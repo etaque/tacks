@@ -13,12 +13,10 @@ Task: Redefine `UserInput` to include all of the information you need.
 
 ------------------------------------------------------------------------------}
 
-type UserInput = { x:Float, y:Float }
-
-floatify {x,y} = { x = toFloat x, y = toFloat y }
+type UserInput = { x:Int, y:Int }
 
 userInput : Signal UserInput
-userInput = floatify <~ Keyboard.arrows
+userInput = Keyboard.arrows
 
 type Input = { timeDelta:Float, userInput:UserInput }
 
@@ -40,20 +38,25 @@ be an empty list (no objects at the start):
 
 ------------------------------------------------------------------------------}
 
-type Boat = { x: Float, y: Float, angle: Float, velocity: Float }
+type Boat = { x: Float, y: Float, direction: Int, velocity: Float, windAngle: Int }
 
 boat : Boat
-boat = { x = 0, y = 0, angle = pi/2, velocity = 20 }
+boat = { x = 0, y = -20, direction = 0, velocity = 0, windAngle = 0 }
 
-type Wind = { angle: Float }
+type Wind = { origin: Int }
 
 wind : Wind
-wind = { angle = 0 }
+wind = { origin = 0 }
 
-type GameState = { wind: Wind, boat: Boat }
+type StartLine = { left: (Float, Float), right: (Float, Float) }
+
+startLine : StartLine
+startLine = { left = (-50, 0), right = (50, 0) }
+
+type GameState = { wind: Wind, boat: Boat, startLine: StartLine }
 
 defaultGame : GameState
-defaultGame = { wind = wind, boat = boat }
+defaultGame = { wind = wind, boat = boat, startLine = startLine }
 
 
 
@@ -67,20 +70,47 @@ Task: redefine `stepGame` to use the UserInput and GameState
 
 ------------------------------------------------------------------------------}
 
-type Arrows = { x:Float, y:Float }
+type Arrows = { x:Int, y:Int }
+
+ensure360 : Int -> Int
+ensure360 val = (val + 360) `mod` 360
+
+angleToWind : Int -> Int -> Int
+angleToWind boatDirection windOrigin = 
+  let delta = windOrigin - boatDirection
+      delta360 = if | delta > 180   -> delta - 360
+                    | delta <= -180 -> delta + 360
+                    | otherwise     -> delta
+  in abs delta360
+
+toRadians : Int -> Float
+toRadians deg = radians (toFloat(90 - deg) * pi / 180)
+--toRadians deg = degrees(toFloat(deg))
+
+polarVelocity : Int -> Float
+polarVelocity delta =
+  let x = toFloat(delta)
+      v = 1.084556812 * (10^ -6) * (x^3) - 1.058704484 * (10^ -3) * (x^2) + 0.195782694 * x - 7.136475544 * (10^ -1)
+  in if v < 0 then 0 else v
+
+  --toFloat(windDelta) / 2
 
 keysStep : Arrows -> GameState -> GameState
 keysStep arrows gameState =
     let boat = gameState.boat
-        newBoat = { boat | angle <- boat.angle - arrows.x / 20 }
+        newBoat = { boat | direction <- ensure360 <| boat.direction + arrows.x }
     in { gameState | boat <- newBoat }
 
 moveStep : Time -> GameState -> GameState
 moveStep delta ({wind, boat} as gameState) =
-    let {x, y, angle, velocity} = boat
-        newVelocity = 20 * abs(angle - wind.angle)
+    let {x, y, direction, velocity, windAngle} = boat
+        newWindAngle = angleToWind direction wind.origin
+        newVelocity = polarVelocity(newWindAngle) * 5
+        angle = toRadians direction
         newBoat = { boat | x <- x + delta * newVelocity * cos angle ,
-                           y <- y + delta * newVelocity * sin angle }
+                           y <- y + delta * newVelocity * sin angle ,
+                           velocity <- newVelocity,
+                           windAngle <- newWindAngle }
     in { gameState | boat <- newBoat }
 
 stepGame : Input -> GameState -> GameState
@@ -102,11 +132,13 @@ Task: redefine `display` to use the GameState you defined in part 2.
 
 display : (Int,Int) -> GameState -> Element
 display (w,h) gameState = 
-  let boat = gameState.boat
+  let start = traced (dotted black) <| segment gameState.startLine.left gameState.startLine.right
+      boat = gameState.boat
       boatPic = image 8 19 "/boat.png" |> toForm
-                                       |> rotate (boat.angle - pi/2)
+                                       |> rotate (toRadians (boat.direction + 90))
                                        |> move (boat.x,boat.y)
-  in layers [ collage w h [boatPic] ]
+  in layers [ collage w h [boatPic, start],
+              asText gameState.boat ]
 
 
 {-- That's all folks! ---------------------------------------------------------
