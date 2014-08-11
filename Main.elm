@@ -164,9 +164,6 @@ inBounds p box =
       (x, y) = p
   in x > xMin && x < xMax && y > yMin && y < yMax
 
-currentWindOrigin : Time -> Int
-currentWindOrigin timestamp = round (cos (inSeconds timestamp / 10) * 10)
-
 moveBoat : Point -> Time -> Float -> Int -> Point
 moveBoat (x,y) delta velocity direction = 
   let angle = toRadians direction
@@ -203,7 +200,10 @@ moveStep (timestamp, delta) ({wind, boat} as gameState) =
 
 windStep : GameClock -> GameState -> GameState
 windStep (timestamp, _) ({wind, boat} as gameState) =
-  let newWind = { wind | origin <- currentWindOrigin timestamp }
+  let o1 = cos (inSeconds timestamp / 10) * 15
+      o2 = cos (inSeconds timestamp / 5) * 5
+      newOrigin = round (o1 + o2)
+      newWind = { wind | origin <- newOrigin }
   in { gameState | wind <- newWind }
 
 
