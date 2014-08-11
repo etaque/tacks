@@ -19,14 +19,21 @@ Task: Redefine `UserInput` to include all of the information you need.
 ------------------------------------------------------------------------------}
 
 type UserArrows = { x:Int, y:Int }
-type Drags = Maybe (Int, Int)
-type UserInput = (UserArrows, Bool, Bool, Drags, (Int,Int))
+type KeyboardInput = { arrows: UserArrows, shift: Bool, space: Bool, ctrl: Bool }
+type MouseInput = { drag: Maybe (Int,Int), mouse: (Int,Int) }
 type GameClock = (Time, Float)
 
-userInput : Signal UserInput
-userInput = lift5 (,,,,) Keyboard.arrows Keyboard.shift Keyboard.space (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
+mouseInput : Signal MouseInput
+mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
 
-type Input = { clock: GameClock, userInput: UserInput }
+keyboardInput : Signal KeyboardInput
+keyboardInput = lift4 KeyboardInput 
+  Keyboard.arrows Keyboard.shift Keyboard.space (dropRepeats Keyboard.ctrl) 
+
+port log : Signal Bool
+port log = (Keyboard.ctrl)
+
+type Input = { clock: GameClock, keyboardInput: KeyboardInput, mouseInput: MouseInput }
 
 floatify (x,y) = (toFloat x, toFloat y)
 
@@ -50,11 +57,14 @@ be an empty list (no objects at the start):
 type Point = G.Point
 
 data WindSide = Babord | Tribord | Neutral
+data ControlMode = FixedDirection | FixedWindAngle
 
-type Boat = { position: Point, direction: Int, velocity: Float, windAngle: Int, tackTarget: Maybe Int, windSide: WindSide, wake: [Point] }
+type Boat = { position: Point, direction: Int, velocity: Float, windAngle: Int, 
+              controlMode: ControlMode, tackTarget: Maybe Int, windSide: WindSide, wake: [Point] }
 
 boat : Boat
-boat = { position = (200,-200), direction = 0, velocity = 0, windAngle = 0, tackTarget = Nothing, windSide = Neutral, wake = [] }
+boat = { position = (200,-200), direction = 0, velocity = 0, windAngle = 0, 
+         controlMode = FixedDirection, tackTarget = Nothing, windSide = Neutral, wake = [] }
 
 type Wind = { origin: Int }
 
@@ -67,7 +77,7 @@ startLine : Gate
 startLine = { left = (-50, -100), right = (50, -100) }
 
 upwindGate : Gate
-upwindGate = { left = (-50, 300), right = (50, 300) }
+upwindGate = { left = (-50, 800), right = (50, 800) }
 
 type Course = { upwind: Gate, downwind: Gate, laps: Int }
 
@@ -128,32 +138,38 @@ defineTackTarget boat wind =
                then w + wa |> ensure360 
                else w - wa |> ensure360
 
-mouseStep : UserInput -> GameState -> GameState
-mouseStep (_, _, _, drag, (x,y)) gameState =
+mouseStep : MouseInput -> GameState -> GameState
+mouseStep ({drag, mouse} as mouseInput) gameState =
   let center = case drag of
+    Just (x',y') -> let (x,y) = mouse in G.sub (floatify (x - x', y' - y)) gameState.center
     Nothing      -> gameState.center 
-    Just (x',y') -> G.sub (floatify (x - x', y' - y)) gameState.center
   in
     { gameState | center <- center }
 
-keysStep : UserInput -> GameState -> GameState
-keysStep (arrows, shift, space, drag, mouse) gameState =
-  let boat = gameState.boat
-      newWindSide = defineWindSide boat.direction boat.windAngle gameState.wind.origin
+keysStep : KeyboardInput -> GameState -> GameState
+keysStep ({arrows, shift, space, ctrl} as keyboardInput) ({wind, boat} as gameState) =
+  let newWindSide = defineWindSide boat.direction boat.windAngle wind.origin
       newTackTarget = 
         if arrows.x /= 0 
           then Nothing
           else case (boat.tackTarget, space) of
             (Just target, _) -> if target == boat.direction then Nothing else boat.tackTarget
-            (Nothing, True)  -> Just (defineTackTarget boat gameState.wind)
+            (Nothing, True)  -> Just (defineTackTarget boat wind)
             (Nothing, False) -> boat.tackTarget
       turn = case (newTackTarget, shift) of 
         (Just target, _) -> if ensure360 (boat.direction - target) > 180 then 2 else -2
         (Nothing, True)  -> arrows.x
         (Nothing, False) -> arrows.x * 2
       newDirection = ensure360 <| boat.direction + turn
+      newWindAngle = angleToWind newDirection wind.origin
+      newControlMode = case (ctrl, boat.controlMode) of
+        (True, FixedDirection) -> FixedWindAngle
+        (True, FixedWindAngle) -> FixedDirection
+        (False, _)             -> boat.controlMode
       newBoat = { boat | direction <- newDirection,
                          windSide <- newWindSide,
+                         windAngle <- newWindAngle,
+                         controlMode <- newControlMode,
                          tackTarget <- newTackTarget }
   in 
     { gameState | boat <- newBoat }
@@ -186,15 +202,13 @@ defineWindSide direction windAngle windOrigin =
 moveStep : GameClock -> GameState -> GameState
 moveStep (timestamp, delta) ({wind, boat} as gameState) =
   let {position, direction, velocity, windAngle, wake} = boat
-      newWindAngle = angleToWind direction wind.origin
-      newVelocity = boatVelocity newWindAngle velocity
+      newVelocity = boatVelocity boat.windAngle velocity
       nextPosition = moveBoat position delta newVelocity direction
       isInBounds = inBounds nextPosition gameState.bounds
       newPosition = if isInBounds then nextPosition else position
       newWake = take 50 (newPosition :: wake)
       newBoat = { boat | position <- newPosition,
                          velocity <- if isInBounds then newVelocity else 0,
-                         windAngle <- newWindAngle,
                          wake <- newWake }
   in { gameState | boat <- newBoat }
 
@@ -209,7 +223,7 @@ windStep (timestamp, _) ({wind, boat} as gameState) =
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  mouseStep input.userInput <| keysStep input.userInput <| moveStep input.clock <| windStep input.clock gameState
+  mouseStep input.mouseInput <| keysStep input.keyboardInput <| moveStep input.clock <| windStep input.clock gameState
 
 
 {-- Part 4: Display the game --------------------------------------------------
@@ -283,7 +297,7 @@ render (w,h) gameState =
       wind = renderWind gameState (w',h')
       bg = rect w' h' |> filled (rgb 239 210 121)
   in layers [ collage w h [bg, race, wind],
-              asText (gameState.boat.windAngle) ]
+              asText (gameState.boat.controlMode) ]
 
 {-- That's all folks! ---------------------------------------------------------
 
@@ -292,7 +306,7 @@ The following code puts it all together and shows it on screen.
 ------------------------------------------------------------------------------}
 
 clock = timestamp (inSeconds <~ fps 30)
-input = sampleOn clock (lift2 Input clock userInput)
+input = sampleOn clock (lift3 Input clock keyboardInput mouseInput)
 
 gameState = foldp stepGame defaultGame input
 
