@@ -128,15 +128,14 @@ defineTackTarget boat wind =
                then w + wa |> ensure360 
                else w - wa |> ensure360
 
-centerGame : GameState -> Maybe (Int,Int) -> (Int,Int) -> Point
-centerGame gameState drag (x,y) =
-  case drag of
+mouseStep : UserInput -> GameState -> GameState
+mouseStep (_, _, _, drag, (x,y)) gameState =
+  let center = case drag of
     Nothing      -> gameState.center 
-    Just (x',y') -> let dx = (x - x')
-                        dy = (y' - y)
-                    in
-                      G.sub (floatify (dx,dy)) gameState.center
-    
+    Just (x',y') -> G.sub (floatify (x - x', y' - y)) gameState.center
+  in
+    { gameState | center <- center }
+
 keysStep : UserInput -> GameState -> GameState
 keysStep (arrows, shift, space, drag, mouse) gameState =
   let boat = gameState.boat
@@ -146,7 +145,7 @@ keysStep (arrows, shift, space, drag, mouse) gameState =
           then Nothing
           else case (boat.tackTarget, space) of
             (Just target, _) -> if target == boat.direction then Nothing else boat.tackTarget
-            (Nothing, True) -> Just (defineTackTarget boat gameState.wind)
+            (Nothing, True)  -> Just (defineTackTarget boat gameState.wind)
             (Nothing, False) -> boat.tackTarget
       turn = case (newTackTarget, shift) of 
         (Just target, _) -> if ensure360 (boat.direction - target) > 180 then 2 else -2
@@ -156,9 +155,8 @@ keysStep (arrows, shift, space, drag, mouse) gameState =
       newBoat = { boat | direction <- newDirection,
                          windSide <- newWindSide,
                          tackTarget <- newTackTarget }
-      center = centerGame gameState drag mouse
-  in { gameState | boat <- newBoat,
-                   center <- center }
+  in 
+    { gameState | boat <- newBoat }
 
 inBounds : Point -> (Point,Point) -> Bool
 inBounds p box =
@@ -191,8 +189,7 @@ defineWindSide direction windAngle windOrigin =
 moveStep : GameClock -> GameState -> GameState
 moveStep (timestamp, delta) ({wind, boat} as gameState) =
   let {position, direction, velocity, windAngle, wake} = boat
-      currentWind = { wind | origin <- currentWindOrigin timestamp }
-      newWindAngle = angleToWind direction currentWind.origin
+      newWindAngle = angleToWind direction wind.origin
       newVelocity = boatVelocity newWindAngle velocity
       nextPosition = moveBoat position delta newVelocity direction
       isInBounds = inBounds nextPosition gameState.bounds
@@ -202,11 +199,17 @@ moveStep (timestamp, delta) ({wind, boat} as gameState) =
                          velocity <- if isInBounds then newVelocity else 0,
                          windAngle <- newWindAngle,
                          wake <- newWake }
-  in { gameState | boat <- newBoat, wind <- currentWind }
+  in { gameState | boat <- newBoat }
+
+windStep : GameClock -> GameState -> GameState
+windStep (timestamp, _) ({wind, boat} as gameState) =
+  let newWind = { wind | origin <- currentWindOrigin timestamp }
+  in { gameState | wind <- newWind }
+
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  keysStep input.userInput <| moveStep input.clock gameState
+  mouseStep input.userInput <| keysStep input.userInput <| moveStep input.clock <| windStep input.clock gameState
 
 
 {-- Part 4: Display the game --------------------------------------------------
@@ -256,12 +259,30 @@ renderRace gameState =
       equalityLine = renderEqualityLine gameState.boat.position gameState.wind.origin
   in move (G.neg gameState.center) (group [bounds, start, upwind, boatWake, boatPic])
 
+renderWind : GameState -> (Float,Float) -> Form
+renderWind ({boat, wind}) (w,h) =
+  let bg = circle 30 |> filled white
+      windAngle = toRadians wind.origin
+      windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+                |> filled red 
+                |> rotate (windAngle + pi/2)
+                |> move (fromPolar (34, windAngle))
+      boatAngle = toRadians boat.direction
+      boatMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+                |> filled black
+                |> rotate (boatAngle - pi/2)
+                |> move (fromPolar (26, boatAngle))
+      text = asText wind.origin
+      center = (w/2 - 50, h/2 - 50)
+  in move center (group [bg, windMarker, boatMarker])
 
 render : (Int,Int) -> GameState -> Element
 render (w,h) gameState =
-  let race = renderRace gameState
-      bg = rect (toFloat w) (toFloat h) |> filled (rgb 239 210 121)
-  in layers [ collage w h [bg, race],
+  let (w',h') = floatify (w,h)
+      race = renderRace gameState
+      wind = renderWind gameState (w',h')
+      bg = rect w' h' |> filled (rgb 239 210 121)
+  in layers [ collage w h [bg, race, wind],
               asText (gameState.boat.windAngle) ]
 
 {-- That's all folks! ---------------------------------------------------------
