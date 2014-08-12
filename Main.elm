@@ -19,7 +19,7 @@ Task: Redefine `UserInput` to include all of the information you need.
 ------------------------------------------------------------------------------}
 
 type UserArrows = { x:Int, y:Int }
-type KeyboardInput = { arrows: UserArrows, shift: Bool, space: Bool, ctrl: Bool }
+type KeyboardInput = { arrows: UserArrows, shift: Bool, space: Bool, aKey: Bool, dKey: Bool }
 type MouseInput = { drag: Maybe (Int,Int), mouse: (Int,Int) }
 type GameClock = (Time, Float)
 
@@ -27,11 +27,11 @@ mouseInput : Signal MouseInput
 mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
 
 keyboardInput : Signal KeyboardInput
-keyboardInput = lift4 KeyboardInput 
-  Keyboard.arrows Keyboard.shift Keyboard.space (dropRepeats Keyboard.ctrl) 
+keyboardInput = lift5 KeyboardInput 
+  Keyboard.arrows Keyboard.shift Keyboard.space (Keyboard.isDown 65) (Keyboard.isDown 68)
 
-port log : Signal Bool
-port log = (Keyboard.ctrl)
+port log : Signal [Int]
+port log = (Keyboard.keysDown)
 
 type Input = { clock: GameClock, keyboardInput: KeyboardInput, mouseInput: MouseInput }
 
@@ -88,7 +88,7 @@ type GameState = { wind: Wind, boat: Boat, course: Course, bounds: (Point, Point
 
 defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, course = course,
-                bounds = ((500,1000), (-500,-300)), center = (0,0) }
+                bounds = ((700,1000), (-700,-300)), center = (0,0) }
 
 
 
@@ -109,11 +109,11 @@ ensure360 val = (val + 360) `mod` 360
 
 angleToWind : Int -> Int -> Int
 angleToWind boatDirection windOrigin =
-  let delta = windOrigin - boatDirection
-      delta360 = if | delta > 180   -> delta - 360
-                    | delta <= -180 -> delta + 360
-                    | otherwise     -> delta
-  in abs delta360
+  let delta = boatDirection - windOrigin
+  in 
+    if | delta > 180   -> delta - 360
+       | delta <= -180 -> delta + 360
+       | otherwise     -> delta
 
 toRadians : Int -> Float
 toRadians deg = radians (toFloat(90 - deg) * pi / 180)
@@ -131,12 +131,7 @@ defineTackTarget boat wind =
       d = boat.direction
       w = wind.origin
   in
-    case wa of
-      0   -> d
-      180 -> d
-      _   -> if ensure360 (d + w) > 180 
-               then w + wa |> ensure360 
-               else w - wa |> ensure360
+    ensure360 (w - wa)
 
 mouseStep : MouseInput -> GameState -> GameState
 mouseStep ({drag, mouse} as mouseInput) gameState =
@@ -146,33 +141,44 @@ mouseStep ({drag, mouse} as mouseInput) gameState =
   in
     { gameState | center <- center }
 
+
 keysStep : KeyboardInput -> GameState -> GameState
-keysStep ({arrows, shift, space, ctrl} as keyboardInput) ({wind, boat} as gameState) =
-  let newWindSide = defineWindSide boat.direction boat.windAngle wind.origin
+keysStep ({arrows, shift, space, aKey, dKey} as keyboardInput) ({wind, boat} as gameState) =
+  let newWindSide = if boat.windAngle > 0 then Babord else Tribord
+      newControlMode = case (aKey, dKey, boat.controlMode) of
+        (True, _, FixedDirection) -> FixedWindAngle
+        (_, True, FixedWindAngle) -> FixedDirection
+        (_, _, _)                 -> boat.controlMode
+      -- calcul de la cible du virement, si nécessaire
       newTackTarget = 
-        if arrows.x /= 0 
+        if arrows.x /= 0 -- annule le virement
           then Nothing
           else case (boat.tackTarget, space) of
+            -- si direction cible atteinte, on arrête le virement
             (Just target, _) -> if target == boat.direction then Nothing else boat.tackTarget
+            -- si touche espace pressée, on défini la cible
             (Nothing, True)  -> Just (defineTackTarget boat wind)
-            (Nothing, False) -> boat.tackTarget
-      turn = case (newTackTarget, shift) of 
-        (Just target, _) -> if ensure360 (boat.direction - target) > 180 then 2 else -2
-        (Nothing, True)  -> arrows.x
-        (Nothing, False) -> arrows.x * 2
+            -- sinon, pas de cible
+            (Nothing, False) -> Nothing
+      -- calcul de la modification de direction
+      turn = case (newTackTarget, newControlMode, shift, arrows.x) of 
+        -- virement en cours
+        (Just target, _, _, _) -> if ensure360 (boat.direction - target) > 180 then 2 else -2
+        -- pas de virement ni de touche flèche, donc contrôle auto
+        (Nothing, _, _, 0)     -> case newControlMode of
+                                    FixedDirection -> 0
+                                    FixedWindAngle -> (wind.origin + boat.windAngle) - boat.direction
+        -- changement de direction via touche flèche
+        (Nothing, _, True,  _) -> arrows.x
+        (Nothing, _, False, _) -> arrows.x * 2
       newDirection = ensure360 <| boat.direction + turn
       newWindAngle = angleToWind newDirection wind.origin
-      newControlMode = case (ctrl, boat.controlMode) of
-        (True, FixedDirection) -> FixedWindAngle
-        (True, FixedWindAngle) -> FixedDirection
-        (False, _)             -> boat.controlMode
-      newBoat = { boat | direction <- newDirection,
-                         windSide <- newWindSide,
-                         windAngle <- newWindAngle,
-                         controlMode <- newControlMode,
-                         tackTarget <- newTackTarget }
   in 
-    { gameState | boat <- newBoat }
+    { gameState | boat <- { boat | direction <- newDirection,
+                                   windSide <- newWindSide,
+                                   windAngle <- newWindAngle,
+                                   controlMode <- newControlMode,
+                                   tackTarget <- newTackTarget }}
 
 inBounds : Point -> (Point,Point) -> Bool
 inBounds p box =
@@ -189,7 +195,7 @@ moveBoat (x,y) delta velocity direction =
 
 boatVelocity : Int -> Float -> Float
 boatVelocity windAngle previousVelocity =
-  let v = polarVelocity(windAngle) * 5
+  let v = polarVelocity(abs windAngle) * 5
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 
@@ -206,7 +212,7 @@ moveStep (timestamp, delta) ({wind, boat} as gameState) =
       nextPosition = moveBoat position delta newVelocity direction
       isInBounds = inBounds nextPosition gameState.bounds
       newPosition = if isInBounds then nextPosition else position
-      newWake = take 50 (newPosition :: wake)
+      newWake = take 200 (newPosition :: wake)
       newBoat = { boat | position <- newPosition,
                          velocity <- if isInBounds then newVelocity else 0,
                          wake <- newWake }
@@ -237,7 +243,11 @@ Task: redefine `render` to use the GameState you defined in part 2.
 renderGate : Gate -> Bool -> Form
 renderGate gate isNext =
   let style = if isNext then solid white else dotted grey
-  in traced style <| segment gate.left gate.right
+      line = segment gate.left gate.right |> traced style
+      leftMark = circle 5 |> filled white |> move gate.left
+      rightMark = circle 5 |> filled white |> move gate.right
+  in
+    group [line, leftMark, rightMark]
 
 renderBoat : Boat -> Form
 renderBoat boat =
@@ -297,7 +307,7 @@ render (w,h) gameState =
       wind = renderWind gameState (w',h')
       bg = rect w' h' |> filled (rgb 239 210 121)
   in layers [ collage w h [bg, race, wind],
-              asText (gameState.boat.controlMode) ]
+              asText (gameState.boat.windAngle) ]
 
 {-- That's all folks! ---------------------------------------------------------
 
