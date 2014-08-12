@@ -56,33 +56,35 @@ be an empty list (no objects at the start):
 
 type Point = G.Point
 
-data WindSide = Babord | Tribord | Neutral
-data ControlMode = FixedDirection | FixedWindAngle
-
-type Boat = { position: Point, direction: Int, velocity: Float, windAngle: Int, 
-              controlMode: ControlMode, tackTarget: Maybe Int, windSide: WindSide, wake: [Point] }
-
-boat : Boat
-boat = { position = (200,-200), direction = 0, velocity = 0, windAngle = 0, 
-         controlMode = FixedDirection, tackTarget = Nothing, windSide = Neutral, wake = [] }
-
-type Wind = { origin: Int }
-
-wind : Wind
-wind = { origin = 0 }
-
-type Gate = { left: Point, right: Point }
+data GateLocation = Downwind | Upwind
+type Gate = { y: Float, width: Float, location: GateLocation }
 
 startLine : Gate
-startLine = { left = (-50, -100), right = (50, -100) }
+startLine = { y = -100, width = 100, location = Downwind }
 
 upwindGate : Gate
-upwindGate = { left = (-50, 800), right = (50, 800) }
+upwindGate = { y = 100, width = 100, location = Upwind }
 
 type Course = { upwind: Gate, downwind: Gate, laps: Int }
 
 course : Course
 course = { upwind = upwindGate, downwind = startLine, laps = 2 }
+
+data ControlMode = FixedDirection | FixedWindAngle
+
+type Boat = { position: Point, direction: Int, velocity: Float, windAngle: Int, 
+              controlMode: ControlMode, tackTarget: Maybe Int,
+              passedGates: [(GateLocation, Time)], wake: [Point] }
+
+boat : Boat
+boat = { position = (50,-200), direction = 0, velocity = 0, windAngle = 0, 
+         controlMode = FixedDirection, tackTarget = Nothing,
+         passedGates = [], wake = [] }
+
+type Wind = { origin: Int }
+
+wind : Wind
+wind = { origin = 0 }
 
 type GameState = { wind: Wind, boat: Boat, course: Course, bounds: (Point, Point), center: Point }
 
@@ -90,7 +92,10 @@ defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, course = course,
                 bounds = ((700,1000), (-700,-300)), center = (0,0) }
 
-
+nextGate : Boat -> GateLocation
+nextGate boat =
+  if ((length boat.passedGates) `mod` 2) == 0 then Downwind else Upwind
+    
 
 {-- Part 3: Update the game ---------------------------------------------------
 
@@ -144,8 +149,7 @@ mouseStep ({drag, mouse} as mouseInput) gameState =
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep ({arrows, shift, space, aKey, dKey} as keyboardInput) ({wind, boat} as gameState) =
-  let newWindSide = if boat.windAngle > 0 then Babord else Tribord
-      newControlMode = case (aKey, dKey, boat.controlMode) of
+  let newControlMode = case (aKey, dKey, boat.controlMode) of
         (True, _, FixedDirection) -> FixedWindAngle
         (_, True, FixedWindAngle) -> FixedDirection
         (_, _, _)                 -> boat.controlMode
@@ -175,7 +179,6 @@ keysStep ({arrows, shift, space, aKey, dKey} as keyboardInput) ({wind, boat} as 
       newWindAngle = angleToWind newDirection wind.origin
   in 
     { gameState | boat <- { boat | direction <- newDirection,
-                                   windSide <- newWindSide,
                                    windAngle <- newWindAngle,
                                    controlMode <- newControlMode,
                                    tackTarget <- newTackTarget }}
@@ -199,22 +202,50 @@ boatVelocity windAngle previousVelocity =
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 
-defineWindSide : Int -> Int -> Int -> WindSide
-defineWindSide direction windAngle windOrigin =
-  if direction - windAngle == windOrigin 
-    then Babord
-    else Tribord
+passedGateInX : Gate -> (Point,Point) -> Bool
+passedGateInX gate ((x,y),(x',y')) =
+  let a = (y - y') / (x - x')
+      b = y - a * x
+      xGate = (gate.y - b) / a
+  in
+    (abs xGate) <= gate.width / 2
+
+gatePassedFromNorth : Gate -> (Point,Point) -> Bool
+gatePassedFromNorth gate (p1,p2) =
+  (snd p1) > gate.y && (snd p2) <= gate.y && (passedGateInX gate (p1,p2))
+
+gatePassedFromSouth : Gate -> (Point,Point) -> Bool
+gatePassedFromSouth gate (p1,p2) =
+  (snd p1) < gate.y && (snd p2) >= gate.y && (passedGateInX gate (p1,p2))
+
+getPassedGates : Boat -> Time -> Course -> (Point,Point) -> [(GateLocation,Time)]
+getPassedGates boat timestamp ({upwind, downwind, laps}) step =
+  case (nextGate boat, isEmpty boat.passedGates) of
+    -- ligne de départ
+    (_, True)     -> if | gatePassedFromSouth downwind step -> (Downwind, timestamp) :: boat.passedGates 
+                        | otherwise                         -> boat.passedGates
+    -- bouée au vent
+    (Upwind, _)   -> if | gatePassedFromSouth upwind step -> (Upwind, timestamp) :: boat.passedGates 
+                        | gatePassedFromSouth downwind step -> tail boat.passedGates
+                        | otherwise                       -> boat.passedGates
+    -- bouée sous le vent
+    (Downwind, _) -> if | gatePassedFromNorth downwind step -> (Downwind, timestamp) :: boat.passedGates 
+                        | gatePassedFromNorth upwind step -> tail boat.passedGates 
+                        | otherwise                         -> boat.passedGates
+
 
 moveStep : GameClock -> GameState -> GameState
 moveStep (timestamp, delta) ({wind, boat} as gameState) =
-  let {position, direction, velocity, windAngle, wake} = boat
+  let {position, direction, velocity, windAngle, passedGates, wake} = boat
       newVelocity = boatVelocity boat.windAngle velocity
       nextPosition = moveBoat position delta newVelocity direction
       isInBounds = inBounds nextPosition gameState.bounds
       newPosition = if isInBounds then nextPosition else position
+      newGatesCrossed = getPassedGates boat timestamp gameState.course (position,nextPosition)
       newWake = take 200 (newPosition :: wake)
       newBoat = { boat | position <- newPosition,
                          velocity <- if isInBounds then newVelocity else 0,
+                         passedGates <- newGatesCrossed,
                          wake <- newWake }
   in { gameState | boat <- newBoat }
 
@@ -241,13 +272,15 @@ Task: redefine `render` to use the GameState you defined in part 2.
 ------------------------------------------------------------------------------}
 
 renderGate : Gate -> Bool -> Form
-renderGate gate isNext =
-  let style = if isNext then solid white else dotted grey
-      line = segment gate.left gate.right |> traced style
-      leftMark = circle 5 |> filled white |> move gate.left
-      rightMark = circle 5 |> filled white |> move gate.right
+renderGate ({y, width}) isNext =
+  let left = (-width / 2, y)
+      right = (width / 2, y)
+      line = segment left right |> traced (dotted grey)
+      leftMark = circle 5 |> filled white |> move left
+      rightMark = circle 5 |> filled white |> move right
+      marks = [leftMark, rightMark]
   in
-    group [line, leftMark, rightMark]
+    if isNext then group (line :: marks) else group marks
 
 renderBoat : Boat -> Form
 renderBoat boat =
@@ -275,8 +308,8 @@ renderBounds box =
 
 renderRace : GameState -> Form
 renderRace gameState =
-  let start = renderGate gameState.course.downwind True
-      upwind = renderGate gameState.course.upwind False
+  let start = renderGate gameState.course.downwind ((nextGate gameState.boat) == Downwind)
+      upwind = renderGate gameState.course.upwind ((nextGate gameState.boat) == Upwind)
       bounds = renderBounds gameState.bounds
       boatPic = renderBoat gameState.boat
       boatWake = renderWake gameState.boat.wake
@@ -307,7 +340,7 @@ render (w,h) gameState =
       wind = renderWind gameState (w',h')
       bg = rect w' h' |> filled (rgb 239 210 121)
   in layers [ collage w h [bg, race, wind],
-              asText (gameState.boat.windAngle) ]
+              asText (gameState.boat.passedGates) ]
 
 {-- That's all folks! ---------------------------------------------------------
 
