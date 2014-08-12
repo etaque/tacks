@@ -74,12 +74,12 @@ data ControlMode = FixedDirection | FixedWindAngle
 
 type Boat = { position: Point, direction: Int, velocity: Float, windAngle: Int, 
               controlMode: ControlMode, tackTarget: Maybe Int,
-              passedGates: [(GateLocation, Time)], wake: [Point] }
+              passedGates: [(GateLocation, Time)] }
 
 boat : Boat
 boat = { position = (50,-200), direction = 0, velocity = 0, windAngle = 0, 
          controlMode = FixedDirection, tackTarget = Nothing,
-         passedGates = [], wake = [] }
+         passedGates = [] }
 
 type Wind = { origin: Int }
 
@@ -92,9 +92,14 @@ defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, course = course,
                 bounds = ((700,1000), (-700,-300)), center = (0,0) }
 
-nextGate : Boat -> GateLocation
-nextGate boat =
-  if ((length boat.passedGates) `mod` 2) == 0 then Downwind else Upwind
+nextGate : Boat -> Int -> Maybe GateLocation
+nextGate boat laps =
+  let c = (length boat.passedGates)
+      i = c `mod` 2
+  in
+    if | c == laps * 2 + 1 -> Nothing
+       | i == 0            -> Just Downwind 
+       | otherwise         -> Just Upwind
     
 
 {-- Part 3: Update the game ---------------------------------------------------
@@ -220,33 +225,49 @@ gatePassedFromSouth gate (p1,p2) =
 
 getPassedGates : Boat -> Time -> Course -> (Point,Point) -> [(GateLocation,Time)]
 getPassedGates boat timestamp ({upwind, downwind, laps}) step =
-  case (nextGate boat, isEmpty boat.passedGates) of
+  case (nextGate boat course.laps, isEmpty boat.passedGates) of
     -- ligne de départ
-    (_, True)     -> if | gatePassedFromSouth downwind step -> (Downwind, timestamp) :: boat.passedGates 
-                        | otherwise                         -> boat.passedGates
+    (_, True)          -> if | gatePassedFromSouth downwind step -> (Downwind, timestamp) :: boat.passedGates 
+                             | otherwise                         -> boat.passedGates
     -- bouée au vent
-    (Upwind, _)   -> if | gatePassedFromSouth upwind step -> (Upwind, timestamp) :: boat.passedGates 
-                        | gatePassedFromSouth downwind step -> tail boat.passedGates
-                        | otherwise                       -> boat.passedGates
+    (Just Upwind, _)   -> if | gatePassedFromSouth upwind step   -> (Upwind, timestamp) :: boat.passedGates 
+                             | gatePassedFromSouth downwind step -> tail boat.passedGates
+                             | otherwise                         -> boat.passedGates
     -- bouée sous le vent
-    (Downwind, _) -> if | gatePassedFromNorth downwind step -> (Downwind, timestamp) :: boat.passedGates 
-                        | gatePassedFromNorth upwind step -> tail boat.passedGates 
-                        | otherwise                         -> boat.passedGates
+    (Just Downwind, _) -> if | gatePassedFromNorth downwind step -> (Downwind, timestamp) :: boat.passedGates 
+                             | gatePassedFromNorth upwind step   -> tail boat.passedGates 
+                             | otherwise                         -> boat.passedGates
+    -- arrivée déjà franchie
+    (Nothing, _)       -> boat.passedGates
 
+getGatesMarks : Course -> [Point]
+getGatesMarks course =
+  [
+    (course.upwind.width / -2, course.upwind.y),
+    (course.upwind.width / 2, course.upwind.y),
+    (course.downwind.width / -2, course.downwind.y),
+    (course.downwind.width / 2, course.downwind.y)
+  ]
+
+isStuck : Point -> GameState -> Bool
+isStuck p gameState =
+  let gatesMarks = getGatesMarks gameState.course
+      stuckOnMark = any (\m -> G.distance m p <= 5) gatesMarks
+      outOfBounds = not (inBounds p gameState.bounds)
+  in 
+    outOfBounds || stuckOnMark
 
 moveStep : GameClock -> GameState -> GameState
 moveStep (timestamp, delta) ({wind, boat} as gameState) =
-  let {position, direction, velocity, windAngle, passedGates, wake} = boat
+  let {position, direction, velocity, windAngle, passedGates} = boat
       newVelocity = boatVelocity boat.windAngle velocity
       nextPosition = moveBoat position delta newVelocity direction
-      isInBounds = inBounds nextPosition gameState.bounds
-      newPosition = if isInBounds then nextPosition else position
-      newGatesCrossed = getPassedGates boat timestamp gameState.course (position,nextPosition)
-      newWake = take 200 (newPosition :: wake)
+      stuck = isStuck nextPosition gameState
+      newPosition = if stuck then position else nextPosition
+      newPassedGates = getPassedGates boat timestamp gameState.course (position, newPosition)
       newBoat = { boat | position <- newPosition,
-                         velocity <- if isInBounds then newVelocity else 0,
-                         passedGates <- newGatesCrossed,
-                         wake <- newWake }
+                         velocity <- if stuck then 0 else newVelocity,
+                         passedGates <- newPassedGates }
   in { gameState | boat <- newBoat }
 
 windStep : GameClock -> GameState -> GameState
@@ -288,10 +309,6 @@ renderBoat boat =
                                     |> rotate (toRadians (boat.direction + 90))
                                     |> move boat.position
 
-renderWake : [Point] -> Form
-renderWake wake =
-  path wake |> traced (solid (rgba 255 255 255 0.3))
-
 renderEqualityLine : Point -> Int -> Form
 renderEqualityLine (x,y) windOrigin =
   segment (x - 100, y) (x + 100, y) |> traced (solid black)
@@ -308,13 +325,13 @@ renderBounds box =
 
 renderRace : GameState -> Form
 renderRace gameState =
-  let start = renderGate gameState.course.downwind ((nextGate gameState.boat) == Downwind)
-      upwind = renderGate gameState.course.upwind ((nextGate gameState.boat) == Upwind)
+  let ng = nextGate gameState.boat gameState.course.laps
+      start = renderGate gameState.course.downwind (ng == Just Downwind)
+      upwind = renderGate gameState.course.upwind (ng == Just Upwind)
       bounds = renderBounds gameState.bounds
       boatPic = renderBoat gameState.boat
-      boatWake = renderWake gameState.boat.wake
       equalityLine = renderEqualityLine gameState.boat.position gameState.wind.origin
-  in move (G.neg gameState.center) (group [bounds, start, upwind, boatWake, boatPic])
+  in move (G.neg gameState.center) (group [bounds, start, upwind, boatPic])
 
 renderWind : GameState -> (Float,Float) -> Form
 renderWind ({boat, wind}) (w,h) =
