@@ -4,9 +4,9 @@ import Keyboard
 import Mouse
 import Window
 import Time
-import Set as S
-import Drag as Drag
-import Geo as G
+import Drag
+import Geo (..)
+import Core (..)
 
 {-- Part 1: Model the user input ----------------------------------------------
 
@@ -30,13 +30,7 @@ keyboardInput : Signal KeyboardInput
 keyboardInput = lift5 KeyboardInput 
   Keyboard.arrows Keyboard.shift Keyboard.space (Keyboard.isDown 65) (Keyboard.isDown 68)
 
-port log : Signal [Int]
-port log = (Keyboard.keysDown)
-
 type Input = { clock: GameClock, keyboardInput: KeyboardInput, mouseInput: MouseInput }
-
-floatify (x,y) = (toFloat x, toFloat y)
-
 
 {-- Part 2: Model the game ----------------------------------------------------
 
@@ -54,8 +48,6 @@ be an empty list (no objects at the start):
 
 ------------------------------------------------------------------------------}
 
-type Point = G.Point
-
 data GateLocation = Downwind | Upwind
 type Gate = { y: Float, width: Float, location: GateLocation }
 
@@ -63,12 +55,12 @@ startLine : Gate
 startLine = { y = -100, width = 100, location = Downwind }
 
 upwindGate : Gate
-upwindGate = { y = 100, width = 100, location = Upwind }
+upwindGate = { y = 1000, width = 100, location = Upwind }
 
-type Course = { upwind: Gate, downwind: Gate, laps: Int }
+type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float }
 
 course : Course
-course = { upwind = upwindGate, downwind = startLine, laps = 2 }
+course = { upwind = upwindGate, downwind = startLine, laps = 3, markRadius = 5 }
 
 data ControlMode = FixedDirection | FixedWindAngle
 
@@ -86,11 +78,12 @@ type Wind = { origin: Int }
 wind : Wind
 wind = { origin = 0 }
 
-type GameState = { wind: Wind, boat: Boat, course: Course, bounds: (Point, Point), center: Point }
+type GameState = { wind: Wind, boat: Boat, course: Course, 
+                   bounds: (Point, Point), center: Point }
 
 defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, course = course,
-                bounds = ((700,1000), (-700,-300)), center = (0,0) }
+                bounds = ((700,1200), (-700,-300)), center = (0,0) }
 
 nextGate : Boat -> Int -> Maybe GateLocation
 nextGate boat laps =
@@ -114,20 +107,6 @@ Task: redefine `stepGame` to use the UserInput and GameState
 
 type Arrows = { x:Int, y:Int }
 
-ensure360 : Int -> Int
-ensure360 val = (val + 360) `mod` 360
-
-angleToWind : Int -> Int -> Int
-angleToWind boatDirection windOrigin =
-  let delta = boatDirection - windOrigin
-  in 
-    if | delta > 180   -> delta - 360
-       | delta <= -180 -> delta + 360
-       | otherwise     -> delta
-
-toRadians : Int -> Float
-toRadians deg = radians (toFloat(90 - deg) * pi / 180)
-
 polarVelocity : Int -> Float
 polarVelocity delta =
   let x = toFloat(delta)
@@ -146,7 +125,7 @@ defineTackTarget boat wind =
 mouseStep : MouseInput -> GameState -> GameState
 mouseStep ({drag, mouse} as mouseInput) gameState =
   let center = case drag of
-    Just (x',y') -> let (x,y) = mouse in G.sub (floatify (x - x', y' - y)) gameState.center
+    Just (x',y') -> let (x,y) = mouse in sub (floatify (x - x', y' - y)) gameState.center
     Nothing      -> gameState.center 
   in
     { gameState | center <- center }
@@ -187,12 +166,6 @@ keysStep ({arrows, shift, space, aKey, dKey} as keyboardInput) ({wind, boat} as 
                                    windAngle <- newWindAngle,
                                    controlMode <- newControlMode,
                                    tackTarget <- newTackTarget }}
-
-inBounds : Point -> (Point,Point) -> Bool
-inBounds p box =
-  let ((xMax, yMax), (xMin, yMin)) = box
-      (x, y) = p
-  in x > xMin && x < xMax && y > yMin && y < yMax
 
 moveBoat : Point -> Time -> Float -> Int -> Point
 moveBoat (x,y) delta velocity direction = 
@@ -252,8 +225,8 @@ getGatesMarks course =
 isStuck : Point -> GameState -> Bool
 isStuck p gameState =
   let gatesMarks = getGatesMarks gameState.course
-      stuckOnMark = any (\m -> G.distance m p <= 5) gatesMarks
-      outOfBounds = not (inBounds p gameState.bounds)
+      stuckOnMark = any (\m -> distance m p <= gameState.course.markRadius) gatesMarks
+      outOfBounds = not (inBox p gameState.bounds)
   in 
     outOfBounds || stuckOnMark
 
@@ -292,13 +265,14 @@ Task: redefine `render` to use the GameState you defined in part 2.
 
 ------------------------------------------------------------------------------}
 
-renderGate : Gate -> Bool -> Form
-renderGate ({y, width}) isNext =
+renderGate : Gate -> Float -> Bool -> Form
+renderGate ({y, width}) markRadius isNext =
   let left = (-width / 2, y)
       right = (width / 2, y)
-      line = segment left right |> traced (dotted grey)
-      leftMark = circle 5 |> filled white |> move left
-      rightMark = circle 5 |> filled white |> move right
+      line = segment left right |> traced (dotted orange)
+      markStyle = if isNext then filled orange else filled white
+      leftMark = circle markRadius |> markStyle |> move left
+      rightMark = circle markRadius |> markStyle |> move right
       marks = [leftMark, rightMark]
   in
     if isNext then group (line :: marks) else group marks
@@ -325,13 +299,14 @@ renderBounds box =
 
 renderRace : GameState -> Form
 renderRace gameState =
-  let ng = nextGate gameState.boat gameState.course.laps
-      start = renderGate gameState.course.downwind (ng == Just Downwind)
-      upwind = renderGate gameState.course.upwind (ng == Just Upwind)
+  let course = gameState.course
+      ng = nextGate gameState.boat course.laps
+      start = renderGate course.downwind course.markRadius (ng == Just Downwind)
+      upwind = renderGate course.upwind course.markRadius (ng == Just Upwind)
       bounds = renderBounds gameState.bounds
       boatPic = renderBoat gameState.boat
       equalityLine = renderEqualityLine gameState.boat.position gameState.wind.origin
-  in move (G.neg gameState.center) (group [bounds, start, upwind, boatPic])
+  in move (neg gameState.center) (group [bounds, start, upwind, boatPic])
 
 renderWind : GameState -> (Float,Float) -> Form
 renderWind ({boat, wind}) (w,h) =
@@ -346,9 +321,9 @@ renderWind ({boat, wind}) (w,h) =
                 |> filled black
                 |> rotate (boatAngle - pi/2)
                 |> move (fromPolar (26, boatAngle))
-      text = asText wind.origin
+      text = boat.windAngle |> abs |> asText |> toForm
       center = (w/2 - 50, h/2 - 50)
-  in move center (group [bg, windMarker, boatMarker])
+  in move center (group [bg, windMarker, boatMarker, text])
 
 render : (Int,Int) -> GameState -> Element
 render (w,h) gameState =
