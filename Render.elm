@@ -60,7 +60,7 @@ renderWind ({boat, wind}) (w,h) =
   let bg = circle 30 |> filled white
       windAngle = toRadians wind.origin
       windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
-                |> filled red 
+                |> filled white 
                 |> rotate (windAngle + pi/2)
                 |> move (fromPolar (34, windAngle))
       boatAngle = toRadians boat.direction
@@ -70,7 +70,7 @@ renderWind ({boat, wind}) (w,h) =
                 |> move (fromPolar (26, boatAngle))
       text = boat.windAngle |> abs |> asText |> toForm
       center = (w/2 - 50, h/2 - 50)
-  in move center (group [bg, windMarker, boatMarker, text])
+  in group [bg, windMarker, boatMarker, text] |> move center |> alpha 0.8
 
 render : (Int,Int) -> GameState -> Element
 render (w,h) gameState =
@@ -80,4 +80,3 @@ render (w,h) gameState =
       bg = rect w' h' |> filled (rgb 239 210 121)
   in layers [ collage w h [bg, race, wind],
               asText (gameState.boat.passedGates) ]
-              

@@ -44,23 +44,22 @@ getTackTarget boat wind spaceKey =
 
 getTurn : Maybe Int -> Boat -> Wind -> UserArrows -> Int 
 getTurn tackTarget boat wind arrows =
-  case (tackTarget, boat.controlMode, arrows.x) of 
+  case (tackTarget, boat.controlMode, arrows.x, arrows.y) of 
     -- virement en cours
-    (Just target, _, _) -> 
+    (Just target, _, _, _) -> 
       case boat.controlMode of 
         FixedDirection -> if ensure360 (boat.direction - target) > 180 then 1 else -1
         FixedWindAngle -> if target > 90 || (target < 0 && target >= -90) then -1 else 1
     -- pas de virement ni de touche flèche, donc contrôle auto
-    (Nothing, FixedDirection, 0) -> 0
-    (Nothing, FixedWindAngle, 0) -> (wind.origin + boat.windAngle) - boat.direction
+    (Nothing, FixedDirection, 0, 0) -> 0
+    (Nothing, FixedWindAngle, 0, 0) -> (wind.origin + boat.windAngle) - boat.direction
     -- changement de direction via touche flèche
-    (Nothing, _, _) -> if (isEmpty boat.passedGates) then arrows.x * 3 else arrows.x
-    --(Nothing, _, False, _) -> arrows.x * 2
+    (Nothing, _, x, y) -> x * 3 + y
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep ({arrows, shift, space, aKey, dKey} as keyboardInput) ({wind, boat} as gameState) =
   let newTackTarget = 
-        if arrows.x /= 0 then Nothing -- annule le virement
+        if arrows.x /= 0 || arrows.y /= 0 then Nothing -- annule le virement
         else getTackTarget boat wind space
       turn = getTurn newTackTarget boat wind arrows
       newDirection = ensure360 <| boat.direction + turn
