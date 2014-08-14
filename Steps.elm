@@ -57,17 +57,15 @@ getTurn tackTarget boat wind arrows =
     (Nothing, _, x, y) -> x * 3 + y
 
 keysStep : KeyboardInput -> GameState -> GameState
-keysStep ({arrows, shift, space, aKey, dKey} as keyboardInput) ({wind, boat} as gameState) =
-  let newTackTarget = 
-        if arrows.x /= 0 || arrows.y /= 0 then Nothing -- annule le virement
-        else getTackTarget boat wind space
+keysStep ({arrows, enter, space}) ({wind, boat} as gameState) =
+  let forceTurn = arrows.x /= 0 || arrows.y /= 0
+      newTackTarget = if forceTurn then Nothing else getTackTarget boat wind space
       turn = getTurn newTackTarget boat wind arrows
       newDirection = ensure360 <| boat.direction + turn
       newWindAngle = angleToWind newDirection wind.origin
-      newControlMode = case (aKey, dKey, boat.controlMode) of
-        (True, _, FixedDirection) -> FixedWindAngle
-        (_, True, FixedWindAngle) -> FixedDirection
-        (_, _, _)                 -> boat.controlMode
+      newControlMode = if | forceTurn -> FixedDirection
+                          | enter     -> FixedWindAngle
+                          | otherwise -> boat.controlMode
   in 
     { gameState | boat <- { boat | direction <- newDirection,
                                    windAngle <- newWindAngle,
