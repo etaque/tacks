@@ -1,5 +1,7 @@
 module Geo where
 
+import Core
+
 type Point = (Float, Float)
 type Segment = (Point, Point)
 
@@ -18,4 +20,10 @@ distance (x,y) (x',y') =
 inBox : Point -> (Point,Point) -> Bool
 inBox (x, y) ((xMax, yMax), (xMin, yMin)) =
   x > xMin && x < xMax && y > yMin && y < yMax
-  
+
+movePoint : Point -> Time -> Float -> Int -> Point
+movePoint (x,y) delta velocity direction = 
+  let angle = Core.toRadians direction
+      x' = x + delta * velocity * cos angle
+      y' = y + delta * velocity * sin angle
+  in (x',y')
