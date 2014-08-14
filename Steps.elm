@@ -90,7 +90,7 @@ gatePassedFromSouth gate (p1,p2) =
 
 getPassedGates : Boat -> Time -> Course -> (Point,Point) -> [(GateLocation,Time)]
 getPassedGates boat timestamp ({upwind, downwind, laps}) step =
-  case (nextGate boat course.laps, isEmpty boat.passedGates) of
+  case (findNextGate boat course.laps, isEmpty boat.passedGates) of
     -- ligne de départ
     (_, True)          -> if | gatePassedFromSouth downwind step -> (Downwind, timestamp) :: boat.passedGates 
                              | otherwise                         -> boat.passedGates

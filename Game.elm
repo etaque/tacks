@@ -19,13 +19,13 @@ be an empty list (no objects at the start):
 ------------------------------------------------------------------------------}
 
 data GateLocation = Downwind | Upwind
-type Gate = { y: Float, width: Float, location: GateLocation }
+type Gate = { y: Float, width: Float, markRadius: Float, location: GateLocation }
 
 startLine : Gate
-startLine = { y = -100, width = 100, location = Downwind }
+startLine = { y = -100, width = 100, markRadius = 5, location = Downwind }
 
 upwindGate : Gate
-upwindGate = { y = 1000, width = 100, location = Upwind }
+upwindGate = { y = 1000, width = 100, markRadius = 5, location = Upwind }
 
 type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float }
 
@@ -55,8 +55,11 @@ defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, course = course,
                 bounds = ((700,1200), (-700,-300)), center = (0,0) }
 
-nextGate : Boat -> Int -> Maybe GateLocation
-nextGate boat laps =
+getGateMarks : Gate -> (Point,Point)
+getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
+
+findNextGate : Boat -> Int -> Maybe GateLocation
+findNextGate boat laps =
   let c = (length boat.passedGates)
       i = c `mod` 2
   in

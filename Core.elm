@@ -28,3 +28,4 @@ boatVelocity windAngle previousVelocity =
   let v = polarVelocity(abs windAngle) * 5
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
+

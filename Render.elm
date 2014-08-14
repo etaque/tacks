@@ -3,6 +3,7 @@ module Render where
 import Core (..)
 import Geo (..)
 import Game (..)
+import Debug
 
 {-- Part 4: Display the game --------------------------------------------------
 
@@ -12,17 +13,39 @@ Task: redefine `render` to use the GameState you defined in part 2.
 
 ------------------------------------------------------------------------------}
 
-renderGate : Gate -> Float -> Bool -> Form
-renderGate ({y, width}) markRadius isNext =
-  let left = (-width / 2, y)
-      right = (width / 2, y)
+renderGate : Gate -> Maybe GateLocation -> Form
+renderGate gate nextGate =
+  let (left,right) = getGateMarks gate
+      isNext = nextGate == Just gate.location
       line = segment left right |> traced (dotted orange)
       markStyle = if isNext then filled orange else filled white
-      leftMark = circle markRadius |> markStyle |> move left
-      rightMark = circle markRadius |> markStyle |> move right
+      leftMark = circle gate.markRadius |> markStyle |> move left
+      rightMark = circle gate.markRadius |> markStyle |> move right
       marks = [leftMark, rightMark]
   in
     if isNext then group (line :: marks) else group marks
+
+renderHiddenGate : Gate -> (Float,Float) -> Point -> Maybe GateLocation -> Form
+renderHiddenGate gate (w,h) (cx,cy) nextGate =
+  let (left,right) = getGateMarks gate
+      isNext = nextGate == Just gate.location
+      c = 5
+      over = cy + h/2 + c < gate.y
+      under = cy - h/2 - c> gate.y
+      markStyle = if isNext then filled orange else filled white
+      distance = round (abs (gate.y - h/2 - cy)) |> asText |> toForm
+  in 
+    case (over, under) of
+      (True, _) -> 
+        let m = polygon [(0,0),(-c,-c),(c,-c)] |> markStyle
+                                               |> move (-cx,(h/2))
+            d = distance |> move (-cx, h/2 - c*3) 
+        in
+          group [m, d]
+
+      (_, True) -> polygon [(0,0),(-c,c),(c,c)]   |> markStyle
+                                                  |> move (-cx,(-h/2))
+      (_, _)    -> group []
 
 renderBoat : Boat -> Form
 renderBoat boat =
@@ -44,16 +67,20 @@ renderBounds box =
   in rect w h |> filled (rgb 10 105 148)
               |> move (cw, ch)
 
-renderRace : GameState -> Form
-renderRace gameState =
+renderRace : GameState -> (Float,Float) -> Form
+renderRace gameState dims =
   let course = gameState.course
-      ng = nextGate gameState.boat course.laps
-      start = renderGate course.downwind course.markRadius (ng == Just Downwind)
-      upwind = renderGate course.upwind course.markRadius (ng == Just Upwind)
+      nextGate = findNextGate gameState.boat course.laps
+      downwindGate = renderGate course.downwind nextGate
+      downwindHiddenGate = renderHiddenGate course.downwind dims gameState.center nextGate
+      upwindGate = renderGate course.upwind nextGate
+      upwindHiddenGate = renderHiddenGate course.upwind dims gameState.center nextGate
       bounds = renderBounds gameState.bounds
       boatPic = renderBoat gameState.boat
       equalityLine = renderEqualityLine gameState.boat.position gameState.wind.origin
-  in move (neg gameState.center) (group [bounds, start, upwind, boatPic])
+      relativeToCenter = (group [bounds, downwindGate, upwindGate, boatPic]) |> move (neg gameState.center)
+      absolute = group [upwindHiddenGate, downwindHiddenGate]
+  in  group [relativeToCenter, absolute]
 
 renderWind : GameState -> (Float,Float) -> Form
 renderWind ({boat, wind}) (w,h) =
@@ -74,9 +101,10 @@ renderWind ({boat, wind}) (w,h) =
 
 render : (Int,Int) -> GameState -> Element
 render (w,h) gameState =
-  let (w',h') = floatify (w,h)
-      race = renderRace gameState
-      wind = renderWind gameState (w',h')
+  let dims = floatify (w,h)
+      (w',h') = dims
+      race = renderRace gameState dims
+      wind = renderWind gameState dims
       bg = rect w' h' |> filled (rgb 239 210 121)
-  in layers [ collage w h [bg, race, wind],
-              asText (gameState.boat.passedGates) ]
+  in layers [ collage w h [bg, race, wind] ]
+              --asText (gameState.boat.passedGates) ]
