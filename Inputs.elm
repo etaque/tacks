@@ -27,4 +27,4 @@ keyboardInput : Signal KeyboardInput
 keyboardInput = lift5 KeyboardInput 
   Keyboard.arrows Keyboard.shift Keyboard.space (Keyboard.isDown 65) (Keyboard.isDown 68)
 
-type Input = { clock: GameClock, keyboardInput: KeyboardInput, mouseInput: MouseInput }
+type Input = { clock: GameClock, keyboardInput: KeyboardInput, mouseInput: MouseInput, windowInput: (Int,Int) }

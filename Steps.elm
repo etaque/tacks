@@ -125,18 +125,33 @@ isStuck p gameState =
   in 
     outOfBounds || stuckOnMark
 
-moveStep : GameClock -> GameState -> GameState
-moveStep (timestamp, delta) ({wind, boat} as gameState) =
+getCenterAfterMove : Point -> Point -> Point -> (Float,Float) -> (Point)
+getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
+  let refocus n n' cn dn = 
+        let margin = 30
+            min = cn - (dn / 2) + margin
+            max = cn + (dn / 2) - margin
+        in
+          if | n < min || n > max -> cn
+             | n' < min           -> cn - (n - n')
+             | n' > max           -> cn + (n' - n)
+             | otherwise          -> cn
+  in
+    (refocus x x' cx w, refocus y y' cy h)
+
+moveStep : GameClock -> (Int,Int) -> GameState -> GameState
+moveStep (timestamp, delta) dimensions ({wind, boat} as gameState) =
   let {position, direction, velocity, windAngle, passedGates} = boat
       newVelocity = boatVelocity boat.windAngle velocity
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
       newPassedGates = getPassedGates boat timestamp gameState.course (position, newPosition)
+      newCenter = getCenterAfterMove position newPosition gameState.center (floatify dimensions)
       newBoat = { boat | position <- newPosition,
                          velocity <- if stuck then 0 else newVelocity,
                          passedGates <- newPassedGates }
-  in { gameState | boat <- newBoat }
+  in { gameState | boat <- newBoat, center <- newCenter }
 
 windStep : GameClock -> GameState -> GameState
 windStep (timestamp, _) ({wind, boat} as gameState) =
@@ -146,7 +161,8 @@ windStep (timestamp, _) ({wind, boat} as gameState) =
       newWind = { wind | origin <- newOrigin }
   in { gameState | wind <- newWind }
 
-
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  mouseStep input.mouseInput <| keysStep input.keyboardInput <| moveStep input.clock <| windStep input.clock gameState
+  mouseStep input.mouseInput <| keysStep input.keyboardInput 
+                             <| moveStep input.clock input.windowInput 
+                             <| windStep input.clock gameState
