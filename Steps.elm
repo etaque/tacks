@@ -143,7 +143,7 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
              | n' > max           -> cn + (n' - n)
              | otherwise          -> cn
   in
-    (refocus x x' cx w 100, refocus y y' cy h 200)
+    (refocus x x' cx w (w * 0.2), refocus y y' cy h (h * 0.4))
 
 moveBoat : GameClock -> GameState -> (Int,Int) -> Boat -> Boat
 moveBoat (timestamp, delta) gameState dimensions boat =
@@ -152,7 +152,9 @@ moveBoat (timestamp, delta) gameState dimensions boat =
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
-      newPassedGates = getPassedGates boat timestamp gameState.course (position, newPosition)
+      newPassedGates = if maybe False (\c -> c <= 0) gameState.countdown
+        then getPassedGates boat timestamp gameState.course (position, newPosition)
+        else boat.passedGates
       newCenter = getCenterAfterMove position newPosition boat.center (floatify dimensions)
   in
       { boat | position <- newPosition,
@@ -177,8 +179,12 @@ windStep (timestamp, _) ({wind, boat} as gameState) =
       newWind = { wind | origin <- newOrigin }
   in { gameState | wind <- newWind }
 
+countdownStep : Time -> GameState -> GameState
+countdownStep chrono gameState = { gameState | countdown <- Just (gameState.startDuration - chrono) }
+
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
   mouseStep input.mouseInput <| keysStep input.keyboardInput input.otherKeyboardInput
                              <| moveStep input.clock input.windowInput 
-                             <| windStep input.clock gameState
+                             <| windStep input.clock 
+                             <| countdownStep input.chrono gameState

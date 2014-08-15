@@ -29,5 +29,8 @@ keyboardInput = lift3 KeyboardInput Keyboard.arrows Keyboard.enter Keyboard.spac
 otherKeyboardInput : Signal KeyboardInput
 otherKeyboardInput = lift3 KeyboardInput (Keyboard.directions 90 83 81 68) Keyboard.shift Keyboard.ctrl
 
-type Input = { clock: GameClock, keyboardInput: KeyboardInput, otherKeyboardInput: KeyboardInput, 
+chrono : Signal Time
+chrono = foldp (+) 0 (fps 1)
+
+type Input = { clock: GameClock, chrono: Time, keyboardInput: KeyboardInput, otherKeyboardInput: KeyboardInput, 
                mouseInput: MouseInput, windowInput: (Int,Int) }

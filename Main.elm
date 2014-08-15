@@ -15,7 +15,8 @@ The following code puts it all together and shows it on screen.
 ------------------------------------------------------------------------------}
 
 clock = timestamp (inSeconds <~ fps 30)
-input = sampleOn clock (lift5 Inputs.Input clock Inputs.keyboardInput Inputs.otherKeyboardInput Inputs.mouseInput Window.dimensions)
+input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardInput 
+  Inputs.otherKeyboardInput Inputs.mouseInput Window.dimensions)
 
 gameState = foldp Steps.stepGame Game.defaultGame input
 

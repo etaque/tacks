@@ -3,7 +3,8 @@ module Render where
 import Core (..)
 import Geo (..)
 import Game (..)
-import Debug
+import String
+import Text
 
 {-- Part 4: Display the game --------------------------------------------------
 
@@ -12,6 +13,17 @@ How should the GameState be displayed to the user?
 Task: redefine `render` to use the GameState you defined in part 2.
 
 ------------------------------------------------------------------------------}
+
+fullScreenMessage : String -> Form
+fullScreenMessage msg = msg
+  |> String.toUpper 
+  |> toText 
+  |> Text.height 100 
+  |> Text.color white 
+  |> centered 
+  |> toForm 
+  |> alpha 0.3
+
 
 renderGate : Gate -> Maybe GateLocation -> Form
 renderGate gate nextGate =
@@ -43,17 +55,40 @@ renderHiddenGate gate (w,h) (cx,cy) nextGate =
         in
           group [m, d]
 
-      (_, True) -> polygon [(0,0),(-c,c),(c,c)]   |> markStyle
-                                                  |> move (-cx,(-h/2))
+      (_, True) -> 
+        let m = polygon [(0,0),(-c,c),(c,c)]   |> markStyle
+                                               |> move (-cx,(-h/2))
+            d = distance |> move (-cx, -h/2 + c*3) 
+        in
+          group [m,d]
       (_, _)    -> group []
+
+renderBoatAngles : Boat -> Form
+renderBoatAngles boat =
+  let
+    drawLine a = segment (fromPolar (15, a)) (fromPolar (25, a)) |> traced (solid white)
+    directionLine = drawLine (toRadians boat.direction) |> alpha 0.5
+    windLine = drawLine (toRadians (boat.direction - boat.windAngle)) |> alpha 0.5
+    --tackLine = drawLine (toRadians (boat.direction - 2 * boat.windAngle)) |> alpha 0.2
+    windAngleText = (show (abs boat.windAngle)) ++ "&deg;" |> toText 
+      |> monospace |> (if (boat.controlMode == FixedWindAngle) then line Under else id) |> centered
+      |> toForm |> move (fromPolar (40, toRadians (boat.direction - (div boat.windAngle 2))))
+      |> alpha 0.8
+  in
+    group [directionLine, windLine, windAngleText] 
+
 
 renderBoat : Boat -> Bool -> Form
 renderBoat boat isMain =
-  let icon = if isMain then "/icon-boat-white.png" else "/boat.png"
-  in
-    image 8 19 icon |> toForm
-                    |> rotate (toRadians (boat.direction + 90))
-                    |> move boat.position
+  let 
+    hull = image 8 19 "/icon-boat-white.png"
+      |> toForm
+      |> alpha (if isMain then 1 else 0.3)
+      |> rotate (toRadians (boat.direction + 90))
+    angles = if isMain then renderBoatAngles boat else toForm empty
+  in 
+    group [angles, hull]
+      |> move boat.position
 
 renderEqualityLine : Point -> Int -> Form
 renderEqualityLine (x,y) windOrigin =
@@ -69,10 +104,43 @@ renderBounds box =
   in rect w h |> filled (rgb 10 105 148)
               |> move (cw, ch)
 
+renderCountdown : GameState -> Form
+renderCountdown gameState = 
+  case gameState.countdown of 
+    Just c -> 
+      if | c > 0 -> let s = c |> inSeconds |> round
+                        msg = (show s) ++ "\""
+                    in fullScreenMessage msg
+         | c > -5 -> fullScreenMessage "Go!"
+         | otherwise -> toForm empty
+    Nothing -> toForm empty
+
+hasFinished : Course -> Boat -> Bool
+hasFinished course boat = (length boat.passedGates) == course.laps * 2 + 1
+
+renderWinner : Course -> Boat -> [Boat] -> Form
+renderWinner course boat otherBoats =
+  if (hasFinished course boat) then
+    let finishTime b = snd (head b.passedGates)
+        othersTime = filter (hasFinished course) otherBoats |> map finishTime
+        myTime = finishTime boat
+        othersAfterMe = all (\t -> t > myTime) othersTime
+    in
+      if (isEmpty othersTime) || othersAfterMe then
+        fullScreenMessage "WINNER"
+      else
+        toForm empty
+  else
+    toForm empty
+
 renderRace : GameState -> Boat -> [Boat] -> (Float,Float) -> Form
 renderRace gameState boat otherBoats dims =
   let course = gameState.course
-      nextGate = findNextGate boat course.laps
+      nextGate = case gameState.countdown of 
+        Just c -> if c <= 0 then findNextGate boat course.laps else Nothing
+        Nothing -> Nothing
+      countdown = renderCountdown gameState
+      winner = renderWinner gameState.course boat otherBoats
       downwindGate = renderGate course.downwind nextGate
       downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
       upwindGate = renderGate course.upwind nextGate
@@ -82,44 +150,44 @@ renderRace gameState boat otherBoats dims =
       otherBoatsPics = map (\b -> renderBoat b False) otherBoats |> group
       equalityLine = renderEqualityLine boat.position gameState.wind.origin
       relativeToCenter = (group [bounds, downwindGate, upwindGate, otherBoatsPics, boatPic]) |> move (neg boat.center)
-      absolute = group [upwindHiddenGate, downwindHiddenGate]
+      absolute = group [upwindHiddenGate, downwindHiddenGate, countdown, winner]
   in  group [relativeToCenter, absolute]
 
-renderControlWheel : Wind -> Boat -> Element
-renderControlWheel wind boat =
-  let bg = circle 30 |> filled white
-      windAngle = toRadians wind.origin
-      windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
-                |> filled white 
-                |> rotate (windAngle + pi/2)
-                |> move (fromPolar (34, windAngle))
-      boatAngle = toRadians boat.direction
-      boatMarker = polygon [(0,4),(-4,-4),(4,-4)] 
-                |> filled black
-                |> rotate (boatAngle - pi/2)
-                |> move (fromPolar (26, boatAngle))
-      fmt = if boat.controlMode == FixedWindAngle then line Under else id
-      windAngleText = boat.windAngle |> abs |> show |> toText |> monospace |> fmt |> centered |> toForm
-  in
-      collage 80 80 [bg, windMarker, boatMarker, windAngleText]
+--renderControlWheel : Wind -> Boat -> Element
+--renderControlWheel wind boat =
+--  let bg = circle 30 |> filled white
+--      windAngle = toRadians wind.origin
+--      windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+--                |> filled white 
+--                |> rotate (windAngle + pi/2)
+--                |> move (fromPolar (34, windAngle))
+--      boatAngle = toRadians boat.direction
+--      boatMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+--                |> filled black
+--                |> rotate (boatAngle - pi/2)
+--                |> move (fromPolar (26, boatAngle))
+--      fmt = if boat.controlMode == FixedWindAngle then line Under else id
+--      windAngleText = boat.windAngle |> abs |> show |> toText |> monospace |> fmt |> centered |> toForm
+--  in
+--      collage 80 80 [bg, windMarker, boatMarker, windAngleText]
 
-renderControls : Wind -> Boat -> (Int,Int) -> Element
-renderControls wind boat (w,h) =
-  let wheel = renderControlWheel wind boat
-      fmt = centered . monospace . toText
-      windOriginText = wind.origin |> show |> fmt
-  in 
-      flow down [windOriginText, wheel] |> opacity 0.8 |> container w h topRight
+--renderControls : Wind -> Boat -> (Int,Int) -> Element
+--renderControls wind boat (w,h) =
+--  let wheel = renderControlWheel wind boat
+--      fmt = centered . monospace . toText
+--      windOriginText = wind.origin |> show |> fmt
+--  in 
+--      flow down [windOriginText, wheel] |> opacity 0.8 |> container w h topRight
 
 renderForBoat : (Int,Int) -> GameState -> Boat -> [Boat] -> Element
 renderForBoat (w,h) gameState boat otherBoats =
   let dims = floatify (w,h)
       (w',h') = dims
       race = renderRace gameState boat otherBoats dims
-      controls = renderControls gameState.wind boat (w,h)
+      --controls = renderControls gameState.wind boat (w,h)
       bg = rect w' h' |> filled (rgb 239 210 121)
   in 
-      layers [collage w h [bg, race], controls]
+      layers [collage w h [bg, race]]
               --asText (gameState.boat.passedGates) ]
 
 render : (Int,Int) -> GameState -> Element
