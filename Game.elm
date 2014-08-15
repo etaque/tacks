@@ -35,25 +35,28 @@ course = { upwind = upwindGate, downwind = startLine, laps = 3, markRadius = 5 }
 data ControlMode = FixedDirection | FixedWindAngle
 
 type Boat = { position: Point, direction: Int, velocity: Float, windAngle: Int, 
-              controlMode: ControlMode, tackTarget: Maybe Int,
+              center: Point, controlMode: ControlMode, tackTarget: Maybe Int,
               passedGates: [(GateLocation, Time)] }
 
 boat : Boat
 boat = { position = (50,-200), direction = 0, velocity = 0, windAngle = 0, 
-         controlMode = FixedDirection, tackTarget = Nothing,
+         center = (0,0), controlMode = FixedDirection, tackTarget = Nothing,
          passedGates = [] }
+
+otherBoat : Boat
+otherBoat = { boat | position <- (-50,-200) }
 
 type Wind = { origin: Int }
 
 wind : Wind
 wind = { origin = 0 }
 
-type GameState = { wind: Wind, boat: Boat, course: Course, 
-                   bounds: (Point, Point), center: Point }
+type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat, 
+                   course: Course, bounds: (Point, Point) }
 
 defaultGame : GameState
-defaultGame = { wind = wind, boat = boat, course = course,
-                bounds = ((700,1200), (-700,-300)), center = (0,0) }
+defaultGame = { wind = wind, boat = boat, otherBoat = Just otherBoat, 
+                course = course, bounds = ((700,1200), (-700,-300)) }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))

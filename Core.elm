@@ -6,6 +6,9 @@ ensure360 val = (val + 360) `mod` 360
 toRadians : Int -> Float
 toRadians deg = radians (toFloat(90 - deg) * pi / 180)
 
+mpsToKnts : Float -> Float
+mpsToKnts mps = mps * 3600 / 1.852 / 1000 
+
 angleToWind : Int -> Int -> Int
 angleToWind boatDirection windOrigin =
   let delta = boatDirection - windOrigin
@@ -29,3 +32,8 @@ boatVelocity windAngle previousVelocity =
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 
+mapMaybe : (a -> b) -> Maybe a -> Maybe b
+mapMaybe f maybe =
+    case maybe of
+      Just v  -> Just (f v)
+      Nothing -> Nothing

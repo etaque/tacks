@@ -5,6 +5,8 @@ import Game (..)
 import Geo (..)
 import Core (..)
 
+import Debug
+
 {-- Part 3: Update the game ---------------------------------------------------
 
 How does the game step from one state to another based on user input?
@@ -17,11 +19,12 @@ Task: redefine `stepGame` to use the UserInput and GameState
 
 mouseStep : MouseInput -> GameState -> GameState
 mouseStep ({drag, mouse} as mouseInput) gameState =
-  let center = case drag of
-    Just (x',y') -> let (x,y) = mouse in sub (floatify (x - x', y' - y)) gameState.center
-    Nothing      -> gameState.center 
+  let boat = gameState.boat
+      center = case drag of
+        Just (x',y') -> let (x,y) = mouse in sub (floatify (x - x', y' - y)) boat.center
+        Nothing      -> boat.center 
   in
-    { gameState | center <- center }
+    { gameState | boat <- { boat | center <- center } }
 
 getTackTarget : Boat -> Wind -> Bool -> Maybe Int
 getTackTarget boat wind spaceKey =
@@ -56,21 +59,28 @@ getTurn tackTarget boat wind arrows =
     -- changement de direction via touche flèche
     (Nothing, _, x, y) -> x * 3 + y
 
-keysStep : KeyboardInput -> GameState -> GameState
-keysStep ({arrows, enter, space}) ({wind, boat} as gameState) =
+keysForBoatStep : KeyboardInput -> Wind -> Boat -> Boat
+keysForBoatStep ({arrows, lockAngle, tack}) wind boat =
   let forceTurn = arrows.x /= 0 || arrows.y /= 0
-      newTackTarget = if forceTurn then Nothing else getTackTarget boat wind space
+      newTackTarget = if forceTurn then Nothing else getTackTarget boat wind tack
       turn = getTurn newTackTarget boat wind arrows
       newDirection = ensure360 <| boat.direction + turn
       newWindAngle = angleToWind newDirection wind.origin
       newControlMode = if | forceTurn -> FixedDirection
-                          | enter     -> FixedWindAngle
+                          | lockAngle -> FixedWindAngle
                           | otherwise -> boat.controlMode
   in 
-    { gameState | boat <- { boat | direction <- newDirection,
-                                   windAngle <- newWindAngle,
-                                   controlMode <- newControlMode,
-                                   tackTarget <- newTackTarget }}
+    { boat | direction <- newDirection,
+             windAngle <- newWindAngle,
+             controlMode <- newControlMode,
+             tackTarget <- newTackTarget }
+
+keysStep : KeyboardInput -> KeyboardInput -> GameState -> GameState
+keysStep keyboardInput otherKeyboardInput gameState =
+  let boatUpdated = keysForBoatStep keyboardInput gameState.wind gameState.boat
+      otherBoatUpdated = mapMaybe (keysForBoatStep otherKeyboardInput gameState.wind) gameState.otherBoat
+  in 
+    { gameState | boat <- boatUpdated, otherBoat <- otherBoatUpdated }
 
 gatePassedInX : Gate -> (Point,Point) -> Bool
 gatePassedInX gate ((x,y),(x',y')) =
@@ -124,9 +134,8 @@ isStuck p gameState =
 
 getCenterAfterMove : Point -> Point -> Point -> (Float,Float) -> (Point)
 getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
-  let refocus n n' cn dn = 
-        let margin = 30
-            min = cn - (dn / 2) + margin
+  let refocus n n' cn dn margin = 
+        let min = cn - (dn / 2) + margin
             max = cn + (dn / 2) - margin
         in
           if | n < min || n > max -> cn
@@ -134,32 +143,42 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
              | n' > max           -> cn + (n' - n)
              | otherwise          -> cn
   in
-    (refocus x x' cx w, refocus y y' cy h)
+    (refocus x x' cx w 100, refocus y y' cy h 200)
 
-moveStep : GameClock -> (Int,Int) -> GameState -> GameState
-moveStep (timestamp, delta) dimensions ({wind, boat} as gameState) =
+moveBoat : GameClock -> GameState -> (Int,Int) -> Boat -> Boat
+moveBoat (timestamp, delta) gameState dimensions boat =
   let {position, direction, velocity, windAngle, passedGates} = boat
       newVelocity = boatVelocity boat.windAngle velocity
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
       newPassedGates = getPassedGates boat timestamp gameState.course (position, newPosition)
-      newCenter = getCenterAfterMove position newPosition gameState.center (floatify dimensions)
-      newBoat = { boat | position <- newPosition,
-                         velocity <- if stuck then 0 else newVelocity,
-                         passedGates <- newPassedGates }
-  in { gameState | boat <- newBoat, center <- newCenter }
+      newCenter = getCenterAfterMove position newPosition boat.center (floatify dimensions)
+  in
+      { boat | position <- newPosition,
+               velocity <- if stuck then 0 else newVelocity,
+               center <- newCenter,
+               passedGates <- newPassedGates }
+
+moveStep : GameClock -> (Int,Int) -> GameState -> GameState
+moveStep clock (w,h) gameState =
+  let dims = if (isJust gameState.otherBoat) then (div w 2, h) else (w,h)
+      boatMoved = moveBoat clock gameState dims gameState.boat
+      otherBoatMoved = mapMaybe (moveBoat clock gameState dims) gameState.otherBoat
+  in
+    { gameState | boat <- boatMoved,
+                  otherBoat <- otherBoatMoved }
 
 windStep : GameClock -> GameState -> GameState
 windStep (timestamp, _) ({wind, boat} as gameState) =
   let o1 = cos (inSeconds timestamp / 10) * 15
       o2 = cos (inSeconds timestamp / 5) * 5
-      newOrigin = round (o1 + o2)
+      newOrigin = round (o1 + o2) |> ensure360
       newWind = { wind | origin <- newOrigin }
   in { gameState | wind <- newWind }
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  mouseStep input.mouseInput <| keysStep input.keyboardInput 
+  mouseStep input.mouseInput <| keysStep input.keyboardInput input.otherKeyboardInput
                              <| moveStep input.clock input.windowInput 
                              <| windStep input.clock gameState
