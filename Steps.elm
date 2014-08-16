@@ -26,17 +26,20 @@ mouseStep ({drag, mouse} as mouseInput) gameState =
   in
     { gameState | boat <- { boat | center <- center } }
 
+tackTargetReached : Boat -> Maybe Int -> Bool
+tackTargetReached boat targetMaybe = 
+  case (targetMaybe, boat.controlMode) of
+    (Just target, FixedWindAngle) -> target == boat.windAngle
+    (Just target, FixedDirection) -> target == boat.direction
+    (Nothing, _)                  -> False
+
 getTackTarget : Boat -> Wind -> Bool -> Maybe Int
 getTackTarget boat wind spaceKey =
   case (boat.tackTarget, spaceKey) of
     -- target en cours
-    (Just target, _) -> 
+    (Just _, _) -> 
       -- si direction cible atteinte, on arrête le virement
-      let targetReached = case boat.controlMode of
-        FixedWindAngle -> target == boat.windAngle
-        FixedDirection -> target == boat.direction
-      in
-        if targetReached then Nothing else boat.tackTarget
+      if tackTargetReached boat boat.tackTarget then Nothing else boat.tackTarget
     -- si touche espace pressée, on défini la cible
     (Nothing, True) -> 
       case boat.controlMode of
@@ -45,14 +48,22 @@ getTackTarget boat wind spaceKey =
     -- sinon, pas de cible
     (Nothing, False) -> Nothing
 
+
+
 getTurn : Maybe Int -> Boat -> Wind -> UserArrows -> Int 
 getTurn tackTarget boat wind arrows =
   case (tackTarget, boat.controlMode, arrows.x, arrows.y) of 
     -- virement en cours
     (Just target, _, _, _) -> 
       case boat.controlMode of 
-        FixedDirection -> if ensure360 (boat.direction - target) > 180 then 1 else -1
-        FixedWindAngle -> if target > 90 || (target < 0 && target >= -90) then -1 else 1
+        FixedDirection -> 
+          let maxTurn = minimum [2, (abs (boat.direction - target))]
+          in
+            if ensure360 (boat.direction - target) > 180 then maxTurn else -maxTurn
+        FixedWindAngle -> 
+          let maxTurn = minimum [2, (abs (boat.windAngle - target))]
+          in
+            if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
     -- pas de virement ni de touche flèche, donc contrôle auto
     (Nothing, FixedDirection, 0, 0) -> 0
     (Nothing, FixedWindAngle, 0, 0) -> (wind.origin + boat.windAngle) - boat.direction
@@ -62,18 +73,19 @@ getTurn tackTarget boat wind arrows =
 keysForBoatStep : KeyboardInput -> Wind -> Boat -> Boat
 keysForBoatStep ({arrows, lockAngle, tack}) wind boat =
   let forceTurn = arrows.x /= 0 
-      newTackTarget = if forceTurn then Nothing else getTackTarget boat wind tack
-      turn = getTurn newTackTarget boat wind arrows
-      newDirection = ensure360 <| boat.direction + turn
-      newWindAngle = angleToWind newDirection wind.origin
-      newControlMode = if | forceTurn -> FixedDirection
-                          | arrows.y > 0 -> FixedWindAngle
-                          | otherwise -> boat.controlMode
+      tackTarget = if forceTurn then Nothing else getTackTarget boat wind tack
+      turn = getTurn tackTarget boat wind arrows
+      direction = ensure360 <| boat.direction + turn
+      windAngle = angleToWind direction wind.origin
+      turnedBoat = { boat | direction <- direction,
+                            windAngle <- windAngle }
+      tackTargetAfterTurn = if tackTargetReached turnedBoat tackTarget then Nothing else tackTarget
+      controlMode = if | forceTurn -> FixedDirection
+                       | arrows.y > 0 -> FixedWindAngle
+                       | otherwise -> turnedBoat.controlMode
   in 
-    { boat | direction <- newDirection,
-             windAngle <- newWindAngle,
-             controlMode <- newControlMode,
-             tackTarget <- newTackTarget }
+    { turnedBoat | controlMode <- controlMode,
+                   tackTarget <- tackTargetAfterTurn }
 
 keysStep : KeyboardInput -> KeyboardInput -> GameState -> GameState
 keysStep keyboardInput otherKeyboardInput gameState =
@@ -185,7 +197,8 @@ countdownStep chrono gameState = { gameState | countdown <- Just (gameState.star
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  mouseStep input.mouseInput <| keysStep input.keyboardInput input.otherKeyboardInput
-                             <| moveStep input.clock input.windowInput 
-                             <| windStep input.clock 
-                             <| countdownStep input.chrono gameState
+  mouseStep input.mouseInput 
+    <| moveStep input.clock input.windowInput 
+    <| keysStep input.keyboardInput input.otherKeyboardInput
+    <| windStep input.clock 
+    <| countdownStep input.chrono gameState

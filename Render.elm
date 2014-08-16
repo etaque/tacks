@@ -6,6 +6,8 @@ import Game (..)
 import String
 import Text
 
+import Debug
+
 {-- Part 4: Display the game --------------------------------------------------
 
 How should the GameState be displayed to the user?
@@ -34,7 +36,7 @@ baseText s =
 
 renderLapsCount : (Float,Float) -> Course -> Boat -> Form
 renderLapsCount (w,h) course boat =
-  let count = ((length boat.passedGates) + 1) |> div 2
+  let count = minimum [(div ((length boat.passedGates) + 1) 2), course.laps]
       msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
   in msg
       |> baseText
@@ -160,12 +162,31 @@ renderIslands gameState =
   in
     group (map renderIsland gameState.islands)
 
+renderPolar : Boat -> (Float,Float) -> Form
+renderPolar boat (w,h) =
+  let 
+    anglePoint a = fromPolar ((polarVelocity a) * 5, toRadians a)
+    points = map anglePoint [0..180]
+    maxSpeed = (map fst points |> maximum) + 10
+    polar = path points |> traced (solid white)
+    yAxis = segment (0,maxSpeed) (0,-maxSpeed) |> traced (solid white) |> alpha 0.5
+    xAxis = segment (0,0) (maxSpeed,0) |> traced (solid white) |> alpha 0.5
+    boatPoint = anglePoint (abs boat.windAngle)
+    boatMark = circle 2 |> filled red |> move boatPoint
+    boatProjection = segment boatPoint (0, snd boatPoint) |> traced (dotted white)
+    legend = "VMG" |> baseText |> centered |> toForm |> move (maxSpeed / 2, maxSpeed * 0.8)
+  in 
+    group [yAxis, xAxis, polar, boatProjection, boatMark, legend] 
+      |> move (-w/2 + 20, h/2 - maxSpeed - 20)
+
+
 renderRelative : GameState -> Boat -> [Boat] -> Form
 renderRelative gameState boat otherBoats =
   let course = gameState.course
-      nextGate = case gameState.countdown of 
-        Just c -> if c <= 0 then findNextGate boat course.laps else Nothing
-        Nothing -> Nothing
+      nextGate = findNextGate boat course.laps
+      --nextGate = case gameState.countdown of 
+      --  Just c -> if c <= 0 then  else Nothing
+      --  Nothing -> Nothing
       downwindGate = renderGate course.downwind nextGate
       upwindGate = renderGate course.upwind nextGate
       bounds = renderBounds gameState.bounds
@@ -187,8 +208,9 @@ renderAbsolute gameState boat otherBoats dims =
       lapsCount = renderLapsCount dims gameState.course boat
       downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
       upwindHiddenGate = renderHiddenGate course.upwind dims boat.center nextGate
+      polar = renderPolar boat dims
   in
-      group [upwindHiddenGate, downwindHiddenGate, lapsCount, countdown, winner]
+      group [polar, upwindHiddenGate, downwindHiddenGate, lapsCount, countdown, winner]
 
 --renderControlWheel : Wind -> Boat -> Element
 --renderControlWheel wind boat =

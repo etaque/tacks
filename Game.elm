@@ -63,7 +63,7 @@ type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat,
                    startDuration : Time, countdown: Maybe Time }
 
 defaultGame : GameState
-defaultGame = { wind = wind, boat = boat, otherBoat = Just otherBoat, 
+defaultGame = { wind = wind, boat = boat, otherBoat = Nothing, --Just otherBoat, 
                 course = course, bounds = ((700,1200), (-700,-300)), islands = islands,
                 startDuration = (30*second), countdown = Nothing }
 
