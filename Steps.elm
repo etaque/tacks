@@ -57,17 +57,17 @@ getTurn tackTarget boat wind arrows =
     (Nothing, FixedDirection, 0, 0) -> 0
     (Nothing, FixedWindAngle, 0, 0) -> (wind.origin + boat.windAngle) - boat.direction
     -- changement de direction via touche flèche
-    (Nothing, _, x, y) -> x * 3 + y
+    (Nothing, _, x, y) -> if y < 0 then x else x * 3
 
 keysForBoatStep : KeyboardInput -> Wind -> Boat -> Boat
 keysForBoatStep ({arrows, lockAngle, tack}) wind boat =
-  let forceTurn = arrows.x /= 0 || arrows.y /= 0
+  let forceTurn = arrows.x /= 0 
       newTackTarget = if forceTurn then Nothing else getTackTarget boat wind tack
       turn = getTurn newTackTarget boat wind arrows
       newDirection = ensure360 <| boat.direction + turn
       newWindAngle = angleToWind newDirection wind.origin
       newControlMode = if | forceTurn -> FixedDirection
-                          | lockAngle -> FixedWindAngle
+                          | arrows.y > 0 -> FixedWindAngle
                           | otherwise -> boat.controlMode
   in 
     { boat | direction <- newDirection,
@@ -129,8 +129,9 @@ isStuck p gameState =
   let gatesMarks = getGatesMarks gameState.course
       stuckOnMark = any (\m -> distance m p <= gameState.course.markRadius) gatesMarks
       outOfBounds = not (inBox p gameState.bounds)
+      onIsland = any (\i -> distance i.location p <= i.radius) gameState.islands
   in 
-    outOfBounds || stuckOnMark
+    outOfBounds || stuckOnMark || onIsland
 
 getCenterAfterMove : Point -> Point -> Point -> (Float,Float) -> (Point)
 getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =

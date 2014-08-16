@@ -1,4 +1,4 @@
-module SailGame where
+module ShiftMaster where
 
 import Window
 import Keyboard

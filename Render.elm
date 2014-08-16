@@ -20,10 +20,27 @@ fullScreenMessage msg = msg
   |> toText 
   |> Text.height 100 
   |> Text.color white 
+  |> monospace
   |> centered 
   |> toForm 
   |> alpha 0.3
 
+baseText : String -> Text
+baseText s =
+  toText s
+    |> Text.height 13
+    |> Text.color white
+    |> monospace
+
+renderLapsCount : (Float,Float) -> Course -> Boat -> Form
+renderLapsCount (w,h) course boat =
+  let count = ((length boat.passedGates) + 1) |> div 2
+      msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
+  in msg
+      |> baseText
+      |> rightAligned
+      |> toForm
+      |> move (w / 2 - 40, h / 2 - 15)
 
 renderGate : Gate -> Maybe GateLocation -> Form
 renderGate gate nextGate =
@@ -45,7 +62,7 @@ renderHiddenGate gate (w,h) (cx,cy) nextGate =
       over = cy + h/2 + c < gate.y
       under = cy - h/2 - c> gate.y
       markStyle = if isNext then filled orange else filled white
-      distance = round (abs (gate.y - h/2 - cy)) |> asText |> toForm
+      distance = round (abs (gate.y - h/2 - cy)) |> show |> baseText |> centered |> toForm
   in 
     case (over, under) of
       (True, _) -> 
@@ -70,10 +87,11 @@ renderBoatAngles boat =
     directionLine = drawLine (toRadians boat.direction) |> alpha 0.5
     windLine = drawLine (toRadians (boat.direction - boat.windAngle)) |> alpha 0.5
     --tackLine = drawLine (toRadians (boat.direction - 2 * boat.windAngle)) |> alpha 0.2
-    windAngleText = (show (abs boat.windAngle)) ++ "&deg;" |> toText 
-      |> monospace |> (if (boat.controlMode == FixedWindAngle) then line Under else id) |> centered
-      |> toForm |> move (fromPolar (40, toRadians (boat.direction - (div boat.windAngle 2))))
-      |> alpha 0.8
+    windAngleText = (show (abs boat.windAngle)) ++ "&deg;" |> baseText
+      |> (if boat.controlMode == FixedWindAngle then line Under else id)
+      |> centered |> toForm 
+      |> move (fromPolar (40, toRadians (boat.direction - (div boat.windAngle 2))))
+      |> alpha 0.5
   in
     group [directionLine, windLine, windAngleText] 
 
@@ -104,14 +122,14 @@ renderBounds box =
   in rect w h |> filled (rgb 10 105 148)
               |> move (cw, ch)
 
-renderCountdown : GameState -> Form
-renderCountdown gameState = 
+renderCountdown : GameState -> Boat -> Form
+renderCountdown gameState boat = 
   case gameState.countdown of 
     Just c -> 
       if | c > 0 -> let s = c |> inSeconds |> round
                         msg = (show s) ++ "\""
                     in fullScreenMessage msg
-         | c > -5 -> fullScreenMessage "Go!"
+         | (isEmpty boat.passedGates) -> fullScreenMessage "Go!"
          | otherwise -> toForm empty
     Nothing -> toForm empty
 
@@ -133,24 +151,46 @@ renderWinner course boat otherBoats =
   else
     toForm empty
 
-renderRace : GameState -> Boat -> [Boat] -> (Float,Float) -> Form
-renderRace gameState boat otherBoats dims =
+renderIslands : GameState -> Form
+renderIslands gameState =
+  let renderIsland i = circle i.radius |> filled (rgb 239 210 121) |> move i.location
+  in
+    group (map renderIsland gameState.islands)
+
+renderRelative : GameState -> Boat -> [Boat] -> Form
+renderRelative gameState boat otherBoats =
   let course = gameState.course
       nextGate = case gameState.countdown of 
         Just c -> if c <= 0 then findNextGate boat course.laps else Nothing
         Nothing -> Nothing
-      countdown = renderCountdown gameState
-      winner = renderWinner gameState.course boat otherBoats
       downwindGate = renderGate course.downwind nextGate
-      downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
       upwindGate = renderGate course.upwind nextGate
-      upwindHiddenGate = renderHiddenGate course.upwind dims boat.center nextGate
       bounds = renderBounds gameState.bounds
       boatPic = renderBoat boat True
       otherBoatsPics = map (\b -> renderBoat b False) otherBoats |> group
       equalityLine = renderEqualityLine boat.position gameState.wind.origin
-      relativeToCenter = (group [bounds, downwindGate, upwindGate, otherBoatsPics, boatPic]) |> move (neg boat.center)
-      absolute = group [upwindHiddenGate, downwindHiddenGate, countdown, winner]
+      islands = renderIslands gameState
+  in
+      (group [bounds, islands, downwindGate, upwindGate, otherBoatsPics, boatPic]) |> move (neg boat.center)
+
+renderAbsolute : GameState -> Boat -> [Boat] -> (Float,Float) -> Form
+renderAbsolute gameState boat otherBoats dims =
+  let course = gameState.course
+      nextGate = case gameState.countdown of 
+        Just c -> if c <= 0 then findNextGate boat course.laps else Nothing
+        Nothing -> Nothing
+      countdown = renderCountdown gameState boat
+      winner = renderWinner gameState.course boat otherBoats
+      lapsCount = renderLapsCount dims gameState.course boat
+      downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
+      upwindHiddenGate = renderHiddenGate course.upwind dims boat.center nextGate
+  in
+      group [upwindHiddenGate, downwindHiddenGate, lapsCount, countdown, winner]
+
+renderRace : GameState -> Boat -> [Boat] -> (Float,Float) -> Form
+renderRace gameState boat otherBoats dims =
+  let relativeToCenter = renderRelative gameState boat otherBoats
+      absolute = renderAbsolute gameState boat otherBoats dims
   in  group [relativeToCenter, absolute]
 
 --renderControlWheel : Wind -> Boat -> Element
