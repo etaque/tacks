@@ -21,7 +21,11 @@ inBox : Point -> (Point,Point) -> Bool
 inBox (x, y) ((xMax, yMax), (xMin, yMin)) =
   x > xMin && x < xMax && y > yMin && y < yMax
 
-movePoint : Point -> Time -> Float -> Int -> Point
+toBox : Point -> Float -> Float -> (Point,Point)
+toBox (x,y) w h =
+  ((x + w/2, y + h/2), (x - w/2, y - h/2))
+
+movePoint : Point -> Time -> Float -> Float -> Point
 movePoint (x,y) delta velocity direction = 
   let angle = Core.toRadians direction
       x' = x + delta * velocity * cos angle

@@ -92,7 +92,7 @@ renderBoatAngles boat =
     windAngleText = (show (abs boat.windAngle)) ++ "&deg;" |> baseText
       |> (if boat.controlMode == FixedWindAngle then line Under else id)
       |> centered |> toForm 
-      |> move (fromPolar (40, toRadians (boat.direction - (div boat.windAngle 2))))
+      |> move (fromPolar (40, toRadians (boat.direction - (boat.windAngle / 2))))
       |> alpha 0.8
   in
     group [directionLine, windLine, windAngleText] 
@@ -110,7 +110,7 @@ renderBoat boat isMain =
     group [angles, hull]
       |> move boat.position
 
-renderEqualityLine : Point -> Int -> Form
+renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =
   let left = (fromPolar (50, toRadians (windOrigin - 90)))
       right = (fromPolar (50, toRadians (windOrigin + 90)))
@@ -156,6 +156,23 @@ renderWinner course boat otherBoats =
   else
     toForm empty
 
+renderGust : Wind -> Gust -> Form
+renderGust wind gust =
+  let
+    c = circle gust.radius |> filled black |> alpha (0.05 + gust.speedImpact / 2)
+    --a = toRadians wind.origin
+    --a' = toRadians (wind.origin + gust.originDelta)
+    --s = segment (0,0) (fromPolar (gust.radius * 0.2, a))
+    --  |> traced (solid white) |> alpha 0.1
+    --s' = segment (0,0) (fromPolar (gust.radius * 0.5, a'))
+    --  |> traced (solid white) |> alpha 0.1
+  in
+    group [c] |> move gust.position
+
+renderGusts : Wind -> Form
+renderGusts wind =
+  group <| map (renderGust wind) wind.gusts
+
 renderIslands : GameState -> Form
 renderIslands gameState =
   let renderIsland i = circle i.radius |> filled (rgb 239 210 121) |> move i.location
@@ -184,9 +201,6 @@ renderRelative : GameState -> Boat -> [Boat] -> Form
 renderRelative gameState boat otherBoats =
   let course = gameState.course
       nextGate = findNextGate boat course.laps
-      --nextGate = case gameState.countdown of 
-      --  Just c -> if c <= 0 then  else Nothing
-      --  Nothing -> Nothing
       downwindGate = renderGate course.downwind nextGate
       upwindGate = renderGate course.upwind nextGate
       bounds = renderBounds gameState.bounds
@@ -194,8 +208,9 @@ renderRelative gameState boat otherBoats =
       otherBoatsPics = map (\b -> renderBoat b False) otherBoats |> group
       equalityLine = renderEqualityLine boat.position gameState.wind.origin
       islands = renderIslands gameState
+      gusts = renderGusts gameState.wind
   in
-      (group [bounds, islands, downwindGate, upwindGate, otherBoatsPics, equalityLine, boatPic]) |> move (neg boat.center)
+      (group [bounds, islands, gusts, downwindGate, upwindGate, otherBoatsPics, equalityLine, boatPic]) |> move (neg boat.center)
 
 renderAbsolute : GameState -> Boat -> [Boat] -> (Float,Float) -> Form
 renderAbsolute gameState boat otherBoats dims =

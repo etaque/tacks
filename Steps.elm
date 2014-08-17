@@ -26,15 +26,15 @@ mouseStep ({drag, mouse} as mouseInput) gameState =
   in
     { gameState | boat <- { boat | center <- center } }
 
-tackTargetReached : Boat -> Maybe Int -> Bool
+tackTargetReached : Boat -> Maybe Float -> Bool
 tackTargetReached boat targetMaybe = 
   case (targetMaybe, boat.controlMode) of
-    (Just target, FixedWindAngle) -> target == boat.windAngle
-    (Just target, FixedDirection) -> target == boat.direction
+    (Just target, FixedWindAngle) -> abs (target - boat.windAngle) < 2
+    (Just target, FixedDirection) -> abs (target - boat.direction) < 2
     (Nothing, _)                  -> False
 
-getTackTarget : Boat -> Wind -> Bool -> Maybe Int
-getTackTarget boat wind spaceKey =
+getTackTarget : Boat -> Bool -> Maybe Float
+getTackTarget boat spaceKey =
   case (boat.tackTarget, spaceKey) of
     -- target en cours
     (Just _, _) -> 
@@ -44,14 +44,14 @@ getTackTarget boat wind spaceKey =
     (Nothing, True) -> 
       case boat.controlMode of
         FixedWindAngle -> Just -boat.windAngle
-        FixedDirection -> Just (ensure360 (wind.origin - boat.windAngle))
+        FixedDirection -> Just (ensure360 (boat.windOrigin - boat.windAngle))
     -- sinon, pas de cible
     (Nothing, False) -> Nothing
 
 
 
-getTurn : Maybe Int -> Boat -> Wind -> UserArrows -> Int 
-getTurn tackTarget boat wind arrows =
+getTurn : Maybe Float -> Boat -> UserArrows -> Float
+getTurn tackTarget boat arrows =
   case (tackTarget, boat.controlMode, arrows.x, arrows.y) of 
     -- virement en cours
     (Just target, _, _, _) -> 
@@ -66,17 +66,17 @@ getTurn tackTarget boat wind arrows =
             if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
     -- pas de virement ni de touche flèche, donc contrôle auto
     (Nothing, FixedDirection, 0, 0) -> 0
-    (Nothing, FixedWindAngle, 0, 0) -> (wind.origin + boat.windAngle) - boat.direction
+    (Nothing, FixedWindAngle, 0, 0) -> (boat.windOrigin + boat.windAngle) - boat.direction
     -- changement de direction via touche flèche
     (Nothing, _, x, y) -> if y < 0 then x else x * 3
 
-keysForBoatStep : KeyboardInput -> Wind -> Boat -> Boat
-keysForBoatStep ({arrows, lockAngle, tack}) wind boat =
+keysForBoatStep : KeyboardInput -> Boat -> Boat
+keysForBoatStep ({arrows, lockAngle, tack}) boat =
   let forceTurn = arrows.x /= 0 
-      tackTarget = if forceTurn then Nothing else getTackTarget boat wind tack
-      turn = getTurn tackTarget boat wind arrows
+      tackTarget = if forceTurn then Nothing else getTackTarget boat tack
+      turn = getTurn tackTarget boat arrows
       direction = ensure360 <| boat.direction + turn
-      windAngle = angleToWind direction wind.origin
+      windAngle = angleToWind direction boat.windOrigin
       turnedBoat = { boat | direction <- direction,
                             windAngle <- windAngle }
       tackTargetAfterTurn = if tackTargetReached turnedBoat tackTarget then Nothing else tackTarget
@@ -89,8 +89,8 @@ keysForBoatStep ({arrows, lockAngle, tack}) wind boat =
 
 keysStep : KeyboardInput -> KeyboardInput -> GameState -> GameState
 keysStep keyboardInput otherKeyboardInput gameState =
-  let boatUpdated = keysForBoatStep keyboardInput gameState.wind gameState.boat
-      otherBoatUpdated = mapMaybe (keysForBoatStep otherKeyboardInput gameState.wind) gameState.otherBoat
+  let boatUpdated = keysForBoatStep keyboardInput gameState.boat
+      otherBoatUpdated = mapMaybe (keysForBoatStep otherKeyboardInput) gameState.otherBoat
   in 
     { gameState | boat <- boatUpdated, otherBoat <- otherBoatUpdated }
 
@@ -184,13 +184,74 @@ moveStep clock (w,h) gameState =
     { gameState | boat <- boatMoved,
                   otherBoat <- otherBoatMoved }
 
+randInWindow : Int -> Int -> Int -> Int
+randInWindow t w i =
+    ((t ^ i) + (t * i * 1000)) `mod` w
+
+spawnGustX : Int -> Float -> Int -> Int
+spawnGustX t w spawnIndex =
+  (randInWindow t (round w) spawnIndex) - (round (w/2))
+
+spawnGustY : Int -> Float -> Int -> Int
+spawnGustY t h spawnIndex =
+  (randInWindow t (round h) spawnIndex)
+
+spawnGust : Time -> (Point,Point) -> Int -> Gust
+spawnGust timestamp ((right,top),(left,bottom)) spawnIndex =
+  let 
+    t = round timestamp
+    x = spawnGustX t (right - left) (spawnIndex + 1)
+    y = if spawnIndex == 0 then (round top) - 1 else spawnGustY t (top - bottom) spawnIndex
+    radius = (randInWindow t 100 (spawnIndex + 1)) + 100 |> toFloat 
+    speedImpact = 0
+    originDelta = (randInWindow t 20 (spawnIndex + 1)) - 10 |> toFloat
+  in
+    { position = floatify (x,y), radius = radius, speedImpact = speedImpact, originDelta = originDelta }
+
+gustInBounds : (Point,Point) -> Gust -> Bool
+gustInBounds bounds gust =
+  inBox gust.position bounds
+
+updateGusts : GameClock -> (Point, Point) -> Wind -> [Gust]
+updateGusts (timestamp, delta) bounds wind = 
+  let 
+    moveGust w g = { g | position <- (movePoint g.position delta w.speed (ensure360 (180 + wind.origin + g.originDelta))) }
+    gusts = filter (gustInBounds bounds) wind.gusts |> map (moveGust wind)
+  in
+    if | (isEmpty wind.gusts) -> map (spawnGust timestamp bounds) [1..(wind.gustsCount + 1)]
+       | (length gusts < wind.gustsCount) -> (spawnGust timestamp bounds 0) :: gusts 
+       | otherwise -> gusts
+
+updateWindForBoat : Wind -> Boat -> Boat
+updateWindForBoat wind boat =
+  let
+    gustsOnBoat : [Gust]
+    gustsOnBoat = filter (\g -> (distance boat.position g.position) <= g.radius) wind.gusts
+      |> sortBy .speedImpact |> reverse
+    windOrigin = if (isEmpty gustsOnBoat) then 
+      wind.origin 
+    else 
+      let 
+        gust = head gustsOnBoat
+        factor = minimum [(gust.radius - (distance boat.position gust.position)) / (gust.radius * 0.1), 1]
+        newDelta = gust.originDelta * factor
+      in
+        ensure360 <| wind.origin + newDelta
+  in
+    { boat | windOrigin <- windOrigin }
+
 windStep : GameClock -> GameState -> GameState
-windStep (timestamp, _) ({wind, boat} as gameState) =
+windStep (timestamp, delta) ({wind, boat} as gameState) =
   let o1 = cos (inSeconds timestamp / 10) * 15
       o2 = cos (inSeconds timestamp / 5) * 5
-      newOrigin = round (o1 + o2) |> ensure360
-      newWind = { wind | origin <- newOrigin }
-  in { gameState | wind <- newWind }
+      newOrigin = o1 + o2 |> ensure360
+      newGusts = updateGusts (timestamp,delta) gameState.bounds wind
+      newWind = { wind | origin <- newOrigin, gusts <- newGusts }
+      boatWithWind = updateWindForBoat wind boat
+      otherBoatWindWind = mapMaybe (updateWindForBoat wind) gameState.otherBoat
+  in { gameState | wind <- newWind,
+                   boat <- boatWithWind,
+                   otherBoat <- otherBoatWindWind }
 
 countdownStep : Time -> GameState -> GameState
 countdownStep chrono gameState = { gameState | countdown <- Just (gameState.startDuration - chrono) }
