@@ -58,7 +58,7 @@ otherBoat = { boat | position <- (-50,-200) }
 
 
 wind : Wind
-wind = { origin = 0, speed = 10, gustsCount = 5, gusts = [] }
+wind = { origin = 0, speed = 10, gustsCount = 8, gusts = [] }
 
 
 islands : [Island]
@@ -68,7 +68,7 @@ islands = [ { location = (250, 300), radius = 100 },
 
 defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, otherBoat = Just otherBoat, 
-                course = course, bounds = ((700,1200), (-700,-300)), islands = islands,
+                course = course, bounds = ((800,1200), (-800,-400)), islands = islands,
                 startDuration = (30*second), countdown = Nothing }
 
 getGateMarks : Gate -> (Point,Point)

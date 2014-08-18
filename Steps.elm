@@ -29,8 +29,8 @@ mouseStep ({drag, mouse} as mouseInput) gameState =
 tackTargetReached : Boat -> Maybe Float -> Bool
 tackTargetReached boat targetMaybe = 
   case (targetMaybe, boat.controlMode) of
-    (Just target, FixedWindAngle) -> abs (target - boat.windAngle) < 2
-    (Just target, FixedDirection) -> abs (target - boat.direction) < 2
+    (Just target, FixedWindAngle) -> abs (target - boat.windAngle) < 0.1
+    (Just target, FixedDirection) -> abs (target - boat.direction) < 0.1
     (Nothing, _)                  -> False
 
 getTackTarget : Boat -> Bool -> Maybe Float

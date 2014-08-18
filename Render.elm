@@ -34,15 +34,6 @@ baseText s =
     |> Text.color white
     |> monospace
 
-renderLapsCount : (Float,Float) -> Course -> Boat -> Form
-renderLapsCount (w,h) course boat =
-  let count = minimum [(div ((length boat.passedGates) + 1) 2), course.laps]
-      msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
-  in msg
-      |> baseText
-      |> rightAligned
-      |> toForm
-      |> move (w / 2 - 40, h / 2 - 15)
 
 renderGate : Gate -> Maybe GateLocation -> Form
 renderGate gate nextGate =
@@ -179,6 +170,17 @@ renderIslands gameState =
   in
     group (map renderIsland gameState.islands)
 
+renderLapsCount : (Float,Float) -> Course -> Boat -> Form
+renderLapsCount (w,h) course boat =
+  let count = minimum [(div ((length boat.passedGates) + 1) 2), course.laps]
+      msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
+  in msg
+      |> baseText
+      |> rightAligned
+      |> toForm
+      |> move (w / 2 - 50, h / 2 - 30)
+
+
 renderPolar : Boat -> (Float,Float) -> Form
 renderPolar boat (w,h) =
   let 
@@ -195,6 +197,21 @@ renderPolar boat (w,h) =
   in 
     group [yAxis, xAxis, polar, boatProjection, boatMark, legend] 
       |> move (-w/2 + 20, h/2 - maxSpeed - 20)
+
+renderControlWheel : Wind -> Boat -> (Float,Float) -> Form
+renderControlWheel wind boat (w,h) =
+  let r = 25
+      c = circle r |> outlined (solid white)
+      windAngle = toRadians boat.windOrigin
+      boatWindMarker = segment (fromPolar (r, windAngle)) (fromPolar (r + 8, windAngle))
+        |> traced (solid white)
+      boatAngle = toRadians boat.direction
+      boatMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+                |> filled white
+                |> rotate (boatAngle - pi/2)
+                |> move (fromPolar (r - 4, boatAngle))
+  in
+      group [c, boatWindMarker, boatMarker] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
 
 
 renderRelative : GameState -> Boat -> [Boat] -> Form
@@ -224,34 +241,9 @@ renderAbsolute gameState boat otherBoats dims =
       downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
       upwindHiddenGate = renderHiddenGate course.upwind dims boat.center nextGate
       polar = renderPolar boat dims
+      controlWheel = renderControlWheel wind boat dims
   in
-      group [polar, upwindHiddenGate, downwindHiddenGate, lapsCount, countdown, winner]
-
---renderControlWheel : Wind -> Boat -> Element
---renderControlWheel wind boat =
---  let bg = circle 30 |> filled white
---      windAngle = toRadians wind.origin
---      windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
---                |> filled white 
---                |> rotate (windAngle + pi/2)
---                |> move (fromPolar (34, windAngle))
---      boatAngle = toRadians boat.direction
---      boatMarker = polygon [(0,4),(-4,-4),(4,-4)] 
---                |> filled black
---                |> rotate (boatAngle - pi/2)
---                |> move (fromPolar (26, boatAngle))
---      fmt = if boat.controlMode == FixedWindAngle then line Under else id
---      windAngleText = boat.windAngle |> abs |> show |> toText |> monospace |> fmt |> centered |> toForm
---  in
---      collage 80 80 [bg, windMarker, boatMarker, windAngleText]
-
---renderControls : Wind -> Boat -> (Int,Int) -> Element
---renderControls wind boat (w,h) =
---  let wheel = renderControlWheel wind boat
---      fmt = centered . monospace . toText
---      windOriginText = wind.origin |> show |> fmt
---  in 
---      flow down [windOriginText, wheel] |> opacity 0.8 |> container w h topRight
+      group [polar, controlWheel, upwindHiddenGate, downwindHiddenGate, lapsCount, countdown, winner]
 
 renderRaceForBoat : (Int,Int) -> GameState -> Boat -> [Boat] -> Element
 renderRaceForBoat (w,h) gameState boat otherBoats =
