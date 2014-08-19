@@ -1,0 +1,13 @@
+@(races: Seq[Race])
+
+@main("Races") {
+
+  <ul>
+  @for(r <- races) {
+    <li>
+      <a href="@routes.Application.showRace(r.id)">@r.id</a> (@r.startTime)
+    </li>
+  }
+  </ul>
+
+}

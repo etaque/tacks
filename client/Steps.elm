@@ -256,10 +256,16 @@ windStep (timestamp, delta) ({wind, boat} as gameState) =
 countdownStep : Time -> GameState -> GameState
 countdownStep chrono gameState = { gameState | countdown <- Just (gameState.startDuration - chrono) }
 
+opponentsStep : RaceInput -> GameState -> GameState
+opponentsStep raceInput gameState =
+  { gameState | opponents <- raceInput.opponents }
+
+
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
   mouseStep input.mouseInput 
     <| moveStep input.clock input.windowInput 
     <| keysStep input.keyboardInput input.otherKeyboardInput
     <| windStep input.clock 
-    <| countdownStep input.chrono gameState
+    <| countdownStep input.chrono
+    <| opponentsStep input.raceInput gameState

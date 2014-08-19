@@ -89,17 +89,25 @@ renderBoatAngles boat =
     group [directionLine, windLine, windAngleText] 
 
 
-renderBoat : Boat -> Bool -> Form
-renderBoat boat isMain =
+renderBoat : Boat -> Form
+renderBoat boat =
   let 
-    hull = image 8 19 "/icon-boat-white.png"
+    hull = image 8 19 "/assets/images/icon-boat-white.png"
       |> toForm
-      |> alpha (if isMain then 1 else 0.3)
       |> rotate (toRadians (boat.direction + 90))
-    angles = if isMain then renderBoatAngles boat else toForm empty
+    angles = renderBoatAngles boat
   in 
     group [angles, hull]
       |> move boat.position
+
+
+renderOpponent : Opponent -> Form
+renderOpponent opponent =
+  image 8 19 "/assets/images/icon-boat-white.png"
+    |> toForm
+    |> alpha 0.3
+    |> rotate (toRadians (opponent.direction + 90))
+    |> move (opponent.position.x,opponent.position.y)
 
 renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =
@@ -214,29 +222,30 @@ renderControlWheel wind boat (w,h) =
       group [c, boatWindMarker, boatMarker] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
 
 
-renderRelative : GameState -> Boat -> [Boat] -> Form
-renderRelative gameState boat otherBoats =
+renderRelative : GameState -> Boat -> [Opponent] -> Form
+renderRelative gameState boat opponents =
   let course = gameState.course
       nextGate = findNextGate boat course.laps
       downwindGate = renderGate course.downwind nextGate
       upwindGate = renderGate course.upwind nextGate
       bounds = renderBounds gameState.bounds
-      boatPic = renderBoat boat True
-      otherBoatsPics = map (\b -> renderBoat b False) otherBoats |> group
+      boatPic = renderBoat boat
+      opponentsPics = map (\b -> renderOpponent b) opponents |> group
       equalityLine = renderEqualityLine boat.position gameState.wind.origin
       islands = renderIslands gameState
       gusts = renderGusts gameState.wind
   in
-      (group [bounds, islands, gusts, downwindGate, upwindGate, otherBoatsPics, equalityLine, boatPic]) |> move (neg boat.center)
+      (group [bounds, islands, gusts, downwindGate, upwindGate, opponentsPics, equalityLine, boatPic]) |> move (neg boat.center)
 
-renderAbsolute : GameState -> Boat -> [Boat] -> (Float,Float) -> Form
-renderAbsolute gameState boat otherBoats dims =
+renderAbsolute : GameState -> Boat -> [Opponent] -> (Float,Float) -> Form
+renderAbsolute gameState boat opponents dims =
   let course = gameState.course
       nextGate = case gameState.countdown of 
         Just c -> if c <= 0 then findNextGate boat course.laps else Nothing
         Nothing -> Nothing
       countdown = renderCountdown gameState boat
-      winner = renderWinner gameState.course boat otherBoats
+      --winner = renderWinner gameState.course boat opponents
+      winner = toForm empty
       lapsCount = renderLapsCount dims gameState.course boat
       downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
       upwindHiddenGate = renderHiddenGate course.upwind dims boat.center nextGate
@@ -245,12 +254,12 @@ renderAbsolute gameState boat otherBoats dims =
   in
       group [polar, controlWheel, upwindHiddenGate, downwindHiddenGate, lapsCount, countdown, winner]
 
-renderRaceForBoat : (Int,Int) -> GameState -> Boat -> [Boat] -> Element
-renderRaceForBoat (w,h) gameState boat otherBoats =
+renderRaceForBoat : (Int,Int) -> GameState -> Boat -> [Opponent] -> Element
+renderRaceForBoat (w,h) gameState boat opponents =
   let dims = floatify (w,h)
       (w',h') = dims
-      relativeToCenter = renderRelative gameState boat otherBoats
-      absolute = renderAbsolute gameState boat otherBoats dims      
+      relativeToCenter = renderRelative gameState boat opponents
+      absolute = renderAbsolute gameState boat opponents dims      
       bg = rect w' h' |> filled (rgb 239 210 121)
   in 
       layers [collage w h [bg, group [relativeToCenter, absolute]]]
@@ -259,7 +268,7 @@ render : (Int,Int) -> GameState -> Element
 render (w,h) gameState =
   case gameState.otherBoat of
     Just otherBoat -> let w' = (div w 2) - 2
-                          r1 = renderRaceForBoat (w',h) gameState gameState.boat [otherBoat]
-                          r2 = renderRaceForBoat (w',h) gameState otherBoat [gameState.boat] 
+                          r1 = renderRaceForBoat (w',h) gameState gameState.boat (map boatToOpponent [otherBoat])
+                          r2 = renderRaceForBoat (w',h) gameState otherBoat (map boatToOpponent [gameState.boat])
                       in flow left [r1, spacer 4 1, r2]
-    Nothing        -> renderRaceForBoat (w,h) gameState gameState.boat []
+    Nothing        -> renderRaceForBoat (w,h) gameState gameState.boat gameState.opponents

@@ -1,6 +1,8 @@
 module Game where
 
 import Geo (..)
+import Json
+import Dict
 
 {-- Part 2: Model the game ----------------------------------------------------
 
@@ -28,14 +30,17 @@ type Boat = { position: Point, direction: Float, velocity: Float, windAngle: Flo
               windOrigin: Float, windSpeed: Float,
               center: Point, controlMode: ControlMode, tackTarget: Maybe Float,
               passedGates: [(GateLocation, Time)] }
+type Opponent = { position : { x: Float, y: Float}, direction: Float, velocity: Float }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 type Island = { location : Point, radius : Float }
 
-type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat, 
+type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat, opponents: [Opponent],
                    course: Course, bounds: (Point, Point), islands : [Island],
                    startDuration : Time, countdown: Maybe Time }
+
+type RaceState = { boats : [Boat] }
 
 startLine : Gate
 startLine = { y = -100, width = 100, markRadius = 5, location = Downwind }
@@ -67,7 +72,7 @@ islands = [ { location = (250, 300), radius = 100 },
             { location = (-200, 500), radius = 60 } ]
 
 defaultGame : GameState
-defaultGame = { wind = wind, boat = boat, otherBoat = Just otherBoat, 
+defaultGame = { wind = wind, boat = boat, otherBoat = Nothing, opponents = [],
                 course = course, bounds = ((800,1200), (-800,-400)), islands = islands,
                 startDuration = (30*second), countdown = Nothing }
 
@@ -82,4 +87,26 @@ findNextGate boat laps =
     if | c == laps * 2 + 1 -> Nothing
        | i == 0            -> Just Downwind 
        | otherwise         -> Just Upwind
+
+boatToOpponent : Boat -> Opponent
+boatToOpponent {position, direction, velocity} =
+  let (x,y) = position
+  in { position = {x = x, y = y}, direction = direction, velocity = velocity }  
+
+boatToJson : Boat -> Json.Value
+boatToJson b =
+  let
+    gateLocationToJson l = case l of
+      Downwind -> Json.String "Downwind"
+      Upwind -> Json.String "Upwind"
+    gateToJson (gl,t) = Json.Object <| Dict.fromList [("gate", gateLocationToJson gl), ("time", Json.Number t)]
+    passedGates = Json.Array (map gateToJson b.passedGates)
+  in
+    Json.Object (Dict.fromList [
+      ("x", Json.Number (fst b.position)),
+      ("y", Json.Number (snd b.position)),
+      ("direction", Json.Number b.direction),
+      ("velocity", Json.Number b.velocity),
+      ("passedGates", passedGates)
+    ])
        

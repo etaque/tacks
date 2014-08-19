@@ -1,5 +1,7 @@
 module Inputs where
 
+import Game
+
 import Keyboard
 import Mouse
 import Drag
@@ -19,6 +21,7 @@ type UserArrows = { x:Int, y:Int }
 type KeyboardInput = { arrows: UserArrows, lockAngle: Bool, tack: Bool }
 type MouseInput = { drag: Maybe (Int,Int), mouse: (Int,Int) }
 type GameClock = (Time, Float)
+type RaceInput = { startTime: Float, opponents: [Game.Opponent]}
 
 mouseInput : Signal MouseInput
 mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
@@ -33,4 +36,5 @@ chrono : Signal Time
 chrono = foldp (+) 0 (fps 1)
 
 type Input = { clock: GameClock, chrono: Time, keyboardInput: KeyboardInput, otherKeyboardInput: KeyboardInput, 
-               mouseInput: MouseInput, windowInput: (Int,Int) }
+               mouseInput: MouseInput, windowInput: (Int,Int), raceInput: RaceInput }
+
