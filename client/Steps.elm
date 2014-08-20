@@ -158,15 +158,15 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
   in
     (refocus x x' cx w (w * 0.2), refocus y y' cy h (h * 0.4))
 
-moveBoat : GameClock -> GameState -> (Int,Int) -> Boat -> Boat
-moveBoat (timestamp, delta) gameState dimensions boat =
+moveBoat : Time -> Float -> GameState -> (Int,Int) -> Boat -> Boat
+moveBoat now delta gameState dimensions boat =
   let {position, direction, velocity, windAngle, passedGates} = boat
       newVelocity = boatVelocity boat.windAngle velocity
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
       newPassedGates = if maybe False (\c -> c <= 0) gameState.countdown
-        then getPassedGates boat timestamp gameState.course (position, newPosition)
+        then getPassedGates boat now gameState.course (position, newPosition)
         else boat.passedGates
       newCenter = getCenterAfterMove position newPosition boat.center (floatify dimensions)
   in
@@ -175,11 +175,11 @@ moveBoat (timestamp, delta) gameState dimensions boat =
                center <- newCenter,
                passedGates <- newPassedGates }
 
-moveStep : GameClock -> (Int,Int) -> GameState -> GameState
-moveStep clock (w,h) gameState =
+moveStep : Time -> Float -> (Int,Int) -> GameState -> GameState
+moveStep now delta (w,h) gameState =
   let dims = if (isJust gameState.otherBoat) then (div w 2, h) else (w,h)
-      boatMoved = moveBoat clock gameState dims gameState.boat
-      otherBoatMoved = mapMaybe (moveBoat clock gameState dims) gameState.otherBoat
+      boatMoved = moveBoat now delta gameState dims gameState.boat
+      otherBoatMoved = mapMaybe (moveBoat now delta gameState dims) gameState.otherBoat
   in
     { gameState | boat <- boatMoved,
                   otherBoat <- otherBoatMoved }
@@ -212,8 +212,8 @@ gustInBounds : (Point,Point) -> Gust -> Bool
 gustInBounds bounds gust =
   inBox gust.position bounds
 
-updateGusts : GameClock -> (Point, Point) -> Wind -> [Gust]
-updateGusts (timestamp, delta) bounds wind = 
+updateGusts : Time -> Float -> (Point, Point) -> Wind -> [Gust]
+updateGusts timestamp delta bounds wind = 
   let 
     moveGust w g = { g | position <- (movePoint g.position delta w.speed (ensure360 (180 + wind.origin + g.originDelta))) }
     gusts = filter (gustInBounds bounds) wind.gusts |> map (moveGust wind)
@@ -240,12 +240,12 @@ updateWindForBoat wind boat =
   in
     { boat | windOrigin <- windOrigin }
 
-windStep : GameClock -> GameState -> GameState
-windStep (timestamp, delta) ({wind, boat} as gameState) =
-  let o1 = cos (inSeconds timestamp / 10) * 15
-      o2 = cos (inSeconds timestamp / 5) * 5
+windStep : Float -> Time -> GameState -> GameState
+windStep delta now ({wind, boat} as gameState) =
+  let o1 = cos (inSeconds now / 10) * 15
+      o2 = cos (inSeconds now / 5) * 5
       newOrigin = o1 + o2 |> ensure360
-      newGusts = updateGusts (timestamp,delta) gameState.bounds wind
+      newGusts = updateGusts now delta gameState.bounds wind
       newWind = { wind | origin <- newOrigin, gusts <- newGusts }
       boatWithWind = updateWindForBoat wind boat
       otherBoatWindWind = mapMaybe (updateWindForBoat wind) gameState.otherBoat
@@ -253,19 +253,15 @@ windStep (timestamp, delta) ({wind, boat} as gameState) =
                    boat <- boatWithWind,
                    otherBoat <- otherBoatWindWind }
 
-countdownStep : Time -> GameState -> GameState
-countdownStep chrono gameState = { gameState | countdown <- Just (gameState.startDuration - chrono) }
-
-opponentsStep : RaceInput -> GameState -> GameState
-opponentsStep raceInput gameState =
-  { gameState | opponents <- raceInput.opponents }
-
+raceInputStep : RaceInput -> GameState -> GameState
+raceInputStep {now,startTime,opponents} gameState =
+  { gameState | opponents <- opponents,
+                countdown <- Just (startTime - now) }
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
   mouseStep input.mouseInput 
-    <| moveStep input.clock input.windowInput 
+    <| moveStep input.raceInput.now input.delta input.windowInput 
     <| keysStep input.keyboardInput input.otherKeyboardInput
-    <| windStep input.clock 
-    <| countdownStep input.chrono
-    <| opponentsStep input.raceInput gameState
+    <| windStep input.delta input.raceInput.now
+    <| raceInputStep input.raceInput gameState

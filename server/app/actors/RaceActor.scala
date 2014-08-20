@@ -1,5 +1,6 @@
 package actors
 
+import org.joda.time.DateTime
 import play.api.Logger
 import akka.actor._
 import models._
@@ -22,7 +23,7 @@ class RaceActor(race: Race) extends Actor {
   }
 
   private def raceUpdateFor(boatId: String) =
-    RaceUpdate(race.startTime, boatStates.toSeq.filterNot(_._1 == boatId).map(_._2))
+    RaceUpdate(DateTime.now, race.startTime, boatStates.toSeq.filterNot(_._1 == boatId).map(_._2))
 }
 
 object RaceActor {

@@ -53,7 +53,7 @@ course : Course
 course = { upwind = upwindGate, downwind = startLine, laps = 3, markRadius = 5 }
 
 boat : Boat
-boat = { position = (50,-200), direction = 0, velocity = 0, windAngle = 0, 
+boat = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
          windOrigin = 0, windSpeed = 0,
          center = (0,0), controlMode = FixedDirection, tackTarget = Nothing,
          passedGates = [] }
@@ -63,7 +63,7 @@ otherBoat = { boat | position <- (-50,-200) }
 
 
 wind : Wind
-wind = { origin = 0, speed = 10, gustsCount = 8, gusts = [] }
+wind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
 
 
 islands : [Island]

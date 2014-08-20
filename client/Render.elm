@@ -134,7 +134,7 @@ renderCountdown gameState boat =
                         msg = (show s) ++ "\""
                     in fullScreenMessage msg
          | (isEmpty boat.passedGates) -> fullScreenMessage "Go!"
-         | otherwise -> toForm empty
+         | otherwise -> fullScreenMessage " " --toForm empty
     Nothing -> toForm empty
 
 hasFinished : Course -> Boat -> Bool

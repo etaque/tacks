@@ -8,7 +8,7 @@ case class Race (
   startTime: Option[DateTime]
 )
 
-case class RaceUpdate(startTime: Option[DateTime], opponents: Seq[BoatState])
+case class RaceUpdate(now: DateTime, startTime: Option[DateTime], opponents: Seq[BoatState])
 
 case class Point(x: Float, y: Float)
 

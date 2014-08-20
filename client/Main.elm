@@ -16,10 +16,10 @@ The following code puts it all together and shows it on screen.
 
 ------------------------------------------------------------------------------}
 
-port raceInput : Signal { startTime: Float, opponents: [{ position : { x: Float, y: Float}, direction: Float, velocity: Float }]}
+port raceInput : Signal { now: Float, startTime: Float, opponents: [{ position : { x: Float, y: Float}, direction: Float, velocity: Float }]}
 
---clock : Inputs.GameClock
-clock = timestamp (inSeconds <~ fps 30)
+clock : Signal Float
+clock = inSeconds <~ fps 30
 
 input : Signal Inputs.Input
 input = sampleOn clock (lift7 Inputs.Input clock Inputs.chrono Inputs.keyboardInput 
@@ -27,11 +27,6 @@ input = sampleOn clock (lift7 Inputs.Input clock Inputs.chrono Inputs.keyboardIn
 
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
-
-boatJson = lift (\g -> Game.boatToJson g.boat) gameState
-
-boatStateJson : Signal String
-boatStateJson = lift (Json.toString "") boatJson
 
 port raceOutput : Signal { position : { x: Float, y: Float}, direction: Float, velocity: Float }
 port raceOutput = lift (Game.boatToOpponent . .boat) gameState

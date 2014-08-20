@@ -20,8 +20,7 @@ Task: Redefine `UserInput` to include all of the information you need.
 type UserArrows = { x:Int, y:Int }
 type KeyboardInput = { arrows: UserArrows, lockAngle: Bool, tack: Bool }
 type MouseInput = { drag: Maybe (Int,Int), mouse: (Int,Int) }
-type GameClock = (Time, Float)
-type RaceInput = { startTime: Float, opponents: [Game.Opponent]}
+type RaceInput = { now: Time, startTime: Time, opponents: [Game.Opponent]}
 
 mouseInput : Signal MouseInput
 mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
@@ -35,6 +34,6 @@ otherKeyboardInput = lift3 KeyboardInput (Keyboard.directions 90 83 81 68) Keybo
 chrono : Signal Time
 chrono = foldp (+) 0 (fps 1)
 
-type Input = { clock: GameClock, chrono: Time, keyboardInput: KeyboardInput, otherKeyboardInput: KeyboardInput, 
+type Input = { delta: Float, chrono: Time, keyboardInput: KeyboardInput, otherKeyboardInput: KeyboardInput, 
                mouseInput: MouseInput, windowInput: (Int,Int), raceInput: RaceInput }
 

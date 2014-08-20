@@ -1,5 +1,7 @@
 @(race: Race)
 
+@import org.joda.time.DateTime
+
 @for(startTime <- race.startTime) {
   <div id="game" style="width:100%;height:100%"></div>
 
@@ -12,12 +14,11 @@
   var ws = new WebSocket("ws://localhost:9020/boatSocket/" + boatId + "/" + raceId);
 
   var gameDiv = document.getElementById('game');
-  var input = { startTime: @startTime.getMillis, opponents: [] };
+  var input = { now : @DateTime.now.getMillis, startTime: @startTime.getMillis, opponents: [] };
   var game = Elm.embed(Elm.ShiftMaster, gameDiv, { raceInput:  input});
 
   ws.onmessage = function(event) {
-//    console.log(JSON.parse(event.data));
-    game.ports.raceInput.send(event.data);
+    game.ports.raceInput.send(JSON.parse(event.data));
   };
 
   ws.onopen = function() {
