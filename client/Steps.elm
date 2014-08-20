@@ -218,7 +218,7 @@ updateGusts timestamp delta bounds wind =
     moveGust w g = { g | position <- (movePoint g.position delta w.speed (ensure360 (180 + wind.origin + g.originDelta))) }
     gusts = filter (gustInBounds bounds) wind.gusts |> map (moveGust wind)
   in
-    if | (isEmpty wind.gusts) -> map (spawnGust timestamp bounds) [1..(wind.gustsCount + 1)]
+    if | (isEmpty wind.gusts) -> map (spawnGust timestamp bounds) [1..wind.gustsCount]
        | (length gusts < wind.gustsCount) -> (spawnGust timestamp bounds 0) :: gusts 
        | otherwise -> gusts
 
