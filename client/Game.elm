@@ -21,7 +21,7 @@ be an empty list (no objects at the start):
 ------------------------------------------------------------------------------}
 
 data GateLocation = Downwind | Upwind
-type Gate = { y: Float, width: Float, markRadius: Float, location: GateLocation }
+type Gate = { y: Float, width: Float, location: GateLocation }
 type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float }
 
 data ControlMode = FixedDirection | FixedWindAngle
@@ -30,7 +30,8 @@ type Boat = { position: Point, direction: Float, velocity: Float, windAngle: Flo
               windOrigin: Float, windSpeed: Float,
               center: Point, controlMode: ControlMode, tackTarget: Maybe Float,
               passedGates: [(GateLocation, Time)] }
-type Opponent = { position : { x: Float, y: Float}, direction: Float, velocity: Float }
+
+type Opponent = { position : { x: Float, y: Float}, direction: Float, velocity: Float, passedGates: [Time] }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
@@ -43,10 +44,10 @@ type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat, opponents: [Op
 type RaceState = { boats : [Boat] }
 
 startLine : Gate
-startLine = { y = -100, width = 100, markRadius = 5, location = Downwind }
+startLine = { y = -100, width = 100, location = Downwind }
 
 upwindGate : Gate
-upwindGate = { y = 1000, width = 100, markRadius = 5, location = Upwind }
+upwindGate = { y = 1000, width = 100, location = Upwind }
 
 
 course : Course
@@ -89,24 +90,7 @@ findNextGate boat laps =
        | otherwise         -> Just Upwind
 
 boatToOpponent : Boat -> Opponent
-boatToOpponent {position, direction, velocity} =
+boatToOpponent ({position, direction, velocity} as boat) =
   let (x,y) = position
-  in { position = {x = x, y = y}, direction = direction, velocity = velocity }  
-
-boatToJson : Boat -> Json.Value
-boatToJson b =
-  let
-    gateLocationToJson l = case l of
-      Downwind -> Json.String "Downwind"
-      Upwind -> Json.String "Upwind"
-    gateToJson (gl,t) = Json.Object <| Dict.fromList [("gate", gateLocationToJson gl), ("time", Json.Number t)]
-    passedGates = Json.Array (map gateToJson b.passedGates)
-  in
-    Json.Object (Dict.fromList [
-      ("x", Json.Number (fst b.position)),
-      ("y", Json.Number (snd b.position)),
-      ("direction", Json.Number b.direction),
-      ("velocity", Json.Number b.velocity),
-      ("passedGates", passedGates)
-    ])
-       
+      gates = map snd boat.passedGates
+  in  { position = {x = x, y = y}, direction = direction, velocity = velocity, passedGates = gates }  

@@ -1,4 +1,4 @@
-@(race: Race)
+@(race: Race, websocketUrlBase: String)
 
 @import org.joda.time.DateTime
 
@@ -11,7 +11,7 @@
 
   var boatId = Date.now().toString();
   var raceId = "@race.id";
-  var ws = new WebSocket("ws://localhost:9020/boatSocket/" + boatId + "/" + raceId);
+  var ws = new WebSocket("@websocketUrlBase/boatSocket/" + boatId + "/" + raceId);
 
   var gameDiv = document.getElementById('game');
   var input = { now : @DateTime.now.getMillis, startTime: @startTime.getMillis, opponents: [] };

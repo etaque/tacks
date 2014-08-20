@@ -35,14 +35,14 @@ baseText s =
     |> monospace
 
 
-renderGate : Gate -> Maybe GateLocation -> Form
-renderGate gate nextGate =
+renderGate : Gate -> Float -> Maybe GateLocation -> Form
+renderGate gate markRadius nextGate =
   let (left,right) = getGateMarks gate
       isNext = nextGate == Just gate.location
       line = segment left right |> traced (dotted orange)
       markStyle = if isNext then filled orange else filled white
-      leftMark = circle gate.markRadius |> markStyle |> move left
-      rightMark = circle gate.markRadius |> markStyle |> move right
+      leftMark = circle markRadius |> markStyle |> move left
+      rightMark = circle markRadius |> markStyle |> move right
       marks = [leftMark, rightMark]
   in
     if isNext then group (line :: marks) else group marks
@@ -53,22 +53,22 @@ renderHiddenGate gate (w,h) (cx,cy) nextGate =
       isNext = nextGate == Just gate.location
       c = 5
       over = cy + h/2 + c < gate.y
-      under = cy - h/2 - c> gate.y
+      under = cy - h/2 - c > gate.y
       markStyle = if isNext then filled orange else filled white
-      distance = round (abs (gate.y - h/2 - cy)) |> show |> baseText |> centered |> toForm
+      distance isOver = round (abs (gate.y + (if isOver then -h else h)/2 - cy)) |> show |> baseText |> centered |> toForm
   in 
     case (over, under) of
       (True, _) -> 
         let m = polygon [(0,0),(-c,-c),(c,-c)] |> markStyle
                                                |> move (-cx,(h/2))
-            d = distance |> move (-cx, h/2 - c*3) 
+            d = distance True |> move (-cx, h/2 - c*3) 
         in
           group [m, d]
 
       (_, True) -> 
         let m = polygon [(0,0),(-c,c),(c,c)]   |> markStyle
                                                |> move (-cx,(-h/2))
-            d = distance |> move (-cx, -h/2 + c*3) 
+            d = distance False |> move (-cx, -h/2 + c*3) 
         in
           group [m,d]
       (_, _)    -> group []
@@ -137,23 +137,26 @@ renderCountdown gameState boat =
          | otherwise -> fullScreenMessage " " --toForm empty
     Nothing -> toForm empty
 
-hasFinished : Course -> Boat -> Bool
+hasFinished : Course -> Opponent -> Bool
 hasFinished course boat = (length boat.passedGates) == course.laps * 2 + 1
 
-renderWinner : Course -> Boat -> [Boat] -> Form
-renderWinner course boat otherBoats =
-  if (hasFinished course boat) then
-    let finishTime b = snd (head b.passedGates)
-        othersTime = filter (hasFinished course) otherBoats |> map finishTime
-        myTime = finishTime boat
-        othersAfterMe = all (\t -> t > myTime) othersTime
-    in
-      if (isEmpty othersTime) || othersAfterMe then
-        fullScreenMessage "WINNER"
-      else
-        toForm empty
-  else
-    toForm empty
+renderWinner : Course -> Boat -> [Opponent] -> Form
+renderWinner course boat opponents =
+  let me = boatToOpponent boat
+  in
+    if (hasFinished course me) then
+      let finishTime : Opponent -> Time
+          finishTime o = head o.passedGates
+          othersTime = filter (hasFinished course) opponents |> map finishTime
+          myTime = finishTime me
+          othersAfterMe = all (\t -> t > myTime) othersTime
+      in
+        if (isEmpty othersTime) || othersAfterMe then
+          fullScreenMessage "WINNER"
+        else
+          toForm empty
+    else
+      toForm empty
 
 renderGust : Wind -> Gust -> Form
 renderGust wind gust =
@@ -226,8 +229,8 @@ renderRelative : GameState -> Boat -> [Opponent] -> Form
 renderRelative gameState boat opponents =
   let course = gameState.course
       nextGate = findNextGate boat course.laps
-      downwindGate = renderGate course.downwind nextGate
-      upwindGate = renderGate course.upwind nextGate
+      downwindGate = renderGate course.downwind course.markRadius nextGate
+      upwindGate = renderGate course.upwind course.markRadius nextGate
       bounds = renderBounds gameState.bounds
       boatPic = renderBoat boat
       opponentsPics = map (\b -> renderOpponent b) opponents |> group
@@ -244,8 +247,7 @@ renderAbsolute gameState boat opponents dims =
         Just c -> if c <= 0 then findNextGate boat course.laps else Nothing
         Nothing -> Nothing
       countdown = renderCountdown gameState boat
-      --winner = renderWinner gameState.course boat opponents
-      winner = toForm empty
+      winner = renderWinner gameState.course boat opponents
       lapsCount = renderLapsCount dims gameState.course boat
       downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
       upwindHiddenGate = renderHiddenGate course.upwind dims boat.center nextGate

@@ -26,10 +26,11 @@ object Application extends Controller {
     Ok(views.html.index(racesStore.toSeq))
   }
 
-  def showRace(id: String) = Action {
+  def showRace(id: String) = Action { implicit req =>
     racesStore.find(_.id == id) match {
       case Some(race) => {
-        Ok(views.html.showRace(race))
+        val websocketUrlBase = "ws://" + req.host
+        Ok(views.html.showRace(race, websocketUrlBase))
 
       }
       case None => NotFound

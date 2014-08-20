@@ -81,7 +81,7 @@ keysForBoatStep ({arrows, lockAngle, tack}) boat =
                             windAngle <- windAngle }
       tackTargetAfterTurn = if tackTargetReached turnedBoat tackTarget then Nothing else tackTarget
       controlMode = if | forceTurn -> FixedDirection
-                       | arrows.y > 0 -> FixedWindAngle
+                       | arrows.y > 0 || lockAngle -> FixedWindAngle
                        | otherwise -> turnedBoat.controlMode
   in 
     { turnedBoat | controlMode <- controlMode,

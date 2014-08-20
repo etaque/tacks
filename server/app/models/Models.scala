@@ -15,7 +15,8 @@ case class Point(x: Float, y: Float)
 case class BoatState (
   position: Point,
   direction: Float,
-  velocity: Float
+  velocity: Float,
+  passedGates: Seq[Float]
 )
 
 case class BoatUpdate(id: String, state: BoatState)
