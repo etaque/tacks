@@ -8,8 +8,6 @@ import org.joda.time.DateTime
 
 object JsonFormats {
 
-  // PNE-like ids
-
   implicit val idWrites: Writes[BSONObjectID] = Writes { id: BSONObjectID => JsString(id.stringify) }
 
   implicit val idReads: Reads[BSONObjectID] = Reads { id: JsValue => id match {

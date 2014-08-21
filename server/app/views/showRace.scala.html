@@ -1,20 +1,22 @@
 @(race: Race, websocketUrlBase: String)
 
 @import org.joda.time.DateTime
+@import play.api.libs.json.Json
 
-@for(startTime <- race.startTime) {
-  <div id="game" style="width:100%;height:100%"></div>
+@main() {
+
+  <div class="game" id="game"></div>
 
   <script type="text/javascript" src="http://elm-lang.org/elm-runtime.js"></script>
   <script type="text/javascript" src="@routes.Assets.at("javascripts/Main.js")"></script>
   <script type="text/javascript">
 
   var boatId = Date.now().toString();
-  var raceId = "@race.id";
-  var ws = new WebSocket("@websocketUrlBase/boatSocket/" + boatId + "/" + raceId);
+  var raceId = @Html(Json.toJson(race.id.stringify).toString());
+  var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/gameSocket/" + boatId);
 
   var gameDiv = document.getElementById('game');
-  var input = { now : @DateTime.now.getMillis, startTime: @startTime.getMillis, opponents: [] };
+  var input = { now : @DateTime.now.getMillis, startTime: @race.startTime.getMillis, opponents: [] };
   var game = Elm.embed(Elm.ShiftMaster, gameDiv, { raceInput:  input});
 
   ws.onmessage = function(event) {
@@ -29,4 +31,5 @@
   };
 
   </script>
+
 }

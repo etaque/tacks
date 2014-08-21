@@ -905,7 +905,7 @@ Elm.Render.make = function (_elm) {
                                                                                                                                      ,boatMarker]))));
               }();}
          _E.Case($moduleName,
-         "between lines 214 and 225");
+         "between lines 216 and 227");
       }();
    });
    var renderIslands = function (gameState) {
@@ -1185,7 +1185,7 @@ Elm.Render.make = function (_elm) {
                                               ,_1: _v19._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(baseText(msg))));
               }();}
          _E.Case($moduleName,
-         "between lines 186 and 192");
+         "between lines 188 and 194");
       }();
    });
    var renderPolar = F2(function (boat,
@@ -1238,7 +1238,7 @@ Elm.Render.make = function (_elm) {
                                                                                                                      ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 197 and 210");
+         "between lines 199 and 212");
       }();
    });
    var fullScreenMessage = function (msg) {
@@ -1252,15 +1252,19 @@ Elm.Render.make = function (_elm) {
          {case "Just":
             return _U.cmp(_v27._0,
               0) > 0 ? function () {
-                 var s = Basics.round(Time.inSeconds(_v27._0));
-                 var msg = _L.append(String.show(s),
-                 "\"");
+                 var cs = Basics.round(Time.inSeconds(_v27._0));
+                 var m = cs / 60 | 0;
+                 var s = A2(Basics.rem,cs,60);
+                 var msg = _L.append(String.show(m),
+                 _L.append("\'",
+                 _L.append(String.show(s),
+                 "\"")));
                  return fullScreenMessage(msg);
               }() : List.isEmpty(boat.passedGates) ? fullScreenMessage("Go!") : fullScreenMessage(" ");
             case "Nothing":
             return Graphics.Collage.toForm(Graphics.Element.empty);}
          _E.Case($moduleName,
-         "between lines 131 and 138");
+         "between lines 131 and 140");
       }();
    });
    var renderWinner = F3(function (course,
@@ -1322,7 +1326,7 @@ Elm.Render.make = function (_elm) {
                case "Nothing":
                return Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 246 and 249");
+            "between lines 248 and 251");
          }();
          var downwindHiddenGate = A4(renderHiddenGate,
          course.downwind,
@@ -1380,7 +1384,7 @@ Elm.Render.make = function (_elm) {
                                                                    ,absolute]))]))]));
               }();}
          _E.Case($moduleName,
-         "between lines 261 and 267");
+         "between lines 263 and 269");
       }();
    });
    var render = F2(function (_v35,
@@ -1429,10 +1433,10 @@ Elm.Render.make = function (_elm) {
                       gameState.boat,
                       gameState.opponents);}
                  _E.Case($moduleName,
-                 "between lines 271 and 276");
+                 "between lines 273 and 278");
               }();}
          _E.Case($moduleName,
-         "between lines 271 and 276");
+         "between lines 273 and 278");
       }();
    });
    _elm.Render.values = {_op: _op

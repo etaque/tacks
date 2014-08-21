@@ -1,13 +1,30 @@
-@(races: Seq[Race])
+@(nextRaceMaybe: Option[Race])
 
-@main("Races") {
+@main() {
+  <div class="content">
+    @for(r <- nextRaceMaybe) {
+      <div class="next-race">
+        <a href="@routes.Races.show(r.id.stringify)">Next race starts in <span id="timer">?</span></a>
+      </div>
 
-  <ul>
-  @for(r <- races) {
-    <li>
-      <a href="@routes.Application.showRace(r.id)">@r.id</a> (@r.startTime)
-    </li>
-  }
-  </ul>
+      <script type="text/javascript">
+
+      var startTime = @r.startTime.getMillis;
+      var timerDiv = document.getElementById("timer");
+
+      function updateTimer() {
+        var c = Math.round((startTime - Date.now()) / 1000);
+        var m = Math.floor(c / 60);
+        var s = c % 60;
+        timerDiv.innerText = "" + m + "' " + s + "\"";
+      }
+
+      setInterval(updateTimer, 1000);
+      updateTimer();
+
+      </script>
+    }
+  </div>
 
 }
+

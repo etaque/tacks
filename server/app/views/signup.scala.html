@@ -1,0 +1,8 @@
+@(form: Form[(String, String, String)])(implicit request: RequestHeader))
+
+<form method="POST" action="@routes.Application.signupPost()">
+  <input type="text" name="email" class="form-control" placeholder="Email address" required autofocus>
+  <input type="password" name="password" class="form-control" placeholder="Password" required>
+  <input type="text" name="name" class="form-control" placeholder="Nickname" required autofocus>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Sign up</button>
+</form>

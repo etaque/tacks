@@ -1,0 +1,59 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  margin: 0;
+  color: #222;
+  font-family: 'Open Sans', sans-serif;
+  font-size: 14px;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  background-color: #222;
+  color: #EEE;
+  padding: 10px 20px;
+}
+
+.logo {
+  color: white;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.content {
+  padding: 20px;
+}
+
+.next-race {
+  margin-top: 200px;
+  text-align: center;
+  a {
+    font-size: 46px;
+    display: inline-block;
+    background-color: #222;
+    color: white;
+    border-radius: 10px;
+    padding: 10px 20px;
+    text-decoration: none;
+  }
+}
+
+.game {
+  flex: 1;
+}

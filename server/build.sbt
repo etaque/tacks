@@ -10,6 +10,7 @@ scalaVersion := "2.11.1"
 
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.akka23-SNAPSHOT",
+  "org.mindrot" % "jbcrypt" % "0.3m",
   cache,
   ws
 )

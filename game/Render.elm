@@ -130,8 +130,10 @@ renderCountdown : GameState -> Boat -> Form
 renderCountdown gameState boat = 
   case gameState.countdown of 
     Just c -> 
-      if | c > 0 -> let s = c |> inSeconds |> round
-                        msg = (show s) ++ "\""
+      if | c > 0 -> let cs = c |> inSeconds |> round
+                        m = cs `div` 60
+                        s = cs `rem` 60
+                        msg = (show m) ++ "'" ++ (show s) ++ "\""
                     in fullScreenMessage msg
          | (isEmpty boat.passedGates) -> fullScreenMessage "Go!"
          | otherwise -> fullScreenMessage " " --toForm empty

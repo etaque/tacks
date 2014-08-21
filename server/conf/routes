@@ -3,12 +3,15 @@
 # ~~~~
 
 # Home page
-GET        /                              controllers.Application.index
+GET         /                                        controllers.Application.index
 #POST        /addRace               controllers.Application.addRace
-GET        /showRace/:id                  controllers.Application.showRace(id)
+GET         /races/:id                               controllers.Races.show(id)
 #POST        /startRace/:id         controllers.Application.startRace(id)
 
-GET        /boatSocket/:id/:raceId        controllers.Application.boatSocket(id, raceId)
+GET         /races/:raceId/gameSocket/:boatId        controllers.Races.gameSocket(raceId, boatId)
+
+GET         /login                                   controllers.Auth.login
+POST        /signup                                  controllers.Application.signupPost
 
 # Map static resources from the /public folder to the /assets URL path
-GET        /assets/*file                  controllers.Assets.at(path="/public", file)
+GET         /assets/*file                            controllers.Assets.at(path="/public", file)
