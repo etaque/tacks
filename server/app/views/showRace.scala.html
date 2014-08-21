@@ -8,7 +8,7 @@
   <div class="game" id="game"></div>
 
   <script type="text/javascript" src="http://elm-lang.org/elm-runtime.js"></script>
-  <script type="text/javascript" src="@routes.Assets.at("javascripts/Main.js")"></script>
+  <script type="text/javascript" src="@routes.Assets.at("javascripts/game.js")"></script>
   <script type="text/javascript">
 
   var boatId = Date.now().toString();
@@ -20,7 +20,9 @@
   var game = Elm.embed(Elm.ShiftMaster, gameDiv, { raceInput:  input});
 
   ws.onmessage = function(event) {
-    game.ports.raceInput.send(JSON.parse(event.data));
+    var data = JSON.parse(event.data);
+    document.title = formatTimer(data.now, data.startTime);
+    game.ports.raceInput.send(data);
   };
 
   ws.onopen = function() {

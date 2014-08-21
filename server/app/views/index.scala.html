@@ -13,10 +13,7 @@
       var timerDiv = document.getElementById("timer");
 
       function updateTimer() {
-        var c = Math.round((startTime - Date.now()) / 1000);
-        var m = Math.floor(c / 60);
-        var s = c % 60;
-        timerDiv.innerText = "" + m + "' " + s + "\"";
+        timerDiv.innerText = formatTimer(Date.now(), startTime);
       }
 
       setInterval(updateTimer, 1000);
