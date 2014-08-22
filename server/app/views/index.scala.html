@@ -1,7 +1,6 @@
 @(nextRaceMaybe: Option[Race])
 
 @main() {
-  <div class="content">
     @for(r <- nextRaceMaybe) {
       <div class="next-race">
         <a href="@routes.Races.show(r.id.stringify)">Next race starts in <span id="timer">?</span></a>
@@ -13,7 +12,11 @@
       var timerDiv = document.getElementById("timer");
 
       function updateTimer() {
-        timerDiv.innerText = formatTimer(Date.now(), startTime);
+        if (Date.now() > startTime) {
+          window.location.reload();
+        } else {
+          timerDiv.innerText = formatTimer(Date.now(), startTime);
+        }
       }
 
       setInterval(updateTimer, 1000);
@@ -21,7 +24,6 @@
 
       </script>
     }
-  </div>
 
 }
 

@@ -905,22 +905,9 @@ Elm.Render.make = function (_elm) {
                                                                                                                                      ,boatMarker]))));
               }();}
          _E.Case($moduleName,
-         "between lines 216 and 227");
+         "between lines 210 and 221");
       }();
    });
-   var renderIslands = function (gameState) {
-      return function () {
-         var renderIsland = function (i) {
-            return Graphics.Collage.move(i.location)(Graphics.Collage.filled(A3(Color.rgb,
-            239,
-            210,
-            121))(Graphics.Collage.circle(i.radius)));
-         };
-         return Graphics.Collage.group(A2(List.map,
-         renderIsland,
-         gameState.islands));
-      }();
-   };
    var renderGust = F2(function (wind,
    gust) {
       return function () {
@@ -938,25 +925,6 @@ Elm.Render.make = function (_elm) {
       return _U.eq(List.length(boat.passedGates),
       course.laps * 2 + 1);
    });
-   var renderBounds = function (box) {
-      return function () {
-         var $ = box,
-         ne = $._0,
-         sw = $._1;
-         var w = Basics.fst(ne) - Basics.fst(sw);
-         var h = Basics.snd(ne) - Basics.snd(sw);
-         var cw = (Basics.fst(ne) + Basics.fst(sw)) / 2;
-         var ch = (Basics.snd(ne) + Basics.snd(sw)) / 2;
-         return Graphics.Collage.move({ctor: "_Tuple2"
-                                      ,_0: cw
-                                      ,_1: ch})(Graphics.Collage.filled(A3(Color.rgb,
-         10,
-         105,
-         148))(A2(Graphics.Collage.rect,
-         w,
-         h)));
-      }();
-   };
    var renderEqualityLine = F2(function (_v4,
    windOrigin) {
       return function () {
@@ -976,7 +944,7 @@ Elm.Render.make = function (_elm) {
                  right))));
               }();}
          _E.Case($moduleName,
-         "between lines 114 and 117");
+         "between lines 108 and 111");
       }();
    });
    var renderOpponent = function (opponent) {
@@ -1010,7 +978,7 @@ Elm.Render.make = function (_elm) {
       }();
    });
    var baseText = function (s) {
-      return Text.monospace(Text.color(Color.white)(Text.height(13)(Text.toText(s))));
+      return Text.color(Color.white)(Text.height(12)(Text.toText(s)));
    };
    var renderHiddenGate = F4(function (gate,
    _v8,
@@ -1059,8 +1027,8 @@ Elm.Render.make = function (_elm) {
                                                                                                                                          ,{ctor: "_Tuple2"
                                                                                                                                           ,_0: c
                                                                                                                                           ,_1: 0 - c}]))));
-                                         return Graphics.Collage.group(_L.fromArray([m
-                                                                                    ,d]));
+                                         return Maybe.Just(Graphics.Collage.group(_L.fromArray([m
+                                                                                               ,d])));
                                       }();}
                                  switch (_v16._1)
                                  {case true: return function () {
@@ -1078,19 +1046,19 @@ Elm.Render.make = function (_elm) {
                                                                                                                                                ,{ctor: "_Tuple2"
                                                                                                                                                 ,_0: c
                                                                                                                                                 ,_1: c}]))));
-                                         return Graphics.Collage.group(_L.fromArray([m
-                                                                                    ,d]));
+                                         return Maybe.Just(Graphics.Collage.group(_L.fromArray([m
+                                                                                               ,d])));
                                       }();}
-                                 return Graphics.Collage.group(_L.fromArray([]));}
+                                 return Maybe.Nothing;}
                             _E.Case($moduleName,
-                            "between lines 60 and 74");
+                            "between lines 61 and 68");
                          }();
                       }();}
                  _E.Case($moduleName,
-                 "between lines 52 and 74");
+                 "between lines 53 and 68");
               }();}
          _E.Case($moduleName,
-         "between lines 52 and 74");
+         "between lines 53 and 68");
       }();
    });
    var renderBoatAngles = function (boat) {
@@ -1127,44 +1095,6 @@ Elm.Render.make = function (_elm) {
                                                                                          ,hull])));
       }();
    };
-   var renderRelative = F3(function (gameState,
-   boat,
-   opponents) {
-      return function () {
-         var gusts = renderGusts(gameState.wind);
-         var islands = renderIslands(gameState);
-         var equalityLine = A2(renderEqualityLine,
-         boat.position,
-         gameState.wind.origin);
-         var opponentsPics = Graphics.Collage.group(A2(List.map,
-         function (b) {
-            return renderOpponent(b);
-         },
-         opponents));
-         var boatPic = renderBoat(boat);
-         var bounds = renderBounds(gameState.bounds);
-         var course = gameState.course;
-         var nextGate = A2(Game.findNextGate,
-         boat,
-         course.laps);
-         var downwindGate = A3(renderGate,
-         course.downwind,
-         course.markRadius,
-         nextGate);
-         var upwindGate = A3(renderGate,
-         course.upwind,
-         course.markRadius,
-         nextGate);
-         return Graphics.Collage.move(Geo.neg(boat.center))(Graphics.Collage.group(_L.fromArray([bounds
-                                                                                                ,islands
-                                                                                                ,gusts
-                                                                                                ,downwindGate
-                                                                                                ,upwindGate
-                                                                                                ,opponentsPics
-                                                                                                ,equalityLine
-                                                                                                ,boatPic])));
-      }();
-   });
    var renderLapsCount = F3(function (_v19,
    course,
    boat) {
@@ -1185,7 +1115,7 @@ Elm.Render.make = function (_elm) {
                                               ,_1: _v19._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(baseText(msg))));
               }();}
          _E.Case($moduleName,
-         "between lines 188 and 194");
+         "between lines 182 and 188");
       }();
    });
    var renderPolar = F2(function (boat,
@@ -1238,11 +1168,11 @@ Elm.Render.make = function (_elm) {
                                                                                                                      ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 199 and 212");
+         "between lines 193 and 206");
       }();
    });
    var fullScreenMessage = function (msg) {
-      return Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(Text.centered(Text.monospace(Text.color(Color.white)(Text.height(100)(Text.toText(String.toUpper(msg))))))));
+      return Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(Text.centered(Text.color(Color.white)(Text.height(100)(Text.toText(String.toUpper(msg)))))));
    };
    var renderCountdown = F2(function (gameState,
    boat) {
@@ -1256,15 +1186,15 @@ Elm.Render.make = function (_elm) {
                  var m = cs / 60 | 0;
                  var s = A2(Basics.rem,cs,60);
                  var msg = _L.append(String.show(m),
-                 _L.append("\'",
+                 _L.append("\' ",
                  _L.append(String.show(s),
                  "\"")));
-                 return fullScreenMessage(msg);
-              }() : List.isEmpty(boat.passedGates) ? fullScreenMessage("Go!") : fullScreenMessage(" ");
+                 return Maybe.Just(fullScreenMessage(msg));
+              }() : List.isEmpty(boat.passedGates) ? Maybe.Just(fullScreenMessage("Go!")) : Maybe.Nothing;
             case "Nothing":
-            return Graphics.Collage.toForm(Graphics.Element.empty);}
+            return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 131 and 140");
+         "between lines 125 and 134");
       }();
    });
    var renderWinner = F3(function (course,
@@ -1287,8 +1217,8 @@ Elm.Render.make = function (_elm) {
                return _U.cmp(t,myTime) > 0;
             },
             othersTime);
-            return List.isEmpty(othersTime) || othersAfterMe ? fullScreenMessage("WINNER") : Graphics.Collage.toForm(Graphics.Element.empty);
-         }() : Graphics.Collage.toForm(Graphics.Element.empty);
+            return List.isEmpty(othersTime) || othersAfterMe ? Maybe.Just(fullScreenMessage("WINNER")) : Maybe.Nothing;
+         }() : Maybe.Nothing;
       }();
    });
    var renderAbsolute = F4(function (gameState,
@@ -1296,25 +1226,16 @@ Elm.Render.make = function (_elm) {
    opponents,
    dims) {
       return function () {
-         var controlWheel = A3(renderControlWheel,
-         Game.wind,
-         boat,
-         dims);
-         var polar = A2(renderPolar,
-         boat,
-         dims);
-         var lapsCount = A3(renderLapsCount,
-         dims,
-         gameState.course,
-         boat);
-         var winner = A3(renderWinner,
-         gameState.course,
-         boat,
-         opponents);
-         var countdown = A2(renderCountdown,
-         gameState,
-         boat);
          var course = gameState.course;
+         var sures = _L.fromArray([A3(renderLapsCount,
+                                  dims,
+                                  course,
+                                  boat)
+                                  ,A2(renderPolar,boat,dims)
+                                  ,A3(renderControlWheel,
+                                  Game.wind,
+                                  boat,
+                                  dims)]);
          var nextGate = function () {
             var _v29 = gameState.countdown;
             switch (_v29.ctor)
@@ -1326,25 +1247,97 @@ Elm.Render.make = function (_elm) {
                case "Nothing":
                return Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 248 and 251");
+            "between lines 241 and 244");
          }();
-         var downwindHiddenGate = A4(renderHiddenGate,
+         var maybes = _L.fromArray([A4(renderHiddenGate,
+                                   course.downwind,
+                                   dims,
+                                   boat.center,
+                                   nextGate)
+                                   ,A4(renderHiddenGate,
+                                   course.upwind,
+                                   dims,
+                                   boat.center,
+                                   nextGate)
+                                   ,A2(renderCountdown,
+                                   gameState,
+                                   boat)
+                                   ,A3(renderWinner,
+                                   course,
+                                   boat,
+                                   opponents)]);
+         return Graphics.Collage.group(_L.append(sures,
+         Core.compact(maybes)));
+      }();
+   });
+   var colors = {_: {}
+                ,sand: A3(Color.rgb,239,210,121)
+                ,seaBlue: A3(Color.rgb,
+                10,
+                105,
+                148)};
+   var renderBounds = function (box) {
+      return function () {
+         var $ = box,
+         ne = $._0,
+         sw = $._1;
+         var w = Basics.fst(ne) - Basics.fst(sw);
+         var h = Basics.snd(ne) - Basics.snd(sw);
+         var cw = (Basics.fst(ne) + Basics.fst(sw)) / 2;
+         var ch = (Basics.snd(ne) + Basics.snd(sw)) / 2;
+         return Graphics.Collage.move({ctor: "_Tuple2"
+                                      ,_0: cw
+                                      ,_1: ch})(Graphics.Collage.filled(colors.seaBlue)(A2(Graphics.Collage.rect,
+         w,
+         h)));
+      }();
+   };
+   var renderIslands = function (gameState) {
+      return function () {
+         var renderIsland = function (i) {
+            return Graphics.Collage.move(i.location)(Graphics.Collage.filled(colors.sand)(Graphics.Collage.circle(i.radius)));
+         };
+         return Graphics.Collage.group(A2(List.map,
+         renderIsland,
+         gameState.islands));
+      }();
+   };
+   var renderRelative = F3(function (gameState,
+   boat,
+   opponents) {
+      return function () {
+         var gusts = renderGusts(gameState.wind);
+         var islands = renderIslands(gameState);
+         var equalityLine = A2(renderEqualityLine,
+         boat.position,
+         gameState.wind.origin);
+         var opponentsPics = Graphics.Collage.group(A2(List.map,
+         function (b) {
+            return renderOpponent(b);
+         },
+         opponents));
+         var boatPic = renderBoat(boat);
+         var bounds = renderBounds(gameState.bounds);
+         var course = gameState.course;
+         var nextGate = A2(Game.findNextGate,
+         boat,
+         course.laps);
+         var downwindGate = A3(renderGate,
          course.downwind,
-         dims,
-         boat.center,
+         course.markRadius,
          nextGate);
-         var upwindHiddenGate = A4(renderHiddenGate,
+         var upwindGate = A3(renderGate,
          course.upwind,
-         dims,
-         boat.center,
+         course.markRadius,
          nextGate);
-         return Graphics.Collage.group(_L.fromArray([polar
-                                                    ,controlWheel
-                                                    ,upwindHiddenGate
-                                                    ,downwindHiddenGate
-                                                    ,lapsCount
-                                                    ,countdown
-                                                    ,winner]));
+         return Graphics.Collage.move(Geo.neg(boat.center))(Graphics.Collage.group(_L.fromArray([bounds
+                                                                                                ,islands
+                                                                                                ,gusts
+                                                                                                ,downwindGate
+                                                                                                ,upwindGate
+                                                                                                ,opponentsPics
+                                                                                                ,equalityLine
+                                                                                                ,boatPic])));
       }();
    });
    var renderRaceForBoat = F4(function (_v31,
@@ -1365,10 +1358,7 @@ Elm.Render.make = function (_elm) {
                  var $ = dims,
                  w$ = $._0,
                  h$ = $._1;
-                 var bg = Graphics.Collage.filled(A3(Color.rgb,
-                 239,
-                 210,
-                 121))(A2(Graphics.Collage.rect,
+                 var bg = Graphics.Collage.filled(colors.sand)(A2(Graphics.Collage.rect,
                  w$,
                  h$));
                  var absolute = A4(renderAbsolute,
@@ -1384,7 +1374,7 @@ Elm.Render.make = function (_elm) {
                                                                    ,absolute]))]))]));
               }();}
          _E.Case($moduleName,
-         "between lines 263 and 269");
+         "between lines 261 and 267");
       }();
    });
    var render = F2(function (_v35,
@@ -1433,13 +1423,14 @@ Elm.Render.make = function (_elm) {
                       gameState.boat,
                       gameState.opponents);}
                  _E.Case($moduleName,
-                 "between lines 273 and 278");
+                 "between lines 271 and 276");
               }();}
          _E.Case($moduleName,
-         "between lines 273 and 278");
+         "between lines 271 and 276");
       }();
    });
    _elm.Render.values = {_op: _op
+                        ,colors: colors
                         ,fullScreenMessage: fullScreenMessage
                         ,baseText: baseText
                         ,renderGate: renderGate
@@ -2036,6 +2027,26 @@ Elm.Core.make = function (_elm) {
    var average = function (items) {
       return List.sum(items) / Basics.toFloat(List.length(items));
    };
+   var compact = function (maybes) {
+      return function () {
+         var folder = F2(function (m,
+         list) {
+            return function () {
+               switch (m.ctor)
+               {case "Just": return {ctor: "::"
+                                    ,_0: m._0
+                                    ,_1: list};
+                  case "Nothing": return list;}
+               _E.Case($moduleName,
+               "between lines 52 and 55");
+            }();
+         });
+         return A3(List.foldl,
+         folder,
+         _L.fromArray([]),
+         maybes);
+      }();
+   };
    var mapMaybe = F2(function (f,
    maybe) {
       return function () {
@@ -2096,6 +2107,7 @@ Elm.Core.make = function (_elm) {
                       ,polarVelocity: polarVelocity
                       ,boatVelocity: boatVelocity
                       ,mapMaybe: mapMaybe
+                      ,compact: compact
                       ,average: average};
    return _elm.Core.values;
 };Elm.Drag = Elm.Drag || {};

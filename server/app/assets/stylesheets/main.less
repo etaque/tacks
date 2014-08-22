@@ -1,5 +1,8 @@
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
 
+@seaBlue: rgb(10, 105, 148);
+@sand: rgb(239, 210, 121);
+
 html,
 body {
   width: 100%;
@@ -41,16 +44,23 @@ body {
 }
 
 .next-race {
-  margin-top: 200px;
-  text-align: center;
+  flex: 1;
+  display: flex;
+  background-color: @seaBlue;
+  align-items: center;
+  justify-content: center;
+
   a {
     font-size: 46px;
-    display: inline-block;
-    background-color: #222;
+    background-color: rgba(255,255,255,0.2);
     color: white;
-    border-radius: 10px;
-    padding: 10px 20px;
+    border-radius: 20px;
+    padding: 20px 30px;
     text-decoration: none;
+
+    &:hover {
+      background-color: rgba(255,255,255,0.3);
+    }
   }
 }
 

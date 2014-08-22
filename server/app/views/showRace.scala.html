@@ -21,7 +21,11 @@
 
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
-    document.title = formatTimer(data.now, data.startTime);
+    if (data.now < data.startTime) {
+      document.title = formatTimer(data.now, data.startTime);
+    } else {
+      document.title = "Race started!"
+    }
     game.ports.raceInput.send(data);
   };
 

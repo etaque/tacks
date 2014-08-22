@@ -38,12 +38,12 @@ class RacesSupervisor extends Actor {
 
   def createRace = {
     Logger.debug("New race")
-    val race = Race(startTime = DateTime.now().plusMinutes(2))
+    val race = Race(startTime = DateTime.now().plusMinutes(3))
     Logger.debug("Creating actor for race " + race.id)
     val ref = context.actorOf(RaceActor.props(race))
     raceActors += race.id -> ref
     context.watch(ref)
-    races = (race +: races).take(3)
+    races = (race +: races).take(5)
     // TODO save races
   }
 
@@ -54,7 +54,7 @@ object RacesSupervisor {
   val actorRef = Akka.system.actorOf(Props[RacesSupervisor])
 
   def start() = {
-    Akka.system.scheduler.schedule(0.microsecond, 3.minutes, actorRef, CreateRace)
+    Akka.system.scheduler.schedule(0.microsecond, 2.minutes, actorRef, CreateRace)
   }
 
 }
