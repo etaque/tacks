@@ -46,5 +46,13 @@ mapMaybe f maybe =
       Just v  -> Just (f v)
       Nothing -> Nothing
 
+compact : [Maybe a] -> [a]
+compact maybes =
+  let folder : Maybe b -> [b] -> [b]
+      folder m list = case m of
+                        Just j  -> j :: list
+                        Nothing -> list
+  in foldl folder [] maybes
+
 average : [Float] -> Float
 average items = (sum items) / (toFloat (length items))

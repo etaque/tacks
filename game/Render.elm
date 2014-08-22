@@ -16,23 +16,24 @@ Task: redefine `render` to use the GameState you defined in part 2.
 
 ------------------------------------------------------------------------------}
 
+colors = { seaBlue = rgb 10 105 148,
+           sand = rgb 239 210 121 }
+
 fullScreenMessage : String -> Form
 fullScreenMessage msg = msg
   |> String.toUpper 
   |> toText 
   |> Text.height 100 
   |> Text.color white 
-  |> monospace
   |> centered 
   |> toForm 
   |> alpha 0.3
 
 baseText : String -> Text
-baseText s =
-  toText s
-    |> Text.height 13
-    |> Text.color white
-    |> monospace
+baseText s = s
+  |> toText
+  |> Text.height 12
+  |> Text.color white
 
 
 renderGate : Gate -> Float -> Maybe GateLocation -> Form
@@ -47,7 +48,7 @@ renderGate gate markRadius nextGate =
   in
     if isNext then group (line :: marks) else group marks
 
-renderHiddenGate : Gate -> (Float,Float) -> Point -> Maybe GateLocation -> Form
+renderHiddenGate : Gate -> (Float,Float) -> Point -> Maybe GateLocation -> Maybe Form
 renderHiddenGate gate (w,h) (cx,cy) nextGate =
   let (left,right) = getGateMarks gate
       isNext = nextGate == Just gate.location
@@ -58,20 +59,13 @@ renderHiddenGate gate (w,h) (cx,cy) nextGate =
       distance isOver = round (abs (gate.y + (if isOver then -h else h)/2 - cy)) |> show |> baseText |> centered |> toForm
   in 
     case (over, under) of
-      (True, _) -> 
-        let m = polygon [(0,0),(-c,-c),(c,-c)] |> markStyle
-                                               |> move (-cx,(h/2))
-            d = distance True |> move (-cx, h/2 - c*3) 
-        in
-          group [m, d]
-
-      (_, True) -> 
-        let m = polygon [(0,0),(-c,c),(c,c)]   |> markStyle
-                                               |> move (-cx,(-h/2))
-            d = distance False |> move (-cx, -h/2 + c*3) 
-        in
-          group [m,d]
-      (_, _)    -> group []
+      (True, _) -> let m = polygon [(0,0),(-c,-c),(c,-c)] |> markStyle |> move (-cx,(h/2))
+                       d = distance True |> move (-cx, h/2 - c*3) 
+                   in  Just (group [m, d])
+      (_, True) -> let m = polygon [(0,0),(-c,c),(c,c)] |> markStyle |> move (-cx,(-h/2))
+                       d = distance False |> move (-cx, -h/2 + c*3) 
+                   in  Just (group [m,d])
+      (_, _)    -> Nothing
 
 renderBoatAngles : Boat -> Form
 renderBoatAngles boat =
@@ -123,26 +117,26 @@ renderBounds box =
       h = snd ne - snd sw
       cw = (fst ne + fst sw) / 2
       ch = (snd ne + snd sw) / 2
-  in rect w h |> filled (rgb 10 105 148)
+  in rect w h |> filled colors.seaBlue
               |> move (cw, ch)
 
-renderCountdown : GameState -> Boat -> Form
+renderCountdown : GameState -> Boat -> Maybe Form
 renderCountdown gameState boat = 
   case gameState.countdown of 
     Just c -> 
       if | c > 0 -> let cs = c |> inSeconds |> round
                         m = cs `div` 60
                         s = cs `rem` 60
-                        msg = (show m) ++ "'" ++ (show s) ++ "\""
-                    in fullScreenMessage msg
-         | (isEmpty boat.passedGates) -> fullScreenMessage "Go!"
-         | otherwise -> fullScreenMessage " " --toForm empty
-    Nothing -> toForm empty
+                        msg = (show m) ++ "' " ++ (show s) ++ "\""
+                    in Just (fullScreenMessage msg)
+         | (isEmpty boat.passedGates) -> Just (fullScreenMessage "Go!")
+         | otherwise -> Nothing
+    Nothing -> Nothing
 
 hasFinished : Course -> Opponent -> Bool
 hasFinished course boat = (length boat.passedGates) == course.laps * 2 + 1
 
-renderWinner : Course -> Boat -> [Opponent] -> Form
+renderWinner : Course -> Boat -> [Opponent] -> Maybe Form
 renderWinner course boat opponents =
   let me = boatToOpponent boat
   in
@@ -154,11 +148,11 @@ renderWinner course boat opponents =
           othersAfterMe = all (\t -> t > myTime) othersTime
       in
         if (isEmpty othersTime) || othersAfterMe then
-          fullScreenMessage "WINNER"
+          Just (fullScreenMessage "WINNER")
         else
-          toForm empty
+          Nothing
     else
-      toForm empty
+      Nothing
 
 renderGust : Wind -> Gust -> Form
 renderGust wind gust =
@@ -179,7 +173,7 @@ renderGusts wind =
 
 renderIslands : GameState -> Form
 renderIslands gameState =
-  let renderIsland i = circle i.radius |> filled (rgb 239 210 121) |> move i.location
+  let renderIsland i = circle i.radius |> filled colors.sand |> move i.location
   in
     group (map renderIsland gameState.islands)
 
@@ -244,19 +238,23 @@ renderRelative gameState boat opponents =
 
 renderAbsolute : GameState -> Boat -> [Opponent] -> (Float,Float) -> Form
 renderAbsolute gameState boat opponents dims =
-  let course = gameState.course
-      nextGate = case gameState.countdown of 
-        Just c -> if c <= 0 then findNextGate boat course.laps else Nothing
-        Nothing -> Nothing
-      countdown = renderCountdown gameState boat
-      winner = renderWinner gameState.course boat opponents
-      lapsCount = renderLapsCount dims gameState.course boat
-      downwindHiddenGate = renderHiddenGate course.downwind dims boat.center nextGate
-      upwindHiddenGate = renderHiddenGate course.upwind dims boat.center nextGate
-      polar = renderPolar boat dims
-      controlWheel = renderControlWheel wind boat dims
+  let nextGate = case gameState.countdown of 
+        Just c  -> if c <= 0 then findNextGate boat course.laps else Nothing
+        Nothing -> Nothing 
+      course = gameState.course
+      justForms = [
+        renderLapsCount dims course boat,
+        renderPolar boat dims,
+        renderControlWheel wind boat dims
+      ]
+      maybeForms = [
+        renderHiddenGate course.downwind dims boat.center nextGate,
+        renderHiddenGate course.upwind dims boat.center nextGate,
+        renderCountdown gameState boat,
+        renderWinner course boat opponents
+      ]
   in
-      group [polar, controlWheel, upwindHiddenGate, downwindHiddenGate, lapsCount, countdown, winner]
+      group (justForms ++ (compact maybeForms))
 
 renderRaceForBoat : (Int,Int) -> GameState -> Boat -> [Opponent] -> Element
 renderRaceForBoat (w,h) gameState boat opponents =
@@ -264,7 +262,7 @@ renderRaceForBoat (w,h) gameState boat opponents =
       (w',h') = dims
       relativeToCenter = renderRelative gameState boat opponents
       absolute = renderAbsolute gameState boat opponents dims      
-      bg = rect w' h' |> filled (rgb 239 210 121)
+      bg = rect w' h' |> filled colors.sand
   in 
       layers [collage w h [bg, group [relativeToCenter, absolute]]]
 
