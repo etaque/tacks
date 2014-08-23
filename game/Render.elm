@@ -26,7 +26,7 @@ fullScreenMessage : String -> Form
 fullScreenMessage msg = msg
   |> String.toUpper 
   |> toText 
-  |> Text.height 100 
+  |> Text.height 60 
   |> Text.color white 
   |> centered 
   |> toForm 
@@ -193,7 +193,7 @@ renderLapsCount (w,h) course boat =
 renderPolar : Boat -> (Float,Float) -> Form
 renderPolar boat (w,h) =
   let 
-    anglePoint a = fromPolar ((polarVelocity a) * 5, toRadians a)
+    anglePoint a = fromPolar ((polarVelocity a) * 10, toRadians a)
     points = map anglePoint [0..180]
     maxSpeed = (map fst points |> maximum) + 10
     polar = path points |> traced (solid white)
@@ -225,7 +225,7 @@ renderControlWheel wind boat (w,h) =
 renderHelp : Float -> (Float,Float) -> Maybe Form
 renderHelp countdown (w,h) = 
   if countdown > 0 then
-    let text = helpMessage |> baseText |> monospace |> centered |> toForm |> move (0, -h/2 + 50) |> alpha 0.8
+    let text = helpMessage |> baseText |> centered |> toForm |> move (0, -h/2 + 50) |> alpha 0.8
     in Just text
   else
     Nothing

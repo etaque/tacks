@@ -1126,7 +1126,7 @@ Elm.Render.make = function (_elm) {
             return function () {
                  var anglePoint = function (a) {
                     return Basics.fromPolar({ctor: "_Tuple2"
-                                            ,_0: Core.polarVelocity(a) * 5
+                                            ,_0: Core.polarVelocity(a) * 10
                                             ,_1: Core.toRadians(a)});
                  };
                  var points = A2(List.map,
@@ -1172,7 +1172,7 @@ Elm.Render.make = function (_elm) {
       }();
    });
    var fullScreenMessage = function (msg) {
-      return Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(Text.centered(Text.color(Color.white)(Text.height(100)(Text.toText(String.toUpper(msg)))))));
+      return Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(Text.centered(Text.color(Color.white)(Text.height(60)(Text.toText(String.toUpper(msg)))))));
    };
    var renderCountdown = F2(function (gameState,
    boat) {
@@ -1222,7 +1222,7 @@ Elm.Render.make = function (_elm) {
               0) > 0 ? function () {
                  var text = Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
                                                                               ,_0: 0
-                                                                              ,_1: (0 - _v27._1) / 2 + 50})(Graphics.Collage.toForm(Text.centered(Text.monospace(baseText(helpMessage))))));
+                                                                              ,_1: (0 - _v27._1) / 2 + 50})(Graphics.Collage.toForm(Text.centered(baseText(helpMessage)))));
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
