@@ -147,14 +147,16 @@ isStuck p gameState =
 
 getCenterAfterMove : Point -> Point -> Point -> (Float,Float) -> (Point)
 getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
-  let refocus n n' cn dn margin = 
-        let min = cn - (dn / 2) + margin
-            max = cn + (dn / 2) - margin
+  let refocus n n' c d margin = 
+        let min = c - (d / 2) + margin
+            max = c + (d / 2) - margin
         in
-          if | n < min || n > max -> cn
-             | n' < min           -> cn - (n - n')
-             | n' > max           -> cn + (n' - n)
-             | otherwise          -> cn
+          if | n < -d/2 || n > d/2 -> c
+             | n < min             -> if n' < n then c - (n - n') else c
+             | n > max             -> if n' > n then c + (n' - n) else c
+             | n' < min            -> c - (n - n')
+             | n' > max            -> c + (n' - n)
+             | otherwise           -> c
   in
     (refocus x x' cx w (w * 0.2), refocus y y' cy h (h * 0.4))
 
@@ -165,7 +167,7 @@ moveBoat now delta gameState dimensions boat =
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
-      newPassedGates = if maybe False (\c -> c <= 0) gameState.countdown
+      newPassedGates = if gameState.countdown <= 0
         then getPassedGates boat now gameState.course (position, newPosition)
         else boat.passedGates
       newCenter = getCenterAfterMove position newPosition boat.center (floatify dimensions)
@@ -256,7 +258,7 @@ windStep delta now ({wind, boat} as gameState) =
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep {now,startTime,opponents} gameState =
   { gameState | opponents <- opponents,
-                countdown <- Just (startTime - now) }
+                countdown <- startTime - now }
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =

@@ -19,6 +19,9 @@ Task: redefine `render` to use the GameState you defined in part 2.
 colors = { seaBlue = rgb 10 105 148,
            sand = rgb 239 210 121 }
 
+helpMessage : String
+helpMessage = "←/→ to turn left/right, ↓←/↓→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe"
+
 fullScreenMessage : String -> Form
 fullScreenMessage msg = msg
   |> String.toUpper 
@@ -32,8 +35,9 @@ fullScreenMessage msg = msg
 baseText : String -> Text
 baseText s = s
   |> toText
-  |> Text.height 12
+  |> Text.height 14
   |> Text.color white
+  |> monospace
 
 
 renderGate : Gate -> Float -> Maybe GateLocation -> Form
@@ -122,16 +126,14 @@ renderBounds box =
 
 renderCountdown : GameState -> Boat -> Maybe Form
 renderCountdown gameState boat = 
-  case gameState.countdown of 
-    Just c -> 
-      if | c > 0 -> let cs = c |> inSeconds |> round
-                        m = cs `div` 60
-                        s = cs `rem` 60
-                        msg = (show m) ++ "' " ++ (show s) ++ "\""
-                    in Just (fullScreenMessage msg)
-         | (isEmpty boat.passedGates) -> Just (fullScreenMessage "Go!")
-         | otherwise -> Nothing
-    Nothing -> Nothing
+  if | gameState.countdown > 0 -> 
+         let cs = gameState.countdown |> inSeconds |> round
+             m = cs `div` 60
+             s = cs `rem` 60
+             msg = (show m) ++ "' " ++ (show s) ++ "\""
+         in Just (fullScreenMessage msg)
+     | (isEmpty boat.passedGates) -> Just (fullScreenMessage "Go!")
+     | otherwise -> Nothing
 
 hasFinished : Course -> Opponent -> Bool
 hasFinished course boat = (length boat.passedGates) == course.laps * 2 + 1
@@ -220,6 +222,13 @@ renderControlWheel wind boat (w,h) =
   in
       group [c, boatWindMarker, boatMarker] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
 
+renderHelp : Float -> (Float,Float) -> Maybe Form
+renderHelp countdown (w,h) = 
+  if countdown > 0 then
+    let text = helpMessage |> baseText |> monospace |> centered |> toForm |> move (0, -h/2 + 50) |> alpha 0.8
+    in Just text
+  else
+    Nothing
 
 renderRelative : GameState -> Boat -> [Opponent] -> Form
 renderRelative gameState boat opponents =
@@ -238,9 +247,8 @@ renderRelative gameState boat opponents =
 
 renderAbsolute : GameState -> Boat -> [Opponent] -> (Float,Float) -> Form
 renderAbsolute gameState boat opponents dims =
-  let nextGate = case gameState.countdown of 
-        Just c  -> if c <= 0 then findNextGate boat course.laps else Nothing
-        Nothing -> Nothing 
+  let nextGate = if gameState.countdown <= 0 then findNextGate boat course.laps 
+                                             else Nothing
       course = gameState.course
       justForms = [
         renderLapsCount dims course boat,
@@ -251,7 +259,8 @@ renderAbsolute gameState boat opponents dims =
         renderHiddenGate course.downwind dims boat.center nextGate,
         renderHiddenGate course.upwind dims boat.center nextGate,
         renderCountdown gameState boat,
-        renderWinner course boat opponents
+        renderWinner course boat opponents,
+        renderHelp gameState.countdown dims
       ]
   in
       group (justForms ++ (compact maybeForms))

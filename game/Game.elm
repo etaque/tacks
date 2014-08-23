@@ -39,7 +39,7 @@ type Island = { location : Point, radius : Float }
 
 type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat, opponents: [Opponent],
                    course: Course, bounds: (Point, Point), islands : [Island],
-                   startDuration : Time, countdown: Maybe Time }
+                   startDuration : Time, countdown: Time }
 
 type RaceState = { boats : [Boat] }
 
@@ -75,7 +75,7 @@ islands = [ { location = (250, 300), radius = 100 },
 defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, otherBoat = Nothing, opponents = [],
                 course = course, bounds = ((800,1200), (-800,-400)), islands = islands,
-                startDuration = (30*second), countdown = Nothing }
+                startDuration = (30*second), countdown = 0 }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))

@@ -137,7 +137,7 @@ Elm.Steps.make = function (_elm) {
          return _U.replace([["opponents"
                             ,_v0.opponents]
                            ,["countdown"
-                            ,Maybe.Just(_v0.startTime - _v0.now)]],
+                            ,_v0.startTime - _v0.now]],
          gameState);
       }();
    });
@@ -238,7 +238,7 @@ Elm.Steps.make = function (_elm) {
                    break;}
               break;}
          _E.Case($moduleName,
-         "between lines 201 and 209");
+         "between lines 203 and 211");
       }();
    });
    var updateGusts = F4(function (timestamp,
@@ -322,17 +322,21 @@ Elm.Steps.make = function (_elm) {
                                     return function () {
                                          var refocus = F5(function (n,
                                          n$,
-                                         cn,
-                                         dn,
+                                         c,
+                                         d,
                                          margin) {
                                             return function () {
-                                               var max = cn + dn / 2 - margin;
-                                               var min = cn - dn / 2 + margin;
+                                               var max = c + d / 2 - margin;
+                                               var min = c - d / 2 + margin;
                                                return _U.cmp(n,
-                                               min) < 0 || _U.cmp(n,
-                                               max) > 0 ? cn : _U.cmp(n$,
-                                               min) < 0 ? cn - (n - n$) : _U.cmp(n$,
-                                               max) > 0 ? cn + (n$ - n) : cn;
+                                               (0 - d) / 2) < 0 || _U.cmp(n,
+                                               d / 2) > 0 ? c : _U.cmp(n,
+                                               min) < 0 ? _U.cmp(n$,
+                                               n) < 0 ? c - (n - n$) : c : _U.cmp(n,
+                                               max) > 0 ? _U.cmp(n$,
+                                               n) > 0 ? c + (n$ - n) : c : _U.cmp(n$,
+                                               min) < 0 ? c - (n - n$) : _U.cmp(n$,
+                                               max) > 0 ? c + (n$ - n) : c;
                                             }();
                                          });
                                          return {ctor: "_Tuple2"
@@ -350,16 +354,16 @@ Elm.Steps.make = function (_elm) {
                                                 _v15._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
-                                 "between lines 150 and 159");
+                                 "between lines 150 and 161");
                               }();}
                          _E.Case($moduleName,
-                         "between lines 150 and 159");
+                         "between lines 150 and 161");
                       }();}
                  _E.Case($moduleName,
-                 "between lines 150 and 159");
+                 "between lines 150 and 161");
               }();}
          _E.Case($moduleName,
-         "between lines 150 and 159");
+         "between lines 150 and 161");
       }();
    });
    var getGatesMarks = function (course) {
@@ -534,12 +538,8 @@ Elm.Steps.make = function (_elm) {
          nextPosition,
          gameState);
          var newPosition = stuck ? position : nextPosition;
-         var newPassedGates = A3(Maybe.maybe,
-         false,
-         function (c) {
-            return _U.cmp(c,0) < 1;
-         },
-         gameState.countdown) ? A4(getPassedGates,
+         var newPassedGates = _U.cmp(gameState.countdown,
+         0) < 1 ? A4(getPassedGates,
          boat,
          now,
          gameState.course,
@@ -595,7 +595,7 @@ Elm.Steps.make = function (_elm) {
                  gameState);
               }();}
          _E.Case($moduleName,
-         "between lines 180 and 185");
+         "between lines 182 and 187");
       }();
    });
    var getTurn = F3(function (tackTarget,
@@ -905,7 +905,7 @@ Elm.Render.make = function (_elm) {
                                                                                                                                      ,boatMarker]))));
               }();}
          _E.Case($moduleName,
-         "between lines 210 and 221");
+         "between lines 212 and 223");
       }();
    });
    var renderGust = F2(function (wind,
@@ -944,7 +944,7 @@ Elm.Render.make = function (_elm) {
                  right))));
               }();}
          _E.Case($moduleName,
-         "between lines 108 and 111");
+         "between lines 112 and 115");
       }();
    });
    var renderOpponent = function (opponent) {
@@ -978,7 +978,7 @@ Elm.Render.make = function (_elm) {
       }();
    });
    var baseText = function (s) {
-      return Text.color(Color.white)(Text.height(12)(Text.toText(s)));
+      return Text.monospace(Text.color(Color.white)(Text.height(14)(Text.toText(s))));
    };
    var renderHiddenGate = F4(function (gate,
    _v8,
@@ -1051,14 +1051,14 @@ Elm.Render.make = function (_elm) {
                                       }();}
                                  return Maybe.Nothing;}
                             _E.Case($moduleName,
-                            "between lines 61 and 68");
+                            "between lines 65 and 72");
                          }();
                       }();}
                  _E.Case($moduleName,
-                 "between lines 53 and 68");
+                 "between lines 57 and 72");
               }();}
          _E.Case($moduleName,
-         "between lines 53 and 68");
+         "between lines 57 and 72");
       }();
    });
    var renderBoatAngles = function (boat) {
@@ -1115,7 +1115,7 @@ Elm.Render.make = function (_elm) {
                                               ,_1: _v19._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(baseText(msg))));
               }();}
          _E.Case($moduleName,
-         "between lines 182 and 188");
+         "between lines 184 and 190");
       }();
    });
    var renderPolar = F2(function (boat,
@@ -1168,7 +1168,7 @@ Elm.Render.make = function (_elm) {
                                                                                                                      ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 193 and 206");
+         "between lines 195 and 208");
       }();
    });
    var fullScreenMessage = function (msg) {
@@ -1176,26 +1176,17 @@ Elm.Render.make = function (_elm) {
    };
    var renderCountdown = F2(function (gameState,
    boat) {
-      return function () {
-         var _v27 = gameState.countdown;
-         switch (_v27.ctor)
-         {case "Just":
-            return _U.cmp(_v27._0,
-              0) > 0 ? function () {
-                 var cs = Basics.round(Time.inSeconds(_v27._0));
-                 var m = cs / 60 | 0;
-                 var s = A2(Basics.rem,cs,60);
-                 var msg = _L.append(String.show(m),
-                 _L.append("\' ",
-                 _L.append(String.show(s),
-                 "\"")));
-                 return Maybe.Just(fullScreenMessage(msg));
-              }() : List.isEmpty(boat.passedGates) ? Maybe.Just(fullScreenMessage("Go!")) : Maybe.Nothing;
-            case "Nothing":
-            return Maybe.Nothing;}
-         _E.Case($moduleName,
-         "between lines 125 and 134");
-      }();
+      return _U.cmp(gameState.countdown,
+      0) > 0 ? function () {
+         var cs = Basics.round(Time.inSeconds(gameState.countdown));
+         var m = cs / 60 | 0;
+         var s = A2(Basics.rem,cs,60);
+         var msg = _L.append(String.show(m),
+         _L.append("\' ",
+         _L.append(String.show(s),
+         "\"")));
+         return Maybe.Just(fullScreenMessage(msg));
+      }() : List.isEmpty(boat.passedGates) ? Maybe.Just(fullScreenMessage("Go!")) : Maybe.Nothing;
    });
    var renderWinner = F3(function (course,
    boat,
@@ -1221,53 +1212,64 @@ Elm.Render.make = function (_elm) {
          }() : Maybe.Nothing;
       }();
    });
+   var helpMessage = "←/→ to turn left/right, ↓←/↓→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe";
+   var renderHelp = F2(function (countdown,
+   _v27) {
+      return function () {
+         switch (_v27.ctor)
+         {case "_Tuple2":
+            return _U.cmp(countdown,
+              0) > 0 ? function () {
+                 var text = Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
+                                                                              ,_0: 0
+                                                                              ,_1: (0 - _v27._1) / 2 + 50})(Graphics.Collage.toForm(Text.centered(Text.monospace(baseText(helpMessage))))));
+                 return Maybe.Just(text);
+              }() : Maybe.Nothing;}
+         _E.Case($moduleName,
+         "between lines 227 and 231");
+      }();
+   });
    var renderAbsolute = F4(function (gameState,
    boat,
    opponents,
    dims) {
       return function () {
          var course = gameState.course;
-         var sures = _L.fromArray([A3(renderLapsCount,
-                                  dims,
-                                  course,
-                                  boat)
-                                  ,A2(renderPolar,boat,dims)
-                                  ,A3(renderControlWheel,
-                                  Game.wind,
-                                  boat,
-                                  dims)]);
-         var nextGate = function () {
-            var _v29 = gameState.countdown;
-            switch (_v29.ctor)
-            {case "Just":
-               return _U.cmp(_v29._0,
-                 0) < 1 ? A2(Game.findNextGate,
-                 boat,
-                 course.laps) : Maybe.Nothing;
-               case "Nothing":
-               return Maybe.Nothing;}
-            _E.Case($moduleName,
-            "between lines 241 and 244");
-         }();
-         var maybes = _L.fromArray([A4(renderHiddenGate,
-                                   course.downwind,
-                                   dims,
-                                   boat.center,
-                                   nextGate)
-                                   ,A4(renderHiddenGate,
-                                   course.upwind,
-                                   dims,
-                                   boat.center,
-                                   nextGate)
-                                   ,A2(renderCountdown,
-                                   gameState,
-                                   boat)
-                                   ,A3(renderWinner,
-                                   course,
-                                   boat,
-                                   opponents)]);
-         return Graphics.Collage.group(_L.append(sures,
-         Core.compact(maybes)));
+         var justForms = _L.fromArray([A3(renderLapsCount,
+                                      dims,
+                                      course,
+                                      boat)
+                                      ,A2(renderPolar,boat,dims)
+                                      ,A3(renderControlWheel,
+                                      Game.wind,
+                                      boat,
+                                      dims)]);
+         var nextGate = _U.cmp(gameState.countdown,
+         0) < 1 ? A2(Game.findNextGate,
+         boat,
+         course.laps) : Maybe.Nothing;
+         var maybeForms = _L.fromArray([A4(renderHiddenGate,
+                                       course.downwind,
+                                       dims,
+                                       boat.center,
+                                       nextGate)
+                                       ,A4(renderHiddenGate,
+                                       course.upwind,
+                                       dims,
+                                       boat.center,
+                                       nextGate)
+                                       ,A2(renderCountdown,
+                                       gameState,
+                                       boat)
+                                       ,A3(renderWinner,
+                                       course,
+                                       boat,
+                                       opponents)
+                                       ,A2(renderHelp,
+                                       gameState.countdown,
+                                       dims)]);
+         return Graphics.Collage.group(_L.append(justForms,
+         Core.compact(maybeForms)));
       }();
    });
    var colors = {_: {}
@@ -1374,7 +1376,7 @@ Elm.Render.make = function (_elm) {
                                                                    ,absolute]))]))]));
               }();}
          _E.Case($moduleName,
-         "between lines 261 and 267");
+         "between lines 270 and 276");
       }();
    });
    var render = F2(function (_v35,
@@ -1423,14 +1425,15 @@ Elm.Render.make = function (_elm) {
                       gameState.boat,
                       gameState.opponents);}
                  _E.Case($moduleName,
-                 "between lines 271 and 276");
+                 "between lines 280 and 285");
               }();}
          _E.Case($moduleName,
-         "between lines 271 and 276");
+         "between lines 280 and 285");
       }();
    });
    _elm.Render.values = {_op: _op
                         ,colors: colors
+                        ,helpMessage: helpMessage
                         ,fullScreenMessage: fullScreenMessage
                         ,baseText: baseText
                         ,renderGate: renderGate
@@ -1449,6 +1452,7 @@ Elm.Render.make = function (_elm) {
                         ,renderLapsCount: renderLapsCount
                         ,renderPolar: renderPolar
                         ,renderControlWheel: renderControlWheel
+                        ,renderHelp: renderHelp
                         ,renderRelative: renderRelative
                         ,renderAbsolute: renderAbsolute
                         ,renderRaceForBoat: renderRaceForBoat
@@ -1793,7 +1797,7 @@ Elm.Game.make = function (_elm) {
                               ,_1: {ctor: "_Tuple2"
                                    ,_0: -800
                                    ,_1: -400}}
-                     ,countdown: Maybe.Nothing
+                     ,countdown: 0
                      ,course: course
                      ,islands: islands
                      ,opponents: _L.fromArray([])
