@@ -216,11 +216,16 @@ renderControlWheel wind boat (w,h) =
         |> traced (solid white)
       boatAngle = toRadians boat.direction
       boatMarker = polygon [(0,4),(-4,-4),(4,-4)] 
-                |> filled white
-                |> rotate (boatAngle - pi/2)
-                |> move (fromPolar (r - 4, boatAngle))
+        |> filled white
+        |> rotate (boatAngle - pi/2)
+        |> move (fromPolar (r - 4, boatAngle))
+      windOriginText = ((show boat.windOrigin) ++ "&deg;")
+        |> baseText |> centered |> toForm
+        |> rotate (windAngle - pi/2)
+        |> move (fromPolar (r + 20, windAngle))
+
   in
-      group [c, boatWindMarker, boatMarker] |> move (w/2 - 50, (h/2 - 100)) |> alpha 0.8
+      group [c, boatWindMarker, boatMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
 
 renderHelp : Float -> (Float,Float) -> Maybe Form
 renderHelp countdown (w,h) = 

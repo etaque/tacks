@@ -871,45 +871,6 @@ Elm.Render.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
-   var renderControlWheel = F3(function (wind,
-   boat,
-   _v0) {
-      return function () {
-         switch (_v0.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var boatAngle = Core.toRadians(boat.direction);
-                 var windAngle = Core.toRadians(boat.windOrigin);
-                 var r = 35;
-                 var c = Graphics.Collage.outlined(Graphics.Collage.solid(Color.white))(Graphics.Collage.circle(r));
-                 var boatWindMarker = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
-                 Basics.fromPolar({ctor: "_Tuple2"
-                                  ,_0: r
-                                  ,_1: windAngle}),
-                 Basics.fromPolar({ctor: "_Tuple2"
-                                  ,_0: r + 8
-                                  ,_1: windAngle})));
-                 var boatMarker = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
-                                                                         ,_0: r - 4
-                                                                         ,_1: boatAngle}))(Graphics.Collage.rotate(boatAngle - Basics.pi / 2)(Graphics.Collage.filled(Color.white)(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                                                                                                          ,_0: 0
-                                                                                                                                                                                                                          ,_1: 4}
-                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                          ,_0: -4
-                                                                                                                                                                                                                          ,_1: -4}
-                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                          ,_0: 4
-                                                                                                                                                                                                                          ,_1: -4}])))));
-                 return Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
-                                                                          ,_0: _v0._0 / 2 - 50
-                                                                          ,_1: _v0._1 / 2 - 100})(Graphics.Collage.group(_L.fromArray([c
-                                                                                                                                      ,boatWindMarker
-                                                                                                                                      ,boatMarker]))));
-              }();}
-         _E.Case($moduleName,
-         "between lines 212 and 223");
-      }();
-   });
    var renderGust = F2(function (wind,
    gust) {
       return function () {
@@ -927,10 +888,10 @@ Elm.Render.make = function (_elm) {
       return _U.eq(List.length(boat.passedGates),
       course.laps * 2 + 1);
    });
-   var renderEqualityLine = F2(function (_v4,
+   var renderEqualityLine = F2(function (_v0,
    windOrigin) {
       return function () {
-         switch (_v4.ctor)
+         switch (_v0.ctor)
          {case "_Tuple2":
             return function () {
                  var right = Basics.fromPolar({ctor: "_Tuple2"
@@ -940,8 +901,8 @@ Elm.Render.make = function (_elm) {
                                              ,_0: 50
                                              ,_1: Core.toRadians(windOrigin - 90)});
                  return Graphics.Collage.move({ctor: "_Tuple2"
-                                              ,_0: _v4._0
-                                              ,_1: _v4._1})(Graphics.Collage.alpha(0.2)(Graphics.Collage.traced(Graphics.Collage.dotted(Color.white))(A2(Graphics.Collage.segment,
+                                              ,_0: _v0._0
+                                              ,_1: _v0._1})(Graphics.Collage.alpha(0.2)(Graphics.Collage.traced(Graphics.Collage.dotted(Color.white))(A2(Graphics.Collage.segment,
                  left,
                  right))));
               }();}
@@ -983,23 +944,23 @@ Elm.Render.make = function (_elm) {
       return Text.monospace(Text.color(Color.white)(Text.height(14)(Text.toText(s))));
    };
    var renderHiddenGate = F4(function (gate,
-   _v8,
-   _v9,
+   _v4,
+   _v5,
    nextGate) {
       return function () {
-         switch (_v9.ctor)
+         switch (_v5.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v8.ctor)
+                 switch (_v4.ctor)
                  {case "_Tuple2":
                     return function () {
                          var distance = function (isOver) {
-                            return Graphics.Collage.toForm(Text.centered(baseText(String.show(Basics.round(Basics.abs(gate.y + (isOver ? 0 - _v8._1 : _v8._1) / 2 - _v9._1))))));
+                            return Graphics.Collage.toForm(Text.centered(baseText(String.show(Basics.round(Basics.abs(gate.y + (isOver ? 0 - _v4._1 : _v4._1) / 2 - _v5._1))))));
                          };
                          var c = 5;
-                         var over = _U.cmp(_v9._1 + _v8._1 / 2 + c,
+                         var over = _U.cmp(_v5._1 + _v4._1 / 2 + c,
                          gate.y) < 0;
-                         var under = _U.cmp(_v9._1 - _v8._1 / 2 - c,
+                         var under = _U.cmp(_v5._1 - _v4._1 / 2 - c,
                          gate.y) > 0;
                          var isNext = _U.eq(nextGate,
                          Maybe.Just(gate.location));
@@ -1008,19 +969,19 @@ Elm.Render.make = function (_elm) {
                          left = $._0,
                          right = $._1;
                          return function () {
-                            var _v16 = {ctor: "_Tuple2"
+                            var _v12 = {ctor: "_Tuple2"
                                        ,_0: over
                                        ,_1: under};
-                            switch (_v16.ctor)
+                            switch (_v12.ctor)
                             {case "_Tuple2":
-                               switch (_v16._0)
+                               switch (_v12._0)
                                  {case true: return function () {
                                          var d = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v9._0
-                                                                       ,_1: _v8._1 / 2 - c * 3})(distance(true));
+                                                                       ,_0: 0 - _v5._0
+                                                                       ,_1: _v4._1 / 2 - c * 3})(distance(true));
                                          var m = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v9._0
-                                                                       ,_1: _v8._1 / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                       ,_0: 0 - _v5._0
+                                                                       ,_1: _v4._1 / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
                                                                                                                                           ,_0: 0
                                                                                                                                           ,_1: 0}
                                                                                                                                          ,{ctor: "_Tuple2"
@@ -1032,14 +993,14 @@ Elm.Render.make = function (_elm) {
                                          return Maybe.Just(Graphics.Collage.group(_L.fromArray([m
                                                                                                ,d])));
                                       }();}
-                                 switch (_v16._1)
+                                 switch (_v12._1)
                                  {case true: return function () {
                                          var d = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v9._0
-                                                                       ,_1: (0 - _v8._1) / 2 + c * 3})(distance(false));
+                                                                       ,_0: 0 - _v5._0
+                                                                       ,_1: (0 - _v4._1) / 2 + c * 3})(distance(false));
                                          var m = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v9._0
-                                                                       ,_1: (0 - _v8._1) / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                       ,_0: 0 - _v5._0
+                                                                       ,_1: (0 - _v4._1) / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
                                                                                                                                                 ,_0: 0
                                                                                                                                                 ,_1: 0}
                                                                                                                                                ,{ctor: "_Tuple2"
@@ -1097,11 +1058,11 @@ Elm.Render.make = function (_elm) {
                                                                                          ,hull])));
       }();
    };
-   var renderLapsCount = F3(function (_v19,
+   var renderLapsCount = F3(function (_v15,
    course,
    boat) {
       return function () {
-         switch (_v19.ctor)
+         switch (_v15.ctor)
          {case "_Tuple2":
             return function () {
                  var count = List.minimum(_L.fromArray([A2(Basics.div,
@@ -1113,17 +1074,17 @@ Elm.Render.make = function (_elm) {
                  _L.append("/",
                  String.show(course.laps))));
                  return Graphics.Collage.move({ctor: "_Tuple2"
-                                              ,_0: _v19._0 / 2 - 50
-                                              ,_1: _v19._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(baseText(msg))));
+                                              ,_0: _v15._0 / 2 - 50
+                                              ,_1: _v15._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(baseText(msg))));
               }();}
          _E.Case($moduleName,
          "between lines 184 and 190");
       }();
    });
    var renderPolar = F2(function (boat,
-   _v23) {
+   _v19) {
       return function () {
-         switch (_v23.ctor)
+         switch (_v19.ctor)
          {case "_Tuple2":
             return function () {
                  var anglePoint = function (a) {
@@ -1161,8 +1122,8 @@ Elm.Render.make = function (_elm) {
                  ,_0: 0
                  ,_1: Basics.snd(boatPoint)}));
                  return Graphics.Collage.move({ctor: "_Tuple2"
-                                              ,_0: (0 - _v23._0) / 2 + 20
-                                              ,_1: _v23._1 / 2 - maxSpeed - 20})(Graphics.Collage.group(_L.fromArray([yAxis
+                                              ,_0: (0 - _v19._0) / 2 + 20
+                                              ,_1: _v19._1 / 2 - maxSpeed - 20})(Graphics.Collage.group(_L.fromArray([yAxis
                                                                                                                      ,xAxis
                                                                                                                      ,polar
                                                                                                                      ,boatProjection
@@ -1171,6 +1132,50 @@ Elm.Render.make = function (_elm) {
               }();}
          _E.Case($moduleName,
          "between lines 195 and 208");
+      }();
+   });
+   var renderControlWheel = F3(function (wind,
+   boat,
+   _v23) {
+      return function () {
+         switch (_v23.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var boatAngle = Core.toRadians(boat.direction);
+                 var windAngle = Core.toRadians(boat.windOrigin);
+                 var r = 35;
+                 var c = Graphics.Collage.outlined(Graphics.Collage.solid(Color.white))(Graphics.Collage.circle(r));
+                 var boatWindMarker = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+                 Basics.fromPolar({ctor: "_Tuple2"
+                                  ,_0: r
+                                  ,_1: windAngle}),
+                 Basics.fromPolar({ctor: "_Tuple2"
+                                  ,_0: r + 8
+                                  ,_1: windAngle})));
+                 var boatMarker = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
+                                                                         ,_0: r - 4
+                                                                         ,_1: boatAngle}))(Graphics.Collage.rotate(boatAngle - Basics.pi / 2)(Graphics.Collage.filled(Color.white)(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                                                                                                          ,_0: 0
+                                                                                                                                                                                                                          ,_1: 4}
+                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                          ,_0: -4
+                                                                                                                                                                                                                          ,_1: -4}
+                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                          ,_0: 4
+                                                                                                                                                                                                                          ,_1: -4}])))));
+                 var windOriginText = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
+                                                                             ,_0: r + 20
+                                                                             ,_1: windAngle}))(Graphics.Collage.rotate(windAngle - Basics.pi / 2)(Graphics.Collage.toForm(Text.centered(baseText(_L.append(String.show(boat.windOrigin),
+                 "&deg;"))))));
+                 return Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
+                                                                          ,_0: _v23._0 / 2 - 50
+                                                                          ,_1: _v23._1 / 2 - 120})(Graphics.Collage.group(_L.fromArray([c
+                                                                                                                                       ,boatWindMarker
+                                                                                                                                       ,boatMarker
+                                                                                                                                       ,windOriginText]))));
+              }();}
+         _E.Case($moduleName,
+         "between lines 212 and 228");
       }();
    });
    var fullScreenMessage = function (msg) {
@@ -1228,7 +1233,7 @@ Elm.Render.make = function (_elm) {
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 227 and 231");
+         "between lines 232 and 236");
       }();
    });
    var renderAbsolute = F4(function (gameState,
@@ -1378,7 +1383,7 @@ Elm.Render.make = function (_elm) {
                                                                    ,absolute]))]))]));
               }();}
          _E.Case($moduleName,
-         "between lines 270 and 276");
+         "between lines 275 and 281");
       }();
    });
    var render = F2(function (_v35,
@@ -1427,10 +1432,10 @@ Elm.Render.make = function (_elm) {
                       gameState.boat,
                       gameState.opponents);}
                  _E.Case($moduleName,
-                 "between lines 280 and 285");
+                 "between lines 285 and 290");
               }();}
          _E.Case($moduleName,
-         "between lines 280 and 285");
+         "between lines 285 and 290");
       }();
    });
    _elm.Render.values = {_op: _op
