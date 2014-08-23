@@ -103,12 +103,12 @@ gatePassedInX gate ((x,y),(x',y')) =
     (abs xGate) <= gate.width / 2
 
 gatePassedFromNorth : Gate -> (Point,Point) -> Bool
-gatePassedFromNorth gate (p1,p2) =
-  (snd p1) > gate.y && (snd p2) <= gate.y && (gatePassedInX gate (p1,p2))
+gatePassedFromNorth gate (p,p') =
+  (snd p) > gate.y && (snd p') <= gate.y && (gatePassedInX gate (p,p'))
 
 gatePassedFromSouth : Gate -> (Point,Point) -> Bool
-gatePassedFromSouth gate (p1,p2) =
-  (snd p1) < gate.y && (snd p2) >= gate.y && (gatePassedInX gate (p1,p2))
+gatePassedFromSouth gate (p,p') =
+  (snd p) < gate.y && (snd p') >= gate.y && (gatePassedInX gate (p,p'))
 
 getPassedGates : Boat -> Time -> Course -> (Point,Point) -> [(GateLocation,Time)]
 getPassedGates boat timestamp ({upwind, downwind, laps}) step =
@@ -148,15 +148,17 @@ isStuck p gameState =
 getCenterAfterMove : Point -> Point -> Point -> (Float,Float) -> (Point)
 getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
   let refocus n n' c d margin = 
-        let min = c - (d / 2) + margin
-            max = c + (d / 2) - margin
+        let min = c - (d / 2)
+            mmin = min + margin
+            max = c + (d / 2)
+            mmax = max - margin
         in
-          if | n < -d/2 || n > d/2 -> c
-             | n < min             -> if n' < n then c - (n - n') else c
-             | n > max             -> if n' > n then c + (n' - n) else c
-             | n' < min            -> c - (n - n')
-             | n' > max            -> c + (n' - n)
-             | otherwise           -> c
+          if | n < min || n > max -> c
+             | n < mmin           -> if n' < n then c - (n - n') else c
+             | n > mmax           -> if n' > n then c + (n' - n) else c
+             | n' < mmin          -> c - (n - n')
+             | n' > mmax          -> c + (n' - n)
+             | otherwise          -> c
   in
     (refocus x x' cx w (w * 0.2), refocus y y' cy h (h * 0.4))
 

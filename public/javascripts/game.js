@@ -238,7 +238,7 @@ Elm.Steps.make = function (_elm) {
                    break;}
               break;}
          _E.Case($moduleName,
-         "between lines 203 and 211");
+         "between lines 205 and 213");
       }();
    });
    var updateGusts = F4(function (timestamp,
@@ -326,17 +326,19 @@ Elm.Steps.make = function (_elm) {
                                          d,
                                          margin) {
                                             return function () {
-                                               var max = c + d / 2 - margin;
-                                               var min = c - d / 2 + margin;
+                                               var max = c + d / 2;
+                                               var mmax = max - margin;
+                                               var min = c - d / 2;
+                                               var mmin = min + margin;
                                                return _U.cmp(n,
-                                               (0 - d) / 2) < 0 || _U.cmp(n,
-                                               d / 2) > 0 ? c : _U.cmp(n,
-                                               min) < 0 ? _U.cmp(n$,
+                                               min) < 0 || _U.cmp(n,
+                                               max) > 0 ? c : _U.cmp(n,
+                                               mmin) < 0 ? _U.cmp(n$,
                                                n) < 0 ? c - (n - n$) : c : _U.cmp(n,
-                                               max) > 0 ? _U.cmp(n$,
+                                               mmax) > 0 ? _U.cmp(n$,
                                                n) > 0 ? c + (n$ - n) : c : _U.cmp(n$,
-                                               min) < 0 ? c - (n - n$) : _U.cmp(n$,
-                                               max) > 0 ? c + (n$ - n) : c;
+                                               mmin) < 0 ? c - (n - n$) : _U.cmp(n$,
+                                               mmax) > 0 ? c + (n$ - n) : c;
                                             }();
                                          });
                                          return {ctor: "_Tuple2"
@@ -354,16 +356,16 @@ Elm.Steps.make = function (_elm) {
                                                 _v15._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
-                                 "between lines 150 and 161");
+                                 "between lines 150 and 163");
                               }();}
                          _E.Case($moduleName,
-                         "between lines 150 and 161");
+                         "between lines 150 and 163");
                       }();}
                  _E.Case($moduleName,
-                 "between lines 150 and 161");
+                 "between lines 150 and 163");
               }();}
          _E.Case($moduleName,
-         "between lines 150 and 161");
+         "between lines 150 and 163");
       }();
    });
    var getGatesMarks = function (course) {
@@ -441,7 +443,7 @@ Elm.Steps.make = function (_elm) {
               ,_0: _v36._0
               ,_1: _v36._1}));}
          _E.Case($moduleName,
-         "on line 107, column 4 to 72");
+         "on line 107, column 4 to 70");
       }();
    });
    var gatePassedFromSouth = F2(function (gate,
@@ -457,7 +459,7 @@ Elm.Steps.make = function (_elm) {
               ,_0: _v40._0
               ,_1: _v40._1}));}
          _E.Case($moduleName,
-         "on line 111, column 4 to 72");
+         "on line 111, column 4 to 70");
       }();
    });
    var getPassedGates = F4(function (boat,
@@ -595,7 +597,7 @@ Elm.Steps.make = function (_elm) {
                  gameState);
               }();}
          _E.Case($moduleName,
-         "between lines 182 and 187");
+         "between lines 184 and 189");
       }();
    });
    var getTurn = F3(function (tackTarget,
@@ -878,7 +880,7 @@ Elm.Render.make = function (_elm) {
             return function () {
                  var boatAngle = Core.toRadians(boat.direction);
                  var windAngle = Core.toRadians(boat.windOrigin);
-                 var r = 25;
+                 var r = 35;
                  var c = Graphics.Collage.outlined(Graphics.Collage.solid(Color.white))(Graphics.Collage.circle(r));
                  var boatWindMarker = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
                  Basics.fromPolar({ctor: "_Tuple2"
@@ -900,9 +902,9 @@ Elm.Render.make = function (_elm) {
                                                                                                                                                                                                                           ,_1: -4}])))));
                  return Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
                                                                           ,_0: _v0._0 / 2 - 50
-                                                                          ,_1: _v0._1 / 2 - 80})(Graphics.Collage.group(_L.fromArray([c
-                                                                                                                                     ,boatWindMarker
-                                                                                                                                     ,boatMarker]))));
+                                                                          ,_1: _v0._1 / 2 - 100})(Graphics.Collage.group(_L.fromArray([c
+                                                                                                                                      ,boatWindMarker
+                                                                                                                                      ,boatMarker]))));
               }();}
          _E.Case($moduleName,
          "between lines 212 and 223");

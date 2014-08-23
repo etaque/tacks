@@ -209,7 +209,7 @@ renderPolar boat (w,h) =
 
 renderControlWheel : Wind -> Boat -> (Float,Float) -> Form
 renderControlWheel wind boat (w,h) =
-  let r = 25
+  let r = 35
       c = circle r |> outlined (solid white)
       windAngle = toRadians boat.windOrigin
       boatWindMarker = segment (fromPolar (r, windAngle)) (fromPolar (r + 8, windAngle))
@@ -220,7 +220,7 @@ renderControlWheel wind boat (w,h) =
                 |> rotate (boatAngle - pi/2)
                 |> move (fromPolar (r - 4, boatAngle))
   in
-      group [c, boatWindMarker, boatMarker] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
+      group [c, boatWindMarker, boatMarker] |> move (w/2 - 50, (h/2 - 100)) |> alpha 0.8
 
 renderHelp : Float -> (Float,Float) -> Maybe Form
 renderHelp countdown (w,h) = 
