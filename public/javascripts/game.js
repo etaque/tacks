@@ -1098,14 +1098,14 @@ Elm.Render.make = function (_elm) {
                  var maxSpeed = List.maximum(A2(List.map,
                  Basics.fst,
                  points)) + 10;
-                 var yAxis = Graphics.Collage.alpha(0.5)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+                 var yAxis = Graphics.Collage.alpha(0.6)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
                  {ctor: "_Tuple2"
                  ,_0: 0
                  ,_1: maxSpeed},
                  {ctor: "_Tuple2"
                  ,_0: 0
                  ,_1: 0 - maxSpeed})));
-                 var xAxis = Graphics.Collage.alpha(0.5)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+                 var xAxis = Graphics.Collage.alpha(0.6)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
                  {ctor: "_Tuple2",_0: 0,_1: 0},
                  {ctor: "_Tuple2"
                  ,_0: maxSpeed
@@ -1114,13 +1114,23 @@ Elm.Render.make = function (_elm) {
                                                     ,_0: maxSpeed / 2
                                                     ,_1: maxSpeed * 0.8})(Graphics.Collage.toForm(Text.centered(baseText("VMG"))));
                  var polar = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(Graphics.Collage.path(points));
-                 var boatPoint = anglePoint(Basics.abs(boat.windAngle));
+                 var absWindAngle = Basics.abs(boat.windAngle);
+                 var boatPoint = anglePoint(absWindAngle);
                  var boatMark = Graphics.Collage.move(boatPoint)(Graphics.Collage.filled(Color.red)(Graphics.Collage.circle(2)));
+                 var boatSegment = Graphics.Collage.alpha(0.3)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+                 {ctor: "_Tuple2",_0: 0,_1: 0},
+                 boatPoint)));
                  var boatProjection = Graphics.Collage.traced(Graphics.Collage.dotted(Color.white))(A2(Graphics.Collage.segment,
                  boatPoint,
                  {ctor: "_Tuple2"
                  ,_0: 0
                  ,_1: Basics.snd(boatPoint)}));
+                 var windOriginText = Graphics.Collage.alpha(0.6)(Graphics.Collage.move(A2(Geo.add,
+                 boatPoint,
+                 Basics.fromPolar({ctor: "_Tuple2"
+                                  ,_0: 20
+                                  ,_1: Core.toRadians(absWindAngle)})))(Graphics.Collage.toForm(Text.centered(baseText(_L.append(String.show(absWindAngle),
+                 "&deg;"))))));
                  return Graphics.Collage.move({ctor: "_Tuple2"
                                               ,_0: (0 - _v19._0) / 2 + 20
                                               ,_1: _v19._1 / 2 - maxSpeed - 20})(Graphics.Collage.group(_L.fromArray([yAxis
@@ -1128,10 +1138,12 @@ Elm.Render.make = function (_elm) {
                                                                                                                      ,polar
                                                                                                                      ,boatProjection
                                                                                                                      ,boatMark
+                                                                                                                     ,boatSegment
+                                                                                                                     ,windOriginText
                                                                                                                      ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 195 and 208");
+         "between lines 195 and 213");
       }();
    });
    var renderControlWheel = F3(function (wind,
@@ -1175,7 +1187,7 @@ Elm.Render.make = function (_elm) {
                                                                                                                                        ,windOriginText]))));
               }();}
          _E.Case($moduleName,
-         "between lines 212 and 228");
+         "between lines 217 and 233");
       }();
    });
    var fullScreenMessage = function (msg) {
@@ -1233,7 +1245,7 @@ Elm.Render.make = function (_elm) {
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 232 and 236");
+         "between lines 237 and 241");
       }();
    });
    var renderAbsolute = F4(function (gameState,
@@ -1383,7 +1395,7 @@ Elm.Render.make = function (_elm) {
                                                                    ,absolute]))]))]));
               }();}
          _E.Case($moduleName,
-         "between lines 275 and 281");
+         "between lines 280 and 286");
       }();
    });
    var render = F2(function (_v35,
@@ -1432,10 +1444,10 @@ Elm.Render.make = function (_elm) {
                       gameState.boat,
                       gameState.opponents);}
                  _E.Case($moduleName,
-                 "between lines 285 and 290");
+                 "between lines 290 and 295");
               }();}
          _E.Case($moduleName,
-         "between lines 285 and 290");
+         "between lines 290 and 295");
       }();
    });
    _elm.Render.values = {_op: _op
@@ -1893,7 +1905,7 @@ Elm.Geo.make = function (_elm) {
                         ,_1: y$};
               }();}
          _E.Case($moduleName,
-         "between lines 30 and 33");
+         "between lines 36 and 39");
       }();
    });
    var toBox = F3(function (_v4,
@@ -1910,7 +1922,7 @@ Elm.Geo.make = function (_elm) {
                         ,_0: _v4._0 - w / 2
                         ,_1: _v4._1 - h / 2}};}
          _E.Case($moduleName,
-         "on line 26, column 4 to 42");
+         "on line 32, column 4 to 42");
       }();
    });
    var inBox = F2(function (_v8,
@@ -1931,12 +1943,12 @@ Elm.Geo.make = function (_elm) {
                                 _v9._1._1) > 0 && _U.cmp(_v8._1,
                                 _v9._0._1) < 0));}
                            _E.Case($moduleName,
-                           "on line 22, column 3 to 47");
+                           "on line 28, column 3 to 47");
                         }();}
                    break;}
               break;}
          _E.Case($moduleName,
-         "on line 22, column 3 to 47");
+         "on line 28, column 3 to 47");
       }();
    });
    var distance = F2(function (_v20,
@@ -1951,34 +1963,64 @@ Elm.Geo.make = function (_elm) {
                       2) + Math.pow(_v20._1 - _v21._1,
                       2));}
                  _E.Case($moduleName,
-                 "on line 18, column 3 to 34");
+                 "on line 24, column 3 to 34");
               }();}
          _E.Case($moduleName,
-         "on line 18, column 3 to 34");
+         "on line 24, column 3 to 34");
       }();
    });
-   var neg = function (_v28) {
+   var scale = F2(function (_v28,
+   s) {
       return function () {
          switch (_v28.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple2"
-                   ,_0: 0 - _v28._0
-                   ,_1: 0 - _v28._1};}
+                   ,_0: _v28._0 * s
+                   ,_1: _v28._1 * s};}
          _E.Case($moduleName,
-         "on line 14, column 14 to 19");
+         "on line 20, column 18 to 26");
+      }();
+   });
+   var neg = function (_v32) {
+      return function () {
+         switch (_v32.ctor)
+         {case "_Tuple2":
+            return {ctor: "_Tuple2"
+                   ,_0: 0 - _v32._0
+                   ,_1: 0 - _v32._1};}
+         _E.Case($moduleName,
+         "on line 17, column 14 to 19");
       }();
    };
-   var sub = F2(function (_v32,
-   _v33) {
+   var sub = F2(function (_v36,
+   _v37) {
       return function () {
-         switch (_v33.ctor)
+         switch (_v37.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v32.ctor)
+                 switch (_v36.ctor)
                  {case "_Tuple2":
                     return {ctor: "_Tuple2"
-                           ,_0: _v33._0 - _v32._0
-                           ,_1: _v33._1 - _v32._1};}
+                           ,_0: _v37._0 - _v36._0
+                           ,_1: _v37._1 - _v36._1};}
+                 _E.Case($moduleName,
+                 "on line 14, column 22 to 36");
+              }();}
+         _E.Case($moduleName,
+         "on line 14, column 22 to 36");
+      }();
+   });
+   var add = F2(function (_v44,
+   _v45) {
+      return function () {
+         switch (_v45.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v44.ctor)
+                 {case "_Tuple2":
+                    return {ctor: "_Tuple2"
+                           ,_0: _v45._0 + _v44._0
+                           ,_1: _v45._1 + _v44._1};}
                  _E.Case($moduleName,
                  "on line 11, column 22 to 36");
               }();}
@@ -1986,21 +2028,23 @@ Elm.Geo.make = function (_elm) {
          "on line 11, column 22 to 36");
       }();
    });
-   var floatify = function (_v40) {
+   var floatify = function (_v52) {
       return function () {
-         switch (_v40.ctor)
+         switch (_v52.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple2"
-                   ,_0: Basics.toFloat(_v40._0)
-                   ,_1: Basics.toFloat(_v40._1)};}
+                   ,_0: Basics.toFloat(_v52._0)
+                   ,_1: Basics.toFloat(_v52._1)};}
          _E.Case($moduleName,
          "on line 8, column 19 to 39");
       }();
    };
    _elm.Geo.values = {_op: _op
                      ,floatify: floatify
+                     ,add: add
                      ,sub: sub
                      ,neg: neg
+                     ,scale: scale
                      ,distance: distance
                      ,inBox: inBox
                      ,toBox: toBox

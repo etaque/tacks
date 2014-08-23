@@ -193,18 +193,23 @@ renderLapsCount (w,h) course boat =
 renderPolar : Boat -> (Float,Float) -> Form
 renderPolar boat (w,h) =
   let 
+    absWindAngle = abs boat.windAngle
     anglePoint a = fromPolar ((polarVelocity a) * 10, toRadians a)
     points = map anglePoint [0..180]
     maxSpeed = (map fst points |> maximum) + 10
     polar = path points |> traced (solid white)
-    yAxis = segment (0,maxSpeed) (0,-maxSpeed) |> traced (solid white) |> alpha 0.5
-    xAxis = segment (0,0) (maxSpeed,0) |> traced (solid white) |> alpha 0.5
-    boatPoint = anglePoint (abs boat.windAngle)
+    yAxis = segment (0,maxSpeed) (0,-maxSpeed) |> traced (solid white) |> alpha 0.6
+    xAxis = segment (0,0) (maxSpeed,0) |> traced (solid white) |> alpha 0.6
+    boatPoint = anglePoint absWindAngle
     boatMark = circle 2 |> filled red |> move boatPoint
+    boatSegment = segment (0,0) boatPoint |> traced (solid white) |> alpha 0.3
+    windOriginText = ((show absWindAngle) ++ "&deg;")
+      |> baseText |> centered |> toForm
+      |> move (add boatPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
     boatProjection = segment boatPoint (0, snd boatPoint) |> traced (dotted white)
     legend = "VMG" |> baseText |> centered |> toForm |> move (maxSpeed / 2, maxSpeed * 0.8)
   in 
-    group [yAxis, xAxis, polar, boatProjection, boatMark, legend] 
+    group [yAxis, xAxis, polar, boatProjection, boatMark, boatSegment, windOriginText, legend] 
       |> move (-w/2 + 20, h/2 - maxSpeed - 20)
 
 renderControlWheel : Wind -> Boat -> (Float,Float) -> Form

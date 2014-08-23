@@ -7,11 +7,17 @@ type Segment = (Point, Point)
 
 floatify (x,y) = (toFloat x, toFloat y)
 
+add : Point -> Point -> Point
+add (x,y) (x',y') = (x' + x, y' + y)
+
 sub : Point -> Point -> Point
 sub (x,y) (x',y') = (x' - x, y' - y)
 
 neg : Point -> Point
 neg (x,y) = (-x,-y)
+
+scale : Point -> Float -> Point
+scale (x,y) s = (x*s, y*s)
 
 distance : Point -> Point -> Float
 distance (x,y) (x',y') =
