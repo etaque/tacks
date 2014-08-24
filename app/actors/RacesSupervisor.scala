@@ -34,7 +34,8 @@ class RacesSupervisor extends Actor {
 
   def getRaceActor(raceId: BSONObjectID) = raceActors.get(raceId)
 
-  def getNextRace: Option[Race] = races.headOption
+  def getNextRace: Option[Race] =
+    races.filter(_.startTime.minusSeconds(30).isAfterNow).sortBy(_.startTime.getMillis).headOption
 
   def createRace = {
     Logger.debug("New race")
