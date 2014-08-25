@@ -18,7 +18,7 @@ import models._
 
 object Races extends Controller {
 
-  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout = Timeout(5.seconds)
 
   def show(id: String) = Action.async { implicit req =>
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(id))).map {

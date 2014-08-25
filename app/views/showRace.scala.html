@@ -2,6 +2,7 @@
 
 @import org.joda.time.DateTime
 @import play.api.libs.json.Json
+@import models.JsonFormats.raceUpdateFormat
 
 @main() {
 
@@ -16,8 +17,8 @@
   var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/gameSocket/" + boatId);
 
   var gameDiv = document.getElementById('game');
-  var input = { now : @DateTime.now.getMillis, startTime: @race.startTime.getMillis, opponents: [] };
-  var game = Elm.embed(Elm.ShiftMaster, gameDiv, { raceInput:  input});
+  var input = @Html(Json.toJson(race.initialUpdate).toString());
+  var game = Elm.embed(Elm.ShiftMaster, gameDiv, { raceInput: input });
 
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);

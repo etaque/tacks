@@ -173,11 +173,18 @@ renderGusts : Wind -> Form
 renderGusts wind =
   group <| map (renderGust wind) wind.gusts
 
+renderIsland : Island -> Form
+renderIsland {location,radius} =
+  let --grad = radial (0,0) (radius - 15) (0,0) radius [(0, colors.sand), (1, colors.seaBlue)]
+      ground = circle radius |> filled colors.sand
+      --palmWidth = minimum [round radius, 100]
+      --palm = fittedImage palmWidth palmWidth "/assets/images/palmtree.png" |> toForm --|> move (0, island.radius/5)
+      --palm = image palmWidth palmWidth "/assets/images/palmtree.png" |> toForm |> move (0, (toFloat palmWidth) / 2)
+  in group [ground] |> move location
+
 renderIslands : GameState -> Form
 renderIslands gameState =
-  let renderIsland i = circle i.radius |> filled colors.sand |> move i.location
-  in
-    group (map renderIsland gameState.islands)
+  group (map renderIsland gameState.course.islands)
 
 renderLapsCount : (Float,Float) -> Course -> Boat -> Form
 renderLapsCount (w,h) course boat =
@@ -189,12 +196,23 @@ renderLapsCount (w,h) course boat =
       |> toForm
       |> move (w / 2 - 50, h / 2 - 30)
 
+renderLaylines : Boat -> Course -> Form
+renderLaylines boat course = 
+  let upwindVmgAngleR = toRadians upwindVmg
+      upwindMark = course.upwind
+      (left,right) = getGateMarks upwindMark
+      windAngleR = toRadians boat.windOrigin
+
+      leftLL = add left (fromPolar (500, windAngleR + upwindVmgAngleR - pi))
+
+      l1 = segment left leftLL |> traced (solid white)
+  in group [l1] |> alpha 0.3
 
 renderPolar : Boat -> (Float,Float) -> Form
 renderPolar boat (w,h) =
   let 
     absWindAngle = abs boat.windAngle
-    anglePoint a = fromPolar ((polarVelocity a) * 10, toRadians a)
+    anglePoint a = fromPolar ((polarVelocity a) * 2, toRadians a)
     points = map anglePoint [0..180]
     maxSpeed = (map fst points |> maximum) + 10
     polar = path points |> traced (solid white)
@@ -232,6 +250,23 @@ renderControlWheel wind boat (w,h) =
   in
       group [c, boatWindMarker, boatMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
 
+--renderLeaderboardLine : Int -> String -> Form
+--renderLeaderboardLine index name = 
+--  (show (index + 1)) ++ ". " ++ name 
+--    |> baseText |> centered 
+--    |> toForm 
+--    |> move (0, (toFloat index) * -20)
+
+
+--renderLeaderboard: [String] -> (Float,Float) -> Maybe Form
+--renderLeaderboard leaderboard (w,h) =
+--  if (isEmpty leaderboard) then Nothing
+--  else
+--    indexedMap renderLeaderboardLine leaderboard
+--      |> group
+--      |> move (w/2 - 50, 0)
+--      |> Just
+
 renderHelp : Float -> (Float,Float) -> Maybe Form
 renderHelp countdown (w,h) = 
   if countdown > 0 then
@@ -246,14 +281,16 @@ renderRelative gameState boat opponents =
       nextGate = findNextGate boat course.laps
       downwindGate = renderGate course.downwind course.markRadius nextGate
       upwindGate = renderGate course.upwind course.markRadius nextGate
-      bounds = renderBounds gameState.bounds
+      bounds = renderBounds gameState.course.bounds
       boatPic = renderBoat boat
       opponentsPics = map (\b -> renderOpponent b) opponents |> group
       equalityLine = renderEqualityLine boat.position gameState.wind.origin
       islands = renderIslands gameState
       gusts = renderGusts gameState.wind
+      --laylines = renderLaylines boat gameState.course
   in
-      (group [bounds, islands, gusts, downwindGate, upwindGate, opponentsPics, equalityLine, boatPic]) |> move (neg boat.center)
+      (group [bounds, islands, gusts, downwindGate, upwindGate, opponentsPics, equalityLine, boatPic]) 
+        |> move (neg boat.center)
 
 renderAbsolute : GameState -> Boat -> [Opponent] -> (Float,Float) -> Form
 renderAbsolute gameState boat opponents dims =
@@ -271,6 +308,7 @@ renderAbsolute gameState boat opponents dims =
         renderCountdown gameState boat,
         renderWinner course boat opponents,
         renderHelp gameState.countdown dims
+        --renderLeaderboard gameState.leaderboard dims
       ]
   in
       group (justForms ++ (compact maybeForms))

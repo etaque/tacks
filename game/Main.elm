@@ -17,7 +17,8 @@ The following code puts it all together and shows it on screen.
 ------------------------------------------------------------------------------}
 
 port raceInput : Signal { now: Float, startTime: Float, opponents: [{ position : { x: Float, y: Float}, 
-                          direction: Float, velocity: Float, passedGates: [Float] }]}
+                          direction: Float, velocity: Float, passedGates: [Float] }],
+                          leaderboard: [String] }
 
 clock : Signal Float
 clock = inSeconds <~ fps 30

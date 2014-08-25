@@ -4,12 +4,16 @@ import org.joda.time.DateTime
 import play.api.libs.json.{Json, Format}
 import reactivemongo.bson.BSONObjectID
 
-import scala.concurrent.Future
-
 case class Race (
   id: BSONObjectID = BSONObjectID.generate,
-  startTime: DateTime
-)
+  startTime: DateTime,
+  leaderboard: Seq[String] = Seq()
+) {
+  def initialUpdate = RaceUpdate(
+    DateTime.now,
+    startTime
+  )
+}
 
 object Race extends MongoDAO[Race] {
   val collectionName = "races"
@@ -18,9 +22,38 @@ object Race extends MongoDAO[Race] {
   implicit val mongoFormat: Format[Race] = Json.format[Race]
 }
 
-case class RaceUpdate(now: DateTime, startTime: DateTime, opponents: Seq[BoatState])
-
 case class Point(x: Float, y: Float)
+
+sealed trait GateLocation
+case object Upwind extends GateLocation
+case object Downwind extends GateLocation
+
+case class Gate(
+  y: Float,
+  width: Float,
+  location: GateLocation
+)
+
+case class Island(
+  location: Point,
+  radius: Float
+)
+
+case class Course(
+  upwind: Gate,
+  downwind: Gate,
+  laps: Int,
+  markRadius: Float,
+  islands: Seq[Island],
+  bounds: (Point, Point)
+)
+
+case class RaceUpdate(
+  now: DateTime,
+  startTime: DateTime,
+  opponents: Seq[BoatState] = Seq(),
+  leaderboard: Seq[String] = Seq()
+)
 
 case class BoatState (
   position: Point,

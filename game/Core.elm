@@ -31,12 +31,23 @@ polarVelocity delta =
   let x = delta
       v = 1.084556812 * (10^ -6) * (x^3) - 1.058704484 * (10^ -3) * (x^2) +
         0.195782694 * x - 7.136475544 * (10^ -1)
-  in if v < 0 then v else v
+  in v * 4
+
+vmgValue : Float  -> Float
+vmgValue a = abs ((cos (toRadians a)) * (polarVelocity a))
+
+upwindVmg : Float
+upwindVmg =
+  map (\a -> (a, vmgValue a)) [30..60] |> sortBy snd |> last |> fst
+
+downwindVmg : Float
+downwindVmg =
+  map (\a -> (a, vmgValue a)) [130..180] |> sortBy snd |> last |> fst
 
 -- deals with inertia
 boatVelocity : Float -> Float -> Float
 boatVelocity windAngle previousVelocity =
-  let v = polarVelocity(abs windAngle) * 5
+  let v = polarVelocity(abs windAngle)
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 
@@ -56,3 +67,7 @@ compact maybes =
 
 average : [Float] -> Float
 average items = (sum items) / (toFloat (length items))
+
+indexedMap : (Int -> a -> b) -> [a] -> [b]
+indexedMap f xs =
+    zipWith f [ 0 .. length xs - 1 ] xs

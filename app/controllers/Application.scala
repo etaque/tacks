@@ -23,7 +23,7 @@ object Application extends Controller {
     "name" -> nonEmptyText
   ))
 
-  implicit val timeout = Timeout(5 seconds)
+  implicit val timeout = Timeout(5.seconds)
 
   def index = Action.async {
     (RacesSupervisor.actorRef ? GetNextRace).map {

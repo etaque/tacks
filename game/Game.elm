@@ -22,7 +22,8 @@ be an empty list (no objects at the start):
 
 data GateLocation = Downwind | Upwind
 type Gate = { y: Float, width: Float, location: GateLocation }
-type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float }
+type Island = { location : Point, radius : Float }
+type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float, islands: [Island], bounds: (Point, Point) }
 
 data ControlMode = FixedDirection | FixedWindAngle
 
@@ -35,10 +36,9 @@ type Opponent = { position : { x: Float, y: Float}, direction: Float, velocity: 
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
-type Island = { location : Point, radius : Float }
 
 type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat, opponents: [Opponent],
-                   course: Course, bounds: (Point, Point), islands : [Island],
+                   course: Course, leaderboard: [String], 
                    startDuration : Time, countdown: Time }
 
 type RaceState = { boats : [Boat] }
@@ -49,9 +49,14 @@ startLine = { y = -100, width = 100, location = Downwind }
 upwindGate : Gate
 upwindGate = { y = 1000, width = 100, location = Upwind }
 
+islands : [Island]
+islands = [ { location = (250, 300), radius = 100 },
+            { location = (50, 700), radius = 80 },
+            { location = (-200, 500), radius = 60 } ]
 
 course : Course
-course = { upwind = upwindGate, downwind = startLine, laps = 3, markRadius = 5 }
+course = { upwind = upwindGate, downwind = startLine, laps = 3, markRadius = 5,
+           islands = islands, bounds = ((800,1200), (-800,-400)) }
 
 boat : Boat
 boat = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
@@ -67,14 +72,9 @@ wind : Wind
 wind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
 
 
-islands : [Island]
-islands = [ { location = (250, 300), radius = 100 },
-            { location = (50, 700), radius = 80 },
-            { location = (-200, 500), radius = 60 } ]
-
 defaultGame : GameState
 defaultGame = { wind = wind, boat = boat, otherBoat = Nothing, opponents = [],
-                course = course, bounds = ((800,1200), (-800,-400)), islands = islands,
+                course = course, leaderboard = [],
                 startDuration = (30*second), countdown = 0 }
 
 getGateMarks : Gate -> (Point,Point)

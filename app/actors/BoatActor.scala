@@ -11,7 +11,7 @@ class BoatActor(id: String, raceActor: ActorRef, out: ActorRef) extends Actor {
 
   def receive = {
     case bs: BoatState => {
-      implicit val timeout = Timeout(1 second)
+      implicit val timeout = Timeout(1.second)
       (raceActor ? BoatUpdate(id, bs)).map(out ! _)
     }
   }

@@ -140,8 +140,8 @@ isStuck : Point -> GameState -> Bool
 isStuck p gameState =
   let gatesMarks = getGatesMarks gameState.course
       stuckOnMark = any (\m -> distance m p <= gameState.course.markRadius) gatesMarks
-      outOfBounds = not (inBox p gameState.bounds)
-      onIsland = any (\i -> distance i.location p <= i.radius) gameState.islands
+      outOfBounds = not (inBox p gameState.course.bounds)
+      onIsland = any (\i -> distance i.location p <= i.radius) gameState.course.islands
   in 
     outOfBounds || stuckOnMark || onIsland
 
@@ -246,10 +246,10 @@ updateWindForBoat wind boat =
 
 windStep : Float -> Time -> GameState -> GameState
 windStep delta now ({wind, boat} as gameState) =
-  let o1 = cos (inSeconds now / 10) * 15
+  let o1 = cos (inSeconds now / 8) * 10
       o2 = cos (inSeconds now / 5) * 5
       newOrigin = o1 + o2 |> ensure360
-      newGusts = updateGusts now delta gameState.bounds wind
+      newGusts = updateGusts now delta gameState.course.bounds wind
       newWind = { wind | origin <- newOrigin, gusts <- newGusts }
       boatWithWind = updateWindForBoat wind boat
       otherBoatWindWind = mapMaybe (updateWindForBoat wind) gameState.otherBoat
@@ -258,8 +258,9 @@ windStep delta now ({wind, boat} as gameState) =
                    otherBoat <- otherBoatWindWind }
 
 raceInputStep : RaceInput -> GameState -> GameState
-raceInputStep {now,startTime,opponents} gameState =
+raceInputStep {now,startTime,opponents,leaderboard} gameState =
   { gameState | opponents <- opponents,
+                leaderboard <- leaderboard,
                 countdown <- startTime - now }
 
 stepGame : Input -> GameState -> GameState

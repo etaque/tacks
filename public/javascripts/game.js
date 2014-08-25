@@ -40,20 +40,23 @@ Elm.ShiftMaster.make = function (_elm) {
    Time.fps(30));
    var raceInput = Native.Ports.portIn("raceInput",
    Native.Ports.incomingSignal(function (v) {
-      return typeof v === "object" && "now" in v && "startTime" in v && "opponents" in v ? {_: {}
-                                                                                           ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
-                                                                                           ,startTime: typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime)
-                                                                                           ,opponents: _U.isJSArray(v.opponents) ? _L.fromArray(v.opponents.map(function (v) {
-                                                                                              return typeof v === "object" && "position" in v && "direction" in v && "velocity" in v && "passedGates" in v ? {_: {}
-                                                                                                                                                                                                             ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
-                                                                                                                                                                                                                                                                                                   ,x: typeof v.position.x === "number" ? v.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.position.x)
-                                                                                                                                                                                                                                                                                                   ,y: typeof v.position.y === "number" ? v.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.position)
-                                                                                                                                                                                                             ,direction: typeof v.direction === "number" ? v.direction : _E.raise("invalid input, expecting JSNumber but got " + v.direction)
-                                                                                                                                                                                                             ,velocity: typeof v.velocity === "number" ? v.velocity : _E.raise("invalid input, expecting JSNumber but got " + v.velocity)
-                                                                                                                                                                                                             ,passedGates: _U.isJSArray(v.passedGates) ? _L.fromArray(v.passedGates.map(function (v) {
-                                                                                                                                                                                                                return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
-                                                                                                                                                                                                             })) : _E.raise("invalid input, expecting JSArray but got " + v.passedGates)} : _E.raise("invalid input, expecting JSObject [\"position\",\"direction\",\"velocity\",\"passedGates\"] but got " + v);
-                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.opponents)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"opponents\"] but got " + v);
+      return typeof v === "object" && "now" in v && "startTime" in v && "opponents" in v && "leaderboard" in v ? {_: {}
+                                                                                                                 ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
+                                                                                                                 ,startTime: typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime)
+                                                                                                                 ,opponents: _U.isJSArray(v.opponents) ? _L.fromArray(v.opponents.map(function (v) {
+                                                                                                                    return typeof v === "object" && "position" in v && "direction" in v && "velocity" in v && "passedGates" in v ? {_: {}
+                                                                                                                                                                                                                                   ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
+                                                                                                                                                                                                                                                                                                                         ,x: typeof v.position.x === "number" ? v.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.position.x)
+                                                                                                                                                                                                                                                                                                                         ,y: typeof v.position.y === "number" ? v.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.position)
+                                                                                                                                                                                                                                   ,direction: typeof v.direction === "number" ? v.direction : _E.raise("invalid input, expecting JSNumber but got " + v.direction)
+                                                                                                                                                                                                                                   ,velocity: typeof v.velocity === "number" ? v.velocity : _E.raise("invalid input, expecting JSNumber but got " + v.velocity)
+                                                                                                                                                                                                                                   ,passedGates: _U.isJSArray(v.passedGates) ? _L.fromArray(v.passedGates.map(function (v) {
+                                                                                                                                                                                                                                      return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
+                                                                                                                                                                                                                                   })) : _E.raise("invalid input, expecting JSArray but got " + v.passedGates)} : _E.raise("invalid input, expecting JSObject [\"position\",\"direction\",\"velocity\",\"passedGates\"] but got " + v);
+                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.opponents)
+                                                                                                                 ,leaderboard: _U.isJSArray(v.leaderboard) ? _L.fromArray(v.leaderboard.map(function (v) {
+                                                                                                                    return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _E.raise("invalid input, expecting JSString but got " + v);
+                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.leaderboard)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"opponents\",\"leaderboard\"] but got " + v);
    }));
    var input = A2(Signal.sampleOn,
    clock,
@@ -136,6 +139,7 @@ Elm.Steps.make = function (_elm) {
       return function () {
          return _U.replace([["opponents"
                             ,_v0.opponents]
+                           ,["leaderboard",_v0.leaderboard]
                            ,["countdown"
                             ,_v0.startTime - _v0.now]],
          gameState);
@@ -285,10 +289,10 @@ Elm.Steps.make = function (_elm) {
             var newGusts = A4(updateGusts,
             now,
             delta,
-            _v10.bounds,
+            _v10.course.bounds,
             _v10.wind);
             var o2 = Basics.cos(Time.inSeconds(now) / 5) * 5;
-            var o1 = Basics.cos(Time.inSeconds(now) / 10) * 15;
+            var o1 = Basics.cos(Time.inSeconds(now) / 8) * 10;
             var newOrigin = Core.ensure360(o1 + o2);
             var newWind = _U.replace([["origin"
                                       ,newOrigin]
@@ -392,10 +396,10 @@ Elm.Steps.make = function (_elm) {
             p),
             i.radius) < 1;
          },
-         gameState.islands);
+         gameState.course.islands);
          var outOfBounds = Basics.not(A2(Geo.inBox,
          p,
-         gameState.bounds));
+         gameState.course.bounds));
          var gatesMarks = getGatesMarks(gameState.course);
          var stuckOnMark = A2(List.any,
          function (m) {
@@ -871,6 +875,26 @@ Elm.Render.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
+   var renderLaylines = F2(function (boat,
+   course) {
+      return function () {
+         var windAngleR = Core.toRadians(boat.windOrigin);
+         var upwindMark = course.upwind;
+         var $ = Game.getGateMarks(upwindMark),
+         left = $._0,
+         right = $._1;
+         var upwindVmgAngleR = Core.toRadians(Core.upwindVmg);
+         var leftLL = A2(Geo.add,
+         left,
+         Basics.fromPolar({ctor: "_Tuple2"
+                          ,_0: 500
+                          ,_1: windAngleR + upwindVmgAngleR - Basics.pi}));
+         var l1 = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+         left,
+         leftLL));
+         return Graphics.Collage.alpha(0.3)(Graphics.Collage.group(_L.fromArray([l1])));
+      }();
+   });
    var renderGust = F2(function (wind,
    gust) {
       return function () {
@@ -1078,7 +1102,7 @@ Elm.Render.make = function (_elm) {
                                               ,_1: _v15._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(baseText(msg))));
               }();}
          _E.Case($moduleName,
-         "between lines 184 and 190");
+         "between lines 191 and 197");
       }();
    });
    var renderPolar = F2(function (boat,
@@ -1089,7 +1113,7 @@ Elm.Render.make = function (_elm) {
             return function () {
                  var anglePoint = function (a) {
                     return Basics.fromPolar({ctor: "_Tuple2"
-                                            ,_0: Core.polarVelocity(a) * 10
+                                            ,_0: Core.polarVelocity(a) * 2
                                             ,_1: Core.toRadians(a)});
                  };
                  var points = A2(List.map,
@@ -1143,7 +1167,7 @@ Elm.Render.make = function (_elm) {
                                                                                                                      ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 195 and 213");
+         "between lines 213 and 231");
       }();
    });
    var renderControlWheel = F3(function (wind,
@@ -1187,7 +1211,7 @@ Elm.Render.make = function (_elm) {
                                                                                                                                        ,windOriginText]))));
               }();}
          _E.Case($moduleName,
-         "between lines 217 and 233");
+         "between lines 235 and 251");
       }();
    });
    var fullScreenMessage = function (msg) {
@@ -1245,7 +1269,7 @@ Elm.Render.make = function (_elm) {
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 237 and 241");
+         "between lines 272 and 276");
       }();
    });
    var renderAbsolute = F4(function (gameState,
@@ -1313,15 +1337,18 @@ Elm.Render.make = function (_elm) {
          h)));
       }();
    };
-   var renderIslands = function (gameState) {
+   var renderIsland = function (_v31) {
       return function () {
-         var renderIsland = function (i) {
-            return Graphics.Collage.move(i.location)(Graphics.Collage.filled(colors.sand)(Graphics.Collage.circle(i.radius)));
-         };
-         return Graphics.Collage.group(A2(List.map,
-         renderIsland,
-         gameState.islands));
+         return function () {
+            var ground = Graphics.Collage.filled(colors.sand)(Graphics.Collage.circle(_v31.radius));
+            return Graphics.Collage.move(_v31.location)(Graphics.Collage.group(_L.fromArray([ground])));
+         }();
       }();
+   };
+   var renderIslands = function (gameState) {
+      return Graphics.Collage.group(A2(List.map,
+      renderIsland,
+      gameState.course.islands));
    };
    var renderRelative = F3(function (gameState,
    boat,
@@ -1338,7 +1365,7 @@ Elm.Render.make = function (_elm) {
          },
          opponents));
          var boatPic = renderBoat(boat);
-         var bounds = renderBounds(gameState.bounds);
+         var bounds = renderBounds(gameState.course.bounds);
          var course = gameState.course;
          var nextGate = A2(Game.findNextGate,
          boat,
@@ -1361,12 +1388,12 @@ Elm.Render.make = function (_elm) {
                                                                                                 ,boatPic])));
       }();
    });
-   var renderRaceForBoat = F4(function (_v31,
+   var renderRaceForBoat = F4(function (_v33,
    gameState,
    boat,
    opponents) {
       return function () {
-         switch (_v31.ctor)
+         switch (_v33.ctor)
          {case "_Tuple2":
             return function () {
                  var relativeToCenter = A3(renderRelative,
@@ -1374,8 +1401,8 @@ Elm.Render.make = function (_elm) {
                  boat,
                  opponents);
                  var dims = Geo.floatify({ctor: "_Tuple2"
-                                         ,_0: _v31._0
-                                         ,_1: _v31._1});
+                                         ,_0: _v33._0
+                                         ,_1: _v33._1});
                  var $ = dims,
                  w$ = $._0,
                  h$ = $._1;
@@ -1388,44 +1415,44 @@ Elm.Render.make = function (_elm) {
                  opponents,
                  dims);
                  return Graphics.Element.layers(_L.fromArray([A3(Graphics.Collage.collage,
-                 _v31._0,
-                 _v31._1,
+                 _v33._0,
+                 _v33._1,
                  _L.fromArray([bg
                               ,Graphics.Collage.group(_L.fromArray([relativeToCenter
                                                                    ,absolute]))]))]));
               }();}
          _E.Case($moduleName,
-         "between lines 280 and 286");
+         "between lines 318 and 324");
       }();
    });
-   var render = F2(function (_v35,
+   var render = F2(function (_v37,
    gameState) {
       return function () {
-         switch (_v35.ctor)
+         switch (_v37.ctor)
          {case "_Tuple2":
             return function () {
-                 var _v39 = gameState.otherBoat;
-                 switch (_v39.ctor)
+                 var _v41 = gameState.otherBoat;
+                 switch (_v41.ctor)
                  {case "Just":
                     return function () {
                          var w$ = A2(Basics.div,
-                         _v35._0,
+                         _v37._0,
                          2) - 2;
                          var r1 = A4(renderRaceForBoat,
                          {ctor: "_Tuple2"
                          ,_0: w$
-                         ,_1: _v35._1},
+                         ,_1: _v37._1},
                          gameState,
                          gameState.boat,
                          A2(List.map,
                          Game.boatToOpponent,
-                         _L.fromArray([_v39._0])));
+                         _L.fromArray([_v41._0])));
                          var r2 = A4(renderRaceForBoat,
                          {ctor: "_Tuple2"
                          ,_0: w$
-                         ,_1: _v35._1},
+                         ,_1: _v37._1},
                          gameState,
-                         _v39._0,
+                         _v41._0,
                          A2(List.map,
                          Game.boatToOpponent,
                          _L.fromArray([gameState.boat])));
@@ -1438,16 +1465,16 @@ Elm.Render.make = function (_elm) {
                     case "Nothing":
                     return A4(renderRaceForBoat,
                       {ctor: "_Tuple2"
-                      ,_0: _v35._0
-                      ,_1: _v35._1},
+                      ,_0: _v37._0
+                      ,_1: _v37._1},
                       gameState,
                       gameState.boat,
                       gameState.opponents);}
                  _E.Case($moduleName,
-                 "between lines 290 and 295");
+                 "between lines 328 and 333");
               }();}
          _E.Case($moduleName,
-         "between lines 290 and 295");
+         "between lines 328 and 333");
       }();
    });
    _elm.Render.values = {_op: _op
@@ -1467,8 +1494,10 @@ Elm.Render.make = function (_elm) {
                         ,renderWinner: renderWinner
                         ,renderGust: renderGust
                         ,renderGusts: renderGusts
+                        ,renderIsland: renderIsland
                         ,renderIslands: renderIslands
                         ,renderLapsCount: renderLapsCount
+                        ,renderLaylines: renderLaylines
                         ,renderPolar: renderPolar
                         ,renderControlWheel: renderControlWheel
                         ,renderHelp: renderHelp
@@ -1532,10 +1561,12 @@ Elm.Inputs.make = function (_elm) {
    }),
    0,
    Time.fps(1));
-   var RaceInput = F3(function (a,
+   var RaceInput = F4(function (a,
    b,
-   c) {
+   c,
+   d) {
       return {_: {}
+             ,leaderboard: d
              ,now: a
              ,opponents: c
              ,startTime: b};
@@ -1645,6 +1676,11 @@ Elm.Game.make = function (_elm) {
                   ,_0: gate.width / 2
                   ,_1: gate.y}};
    };
+   var wind = {_: {}
+              ,gusts: _L.fromArray([])
+              ,gustsCount: 0
+              ,origin: 0
+              ,speed: 10};
    var islands = _L.fromArray([{_: {}
                                ,location: {ctor: "_Tuple2"
                                           ,_0: 250
@@ -1660,38 +1696,26 @@ Elm.Game.make = function (_elm) {
                                           ,_0: -200
                                           ,_1: 500}
                                ,radius: 60}]);
-   var wind = {_: {}
-              ,gusts: _L.fromArray([])
-              ,gustsCount: 0
-              ,origin: 0
-              ,speed: 10};
    var RaceState = function (a) {
       return {_: {},boats: a};
    };
-   var GameState = F9(function (a,
+   var GameState = F8(function (a,
    b,
    c,
    d,
    e,
    f,
    g,
-   h,
-   i) {
+   h) {
       return {_: {}
              ,boat: b
-             ,bounds: f
-             ,countdown: i
+             ,countdown: h
              ,course: e
-             ,islands: g
+             ,leaderboard: f
              ,opponents: d
              ,otherBoat: c
-             ,startDuration: h
+             ,startDuration: g
              ,wind: a};
-   });
-   var Island = F2(function (a,b) {
-      return {_: {}
-             ,location: a
-             ,radius: b};
    });
    var Wind = F4(function (a,
    b,
@@ -1776,15 +1800,24 @@ Elm.Game.make = function (_elm) {
                                 ,_0: -50
                                 ,_1: -200}]],
    boat);
-   var Course = F4(function (a,
+   var Course = F6(function (a,
    b,
    c,
-   d) {
+   d,
+   e,
+   f) {
       return {_: {}
+             ,bounds: f
              ,downwind: b
+             ,islands: e
              ,laps: c
              ,markRadius: d
              ,upwind: a};
+   });
+   var Island = F2(function (a,b) {
+      return {_: {}
+             ,location: a
+             ,radius: b};
    });
    var Gate = F3(function (a,b,c) {
       return {_: {}
@@ -1803,22 +1836,23 @@ Elm.Game.make = function (_elm) {
                    ,width: 100
                    ,y: -100};
    var course = {_: {}
+                ,bounds: {ctor: "_Tuple2"
+                         ,_0: {ctor: "_Tuple2"
+                              ,_0: 800
+                              ,_1: 1200}
+                         ,_1: {ctor: "_Tuple2"
+                              ,_0: -800
+                              ,_1: -400}}
                 ,downwind: startLine
+                ,islands: islands
                 ,laps: 3
                 ,markRadius: 5
                 ,upwind: upwindGate};
    var defaultGame = {_: {}
                      ,boat: boat
-                     ,bounds: {ctor: "_Tuple2"
-                              ,_0: {ctor: "_Tuple2"
-                                   ,_0: 800
-                                   ,_1: 1200}
-                              ,_1: {ctor: "_Tuple2"
-                                   ,_0: -800
-                                   ,_1: -400}}
                      ,countdown: 0
                      ,course: course
-                     ,islands: islands
+                     ,leaderboard: _L.fromArray([])
                      ,opponents: _L.fromArray([])
                      ,otherBoat: Maybe.Nothing
                      ,startDuration: 30 * Time.second
@@ -1836,11 +1870,11 @@ Elm.Game.make = function (_elm) {
    _elm.Game.values = {_op: _op
                       ,startLine: startLine
                       ,upwindGate: upwindGate
+                      ,islands: islands
                       ,course: course
                       ,boat: boat
                       ,otherBoat: otherBoat
                       ,wind: wind
-                      ,islands: islands
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks
                       ,findNextGate: findNextGate
@@ -1850,12 +1884,12 @@ Elm.Game.make = function (_elm) {
                       ,FixedDirection: FixedDirection
                       ,FixedWindAngle: FixedWindAngle
                       ,Gate: Gate
+                      ,Island: Island
                       ,Course: Course
                       ,Boat: Boat
                       ,Opponent: Opponent
                       ,Gust: Gust
                       ,Wind: Wind
-                      ,Island: Island
                       ,GameState: GameState
                       ,RaceState: RaceState};
    return _elm.Game.values;
@@ -2079,6 +2113,13 @@ Elm.Core.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
+   var indexedMap = F2(function (f,
+   xs) {
+      return A3(List.zipWith,
+      f,
+      _L.range(0,List.length(xs) - 1),
+      xs);
+   });
    var average = function (items) {
       return List.sum(items) / Basics.toFloat(List.length(items));
    };
@@ -2093,7 +2134,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 52 and 55");
+               "between lines 63 and 66");
             }();
          });
          return A3(List.foldl,
@@ -2111,7 +2152,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 45 and 47");
+         "between lines 56 and 58");
       }();
    });
    var polarVelocity = function (delta) {
@@ -2123,13 +2164,13 @@ Elm.Core.make = function (_elm) {
          -3) * Math.pow(x,
          2) + 0.195782694 * x - 7.136475544 * Math.pow(10,
          -1);
-         return _U.cmp(v,0) < 0 ? v : v;
+         return v * 4;
       }();
    };
    var boatVelocity = F2(function (windAngle,
    previousVelocity) {
       return function () {
-         var v = polarVelocity(Basics.abs(windAngle)) * 5;
+         var v = polarVelocity(Basics.abs(windAngle));
          var delta = v - previousVelocity;
          return previousVelocity + delta * 2.0e-2;
       }();
@@ -2149,6 +2190,23 @@ Elm.Core.make = function (_elm) {
    var toRadians = function (deg) {
       return Basics.radians((90 - deg) * Basics.pi / 180);
    };
+   var vmgValue = function (a) {
+      return Basics.abs(Basics.cos(toRadians(a)) * polarVelocity(a));
+   };
+   var upwindVmg = Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
+   function (a) {
+      return {ctor: "_Tuple2"
+             ,_0: a
+             ,_1: vmgValue(a)};
+   },
+   _L.range(30,60)))));
+   var downwindVmg = Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
+   function (a) {
+      return {ctor: "_Tuple2"
+             ,_0: a
+             ,_1: vmgValue(a)};
+   },
+   _L.range(130,180)))));
    var ensure360 = function (val) {
       return Basics.toFloat(A2(Basics.mod,
       Basics.round(val) + 360,
@@ -2160,10 +2218,14 @@ Elm.Core.make = function (_elm) {
                       ,mpsToKnts: mpsToKnts
                       ,angleToWind: angleToWind
                       ,polarVelocity: polarVelocity
+                      ,vmgValue: vmgValue
+                      ,upwindVmg: upwindVmg
+                      ,downwindVmg: downwindVmg
                       ,boatVelocity: boatVelocity
                       ,mapMaybe: mapMaybe
                       ,compact: compact
-                      ,average: average};
+                      ,average: average
+                      ,indexedMap: indexedMap};
    return _elm.Core.values;
 };Elm.Drag = Elm.Drag || {};
 Elm.Drag.make = function (_elm) {
