@@ -50,8 +50,8 @@ getTackTarget boat spaceKey =
 
 
 
-getTurn : Maybe Float -> Boat -> UserArrows -> Float
-getTurn tackTarget boat arrows =
+getTurn : Maybe Float -> Boat -> UserArrows -> Bool -> Float
+getTurn tackTarget boat arrows fineTurn =
   case (tackTarget, boat.controlMode, arrows.x, arrows.y) of 
     -- virement en cours
     (Just target, _, _, _) -> 
@@ -68,13 +68,13 @@ getTurn tackTarget boat arrows =
     (Nothing, FixedDirection, 0, 0) -> 0
     (Nothing, FixedWindAngle, 0, 0) -> (boat.windOrigin + boat.windAngle) - boat.direction
     -- changement de direction via touche flèche
-    (Nothing, _, x, y) -> if y < 0 then x else x * 3
+    (Nothing, _, x, y) -> if fineTurn then x else x * 3
 
 keysForBoatStep : KeyboardInput -> Boat -> Boat
-keysForBoatStep ({arrows, lockAngle, tack}) boat =
+keysForBoatStep ({arrows, lockAngle, tack, fineTurn}) boat =
   let forceTurn = arrows.x /= 0 
       tackTarget = if forceTurn then Nothing else getTackTarget boat tack
-      turn = getTurn tackTarget boat arrows
+      turn = getTurn tackTarget boat arrows fineTurn
       direction = ensure360 <| boat.direction + turn
       windAngle = angleToWind direction boat.windOrigin
       turnedBoat = { boat | direction <- direction,

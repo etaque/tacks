@@ -578,9 +578,10 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var getTurn = F3(function (tackTarget,
+   var getTurn = F4(function (tackTarget,
    boat,
-   arrows) {
+   arrows,
+   fineTurn) {
       return function () {
          var _v50 = {ctor: "_Tuple4"
                     ,_0: tackTarget
@@ -628,8 +629,7 @@ Elm.Steps.make = function (_elm) {
                                 return boat.windOrigin + boat.windAngle - boat.direction;}
                              break;}
                         break;}
-                   return _U.cmp(_v50._3,
-                   0) < 0 ? _v50._2 : _v50._2 * 3;}
+                   return fineTurn ? _v50._2 : _v50._2 * 3;}
               break;}
          _E.Case($moduleName,
          "between lines 55 and 71");
@@ -700,10 +700,11 @@ Elm.Steps.make = function (_elm) {
             var tackTarget = forceTurn ? Maybe.Nothing : A2(getTackTarget,
             boat,
             _v66.tack);
-            var turn = A3(getTurn,
+            var turn = A4(getTurn,
             tackTarget,
             boat,
-            _v66.arrows);
+            _v66.arrows,
+            _v66.fineTurn);
             var direction = Core.ensure360(boat.direction + turn);
             var windAngle = A2(Core.angleToWind,
             direction,
@@ -1580,19 +1581,22 @@ Elm.Inputs.make = function (_elm) {
    MouseInput,
    Drag.lastPosition(20 * Time.millisecond),
    Mouse.position);
-   var KeyboardInput = F3(function (a,
+   var KeyboardInput = F4(function (a,
    b,
-   c) {
+   c,
+   d) {
       return {_: {}
              ,arrows: a
+             ,fineTurn: d
              ,lockAngle: b
              ,tack: c};
    });
-   var keyboardInput = A4(Signal.lift3,
+   var keyboardInput = A5(Signal.lift4,
    KeyboardInput,
    Keyboard.arrows,
    Keyboard.enter,
-   Keyboard.space);
+   Keyboard.space,
+   Keyboard.shift);
    var UserArrows = F2(function (a,
    b) {
       return {_: {},x: a,y: b};
