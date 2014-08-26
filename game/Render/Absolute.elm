@@ -1,23 +1,11 @@
 module Render.Absolute where
 
+import Render.Utils (..)
 import Core (..)
 import Geo (..)
 import Game (..)
 import String
 import Text
-
-helpMessage : String
-helpMessage = "←/→ to turn left/right, ↓←/↓→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe"
-
-fullScreenMessage : String -> Form
-fullScreenMessage msg = msg
-  |> String.toUpper 
-  |> toText 
-  |> Text.height 60 
-  |> Text.color white 
-  |> centered 
-  |> toForm 
-  |> alpha 0.3
 
 renderHiddenGate : Gate -> (Float,Float) -> Point -> Maybe GateLocation -> Maybe Form
 renderHiddenGate gate (w,h) (cx,cy) nextGate =
@@ -38,16 +26,6 @@ renderHiddenGate gate (w,h) (cx,cy) nextGate =
                    in  Just (group [m,d])
       (_, _)    -> Nothing
 
-renderCountdown : GameState -> Boat -> Maybe Form
-renderCountdown gameState boat = 
-  if | gameState.countdown > 0 -> 
-         let cs = gameState.countdown |> inSeconds |> round
-             m = cs `div` 60
-             s = cs `rem` 60
-             msg = (show m) ++ "' " ++ (show s) ++ "\""
-         in Just (fullScreenMessage msg)
-     | (isEmpty boat.passedGates) -> Just (fullScreenMessage "Go!")
-     | otherwise -> Nothing
 
 hasFinished : Course -> Opponent -> Bool
 hasFinished course boat = (length boat.passedGates) == course.laps * 2 + 1
@@ -160,7 +138,6 @@ renderAbsolute ({boat,opponents,course} as gameState) dims =
       maybeForms = [
         renderHiddenGate course.downwind dims boat.center nextGate,
         renderHiddenGate course.upwind dims boat.center nextGate,
-        renderCountdown gameState boat,
         renderWinner course boat opponents,
         renderHelp gameState.countdown dims
         --renderLeaderboard gameState.leaderboard dims

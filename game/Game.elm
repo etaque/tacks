@@ -81,7 +81,8 @@ findNextGate boat laps =
   let c = (length boat.passedGates)
       i = c `mod` 2
   in
-    if | c == laps * 2 + 1 -> Nothing
+    if | c == 0            -> Nothing
+       | c == laps * 2 + 1 -> Nothing
        | i == 0            -> Just Downwind 
        | otherwise         -> Just Upwind
 
