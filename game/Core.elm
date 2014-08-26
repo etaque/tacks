@@ -51,6 +51,13 @@ boatVelocity windAngle previousVelocity =
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 
+baseText : String -> Text
+baseText s = s
+  |> toText
+  |> Text.height 14
+  |> Text.color white
+  |> monospace
+
 mapMaybe : (a -> b) -> Maybe a -> Maybe b
 mapMaybe f maybe =
     case maybe of

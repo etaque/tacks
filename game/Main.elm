@@ -8,7 +8,7 @@ import Json
 import Inputs
 import Game
 import Steps
-import Render
+import Render.All as R
 
 {-- That's all folks! ---------------------------------------------------------
 
@@ -33,4 +33,4 @@ gameState = foldp Steps.stepGame Game.defaultGame input
 port raceOutput : Signal { position : { x: Float, y: Float}, direction: Float, velocity: Float, passedGates: [Float] }
 port raceOutput = lift (Game.boatToOpponent . .boat) gameState
 
-main = lift2 Render.render Window.dimensions gameState
+main = lift2 R.render Window.dimensions gameState
