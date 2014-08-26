@@ -87,12 +87,10 @@ keysForBoatStep ({arrows, lockAngle, tack}) boat =
     { turnedBoat | controlMode <- controlMode,
                    tackTarget <- tackTargetAfterTurn }
 
-keysStep : KeyboardInput -> KeyboardInput -> GameState -> GameState
-keysStep keyboardInput otherKeyboardInput gameState =
+keysStep : KeyboardInput -> GameState -> GameState
+keysStep keyboardInput gameState =
   let boatUpdated = keysForBoatStep keyboardInput gameState.boat
-      otherBoatUpdated = mapMaybe (keysForBoatStep otherKeyboardInput) gameState.otherBoat
-  in 
-    { gameState | boat <- boatUpdated, otherBoat <- otherBoatUpdated }
+  in  { gameState | boat <- boatUpdated }
 
 gatePassedInX : Gate -> (Point,Point) -> Bool
 gatePassedInX gate ((x,y),(x',y')) =
@@ -180,13 +178,9 @@ moveBoat now delta gameState dimensions boat =
                passedGates <- newPassedGates }
 
 moveStep : Time -> Float -> (Int,Int) -> GameState -> GameState
-moveStep now delta (w,h) gameState =
-  let dims = if (isJust gameState.otherBoat) then (div w 2, h) else (w,h)
-      boatMoved = moveBoat now delta gameState dims gameState.boat
-      otherBoatMoved = mapMaybe (moveBoat now delta gameState dims) gameState.otherBoat
-  in
-    { gameState | boat <- boatMoved,
-                  otherBoat <- otherBoatMoved }
+moveStep now delta dims gameState =
+  let boatMoved = moveBoat now delta gameState dims gameState.boat
+  in  { gameState | boat <- boatMoved }
 
 randInWindow : Int -> Int -> Int -> Int
 randInWindow t w i =
@@ -252,10 +246,8 @@ windStep delta now ({wind, boat} as gameState) =
       newGusts = updateGusts now delta gameState.course.bounds wind
       newWind = { wind | origin <- newOrigin, gusts <- newGusts }
       boatWithWind = updateWindForBoat wind boat
-      otherBoatWindWind = mapMaybe (updateWindForBoat wind) gameState.otherBoat
   in { gameState | wind <- newWind,
-                   boat <- boatWithWind,
-                   otherBoat <- otherBoatWindWind }
+                   boat <- boatWithWind }
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep {now,startTime,opponents,leaderboard} gameState =
@@ -267,6 +259,6 @@ stepGame : Input -> GameState -> GameState
 stepGame input gameState =
   mouseStep input.mouseInput 
     <| moveStep input.raceInput.now input.delta input.windowInput 
-    <| keysStep input.keyboardInput input.otherKeyboardInput
+    <| keysStep input.keyboardInput
     <| windStep input.delta input.raceInput.now
     <| raceInputStep input.raceInput gameState

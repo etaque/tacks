@@ -24,8 +24,8 @@ clock : Signal Float
 clock = inSeconds <~ fps 30
 
 input : Signal Inputs.Input
-input = sampleOn clock (lift7 Inputs.Input clock Inputs.chrono Inputs.keyboardInput 
-  Inputs.otherKeyboardInput Inputs.mouseInput Window.dimensions raceInput)
+input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardInput 
+                              Inputs.mouseInput Window.dimensions raceInput)
 
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
@@ -33,4 +33,4 @@ gameState = foldp Steps.stepGame Game.defaultGame input
 port raceOutput : Signal { position : { x: Float, y: Float}, direction: Float, velocity: Float, passedGates: [Float] }
 port raceOutput = lift (Game.boatToOpponent . .boat) gameState
 
-main = lift2 R.render Window.dimensions gameState
+main = lift2 R.renderAll Window.dimensions gameState

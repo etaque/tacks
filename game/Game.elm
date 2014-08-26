@@ -37,7 +37,7 @@ type Opponent = { position : { x: Float, y: Float}, direction: Float, velocity: 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 
-type GameState = { wind: Wind, boat: Boat, otherBoat: Maybe Boat, opponents: [Opponent],
+type GameState = { wind: Wind, boat: Boat, opponents: [Opponent],
                    course: Course, leaderboard: [String], 
                    startDuration : Time, countdown: Time }
 
@@ -64,16 +64,12 @@ boat = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0,
          center = (0,0), controlMode = FixedDirection, tackTarget = Nothing,
          passedGates = [] }
 
-otherBoat : Boat
-otherBoat = { boat | position <- (-50,-200) }
-
-
 wind : Wind
 wind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
 
 
 defaultGame : GameState
-defaultGame = { wind = wind, boat = boat, otherBoat = Nothing, opponents = [],
+defaultGame = { wind = wind, boat = boat, opponents = [],
                 course = course, leaderboard = [],
                 startDuration = (30*second), countdown = 0 }
 

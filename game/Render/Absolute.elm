@@ -147,11 +147,11 @@ renderHelp countdown (w,h) =
   else
     Nothing
 
-renderAbsolute : GameState -> Boat -> [Opponent] -> (Float,Float) -> Form
-renderAbsolute gameState boat opponents dims =
-  let nextGate = if gameState.countdown <= 0 then findNextGate boat course.laps 
-                                             else Nothing
-      course = gameState.course
+renderAbsolute : GameState -> (Float,Float) -> Form
+renderAbsolute ({boat,opponents,course} as gameState) dims =
+  let nextGate = if gameState.countdown <= 0 
+        then findNextGate boat course.laps 
+        else Nothing
       justForms = [
         renderLapsCount dims course boat,
         renderPolar boat dims,

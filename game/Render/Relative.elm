@@ -116,10 +116,9 @@ renderLaylines boat course =
   in group [l1] |> alpha 0.3
 
 
-renderRelative : GameState -> Boat -> [Opponent] -> Form
-renderRelative gameState boat opponents =
-  let course = gameState.course
-      nextGate = findNextGate boat course.laps
+renderRelative : GameState -> Form
+renderRelative ({boat,opponents,course} as gameState) =
+  let nextGate = findNextGate boat course.laps
       downwindGate = renderGate course.downwind course.markRadius nextGate
       upwindGate = renderGate course.upwind course.markRadius nextGate
       bounds = renderBounds gameState.course.bounds
