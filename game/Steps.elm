@@ -109,17 +109,17 @@ gatePassedFromSouth gate (p,p') =
   (snd p) < gate.y && (snd p') >= gate.y && (gatePassedInX gate (p,p'))
 
 getPassedGates : Player -> Time -> Course -> (Point,Point) -> [Time]
-getPassedGates player timestamp ({upwind, downwind, laps}) step =
-  case (findNextGate player course.laps) of
+getPassedGates player now ({upwind, downwind, laps}) step =
+  case findNextGate player laps of
     -- ligne de départ
-    Just StartLine -> if | gatePassedFromSouth downwind step -> timestamp :: player.passedGates 
+    Just StartLine -> if | gatePassedFromSouth downwind step -> now :: player.passedGates 
                          | otherwise                         -> player.passedGates
     -- bouée au vent
-    Just Upwind    -> if | gatePassedFromSouth upwind step   -> timestamp :: player.passedGates 
+    Just Upwind    -> if | gatePassedFromSouth upwind step   -> now :: player.passedGates 
                          | gatePassedFromSouth downwind step -> tail player.passedGates
                          | otherwise                         -> player.passedGates
     -- bouée sous le vent
-    Just Downwind  -> if | gatePassedFromNorth downwind step -> timestamp :: player.passedGates 
+    Just Downwind  -> if | gatePassedFromNorth downwind step -> now :: player.passedGates 
                          | gatePassedFromNorth upwind step   -> tail player.passedGates 
                          | otherwise                         -> player.passedGates
     -- arrivée déjà franchie

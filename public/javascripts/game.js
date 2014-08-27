@@ -391,14 +391,14 @@ Elm.Steps.make = function (_elm) {
       }();
    });
    var getPassedGates = F4(function (player,
-   timestamp,
+   now,
    _v36,
    step) {
       return function () {
          return function () {
             var _v38 = A2(Game.findNextGate,
             player,
-            Game.course.laps);
+            _v36.laps);
             switch (_v38.ctor)
             {case "Just":
                switch (_v38._0.ctor)
@@ -406,7 +406,7 @@ Elm.Steps.make = function (_elm) {
                     return A2(gatePassedFromNorth,
                       _v36.downwind,
                       step) ? {ctor: "::"
-                              ,_0: timestamp
+                              ,_0: now
                               ,_1: player.passedGates} : A2(gatePassedFromNorth,
                       _v36.upwind,
                       step) ? List.tail(player.passedGates) : player.passedGates;
@@ -414,13 +414,13 @@ Elm.Steps.make = function (_elm) {
                     return A2(gatePassedFromSouth,
                       _v36.downwind,
                       step) ? {ctor: "::"
-                              ,_0: timestamp
+                              ,_0: now
                               ,_1: player.passedGates} : player.passedGates;
                     case "Upwind":
                     return A2(gatePassedFromSouth,
                       _v36.upwind,
                       step) ? {ctor: "::"
-                              ,_0: timestamp
+                              ,_0: now
                               ,_1: player.passedGates} : A2(gatePassedFromSouth,
                       _v36.downwind,
                       step) ? List.tail(player.passedGates) : player.passedGates;}
