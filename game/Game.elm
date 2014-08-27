@@ -39,25 +39,16 @@ type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 
 type GameState = { wind: Wind, player: Player, opponents: [Opponent],
-                   course: Course, leaderboard: [String], 
-                   startDuration : Time, countdown: Time }
+                   course: Course, leaderboard: [String], countdown: Time }
 
 type RaceState = { players : [Player] }
 
-startLine : Gate
-startLine = { y = -100, width = 100 }
-
-upwindGate : Gate
-upwindGate = { y = 1000, width = 100 }
-
-islands : [Island]
-islands = [ { location = (250, 300), radius = 100 },
-            { location = (50, 700), radius = 80 },
-            { location = (-200, 500), radius = 60 } ]
+defaultGate : Gate
+defaultGate = { y = 0, width = 0 }
 
 course : Course
-course = { upwind = upwindGate, downwind = startLine, laps = 3, markRadius = 5,
-           islands = islands, bounds = ((800,1200), (-800,-400)) }
+course = { upwind = defaultGate, downwind = defaultGate, laps = 0, markRadius = 0,
+           islands = [], bounds = ((0,0), (0,0)) }
 
 player : Player
 player = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
@@ -71,8 +62,7 @@ wind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
 
 defaultGame : GameState
 defaultGame = { wind = wind, player = player, opponents = [],
-                course = course, leaderboard = [],
-                startDuration = (30*second), countdown = 0 }
+                course = course, leaderboard = [], countdown = 0 }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))

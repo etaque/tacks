@@ -34,7 +34,11 @@ object Course {
     downwind = Gate(-100, 100),
     laps = 2,
     markRadius = 5,
-    islands = Seq(),
+    islands = Seq(
+      Island((250, 300), 100),
+      Island((50, 700), 80),
+      Island((-200, 500), 60)
+    ),
     bounds = ((800,1200), (-800,-400))
   )
 }

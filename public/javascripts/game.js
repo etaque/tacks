@@ -1552,57 +1552,37 @@ Elm.Game.make = function (_elm) {
               ,gustsCount: 0
               ,origin: 0
               ,speed: 10};
-   var islands = _L.fromArray([{_: {}
-                               ,location: {ctor: "_Tuple2"
-                                          ,_0: 250
-                                          ,_1: 300}
-                               ,radius: 100}
-                              ,{_: {}
-                               ,location: {ctor: "_Tuple2"
-                                          ,_0: 50
-                                          ,_1: 700}
-                               ,radius: 80}
-                              ,{_: {}
-                               ,location: {ctor: "_Tuple2"
-                                          ,_0: -200
-                                          ,_1: 500}
-                               ,radius: 60}]);
-   var upwindGate = {_: {}
-                    ,width: 100
-                    ,y: 1000};
-   var startLine = {_: {}
-                   ,width: 100
-                   ,y: -100};
+   var defaultGate = {_: {}
+                     ,width: 0
+                     ,y: 0};
    var course = {_: {}
                 ,bounds: {ctor: "_Tuple2"
                          ,_0: {ctor: "_Tuple2"
-                              ,_0: 800
-                              ,_1: 1200}
+                              ,_0: 0
+                              ,_1: 0}
                          ,_1: {ctor: "_Tuple2"
-                              ,_0: -800
-                              ,_1: -400}}
-                ,downwind: startLine
-                ,islands: islands
-                ,laps: 3
-                ,markRadius: 5
-                ,upwind: upwindGate};
+                              ,_0: 0
+                              ,_1: 0}}
+                ,downwind: defaultGate
+                ,islands: _L.fromArray([])
+                ,laps: 0
+                ,markRadius: 0
+                ,upwind: defaultGate};
    var RaceState = function (a) {
       return {_: {},players: a};
    };
-   var GameState = F7(function (a,
+   var GameState = F6(function (a,
    b,
    c,
    d,
    e,
-   f,
-   g) {
+   f) {
       return {_: {}
-             ,countdown: g
+             ,countdown: f
              ,course: d
              ,leaderboard: e
              ,opponents: c
              ,player: b
-             ,startDuration: f
              ,wind: a};
    });
    var Wind = F4(function (a,
@@ -1661,7 +1641,6 @@ Elm.Game.make = function (_elm) {
                      ,leaderboard: _L.fromArray([])
                      ,opponents: _L.fromArray([])
                      ,player: player
-                     ,startDuration: 30 * Time.second
                      ,wind: wind};
    var Course = F6(function (a,
    b,
@@ -1700,9 +1679,7 @@ Elm.Game.make = function (_elm) {
       }();
    });
    _elm.Game.values = {_op: _op
-                      ,startLine: startLine
-                      ,upwindGate: upwindGate
-                      ,islands: islands
+                      ,defaultGate: defaultGate
                       ,course: course
                       ,player: player
                       ,wind: wind
