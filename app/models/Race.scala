@@ -7,14 +7,14 @@ import reactivemongo.bson.BSONObjectID
 case class Race (
   _id: BSONObjectID = BSONObjectID.generate,
   startTime: DateTime,
-  course: Course = Course.default,
+  course: Course,
   leaderboard: Seq[String] = Seq()
 ) extends HasId {
 
   def initialUpdate = RaceUpdate(
     DateTime.now,
     startTime = startTime,
-    course = course
+    course = Some(course)
   )
 
   def millisBeforeStart = startTime.getMillis - DateTime.now.getMillis

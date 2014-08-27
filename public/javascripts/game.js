@@ -1625,7 +1625,7 @@ Elm.Game.make = function (_elm) {
              ,radius: b
              ,speedImpact: c};
    });
-   var Sailing = F5(function (a,
+   var Boat = F5(function (a,
    b,
    c,
    d,
@@ -1717,7 +1717,7 @@ Elm.Game.make = function (_elm) {
                       ,Gate: Gate
                       ,Island: Island
                       ,Course: Course
-                      ,Sailing: Sailing
+                      ,Boat: Boat
                       ,Gust: Gust
                       ,Wind: Wind
                       ,GameState: GameState

@@ -1,6 +1,7 @@
 package actors
 
 import scala.concurrent.duration._
+import scala.collection.mutable.ListBuffer
 import play.api.Logger
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
@@ -8,9 +9,8 @@ import play.api.Play.current
 import akka.actor.{Props, Terminated, ActorRef, Actor}
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
-import models.Race
+import models.{Course, Race}
 
-import scala.collection.mutable.ListBuffer
 
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActor(raceId: BSONObjectID)
@@ -39,7 +39,7 @@ class RacesSupervisor extends Actor {
 
   def createRace = {
     Logger.debug("New race")
-    val race = Race(startTime = DateTime.now().plusMinutes(3))
+    val race = Race(startTime = DateTime.now().plusMinutes(3), course = Course.default)
     Logger.debug("Creating actor for race " + race.id)
     val ref = context.actorOf(RaceActor.props(race))
     raceActors += race.id -> ref

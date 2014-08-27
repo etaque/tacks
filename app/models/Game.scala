@@ -2,6 +2,7 @@ package models
 
 import org.joda.time.DateTime
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 
 object Geo {
   type Point = (Float,Float)
@@ -41,7 +42,7 @@ object Course {
 case class RaceUpdate(
   now: DateTime,
   startTime: DateTime,
-  course: Course,
+  course: Option[Course],
   opponents: Seq[BoatState] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
@@ -66,5 +67,13 @@ object JsonFormats {
   implicit val courseFormat: Format[Course] = Json.format[Course]
   implicit val boatStateFormat: Format[BoatState] = Json.format[BoatState]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
-  implicit val raceUpdateFormat: Format[RaceUpdate] = Json.format[RaceUpdate]
+
+  implicit val raceUpdateFormat: Format[RaceUpdate] = (
+    (__ \ 'now).format[DateTime] and
+      (__ \ 'startTime).format[DateTime] and
+      (__ \ 'course).format[Option[Course]] and
+      (__ \ 'opponents).format[Seq[BoatState]] and
+      (__ \ 'leaderboard).format[Seq[String]]
+    )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
+
 }
