@@ -9,7 +9,7 @@ import akka.actor._
 import org.joda.time.DateTime
 import models._
 
-case class BoatLeaved(id: String)
+case class PlayerLeaved(id: String)
 case object UpdateLeaderboard
 
 class RaceActor(race: Race) extends Actor {
@@ -20,7 +20,7 @@ class RaceActor(race: Race) extends Actor {
   Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateLeaderboard)
 
   def receive = {
-    case BoatUpdate(id, state) => {
+    case PlayerUpdate(id, state) => {
       boatStates.get(id) match {
         case Some(bs) => if (bs.passedGates != state.passedGates) updateLeaderboard()
         case None =>
@@ -28,7 +28,7 @@ class RaceActor(race: Race) extends Actor {
       boatStates += (id -> state)
       sender ! raceUpdateFor(id)
     }
-    case BoatLeaved(id) => {
+    case PlayerLeaved(id) => {
       Logger.debug("Boat leaved: " + id)
       boatStates -= id
     }

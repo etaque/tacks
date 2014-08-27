@@ -29,9 +29,9 @@ gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
 
 port raceOutput : Signal { position : (Float, Float), direction: Float, velocity: Float, passedGates: [Float] }
-port raceOutput = lift (boatToRaceOutput . .boat) gameState
+port raceOutput = lift (playerToRaceOutput . .player) gameState
 
-boatToRaceOutput ({position, direction, velocity, passedGates} as boat) =
+playerToRaceOutput ({position, direction, velocity, passedGates} as player) =
   { position = position, direction = direction, velocity = velocity, passedGates = passedGates }  
 
 main = lift2 R.renderAll Window.dimensions gameState

@@ -38,15 +38,15 @@ renderGate gate markRadius isNext =
   --    marks = [leftMark, rightMark]
   --in  if isNext then group (line :: marks) else group marks
 
-renderBoatAngles : Boat -> Form
-renderBoatAngles boat =
+renderPlayerAngles : Player -> Form
+renderPlayerAngles player =
   let drawLine a = segment (fromPolar (15, a)) (fromPolar (25, a)) |> traced (solid white)
-      directionLine = drawLine (toRadians boat.direction) |> alpha 0.8
-      windLine = drawLine (toRadians (boat.direction - boat.windAngle)) |> alpha 0.3
-      windAngleText = (show (abs boat.windAngle)) ++ "&deg;" |> baseText
-        |> (if boat.controlMode == FixedWindAngle then line Under else id)
+      directionLine = drawLine (toRadians player.direction) |> alpha 0.8
+      windLine = drawLine (toRadians (player.direction - player.windAngle)) |> alpha 0.3
+      windAngleText = (show (abs player.windAngle)) ++ "&deg;" |> baseText
+        |> (if player.controlMode == FixedWindAngle then line Under else id)
         |> centered |> toForm 
-        |> move (fromPolar (40, toRadians (boat.direction - (boat.windAngle / 2))))
+        |> move (fromPolar (40, toRadians (player.direction - (player.windAngle / 2))))
         |> alpha 0.8
   in  group [directionLine, windLine, windAngleText] 
 
@@ -56,17 +56,17 @@ renderEqualityLine (x,y) windOrigin =
       right = (fromPolar (50, toRadians (windOrigin + 90)))
   in  segment left right |> traced (dotted white) |> alpha 0.2
 
-renderBoat : Boat -> Form
-renderBoat boat =
+renderPlayer : Player -> Form
+renderPlayer player =
   let 
     hull = image 8 19 "/assets/images/icon-boat-white.png"
       |> toForm
-      |> rotate (toRadians (boat.direction + 90))
-    angles = renderBoatAngles boat
-    eqLine = renderEqualityLine boat.position boat.windOrigin
+      |> rotate (toRadians (player.direction + 90))
+    angles = renderPlayerAngles player
+    eqLine = renderEqualityLine player.position player.windOrigin
   in 
     group [angles, eqLine, hull]
-      |> move boat.position
+      |> move player.position
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
@@ -116,20 +116,20 @@ renderIslands : GameState -> Form
 renderIslands gameState =
   group (map renderIsland gameState.course.islands)
 
-renderLaylines : Boat -> Course -> Form
-renderLaylines boat course = 
+renderLaylines : Player -> Course -> Form
+renderLaylines player course = 
   let upwindVmgAngleR = toRadians upwindVmg
       upwindMark = course.upwind
       (left,right) = getGateMarks upwindMark
-      windAngleR = toRadians boat.windOrigin
+      windAngleR = toRadians player.windOrigin
 
       leftLL = add left (fromPolar (500, windAngleR + upwindVmgAngleR - pi))
 
       l1 = segment left leftLL |> traced (solid white)
   in group [l1] |> alpha 0.3
 
-renderCountdown : GameState -> Boat -> Maybe Form
-renderCountdown gameState boat = 
+renderCountdown : GameState -> Player -> Maybe Form
+renderCountdown gameState player = 
   let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 50)
   in  if | gameState.countdown > 0 -> 
              let cs = gameState.countdown |> inSeconds |> ceiling
@@ -137,13 +137,13 @@ renderCountdown gameState boat =
                  s = cs `rem` 60
                  msg = "Start in " ++ (show m) ++ "'" ++ (show s) ++ "\"..."
              in  Just (messageBuilder msg)
-         | (isEmpty boat.passedGates) -> Just (messageBuilder "Go!")
+         | (isEmpty player.passedGates) -> Just (messageBuilder "Go!")
          | otherwise -> Nothing
 
 renderRelative : GameState -> Form
-renderRelative ({boat,opponents,course} as gameState) =
-  let nextGate = findNextGate boat course.laps
-      downwindOrStartLine = if isEmpty boat.passedGates
+renderRelative ({player,opponents,course} as gameState) =
+  let nextGate = findNextGate player course.laps
+      downwindOrStartLine = if isEmpty player.passedGates
         then renderStartLine course.downwind course.markRadius (gameState.countdown <= 0)
         else renderGate course.downwind course.markRadius (nextGate == Just Downwind)
       justForms = [
@@ -151,13 +151,13 @@ renderRelative ({boat,opponents,course} as gameState) =
         renderIslands gameState,
         downwindOrStartLine,
         renderGate course.upwind course.markRadius (nextGate == Just Upwind),
-        --renderLaylines boat gameState.course,
-        renderBoat boat,
+        --renderLaylines player gameState.course,
+        renderPlayer player,
         group (map renderOpponent opponents),
         renderGusts gameState.wind
       ]
       maybeForms = [
-        renderCountdown gameState boat
+        renderCountdown gameState player
       ]
-  in  group (justForms ++ (compact maybeForms)) |> move (neg boat.center)
+  in  group (justForms ++ (compact maybeForms)) |> move (neg player.center)
 

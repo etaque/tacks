@@ -26,18 +26,18 @@ renderHiddenGate gate (w,h) (cx,cy) isNext =
       (_, _)    -> Nothing
 
 
-hasFinished : Course -> Sailing a -> Bool
-hasFinished course boat = (length boat.passedGates) == course.laps * 2 + 1
+hasFinished : Course -> Boat a -> Bool
+hasFinished course player = (length player.passedGates) == course.laps * 2 + 1
 
 -- TODO repair
-renderWinner : Course -> Boat -> [Opponent] -> Maybe Form
-renderWinner course boat opponents =
+renderWinner : Course -> Player -> [Opponent] -> Maybe Form
+renderWinner course player opponents =
   Nothing
-  --if (hasFinished course boat) then
+  --if (hasFinished course player) then
   --  let finishTime : Opponent -> Time
   --      finishTime o = head o.passedGates
   --      othersTime = filter (hasFinished course) opponents |> map finishTime
-  --      myTime = finishTime boat
+  --      myTime = finishTime player
   --      othersAfterMe = all (\t -> t > myTime) othersTime
   --  in
   --    if (isEmpty othersTime) || othersAfterMe then
@@ -47,9 +47,9 @@ renderWinner course boat opponents =
   --else
   --  Nothing
 
-renderLapsCount : (Float,Float) -> Course -> Boat -> Form
-renderLapsCount (w,h) course boat =
-  let count = minimum [(div ((length boat.passedGates) + 1) 2), course.laps]
+renderLapsCount : (Float,Float) -> Course -> Player -> Form
+renderLapsCount (w,h) course player =
+  let count = minimum [(div ((length player.passedGates) + 1) 2), course.laps]
       msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
   in msg
       |> baseText
@@ -57,47 +57,47 @@ renderLapsCount (w,h) course boat =
       |> toForm
       |> move (w / 2 - 50, h / 2 - 30)
 
-renderPolar : Boat -> (Float,Float) -> Form
-renderPolar boat (w,h) =
+renderPolar : Player -> (Float,Float) -> Form
+renderPolar player (w,h) =
   let 
-    absWindAngle = abs boat.windAngle
+    absWindAngle = abs player.windAngle
     anglePoint a = fromPolar ((polarVelocity a) * 2, toRadians a)
     points = map anglePoint [0..180]
     maxSpeed = (map fst points |> maximum) + 10
     polar = path points |> traced (solid white)
     yAxis = segment (0,maxSpeed) (0,-maxSpeed) |> traced (solid white) |> alpha 0.6
     xAxis = segment (0,0) (maxSpeed,0) |> traced (solid white) |> alpha 0.6
-    boatPoint = anglePoint absWindAngle
-    boatMark = circle 2 |> filled red |> move boatPoint
-    boatSegment = segment (0,0) boatPoint |> traced (solid white) |> alpha 0.3
+    playerPoint = anglePoint absWindAngle
+    playerMark = circle 2 |> filled red |> move playerPoint
+    playerSegment = segment (0,0) playerPoint |> traced (solid white) |> alpha 0.3
     windOriginText = ((show absWindAngle) ++ "&deg;")
       |> baseText |> centered |> toForm
-      |> move (add boatPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
-    boatProjection = segment boatPoint (0, snd boatPoint) |> traced (dotted white)
+      |> move (add playerPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
+    playerProjection = segment playerPoint (0, snd playerPoint) |> traced (dotted white)
     legend = "VMG" |> baseText |> centered |> toForm |> move (maxSpeed / 2, maxSpeed * 0.8)
   in 
-    group [yAxis, xAxis, polar, boatProjection, boatMark, boatSegment, windOriginText, legend] 
+    group [yAxis, xAxis, polar, playerProjection, playerMark, playerSegment, windOriginText, legend] 
       |> move (-w/2 + 20, h/2 - maxSpeed - 20)
 
-renderControlWheel : Wind -> Boat -> (Float,Float) -> Form
-renderControlWheel wind boat (w,h) =
+renderControlWheel : Wind -> Player -> (Float,Float) -> Form
+renderControlWheel wind player (w,h) =
   let r = 35
       c = circle r |> outlined (solid white)
-      windAngle = toRadians boat.windOrigin
-      boatWindMarker = segment (fromPolar (r, windAngle)) (fromPolar (r + 8, windAngle))
+      windAngle = toRadians player.windOrigin
+      playerWindMarker = segment (fromPolar (r, windAngle)) (fromPolar (r + 8, windAngle))
         |> traced (solid white)
-      boatAngle = toRadians boat.direction
-      boatMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+      playerAngle = toRadians player.direction
+      playerMarker = polygon [(0,4),(-4,-4),(4,-4)] 
         |> filled white
-        |> rotate (boatAngle - pi/2)
-        |> move (fromPolar (r - 4, boatAngle))
-      windOriginText = ((show boat.windOrigin) ++ "&deg;")
+        |> rotate (playerAngle - pi/2)
+        |> move (fromPolar (r - 4, playerAngle))
+      windOriginText = ((show player.windOrigin) ++ "&deg;")
         |> baseText |> centered |> toForm
         |> rotate (windAngle - pi/2)
         |> move (fromPolar (r + 20, windAngle))
 
   in
-      group [c, boatWindMarker, boatMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
+      group [c, playerWindMarker, playerMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
 
 --renderLeaderboardLine : Int -> String -> Form
 --renderLeaderboardLine index name = 
@@ -125,19 +125,19 @@ renderHelp countdown (w,h) =
     Nothing
 
 renderAbsolute : GameState -> (Float,Float) -> Form
-renderAbsolute ({boat,opponents,course} as gameState) dims =
+renderAbsolute ({player,opponents,course} as gameState) dims =
   let nextGate = if gameState.countdown <= 0 
-        then findNextGate boat course.laps 
+        then findNextGate player course.laps 
         else Nothing
       justForms = [
-        renderLapsCount dims course boat,
-        renderPolar boat dims,
-        renderControlWheel wind boat dims
+        renderLapsCount dims course player,
+        renderPolar player dims,
+        renderControlWheel wind player dims
       ]
       maybeForms = [
-        renderHiddenGate course.downwind dims boat.center (nextGate == Just Downwind),
-        renderHiddenGate course.upwind dims boat.center (nextGate == Just Upwind),
-        renderWinner course boat opponents,
+        renderHiddenGate course.downwind dims player.center (nextGate == Just Downwind),
+        renderHiddenGate course.upwind dims player.center (nextGate == Just Upwind),
+        renderWinner course player opponents,
         renderHelp gameState.countdown dims
         --renderLeaderboard gameState.leaderboard dims
       ]

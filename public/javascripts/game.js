@@ -36,7 +36,7 @@ Elm.ShiftMaster.make = function (_elm) {
    var WebSocket = Elm.WebSocket.make(_elm);
    var Window = Elm.Window.make(_elm);
    var _op = {};
-   var boatToRaceOutput = function (_v0) {
+   var playerToRaceOutput = function (_v0) {
       return function () {
          return {_: {}
                 ,direction: _v0.direction
@@ -117,8 +117,8 @@ Elm.ShiftMaster.make = function (_elm) {
    }),
    A2(Signal.lift,
    function ($) {
-      return boatToRaceOutput(function (_) {
-         return _.boat;
+      return playerToRaceOutput(function (_) {
+         return _.player;
       }($));
    },
    gameState));
@@ -130,7 +130,7 @@ Elm.ShiftMaster.make = function (_elm) {
                              ,clock: clock
                              ,input: input
                              ,gameState: gameState
-                             ,boatToRaceOutput: boatToRaceOutput
+                             ,playerToRaceOutput: playerToRaceOutput
                              ,main: main};
    return _elm.ShiftMaster.values;
 };Elm.Steps = Elm.Steps || {};
@@ -183,23 +183,23 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var updateWindForBoat = F2(function (wind,
-   boat) {
+   var updateWindForPlayer = F2(function (wind,
+   player) {
       return function () {
-         var gustsOnBoat = List.reverse(List.sortBy(function (_) {
+         var gustsOnPlayer = List.reverse(List.sortBy(function (_) {
             return _.speedImpact;
          })(A2(List.filter,
          function (g) {
             return _U.cmp(A2(Geo.distance,
-            boat.position,
+            player.position,
             g.position),
             g.radius) < 1;
          },
          wind.gusts)));
-         var windOrigin = List.isEmpty(gustsOnBoat) ? wind.origin : function () {
-            var gust = List.head(gustsOnBoat);
+         var windOrigin = List.isEmpty(gustsOnPlayer) ? wind.origin : function () {
+            var gust = List.head(gustsOnPlayer);
             var factor = List.minimum(_L.fromArray([(gust.radius - A2(Geo.distance,
-                                                   boat.position,
+                                                   player.position,
                                                    gust.position)) / (gust.radius * 0.1)
                                                    ,1]));
             var newDelta = gust.originDelta * factor;
@@ -207,7 +207,7 @@ Elm.Steps.make = function (_elm) {
          }();
          return _U.replace([["windOrigin"
                             ,windOrigin]],
-         boat);
+         player);
       }();
    });
    var windStep = F3(function (delta,
@@ -215,9 +215,9 @@ Elm.Steps.make = function (_elm) {
    _v2) {
       return function () {
          return function () {
-            var boatWithWind = A2(updateWindForBoat,
+            var playerWithWind = A2(updateWindForPlayer,
             _v2.wind,
-            _v2.boat);
+            _v2.player);
             var o2 = Basics.cos(Time.inSeconds(now) / 5) * 5;
             var o1 = Basics.cos(Time.inSeconds(now) / 8) * 10;
             var newOrigin = Core.ensure360(o1 + o2);
@@ -226,7 +226,7 @@ Elm.Steps.make = function (_elm) {
             _v2.wind);
             return _U.replace([["wind"
                                ,newWind]
-                              ,["boat",boatWithWind]],
+                              ,["player",playerWithWind]],
             _v2);
          }();
       }();
@@ -390,14 +390,14 @@ Elm.Steps.make = function (_elm) {
          "on line 109, column 4 to 70");
       }();
    });
-   var getPassedGates = F4(function (boat,
+   var getPassedGates = F4(function (player,
    timestamp,
    _v36,
    step) {
       return function () {
          return function () {
             var _v38 = A2(Game.findNextGate,
-            boat,
+            player,
             Game.course.laps);
             switch (_v38.ctor)
             {case "Just":
@@ -407,45 +407,45 @@ Elm.Steps.make = function (_elm) {
                       _v36.downwind,
                       step) ? {ctor: "::"
                               ,_0: timestamp
-                              ,_1: boat.passedGates} : A2(gatePassedFromNorth,
+                              ,_1: player.passedGates} : A2(gatePassedFromNorth,
                       _v36.upwind,
-                      step) ? List.tail(boat.passedGates) : boat.passedGates;
+                      step) ? List.tail(player.passedGates) : player.passedGates;
                     case "StartLine":
                     return A2(gatePassedFromSouth,
                       _v36.downwind,
                       step) ? {ctor: "::"
                               ,_0: timestamp
-                              ,_1: boat.passedGates} : boat.passedGates;
+                              ,_1: player.passedGates} : player.passedGates;
                     case "Upwind":
                     return A2(gatePassedFromSouth,
                       _v36.upwind,
                       step) ? {ctor: "::"
                               ,_0: timestamp
-                              ,_1: boat.passedGates} : A2(gatePassedFromSouth,
+                              ,_1: player.passedGates} : A2(gatePassedFromSouth,
                       _v36.downwind,
-                      step) ? List.tail(boat.passedGates) : boat.passedGates;}
+                      step) ? List.tail(player.passedGates) : player.passedGates;}
                  break;
                case "Nothing":
-               return boat.passedGates;}
+               return player.passedGates;}
             _E.Case($moduleName,
             "between lines 113 and 126");
          }();
       }();
    });
-   var moveBoat = F5(function (now,
+   var movePlayer = F5(function (now,
    delta,
    gameState,
    dimensions,
-   boat) {
+   player) {
       return function () {
-         var $ = boat,
+         var $ = player,
          position = $.position,
          direction = $.direction,
          velocity = $.velocity,
          windAngle = $.windAngle,
          passedGates = $.passedGates;
-         var newVelocity = A2(Core.boatVelocity,
-         boat.windAngle,
+         var newVelocity = A2(Core.playerVelocity,
+         player.windAngle,
          velocity);
          var nextPosition = A4(Geo.movePoint,
          position,
@@ -458,16 +458,16 @@ Elm.Steps.make = function (_elm) {
          var newPosition = stuck ? position : nextPosition;
          var newPassedGates = _U.cmp(gameState.countdown,
          0) < 1 ? A4(getPassedGates,
-         boat,
+         player,
          now,
          gameState.course,
          {ctor: "_Tuple2"
          ,_0: position
-         ,_1: newPosition}) : boat.passedGates;
+         ,_1: newPosition}) : player.passedGates;
          var newCenter = A4(getCenterAfterMove,
          position,
          newPosition,
-         boat.center,
+         player.center,
          Geo.floatify(dimensions));
          return _U.replace([["position"
                             ,newPosition]
@@ -476,7 +476,7 @@ Elm.Steps.make = function (_elm) {
                            ,["center",newCenter]
                            ,["passedGates"
                             ,newPassedGates]],
-         boat);
+         player);
       }();
    });
    var moveStep = F4(function (now,
@@ -484,25 +484,25 @@ Elm.Steps.make = function (_elm) {
    dims,
    gameState) {
       return function () {
-         var boatMoved = A5(moveBoat,
+         var playerMoved = A5(movePlayer,
          now,
          delta,
          gameState,
          dims,
-         gameState.boat);
-         return _U.replace([["boat"
-                            ,boatMoved]],
+         gameState.player);
+         return _U.replace([["player"
+                            ,playerMoved]],
          gameState);
       }();
    });
    var getTurn = F4(function (tackTarget,
-   boat,
+   player,
    arrows,
    fineTurn) {
       return function () {
          var _v40 = {ctor: "_Tuple4"
                     ,_0: tackTarget
-                    ,_1: boat.controlMode
+                    ,_1: player.controlMode
                     ,_2: arrows.x
                     ,_3: arrows.y};
          switch (_v40.ctor)
@@ -510,19 +510,19 @@ Elm.Steps.make = function (_elm) {
             switch (_v40._0.ctor)
               {case "Just":
                  return function () {
-                      var _v46 = boat.controlMode;
+                      var _v46 = player.controlMode;
                       switch (_v46.ctor)
                       {case "FixedDirection":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(boat.direction - _v40._0._0)]));
-                              return _U.cmp(Core.ensure360(boat.direction - _v40._0._0),
+                                                                      ,Basics.abs(player.direction - _v40._0._0)]));
+                              return _U.cmp(Core.ensure360(player.direction - _v40._0._0),
                               180) > 0 ? maxTurn : 0 - maxTurn;
                            }();
                          case "FixedWindAngle":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(boat.windAngle - _v40._0._0)]));
+                                                                      ,Basics.abs(player.windAngle - _v40._0._0)]));
                               return _U.cmp(_v40._0._0,
                               90) > 0 || _U.cmp(_v40._0._0,
                               0) < 0 && _U.cmp(_v40._0._0,
@@ -543,7 +543,7 @@ Elm.Steps.make = function (_elm) {
                       switch (_v40._2)
                         {case 0: switch (_v40._3)
                              {case 0:
-                                return boat.windOrigin + boat.windAngle - boat.direction;}
+                                return player.windOrigin + player.windAngle - player.direction;}
                              break;}
                         break;}
                    return fineTurn ? _v40._2 : _v40._2 * 3;}
@@ -552,22 +552,22 @@ Elm.Steps.make = function (_elm) {
          "between lines 55 and 71");
       }();
    });
-   var tackTargetReached = F2(function (boat,
+   var tackTargetReached = F2(function (player,
    targetMaybe) {
       return function () {
          var _v47 = {ctor: "_Tuple2"
                     ,_0: targetMaybe
-                    ,_1: boat.controlMode};
+                    ,_1: player.controlMode};
          switch (_v47.ctor)
          {case "_Tuple2":
             switch (_v47._0.ctor)
               {case "Just":
                  switch (_v47._1.ctor)
                    {case "FixedDirection":
-                      return _U.cmp(Basics.abs(_v47._0._0 - boat.direction),
+                      return _U.cmp(Basics.abs(_v47._0._0 - player.direction),
                         0.1) < 0;
                       case "FixedWindAngle":
-                      return _U.cmp(Basics.abs(_v47._0._0 - boat.windAngle),
+                      return _U.cmp(Basics.abs(_v47._0._0 - player.windAngle),
                         0.1) < 0;}
                    break;
                  case "Nothing": return false;}
@@ -576,29 +576,29 @@ Elm.Steps.make = function (_elm) {
          "between lines 31 and 34");
       }();
    });
-   var getTackTarget = F2(function (boat,
+   var getTackTarget = F2(function (player,
    spaceKey) {
       return function () {
          var _v51 = {ctor: "_Tuple2"
-                    ,_0: boat.tackTarget
+                    ,_0: player.tackTarget
                     ,_1: spaceKey};
          switch (_v51.ctor)
          {case "_Tuple2":
             switch (_v51._0.ctor)
               {case "Just":
                  return A2(tackTargetReached,
-                   boat,
-                   boat.tackTarget) ? Maybe.Nothing : boat.tackTarget;
+                   player,
+                   player.tackTarget) ? Maybe.Nothing : player.tackTarget;
                  case "Nothing": switch (_v51._1)
                    {case false:
                       return Maybe.Nothing;
                       case true: return function () {
-                           var _v55 = boat.controlMode;
+                           var _v55 = player.controlMode;
                            switch (_v55.ctor)
                            {case "FixedDirection":
-                              return Maybe.Just(Core.ensure360(boat.windOrigin - boat.windAngle));
+                              return Maybe.Just(Core.ensure360(player.windOrigin - player.windAngle));
                               case "FixedWindAngle":
-                              return Maybe.Just(0 - boat.windAngle);}
+                              return Maybe.Just(0 - player.windAngle);}
                            _E.Case($moduleName,
                            "between lines 45 and 49");
                         }();}
@@ -608,49 +608,49 @@ Elm.Steps.make = function (_elm) {
          "between lines 38 and 49");
       }();
    });
-   var keysForBoatStep = F2(function (_v56,
-   boat) {
+   var keysForPlayerStep = F2(function (_v56,
+   player) {
       return function () {
          return function () {
             var forceTurn = !_U.eq(_v56.arrows.x,
             0);
             var tackTarget = forceTurn ? Maybe.Nothing : A2(getTackTarget,
-            boat,
+            player,
             _v56.tack);
             var turn = A4(getTurn,
             tackTarget,
-            boat,
+            player,
             _v56.arrows,
             _v56.fineTurn);
-            var direction = Core.ensure360(boat.direction + turn);
+            var direction = Core.ensure360(player.direction + turn);
             var windAngle = A2(Core.angleToWind,
             direction,
-            boat.windOrigin);
-            var turnedBoat = _U.replace([["direction"
-                                         ,direction]
-                                        ,["windAngle",windAngle]],
-            boat);
+            player.windOrigin);
+            var turnedPlayer = _U.replace([["direction"
+                                           ,direction]
+                                          ,["windAngle",windAngle]],
+            player);
             var tackTargetAfterTurn = A2(tackTargetReached,
-            turnedBoat,
+            turnedPlayer,
             tackTarget) ? Maybe.Nothing : tackTarget;
             var controlMode = forceTurn ? Game.FixedDirection : _U.cmp(_v56.arrows.y,
-            0) > 0 || _v56.lockAngle ? Game.FixedWindAngle : turnedBoat.controlMode;
+            0) > 0 || _v56.lockAngle ? Game.FixedWindAngle : turnedPlayer.controlMode;
             return _U.replace([["controlMode"
                                ,controlMode]
                               ,["tackTarget"
                                ,tackTargetAfterTurn]],
-            turnedBoat);
+            turnedPlayer);
          }();
       }();
    });
    var keysStep = F2(function (keyboardInput,
    gameState) {
       return function () {
-         var boatUpdated = A2(keysForBoatStep,
+         var playerUpdated = A2(keysForPlayerStep,
          keyboardInput,
-         gameState.boat);
-         return _U.replace([["boat"
-                            ,boatUpdated]],
+         gameState.player);
+         return _U.replace([["player"
+                            ,playerUpdated]],
          gameState);
       }();
    });
@@ -658,7 +658,7 @@ Elm.Steps.make = function (_elm) {
    gameState) {
       return function () {
          return function () {
-            var boat = gameState.boat;
+            var player = gameState.player;
             var center = function () {
                var _v60 = _v58.drag;
                switch (_v60.ctor)
@@ -673,17 +673,17 @@ Elm.Steps.make = function (_elm) {
                             Geo.floatify({ctor: "_Tuple2"
                                          ,_0: x - _v60._0._0
                                          ,_1: _v60._0._1 - y}),
-                            boat.center);
+                            player.center);
                          }();}
                     break;
                   case "Nothing":
-                  return boat.center;}
+                  return player.center;}
                _E.Case($moduleName,
                "between lines 23 and 26");
             }();
-            return _U.replace([["boat"
+            return _U.replace([["player"
                                ,_U.replace([["center",center]],
-                               boat)]],
+                               player)]],
             gameState);
          }();
       }();
@@ -704,7 +704,7 @@ Elm.Steps.make = function (_elm) {
                        ,tackTargetReached: tackTargetReached
                        ,getTackTarget: getTackTarget
                        ,getTurn: getTurn
-                       ,keysForBoatStep: keysForBoatStep
+                       ,keysForPlayerStep: keysForPlayerStep
                        ,keysStep: keysStep
                        ,gatePassedInX: gatePassedInX
                        ,gatePassedFromNorth: gatePassedFromNorth
@@ -713,9 +713,9 @@ Elm.Steps.make = function (_elm) {
                        ,getGatesMarks: getGatesMarks
                        ,isStuck: isStuck
                        ,getCenterAfterMove: getCenterAfterMove
-                       ,moveBoat: moveBoat
+                       ,movePlayer: movePlayer
                        ,moveStep: moveStep
-                       ,updateWindForBoat: updateWindForBoat
+                       ,updateWindForPlayer: updateWindForPlayer
                        ,windStep: windStep
                        ,raceInputStep: raceInputStep
                        ,stepGame: stepGame};
@@ -831,7 +831,7 @@ Elm.Render.Relative.make = function (_elm) {
    var Time = Elm.Time.make(_elm);
    var _op = {};
    var renderCountdown = F2(function (gameState,
-   boat) {
+   player) {
       return function () {
          var messageBuilder = function (msg) {
             return Graphics.Collage.move({ctor: "_Tuple2"
@@ -849,13 +849,13 @@ Elm.Render.Relative.make = function (_elm) {
             _L.append(String.show(s),
             "\"..."))));
             return Maybe.Just(messageBuilder(msg));
-         }() : List.isEmpty(boat.passedGates) ? Maybe.Just(messageBuilder("Go!")) : Maybe.Nothing;
+         }() : List.isEmpty(player.passedGates) ? Maybe.Just(messageBuilder("Go!")) : Maybe.Nothing;
       }();
    });
-   var renderLaylines = F2(function (boat,
+   var renderLaylines = F2(function (player,
    course) {
       return function () {
-         var windAngleR = Core.toRadians(boat.windOrigin);
+         var windAngleR = Core.toRadians(player.windOrigin);
          var upwindMark = course.upwind;
          var $ = Game.getGateMarks(upwindMark),
          left = $._0,
@@ -939,12 +939,12 @@ Elm.Render.Relative.make = function (_elm) {
          "between lines 55 and 57");
       }();
    });
-   var renderBoatAngles = function (boat) {
+   var renderPlayerAngles = function (player) {
       return function () {
          var windAngleText = Graphics.Collage.alpha(0.8)(Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
                                                                                                 ,_0: 40
-                                                                                                ,_1: Core.toRadians(boat.direction - boat.windAngle / 2)}))(Graphics.Collage.toForm(Text.centered((_U.eq(boat.controlMode,
-         Game.FixedWindAngle) ? Text.line(Text.Under) : Basics.id)(Render.Utils.baseText(_L.append(String.show(Basics.abs(boat.windAngle)),
+                                                                                                ,_1: Core.toRadians(player.direction - player.windAngle / 2)}))(Graphics.Collage.toForm(Text.centered((_U.eq(player.controlMode,
+         Game.FixedWindAngle) ? Text.line(Text.Under) : Basics.id)(Render.Utils.baseText(_L.append(String.show(Basics.abs(player.windAngle)),
          "&deg;")))))));
          var drawLine = function (a) {
             return Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
@@ -955,26 +955,26 @@ Elm.Render.Relative.make = function (_elm) {
                              ,_0: 25
                              ,_1: a})));
          };
-         var directionLine = Graphics.Collage.alpha(0.8)(drawLine(Core.toRadians(boat.direction)));
-         var windLine = Graphics.Collage.alpha(0.3)(drawLine(Core.toRadians(boat.direction - boat.windAngle)));
+         var directionLine = Graphics.Collage.alpha(0.8)(drawLine(Core.toRadians(player.direction)));
+         var windLine = Graphics.Collage.alpha(0.3)(drawLine(Core.toRadians(player.direction - player.windAngle)));
          return Graphics.Collage.group(_L.fromArray([directionLine
                                                     ,windLine
                                                     ,windAngleText]));
       }();
    };
-   var renderBoat = function (boat) {
+   var renderPlayer = function (player) {
       return function () {
          var eqLine = A2(renderEqualityLine,
-         boat.position,
-         boat.windOrigin);
-         var angles = renderBoatAngles(boat);
-         var hull = Graphics.Collage.rotate(Core.toRadians(boat.direction + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
+         player.position,
+         player.windOrigin);
+         var angles = renderPlayerAngles(player);
+         var hull = Graphics.Collage.rotate(Core.toRadians(player.direction + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
          8,
          19,
          "/assets/images/icon-boat-white.png")));
-         return Graphics.Collage.move(boat.position)(Graphics.Collage.group(_L.fromArray([angles
-                                                                                         ,eqLine
-                                                                                         ,hull])));
+         return Graphics.Collage.move(player.position)(Graphics.Collage.group(_L.fromArray([angles
+                                                                                           ,eqLine
+                                                                                           ,hull])));
       }();
    };
    var renderGate = F3(function (gate,
@@ -1028,11 +1028,11 @@ Elm.Render.Relative.make = function (_elm) {
          return function () {
             var maybeForms = _L.fromArray([A2(renderCountdown,
             _v6,
-            _v6.boat)]);
+            _v6.player)]);
             var nextGate = A2(Game.findNextGate,
-            _v6.boat,
+            _v6.player,
             _v6.course.laps);
-            var downwindOrStartLine = List.isEmpty(_v6.boat.passedGates) ? A3(renderStartLine,
+            var downwindOrStartLine = List.isEmpty(_v6.player.passedGates) ? A3(renderStartLine,
             _v6.course.downwind,
             _v6.course.markRadius,
             _U.cmp(_v6.countdown,
@@ -1049,12 +1049,12 @@ Elm.Render.Relative.make = function (_elm) {
                                          _v6.course.markRadius,
                                          _U.eq(nextGate,
                                          Maybe.Just(Game.Upwind)))
-                                         ,renderBoat(_v6.boat)
+                                         ,renderPlayer(_v6.player)
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
                                          _v6.opponents))
                                          ,renderGusts(_v6.wind)]);
-            return Graphics.Collage.move(Geo.neg(_v6.boat.center))(Graphics.Collage.group(_L.append(justForms,
+            return Graphics.Collage.move(Geo.neg(_v6.player.center))(Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms))));
          }();
       }();
@@ -1062,9 +1062,9 @@ Elm.Render.Relative.make = function (_elm) {
    _elm.Render.Relative.values = {_op: _op
                                  ,renderStartLine: renderStartLine
                                  ,renderGate: renderGate
-                                 ,renderBoatAngles: renderBoatAngles
+                                 ,renderPlayerAngles: renderPlayerAngles
                                  ,renderEqualityLine: renderEqualityLine
-                                 ,renderBoat: renderBoat
+                                 ,renderPlayer: renderPlayer
                                  ,renderOpponent: renderOpponent
                                  ,renderBounds: renderBounds
                                  ,renderGust: renderGust
@@ -1128,50 +1128,50 @@ Elm.Render.Absolute.make = function (_elm) {
       }();
    });
    var renderControlWheel = F3(function (wind,
-   boat,
+   player,
    _v4) {
       return function () {
          switch (_v4.ctor)
          {case "_Tuple2":
             return function () {
-                 var boatAngle = Core.toRadians(boat.direction);
-                 var windAngle = Core.toRadians(boat.windOrigin);
+                 var playerAngle = Core.toRadians(player.direction);
+                 var windAngle = Core.toRadians(player.windOrigin);
                  var r = 35;
                  var c = Graphics.Collage.outlined(Graphics.Collage.solid(Color.white))(Graphics.Collage.circle(r));
-                 var boatWindMarker = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+                 var playerWindMarker = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
                  Basics.fromPolar({ctor: "_Tuple2"
                                   ,_0: r
                                   ,_1: windAngle}),
                  Basics.fromPolar({ctor: "_Tuple2"
                                   ,_0: r + 8
                                   ,_1: windAngle})));
-                 var boatMarker = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
-                                                                         ,_0: r - 4
-                                                                         ,_1: boatAngle}))(Graphics.Collage.rotate(boatAngle - Basics.pi / 2)(Graphics.Collage.filled(Color.white)(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                                                                                                          ,_0: 0
-                                                                                                                                                                                                                          ,_1: 4}
-                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                          ,_0: -4
-                                                                                                                                                                                                                          ,_1: -4}
-                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                          ,_0: 4
-                                                                                                                                                                                                                          ,_1: -4}])))));
+                 var playerMarker = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
+                                                                           ,_0: r - 4
+                                                                           ,_1: playerAngle}))(Graphics.Collage.rotate(playerAngle - Basics.pi / 2)(Graphics.Collage.filled(Color.white)(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                                                                                                                ,_0: 0
+                                                                                                                                                                                                                                ,_1: 4}
+                                                                                                                                                                                                                               ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                ,_0: -4
+                                                                                                                                                                                                                                ,_1: -4}
+                                                                                                                                                                                                                               ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                ,_0: 4
+                                                                                                                                                                                                                                ,_1: -4}])))));
                  var windOriginText = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
                                                                              ,_0: r + 20
-                                                                             ,_1: windAngle}))(Graphics.Collage.rotate(windAngle - Basics.pi / 2)(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(boat.windOrigin),
+                                                                             ,_1: windAngle}))(Graphics.Collage.rotate(windAngle - Basics.pi / 2)(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(player.windOrigin),
                  "&deg;"))))));
                  return Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
                                                                           ,_0: _v4._0 / 2 - 50
                                                                           ,_1: _v4._1 / 2 - 120})(Graphics.Collage.group(_L.fromArray([c
-                                                                                                                                      ,boatWindMarker
-                                                                                                                                      ,boatMarker
+                                                                                                                                      ,playerWindMarker
+                                                                                                                                      ,playerMarker
                                                                                                                                       ,windOriginText]))));
               }();}
          _E.Case($moduleName,
          "between lines 84 and 100");
       }();
    });
-   var renderPolar = F2(function (boat,
+   var renderPolar = F2(function (player,
    _v8) {
       return function () {
          switch (_v8.ctor)
@@ -1204,19 +1204,19 @@ Elm.Render.Absolute.make = function (_elm) {
                                                     ,_0: maxSpeed / 2
                                                     ,_1: maxSpeed * 0.8})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("VMG"))));
                  var polar = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(Graphics.Collage.path(points));
-                 var absWindAngle = Basics.abs(boat.windAngle);
-                 var boatPoint = anglePoint(absWindAngle);
-                 var boatMark = Graphics.Collage.move(boatPoint)(Graphics.Collage.filled(Color.red)(Graphics.Collage.circle(2)));
-                 var boatSegment = Graphics.Collage.alpha(0.3)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+                 var absWindAngle = Basics.abs(player.windAngle);
+                 var playerPoint = anglePoint(absWindAngle);
+                 var playerMark = Graphics.Collage.move(playerPoint)(Graphics.Collage.filled(Color.red)(Graphics.Collage.circle(2)));
+                 var playerSegment = Graphics.Collage.alpha(0.3)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
                  {ctor: "_Tuple2",_0: 0,_1: 0},
-                 boatPoint)));
-                 var boatProjection = Graphics.Collage.traced(Graphics.Collage.dotted(Color.white))(A2(Graphics.Collage.segment,
-                 boatPoint,
+                 playerPoint)));
+                 var playerProjection = Graphics.Collage.traced(Graphics.Collage.dotted(Color.white))(A2(Graphics.Collage.segment,
+                 playerPoint,
                  {ctor: "_Tuple2"
                  ,_0: 0
-                 ,_1: Basics.snd(boatPoint)}));
+                 ,_1: Basics.snd(playerPoint)}));
                  var windOriginText = Graphics.Collage.alpha(0.6)(Graphics.Collage.move(A2(Geo.add,
-                 boatPoint,
+                 playerPoint,
                  Basics.fromPolar({ctor: "_Tuple2"
                                   ,_0: 20
                                   ,_1: Core.toRadians(absWindAngle)})))(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(absWindAngle),
@@ -1226,9 +1226,9 @@ Elm.Render.Absolute.make = function (_elm) {
                                               ,_1: _v8._1 / 2 - maxSpeed - 20})(Graphics.Collage.group(_L.fromArray([yAxis
                                                                                                                     ,xAxis
                                                                                                                     ,polar
-                                                                                                                    ,boatProjection
-                                                                                                                    ,boatMark
-                                                                                                                    ,boatSegment
+                                                                                                                    ,playerProjection
+                                                                                                                    ,playerMark
+                                                                                                                    ,playerSegment
                                                                                                                     ,windOriginText
                                                                                                                     ,legend])));
               }();}
@@ -1238,13 +1238,13 @@ Elm.Render.Absolute.make = function (_elm) {
    });
    var renderLapsCount = F3(function (_v12,
    course,
-   boat) {
+   player) {
       return function () {
          switch (_v12.ctor)
          {case "_Tuple2":
             return function () {
                  var count = List.minimum(_L.fromArray([A2(Basics.div,
-                                                       List.length(boat.passedGates) + 1,
+                                                       List.length(player.passedGates) + 1,
                                                        2)
                                                        ,course.laps]));
                  var msg = _L.append("LAP ",
@@ -1260,13 +1260,13 @@ Elm.Render.Absolute.make = function (_elm) {
       }();
    });
    var renderWinner = F3(function (course,
-   boat,
+   player,
    opponents) {
       return Maybe.Nothing;
    });
    var hasFinished = F2(function (course,
-   boat) {
-      return _U.eq(List.length(boat.passedGates),
+   player) {
+      return _U.eq(List.length(player.passedGates),
       course.laps * 2 + 1);
    });
    var renderHiddenGate = F4(function (gate,
@@ -1355,31 +1355,33 @@ Elm.Render.Absolute.make = function (_elm) {
             var justForms = _L.fromArray([A3(renderLapsCount,
                                          dims,
                                          _v27.course,
-                                         _v27.boat)
-                                         ,A2(renderPolar,_v27.boat,dims)
+                                         _v27.player)
+                                         ,A2(renderPolar,
+                                         _v27.player,
+                                         dims)
                                          ,A3(renderControlWheel,
                                          Game.wind,
-                                         _v27.boat,
+                                         _v27.player,
                                          dims)]);
             var nextGate = _U.cmp(_v27.countdown,
             0) < 1 ? A2(Game.findNextGate,
-            _v27.boat,
+            _v27.player,
             _v27.course.laps) : Maybe.Nothing;
             var maybeForms = _L.fromArray([A4(renderHiddenGate,
                                           _v27.course.downwind,
                                           dims,
-                                          _v27.boat.center,
+                                          _v27.player.center,
                                           _U.eq(nextGate,
                                           Maybe.Just(Game.Downwind)))
                                           ,A4(renderHiddenGate,
                                           _v27.course.upwind,
                                           dims,
-                                          _v27.boat.center,
+                                          _v27.player.center,
                                           _U.eq(nextGate,
                                           Maybe.Just(Game.Upwind)))
                                           ,A3(renderWinner,
                                           _v27.course,
-                                          _v27.boat,
+                                          _v27.player,
                                           _v27.opponents)
                                           ,A2(renderHelp,
                                           _v27.countdown,
@@ -1585,7 +1587,7 @@ Elm.Game.make = function (_elm) {
                 ,markRadius: 5
                 ,upwind: upwindGate};
    var RaceState = function (a) {
-      return {_: {},boats: a};
+      return {_: {},players: a};
    };
    var GameState = F7(function (a,
    b,
@@ -1595,11 +1597,11 @@ Elm.Game.make = function (_elm) {
    f,
    g) {
       return {_: {}
-             ,boat: b
              ,countdown: g
              ,course: d
              ,leaderboard: e
              ,opponents: c
+             ,player: b
              ,startDuration: f
              ,wind: a};
    });
@@ -1638,27 +1640,27 @@ Elm.Game.make = function (_elm) {
    });
    var FixedWindAngle = {ctor: "FixedWindAngle"};
    var FixedDirection = {ctor: "FixedDirection"};
-   var boat = {_: {}
-              ,center: {ctor: "_Tuple2"
-                       ,_0: 0
-                       ,_1: 0}
-              ,controlMode: FixedDirection
-              ,direction: 0
-              ,passedGates: _L.fromArray([])
-              ,position: {ctor: "_Tuple2"
+   var player = {_: {}
+                ,center: {ctor: "_Tuple2"
                          ,_0: 0
-                         ,_1: -200}
-              ,tackTarget: Maybe.Nothing
-              ,velocity: 0
-              ,windAngle: 0
-              ,windOrigin: 0
-              ,windSpeed: 0};
+                         ,_1: 0}
+                ,controlMode: FixedDirection
+                ,direction: 0
+                ,passedGates: _L.fromArray([])
+                ,position: {ctor: "_Tuple2"
+                           ,_0: 0
+                           ,_1: -200}
+                ,tackTarget: Maybe.Nothing
+                ,velocity: 0
+                ,windAngle: 0
+                ,windOrigin: 0
+                ,windSpeed: 0};
    var defaultGame = {_: {}
-                     ,boat: boat
                      ,countdown: 0
                      ,course: course
                      ,leaderboard: _L.fromArray([])
                      ,opponents: _L.fromArray([])
+                     ,player: player
                      ,startDuration: 30 * Time.second
                      ,wind: wind};
    var Course = F6(function (a,
@@ -1686,10 +1688,10 @@ Elm.Game.make = function (_elm) {
    var Upwind = {ctor: "Upwind"};
    var Downwind = {ctor: "Downwind"};
    var StartLine = {ctor: "StartLine"};
-   var findNextGate = F2(function (boat,
+   var findNextGate = F2(function (player,
    laps) {
       return function () {
-         var c = List.length(boat.passedGates);
+         var c = List.length(player.passedGates);
          var i = A2(Basics.mod,c,2);
          return _U.eq(c,
          laps * 2 + 1) ? Maybe.Nothing : _U.eq(c,
@@ -1702,7 +1704,7 @@ Elm.Game.make = function (_elm) {
                       ,upwindGate: upwindGate
                       ,islands: islands
                       ,course: course
-                      ,boat: boat
+                      ,player: player
                       ,wind: wind
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks
@@ -1995,7 +1997,7 @@ Elm.Core.make = function (_elm) {
          return v * 4;
       }();
    };
-   var boatVelocity = F2(function (windAngle,
+   var playerVelocity = F2(function (windAngle,
    previousVelocity) {
       return function () {
          var v = polarVelocity(Basics.abs(windAngle));
@@ -2003,10 +2005,10 @@ Elm.Core.make = function (_elm) {
          return previousVelocity + delta * 2.0e-2;
       }();
    });
-   var angleToWind = F2(function (boatDirection,
+   var angleToWind = F2(function (playerDirection,
    windOrigin) {
       return function () {
-         var delta = boatDirection - windOrigin;
+         var delta = playerDirection - windOrigin;
          return _U.cmp(delta,
          180) > 0 ? delta - 360 : _U.cmp(delta,
          -180) < 1 ? delta + 360 : delta;
@@ -2049,7 +2051,7 @@ Elm.Core.make = function (_elm) {
                       ,vmgValue: vmgValue
                       ,upwindVmg: upwindVmg
                       ,downwindVmg: downwindVmg
-                      ,boatVelocity: boatVelocity
+                      ,playerVelocity: playerVelocity
                       ,mapMaybe: mapMaybe
                       ,compact: compact
                       ,average: average

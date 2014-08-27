@@ -10,8 +10,8 @@ mpsToKnts : Float -> Float
 mpsToKnts mps = mps * 3600 / 1.852 / 1000 
 
 angleToWind : Float -> Float -> Float
-angleToWind boatDirection windOrigin =
-  let delta = boatDirection - windOrigin
+angleToWind playerDirection windOrigin =
+  let delta = playerDirection - windOrigin
   in 
     if | delta > 180   -> delta - 360
        | delta <= -180 -> delta + 360
@@ -45,8 +45,8 @@ downwindVmg =
   map (\a -> (a, vmgValue a)) [130..180] |> sortBy snd |> last |> fst
 
 -- deals with inertia
-boatVelocity : Float -> Float -> Float
-boatVelocity windAngle previousVelocity =
+playerVelocity : Float -> Float -> Float
+playerVelocity windAngle previousVelocity =
   let v = polarVelocity(abs windAngle)
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02

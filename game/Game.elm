@@ -28,21 +28,21 @@ type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float, isla
 
 data ControlMode = FixedDirection | FixedWindAngle
 
-type Sailing a = { a | position : Point, direction: Float, velocity: Float, passedGates: [Time] }
+type Boat a = { a | position : Point, direction: Float, velocity: Float, passedGates: [Time] }
 
-type Opponent = Sailing { }
+type Opponent = Boat { }
 
-type Boat = Sailing { windAngle: Float, windOrigin: Float, windSpeed: Float,
+type Player = Boat { windAngle: Float, windOrigin: Float, windSpeed: Float,
                          center: Point, controlMode: ControlMode, tackTarget: Maybe Float }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 
-type GameState = { wind: Wind, boat: Boat, opponents: [Opponent],
+type GameState = { wind: Wind, player: Player, opponents: [Opponent],
                    course: Course, leaderboard: [String], 
                    startDuration : Time, countdown: Time }
 
-type RaceState = { boats : [Boat] }
+type RaceState = { players : [Player] }
 
 startLine : Gate
 startLine = { y = -100, width = 100 }
@@ -59,8 +59,8 @@ course : Course
 course = { upwind = upwindGate, downwind = startLine, laps = 3, markRadius = 5,
            islands = islands, bounds = ((800,1200), (-800,-400)) }
 
-boat : Boat
-boat = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
+player : Player
+player = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
          windOrigin = 0, windSpeed = 0,
          center = (0,0), controlMode = FixedDirection, tackTarget = Nothing,
          passedGates = [] }
@@ -70,16 +70,16 @@ wind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
 
 
 defaultGame : GameState
-defaultGame = { wind = wind, boat = boat, opponents = [],
+defaultGame = { wind = wind, player = player, opponents = [],
                 course = course, leaderboard = [],
                 startDuration = (30*second), countdown = 0 }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
 
-findNextGate : Boat -> Int -> Maybe GateLocation
-findNextGate boat laps =
-  let c = (length boat.passedGates)
+findNextGate : Player -> Int -> Maybe GateLocation
+findNextGate player laps =
+  let c = (length player.passedGates)
       i = c `mod` 2
   in
     if | c == laps * 2 + 1 -> Nothing

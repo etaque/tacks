@@ -19,78 +19,78 @@ Task: redefine `stepGame` to use the UserInput and GameState
 
 mouseStep : MouseInput -> GameState -> GameState
 mouseStep ({drag, mouse} as mouseInput) gameState =
-  let boat = gameState.boat
+  let player = gameState.player
       center = case drag of
-        Just (x',y') -> let (x,y) = mouse in sub (floatify (x - x', y' - y)) boat.center
-        Nothing      -> boat.center 
+        Just (x',y') -> let (x,y) = mouse in sub (floatify (x - x', y' - y)) player.center
+        Nothing      -> player.center 
   in
-    { gameState | boat <- { boat | center <- center } }
+    { gameState | player <- { player | center <- center } }
 
-tackTargetReached : Boat -> Maybe Float -> Bool
-tackTargetReached boat targetMaybe = 
-  case (targetMaybe, boat.controlMode) of
-    (Just target, FixedWindAngle) -> abs (target - boat.windAngle) < 0.1
-    (Just target, FixedDirection) -> abs (target - boat.direction) < 0.1
+tackTargetReached : Player -> Maybe Float -> Bool
+tackTargetReached player targetMaybe = 
+  case (targetMaybe, player.controlMode) of
+    (Just target, FixedWindAngle) -> abs (target - player.windAngle) < 0.1
+    (Just target, FixedDirection) -> abs (target - player.direction) < 0.1
     (Nothing, _)                  -> False
 
-getTackTarget : Boat -> Bool -> Maybe Float
-getTackTarget boat spaceKey =
-  case (boat.tackTarget, spaceKey) of
+getTackTarget : Player -> Bool -> Maybe Float
+getTackTarget player spaceKey =
+  case (player.tackTarget, spaceKey) of
     -- target en cours
     (Just _, _) -> 
       -- si direction cible atteinte, on arrête le virement
-      if tackTargetReached boat boat.tackTarget then Nothing else boat.tackTarget
+      if tackTargetReached player player.tackTarget then Nothing else player.tackTarget
     -- si touche espace pressée, on défini la cible
     (Nothing, True) -> 
-      case boat.controlMode of
-        FixedWindAngle -> Just -boat.windAngle
-        FixedDirection -> Just (ensure360 (boat.windOrigin - boat.windAngle))
+      case player.controlMode of
+        FixedWindAngle -> Just -player.windAngle
+        FixedDirection -> Just (ensure360 (player.windOrigin - player.windAngle))
     -- sinon, pas de cible
     (Nothing, False) -> Nothing
 
 
 
-getTurn : Maybe Float -> Boat -> UserArrows -> Bool -> Float
-getTurn tackTarget boat arrows fineTurn =
-  case (tackTarget, boat.controlMode, arrows.x, arrows.y) of 
+getTurn : Maybe Float -> Player -> UserArrows -> Bool -> Float
+getTurn tackTarget player arrows fineTurn =
+  case (tackTarget, player.controlMode, arrows.x, arrows.y) of 
     -- virement en cours
     (Just target, _, _, _) -> 
-      case boat.controlMode of 
+      case player.controlMode of 
         FixedDirection -> 
-          let maxTurn = minimum [2, (abs (boat.direction - target))]
+          let maxTurn = minimum [2, (abs (player.direction - target))]
           in
-            if ensure360 (boat.direction - target) > 180 then maxTurn else -maxTurn
+            if ensure360 (player.direction - target) > 180 then maxTurn else -maxTurn
         FixedWindAngle -> 
-          let maxTurn = minimum [2, (abs (boat.windAngle - target))]
+          let maxTurn = minimum [2, (abs (player.windAngle - target))]
           in
             if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
     -- pas de virement ni de touche flèche, donc contrôle auto
     (Nothing, FixedDirection, 0, 0) -> 0
-    (Nothing, FixedWindAngle, 0, 0) -> (boat.windOrigin + boat.windAngle) - boat.direction
+    (Nothing, FixedWindAngle, 0, 0) -> (player.windOrigin + player.windAngle) - player.direction
     -- changement de direction via touche flèche
     (Nothing, _, x, y) -> if fineTurn then x else x * 3
 
-keysForBoatStep : KeyboardInput -> Boat -> Boat
-keysForBoatStep ({arrows, lockAngle, tack, fineTurn}) boat =
+keysForPlayerStep : KeyboardInput -> Player -> Player
+keysForPlayerStep ({arrows, lockAngle, tack, fineTurn}) player =
   let forceTurn = arrows.x /= 0 
-      tackTarget = if forceTurn then Nothing else getTackTarget boat tack
-      turn = getTurn tackTarget boat arrows fineTurn
-      direction = ensure360 <| boat.direction + turn
-      windAngle = angleToWind direction boat.windOrigin
-      turnedBoat = { boat | direction <- direction,
+      tackTarget = if forceTurn then Nothing else getTackTarget player tack
+      turn = getTurn tackTarget player arrows fineTurn
+      direction = ensure360 <| player.direction + turn
+      windAngle = angleToWind direction player.windOrigin
+      turnedPlayer = { player | direction <- direction,
                             windAngle <- windAngle }
-      tackTargetAfterTurn = if tackTargetReached turnedBoat tackTarget then Nothing else tackTarget
+      tackTargetAfterTurn = if tackTargetReached turnedPlayer tackTarget then Nothing else tackTarget
       controlMode = if | forceTurn -> FixedDirection
                        | arrows.y > 0 || lockAngle -> FixedWindAngle
-                       | otherwise -> turnedBoat.controlMode
+                       | otherwise -> turnedPlayer.controlMode
   in 
-    { turnedBoat | controlMode <- controlMode,
+    { turnedPlayer | controlMode <- controlMode,
                    tackTarget <- tackTargetAfterTurn }
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep keyboardInput gameState =
-  let boatUpdated = keysForBoatStep keyboardInput gameState.boat
-  in  { gameState | boat <- boatUpdated }
+  let playerUpdated = keysForPlayerStep keyboardInput gameState.player
+  in  { gameState | player <- playerUpdated }
 
 gatePassedInX : Gate -> (Point,Point) -> Bool
 gatePassedInX gate ((x,y),(x',y')) =
@@ -108,22 +108,22 @@ gatePassedFromSouth : Gate -> (Point,Point) -> Bool
 gatePassedFromSouth gate (p,p') =
   (snd p) < gate.y && (snd p') >= gate.y && (gatePassedInX gate (p,p'))
 
-getPassedGates : Boat -> Time -> Course -> (Point,Point) -> [Time]
-getPassedGates boat timestamp ({upwind, downwind, laps}) step =
-  case (findNextGate boat course.laps) of
+getPassedGates : Player -> Time -> Course -> (Point,Point) -> [Time]
+getPassedGates player timestamp ({upwind, downwind, laps}) step =
+  case (findNextGate player course.laps) of
     -- ligne de départ
-    Just StartLine -> if | gatePassedFromSouth downwind step -> timestamp :: boat.passedGates 
-                         | otherwise                         -> boat.passedGates
+    Just StartLine -> if | gatePassedFromSouth downwind step -> timestamp :: player.passedGates 
+                         | otherwise                         -> player.passedGates
     -- bouée au vent
-    Just Upwind    -> if | gatePassedFromSouth upwind step   -> timestamp :: boat.passedGates 
-                         | gatePassedFromSouth downwind step -> tail boat.passedGates
-                         | otherwise                         -> boat.passedGates
+    Just Upwind    -> if | gatePassedFromSouth upwind step   -> timestamp :: player.passedGates 
+                         | gatePassedFromSouth downwind step -> tail player.passedGates
+                         | otherwise                         -> player.passedGates
     -- bouée sous le vent
-    Just Downwind  -> if | gatePassedFromNorth downwind step -> timestamp :: boat.passedGates 
-                         | gatePassedFromNorth upwind step   -> tail boat.passedGates 
-                         | otherwise                         -> boat.passedGates
+    Just Downwind  -> if | gatePassedFromNorth downwind step -> timestamp :: player.passedGates 
+                         | gatePassedFromNorth upwind step   -> tail player.passedGates 
+                         | otherwise                         -> player.passedGates
     -- arrivée déjà franchie
-    Nothing        -> boat.passedGates
+    Nothing        -> player.passedGates
 
 getGatesMarks : Course -> [Point]
 getGatesMarks course =
@@ -160,27 +160,27 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
   in
     (refocus x x' cx w (w * 0.2), refocus y y' cy h (h * 0.4))
 
-moveBoat : Time -> Float -> GameState -> (Int,Int) -> Boat -> Boat
-moveBoat now delta gameState dimensions boat =
-  let {position, direction, velocity, windAngle, passedGates} = boat
-      newVelocity = boatVelocity boat.windAngle velocity
+movePlayer : Time -> Float -> GameState -> (Int,Int) -> Player -> Player
+movePlayer now delta gameState dimensions player =
+  let {position, direction, velocity, windAngle, passedGates} = player
+      newVelocity = playerVelocity player.windAngle velocity
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
       newPassedGates = if gameState.countdown <= 0
-        then getPassedGates boat now gameState.course (position, newPosition)
-        else boat.passedGates
-      newCenter = getCenterAfterMove position newPosition boat.center (floatify dimensions)
+        then getPassedGates player now gameState.course (position, newPosition)
+        else player.passedGates
+      newCenter = getCenterAfterMove position newPosition player.center (floatify dimensions)
   in
-      { boat | position <- newPosition,
+      { player | position <- newPosition,
                velocity <- if stuck then 0 else newVelocity,
                center <- newCenter,
                passedGates <- newPassedGates }
 
 moveStep : Time -> Float -> (Int,Int) -> GameState -> GameState
 moveStep now delta dims gameState =
-  let boatMoved = moveBoat now delta gameState dims gameState.boat
-  in  { gameState | boat <- boatMoved }
+  let playerMoved = movePlayer now delta gameState dims gameState.player
+  in  { gameState | player <- playerMoved }
 
 --randInWindow : Int -> Int -> Int -> Int
 --randInWindow t w i =
@@ -220,34 +220,34 @@ moveStep now delta dims gameState =
 --       | (length gusts < wind.gustsCount) -> (spawnGust timestamp bounds 0) :: gusts 
 --       | otherwise -> gusts
 
-updateWindForBoat : Wind -> Boat -> Boat
-updateWindForBoat wind boat =
+updateWindForPlayer : Wind -> Player -> Player
+updateWindForPlayer wind player =
   let
-    gustsOnBoat : [Gust]
-    gustsOnBoat = filter (\g -> (distance boat.position g.position) <= g.radius) wind.gusts
+    gustsOnPlayer : [Gust]
+    gustsOnPlayer = filter (\g -> (distance player.position g.position) <= g.radius) wind.gusts
       |> sortBy .speedImpact |> reverse
-    windOrigin = if (isEmpty gustsOnBoat) then 
+    windOrigin = if (isEmpty gustsOnPlayer) then 
       wind.origin 
     else 
       let 
-        gust = head gustsOnBoat
-        factor = minimum [(gust.radius - (distance boat.position gust.position)) / (gust.radius * 0.1), 1]
+        gust = head gustsOnPlayer
+        factor = minimum [(gust.radius - (distance player.position gust.position)) / (gust.radius * 0.1), 1]
         newDelta = gust.originDelta * factor
       in
         ensure360 <| wind.origin + newDelta
   in
-    { boat | windOrigin <- windOrigin }
+    { player | windOrigin <- windOrigin }
 
 windStep : Float -> Time -> GameState -> GameState
-windStep delta now ({wind, boat} as gameState) =
+windStep delta now ({wind, player} as gameState) =
   let o1 = cos (inSeconds now / 8) * 10
       o2 = cos (inSeconds now / 5) * 5
       newOrigin = o1 + o2 |> ensure360
       --newGusts = updateGusts now delta gameState.course.bounds wind
       newWind = { wind | origin <- newOrigin }
-      boatWithWind = updateWindForBoat wind boat
+      playerWithWind = updateWindForPlayer wind player
   in { gameState | wind <- newWind,
-                   boat <- boatWithWind }
+                   player <- playerWithWind }
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep {now,startTime,course,opponents,leaderboard} gameState =

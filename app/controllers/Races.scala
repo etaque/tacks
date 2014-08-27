@@ -37,7 +37,7 @@ object Races extends Controller {
 
   def gameSocket(raceId: String, id: String) = WebSocket.tryAcceptWithActor[BoatState, RaceUpdate] { request =>
     (RacesSupervisor.actorRef ? GetRaceActor(BSONObjectID(raceId))).map {
-      case Some(raceActor: ActorRef) => Right(BoatActor.props(raceActor, id)(_))
+      case Some(raceActor: ActorRef) => Right(PlayerActor.props(raceActor, id)(_))
       case None => Left(NotFound)
     }
   }
