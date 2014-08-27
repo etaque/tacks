@@ -17,7 +17,7 @@
   var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/gameSocket/" + boatId);
 
   var gameDiv = document.getElementById('game');
-  var input = @Html(Json.toJson(race.initialUpdate).toString());
+  var input = @Html(Json.toJson(RaceUpdate.initial(race)).toString());
   var game = Elm.embed(Elm.ShiftMaster, gameDiv, { raceInput: input });
 
   ws.onmessage = function(event) {

@@ -43,13 +43,28 @@ object Course {
   )
 }
 
+case class Gust(
+  position: Geo.Point,
+  radius: Float,
+  originDelta: Float
+)
+
 case class RaceUpdate(
   now: DateTime,
   startTime: DateTime,
   course: Option[Course],
   opponents: Seq[BoatState] = Seq(),
+  gusts: Seq[Gust] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
+
+object RaceUpdate {
+  def initial(r: Race) = RaceUpdate(
+    DateTime.now,
+    startTime = r.startTime,
+    course = Some(r.course)
+  )
+}
 
 case class BoatState (
   position: Geo.Point,
@@ -66,6 +81,7 @@ object JsonFormats {
   implicit val pointFormat: Format[Geo.Point] = utils.JsonFormats.tuple2Format[Float,Float]
   implicit val boxFormat: Format[Geo.Box] = utils.JsonFormats.tuple2Format[Geo.Point,Geo.Point]
 
+  implicit val gustFormat: Format[Gust] = Json.format[Gust]
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
   implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
@@ -77,6 +93,7 @@ object JsonFormats {
       (__ \ 'startTime).format[DateTime] and
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'opponents).format[Seq[BoatState]] and
+      (__ \ 'gusts).format[Seq[Gust]] and
       (__ \ 'leaderboard).format[Seq[String]]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 

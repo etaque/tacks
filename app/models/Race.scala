@@ -11,12 +11,6 @@ case class Race (
   leaderboard: Seq[String] = Seq()
 ) extends HasId {
 
-  def initialUpdate = RaceUpdate(
-    DateTime.now,
-    startTime = startTime,
-    course = Some(course)
-  )
-
   def millisBeforeStart = startTime.getMillis - DateTime.now.getMillis
 }
 

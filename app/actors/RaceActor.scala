@@ -11,13 +11,16 @@ import models._
 
 case class PlayerLeaved(id: String)
 case object UpdateLeaderboard
+case object UpdateGusts
 
 class RaceActor(race: Race) extends Actor {
 
   val boatStates = scala.collection.mutable.Map[String,BoatState]()
+  val gusts = Seq[Gust]()
   var leaderboard = Seq[String]()
 
   Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateLeaderboard)
+  Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateGusts)
 
   def receive = {
     case PlayerUpdate(id, state) => {
@@ -47,6 +50,7 @@ class RaceActor(race: Race) extends Actor {
       now = DateTime.now,
       startTime = race.startTime,
       course = None, // already transmitted in initial update
+      gusts = Seq(),
       opponents = boatStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard
     )
