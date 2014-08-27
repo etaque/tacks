@@ -26,12 +26,24 @@ angleToWind playerDirection windOrigin =
 --       | otherwise     -> delta
 
 
+-- polynomial regression of AC72 polar
+-- see http://noticeboard.americascup.com/wp-content/uploads/actv/LV13/AC72polar.130714.txt
+-- and http://www.xuru.org/rt/MPR.asp
 polarVelocity : Float -> Float
-polarVelocity delta =
-  let x = delta
-      v = 1.084556812 * (10^ -6) * (x^3) - 1.058704484 * (10^ -3) * (x^2) +
-        0.195782694 * x - 7.136475544 * (10^ -1)
-  in v * 4
+polarVelocity angle =
+  let x1 = 15
+      x2 = angle
+      v = -8.629353458 * 10^ -4 * x1^3 
+          - 1.150751365 * 10^ -6 * x1^2 * x2 
+          - 1.545154964 * 10^ -4 * x1 * x2^2 
+          - 1.576508561 * 10^ -5 * x2^3 
+          + 1.013664743 * 10^ -2 * x2 
+          + 3.818064169 * 10^ -2 * x1 * x2 
+          + 3.661699453 * 10^ -3 * x2^2 
+          - 6.076025593 * 10^ -1 * x1 
+          - 2.385773381 * 10^ -1 * x2 
+          + 14.77328598
+  in v * 2 -- articifial speed factor
 
 vmgValue : Float  -> Float
 vmgValue a = abs ((cos (toRadians a)) * (polarVelocity a))

@@ -1941,7 +1941,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 64 and 67");
+               "between lines 76 and 79");
             }();
          });
          return A3(List.foldl,
@@ -1959,19 +1959,29 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 57 and 59");
+         "between lines 69 and 71");
       }();
    });
-   var polarVelocity = function (delta) {
+   var polarVelocity = function (angle) {
       return function () {
-         var x = delta;
-         var v = 1.084556812 * Math.pow(10,
-         -6) * Math.pow(x,
-         3) - 1.058704484 * Math.pow(10,
-         -3) * Math.pow(x,
-         2) + 0.195782694 * x - 7.136475544 * Math.pow(10,
-         -1);
-         return v * 4;
+         var x2 = angle;
+         var x1 = 15;
+         var v = -8.629353458 * Math.pow(10,
+         -4) * Math.pow(x1,
+         3) - 1.150751365 * Math.pow(10,
+         -6) * Math.pow(x1,
+         2) * x2 - 1.545154964 * Math.pow(10,
+         -4) * x1 * Math.pow(x2,
+         2) - 1.576508561 * Math.pow(10,
+         -5) * Math.pow(x2,
+         3) + 1.013664743 * Math.pow(10,
+         -2) * x2 + 3.818064169 * Math.pow(10,
+         -2) * x1 * x2 + 3.661699453 * Math.pow(10,
+         -3) * Math.pow(x2,
+         2) - 6.076025593 * Math.pow(10,
+         -1) * x1 - 2.385773381 * Math.pow(10,
+         -1) * x2 + 14.77328598;
+         return v * 2;
       }();
    };
    var playerVelocity = F2(function (windAngle,
