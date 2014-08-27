@@ -36,28 +36,60 @@ Elm.ShiftMaster.make = function (_elm) {
    var WebSocket = Elm.WebSocket.make(_elm);
    var Window = Elm.Window.make(_elm);
    var _op = {};
+   var boatToRaceOutput = function (_v0) {
+      return function () {
+         return {_: {}
+                ,direction: _v0.direction
+                ,passedGates: _v0.passedGates
+                ,position: _v0.position
+                ,velocity: _v0.velocity};
+      }();
+   };
    var clock = A2(Signal._op["<~"],
    Time.inSeconds,
    Time.fps(30));
    var raceInput = Native.Ports.portIn("raceInput",
    Native.Ports.incomingSignal(function (v) {
-      return typeof v === "object" && "now" in v && "startTime" in v && "opponents" in v && "leaderboard" in v ? {_: {}
-                                                                                                                 ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
-                                                                                                                 ,startTime: typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime)
-                                                                                                                 ,opponents: _U.isJSArray(v.opponents) ? _L.fromArray(v.opponents.map(function (v) {
-                                                                                                                    return typeof v === "object" && "position" in v && "direction" in v && "velocity" in v && "passedGates" in v ? {_: {}
-                                                                                                                                                                                                                                   ,position: typeof v.position === "object" && "x" in v.position && "y" in v.position ? {_: {}
-                                                                                                                                                                                                                                                                                                                         ,x: typeof v.position.x === "number" ? v.position.x : _E.raise("invalid input, expecting JSNumber but got " + v.position.x)
-                                                                                                                                                                                                                                                                                                                         ,y: typeof v.position.y === "number" ? v.position.y : _E.raise("invalid input, expecting JSNumber but got " + v.position.y)} : _E.raise("invalid input, expecting JSObject [\"x\",\"y\"] but got " + v.position)
-                                                                                                                                                                                                                                   ,direction: typeof v.direction === "number" ? v.direction : _E.raise("invalid input, expecting JSNumber but got " + v.direction)
-                                                                                                                                                                                                                                   ,velocity: typeof v.velocity === "number" ? v.velocity : _E.raise("invalid input, expecting JSNumber but got " + v.velocity)
-                                                                                                                                                                                                                                   ,passedGates: _U.isJSArray(v.passedGates) ? _L.fromArray(v.passedGates.map(function (v) {
-                                                                                                                                                                                                                                      return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
-                                                                                                                                                                                                                                   })) : _E.raise("invalid input, expecting JSArray but got " + v.passedGates)} : _E.raise("invalid input, expecting JSObject [\"position\",\"direction\",\"velocity\",\"passedGates\"] but got " + v);
-                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.opponents)
-                                                                                                                 ,leaderboard: _U.isJSArray(v.leaderboard) ? _L.fromArray(v.leaderboard.map(function (v) {
-                                                                                                                    return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _E.raise("invalid input, expecting JSString but got " + v);
-                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.leaderboard)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"opponents\",\"leaderboard\"] but got " + v);
+      return typeof v === "object" && "now" in v && "startTime" in v && "course" in v && "opponents" in v && "leaderboard" in v ? {_: {}
+                                                                                                                                  ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
+                                                                                                                                  ,startTime: typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime)
+                                                                                                                                  ,course: v.course === null ? Maybe.Nothing : Maybe.Just(typeof v.course === "object" && "upwind" in v.course && "downwind" in v.course && "laps" in v.course && "markRadius" in v.course && "islands" in v.course && "bounds" in v.course ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                              ,upwind: typeof v.course.upwind === "object" && "y" in v.course.upwind && "width" in v.course.upwind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,y: typeof v.course.upwind.y === "number" ? v.course.upwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.y)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,width: typeof v.course.upwind.width === "number" ? v.course.upwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.upwind)
+                                                                                                                                                                                                                                                                                                                                                                              ,downwind: typeof v.course.downwind === "object" && "y" in v.course.downwind && "width" in v.course.downwind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,y: typeof v.course.downwind.y === "number" ? v.course.downwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.y)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,width: typeof v.course.downwind.width === "number" ? v.course.downwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.downwind)
+                                                                                                                                                                                                                                                                                                                                                                              ,laps: typeof v.course.laps === "number" ? v.course.laps : _E.raise("invalid input, expecting JSNumber but got " + v.course.laps)
+                                                                                                                                                                                                                                                                                                                                                                              ,markRadius: typeof v.course.markRadius === "number" ? v.course.markRadius : _E.raise("invalid input, expecting JSNumber but got " + v.course.markRadius)
+                                                                                                                                                                                                                                                                                                                                                                              ,islands: _U.isJSArray(v.course.islands) ? _L.fromArray(v.course.islands.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                                                 return typeof v === "object" && "location" in v && "radius" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,location: _U.isJSArray(v.location) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,_0: typeof v.location[0] === "number" ? v.location[0] : _E.raise("invalid input, expecting JSNumber but got " + v.location[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,_1: typeof v.location[1] === "number" ? v.location[1] : _E.raise("invalid input, expecting JSNumber but got " + v.location[1])} : _E.raise("invalid input, expecting JSArray but got " + v.location)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)} : _E.raise("invalid input, expecting JSObject [\"location\",\"radius\"] but got " + v);
+                                                                                                                                                                                                                                                                                                                                                                              })) : _E.raise("invalid input, expecting JSArray but got " + v.course.islands)
+                                                                                                                                                                                                                                                                                                                                                                              ,bounds: _U.isJSArray(v.course.bounds) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                       ,_0: _U.isJSArray(v.course.bounds[0]) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,_0: typeof v.course.bounds[0][0] === "number" ? v.course.bounds[0][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,_1: typeof v.course.bounds[0][1] === "number" ? v.course.bounds[0][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                       ,_1: _U.isJSArray(v.course.bounds[1]) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,_0: typeof v.course.bounds[1][0] === "number" ? v.course.bounds[1][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,_1: typeof v.course.bounds[1][1] === "number" ? v.course.bounds[1][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds)} : _E.raise("invalid input, expecting JSObject [\"upwind\",\"downwind\",\"laps\",\"markRadius\",\"islands\",\"bounds\"] but got " + v.course))
+                                                                                                                                  ,opponents: _U.isJSArray(v.opponents) ? _L.fromArray(v.opponents.map(function (v) {
+                                                                                                                                     return typeof v === "object" && "position" in v && "direction" in v && "velocity" in v && "passedGates" in v ? {_: {}
+                                                                                                                                                                                                                                                    ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                          ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
+                                                                                                                                                                                                                                                                                          ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
+                                                                                                                                                                                                                                                    ,direction: typeof v.direction === "number" ? v.direction : _E.raise("invalid input, expecting JSNumber but got " + v.direction)
+                                                                                                                                                                                                                                                    ,velocity: typeof v.velocity === "number" ? v.velocity : _E.raise("invalid input, expecting JSNumber but got " + v.velocity)
+                                                                                                                                                                                                                                                    ,passedGates: _U.isJSArray(v.passedGates) ? _L.fromArray(v.passedGates.map(function (v) {
+                                                                                                                                                                                                                                                       return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
+                                                                                                                                                                                                                                                    })) : _E.raise("invalid input, expecting JSArray but got " + v.passedGates)} : _E.raise("invalid input, expecting JSObject [\"position\",\"direction\",\"velocity\",\"passedGates\"] but got " + v);
+                                                                                                                                  })) : _E.raise("invalid input, expecting JSArray but got " + v.opponents)
+                                                                                                                                  ,leaderboard: _U.isJSArray(v.leaderboard) ? _L.fromArray(v.leaderboard.map(function (v) {
+                                                                                                                                     return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _E.raise("invalid input, expecting JSString but got " + v);
+                                                                                                                                  })) : _E.raise("invalid input, expecting JSArray but got " + v.leaderboard)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"course\",\"opponents\",\"leaderboard\"] but got " + v);
    }));
    var input = A2(Signal.sampleOn,
    clock,
@@ -75,8 +107,8 @@ Elm.ShiftMaster.make = function (_elm) {
    input);
    var raceOutput = Native.Ports.portOut("raceOutput",
    Native.Ports.outgoingSignal(function (v) {
-      return {position: {x: v.position.x
-                        ,y: v.position.y}
+      return {position: [v.position._0
+                        ,v.position._1]
              ,direction: v.direction
              ,velocity: v.velocity
              ,passedGates: _L.toArray(v.passedGates).map(function (v) {
@@ -85,7 +117,7 @@ Elm.ShiftMaster.make = function (_elm) {
    }),
    A2(Signal.lift,
    function ($) {
-      return Game.boatToOpponent(function (_) {
+      return boatToRaceOutput(function (_) {
          return _.boat;
       }($));
    },
@@ -98,6 +130,7 @@ Elm.ShiftMaster.make = function (_elm) {
                              ,clock: clock
                              ,input: input
                              ,gameState: gameState
+                             ,boatToRaceOutput: boatToRaceOutput
                              ,main: main};
    return _elm.ShiftMaster.values;
 };Elm.Steps = Elm.Steps || {};
@@ -139,6 +172,11 @@ Elm.Steps.make = function (_elm) {
       return function () {
          return _U.replace([["opponents"
                             ,_v0.opponents]
+                           ,["course"
+                            ,A3(Maybe.maybe,
+                            gameState.course,
+                            Basics.id,
+                            _v0.course)]
                            ,["leaderboard",_v0.leaderboard]
                            ,["countdown"
                             ,_v0.startTime - _v0.now]],
@@ -172,151 +210,42 @@ Elm.Steps.make = function (_elm) {
          boat);
       }();
    });
-   var gustInBounds = F2(function (bounds,
-   gust) {
-      return A2(Geo.inBox,
-      gust.position,
-      bounds);
-   });
-   var randInWindow = F3(function (t,
-   w,
-   i) {
-      return A2(Basics.mod,
-      Math.pow(t,i) + t * i * 1000,
-      w);
-   });
-   var spawnGustX = F3(function (t,
-   w,
-   spawnIndex) {
-      return A3(randInWindow,
-      t,
-      Basics.round(w),
-      spawnIndex) - Basics.round(w / 2);
-   });
-   var spawnGustY = F3(function (t,
-   h,
-   spawnIndex) {
-      return A3(randInWindow,
-      t,
-      Basics.round(h),
-      spawnIndex);
-   });
-   var spawnGust = F3(function (timestamp,
-   _v2,
-   spawnIndex) {
-      return function () {
-         switch (_v2.ctor)
-         {case "_Tuple2":
-            switch (_v2._0.ctor)
-              {case "_Tuple2":
-                 switch (_v2._1.ctor)
-                   {case "_Tuple2":
-                      return function () {
-                           var speedImpact = 0;
-                           var t = Basics.round(timestamp);
-                           var x = A3(spawnGustX,
-                           t,
-                           _v2._0._0 - _v2._1._0,
-                           spawnIndex + 1);
-                           var y = _U.eq(spawnIndex,
-                           0) ? Basics.round(_v2._0._1) - 1 : A3(spawnGustY,
-                           t,
-                           _v2._0._1 - _v2._1._1,
-                           spawnIndex);
-                           var radius = Basics.toFloat(A3(randInWindow,
-                           t,
-                           100,
-                           spawnIndex + 1) + 100);
-                           var originDelta = Basics.toFloat(A3(randInWindow,
-                           t,
-                           20,
-                           spawnIndex + 1) - 10);
-                           return {_: {}
-                                  ,originDelta: originDelta
-                                  ,position: Geo.floatify({ctor: "_Tuple2"
-                                                          ,_0: x
-                                                          ,_1: y})
-                                  ,radius: radius
-                                  ,speedImpact: speedImpact};
-                        }();}
-                   break;}
-              break;}
-         _E.Case($moduleName,
-         "between lines 199 and 207");
-      }();
-   });
-   var updateGusts = F4(function (timestamp,
-   delta,
-   bounds,
-   wind) {
-      return function () {
-         var moveGust = F2(function (w,
-         g) {
-            return _U.replace([["position"
-                               ,A4(Geo.movePoint,
-                               g.position,
-                               delta,
-                               w.speed,
-                               Core.ensure360(180 + wind.origin + g.originDelta))]],
-            g);
-         });
-         var gusts = List.map(moveGust(wind))(A2(List.filter,
-         gustInBounds(bounds),
-         wind.gusts));
-         return List.isEmpty(wind.gusts) ? A2(List.map,
-         A2(spawnGust,timestamp,bounds),
-         _L.range(1,
-         wind.gustsCount)) : _U.cmp(List.length(gusts),
-         wind.gustsCount) < 0 ? {ctor: "::"
-                                ,_0: A3(spawnGust,
-                                timestamp,
-                                bounds,
-                                0)
-                                ,_1: gusts} : gusts;
-      }();
-   });
    var windStep = F3(function (delta,
    now,
-   _v10) {
+   _v2) {
       return function () {
          return function () {
             var boatWithWind = A2(updateWindForBoat,
-            _v10.wind,
-            _v10.boat);
-            var newGusts = A4(updateGusts,
-            now,
-            delta,
-            _v10.course.bounds,
-            _v10.wind);
+            _v2.wind,
+            _v2.boat);
             var o2 = Basics.cos(Time.inSeconds(now) / 5) * 5;
             var o1 = Basics.cos(Time.inSeconds(now) / 8) * 10;
             var newOrigin = Core.ensure360(o1 + o2);
             var newWind = _U.replace([["origin"
-                                      ,newOrigin]
-                                     ,["gusts",newGusts]],
-            _v10.wind);
+                                      ,newOrigin]],
+            _v2.wind);
             return _U.replace([["wind"
                                ,newWind]
                               ,["boat",boatWithWind]],
-            _v10);
+            _v2);
          }();
       }();
    });
-   var getCenterAfterMove = F4(function (_v12,
-   _v13,
-   _v14,
-   _v15) {
+   var getCenterAfterMove = F4(function (_v4,
+   _v5,
+   _v6,
+   _v7) {
       return function () {
-         switch (_v15.ctor)
+         switch (_v7.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v14.ctor)
+                 switch (_v6.ctor)
                  {case "_Tuple2":
                     return function () {
-                         switch (_v13.ctor)
+                         switch (_v5.ctor)
                          {case "_Tuple2":
                             return function () {
-                                 switch (_v12.ctor)
+                                 switch (_v4.ctor)
                                  {case "_Tuple2":
                                     return function () {
                                          var refocus = F5(function (n,
@@ -342,17 +271,17 @@ Elm.Steps.make = function (_elm) {
                                          });
                                          return {ctor: "_Tuple2"
                                                 ,_0: A5(refocus,
-                                                _v12._0,
-                                                _v13._0,
-                                                _v14._0,
-                                                _v15._0,
-                                                _v15._0 * 0.2)
+                                                _v4._0,
+                                                _v5._0,
+                                                _v6._0,
+                                                _v7._0,
+                                                _v7._0 * 0.2)
                                                 ,_1: A5(refocus,
-                                                _v12._1,
-                                                _v13._1,
-                                                _v14._1,
-                                                _v15._1,
-                                                _v15._1 * 0.4)};
+                                                _v4._1,
+                                                _v5._1,
+                                                _v6._1,
+                                                _v7._1,
+                                                _v7._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
                                  "between lines 148 and 161");
@@ -408,17 +337,17 @@ Elm.Steps.make = function (_elm) {
       }();
    });
    var gatePassedInX = F2(function (gate,
-   _v28) {
+   _v20) {
       return function () {
-         switch (_v28.ctor)
+         switch (_v20.ctor)
          {case "_Tuple2":
-            switch (_v28._0.ctor)
+            switch (_v20._0.ctor)
               {case "_Tuple2":
-                 switch (_v28._1.ctor)
+                 switch (_v20._1.ctor)
                    {case "_Tuple2":
                       return function () {
-                           var a = (_v28._0._1 - _v28._1._1) / (_v28._0._0 - _v28._1._0);
-                           var b = _v28._0._1 - a * _v28._0._0;
+                           var a = (_v20._0._1 - _v20._1._1) / (_v20._0._0 - _v20._1._0);
+                           var b = _v20._0._1 - a * _v20._0._0;
                            var xGate = (gate.y - b) / a;
                            return _U.cmp(Basics.abs(xGate),
                            gate.width / 2) < 1;
@@ -430,86 +359,74 @@ Elm.Steps.make = function (_elm) {
       }();
    });
    var gatePassedFromNorth = F2(function (gate,
-   _v36) {
+   _v28) {
       return function () {
-         switch (_v36.ctor)
+         switch (_v28.ctor)
          {case "_Tuple2":
-            return _U.cmp(Basics.snd(_v36._0),
-              gate.y) > 0 && (_U.cmp(Basics.snd(_v36._1),
+            return _U.cmp(Basics.snd(_v28._0),
+              gate.y) > 0 && (_U.cmp(Basics.snd(_v28._1),
               gate.y) < 1 && A2(gatePassedInX,
               gate,
               {ctor: "_Tuple2"
-              ,_0: _v36._0
-              ,_1: _v36._1}));}
+              ,_0: _v28._0
+              ,_1: _v28._1}));}
          _E.Case($moduleName,
          "on line 105, column 4 to 70");
       }();
    });
    var gatePassedFromSouth = F2(function (gate,
-   _v40) {
+   _v32) {
       return function () {
-         switch (_v40.ctor)
+         switch (_v32.ctor)
          {case "_Tuple2":
-            return _U.cmp(Basics.snd(_v40._0),
-              gate.y) < 0 && (_U.cmp(Basics.snd(_v40._1),
+            return _U.cmp(Basics.snd(_v32._0),
+              gate.y) < 0 && (_U.cmp(Basics.snd(_v32._1),
               gate.y) > -1 && A2(gatePassedInX,
               gate,
               {ctor: "_Tuple2"
-              ,_0: _v40._0
-              ,_1: _v40._1}));}
+              ,_0: _v32._0
+              ,_1: _v32._1}));}
          _E.Case($moduleName,
          "on line 109, column 4 to 70");
       }();
    });
    var getPassedGates = F4(function (boat,
    timestamp,
-   _v44,
+   _v36,
    step) {
       return function () {
          return function () {
-            var _v46 = {ctor: "_Tuple2"
-                       ,_0: A2(Game.findNextGate,
-                       boat,
-                       Game.course.laps)
-                       ,_1: List.isEmpty(boat.passedGates)};
-            switch (_v46.ctor)
-            {case "_Tuple2":
-               switch (_v46._1)
-                 {case true:
-                    return A2(gatePassedFromSouth,
-                      _v44.downwind,
+            var _v38 = A2(Game.findNextGate,
+            boat,
+            Game.course.laps);
+            switch (_v38.ctor)
+            {case "Just":
+               switch (_v38._0.ctor)
+                 {case "Downwind":
+                    return A2(gatePassedFromNorth,
+                      _v36.downwind,
                       step) ? {ctor: "::"
-                              ,_0: {ctor: "_Tuple2"
-                                   ,_0: Game.Downwind
-                                   ,_1: timestamp}
-                              ,_1: boat.passedGates} : boat.passedGates;}
-                 switch (_v46._0.ctor)
-                 {case "Just":
-                    switch (_v46._0._0.ctor)
-                      {case "Downwind":
-                         return A2(gatePassedFromNorth,
-                           _v44.downwind,
-                           step) ? {ctor: "::"
-                                   ,_0: {ctor: "_Tuple2"
-                                        ,_0: Game.Downwind
-                                        ,_1: timestamp}
-                                   ,_1: boat.passedGates} : A2(gatePassedFromNorth,
-                           _v44.upwind,
-                           step) ? List.tail(boat.passedGates) : boat.passedGates;
-                         case "Upwind":
-                         return A2(gatePassedFromSouth,
-                           _v44.upwind,
-                           step) ? {ctor: "::"
-                                   ,_0: {ctor: "_Tuple2"
-                                        ,_0: Game.Upwind
-                                        ,_1: timestamp}
-                                   ,_1: boat.passedGates} : A2(gatePassedFromSouth,
-                           _v44.downwind,
-                           step) ? List.tail(boat.passedGates) : boat.passedGates;}
-                      break;
-                    case "Nothing":
-                    return boat.passedGates;}
-                 break;}
+                              ,_0: timestamp
+                              ,_1: boat.passedGates} : A2(gatePassedFromNorth,
+                      _v36.upwind,
+                      step) ? List.tail(boat.passedGates) : boat.passedGates;
+                    case "StartLine":
+                    return A2(gatePassedFromSouth,
+                      _v36.downwind,
+                      step) ? {ctor: "::"
+                              ,_0: timestamp
+                              ,_1: boat.passedGates} : boat.passedGates;
+                    case "Upwind":
+                    return A2(gatePassedFromSouth,
+                      _v36.upwind,
+                      step) ? {ctor: "::"
+                              ,_0: timestamp
+                              ,_1: boat.passedGates} : A2(gatePassedFromSouth,
+                      _v36.downwind,
+                      step) ? List.tail(boat.passedGates) : boat.passedGates;}
+                 break;
+               case "Nothing":
+               return boat.passedGates;}
             _E.Case($moduleName,
             "between lines 113 and 126");
          }();
@@ -583,53 +500,53 @@ Elm.Steps.make = function (_elm) {
    arrows,
    fineTurn) {
       return function () {
-         var _v50 = {ctor: "_Tuple4"
+         var _v40 = {ctor: "_Tuple4"
                     ,_0: tackTarget
                     ,_1: boat.controlMode
                     ,_2: arrows.x
                     ,_3: arrows.y};
-         switch (_v50.ctor)
+         switch (_v40.ctor)
          {case "_Tuple4":
-            switch (_v50._0.ctor)
+            switch (_v40._0.ctor)
               {case "Just":
                  return function () {
-                      var _v56 = boat.controlMode;
-                      switch (_v56.ctor)
+                      var _v46 = boat.controlMode;
+                      switch (_v46.ctor)
                       {case "FixedDirection":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(boat.direction - _v50._0._0)]));
-                              return _U.cmp(Core.ensure360(boat.direction - _v50._0._0),
+                                                                      ,Basics.abs(boat.direction - _v40._0._0)]));
+                              return _U.cmp(Core.ensure360(boat.direction - _v40._0._0),
                               180) > 0 ? maxTurn : 0 - maxTurn;
                            }();
                          case "FixedWindAngle":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(boat.windAngle - _v50._0._0)]));
-                              return _U.cmp(_v50._0._0,
-                              90) > 0 || _U.cmp(_v50._0._0,
-                              0) < 0 && _U.cmp(_v50._0._0,
+                                                                      ,Basics.abs(boat.windAngle - _v40._0._0)]));
+                              return _U.cmp(_v40._0._0,
+                              90) > 0 || _U.cmp(_v40._0._0,
+                              0) < 0 && _U.cmp(_v40._0._0,
                               -90) > -1 ? 0 - maxTurn : maxTurn;
                            }();}
                       _E.Case($moduleName,
                       "between lines 58 and 68");
                    }();
                  case "Nothing":
-                 switch (_v50._1.ctor)
+                 switch (_v40._1.ctor)
                    {case "FixedDirection":
-                      switch (_v50._2)
-                        {case 0: switch (_v50._3)
+                      switch (_v40._2)
+                        {case 0: switch (_v40._3)
                              {case 0: return 0;}
                              break;}
                         break;
                       case "FixedWindAngle":
-                      switch (_v50._2)
-                        {case 0: switch (_v50._3)
+                      switch (_v40._2)
+                        {case 0: switch (_v40._3)
                              {case 0:
                                 return boat.windOrigin + boat.windAngle - boat.direction;}
                              break;}
                         break;}
-                   return fineTurn ? _v50._2 : _v50._2 * 3;}
+                   return fineTurn ? _v40._2 : _v40._2 * 3;}
               break;}
          _E.Case($moduleName,
          "between lines 55 and 71");
@@ -638,19 +555,19 @@ Elm.Steps.make = function (_elm) {
    var tackTargetReached = F2(function (boat,
    targetMaybe) {
       return function () {
-         var _v57 = {ctor: "_Tuple2"
+         var _v47 = {ctor: "_Tuple2"
                     ,_0: targetMaybe
                     ,_1: boat.controlMode};
-         switch (_v57.ctor)
+         switch (_v47.ctor)
          {case "_Tuple2":
-            switch (_v57._0.ctor)
+            switch (_v47._0.ctor)
               {case "Just":
-                 switch (_v57._1.ctor)
+                 switch (_v47._1.ctor)
                    {case "FixedDirection":
-                      return _U.cmp(Basics.abs(_v57._0._0 - boat.direction),
+                      return _U.cmp(Basics.abs(_v47._0._0 - boat.direction),
                         0.1) < 0;
                       case "FixedWindAngle":
-                      return _U.cmp(Basics.abs(_v57._0._0 - boat.windAngle),
+                      return _U.cmp(Basics.abs(_v47._0._0 - boat.windAngle),
                         0.1) < 0;}
                    break;
                  case "Nothing": return false;}
@@ -662,22 +579,22 @@ Elm.Steps.make = function (_elm) {
    var getTackTarget = F2(function (boat,
    spaceKey) {
       return function () {
-         var _v61 = {ctor: "_Tuple2"
+         var _v51 = {ctor: "_Tuple2"
                     ,_0: boat.tackTarget
                     ,_1: spaceKey};
-         switch (_v61.ctor)
+         switch (_v51.ctor)
          {case "_Tuple2":
-            switch (_v61._0.ctor)
+            switch (_v51._0.ctor)
               {case "Just":
                  return A2(tackTargetReached,
                    boat,
                    boat.tackTarget) ? Maybe.Nothing : boat.tackTarget;
-                 case "Nothing": switch (_v61._1)
+                 case "Nothing": switch (_v51._1)
                    {case false:
                       return Maybe.Nothing;
                       case true: return function () {
-                           var _v65 = boat.controlMode;
-                           switch (_v65.ctor)
+                           var _v55 = boat.controlMode;
+                           switch (_v55.ctor)
                            {case "FixedDirection":
                               return Maybe.Just(Core.ensure360(boat.windOrigin - boat.windAngle));
                               case "FixedWindAngle":
@@ -691,20 +608,20 @@ Elm.Steps.make = function (_elm) {
          "between lines 38 and 49");
       }();
    });
-   var keysForBoatStep = F2(function (_v66,
+   var keysForBoatStep = F2(function (_v56,
    boat) {
       return function () {
          return function () {
-            var forceTurn = !_U.eq(_v66.arrows.x,
+            var forceTurn = !_U.eq(_v56.arrows.x,
             0);
             var tackTarget = forceTurn ? Maybe.Nothing : A2(getTackTarget,
             boat,
-            _v66.tack);
+            _v56.tack);
             var turn = A4(getTurn,
             tackTarget,
             boat,
-            _v66.arrows,
-            _v66.fineTurn);
+            _v56.arrows,
+            _v56.fineTurn);
             var direction = Core.ensure360(boat.direction + turn);
             var windAngle = A2(Core.angleToWind,
             direction,
@@ -716,8 +633,8 @@ Elm.Steps.make = function (_elm) {
             var tackTargetAfterTurn = A2(tackTargetReached,
             turnedBoat,
             tackTarget) ? Maybe.Nothing : tackTarget;
-            var controlMode = forceTurn ? Game.FixedDirection : _U.cmp(_v66.arrows.y,
-            0) > 0 || _v66.lockAngle ? Game.FixedWindAngle : turnedBoat.controlMode;
+            var controlMode = forceTurn ? Game.FixedDirection : _U.cmp(_v56.arrows.y,
+            0) > 0 || _v56.lockAngle ? Game.FixedWindAngle : turnedBoat.controlMode;
             return _U.replace([["controlMode"
                                ,controlMode]
                               ,["tackTarget"
@@ -737,25 +654,25 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var mouseStep = F2(function (_v68,
+   var mouseStep = F2(function (_v58,
    gameState) {
       return function () {
          return function () {
             var boat = gameState.boat;
             var center = function () {
-               var _v70 = _v68.drag;
-               switch (_v70.ctor)
+               var _v60 = _v58.drag;
+               switch (_v60.ctor)
                {case "Just":
-                  switch (_v70._0.ctor)
+                  switch (_v60._0.ctor)
                     {case "_Tuple2":
                        return function () {
-                            var $ = _v68.mouse,
+                            var $ = _v58.mouse,
                             x = $._0,
                             y = $._1;
                             return A2(Geo.sub,
                             Geo.floatify({ctor: "_Tuple2"
-                                         ,_0: x - _v70._0._0
-                                         ,_1: _v70._0._1 - y}),
+                                         ,_0: x - _v60._0._0
+                                         ,_1: _v60._0._1 - y}),
                             boat.center);
                          }();}
                     break;
@@ -798,12 +715,6 @@ Elm.Steps.make = function (_elm) {
                        ,getCenterAfterMove: getCenterAfterMove
                        ,moveBoat: moveBoat
                        ,moveStep: moveStep
-                       ,randInWindow: randInWindow
-                       ,spawnGustX: spawnGustX
-                       ,spawnGustY: spawnGustY
-                       ,spawnGust: spawnGust
-                       ,gustInBounds: gustInBounds
-                       ,updateGusts: updateGusts
                        ,updateWindForBoat: updateWindForBoat
                        ,windStep: windStep
                        ,raceInputStep: raceInputStep
@@ -1003,9 +914,7 @@ Elm.Render.Relative.make = function (_elm) {
       }();
    };
    var renderOpponent = function (opponent) {
-      return Graphics.Collage.move({ctor: "_Tuple2"
-                                   ,_0: opponent.position.x
-                                   ,_1: opponent.position.y})(Graphics.Collage.rotate(Core.toRadians(opponent.direction + 90))(Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(A3(Graphics.Element.image,
+      return Graphics.Collage.move(opponent.position)(Graphics.Collage.rotate(Core.toRadians(opponent.direction + 90))(Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(A3(Graphics.Element.image,
       8,
       19,
       "/assets/images/icon-boat-white.png")))));
@@ -1070,14 +979,13 @@ Elm.Render.Relative.make = function (_elm) {
    };
    var renderGate = F3(function (gate,
    markRadius,
-   nextGate) {
+   isNext) {
       return function () {
-         var $ = _U.eq(nextGate,
-         Maybe.Just(gate.location)) ? {ctor: "_Tuple2"
-                                      ,_0: Graphics.Collage.filled(Color.orange)
-                                      ,_1: Graphics.Collage.traced(Graphics.Collage.dotted(Color.orange))} : {ctor: "_Tuple2"
-                                                                                                             ,_0: Graphics.Collage.filled(Color.white)
-                                                                                                             ,_1: Graphics.Collage.traced(Graphics.Collage.solid(Render.Utils.colors.seaBlue))},
+         var $ = isNext ? {ctor: "_Tuple2"
+                          ,_0: Graphics.Collage.filled(Color.orange)
+                          ,_1: Graphics.Collage.traced(Graphics.Collage.dotted(Color.orange))} : {ctor: "_Tuple2"
+                                                                                                 ,_0: Graphics.Collage.filled(Color.white)
+                                                                                                 ,_1: Graphics.Collage.traced(Graphics.Collage.solid(Render.Utils.colors.seaBlue))},
          markStyle = $._0,
          lineStyle = $._1;
          var $ = Game.getGateMarks(gate),
@@ -1131,14 +1039,16 @@ Elm.Render.Relative.make = function (_elm) {
             0) < 1) : A3(renderGate,
             _v6.course.downwind,
             _v6.course.markRadius,
-            nextGate);
+            _U.eq(nextGate,
+            Maybe.Just(Game.Downwind)));
             var justForms = _L.fromArray([renderBounds(_v6.course.bounds)
                                          ,renderIslands(_v6)
                                          ,downwindOrStartLine
                                          ,A3(renderGate,
                                          _v6.course.upwind,
                                          _v6.course.markRadius,
-                                         nextGate)
+                                         _U.eq(nextGate,
+                                         Maybe.Just(Game.Upwind)))
                                          ,renderBoat(_v6.boat)
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
@@ -1214,7 +1124,7 @@ Elm.Render.Absolute.make = function (_elm) {
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 122 and 126");
+         "between lines 121 and 125");
       }();
    });
    var renderControlWheel = F3(function (wind,
@@ -1258,7 +1168,7 @@ Elm.Render.Absolute.make = function (_elm) {
                                                                                                                                       ,windOriginText]))));
               }();}
          _E.Case($moduleName,
-         "between lines 85 and 101");
+         "between lines 84 and 100");
       }();
    });
    var renderPolar = F2(function (boat,
@@ -1323,7 +1233,7 @@ Elm.Render.Absolute.make = function (_elm) {
                                                                                                                     ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 63 and 81");
+         "between lines 62 and 80");
       }();
    });
    var renderLapsCount = F3(function (_v12,
@@ -1346,42 +1256,23 @@ Elm.Render.Absolute.make = function (_elm) {
                                               ,_1: _v12._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(Render.Utils.baseText(msg))));
               }();}
          _E.Case($moduleName,
-         "between lines 53 and 59");
+         "between lines 52 and 58");
       }();
+   });
+   var renderWinner = F3(function (course,
+   boat,
+   opponents) {
+      return Maybe.Nothing;
    });
    var hasFinished = F2(function (course,
    boat) {
       return _U.eq(List.length(boat.passedGates),
       course.laps * 2 + 1);
    });
-   var renderWinner = F3(function (course,
-   boat,
-   opponents) {
-      return function () {
-         var me = Game.boatToOpponent(boat);
-         return A2(hasFinished,
-         course,
-         me) ? function () {
-            var finishTime = function (o) {
-               return List.head(o.passedGates);
-            };
-            var othersTime = List.map(finishTime)(A2(List.filter,
-            hasFinished(course),
-            opponents));
-            var myTime = finishTime(me);
-            var othersAfterMe = A2(List.all,
-            function (t) {
-               return _U.cmp(t,myTime) > 0;
-            },
-            othersTime);
-            return List.isEmpty(othersTime) || othersAfterMe ? Maybe.Just(Render.Utils.fullScreenMessage("WINNER")) : Maybe.Nothing;
-         }() : Maybe.Nothing;
-      }();
-   });
    var renderHiddenGate = F4(function (gate,
    _v16,
    _v17,
-   nextGate) {
+   isNext) {
       return function () {
          switch (_v17.ctor)
          {case "_Tuple2":
@@ -1392,14 +1283,12 @@ Elm.Render.Absolute.make = function (_elm) {
                          var distance = function (isOver) {
                             return Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(String.show(Basics.round(Basics.abs(gate.y + (isOver ? 0 - _v16._1 : _v16._1) / 2 - _v17._1))))));
                          };
+                         var markStyle = isNext ? Graphics.Collage.filled(Color.orange) : Graphics.Collage.filled(Color.white);
                          var c = 5;
                          var over = _U.cmp(_v17._1 + _v16._1 / 2 + c,
                          gate.y) < 0;
                          var under = _U.cmp(_v17._1 - _v16._1 / 2 - c,
                          gate.y) > 0;
-                         var isNext = _U.eq(nextGate,
-                         Maybe.Just(gate.location));
-                         var markStyle = isNext ? Graphics.Collage.filled(Color.orange) : Graphics.Collage.filled(Color.white);
                          var $ = Game.getGateMarks(gate),
                          left = $._0,
                          right = $._1;
@@ -1449,14 +1338,14 @@ Elm.Render.Absolute.make = function (_elm) {
                                       }();}
                                  return Maybe.Nothing;}
                             _E.Case($moduleName,
-                            "between lines 20 and 27");
+                            "between lines 19 and 26");
                          }();
                       }();}
                  _E.Case($moduleName,
-                 "between lines 12 and 27");
+                 "between lines 12 and 26");
               }();}
          _E.Case($moduleName,
-         "between lines 12 and 27");
+         "between lines 12 and 26");
       }();
    });
    var renderAbsolute = F2(function (_v27,
@@ -1480,12 +1369,14 @@ Elm.Render.Absolute.make = function (_elm) {
                                           _v27.course.downwind,
                                           dims,
                                           _v27.boat.center,
-                                          nextGate)
+                                          _U.eq(nextGate,
+                                          Maybe.Just(Game.Downwind)))
                                           ,A4(renderHiddenGate,
                                           _v27.course.upwind,
                                           dims,
                                           _v27.boat.center,
-                                          nextGate)
+                                          _U.eq(nextGate,
+                                          Maybe.Just(Game.Upwind)))
                                           ,A3(renderWinner,
                                           _v27.course,
                                           _v27.boat,
@@ -1561,14 +1452,16 @@ Elm.Inputs.make = function (_elm) {
    }),
    0,
    Time.fps(1));
-   var RaceInput = F4(function (a,
+   var RaceInput = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
-             ,leaderboard: d
+             ,course: c
+             ,leaderboard: e
              ,now: a
-             ,opponents: c
+             ,opponents: d
              ,startTime: b};
    });
    var MouseInput = F2(function (a,
@@ -1643,23 +1536,6 @@ Elm.Game.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
-   var boatToOpponent = function (_v0) {
-      return function () {
-         return function () {
-            var gates = A2(List.map,
-            Basics.snd,
-            _v0.passedGates);
-            var $ = _v0.position,
-            x = $._0,
-            y = $._1;
-            return {_: {}
-                   ,direction: _v0.direction
-                   ,passedGates: gates
-                   ,position: {_: {},x: x,y: y}
-                   ,velocity: _v0.velocity};
-         }();
-      }();
-   };
    var getGateMarks = function (gate) {
       return {ctor: "_Tuple2"
              ,_0: {ctor: "_Tuple2"
@@ -1689,6 +1565,25 @@ Elm.Game.make = function (_elm) {
                                           ,_0: -200
                                           ,_1: 500}
                                ,radius: 60}]);
+   var upwindGate = {_: {}
+                    ,width: 100
+                    ,y: 1000};
+   var startLine = {_: {}
+                   ,width: 100
+                   ,y: -100};
+   var course = {_: {}
+                ,bounds: {ctor: "_Tuple2"
+                         ,_0: {ctor: "_Tuple2"
+                              ,_0: 800
+                              ,_1: 1200}
+                         ,_1: {ctor: "_Tuple2"
+                              ,_0: -800
+                              ,_1: -400}}
+                ,downwind: startLine
+                ,islands: islands
+                ,laps: 3
+                ,markRadius: 5
+                ,upwind: upwindGate};
    var RaceState = function (a) {
       return {_: {},boats: a};
    };
@@ -1728,47 +1623,19 @@ Elm.Game.make = function (_elm) {
              ,radius: b
              ,speedImpact: c};
    });
-   var Opponent = F4(function (a,
+   var Sailing = F5(function (a,
    b,
    c,
-   d) {
-      return {_: {}
-             ,direction: b
-             ,passedGates: d
-             ,position: a
-             ,velocity: c};
+   d,
+   e) {
+      return _U.insert("passedGates",
+      d,
+      _U.insert("velocity",
+      c,
+      _U.insert("direction",
+      b,
+      _U.insert("position",a,e))));
    });
-   var Boat = function (a) {
-      return function (b) {
-         return function (c) {
-            return function (d) {
-               return function (e) {
-                  return function (f) {
-                     return function (g) {
-                        return function (h) {
-                           return function (i) {
-                              return function (j) {
-                                 return {_: {}
-                                        ,center: g
-                                        ,controlMode: h
-                                        ,direction: b
-                                        ,passedGates: j
-                                        ,position: a
-                                        ,tackTarget: i
-                                        ,velocity: c
-                                        ,windAngle: d
-                                        ,windOrigin: e
-                                        ,windSpeed: f};
-                              };
-                           };
-                        };
-                     };
-                  };
-               };
-            };
-         };
-      };
-   };
    var FixedWindAngle = {ctor: "FixedWindAngle"};
    var FixedDirection = {ctor: "FixedDirection"};
    var boat = {_: {}
@@ -1786,6 +1653,14 @@ Elm.Game.make = function (_elm) {
               ,windAngle: 0
               ,windOrigin: 0
               ,windSpeed: 0};
+   var defaultGame = {_: {}
+                     ,boat: boat
+                     ,countdown: 0
+                     ,course: course
+                     ,leaderboard: _L.fromArray([])
+                     ,opponents: _L.fromArray([])
+                     ,startDuration: 30 * Time.second
+                     ,wind: wind};
    var Course = F6(function (a,
    b,
    c,
@@ -1805,51 +1680,20 @@ Elm.Game.make = function (_elm) {
              ,location: a
              ,radius: b};
    });
-   var Gate = F3(function (a,b,c) {
-      return {_: {}
-             ,location: c
-             ,width: b
-             ,y: a};
+   var Gate = F2(function (a,b) {
+      return {_: {},width: b,y: a};
    });
    var Upwind = {ctor: "Upwind"};
-   var upwindGate = {_: {}
-                    ,location: Upwind
-                    ,width: 100
-                    ,y: 1000};
    var Downwind = {ctor: "Downwind"};
-   var startLine = {_: {}
-                   ,location: Downwind
-                   ,width: 100
-                   ,y: -100};
-   var course = {_: {}
-                ,bounds: {ctor: "_Tuple2"
-                         ,_0: {ctor: "_Tuple2"
-                              ,_0: 800
-                              ,_1: 1200}
-                         ,_1: {ctor: "_Tuple2"
-                              ,_0: -800
-                              ,_1: -400}}
-                ,downwind: startLine
-                ,islands: islands
-                ,laps: 3
-                ,markRadius: 5
-                ,upwind: upwindGate};
-   var defaultGame = {_: {}
-                     ,boat: boat
-                     ,countdown: 0
-                     ,course: course
-                     ,leaderboard: _L.fromArray([])
-                     ,opponents: _L.fromArray([])
-                     ,startDuration: 30 * Time.second
-                     ,wind: wind};
+   var StartLine = {ctor: "StartLine"};
    var findNextGate = F2(function (boat,
    laps) {
       return function () {
          var c = List.length(boat.passedGates);
          var i = A2(Basics.mod,c,2);
          return _U.eq(c,
-         0) ? Maybe.Nothing : _U.eq(c,
-         laps * 2 + 1) ? Maybe.Nothing : _U.eq(i,
+         laps * 2 + 1) ? Maybe.Nothing : _U.eq(c,
+         0) ? Maybe.Just(StartLine) : _U.eq(i,
          0) ? Maybe.Just(Downwind) : Maybe.Just(Upwind);
       }();
    });
@@ -1863,7 +1707,7 @@ Elm.Game.make = function (_elm) {
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks
                       ,findNextGate: findNextGate
-                      ,boatToOpponent: boatToOpponent
+                      ,StartLine: StartLine
                       ,Downwind: Downwind
                       ,Upwind: Upwind
                       ,FixedDirection: FixedDirection
@@ -1871,8 +1715,7 @@ Elm.Game.make = function (_elm) {
                       ,Gate: Gate
                       ,Island: Island
                       ,Course: Course
-                      ,Boat: Boat
-                      ,Opponent: Opponent
+                      ,Sailing: Sailing
                       ,Gust: Gust
                       ,Wind: Wind
                       ,GameState: GameState

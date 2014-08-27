@@ -1,41 +1,20 @@
 package models
 
 import org.joda.time.DateTime
-import play.api.libs.json.{Json, Format}
-import reactivemongo.bson.BSONObjectID
+import play.api.libs.json._
 
-case class Race (
-  id: BSONObjectID = BSONObjectID.generate,
-  startTime: DateTime,
-  leaderboard: Seq[String] = Seq()
-) {
-  def initialUpdate = RaceUpdate(
-    DateTime.now,
-    startTime
-  )
+object Geo {
+  type Point = (Float,Float)
+  type Box = (Point,Point)
 }
-
-object Race extends MongoDAO[Race] {
-  val collectionName = "races"
-
-  import utils.JsonFormats.idFormat
-  implicit val mongoFormat: Format[Race] = Json.format[Race]
-}
-
-case class Point(x: Float, y: Float)
-
-sealed trait GateLocation
-case object Upwind extends GateLocation
-case object Downwind extends GateLocation
 
 case class Gate(
   y: Float,
-  width: Float,
-  location: GateLocation
+  width: Float
 )
 
 case class Island(
-  location: Point,
+  location: (Float,Float),
   radius: Float
 )
 
@@ -45,18 +24,30 @@ case class Course(
   laps: Int,
   markRadius: Float,
   islands: Seq[Island],
-  bounds: (Point, Point)
+  bounds: Geo.Box
 )
+
+object Course {
+  val default = Course(
+    upwind = Gate(1000, 100),
+    downwind = Gate(-100, 100),
+    laps = 2,
+    markRadius = 5,
+    islands = Seq(),
+    bounds = ((800,1200), (-800,-400))
+  )
+}
 
 case class RaceUpdate(
   now: DateTime,
   startTime: DateTime,
+  course: Course,
   opponents: Seq[BoatState] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
 
 case class BoatState (
-  position: Point,
+  position: Geo.Point,
   direction: Float,
   velocity: Float,
   passedGates: Seq[Float]
@@ -67,7 +58,12 @@ case class BoatUpdate(id: String, state: BoatState)
 object JsonFormats {
   import utils.JsonFormats.dateTimeFormat
 
-  implicit val pointFormat: Format[Point] = Json.format[Point]
+  implicit val pointFormat: Format[Geo.Point] = utils.JsonFormats.tuple2Format[Float,Float]
+  implicit val boxFormat: Format[Geo.Box] = utils.JsonFormats.tuple2Format[Geo.Point,Geo.Point]
+
+  implicit val gateFormat: Format[Gate] = Json.format[Gate]
+  implicit val islandFormat: Format[Island] = Json.format[Island]
+  implicit val courseFormat: Format[Course] = Json.format[Course]
   implicit val boatStateFormat: Format[BoatState] = Json.format[BoatState]
   implicit val boatUpdateFormat: Format[BoatUpdate] = Json.format[BoatUpdate]
   implicit val raceUpdateFormat: Format[RaceUpdate] = Json.format[RaceUpdate]

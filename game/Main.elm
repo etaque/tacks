@@ -10,14 +10,12 @@ import Game
 import Steps
 import Render.All as R
 
-{-- That's all folks! ---------------------------------------------------------
-
-The following code puts it all together and shows it on screen.
-
-------------------------------------------------------------------------------}
-
-port raceInput : Signal { now: Float, startTime: Float, opponents: [{ position : { x: Float, y: Float}, 
-                          direction: Float, velocity: Float, passedGates: [Float] }],
+-- ports can't expand type alias for the moment... ugly manual expansion...
+port raceInput : Signal { now: Float, startTime: Float, 
+                          course: Maybe { upwind: { y: Float, width: Float }, downwind: { y: Float, width: Float }, laps: Int, 
+                                          markRadius: Float, islands: [{ location : (Float,Float), radius : Float }], 
+                                          bounds: ((Float,Float),(Float,Float)) },
+                          opponents: [{ position : (Float,Float), direction: Float, velocity: Float, passedGates: [Float] }],
                           leaderboard: [String] }
 
 clock : Signal Float
@@ -30,7 +28,10 @@ input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardIn
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
 
-port raceOutput : Signal { position : { x: Float, y: Float}, direction: Float, velocity: Float, passedGates: [Float] }
-port raceOutput = lift (Game.boatToOpponent . .boat) gameState
+port raceOutput : Signal { position : (Float, Float), direction: Float, velocity: Float, passedGates: [Float] }
+port raceOutput = lift (boatToRaceOutput . .boat) gameState
+
+boatToRaceOutput ({position, direction, velocity, passedGates} as boat) =
+  { position = position, direction = direction, velocity = velocity, passedGates = passedGates }  
 
 main = lift2 R.renderAll Window.dimensions gameState

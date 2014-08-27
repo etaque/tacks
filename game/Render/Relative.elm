@@ -18,11 +18,11 @@ renderStartLine gate markRadius started =
       marks = map (\g -> circle markRadius |> filled markColor |> move g) [left, right]
   in  group (line :: marks)
 
-renderGate : Gate -> Float -> Maybe GateLocation -> Form
-renderGate gate markRadius nextGate =
+renderGate : Gate -> Float -> Bool -> Form
+renderGate gate markRadius isNext =
   let (left,right) = getGateMarks gate
       (markStyle,lineStyle) = 
-        if nextGate == Just gate.location
+        if isNext
           then (filled orange, traced (dotted orange))
           else (filled white, traced (solid colors.seaBlue))
       line = segment left right |> lineStyle
@@ -74,7 +74,7 @@ renderOpponent opponent =
     |> toForm
     |> alpha 0.3
     |> rotate (toRadians (opponent.direction + 90))
-    |> move (opponent.position.x,opponent.position.y)
+    |> move opponent.position
 
 renderBounds : (Point, Point) -> Form
 renderBounds box =
@@ -145,12 +145,12 @@ renderRelative ({boat,opponents,course} as gameState) =
   let nextGate = findNextGate boat course.laps
       downwindOrStartLine = if isEmpty boat.passedGates
         then renderStartLine course.downwind course.markRadius (gameState.countdown <= 0)
-        else renderGate course.downwind course.markRadius nextGate 
+        else renderGate course.downwind course.markRadius (nextGate == Just Downwind)
       justForms = [
         renderBounds gameState.course.bounds,
         renderIslands gameState,
         downwindOrStartLine,
-        renderGate course.upwind course.markRadius nextGate,
+        renderGate course.upwind course.markRadius (nextGate == Just Upwind),
         --renderLaylines boat gameState.course,
         renderBoat boat,
         group (map renderOpponent opponents),

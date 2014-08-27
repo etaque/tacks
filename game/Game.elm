@@ -20,19 +20,20 @@ be an empty list (no objects at the start):
 
 ------------------------------------------------------------------------------}
 
-data GateLocation = Downwind | Upwind
-type Gate = { y: Float, width: Float, location: GateLocation }
+data GateLocation = StartLine | Downwind | Upwind
+
+type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
 type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float, islands: [Island], bounds: (Point, Point) }
 
 data ControlMode = FixedDirection | FixedWindAngle
 
-type Boat = { position: Point, direction: Float, velocity: Float, windAngle: Float, 
-              windOrigin: Float, windSpeed: Float,
-              center: Point, controlMode: ControlMode, tackTarget: Maybe Float,
-              passedGates: [(GateLocation, Time)] }
+type Sailing a = { a | position : Point, direction: Float, velocity: Float, passedGates: [Time] }
 
-type Opponent = { position : { x: Float, y: Float}, direction: Float, velocity: Float, passedGates: [Time] }
+type Opponent = Sailing { }
+
+type Boat = Sailing { windAngle: Float, windOrigin: Float, windSpeed: Float,
+                         center: Point, controlMode: ControlMode, tackTarget: Maybe Float }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
@@ -44,10 +45,10 @@ type GameState = { wind: Wind, boat: Boat, opponents: [Opponent],
 type RaceState = { boats : [Boat] }
 
 startLine : Gate
-startLine = { y = -100, width = 100, location = Downwind }
+startLine = { y = -100, width = 100 }
 
 upwindGate : Gate
-upwindGate = { y = 1000, width = 100, location = Upwind }
+upwindGate = { y = 1000, width = 100 }
 
 islands : [Island]
 islands = [ { location = (250, 300), radius = 100 },
@@ -81,13 +82,8 @@ findNextGate boat laps =
   let c = (length boat.passedGates)
       i = c `mod` 2
   in
-    if | c == 0            -> Nothing
-       | c == laps * 2 + 1 -> Nothing
+    if | c == laps * 2 + 1 -> Nothing
+       | c == 0            -> Just StartLine
        | i == 0            -> Just Downwind 
        | otherwise         -> Just Upwind
 
-boatToOpponent : Boat -> Opponent
-boatToOpponent ({position, direction, velocity} as boat) =
-  let (x,y) = position
-      gates = map snd boat.passedGates
-  in  { position = {x = x, y = y}, direction = direction, velocity = velocity, passedGates = gates }  

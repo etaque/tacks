@@ -7,10 +7,9 @@ import Game (..)
 import String
 import Text
 
-renderHiddenGate : Gate -> (Float,Float) -> Point -> Maybe GateLocation -> Maybe Form
-renderHiddenGate gate (w,h) (cx,cy) nextGate =
+renderHiddenGate : Gate -> (Float,Float) -> Point -> Bool -> Maybe Form
+renderHiddenGate gate (w,h) (cx,cy) isNext =
   let (left,right) = getGateMarks gate
-      isNext = nextGate == Just gate.location
       c = 5
       over = cy + h/2 + c < gate.y
       under = cy - h/2 - c > gate.y
@@ -27,26 +26,26 @@ renderHiddenGate gate (w,h) (cx,cy) nextGate =
       (_, _)    -> Nothing
 
 
-hasFinished : Course -> Opponent -> Bool
+hasFinished : Course -> Sailing a -> Bool
 hasFinished course boat = (length boat.passedGates) == course.laps * 2 + 1
 
+-- TODO repair
 renderWinner : Course -> Boat -> [Opponent] -> Maybe Form
 renderWinner course boat opponents =
-  let me = boatToOpponent boat
-  in
-    if (hasFinished course me) then
-      let finishTime : Opponent -> Time
-          finishTime o = head o.passedGates
-          othersTime = filter (hasFinished course) opponents |> map finishTime
-          myTime = finishTime me
-          othersAfterMe = all (\t -> t > myTime) othersTime
-      in
-        if (isEmpty othersTime) || othersAfterMe then
-          Just (fullScreenMessage "WINNER")
-        else
-          Nothing
-    else
-      Nothing
+  Nothing
+  --if (hasFinished course boat) then
+  --  let finishTime : Opponent -> Time
+  --      finishTime o = head o.passedGates
+  --      othersTime = filter (hasFinished course) opponents |> map finishTime
+  --      myTime = finishTime boat
+  --      othersAfterMe = all (\t -> t > myTime) othersTime
+  --  in
+  --    if (isEmpty othersTime) || othersAfterMe then
+  --      Just (fullScreenMessage "WINNER")
+  --    else
+  --      Nothing
+  --else
+  --  Nothing
 
 renderLapsCount : (Float,Float) -> Course -> Boat -> Form
 renderLapsCount (w,h) course boat =
@@ -136,8 +135,8 @@ renderAbsolute ({boat,opponents,course} as gameState) dims =
         renderControlWheel wind boat dims
       ]
       maybeForms = [
-        renderHiddenGate course.downwind dims boat.center nextGate,
-        renderHiddenGate course.upwind dims boat.center nextGate,
+        renderHiddenGate course.downwind dims boat.center (nextGate == Just Downwind),
+        renderHiddenGate course.upwind dims boat.center (nextGate == Just Upwind),
         renderWinner course boat opponents,
         renderHelp gameState.countdown dims
         --renderLeaderboard gameState.leaderboard dims

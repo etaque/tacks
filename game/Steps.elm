@@ -108,22 +108,22 @@ gatePassedFromSouth : Gate -> (Point,Point) -> Bool
 gatePassedFromSouth gate (p,p') =
   (snd p) < gate.y && (snd p') >= gate.y && (gatePassedInX gate (p,p'))
 
-getPassedGates : Boat -> Time -> Course -> (Point,Point) -> [(GateLocation,Time)]
+getPassedGates : Boat -> Time -> Course -> (Point,Point) -> [Time]
 getPassedGates boat timestamp ({upwind, downwind, laps}) step =
-  case (findNextGate boat course.laps, isEmpty boat.passedGates) of
+  case (findNextGate boat course.laps) of
     -- ligne de départ
-    (_, True)          -> if | gatePassedFromSouth downwind step -> (Downwind, timestamp) :: boat.passedGates 
-                             | otherwise                         -> boat.passedGates
+    Just StartLine -> if | gatePassedFromSouth downwind step -> timestamp :: boat.passedGates 
+                         | otherwise                         -> boat.passedGates
     -- bouée au vent
-    (Just Upwind, _)   -> if | gatePassedFromSouth upwind step   -> (Upwind, timestamp) :: boat.passedGates 
-                             | gatePassedFromSouth downwind step -> tail boat.passedGates
-                             | otherwise                         -> boat.passedGates
+    Just Upwind    -> if | gatePassedFromSouth upwind step   -> timestamp :: boat.passedGates 
+                         | gatePassedFromSouth downwind step -> tail boat.passedGates
+                         | otherwise                         -> boat.passedGates
     -- bouée sous le vent
-    (Just Downwind, _) -> if | gatePassedFromNorth downwind step -> (Downwind, timestamp) :: boat.passedGates 
-                             | gatePassedFromNorth upwind step   -> tail boat.passedGates 
-                             | otherwise                         -> boat.passedGates
+    Just Downwind  -> if | gatePassedFromNorth downwind step -> timestamp :: boat.passedGates 
+                         | gatePassedFromNorth upwind step   -> tail boat.passedGates 
+                         | otherwise                         -> boat.passedGates
     -- arrivée déjà franchie
-    (Nothing, _)       -> boat.passedGates
+    Nothing        -> boat.passedGates
 
 getGatesMarks : Course -> [Point]
 getGatesMarks course =
@@ -182,43 +182,43 @@ moveStep now delta dims gameState =
   let boatMoved = moveBoat now delta gameState dims gameState.boat
   in  { gameState | boat <- boatMoved }
 
-randInWindow : Int -> Int -> Int -> Int
-randInWindow t w i =
-    ((t ^ i) + (t * i * 1000)) `mod` w
+--randInWindow : Int -> Int -> Int -> Int
+--randInWindow t w i =
+--    ((t ^ i) + (t * i * 1000)) `mod` w
 
-spawnGustX : Int -> Float -> Int -> Int
-spawnGustX t w spawnIndex =
-  (randInWindow t (round w) spawnIndex) - (round (w/2))
+--spawnGustX : Int -> Float -> Int -> Int
+--spawnGustX t w spawnIndex =
+--  (randInWindow t (round w) spawnIndex) - (round (w/2))
 
-spawnGustY : Int -> Float -> Int -> Int
-spawnGustY t h spawnIndex =
-  (randInWindow t (round h) spawnIndex)
+--spawnGustY : Int -> Float -> Int -> Int
+--spawnGustY t h spawnIndex =
+--  (randInWindow t (round h) spawnIndex)
 
-spawnGust : Time -> (Point,Point) -> Int -> Gust
-spawnGust timestamp ((right,top),(left,bottom)) spawnIndex =
-  let 
-    t = round timestamp
-    x = spawnGustX t (right - left) (spawnIndex + 1)
-    y = if spawnIndex == 0 then (round top) - 1 else spawnGustY t (top - bottom) spawnIndex
-    radius = (randInWindow t 100 (spawnIndex + 1)) + 100 |> toFloat 
-    speedImpact = 0
-    originDelta = (randInWindow t 20 (spawnIndex + 1)) - 10 |> toFloat
-  in
-    { position = floatify (x,y), radius = radius, speedImpact = speedImpact, originDelta = originDelta }
+--spawnGust : Time -> (Point,Point) -> Int -> Gust
+--spawnGust timestamp ((right,top),(left,bottom)) spawnIndex =
+--  let 
+--    t = round timestamp
+--    x = spawnGustX t (right - left) (spawnIndex + 1)
+--    y = if spawnIndex == 0 then (round top) - 1 else spawnGustY t (top - bottom) spawnIndex
+--    radius = (randInWindow t 100 (spawnIndex + 1)) + 100 |> toFloat 
+--    speedImpact = 0
+--    originDelta = (randInWindow t 20 (spawnIndex + 1)) - 10 |> toFloat
+--  in
+--    { position = floatify (x,y), radius = radius, speedImpact = speedImpact, originDelta = originDelta }
 
-gustInBounds : (Point,Point) -> Gust -> Bool
-gustInBounds bounds gust =
-  inBox gust.position bounds
+--gustInBounds : (Point,Point) -> Gust -> Bool
+--gustInBounds bounds gust =
+--  inBox gust.position bounds
 
-updateGusts : Time -> Float -> (Point, Point) -> Wind -> [Gust]
-updateGusts timestamp delta bounds wind = 
-  let 
-    moveGust w g = { g | position <- (movePoint g.position delta w.speed (ensure360 (180 + wind.origin + g.originDelta))) }
-    gusts = filter (gustInBounds bounds) wind.gusts |> map (moveGust wind)
-  in
-    if | (isEmpty wind.gusts) -> map (spawnGust timestamp bounds) [1..wind.gustsCount]
-       | (length gusts < wind.gustsCount) -> (spawnGust timestamp bounds 0) :: gusts 
-       | otherwise -> gusts
+--updateGusts : Time -> Float -> (Point, Point) -> Wind -> [Gust]
+--updateGusts timestamp delta bounds wind = 
+--  let 
+--    moveGust w g = { g | position <- (movePoint g.position delta w.speed (ensure360 (180 + wind.origin + g.originDelta))) }
+--    gusts = filter (gustInBounds bounds) wind.gusts |> map (moveGust wind)
+--  in
+--    if | (isEmpty wind.gusts) -> map (spawnGust timestamp bounds) [1..wind.gustsCount]
+--       | (length gusts < wind.gustsCount) -> (spawnGust timestamp bounds 0) :: gusts 
+--       | otherwise -> gusts
 
 updateWindForBoat : Wind -> Boat -> Boat
 updateWindForBoat wind boat =
@@ -243,15 +243,16 @@ windStep delta now ({wind, boat} as gameState) =
   let o1 = cos (inSeconds now / 8) * 10
       o2 = cos (inSeconds now / 5) * 5
       newOrigin = o1 + o2 |> ensure360
-      newGusts = updateGusts now delta gameState.course.bounds wind
-      newWind = { wind | origin <- newOrigin, gusts <- newGusts }
+      --newGusts = updateGusts now delta gameState.course.bounds wind
+      newWind = { wind | origin <- newOrigin }
       boatWithWind = updateWindForBoat wind boat
   in { gameState | wind <- newWind,
                    boat <- boatWithWind }
 
 raceInputStep : RaceInput -> GameState -> GameState
-raceInputStep {now,startTime,opponents,leaderboard} gameState =
+raceInputStep {now,startTime,course,opponents,leaderboard} gameState =
   { gameState | opponents <- opponents,
+                course <- maybe gameState.course id course,
                 leaderboard <- leaderboard,
                 countdown <- startTime - now }
 

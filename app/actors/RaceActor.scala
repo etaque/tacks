@@ -43,7 +43,7 @@ class RaceActor(race: Race) extends Actor {
     }
 
   private def raceUpdateFor(boatId: String) =
-    RaceUpdate(DateTime.now, race.startTime, boatStates.toSeq.filterNot(_._1 == boatId).map(_._2), leaderboard)
+    RaceUpdate(DateTime.now, race.startTime, race.course, boatStates.toSeq.filterNot(_._1 == boatId).map(_._2), leaderboard)
 }
 
 object RaceActor {

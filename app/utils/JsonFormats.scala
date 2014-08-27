@@ -1,5 +1,6 @@
 package utils
 
+import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits._
 import reactivemongo.bson.BSONObjectID
@@ -20,11 +21,7 @@ object JsonFormats {
 
   // DateTime <-> Mongo Date
 
-  implicit val dateTimeReads: Reads[DateTime] = (
-    __.read[Long].map { dateTime =>
-      new DateTime(dateTime)
-    }
-  )
+  implicit val dateTimeReads: Reads[DateTime] = __.read[Long].map(new DateTime(_))
 
   implicit val dateTimeWrites: Writes[DateTime] = new Writes[DateTime] {
     def writes(dateTime: DateTime): JsValue = JsNumber(dateTime.getMillis)
@@ -32,6 +29,24 @@ object JsonFormats {
 
   implicit val dateTimeFormat: Format[DateTime] = Format(dateTimeReads, dateTimeWrites)
 
+
+  // Tuple2
+
+  implicit def tuple2Reads[A, B](implicit aReads: Reads[A], bReads: Reads[B]): Reads[(A, B)] = Reads[(A, B)] {
+    case JsArray(arr) if arr.size == 2 => for {
+      a <- aReads.reads(arr(0))
+      b <- bReads.reads(arr(1))
+    } yield (a, b)
+    case _ => JsError(Seq(JsPath() -> Seq(ValidationError("Expected array of two elements"))))
+  }
+
+  implicit def tuple2Writes[A, B](implicit aWrites: Writes[A], bWrites: Writes[B]): Writes[(A, B)] =
+    new Writes[(A, B)] {
+      def writes(tuple: (A, B)) = JsArray(Seq(aWrites.writes(tuple._1), bWrites.writes(tuple._2)))
+    }
+
+  implicit def tuple2Format[A,B](implicit aFormat: Format[A], bFormat: Format[B]): Format[(A,B)] =
+    Format[(A,B)](tuple2Reads[A,B], tuple2Writes[A,B])
 
   // Scala Enumeration
 
