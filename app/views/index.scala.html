@@ -8,11 +8,12 @@
 
       <script type="text/javascript">
 
-      var startTime = @r.startTime.getMillis;
+      var timer = @r.millisBeforeStart;
       var timerDiv = document.getElementById("timer");
 
       function updateTimer() {
-        timerDiv.innerHTML = formatTimer(Date.now(), startTime);
+        timer = timer - 1000;
+        timerDiv.innerHTML = formatTimer(timer);
       }
 
       setInterval(updateTimer, 1000);

@@ -23,7 +23,7 @@
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);
     if (data.now < data.startTime) {
-      document.title = formatTimer(data.now, data.startTime);
+      document.title = formatTimer(data.startTime - data.now);
     } else {
       document.title = "Race started!"
     }
