@@ -12,11 +12,7 @@
       var timerDiv = document.getElementById("timer");
 
       function updateTimer() {
-        if (Date.now() > startTime) {
-          window.location.reload();
-        } else {
-          timerDiv.innerText = formatTimer(Date.now(), startTime);
-        }
+        timerDiv.innerHTML = formatTimer(Date.now(), startTime);
       }
 
       setInterval(updateTimer, 1000);
