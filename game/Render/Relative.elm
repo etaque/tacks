@@ -41,14 +41,23 @@ renderGate gate markRadius isNext =
 renderPlayerAngles : Player -> Form
 renderPlayerAngles player =
   let drawLine a = segment (fromPolar (15, a)) (fromPolar (25, a)) |> traced (solid white)
-      directionLine = drawLine (toRadians player.direction) |> alpha 0.8
-      windLine = drawLine (toRadians (player.direction - player.windAngle)) |> alpha 0.3
+      --directionLine = drawLine (toRadians player.direction) |> alpha 0.8
+      --windLine = drawLine (toRadians (player.direction - player.windAngle)) |> alpha 0.3
+
+      windOriginRadians = toRadians (player.direction - player.windAngle)
+      windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+        |> filled white
+        |> rotate (windOriginRadians + pi/2)
+        |> move (fromPolar (25, windOriginRadians))
+        |> alpha 0.5
+
       windAngleText = (show (abs player.windAngle)) ++ "&deg;" |> baseText
         |> (if player.controlMode == FixedWindAngle then line Under else id)
         |> centered |> toForm 
-        |> move (fromPolar (40, toRadians (player.direction - (player.windAngle / 2))))
-        |> alpha 0.8
-  in  group [directionLine, windLine, windAngleText] 
+        |> move (fromPolar (25, windOriginRadians + pi))
+        --|> move (fromPolar (25, toRadians (player.direction - (player.windAngle / 2))))
+        |> alpha 0.5
+  in  group [windMarker, windAngleText] 
 
 renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =
@@ -56,21 +65,27 @@ renderEqualityLine (x,y) windOrigin =
       right = (fromPolar (50, toRadians (windOrigin + 90)))
   in  segment left right |> traced (dotted white) |> alpha 0.2
 
+renderWake : [Point] -> Form
+renderWake wake =
+  let span = 5
+      opacityForIndex i = 0.5 - 0.4 * (toFloat i) / (toFloat (length wake))
+      renderWakePoint (i, p) = circle 2 |> filled white |> move p |> alpha (opacityForIndex i)
+      points = indexedMap (,) wake |> filter (\(i,p) -> ((i+1) `mod` span) == 0) |> map renderWakePoint
+  in  group points
+
 renderPlayer : Player -> Form
 renderPlayer player =
-  let 
-    hull = image 8 19 "/assets/images/icon-boat-white.png"
-      |> toForm
-      |> rotate (toRadians (player.direction + 90))
-    angles = renderPlayerAngles player
-    eqLine = renderEqualityLine player.position player.windOrigin
-  in 
-    group [angles, eqLine, hull]
-      |> move player.position
+  let hull = image 11 20 "/assets/images/icon-ac72.png" |> toForm
+        |> rotate (toRadians (player.direction + 90))
+      angles = renderPlayerAngles player
+      eqLine = renderEqualityLine player.position player.windOrigin
+      movingPart = group [angles, eqLine, hull] |> move player.position
+      wake = renderWake player.wake
+  in group [movingPart, wake]
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
-  image 8 19 "/assets/images/icon-boat-white.png"
+  image 11 20 "/assets/images/icon-ac72.png"
     |> toForm
     |> alpha 0.3
     |> rotate (toRadians (opponent.direction + 90))

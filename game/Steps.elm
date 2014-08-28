@@ -171,11 +171,12 @@ movePlayer now delta gameState dimensions player =
         then getPassedGates player now gameState.course (position, newPosition)
         else player.passedGates
       newCenter = getCenterAfterMove position newPosition player.center (floatify dimensions)
-  in
-      { player | position <- newPosition,
-               velocity <- if stuck then 0 else newVelocity,
-               center <- newCenter,
-               passedGates <- newPassedGates }
+      newWake = take 30 (newPosition :: player.wake)
+  in  { player | position <- newPosition,
+                 velocity <- if stuck then 0 else newVelocity,
+                 center <- newCenter,
+                 wake <- newWake,
+                 passedGates <- newPassedGates }
 
 moveStep : Time -> Float -> (Int,Int) -> GameState -> GameState
 moveStep now delta dims gameState =

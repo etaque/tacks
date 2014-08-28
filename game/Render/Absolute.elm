@@ -61,7 +61,7 @@ renderPolar : Player -> (Float,Float) -> Form
 renderPolar player (w,h) =
   let 
     absWindAngle = abs player.windAngle
-    anglePoint a = fromPolar ((polarVelocity a) * 2, toRadians a)
+    anglePoint a = fromPolar ((polarVelocity a) * 1.5, toRadians a)
     points = map anglePoint [0..180]
     maxSpeed = (map fst points |> maximum) + 10
     polar = path points |> traced (solid white)
@@ -125,7 +125,7 @@ renderHelp countdown (w,h) =
     Nothing
 
 renderAbsolute : GameState -> (Float,Float) -> Form
-renderAbsolute ({player,opponents,course} as gameState) dims =
+renderAbsolute ({wind,player,opponents,course} as gameState) dims =
   let nextGate = if gameState.countdown <= 0 
         then findNextGate player course.laps 
         else Nothing

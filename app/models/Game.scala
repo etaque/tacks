@@ -36,7 +36,7 @@ object Course {
     markRadius = 5,
     islands = Seq(
       Island((250, 300), 100),
-      Island((50, 700), 80),
+      Island((150, 700), 80),
       Island((-200, 500), 60)
     ),
     bounds = ((800,1200), (-800,-400))

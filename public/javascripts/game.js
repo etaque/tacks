@@ -456,6 +456,11 @@ Elm.Steps.make = function (_elm) {
          nextPosition,
          gameState);
          var newPosition = stuck ? position : nextPosition;
+         var newWake = A2(List.take,
+         30,
+         {ctor: "::"
+         ,_0: newPosition
+         ,_1: player.wake});
          var newPassedGates = _U.cmp(gameState.countdown,
          0) < 1 ? A4(getPassedGates,
          player,
@@ -474,6 +479,7 @@ Elm.Steps.make = function (_elm) {
                            ,["velocity"
                             ,stuck ? 0 : newVelocity]
                            ,["center",newCenter]
+                           ,["wake",newWake]
                            ,["passedGates"
                             ,newPassedGates]],
          player);
@@ -915,14 +921,50 @@ Elm.Render.Relative.make = function (_elm) {
    };
    var renderOpponent = function (opponent) {
       return Graphics.Collage.move(opponent.position)(Graphics.Collage.rotate(Core.toRadians(opponent.direction + 90))(Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(A3(Graphics.Element.image,
-      8,
-      19,
-      "/assets/images/icon-boat-white.png")))));
+      11,
+      20,
+      "/assets/images/icon-ac72.png")))));
    };
-   var renderEqualityLine = F2(function (_v2,
+   var renderWake = function (wake) {
+      return function () {
+         var opacityForIndex = function (i) {
+            return 0.5 - 0.4 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
+         };
+         var renderWakePoint = function (_v2) {
+            return function () {
+               switch (_v2.ctor)
+               {case "_Tuple2":
+                  return Graphics.Collage.alpha(opacityForIndex(_v2._0))(Graphics.Collage.move(_v2._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
+               _E.Case($moduleName,
+               "on line 72, column 32 to 94");
+            }();
+         };
+         var span = 5;
+         var points = List.map(renderWakePoint)(List.filter(function (_v6) {
+            return function () {
+               switch (_v6.ctor)
+               {case "_Tuple2":
+                  return _U.eq(A2(Basics.mod,
+                    _v6._0 + 1,
+                    span),
+                    0);}
+               _E.Case($moduleName,
+               "on line 73, column 59 to 80");
+            }();
+         })(A2(Core.indexedMap,
+         F2(function (v0,v1) {
+            return {ctor: "_Tuple2"
+                   ,_0: v0
+                   ,_1: v1};
+         }),
+         wake)));
+         return Graphics.Collage.group(points);
+      }();
+   };
+   var renderEqualityLine = F2(function (_v10,
    windOrigin) {
       return function () {
-         switch (_v2.ctor)
+         switch (_v10.ctor)
          {case "_Tuple2":
             return function () {
                  var right = Basics.fromPolar({ctor: "_Tuple2"
@@ -936,14 +978,26 @@ Elm.Render.Relative.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 55 and 57");
+         "between lines 64 and 66");
       }();
    });
    var renderPlayerAngles = function (player) {
       return function () {
-         var windAngleText = Graphics.Collage.alpha(0.8)(Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
-                                                                                                ,_0: 40
-                                                                                                ,_1: Core.toRadians(player.direction - player.windAngle / 2)}))(Graphics.Collage.toForm(Text.centered((_U.eq(player.controlMode,
+         var windOriginRadians = Core.toRadians(player.direction - player.windAngle);
+         var windMarker = Graphics.Collage.alpha(0.5)(Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
+                                                                                             ,_0: 25
+                                                                                             ,_1: windOriginRadians}))(Graphics.Collage.rotate(windOriginRadians + Basics.pi / 2)(Graphics.Collage.filled(Color.white)(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                                                                                                                                              ,_0: 0
+                                                                                                                                                                                                                                                              ,_1: 4}
+                                                                                                                                                                                                                                                             ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                                              ,_0: -4
+                                                                                                                                                                                                                                                              ,_1: -4}
+                                                                                                                                                                                                                                                             ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                                              ,_0: 4
+                                                                                                                                                                                                                                                              ,_1: -4}]))))));
+         var windAngleText = Graphics.Collage.alpha(0.5)(Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
+                                                                                                ,_0: 25
+                                                                                                ,_1: windOriginRadians + Basics.pi}))(Graphics.Collage.toForm(Text.centered((_U.eq(player.controlMode,
          Game.FixedWindAngle) ? Text.line(Text.Under) : Basics.id)(Render.Utils.baseText(_L.append(String.show(Basics.abs(player.windAngle)),
          "&deg;")))))));
          var drawLine = function (a) {
@@ -955,26 +1009,26 @@ Elm.Render.Relative.make = function (_elm) {
                              ,_0: 25
                              ,_1: a})));
          };
-         var directionLine = Graphics.Collage.alpha(0.8)(drawLine(Core.toRadians(player.direction)));
-         var windLine = Graphics.Collage.alpha(0.3)(drawLine(Core.toRadians(player.direction - player.windAngle)));
-         return Graphics.Collage.group(_L.fromArray([directionLine
-                                                    ,windLine
+         return Graphics.Collage.group(_L.fromArray([windMarker
                                                     ,windAngleText]));
       }();
    };
    var renderPlayer = function (player) {
       return function () {
+         var wake = renderWake(player.wake);
          var eqLine = A2(renderEqualityLine,
          player.position,
          player.windOrigin);
          var angles = renderPlayerAngles(player);
          var hull = Graphics.Collage.rotate(Core.toRadians(player.direction + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
-         8,
-         19,
-         "/assets/images/icon-boat-white.png")));
-         return Graphics.Collage.move(player.position)(Graphics.Collage.group(_L.fromArray([angles
-                                                                                           ,eqLine
-                                                                                           ,hull])));
+         11,
+         20,
+         "/assets/images/icon-ac72.png")));
+         var movingPart = Graphics.Collage.move(player.position)(Graphics.Collage.group(_L.fromArray([angles
+                                                                                                     ,eqLine
+                                                                                                     ,hull])));
+         return Graphics.Collage.group(_L.fromArray([movingPart
+                                                    ,wake]));
       }();
    };
    var renderGate = F3(function (gate,
@@ -1023,38 +1077,38 @@ Elm.Render.Relative.make = function (_elm) {
                                        ,_1: marks});
       }();
    });
-   var renderRelative = function (_v6) {
+   var renderRelative = function (_v14) {
       return function () {
          return function () {
             var maybeForms = _L.fromArray([A2(renderCountdown,
-            _v6,
-            _v6.player)]);
+            _v14,
+            _v14.player)]);
             var nextGate = A2(Game.findNextGate,
-            _v6.player,
-            _v6.course.laps);
-            var downwindOrStartLine = List.isEmpty(_v6.player.passedGates) ? A3(renderStartLine,
-            _v6.course.downwind,
-            _v6.course.markRadius,
-            _U.cmp(_v6.countdown,
+            _v14.player,
+            _v14.course.laps);
+            var downwindOrStartLine = List.isEmpty(_v14.player.passedGates) ? A3(renderStartLine,
+            _v14.course.downwind,
+            _v14.course.markRadius,
+            _U.cmp(_v14.countdown,
             0) < 1) : A3(renderGate,
-            _v6.course.downwind,
-            _v6.course.markRadius,
+            _v14.course.downwind,
+            _v14.course.markRadius,
             _U.eq(nextGate,
             Maybe.Just(Game.Downwind)));
-            var justForms = _L.fromArray([renderBounds(_v6.course.bounds)
-                                         ,renderIslands(_v6)
+            var justForms = _L.fromArray([renderBounds(_v14.course.bounds)
+                                         ,renderIslands(_v14)
                                          ,downwindOrStartLine
                                          ,A3(renderGate,
-                                         _v6.course.upwind,
-                                         _v6.course.markRadius,
+                                         _v14.course.upwind,
+                                         _v14.course.markRadius,
                                          _U.eq(nextGate,
                                          Maybe.Just(Game.Upwind)))
-                                         ,renderPlayer(_v6.player)
+                                         ,renderPlayer(_v14.player)
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
-                                         _v6.opponents))
-                                         ,renderGusts(_v6.wind)]);
-            return Graphics.Collage.move(Geo.neg(_v6.player.center))(Graphics.Collage.group(_L.append(justForms,
+                                         _v14.opponents))
+                                         ,renderGusts(_v14.wind)]);
+            return Graphics.Collage.move(Geo.neg(_v14.player.center))(Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms))));
          }();
       }();
@@ -1064,6 +1118,7 @@ Elm.Render.Relative.make = function (_elm) {
                                  ,renderGate: renderGate
                                  ,renderPlayerAngles: renderPlayerAngles
                                  ,renderEqualityLine: renderEqualityLine
+                                 ,renderWake: renderWake
                                  ,renderPlayer: renderPlayer
                                  ,renderOpponent: renderOpponent
                                  ,renderBounds: renderBounds
@@ -1179,7 +1234,7 @@ Elm.Render.Absolute.make = function (_elm) {
             return function () {
                  var anglePoint = function (a) {
                     return Basics.fromPolar({ctor: "_Tuple2"
-                                            ,_0: Core.polarVelocity(a) * 2
+                                            ,_0: Core.polarVelocity(a) * 1.5
                                             ,_1: Core.toRadians(a)});
                  };
                  var points = A2(List.map,
@@ -1360,7 +1415,7 @@ Elm.Render.Absolute.make = function (_elm) {
                                          _v27.player,
                                          dims)
                                          ,A3(renderControlWheel,
-                                         Game.wind,
+                                         _v27.wind,
                                          _v27.player,
                                          dims)]);
             var nextGate = _U.cmp(_v27.countdown,
@@ -1547,27 +1602,27 @@ Elm.Game.make = function (_elm) {
                   ,_0: gate.width / 2
                   ,_1: gate.y}};
    };
-   var wind = {_: {}
-              ,gusts: _L.fromArray([])
-              ,gustsCount: 0
-              ,origin: 0
-              ,speed: 10};
+   var defaultWind = {_: {}
+                     ,gusts: _L.fromArray([])
+                     ,gustsCount: 0
+                     ,origin: 0
+                     ,speed: 10};
    var defaultGate = {_: {}
                      ,width: 0
                      ,y: 0};
-   var course = {_: {}
-                ,bounds: {ctor: "_Tuple2"
-                         ,_0: {ctor: "_Tuple2"
-                              ,_0: 0
-                              ,_1: 0}
-                         ,_1: {ctor: "_Tuple2"
-                              ,_0: 0
-                              ,_1: 0}}
-                ,downwind: defaultGate
-                ,islands: _L.fromArray([])
-                ,laps: 0
-                ,markRadius: 0
-                ,upwind: defaultGate};
+   var defaultCourse = {_: {}
+                       ,bounds: {ctor: "_Tuple2"
+                                ,_0: {ctor: "_Tuple2"
+                                     ,_0: 0
+                                     ,_1: 0}
+                                ,_1: {ctor: "_Tuple2"
+                                     ,_0: 0
+                                     ,_1: 0}}
+                       ,downwind: defaultGate
+                       ,islands: _L.fromArray([])
+                       ,laps: 0
+                       ,markRadius: 0
+                       ,upwind: defaultGate};
    var RaceState = function (a) {
       return {_: {},players: a};
    };
@@ -1620,28 +1675,29 @@ Elm.Game.make = function (_elm) {
    });
    var FixedWindAngle = {ctor: "FixedWindAngle"};
    var FixedDirection = {ctor: "FixedDirection"};
-   var player = {_: {}
-                ,center: {ctor: "_Tuple2"
-                         ,_0: 0
-                         ,_1: 0}
-                ,controlMode: FixedDirection
-                ,direction: 0
-                ,passedGates: _L.fromArray([])
-                ,position: {ctor: "_Tuple2"
-                           ,_0: 0
-                           ,_1: -200}
-                ,tackTarget: Maybe.Nothing
-                ,velocity: 0
-                ,windAngle: 0
-                ,windOrigin: 0
-                ,windSpeed: 0};
+   var defaultPlayer = {_: {}
+                       ,center: {ctor: "_Tuple2"
+                                ,_0: 0
+                                ,_1: 0}
+                       ,controlMode: FixedDirection
+                       ,direction: 0
+                       ,passedGates: _L.fromArray([])
+                       ,position: {ctor: "_Tuple2"
+                                  ,_0: 0
+                                  ,_1: -200}
+                       ,tackTarget: Maybe.Nothing
+                       ,velocity: 0
+                       ,wake: _L.fromArray([])
+                       ,windAngle: 0
+                       ,windOrigin: 0
+                       ,windSpeed: 0};
    var defaultGame = {_: {}
                      ,countdown: 0
-                     ,course: course
+                     ,course: defaultCourse
                      ,leaderboard: _L.fromArray([])
                      ,opponents: _L.fromArray([])
-                     ,player: player
-                     ,wind: wind};
+                     ,player: defaultPlayer
+                     ,wind: defaultWind};
    var Course = F6(function (a,
    b,
    c,
@@ -1680,9 +1736,9 @@ Elm.Game.make = function (_elm) {
    });
    _elm.Game.values = {_op: _op
                       ,defaultGate: defaultGate
-                      ,course: course
-                      ,player: player
-                      ,wind: wind
+                      ,defaultCourse: defaultCourse
+                      ,defaultPlayer: defaultPlayer
+                      ,defaultWind: defaultWind
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks
                       ,findNextGate: findNextGate

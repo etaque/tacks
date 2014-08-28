@@ -32,8 +32,8 @@ type Boat a = { a | position : Point, direction: Float, velocity: Float, passedG
 
 type Opponent = Boat { }
 
-type Player = Boat { windAngle: Float, windOrigin: Float, windSpeed: Float,
-                         center: Point, controlMode: ControlMode, tackTarget: Maybe Float }
+type Player = Boat { windAngle: Float, windOrigin: Float, windSpeed: Float, wake: [Point],
+                     center: Point, controlMode: ControlMode, tackTarget: Maybe Float }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
@@ -46,23 +46,23 @@ type RaceState = { players : [Player] }
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
 
-course : Course
-course = { upwind = defaultGate, downwind = defaultGate, laps = 0, markRadius = 0,
+defaultCourse : Course
+defaultCourse = { upwind = defaultGate, downwind = defaultGate, laps = 0, markRadius = 0,
            islands = [], bounds = ((0,0), (0,0)) }
 
-player : Player
-player = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
-         windOrigin = 0, windSpeed = 0,
+defaultPlayer : Player
+defaultPlayer = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
+         windOrigin = 0, windSpeed = 0, wake = [],
          center = (0,0), controlMode = FixedDirection, tackTarget = Nothing,
          passedGates = [] }
 
-wind : Wind
-wind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
+defaultWind : Wind
+defaultWind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
 
 
 defaultGame : GameState
-defaultGame = { wind = wind, player = player, opponents = [],
-                course = course, leaderboard = [], countdown = 0 }
+defaultGame = { wind = defaultWind, player = defaultPlayer, opponents = [],
+                course = defaultCourse, leaderboard = [], countdown = 0 }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
