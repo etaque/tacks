@@ -15,7 +15,7 @@ case object UpdateGusts
 
 class RaceActor(race: Race) extends Actor {
 
-  val boatStates = scala.collection.mutable.Map[String,BoatState]()
+  val playersStates = scala.collection.mutable.Map[String,BoatState]()
   val gusts = Seq[Gust]()
   var leaderboard = Seq[String]()
 
@@ -24,23 +24,23 @@ class RaceActor(race: Race) extends Actor {
 
   def receive = {
     case PlayerUpdate(id, state) => {
-      boatStates.get(id) match {
+      playersStates.get(id) match {
         case Some(bs) => if (bs.passedGates != state.passedGates) updateLeaderboard()
         case None =>
       }
-      boatStates += (id -> state)
+      playersStates += (id -> state)
       sender ! raceUpdateFor(id)
     }
     case PlayerLeaved(id) => {
       Logger.debug("Boat leaved: " + id)
-      boatStates -= id
+      playersStates -= id
     }
     case UpdateLeaderboard => updateLeaderboard()
   }
 
   private def updateLeaderboard() =
-    if (boatStates.values.exists(_.passedGates.nonEmpty)) {
-      leaderboard = boatStates.toSeq.sortBy {
+    if (playersStates.values.exists(_.passedGates.nonEmpty)) {
+      leaderboard = playersStates.toSeq.sortBy {
         case (_, b) => (- b.passedGates.length, b.passedGates.headOption)
       }.map(_._1)
     }
@@ -51,7 +51,7 @@ class RaceActor(race: Race) extends Actor {
       startTime = race.startTime,
       course = None, // already transmitted in initial update
       gusts = Seq(),
-      opponents = boatStates.toSeq.filterNot(_._1 == boatId).map(_._2),
+      opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard
     )
 }

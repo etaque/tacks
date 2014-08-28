@@ -15,7 +15,7 @@ port raceInput : Signal { now: Float, startTime: Float,
                           course: Maybe { upwind: { y: Float, width: Float }, downwind: { y: Float, width: Float }, laps: Int, 
                                           markRadius: Float, islands: [{ location : (Float,Float), radius : Float }], 
                                           bounds: ((Float,Float),(Float,Float)) },
-                          opponents: [{ position : (Float,Float), direction: Float, velocity: Float, passedGates: [Float] }],
+                          opponents: [{ position: (Float,Float), direction: Float, velocity: Float, passedGates: [Float], name: String }],
                           leaderboard: [String] }
 
 clock : Signal Float

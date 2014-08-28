@@ -67,6 +67,7 @@ object RaceUpdate {
 }
 
 case class BoatState (
+  name: String,
   position: Geo.Point,
   direction: Float,
   velocity: Float,

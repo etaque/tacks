@@ -1,17 +1,11 @@
-# Routes
-# This file defines all application routes (Higher priority routes first)
-# ~~~~
 
-# Home page
-GET         /                                        controllers.Application.index
-#POST        /addRace               controllers.Application.addRace
-GET         /races/:id                               controllers.Races.show(id)
-#POST        /startRace/:id         controllers.Application.startRace(id)
+GET         /                                          controllers.Application.index
+GET         /races/:id                                 controllers.Races.show(id)
 
-GET         /races/:raceId/gameSocket/:boatId        controllers.Races.gameSocket(raceId, boatId)
+GET         /races/:raceId/gameSocket/:playerId        controllers.Races.gameSocket(raceId, playerId)
 
-GET         /login                                   controllers.Auth.login
-POST        /signup                                  controllers.Application.signupPost
+GET         /login                                     controllers.Auth.login
+POST        /signup                                    controllers.Application.signupPost
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                            controllers.Assets.at(path="/public", file)
+GET         /assets/*file                              controllers.Assets.at(path="/public", file)

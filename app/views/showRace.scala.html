@@ -1,10 +1,22 @@
-@(race: Race, websocketUrlBase: String)
+@(race: Race, name: Option[String], websocketUrlBase: String)(implicit request: RequestHeader)
 
-@import org.joda.time.DateTime
 @import play.api.libs.json.Json
 @import models.JsonFormats.raceUpdateFormat
 
 @main() {
+
+  @if(name.isEmpty) {
+
+    <div class="next-race">
+
+      <form class="form-player-name">
+        <input type="text" name="name" placeholder="Nickname?" value="@request.session.get("playerName").getOrElse("")">
+        <input type="submit" value="Enter the race.">
+      </form>
+
+    </div>
+
+  } else {
 
   <div class="game" id="game"></div>
 
@@ -12,9 +24,10 @@
   <script type="text/javascript" src="@routes.Assets.at("javascripts/game.js")"></script>
   <script type="text/javascript">
 
-  var boatId = Date.now().toString();
+  var playerId = "@java.util.UUID.randomUUID().toString";
+  var name = "@name.get";
   var raceId = @Html(Json.toJson(race.id.stringify).toString());
-  var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/gameSocket/" + boatId);
+  var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/gameSocket/" + playerId);
 
   var gameDiv = document.getElementById('game');
   var input = @Html(Json.toJson(RaceUpdate.initial(race)).toString());
@@ -32,6 +45,7 @@
 
   ws.onopen = function() {
     game.ports.raceOutput.subscribe(function(state) {
+      state.name = name;
       ws.send(JSON.stringify(state))
     });
 
@@ -39,4 +53,5 @@
 
   </script>
 
+  }
 }

@@ -85,11 +85,15 @@ renderPlayer player =
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
-  image 11 20 "/assets/images/icon-ac72.png"
-    |> toForm
-    |> alpha 0.3
-    |> rotate (toRadians (opponent.direction + 90))
-    |> move opponent.position
+  let hull = image 11 20 "/assets/images/icon-ac72.png" |> toForm
+        |> rotate (toRadians (opponent.direction + 90))
+        |> move opponent.position
+        |> alpha 0.5
+      name = opponent.name |> baseText |> centered |> toForm 
+        |> move (add opponent.position (0,-25))
+        |> alpha 0.3
+  in group [hull, name]
+
 
 renderBounds : (Point, Point) -> Form
 renderBounds box =

@@ -24,7 +24,10 @@ object Races extends Controller {
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(id))).map {
       case Some(race: Race) => {
         val websocketUrlBase = "ws://" + req.host
-        Ok(views.html.showRace(race, websocketUrlBase))
+        val nameMaybe = req.getQueryString("name")
+        val res = Ok(views.html.showRace(race, nameMaybe, websocketUrlBase))
+
+        nameMaybe.map(n => res.withSession("playerName" -> n)).getOrElse(res)
 
       }
       case None => Redirect(routes.Application.index())
@@ -35,9 +38,9 @@ object Races extends Controller {
   implicit val boatUpdateFrameFormatter = FrameFormatter.jsonFrame[BoatState]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
-  def gameSocket(raceId: String, id: String) = WebSocket.tryAcceptWithActor[BoatState, RaceUpdate] { request =>
+  def gameSocket(raceId: String, playerId: String) = WebSocket.tryAcceptWithActor[BoatState, RaceUpdate] { request =>
     (RacesSupervisor.actorRef ? GetRaceActor(BSONObjectID(raceId))).map {
-      case Some(raceActor: ActorRef) => Right(PlayerActor.props(raceActor, id)(_))
+      case Some(raceActor: ActorRef) => Right(PlayerActor.props(raceActor, playerId)(_))
       case None => Left(NotFound)
     }
   }

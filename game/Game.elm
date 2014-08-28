@@ -30,7 +30,7 @@ data ControlMode = FixedDirection | FixedWindAngle
 
 type Boat a = { a | position : Point, direction: Float, velocity: Float, passedGates: [Time] }
 
-type Opponent = Boat { }
+type Opponent = Boat { name : String }
 
 type Player = Boat { windAngle: Float, windOrigin: Float, windSpeed: Float, wake: [Point],
                      center: Point, controlMode: ControlMode, tackTarget: Maybe Float }

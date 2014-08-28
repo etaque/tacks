@@ -1,5 +1,6 @@
 package controllers
 
+
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
@@ -9,7 +10,7 @@ import play.api.mvc._
 import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
 
-import actors.{GetNextRace, RacesSupervisor}
+import actors._
 
 import models.{User, Race}
 
@@ -31,7 +32,7 @@ object Application extends Controller {
     }
   }
 
-  def signup = Action {
+  def signup = Action { request =>
     Ok
   }
 
