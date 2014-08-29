@@ -59,14 +59,15 @@ case class Gust(
 
 case class Spell(
   position: Geo.Point,
+  radius: Float,
   kind: String,
   duration: Int // seconds
 )
 
 object Spell {
   val default = Seq(
-    Spell((200, 200), "inversion", 20),
-    Spell((400, 400), "inversion", 20)
+    Spell((200, 200), 5, "inversion", 20),
+    Spell((400, 400), 5, "inversion", 20)
   )
 }
 
