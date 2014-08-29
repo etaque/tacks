@@ -58,16 +58,20 @@ case class Gust(
 )
 
 case class Spell(
-  position: Geo.Point,
-  radius: Float,
   kind: String,
   duration: Int // seconds
 )
 
-object Spell {
+case class Buoy(
+  position: Geo.Point,
+  radius: Float,
+  spell: Spell
+)
+
+object Buoy {
   val default = Seq(
-    Spell((200, 200), 5, "inversion", 20),
-    Spell((400, 400), 5, "inversion", 20)
+    Buoy((200, 200), 5, Spell("inversion", 20)),
+    Buoy((-200, 400), 5, Spell("inversion", 20))
   )
 }
 
@@ -77,8 +81,8 @@ case class RaceUpdate(
   course: Option[Course],
   opponents: Seq[BoatState] = Seq(),
   gusts: Seq[Gust] = Seq(),
-  availableSpells: Seq[Spell] = Seq(),
-  playerSpells: Seq[Spell] = Seq(),
+  buoys: Seq[Buoy] = Seq(),
+  playerSpells: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
@@ -97,12 +101,12 @@ case class BoatState (
   direction: Float,
   velocity: Float,
   passedGates: Seq[Float],
-  ownSpells: Seq[Spell] = Seq(),
+  ownSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq()
 ) {
 
-  def collisions(spells: Seq[Spell]): Option[Spell] = spells.find { spell =>
-    false
+  def collisions(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
+    Geo.distanceBetween(buoy.position, position) <= buoy.radius
   }
 
 }
@@ -116,6 +120,7 @@ object JsonFormats {
   implicit val boxFormat: Format[Geo.Box] = utils.JsonFormats.tuple2Format[Geo.Point,Geo.Point]
 
   implicit val spellFormat: Format[Spell] = Json.format[Spell]
+  implicit val buoyFormat: Format[Buoy] = Json.format[Buoy]
   implicit val gustFormat: Format[Gust] = Json.format[Gust]
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
   implicit val islandFormat: Format[Island] = Json.format[Island]
@@ -129,8 +134,8 @@ object JsonFormats {
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'opponents).format[Seq[BoatState]] and
       (__ \ 'gusts).format[Seq[Gust]] and
-      (__ \ 'availableSpells).format[Seq[Spell]] and
-      (__ \ 'playerSpells).format[Seq[Spell]] and
+      (__ \ 'buoys).format[Seq[Buoy]] and
+      (__ \ 'playerSpell).format[Option[Spell]] and
       (__ \ 'triggeredSpells).format[Seq[Spell]] and
       (__ \ 'leaderboard).format[Seq[String]]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
