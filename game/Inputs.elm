@@ -29,7 +29,8 @@ type RaceInput = {
   , buoys: [Game.Buoy]
   , playerSpell: Maybe Game.Spell
   , triggeredSpells: [Game.Spell]
-  , leaderboard: [String] }
+  , leaderboard: [String]
+  , gusts: [Game.Gust] }
 
 mouseInput : Signal MouseInput
 mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position

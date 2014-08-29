@@ -47,7 +47,7 @@ type Player = Boat
  , spellCast: Bool
  }
 
-type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
+type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 
 type GameState =

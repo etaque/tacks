@@ -189,12 +189,13 @@ updateWindForPlayer : Wind -> Player -> Player
 updateWindForPlayer wind player =
   { player | windOrigin <- wind.origin }
 
-windStep : Float -> Time -> GameState -> GameState
-windStep delta now ({wind, player} as gameState) =
+windStep : Float -> Time -> [Gust] -> GameState -> GameState
+windStep delta now gusts ({wind, player} as gameState) =
   let o1 = cos (inSeconds now / 8) * 10
       o2 = cos (inSeconds now / 5) * 5
       newOrigin = o1 + o2 |> ensure360
-      newWind = { wind | origin <- newOrigin }
+      newWind = { wind | origin <- newOrigin,
+                         gusts <- gusts }
       playerWithWind = updateWindForPlayer wind player
   in { gameState | wind <- newWind,
                    player <- playerWithWind }
@@ -214,5 +215,5 @@ stepGame input gameState =
   mouseStep input.mouseInput
     <| moveStep input.raceInput.now input.delta input.windowInput
     <| keysStep input.keyboardInput
-    <| windStep input.delta input.raceInput.now
+    <| windStep input.delta input.raceInput.now input.raceInput.gusts
     <| raceInputStep input.raceInput gameState

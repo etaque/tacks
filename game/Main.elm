@@ -19,7 +19,8 @@ port raceInput : Signal { now: Float, startTime: Float,
                           buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}],
                           playerSpell: Maybe { kind: String },
                           triggeredSpells: [{ kind: String }],
-                          leaderboard: [String] }
+                          leaderboard: [String],
+                          gusts: [{ position: (Float,Float), angle: Float, speed: Float, radius: Float }] }
 
 clock : Signal Float
 clock = inSeconds <~ fps 30

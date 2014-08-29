@@ -11,18 +11,20 @@ import models._
 
 case class PlayerQuit(id: String)
 case object UpdateGameState
+case object UpdateGusts
 
 class RaceActor(race: Race) extends Actor {
 
   type PlayerId = String
 
   val playersStates = scala.collection.mutable.Map[PlayerId, BoatState]()
-  val gusts = Seq[Gust]()
+  var gusts: Seq[Gust] = Gust.default
   var buoys: Seq[Buoy] = Buoy.default
   val triggeredSpells = scala.collection.mutable.Map[PlayerId, Seq[(Spell, DateTime)]]() // datetime is expiration
   var leaderboard = Seq[String]()
 
-  Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateGameState)
+  Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
+  Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateGusts)
 
   def receive = {
     case PlayerUpdate(id, input) => {
@@ -49,6 +51,7 @@ class RaceActor(race: Race) extends Actor {
       playersStates -= id
     }
     case UpdateGameState => updateGameState()
+    case UpdateGusts => updateGusts()
   }
 
   private def updateLeaderboard() =
@@ -61,6 +64,7 @@ class RaceActor(race: Race) extends Actor {
   private def updateGameState() = {
     updateLeaderboard()
     updateSpells()
+    updateGusts()
   }
 
   private def updateSpells() = {
@@ -72,13 +76,23 @@ class RaceActor(race: Race) extends Actor {
     }
   }
 
+  private def updateGusts() = {
+    val now = DateTime.now().getMillis
+    gusts = gusts.map { gust =>
+      val (cx,cy) = race.course.center
+      val x = -(now * gust.pixelSpeed * Math.cos(gust.radians)) % race.course.width + race.course.width / 2 + cx
+      val y = -(now * gust.pixelSpeed * Math.sin(gust.radians)) % race.course.height + race.course.height / 2 + cy
+      gust.copy(position = (x.toFloat,y.toFloat))
+    }
+  }
+
   private def raceUpdateFor(boatId: String) = {
     val bs = playersStates.get(boatId)
     RaceUpdate(
       now = DateTime.now,
       startTime = race.startTime,
       course = None, // already transmitted in initial update
-      gusts = Seq(),
+      gusts = gusts,
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,

@@ -93,16 +93,7 @@ renderBounds box =
 
 renderGust : Wind -> Gust -> Form
 renderGust wind gust =
-  let
-    c = circle gust.radius |> filled black |> alpha (0.05 + gust.speedImpact / 2)
-    --a = toRadians wind.origin
-    --a' = toRadians (wind.origin + gust.originDelta)
-    --s = segment (0,0) (fromPolar (gust.radius * 0.2, a))
-    --  |> traced (solid white) |> alpha 0.1
-    --s' = segment (0,0) (fromPolar (gust.radius * 0.5, a'))
-    --  |> traced (solid white) |> alpha 0.1
-  in
-    group [c] |> move gust.position
+  circle gust.radius |> filled black |> alpha 0.5 |> move gust.position
 
 renderGusts : Wind -> Form
 renderGusts wind =

@@ -15,6 +15,7 @@ object Geo {
     val (x2,y2) = p2
     Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
   }
+
 }
 
 case class Gate(
@@ -34,7 +35,11 @@ case class Course(
   markRadius: Float,
   islands: Seq[Island],
   bounds: Geo.Box
-)
+) {
+  def width = Math.abs(bounds._1._1 - bounds._2._1)
+  def height = Math.abs(bounds._1._2 - bounds._2._2)
+  def center: Geo.Point = ((bounds._1._1 + bounds._2._1) / 2, (bounds._1._2 + bounds._2._2) / 2)
+}
 
 object Course {
   val default = Course(
@@ -53,9 +58,21 @@ object Course {
 
 case class Gust(
   position: Geo.Point,
-  radius: Float,
-  originDelta: Float
-)
+  angle: Float, // degrees
+  speed: Float,
+  radius: Float
+) {
+  val radians = (90 - angle) * Math.PI / 180
+  val pixelSpeed = speed * 0.03
+}
+
+object Gust {
+  val default = Seq(
+    Gust((-20, -20), 10, 3, 100),
+    Gust((30, -10), -15, 2, 80),
+    Gust((0, 40), 8, 1, 120)
+  )
+}
 
 case class Spell(
   kind: String,
