@@ -16,8 +16,8 @@ sub (x,y) (x',y') = (x' - x, y' - y)
 neg : Point -> Point
 neg (x,y) = (-x,-y)
 
-scale : Point -> Float -> Point
-scale (x,y) s = (x*s, y*s)
+scale : Float -> Point -> Point
+scale s (x,y) = (x*s, y*s)
 
 distance : Point -> Point -> Float
 distance (x,y) (x',y') =
@@ -32,7 +32,7 @@ toBox (x,y) w h =
   ((x + w/2, y + h/2), (x - w/2, y - h/2))
 
 movePoint : Point -> Time -> Float -> Float -> Point
-movePoint (x,y) delta velocity direction = 
+movePoint (x,y) delta velocity direction =
   let angle = Core.toRadians direction
       x' = x + delta * velocity * cos angle
       y' = y + delta * velocity * sin angle
