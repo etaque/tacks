@@ -80,11 +80,10 @@ class RaceActor(race: Race) extends Actor {
 
   private def updateGusts() = {
     val now = DateTime.now().getMillis
-    val pixelSpeed = 0.1
     gusts = gusts.map { gust =>
       val (cx,cy) = race.course.center
-      val x = -(now * pixelSpeed * Math.cos(gust.radians)) % race.course.width + race.course.width / 2 + cx
-      val y = -(now * pixelSpeed * Math.sin(gust.radians)) % race.course.height + race.course.height / 2 + cy
+      val x = -(now * gust.pixelSpeed * Math.cos(gust.radians)) % race.course.width + race.course.width / 2 + cx
+      val y = -(now * gust.pixelSpeed * Math.sin(gust.radians)) % race.course.height + race.course.height / 2 + cy
       gust.copy(position = (x.toFloat,y.toFloat))
     }
   }

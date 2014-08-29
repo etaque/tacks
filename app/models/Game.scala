@@ -63,12 +63,13 @@ case class Gust(
   radius: Float
 ) {
   val radians = (90 - angle) * Math.PI / 180
+  val pixelSpeed = speed * 0.05
 }
 
 object Gust {
   val default = Seq(
     Gust((-20, -20), 5, 4, 100),
-    Gust((20, -10), -5, 6, 80),
+    Gust((20, -10), -5, 3, 80),
     Gust((30, 40), 8, 1, 120)
   )
 }
