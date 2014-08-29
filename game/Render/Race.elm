@@ -93,7 +93,7 @@ renderBounds box =
 
 renderGust : Wind -> Gust -> Form
 renderGust wind gust =
-  circle gust.radius |> filled black |> alpha 0.5 |> move gust.position
+  circle gust.radius |> filled black |> alpha 0.2 |> move gust.position
 
 renderGusts : Wind -> Form
 renderGusts wind =

@@ -187,7 +187,12 @@ moveStep now delta dims gameState =
 -- will be useful when gusts will be implemented
 updateWindForPlayer : Wind -> Player -> Player
 updateWindForPlayer wind player =
-  { player | windOrigin <- wind.origin }
+  let gustsOnPlayer = filter (\g -> distance player.position g.position < g.radius) wind.gusts
+      windOrigin = if isEmpty gustsOnPlayer
+        then wind.origin
+        else let gust = head gustsOnPlayer
+             in  ensure360 gust.angle
+  in  { player | windOrigin <- windOrigin }
 
 windStep : Float -> Time -> [Gust] -> GameState -> GameState
 windStep delta now gusts ({wind, player} as gameState) =
