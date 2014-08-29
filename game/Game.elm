@@ -30,6 +30,8 @@ data ControlMode = FixedDirection | FixedWindAngle
 
 type Boat a = { a | position : Point, direction: Float, velocity: Float, passedGates: [Time] }
 
+type Spell = { kind : String }
+
 type Opponent = Boat { name : String }
 
 type Player = Boat
@@ -40,8 +42,6 @@ type Player = Boat
  , center: Point
  , controlMode: ControlMode
  , tackTarget: Maybe Float
- , stockSpell: Maybe Spell
- , spellsInYourFace: [Spell]
  }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
@@ -54,11 +54,11 @@ type GameState =
   , course: Course
   , leaderboard: [String]
   , countdown: Time
+  , playerSpell: Maybe Spell
+  , triggeredSpells: [Spell]
   }
 
 type RaceState = { players : [Player] }
-
-data Spell = PoleInversion
 
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
@@ -80,8 +80,6 @@ defaultPlayer =
   , controlMode = FixedDirection
   , tackTarget = Nothing
   , passedGates = []
-  , stockSpell = Nothing
-  , spellsInYourFace = []
   }
 
 defaultWind : Wind
@@ -90,7 +88,8 @@ defaultWind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
 
 defaultGame : GameState
 defaultGame = { wind = defaultWind, player = defaultPlayer, opponents = [],
-                course = defaultCourse, leaderboard = [], countdown = 0 }
+                course = defaultCourse, leaderboard = [], countdown = 0,
+                playerSpell = Nothing, triggeredSpells = []}
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))

@@ -11,18 +11,20 @@ import Steps
 import Render.All as R
 
 -- ports can't expand type alias for the moment... ugly manual expansion...
-port raceInput : Signal { now: Float, startTime: Float, 
-                          course: Maybe { upwind: { y: Float, width: Float }, downwind: { y: Float, width: Float }, laps: Int, 
-                                          markRadius: Float, islands: [{ location : (Float,Float), radius : Float }], 
+port raceInput : Signal { now: Float, startTime: Float,
+                          course: Maybe { upwind: { y: Float, width: Float }, downwind: { y: Float, width: Float }, laps: Int,
+                                          markRadius: Float, islands: [{ location : (Float,Float), radius : Float }],
                                           bounds: ((Float,Float),(Float,Float)) },
                           opponents: [{ position: (Float,Float), direction: Float, velocity: Float, passedGates: [Float], name: String }],
+                          playerSpell: Maybe { kind: String },
+                          triggeredSpells: [{ kind: String }],
                           leaderboard: [String] }
 
 clock : Signal Float
 clock = inSeconds <~ fps 30
 
 input : Signal Inputs.Input
-input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardInput 
+input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardInput
                               Inputs.mouseInput Window.dimensions raceInput)
 
 gameState : Signal Game.GameState
@@ -32,6 +34,6 @@ port raceOutput : Signal { position : (Float, Float), direction: Float, velocity
 port raceOutput = lift (playerToRaceOutput . .player) gameState
 
 playerToRaceOutput ({position, direction, velocity, passedGates} as player) =
-  { position = position, direction = direction, velocity = velocity, passedGates = passedGates }  
+  { position = position, direction = direction, velocity = velocity, passedGates = passedGates }
 
 main = lift2 R.renderAll Window.dimensions gameState
