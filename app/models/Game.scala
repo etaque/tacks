@@ -69,9 +69,10 @@ case class Buoy(
 )
 
 object Buoy {
-  val default = Seq(
-    Buoy((200, 200), 5, Spell("PoleInversion", 20)),
-    Buoy((-200, 400), 5, Spell("PoleInversion", 20))
+  val default = Seq.fill(20)(
+    Buoy((scala.util.Random.nextInt(1600) - 800, scala.util.Random.nextInt(1600) - 400),
+      5,
+      Spell("PoleInversion", 20))
   )
 }
 
