@@ -100,20 +100,29 @@ renderControlWheel wind player (w,h) =
       group [c, playerWindMarker, playerMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
 
 renderStockSpell : Spell -> (Float, Float) -> Form
-renderStockSpell spell (w,h) = case spell.kind of
-  "PoleInversion" ->
-    let outline = square 35
-          |> outlined (solid white)
-        arrow = map (scale 3) getArrow
-          |> polygon
-          |> filled white
-        leftArrow = arrow
-          |> move (-1, 6)
-        rightArrow = arrow
-          |> rotate (degrees 180)
-          |> move (1, -6)
-    in  group [outline, leftArrow, rightArrow]
-          |> move (-w/2 + 70, h/2 - 300)
+renderStockSpell spell (w,h) =
+  let spellLabel = "SPELL"
+        |> baseText
+        |> centered
+        |> toForm
+        |> move (0, 35)
+      outlineSquare = square 35
+        |> outlined (solid white)
+      spellGraphics = getSpellStockGraphic spell.kind
+  in  group [spellLabel, outlineSquare, spellGraphics]
+        |> move (w/2 - 45, h/2 - 250)
+
+getSpellStockGraphic : String -> Form
+getSpellStockGraphic "PoleInversion" =
+  let arrow = map (scale 3) getArrow
+        |> polygon
+        |> filled white
+      leftArrow = arrow
+        |> move (-1, 6)
+      rightArrow = arrow
+        |> rotate (degrees 180)
+        |> move (1, -6)
+  in  group [leftArrow, rightArrow]
 
 getArrow : Path
 getArrow =
@@ -171,6 +180,8 @@ renderAbsolute ({wind,player,opponents,course,playerSpell} as gameState) dims =
             Just spell -> Just (renderStockSpell spell dims)
             Nothing -> Nothing
         ]
+
+
   in
       group (justForms ++ (compact maybeForms))
 
