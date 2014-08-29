@@ -22,12 +22,12 @@ mouseStep ({drag, mouse} as mouseInput) gameState =
   let player = gameState.player
       center = case drag of
         Just (x',y') -> let (x,y) = mouse in sub (floatify (x - x', y' - y)) player.center
-        Nothing      -> player.center 
+        Nothing      -> player.center
   in
     { gameState | player <- { player | center <- center } }
 
 tackTargetReached : Player -> Maybe Float -> Bool
-tackTargetReached player targetMaybe = 
+tackTargetReached player targetMaybe =
   case (targetMaybe, player.controlMode) of
     (Just target, FixedWindAngle) -> abs (target - player.windAngle) < 0.1
     (Just target, FixedDirection) -> abs (target - player.direction) < 0.1
@@ -37,11 +37,11 @@ getTackTarget : Player -> Bool -> Maybe Float
 getTackTarget player spaceKey =
   case (player.tackTarget, spaceKey) of
     -- target en cours
-    (Just _, _) -> 
+    (Just _, _) ->
       -- si direction cible atteinte, on arrête le virement
       if tackTargetReached player player.tackTarget then Nothing else player.tackTarget
     -- si touche espace pressée, on défini la cible
-    (Nothing, True) -> 
+    (Nothing, True) ->
       case player.controlMode of
         FixedWindAngle -> Just -player.windAngle
         FixedDirection -> Just (ensure360 (player.windOrigin - player.windAngle))
@@ -52,15 +52,15 @@ getTackTarget player spaceKey =
 
 getTurn : Maybe Float -> Player -> UserArrows -> Bool -> Float
 getTurn tackTarget player arrows fineTurn =
-  case (tackTarget, player.controlMode, arrows.x, arrows.y) of 
+  case (tackTarget, player.controlMode, arrows.x, arrows.y) of
     -- virement en cours
-    (Just target, _, _, _) -> 
-      case player.controlMode of 
-        FixedDirection -> 
+    (Just target, _, _, _) ->
+      case player.controlMode of
+        FixedDirection ->
           let maxTurn = minimum [2, (abs (player.direction - target))]
           in
             if ensure360 (player.direction - target) > 180 then maxTurn else -maxTurn
-        FixedWindAngle -> 
+        FixedWindAngle ->
           let maxTurn = minimum [2, (abs (player.windAngle - target))]
           in
             if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
@@ -71,8 +71,8 @@ getTurn tackTarget player arrows fineTurn =
     (Nothing, _, x, y) -> if fineTurn then x else x * 3
 
 keysForPlayerStep : KeyboardInput -> Player -> Player
-keysForPlayerStep ({arrows, lockAngle, tack, fineTurn}) player =
-  let forceTurn = arrows.x /= 0 
+keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) player =
+  let forceTurn = arrows.x /= 0
       tackTarget = if forceTurn then Nothing else getTackTarget player tack
       turn = getTurn tackTarget player arrows fineTurn
       direction = ensure360 <| player.direction + turn
@@ -83,9 +83,10 @@ keysForPlayerStep ({arrows, lockAngle, tack, fineTurn}) player =
       controlMode = if | forceTurn -> FixedDirection
                        | arrows.y > 0 || lockAngle -> FixedWindAngle
                        | otherwise -> turnedPlayer.controlMode
-  in 
+  in
     { turnedPlayer | controlMode <- controlMode,
-                   tackTarget <- tackTargetAfterTurn }
+                   tackTarget <- tackTargetAfterTurn,
+                   spellCast <- spellCast }
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep keyboardInput gameState =
@@ -112,15 +113,15 @@ getPassedGates : Player -> Time -> Course -> (Point,Point) -> [Time]
 getPassedGates player now ({upwind, downwind, laps}) step =
   case findNextGate player laps of
     -- ligne de départ
-    Just StartLine -> if | gatePassedFromSouth downwind step -> now :: player.passedGates 
+    Just StartLine -> if | gatePassedFromSouth downwind step -> now :: player.passedGates
                          | otherwise                         -> player.passedGates
     -- bouée au vent
-    Just Upwind    -> if | gatePassedFromSouth upwind step   -> now :: player.passedGates 
+    Just Upwind    -> if | gatePassedFromSouth upwind step   -> now :: player.passedGates
                          | gatePassedFromSouth downwind step -> tail player.passedGates
                          | otherwise                         -> player.passedGates
     -- bouée sous le vent
-    Just Downwind  -> if | gatePassedFromNorth downwind step -> now :: player.passedGates 
-                         | gatePassedFromNorth upwind step   -> tail player.passedGates 
+    Just Downwind  -> if | gatePassedFromNorth downwind step -> now :: player.passedGates
+                         | gatePassedFromNorth upwind step   -> tail player.passedGates
                          | otherwise                         -> player.passedGates
     -- arrivée déjà franchie
     Nothing        -> player.passedGates
@@ -140,12 +141,12 @@ isStuck p gameState =
       stuckOnMark = any (\m -> distance m p <= gameState.course.markRadius) gatesMarks
       outOfBounds = not (inBox p gameState.course.bounds)
       onIsland = any (\i -> distance i.location p <= i.radius) gameState.course.islands
-  in 
+  in
     outOfBounds || stuckOnMark || onIsland
 
 getCenterAfterMove : Point -> Point -> Point -> (Float,Float) -> (Point)
 getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
-  let refocus n n' c d margin = 
+  let refocus n n' c d margin =
         let min = c - (d / 2)
             mmin = min + margin
             max = c + (d / 2)
@@ -209,8 +210,8 @@ raceInputStep {now,startTime,course,opponents,playerSpell,triggeredSpells,leader
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  mouseStep input.mouseInput 
-    <| moveStep input.raceInput.now input.delta input.windowInput 
+  mouseStep input.mouseInput
+    <| moveStep input.raceInput.now input.delta input.windowInput
     <| keysStep input.keyboardInput
     <| windStep input.delta input.raceInput.now
     <| raceInputStep input.raceInput gameState
