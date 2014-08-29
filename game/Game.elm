@@ -24,7 +24,6 @@ data GateLocation = StartLine | Downwind | Upwind
 
 type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
-type Gust = { initX: Int, angle: Float,  speed: Float, radius: Float }
 type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float, islands: [Island], bounds: (Point, Point) }
 
 data ControlMode = FixedDirection | FixedWindAngle
@@ -36,6 +35,7 @@ type Opponent = Boat { name : String }
 type Player = Boat { windAngle: Float, windOrigin: Float, windSpeed: Float, wake: [Point],
                      center: Point, controlMode: ControlMode, tackTarget: Maybe Float }
 
+type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 
 type GameState = { wind: Wind, player: Player, opponents: [Opponent],

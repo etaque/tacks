@@ -20,7 +20,7 @@ Task: Redefine `UserInput` to include all of the information you need.
 type UserArrows = { x:Int, y:Int }
 type KeyboardInput = { arrows: UserArrows, lockAngle: Bool, tack: Bool, fineTurn: Bool }
 type MouseInput = { drag: Maybe (Int,Int), mouse: (Int,Int) }
-type RaceInput = { now: Time, startTime: Time, course: Maybe Game.Course, opponents: [Game.Opponent], leaderboard: [String] }
+type RaceInput = { now: Time, startTime: Time, course: Maybe Game.Course, opponents: [Game.Opponent], leaderboard: [String], gusts: [Game.Gust] }
 
 mouseInput : Signal MouseInput
 mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
