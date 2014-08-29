@@ -49,12 +49,21 @@ case class Gust(
   originDelta: Float
 )
 
+case class Spell(
+  position: Geo.Point,
+  kind: String,
+  duration: Int
+)
+
 case class RaceUpdate(
   now: DateTime,
   startTime: DateTime,
   course: Option[Course],
   opponents: Seq[BoatState] = Seq(),
   gusts: Seq[Gust] = Seq(),
+  availableSpells: Seq[Spell] = Seq(),
+  playerSpells: Seq[Spell] = Seq(),
+  triggeredSpells: Seq[Spell] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
 
@@ -82,6 +91,7 @@ object JsonFormats {
   implicit val pointFormat: Format[Geo.Point] = utils.JsonFormats.tuple2Format[Float,Float]
   implicit val boxFormat: Format[Geo.Box] = utils.JsonFormats.tuple2Format[Geo.Point,Geo.Point]
 
+  implicit val spellFormat: Format[Spell] = Json.format[Spell]
   implicit val gustFormat: Format[Gust] = Json.format[Gust]
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
   implicit val islandFormat: Format[Island] = Json.format[Island]
@@ -95,6 +105,9 @@ object JsonFormats {
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'opponents).format[Seq[BoatState]] and
       (__ \ 'gusts).format[Seq[Gust]] and
+      (__ \ 'availableSpells).format[Seq[Spell]] and
+      (__ \ 'playerSpells).format[Seq[Spell]] and
+      (__ \ 'triggeredSpells).format[Seq[Spell]] and
       (__ \ 'leaderboard).format[Seq[String]]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
