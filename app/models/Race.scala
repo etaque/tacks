@@ -12,6 +12,8 @@ case class Race (
 ) extends HasId {
 
   def millisBeforeStart = startTime.getMillis - DateTime.now.getMillis
+
+  def started = millisBeforeStart <= 0
 }
 
 object Race extends MongoDAO[Race] {

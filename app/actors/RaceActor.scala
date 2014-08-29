@@ -26,7 +26,7 @@ class RaceActor(race: Race) extends Actor {
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
   Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateGusts)
-  Akka.system.scheduler.schedule(1.second, 5.seconds, self, SpawnBuoy)
+  Akka.system.scheduler.schedule(1.second, 1.seconds, self, SpawnBuoy)
 
   def receive = {
     case SpawnBuoy => {

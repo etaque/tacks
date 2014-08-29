@@ -101,7 +101,7 @@ object Buoy {
         },
         duration = 20))
 
-  val default = Seq.fill(50)(spawn)
+  val default = Seq()
 }
 
 case class RaceUpdate(
