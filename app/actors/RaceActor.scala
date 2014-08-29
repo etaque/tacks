@@ -36,7 +36,7 @@ class RaceActor(race: Race) extends Actor {
         }
         case None => None
       }
-      if (state.spellCast) state.ownSpell.map { spell =>
+      if (state.spellCast == Some(true)) state.ownSpell.map { spell =>
         // The player is casting a spell!
         val expiration = DateTime.now().plusSeconds(spell.duration)
         playersStates.keys.filterNot(_ == id).map { opponentId =>
@@ -80,7 +80,6 @@ class RaceActor(race: Race) extends Actor {
       now = DateTime.now,
       startTime = race.startTime,
       course = None, // already transmitted in initial update
-      gusts = Seq(),
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,

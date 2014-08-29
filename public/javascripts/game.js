@@ -2197,7 +2197,7 @@ Elm.Render.Utils.make = function (_elm) {
                 10,
                 105,
                 148)};
-   var helpMessage = "←/→ to turn left/right, ↓←/↓→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe";
+   var helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe";
    _elm.Render.Utils.values = {_op: _op
                               ,helpMessage: helpMessage
                               ,colors: colors

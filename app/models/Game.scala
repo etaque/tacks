@@ -33,7 +33,8 @@ case class Course(
   laps: Int,
   markRadius: Float,
   islands: Seq[Island],
-  bounds: Geo.Box
+  bounds: Geo.Box,
+  gusts: Seq[Gust]
 )
 
 object Course {
@@ -47,14 +48,18 @@ object Course {
       Island((150, 700), 80),
       Island((-200, 500), 60)
     ),
-    bounds = ((800,1200), (-800,-400))
+    bounds = ((800,1200), (-800,-400)),
+    gusts = Seq(
+      Gust(0, 5, 10, 100)
+    )
   )
 }
 
 case class Gust(
-  position: Geo.Point,
-  radius: Float,
-  originDelta: Float
+  initX: Int,
+  angle: Float, // degrees
+  speed: Float,
+  radius: Float
 )
 
 case class Spell(
@@ -80,7 +85,6 @@ case class RaceUpdate(
   startTime: DateTime,
   course: Option[Course],
   opponents: Seq[BoatState] = Seq(),
-  gusts: Seq[Gust] = Seq(),
   buoys: Seq[Buoy] = Seq(),
   playerSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
@@ -102,7 +106,7 @@ case class BoatState (
   velocity: Float,
   passedGates: Seq[Float],
   ownSpell: Option[Spell] = None,
-  spellCast: Boolean
+  spellCast: Option[Boolean]
 ) {
 
   def collisions(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
@@ -133,7 +137,6 @@ object JsonFormats {
       (__ \ 'startTime).format[DateTime] and
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'opponents).format[Seq[BoatState]] and
-      (__ \ 'gusts).format[Seq[Gust]] and
       (__ \ 'buoys).format[Seq[Buoy]] and
       (__ \ 'playerSpell).format[Option[Spell]] and
       (__ \ 'triggeredSpells).format[Seq[Spell]] and
