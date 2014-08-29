@@ -82,7 +82,7 @@ case class RaceUpdate(
   opponents: Seq[BoatState] = Seq(),
   gusts: Seq[Gust] = Seq(),
   buoys: Seq[Buoy] = Seq(),
-  playerSpells: Option[Spell] = None,
+  playerSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
