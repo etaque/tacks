@@ -17,7 +17,7 @@ class RaceActor(race: Race) extends Actor {
 
   val playersStates = scala.collection.mutable.Map[String,BoatState]()
   val gusts = Seq[Gust]()
-  var spells: Seq[Spell] = Spell.default
+  var buoys: Seq[Buoy] = Buoy.default
   var leaderboard = Seq[String]()
 
   Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateLeaderboard)
@@ -28,9 +28,9 @@ class RaceActor(race: Race) extends Actor {
       val newSpell: Option[Spell] = playersStates.get(id) match {
         case Some(bs) => {
           if (bs.passedGates != state.passedGates) updateLeaderboard()
-          bs.collisions(spells).map { spell =>
-            spells = spells.filter(_ == spell) // Remove the spell from the game board
-            spell
+          bs.collisions(buoys).map { buoy =>
+            buoys = buoys.filter(_ == buoy) // Remove the spell from the game board
+            buoy.spell
           }
         }
         case None => None
@@ -61,7 +61,7 @@ class RaceActor(race: Race) extends Actor {
       gusts = Seq(),
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,
-      availableSpells = spells,
+      buoys = buoys,
       playerSpells = bs.flatMap(_.ownSpell),
       triggeredSpells = bs.map(_.triggeredSpells).getOrElse(Nil)
     )
