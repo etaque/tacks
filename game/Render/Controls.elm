@@ -15,13 +15,13 @@ renderHiddenGate gate (w,h) (cx,cy) isNext =
       under = cy - h/2 - c > gate.y
       markStyle = if isNext then filled orange else filled white
       distance isOver = round (abs (gate.y + (if isOver then -h else h)/2 - cy)) |> show |> baseText |> centered |> toForm
-  in 
+  in
     case (over, under) of
       (True, _) -> let m = polygon [(0,0),(-c,-c),(c,-c)] |> markStyle |> move (-cx,(h/2))
-                       d = distance True |> move (-cx, h/2 - c*3) 
+                       d = distance True |> move (-cx, h/2 - c*3)
                    in  Just (group [m, d])
       (_, True) -> let m = polygon [(0,0),(-c,c),(c,c)] |> markStyle |> move (-cx,(-h/2))
-                       d = distance False |> move (-cx, -h/2 + c*3) 
+                       d = distance False |> move (-cx, -h/2 + c*3)
                    in  Just (group [m,d])
       (_, _)    -> Nothing
 
@@ -59,7 +59,7 @@ renderLapsCount (w,h) course player =
 
 renderPolar : Player -> (Float,Float) -> Form
 renderPolar player (w,h) =
-  let 
+  let
     absWindAngle = abs player.windAngle
     anglePoint a = fromPolar ((polarVelocity a) * 1.5, toRadians a)
     points = map anglePoint [0..180]
@@ -75,8 +75,8 @@ renderPolar player (w,h) =
       |> move (add playerPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
     playerProjection = segment playerPoint (0, snd playerPoint) |> traced (dotted white)
     legend = "VMG" |> baseText |> centered |> toForm |> move (maxSpeed / 2, maxSpeed * 0.8)
-  in 
-    group [yAxis, xAxis, polar, playerProjection, playerMark, playerSegment, windOriginText, legend] 
+  in
+    group [yAxis, xAxis, polar, playerProjection, playerMark, playerSegment, windOriginText, legend]
       |> move (-w/2 + 20, h/2 - maxSpeed - 20)
 
 renderControlWheel : Wind -> Player -> (Float,Float) -> Form
@@ -87,7 +87,7 @@ renderControlWheel wind player (w,h) =
       playerWindMarker = segment (fromPolar (r, windAngle)) (fromPolar (r + 8, windAngle))
         |> traced (solid white)
       playerAngle = toRadians player.direction
-      playerMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+      playerMarker = polygon [(0,4),(-4,-4),(4,-4)]
         |> filled white
         |> rotate (playerAngle - pi/2)
         |> move (fromPolar (r - 4, playerAngle))
@@ -99,11 +99,19 @@ renderControlWheel wind player (w,h) =
   in
       group [c, playerWindMarker, playerMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
 
+renderStockSpell : Spell -> (Float, Float) -> Form
+renderStockSpell spell (w,h) = case spell.kind of
+  "PoleInversion" ->
+    let r = 20
+    in  circle r
+        |> filled red
+        |> move (-w/2 + 70, h/2 - 300)
+
 --renderLeaderboardLine : Int -> String -> Form
---renderLeaderboardLine index name = 
---  (show (index + 1)) ++ ". " ++ name 
---    |> baseText |> centered 
---    |> toForm 
+--renderLeaderboardLine index name =
+--  (show (index + 1)) ++ ". " ++ name
+--    |> baseText |> centered
+--    |> toForm
 --    |> move (0, (toFloat index) * -20)
 
 
@@ -117,7 +125,7 @@ renderControlWheel wind player (w,h) =
 --      |> Just
 
 renderHelp : Float -> (Float,Float) -> Maybe Form
-renderHelp countdown (w,h) = 
+renderHelp countdown (w,h) =
   if countdown > 0 then
     let text = helpMessage |> baseText |> centered |> toForm |> move (0, -h/2 + 50) |> alpha 0.8
     in Just text
@@ -125,22 +133,25 @@ renderHelp countdown (w,h) =
     Nothing
 
 renderAbsolute : GameState -> (Float,Float) -> Form
-renderAbsolute ({wind,player,opponents,course} as gameState) dims =
-  let nextGate = if gameState.countdown <= 0 
-        then findNextGate player course.laps 
+renderAbsolute ({wind,player,opponents,course,playerSpell} as gameState) dims =
+  let nextGate = if gameState.countdown <= 0
+        then findNextGate player course.laps
         else Nothing
-      justForms = [
-        renderLapsCount dims course player,
-        renderPolar player dims,
-        renderControlWheel wind player dims
-      ]
-      maybeForms = [
-        renderHiddenGate course.downwind dims player.center (nextGate == Just Downwind),
-        renderHiddenGate course.upwind dims player.center (nextGate == Just Upwind),
-        renderWinner course player opponents,
-        renderHelp gameState.countdown dims
-        --renderLeaderboard gameState.leaderboard dims
-      ]
+      justForms =
+        [ renderLapsCount dims course player
+        , renderPolar player dims
+        , renderControlWheel wind player dims
+        ]
+      maybeForms =
+        [ renderHiddenGate course.downwind dims player.center (nextGate == Just Downwind)
+        , renderHiddenGate course.upwind dims player.center (nextGate == Just Upwind)
+        , renderWinner course player opponents
+        , renderHelp gameState.countdown dims
+        -- , renderLeaderboard gameState.leaderboard dims
+        , case playerSpell of
+            Just spell -> Just (renderStockSpell spell dims)
+            Nothing -> Nothing
+        ]
   in
       group (justForms ++ (compact maybeForms))
 
