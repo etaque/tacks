@@ -736,9 +736,9 @@ Elm.Render.All.make = function (_elm) {
    var Native = Native || {};
    Native.Ports = Elm.Native.Ports.make(_elm);
    var Render = Render || {};
-   Render.Absolute = Elm.Render.Absolute.make(_elm);
+   Render.Controls = Elm.Render.Controls.make(_elm);
    var Render = Render || {};
-   Render.Relative = Elm.Render.Relative.make(_elm);
+   Render.Race = Elm.Render.Race.make(_elm);
    var Render = Render || {};
    Render.Utils = Elm.Render.Utils.make(_elm);
    var Signal = Elm.Signal.make(_elm);
@@ -752,7 +752,7 @@ Elm.Render.All.make = function (_elm) {
          switch (_v0.ctor)
          {case "_Tuple2":
             return function () {
-                 var relativeForms = Render.Relative.renderRelative(gameState);
+                 var relativeForms = Render.Race.renderRelative(gameState);
                  var dims = Geo.floatify({ctor: "_Tuple2"
                                          ,_0: _v0._0
                                          ,_1: _v0._1});
@@ -762,7 +762,7 @@ Elm.Render.All.make = function (_elm) {
                  var bg = Graphics.Collage.filled(Render.Utils.colors.sand)(A2(Graphics.Collage.rect,
                  w$,
                  h$));
-                 var absoluteForms = A2(Render.Absolute.renderAbsolute,
+                 var absoluteForms = A2(Render.Controls.renderAbsolute,
                  gameState,
                  dims);
                  return Graphics.Element.layers(_L.fromArray([A3(Graphics.Collage.collage,
@@ -780,19 +780,19 @@ Elm.Render.All.make = function (_elm) {
                             ,renderAll: renderAll};
    return _elm.Render.All.values;
 };Elm.Render = Elm.Render || {};
-Elm.Render.Relative = Elm.Render.Relative || {};
-Elm.Render.Relative.make = function (_elm) {
+Elm.Render.Race = Elm.Render.Race || {};
+Elm.Render.Race.make = function (_elm) {
    "use strict";
    _elm.Render = _elm.Render || {};
-   _elm.Render.Relative = _elm.Render.Relative || {};
-   if (_elm.Render.Relative.values)
-   return _elm.Render.Relative.values;
+   _elm.Render.Race = _elm.Render.Race || {};
+   if (_elm.Render.Race.values)
+   return _elm.Render.Race.values;
    var _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
-   $moduleName = "Render.Relative";
+   $moduleName = "Render.Race";
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
    var Core = Elm.Core.make(_elm);
@@ -922,7 +922,7 @@ Elm.Render.Relative.make = function (_elm) {
                {case "_Tuple2":
                   return Graphics.Collage.alpha(opacityForIndex(_v2._0))(Graphics.Collage.move(_v2._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
                _E.Case($moduleName,
-               "on line 64, column 32 to 94");
+               "on line 58, column 32 to 94");
             }();
          };
          var span = 5;
@@ -935,7 +935,7 @@ Elm.Render.Relative.make = function (_elm) {
                     span),
                     0);}
                _E.Case($moduleName,
-               "on line 65, column 59 to 80");
+               "on line 59, column 59 to 80");
             }();
          })(A2(Core.indexedMap,
          F2(function (v0,v1) {
@@ -964,7 +964,7 @@ Elm.Render.Relative.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 56 and 58");
+         "between lines 50 and 52");
       }();
    });
    var renderPlayerAngles = function (player) {
@@ -986,15 +986,6 @@ Elm.Render.Relative.make = function (_elm) {
                                                                                                 ,_1: windOriginRadians + Basics.pi}))(Graphics.Collage.toForm(Text.centered((_U.eq(player.controlMode,
          Game.FixedWindAngle) ? Text.line(Text.Under) : Basics.id)(Render.Utils.baseText(_L.append(String.show(Basics.abs(player.windAngle)),
          "&deg;")))))));
-         var drawLine = function (a) {
-            return Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
-            Basics.fromPolar({ctor: "_Tuple2"
-                             ,_0: 15
-                             ,_1: a}),
-            Basics.fromPolar({ctor: "_Tuple2"
-                             ,_0: 25
-                             ,_1: a})));
-         };
          return Graphics.Collage.group(_L.fromArray([windMarker
                                                     ,windAngleText]));
       }();
@@ -1099,37 +1090,37 @@ Elm.Render.Relative.make = function (_elm) {
          }();
       }();
    };
-   _elm.Render.Relative.values = {_op: _op
-                                 ,renderStartLine: renderStartLine
-                                 ,renderGate: renderGate
-                                 ,renderPlayerAngles: renderPlayerAngles
-                                 ,renderEqualityLine: renderEqualityLine
-                                 ,renderWake: renderWake
-                                 ,renderPlayer: renderPlayer
-                                 ,renderOpponent: renderOpponent
-                                 ,renderBounds: renderBounds
-                                 ,renderGust: renderGust
-                                 ,renderGusts: renderGusts
-                                 ,renderIsland: renderIsland
-                                 ,renderIslands: renderIslands
-                                 ,renderLaylines: renderLaylines
-                                 ,renderCountdown: renderCountdown
-                                 ,renderRelative: renderRelative};
-   return _elm.Render.Relative.values;
+   _elm.Render.Race.values = {_op: _op
+                             ,renderStartLine: renderStartLine
+                             ,renderGate: renderGate
+                             ,renderPlayerAngles: renderPlayerAngles
+                             ,renderEqualityLine: renderEqualityLine
+                             ,renderWake: renderWake
+                             ,renderPlayer: renderPlayer
+                             ,renderOpponent: renderOpponent
+                             ,renderBounds: renderBounds
+                             ,renderGust: renderGust
+                             ,renderGusts: renderGusts
+                             ,renderIsland: renderIsland
+                             ,renderIslands: renderIslands
+                             ,renderLaylines: renderLaylines
+                             ,renderCountdown: renderCountdown
+                             ,renderRelative: renderRelative};
+   return _elm.Render.Race.values;
 };Elm.Render = Elm.Render || {};
-Elm.Render.Absolute = Elm.Render.Absolute || {};
-Elm.Render.Absolute.make = function (_elm) {
+Elm.Render.Controls = Elm.Render.Controls || {};
+Elm.Render.Controls.make = function (_elm) {
    "use strict";
    _elm.Render = _elm.Render || {};
-   _elm.Render.Absolute = _elm.Render.Absolute || {};
-   if (_elm.Render.Absolute.values)
-   return _elm.Render.Absolute.values;
+   _elm.Render.Controls = _elm.Render.Controls || {};
+   if (_elm.Render.Controls.values)
+   return _elm.Render.Controls.values;
    var _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
-   $moduleName = "Render.Absolute";
+   $moduleName = "Render.Controls";
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
    var Core = Elm.Core.make(_elm);
@@ -1432,7 +1423,7 @@ Elm.Render.Absolute.make = function (_elm) {
          }();
       }();
    });
-   _elm.Render.Absolute.values = {_op: _op
+   _elm.Render.Controls.values = {_op: _op
                                  ,renderHiddenGate: renderHiddenGate
                                  ,hasFinished: hasFinished
                                  ,renderWinner: renderWinner
@@ -1441,7 +1432,7 @@ Elm.Render.Absolute.make = function (_elm) {
                                  ,renderControlWheel: renderControlWheel
                                  ,renderHelp: renderHelp
                                  ,renderAbsolute: renderAbsolute};
-   return _elm.Render.Absolute.values;
+   return _elm.Render.Controls.values;
 };Elm.Inputs = Elm.Inputs || {};
 Elm.Inputs.make = function (_elm) {
    "use strict";
@@ -1983,7 +1974,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 76 and 79");
+               "between lines 66 and 69");
             }();
          });
          return A3(List.foldl,
@@ -2001,7 +1992,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 69 and 71");
+         "between lines 59 and 61");
       }();
    });
    var polarVelocity = function (angle) {

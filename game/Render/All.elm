@@ -7,8 +7,8 @@ import String
 import Text
 
 import Render.Utils (..)
-import Render.Relative (..)
-import Render.Absolute (..)
+import Render.Race (..)
+import Render.Controls (..)
 
 renderAll : (Int,Int) -> GameState -> Element
 renderAll (w,h) gameState =

@@ -1,4 +1,4 @@
-module Render.Relative where
+module Render.Race where
 
 import Render.Utils (..)
 import Core (..)
@@ -32,22 +32,16 @@ renderGate gate markRadius isNext =
 
 renderPlayerAngles : Player -> Form
 renderPlayerAngles player =
-  let drawLine a = segment (fromPolar (15, a)) (fromPolar (25, a)) |> traced (solid white)
-      --directionLine = drawLine (toRadians player.direction) |> alpha 0.8
-      --windLine = drawLine (toRadians (player.direction - player.windAngle)) |> alpha 0.3
-
-      windOriginRadians = toRadians (player.direction - player.windAngle)
+  let windOriginRadians = toRadians (player.direction - player.windAngle)
       windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
         |> filled white
         |> rotate (windOriginRadians + pi/2)
         |> move (fromPolar (25, windOriginRadians))
         |> alpha 0.5
-
       windAngleText = (show (abs player.windAngle)) ++ "&deg;" |> baseText
         |> (if player.controlMode == FixedWindAngle then line Under else id)
         |> centered |> toForm 
         |> move (fromPolar (25, windOriginRadians + pi))
-        --|> move (fromPolar (25, toRadians (player.direction - (player.windAngle / 2))))
         |> alpha 0.5
   in  group [windMarker, windAngleText] 
 

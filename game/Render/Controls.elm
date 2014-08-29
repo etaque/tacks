@@ -1,4 +1,4 @@
-module Render.Absolute where
+module Render.Controls where
 
 import Render.Utils (..)
 import Core (..)
