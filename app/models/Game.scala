@@ -67,10 +67,14 @@ case class Gust(
 }
 
 object Gust {
-  val default = Seq(
-    Gust((-20, -20), 10, 3, 100),
-    Gust((30, -10), -15, 2, 80),
-    Gust((0, 40), 8, 1, 120)
+  import scala.util.Random._
+  val default = Seq.fill(10)(
+    Gust(
+      position = (nextInt(1600) - 800, nextInt(1600) - 400),
+      angle = nextInt(30) - 15,
+      speed = nextInt(5),
+      radius = nextInt(40) + 80
+    )
   )
 }
 
