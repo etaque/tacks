@@ -112,7 +112,8 @@ case class BoatState (
   velocity: Float,
   passedGates: Seq[Float],
   ownSpell: Option[Spell] = None,
-  triggeredSpells: Seq[Spell] = Seq()) {
+  spellCast: Boolean
+) {
 
   def collisions(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
     Geo.distanceBetween(buoy.position, position) <= buoy.radius
