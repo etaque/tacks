@@ -29,7 +29,7 @@ class RaceActor(race: Race) extends Actor {
   Akka.system.scheduler.schedule(1.second, 1.seconds, self, SpawnBuoy)
 
   def receive = {
-    case SpawnBuoy => {
+    case SpawnBuoy if race.millisBeforeStart < 30 * 1000 => {
       buoys = buoys :+ Buoy.spawn
     }
     case PlayerUpdate(id, input) => {
