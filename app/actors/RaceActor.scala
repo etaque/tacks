@@ -9,7 +9,7 @@ import akka.actor._
 import org.joda.time.DateTime
 import models._
 
-case class PlayerLeaved(id: String)
+case class PlayerQuit(id: String)
 case object UpdateGameState
 case object UpdateGusts
 
@@ -27,29 +27,27 @@ class RaceActor(race: Race) extends Actor {
   Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateGusts)
 
   def receive = {
-    case PlayerUpdate(id, state) => {
-      val newSpell: Option[Spell] = playersStates.get(id) match {
-        case Some(bs) => {
-          if (bs.passedGates != state.passedGates) updateLeaderboard()
-          bs.collisions(buoys).map { buoy =>
-            buoys = buoys.filter(_ == buoy) // Remove the spell from the game board
-            buoy.spell
-          }
-        }
-        case None => None
+    case PlayerUpdate(id, input) => {
+      val state1 = playersStates.get(id).fold(input.makeState)(input.updateState)
+      if (state1.passedGates != input.passedGates) updateLeaderboard()
+      val newSpell: Option[Spell] = state1.collisions(buoys).map { buoy =>
+        buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
+        buoy.spell
       }
-      if (state.spellCast == Some(true)) state.ownSpell.map { spell =>
+      val state2 = newSpell.fold(state1)(state1.withSpell)
+      val state3 = state2.ownSpell.filter(_ => input.spellCast).fold(state2) { spell =>
         // The player is casting a spell!
         val expiration = DateTime.now().plusSeconds(spell.duration)
         playersStates.keys.filterNot(_ == id).map { opponentId =>
           triggeredSpells += opponentId -> (triggeredSpells.getOrElse(opponentId, Nil) :+ (spell, expiration))
         }
+        state2.copy(ownSpell = None)
       }
-      playersStates += (id -> state.copy(ownSpell = newSpell.orElse(state.ownSpell)))
+      playersStates += (id -> state3)
       sender ! raceUpdateFor(id)
     }
-    case PlayerLeaved(id) => {
-      Logger.debug("Boat leaved: " + id)
+    case PlayerQuit(id) => {
+      Logger.debug("Boat quit: " + id)
       playersStates -= id
     }
     case UpdateGameState => updateGameState()
@@ -107,7 +105,3 @@ class RaceActor(race: Race) extends Actor {
 object RaceActor {
   def props(race: Race) = Props(new RaceActor(race))
 }
-
-
-
-

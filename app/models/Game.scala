@@ -86,9 +86,10 @@ case class Buoy(
 )
 
 object Buoy {
-  val default = Seq(
-    Buoy((200, 200), 5, Spell("inversion", 20)),
-    Buoy((-200, 400), 5, Spell("inversion", 20))
+  val default = Seq.fill(20)(
+    Buoy((scala.util.Random.nextInt(1600) - 800, scala.util.Random.nextInt(1600) - 400),
+      5,
+      Spell("PoleInversion", 20))
   )
 }
 
@@ -112,6 +113,23 @@ object RaceUpdate {
   )
 }
 
+case class BoatInput (
+  name: String,
+  position: Geo.Point,
+  direction: Float,
+  velocity: Float,
+  passedGates: Seq[Float],
+  spellCast: Boolean) {
+
+  def makeState = BoatState(name, position, direction, velocity, passedGates, None, Seq())
+
+  def updateState(state: BoatState) = state.copy(
+    position = position,
+    direction = direction,
+    velocity = velocity,
+    passedGates = passedGates)
+}
+
 case class BoatState (
   name: String,
   position: Geo.Point,
@@ -119,16 +137,17 @@ case class BoatState (
   velocity: Float,
   passedGates: Seq[Float],
   ownSpell: Option[Spell] = None,
-  spellCast: Option[Boolean]
+  triggeredSpells: Seq[Spell] = Seq()
 ) {
 
   def collisions(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
     Geo.distanceBetween(buoy.position, position) <= buoy.radius
   }
 
+  def withSpell(spell: Spell) = copy(ownSpell = Some(spell))
 }
 
-case class PlayerUpdate(id: String, state: BoatState)
+case class PlayerUpdate(id: String, input: BoatInput)
 
 object JsonFormats {
   import utils.JsonFormats.dateTimeFormat
@@ -143,6 +162,7 @@ object JsonFormats {
   implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
   implicit val boatStateFormat: Format[BoatState] = Json.format[BoatState]
+  implicit val boatInputFormat: Format[BoatInput] = Json.format[BoatInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (

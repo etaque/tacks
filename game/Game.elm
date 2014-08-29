@@ -30,16 +30,36 @@ data ControlMode = FixedDirection | FixedWindAngle
 
 type Boat a = { a | position : Point, direction: Float, velocity: Float, passedGates: [Time] }
 
+type Spell = { kind : String }
+
+type Buoy = { position : Point, radius : Float, spell : Spell }
+
 type Opponent = Boat { name : String }
 
-type Player = Boat { windAngle: Float, windOrigin: Float, windSpeed: Float, wake: [Point],
-                     center: Point, controlMode: ControlMode, tackTarget: Maybe Float }
+type Player = Boat
+ { windAngle: Float
+ , windOrigin: Float
+ , windSpeed: Float
+ , wake: [Point]
+ , center: Point
+ , controlMode: ControlMode
+ , tackTarget: Maybe Float
+ }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 
-type GameState = { wind: Wind, player: Player, opponents: [Opponent],
-                   course: Course, leaderboard: [String], countdown: Time }
+type GameState =
+  { wind: Wind
+  , player: Player
+  , opponents: [Opponent]
+  , buoys: [Buoy]
+  , course: Course
+  , leaderboard: [String]
+  , countdown: Time
+  , playerSpell: Maybe Spell
+  , triggeredSpells: [Spell]
+  }
 
 type RaceState = { players : [Player] }
 
@@ -51,18 +71,40 @@ defaultCourse = { upwind = defaultGate, downwind = defaultGate, laps = 0, markRa
            islands = [], bounds = ((0,0), (0,0)) }
 
 defaultPlayer : Player
-defaultPlayer = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
-         windOrigin = 0, windSpeed = 0, wake = [],
-         center = (0,0), controlMode = FixedDirection, tackTarget = Nothing,
-         passedGates = [] }
+defaultPlayer =
+  { position = (0,-200)
+  , direction = 0
+  , velocity = 0
+  , windAngle = 0
+  , windOrigin = 0
+  , windSpeed = 0
+  , wake = []
+  , center = (0,0)
+  , controlMode = FixedDirection
+  , tackTarget = Nothing
+  , passedGates = []
+  }
 
 defaultWind : Wind
-defaultWind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
-
+defaultWind =
+  { origin = 0
+  , speed = 10
+  , gustsCount = 0
+  , gusts = []
+  }
 
 defaultGame : GameState
-defaultGame = { wind = defaultWind, player = defaultPlayer, opponents = [],
-                course = defaultCourse, leaderboard = [], countdown = 0 }
+defaultGame =
+  { wind = defaultWind
+  , player = defaultPlayer
+  , opponents = []
+  , buoys = []
+  , course = defaultCourse
+  , leaderboard = []
+  , countdown = 0
+  , playerSpell = Nothing
+  , triggeredSpells = []
+  }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
@@ -74,6 +116,6 @@ findNextGate player laps =
   in
     if | c == laps * 2 + 1 -> Nothing
        | c == 0            -> Just StartLine
-       | i == 0            -> Just Downwind 
+       | i == 0            -> Just Downwind
        | otherwise         -> Just Upwind
 

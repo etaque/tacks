@@ -5,19 +5,19 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.{Props, Actor, ActorRef}
 import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
-import models.{BoatState, PlayerUpdate}
+import models.{BoatInput, PlayerUpdate}
 
 class PlayerActor(id: String, raceActor: ActorRef, out: ActorRef) extends Actor {
 
   def receive = {
-    case bs: BoatState => {
+    case bi: BoatInput => {
       implicit val timeout = Timeout(1.second)
-      (raceActor ? PlayerUpdate(id, bs)).map(out ! _)
+      (raceActor ? PlayerUpdate(id, bi)).map(out ! _)
     }
   }
 
   override def postStop() = {
-    raceActor ! PlayerLeaved(id)
+    raceActor ! PlayerQuit(id)
   }
 }
 

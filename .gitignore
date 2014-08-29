@@ -15,3 +15,4 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+/public/javascripts/game.js

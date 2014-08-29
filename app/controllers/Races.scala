@@ -35,10 +35,10 @@ object Races extends Controller {
   }
 
   import models.JsonFormats._
-  implicit val boatUpdateFrameFormatter = FrameFormatter.jsonFrame[BoatState]
+  implicit val boatUpdateFrameFormatter = FrameFormatter.jsonFrame[BoatInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
-  def gameSocket(raceId: String, playerId: String) = WebSocket.tryAcceptWithActor[BoatState, RaceUpdate] { request =>
+  def gameSocket(raceId: String, playerId: String) = WebSocket.tryAcceptWithActor[BoatInput, RaceUpdate] { request =>
     (RacesSupervisor.actorRef ? GetRaceActor(BSONObjectID(raceId))).map {
       case Some(raceActor: ActorRef) => Right(PlayerActor.props(raceActor, playerId)(_))
       case None => Left(NotFound)

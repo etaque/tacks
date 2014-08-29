@@ -11,28 +11,31 @@ import Steps
 import Render.All as R
 
 -- ports can't expand type alias for the moment... ugly manual expansion...
-port raceInput : Signal { now: Float, startTime: Float, 
-                          course: Maybe { upwind: { y: Float, width: Float }, downwind: { y: Float, width: Float }, laps: Int, 
-                                          markRadius: Float, islands: [{ location : (Float,Float), radius : Float }], 
+port raceInput : Signal { now: Float, startTime: Float,
+                          course: Maybe { upwind: { y: Float, width: Float }, downwind: { y: Float, width: Float }, laps: Int,
+                                          markRadius: Float, islands: [{ location : (Float,Float), radius : Float }],
                                           bounds: ((Float,Float),(Float,Float)) },
                           opponents: [{ position: (Float,Float), direction: Float, velocity: Float, passedGates: [Float], name: String }],
-                          leaderboard: [String], 
+                          buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}],
+                          playerSpell: Maybe { kind: String },
+                          triggeredSpells: [{ kind: String }],
+                          leaderboard: [String],
                           gusts: [{ position: (Float,Float), angle: Float, speed: Float, radius: Float }] }
 
 clock : Signal Float
 clock = inSeconds <~ fps 30
 
 input : Signal Inputs.Input
-input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardInput 
+input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardInput
                               Inputs.mouseInput Window.dimensions raceInput)
 
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
 
-port raceOutput : Signal { position : (Float, Float), direction: Float, velocity: Float, passedGates: [Float] }
+port raceOutput : Signal { position : (Float, Float), direction: Float, velocity: Float, passedGates: [Float], spellCast: Bool }
 port raceOutput = lift (playerToRaceOutput . .player) gameState
 
 playerToRaceOutput ({position, direction, velocity, passedGates} as player) =
-  { position = position, direction = direction, velocity = velocity, passedGates = passedGates }  
+  { position = position, direction = direction, velocity = velocity, passedGates = passedGates, spellCast = False }
 
 main = lift2 R.renderAll Window.dimensions gameState
