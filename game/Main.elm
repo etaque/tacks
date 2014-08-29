@@ -34,7 +34,12 @@ gameState = foldp Steps.stepGame Game.defaultGame input
 port raceOutput : Signal { position : (Float, Float), direction: Float, velocity: Float, passedGates: [Float], spellCast: Bool }
 port raceOutput = lift (playerToRaceOutput . .player) gameState
 
-playerToRaceOutput ({position, direction, velocity, passedGates} as player) =
-  { position = position, direction = direction, velocity = velocity, passedGates = passedGates, spellCast = False }
+playerToRaceOutput ({position, direction, velocity, passedGates, spellCast} as player) =
+  { position = position
+  , direction = direction
+  , velocity = velocity
+  , passedGates = passedGates
+  , spellCast = spellCast
+  }
 
 main = lift2 R.renderAll Window.dimensions gameState

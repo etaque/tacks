@@ -44,6 +44,7 @@ type Player = Boat
  , center: Point
  , controlMode: ControlMode
  , tackTarget: Maybe Float
+ , spellCast: Bool
  }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
@@ -83,6 +84,7 @@ defaultPlayer =
   , controlMode = FixedDirection
   , tackTarget = Nothing
   , passedGates = []
+  , spellCast = False
   }
 
 defaultWind : Wind
