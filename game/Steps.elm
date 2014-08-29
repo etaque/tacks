@@ -75,7 +75,7 @@ keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) spells player
   let forceTurn = arrows.x /= 0
       tackTarget = if forceTurn then Nothing else getTackTarget player tack
       turn = getTurn tackTarget player arrows fineTurn
-      direction = ensure360 <| player.direction + turn
+      direction = ensure360 <| player.direction + (if(containsSpell "PoleInversion" spells) then -turn else turn)
       windAngle = angleToWind direction player.windOrigin
       turnedPlayer = { player | direction <- direction,
                             windAngle <- windAngle }
