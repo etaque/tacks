@@ -96,10 +96,14 @@ object RaceUpdate {
 }
 
 case class BoatInput (
+  name: String,
   position: Geo.Point,
   direction: Float,
   velocity: Float,
-  passedGates: Seq[Float])
+  passedGates: Seq[Float]) {
+
+  def makeState = BoatState(name, position, direction, velocity, passedGates, None, Seq())
+}
 
 case class BoatState (
   name: String,
