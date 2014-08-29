@@ -4,9 +4,17 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
+import scala.concurrent.duration.Duration
+
 object Geo {
   type Point = (Float,Float)
   type Box = (Point,Point)
+
+  def distanceBetween(p1: Point, p2: Point): Double = {
+    val (x1,y1) = p1
+    val (x2,y2) = p2
+    Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+  }
 }
 
 case class Gate(
@@ -49,12 +57,29 @@ case class Gust(
   originDelta: Float
 )
 
+case class Spell(
+  position: Geo.Point,
+  radius: Float,
+  kind: String,
+  duration: Int // seconds
+)
+
+object Spell {
+  val default = Seq(
+    Spell((200, 200), 5, "inversion", 20),
+    Spell((400, 400), 5, "inversion", 20)
+  )
+}
+
 case class RaceUpdate(
   now: DateTime,
   startTime: DateTime,
   course: Option[Course],
   opponents: Seq[BoatState] = Seq(),
   gusts: Seq[Gust] = Seq(),
+  availableSpells: Seq[Spell] = Seq(),
+  playerSpells: Seq[Spell] = Seq(),
+  triggeredSpells: Seq[Spell] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
 
@@ -71,8 +96,16 @@ case class BoatState (
   position: Geo.Point,
   direction: Float,
   velocity: Float,
-  passedGates: Seq[Float]
-)
+  passedGates: Seq[Float],
+  ownSpells: Seq[Spell] = Seq(),
+  triggeredSpells: Seq[Spell] = Seq()
+) {
+
+  def collisions(spells: Seq[Spell]): Option[Spell] = spells.find { spell =>
+    false
+  }
+
+}
 
 case class PlayerUpdate(id: String, state: BoatState)
 
@@ -82,6 +115,7 @@ object JsonFormats {
   implicit val pointFormat: Format[Geo.Point] = utils.JsonFormats.tuple2Format[Float,Float]
   implicit val boxFormat: Format[Geo.Box] = utils.JsonFormats.tuple2Format[Geo.Point,Geo.Point]
 
+  implicit val spellFormat: Format[Spell] = Json.format[Spell]
   implicit val gustFormat: Format[Gust] = Json.format[Gust]
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
   implicit val islandFormat: Format[Island] = Json.format[Island]
@@ -95,6 +129,9 @@ object JsonFormats {
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'opponents).format[Seq[BoatState]] and
       (__ \ 'gusts).format[Seq[Gust]] and
+      (__ \ 'availableSpells).format[Seq[Spell]] and
+      (__ \ 'playerSpells).format[Seq[Spell]] and
+      (__ \ 'triggeredSpells).format[Seq[Spell]] and
       (__ \ 'leaderboard).format[Seq[String]]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
