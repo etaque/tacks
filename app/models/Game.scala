@@ -4,6 +4,8 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
+import scala.concurrent.duration.Duration
+
 object Geo {
   type Point = (Float,Float)
   type Box = (Point,Point)
@@ -52,8 +54,15 @@ case class Gust(
 case class Spell(
   position: Geo.Point,
   kind: String,
-  duration: Int
+  duration: Int // seconds
 )
+
+object Spell {
+  val default = Seq(
+    Spell((200, 200), "inversion", 20),
+    Spell((400, 400), "inversion", 20)
+  )
+}
 
 case class RaceUpdate(
   now: DateTime,
@@ -80,8 +89,16 @@ case class BoatState (
   position: Geo.Point,
   direction: Float,
   velocity: Float,
-  passedGates: Seq[Float]
-)
+  passedGates: Seq[Float],
+  ownSpells: Seq[Spell] = Seq(),
+  triggeredSpells: Seq[Spell] = Seq()
+) {
+
+  def collisions(spells: Seq[Spell]): Option[Spell] = spells.find { spell =>
+    false
+  }
+
+}
 
 case class PlayerUpdate(id: String, state: BoatState)
 
