@@ -100,20 +100,29 @@ renderControlWheel wind player (w,h) =
       group [c, playerWindMarker, playerMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
 
 renderStockSpell : Spell -> (Float, Float) -> Form
-renderStockSpell spell (w,h) = case spell.kind of
-  "PoleInversion" ->
-    let outline = square 35
-          |> outlined (solid white)
-        arrow = map (scale 3) getArrow
-          |> polygon
-          |> filled white
-        leftArrow = arrow
-          |> move (-1, 6)
-        rightArrow = arrow
-          |> rotate (degrees 180)
-          |> move (1, -6)
-    in  group [outline, leftArrow, rightArrow]
-          |> move (-w/2 + 70, h/2 - 300)
+renderStockSpell spell (w,h) =
+  let spellLabel = "SPELL"
+        |> baseText
+        |> centered
+        |> toForm
+        |> move (0, 35)
+      spellGraphics = getSpellStockGraphic spell.kind
+  in  group [spellLabel, spellGraphics]
+        |> move (w/2 - 45, h/2 - 250)
+
+getSpellStockGraphic : String -> Form
+getSpellStockGraphic "PoleInversion" =
+  let outline = square 35
+        |> outlined (solid white)
+      arrow = map (scale 3) getArrow
+        |> polygon
+        |> filled white
+      leftArrow = arrow
+        |> move (-1, 6)
+      rightArrow = arrow
+        |> rotate (degrees 180)
+        |> move (1, -6)
+  in  group [outline, leftArrow, rightArrow]
 
 getArrow : Path
 getArrow =
@@ -167,10 +176,13 @@ renderAbsolute ({wind,player,opponents,course,playerSpell} as gameState) dims =
         , renderWinner course player opponents
         , renderHelp gameState.countdown dims
         -- , renderLeaderboard gameState.leaderboard dims
-        , case playerSpell of
-            Just spell -> Just (renderStockSpell spell dims)
-            Nothing -> Nothing
+        , Just (renderStockSpell {kind = "PoleInversion"} dims)
+        -- , case playerSpell of
+        --     Just spell -> Just (renderStockSpell spell dims)
+        --     Nothing -> Nothing
         ]
+
+
   in
       group (justForms ++ (compact maybeForms))
 
