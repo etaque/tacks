@@ -38,6 +38,7 @@ case class Course(
 ) {
   def width = Math.abs(bounds._1._1 - bounds._2._1)
   def height = Math.abs(bounds._1._2 - bounds._2._2)
+  def center: Geo.Point = ((bounds._1._1 + bounds._2._1) / 2, (bounds._1._2 + bounds._2._2) / 2)
 }
 
 object Course {
@@ -61,12 +62,10 @@ case class Gust(
   speed: Float,
   radius: Float
 ) {
-  lazy val radians = (90 - angle) * Math.PI / 180
-  lazy val pixelSpeed = speed * Gust.UNITARY_SPEED
+  val radians = (90 - angle) * Math.PI / 180
 }
 
 object Gust {
-  val UNITARY_SPEED = 0.01 // pixels / milliseconds for speed = 1
   val default = Seq(
     Gust((-20, -20), 5, 4, 100),
     Gust((20, -10), -5, 6, 80),
