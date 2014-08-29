@@ -100,9 +100,16 @@ case class BoatInput (
   position: Geo.Point,
   direction: Float,
   velocity: Float,
-  passedGates: Seq[Float]) {
+  passedGates: Seq[Float],
+  spellCast: Boolean) {
 
   def makeState = BoatState(name, position, direction, velocity, passedGates, None, Seq())
+
+  def updateState(state: BoatState) = state.copy(
+    position = position,
+    direction = direction,
+    velocity = velocity,
+    passedGates = passedGates)
 }
 
 case class BoatState (
@@ -112,13 +119,14 @@ case class BoatState (
   velocity: Float,
   passedGates: Seq[Float],
   ownSpell: Option[Spell] = None,
-  spellCast: Boolean
+  triggeredSpells: Seq[Spell] = Seq()
 ) {
 
   def collisions(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
     Geo.distanceBetween(buoy.position, position) <= buoy.radius
   }
 
+  def withSpell(spell: Spell) = copy(ownSpell = Some(spell))
 }
 
 case class PlayerUpdate(id: String, input: BoatInput)

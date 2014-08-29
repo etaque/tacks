@@ -9,7 +9,7 @@ import akka.actor._
 import org.joda.time.DateTime
 import models._
 
-case class PlayerLeaved(id: String)
+case class PlayerQuit(id: String)
 case object UpdateGameState
 
 class RaceActor(race: Race) extends Actor {
@@ -24,37 +24,24 @@ class RaceActor(race: Race) extends Actor {
 
   Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateGameState)
 
-  case object UpdateSpells
-  Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateSpells)
-
   def receive = {
-    case UpdateSpells => {
-      playersStates foreach {
-        case (id, state) => playersStates += (id -> state.copy(
-          ownSpell = state.ownSpell.fold[Option[Spell]](Some(Spell(kind = "PoleInversion", duration = 5)))(_ => None)
-        ))
-      }
-      println(playersStates)
-    }
     case PlayerUpdate(id, input) => {
-      playersStates += (id -> (playersStates.get(id) match {
-        case Some(bs) => {
-          if (bs.passedGates != input.passedGates) updateLeaderboard()
-          bs.collisions(buoys).fold(bs) { buoy =>
-            buoys = buoys.filter(_ == buoy) // Remove the spell from the game board
-            bs.copy(ownSpell = Some(buoy.spell))
-          }
-        }
-        case None => None
+      val state1 = playersStates.get(id).fold(input.makeState)(input.updateState)
+      if (state1.passedGates != input.passedGates) updateLeaderboard()
+      val newSpell: Option[Spell] = state1.collisions(buoys).map { buoy =>
+        buoys = buoys.filter(_ == buoy) // Remove the spell from the game board
+        buoy.spell
       }
-      if (state.spellCast) state.ownSpell.map { spell =>
+      val state2 = newSpell.fold(state1)(state1.withSpell)
+      val state3 = state2.ownSpell.filter(_ => input.spellCast).fold(state2) { spell =>
         // The player is casting a spell!
         val expiration = DateTime.now().plusSeconds(spell.duration)
         playersStates.keys.filterNot(_ == id).map { opponentId =>
           triggeredSpells += opponentId -> (triggeredSpells.getOrElse(opponentId, Nil) :+ (spell, expiration))
         }
+        state2.copy(ownSpell = None)
       }
-      playersStates += (id -> state.copy(ownSpell = newSpell.orElse(state.ownSpell)))
+      playersStates += (id -> state3)
       sender ! raceUpdateFor(id)
     }
     case PlayerQuit(id) => {
