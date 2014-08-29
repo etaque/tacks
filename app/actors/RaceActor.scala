@@ -62,7 +62,7 @@ class RaceActor(race: Race) extends Actor {
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,
-      playerSpells = bs.flatMap(_.ownSpell),
+      playerSpell = bs.flatMap(_.ownSpell),
       triggeredSpells = bs.map(_.triggeredSpells).getOrElse(Nil)
     )
   }
