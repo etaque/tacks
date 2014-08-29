@@ -91,7 +91,7 @@ case class Buoy(
 
 object Buoy {
   import scala.util.Random._
-  val default = Seq.fill(20)(
+  val default = Seq.fill(50)(
     Buoy(
       position = (nextInt(1600) - 800, nextInt(1600) - 400),
       radius = 5,

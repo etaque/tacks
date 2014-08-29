@@ -66,7 +66,15 @@ renderPlayer player spells =
         |> rotate (toRadians (player.direction + 90))
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin
-      movingPart = group [angles, eqLine, hull] |> move player.position
+      -- fog = oval (100 + (mod (round (fst player.position)) 100)) 180
+      fog1 = oval 190 250
+        |> filled grey
+        |> rotate (snd player.position / 60)
+      fog2 = oval 170 230
+        |> filled white
+        |> rotate (fst player.position / 41 + 220)
+      fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
+      movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
       wake = renderWake player.wake
   in group [movingPart, wake]
 
@@ -148,10 +156,10 @@ renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
         downwindOrStartLine,
         renderGate course.upwind course.markRadius (nextGate == Just Upwind),
         --renderLaylines player gameState.course,
-        renderPlayer player triggeredSpells,
         group (map renderOpponent opponents),
         group (map renderBuoy buoys),
-        renderGusts gameState.wind
+        renderGusts gameState.wind,
+        renderPlayer player triggeredSpells
       ]
       maybeForms = [
         renderCountdown gameState player
