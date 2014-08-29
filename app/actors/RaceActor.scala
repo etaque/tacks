@@ -29,7 +29,7 @@ class RaceActor(race: Race) extends Actor {
       val state1 = playersStates.get(id).fold(input.makeState)(input.updateState)
       if (state1.passedGates != input.passedGates) updateLeaderboard()
       val newSpell: Option[Spell] = state1.collisions(buoys).map { buoy =>
-        buoys = buoys.filter(_ == buoy) // Remove the spell from the game board
+        buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
         buoy.spell
       }
       val state2 = newSpell.fold(state1)(state1.withSpell)
