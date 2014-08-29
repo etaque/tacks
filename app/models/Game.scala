@@ -91,17 +91,17 @@ case class Buoy(
 
 object Buoy {
   import scala.util.Random._
-  val default = Seq.fill(50)(
-    Buoy(
+  def spawn: Buoy = Buoy(
       position = (nextInt(1600) - 800, nextInt(1600) - 400),
       radius = 5,
       spell = Spell(
         kind = nextInt(2) match {
           case 0 => "PoleInversion"
-          case 1 => "Fog"
+          case _ => "Fog"
         },
         duration = 20))
-  )
+
+  val default = Seq.fill(50)(spawn)
 }
 
 case class RaceUpdate(
