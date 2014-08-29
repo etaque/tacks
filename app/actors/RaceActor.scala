@@ -18,7 +18,7 @@ class RaceActor(race: Race) extends Actor {
   type PlayerId = String
 
   val playersStates = scala.collection.mutable.Map[PlayerId, BoatState]()
-  var gusts = Seq[Gust]()
+  var gusts: Seq[Gust] = Gust.default
   var buoys: Seq[Buoy] = Buoy.default
   val triggeredSpells = scala.collection.mutable.Map[PlayerId, Seq[(Spell, DateTime)]]() // datetime is expiration
   var leaderboard = Seq[String]()

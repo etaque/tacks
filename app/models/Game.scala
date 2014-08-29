@@ -34,8 +34,7 @@ case class Course(
   laps: Int,
   markRadius: Float,
   islands: Seq[Island],
-  bounds: Geo.Box,
-  gusts: Seq[Gust]
+  bounds: Geo.Box
 ) {
   def width = Math.abs(bounds._1._1 - bounds._2._1)
   def height = Math.abs(bounds._1._2 - bounds._2._2)
@@ -52,10 +51,7 @@ object Course {
       Island((150, 700), 80),
       Island((-200, 500), 60)
     ),
-    bounds = ((800,1200), (-800,-400)),
-    gusts = Seq(
-      Gust((-20, -20), 5, 10, 100)
-    )
+    bounds = ((800,1200), (-800,-400))
   )
 }
 
@@ -71,6 +67,11 @@ case class Gust(
 
 object Gust {
   val UNITARY_SPEED = 0.01 // pixels / milliseconds for speed = 1
+  val default = Seq(
+    Gust((-20, -20), 5, 4, 100),
+    Gust((20, -10), -5, 6, 80),
+    Gust((30, 40), 8, 1, 120)
+  )
 }
 
 case class Spell(
