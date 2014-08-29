@@ -70,8 +70,8 @@ getTurn tackTarget player arrows fineTurn =
     -- changement de direction via touche flèche
     (Nothing, _, x, y) -> if fineTurn then x else x * 3
 
-keysForPlayerStep : KeyboardInput -> Player -> Player
-keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) player =
+keysForPlayerStep : KeyboardInput -> [Spell] -> Player -> Player
+keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) spells player =
   let forceTurn = arrows.x /= 0
       tackTarget = if forceTurn then Nothing else getTackTarget player tack
       turn = getTurn tackTarget player arrows fineTurn
@@ -90,7 +90,7 @@ keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) player =
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep keyboardInput gameState =
-  let playerUpdated = keysForPlayerStep keyboardInput gameState.player
+  let playerUpdated = keysForPlayerStep keyboardInput gameState.triggeredSpells gameState.player
   in  { gameState | player <- playerUpdated }
 
 gatePassedInX : Gate -> (Point,Point) -> Bool

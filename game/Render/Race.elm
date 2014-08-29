@@ -59,9 +59,10 @@ renderWake wake =
       points = indexedMap (,) wake |> filter (\(i,p) -> ((i+1) `mod` span) == 0) |> map renderWakePoint
   in  group points
 
-renderPlayer : Player -> Form
-renderPlayer player =
-  let hull = image 11 20 "/assets/images/icon-ac72.png" |> toForm
+renderPlayer : Player -> [Spell] -> Form
+renderPlayer player spells =
+  let boatPath = if(containsSpell "PoleInversion" spells) then "boat-pole-inversion" else "icon-ac72"
+      hull = image 11 20 ("/assets/images/" ++ boatPath ++ ".png") |> toForm
         |> rotate (toRadians (player.direction + 90))
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin
@@ -136,7 +137,7 @@ renderCountdown gameState player =
          | otherwise -> Nothing
 
 renderRelative : GameState -> Form
-renderRelative ({player,opponents,course,buoys} as gameState) =
+renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
   let nextGate = findNextGate player course.laps
       downwindOrStartLine = if isEmpty player.passedGates
         then renderStartLine course.downwind course.markRadius (gameState.countdown <= 0)
@@ -147,7 +148,7 @@ renderRelative ({player,opponents,course,buoys} as gameState) =
         downwindOrStartLine,
         renderGate course.upwind course.markRadius (nextGate == Just Upwind),
         --renderLaylines player gameState.course,
-        renderPlayer player,
+        renderPlayer player triggeredSpells,
         group (map renderOpponent opponents),
         group (map renderBuoy buoys),
         renderGusts gameState.wind
