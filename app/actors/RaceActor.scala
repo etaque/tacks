@@ -23,7 +23,18 @@ class RaceActor(race: Race) extends Actor {
   Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateLeaderboard)
   Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateGusts)
 
+  case object UpdateSpells
+  Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateSpells)
+
   def receive = {
+    case UpdateSpells => {
+      playersStates foreach {
+        case (id, state) => playersStates += (id -> state.copy(
+          ownSpell = state.ownSpell.fold[Option[Spell]](Some(Spell(kind = "PoleInversion", duration = 5)))(_ => None)
+        ))
+      }
+      println(playersStates)
+    }
     case PlayerUpdate(id, state) => {
       val newSpell: Option[Spell] = playersStates.get(id) match {
         case Some(bs) => {
