@@ -199,8 +199,10 @@ windStep delta now ({wind, player} as gameState) =
                    player <- playerWithWind }
 
 raceInputStep : RaceInput -> GameState -> GameState
-raceInputStep {now,startTime,course,opponents,leaderboard} gameState =
+raceInputStep {now,startTime,course,opponents,playerSpell,triggeredSpells,leaderboard} gameState =
   { gameState | opponents <- opponents,
+                playerSpell <- playerSpell,
+                triggeredSpells <- triggeredSpells,
                 course <- maybe gameState.course id course,
                 leaderboard <- leaderboard,
                 countdown <- startTime - now }
