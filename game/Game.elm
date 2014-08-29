@@ -32,16 +32,38 @@ type Boat a = { a | position : Point, direction: Float, velocity: Float, passedG
 
 type Opponent = Boat { name : String }
 
-type Player = Boat { windAngle: Float, windOrigin: Float, windSpeed: Float, wake: [Point],
-                     center: Point, controlMode: ControlMode, tackTarget: Maybe Float }
+type Player = Boat
+ { windAngle: Float
+ , windOrigin: Float
+ , windSpeed: Float
+ , wake: [Point]
+ , center: Point
+ , controlMode: ControlMode
+ , tackTarget: Maybe Float
+ , stockSpell: Maybe Spell
+ , spellsInYourFace: [Spell]
+ }
 
 type Gust = { position : Point, radius : Float, speedImpact : Float, originDelta : Float }
 type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
 
-type GameState = { wind: Wind, player: Player, opponents: [Opponent],
-                   course: Course, leaderboard: [String], countdown: Time }
+type GameState =
+  { wind: Wind
+  , player: Player
+  , opponents: [Opponent]
+  , course: Course
+  , leaderboard: [String]
+  , countdown: Time
+  }
 
 type RaceState = { players : [Player] }
+
+data Spell = PoleInversion
+
+type SpellInProgress =
+  { spell: Spell
+  , remainingTime: Int
+  }
 
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
@@ -51,10 +73,21 @@ defaultCourse = { upwind = defaultGate, downwind = defaultGate, laps = 0, markRa
            islands = [], bounds = ((0,0), (0,0)) }
 
 defaultPlayer : Player
-defaultPlayer = { position = (0,-200), direction = 0, velocity = 0, windAngle = 0, 
-         windOrigin = 0, windSpeed = 0, wake = [],
-         center = (0,0), controlMode = FixedDirection, tackTarget = Nothing,
-         passedGates = [] }
+defaultPlayer =
+  { position = (0,-200)
+  , direction = 0
+  , velocity = 0
+  , windAngle = 0
+  , windOrigin = 0
+  , windSpeed = 0
+  , wake = []
+  , center = (0,0)
+  , controlMode = FixedDirection
+  , tackTarget = Nothing
+  , passedGates = []
+  , stockSpell = Nothing
+  , spellsInYourFace = []
+  }
 
 defaultWind : Wind
 defaultWind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
@@ -74,6 +107,6 @@ findNextGate player laps =
   in
     if | c == laps * 2 + 1 -> Nothing
        | c == 0            -> Just StartLine
-       | i == 0            -> Just Downwind 
+       | i == 0            -> Just Downwind
        | otherwise         -> Just Upwind
 
