@@ -106,15 +106,15 @@ renderStockSpell spell (w,h) =
         |> centered
         |> toForm
         |> move (0, 35)
+      outlineSquare = square 35
+        |> outlined (solid white)
       spellGraphics = getSpellStockGraphic spell.kind
-  in  group [spellLabel, spellGraphics]
+  in  group [spellLabel, outlineSquare, spellGraphics]
         |> move (w/2 - 45, h/2 - 250)
 
 getSpellStockGraphic : String -> Form
 getSpellStockGraphic "PoleInversion" =
-  let outline = square 35
-        |> outlined (solid white)
-      arrow = map (scale 3) getArrow
+  let arrow = map (scale 3) getArrow
         |> polygon
         |> filled white
       leftArrow = arrow
@@ -122,7 +122,7 @@ getSpellStockGraphic "PoleInversion" =
       rightArrow = arrow
         |> rotate (degrees 180)
         |> move (1, -6)
-  in  group [outline, leftArrow, rightArrow]
+  in  group [leftArrow, rightArrow]
 
 getArrow : Path
 getArrow =
@@ -176,10 +176,9 @@ renderAbsolute ({wind,player,opponents,course,playerSpell} as gameState) dims =
         , renderWinner course player opponents
         , renderHelp gameState.countdown dims
         -- , renderLeaderboard gameState.leaderboard dims
-        , Just (renderStockSpell {kind = "PoleInversion"} dims)
-        -- , case playerSpell of
-        --     Just spell -> Just (renderStockSpell spell dims)
-        --     Nothing -> Nothing
+        , case playerSpell of
+            Just spell -> Just (renderStockSpell spell dims)
+            Nothing -> Nothing
         ]
 
 

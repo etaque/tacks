@@ -34,6 +34,11 @@ port raceOutput : Signal { position : (Float, Float), direction: Float, velocity
 port raceOutput = lift (playerToRaceOutput . .player) gameState
 
 playerToRaceOutput ({position, direction, velocity, passedGates} as player) =
-  { position = position, direction = direction, velocity = velocity, passedGates = passedGates, spellCast = False }
+  { position = position
+  , direction = direction
+  , velocity = velocity
+  , passedGates = passedGates
+  , spellCast = False
+  }
 
 main = lift2 R.renderAll Window.dimensions gameState
