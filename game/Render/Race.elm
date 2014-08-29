@@ -21,7 +21,7 @@ renderStartLine gate markRadius started =
 renderGate : Gate -> Float -> Bool -> Form
 renderGate gate markRadius isNext =
   let (left,right) = getGateMarks gate
-      (markStyle,lineStyle) = 
+      (markStyle,lineStyle) =
         if isNext
           then (filled orange, traced (dotted orange))
           else (filled white, traced (solid colors.seaBlue))
@@ -33,17 +33,17 @@ renderGate gate markRadius isNext =
 renderPlayerAngles : Player -> Form
 renderPlayerAngles player =
   let windOriginRadians = toRadians (player.direction - player.windAngle)
-      windMarker = polygon [(0,4),(-4,-4),(4,-4)] 
+      windMarker = polygon [(0,4),(-4,-4),(4,-4)]
         |> filled white
         |> rotate (windOriginRadians + pi/2)
         |> move (fromPolar (25, windOriginRadians))
         |> alpha 0.5
       windAngleText = (show (abs player.windAngle)) ++ "&deg;" |> baseText
         |> (if player.controlMode == FixedWindAngle then line Under else id)
-        |> centered |> toForm 
+        |> centered |> toForm
         |> move (fromPolar (25, windOriginRadians + pi))
         |> alpha 0.5
-  in  group [windMarker, windAngleText] 
+  in  group [windMarker, windAngleText]
 
 renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =
@@ -75,7 +75,7 @@ renderOpponent opponent =
         |> rotate (toRadians (opponent.direction + 90))
         |> move opponent.position
         |> alpha 0.5
-      name = opponent.name |> baseText |> centered |> toForm 
+      name = opponent.name |> baseText |> centered |> toForm
         |> move (add opponent.position (0,-25))
         |> alpha 0.3
   in group [hull, name]
@@ -116,8 +116,12 @@ renderIslands : GameState -> Form
 renderIslands gameState =
   group (map renderIsland gameState.course.islands)
 
+renderBuoy : Buoy -> Form
+renderBuoy {position,radius,spell} =
+  circle radius |> filled colors.buoy |> move position
+
 renderLaylines : Player -> Course -> Form
-renderLaylines player course = 
+renderLaylines player course =
   let upwindVmgAngleR = toRadians upwindVmg
       upwindMark = course.upwind
       (left,right) = getGateMarks upwindMark
@@ -129,9 +133,9 @@ renderLaylines player course =
   in group [l1] |> alpha 0.3
 
 renderCountdown : GameState -> Player -> Maybe Form
-renderCountdown gameState player = 
+renderCountdown gameState player =
   let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 50)
-  in  if | gameState.countdown > 0 -> 
+  in  if | gameState.countdown > 0 ->
              let cs = gameState.countdown |> inSeconds |> ceiling
                  m = cs `div` 60
                  s = cs `rem` 60
@@ -141,7 +145,7 @@ renderCountdown gameState player =
          | otherwise -> Nothing
 
 renderRelative : GameState -> Form
-renderRelative ({player,opponents,course} as gameState) =
+renderRelative ({player,opponents,course,buoys} as gameState) =
   let nextGate = findNextGate player course.laps
       downwindOrStartLine = if isEmpty player.passedGates
         then renderStartLine course.downwind course.markRadius (gameState.countdown <= 0)
@@ -154,6 +158,7 @@ renderRelative ({player,opponents,course} as gameState) =
         --renderLaylines player gameState.course,
         renderPlayer player,
         group (map renderOpponent opponents),
+        group (map renderBuoy buoys),
         renderGusts gameState.wind
       ]
       maybeForms = [

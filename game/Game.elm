@@ -32,6 +32,8 @@ type Boat a = { a | position : Point, direction: Float, velocity: Float, passedG
 
 type Spell = { kind : String }
 
+type Buoy = { position : Point, radius : Float, spell : Spell }
+
 type Opponent = Boat { name : String }
 
 type Player = Boat
@@ -51,6 +53,7 @@ type GameState =
   { wind: Wind
   , player: Player
   , opponents: [Opponent]
+  , buoys: [Buoy]
   , course: Course
   , leaderboard: [String]
   , countdown: Time
@@ -95,6 +98,7 @@ defaultGame =
   { wind = defaultWind
   , player = defaultPlayer
   , opponents = []
+  , buoys = []
   , course = defaultCourse
   , leaderboard = []
   , countdown = 0

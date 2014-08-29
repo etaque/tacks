@@ -16,6 +16,7 @@ port raceInput : Signal { now: Float, startTime: Float,
                                           markRadius: Float, islands: [{ location : (Float,Float), radius : Float }],
                                           bounds: ((Float,Float),(Float,Float)) },
                           opponents: [{ position: (Float,Float), direction: Float, velocity: Float, passedGates: [Float], name: String }],
+                          buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}],
                           playerSpell: Maybe { kind: String },
                           triggeredSpells: [{ kind: String }],
                           leaderboard: [String] }
