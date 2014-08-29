@@ -25,17 +25,17 @@ class RaceActor(race: Race) extends Actor {
 
   def receive = {
     case PlayerUpdate(id, state) => {
-      playersStates.get(id) match {
+      val newSpell: Option[Spell] = playersStates.get(id) match {
         case Some(bs) => {
           if (bs.passedGates != state.passedGates) updateLeaderboard()
           bs.collisions(spells).map { spell =>
             spells = spells.filter(_ == spell) // Remove the spell from the game board
-            playersStates.put(id, bs.copy(ownSpells = bs.ownSpells :+ spell)) // Add the spell to the player
+            spell
           }
         }
-        case None =>
+        case None => None
       }
-      playersStates += (id -> state)
+      playersStates += (id -> state.copy(ownSpell = newSpell.orElse(state.ownSpell)))
       sender ! raceUpdateFor(id)
     }
     case PlayerLeaved(id) => {
@@ -62,7 +62,7 @@ class RaceActor(race: Race) extends Actor {
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,
       availableSpells = spells,
-      playerSpells = bs.map(_.ownSpells).getOrElse(Nil),
+      playerSpells = bs.flatMap(_.ownSpell),
       triggeredSpells = bs.map(_.triggeredSpells).getOrElse(Nil)
     )
   }

@@ -78,7 +78,7 @@ case class RaceUpdate(
   opponents: Seq[BoatState] = Seq(),
   gusts: Seq[Gust] = Seq(),
   availableSpells: Seq[Spell] = Seq(),
-  playerSpells: Seq[Spell] = Seq(),
+  playerSpells: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
   leaderboard: Seq[String] = Seq()
 )
@@ -97,7 +97,7 @@ case class BoatState (
   direction: Float,
   velocity: Float,
   passedGates: Seq[Float],
-  ownSpells: Seq[Spell] = Seq(),
+  ownSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq()
 ) {
 
@@ -130,7 +130,7 @@ object JsonFormats {
       (__ \ 'opponents).format[Seq[BoatState]] and
       (__ \ 'gusts).format[Seq[Gust]] and
       (__ \ 'availableSpells).format[Seq[Spell]] and
-      (__ \ 'playerSpells).format[Seq[Spell]] and
+      (__ \ 'playerSpell).format[Option[Spell]] and
       (__ \ 'triggeredSpells).format[Seq[Spell]] and
       (__ \ 'leaderboard).format[Seq[String]]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
