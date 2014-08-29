@@ -83,13 +83,24 @@ defaultPlayer =
   }
 
 defaultWind : Wind
-defaultWind = { origin = 0, speed = 10, gustsCount = 0, gusts = [] }
-
+defaultWind =
+  { origin = 0
+  , speed = 10
+  , gustsCount = 0
+  , gusts = []
+  }
 
 defaultGame : GameState
-defaultGame = { wind = defaultWind, player = defaultPlayer, opponents = [],
-                course = defaultCourse, leaderboard = [], countdown = 0,
-                playerSpell = Nothing, triggeredSpells = []}
+defaultGame =
+  { wind = defaultWind
+  , player = defaultPlayer
+  , opponents = []
+  , course = defaultCourse
+  , leaderboard = []
+  , countdown = 0
+  , playerSpell = Nothing
+  , triggeredSpells = []
+  }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
