@@ -30,14 +30,6 @@ renderGate gate markRadius isNext =
       rightMark = circle markRadius |> markStyle |> move right
   in  group [line, leftMark, rightMark]
 
-  --    isNext = nextGate == Just gate.location
-  --    line = segment left right |> traced (dotted orange)
-  --    markStyle = if isNext then filled orange else filled white
-  --    leftMark = circle markRadius |> markStyle |> move left
-  --    rightMark = circle markRadius |> markStyle |> move right
-  --    marks = [leftMark, rightMark]
-  --in  if isNext then group (line :: marks) else group marks
-
 renderPlayerAngles : Player -> Form
 renderPlayerAngles player =
   let drawLine a = segment (fromPolar (15, a)) (fromPolar (25, a)) |> traced (solid white)
@@ -124,12 +116,7 @@ renderGusts wind =
 
 renderIsland : Island -> Form
 renderIsland {location,radius} =
-  let --grad = radial (0,0) (radius - 15) (0,0) radius [(0, colors.sand), (1, colors.seaBlue)]
-      ground = circle radius |> filled colors.sand
-      --palmWidth = minimum [round radius, 100]
-      --palm = fittedImage palmWidth palmWidth "/assets/images/palmtree.png" |> toForm --|> move (0, island.radius/5)
-      --palm = image palmWidth palmWidth "/assets/images/palmtree.png" |> toForm |> move (0, (toFloat palmWidth) / 2)
-  in group [ground] |> move location
+  circle radius |> filled colors.sand |> move location
 
 renderIslands : GameState -> Form
 renderIslands gameState =

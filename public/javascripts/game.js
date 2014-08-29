@@ -186,30 +186,9 @@ Elm.Steps.make = function (_elm) {
    });
    var updateWindForPlayer = F2(function (wind,
    player) {
-      return function () {
-         var gustsOnPlayer = List.reverse(List.sortBy(function (_) {
-            return _.speedImpact;
-         })(A2(List.filter,
-         function (g) {
-            return _U.cmp(A2(Geo.distance,
-            player.position,
-            g.position),
-            g.radius) < 1;
-         },
-         wind.gusts)));
-         var windOrigin = List.isEmpty(gustsOnPlayer) ? wind.origin : function () {
-            var gust = List.head(gustsOnPlayer);
-            var factor = List.minimum(_L.fromArray([(gust.radius - A2(Geo.distance,
-                                                   player.position,
-                                                   gust.position)) / (gust.radius * 0.1)
-                                                   ,1]));
-            var newDelta = gust.originDelta * factor;
-            return Core.ensure360(wind.origin + newDelta);
-         }();
-         return _U.replace([["windOrigin"
-                            ,windOrigin]],
-         player);
-      }();
+      return _U.replace([["windOrigin"
+                         ,wind.origin]],
+      player);
    });
    var windStep = F3(function (delta,
    now,
@@ -881,10 +860,7 @@ Elm.Render.Relative.make = function (_elm) {
    });
    var renderIsland = function (_v0) {
       return function () {
-         return function () {
-            var ground = Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v0.radius));
-            return Graphics.Collage.move(_v0.location)(Graphics.Collage.group(_L.fromArray([ground])));
-         }();
+         return Graphics.Collage.move(_v0.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v0.radius)));
       }();
    };
    var renderIslands = function (gameState) {
@@ -946,7 +922,7 @@ Elm.Render.Relative.make = function (_elm) {
                {case "_Tuple2":
                   return Graphics.Collage.alpha(opacityForIndex(_v2._0))(Graphics.Collage.move(_v2._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
                _E.Case($moduleName,
-               "on line 72, column 32 to 94");
+               "on line 64, column 32 to 94");
             }();
          };
          var span = 5;
@@ -959,7 +935,7 @@ Elm.Render.Relative.make = function (_elm) {
                     span),
                     0);}
                _E.Case($moduleName,
-               "on line 73, column 59 to 80");
+               "on line 65, column 59 to 80");
             }();
          })(A2(Core.indexedMap,
          F2(function (v0,v1) {
@@ -988,7 +964,7 @@ Elm.Render.Relative.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 64 and 66");
+         "between lines 56 and 58");
       }();
    });
    var renderPlayerAngles = function (player) {

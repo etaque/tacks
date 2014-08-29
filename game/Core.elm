@@ -17,15 +17,6 @@ angleToWind playerDirection windOrigin =
        | delta <= -180 -> delta + 360
        | otherwise     -> delta
 
---angleDelta : Float -> Float -> Float
---angleDelta a1 a2 =
---  let delta = a1 - a2
---  in 
---    if | delta > 360   -> delta - 180
---       | delta <= 0    -> delta + 180
---       | otherwise     -> delta
-
-
 -- polynomial regression of AC72 polar
 -- see http://noticeboard.americascup.com/wp-content/uploads/actv/LV13/AC72polar.130714.txt
 -- and http://www.xuru.org/rt/MPR.asp
@@ -63,7 +54,6 @@ playerVelocity windAngle previousVelocity =
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 
-
 mapMaybe : (a -> b) -> Maybe a -> Maybe b
 mapMaybe f maybe =
     case maybe of
@@ -84,3 +74,4 @@ average items = (sum items) / (toFloat (length items))
 indexedMap : (Int -> a -> b) -> [a] -> [b]
 indexedMap f xs =
     zipWith f [ 0 .. length xs - 1 ] xs
+    
