@@ -9,7 +9,7 @@ import akka.actor._
 import org.joda.time.DateTime
 import models._
 
-case class PlayerLeaved(id: String)
+case class PlayerQuit(id: String)
 case object UpdateLeaderboard
 case object UpdateGusts
 
@@ -49,8 +49,8 @@ class RaceActor(race: Race) extends Actor {
       playersStates += (id -> state.copy(ownSpell = newSpell.orElse(state.ownSpell)))
       sender ! raceUpdateFor(id)
     }
-    case PlayerLeaved(id) => {
-      Logger.debug("Boat leaved: " + id)
+    case PlayerQuit(id) => {
+      Logger.debug("Boat quit: " + id)
       playersStates -= id
     }
     case UpdateLeaderboard => updateLeaderboard()
@@ -82,7 +82,3 @@ class RaceActor(race: Race) extends Actor {
 object RaceActor {
   def props(race: Race) = Props(new RaceActor(race))
 }
-
-
-
-

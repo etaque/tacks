@@ -17,7 +17,7 @@ class PlayerActor(id: String, raceActor: ActorRef, out: ActorRef) extends Actor 
   }
 
   override def postStop() = {
-    raceActor ! PlayerLeaved(id)
+    raceActor ! PlayerQuit(id)
   }
 }
 
