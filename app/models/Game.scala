@@ -66,6 +66,11 @@ case class Gust(
   radius: Float
 ) {
   lazy val radians = (90 - angle) * Math.PI / 180
+  lazy val pixelSpeed = speed * Gust.UNITARY_SPEED
+}
+
+object Gust {
+  val UNITARY_SPEED = 0.01 // pixels / milliseconds for speed = 1
 }
 
 case class Spell(
