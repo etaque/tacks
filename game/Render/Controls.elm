@@ -102,10 +102,29 @@ renderControlWheel wind player (w,h) =
 renderStockSpell : Spell -> (Float, Float) -> Form
 renderStockSpell spell (w,h) = case spell.kind of
   "PoleInversion" ->
-    let r = 20
-    in  circle r
-        |> filled red
-        |> move (-w/2 + 70, h/2 - 300)
+    let outline = square 35
+          |> outlined (solid white)
+        arrow = map (scale 3) getArrow
+          |> polygon
+          |> filled white
+        leftArrow = arrow
+          |> move (-1, 6)
+        rightArrow = arrow
+          |> rotate (degrees 180)
+          |> move (1, -6)
+    in  group [outline, leftArrow, rightArrow]
+          |> move (-w/2 + 70, h/2 - 300)
+
+getArrow : Path
+getArrow =
+  [ (-3, 1)
+  , (1, 1)
+  , (1, 2)
+  , (3, 0)
+  , (1, -2)
+  , (1, -1)
+  , (-3, -1)
+  ]
 
 --renderLeaderboardLine : Int -> String -> Form
 --renderLeaderboardLine index name =
