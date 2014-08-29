@@ -102,7 +102,7 @@ case class BoatState (
 ) {
 
   def collisions(spells: Seq[Spell]): Option[Spell] = spells.find { spell =>
-    false
+    Geo.distanceBetween(spell.position, position) <= spell.radius
   }
 
 }
