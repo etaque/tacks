@@ -32,6 +32,11 @@ type Boat a = { a | position : Point, direction: Float, velocity: Float, passedG
 
 type Spell = { kind : String }
 
+containsSpell : String -> [Spell] -> Bool
+containsSpell spellName spells =
+  let filtredSpells = filter (\spell -> spell.kind == spellName) spells
+  in  length filtredSpells > 0
+
 type Buoy = { position : Point, radius : Float, spell : Spell }
 
 type Opponent = Boat { name : String }

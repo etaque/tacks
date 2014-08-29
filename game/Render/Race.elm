@@ -70,11 +70,6 @@ renderPlayer player spells =
       wake = renderWake player.wake
   in group [movingPart, wake]
 
-containsSpell : String -> [Spell] -> Bool
-containsSpell spellName spells =
-  let filtredSpells = filter (\spell -> spell.kind == spellName) spells
-  in  length filtredSpells > 0
-
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
   let hull = image 11 20 "/assets/images/icon-ac72.png" |> toForm
