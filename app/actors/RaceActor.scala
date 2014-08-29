@@ -11,18 +11,20 @@ import models._
 
 case class PlayerLeaved(id: String)
 case object UpdateGameState
+case object UpdateGusts
 
 class RaceActor(race: Race) extends Actor {
 
   type PlayerId = String
 
   val playersStates = scala.collection.mutable.Map[PlayerId, BoatState]()
-  val gusts = Seq[Gust]()
+  var gusts = Seq[Gust]()
   var buoys: Seq[Buoy] = Buoy.default
   val triggeredSpells = scala.collection.mutable.Map[PlayerId, Seq[(Spell, DateTime)]]() // datetime is expiration
   var leaderboard = Seq[String]()
 
-  Akka.system.scheduler.schedule(1.minute, 1.second, self, UpdateGameState)
+  Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
+  Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateGusts)
 
   def receive = {
     case PlayerUpdate(id, state) => {
@@ -51,6 +53,7 @@ class RaceActor(race: Race) extends Actor {
       playersStates -= id
     }
     case UpdateGameState => updateGameState()
+    case UpdateGusts => updateGusts()
   }
 
   private def updateLeaderboard() =
@@ -63,6 +66,7 @@ class RaceActor(race: Race) extends Actor {
   private def updateGameState() = {
     updateLeaderboard()
     updateSpells()
+    updateGusts()
   }
 
   private def updateSpells() = {
@@ -74,12 +78,22 @@ class RaceActor(race: Race) extends Actor {
     }
   }
 
+  private def updateGusts() = {
+    val now = DateTime.now().getMillis
+    gusts = gusts.map { gust =>
+      val x = (gust.position._1 * now * gust.speed * Math.cos(gust.radians)) % race.course.width
+      val y = (gust.position._2 * now * gust.speed * Math.sin(gust.radians)) % race.course.height
+      gust.copy(position = (gust.position._1, gust.position._2 * gust.speed))
+    }
+  }
+
   private def raceUpdateFor(boatId: String) = {
     val bs = playersStates.get(boatId)
     RaceUpdate(
       now = DateTime.now,
       startTime = race.startTime,
       course = None, // already transmitted in initial update
+      gusts = gusts,
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,

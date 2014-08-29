@@ -15,6 +15,7 @@ object Geo {
     val (x2,y2) = p2
     Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
   }
+
 }
 
 case class Gate(
@@ -35,7 +36,10 @@ case class Course(
   islands: Seq[Island],
   bounds: Geo.Box,
   gusts: Seq[Gust]
-)
+) {
+  def width = Math.abs(bounds._1._1 - bounds._2._1)
+  def height = Math.abs(bounds._1._2 - bounds._2._2)
+}
 
 object Course {
   val default = Course(
@@ -50,17 +54,19 @@ object Course {
     ),
     bounds = ((800,1200), (-800,-400)),
     gusts = Seq(
-      Gust(0, 5, 10, 100)
+      Gust((-20, -20), 5, 10, 100)
     )
   )
 }
 
 case class Gust(
-  initX: Int,
+  position: Geo.Point,
   angle: Float, // degrees
   speed: Float,
   radius: Float
-)
+) {
+  lazy val radians = (90 - angle) * Math.PI / 180
+}
 
 case class Spell(
   kind: String,
@@ -85,6 +91,7 @@ case class RaceUpdate(
   startTime: DateTime,
   course: Option[Course],
   opponents: Seq[BoatState] = Seq(),
+  gusts: Seq[Gust] = Seq(),
   buoys: Seq[Buoy] = Seq(),
   playerSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
@@ -137,6 +144,7 @@ object JsonFormats {
       (__ \ 'startTime).format[DateTime] and
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'opponents).format[Seq[BoatState]] and
+      (__ \ 'gusts).format[Seq[Gust]] and
       (__ \ 'buoys).format[Seq[Buoy]] and
       (__ \ 'playerSpell).format[Option[Spell]] and
       (__ \ 'triggeredSpells).format[Seq[Spell]] and
