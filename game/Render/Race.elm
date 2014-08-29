@@ -73,6 +73,7 @@ renderPlayer player spells =
       fog2 = oval 170 230
         |> filled white
         |> rotate (fst player.position / 41 + 220)
+        |> alpha 0.8
       fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
       movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
       wake = renderWake player.wake

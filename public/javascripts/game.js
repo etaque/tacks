@@ -1048,9 +1048,9 @@ Elm.Render.Race.make = function (_elm) {
    spells) {
       return function () {
          var wake = renderWake(player.wake);
-         var fog2 = Graphics.Collage.rotate(Basics.fst(player.position) / 41 + 220)(Graphics.Collage.filled(Color.white)(A2(Graphics.Collage.oval,
+         var fog2 = Graphics.Collage.alpha(0.8)(Graphics.Collage.rotate(Basics.fst(player.position) / 41 + 220)(Graphics.Collage.filled(Color.white)(A2(Graphics.Collage.oval,
          170,
-         230)));
+         230))));
          var fog1 = Graphics.Collage.rotate(Basics.snd(player.position) / 60)(Graphics.Collage.filled(Color.grey)(A2(Graphics.Collage.oval,
          190,
          250)));
