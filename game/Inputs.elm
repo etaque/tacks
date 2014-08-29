@@ -36,7 +36,7 @@ mouseInput : Signal MouseInput
 mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
 
 keyboardInput : Signal KeyboardInput
-keyboardInput = lift5 KeyboardInput Keyboard.arrows Keyboard.enter Keyboard.space Keyboard.shift (Keyboard.isDown (Char.toCode 'A'))
+keyboardInput = lift5 KeyboardInput Keyboard.arrows Keyboard.enter Keyboard.space Keyboard.shift (Keyboard.isDown (Char.toCode 'S'))
 
 chrono : Signal Time
 chrono = foldp (+) 0 (fps 1)
