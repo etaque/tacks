@@ -4,7 +4,7 @@ import String
 import Text
 
 helpMessage : String
-helpMessage = "←/→ to turn left/right, ↓←/↓→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe"
+helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe"
 
 colors = { seaBlue = rgb 10 105 148,
            sand = rgb 239 210 121 }

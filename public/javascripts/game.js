@@ -437,7 +437,7 @@ Elm.Steps.make = function (_elm) {
          gameState);
          var newPosition = stuck ? position : nextPosition;
          var newWake = A2(List.take,
-         30,
+         40,
          {ctor: "::"
          ,_0: newPosition
          ,_1: player.wake});
