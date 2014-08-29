@@ -70,8 +70,8 @@ case class Buoy(
 
 object Buoy {
   val default = Seq(
-    Buoy((200, 200), 5, Spell("inversion", 20)),
-    Buoy((-200, 400), 5, Spell("inversion", 20))
+    Buoy((200, 200), 5, Spell("PoleInversion", 20)),
+    Buoy((-200, 400), 5, Spell("PoleInversion", 20))
   )
 }
 
