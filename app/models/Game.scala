@@ -95,6 +95,12 @@ object RaceUpdate {
   )
 }
 
+case class BoatInput (
+  position: Geo.Point,
+  direction: Float,
+  velocity: Float,
+  passedGates: Seq[Float])
+
 case class BoatState (
   name: String,
   position: Geo.Point,
@@ -102,8 +108,7 @@ case class BoatState (
   velocity: Float,
   passedGates: Seq[Float],
   ownSpell: Option[Spell] = None,
-  triggeredSpells: Seq[Spell] = Seq()
-) {
+  triggeredSpells: Seq[Spell] = Seq()) {
 
   def collisions(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
     Geo.distanceBetween(buoy.position, position) <= buoy.radius
@@ -111,7 +116,7 @@ case class BoatState (
 
 }
 
-case class PlayerUpdate(id: String, state: BoatState)
+case class PlayerUpdate(id: String, input: BoatInput)
 
 object JsonFormats {
   import utils.JsonFormats.dateTimeFormat
@@ -126,6 +131,7 @@ object JsonFormats {
   implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
   implicit val boatStateFormat: Format[BoatState] = Json.format[BoatState]
+  implicit val boatInputFormat: Format[BoatInput] = Json.format[BoatInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (

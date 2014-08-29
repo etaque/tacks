@@ -35,19 +35,18 @@ class RaceActor(race: Race) extends Actor {
       }
       println(playersStates)
     }
-    case PlayerUpdate(id, state) => {
-      val newSpell: Option[Spell] = playersStates.get(id) match {
-        case Some(bs) => {
-          if (bs.passedGates != state.passedGates) updateLeaderboard()
-          bs.collisions(buoys).map { buoy =>
+    case PlayerUpdate(id, input) => {
+      playersStates.get(id) match {
+        case Some(state) => {
+          if (state.passedGates != input.passedGates) updateLeaderboard()
+          state.collisions(buoys).map { buoy =>
             buoys = buoys.filter(_ == buoy) // Remove the spell from the game board
-            buoy.spell
+            playersStates += (id -> state.copy(ownSpell = Some(buoy.spell)))
           }
+          sender ! raceUpdateFor(id)
         }
-        case None => None
+        case None =>
       }
-      playersStates += (id -> state.copy(ownSpell = newSpell.orElse(state.ownSpell)))
-      sender ! raceUpdateFor(id)
     }
     case PlayerQuit(id) => {
       Logger.debug("Boat quit: " + id)
