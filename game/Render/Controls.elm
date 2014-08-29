@@ -112,8 +112,7 @@ renderStockSpell spell (w,h) =
   in  group [spellLabel, outlineSquare, spellGraphics]
         |> move (w/2 - 45, h/2 - 250)
 
-getSpellStockGraphic : String -> Form
-getSpellStockGraphic "PoleInversion" =
+renderPoleInversion =
   let arrow = map (scale 3) getArrow
         |> polygon
         |> filled white
@@ -123,6 +122,21 @@ getSpellStockGraphic "PoleInversion" =
         |> rotate (degrees 180)
         |> move (1, -6)
   in  group [leftArrow, rightArrow]
+
+renderFog =
+  let upLine = segment (-12, -8) (12, -8)
+        |> traced { defaultLine | width <- 5,
+                                  color <- white }
+        |> alpha 0.6
+      midLine = upLine |> move (0, 8)
+      botLine = upLine |> move (0, 16)
+  in  group [upLine, midLine, botLine]
+
+getSpellStockGraphic : String -> Form
+getSpellStockGraphic kind =
+  case kind of
+    "PoleInversion" -> renderPoleInversion
+    "Fog" -> renderFog
 
 getArrow : Path
 getArrow =
