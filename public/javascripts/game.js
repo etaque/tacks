@@ -1600,6 +1600,7 @@ Elm.Game.make = function (_elm) {
                        ,laps: 0
                        ,markRadius: 0
                        ,upwind: defaultGate};
+   var PoleInversion = {ctor: "PoleInversion"};
    var RaceState = function (a) {
       return {_: {},players: a};
    };
@@ -1662,6 +1663,8 @@ Elm.Game.make = function (_elm) {
                        ,position: {ctor: "_Tuple2"
                                   ,_0: 0
                                   ,_1: -200}
+                       ,spellsInYourFace: _L.fromArray([])
+                       ,stockSpell: Maybe.Nothing
                        ,tackTarget: Maybe.Nothing
                        ,velocity: 0
                        ,wake: _L.fromArray([])
@@ -1724,6 +1727,7 @@ Elm.Game.make = function (_elm) {
                       ,Upwind: Upwind
                       ,FixedDirection: FixedDirection
                       ,FixedWindAngle: FixedWindAngle
+                      ,PoleInversion: PoleInversion
                       ,Gate: Gate
                       ,Island: Island
                       ,Course: Course
@@ -2197,7 +2201,7 @@ Elm.Render.Utils.make = function (_elm) {
                 10,
                 105,
                 148)};
-   var helpMessage = "←/→ to turn left/right, ↓←/↓→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe";
+   var helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe";
    _elm.Render.Utils.values = {_op: _op
                               ,helpMessage: helpMessage
                               ,colors: colors

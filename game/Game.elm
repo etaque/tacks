@@ -60,11 +60,6 @@ type RaceState = { players : [Player] }
 
 data Spell = PoleInversion
 
-type SpellInProgress =
-  { spell: Spell
-  , remainingTime: Int
-  }
-
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
 
