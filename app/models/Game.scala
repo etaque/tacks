@@ -9,6 +9,12 @@ import scala.concurrent.duration.Duration
 object Geo {
   type Point = (Float,Float)
   type Box = (Point,Point)
+
+  def distanceBetween(p1: Point, p2: Point): Double = {
+    val (x1,y1) = p1
+    val (x2,y2) = p2
+    Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+  }
 }
 
 case class Gate(
