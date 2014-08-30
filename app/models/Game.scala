@@ -4,23 +4,7 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-object Geo {
-  type Point = (Float,Float) // (x,y)
-  type Box = (Point,Point) // ((right,top),(left,bottom))
-
-  def distanceBetween(p1: Point, p2: Point): Double = {
-    val (x1,y1) = p1
-    val (x2,y2) = p2
-    Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
-  }
-
-  def inBox(p: Point, b: Box): Boolean = {
-    val (x,y) = p
-    val ((right, top), (left, bottom)) = b
-    x > left && x < right && y > bottom && y < top
-  }
-
-}
+import Geo._
 
 case class Gate(
   y: Float,
@@ -48,7 +32,7 @@ case class Course(
   laps: Int,
   markRadius: Float,
   islands: Seq[Island],
-  bounds: Geo.Box,
+  bounds: Box,
   windGenerator: WindGenerator
 ) {
   lazy val ((right, top), (left, bottom)) = bounds
@@ -64,7 +48,7 @@ case class Course(
 
   def randomX(margin: Int = 0): Float = nextInt(width.toInt - margin * 2) - width / 2 + margin + cx
   def randomY(margin: Int = 0): Float = nextInt(height.toInt - margin * 2) - height / 2 + margin + cy
-  def randomPoint: Geo.Point = (randomX(0), randomY(0))
+  def randomPoint: Point = (randomX(0), randomY(0))
 }
 
 object Course {
@@ -84,7 +68,7 @@ object Course {
 }
 
 case class Gust(
-  position: Geo.Point,
+  position: Point,
   angle: Float, // degrees
   speed: Float,
   radius: Float
@@ -122,7 +106,7 @@ case class Spell(
 )
 
 case class Buoy(
-  position: Geo.Point,
+  position: Point,
   radius: Float,
   spell: Spell
 )
@@ -163,7 +147,7 @@ object RaceUpdate {
 
 case class BoatInput (
   name: String,
-  position: Geo.Point,
+  position: Point,
   direction: Float,
   velocity: Float,
   passedGates: Seq[Float],
@@ -180,7 +164,7 @@ case class BoatInput (
 
 case class BoatState (
   name: String,
-  position: Geo.Point,
+  position: Point,
   direction: Float,
   velocity: Float,
   passedGates: Seq[Float],
@@ -189,7 +173,7 @@ case class BoatState (
 ) {
 
   def collision(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
-    Geo.distanceBetween(buoy.position, position) <= buoy.radius
+    distanceBetween(buoy.position, position) <= buoy.radius
   }
 
   def withSpell(spell: Spell) = copy(ownSpell = Some(spell))
@@ -199,9 +183,6 @@ case class PlayerUpdate(id: String, input: BoatInput)
 
 object JsonFormats {
   import utils.JsonFormats.dateTimeFormat
-
-  implicit val pointFormat: Format[Geo.Point] = utils.JsonFormats.tuple2Format[Float,Float]
-  implicit val boxFormat: Format[Geo.Box] = utils.JsonFormats.tuple2Format[Geo.Point,Geo.Point]
 
   implicit val spellFormat: Format[Spell] = Json.format[Spell]
   implicit val buoyFormat: Format[Buoy] = Json.format[Buoy]
