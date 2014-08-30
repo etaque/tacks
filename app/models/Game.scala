@@ -32,13 +32,24 @@ case class Island(
   radius: Float
 )
 
+case class WindGenerator(
+  wavelength1: Int,
+  amplitude1: Int,
+  wavelength2: Int,
+  amplitude2: Int
+) {
+  def windOrigin(at: DateTime) =
+    Math.cos(at.getMillis * 0.001 / wavelength1) * amplitude1 + Math.cos(at.getMillis * 0.001 / wavelength2) * amplitude2
+}
+
 case class Course(
   upwind: Gate,
   downwind: Gate,
   laps: Int,
   markRadius: Float,
   islands: Seq[Island],
-  bounds: Geo.Box
+  bounds: Geo.Box,
+  windGenerator: WindGenerator
 ) {
   lazy val ((right, top), (left, bottom)) = bounds
   
@@ -67,7 +78,8 @@ object Course {
       Island((150, 700), 80),
       Island((-200, 500), 60)
     ),
-    bounds = ((800,1200), (-800,-400))
+    bounds = ((800,1200), (-800,-400)),
+    windGenerator = WindGenerator(8, 10, 5, 5)
   )
 }
 
@@ -78,7 +90,7 @@ case class Gust(
   radius: Float
 ) {
   val radians = (90 - angle) * Math.PI / 180
-  val pixelSpeed = speed * 0.005
+  val pixelSpeed = speed * 0.005 // on milliseconds
 }
 
 object Gust {
@@ -92,6 +104,16 @@ object Gust {
     speed = nextInt(5) + 5,
     radius = nextInt(50) + 100
   )
+}
+
+case class Wind(
+  origin: Double,
+  speed: Double,
+  gusts: Seq[Gust]
+)
+
+object Wind {
+  val default = Wind(0, 10, Nil)
 }
 
 case class Spell(
@@ -116,16 +138,14 @@ object Buoy {
           case _ => "Fog"
         },
         duration = 20))
-
-  val default = Seq()
 }
 
 case class RaceUpdate(
   now: DateTime,
   startTime: DateTime,
   course: Option[Course],
+  wind: Wind,
   opponents: Seq[BoatState] = Seq(),
-  gusts: Seq[Gust] = Seq(),
   buoys: Seq[Buoy] = Seq(),
   playerSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
@@ -136,7 +156,8 @@ object RaceUpdate {
   def initial(r: Race) = RaceUpdate(
     DateTime.now,
     startTime = r.startTime,
-    course = Some(r.course)
+    course = Some(r.course),
+    wind = Wind.default
   )
 }
 
@@ -185,6 +206,8 @@ object JsonFormats {
   implicit val spellFormat: Format[Spell] = Json.format[Spell]
   implicit val buoyFormat: Format[Buoy] = Json.format[Buoy]
   implicit val gustFormat: Format[Gust] = Json.format[Gust]
+  implicit val windGeneratorFormat: Format[WindGenerator] = Json.format[WindGenerator]
+  implicit val windFormat: Format[Wind] = Json.format[Wind]
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
   implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
@@ -196,8 +219,8 @@ object JsonFormats {
     (__ \ 'now).format[DateTime] and
       (__ \ 'startTime).format[DateTime] and
       (__ \ 'course).format[Option[Course]] and
+      (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[BoatState]] and
-      (__ \ 'gusts).format[Seq[Gust]] and
       (__ \ 'buoys).format[Seq[Buoy]] and
       (__ \ 'playerSpell).format[Option[Spell]] and
       (__ \ 'triggeredSpells).format[Seq[Spell]] and

@@ -184,9 +184,8 @@ moveStep now delta dims gameState =
   let playerMoved = movePlayer now delta gameState dims gameState.player
   in  { gameState | player <- playerMoved }
 
--- will be useful when gusts will be implemented
-updateWindForPlayer : Wind -> Player -> Player
-updateWindForPlayer wind player =
+updatePlayerWind : Wind -> Player -> Player
+updatePlayerWind wind player =
   let gustsOnPlayer = filter (\g -> distance player.position g.position < g.radius) wind.gusts
       windOrigin = if isEmpty gustsOnPlayer
         then wind.origin
@@ -194,16 +193,11 @@ updateWindForPlayer wind player =
              in  ensure360 gust.angle
   in  { player | windOrigin <- windOrigin }
 
-windStep : Float -> Time -> [Gust] -> GameState -> GameState
-windStep delta now gusts ({wind, player} as gameState) =
-  let o1 = cos (inSeconds now / 8) * 10
-      o2 = cos (inSeconds now / 5) * 5
-      newOrigin = o1 + o2 |> ensure360
-      newWind = { wind | origin <- newOrigin,
-                         gusts <- gusts }
-      playerWithWind = updateWindForPlayer wind player
-  in { gameState | wind <- newWind,
-                   player <- playerWithWind }
+windStep : Wind -> GameState -> GameState
+windStep wind gameState =
+  let playerWithWind = updatePlayerWind wind gameState.player
+  in  { gameState | wind <- wind,
+                    player <- playerWithWind }
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep {now,startTime,course,opponents,buoys,playerSpell,triggeredSpells,leaderboard} gameState =
@@ -220,5 +214,5 @@ stepGame input gameState =
   mouseStep input.mouseInput
     <| moveStep input.raceInput.now input.delta input.windowInput
     <| keysStep input.keyboardInput
-    <| windStep input.delta input.raceInput.now input.raceInput.gusts
+    <| windStep input.raceInput.wind
     <| raceInputStep input.raceInput gameState

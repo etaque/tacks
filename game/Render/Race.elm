@@ -38,7 +38,7 @@ renderPlayerAngles player =
         |> rotate (windOriginRadians + pi/2)
         |> move (fromPolar (25, windOriginRadians))
         |> alpha 0.5
-      windAngleText = (show (abs player.windAngle)) ++ "&deg;" |> baseText
+      windAngleText = (show (abs (round player.windAngle))) ++ "&deg;" |> baseText
         |> (if player.controlMode == FixedWindAngle then line Under else id)
         |> centered |> toForm
         |> move (fromPolar (25, windOriginRadians + pi))

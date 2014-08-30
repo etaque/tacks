@@ -7,12 +7,12 @@ toRadians : Float -> Float
 toRadians deg = radians ((90 - deg) * pi / 180)
 
 mpsToKnts : Float -> Float
-mpsToKnts mps = mps * 3600 / 1.852 / 1000 
+mpsToKnts mps = mps * 3600 / 1.852 / 1000
 
 angleToWind : Float -> Float -> Float
 angleToWind playerDirection windOrigin =
   let delta = playerDirection - windOrigin
-  in 
+  in
     if | delta > 180   -> delta - 360
        | delta <= -180 -> delta + 360
        | otherwise     -> delta
@@ -24,15 +24,15 @@ polarVelocity : Float -> Float
 polarVelocity angle =
   let x1 = 15
       x2 = angle
-      v = -8.629353458 * 10^ -4 * x1^3 
-          - 1.150751365 * 10^ -6 * x1^2 * x2 
-          - 1.545154964 * 10^ -4 * x1 * x2^2 
-          - 1.576508561 * 10^ -5 * x2^3 
-          + 1.013664743 * 10^ -2 * x2 
-          + 3.818064169 * 10^ -2 * x1 * x2 
-          + 3.661699453 * 10^ -3 * x2^2 
-          - 6.076025593 * 10^ -1 * x1 
-          - 2.385773381 * 10^ -1 * x2 
+      v = -8.629353458 * 10^ -4 * x1^3
+          - 1.150751365 * 10^ -6 * x1^2 * x2
+          - 1.545154964 * 10^ -4 * x1 * x2^2
+          - 1.576508561 * 10^ -5 * x2^3
+          + 1.013664743 * 10^ -2 * x2
+          + 3.818064169 * 10^ -2 * x1 * x2
+          + 3.661699453 * 10^ -3 * x2^2
+          - 6.076025593 * 10^ -1 * x1
+          - 2.385773381 * 10^ -1 * x2
           + 14.77328598
   in v * 2 -- articifial speed factor
 
@@ -74,4 +74,3 @@ average items = (sum items) / (toFloat (length items))
 indexedMap : (Int -> a -> b) -> [a] -> [b]
 indexedMap f xs =
     zipWith f [ 0 .. length xs - 1 ] xs
-    

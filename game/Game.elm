@@ -53,7 +53,7 @@ type Player = Boat
  }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
-type Wind = { origin : Float, speed : Float, gustsCount : Int, gusts : [Gust] }
+type Wind = { origin : Float, speed : Float, gusts : [Gust] }
 
 type GameState =
   { wind: Wind
@@ -95,8 +95,7 @@ defaultPlayer =
 defaultWind : Wind
 defaultWind =
   { origin = 0
-  , speed = 10
-  , gustsCount = 0
+  , speed = 0
   , gusts = []
   }
 

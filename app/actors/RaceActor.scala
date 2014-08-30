@@ -11,7 +11,7 @@ import models._
 
 case class PlayerQuit(id: String)
 case object UpdateGameState
-case object UpdateGusts
+case object UpdateWind
 case object SpawnBuoy
 
 class RaceActor(race: Race) extends Actor {
@@ -19,13 +19,13 @@ class RaceActor(race: Race) extends Actor {
   type PlayerId = String
 
   val playersStates = scala.collection.mutable.Map[PlayerId, BoatState]()
-  var gusts: Seq[Gust] = Gust.default(race.course)
-  var buoys: Seq[Buoy] = Buoy.default
+  var wind = Wind.default.copy(gusts = Gust.default(race.course))
+  var buoys = Seq.empty[Buoy]
   val triggeredSpells = scala.collection.mutable.Map[PlayerId, Seq[(Spell, DateTime)]]() // datetime is expiration
-  var leaderboard = Seq[String]()
+  var leaderboard = Seq[PlayerId]()
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
-  Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateGusts)
+  Akka.system.scheduler.schedule(0.seconds, 10.milliseconds, self, UpdateWind)
   Akka.system.scheduler.schedule(1.second, 3.seconds, self, SpawnBuoy)
 
   def receive = {
@@ -56,7 +56,7 @@ class RaceActor(race: Race) extends Actor {
       playersStates -= id
     }
     case UpdateGameState => updateGameState()
-    case UpdateGusts => updateGusts()
+    case UpdateWind => updateWind()
   }
 
   private def updateLeaderboard() =
@@ -69,7 +69,6 @@ class RaceActor(race: Race) extends Actor {
   private def updateGameState() = {
     updateLeaderboard()
     updateSpells()
-    updateGusts()
   }
 
   private def updateSpells() = {
@@ -81,12 +80,21 @@ class RaceActor(race: Race) extends Actor {
     }
   }
 
-  private def updateGusts() = {
-    val now = DateTime.now().getMillis
-    gusts = gusts.map { gust =>
+  private def updateWind() = {
+    val now = DateTime.now()
+    wind = Wind(
+      origin = race.course.windGenerator.windOrigin(now),
+      speed = wind.speed,
+      gusts = moveGusts(now, wind.gusts)
+    )
+  }
+
+  private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
+    val ms = at.getMillis
+    gusts.map { gust =>
       val (cx,cy) = race.course.center
-      val x = -(now * gust.pixelSpeed * Math.cos(gust.radians)) % race.course.width + race.course.width / 2 + cx
-      val y = -(now * gust.pixelSpeed * Math.sin(gust.radians)) % race.course.height + race.course.height / 2 + cy
+      val x = -(ms * gust.pixelSpeed * Math.cos(gust.radians)) % race.course.width + race.course.width / 2 + cx
+      val y = -(ms * gust.pixelSpeed * Math.sin(gust.radians)) % race.course.height + race.course.height / 2 + cy
       val p = (x.toFloat,y.toFloat)
 
       if (Geo.inBox(p, race.course.bounds)) {
@@ -103,7 +111,7 @@ class RaceActor(race: Race) extends Actor {
       now = DateTime.now,
       startTime = race.startTime,
       course = None, // already transmitted in initial update
-      gusts = gusts,
+      wind = wind,
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,

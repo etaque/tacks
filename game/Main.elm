@@ -15,12 +15,12 @@ port raceInput : Signal { now: Float, startTime: Float,
                           course: Maybe { upwind: { y: Float, width: Float }, downwind: { y: Float, width: Float }, laps: Int,
                                           markRadius: Float, islands: [{ location : (Float,Float), radius : Float }],
                                           bounds: ((Float,Float),(Float,Float)) },
+                          wind: { origin : Float, speed : Float, gusts : [{ position: (Float,Float), angle: Float, speed: Float, radius: Float }] },
                           opponents: [{ position: (Float,Float), direction: Float, velocity: Float, passedGates: [Float], name: String }],
                           buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}],
                           playerSpell: Maybe { kind: String },
                           triggeredSpells: [{ kind: String }],
-                          leaderboard: [String],
-                          gusts: [{ position: (Float,Float), angle: Float, speed: Float, radius: Float }] }
+                          leaderboard: [String] }
 
 clock : Signal Float
 clock = inSeconds <~ fps 30

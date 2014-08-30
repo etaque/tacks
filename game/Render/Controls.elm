@@ -70,7 +70,7 @@ renderPolar player (w,h) =
     playerPoint = anglePoint absWindAngle
     playerMark = circle 2 |> filled red |> move playerPoint
     playerSegment = segment (0,0) playerPoint |> traced (solid white) |> alpha 0.3
-    windOriginText = ((show absWindAngle) ++ "&deg;")
+    windOriginText = ((show (round absWindAngle)) ++ "&deg;")
       |> baseText |> centered |> toForm
       |> move (add playerPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
     playerProjection = segment playerPoint (0, snd playerPoint) |> traced (dotted white)
@@ -91,7 +91,7 @@ renderControlWheel wind player (w,h) =
         |> filled white
         |> rotate (playerAngle - pi/2)
         |> move (fromPolar (r - 4, playerAngle))
-      windOriginText = ((show player.windOrigin) ++ "&deg;")
+      windOriginText = ((show (round player.windOrigin)) ++ "&deg;")
         |> baseText |> centered |> toForm
         |> rotate (windAngle - pi/2)
         |> move (fromPolar (r + 20, windAngle))
