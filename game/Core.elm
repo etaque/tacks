@@ -20,9 +20,9 @@ angleToWind playerDirection windOrigin =
 -- polynomial regression of AC72 polar
 -- see http://noticeboard.americascup.com/wp-content/uploads/actv/LV13/AC72polar.130714.txt
 -- and http://www.xuru.org/rt/MPR.asp
-polarVelocity : Float -> Float
-polarVelocity angle =
-  let x1 = 15
+polarVelocity : Float -> Float -> Float
+polarVelocity speed angle =
+  let x1 = speed
       x2 = angle
       v = -8.629353458 * 10^ -4 * x1^3
           - 1.150751365 * 10^ -6 * x1^2 * x2
@@ -36,21 +36,21 @@ polarVelocity angle =
           + 14.77328598
   in v * 2 -- articifial speed factor
 
-vmgValue : Float  -> Float
-vmgValue a = abs ((cos (toRadians a)) * (polarVelocity a))
+vmgValue : Float -> Float  -> Float
+vmgValue s a = abs ((cos (toRadians a)) * (polarVelocity s a))
 
-upwindVmg : Float
-upwindVmg =
-  map (\a -> (a, vmgValue a)) [30..60] |> sortBy snd |> last |> fst
+upwindVmg : Float -> Float
+upwindVmg windSpeed =
+  map (\a -> (a, vmgValue windSpeed a)) [30..60] |> sortBy snd |> last |> fst
 
-downwindVmg : Float
-downwindVmg =
-  map (\a -> (a, vmgValue a)) [130..180] |> sortBy snd |> last |> fst
+downwindVmg : Float -> Float
+downwindVmg windSpeed =
+  map (\a -> (a, vmgValue windSpeed a)) [130..180] |> sortBy snd |> last |> fst
 
 -- deals with inertia
-playerVelocity : Float -> Float -> Float
-playerVelocity windAngle previousVelocity =
-  let v = polarVelocity(abs windAngle)
+playerVelocity : Float -> Float -> Float -> Float
+playerVelocity windSpeed windAngle previousVelocity =
+  let v = polarVelocity windSpeed (abs windAngle)
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 

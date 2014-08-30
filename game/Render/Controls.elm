@@ -61,11 +61,11 @@ renderPolar : Player -> (Float,Float) -> Form
 renderPolar player (w,h) =
   let
     absWindAngle = abs player.windAngle
-    anglePoint a = fromPolar ((polarVelocity a) * 1.5, toRadians a)
+    anglePoint a = fromPolar ((polarVelocity player.windSpeed a), toRadians a)
     points = map anglePoint [0..180]
-    maxSpeed = (map fst points |> maximum) + 10
+    maxSpeed = 100
     polar = path points |> traced (solid white)
-    yAxis = segment (0,maxSpeed) (0,-maxSpeed) |> traced (solid white) |> alpha 0.6
+    yAxis = segment (0,(maxSpeed/2)) (0,-maxSpeed) |> traced (solid white) |> alpha 0.6
     xAxis = segment (0,0) (maxSpeed,0) |> traced (solid white) |> alpha 0.6
     playerPoint = anglePoint absWindAngle
     playerMark = circle 2 |> filled red |> move playerPoint
@@ -74,30 +74,29 @@ renderPolar player (w,h) =
       |> baseText |> centered |> toForm
       |> move (add playerPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
     playerProjection = segment playerPoint (0, snd playerPoint) |> traced (dotted white)
-    legend = "VMG" |> baseText |> centered |> toForm |> move (maxSpeed / 2, maxSpeed * 0.8)
+    legend = "PLAYER\nSPEED" |> baseText |> centered |> toForm |> move (maxSpeed/2, -maxSpeed * 0.9)
   in
     group [yAxis, xAxis, polar, playerProjection, playerMark, playerSegment, windOriginText, legend]
-      |> move (-w/2 + 20, h/2 - maxSpeed - 20)
+      |> move (-w/2 + 20, h/2 - maxSpeed/2 - 20)
 
-renderControlWheel : Wind -> Player -> (Float,Float) -> Form
-renderControlWheel wind player (w,h) =
-  let r = 35
+renderWindWheel : Wind -> Player -> (Float,Float) -> Form
+renderWindWheel wind player (w,h) =
+  let r = 25 + wind.speed * 0.5
       c = circle r |> outlined (solid white)
-      windAngle = toRadians player.windOrigin
-      playerWindMarker = segment (fromPolar (r, windAngle)) (fromPolar (r + 8, windAngle))
-        |> traced (solid white)
-      playerAngle = toRadians player.direction
-      playerMarker = polygon [(0,4),(-4,-4),(4,-4)]
+      windOriginRadians = toRadians wind.origin
+      windMarker = polygon [(0,4),(-4,-4),(4,-4)]
         |> filled white
-        |> rotate (playerAngle - pi/2)
-        |> move (fromPolar (r - 4, playerAngle))
-      windOriginText = ((show (round player.windOrigin)) ++ "&deg;")
+        |> rotate (windOriginRadians + pi/2)
+        |> move (fromPolar (r + 4, windOriginRadians))
+      windOriginText = ((show (round wind.origin)) ++ "&deg;")
         |> baseText |> centered |> toForm
-        |> rotate (windAngle - pi/2)
-        |> move (fromPolar (r + 20, windAngle))
+        |> rotate (windOriginRadians - pi/2)
+        |> move (fromPolar (r + 20, windOriginRadians))
+      windSpeedText = ((show (round wind.speed)) ++ "kn")
+        |> baseText |> centered |> toForm
+      legend = "WIND" |> baseText |> centered |> toForm |> move (0, -50)
 
-  in
-      group [c, playerWindMarker, playerMarker, windOriginText] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
+  in  group [c, windMarker, windOriginText, windSpeedText, legend] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
 
 renderStockSpell : Spell -> (Float, Float) -> Form
 renderStockSpell spell (w,h) =
@@ -182,7 +181,7 @@ renderAbsolute ({wind,player,opponents,course,playerSpell} as gameState) dims =
       justForms =
         [ renderLapsCount dims course player
         , renderPolar player dims
-        , renderControlWheel wind player dims
+        , renderWindWheel wind player dims
         ]
       maybeForms =
         [ renderHiddenGate course.downwind dims player.center (nextGate == Just Downwind)

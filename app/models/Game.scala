@@ -24,6 +24,9 @@ case class WindGenerator(
 ) {
   def windOrigin(at: DateTime) =
     Math.cos(at.getMillis * 0.001 / wavelength1) * amplitude1 + Math.cos(at.getMillis * 0.001 / wavelength2) * amplitude2
+
+  def windSpeed(at: DateTime) = Wind.defaultWindSpeed +
+    (Math.cos(at.getMillis * 0.001 / wavelength1) * 5 - Math.cos(at.getMillis * 0.001 / wavelength2) * 5) / 2
 }
 
 case class Course(
@@ -83,7 +86,7 @@ object Gust {
   def default(course: Course, quantity: Int = 5) = Seq.fill(quantity)(spawn(course, initial = true))
 
   def spawn(course: Course, initial: Boolean) = Gust(
-    position = (course.randomX(100), if (initial) course.randomY(0) else course.top),
+    position = (course.randomX((course.width/4).toInt), if (initial) course.randomY(0) else course.top),
     angle = nextInt(30) - 15,
     speed = nextInt(5) + 5,
     radius = nextInt(50) + 100
@@ -97,7 +100,8 @@ case class Wind(
 )
 
 object Wind {
-  val default = Wind(0, 10, Nil)
+  val defaultWindSpeed = 15
+  val default = Wind(0, defaultWindSpeed, Nil)
 }
 
 case class Spell(

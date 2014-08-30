@@ -228,12 +228,19 @@ Elm.Steps.make = function (_elm) {
             g.radius) < 0;
          },
          wind.gusts);
-         var windOrigin = List.isEmpty(gustsOnPlayer) ? wind.origin : function () {
+         var $ = List.isEmpty(gustsOnPlayer) ? {ctor: "_Tuple2"
+                                               ,_0: wind.origin
+                                               ,_1: wind.speed} : function () {
             var gust = List.head(gustsOnPlayer);
-            return Core.ensure360(gust.angle);
-         }();
+            return {ctor: "_Tuple2"
+                   ,_0: Core.ensure360(gust.angle)
+                   ,_1: wind.speed + gust.speed};
+         }(),
+         windOrigin = $._0,
+         windSpeed = $._1;
          return _U.replace([["windOrigin"
-                            ,windOrigin]],
+                            ,windOrigin]
+                           ,["windSpeed",windSpeed]],
          player);
       }();
    });
@@ -461,7 +468,8 @@ Elm.Steps.make = function (_elm) {
          velocity = $.velocity,
          windAngle = $.windAngle,
          passedGates = $.passedGates;
-         var newVelocity = A2(Core.playerVelocity,
+         var newVelocity = A3(Core.playerVelocity,
+         player.windSpeed,
          player.windAngle,
          velocity);
          var nextPosition = A4(Geo.movePoint,
@@ -886,7 +894,7 @@ Elm.Render.Race.make = function (_elm) {
          var $ = Game.getGateMarks(upwindMark),
          left = $._0,
          right = $._1;
-         var upwindVmgAngleR = Core.toRadians(Core.upwindVmg);
+         var upwindVmgAngleR = Core.toRadians(Core.upwindVmg(player.windSpeed));
          var leftLL = A2(Geo.add,
          left,
          Basics.fromPolar({ctor: "_Tuple2"
@@ -919,7 +927,12 @@ Elm.Render.Race.make = function (_elm) {
    };
    var renderGust = F2(function (wind,
    gust) {
-      return Graphics.Collage.move(gust.position)(Graphics.Collage.alpha(0.2)(Graphics.Collage.filled(Color.black)(Graphics.Collage.circle(gust.radius))));
+      return function () {
+         var color = _U.cmp(gust.speed,
+         0) > 0 ? Color.black : Color.white;
+         var a = 0.3 * Basics.abs(gust.speed) / 10;
+         return Graphics.Collage.move(gust.position)(Graphics.Collage.alpha(a)(Graphics.Collage.filled(color)(Graphics.Collage.circle(gust.radius))));
+      }();
    });
    var renderGusts = function (wind) {
       return Graphics.Collage.group(A2(List.map,
@@ -1223,7 +1236,7 @@ Elm.Render.Controls.make = function (_elm) {
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 171 and 175");
+         "between lines 170 and 174");
       }();
    });
    var getArrow = _L.fromArray([{ctor: "_Tuple2"
@@ -1279,7 +1292,7 @@ Elm.Render.Controls.make = function (_elm) {
             case "PoleInversion":
             return renderPoleInversion;}
          _E.Case($moduleName,
-         "between lines 137 and 139");
+         "between lines 136 and 138");
       }();
    };
    var renderStockSpell = F2(function (spell,
@@ -1300,51 +1313,49 @@ Elm.Render.Controls.make = function (_elm) {
                                                                                                           ,spellGraphics])));
               }();}
          _E.Case($moduleName,
-         "between lines 104 and 113");
+         "between lines 103 and 112");
       }();
    });
-   var renderControlWheel = F3(function (wind,
+   var renderWindWheel = F3(function (wind,
    player,
    _v9) {
       return function () {
          switch (_v9.ctor)
          {case "_Tuple2":
             return function () {
-                 var playerAngle = Core.toRadians(player.direction);
-                 var windAngle = Core.toRadians(player.windOrigin);
-                 var r = 35;
+                 var legend = Graphics.Collage.move({ctor: "_Tuple2"
+                                                    ,_0: 0
+                                                    ,_1: -50})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("WIND"))));
+                 var windSpeedText = Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(Basics.round(wind.speed)),
+                 "kn"))));
+                 var windOriginRadians = Core.toRadians(wind.origin);
+                 var r = 25 + wind.speed * 0.5;
                  var c = Graphics.Collage.outlined(Graphics.Collage.solid(Color.white))(Graphics.Collage.circle(r));
-                 var playerWindMarker = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
-                 Basics.fromPolar({ctor: "_Tuple2"
-                                  ,_0: r
-                                  ,_1: windAngle}),
-                 Basics.fromPolar({ctor: "_Tuple2"
-                                  ,_0: r + 8
-                                  ,_1: windAngle})));
-                 var playerMarker = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
-                                                                           ,_0: r - 4
-                                                                           ,_1: playerAngle}))(Graphics.Collage.rotate(playerAngle - Basics.pi / 2)(Graphics.Collage.filled(Color.white)(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                                                                                                                ,_0: 0
-                                                                                                                                                                                                                                ,_1: 4}
-                                                                                                                                                                                                                               ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                ,_0: -4
-                                                                                                                                                                                                                                ,_1: -4}
-                                                                                                                                                                                                                               ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                ,_0: 4
-                                                                                                                                                                                                                                ,_1: -4}])))));
+                 var windMarker = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
+                                                                         ,_0: r + 4
+                                                                         ,_1: windOriginRadians}))(Graphics.Collage.rotate(windOriginRadians + Basics.pi / 2)(Graphics.Collage.filled(Color.white)(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                                                                                                                          ,_0: 0
+                                                                                                                                                                                                                                          ,_1: 4}
+                                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                          ,_0: -4
+                                                                                                                                                                                                                                          ,_1: -4}
+                                                                                                                                                                                                                                         ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                          ,_0: 4
+                                                                                                                                                                                                                                          ,_1: -4}])))));
                  var windOriginText = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
                                                                              ,_0: r + 20
-                                                                             ,_1: windAngle}))(Graphics.Collage.rotate(windAngle - Basics.pi / 2)(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(Basics.round(player.windOrigin)),
+                                                                             ,_1: windOriginRadians}))(Graphics.Collage.rotate(windOriginRadians - Basics.pi / 2)(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(Basics.round(wind.origin)),
                  "&deg;"))))));
                  return Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
                                                                           ,_0: _v9._0 / 2 - 50
                                                                           ,_1: _v9._1 / 2 - 120})(Graphics.Collage.group(_L.fromArray([c
-                                                                                                                                      ,playerWindMarker
-                                                                                                                                      ,playerMarker
-                                                                                                                                      ,windOriginText]))));
+                                                                                                                                      ,windMarker
+                                                                                                                                      ,windOriginText
+                                                                                                                                      ,windSpeedText
+                                                                                                                                      ,legend]))));
               }();}
          _E.Case($moduleName,
-         "between lines 84 and 100");
+         "between lines 84 and 99");
       }();
    });
    var renderPolar = F2(function (player,
@@ -1353,21 +1364,11 @@ Elm.Render.Controls.make = function (_elm) {
          switch (_v13.ctor)
          {case "_Tuple2":
             return function () {
-                 var anglePoint = function (a) {
-                    return Basics.fromPolar({ctor: "_Tuple2"
-                                            ,_0: Core.polarVelocity(a) * 1.5
-                                            ,_1: Core.toRadians(a)});
-                 };
-                 var points = A2(List.map,
-                 anglePoint,
-                 _L.range(0,180));
-                 var maxSpeed = List.maximum(A2(List.map,
-                 Basics.fst,
-                 points)) + 10;
+                 var maxSpeed = 100;
                  var yAxis = Graphics.Collage.alpha(0.6)(Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
                  {ctor: "_Tuple2"
                  ,_0: 0
-                 ,_1: maxSpeed},
+                 ,_1: maxSpeed / 2},
                  {ctor: "_Tuple2"
                  ,_0: 0
                  ,_1: 0 - maxSpeed})));
@@ -1378,7 +1379,17 @@ Elm.Render.Controls.make = function (_elm) {
                  ,_1: 0})));
                  var legend = Graphics.Collage.move({ctor: "_Tuple2"
                                                     ,_0: maxSpeed / 2
-                                                    ,_1: maxSpeed * 0.8})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("VMG"))));
+                                                    ,_1: (0 - maxSpeed) * 0.9})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("PLAYER\nSPEED"))));
+                 var anglePoint = function (a) {
+                    return Basics.fromPolar({ctor: "_Tuple2"
+                                            ,_0: A2(Core.polarVelocity,
+                                            player.windSpeed,
+                                            a)
+                                            ,_1: Core.toRadians(a)});
+                 };
+                 var points = A2(List.map,
+                 anglePoint,
+                 _L.range(0,180));
                  var polar = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(Graphics.Collage.path(points));
                  var absWindAngle = Basics.abs(player.windAngle);
                  var playerPoint = anglePoint(absWindAngle);
@@ -1399,14 +1410,14 @@ Elm.Render.Controls.make = function (_elm) {
                  "&deg;"))))));
                  return Graphics.Collage.move({ctor: "_Tuple2"
                                               ,_0: (0 - _v13._0) / 2 + 20
-                                              ,_1: _v13._1 / 2 - maxSpeed - 20})(Graphics.Collage.group(_L.fromArray([yAxis
-                                                                                                                     ,xAxis
-                                                                                                                     ,polar
-                                                                                                                     ,playerProjection
-                                                                                                                     ,playerMark
-                                                                                                                     ,playerSegment
-                                                                                                                     ,windOriginText
-                                                                                                                     ,legend])));
+                                              ,_1: _v13._1 / 2 - maxSpeed / 2 - 20})(Graphics.Collage.group(_L.fromArray([yAxis
+                                                                                                                         ,xAxis
+                                                                                                                         ,polar
+                                                                                                                         ,playerProjection
+                                                                                                                         ,playerMark
+                                                                                                                         ,playerSegment
+                                                                                                                         ,windOriginText
+                                                                                                                         ,legend])));
               }();}
          _E.Case($moduleName,
          "between lines 62 and 80");
@@ -1535,7 +1546,7 @@ Elm.Render.Controls.make = function (_elm) {
                                          ,A2(renderPolar,
                                          _v32.player,
                                          dims)
-                                         ,A3(renderControlWheel,
+                                         ,A3(renderWindWheel,
                                          _v32.wind,
                                          _v32.player,
                                          dims)]);
@@ -1572,7 +1583,7 @@ Elm.Render.Controls.make = function (_elm) {
                                                 case "Nothing":
                                                 return Maybe.Nothing;}
                                              _E.Case($moduleName,
-                                             "between lines 193 and 196");
+                                             "between lines 192 and 195");
                                           }()]);
             return Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms)));
@@ -1585,7 +1596,7 @@ Elm.Render.Controls.make = function (_elm) {
                                  ,renderWinner: renderWinner
                                  ,renderLapsCount: renderLapsCount
                                  ,renderPolar: renderPolar
-                                 ,renderControlWheel: renderControlWheel
+                                 ,renderWindWheel: renderWindWheel
                                  ,renderStockSpell: renderStockSpell
                                  ,renderPoleInversion: renderPoleInversion
                                  ,renderFog: renderFog
@@ -2198,10 +2209,11 @@ Elm.Core.make = function (_elm) {
          "between lines 59 and 61");
       }();
    });
-   var polarVelocity = function (angle) {
+   var polarVelocity = F2(function (speed,
+   angle) {
       return function () {
          var x2 = angle;
-         var x1 = 15;
+         var x1 = speed;
          var v = -8.629353458 * Math.pow(10,
          -4) * Math.pow(x1,
          3) - 1.150751365 * Math.pow(10,
@@ -2219,11 +2231,14 @@ Elm.Core.make = function (_elm) {
          -1) * x2 + 14.77328598;
          return v * 2;
       }();
-   };
-   var playerVelocity = F2(function (windAngle,
+   });
+   var playerVelocity = F3(function (windSpeed,
+   windAngle,
    previousVelocity) {
       return function () {
-         var v = polarVelocity(Basics.abs(windAngle));
+         var v = A2(polarVelocity,
+         windSpeed,
+         Basics.abs(windAngle));
          var delta = v - previousVelocity;
          return previousVelocity + delta * 2.0e-2;
       }();
@@ -2243,23 +2258,30 @@ Elm.Core.make = function (_elm) {
    var toRadians = function (deg) {
       return Basics.radians((90 - deg) * Basics.pi / 180);
    };
-   var vmgValue = function (a) {
-      return Basics.abs(Basics.cos(toRadians(a)) * polarVelocity(a));
+   var vmgValue = F2(function (s,
+   a) {
+      return Basics.abs(Basics.cos(toRadians(a)) * A2(polarVelocity,
+      s,
+      a));
+   });
+   var upwindVmg = function (windSpeed) {
+      return Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
+      function (a) {
+         return {ctor: "_Tuple2"
+                ,_0: a
+                ,_1: A2(vmgValue,windSpeed,a)};
+      },
+      _L.range(30,60)))));
    };
-   var upwindVmg = Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
-   function (a) {
-      return {ctor: "_Tuple2"
-             ,_0: a
-             ,_1: vmgValue(a)};
-   },
-   _L.range(30,60)))));
-   var downwindVmg = Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
-   function (a) {
-      return {ctor: "_Tuple2"
-             ,_0: a
-             ,_1: vmgValue(a)};
-   },
-   _L.range(130,180)))));
+   var downwindVmg = function (windSpeed) {
+      return Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
+      function (a) {
+         return {ctor: "_Tuple2"
+                ,_0: a
+                ,_1: A2(vmgValue,windSpeed,a)};
+      },
+      _L.range(130,180)))));
+   };
    var ensure360 = function (val) {
       return Basics.toFloat(A2(Basics.mod,
       Basics.round(val) + 360,
@@ -2401,7 +2423,7 @@ Elm.Render.Utils.make = function (_elm) {
                 10,
                 105,
                 148)};
-   var helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, ↑ or ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell";
+   var helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n↑ or ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell";
    _elm.Render.Utils.values = {_op: _op
                               ,helpMessage: helpMessage
                               ,colors: colors

@@ -164,7 +164,7 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
 movePlayer : Time -> Float -> GameState -> (Int,Int) -> Player -> Player
 movePlayer now delta gameState dimensions player =
   let {position, direction, velocity, windAngle, passedGates} = player
-      newVelocity = playerVelocity player.windAngle velocity
+      newVelocity = playerVelocity player.windSpeed player.windAngle velocity
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
@@ -187,11 +187,12 @@ moveStep now delta dims gameState =
 updatePlayerWind : Wind -> Player -> Player
 updatePlayerWind wind player =
   let gustsOnPlayer = filter (\g -> distance player.position g.position < g.radius) wind.gusts
-      windOrigin = if isEmpty gustsOnPlayer
-        then wind.origin
+      (windOrigin, windSpeed) = if isEmpty gustsOnPlayer
+        then (wind.origin, wind.speed)
         else let gust = head gustsOnPlayer
-             in  ensure360 gust.angle
-  in  { player | windOrigin <- windOrigin }
+             in  (ensure360 gust.angle, wind.speed + gust.speed)
+  in  { player | windOrigin <- windOrigin,
+                 windSpeed <- windSpeed }
 
 windStep : Wind -> GameState -> GameState
 windStep wind gameState =

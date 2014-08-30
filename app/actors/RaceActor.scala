@@ -79,7 +79,7 @@ class RaceActor(race: Race) extends Actor {
     val now = DateTime.now()
     wind = Wind(
       origin = race.course.windGenerator.windOrigin(now),
-      speed = wind.speed,
+      speed = race.course.windGenerator.windSpeed(now),
       gusts = moveGusts(now, wind.gusts)
     )
   }

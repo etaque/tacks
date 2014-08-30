@@ -77,7 +77,7 @@ renderPlayer player spells =
       fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
       movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
       wake = renderWake player.wake
-  in group [movingPart, wake]
+  in movingPart --group [movingPart, wake]
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
@@ -103,7 +103,9 @@ renderBounds box =
 
 renderGust : Wind -> Gust -> Form
 renderGust wind gust =
-  circle gust.radius |> filled black |> alpha 0.2 |> move gust.position
+  let a = 0.3 * (abs gust.speed) / 10
+      color = if gust.speed > 0 then black else white
+  in  circle gust.radius |> filled color |> alpha a |> move gust.position
 
 renderGusts : Wind -> Form
 renderGusts wind =
@@ -124,7 +126,7 @@ renderBuoy timer {position,radius,spell} =
 
 renderLaylines : Player -> Course -> Form
 renderLaylines player course =
-  let upwindVmgAngleR = toRadians upwindVmg
+  let upwindVmgAngleR = toRadians (upwindVmg player.windSpeed)
       upwindMark = course.upwind
       (left,right) = getGateMarks upwindMark
       windAngleR = toRadians player.windOrigin
