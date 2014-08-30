@@ -4,16 +4,20 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
-import scala.concurrent.duration.Duration
-
 object Geo {
-  type Point = (Float,Float)
-  type Box = (Point,Point)
+  type Point = (Float,Float) // (x,y)
+  type Box = (Point,Point) // ((right,top),(left,bottom))
 
   def distanceBetween(p1: Point, p2: Point): Double = {
     val (x1,y1) = p1
     val (x2,y2) = p2
     Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+  }
+
+  def inBox(p: Point, b: Box): Boolean = {
+    val (x,y) = p
+    val ((right, top), (left, bottom)) = b
+    x > left && x < right && y > bottom && y < top
   }
 
 }
@@ -36,9 +40,20 @@ case class Course(
   islands: Seq[Island],
   bounds: Geo.Box
 ) {
-  def width = Math.abs(bounds._1._1 - bounds._2._1)
-  def height = Math.abs(bounds._1._2 - bounds._2._2)
-  def center: Geo.Point = ((bounds._1._1 + bounds._2._1) / 2, (bounds._1._2 + bounds._2._2) / 2)
+  lazy val ((right, top), (left, bottom)) = bounds
+  
+  lazy val width = Math.abs(right - left)
+  lazy val height = Math.abs(top - bottom)
+
+  lazy val cx = (right + left) / 2
+  lazy val cy = (top + bottom) / 2
+  lazy val center = (cx, cy)
+
+  import scala.util.Random._
+
+  def randomX(margin: Int = 0): Float = nextInt(width.toInt - margin * 2) - width / 2 + margin + cx
+  def randomY(margin: Int = 0): Float = nextInt(height.toInt - margin * 2) - height / 2 + margin + cy
+  def randomPoint: Geo.Point = (randomX(0), randomY(0))
 }
 
 object Course {
@@ -63,18 +78,19 @@ case class Gust(
   radius: Float
 ) {
   val radians = (90 - angle) * Math.PI / 180
-  val pixelSpeed = speed * 0.03
+  val pixelSpeed = speed * 0.005
 }
 
 object Gust {
   import scala.util.Random._
-  val default = Seq.fill(10)(
-    Gust(
-      position = (nextInt(1600) - 800, nextInt(1600) - 400),
-      angle = nextInt(30) - 15,
-      speed = nextInt(5),
-      radius = nextInt(40) + 80
-    )
+
+  def default(course: Course, quantity: Int = 5) = Seq.fill(quantity)(spawn(course, initial = true))
+
+  def spawn(course: Course, initial: Boolean) = Gust(
+    position = (course.randomX(100), if (initial) course.randomY(0) else course.top),
+    angle = nextInt(30) - 15,
+    speed = nextInt(5) + 5,
+    radius = nextInt(50) + 100
   )
 }
 

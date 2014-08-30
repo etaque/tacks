@@ -19,7 +19,7 @@ class RaceActor(race: Race) extends Actor {
   type PlayerId = String
 
   val playersStates = scala.collection.mutable.Map[PlayerId, BoatState]()
-  var gusts: Seq[Gust] = Gust.default
+  var gusts: Seq[Gust] = Gust.default(race.course)
   var buoys: Seq[Buoy] = Buoy.default
   val triggeredSpells = scala.collection.mutable.Map[PlayerId, Seq[(Spell, DateTime)]]() // datetime is expiration
   var leaderboard = Seq[String]()
@@ -87,7 +87,13 @@ class RaceActor(race: Race) extends Actor {
       val (cx,cy) = race.course.center
       val x = -(now * gust.pixelSpeed * Math.cos(gust.radians)) % race.course.width + race.course.width / 2 + cx
       val y = -(now * gust.pixelSpeed * Math.sin(gust.radians)) % race.course.height + race.course.height / 2 + cy
-      gust.copy(position = (x.toFloat,y.toFloat))
+      val p = (x.toFloat,y.toFloat)
+
+      if (Geo.inBox(p, race.course.bounds)) {
+        gust.copy(position = p)
+      } else {
+        Gust.spawn(race.course, initial = false)
+      }
     }
   }
 
