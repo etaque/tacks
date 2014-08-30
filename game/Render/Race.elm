@@ -117,9 +117,10 @@ renderIslands : GameState -> Form
 renderIslands gameState =
   group (map renderIsland gameState.course.islands)
 
-renderBuoy : Buoy -> Form
-renderBuoy {position,radius,spell} =
-  circle radius |> filled colors.buoy |> move position
+renderBuoy : Time -> Buoy -> Form
+renderBuoy timer {position,radius,spell} =
+  let a = 0.4 + 0.2 * cos (timer * 0.005)
+  in  circle radius |> filled colors.buoy |> move position |> alpha a
 
 renderLaylines : Player -> Course -> Form
 renderLaylines player course =
@@ -158,7 +159,7 @@ renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
         renderGate course.upwind course.markRadius (nextGate == Just Upwind),
         --renderLaylines player gameState.course,
         group (map renderOpponent opponents),
-        group (map renderBuoy buoys),
+        group (map (renderBuoy gameState.countdown) buoys),
         renderGusts gameState.wind,
         renderPlayer player triggeredSpells
       ]

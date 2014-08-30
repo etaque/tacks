@@ -8,7 +8,7 @@ helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune directio
 
 colors = { seaBlue = rgb 10 105 148,
            sand = rgb 239 210 121,
-           buoy = rgb 253 52 62 }
+           buoy = white }
 
 fullScreenMessage : String -> Form
 fullScreenMessage msg = msg

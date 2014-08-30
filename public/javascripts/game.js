@@ -898,11 +898,15 @@ Elm.Render.Race.make = function (_elm) {
          return Graphics.Collage.alpha(0.3)(Graphics.Collage.group(_L.fromArray([l1])));
       }();
    });
-   var renderBuoy = function (_v0) {
+   var renderBuoy = F2(function (timer,
+   _v0) {
       return function () {
-         return Graphics.Collage.move(_v0.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v0.radius)));
+         return function () {
+            var a = 0.4 + 0.2 * Basics.cos(timer * 5.0e-3);
+            return Graphics.Collage.alpha(a)(Graphics.Collage.move(_v0.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v0.radius))));
+         }();
       }();
-   };
+   });
    var renderIsland = function (_v2) {
       return function () {
          return Graphics.Collage.move(_v2.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v2.radius)));
@@ -1062,8 +1066,7 @@ Elm.Render.Race.make = function (_elm) {
                                                                                                                ,eqLine
                                                                                                                ,hull]),
          fog)));
-         return Graphics.Collage.group(_L.fromArray([movingPart
-                                                    ,wake]));
+         return movingPart;
       }();
    });
    var renderGate = F3(function (gate,
@@ -1142,7 +1145,7 @@ Elm.Render.Race.make = function (_elm) {
                                          renderOpponent,
                                          _v16.opponents))
                                          ,Graphics.Collage.group(A2(List.map,
-                                         renderBuoy,
+                                         renderBuoy(_v16.countdown),
                                          _v16.buoys))
                                          ,renderGusts(_v16.wind)
                                          ,A2(renderPlayer,
@@ -2392,7 +2395,7 @@ Elm.Render.Utils.make = function (_elm) {
       return Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(Text.centered(Text.color(Color.white)(Text.height(60)(Text.toText(String.toUpper(msg)))))));
    };
    var colors = {_: {}
-                ,buoy: A3(Color.rgb,253,52,62)
+                ,buoy: Color.white
                 ,sand: A3(Color.rgb,239,210,121)
                 ,seaBlue: A3(Color.rgb,
                 10,
