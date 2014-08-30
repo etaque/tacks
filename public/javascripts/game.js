@@ -308,16 +308,16 @@ Elm.Steps.make = function (_elm) {
                                                 _v5._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
-                                 "between lines 149 and 162");
+                                 "between lines 145 and 158");
                               }();}
                          _E.Case($moduleName,
-                         "between lines 149 and 162");
+                         "between lines 145 and 158");
                       }();}
                  _E.Case($moduleName,
-                 "between lines 149 and 162");
+                 "between lines 145 and 158");
               }();}
          _E.Case($moduleName,
-         "between lines 149 and 162");
+         "between lines 145 and 158");
       }();
    });
    var getGatesMarks = function (course) {
@@ -379,7 +379,7 @@ Elm.Steps.make = function (_elm) {
                    break;}
               break;}
          _E.Case($moduleName,
-         "between lines 98 and 102");
+         "between lines 94 and 98");
       }();
    });
    var gatePassedFromNorth = F2(function (gate,
@@ -395,7 +395,7 @@ Elm.Steps.make = function (_elm) {
               ,_0: _v26._0
               ,_1: _v26._1}));}
          _E.Case($moduleName,
-         "on line 106, column 4 to 70");
+         "on line 102, column 4 to 70");
       }();
    });
    var gatePassedFromSouth = F2(function (gate,
@@ -411,7 +411,7 @@ Elm.Steps.make = function (_elm) {
               ,_0: _v30._0
               ,_1: _v30._1}));}
          _E.Case($moduleName,
-         "on line 110, column 4 to 70");
+         "on line 106, column 4 to 70");
       }();
    });
    var getPassedGates = F4(function (player,
@@ -452,7 +452,7 @@ Elm.Steps.make = function (_elm) {
                case "Nothing":
                return player.passedGates;}
             _E.Case($moduleName,
-            "between lines 114 and 127");
+            "between lines 110 and 123");
          }();
       }();
    });
@@ -560,7 +560,7 @@ Elm.Steps.make = function (_elm) {
                               -90) > -1 ? 0 - maxTurn : maxTurn;
                            }();}
                       _E.Case($moduleName,
-                      "between lines 58 and 68");
+                      "between lines 58 and 66");
                    }();
                  case "Nothing":
                  switch (_v38._1.ctor)
@@ -573,14 +573,15 @@ Elm.Steps.make = function (_elm) {
                       case "FixedWindAngle":
                       switch (_v38._2)
                         {case 0: switch (_v38._3)
-                             {case 0:
-                                return player.windOrigin + player.windAngle - player.direction;}
+                             {case 0: return A2(Debug.log,
+                                  "turn",
+                                  Core.ensure360(player.windOrigin + player.windAngle - player.direction));}
                              break;}
                         break;}
                    return fineTurn ? _v38._2 : _v38._2 * 3;}
               break;}
          _E.Case($moduleName,
-         "between lines 55 and 71");
+         "between lines 55 and 69");
       }();
    });
    var tackTargetReached = F2(function (player,
@@ -672,8 +673,7 @@ Elm.Steps.make = function (_elm) {
             return _U.replace([["controlMode"
                                ,controlMode]
                               ,["tackTarget"
-                               ,tackTargetAfterTurn]
-                              ,["spellCast",_v54.spellCast]],
+                               ,tackTargetAfterTurn]],
             turnedPlayer);
          }();
       }();
@@ -2188,7 +2188,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 66 and 69");
+               "between lines 69 and 72");
             }();
          });
          return A3(List.foldl,
@@ -2206,7 +2206,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 59 and 61");
+         "between lines 62 and 64");
       }();
    });
    var polarVelocity = F2(function (speed,
@@ -2283,9 +2283,13 @@ Elm.Core.make = function (_elm) {
       _L.range(130,180)))));
    };
    var ensure360 = function (val) {
-      return Basics.toFloat(A2(Basics.mod,
-      Basics.round(val) + 360,
-      360));
+      return function () {
+         var rounded = Basics.round(val);
+         var excess = val - Basics.toFloat(rounded);
+         return Basics.toFloat(A2(Basics.mod,
+         rounded + 360,
+         360)) + excess;
+      }();
    };
    _elm.Core.values = {_op: _op
                       ,ensure360: ensure360

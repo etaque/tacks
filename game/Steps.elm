@@ -58,15 +58,13 @@ getTurn tackTarget player arrows fineTurn =
       case player.controlMode of
         FixedDirection ->
           let maxTurn = minimum [2, (abs (player.direction - target))]
-          in
-            if ensure360 (player.direction - target) > 180 then maxTurn else -maxTurn
+          in  if ensure360 (player.direction - target) > 180 then maxTurn else -maxTurn
         FixedWindAngle ->
           let maxTurn = minimum [2, (abs (player.windAngle - target))]
-          in
-            if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
+          in  if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
     -- pas de virement ni de touche flèche, donc contrôle auto
     (Nothing, FixedDirection, 0, 0) -> 0
-    (Nothing, FixedWindAngle, 0, 0) -> (player.windOrigin + player.windAngle) - player.direction
+    (Nothing, FixedWindAngle, 0, 0) -> Debug.log "turn" (ensure360 ((player.windOrigin + player.windAngle) - player.direction))
     -- changement de direction via touche flèche
     (Nothing, _, x, y) -> if fineTurn then x else x * 3
 
@@ -83,10 +81,8 @@ keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) spells player
       controlMode = if | forceTurn -> FixedDirection
                        | arrows.y > 0 || lockAngle -> FixedWindAngle
                        | otherwise -> turnedPlayer.controlMode
-  in
-    { turnedPlayer | controlMode <- controlMode,
-                   tackTarget <- tackTargetAfterTurn,
-                   spellCast <- spellCast }
+  in  { turnedPlayer | controlMode <- controlMode,
+                       tackTarget <- tackTargetAfterTurn }
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep keyboardInput gameState =

@@ -1,7 +1,10 @@
 module Core where
 
 ensure360 : Float -> Float
-ensure360 val = ((round val) + 360) `mod` 360 |> toFloat
+ensure360 val = 
+  let rounded = round val
+      excess = val - (toFloat rounded)
+  in  ((rounded + 360) `mod` 360 |> toFloat) + excess
 
 toRadians : Float -> Float
 toRadians deg = radians ((90 - deg) * pi / 180)
