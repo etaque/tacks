@@ -17,45 +17,45 @@ case object SpawnBuoy
 class RaceActor(race: Race) extends Actor {
 
   type PlayerId = String
+  case class SpellCast(by: PlayerId, spell: Spell, at: DateTime, to: Seq[PlayerId]) {
+    def isExpired = at.plusSeconds(spell.duration).isBeforeNow
+  }
 
   val playersStates = scala.collection.mutable.Map[PlayerId, BoatState]()
   var wind = Wind.default.copy(gusts = Gust.default(race.course))
-  var buoys = Seq.empty[Buoy]
-  val triggeredSpells = scala.collection.mutable.Map[PlayerId, Seq[(Spell, DateTime)]]() // datetime is expiration
+  var buoys = Seq.fill(10)(Buoy.spawn(race.course))
+  var spellCasts = Seq[SpellCast]()
   var leaderboard = Seq[PlayerId]()
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
   Akka.system.scheduler.schedule(0.seconds, 10.milliseconds, self, UpdateWind)
-  Akka.system.scheduler.schedule(1.second, 3.seconds, self, SpawnBuoy)
 
   def receive = {
-    case SpawnBuoy if race.millisBeforeStart < 50 * 1000 => {
-      buoys = buoys :+ Buoy.spawn
-    }
+
     case PlayerUpdate(id, input) => {
       val state1 = playersStates.get(id).fold(input.makeState)(input.updateState)
       if (state1.passedGates != input.passedGates) updateLeaderboard()
-      val newSpell: Option[Spell] = state1.collisions(buoys).filter(_ => race.started).map { buoy =>
-        buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
+      val newSpell: Option[Spell] = state1.collision(buoys).filter(_ => race.started).map { buoy =>
+        buoys = buoys.filterNot(_ == buoy) :+ Buoy.spawn(race.course) // Remove the spell from the game board
         buoy.spell
       }
       val state2 = newSpell.fold(state1)(state1.withSpell)
       val state3 = state2.ownSpell.filter(_ => input.spellCast).fold(state2) { spell =>
         // The player is casting a spell!
-        val expiration = DateTime.now().plusSeconds(spell.duration)
-        playersStates.keys.filterNot(_ == id).map { opponentId =>
-          triggeredSpells += opponentId -> (triggeredSpells.getOrElse(opponentId, Nil) :+ (spell, expiration))
-        }
+        spellCasts = spellCasts :+ SpellCast(id, spell, DateTime.now, playersStates.keys.filterNot(_ == id).toSeq)
         state2.copy(ownSpell = None)
       }
       playersStates += (id -> state3)
       sender ! raceUpdateFor(id)
     }
+
     case PlayerQuit(id) => {
       Logger.debug("Boat quit: " + id)
       playersStates -= id
     }
+
     case UpdateGameState => updateGameState()
+
     case UpdateWind => updateWind()
   }
 
@@ -72,12 +72,7 @@ class RaceActor(race: Race) extends Actor {
   }
 
   private def updateSpells() = {
-    // Spell expiration
-    triggeredSpells.keys.foreach { boatId =>
-      triggeredSpells += boatId -> triggeredSpells(boatId).filter { case (_, expiration) =>
-        expiration.isAfterNow
-      }
-    }
+    spellCasts = spellCasts.filterNot(_.isExpired)
   }
 
   private def updateWind() = {
@@ -116,7 +111,7 @@ class RaceActor(race: Race) extends Actor {
       leaderboard = leaderboard,
       buoys = buoys,
       playerSpell = bs.flatMap(_.ownSpell),
-      triggeredSpells = triggeredSpells.getOrElse(boatId, Nil).map(_._1)
+      triggeredSpells = spellCasts.filter(_.to.contains(boatId)).map(_.spell)
     )
   }
 }

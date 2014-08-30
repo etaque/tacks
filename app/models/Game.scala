@@ -129,15 +129,15 @@ case class Buoy(
 
 object Buoy {
   import scala.util.Random._
-  def spawn: Buoy = Buoy(
-      position = (nextInt(1600) - 800, nextInt(1600) - 400),
-      radius = 5,
-      spell = Spell(
-        kind = nextInt(2) match {
-          case 0 => "PoleInversion"
-          case _ => "Fog"
-        },
-        duration = 20))
+  def spawn(course: Course) = Buoy(
+    position = course.randomPoint,
+    radius = 5,
+    spell = Spell(
+      kind = nextInt(2) match {
+        case 0 => "PoleInversion"
+        case _ => "Fog"
+      },
+      duration = 10))
 }
 
 case class RaceUpdate(
@@ -188,7 +188,7 @@ case class BoatState (
   triggeredSpells: Seq[Spell] = Seq()
 ) {
 
-  def collisions(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
+  def collision(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
     Geo.distanceBetween(buoy.position, position) <= buoy.radius
   }
 
