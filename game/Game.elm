@@ -52,6 +52,8 @@ type Player = Boat
   , crossedGates: [Time]
   , nextGate: Maybe GateLocation
   , spellCast: Bool
+  , downwindVmg: Float
+  , upwindVmg: Float
   }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
@@ -93,6 +95,8 @@ defaultPlayer =
   , crossedGates = []
   , nextGate = Just StartLine
   , spellCast = False
+  , downwindVmg = 0
+  , upwindVmg = 0
   }
 
 defaultWind : Wind

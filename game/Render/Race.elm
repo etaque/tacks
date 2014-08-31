@@ -7,8 +7,6 @@ import Game (..)
 import String
 import Text
 
-import Debug
-
 renderStartLine : Gate -> Float -> Bool -> Form
 renderStartLine gate markRadius started =
   let lineStyle = if started then dotted green else solid orange
@@ -122,17 +120,23 @@ renderBuoy timer {position,radius,spell} =
   let a = 0.4 + 0.2 * cos (timer * 0.005)
   in  circle radius |> filled colors.buoy |> move position |> alpha a
 
-renderLaylines : Player -> Course -> Form
+renderGateLaylines : Float -> Float -> Gate -> Form
+renderGateLaylines vmg windOrigin gate =
+  let vmgRad = toRadians vmg
+      (leftMark,rightMark) = getGateMarks gate
+      windAngleRad = toRadians windOrigin
+      leftLineEnd = add leftMark (fromPolar (1000, windAngleRad + vmgRad + pi/2))
+      rightLineEnd = add rightMark (fromPolar (1000, windAngleRad - vmgRad - pi/2))
+      drawLine (p1,p2) = segment p1 p2 |> traced (solid white)
+  in  group (map drawLine [(leftMark, leftLineEnd), (rightMark, rightLineEnd)]) |> alpha 0.3
+
+renderLaylines : Player -> Course -> Maybe Form
 renderLaylines player course =
-  let upwindVmgAngleR = toRadians (upwindVmg player.windSpeed)
-      upwindMark = course.upwind
-      (left,right) = getGateMarks upwindMark
-      windAngleR = toRadians player.windOrigin
-
-      leftLL = add left (fromPolar (500, windAngleR + upwindVmgAngleR - pi))
-
-      l1 = segment left leftLL |> traced (solid white)
-  in group [l1] |> alpha 0.3
+  case player.nextGate of
+    Just Upwind   -> Just <| renderGateLaylines player.upwindVmg player.windOrigin course.upwind
+    Just Downwind -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
+    _             -> Nothing
+   
 
 renderCountdown : GameState -> Player -> Maybe Form
 renderCountdown gameState player =
@@ -169,6 +173,7 @@ renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
         ]
       maybeForms = 
         [ renderCountdown gameState player
+        , renderLaylines player course
         , renderFinished gameState.course player
         ]
   in  group (justForms ++ (compact maybeForms)) |> move (neg player.center)

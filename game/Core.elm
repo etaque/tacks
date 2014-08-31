@@ -26,7 +26,7 @@ angleToWind playerDirection windOrigin =
 polarVelocity : Float -> Float -> Float
 polarVelocity speed angle =
   let x1 = speed
-      x2 = angle
+      x2 = angle -- degrees
       v = -2.067174789 * 10 ^ -3 * x1 ^ 3 - 1.868941044 * 10 ^ -4 * x1 ^ 2 * x2 
           - 1.03401471 * 10 ^ -4 * x1 * x2 ^ 2 - 1.86799863 * 10 ^ -5 * x2 ^ 3 
           + 7.376288713 * 10 ^ -2 * x1 ^ 2 + 3.19606466 * 10 ^ -2 * x1 * x2 
@@ -35,15 +35,23 @@ polarVelocity speed angle =
   in v * 2 -- pixel speed
 
 vmgValue : Float -> Float  -> Float
-vmgValue s a = abs ((cos (toRadians a)) * (polarVelocity s a))
+vmgValue windSpeed windAngle = 
+  let windAngleRad = toRadians windAngle
+      boatSpeed = polarVelocity windSpeed windAngle
+  in  (sin windAngleRad) * boatSpeed |> abs
 
-upwindVmg : Float -> Float
-upwindVmg windSpeed =
-  map (\a -> (a, vmgValue windSpeed a)) [30..60] |> sortBy snd |> last |> fst
+getVmgInInterval : Float -> [Float] -> Float
+getVmgInInterval windSpeed angles =
+  let vmgValues = map (vmgValue windSpeed) angles
+      pairs = zip angles vmgValues
+      best = sortBy snd pairs |> last
+  in  fst best
 
-downwindVmg : Float -> Float
-downwindVmg windSpeed =
-  map (\a -> (a, vmgValue windSpeed a)) [130..180] |> sortBy snd |> last |> fst
+getUpwindVmg : Float -> Float
+getUpwindVmg windSpeed = getVmgInInterval windSpeed [40..60]
+
+getDownwindVmg : Float -> Float
+getDownwindVmg windSpeed = getVmgInInterval windSpeed [130..180]
 
 -- deals with inertia
 playerVelocity : Float -> Float -> Float -> Float

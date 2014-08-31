@@ -237,6 +237,16 @@ Elm.Steps.make = function (_elm) {
          }();
       }();
    });
+   var updateVmg = function (player) {
+      return function () {
+         var d = Core.getDownwindVmg(player.windSpeed);
+         var u = Core.getUpwindVmg(player.windSpeed);
+         return _U.replace([["upwindVmg"
+                            ,u]
+                           ,["downwindVmg",d]],
+         player);
+      }();
+   };
    var updatePlayerWind = F2(function (wind,
    player) {
       return function () {
@@ -267,11 +277,11 @@ Elm.Steps.make = function (_elm) {
    var windStep = F2(function (wind,
    gameState) {
       return function () {
-         var playerWithWind = A2(updatePlayerWind,
+         var player = updateVmg(A2(updatePlayerWind,
          wind,
-         gameState.player);
+         gameState.player));
          return _U.replace([["wind",wind]
-                           ,["player",playerWithWind]],
+                           ,["player",player]],
          gameState);
       }();
    });
@@ -487,9 +497,8 @@ Elm.Steps.make = function (_elm) {
                       case "FixedWindAngle":
                       switch (_v22._2)
                         {case 0: switch (_v22._3)
-                             {case 0: return A2(Debug.log,
-                                  "turn",
-                                  Core.ensure360(player.windOrigin + player.windAngle - player.direction));}
+                             {case 0:
+                                return Core.ensure360(player.windOrigin + player.windAngle - player.direction);}
                              break;}
                         break;}
                    return fineTurn ? _v22._2 : _v22._2 * 3;}
@@ -661,6 +670,7 @@ Elm.Steps.make = function (_elm) {
                        ,movePlayer: movePlayer
                        ,moveStep: moveStep
                        ,updatePlayerWind: updatePlayerWind
+                       ,updateVmg: updateVmg
                        ,windStep: windStep
                        ,raceInputStep: raceInputStep
                        ,stepGame: stepGame};
@@ -809,38 +819,79 @@ Elm.Render.Race.make = function (_elm) {
          }() : List.isEmpty(player.crossedGates) ? Maybe.Just(messageBuilder("Go!")) : Maybe.Nothing;
       }();
    });
+   var renderGateLaylines = F3(function (vmg,
+   windOrigin,
+   gate) {
+      return function () {
+         var drawLine = function (_v1) {
+            return function () {
+               switch (_v1.ctor)
+               {case "_Tuple2":
+                  return Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
+                    _v1._0,
+                    _v1._1));}
+               _E.Case($moduleName,
+               "on line 132, column 26 to 62");
+            }();
+         };
+         var windAngleRad = Core.toRadians(windOrigin);
+         var $ = Game.getGateMarks(gate),
+         leftMark = $._0,
+         rightMark = $._1;
+         var vmgRad = Core.toRadians(vmg);
+         var leftLineEnd = A2(Geo.add,
+         leftMark,
+         Basics.fromPolar({ctor: "_Tuple2"
+                          ,_0: 1000
+                          ,_1: windAngleRad + vmgRad + Basics.pi / 2}));
+         var rightLineEnd = A2(Geo.add,
+         rightMark,
+         Basics.fromPolar({ctor: "_Tuple2"
+                          ,_0: 1000
+                          ,_1: windAngleRad - vmgRad - Basics.pi / 2}));
+         return Graphics.Collage.alpha(0.3)(Graphics.Collage.group(A2(List.map,
+         drawLine,
+         _L.fromArray([{ctor: "_Tuple2"
+                       ,_0: leftMark
+                       ,_1: leftLineEnd}
+                      ,{ctor: "_Tuple2"
+                       ,_0: rightMark
+                       ,_1: rightLineEnd}]))));
+      }();
+   });
    var renderLaylines = F2(function (player,
    course) {
       return function () {
-         var windAngleR = Core.toRadians(player.windOrigin);
-         var upwindMark = course.upwind;
-         var $ = Game.getGateMarks(upwindMark),
-         left = $._0,
-         right = $._1;
-         var upwindVmgAngleR = Core.toRadians(Core.upwindVmg(player.windSpeed));
-         var leftLL = A2(Geo.add,
-         left,
-         Basics.fromPolar({ctor: "_Tuple2"
-                          ,_0: 500
-                          ,_1: windAngleR + upwindVmgAngleR - Basics.pi}));
-         var l1 = Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
-         left,
-         leftLL));
-         return Graphics.Collage.alpha(0.3)(Graphics.Collage.group(_L.fromArray([l1])));
+         var _v5 = player.nextGate;
+         switch (_v5.ctor)
+         {case "Just":
+            switch (_v5._0.ctor)
+              {case "Downwind":
+                 return Maybe.Just(A3(renderGateLaylines,
+                   player.downwindVmg,
+                   player.windOrigin,
+                   course.downwind));
+                 case "Upwind":
+                 return Maybe.Just(A3(renderGateLaylines,
+                   player.upwindVmg,
+                   player.windOrigin,
+                   course.upwind));}
+              break;}
+         return Maybe.Nothing;
       }();
    });
    var renderBuoy = F2(function (timer,
-   _v1) {
+   _v7) {
       return function () {
          return function () {
             var a = 0.4 + 0.2 * Basics.cos(timer * 5.0e-3);
-            return Graphics.Collage.alpha(a)(Graphics.Collage.move(_v1.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v1.radius))));
+            return Graphics.Collage.alpha(a)(Graphics.Collage.move(_v7.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v7.radius))));
          }();
       }();
    });
-   var renderIsland = function (_v3) {
+   var renderIsland = function (_v9) {
       return function () {
-         return Graphics.Collage.move(_v3.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v3.radius)));
+         return Graphics.Collage.move(_v9.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v9.radius)));
       }();
    };
    var renderIslands = function (gameState) {
@@ -898,22 +949,22 @@ Elm.Render.Race.make = function (_elm) {
          var opacityForIndex = function (i) {
             return 0.5 - 0.4 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
          };
-         var renderWakePoint = function (_v5) {
+         var renderWakePoint = function (_v11) {
             return function () {
-               switch (_v5.ctor)
+               switch (_v11.ctor)
                {case "_Tuple2":
-                  return Graphics.Collage.alpha(opacityForIndex(_v5._0))(Graphics.Collage.move(_v5._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
+                  return Graphics.Collage.alpha(opacityForIndex(_v11._0))(Graphics.Collage.move(_v11._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
                _E.Case($moduleName,
                "on line 56, column 32 to 94");
             }();
          };
          var span = 5;
-         var points = List.map(renderWakePoint)(List.filter(function (_v9) {
+         var points = List.map(renderWakePoint)(List.filter(function (_v15) {
             return function () {
-               switch (_v9.ctor)
+               switch (_v15.ctor)
                {case "_Tuple2":
                   return _U.eq(A2(Basics.mod,
-                    _v9._0 + 1,
+                    _v15._0 + 1,
                     span),
                     0);}
                _E.Case($moduleName,
@@ -929,10 +980,10 @@ Elm.Render.Race.make = function (_elm) {
          return Graphics.Collage.group(points);
       }();
    };
-   var renderEqualityLine = F2(function (_v13,
+   var renderEqualityLine = F2(function (_v19,
    windOrigin) {
       return function () {
-         switch (_v13.ctor)
+         switch (_v19.ctor)
          {case "_Tuple2":
             return function () {
                  var right = Basics.fromPolar({ctor: "_Tuple2"
@@ -1044,43 +1095,46 @@ Elm.Render.Race.make = function (_elm) {
                                        ,_1: marks});
       }();
    });
-   var renderRelative = function (_v17) {
+   var renderRelative = function (_v23) {
       return function () {
          return function () {
             var maybeForms = _L.fromArray([A2(renderCountdown,
-                                          _v17,
-                                          _v17.player)
+                                          _v23,
+                                          _v23.player)
+                                          ,A2(renderLaylines,
+                                          _v23.player,
+                                          _v23.course)
                                           ,A2(renderFinished,
-                                          _v17.course,
-                                          _v17.player)]);
-            var downwindOrStartLine = List.isEmpty(_v17.player.crossedGates) ? A3(renderStartLine,
-            _v17.course.downwind,
-            _v17.course.markRadius,
-            _U.cmp(_v17.countdown,
+                                          _v23.course,
+                                          _v23.player)]);
+            var downwindOrStartLine = List.isEmpty(_v23.player.crossedGates) ? A3(renderStartLine,
+            _v23.course.downwind,
+            _v23.course.markRadius,
+            _U.cmp(_v23.countdown,
             0) < 1) : A3(renderGate,
-            _v17.course.downwind,
-            _v17.course.markRadius,
-            _U.eq(_v17.player.nextGate,
+            _v23.course.downwind,
+            _v23.course.markRadius,
+            _U.eq(_v23.player.nextGate,
             Maybe.Just(Game.Downwind)));
-            var justForms = _L.fromArray([renderBounds(_v17.course.bounds)
-                                         ,renderIslands(_v17)
+            var justForms = _L.fromArray([renderBounds(_v23.course.bounds)
+                                         ,renderIslands(_v23)
                                          ,downwindOrStartLine
                                          ,A3(renderGate,
-                                         _v17.course.upwind,
-                                         _v17.course.markRadius,
-                                         _U.eq(_v17.player.nextGate,
+                                         _v23.course.upwind,
+                                         _v23.course.markRadius,
+                                         _U.eq(_v23.player.nextGate,
                                          Maybe.Just(Game.Upwind)))
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
-                                         _v17.opponents))
+                                         _v23.opponents))
                                          ,Graphics.Collage.group(A2(List.map,
-                                         renderBuoy(_v17.countdown),
-                                         _v17.buoys))
-                                         ,renderGusts(_v17.wind)
+                                         renderBuoy(_v23.countdown),
+                                         _v23.buoys))
+                                         ,renderGusts(_v23.wind)
                                          ,A2(renderPlayer,
-                                         _v17.player,
-                                         _v17.triggeredSpells)]);
-            return Graphics.Collage.move(Geo.neg(_v17.player.center))(Graphics.Collage.group(_L.append(justForms,
+                                         _v23.player,
+                                         _v23.triggeredSpells)]);
+            return Graphics.Collage.move(Geo.neg(_v23.player.center))(Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms))));
          }();
       }();
@@ -1099,6 +1153,7 @@ Elm.Render.Race.make = function (_elm) {
                              ,renderIsland: renderIsland
                              ,renderIslands: renderIslands
                              ,renderBuoy: renderBuoy
+                             ,renderGateLaylines: renderGateLaylines
                              ,renderLaylines: renderLaylines
                              ,renderCountdown: renderCountdown
                              ,renderFinished: renderFinished
@@ -1821,12 +1876,14 @@ Elm.Game.make = function (_elm) {
                        ,controlMode: FixedDirection
                        ,crossedGates: _L.fromArray([])
                        ,direction: 0
+                       ,downwindVmg: 0
                        ,nextGate: Maybe.Just(StartLine)
                        ,position: {ctor: "_Tuple2"
                                   ,_0: 0
                                   ,_1: -200}
                        ,spellCast: false
                        ,tackTarget: Maybe.Nothing
+                       ,upwindVmg: 0
                        ,velocity: 0
                        ,wake: _L.fromArray([])
                        ,windAngle: 0
@@ -2071,6 +2128,7 @@ Elm.Core.make = function (_elm) {
    $moduleName = "Core";
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
+   var Debug = Elm.Debug.make(_elm);
    var Graphics = Graphics || {};
    Graphics.Collage = Elm.Graphics.Collage.make(_elm);
    var Graphics = Graphics || {};
@@ -2107,7 +2165,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 72 and 75");
+               "between lines 74 and 77");
             }();
          });
          return A3(List.foldl,
@@ -2125,7 +2183,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 65 and 67");
+         "between lines 67 and 69");
       }();
    });
    var polarVelocity = F2(function (speed,
@@ -2178,29 +2236,40 @@ Elm.Core.make = function (_elm) {
    var toRadians = function (deg) {
       return Basics.radians((90 - deg) * Basics.pi / 180);
    };
-   var vmgValue = F2(function (s,
-   a) {
-      return Basics.abs(Basics.cos(toRadians(a)) * A2(polarVelocity,
-      s,
-      a));
+   var vmgValue = F2(function (windSpeed,
+   windAngle) {
+      return function () {
+         var boatSpeed = A2(polarVelocity,
+         windSpeed,
+         windAngle);
+         var windAngleRad = toRadians(windAngle);
+         return Basics.abs(Basics.sin(windAngleRad) * boatSpeed);
+      }();
    });
-   var upwindVmg = function (windSpeed) {
-      return Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
-      function (a) {
-         return {ctor: "_Tuple2"
-                ,_0: a
-                ,_1: A2(vmgValue,windSpeed,a)};
-      },
-      _L.range(30,60)))));
+   var getVmgInInterval = F2(function (windSpeed,
+   angles) {
+      return function () {
+         var vmgValues = A2(List.map,
+         vmgValue(windSpeed),
+         angles);
+         var pairs = A2(List.zip,
+         angles,
+         vmgValues);
+         var best = List.last(A2(List.sortBy,
+         Basics.snd,
+         pairs));
+         return Basics.fst(best);
+      }();
+   });
+   var getUpwindVmg = function (windSpeed) {
+      return A2(getVmgInInterval,
+      windSpeed,
+      _L.range(40,60));
    };
-   var downwindVmg = function (windSpeed) {
-      return Basics.fst(List.last(List.sortBy(Basics.snd)(A2(List.map,
-      function (a) {
-         return {ctor: "_Tuple2"
-                ,_0: a
-                ,_1: A2(vmgValue,windSpeed,a)};
-      },
-      _L.range(130,180)))));
+   var getDownwindVmg = function (windSpeed) {
+      return A2(getVmgInInterval,
+      windSpeed,
+      _L.range(130,180));
    };
    var ensure360 = function (val) {
       return function () {
@@ -2218,8 +2287,9 @@ Elm.Core.make = function (_elm) {
                       ,angleToWind: angleToWind
                       ,polarVelocity: polarVelocity
                       ,vmgValue: vmgValue
-                      ,upwindVmg: upwindVmg
-                      ,downwindVmg: downwindVmg
+                      ,getVmgInInterval: getVmgInInterval
+                      ,getUpwindVmg: getUpwindVmg
+                      ,getDownwindVmg: getDownwindVmg
                       ,playerVelocity: playerVelocity
                       ,mapMaybe: mapMaybe
                       ,compact: compact

@@ -5,8 +5,6 @@ import Game (..)
 import Geo (..)
 import Core (..)
 
-import Debug
-
 {-- Part 3: Update the game ---------------------------------------------------
 
 How does the game step from one state to another based on user input?
@@ -64,7 +62,7 @@ getTurn tackTarget player arrows fineTurn =
           in  if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
     -- pas de virement ni de touche flèche, donc contrôle auto
     (Nothing, FixedDirection, 0, 0) -> 0
-    (Nothing, FixedWindAngle, 0, 0) -> Debug.log "turn" (ensure360 ((player.windOrigin + player.windAngle) - player.direction))
+    (Nothing, FixedWindAngle, 0, 0) -> ensure360 ((player.windOrigin + player.windAngle) - player.direction)
     -- changement de direction via touche flèche
     (Nothing, _, x, y) -> if fineTurn then x else x * 3
 
@@ -154,11 +152,18 @@ updatePlayerWind wind player =
   in  { player | windOrigin <- windOrigin,
                  windSpeed <- windSpeed }
 
+updateVmg : Player -> Player
+updateVmg player =
+  let u = getUpwindVmg player.windSpeed
+      d = getDownwindVmg player.windSpeed
+  in  { player | upwindVmg <- u,
+                 downwindVmg <- d }
+
 windStep : Wind -> GameState -> GameState
 windStep wind gameState =
-  let playerWithWind = updatePlayerWind wind gameState.player
+  let player = updatePlayerWind wind gameState.player |> updateVmg
   in  { gameState | wind <- wind,
-                    player <- playerWithWind }
+                    player <- player }
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep {now,startTime,course,crossedGates,nextGate,opponents,buoys,playerSpell,triggeredSpells,leaderboard} ({player} as gameState) =
