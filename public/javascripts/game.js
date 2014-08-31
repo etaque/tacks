@@ -851,10 +851,12 @@ Elm.Render.Race.make = function (_elm) {
    var renderGust = F2(function (wind,
    gust) {
       return function () {
+         var angleText = Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(String.show(gust.angle))));
          var color = _U.cmp(gust.speed,
          0) > 0 ? Color.black : Color.white;
          var a = 0.3 * Basics.abs(gust.speed) / 10;
-         return Graphics.Collage.move(gust.position)(Graphics.Collage.alpha(a)(Graphics.Collage.filled(color)(Graphics.Collage.circle(gust.radius))));
+         return Graphics.Collage.move(gust.position)(Graphics.Collage.group(_L.fromArray([Graphics.Collage.alpha(a)(Graphics.Collage.filled(color)(Graphics.Collage.circle(gust.radius)))
+                                                                                         ,angleText])));
       }();
    });
    var renderGusts = function (wind) {
@@ -904,7 +906,7 @@ Elm.Render.Race.make = function (_elm) {
                {case "_Tuple2":
                   return Graphics.Collage.alpha(opacityForIndex(_v5._0))(Graphics.Collage.move(_v5._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
                _E.Case($moduleName,
-               "on line 58, column 32 to 94");
+               "on line 56, column 32 to 94");
             }();
          };
          var span = 5;
@@ -917,7 +919,7 @@ Elm.Render.Race.make = function (_elm) {
                     span),
                     0);}
                _E.Case($moduleName,
-               "on line 59, column 59 to 80");
+               "on line 57, column 59 to 80");
             }();
          })(A2(Core.indexedMap,
          F2(function (v0,v1) {
@@ -946,7 +948,7 @@ Elm.Render.Race.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 50 and 52");
+         "between lines 48 and 50");
       }();
    });
    var renderPlayerAngles = function (player) {
@@ -1009,21 +1011,15 @@ Elm.Render.Race.make = function (_elm) {
    markRadius,
    isNext) {
       return function () {
-         var $ = isNext ? {ctor: "_Tuple2"
-                          ,_0: Graphics.Collage.filled(Color.orange)
-                          ,_1: Graphics.Collage.traced(Graphics.Collage.dotted(Color.orange))} : {ctor: "_Tuple2"
-                                                                                                 ,_0: Graphics.Collage.filled(Color.white)
-                                                                                                 ,_1: Graphics.Collage.traced(Graphics.Collage.solid(Render.Utils.colors.seaBlue))},
-         markStyle = $._0,
-         lineStyle = $._1;
+         var lineStyle = isNext ? Graphics.Collage.traced(Graphics.Collage.dotted(Render.Utils.colors.gateLine)) : Graphics.Collage.traced(Graphics.Collage.solid(Render.Utils.colors.seaBlue));
          var $ = Game.getGateMarks(gate),
          left = $._0,
          right = $._1;
          var line = lineStyle(A2(Graphics.Collage.segment,
          left,
          right));
-         var leftMark = Graphics.Collage.move(left)(markStyle(Graphics.Collage.circle(markRadius)));
-         var rightMark = Graphics.Collage.move(right)(markStyle(Graphics.Collage.circle(markRadius)));
+         var leftMark = Graphics.Collage.move(left)(Graphics.Collage.filled(Render.Utils.colors.gateMark)(Graphics.Collage.circle(markRadius)));
+         var rightMark = Graphics.Collage.move(right)(Graphics.Collage.filled(Render.Utils.colors.gateMark)(Graphics.Collage.circle(markRadius)));
          return Graphics.Collage.group(_L.fromArray([line
                                                     ,leftMark
                                                     ,rightMark]));
@@ -1036,13 +1032,12 @@ Elm.Render.Race.make = function (_elm) {
          var $ = Game.getGateMarks(gate),
          left = $._0,
          right = $._1;
-         var markColor = started ? Color.green : Color.red;
          var marks = A2(List.map,
          function (g) {
-            return Graphics.Collage.move(g)(Graphics.Collage.filled(markColor)(Graphics.Collage.circle(markRadius)));
+            return Graphics.Collage.move(g)(Graphics.Collage.filled(Render.Utils.colors.gateMark)(Graphics.Collage.circle(markRadius)));
          },
          _L.fromArray([left,right]));
-         var lineStyle = started ? Graphics.Collage.dotted(Color.white) : Graphics.Collage.solid(Color.white);
+         var lineStyle = started ? Graphics.Collage.dotted(Color.green) : Graphics.Collage.solid(Color.orange);
          var line = Graphics.Collage.traced(lineStyle)(A2(Graphics.Collage.segment,
          left,
          right));
@@ -2348,6 +2343,8 @@ Elm.Render.Utils.make = function (_elm) {
    };
    var colors = {_: {}
                 ,buoy: Color.white
+                ,gateLine: Color.orange
+                ,gateMark: Color.orange
                 ,sand: A3(Color.rgb,239,210,121)
                 ,seaBlue: A3(Color.rgb,
                 10,

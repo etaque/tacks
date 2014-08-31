@@ -28,7 +28,7 @@ object Geo {
     (x1.toFloat, y1.toFloat)
   }
 
-  def angleToRadians(angle: Float): Float = toRadians(angle - 90).toFloat
+  def angleToRadians(angle: Float): Float = toRadians(-angle - 90).toFloat
 
   def ensure360(d: Float): Float = (d + 360) % 360
 

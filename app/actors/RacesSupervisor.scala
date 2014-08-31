@@ -43,7 +43,7 @@ class RacesSupervisor extends Actor {
     val ref = context.actorOf(RaceActor.props(race))
     raceActors += race.id -> ref
     context.watch(ref)
-    races = (race +: races).take(5)
+    races = (race +: races).take(10)
     // TODO save races
   }
 

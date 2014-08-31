@@ -11,23 +11,21 @@ import Debug
 
 renderStartLine : Gate -> Float -> Bool -> Form
 renderStartLine gate markRadius started =
-  let lineStyle = if started then dotted white else solid white
-      markColor = if started then green else red
+  let lineStyle = if started then dotted green else solid orange
       line = segment left right |> traced lineStyle
       (left,right) = getGateMarks gate
-      marks = map (\g -> circle markRadius |> filled markColor |> move g) [left, right]
+      marks = map (\g -> circle markRadius |> filled colors.gateMark |> move g) [left, right]
   in  group (line :: marks)
 
 renderGate : Gate -> Float -> Bool -> Form
 renderGate gate markRadius isNext =
   let (left,right) = getGateMarks gate
-      (markStyle,lineStyle) =
-        if isNext
-          then (filled orange, traced (dotted orange))
-          else (filled white, traced (solid colors.seaBlue))
+      lineStyle = if isNext
+        then traced (dotted colors.gateLine)
+        else traced (solid colors.seaBlue)
       line = segment left right |> lineStyle
-      leftMark = circle markRadius |> markStyle |> move left
-      rightMark = circle markRadius |> markStyle |> move right
+      leftMark = circle markRadius |> filled colors.gateMark |> move left
+      rightMark = circle markRadius |> filled colors.gateMark |> move right
   in  group [line, leftMark, rightMark]
 
 renderPlayerAngles : Player -> Form

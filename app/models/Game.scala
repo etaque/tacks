@@ -64,7 +64,8 @@ case class Course(
   markRadius: Float,
   islands: Seq[Island],
   bounds: Box,
-  windGenerator: WindGenerator
+  windGenerator: WindGenerator,
+  gustsCount: Int
 ) {
   lazy val ((right, top), (left, bottom)) = bounds
   
@@ -92,17 +93,18 @@ case class Course(
 
 object Course {
   val default = Course(
-    upwind = Gate(1000, 120),
+    upwind = Gate(1500, 120),
     downwind = Gate(-100, 120),
     laps = 2,
     markRadius = 5,
     islands = Seq(
-//      Island((250, 300), 100),
-//      Island((150, 700), 80),
-//      Island((-200, 500), 60)
+      Island((-250, 300), 90),
+      Island((150, 900), 80),
+      Island((-200, 1200), 60)
     ),
-    bounds = ((800,1400), (-800,-400)),
-    windGenerator = WindGenerator(8, 10, 5, 5)
+    bounds = ((800,1800), (-800,-400)),
+    windGenerator = WindGenerator(8, 10, 5, 5),
+    gustsCount = 8
   )
 }
 
@@ -131,7 +133,7 @@ case class Gust(
 object Gust {
   import scala.util.Random._
 
-  def spawnAll(course: Course, quantity: Int = 5) = Seq.fill(quantity)(spawn(course))
+  def spawnAll(course: Course) = Seq.fill(course.gustsCount)(spawn(course))
 
   def spawn(course: Course) = Gust(
     position = (course.randomX(), course.top),
@@ -241,7 +243,7 @@ case class PlayerState (
     val nextGate = course.nextGate(crossedGates.size)
     val newPassedGates = nextGate match {
       case Some(StartLine) => {
-        if (!started && course.downwind.crossedUpward(step)) now +: crossedGates
+        if (started && course.downwind.crossedUpward(step)) now +: crossedGates
         else crossedGates
       }
       case Some(UpwindGate) => {
