@@ -36,26 +36,16 @@ class RaceActor(race: Race) extends Actor {
 
     case PlayerUpdate(id, input) => {
       val previousStateMaybe = playersStates.get(id)
-      val state1 = previousStateMaybe.fold(input.makeState)(input.updateState)
 
-      val newSpell: Option[Spell] = state1.collision(buoys).filter(_ => race.started).map { buoy =>
-        buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
-        buoy.spell
-      }
+      val runStep =
+        withCollectedBuoy _ andThen
+        withCastedSpell(id, input.spellCast) andThen
+        withCrossedGates(previousStateMaybe)
 
-      val state2 = newSpell.fold(state1)(state1.withSpell)
+      val newState = runStep(previousStateMaybe.fold(input.makeState)(input.updateState))
 
-      val state3 = state2.ownSpell.filter(_ => input.spellCast).fold(state2) { spell =>
-        // The player is casting a spell!
-        Logger.debug(s"Player ${state2.name} casting spell $spell")
-        spellCasts = spellCasts :+ SpellCast(id, spell, DateTime.now, playersStates.keys.filterNot(_ == id).toSeq)
-        state2.copy(ownSpell = None)
-      }
-
-      val state4 = previousStateMaybe.fold(state3)(state3.updateCrossedGates(race.course))
-
-      playersStates += (id -> state4)
-      if (state4.crossedGates != state3.crossedGates) updateLeaderboard()
+      playersStates += (id -> newState)
+      if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
 
       sender ! raceUpdateFor(id)
     }
@@ -65,9 +55,19 @@ class RaceActor(race: Race) extends Actor {
       playersStates -= id
     }
 
-    case UpdateGameState => updateGameState()
+    case UpdateGameState => {
+      updateLeaderboard()
+      updateSpells()
+    }
 
-    case UpdateWind => updateWind()
+    case UpdateWind => {
+      val now = DateTime.now()
+      wind = Wind(
+        origin = race.course.windGenerator.windOrigin(now),
+        speed = race.course.windGenerator.windSpeed(now),
+        gusts = moveGusts(now, wind.gusts)
+      )
+    }
 
     case SpawnBuoy => {
       if (buoys.size < 10) {
@@ -85,22 +85,29 @@ class RaceActor(race: Race) extends Actor {
     }
   }
 
-  private def updateGameState() = {
-    updateLeaderboard()
-    updateSpells()
+  private def withCollectedBuoy(state: PlayerState): PlayerState = {
+    val newSpell: Option[Spell] = state.collision(buoys).filter(_ => race.started).map { buoy =>
+      buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
+      buoy.spell
+    }
+    newSpell.fold(state)(state.withSpell)
+  }
+
+  private def withCastedSpell(id: PlayerId, castSpell: Boolean)(state: PlayerState): PlayerState = {
+    state.ownSpell.filter(_ => castSpell).fold(state) { spell =>
+      // The player is casting a spell!
+      Logger.debug(s"Player ${state.name} casting spell $spell")
+      spellCasts = spellCasts :+ SpellCast(by = id, spell, at = DateTime.now, to = playersStates.keys.filterNot(_ == id).toSeq)
+      state.copy(ownSpell = None)
+    }
+  }
+
+  private def withCrossedGates(previousStateMaybe: Option[PlayerState])(state: PlayerState): PlayerState = {
+    previousStateMaybe.fold(state)(state.updateCrossedGates(race.course))
   }
 
   private def updateSpells() = {
     spellCasts = spellCasts.filterNot(_.isExpired)
-  }
-
-  private def updateWind() = {
-    val now = DateTime.now()
-    wind = Wind(
-      origin = race.course.windGenerator.windOrigin(now),
-      speed = race.course.windGenerator.windSpeed(now),
-      gusts = moveGusts(now, wind.gusts)
-    )
   }
 
   private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
