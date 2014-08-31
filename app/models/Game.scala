@@ -14,8 +14,8 @@ case object UpwindGate extends GateLocation
 case object DownwindGate extends GateLocation
 
 case class Gate(
-  y: Float,
-  width: Float
+  y: Double,
+  width: Double
 ) {
 
   def crossedInX(s: Segment) = {
@@ -40,8 +40,8 @@ case class Gate(
 }
 
 case class Island(
-  location: (Float,Float),
-  radius: Float
+  location: (Double,Double),
+  radius: Double
 )
 
 case class WindGenerator(
@@ -50,18 +50,18 @@ case class WindGenerator(
   wavelength2: Int,
   amplitude2: Int
 ) {
-  def windOrigin(at: DateTime): Float =
-    (cos(at.getMillis * 0.001 / wavelength1) * amplitude1 + cos(at.getMillis * 0.001 / wavelength2) * amplitude2).toFloat
+  def windOrigin(at: DateTime): Double =
+    cos(at.getMillis * 0.001 / wavelength1) * amplitude1 + cos(at.getMillis * 0.001 / wavelength2) * amplitude2
 
-  def windSpeed(at: DateTime): Float = Wind.defaultWindSpeed +
-    ((cos(at.getMillis * 0.001 / wavelength1) * 5 - cos(at.getMillis * 0.001 / wavelength2) * 5) / 2).toFloat
+  def windSpeed(at: DateTime): Double = Wind.defaultWindSpeed +
+    (cos(at.getMillis * 0.001 / wavelength1) * 5 - cos(at.getMillis * 0.001 / wavelength2) * 5) / 2
 }
 
 case class Course(
   upwind: Gate,
   downwind: Gate,
   laps: Int,
-  markRadius: Float,
+  markRadius: Double,
   islands: Seq[Island],
   bounds: Box,
   windGenerator: WindGenerator,
@@ -78,8 +78,8 @@ case class Course(
 
   import scala.util.Random._
 
-  def randomX(margin: Float = 0): Float = nextFloat * (width - margin * 2) - width / 2 + margin + cx
-  def randomY(margin: Float = 0): Float = nextFloat * (height - margin * 2) - height / 2 + margin + cy
+  def randomX(margin: Double = 0): Double = nextDouble * (width - margin * 2) - width / 2 + margin + cx
+  def randomY(margin: Double = 0): Double = nextDouble * (height - margin * 2) - height / 2 + margin + cy
   def randomPoint: Point = (randomX(0), randomY(0))
 
   def nextGate(crossedGates: Int): Option[GateLocation] = {
@@ -110,10 +110,10 @@ object Course {
 
 case class Gust(
   position: Point,
-  angle: Float, // degrees
-  speed: Float,
-  radius: Float,
-  maxRadius: Float,
+  angle: Double, // degrees
+  speed: Double,
+  radius: Double,
+  maxRadius: Double,
   spawnedAt: DateTime
 ) {
   val radians = angleToRadians(angle)
@@ -122,10 +122,10 @@ case class Gust(
 
   def update(course: Course, wind: Wind, lastUpdate: DateTime, now: DateTime): Gust = {
     val delta = now.getMillis - lastUpdate.getMillis
-    val groundSpeed = (wind.speed + speed) * pixelPerSecond * 0.001.toFloat
+    val groundSpeed = (wind.speed + speed) * pixelPerSecond * 0.001
     val groundDirection = ensure360(angle + 180)
     val newPosition = movePoint(position, delta, groundSpeed, groundDirection)
-    val radius = min((now.getMillis - spawnedAt.getMillis) * 0.001 * maxRadius / maxRadiusAfterSeconds, maxRadius).toFloat
+    val radius = min((now.getMillis - spawnedAt.getMillis) * 0.001 * maxRadius / maxRadiusAfterSeconds, maxRadius)
     copy(position = newPosition, radius = radius)
   }
 }
@@ -140,14 +140,14 @@ object Gust {
     angle = nextInt(30) - 15,
     speed = nextInt(15) - 5,
     radius = 0,
-    maxRadius = nextInt(50) + 100,
+    maxRadius = nextInt(50) + 200,
     spawnedAt = DateTime.now
   )
 }
 
 case class Wind(
-  origin: Float,
-  speed: Float,
+  origin: Double,
+  speed: Double,
   gusts: Seq[Gust]
 )
 
@@ -163,7 +163,7 @@ case class Spell(
 
 case class Buoy(
   position: Point,
-  radius: Float,
+  radius: Double,
   spell: Spell
 )
 
@@ -208,8 +208,8 @@ object RaceUpdate {
 case class PlayerInput (
   name: String,
   position: Point,
-  direction: Float,
-  velocity: Float,
+  direction: Double,
+  velocity: Double,
   spellCast: Boolean) {
 
   def makeState = PlayerState(name, position, direction, velocity, Seq(), Some(StartLine), None, Seq())
@@ -223,8 +223,8 @@ case class PlayerInput (
 case class PlayerState (
   name: String,
   position: Point,
-  direction: Float,
-  velocity: Float,
+  direction: Double,
+  velocity: Double,
   crossedGates: Seq[DateTime],
   nextGate: Option[GateLocation],
   ownSpell: Option[Spell] = None,

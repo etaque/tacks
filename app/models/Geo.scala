@@ -4,7 +4,7 @@ import Math._
 import play.api.libs.json._
 
 object Geo {
-  type Point = (Float,Float) // (x,y)
+  type Point = (Double,Double) // (x,y)
   type Segment = (Point,Point)
   type Box = (Point,Point) // ((right,top),(left,bottom))
 
@@ -20,18 +20,18 @@ object Geo {
     x > left && x < right && y > bottom && y < top
   }
 
-  def movePoint(p: Point, msDelta: Long, velocity: Float, direction: Float): Point = {
+  def movePoint(p: Point, msDelta: Long, velocity: Double, direction: Double): Point = {
     val (x,y) = p
     val rad = angleToRadians(direction)
     val x1 = x + msDelta * velocity * cos(rad)
     val y1 = y + msDelta * velocity * sin(rad)
-    (x1.toFloat, y1.toFloat)
+    (x1, y1)
   }
 
-  def angleToRadians(angle: Float): Float = toRadians(-angle - 90).toFloat
+  def angleToRadians(angle: Double): Double = toRadians(-angle - 90)
 
-  def ensure360(d: Float): Float = (d + 360) % 360
+  def ensure360(d: Double): Double = (d + 360) % 360
 
-  implicit val pointFormat: Format[Point] = utils.JsonFormats.tuple2Format[Float,Float]
+  implicit val pointFormat: Format[Point] = utils.JsonFormats.tuple2Format[Double,Double]
   implicit val boxFormat: Format[Box] = utils.JsonFormats.tuple2Format[Point,Point]
 }
