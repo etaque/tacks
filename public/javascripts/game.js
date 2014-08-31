@@ -328,16 +328,16 @@ Elm.Steps.make = function (_elm) {
                                                 _v9._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
-                                 "between lines 112 and 125");
+                                 "between lines 113 and 126");
                               }();}
                          _E.Case($moduleName,
-                         "between lines 112 and 125");
+                         "between lines 113 and 126");
                       }();}
                  _E.Case($moduleName,
-                 "between lines 112 and 125");
+                 "between lines 113 and 126");
               }();}
          _E.Case($moduleName,
-         "between lines 112 and 125");
+         "between lines 113 and 126");
       }();
    });
    var getGatesMarks = function (course) {
@@ -587,7 +587,8 @@ Elm.Steps.make = function (_elm) {
             return _U.replace([["controlMode"
                                ,controlMode]
                               ,["tackTarget"
-                               ,tackTargetAfterTurn]],
+                               ,tackTargetAfterTurn]
+                              ,["spellCast",_v38.spellCast]],
             turnedPlayer);
          }();
       }();
@@ -782,7 +783,7 @@ Elm.Render.Race.make = function (_elm) {
          {case "Nothing":
             return Maybe.Just(Graphics.Collage.move({ctor: "_Tuple2"
                                                     ,_0: 0
-                                                    ,_1: course.downwind.y + 50})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("Finished!")))));}
+                                                    ,_1: course.downwind.y + 40})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("Finished!")))));}
          return Maybe.Nothing;
       }();
    });
@@ -792,7 +793,7 @@ Elm.Render.Race.make = function (_elm) {
          var messageBuilder = function (msg) {
             return Graphics.Collage.move({ctor: "_Tuple2"
                                          ,_0: 0
-                                         ,_1: gameState.course.downwind.y + 50})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(msg))));
+                                         ,_1: gameState.course.downwind.y + 40})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(msg))));
          };
          return _U.cmp(gameState.countdown,
          0) > 0 ? function () {

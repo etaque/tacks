@@ -40,7 +40,6 @@ class RacesSupervisor extends Actor {
   def createRace = {
     Logger.debug("New race")
     val race = Race(startTime = DateTime.now().plusMinutes(2), course = Course.default)
-    Logger.debug("Creating actor for race " + race.id)
     val ref = context.actorOf(RaceActor.props(race))
     raceActors += race.id -> ref
     context.watch(ref)

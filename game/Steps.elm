@@ -82,7 +82,8 @@ keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) spells player
                        | arrows.y > 0 || lockAngle -> FixedWindAngle
                        | otherwise -> turnedPlayer.controlMode
   in  { turnedPlayer | controlMode <- controlMode,
-                       tackTarget <- tackTargetAfterTurn }
+                       tackTarget <- tackTargetAfterTurn,
+                       spellCast <- spellCast }
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep keyboardInput gameState =

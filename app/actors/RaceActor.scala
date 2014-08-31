@@ -24,12 +24,13 @@ class RaceActor(race: Race) extends Actor {
 
   val playersStates = scala.collection.mutable.Map[PlayerId, PlayerState]()
   var wind = Wind.default.copy(gusts = Gust.default(race.course))
-  var buoys = Seq.fill(10)(Buoy.spawn(race.course))
+  var buoys = Seq[Buoy]()
   var spellCasts = Seq[SpellCast]()
   var leaderboard = Seq[String]()
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
   Akka.system.scheduler.schedule(0.seconds, 10.milliseconds, self, UpdateWind)
+  Akka.system.scheduler.schedule(race.millisBeforeStart.millis, 20.seconds, self, SpawnBuoy)
 
   def receive = {
 
@@ -38,7 +39,7 @@ class RaceActor(race: Race) extends Actor {
       val state1 = previousStateMaybe.fold(input.makeState)(input.updateState)
 
       val newSpell: Option[Spell] = state1.collision(buoys).filter(_ => race.started).map { buoy =>
-        buoys = buoys.filterNot(_ == buoy) :+ Buoy.spawn(race.course) // Remove the spell from the game board
+        buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
         buoy.spell
       }
 
@@ -46,6 +47,7 @@ class RaceActor(race: Race) extends Actor {
 
       val state3 = state2.ownSpell.filter(_ => input.spellCast).fold(state2) { spell =>
         // The player is casting a spell!
+        Logger.debug(s"Player ${state2.name} casting spell $spell")
         spellCasts = spellCasts :+ SpellCast(id, spell, DateTime.now, playersStates.keys.filterNot(_ == id).toSeq)
         state2.copy(ownSpell = None)
       }
@@ -66,6 +68,13 @@ class RaceActor(race: Race) extends Actor {
     case UpdateGameState => updateGameState()
 
     case UpdateWind => updateWind()
+
+    case SpawnBuoy => {
+      if (buoys.size < 10) {
+        buoys = buoys :+ Buoy.spawn(race.course)
+      }
+
+    }
   }
 
   private def updateLeaderboard() = {
