@@ -4,6 +4,7 @@ import play.api.libs.json._
 
 object Geo {
   type Point = (Float,Float) // (x,y)
+  type Segment = (Point,Point)
   type Box = (Point,Point) // ((right,top),(left,bottom))
 
   def distanceBetween(p1: Point, p2: Point): Double = {

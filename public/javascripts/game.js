@@ -40,7 +40,6 @@ Elm.ShiftMaster.make = function (_elm) {
       return function () {
          return {_: {}
                 ,direction: _v0.direction
-                ,passedGates: _v0.passedGates
                 ,position: _v0.position
                 ,spellCast: _v0.spellCast
                 ,velocity: _v0.velocity};
@@ -51,74 +50,75 @@ Elm.ShiftMaster.make = function (_elm) {
    Time.fps(30));
    var raceInput = Native.Ports.portIn("raceInput",
    Native.Ports.incomingSignal(function (v) {
-      return typeof v === "object" && "now" in v && "startTime" in v && "course" in v && "wind" in v && "opponents" in v && "buoys" in v && "playerSpell" in v && "triggeredSpells" in v && "leaderboard" in v ? {_: {}
-                                                                                                                                                                                                                 ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
-                                                                                                                                                                                                                 ,startTime: typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime)
-                                                                                                                                                                                                                 ,course: v.course === null ? Maybe.Nothing : Maybe.Just(typeof v.course === "object" && "upwind" in v.course && "downwind" in v.course && "laps" in v.course && "markRadius" in v.course && "islands" in v.course && "bounds" in v.course ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,upwind: typeof v.course.upwind === "object" && "y" in v.course.upwind && "width" in v.course.upwind ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,y: typeof v.course.upwind.y === "number" ? v.course.upwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.y)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,width: typeof v.course.upwind.width === "number" ? v.course.upwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.upwind)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,downwind: typeof v.course.downwind === "object" && "y" in v.course.downwind && "width" in v.course.downwind ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,y: typeof v.course.downwind.y === "number" ? v.course.downwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.y)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,width: typeof v.course.downwind.width === "number" ? v.course.downwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.downwind)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,laps: typeof v.course.laps === "number" ? v.course.laps : _E.raise("invalid input, expecting JSNumber but got " + v.course.laps)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,markRadius: typeof v.course.markRadius === "number" ? v.course.markRadius : _E.raise("invalid input, expecting JSNumber but got " + v.course.markRadius)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,islands: _U.isJSArray(v.course.islands) ? _L.fromArray(v.course.islands.map(function (v) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                return typeof v === "object" && "location" in v && "radius" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,location: _U.isJSArray(v.location) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,_0: typeof v.location[0] === "number" ? v.location[0] : _E.raise("invalid input, expecting JSNumber but got " + v.location[0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,_1: typeof v.location[1] === "number" ? v.location[1] : _E.raise("invalid input, expecting JSNumber but got " + v.location[1])} : _E.raise("invalid input, expecting JSArray but got " + v.location)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)} : _E.raise("invalid input, expecting JSObject [\"location\",\"radius\"] but got " + v);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             })) : _E.raise("invalid input, expecting JSArray but got " + v.course.islands)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,bounds: _U.isJSArray(v.course.bounds) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_0: _U.isJSArray(v.course.bounds[0]) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,_0: typeof v.course.bounds[0][0] === "number" ? v.course.bounds[0][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,_1: typeof v.course.bounds[0][1] === "number" ? v.course.bounds[0][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_1: _U.isJSArray(v.course.bounds[1]) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,_0: typeof v.course.bounds[1][0] === "number" ? v.course.bounds[1][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,_1: typeof v.course.bounds[1][1] === "number" ? v.course.bounds[1][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds)} : _E.raise("invalid input, expecting JSObject [\"upwind\",\"downwind\",\"laps\",\"markRadius\",\"islands\",\"bounds\"] but got " + v.course))
-                                                                                                                                                                                                                 ,wind: typeof v.wind === "object" && "origin" in v.wind && "speed" in v.wind && "gusts" in v.wind ? {_: {}
-                                                                                                                                                                                                                                                                                                                     ,origin: typeof v.wind.origin === "number" ? v.wind.origin : _E.raise("invalid input, expecting JSNumber but got " + v.wind.origin)
-                                                                                                                                                                                                                                                                                                                     ,speed: typeof v.wind.speed === "number" ? v.wind.speed : _E.raise("invalid input, expecting JSNumber but got " + v.wind.speed)
-                                                                                                                                                                                                                                                                                                                     ,gusts: _U.isJSArray(v.wind.gusts) ? _L.fromArray(v.wind.gusts.map(function (v) {
-                                                                                                                                                                                                                                                                                                                        return typeof v === "object" && "position" in v && "angle" in v && "speed" in v && "radius" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                           ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
-                                                                                                                                                                                                                                                                                                                                                                                                                           ,angle: typeof v.angle === "number" ? v.angle : _E.raise("invalid input, expecting JSNumber but got " + v.angle)
-                                                                                                                                                                                                                                                                                                                                                                                                                           ,speed: typeof v.speed === "number" ? v.speed : _E.raise("invalid input, expecting JSNumber but got " + v.speed)
-                                                                                                                                                                                                                                                                                                                                                                                                                           ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)} : _E.raise("invalid input, expecting JSObject [\"position\",\"angle\",\"speed\",\"radius\"] but got " + v);
-                                                                                                                                                                                                                                                                                                                     })) : _E.raise("invalid input, expecting JSArray but got " + v.wind.gusts)} : _E.raise("invalid input, expecting JSObject [\"origin\",\"speed\",\"gusts\"] but got " + v.wind)
-                                                                                                                                                                                                                 ,opponents: _U.isJSArray(v.opponents) ? _L.fromArray(v.opponents.map(function (v) {
-                                                                                                                                                                                                                    return typeof v === "object" && "position" in v && "direction" in v && "velocity" in v && "passedGates" in v && "name" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                  ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                        ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
-                                                                                                                                                                                                                                                                                                                                                                                        ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
-                                                                                                                                                                                                                                                                                                                                                  ,direction: typeof v.direction === "number" ? v.direction : _E.raise("invalid input, expecting JSNumber but got " + v.direction)
-                                                                                                                                                                                                                                                                                                                                                  ,velocity: typeof v.velocity === "number" ? v.velocity : _E.raise("invalid input, expecting JSNumber but got " + v.velocity)
-                                                                                                                                                                                                                                                                                                                                                  ,passedGates: _U.isJSArray(v.passedGates) ? _L.fromArray(v.passedGates.map(function (v) {
-                                                                                                                                                                                                                                                                                                                                                     return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
-                                                                                                                                                                                                                                                                                                                                                  })) : _E.raise("invalid input, expecting JSArray but got " + v.passedGates)
-                                                                                                                                                                                                                                                                                                                                                  ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _E.raise("invalid input, expecting JSString but got " + v.name)} : _E.raise("invalid input, expecting JSObject [\"position\",\"direction\",\"velocity\",\"passedGates\",\"name\"] but got " + v);
-                                                                                                                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.opponents)
-                                                                                                                                                                                                                 ,buoys: _U.isJSArray(v.buoys) ? _L.fromArray(v.buoys.map(function (v) {
-                                                                                                                                                                                                                    return typeof v === "object" && "position" in v && "radius" in v && "spell" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                       ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                             ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
-                                                                                                                                                                                                                                                                                                                                             ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
-                                                                                                                                                                                                                                                                                                       ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)
-                                                                                                                                                                                                                                                                                                       ,spell: typeof v.spell === "object" && "kind" in v.spell ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                  ,kind: typeof v.spell.kind === "string" || typeof v.spell.kind === "object" && v.spell.kind instanceof String ? v.spell.kind : _E.raise("invalid input, expecting JSString but got " + v.spell.kind)} : _E.raise("invalid input, expecting JSObject [\"kind\"] but got " + v.spell)} : _E.raise("invalid input, expecting JSObject [\"position\",\"radius\",\"spell\"] but got " + v);
-                                                                                                                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.buoys)
-                                                                                                                                                                                                                 ,playerSpell: v.playerSpell === null ? Maybe.Nothing : Maybe.Just(typeof v.playerSpell === "object" && "kind" in v.playerSpell ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                  ,kind: typeof v.playerSpell.kind === "string" || typeof v.playerSpell.kind === "object" && v.playerSpell.kind instanceof String ? v.playerSpell.kind : _E.raise("invalid input, expecting JSString but got " + v.playerSpell.kind)} : _E.raise("invalid input, expecting JSObject [\"kind\"] but got " + v.playerSpell))
-                                                                                                                                                                                                                 ,triggeredSpells: _U.isJSArray(v.triggeredSpells) ? _L.fromArray(v.triggeredSpells.map(function (v) {
-                                                                                                                                                                                                                    return typeof v === "object" && "kind" in v ? {_: {}
-                                                                                                                                                                                                                                                                  ,kind: typeof v.kind === "string" || typeof v.kind === "object" && v.kind instanceof String ? v.kind : _E.raise("invalid input, expecting JSString but got " + v.kind)} : _E.raise("invalid input, expecting JSObject [\"kind\"] but got " + v);
-                                                                                                                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.triggeredSpells)
-                                                                                                                                                                                                                 ,leaderboard: _U.isJSArray(v.leaderboard) ? _L.fromArray(v.leaderboard.map(function (v) {
-                                                                                                                                                                                                                    return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _E.raise("invalid input, expecting JSString but got " + v);
-                                                                                                                                                                                                                 })) : _E.raise("invalid input, expecting JSArray but got " + v.leaderboard)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"course\",\"wind\",\"opponents\",\"buoys\",\"playerSpell\",\"triggeredSpells\",\"leaderboard\"] but got " + v);
+      return typeof v === "object" && "now" in v && "startTime" in v && "course" in v && "crossedGates" in v && "nextGate" in v && "wind" in v && "opponents" in v && "buoys" in v && "playerSpell" in v && "triggeredSpells" in v && "leaderboard" in v ? {_: {}
+                                                                                                                                                                                                                                                           ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
+                                                                                                                                                                                                                                                           ,startTime: typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime)
+                                                                                                                                                                                                                                                           ,course: v.course === null ? Maybe.Nothing : Maybe.Just(typeof v.course === "object" && "upwind" in v.course && "downwind" in v.course && "laps" in v.course && "markRadius" in v.course && "islands" in v.course && "bounds" in v.course ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,upwind: typeof v.course.upwind === "object" && "y" in v.course.upwind && "width" in v.course.upwind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,y: typeof v.course.upwind.y === "number" ? v.course.upwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.y)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,width: typeof v.course.upwind.width === "number" ? v.course.upwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.upwind)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,downwind: typeof v.course.downwind === "object" && "y" in v.course.downwind && "width" in v.course.downwind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,y: typeof v.course.downwind.y === "number" ? v.course.downwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.y)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,width: typeof v.course.downwind.width === "number" ? v.course.downwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.downwind)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,laps: typeof v.course.laps === "number" ? v.course.laps : _E.raise("invalid input, expecting JSNumber but got " + v.course.laps)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,markRadius: typeof v.course.markRadius === "number" ? v.course.markRadius : _E.raise("invalid input, expecting JSNumber but got " + v.course.markRadius)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,islands: _U.isJSArray(v.course.islands) ? _L.fromArray(v.course.islands.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          return typeof v === "object" && "location" in v && "radius" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,location: _U.isJSArray(v.location) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,_0: typeof v.location[0] === "number" ? v.location[0] : _E.raise("invalid input, expecting JSNumber but got " + v.location[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,_1: typeof v.location[1] === "number" ? v.location[1] : _E.raise("invalid input, expecting JSNumber but got " + v.location[1])} : _E.raise("invalid input, expecting JSArray but got " + v.location)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)} : _E.raise("invalid input, expecting JSObject [\"location\",\"radius\"] but got " + v);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       })) : _E.raise("invalid input, expecting JSArray but got " + v.course.islands)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,bounds: _U.isJSArray(v.course.bounds) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,_0: _U.isJSArray(v.course.bounds[0]) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ,_0: typeof v.course.bounds[0][0] === "number" ? v.course.bounds[0][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ,_1: typeof v.course.bounds[0][1] === "number" ? v.course.bounds[0][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,_1: _U.isJSArray(v.course.bounds[1]) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ,_0: typeof v.course.bounds[1][0] === "number" ? v.course.bounds[1][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ,_1: typeof v.course.bounds[1][1] === "number" ? v.course.bounds[1][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds)} : _E.raise("invalid input, expecting JSObject [\"upwind\",\"downwind\",\"laps\",\"markRadius\",\"islands\",\"bounds\"] but got " + v.course))
+                                                                                                                                                                                                                                                           ,crossedGates: _U.isJSArray(v.crossedGates) ? _L.fromArray(v.crossedGates.map(function (v) {
+                                                                                                                                                                                                                                                              return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
+                                                                                                                                                                                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.crossedGates)
+                                                                                                                                                                                                                                                           ,nextGate: v.nextGate === null ? Maybe.Nothing : Maybe.Just(typeof v.nextGate === "string" || typeof v.nextGate === "object" && v.nextGate instanceof String ? v.nextGate : _E.raise("invalid input, expecting JSString but got " + v.nextGate))
+                                                                                                                                                                                                                                                           ,wind: typeof v.wind === "object" && "origin" in v.wind && "speed" in v.wind && "gusts" in v.wind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                               ,origin: typeof v.wind.origin === "number" ? v.wind.origin : _E.raise("invalid input, expecting JSNumber but got " + v.wind.origin)
+                                                                                                                                                                                                                                                                                                                                                               ,speed: typeof v.wind.speed === "number" ? v.wind.speed : _E.raise("invalid input, expecting JSNumber but got " + v.wind.speed)
+                                                                                                                                                                                                                                                                                                                                                               ,gusts: _U.isJSArray(v.wind.gusts) ? _L.fromArray(v.wind.gusts.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                                  return typeof v === "object" && "position" in v && "angle" in v && "speed" in v && "radius" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,angle: typeof v.angle === "number" ? v.angle : _E.raise("invalid input, expecting JSNumber but got " + v.angle)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,speed: typeof v.speed === "number" ? v.speed : _E.raise("invalid input, expecting JSNumber but got " + v.speed)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)} : _E.raise("invalid input, expecting JSObject [\"position\",\"angle\",\"speed\",\"radius\"] but got " + v);
+                                                                                                                                                                                                                                                                                                                                                               })) : _E.raise("invalid input, expecting JSArray but got " + v.wind.gusts)} : _E.raise("invalid input, expecting JSObject [\"origin\",\"speed\",\"gusts\"] but got " + v.wind)
+                                                                                                                                                                                                                                                           ,opponents: _U.isJSArray(v.opponents) ? _L.fromArray(v.opponents.map(function (v) {
+                                                                                                                                                                                                                                                              return typeof v === "object" && "position" in v && "direction" in v && "velocity" in v && "name" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                      ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                            ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
+                                                                                                                                                                                                                                                                                                                                                                                                            ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
+                                                                                                                                                                                                                                                                                                                                                                      ,direction: typeof v.direction === "number" ? v.direction : _E.raise("invalid input, expecting JSNumber but got " + v.direction)
+                                                                                                                                                                                                                                                                                                                                                                      ,velocity: typeof v.velocity === "number" ? v.velocity : _E.raise("invalid input, expecting JSNumber but got " + v.velocity)
+                                                                                                                                                                                                                                                                                                                                                                      ,name: typeof v.name === "string" || typeof v.name === "object" && v.name instanceof String ? v.name : _E.raise("invalid input, expecting JSString but got " + v.name)} : _E.raise("invalid input, expecting JSObject [\"position\",\"direction\",\"velocity\",\"name\"] but got " + v);
+                                                                                                                                                                                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.opponents)
+                                                                                                                                                                                                                                                           ,buoys: _U.isJSArray(v.buoys) ? _L.fromArray(v.buoys.map(function (v) {
+                                                                                                                                                                                                                                                              return typeof v === "object" && "position" in v && "radius" in v && "spell" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                 ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                       ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
+                                                                                                                                                                                                                                                                                                                                                                                       ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
+                                                                                                                                                                                                                                                                                                                                                 ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)
+                                                                                                                                                                                                                                                                                                                                                 ,spell: typeof v.spell === "object" && "kind" in v.spell ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                            ,kind: typeof v.spell.kind === "string" || typeof v.spell.kind === "object" && v.spell.kind instanceof String ? v.spell.kind : _E.raise("invalid input, expecting JSString but got " + v.spell.kind)} : _E.raise("invalid input, expecting JSObject [\"kind\"] but got " + v.spell)} : _E.raise("invalid input, expecting JSObject [\"position\",\"radius\",\"spell\"] but got " + v);
+                                                                                                                                                                                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.buoys)
+                                                                                                                                                                                                                                                           ,playerSpell: v.playerSpell === null ? Maybe.Nothing : Maybe.Just(typeof v.playerSpell === "object" && "kind" in v.playerSpell ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                            ,kind: typeof v.playerSpell.kind === "string" || typeof v.playerSpell.kind === "object" && v.playerSpell.kind instanceof String ? v.playerSpell.kind : _E.raise("invalid input, expecting JSString but got " + v.playerSpell.kind)} : _E.raise("invalid input, expecting JSObject [\"kind\"] but got " + v.playerSpell))
+                                                                                                                                                                                                                                                           ,triggeredSpells: _U.isJSArray(v.triggeredSpells) ? _L.fromArray(v.triggeredSpells.map(function (v) {
+                                                                                                                                                                                                                                                              return typeof v === "object" && "kind" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                            ,kind: typeof v.kind === "string" || typeof v.kind === "object" && v.kind instanceof String ? v.kind : _E.raise("invalid input, expecting JSString but got " + v.kind)} : _E.raise("invalid input, expecting JSObject [\"kind\"] but got " + v);
+                                                                                                                                                                                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.triggeredSpells)
+                                                                                                                                                                                                                                                           ,leaderboard: _U.isJSArray(v.leaderboard) ? _L.fromArray(v.leaderboard.map(function (v) {
+                                                                                                                                                                                                                                                              return typeof v === "string" || typeof v === "object" && v instanceof String ? v : _E.raise("invalid input, expecting JSString but got " + v);
+                                                                                                                                                                                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.leaderboard)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"course\",\"crossedGates\",\"nextGate\",\"wind\",\"opponents\",\"buoys\",\"playerSpell\",\"triggeredSpells\",\"leaderboard\"] but got " + v);
    }));
    var input = A2(Signal.sampleOn,
    clock,
@@ -140,9 +140,6 @@ Elm.ShiftMaster.make = function (_elm) {
                         ,v.position._1]
              ,direction: v.direction
              ,velocity: v.velocity
-             ,passedGates: _L.toArray(v.passedGates).map(function (v) {
-                return v;
-             })
              ,spellCast: v.spellCast};
    }),
    A2(Signal.lift,
@@ -198,23 +195,46 @@ Elm.Steps.make = function (_elm) {
    var Time = Elm.Time.make(_elm);
    var _op = {};
    var raceInputStep = F2(function (_v0,
-   gameState) {
+   _v1) {
       return function () {
-         return _U.replace([["opponents"
-                            ,_v0.opponents]
-                           ,["buoys",_v0.buoys]
-                           ,["playerSpell",_v0.playerSpell]
-                           ,["triggeredSpells"
-                            ,_v0.triggeredSpells]
-                           ,["course"
-                            ,A3(Maybe.maybe,
-                            gameState.course,
-                            Basics.id,
-                            _v0.course)]
-                           ,["leaderboard",_v0.leaderboard]
-                           ,["countdown"
-                            ,_v0.startTime - _v0.now]],
-         gameState);
+         return function () {
+            return function () {
+               var nextGateType = function () {
+                  var _v4 = _v0.nextGate;
+                  switch (_v4.ctor)
+                  {case "Just": switch (_v4._0)
+                       {case "DownwindGate":
+                          return Maybe.Just(Game.Downwind);
+                          case "StartLine":
+                          return Maybe.Just(Game.StartLine);
+                          case "UpwindGate":
+                          return Maybe.Just(Game.Upwind);}
+                       break;}
+                  return Maybe.Nothing;
+               }();
+               var updatedPlayer = _U.replace([["nextGate"
+                                               ,nextGateType]
+                                              ,["crossedGates"
+                                               ,_v0.crossedGates]],
+               _v1.player);
+               return _U.replace([["opponents"
+                                  ,_v0.opponents]
+                                 ,["player",updatedPlayer]
+                                 ,["course"
+                                  ,A3(Maybe.maybe,
+                                  _v1.course,
+                                  Basics.id,
+                                  _v0.course)]
+                                 ,["buoys",_v0.buoys]
+                                 ,["playerSpell",_v0.playerSpell]
+                                 ,["triggeredSpells"
+                                  ,_v0.triggeredSpells]
+                                 ,["leaderboard",_v0.leaderboard]
+                                 ,["countdown"
+                                  ,_v0.startTime - _v0.now]],
+               _v1);
+            }();
+         }();
       }();
    });
    var updatePlayerWind = F2(function (wind,
@@ -255,21 +275,21 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var getCenterAfterMove = F4(function (_v2,
-   _v3,
-   _v4,
-   _v5) {
+   var getCenterAfterMove = F4(function (_v6,
+   _v7,
+   _v8,
+   _v9) {
       return function () {
-         switch (_v5.ctor)
+         switch (_v9.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v4.ctor)
+                 switch (_v8.ctor)
                  {case "_Tuple2":
                     return function () {
-                         switch (_v3.ctor)
+                         switch (_v7.ctor)
                          {case "_Tuple2":
                             return function () {
-                                 switch (_v2.ctor)
+                                 switch (_v6.ctor)
                                  {case "_Tuple2":
                                     return function () {
                                          var refocus = F5(function (n,
@@ -295,29 +315,29 @@ Elm.Steps.make = function (_elm) {
                                          });
                                          return {ctor: "_Tuple2"
                                                 ,_0: A5(refocus,
-                                                _v2._0,
-                                                _v3._0,
-                                                _v4._0,
-                                                _v5._0,
-                                                _v5._0 * 0.2)
+                                                _v6._0,
+                                                _v7._0,
+                                                _v8._0,
+                                                _v9._0,
+                                                _v9._0 * 0.2)
                                                 ,_1: A5(refocus,
-                                                _v2._1,
-                                                _v3._1,
-                                                _v4._1,
-                                                _v5._1,
-                                                _v5._1 * 0.4)};
+                                                _v6._1,
+                                                _v7._1,
+                                                _v8._1,
+                                                _v9._1,
+                                                _v9._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
-                                 "between lines 145 and 158");
+                                 "between lines 112 and 125");
                               }();}
                          _E.Case($moduleName,
-                         "between lines 145 and 158");
+                         "between lines 112 and 125");
                       }();}
                  _E.Case($moduleName,
-                 "between lines 145 and 158");
+                 "between lines 112 and 125");
               }();}
          _E.Case($moduleName,
-         "between lines 145 and 158");
+         "between lines 112 and 125");
       }();
    });
    var getGatesMarks = function (course) {
@@ -360,102 +380,6 @@ Elm.Steps.make = function (_elm) {
          return outOfBounds || (stuckOnMark || onIsland);
       }();
    });
-   var gatePassedInX = F2(function (gate,
-   _v18) {
-      return function () {
-         switch (_v18.ctor)
-         {case "_Tuple2":
-            switch (_v18._0.ctor)
-              {case "_Tuple2":
-                 switch (_v18._1.ctor)
-                   {case "_Tuple2":
-                      return function () {
-                           var a = (_v18._0._1 - _v18._1._1) / (_v18._0._0 - _v18._1._0);
-                           var b = _v18._0._1 - a * _v18._0._0;
-                           var xGate = (gate.y - b) / a;
-                           return _U.cmp(Basics.abs(xGate),
-                           gate.width / 2) < 1;
-                        }();}
-                   break;}
-              break;}
-         _E.Case($moduleName,
-         "between lines 94 and 98");
-      }();
-   });
-   var gatePassedFromNorth = F2(function (gate,
-   _v26) {
-      return function () {
-         switch (_v26.ctor)
-         {case "_Tuple2":
-            return _U.cmp(Basics.snd(_v26._0),
-              gate.y) > 0 && (_U.cmp(Basics.snd(_v26._1),
-              gate.y) < 1 && A2(gatePassedInX,
-              gate,
-              {ctor: "_Tuple2"
-              ,_0: _v26._0
-              ,_1: _v26._1}));}
-         _E.Case($moduleName,
-         "on line 102, column 4 to 70");
-      }();
-   });
-   var gatePassedFromSouth = F2(function (gate,
-   _v30) {
-      return function () {
-         switch (_v30.ctor)
-         {case "_Tuple2":
-            return _U.cmp(Basics.snd(_v30._0),
-              gate.y) < 0 && (_U.cmp(Basics.snd(_v30._1),
-              gate.y) > -1 && A2(gatePassedInX,
-              gate,
-              {ctor: "_Tuple2"
-              ,_0: _v30._0
-              ,_1: _v30._1}));}
-         _E.Case($moduleName,
-         "on line 106, column 4 to 70");
-      }();
-   });
-   var getPassedGates = F4(function (player,
-   now,
-   _v34,
-   step) {
-      return function () {
-         return function () {
-            var _v36 = A2(Game.findNextGate,
-            player,
-            _v34.laps);
-            switch (_v36.ctor)
-            {case "Just":
-               switch (_v36._0.ctor)
-                 {case "Downwind":
-                    return A2(gatePassedFromNorth,
-                      _v34.downwind,
-                      step) ? {ctor: "::"
-                              ,_0: now
-                              ,_1: player.passedGates} : A2(gatePassedFromNorth,
-                      _v34.upwind,
-                      step) ? List.tail(player.passedGates) : player.passedGates;
-                    case "StartLine":
-                    return A2(gatePassedFromSouth,
-                      _v34.downwind,
-                      step) ? {ctor: "::"
-                              ,_0: now
-                              ,_1: player.passedGates} : player.passedGates;
-                    case "Upwind":
-                    return A2(gatePassedFromSouth,
-                      _v34.upwind,
-                      step) ? {ctor: "::"
-                              ,_0: now
-                              ,_1: player.passedGates} : A2(gatePassedFromSouth,
-                      _v34.downwind,
-                      step) ? List.tail(player.passedGates) : player.passedGates;}
-                 break;
-               case "Nothing":
-               return player.passedGates;}
-            _E.Case($moduleName,
-            "between lines 110 and 123");
-         }();
-      }();
-   });
    var movePlayer = F5(function (now,
    delta,
    gameState,
@@ -467,7 +391,7 @@ Elm.Steps.make = function (_elm) {
          direction = $.direction,
          velocity = $.velocity,
          windAngle = $.windAngle,
-         passedGates = $.passedGates;
+         crossedGates = $.crossedGates;
          var newVelocity = A3(Core.playerVelocity,
          player.windSpeed,
          player.windAngle,
@@ -486,14 +410,6 @@ Elm.Steps.make = function (_elm) {
          {ctor: "::"
          ,_0: newPosition
          ,_1: player.wake});
-         var newPassedGates = _U.cmp(gameState.countdown,
-         0) < 1 ? A4(getPassedGates,
-         player,
-         now,
-         gameState.course,
-         {ctor: "_Tuple2"
-         ,_0: position
-         ,_1: newPosition}) : player.passedGates;
          var newCenter = A4(getCenterAfterMove,
          position,
          newPosition,
@@ -504,9 +420,7 @@ Elm.Steps.make = function (_elm) {
                            ,["velocity"
                             ,stuck ? 0 : newVelocity]
                            ,["center",newCenter]
-                           ,["wake",newWake]
-                           ,["passedGates"
-                            ,newPassedGates]],
+                           ,["wake",newWake]],
          player);
       }();
    });
@@ -531,54 +445,54 @@ Elm.Steps.make = function (_elm) {
    arrows,
    fineTurn) {
       return function () {
-         var _v38 = {ctor: "_Tuple4"
+         var _v22 = {ctor: "_Tuple4"
                     ,_0: tackTarget
                     ,_1: player.controlMode
                     ,_2: arrows.x
                     ,_3: arrows.y};
-         switch (_v38.ctor)
+         switch (_v22.ctor)
          {case "_Tuple4":
-            switch (_v38._0.ctor)
+            switch (_v22._0.ctor)
               {case "Just":
                  return function () {
-                      var _v44 = player.controlMode;
-                      switch (_v44.ctor)
+                      var _v28 = player.controlMode;
+                      switch (_v28.ctor)
                       {case "FixedDirection":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(player.direction - _v38._0._0)]));
-                              return _U.cmp(Core.ensure360(player.direction - _v38._0._0),
+                                                                      ,Basics.abs(player.direction - _v22._0._0)]));
+                              return _U.cmp(Core.ensure360(player.direction - _v22._0._0),
                               180) > 0 ? maxTurn : 0 - maxTurn;
                            }();
                          case "FixedWindAngle":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(player.windAngle - _v38._0._0)]));
-                              return _U.cmp(_v38._0._0,
-                              90) > 0 || _U.cmp(_v38._0._0,
-                              0) < 0 && _U.cmp(_v38._0._0,
+                                                                      ,Basics.abs(player.windAngle - _v22._0._0)]));
+                              return _U.cmp(_v22._0._0,
+                              90) > 0 || _U.cmp(_v22._0._0,
+                              0) < 0 && _U.cmp(_v22._0._0,
                               -90) > -1 ? 0 - maxTurn : maxTurn;
                            }();}
                       _E.Case($moduleName,
                       "between lines 58 and 66");
                    }();
                  case "Nothing":
-                 switch (_v38._1.ctor)
+                 switch (_v22._1.ctor)
                    {case "FixedDirection":
-                      switch (_v38._2)
-                        {case 0: switch (_v38._3)
+                      switch (_v22._2)
+                        {case 0: switch (_v22._3)
                              {case 0: return 0;}
                              break;}
                         break;
                       case "FixedWindAngle":
-                      switch (_v38._2)
-                        {case 0: switch (_v38._3)
+                      switch (_v22._2)
+                        {case 0: switch (_v22._3)
                              {case 0: return A2(Debug.log,
                                   "turn",
                                   Core.ensure360(player.windOrigin + player.windAngle - player.direction));}
                              break;}
                         break;}
-                   return fineTurn ? _v38._2 : _v38._2 * 3;}
+                   return fineTurn ? _v22._2 : _v22._2 * 3;}
               break;}
          _E.Case($moduleName,
          "between lines 55 and 69");
@@ -587,19 +501,19 @@ Elm.Steps.make = function (_elm) {
    var tackTargetReached = F2(function (player,
    targetMaybe) {
       return function () {
-         var _v45 = {ctor: "_Tuple2"
+         var _v29 = {ctor: "_Tuple2"
                     ,_0: targetMaybe
                     ,_1: player.controlMode};
-         switch (_v45.ctor)
+         switch (_v29.ctor)
          {case "_Tuple2":
-            switch (_v45._0.ctor)
+            switch (_v29._0.ctor)
               {case "Just":
-                 switch (_v45._1.ctor)
+                 switch (_v29._1.ctor)
                    {case "FixedDirection":
-                      return _U.cmp(Basics.abs(_v45._0._0 - player.direction),
+                      return _U.cmp(Basics.abs(_v29._0._0 - player.direction),
                         0.1) < 0;
                       case "FixedWindAngle":
-                      return _U.cmp(Basics.abs(_v45._0._0 - player.windAngle),
+                      return _U.cmp(Basics.abs(_v29._0._0 - player.windAngle),
                         0.1) < 0;}
                    break;
                  case "Nothing": return false;}
@@ -611,22 +525,22 @@ Elm.Steps.make = function (_elm) {
    var getTackTarget = F2(function (player,
    spaceKey) {
       return function () {
-         var _v49 = {ctor: "_Tuple2"
+         var _v33 = {ctor: "_Tuple2"
                     ,_0: player.tackTarget
                     ,_1: spaceKey};
-         switch (_v49.ctor)
+         switch (_v33.ctor)
          {case "_Tuple2":
-            switch (_v49._0.ctor)
+            switch (_v33._0.ctor)
               {case "Just":
                  return A2(tackTargetReached,
                    player,
                    player.tackTarget) ? Maybe.Nothing : player.tackTarget;
-                 case "Nothing": switch (_v49._1)
+                 case "Nothing": switch (_v33._1)
                    {case false:
                       return Maybe.Nothing;
                       case true: return function () {
-                           var _v53 = player.controlMode;
-                           switch (_v53.ctor)
+                           var _v37 = player.controlMode;
+                           switch (_v37.ctor)
                            {case "FixedDirection":
                               return Maybe.Just(Core.ensure360(player.windOrigin - player.windAngle));
                               case "FixedWindAngle":
@@ -640,21 +554,21 @@ Elm.Steps.make = function (_elm) {
          "between lines 38 and 49");
       }();
    });
-   var keysForPlayerStep = F3(function (_v54,
+   var keysForPlayerStep = F3(function (_v38,
    spells,
    player) {
       return function () {
          return function () {
-            var forceTurn = !_U.eq(_v54.arrows.x,
+            var forceTurn = !_U.eq(_v38.arrows.x,
             0);
             var tackTarget = forceTurn ? Maybe.Nothing : A2(getTackTarget,
             player,
-            _v54.tack);
+            _v38.tack);
             var turn = A4(getTurn,
             tackTarget,
             player,
-            _v54.arrows,
-            _v54.fineTurn);
+            _v38.arrows,
+            _v38.fineTurn);
             var direction = Core.ensure360(player.direction + (A2(Game.containsSpell,
             "PoleInversion",
             spells) ? 0 - turn : turn));
@@ -668,8 +582,8 @@ Elm.Steps.make = function (_elm) {
             var tackTargetAfterTurn = A2(tackTargetReached,
             turnedPlayer,
             tackTarget) ? Maybe.Nothing : tackTarget;
-            var controlMode = forceTurn ? Game.FixedDirection : _U.cmp(_v54.arrows.y,
-            0) > 0 || _v54.lockAngle ? Game.FixedWindAngle : turnedPlayer.controlMode;
+            var controlMode = forceTurn ? Game.FixedDirection : _U.cmp(_v38.arrows.y,
+            0) > 0 || _v38.lockAngle ? Game.FixedWindAngle : turnedPlayer.controlMode;
             return _U.replace([["controlMode"
                                ,controlMode]
                               ,["tackTarget"
@@ -690,25 +604,25 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var mouseStep = F2(function (_v56,
+   var mouseStep = F2(function (_v40,
    gameState) {
       return function () {
          return function () {
             var player = gameState.player;
             var center = function () {
-               var _v58 = _v56.drag;
-               switch (_v58.ctor)
+               var _v42 = _v40.drag;
+               switch (_v42.ctor)
                {case "Just":
-                  switch (_v58._0.ctor)
+                  switch (_v42._0.ctor)
                     {case "_Tuple2":
                        return function () {
-                            var $ = _v56.mouse,
+                            var $ = _v40.mouse,
                             x = $._0,
                             y = $._1;
                             return A2(Geo.sub,
                             Geo.floatify({ctor: "_Tuple2"
-                                         ,_0: x - _v58._0._0
-                                         ,_1: _v58._0._1 - y}),
+                                         ,_0: x - _v42._0._0
+                                         ,_1: _v42._0._1 - y}),
                             player.center);
                          }();}
                     break;
@@ -740,10 +654,6 @@ Elm.Steps.make = function (_elm) {
                        ,getTurn: getTurn
                        ,keysForPlayerStep: keysForPlayerStep
                        ,keysStep: keysStep
-                       ,gatePassedInX: gatePassedInX
-                       ,gatePassedFromNorth: gatePassedFromNorth
-                       ,gatePassedFromSouth: gatePassedFromSouth
-                       ,getPassedGates: getPassedGates
                        ,getGatesMarks: getGatesMarks
                        ,isStuck: isStuck
                        ,getCenterAfterMove: getCenterAfterMove
@@ -864,6 +774,18 @@ Elm.Render.Race.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
+   var renderFinished = F2(function (course,
+   player) {
+      return function () {
+         var _v0 = player.nextGate;
+         switch (_v0.ctor)
+         {case "Nothing":
+            return Maybe.Just(Graphics.Collage.move({ctor: "_Tuple2"
+                                                    ,_0: 0
+                                                    ,_1: course.downwind.y + 50})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("Finished!")))));}
+         return Maybe.Nothing;
+      }();
+   });
    var renderCountdown = F2(function (gameState,
    player) {
       return function () {
@@ -883,7 +805,7 @@ Elm.Render.Race.make = function (_elm) {
             _L.append(String.show(s),
             "\"..."))));
             return Maybe.Just(messageBuilder(msg));
-         }() : List.isEmpty(player.passedGates) ? Maybe.Just(messageBuilder("Go!")) : Maybe.Nothing;
+         }() : List.isEmpty(player.crossedGates) ? Maybe.Just(messageBuilder("Go!")) : Maybe.Nothing;
       }();
    });
    var renderLaylines = F2(function (player,
@@ -907,17 +829,17 @@ Elm.Render.Race.make = function (_elm) {
       }();
    });
    var renderBuoy = F2(function (timer,
-   _v0) {
+   _v1) {
       return function () {
          return function () {
             var a = 0.4 + 0.2 * Basics.cos(timer * 5.0e-3);
-            return Graphics.Collage.alpha(a)(Graphics.Collage.move(_v0.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v0.radius))));
+            return Graphics.Collage.alpha(a)(Graphics.Collage.move(_v1.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v1.radius))));
          }();
       }();
    });
-   var renderIsland = function (_v2) {
+   var renderIsland = function (_v3) {
       return function () {
-         return Graphics.Collage.move(_v2.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v2.radius)));
+         return Graphics.Collage.move(_v3.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v3.radius)));
       }();
    };
    var renderIslands = function (gameState) {
@@ -975,22 +897,22 @@ Elm.Render.Race.make = function (_elm) {
          var opacityForIndex = function (i) {
             return 0.5 - 0.4 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
          };
-         var renderWakePoint = function (_v4) {
+         var renderWakePoint = function (_v5) {
             return function () {
-               switch (_v4.ctor)
+               switch (_v5.ctor)
                {case "_Tuple2":
-                  return Graphics.Collage.alpha(opacityForIndex(_v4._0))(Graphics.Collage.move(_v4._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
+                  return Graphics.Collage.alpha(opacityForIndex(_v5._0))(Graphics.Collage.move(_v5._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
                _E.Case($moduleName,
                "on line 58, column 32 to 94");
             }();
          };
          var span = 5;
-         var points = List.map(renderWakePoint)(List.filter(function (_v8) {
+         var points = List.map(renderWakePoint)(List.filter(function (_v9) {
             return function () {
-               switch (_v8.ctor)
+               switch (_v9.ctor)
                {case "_Tuple2":
                   return _U.eq(A2(Basics.mod,
-                    _v8._0 + 1,
+                    _v9._0 + 1,
                     span),
                     0);}
                _E.Case($moduleName,
@@ -1006,10 +928,10 @@ Elm.Render.Race.make = function (_elm) {
          return Graphics.Collage.group(points);
       }();
    };
-   var renderEqualityLine = F2(function (_v12,
+   var renderEqualityLine = F2(function (_v13,
    windOrigin) {
       return function () {
-         switch (_v12.ctor)
+         switch (_v13.ctor)
          {case "_Tuple2":
             return function () {
                  var right = Basics.fromPolar({ctor: "_Tuple2"
@@ -1128,43 +1050,43 @@ Elm.Render.Race.make = function (_elm) {
                                        ,_1: marks});
       }();
    });
-   var renderRelative = function (_v16) {
+   var renderRelative = function (_v17) {
       return function () {
          return function () {
             var maybeForms = _L.fromArray([A2(renderCountdown,
-            _v16,
-            _v16.player)]);
-            var nextGate = A2(Game.findNextGate,
-            _v16.player,
-            _v16.course.laps);
-            var downwindOrStartLine = List.isEmpty(_v16.player.passedGates) ? A3(renderStartLine,
-            _v16.course.downwind,
-            _v16.course.markRadius,
-            _U.cmp(_v16.countdown,
+                                          _v17,
+                                          _v17.player)
+                                          ,A2(renderFinished,
+                                          _v17.course,
+                                          _v17.player)]);
+            var downwindOrStartLine = List.isEmpty(_v17.player.crossedGates) ? A3(renderStartLine,
+            _v17.course.downwind,
+            _v17.course.markRadius,
+            _U.cmp(_v17.countdown,
             0) < 1) : A3(renderGate,
-            _v16.course.downwind,
-            _v16.course.markRadius,
-            _U.eq(nextGate,
+            _v17.course.downwind,
+            _v17.course.markRadius,
+            _U.eq(_v17.player.nextGate,
             Maybe.Just(Game.Downwind)));
-            var justForms = _L.fromArray([renderBounds(_v16.course.bounds)
-                                         ,renderIslands(_v16)
+            var justForms = _L.fromArray([renderBounds(_v17.course.bounds)
+                                         ,renderIslands(_v17)
                                          ,downwindOrStartLine
                                          ,A3(renderGate,
-                                         _v16.course.upwind,
-                                         _v16.course.markRadius,
-                                         _U.eq(nextGate,
+                                         _v17.course.upwind,
+                                         _v17.course.markRadius,
+                                         _U.eq(_v17.player.nextGate,
                                          Maybe.Just(Game.Upwind)))
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
-                                         _v16.opponents))
+                                         _v17.opponents))
                                          ,Graphics.Collage.group(A2(List.map,
-                                         renderBuoy(_v16.countdown),
-                                         _v16.buoys))
-                                         ,renderGusts(_v16.wind)
+                                         renderBuoy(_v17.countdown),
+                                         _v17.buoys))
+                                         ,renderGusts(_v17.wind)
                                          ,A2(renderPlayer,
-                                         _v16.player,
-                                         _v16.triggeredSpells)]);
-            return Graphics.Collage.move(Geo.neg(_v16.player.center))(Graphics.Collage.group(_L.append(justForms,
+                                         _v17.player,
+                                         _v17.triggeredSpells)]);
+            return Graphics.Collage.move(Geo.neg(_v17.player.center))(Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms))));
          }();
       }();
@@ -1185,6 +1107,7 @@ Elm.Render.Race.make = function (_elm) {
                              ,renderBuoy: renderBuoy
                              ,renderLaylines: renderLaylines
                              ,renderCountdown: renderCountdown
+                             ,renderFinished: renderFinished
                              ,renderRelative: renderRelative};
    return _elm.Render.Race.values;
 };Elm.Render = Elm.Render || {};
@@ -1236,7 +1159,25 @@ Elm.Render.Controls.make = function (_elm) {
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 170 and 174");
+         "between lines 142 and 146");
+      }();
+   });
+   var renderLeaderboard = F2(function (leaderboard,
+   _v4) {
+      return function () {
+         switch (_v4.ctor)
+         {case "_Tuple2":
+            return List.isEmpty(leaderboard) ? Maybe.Nothing : Maybe.Just(Graphics.Collage.move({ctor: "_Tuple2"
+                                                                                                ,_0: _v4._0 / 2 - 50
+                                                                                                ,_1: 0})(Graphics.Collage.toForm(Text.leftAligned(Render.Utils.baseText(List.concat(A2(Core.indexedMap,
+              F2(function (i,n) {
+                 return _L.append(String.show(i + 1),
+                 _L.append(". ",
+                 _L.append(n,"\n")));
+              }),
+              leaderboard)))))));}
+         _E.Case($moduleName,
+         "between lines 132 and 138");
       }();
    });
    var getArrow = _L.fromArray([{ctor: "_Tuple2"
@@ -1292,13 +1233,13 @@ Elm.Render.Controls.make = function (_elm) {
             case "PoleInversion":
             return renderPoleInversion;}
          _E.Case($moduleName,
-         "between lines 136 and 138");
+         "between lines 115 and 117");
       }();
    };
    var renderStockSpell = F2(function (spell,
-   _v5) {
+   _v9) {
       return function () {
-         switch (_v5.ctor)
+         switch (_v9.ctor)
          {case "_Tuple2":
             return function () {
                  var spellGraphics = getSpellStockGraphic(spell.kind);
@@ -1307,20 +1248,20 @@ Elm.Render.Controls.make = function (_elm) {
                                                         ,_0: 0
                                                         ,_1: 35})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText("SPELL"))));
                  return Graphics.Collage.move({ctor: "_Tuple2"
-                                              ,_0: _v5._0 / 2 - 45
-                                              ,_1: _v5._1 / 2 - 250})(Graphics.Collage.group(_L.fromArray([spellLabel
+                                              ,_0: _v9._0 / 2 - 45
+                                              ,_1: _v9._1 / 2 - 250})(Graphics.Collage.group(_L.fromArray([spellLabel
                                                                                                           ,outlineSquare
                                                                                                           ,spellGraphics])));
               }();}
          _E.Case($moduleName,
-         "between lines 103 and 112");
+         "between lines 82 and 91");
       }();
    });
    var renderWindWheel = F3(function (wind,
    player,
-   _v9) {
+   _v13) {
       return function () {
-         switch (_v9.ctor)
+         switch (_v13.ctor)
          {case "_Tuple2":
             return function () {
                  var legend = Graphics.Collage.move({ctor: "_Tuple2"
@@ -1347,21 +1288,21 @@ Elm.Render.Controls.make = function (_elm) {
                                                                              ,_1: windOriginRadians}))(Graphics.Collage.rotate(windOriginRadians - Basics.pi / 2)(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(Basics.round(wind.origin)),
                  "&deg;"))))));
                  return Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
-                                                                          ,_0: _v9._0 / 2 - 50
-                                                                          ,_1: _v9._1 / 2 - 120})(Graphics.Collage.group(_L.fromArray([c
-                                                                                                                                      ,windMarker
-                                                                                                                                      ,windOriginText
-                                                                                                                                      ,windSpeedText
-                                                                                                                                      ,legend]))));
+                                                                          ,_0: _v13._0 / 2 - 50
+                                                                          ,_1: _v13._1 / 2 - 120})(Graphics.Collage.group(_L.fromArray([c
+                                                                                                                                       ,windMarker
+                                                                                                                                       ,windOriginText
+                                                                                                                                       ,windSpeedText
+                                                                                                                                       ,legend]))));
               }();}
          _E.Case($moduleName,
-         "between lines 84 and 99");
+         "between lines 63 and 78");
       }();
    });
    var renderPolar = F2(function (player,
-   _v13) {
+   _v17) {
       return function () {
-         switch (_v13.ctor)
+         switch (_v17.ctor)
          {case "_Tuple2":
             return function () {
                  var maxSpeed = 100;
@@ -1409,8 +1350,8 @@ Elm.Render.Controls.make = function (_elm) {
                                   ,_1: Core.toRadians(absWindAngle)})))(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append(String.show(Basics.round(absWindAngle)),
                  "&deg;"))))));
                  return Graphics.Collage.move({ctor: "_Tuple2"
-                                              ,_0: (0 - _v13._0) / 2 + 20
-                                              ,_1: _v13._1 / 2 - maxSpeed / 2 - 20})(Graphics.Collage.group(_L.fromArray([yAxis
+                                              ,_0: (0 - _v17._0) / 2 + 20
+                                              ,_1: _v17._1 / 2 - maxSpeed / 2 - 20})(Graphics.Collage.group(_L.fromArray([yAxis
                                                                                                                          ,xAxis
                                                                                                                          ,polar
                                                                                                                          ,playerProjection
@@ -1420,18 +1361,18 @@ Elm.Render.Controls.make = function (_elm) {
                                                                                                                          ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 62 and 80");
+         "between lines 41 and 59");
       }();
    });
-   var renderLapsCount = F3(function (_v17,
+   var renderLapsCount = F3(function (_v21,
    course,
    player) {
       return function () {
-         switch (_v17.ctor)
+         switch (_v21.ctor)
          {case "_Tuple2":
             return function () {
                  var count = List.minimum(_L.fromArray([A2(Basics.div,
-                                                       List.length(player.passedGates) + 1,
+                                                       List.length(player.crossedGates) + 1,
                                                        2)
                                                        ,course.laps]));
                  var msg = _L.append("LAP ",
@@ -1439,60 +1380,50 @@ Elm.Render.Controls.make = function (_elm) {
                  _L.append("/",
                  String.show(course.laps))));
                  return Graphics.Collage.move({ctor: "_Tuple2"
-                                              ,_0: _v17._0 / 2 - 50
-                                              ,_1: _v17._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(Render.Utils.baseText(msg))));
+                                              ,_0: _v21._0 / 2 - 50
+                                              ,_1: _v21._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(Render.Utils.baseText(msg))));
               }();}
          _E.Case($moduleName,
-         "between lines 52 and 58");
+         "between lines 31 and 37");
       }();
    });
-   var renderWinner = F3(function (course,
-   player,
-   opponents) {
-      return Maybe.Nothing;
-   });
-   var hasFinished = F2(function (course,
-   player) {
-      return _U.eq(List.length(player.passedGates),
-      course.laps * 2 + 1);
-   });
    var renderHiddenGate = F4(function (gate,
-   _v21,
-   _v22,
+   _v25,
+   _v26,
    isNext) {
       return function () {
-         switch (_v22.ctor)
+         switch (_v26.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v21.ctor)
+                 switch (_v25.ctor)
                  {case "_Tuple2":
                     return function () {
                          var distance = function (isOver) {
-                            return Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(String.show(Basics.round(Basics.abs(gate.y + (isOver ? 0 - _v21._1 : _v21._1) / 2 - _v22._1))))));
+                            return Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(String.show(Basics.round(Basics.abs(gate.y + (isOver ? 0 - _v25._1 : _v25._1) / 2 - _v26._1))))));
                          };
                          var markStyle = isNext ? Graphics.Collage.filled(Color.orange) : Graphics.Collage.filled(Color.white);
                          var c = 5;
-                         var over = _U.cmp(_v22._1 + _v21._1 / 2 + c,
+                         var over = _U.cmp(_v26._1 + _v25._1 / 2 + c,
                          gate.y) < 0;
-                         var under = _U.cmp(_v22._1 - _v21._1 / 2 - c,
+                         var under = _U.cmp(_v26._1 - _v25._1 / 2 - c,
                          gate.y) > 0;
                          var $ = Game.getGateMarks(gate),
                          left = $._0,
                          right = $._1;
                          return function () {
-                            var _v29 = {ctor: "_Tuple2"
+                            var _v33 = {ctor: "_Tuple2"
                                        ,_0: over
                                        ,_1: under};
-                            switch (_v29.ctor)
+                            switch (_v33.ctor)
                             {case "_Tuple2":
-                               switch (_v29._0)
+                               switch (_v33._0)
                                  {case true: return function () {
                                          var d = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v22._0
-                                                                       ,_1: _v21._1 / 2 - c * 3})(distance(true));
+                                                                       ,_0: 0 - _v26._0
+                                                                       ,_1: _v25._1 / 2 - c * 3})(distance(true));
                                          var m = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v22._0
-                                                                       ,_1: _v21._1 / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                       ,_0: 0 - _v26._0
+                                                                       ,_1: _v25._1 / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
                                                                                                                                            ,_0: 0
                                                                                                                                            ,_1: 0}
                                                                                                                                           ,{ctor: "_Tuple2"
@@ -1504,14 +1435,14 @@ Elm.Render.Controls.make = function (_elm) {
                                          return Maybe.Just(Graphics.Collage.group(_L.fromArray([m
                                                                                                ,d])));
                                       }();}
-                                 switch (_v29._1)
+                                 switch (_v33._1)
                                  {case true: return function () {
                                          var d = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v22._0
-                                                                       ,_1: (0 - _v21._1) / 2 + c * 3})(distance(false));
+                                                                       ,_0: 0 - _v26._0
+                                                                       ,_1: (0 - _v25._1) / 2 + c * 3})(distance(false));
                                          var m = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v22._0
-                                                                       ,_1: (0 - _v21._1) / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                       ,_0: 0 - _v26._0
+                                                                       ,_1: (0 - _v25._1) / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
                                                                                                                                                  ,_0: 0
                                                                                                                                                  ,_1: 0}
                                                                                                                                                 ,{ctor: "_Tuple2"
@@ -1535,56 +1466,51 @@ Elm.Render.Controls.make = function (_elm) {
          "between lines 12 and 26");
       }();
    });
-   var renderAbsolute = F2(function (_v32,
+   var renderAbsolute = F2(function (_v36,
    dims) {
       return function () {
          return function () {
-            var justForms = _L.fromArray([A3(renderLapsCount,
-                                         dims,
-                                         _v32.course,
-                                         _v32.player)
-                                         ,A2(renderPolar,
-                                         _v32.player,
-                                         dims)
-                                         ,A3(renderWindWheel,
-                                         _v32.wind,
-                                         _v32.player,
-                                         dims)]);
-            var nextGate = _U.cmp(_v32.countdown,
-            0) < 1 ? A2(Game.findNextGate,
-            _v32.player,
-            _v32.course.laps) : Maybe.Nothing;
             var maybeForms = _L.fromArray([A4(renderHiddenGate,
-                                          _v32.course.downwind,
+                                          _v36.course.downwind,
                                           dims,
-                                          _v32.player.center,
-                                          _U.eq(nextGate,
+                                          _v36.player.center,
+                                          _U.eq(_v36.player.nextGate,
                                           Maybe.Just(Game.Downwind)))
                                           ,A4(renderHiddenGate,
-                                          _v32.course.upwind,
+                                          _v36.course.upwind,
                                           dims,
-                                          _v32.player.center,
-                                          _U.eq(nextGate,
+                                          _v36.player.center,
+                                          _U.eq(_v36.player.nextGate,
                                           Maybe.Just(Game.Upwind)))
-                                          ,A3(renderWinner,
-                                          _v32.course,
-                                          _v32.player,
-                                          _v32.opponents)
                                           ,A2(renderHelp,
-                                          _v32.countdown,
+                                          _v36.countdown,
+                                          dims)
+                                          ,A2(renderLeaderboard,
+                                          _v36.leaderboard,
                                           dims)
                                           ,function () {
-                                             var _v34 = _v32.playerSpell;
-                                             switch (_v34.ctor)
+                                             var _v38 = _v36.playerSpell;
+                                             switch (_v38.ctor)
                                              {case "Just":
                                                 return Maybe.Just(A2(renderStockSpell,
-                                                  _v34._0,
+                                                  _v38._0,
                                                   dims));
                                                 case "Nothing":
                                                 return Maybe.Nothing;}
                                              _E.Case($moduleName,
-                                             "between lines 192 and 195");
+                                             "between lines 160 and 163");
                                           }()]);
+            var justForms = _L.fromArray([A3(renderLapsCount,
+                                         dims,
+                                         _v36.course,
+                                         _v36.player)
+                                         ,A2(renderPolar,
+                                         _v36.player,
+                                         dims)
+                                         ,A3(renderWindWheel,
+                                         _v36.wind,
+                                         _v36.player,
+                                         dims)]);
             return Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms)));
          }();
@@ -1592,8 +1518,6 @@ Elm.Render.Controls.make = function (_elm) {
    });
    _elm.Render.Controls.values = {_op: _op
                                  ,renderHiddenGate: renderHiddenGate
-                                 ,hasFinished: hasFinished
-                                 ,renderWinner: renderWinner
                                  ,renderLapsCount: renderLapsCount
                                  ,renderPolar: renderPolar
                                  ,renderWindWheel: renderWindWheel
@@ -1602,6 +1526,7 @@ Elm.Render.Controls.make = function (_elm) {
                                  ,renderFog: renderFog
                                  ,getSpellStockGraphic: getSpellStockGraphic
                                  ,getArrow: getArrow
+                                 ,renderLeaderboard: renderLeaderboard
                                  ,renderHelp: renderHelp
                                  ,renderAbsolute: renderAbsolute};
    return _elm.Render.Controls.values;
@@ -1659,26 +1584,40 @@ Elm.Inputs.make = function (_elm) {
    }),
    0,
    Time.fps(1));
-   var RaceInput = F9(function (a,
-   b,
-   c,
-   d,
-   e,
-   f,
-   g,
-   h,
-   i) {
-      return {_: {}
-             ,buoys: f
-             ,course: c
-             ,leaderboard: i
-             ,now: a
-             ,opponents: e
-             ,playerSpell: g
-             ,startTime: b
-             ,triggeredSpells: h
-             ,wind: d};
-   });
+   var RaceInput = function (a) {
+      return function (b) {
+         return function (c) {
+            return function (d) {
+               return function (e) {
+                  return function (f) {
+                     return function (g) {
+                        return function (h) {
+                           return function (i) {
+                              return function (j) {
+                                 return function (k) {
+                                    return {_: {}
+                                           ,buoys: h
+                                           ,course: c
+                                           ,crossedGates: d
+                                           ,leaderboard: k
+                                           ,nextGate: e
+                                           ,now: a
+                                           ,opponents: g
+                                           ,playerSpell: i
+                                           ,startTime: b
+                                           ,triggeredSpells: j
+                                           ,wind: f};
+                                 };
+                              };
+                           };
+                        };
+                     };
+                  };
+               };
+            };
+         };
+      };
+   };
    var MouseInput = F2(function (a,
    b) {
       return {_: {}
@@ -1844,48 +1783,18 @@ Elm.Game.make = function (_elm) {
    var Spell = function (a) {
       return {_: {},kind: a};
    };
-   var Boat = F5(function (a,
+   var Boat = F4(function (a,
    b,
    c,
-   d,
-   e) {
-      return _U.insert("passedGates",
-      d,
-      _U.insert("velocity",
+   d) {
+      return _U.insert("velocity",
       c,
       _U.insert("direction",
       b,
-      _U.insert("position",a,e))));
+      _U.insert("position",a,d)));
    });
    var FixedWindAngle = {ctor: "FixedWindAngle"};
    var FixedDirection = {ctor: "FixedDirection"};
-   var defaultPlayer = {_: {}
-                       ,center: {ctor: "_Tuple2"
-                                ,_0: 0
-                                ,_1: 0}
-                       ,controlMode: FixedDirection
-                       ,direction: 0
-                       ,passedGates: _L.fromArray([])
-                       ,position: {ctor: "_Tuple2"
-                                  ,_0: 0
-                                  ,_1: -200}
-                       ,spellCast: false
-                       ,tackTarget: Maybe.Nothing
-                       ,velocity: 0
-                       ,wake: _L.fromArray([])
-                       ,windAngle: 0
-                       ,windOrigin: 0
-                       ,windSpeed: 0};
-   var defaultGame = {_: {}
-                     ,buoys: _L.fromArray([])
-                     ,countdown: 0
-                     ,course: defaultCourse
-                     ,leaderboard: _L.fromArray([])
-                     ,opponents: _L.fromArray([])
-                     ,player: defaultPlayer
-                     ,playerSpell: Maybe.Nothing
-                     ,triggeredSpells: _L.fromArray([])
-                     ,wind: defaultWind};
    var Course = F6(function (a,
    b,
    c,
@@ -1911,17 +1820,34 @@ Elm.Game.make = function (_elm) {
    var Upwind = {ctor: "Upwind"};
    var Downwind = {ctor: "Downwind"};
    var StartLine = {ctor: "StartLine"};
-   var findNextGate = F2(function (player,
-   laps) {
-      return function () {
-         var c = List.length(player.passedGates);
-         var i = A2(Basics.mod,c,2);
-         return _U.eq(c,
-         laps * 2 + 1) ? Maybe.Nothing : _U.eq(c,
-         0) ? Maybe.Just(StartLine) : _U.eq(i,
-         0) ? Maybe.Just(Downwind) : Maybe.Just(Upwind);
-      }();
-   });
+   var defaultPlayer = {_: {}
+                       ,center: {ctor: "_Tuple2"
+                                ,_0: 0
+                                ,_1: 0}
+                       ,controlMode: FixedDirection
+                       ,crossedGates: _L.fromArray([])
+                       ,direction: 0
+                       ,nextGate: Maybe.Just(StartLine)
+                       ,position: {ctor: "_Tuple2"
+                                  ,_0: 0
+                                  ,_1: -200}
+                       ,spellCast: false
+                       ,tackTarget: Maybe.Nothing
+                       ,velocity: 0
+                       ,wake: _L.fromArray([])
+                       ,windAngle: 0
+                       ,windOrigin: 0
+                       ,windSpeed: 0};
+   var defaultGame = {_: {}
+                     ,buoys: _L.fromArray([])
+                     ,countdown: 0
+                     ,course: defaultCourse
+                     ,leaderboard: _L.fromArray([])
+                     ,opponents: _L.fromArray([])
+                     ,player: defaultPlayer
+                     ,playerSpell: Maybe.Nothing
+                     ,triggeredSpells: _L.fromArray([])
+                     ,wind: defaultWind};
    _elm.Game.values = {_op: _op
                       ,containsSpell: containsSpell
                       ,defaultGate: defaultGate
@@ -1930,7 +1856,6 @@ Elm.Game.make = function (_elm) {
                       ,defaultWind: defaultWind
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks
-                      ,findNextGate: findNextGate
                       ,StartLine: StartLine
                       ,Downwind: Downwind
                       ,Upwind: Upwind

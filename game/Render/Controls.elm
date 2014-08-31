@@ -26,30 +26,9 @@ renderHiddenGate gate (w,h) (cx,cy) isNext =
       (_, _)    -> Nothing
 
 
-hasFinished : Course -> Boat a -> Bool
-hasFinished course player = (length player.passedGates) == course.laps * 2 + 1
-
--- TODO repair
-renderWinner : Course -> Player -> [Opponent] -> Maybe Form
-renderWinner course player opponents =
-  Nothing
-  --if (hasFinished course player) then
-  --  let finishTime : Opponent -> Time
-  --      finishTime o = head o.passedGates
-  --      othersTime = filter (hasFinished course) opponents |> map finishTime
-  --      myTime = finishTime player
-  --      othersAfterMe = all (\t -> t > myTime) othersTime
-  --  in
-  --    if (isEmpty othersTime) || othersAfterMe then
-  --      Just (fullScreenMessage "WINNER")
-  --    else
-  --      Nothing
-  --else
-  --  Nothing
-
 renderLapsCount : (Float,Float) -> Course -> Player -> Form
 renderLapsCount (w,h) course player =
-  let count = minimum [(div ((length player.passedGates) + 1) 2), course.laps]
+  let count = minimum [(div ((length player.crossedGates) + 1) 2), course.laps]
       msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
   in msg
       |> baseText
@@ -148,22 +127,15 @@ getArrow =
   , (-3, -1)
   ]
 
---renderLeaderboardLine : Int -> String -> Form
---renderLeaderboardLine index name =
---  (show (index + 1)) ++ ". " ++ name
---    |> baseText |> centered
---    |> toForm
---    |> move (0, (toFloat index) * -20)
-
-
---renderLeaderboard: [String] -> (Float,Float) -> Maybe Form
---renderLeaderboard leaderboard (w,h) =
---  if (isEmpty leaderboard) then Nothing
---  else
---    indexedMap renderLeaderboardLine leaderboard
---      |> group
---      |> move (w/2 - 50, 0)
---      |> Just
+renderLeaderboard: [String] -> (Float,Float) -> Maybe Form
+renderLeaderboard leaderboard (w,h) =
+  if (isEmpty leaderboard) then Nothing
+  else
+    indexedMap (\i n -> (show (i + 1) ++ ". " ++ n ++ "\n")) leaderboard
+      |> concat
+      |> baseText |> leftAligned |> toForm
+      |> move (w/2 - 50, 0)
+      |> Just
 
 renderHelp : Float -> (Float,Float) -> Maybe Form
 renderHelp countdown (w,h) =
@@ -175,26 +147,19 @@ renderHelp countdown (w,h) =
 
 renderAbsolute : GameState -> (Float,Float) -> Form
 renderAbsolute ({wind,player,opponents,course,playerSpell} as gameState) dims =
-  let nextGate = if gameState.countdown <= 0
-        then findNextGate player course.laps
-        else Nothing
-      justForms =
+  let justForms =
         [ renderLapsCount dims course player
         , renderPolar player dims
         , renderWindWheel wind player dims
         ]
       maybeForms =
-        [ renderHiddenGate course.downwind dims player.center (nextGate == Just Downwind)
-        , renderHiddenGate course.upwind dims player.center (nextGate == Just Upwind)
-        , renderWinner course player opponents
+        [ renderHiddenGate course.downwind dims player.center (player.nextGate == Just Downwind)
+        , renderHiddenGate course.upwind dims player.center (player.nextGate == Just Upwind)
         , renderHelp gameState.countdown dims
-        -- , renderLeaderboard gameState.leaderboard dims
+        , renderLeaderboard gameState.leaderboard dims
         , case playerSpell of
             Just spell -> Just (renderStockSpell spell dims)
             Nothing -> Nothing
         ]
-
-
-  in
-      group (justForms ++ (compact maybeForms))
+  in  group (justForms ++ (compact maybeForms))
 

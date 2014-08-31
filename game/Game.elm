@@ -28,7 +28,7 @@ type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float, isla
 
 data ControlMode = FixedDirection | FixedWindAngle
 
-type Boat a = { a | position : Point, direction: Float, velocity: Float, passedGates: [Time] }
+type Boat a = { a | position : Point, direction: Float, velocity: Float }
 
 type Spell = { kind : String }
 
@@ -42,15 +42,17 @@ type Buoy = { position : Point, radius : Float, spell : Spell }
 type Opponent = Boat { name : String }
 
 type Player = Boat
- { windAngle: Float
- , windOrigin: Float
- , windSpeed: Float
- , wake: [Point]
- , center: Point
- , controlMode: ControlMode
- , tackTarget: Maybe Float
- , spellCast: Bool
- }
+  { windAngle: Float
+  , windOrigin: Float
+  , windSpeed: Float
+  , wake: [Point]
+  , center: Point
+  , controlMode: ControlMode
+  , tackTarget: Maybe Float
+  , crossedGates: [Time]
+  , nextGate: Maybe GateLocation
+  , spellCast: Bool
+  }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gusts : [Gust] }
@@ -88,7 +90,8 @@ defaultPlayer =
   , center = (0,0)
   , controlMode = FixedDirection
   , tackTarget = Nothing
-  , passedGates = []
+  , crossedGates = []
+  , nextGate = Just StartLine
   , spellCast = False
   }
 
@@ -114,14 +117,3 @@ defaultGame =
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
-
-findNextGate : Player -> Int -> Maybe GateLocation
-findNextGate player laps =
-  let c = (length player.passedGates)
-      i = c `mod` 2
-  in
-    if | c == laps * 2 + 1 -> Nothing
-       | c == 0            -> Just StartLine
-       | i == 0            -> Just Downwind
-       | otherwise         -> Just Upwind
-

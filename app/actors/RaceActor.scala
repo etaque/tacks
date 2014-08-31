@@ -1,5 +1,6 @@
 package actors
 
+
 import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -21,11 +22,11 @@ class RaceActor(race: Race) extends Actor {
     def isExpired = at.plusSeconds(spell.duration).isBeforeNow
   }
 
-  val playersStates = scala.collection.mutable.Map[PlayerId, BoatState]()
+  val playersStates = scala.collection.mutable.Map[PlayerId, PlayerState]()
   var wind = Wind.default.copy(gusts = Gust.default(race.course))
   var buoys = Seq.fill(10)(Buoy.spawn(race.course))
   var spellCasts = Seq[SpellCast]()
-  var leaderboard = Seq[PlayerId]()
+  var leaderboard = Seq[String]()
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
   Akka.system.scheduler.schedule(0.seconds, 10.milliseconds, self, UpdateWind)
@@ -33,19 +34,27 @@ class RaceActor(race: Race) extends Actor {
   def receive = {
 
     case PlayerUpdate(id, input) => {
-      val state1 = playersStates.get(id).fold(input.makeState)(input.updateState)
-      if (state1.passedGates != input.passedGates) updateLeaderboard()
+      val previousStateMaybe = playersStates.get(id)
+      val state1 = previousStateMaybe.fold(input.makeState)(input.updateState)
+
       val newSpell: Option[Spell] = state1.collision(buoys).filter(_ => race.started).map { buoy =>
         buoys = buoys.filterNot(_ == buoy) :+ Buoy.spawn(race.course) // Remove the spell from the game board
         buoy.spell
       }
+
       val state2 = newSpell.fold(state1)(state1.withSpell)
+
       val state3 = state2.ownSpell.filter(_ => input.spellCast).fold(state2) { spell =>
         // The player is casting a spell!
         spellCasts = spellCasts :+ SpellCast(id, spell, DateTime.now, playersStates.keys.filterNot(_ == id).toSeq)
         state2.copy(ownSpell = None)
       }
-      playersStates += (id -> state3)
+
+      val state4 = previousStateMaybe.fold(state3)(state3.updateCrossedGates(race.course))
+
+      playersStates += (id -> state4)
+      if (state4.crossedGates != state3.crossedGates) updateLeaderboard()
+
       sender ! raceUpdateFor(id)
     }
 
@@ -59,12 +68,13 @@ class RaceActor(race: Race) extends Actor {
     case UpdateWind => updateWind()
   }
 
-  private def updateLeaderboard() =
-     if (playersStates.values.exists(_.passedGates.nonEmpty)) {
+  private def updateLeaderboard() = {
+    if (playersStates.values.exists(_.crossedGates.nonEmpty)) {
       leaderboard = playersStates.toSeq.sortBy {
-        case (_, b) => (-b.passedGates.length, b.passedGates.headOption)
-      }.map(_._1)
+        case (_, b) => (-b.crossedGates.length, b.crossedGates.headOption.map(_.getMillis))
+      }.map(_._2.name)
     }
+  }
 
   private def updateGameState() = {
     updateLeaderboard()
@@ -106,6 +116,8 @@ class RaceActor(race: Race) extends Actor {
       now = DateTime.now,
       startTime = race.startTime,
       course = None, // already transmitted in initial update
+      crossedGates = bs.map(_.crossedGates).getOrElse(Nil),
+      nextGate = bs.flatMap(_.nextGate),
       wind = wind,
       opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
       leaderboard = leaderboard,

@@ -89,39 +89,6 @@ keysStep keyboardInput gameState =
   let playerUpdated = keysForPlayerStep keyboardInput gameState.triggeredSpells gameState.player
   in  { gameState | player <- playerUpdated }
 
-gatePassedInX : Gate -> (Point,Point) -> Bool
-gatePassedInX gate ((x,y),(x',y')) =
-  let a = (y - y') / (x - x')
-      b = y - a * x
-      xGate = (gate.y - b) / a
-  in
-    (abs xGate) <= gate.width / 2
-
-gatePassedFromNorth : Gate -> (Point,Point) -> Bool
-gatePassedFromNorth gate (p,p') =
-  (snd p) > gate.y && (snd p') <= gate.y && (gatePassedInX gate (p,p'))
-
-gatePassedFromSouth : Gate -> (Point,Point) -> Bool
-gatePassedFromSouth gate (p,p') =
-  (snd p) < gate.y && (snd p') >= gate.y && (gatePassedInX gate (p,p'))
-
-getPassedGates : Player -> Time -> Course -> (Point,Point) -> [Time]
-getPassedGates player now ({upwind, downwind, laps}) step =
-  case findNextGate player laps of
-    -- ligne de départ
-    Just StartLine -> if | gatePassedFromSouth downwind step -> now :: player.passedGates
-                         | otherwise                         -> player.passedGates
-    -- bouée au vent
-    Just Upwind    -> if | gatePassedFromSouth upwind step   -> now :: player.passedGates
-                         | gatePassedFromSouth downwind step -> tail player.passedGates
-                         | otherwise                         -> player.passedGates
-    -- bouée sous le vent
-    Just Downwind  -> if | gatePassedFromNorth downwind step -> now :: player.passedGates
-                         | gatePassedFromNorth upwind step   -> tail player.passedGates
-                         | otherwise                         -> player.passedGates
-    -- arrivée déjà franchie
-    Nothing        -> player.passedGates
-
 getGatesMarks : Course -> [Point]
 getGatesMarks course =
   [
@@ -159,21 +126,17 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
 
 movePlayer : Time -> Float -> GameState -> (Int,Int) -> Player -> Player
 movePlayer now delta gameState dimensions player =
-  let {position, direction, velocity, windAngle, passedGates} = player
+  let {position, direction, velocity, windAngle, crossedGates} = player
       newVelocity = playerVelocity player.windSpeed player.windAngle velocity
       nextPosition = movePoint position delta newVelocity direction
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
-      newPassedGates = if gameState.countdown <= 0
-        then getPassedGates player now gameState.course (position, newPosition)
-        else player.passedGates
       newCenter = getCenterAfterMove position newPosition player.center (floatify dimensions)
       newWake = take 40 (newPosition :: player.wake)
   in  { player | position <- newPosition,
                  velocity <- if stuck then 0 else newVelocity,
                  center <- newCenter,
-                 wake <- newWake,
-                 passedGates <- newPassedGates }
+                 wake <- newWake }
 
 moveStep : Time -> Float -> (Int,Int) -> GameState -> GameState
 moveStep now delta dims gameState =
@@ -197,14 +160,22 @@ windStep wind gameState =
                     player <- playerWithWind }
 
 raceInputStep : RaceInput -> GameState -> GameState
-raceInputStep {now,startTime,course,opponents,buoys,playerSpell,triggeredSpells,leaderboard} gameState =
-  { gameState | opponents <- opponents,
-                buoys <- buoys,
-                playerSpell <- playerSpell,
-                triggeredSpells <- triggeredSpells,
-                course <- maybe gameState.course id course,
-                leaderboard <- leaderboard,
-                countdown <- startTime - now }
+raceInputStep {now,startTime,course,crossedGates,nextGate,opponents,buoys,playerSpell,triggeredSpells,leaderboard} ({player} as gameState) =
+  let nextGateType = case nextGate of
+        Just "StartLine"    -> Just StartLine
+        Just "DownwindGate" -> Just Downwind
+        Just "UpwindGate"   -> Just Upwind
+        _                   -> Nothing
+      updatedPlayer = { player | nextGate <- nextGateType,
+                                 crossedGates <- crossedGates }
+  in  { gameState | opponents <- opponents,
+                    player <- updatedPlayer,
+                    course <- maybe gameState.course id course,
+                    buoys <- buoys,
+                    playerSpell <- playerSpell,
+                    triggeredSpells <- triggeredSpells,
+                    leaderboard <- leaderboard,
+                    countdown <- startTime - now }
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =

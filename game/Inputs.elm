@@ -25,6 +25,8 @@ type RaceInput =
   { now: Time
   , startTime: Time
   , course: Maybe Game.Course
+  , crossedGates: [Time]
+  , nextGate: Maybe String
   , wind: Game.Wind
   , opponents: [Game.Opponent]
   , buoys: [Game.Buoy]

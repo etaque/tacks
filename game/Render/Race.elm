@@ -138,35 +138,40 @@ renderLaylines player course =
 
 renderCountdown : GameState -> Player -> Maybe Form
 renderCountdown gameState player =
-  let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 50)
+  let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 40)
   in  if | gameState.countdown > 0 ->
              let cs = gameState.countdown |> inSeconds |> ceiling
                  m = cs `div` 60
                  s = cs `rem` 60
                  msg = "Start in " ++ (show m) ++ "'" ++ (show s) ++ "\"..."
              in  Just (messageBuilder msg)
-         | (isEmpty player.passedGates) -> Just (messageBuilder "Go!")
+         | (isEmpty player.crossedGates) -> Just (messageBuilder "Go!")
          | otherwise -> Nothing
+
+renderFinished : Course -> Player -> Maybe Form
+renderFinished course player =
+  case player.nextGate of
+    Nothing -> Just (baseText "Finished!" |> centered |> toForm |> move (0, course.downwind.y + 40))
+    _       -> Nothing
 
 renderRelative : GameState -> Form
 renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
-  let nextGate = findNextGate player course.laps
-      downwindOrStartLine = if isEmpty player.passedGates
+  let downwindOrStartLine = if isEmpty player.crossedGates
         then renderStartLine course.downwind course.markRadius (gameState.countdown <= 0)
-        else renderGate course.downwind course.markRadius (nextGate == Just Downwind)
-      justForms = [
-        renderBounds gameState.course.bounds,
-        renderIslands gameState,
-        downwindOrStartLine,
-        renderGate course.upwind course.markRadius (nextGate == Just Upwind),
-        --renderLaylines player gameState.course,
-        group (map renderOpponent opponents),
-        group (map (renderBuoy gameState.countdown) buoys),
-        renderGusts gameState.wind,
-        renderPlayer player triggeredSpells
-      ]
-      maybeForms = [
-        renderCountdown gameState player
-      ]
+        else renderGate course.downwind course.markRadius (player.nextGate == Just Downwind)
+      justForms = 
+        [ renderBounds gameState.course.bounds
+        , renderIslands gameState
+        , downwindOrStartLine
+        , renderGate course.upwind course.markRadius (player.nextGate == Just Upwind)
+        , group (map renderOpponent opponents)
+        , group (map (renderBuoy gameState.countdown) buoys)
+        , renderGusts gameState.wind
+        , renderPlayer player triggeredSpells
+        ]
+      maybeForms = 
+        [ renderCountdown gameState player
+        , renderFinished gameState.course player
+        ]
   in  group (justForms ++ (compact maybeForms)) |> move (neg player.center)
 
