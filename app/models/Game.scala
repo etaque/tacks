@@ -196,7 +196,7 @@ case class PlayerInput (
   velocity: Float,
   spellCast: Boolean) {
 
-  def makeState = PlayerState(name, position, direction, velocity, Seq(), None, None, Seq())
+  def makeState = PlayerState(name, position, direction, velocity, Seq(), Some(StartLine), None, Seq())
 
   def updateState(state: PlayerState) = state.copy(
     position = position,
@@ -221,13 +221,13 @@ case class PlayerState (
 
   def withSpell(spell: Spell) = copy(ownSpell = Some(spell))
   
-  def updateCrossedGates(course: Course)(previousState: PlayerState): PlayerState = {
+  def updateCrossedGates(course: Course, started: Boolean)(previousState: PlayerState): PlayerState = {
     val now = DateTime.now
     val step = (previousState.position, position)
     val nextGate = course.nextGate(crossedGates.size)
     val newPassedGates = nextGate match {
       case Some(StartLine) => {
-        if (course.downwind.crossedUpward(step)) now +: crossedGates
+        if (!started && course.downwind.crossedUpward(step)) now +: crossedGates
         else crossedGates
       }
       case Some(UpwindGate) => {

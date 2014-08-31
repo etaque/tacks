@@ -103,7 +103,7 @@ class RaceActor(race: Race) extends Actor {
   }
 
   private def withCrossedGates(previousStateMaybe: Option[PlayerState])(state: PlayerState): PlayerState = {
-    previousStateMaybe.fold(state)(state.updateCrossedGates(race.course))
+    previousStateMaybe.fold(state)(state.updateCrossedGates(race.course, race.started))
   }
 
   private def updateSpells() = {
