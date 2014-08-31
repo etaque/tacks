@@ -851,12 +851,10 @@ Elm.Render.Race.make = function (_elm) {
    var renderGust = F2(function (wind,
    gust) {
       return function () {
-         var angleText = Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(String.show(gust.angle))));
          var color = _U.cmp(gust.speed,
          0) > 0 ? Color.black : Color.white;
          var a = 0.3 * Basics.abs(gust.speed) / 10;
-         return Graphics.Collage.move(gust.position)(Graphics.Collage.group(_L.fromArray([Graphics.Collage.alpha(a)(Graphics.Collage.filled(color)(Graphics.Collage.circle(gust.radius)))
-                                                                                         ,angleText])));
+         return Graphics.Collage.move(gust.position)(Graphics.Collage.alpha(a)(Graphics.Collage.filled(color)(Graphics.Collage.circle(gust.radius))));
       }();
    });
    var renderGusts = function (wind) {
@@ -2109,7 +2107,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 69 and 72");
+               "between lines 72 and 75");
             }();
          });
          return A3(List.foldl,
@@ -2127,7 +2125,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 62 and 64");
+         "between lines 65 and 67");
       }();
    });
    var polarVelocity = F2(function (speed,
@@ -2135,21 +2133,22 @@ Elm.Core.make = function (_elm) {
       return function () {
          var x2 = angle;
          var x1 = speed;
-         var v = -8.629353458 * Math.pow(10,
+         var v = -2.067174789 * Math.pow(10,
+         -3) * Math.pow(x1,
+         3) - 1.868941044 * Math.pow(10,
          -4) * Math.pow(x1,
-         3) - 1.150751365 * Math.pow(10,
-         -6) * Math.pow(x1,
-         2) * x2 - 1.545154964 * Math.pow(10,
+         2) * x2 - 1.03401471 * Math.pow(10,
          -4) * x1 * Math.pow(x2,
-         2) - 1.576508561 * Math.pow(10,
+         2) - 1.86799863 * Math.pow(10,
          -5) * Math.pow(x2,
-         3) + 1.013664743 * Math.pow(10,
-         -2) * x2 + 3.818064169 * Math.pow(10,
-         -2) * x1 * x2 + 3.661699453 * Math.pow(10,
+         3) + 7.376288713 * Math.pow(10,
+         -2) * Math.pow(x1,
+         2) + 3.19606466 * Math.pow(10,
+         -2) * x1 * x2 + 2.939457021 * Math.pow(10,
          -3) * Math.pow(x2,
-         2) - 6.076025593 * Math.pow(10,
-         -1) * x1 - 2.385773381 * Math.pow(10,
-         -1) * x2 + 14.77328598;
+         2) - 8.575945237 * Math.pow(10,
+         -1) * x1 + 9.427801906 * Math.pow(10,
+         -5) * x2 + 4.342327445;
          return v * 2;
       }();
    });
