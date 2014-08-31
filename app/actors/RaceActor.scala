@@ -23,10 +23,12 @@ class RaceActor(race: Race) extends Actor {
   }
 
   val playersStates = scala.collection.mutable.Map[PlayerId, PlayerState]()
-  var wind = Wind.default.copy(gusts = Gust.default(race.course))
+  var wind = Wind.default.copy(gusts = Gust.spawnAll(race.course))
   var buoys = Seq[Buoy]()
   var spellCasts = Seq[SpellCast]()
   var leaderboard = Seq[String]()
+
+  var previousWindUpdate = DateTime.now
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
   Akka.system.scheduler.schedule(0.seconds, 10.milliseconds, self, UpdateWind)
@@ -67,6 +69,7 @@ class RaceActor(race: Race) extends Actor {
         speed = race.course.windGenerator.windSpeed(now),
         gusts = moveGusts(now, wind.gusts)
       )
+      previousWindUpdate = now
     }
 
     case SpawnBuoy => {
@@ -95,7 +98,6 @@ class RaceActor(race: Race) extends Actor {
 
   private def withCastedSpell(id: PlayerId, castSpell: Boolean)(state: PlayerState): PlayerState = {
     state.ownSpell.filter(_ => castSpell).fold(state) { spell =>
-      // The player is casting a spell!
       Logger.debug(s"Player ${state.name} casting spell $spell")
       spellCasts = spellCasts :+ SpellCast(by = id, spell, at = DateTime.now, to = playersStates.keys.filterNot(_ == id).toSeq)
       state.copy(ownSpell = None)
@@ -111,17 +113,11 @@ class RaceActor(race: Race) extends Actor {
   }
 
   private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
-    val ms = at.getMillis
-    gusts.map { gust =>
-      val (cx,cy) = race.course.center
-      val x = -(ms * gust.pixelSpeed * Math.cos(gust.radians)) % race.course.width + race.course.width / 2 + cx
-      val y = -(ms * gust.pixelSpeed * Math.sin(gust.radians)) % race.course.height + race.course.height / 2 + cy
-      val p = (x.toFloat,y.toFloat)
-
-      if (Geo.inBox(p, race.course.bounds)) {
-        gust.copy(position = p)
+    gusts.map(_.update(race.course, wind, at, previousWindUpdate)).map { gust =>
+      if (Geo.inBox(gust.position, race.course.bounds)) {
+        gust
       } else {
-        Gust.spawn(race.course, initial = false)
+        Gust.spawn(race.course)
       }
     }
   }

@@ -50,11 +50,11 @@ case class WindGenerator(
   wavelength2: Int,
   amplitude2: Int
 ) {
-  def windOrigin(at: DateTime) =
-    cos(at.getMillis * 0.001 / wavelength1) * amplitude1 + cos(at.getMillis * 0.001 / wavelength2) * amplitude2
+  def windOrigin(at: DateTime): Float =
+    (cos(at.getMillis * 0.001 / wavelength1) * amplitude1 + cos(at.getMillis * 0.001 / wavelength2) * amplitude2).toFloat
 
-  def windSpeed(at: DateTime) = Wind.defaultWindSpeed +
-    (cos(at.getMillis * 0.001 / wavelength1) * 5 - cos(at.getMillis * 0.001 / wavelength2) * 5) / 2
+  def windSpeed(at: DateTime): Float = Wind.defaultWindSpeed +
+    ((cos(at.getMillis * 0.001 / wavelength1) * 5 - cos(at.getMillis * 0.001 / wavelength2) * 5) / 2).toFloat
 }
 
 case class Course(
@@ -77,8 +77,8 @@ case class Course(
 
   import scala.util.Random._
 
-  def randomX(margin: Int = 0): Float = nextInt(width.toInt - margin * 2) - width / 2 + margin + cx
-  def randomY(margin: Int = 0): Float = nextInt(height.toInt - margin * 2) - height / 2 + margin + cy
+  def randomX(margin: Float = 0): Float = nextFloat * (width - margin * 2) - width / 2 + margin + cx
+  def randomY(margin: Float = 0): Float = nextFloat * (height - margin * 2) - height / 2 + margin + cy
   def randomPoint: Point = (randomX(0), randomY(0))
 
   def nextGate(crossedGates: Int): Option[GateLocation] = {
@@ -92,16 +92,16 @@ case class Course(
 
 object Course {
   val default = Course(
-    upwind = Gate(1000, 100),
-    downwind = Gate(-100, 100),
+    upwind = Gate(1000, 120),
+    downwind = Gate(-100, 120),
     laps = 2,
     markRadius = 5,
     islands = Seq(
-      Island((250, 300), 100),
-      Island((150, 700), 80),
-      Island((-200, 500), 60)
+//      Island((250, 300), 100),
+//      Island((150, 700), 80),
+//      Island((-200, 500), 60)
     ),
-    bounds = ((800,1200), (-800,-400)),
+    bounds = ((800,1400), (-800,-400)),
     windGenerator = WindGenerator(8, 10, 5, 5)
   )
 }
@@ -110,28 +110,42 @@ case class Gust(
   position: Point,
   angle: Float, // degrees
   speed: Float,
-  radius: Float
+  radius: Float,
+  maxRadius: Float,
+  spawnedAt: DateTime
 ) {
-  val radians = (90 - angle) * PI / 180
-  val pixelSpeed = speed * 0.005 // on milliseconds
+  val radians = angleToRadians(angle)
+  val pixelPerSecond = 1
+  val maxRadiusAfterSeconds = 20
+
+  def update(course: Course, wind: Wind, lastUpdate: DateTime, now: DateTime): Gust = {
+    val delta = now.getMillis - lastUpdate.getMillis
+    val groundSpeed = (wind.speed + speed) * pixelPerSecond * 0.001.toFloat
+    val groundDirection = ensure360(angle + 180)
+    val newPosition = movePoint(position, delta, groundSpeed, groundDirection)
+    val radius = min((now.getMillis - spawnedAt.getMillis) * 0.001 * maxRadius / maxRadiusAfterSeconds, maxRadius).toFloat
+    copy(position = newPosition, radius = radius)
+  }
 }
 
 object Gust {
   import scala.util.Random._
 
-  def default(course: Course, quantity: Int = 5) = Seq.fill(quantity)(spawn(course, initial = true))
+  def spawnAll(course: Course, quantity: Int = 5) = Seq.fill(quantity)(spawn(course))
 
-  def spawn(course: Course, initial: Boolean) = Gust(
-    position = (course.randomX((course.width/4).toInt), if (initial) course.randomY(0) else course.top),
+  def spawn(course: Course) = Gust(
+    position = (course.randomX(), course.top),
     angle = nextInt(30) - 15,
-    speed = nextInt(5) + 5,
-    radius = nextInt(50) + 100
+    speed = nextInt(15) - 5,
+    radius = 0,
+    maxRadius = nextInt(50) + 100,
+    spawnedAt = DateTime.now
   )
 }
 
 case class Wind(
-  origin: Double,
-  speed: Double,
+  origin: Float,
+  speed: Float,
   gusts: Seq[Gust]
 )
 
