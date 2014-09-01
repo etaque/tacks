@@ -191,7 +191,8 @@ case class RaceUpdate(
   buoys: Seq[Buoy] = Seq(),
   playerSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
-  leaderboard: Seq[String] = Seq()
+  leaderboard: Seq[String] = Seq(),
+  isMaster: Boolean = false
 )
 
 object RaceUpdate {
@@ -308,7 +309,8 @@ object JsonFormats {
       (__ \ 'buoys).format[Seq[Buoy]] and
       (__ \ 'playerSpell).format[Option[Spell]] and
       (__ \ 'triggeredSpells).format[Seq[Spell]] and
-      (__ \ 'leaderboard).format[Seq[String]]
+      (__ \ 'leaderboard).format[Seq[String]] and
+      (__ \ 'isMaster).format[Boolean]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
 }

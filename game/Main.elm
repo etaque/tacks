@@ -34,6 +34,7 @@ port raceInput : Signal
   , playerSpell: Maybe { kind: String }
   , triggeredSpells: [{ kind: String }]
   , leaderboard: [String] 
+  , isMaster: Bool
   }
 
 clock : Signal Float

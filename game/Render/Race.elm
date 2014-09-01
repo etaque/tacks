@@ -154,7 +154,10 @@ renderCountdown gameState player =
             else if player.nextGate == Just StartLine 
               then Just <| messageBuilder "Go!"
               else Nothing
-        Nothing -> Nothing
+        Nothing -> 
+          if gameState.isMaster
+            then Just <| messageBuilder startCountdownMessage
+            else Nothing
 
 renderFinished : Course -> Player -> Maybe Form
 renderFinished course player =

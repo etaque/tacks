@@ -139,20 +139,21 @@ class RaceActor(race: Race) extends Actor {
     }
   }
 
-  private def raceUpdateFor(boatId: String) = {
-    val bs = playersStates.get(boatId)
+  private def raceUpdateFor(playerId: String) = {
+    val ps = playersStates.get(playerId)
     RaceUpdate(
       now = DateTime.now,
       startTime = startTime,
       course = None, // already transmitted in initial update
-      crossedGates = bs.map(_.crossedGates).getOrElse(Nil),
-      nextGate = bs.flatMap(_.nextGate),
+      crossedGates = ps.map(_.crossedGates).getOrElse(Nil),
+      nextGate = ps.flatMap(_.nextGate),
       wind = wind,
-      opponents = playersStates.toSeq.filterNot(_._1 == boatId).map(_._2),
+      opponents = playersStates.toSeq.filterNot(_._1 == playerId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,
-      playerSpell = bs.flatMap(_.ownSpell),
-      triggeredSpells = spellCasts.filter(_.to.contains(boatId)).map(_.spell)
+      playerSpell = ps.flatMap(_.ownSpell),
+      triggeredSpells = spellCasts.filter(_.to.contains(playerId)).map(_.spell),
+      isMaster = race.userId.stringify == playerId
     )
   }
 }

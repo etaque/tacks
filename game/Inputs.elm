@@ -43,6 +43,7 @@ type RaceInput =
   , playerSpell: Maybe Game.Spell
   , triggeredSpells: [Game.Spell]
   , leaderboard: [String]
+  , isMaster: Bool
   }
 
 mouseInput : Signal MouseInput

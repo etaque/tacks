@@ -167,8 +167,10 @@ windStep wind gameState =
                     player <- player }
 
 raceInputStep : RaceInput -> GameState -> GameState
-raceInputStep {now,startTime,course,crossedGates,nextGate,opponents,buoys,playerSpell,triggeredSpells,leaderboard} ({player} as gameState) =
-  let nextGateType = case nextGate of
+raceInputStep raceInput ({player} as gameState) =
+  let { now, startTime, course, crossedGates, nextGate, opponents, buoys,
+        playerSpell, triggeredSpells, leaderboard, isMaster } = raceInput
+      nextGateType = case nextGate of
         Just "StartLine"    -> Just StartLine
         Just "DownwindGate" -> Just Downwind
         Just "UpwindGate"   -> Just Upwind
@@ -182,7 +184,8 @@ raceInputStep {now,startTime,course,crossedGates,nextGate,opponents,buoys,player
                     playerSpell <- playerSpell,
                     triggeredSpells <- triggeredSpells,
                     leaderboard <- leaderboard,
-                    countdown <- mapMaybe (\st -> st - now) startTime }
+                    countdown <- mapMaybe (\st -> st - now) startTime,
+                    isMaster <- isMaster }
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =

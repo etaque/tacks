@@ -70,6 +70,7 @@ type GameState =
   , countdown: Maybe Time
   , playerSpell: Maybe Spell
   , triggeredSpells: [Spell]
+  , isMaster: Bool
   }
 
 type RaceState = { players : [Player] }
@@ -119,6 +120,7 @@ defaultGame =
   , countdown = Nothing
   , playerSpell = Nothing
   , triggeredSpells = []
+  , isMaster = False
   }
 
 getGateMarks : Gate -> (Point,Point)

@@ -3,8 +3,10 @@ module Render.Utils where
 import String
 import Text
 
-helpMessage : String
-helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n↑ or ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
+helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n" ++ 
+  "↑ or ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
+
+startCountdownMessage = "press C to start countdown (30s)"
 
 colors = 
   { seaBlue = rgb 10 105 148
