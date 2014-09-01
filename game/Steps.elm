@@ -67,7 +67,7 @@ getTurn tackTarget player arrows fineTurn =
     (Nothing, _, x, y) -> if fineTurn then x else x * 3
 
 keysForPlayerStep : KeyboardInput -> [Spell] -> Player -> Player
-keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) spells player =
+keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast, startCountdown}) spells player =
   let forceTurn = arrows.x /= 0
       tackTarget = if forceTurn then Nothing else getTackTarget player tack
       turn = getTurn tackTarget player arrows fineTurn
@@ -81,7 +81,8 @@ keysForPlayerStep ({arrows, lockAngle, tack, fineTurn, spellCast}) spells player
                        | otherwise -> turnedPlayer.controlMode
   in  { turnedPlayer | controlMode <- controlMode,
                        tackTarget <- tackTargetAfterTurn,
-                       spellCast <- spellCast }
+                       spellCast <- spellCast,
+                       startCountdown <- startCountdown }
 
 keysStep : KeyboardInput -> GameState -> GameState
 keysStep keyboardInput gameState =
@@ -181,7 +182,7 @@ raceInputStep {now,startTime,course,crossedGates,nextGate,opponents,buoys,player
                     playerSpell <- playerSpell,
                     triggeredSpells <- triggeredSpells,
                     leaderboard <- leaderboard,
-                    countdown <- startTime - now }
+                    countdown <- mapMaybe (\st -> st - now) startTime }
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =

@@ -1,22 +1,9 @@
-@(race: Race, name: Option[String], websocketUrlBase: String)(implicit request: RequestHeader)
+@(race: Race, playerName: String, websocketUrlBase: String)(implicit request: controllers.IdentifiedRequest[_])
 
 @import play.api.libs.json.Json
 @import models.JsonFormats.raceUpdateFormat
 
 @main() {
-
-  @if(name.isEmpty) {
-
-    <div class="next-race">
-
-      <form class="form-player-name">
-        <input type="text" name="name" placeholder="Nickname?" value="@request.session.get("playerName").getOrElse("")">
-        <input type="submit" value="Enter the race.">
-      </form>
-
-    </div>
-
-  } else {
 
   <div class="game" id="game"></div>
 
@@ -24,10 +11,10 @@
   <script type="text/javascript" src="@routes.Assets.at("javascripts/game.js")"></script>
   <script type="text/javascript">
 
-  var playerId = "@java.util.UUID.randomUUID().toString";
-  var name = "@name.get";
+  var playerId = "@request.userId";
+  var name = "@playerName";
   var raceId = @Html(Json.toJson(race.id.stringify).toString());
-  var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/gameSocket/" + playerId);
+  var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/play/socket/" + playerId);
 
   var gameDiv = document.getElementById('game');
   var input = @Html(Json.toJson(RaceUpdate.initial(race)).toString());
@@ -53,5 +40,4 @@
 
   </script>
 
-  }
 }

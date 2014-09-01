@@ -182,7 +182,7 @@ object Buoy {
 
 case class RaceUpdate(
   now: DateTime,
-  startTime: DateTime,
+  startTime: Option[DateTime],
   course: Option[Course],
   crossedGates: Seq[DateTime],
   nextGate: Option[GateLocation],
@@ -197,7 +197,7 @@ case class RaceUpdate(
 object RaceUpdate {
   def initial(r: Race) = RaceUpdate(
     DateTime.now,
-    startTime = r.startTime,
+    startTime = None,
     course = Some(r.course),
     crossedGates = Nil,
     nextGate = Some(StartLine),
@@ -210,17 +210,20 @@ case class PlayerInput (
   position: Point,
   direction: Double,
   velocity: Double,
-  spellCast: Boolean) {
+  spellCast: Boolean,
+  startCountdown: Boolean) {
 
-  def makeState = PlayerState(name, position, direction, velocity, Seq(), Some(StartLine), None, Seq())
+  def makeState = PlayerState(DateTime.now, name, position, direction, velocity, Seq(), Some(StartLine), None, Seq())
 
   def updateState(state: PlayerState) = state.copy(
+    at = DateTime.now,
     position = position,
     direction = direction,
     velocity = velocity)
 }
 
 case class PlayerState (
+  at: DateTime,
   name: String,
   position: Point,
   direction: Double,
@@ -290,13 +293,13 @@ object JsonFormats {
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
   implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
-  implicit val boatStateFormat: Format[PlayerState] = Json.format[PlayerState]
-  implicit val boatInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
+  implicit val playerStateFormat: Format[PlayerState] = Json.format[PlayerState]
+  implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
     (__ \ 'now).format[DateTime] and
-      (__ \ 'startTime).format[DateTime] and
+      (__ \ 'startTime).format[Option[DateTime]] and
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'crossedGates).format[Seq[DateTime]] and
       (__ \ 'nextGate).format[Option[GateLocation]] and

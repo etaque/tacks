@@ -1,7 +1,8 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
 
 @seaBlue: rgb(10, 105, 148);
 @sand: rgb(239, 210, 121);
+@fontFamily: Inconsolata,monospace;
 
 html,
 body {
@@ -14,9 +15,14 @@ body {
 
 body {
   margin: 0;
-  color: #222;
-  font-family: 'Open Sans', sans-serif;
+  color: #EEE;
+  font-family: @fontFamily;
   font-size: 14px;
+  background-color: @seaBlue;
+}
+
+input,textarea {
+  font-family: @fontFamily;
 }
 
 .wrapper {
@@ -44,25 +50,26 @@ body {
   padding: 20px;
 }
 
-.next-race {
+a {
+  color: white;
+}
+
+.btn-new-race {
+  cursor: pointer;
+  background-color: orange;
+  color: black;
+  padding: 20px 30px;
+  border: none;
+//  box-shadow: 9px 9px 0px orange;
+  font-size: 32px;
+}
+
+.lost-in-sea {
   flex: 1;
   display: flex;
-  background-color: @seaBlue;
   align-items: center;
   justify-content: center;
-
-  a {
-    font-size: 46px;
-    background-color: rgba(255,255,255,0.2);
-    color: white;
-    border-radius: 20px;
-    padding: 20px 30px;
-    text-decoration: none;
-
-    &:hover {
-      background-color: rgba(255,255,255,0.3);
-    }
-  }
+  color: white;
 }
 
 .game {

@@ -27,6 +27,6 @@ fullScreenMessage msg = msg
 baseText : String -> Text
 baseText s = s
   |> toText
-  |> Text.height 14
+  |> Text.height 15
   |> Text.color white
-  |> monospace
+  |> typeface ["Inconsolata", "monospace"]

@@ -1,4 +1,4 @@
-@()(content: Html)
+@(headerMaybe: Option[Html] = None)(content: Html)
 
 <!DOCTYPE html>
 
@@ -12,7 +12,8 @@
   <body>
      <div class="wrapper">
        <div class="header">
-         <a href="@routes.Application.index" class="logo">SHIFTMASTER</a>
+          <a href="@routes.Application.index" class="logo">SHIFTMASTER</a>
+          @for(h <- headerMaybe) { @h }
        </div>
        @content
      </div>

@@ -60,6 +60,12 @@ playerVelocity windSpeed windAngle previousVelocity =
       delta = v - previousVelocity
   in previousVelocity + delta * 0.02
 
+isStarted : Maybe Time -> Bool
+isStarted maybeCountdown = maybe False (\n -> n <= 0) maybeCountdown
+
+getCountdown : Maybe Time -> Float
+getCountdown maybeCountdown = maybe 0 id maybeCountdown
+
 mapMaybe : (a -> b) -> Maybe a -> Maybe b
 mapMaybe f maybe =
     case maybe of

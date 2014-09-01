@@ -1,26 +1,18 @@
-@(nextRaceMaybe: Option[Race])
+@(pendingRaces: Seq[(Race, Option[DateTime])])
 
 @main() {
-    @for(r <- nextRaceMaybe) {
-      <div class="next-race">
-        <a href="@routes.Races.show(r.id.stringify)">Next race starts in <span id="timer">?</span></a>
-      </div>
 
-      <script type="text/javascript">
+  <div class="content">
+    <form action="@routes.Application.createRace" method="post">
+      <input type="submit" value="Create new race" class="btn-new-race">
+    </form>
 
-      var timer = @r.millisBeforeStart;
-      var timerDiv = document.getElementById("timer");
-
-      function updateTimer() {
-        timer = timer - 1000;
-        timerDiv.innerHTML = formatTimer(timer);
+    @if(pendingRaces.nonEmpty) {
+      <h2>Join pending races</h2>
+      @for((r, startTimeMaybe) <- pendingRaces) {
+        <li><a href="@routes.Game.playRace(r.id.stringify)">@startTimeMaybe.map(_.toString()).getOrElse("Not started")</a></li>
       }
-
-      setInterval(updateTimer, 1000);
-      updateTimer();
-
-      </script>
     }
+  </div>
 
 }
-

@@ -42,6 +42,7 @@ Elm.ShiftMaster.make = function (_elm) {
                 ,direction: _v0.direction
                 ,position: _v0.position
                 ,spellCast: _v0.spellCast
+                ,startCountdown: _v0.startCountdown
                 ,velocity: _v0.velocity};
       }();
    };
@@ -52,7 +53,7 @@ Elm.ShiftMaster.make = function (_elm) {
    Native.Ports.incomingSignal(function (v) {
       return typeof v === "object" && "now" in v && "startTime" in v && "course" in v && "crossedGates" in v && "nextGate" in v && "wind" in v && "opponents" in v && "buoys" in v && "playerSpell" in v && "triggeredSpells" in v && "leaderboard" in v ? {_: {}
                                                                                                                                                                                                                                                            ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
-                                                                                                                                                                                                                                                           ,startTime: typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime)
+                                                                                                                                                                                                                                                           ,startTime: v.startTime === null ? Maybe.Nothing : Maybe.Just(typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime))
                                                                                                                                                                                                                                                            ,course: v.course === null ? Maybe.Nothing : Maybe.Just(typeof v.course === "object" && "upwind" in v.course && "downwind" in v.course && "laps" in v.course && "markRadius" in v.course && "islands" in v.course && "bounds" in v.course ? {_: {}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        ,upwind: typeof v.course.upwind === "object" && "y" in v.course.upwind && "width" in v.course.upwind ? {_: {}
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,y: typeof v.course.upwind.y === "number" ? v.course.upwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.y)
@@ -140,7 +141,8 @@ Elm.ShiftMaster.make = function (_elm) {
                         ,v.position._1]
              ,direction: v.direction
              ,velocity: v.velocity
-             ,spellCast: v.spellCast};
+             ,spellCast: v.spellCast
+             ,startCountdown: v.startCountdown};
    }),
    A2(Signal.lift,
    function ($) {
@@ -175,7 +177,6 @@ Elm.Steps.make = function (_elm) {
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
    var Core = Elm.Core.make(_elm);
-   var Debug = Elm.Debug.make(_elm);
    var Game = Elm.Game.make(_elm);
    var Geo = Elm.Geo.make(_elm);
    var Graphics = Graphics || {};
@@ -231,7 +232,11 @@ Elm.Steps.make = function (_elm) {
                                   ,_v0.triggeredSpells]
                                  ,["leaderboard",_v0.leaderboard]
                                  ,["countdown"
-                                  ,_v0.startTime - _v0.now]],
+                                  ,A2(Core.mapMaybe,
+                                  function (st) {
+                                     return st - _v0.now;
+                                  },
+                                  _v0.startTime)]],
                _v1);
             }();
          }();
@@ -338,16 +343,16 @@ Elm.Steps.make = function (_elm) {
                                                 _v9._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
-                                 "between lines 113 and 126");
+                                 "between lines 112 and 125");
                               }();}
                          _E.Case($moduleName,
-                         "between lines 113 and 126");
+                         "between lines 112 and 125");
                       }();}
                  _E.Case($moduleName,
-                 "between lines 113 and 126");
+                 "between lines 112 and 125");
               }();}
          _E.Case($moduleName,
-         "between lines 113 and 126");
+         "between lines 112 and 125");
       }();
    });
    var getGatesMarks = function (course) {
@@ -484,7 +489,7 @@ Elm.Steps.make = function (_elm) {
                               -90) > -1 ? 0 - maxTurn : maxTurn;
                            }();}
                       _E.Case($moduleName,
-                      "between lines 58 and 66");
+                      "between lines 56 and 64");
                    }();
                  case "Nothing":
                  switch (_v22._1.ctor)
@@ -504,7 +509,7 @@ Elm.Steps.make = function (_elm) {
                    return fineTurn ? _v22._2 : _v22._2 * 3;}
               break;}
          _E.Case($moduleName,
-         "between lines 55 and 69");
+         "between lines 53 and 67");
       }();
    });
    var tackTargetReached = F2(function (player,
@@ -528,7 +533,7 @@ Elm.Steps.make = function (_elm) {
                  case "Nothing": return false;}
               break;}
          _E.Case($moduleName,
-         "between lines 31 and 34");
+         "between lines 29 and 32");
       }();
    });
    var getTackTarget = F2(function (player,
@@ -555,12 +560,12 @@ Elm.Steps.make = function (_elm) {
                               case "FixedWindAngle":
                               return Maybe.Just(0 - player.windAngle);}
                            _E.Case($moduleName,
-                           "between lines 45 and 49");
+                           "between lines 43 and 47");
                         }();}
                    break;}
               break;}
          _E.Case($moduleName,
-         "between lines 38 and 49");
+         "between lines 36 and 47");
       }();
    });
    var keysForPlayerStep = F3(function (_v38,
@@ -597,7 +602,9 @@ Elm.Steps.make = function (_elm) {
                                ,controlMode]
                               ,["tackTarget"
                                ,tackTargetAfterTurn]
-                              ,["spellCast",_v38.spellCast]],
+                              ,["spellCast",_v38.spellCast]
+                              ,["startCountdown"
+                               ,_v38.startCountdown]],
             turnedPlayer);
          }();
       }();
@@ -639,7 +646,7 @@ Elm.Steps.make = function (_elm) {
                   case "Nothing":
                   return player.center;}
                _E.Case($moduleName,
-               "between lines 23 and 26");
+               "between lines 21 and 24");
             }();
             return _U.replace([["player"
                                ,_U.replace([["center",center]],
@@ -765,7 +772,6 @@ Elm.Render.Race.make = function (_elm) {
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
    var Core = Elm.Core.make(_elm);
-   var Debug = Elm.Debug.make(_elm);
    var Game = Elm.Game.make(_elm);
    var Geo = Elm.Geo.make(_elm);
    var Graphics = Graphics || {};
@@ -797,6 +803,18 @@ Elm.Render.Race.make = function (_elm) {
          return Maybe.Nothing;
       }();
    });
+   var formatCountdown = function (c) {
+      return function () {
+         var cs = Basics.ceiling(Time.inSeconds(c));
+         var m = cs / 60 | 0;
+         var s = A2(Basics.rem,cs,60);
+         return _L.append("Start in ",
+         _L.append(String.show(m),
+         _L.append("\'",
+         _L.append(String.show(s),
+         "\"..."))));
+      }();
+   };
    var renderCountdown = F2(function (gameState,
    player) {
       return function () {
@@ -805,33 +823,33 @@ Elm.Render.Race.make = function (_elm) {
                                          ,_0: 0
                                          ,_1: gameState.course.downwind.y + 40})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(msg))));
          };
-         return _U.cmp(gameState.countdown,
-         0) > 0 ? function () {
-            var cs = Basics.ceiling(Time.inSeconds(gameState.countdown));
-            var m = cs / 60 | 0;
-            var s = A2(Basics.rem,cs,60);
-            var msg = _L.append("Start in ",
-            _L.append(String.show(m),
-            _L.append("\'",
-            _L.append(String.show(s),
-            "\"..."))));
-            return Maybe.Just(messageBuilder(msg));
-         }() : List.isEmpty(player.crossedGates) ? Maybe.Just(messageBuilder("Go!")) : Maybe.Nothing;
+         return function () {
+            var _v1 = gameState.countdown;
+            switch (_v1.ctor)
+            {case "Just":
+               return _U.cmp(_v1._0,
+                 0) > 0 ? Maybe.Just(messageBuilder(formatCountdown(Core.getCountdown(gameState.countdown)))) : _U.eq(player.nextGate,
+                 Maybe.Just(Game.StartLine)) ? Maybe.Just(messageBuilder("Go!")) : Maybe.Nothing;
+               case "Nothing":
+               return Maybe.Nothing;}
+            _E.Case($moduleName,
+            "between lines 150 and 157");
+         }();
       }();
    });
    var renderGateLaylines = F3(function (vmg,
    windOrigin,
    gate) {
       return function () {
-         var drawLine = function (_v1) {
+         var drawLine = function (_v3) {
             return function () {
-               switch (_v1.ctor)
+               switch (_v3.ctor)
                {case "_Tuple2":
                   return Graphics.Collage.traced(Graphics.Collage.solid(Color.white))(A2(Graphics.Collage.segment,
-                    _v1._0,
-                    _v1._1));}
+                    _v3._0,
+                    _v3._1));}
                _E.Case($moduleName,
-               "on line 132, column 26 to 62");
+               "on line 130, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -862,10 +880,10 @@ Elm.Render.Race.make = function (_elm) {
    var renderLaylines = F2(function (player,
    course) {
       return function () {
-         var _v5 = player.nextGate;
-         switch (_v5.ctor)
+         var _v7 = player.nextGate;
+         switch (_v7.ctor)
          {case "Just":
-            switch (_v5._0.ctor)
+            switch (_v7._0.ctor)
               {case "Downwind":
                  return Maybe.Just(A3(renderGateLaylines,
                    player.downwindVmg,
@@ -881,17 +899,17 @@ Elm.Render.Race.make = function (_elm) {
       }();
    });
    var renderBuoy = F2(function (timer,
-   _v7) {
+   _v9) {
       return function () {
          return function () {
             var a = 0.4 + 0.2 * Basics.cos(timer * 5.0e-3);
-            return Graphics.Collage.alpha(a)(Graphics.Collage.move(_v7.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v7.radius))));
+            return Graphics.Collage.alpha(a)(Graphics.Collage.move(_v9.position)(Graphics.Collage.filled(Render.Utils.colors.buoy)(Graphics.Collage.circle(_v9.radius))));
          }();
       }();
    });
-   var renderIsland = function (_v9) {
+   var renderIsland = function (_v11) {
       return function () {
-         return Graphics.Collage.move(_v9.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v9.radius)));
+         return Graphics.Collage.move(_v11.location)(Graphics.Collage.filled(Render.Utils.colors.sand)(Graphics.Collage.circle(_v11.radius)));
       }();
    };
    var renderIslands = function (gameState) {
@@ -949,26 +967,26 @@ Elm.Render.Race.make = function (_elm) {
          var opacityForIndex = function (i) {
             return 0.5 - 0.4 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
          };
-         var renderWakePoint = function (_v11) {
+         var renderWakePoint = function (_v13) {
             return function () {
-               switch (_v11.ctor)
+               switch (_v13.ctor)
                {case "_Tuple2":
-                  return Graphics.Collage.alpha(opacityForIndex(_v11._0))(Graphics.Collage.move(_v11._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
+                  return Graphics.Collage.alpha(opacityForIndex(_v13._0))(Graphics.Collage.move(_v13._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
                _E.Case($moduleName,
-               "on line 56, column 32 to 94");
+               "on line 54, column 32 to 94");
             }();
          };
          var span = 5;
-         var points = List.map(renderWakePoint)(List.filter(function (_v15) {
+         var points = List.map(renderWakePoint)(List.filter(function (_v17) {
             return function () {
-               switch (_v15.ctor)
+               switch (_v17.ctor)
                {case "_Tuple2":
                   return _U.eq(A2(Basics.mod,
-                    _v15._0 + 1,
+                    _v17._0 + 1,
                     span),
                     0);}
                _E.Case($moduleName,
-               "on line 57, column 59 to 80");
+               "on line 55, column 59 to 80");
             }();
          })(A2(Core.indexedMap,
          F2(function (v0,v1) {
@@ -980,10 +998,10 @@ Elm.Render.Race.make = function (_elm) {
          return Graphics.Collage.group(points);
       }();
    };
-   var renderEqualityLine = F2(function (_v19,
+   var renderEqualityLine = F2(function (_v21,
    windOrigin) {
       return function () {
-         switch (_v19.ctor)
+         switch (_v21.ctor)
          {case "_Tuple2":
             return function () {
                  var right = Basics.fromPolar({ctor: "_Tuple2"
@@ -997,7 +1015,7 @@ Elm.Render.Race.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 48 and 50");
+         "between lines 46 and 48");
       }();
    });
    var renderPlayerAngles = function (player) {
@@ -1095,46 +1113,49 @@ Elm.Render.Race.make = function (_elm) {
                                        ,_1: marks});
       }();
    });
-   var renderRelative = function (_v23) {
+   var renderRelative = function (_v25) {
       return function () {
          return function () {
             var maybeForms = _L.fromArray([A2(renderCountdown,
-                                          _v23,
-                                          _v23.player)
+                                          _v25,
+                                          _v25.player)
+                                          ,A2(Core.mapMaybe,
+                                          function (c) {
+                                             return Graphics.Collage.group(A2(List.map,
+                                             renderBuoy(c),
+                                             _v25.buoys));
+                                          },
+                                          _v25.countdown)
                                           ,A2(renderLaylines,
-                                          _v23.player,
-                                          _v23.course)
+                                          _v25.player,
+                                          _v25.course)
                                           ,A2(renderFinished,
-                                          _v23.course,
-                                          _v23.player)]);
-            var downwindOrStartLine = List.isEmpty(_v23.player.crossedGates) ? A3(renderStartLine,
-            _v23.course.downwind,
-            _v23.course.markRadius,
-            _U.cmp(_v23.countdown,
-            0) < 1) : A3(renderGate,
-            _v23.course.downwind,
-            _v23.course.markRadius,
-            _U.eq(_v23.player.nextGate,
+                                          _v25.course,
+                                          _v25.player)]);
+            var downwindOrStartLine = List.isEmpty(_v25.player.crossedGates) ? A3(renderStartLine,
+            _v25.course.downwind,
+            _v25.course.markRadius,
+            Core.isStarted(_v25.countdown)) : A3(renderGate,
+            _v25.course.downwind,
+            _v25.course.markRadius,
+            _U.eq(_v25.player.nextGate,
             Maybe.Just(Game.Downwind)));
-            var justForms = _L.fromArray([renderBounds(_v23.course.bounds)
-                                         ,renderIslands(_v23)
+            var justForms = _L.fromArray([renderBounds(_v25.course.bounds)
+                                         ,renderIslands(_v25)
                                          ,downwindOrStartLine
                                          ,A3(renderGate,
-                                         _v23.course.upwind,
-                                         _v23.course.markRadius,
-                                         _U.eq(_v23.player.nextGate,
+                                         _v25.course.upwind,
+                                         _v25.course.markRadius,
+                                         _U.eq(_v25.player.nextGate,
                                          Maybe.Just(Game.Upwind)))
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
-                                         _v23.opponents))
-                                         ,Graphics.Collage.group(A2(List.map,
-                                         renderBuoy(_v23.countdown),
-                                         _v23.buoys))
-                                         ,renderGusts(_v23.wind)
+                                         _v25.opponents))
+                                         ,renderGusts(_v25.wind)
                                          ,A2(renderPlayer,
-                                         _v23.player,
-                                         _v23.triggeredSpells)]);
-            return Graphics.Collage.move(Geo.neg(_v23.player.center))(Graphics.Collage.group(_L.append(justForms,
+                                         _v25.player,
+                                         _v25.triggeredSpells)]);
+            return Graphics.Collage.move(Geo.neg(_v25.player.center))(Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms))));
          }();
       }();
@@ -1155,6 +1176,7 @@ Elm.Render.Race.make = function (_elm) {
                              ,renderBuoy: renderBuoy
                              ,renderGateLaylines: renderGateLaylines
                              ,renderLaylines: renderLaylines
+                             ,formatCountdown: formatCountdown
                              ,renderCountdown: renderCountdown
                              ,renderFinished: renderFinished
                              ,renderRelative: renderRelative};
@@ -1195,13 +1217,17 @@ Elm.Render.Controls.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
-   var renderHelp = F2(function (countdown,
+   var renderHelp = F2(function (countdownMaybe,
    _v0) {
       return function () {
          switch (_v0.ctor)
          {case "_Tuple2":
-            return _U.cmp(countdown,
-              0) > 0 ? function () {
+            return A3(Maybe.maybe,
+              true,
+              function (c) {
+                 return _U.cmp(c,0) > 0;
+              },
+              countdownMaybe) ? function () {
                  var text = Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
                                                                               ,_0: 0
                                                                               ,_1: (0 - _v0._1) / 2 + 50})(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(Render.Utils.helpMessage)))));
@@ -1677,25 +1703,28 @@ Elm.Inputs.make = function (_elm) {
    MouseInput,
    Drag.lastPosition(20 * Time.millisecond),
    Mouse.position);
-   var KeyboardInput = F5(function (a,
+   var KeyboardInput = F6(function (a,
    b,
    c,
    d,
-   e) {
+   e,
+   f) {
       return {_: {}
              ,arrows: a
              ,fineTurn: d
              ,lockAngle: b
              ,spellCast: e
+             ,startCountdown: f
              ,tack: c};
    });
-   var keyboardInput = A6(Signal.lift5,
+   var keyboardInput = A7(Signal.lift6,
    KeyboardInput,
    Keyboard.arrows,
    Keyboard.enter,
    Keyboard.space,
    Keyboard.shift,
-   Keyboard.isDown(Char.toCode(_U.chr("S"))));
+   Keyboard.isDown(Char.toCode(_U.chr("S"))),
+   Keyboard.isDown(Char.toCode(_U.chr("C"))));
    var UserArrows = F2(function (a,
    b) {
       return {_: {},x: a,y: b};
@@ -1882,6 +1911,7 @@ Elm.Game.make = function (_elm) {
                                   ,_0: 0
                                   ,_1: -200}
                        ,spellCast: false
+                       ,startCountdown: false
                        ,tackTarget: Maybe.Nothing
                        ,upwindVmg: 0
                        ,velocity: 0
@@ -1891,7 +1921,7 @@ Elm.Game.make = function (_elm) {
                        ,windSpeed: 0};
    var defaultGame = {_: {}
                      ,buoys: _L.fromArray([])
-                     ,countdown: 0
+                     ,countdown: Maybe.Nothing
                      ,course: defaultCourse
                      ,leaderboard: _L.fromArray([])
                      ,opponents: _L.fromArray([])
@@ -2128,7 +2158,6 @@ Elm.Core.make = function (_elm) {
    $moduleName = "Core";
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
-   var Debug = Elm.Debug.make(_elm);
    var Graphics = Graphics || {};
    Graphics.Collage = Elm.Graphics.Collage.make(_elm);
    var Graphics = Graphics || {};
@@ -2165,7 +2194,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 74 and 77");
+               "between lines 78 and 81");
             }();
          });
          return A3(List.foldl,
@@ -2183,9 +2212,23 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 67 and 69");
+         "between lines 71 and 73");
       }();
    });
+   var getCountdown = function (maybeCountdown) {
+      return A3(Maybe.maybe,
+      0,
+      Basics.id,
+      maybeCountdown);
+   };
+   var isStarted = function (maybeCountdown) {
+      return A3(Maybe.maybe,
+      false,
+      function (n) {
+         return _U.cmp(n,0) < 1;
+      },
+      maybeCountdown);
+   };
    var polarVelocity = F2(function (speed,
    angle) {
       return function () {
@@ -2291,6 +2334,8 @@ Elm.Core.make = function (_elm) {
                       ,getUpwindVmg: getUpwindVmg
                       ,getDownwindVmg: getDownwindVmg
                       ,playerVelocity: playerVelocity
+                      ,isStarted: isStarted
+                      ,getCountdown: getCountdown
                       ,mapMaybe: mapMaybe
                       ,compact: compact
                       ,average: average
@@ -2405,7 +2450,8 @@ Elm.Render.Utils.make = function (_elm) {
    var Time = Elm.Time.make(_elm);
    var _op = {};
    var baseText = function (s) {
-      return Text.monospace(Text.color(Color.white)(Text.height(14)(Text.toText(s))));
+      return Text.typeface(_L.fromArray(["Inconsolata"
+                                        ,"monospace"]))(Text.color(Color.white)(Text.height(15)(Text.toText(s))));
    };
    var fullScreenMessage = function (msg) {
       return Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(Text.centered(Text.color(Color.white)(Text.height(60)(Text.toText(String.toUpper(msg)))))));

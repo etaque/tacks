@@ -137,9 +137,9 @@ renderLeaderboard leaderboard (w,h) =
       |> move (w/2 - 50, 0)
       |> Just
 
-renderHelp : Float -> (Float,Float) -> Maybe Form
-renderHelp countdown (w,h) =
-  if countdown > 0 then
+renderHelp : Maybe Float -> (Float,Float) -> Maybe Form
+renderHelp countdownMaybe (w,h) =
+  if maybe True (\c -> c > 0) countdownMaybe then
     let text = helpMessage |> baseText |> centered |> toForm |> move (0, -h/2 + 50) |> alpha 0.8
     in Just text
   else

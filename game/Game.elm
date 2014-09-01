@@ -52,6 +52,7 @@ type Player = Boat
   , crossedGates: [Time]
   , nextGate: Maybe GateLocation
   , spellCast: Bool
+  , startCountdown: Bool
   , downwindVmg: Float
   , upwindVmg: Float
   }
@@ -66,7 +67,7 @@ type GameState =
   , buoys: [Buoy]
   , course: Course
   , leaderboard: [String]
-  , countdown: Time
+  , countdown: Maybe Time
   , playerSpell: Maybe Spell
   , triggeredSpells: [Spell]
   }
@@ -95,6 +96,7 @@ defaultPlayer =
   , crossedGates = []
   , nextGate = Just StartLine
   , spellCast = False
+  , startCountdown = False
   , downwindVmg = 0
   , upwindVmg = 0
   }
@@ -114,7 +116,7 @@ defaultGame =
   , buoys = []
   , course = defaultCourse
   , leaderboard = []
-  , countdown = 0
+  , countdown = Nothing
   , playerSpell = Nothing
   , triggeredSpells = []
   }

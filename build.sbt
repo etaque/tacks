@@ -15,4 +15,10 @@ libraryDependencies ++= Seq(
   ws
 )
 
+play.PlayScala.projectSettings
+
+TwirlKeys.templateImports ++= Seq(
+  "org.joda.time.DateTime"
+)
+
 scalacOptions += "-feature"

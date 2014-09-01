@@ -10,10 +10,12 @@ import akka.actor._
 import org.joda.time.DateTime
 import models._
 
+case class Start(at: DateTime)
 case class PlayerQuit(id: String)
 case object UpdateGameState
 case object UpdateWind
 case object SpawnBuoy
+case object GetStartTime
 
 class RaceActor(race: Race) extends Actor {
 
@@ -29,10 +31,13 @@ class RaceActor(race: Race) extends Actor {
   var leaderboard = Seq[String]()
 
   var previousWindUpdate = DateTime.now
+  var startTime: Option[DateTime] = None
+
+  def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
+  def started = millisBeforeStart.exists(_ <= 0)
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
   Akka.system.scheduler.schedule(0.seconds, 10.milliseconds, self, UpdateWind)
-  Akka.system.scheduler.schedule(race.millisBeforeStart.millis, 20.seconds, self, SpawnBuoy)
 
   def receive = {
 
@@ -48,6 +53,8 @@ class RaceActor(race: Race) extends Actor {
 
       playersStates += (id -> newState)
       if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
+
+      if (input.startCountdown) startCountdown(byPlayerId = id)
 
       sender ! raceUpdateFor(id)
     }
@@ -76,7 +83,17 @@ class RaceActor(race: Race) extends Actor {
       if (buoys.size < 10) {
         buoys = buoys :+ Buoy.spawn(race.course)
       }
+    }
 
+    case GetStartTime => sender ! startTime
+  }
+
+  private def startCountdown(byPlayerId: String) = {
+    if (startTime.isEmpty && byPlayerId == race.userId.stringify) {
+      val at = DateTime.now.plusSeconds(race.countdownSeconds)
+      Logger.info(s"Race ${race.id} will start at $at")
+      startTime = Some(at)
+      Akka.system.scheduler.schedule(race.countdownSeconds.seconds, 20.seconds, self, SpawnBuoy)
     }
   }
 
@@ -89,7 +106,7 @@ class RaceActor(race: Race) extends Actor {
   }
 
   private def withCollectedBuoy(state: PlayerState): PlayerState = {
-    val newSpell: Option[Spell] = state.collision(buoys).filter(_ => race.started).map { buoy =>
+    val newSpell: Option[Spell] = state.collision(buoys).filter(_ => started).map { buoy =>
       buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
       buoy.spell
     }
@@ -105,7 +122,7 @@ class RaceActor(race: Race) extends Actor {
   }
 
   private def withCrossedGates(previousStateMaybe: Option[PlayerState])(state: PlayerState): PlayerState = {
-    previousStateMaybe.fold(state)(state.updateCrossedGates(race.course, race.started))
+    previousStateMaybe.fold(state)(state.updateCrossedGates(race.course, started))
   }
 
   private def updateSpells() = {
@@ -126,7 +143,7 @@ class RaceActor(race: Race) extends Actor {
     val bs = playersStates.get(boatId)
     RaceUpdate(
       now = DateTime.now,
-      startTime = race.startTime,
+      startTime = startTime,
       course = None, // already transmitted in initial update
       crossedGates = bs.map(_.crossedGates).getOrElse(Nil),
       nextGate = bs.flatMap(_.nextGate),

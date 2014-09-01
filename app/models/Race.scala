@@ -6,15 +6,11 @@ import reactivemongo.bson.BSONObjectID
 
 case class Race (
   _id: BSONObjectID = BSONObjectID.generate,
-  startTime: DateTime,
+  userId: BSONObjectID,
+  isPrivate: Boolean,
   course: Course,
-  leaderboard: Seq[String] = Seq()
-) extends HasId {
-
-  def millisBeforeStart = startTime.getMillis - DateTime.now.getMillis
-
-  def started = millisBeforeStart <= 0
-}
+  countdownSeconds: Int
+) extends HasId
 
 object Race extends MongoDAO[Race] {
   val collectionName = "races"

@@ -13,7 +13,7 @@ import Render.All as R
 -- ports can't expand type alias for the moment... ugly manual expansion...
 port raceInput : Signal 
   { now: Float
-  , startTime: Float
+  , startTime: Maybe Float
   , course: Maybe 
               { upwind: { y: Float, width: Float }
               , downwind: { y: Float, width: Float }
@@ -46,14 +46,21 @@ input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardIn
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
 
-port raceOutput : Signal { position : (Float, Float), direction: Float, velocity: Float, spellCast: Bool }
+port raceOutput : Signal 
+  { position : (Float, Float)
+  , direction: Float
+  , velocity: Float
+  , spellCast: Bool
+  , startCountdown: Bool
+  }
 port raceOutput = lift (playerToRaceOutput . .player) gameState
 
-playerToRaceOutput ({position, direction, velocity, spellCast} as player) =
+playerToRaceOutput ({position, direction, velocity, spellCast, startCountdown} as player) =
   { position = position
   , direction = direction
   , velocity = velocity
   , spellCast = spellCast
+  , startCountdown = startCountdown
   }
 
 main = lift2 R.renderAll Window.dimensions gameState

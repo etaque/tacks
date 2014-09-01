@@ -136,19 +136,25 @@ renderLaylines player course =
     Just Upwind   -> Just <| renderGateLaylines player.upwindVmg player.windOrigin course.upwind
     Just Downwind -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
     _             -> Nothing
-   
+
+formatCountdown : Time -> String
+formatCountdown c =
+  let cs = c |> inSeconds |> ceiling
+      m = cs `div` 60
+      s = cs `rem` 60
+  in  "Start in " ++ (show m) ++ "'" ++ (show s) ++ "\"..."
 
 renderCountdown : GameState -> Player -> Maybe Form
 renderCountdown gameState player =
   let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 40)
-  in  if | gameState.countdown > 0 ->
-             let cs = gameState.countdown |> inSeconds |> ceiling
-                 m = cs `div` 60
-                 s = cs `rem` 60
-                 msg = "Start in " ++ (show m) ++ "'" ++ (show s) ++ "\"..."
-             in  Just (messageBuilder msg)
-         | (isEmpty player.crossedGates) -> Just (messageBuilder "Go!")
-         | otherwise -> Nothing
+  in  case gameState.countdown of
+        Just c -> 
+          if c > 0 
+            then Just <| messageBuilder (formatCountdown (getCountdown gameState.countdown))
+            else if player.nextGate == Just StartLine 
+              then Just <| messageBuilder "Go!"
+              else Nothing
+        Nothing -> Nothing
 
 renderFinished : Course -> Player -> Maybe Form
 renderFinished course player =
@@ -159,7 +165,7 @@ renderFinished course player =
 renderRelative : GameState -> Form
 renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
   let downwindOrStartLine = if isEmpty player.crossedGates
-        then renderStartLine course.downwind course.markRadius (gameState.countdown <= 0)
+        then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown)
         else renderGate course.downwind course.markRadius (player.nextGate == Just Downwind)
       justForms = 
         [ renderBounds gameState.course.bounds
@@ -167,12 +173,12 @@ renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
         , downwindOrStartLine
         , renderGate course.upwind course.markRadius (player.nextGate == Just Upwind)
         , group (map renderOpponent opponents)
-        , group (map (renderBuoy gameState.countdown) buoys)
         , renderGusts gameState.wind
         , renderPlayer player triggeredSpells
         ]
       maybeForms = 
         [ renderCountdown gameState player
+        , mapMaybe (\c -> group (map (renderBuoy c) buoys)) gameState.countdown
         , renderLaylines player course
         , renderFinished gameState.course player
         ]
