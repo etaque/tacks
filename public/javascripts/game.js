@@ -1,15 +1,15 @@
-Elm.ShiftMaster = Elm.ShiftMaster || {};
-Elm.ShiftMaster.make = function (_elm) {
+Elm.Main = Elm.Main || {};
+Elm.Main.make = function (_elm) {
    "use strict";
-   _elm.ShiftMaster = _elm.ShiftMaster || {};
-   if (_elm.ShiftMaster.values)
-   return _elm.ShiftMaster.values;
+   _elm.Main = _elm.Main || {};
+   if (_elm.Main.values)
+   return _elm.Main.values;
    var _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
-   $moduleName = "ShiftMaster";
+   $moduleName = "Main";
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
    var Game = Elm.Game.make(_elm);
@@ -156,13 +156,13 @@ Elm.ShiftMaster.make = function (_elm) {
    Render.All.renderAll,
    Window.dimensions,
    gameState);
-   _elm.ShiftMaster.values = {_op: _op
-                             ,clock: clock
-                             ,input: input
-                             ,gameState: gameState
-                             ,playerToRaceOutput: playerToRaceOutput
-                             ,main: main};
-   return _elm.ShiftMaster.values;
+   _elm.Main.values = {_op: _op
+                      ,clock: clock
+                      ,input: input
+                      ,gameState: gameState
+                      ,playerToRaceOutput: playerToRaceOutput
+                      ,main: main};
+   return _elm.Main.values;
 };Elm.Steps = Elm.Steps || {};
 Elm.Steps.make = function (_elm) {
    "use strict";

@@ -1,4 +1,4 @@
-name := "shiftmaster"
+name := "tacks"
 
 version := "1.0-SNAPSHOT"
 

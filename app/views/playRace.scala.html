@@ -18,7 +18,7 @@
 
   var gameDiv = document.getElementById('game');
   var input = @Html(Json.toJson(RaceUpdate.initial(race)).toString());
-  var game = Elm.embed(Elm.ShiftMaster, gameDiv, { raceInput: input });
+  var game = Elm.embed(Elm.Main, gameDiv, { raceInput: input });
 
   ws.onmessage = function(event) {
     var data = JSON.parse(event.data);

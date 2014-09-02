@@ -1,4 +1,4 @@
-module ShiftMaster where
+module Main where
 
 import Window
 import Keyboard

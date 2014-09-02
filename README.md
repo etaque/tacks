@@ -1,5 +1,5 @@
-Shiftmaster
-===========
+TACKS
+=====
 
 A sailing race simulator, multiplayer & realtime, using modern web stack and browser technologies.
 
