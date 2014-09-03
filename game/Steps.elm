@@ -143,13 +143,28 @@ moveStep now delta dims gameState =
   let playerMoved = movePlayer now delta gameState dims gameState.player
   in  { gameState | player <- playerMoved }
 
+gustEffect : Player -> Wind -> Gust -> (Float,Float)
+gustEffect player wind gust =
+  let d = distance player.position gust.position
+      fromEdge = gust.radius - d
+      factor = minimum [fromEdge / (gust.radius * 0.2), 1]
+      originEffect = (angleToWind gust.angle wind.origin) * factor
+      speedEffect = gust.speed * factor
+  in  (originEffect, speedEffect)
+
+withGusts : Player -> Wind -> [Gust] -> (Float,Float)
+withGusts player wind gusts =
+  let effects = map (gustEffect player wind) gusts
+      windOrigin = ensure360 <| wind.origin + average (map fst effects)
+      windSpeed = wind.speed + sum (map snd effects)
+  in (windOrigin, windSpeed)
+
 updatePlayerWind : Wind -> Player -> Player
 updatePlayerWind wind player =
   let gustsOnPlayer = filter (\g -> distance player.position g.position < g.radius) wind.gusts
       (windOrigin, windSpeed) = if isEmpty gustsOnPlayer
         then (wind.origin, wind.speed)
-        else let gust = head gustsOnPlayer
-             in  (ensure360 gust.angle, wind.speed + gust.speed)
+        else withGusts player wind gustsOnPlayer
   in  { player | windOrigin <- windOrigin,
                  windSpeed <- windSpeed }
 

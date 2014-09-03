@@ -263,6 +263,43 @@ Elm.Steps.make = function (_elm) {
          player);
       }();
    };
+   var gustEffect = F3(function (player,
+   wind,
+   gust) {
+      return function () {
+         var d = A2(Geo.distance,
+         player.position,
+         gust.position);
+         var fromEdge = gust.radius - d;
+         var factor = List.minimum(_L.fromArray([fromEdge / (gust.radius * 0.2)
+                                                ,1]));
+         var originEffect = A2(Core.angleToWind,
+         gust.angle,
+         wind.origin) * factor;
+         var speedEffect = gust.speed * factor;
+         return {ctor: "_Tuple2"
+                ,_0: originEffect
+                ,_1: speedEffect};
+      }();
+   });
+   var withGusts = F3(function (player,
+   wind,
+   gusts) {
+      return function () {
+         var effects = A2(List.map,
+         A2(gustEffect,player,wind),
+         gusts);
+         var windOrigin = Core.ensure360(wind.origin + Core.average(A2(List.map,
+         Basics.fst,
+         effects)));
+         var windSpeed = wind.speed + List.sum(A2(List.map,
+         Basics.snd,
+         effects));
+         return {ctor: "_Tuple2"
+                ,_0: windOrigin
+                ,_1: windSpeed};
+      }();
+   });
    var updatePlayerWind = F2(function (wind,
    player) {
       return function () {
@@ -276,12 +313,10 @@ Elm.Steps.make = function (_elm) {
          wind.gusts);
          var $ = List.isEmpty(gustsOnPlayer) ? {ctor: "_Tuple2"
                                                ,_0: wind.origin
-                                               ,_1: wind.speed} : function () {
-            var gust = List.head(gustsOnPlayer);
-            return {ctor: "_Tuple2"
-                   ,_0: Core.ensure360(gust.angle)
-                   ,_1: wind.speed + gust.speed};
-         }(),
+                                               ,_1: wind.speed} : A3(withGusts,
+         player,
+         wind,
+         gustsOnPlayer),
          windOrigin = $._0,
          windSpeed = $._1;
          return _U.replace([["windOrigin"
@@ -687,6 +722,8 @@ Elm.Steps.make = function (_elm) {
                        ,getCenterAfterMove: getCenterAfterMove
                        ,movePlayer: movePlayer
                        ,moveStep: moveStep
+                       ,gustEffect: gustEffect
+                       ,withGusts: withGusts
                        ,updatePlayerWind: updatePlayerWind
                        ,updateVmg: updateVmg
                        ,windStep: windStep
