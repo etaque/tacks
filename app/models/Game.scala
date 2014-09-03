@@ -65,7 +65,8 @@ case class Course(
   islands: Seq[Island],
   bounds: Box,
   windGenerator: WindGenerator,
-  gustsCount: Int
+  gustsCount: Int,
+  boatWidth: Double // for collision detection, should be consistent with icon
 ) {
   lazy val ((right, top), (left, bottom)) = bounds
   
@@ -93,8 +94,8 @@ case class Course(
 
 object Course {
   val default = Course(
-    upwind = Gate(1500, 120),
-    downwind = Gate(-100, 120),
+    upwind = Gate(2000, 150),
+    downwind = Gate(-100, 150),
     laps = 2,
     markRadius = 5,
     islands = Seq(
@@ -102,9 +103,10 @@ object Course {
       Island((150, 900), 80),
       Island((-200, 1200), 60)
     ),
-    bounds = ((800,1800), (-800,-400)),
+    bounds = ((800,2200), (-800,-400)),
     windGenerator = WindGenerator(8, 10, 5, 5),
-    gustsCount = 8
+    gustsCount = 8,
+    boatWidth = 9
   )
 }
 
@@ -235,8 +237,8 @@ case class PlayerState (
   triggeredSpells: Seq[Spell] = Seq()
 ) {
 
-  def collision(buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
-    distanceBetween(buoy.position, position) <= buoy.radius
+  def collision(boatWidth: Double, buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
+    distanceBetween(buoy.position, position) <= buoy.radius + boatWidth / 2
   }
 
   def withSpell(spell: Spell) = copy(ownSpell = Some(spell))

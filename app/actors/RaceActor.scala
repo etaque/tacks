@@ -45,7 +45,7 @@ class RaceActor(race: Race) extends Actor {
       val previousStateMaybe = playersStates.get(id)
 
       val runStep =
-        withCollectedBuoy _ andThen
+        withCollectedBuoy(race.course.boatWidth) _ andThen
         withCastedSpell(id, input.spellCast) andThen
         withCrossedGates(previousStateMaybe)
 
@@ -105,8 +105,8 @@ class RaceActor(race: Race) extends Actor {
     }
   }
 
-  private def withCollectedBuoy(state: PlayerState): PlayerState = {
-    val newSpell: Option[Spell] = state.collision(buoys).filter(_ => started).map { buoy =>
+  private def withCollectedBuoy(boatWidth: Double)(state: PlayerState): PlayerState = {
+    val newSpell: Option[Spell] = state.collision(boatWidth, buoys).filter(_ => started).map { buoy =>
       buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
       buoy.spell
     }

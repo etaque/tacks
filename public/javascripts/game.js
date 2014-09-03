@@ -54,29 +54,30 @@ Elm.Main.make = function (_elm) {
       return typeof v === "object" && "now" in v && "startTime" in v && "course" in v && "crossedGates" in v && "nextGate" in v && "wind" in v && "opponents" in v && "buoys" in v && "playerSpell" in v && "triggeredSpells" in v && "leaderboard" in v && "isMaster" in v ? {_: {}
                                                                                                                                                                                                                                                                               ,now: typeof v.now === "number" ? v.now : _E.raise("invalid input, expecting JSNumber but got " + v.now)
                                                                                                                                                                                                                                                                               ,startTime: v.startTime === null ? Maybe.Nothing : Maybe.Just(typeof v.startTime === "number" ? v.startTime : _E.raise("invalid input, expecting JSNumber but got " + v.startTime))
-                                                                                                                                                                                                                                                                              ,course: v.course === null ? Maybe.Nothing : Maybe.Just(typeof v.course === "object" && "upwind" in v.course && "downwind" in v.course && "laps" in v.course && "markRadius" in v.course && "islands" in v.course && "bounds" in v.course ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,upwind: typeof v.course.upwind === "object" && "y" in v.course.upwind && "width" in v.course.upwind ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,y: typeof v.course.upwind.y === "number" ? v.course.upwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.y)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,width: typeof v.course.upwind.width === "number" ? v.course.upwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.upwind)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,downwind: typeof v.course.downwind === "object" && "y" in v.course.downwind && "width" in v.course.downwind ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,y: typeof v.course.downwind.y === "number" ? v.course.downwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.y)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,width: typeof v.course.downwind.width === "number" ? v.course.downwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.downwind)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,laps: typeof v.course.laps === "number" ? v.course.laps : _E.raise("invalid input, expecting JSNumber but got " + v.course.laps)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,markRadius: typeof v.course.markRadius === "number" ? v.course.markRadius : _E.raise("invalid input, expecting JSNumber but got " + v.course.markRadius)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,islands: _U.isJSArray(v.course.islands) ? _L.fromArray(v.course.islands.map(function (v) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             return typeof v === "object" && "location" in v && "radius" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,location: _U.isJSArray(v.location) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_0: typeof v.location[0] === "number" ? v.location[0] : _E.raise("invalid input, expecting JSNumber but got " + v.location[0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_1: typeof v.location[1] === "number" ? v.location[1] : _E.raise("invalid input, expecting JSNumber but got " + v.location[1])} : _E.raise("invalid input, expecting JSArray but got " + v.location)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)} : _E.raise("invalid input, expecting JSObject [\"location\",\"radius\"] but got " + v);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          })) : _E.raise("invalid input, expecting JSArray but got " + v.course.islands)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,bounds: _U.isJSArray(v.course.bounds) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,_0: _U.isJSArray(v.course.bounds[0]) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_0: typeof v.course.bounds[0][0] === "number" ? v.course.bounds[0][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_1: typeof v.course.bounds[0][1] === "number" ? v.course.bounds[0][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,_1: _U.isJSArray(v.course.bounds[1]) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_0: typeof v.course.bounds[1][0] === "number" ? v.course.bounds[1][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_1: typeof v.course.bounds[1][1] === "number" ? v.course.bounds[1][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds)} : _E.raise("invalid input, expecting JSObject [\"upwind\",\"downwind\",\"laps\",\"markRadius\",\"islands\",\"bounds\"] but got " + v.course))
+                                                                                                                                                                                                                                                                              ,course: v.course === null ? Maybe.Nothing : Maybe.Just(typeof v.course === "object" && "upwind" in v.course && "downwind" in v.course && "laps" in v.course && "markRadius" in v.course && "islands" in v.course && "bounds" in v.course && "boatWidth" in v.course ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,upwind: typeof v.course.upwind === "object" && "y" in v.course.upwind && "width" in v.course.upwind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,y: typeof v.course.upwind.y === "number" ? v.course.upwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.y)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,width: typeof v.course.upwind.width === "number" ? v.course.upwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.upwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.upwind)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,downwind: typeof v.course.downwind === "object" && "y" in v.course.downwind && "width" in v.course.downwind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,y: typeof v.course.downwind.y === "number" ? v.course.downwind.y : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.y)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,width: typeof v.course.downwind.width === "number" ? v.course.downwind.width : _E.raise("invalid input, expecting JSNumber but got " + v.course.downwind.width)} : _E.raise("invalid input, expecting JSObject [\"y\",\"width\"] but got " + v.course.downwind)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,laps: typeof v.course.laps === "number" ? v.course.laps : _E.raise("invalid input, expecting JSNumber but got " + v.course.laps)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,markRadius: typeof v.course.markRadius === "number" ? v.course.markRadius : _E.raise("invalid input, expecting JSNumber but got " + v.course.markRadius)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,islands: _U.isJSArray(v.course.islands) ? _L.fromArray(v.course.islands.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        return typeof v === "object" && "location" in v && "radius" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,location: _U.isJSArray(v.location) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,_0: typeof v.location[0] === "number" ? v.location[0] : _E.raise("invalid input, expecting JSNumber but got " + v.location[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,_1: typeof v.location[1] === "number" ? v.location[1] : _E.raise("invalid input, expecting JSNumber but got " + v.location[1])} : _E.raise("invalid input, expecting JSArray but got " + v.location)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,radius: typeof v.radius === "number" ? v.radius : _E.raise("invalid input, expecting JSNumber but got " + v.radius)} : _E.raise("invalid input, expecting JSObject [\"location\",\"radius\"] but got " + v);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     })) : _E.raise("invalid input, expecting JSArray but got " + v.course.islands)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,bounds: _U.isJSArray(v.course.bounds) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,_0: _U.isJSArray(v.course.bounds[0]) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_0: typeof v.course.bounds[0][0] === "number" ? v.course.bounds[0][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_1: typeof v.course.bounds[0][1] === "number" ? v.course.bounds[0][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[0][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,_1: _U.isJSArray(v.course.bounds[1]) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_0: typeof v.course.bounds[1][0] === "number" ? v.course.bounds[1][0] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,_1: typeof v.course.bounds[1][1] === "number" ? v.course.bounds[1][1] : _E.raise("invalid input, expecting JSNumber but got " + v.course.bounds[1][1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds[1])} : _E.raise("invalid input, expecting JSArray but got " + v.course.bounds)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,boatWidth: typeof v.course.boatWidth === "number" ? v.course.boatWidth : _E.raise("invalid input, expecting JSNumber but got " + v.course.boatWidth)} : _E.raise("invalid input, expecting JSObject [\"upwind\",\"downwind\",\"laps\",\"markRadius\",\"islands\",\"bounds\",\"boatWidth\"] but got " + v.course))
                                                                                                                                                                                                                                                                               ,crossedGates: _U.isJSArray(v.crossedGates) ? _L.fromArray(v.crossedGates.map(function (v) {
                                                                                                                                                                                                                                                                                  return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
                                                                                                                                                                                                                                                                               })) : _E.raise("invalid input, expecting JSArray but got " + v.crossedGates)
@@ -416,29 +417,32 @@ Elm.Steps.make = function (_elm) {
                            ,_1: course.downwind.y}]);
    };
    var isStuck = F2(function (p,
-   gameState) {
+   _v20) {
       return function () {
-         var onIsland = A2(List.any,
-         function (i) {
-            return _U.cmp(A2(Geo.distance,
-            i.location,
-            p),
-            i.radius) < 1;
-         },
-         gameState.course.islands);
-         var outOfBounds = Basics.not(A2(Geo.inBox,
-         p,
-         gameState.course.bounds));
-         var gatesMarks = getGatesMarks(gameState.course);
-         var stuckOnMark = A2(List.any,
-         function (m) {
-            return _U.cmp(A2(Geo.distance,
-            m,
-            p),
-            gameState.course.markRadius) < 1;
-         },
-         gatesMarks);
-         return outOfBounds || (stuckOnMark || onIsland);
+         return function () {
+            var onIsland = A2(List.any,
+            function (i) {
+               return _U.cmp(A2(Geo.distance,
+               i.location,
+               p),
+               i.radius + _v20.course.boatWidth / 2) < 1;
+            },
+            _v20.course.islands);
+            var outOfBounds = Basics.not(A2(Geo.inBox,
+            p,
+            _v20.course.bounds));
+            var boatWidth = 5.0;
+            var gatesMarks = getGatesMarks(_v20.course);
+            var stuckOnMark = A2(List.any,
+            function (m) {
+               return _U.cmp(A2(Geo.distance,
+               m,
+               p),
+               _v20.course.markRadius + _v20.course.boatWidth / 2) < 1;
+            },
+            gatesMarks);
+            return outOfBounds || (stuckOnMark || onIsland);
+         }();
       }();
    });
    var movePlayer = F5(function (now,
@@ -506,53 +510,53 @@ Elm.Steps.make = function (_elm) {
    arrows,
    fineTurn) {
       return function () {
-         var _v20 = {ctor: "_Tuple4"
+         var _v22 = {ctor: "_Tuple4"
                     ,_0: tackTarget
                     ,_1: player.controlMode
                     ,_2: arrows.x
                     ,_3: arrows.y};
-         switch (_v20.ctor)
+         switch (_v22.ctor)
          {case "_Tuple4":
-            switch (_v20._0.ctor)
+            switch (_v22._0.ctor)
               {case "Just":
                  return function () {
-                      var _v26 = player.controlMode;
-                      switch (_v26.ctor)
+                      var _v28 = player.controlMode;
+                      switch (_v28.ctor)
                       {case "FixedDirection":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(player.direction - _v20._0._0)]));
-                              return _U.cmp(Core.ensure360(player.direction - _v20._0._0),
+                                                                      ,Basics.abs(player.direction - _v22._0._0)]));
+                              return _U.cmp(Core.ensure360(player.direction - _v22._0._0),
                               180) > 0 ? maxTurn : 0 - maxTurn;
                            }();
                          case "FixedWindAngle":
                          return function () {
                               var maxTurn = List.minimum(_L.fromArray([2
-                                                                      ,Basics.abs(player.windAngle - _v20._0._0)]));
-                              return _U.cmp(_v20._0._0,
-                              90) > 0 || _U.cmp(_v20._0._0,
-                              0) < 0 && _U.cmp(_v20._0._0,
+                                                                      ,Basics.abs(player.windAngle - _v22._0._0)]));
+                              return _U.cmp(_v22._0._0,
+                              90) > 0 || _U.cmp(_v22._0._0,
+                              0) < 0 && _U.cmp(_v22._0._0,
                               -90) > -1 ? 0 - maxTurn : maxTurn;
                            }();}
                       _E.Case($moduleName,
                       "between lines 56 and 64");
                    }();
                  case "Nothing":
-                 switch (_v20._1.ctor)
+                 switch (_v22._1.ctor)
                    {case "FixedDirection":
-                      switch (_v20._2)
-                        {case 0: switch (_v20._3)
+                      switch (_v22._2)
+                        {case 0: switch (_v22._3)
                              {case 0: return 0;}
                              break;}
                         break;
                       case "FixedWindAngle":
-                      switch (_v20._2)
-                        {case 0: switch (_v20._3)
+                      switch (_v22._2)
+                        {case 0: switch (_v22._3)
                              {case 0:
                                 return Core.ensure360(player.windOrigin + player.windAngle - player.direction);}
                              break;}
                         break;}
-                   return fineTurn ? _v20._2 : _v20._2 * 3;}
+                   return fineTurn ? _v22._2 : _v22._2 * 3;}
               break;}
          _E.Case($moduleName,
          "between lines 53 and 67");
@@ -561,19 +565,19 @@ Elm.Steps.make = function (_elm) {
    var tackTargetReached = F2(function (player,
    targetMaybe) {
       return function () {
-         var _v27 = {ctor: "_Tuple2"
+         var _v29 = {ctor: "_Tuple2"
                     ,_0: targetMaybe
                     ,_1: player.controlMode};
-         switch (_v27.ctor)
+         switch (_v29.ctor)
          {case "_Tuple2":
-            switch (_v27._0.ctor)
+            switch (_v29._0.ctor)
               {case "Just":
-                 switch (_v27._1.ctor)
+                 switch (_v29._1.ctor)
                    {case "FixedDirection":
-                      return _U.cmp(Basics.abs(_v27._0._0 - player.direction),
+                      return _U.cmp(Basics.abs(_v29._0._0 - player.direction),
                         0.1) < 0;
                       case "FixedWindAngle":
-                      return _U.cmp(Basics.abs(_v27._0._0 - player.windAngle),
+                      return _U.cmp(Basics.abs(_v29._0._0 - player.windAngle),
                         0.1) < 0;}
                    break;
                  case "Nothing": return false;}
@@ -585,22 +589,22 @@ Elm.Steps.make = function (_elm) {
    var getTackTarget = F2(function (player,
    spaceKey) {
       return function () {
-         var _v31 = {ctor: "_Tuple2"
+         var _v33 = {ctor: "_Tuple2"
                     ,_0: player.tackTarget
                     ,_1: spaceKey};
-         switch (_v31.ctor)
+         switch (_v33.ctor)
          {case "_Tuple2":
-            switch (_v31._0.ctor)
+            switch (_v33._0.ctor)
               {case "Just":
                  return A2(tackTargetReached,
                    player,
                    player.tackTarget) ? Maybe.Nothing : player.tackTarget;
-                 case "Nothing": switch (_v31._1)
+                 case "Nothing": switch (_v33._1)
                    {case false:
                       return Maybe.Nothing;
                       case true: return function () {
-                           var _v35 = player.controlMode;
-                           switch (_v35.ctor)
+                           var _v37 = player.controlMode;
+                           switch (_v37.ctor)
                            {case "FixedDirection":
                               return Maybe.Just(Core.ensure360(player.windOrigin - player.windAngle));
                               case "FixedWindAngle":
@@ -614,21 +618,21 @@ Elm.Steps.make = function (_elm) {
          "between lines 36 and 47");
       }();
    });
-   var keysForPlayerStep = F3(function (_v36,
+   var keysForPlayerStep = F3(function (_v38,
    spells,
    player) {
       return function () {
          return function () {
-            var forceTurn = !_U.eq(_v36.arrows.x,
+            var forceTurn = !_U.eq(_v38.arrows.x,
             0);
             var tackTarget = forceTurn ? Maybe.Nothing : A2(getTackTarget,
             player,
-            _v36.tack);
+            _v38.tack);
             var turn = A4(getTurn,
             tackTarget,
             player,
-            _v36.arrows,
-            _v36.fineTurn);
+            _v38.arrows,
+            _v38.fineTurn);
             var direction = Core.ensure360(player.direction + (A2(Game.containsSpell,
             "PoleInversion",
             spells) ? 0 - turn : turn));
@@ -642,15 +646,15 @@ Elm.Steps.make = function (_elm) {
             var tackTargetAfterTurn = A2(tackTargetReached,
             turnedPlayer,
             tackTarget) ? Maybe.Nothing : tackTarget;
-            var controlMode = forceTurn ? Game.FixedDirection : _U.cmp(_v36.arrows.y,
-            0) > 0 || _v36.lockAngle ? Game.FixedWindAngle : turnedPlayer.controlMode;
+            var controlMode = forceTurn ? Game.FixedDirection : _U.cmp(_v38.arrows.y,
+            0) > 0 || _v38.lockAngle ? Game.FixedWindAngle : turnedPlayer.controlMode;
             return _U.replace([["controlMode"
                                ,controlMode]
                               ,["tackTarget"
                                ,tackTargetAfterTurn]
-                              ,["spellCast",_v36.spellCast]
+                              ,["spellCast",_v38.spellCast]
                               ,["startCountdown"
-                               ,_v36.startCountdown]],
+                               ,_v38.startCountdown]],
             turnedPlayer);
          }();
       }();
@@ -667,25 +671,25 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var mouseStep = F2(function (_v38,
+   var mouseStep = F2(function (_v40,
    gameState) {
       return function () {
          return function () {
             var player = gameState.player;
             var center = function () {
-               var _v40 = _v38.drag;
-               switch (_v40.ctor)
+               var _v42 = _v40.drag;
+               switch (_v42.ctor)
                {case "Just":
-                  switch (_v40._0.ctor)
+                  switch (_v42._0.ctor)
                     {case "_Tuple2":
                        return function () {
-                            var $ = _v38.mouse,
+                            var $ = _v40.mouse,
                             x = $._0,
                             y = $._1;
                             return A2(Geo.sub,
                             Geo.floatify({ctor: "_Tuple2"
-                                         ,_0: x - _v40._0._0
-                                         ,_1: _v40._0._1 - y}),
+                                         ,_0: x - _v42._0._0
+                                         ,_1: _v42._0._1 - y}),
                             player.center);
                          }();}
                     break;
@@ -881,7 +885,7 @@ Elm.Render.Race.make = function (_elm) {
                case "Nothing":
                return gameState.isMaster ? Maybe.Just(messageBuilder(Render.Utils.startCountdownMessage)) : Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 153 and 163");
+            "between lines 150 and 160");
          }();
       }();
    });
@@ -897,7 +901,7 @@ Elm.Render.Race.make = function (_elm) {
                     _v3._0,
                     _v3._1));}
                _E.Case($moduleName,
-               "on line 133, column 26 to 62");
+               "on line 130, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -1012,21 +1016,13 @@ Elm.Render.Race.make = function (_elm) {
    };
    var renderWake = function (wake) {
       return function () {
+         var opacityForIndex = function (i) {
+            return 0.3 - 0.3 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
+         };
          var style = _U.replace([["color"
                                  ,Color.white]
                                 ,["width",3]],
          Graphics.Collage.defaultLine);
-         var pairs = List.isEmpty(wake) ? _L.fromArray([]) : Core.indexedMap(F2(function (v0,
-         v1) {
-            return {ctor: "_Tuple2"
-                   ,_0: v0
-                   ,_1: v1};
-         }))(A2(List.zip,
-         wake,
-         List.tail(wake)));
-         var opacityForIndex = function (i) {
-            return 0.3 - 0.3 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
-         };
          var renderSegment = function (_v13) {
             return function () {
                switch (_v13.ctor)
@@ -1038,10 +1034,17 @@ Elm.Render.Race.make = function (_elm) {
                          _v13._1._1)));}
                     break;}
                _E.Case($moduleName,
-               "on line 58, column 33 to 88");
+               "on line 55, column 33 to 88");
             }();
          };
-         var span = 5;
+         var pairs = List.isEmpty(wake) ? _L.fromArray([]) : Core.indexedMap(F2(function (v0,
+         v1) {
+            return {ctor: "_Tuple2"
+                   ,_0: v0
+                   ,_1: v1};
+         }))(A2(List.zip,
+         wake,
+         List.tail(wake)));
          return Graphics.Collage.group(A2(List.map,
          renderSegment,
          pairs));
@@ -1841,6 +1844,7 @@ Elm.Game.make = function (_elm) {
                      ,width: 0
                      ,y: 0};
    var defaultCourse = {_: {}
+                       ,boatWidth: 0
                        ,bounds: {ctor: "_Tuple2"
                                 ,_0: {ctor: "_Tuple2"
                                      ,_0: 0
@@ -1937,13 +1941,15 @@ Elm.Game.make = function (_elm) {
    });
    var FixedWindAngle = {ctor: "FixedWindAngle"};
    var FixedDirection = {ctor: "FixedDirection"};
-   var Course = F6(function (a,
+   var Course = F7(function (a,
    b,
    c,
    d,
    e,
-   f) {
+   f,
+   g) {
       return {_: {}
+             ,boatWidth: g
              ,bounds: f
              ,downwind: b
              ,islands: e

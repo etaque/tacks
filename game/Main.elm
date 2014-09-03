@@ -21,6 +21,7 @@ port raceInput : Signal
               , markRadius: Float
               , islands: [{ location : (Float,Float), radius : Float }]
               , bounds: ((Float,Float),(Float,Float))
+              , boatWidth: Float
               }
   , crossedGates: [Float]
   , nextGate: Maybe String

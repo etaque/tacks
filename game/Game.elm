@@ -31,6 +31,7 @@ type Course =
   , markRadius: Float
   , islands: [Island]
   , bounds: (Point, Point)
+  , boatWidth: Float
   }
 
 data ControlMode = FixedDirection | FixedWindAngle
@@ -93,6 +94,7 @@ defaultCourse =
   , markRadius = 0
   , islands = []
   , bounds = ((0,0), (0,0))
+  , boatWidth = 0
   }
 
 defaultPlayer : Player

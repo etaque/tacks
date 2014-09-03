@@ -99,13 +99,13 @@ getGatesMarks course =
   ]
 
 isStuck : Point -> GameState -> Bool
-isStuck p gameState =
-  let gatesMarks = getGatesMarks gameState.course
-      stuckOnMark = any (\m -> distance m p <= gameState.course.markRadius) gatesMarks
-      outOfBounds = not (inBox p gameState.course.bounds)
-      onIsland = any (\i -> distance i.location p <= i.radius) gameState.course.islands
-  in
-    outOfBounds || stuckOnMark || onIsland
+isStuck p ({course} as gameState) =
+  let gatesMarks = getGatesMarks course
+      boatWidth = 5.0
+      stuckOnMark = any (\m -> distance m p <= course.markRadius + course.boatWidth / 2) gatesMarks
+      outOfBounds = not (inBox p course.bounds)
+      onIsland = any (\i -> distance i.location p <= i.radius + course.boatWidth / 2) course.islands
+  in  outOfBounds || stuckOnMark || onIsland
 
 getCenterAfterMove : Point -> Point -> Point -> (Float,Float) -> (Point)
 getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
