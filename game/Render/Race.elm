@@ -49,11 +49,11 @@ renderEqualityLine (x,y) windOrigin =
 
 renderWake : [Point] -> Form
 renderWake wake =
-  let span = 5
-      opacityForIndex i = 0.5 - 0.4 * (toFloat i) / (toFloat (length wake))
-      renderWakePoint (i, p) = circle 2 |> filled white |> move p |> alpha (opacityForIndex i)
-      points = indexedMap (,) wake |> filter (\(i,p) -> ((i+1) `mod` span) == 0) |> map renderWakePoint
-  in  group points
+  let pairs = if (isEmpty wake) then [] else zip wake (tail wake) |> indexedMap (,)
+      style = { defaultLine | color <- white, width <- 3 }
+      opacityForIndex i = 0.3 - 0.3 * (toFloat i) / (toFloat (length wake))
+      renderSegment (i,(a,b)) = segment a b |> traced style |> alpha (opacityForIndex i)
+  in  group (map renderSegment pairs)
 
 renderPlayer : Player -> [Spell] -> Form
 renderPlayer player spells =
@@ -73,7 +73,7 @@ renderPlayer player spells =
       fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
       movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
       wake = renderWake player.wake
-  in movingPart --group [movingPart, wake]
+  in group [movingPart, wake]
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =

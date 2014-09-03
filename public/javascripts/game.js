@@ -467,7 +467,7 @@ Elm.Steps.make = function (_elm) {
          gameState);
          var newPosition = stuck ? position : nextPosition;
          var newWake = A2(List.take,
-         40,
+         20,
          {ctor: "::"
          ,_0: newPosition
          ,_1: player.wake});
@@ -881,7 +881,7 @@ Elm.Render.Race.make = function (_elm) {
                case "Nothing":
                return gameState.isMaster ? Maybe.Just(messageBuilder(Render.Utils.startCountdownMessage)) : Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 150 and 160");
+            "between lines 153 and 163");
          }();
       }();
    });
@@ -897,7 +897,7 @@ Elm.Render.Race.make = function (_elm) {
                     _v3._0,
                     _v3._1));}
                _E.Case($moduleName,
-               "on line 130, column 26 to 62");
+               "on line 133, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -1012,44 +1012,45 @@ Elm.Render.Race.make = function (_elm) {
    };
    var renderWake = function (wake) {
       return function () {
-         var opacityForIndex = function (i) {
-            return 0.5 - 0.4 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
-         };
-         var renderWakePoint = function (_v13) {
-            return function () {
-               switch (_v13.ctor)
-               {case "_Tuple2":
-                  return Graphics.Collage.alpha(opacityForIndex(_v13._0))(Graphics.Collage.move(_v13._1)(Graphics.Collage.filled(Color.white)(Graphics.Collage.circle(2))));}
-               _E.Case($moduleName,
-               "on line 54, column 32 to 94");
-            }();
-         };
-         var span = 5;
-         var points = List.map(renderWakePoint)(List.filter(function (_v17) {
-            return function () {
-               switch (_v17.ctor)
-               {case "_Tuple2":
-                  return _U.eq(A2(Basics.mod,
-                    _v17._0 + 1,
-                    span),
-                    0);}
-               _E.Case($moduleName,
-               "on line 55, column 59 to 80");
-            }();
-         })(A2(Core.indexedMap,
-         F2(function (v0,v1) {
+         var style = _U.replace([["color"
+                                 ,Color.white]
+                                ,["width",3]],
+         Graphics.Collage.defaultLine);
+         var pairs = List.isEmpty(wake) ? _L.fromArray([]) : Core.indexedMap(F2(function (v0,
+         v1) {
             return {ctor: "_Tuple2"
                    ,_0: v0
                    ,_1: v1};
-         }),
-         wake)));
-         return Graphics.Collage.group(points);
+         }))(A2(List.zip,
+         wake,
+         List.tail(wake)));
+         var opacityForIndex = function (i) {
+            return 0.3 - 0.3 * Basics.toFloat(i) / Basics.toFloat(List.length(wake));
+         };
+         var renderSegment = function (_v13) {
+            return function () {
+               switch (_v13.ctor)
+               {case "_Tuple2":
+                  switch (_v13._1.ctor)
+                    {case "_Tuple2":
+                       return Graphics.Collage.alpha(opacityForIndex(_v13._0))(Graphics.Collage.traced(style)(A2(Graphics.Collage.segment,
+                         _v13._1._0,
+                         _v13._1._1)));}
+                    break;}
+               _E.Case($moduleName,
+               "on line 58, column 33 to 88");
+            }();
+         };
+         var span = 5;
+         return Graphics.Collage.group(A2(List.map,
+         renderSegment,
+         pairs));
       }();
    };
-   var renderEqualityLine = F2(function (_v21,
+   var renderEqualityLine = F2(function (_v19,
    windOrigin) {
       return function () {
-         switch (_v21.ctor)
+         switch (_v19.ctor)
          {case "_Tuple2":
             return function () {
                  var right = Basics.fromPolar({ctor: "_Tuple2"
@@ -1119,7 +1120,8 @@ Elm.Render.Race.make = function (_elm) {
                                                                                                                ,eqLine
                                                                                                                ,hull]),
          fog)));
-         return movingPart;
+         return Graphics.Collage.group(_L.fromArray([movingPart
+                                                    ,wake]));
       }();
    });
    var renderGate = F3(function (gate,
@@ -1161,49 +1163,49 @@ Elm.Render.Race.make = function (_elm) {
                                        ,_1: marks});
       }();
    });
-   var renderRelative = function (_v25) {
+   var renderRelative = function (_v23) {
       return function () {
          return function () {
             var maybeForms = _L.fromArray([A2(renderCountdown,
-                                          _v25,
-                                          _v25.player)
+                                          _v23,
+                                          _v23.player)
                                           ,A2(Core.mapMaybe,
                                           function (c) {
                                              return Graphics.Collage.group(A2(List.map,
                                              renderBuoy(c),
-                                             _v25.buoys));
+                                             _v23.buoys));
                                           },
-                                          _v25.countdown)
+                                          _v23.countdown)
                                           ,A2(renderLaylines,
-                                          _v25.player,
-                                          _v25.course)
+                                          _v23.player,
+                                          _v23.course)
                                           ,A2(renderFinished,
-                                          _v25.course,
-                                          _v25.player)]);
-            var downwindOrStartLine = List.isEmpty(_v25.player.crossedGates) ? A3(renderStartLine,
-            _v25.course.downwind,
-            _v25.course.markRadius,
-            Core.isStarted(_v25.countdown)) : A3(renderGate,
-            _v25.course.downwind,
-            _v25.course.markRadius,
-            _U.eq(_v25.player.nextGate,
+                                          _v23.course,
+                                          _v23.player)]);
+            var downwindOrStartLine = List.isEmpty(_v23.player.crossedGates) ? A3(renderStartLine,
+            _v23.course.downwind,
+            _v23.course.markRadius,
+            Core.isStarted(_v23.countdown)) : A3(renderGate,
+            _v23.course.downwind,
+            _v23.course.markRadius,
+            _U.eq(_v23.player.nextGate,
             Maybe.Just(Game.Downwind)));
-            var justForms = _L.fromArray([renderBounds(_v25.course.bounds)
-                                         ,renderIslands(_v25)
+            var justForms = _L.fromArray([renderBounds(_v23.course.bounds)
+                                         ,renderIslands(_v23)
                                          ,downwindOrStartLine
                                          ,A3(renderGate,
-                                         _v25.course.upwind,
-                                         _v25.course.markRadius,
-                                         _U.eq(_v25.player.nextGate,
+                                         _v23.course.upwind,
+                                         _v23.course.markRadius,
+                                         _U.eq(_v23.player.nextGate,
                                          Maybe.Just(Game.Upwind)))
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
-                                         _v25.opponents))
-                                         ,renderGusts(_v25.wind)
+                                         _v23.opponents))
+                                         ,renderGusts(_v23.wind)
                                          ,A2(renderPlayer,
-                                         _v25.player,
-                                         _v25.triggeredSpells)]);
-            return Graphics.Collage.move(Geo.neg(_v25.player.center))(Graphics.Collage.group(_L.append(justForms,
+                                         _v23.player,
+                                         _v23.triggeredSpells)]);
+            return Graphics.Collage.move(Geo.neg(_v23.player.center))(Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms))));
          }();
       }();

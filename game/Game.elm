@@ -24,7 +24,14 @@ data GateLocation = StartLine | Downwind | Upwind
 
 type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
-type Course = { upwind: Gate, downwind: Gate, laps: Int, markRadius: Float, islands: [Island], bounds: (Point, Point) }
+type Course = 
+  { upwind: Gate
+  , downwind: Gate
+  , laps: Int
+  , markRadius: Float
+  , islands: [Island]
+  , bounds: (Point, Point)
+  }
 
 data ControlMode = FixedDirection | FixedWindAngle
 
@@ -79,8 +86,14 @@ defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
 
 defaultCourse : Course
-defaultCourse = { upwind = defaultGate, downwind = defaultGate, laps = 0, markRadius = 0,
-           islands = [], bounds = ((0,0), (0,0)) }
+defaultCourse = 
+  { upwind = defaultGate
+  , downwind = defaultGate
+  , laps = 0
+  , markRadius = 0
+  , islands = []
+  , bounds = ((0,0), (0,0))
+  }
 
 defaultPlayer : Player
 defaultPlayer =

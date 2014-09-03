@@ -132,7 +132,7 @@ movePlayer now delta gameState dimensions player =
       stuck = isStuck nextPosition gameState
       newPosition = if stuck then position else nextPosition
       newCenter = getCenterAfterMove position newPosition player.center (floatify dimensions)
-      newWake = take 40 (newPosition :: player.wake)
+      newWake = take 20 (newPosition :: player.wake)
   in  { player | position <- newPosition,
                  velocity <- if stuck then 0 else newVelocity,
                  center <- newCenter,
