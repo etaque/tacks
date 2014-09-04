@@ -75,6 +75,7 @@ type GameState =
   , buoys: [Buoy]
   , course: Course
   , leaderboard: [String]
+  , now: Time
   , countdown: Maybe Time
   , playerSpell: Maybe Spell
   , triggeredSpells: [Spell]
@@ -132,6 +133,7 @@ defaultGame =
   , buoys = []
   , course = defaultCourse
   , leaderboard = []
+  , now = 0
   , countdown = Nothing
   , playerSpell = Nothing
   , triggeredSpells = []

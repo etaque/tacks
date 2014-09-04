@@ -7,11 +7,12 @@ import Game (..)
 import String
 import Text
 
-renderStartLine : Gate -> Float -> Bool -> Form
-renderStartLine gate markRadius started =
+renderStartLine : Gate -> Float -> Bool -> Time -> Form
+renderStartLine gate markRadius started timer =
   let lineStyle = if started then dotted green else solid orange
-      line = segment left right |> traced lineStyle
+      line = segment left right |> traced lineStyle |> alpha a
       (left,right) = getGateMarks gate
+      a = if started then 0.5 + 0.5 * cos (timer * 0.005) else 1
       marks = map (\g -> circle markRadius |> filled colors.gateMark |> move g) [left, right]
   in  group (line :: marks)
 
@@ -165,10 +166,10 @@ renderFinished course player =
     Nothing -> Just (baseText "Finished!" |> centered |> toForm |> move (0, course.downwind.y + 40))
     _       -> Nothing
 
-renderRelative : GameState -> Form
-renderRelative ({player,opponents,course,buoys,triggeredSpells} as gameState) =
+renderRace : GameState -> Form
+renderRace ({player,opponents,course,buoys,triggeredSpells,now} as gameState) =
   let downwindOrStartLine = if isEmpty player.crossedGates
-        then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown)
+        then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
         else renderGate course.downwind course.markRadius (player.nextGate == Just Downwind)
       justForms = 
         [ renderBounds gameState.course.bounds

@@ -7,24 +7,30 @@ import Game (..)
 import String
 import Text
 
-renderHiddenGate : Gate -> (Float,Float) -> Point -> Bool -> Maybe Form
-renderHiddenGate gate (w,h) (cx,cy) isNext =
+gateHintLabel: Int -> Form
+gateHintLabel d =
+  "Next gate in " ++ (show d) ++ "m" |> baseText |> centered |> toForm
+
+renderGateHint : Gate -> (Float,Float) -> Point -> Float -> Maybe Form
+renderGateHint gate (w,h) (cx,cy) timer =
   let (left,right) = getGateMarks gate
       c = 5
-      over = cy + h/2 + c < gate.y
-      under = cy - h/2 - c > gate.y
-      markStyle = if isNext then filled orange else filled white
-      distance isOver = round (abs (gate.y + (if isOver then -h else h)/2 - cy)) |> show |> baseText |> centered |> toForm
-  in
-    case (over, under) of
-      (True, _) -> let m = polygon [(0,0),(-c,-c),(c,-c)] |> markStyle |> move (-cx,(h/2))
-                       d = distance True |> move (-cx, h/2 - c*3)
-                   in  Just (group [m, d])
-      (_, True) -> let m = polygon [(0,0),(-c,c),(c,c)] |> markStyle |> move (-cx,(-h/2))
-                       d = distance False |> move (-cx, -h/2 + c*3)
-                   in  Just (group [m,d])
-      (_, _)    -> Nothing
-
+      isOver = cy + h/2 + c < gate.y
+      isUnder = cy - h/2 - c > gate.y
+      markStyle = filled orange
+      a = 1 + 0.5 * cos (timer * 0.005)
+      distance isOver = round (abs (gate.y + (if isOver then -h else h)/2 - cy) / 2)
+      side = if | isOver      -> h/2
+                | isUnder     -> -h/2
+                | otherwise -> 0
+  in  if isOver || isUnder then Just <|
+        let ml = triangle c (side > 0) |> markStyle |> move (-cx - (gate.width / 2), side)
+            mr = triangle c (side > 0) |> markStyle |> move (-cx + (gate.width / 2), side)
+            textY = if (side > 0) then -c else c
+            d = distance (side > 0) |> gateHintLabel |> move (-cx, side + textY * 4) |> alpha a
+        in  group [ml, mr, d]
+      else
+        Nothing
 
 renderLapsCount : (Float,Float) -> Course -> Player -> Form
 renderLapsCount (w,h) course player =
@@ -145,16 +151,22 @@ renderHelp countdownMaybe (w,h) =
   else
     Nothing
 
-renderAbsolute : GameState -> (Float,Float) -> Form
-renderAbsolute ({wind,player,opponents,course,playerSpell} as gameState) dims =
+renderControls : GameState -> (Float,Float) -> Form
+renderControls ({wind,player,opponents,course,playerSpell,now,countdown} as gameState) dims =
   let justForms =
         [ renderLapsCount dims course player
         , renderPolar player dims
         , renderWindWheel wind player dims
         ]
+      downwindHint = if (player.nextGate == Just Downwind)
+        then renderGateHint course.downwind dims player.center now
+        else Nothing
+      upwindHint = if (player.nextGate == Just Upwind)
+        then renderGateHint course.upwind dims player.center now
+        else Nothing
       maybeForms =
-        [ renderHiddenGate course.downwind dims player.center (player.nextGate == Just Downwind)
-        , renderHiddenGate course.upwind dims player.center (player.nextGate == Just Upwind)
+        [ downwindHint
+        , upwindHint
         , renderHelp gameState.countdown dims
         , renderLeaderboard gameState.leaderboard dims
         , case playerSpell of

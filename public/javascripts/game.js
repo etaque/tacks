@@ -243,6 +243,7 @@ Elm.Steps.make = function (_elm) {
                               ,["triggeredSpells"
                                ,triggeredSpells]
                               ,["leaderboard",leaderboard]
+                              ,["now",now]
                               ,["countdown"
                                ,A2(Core.mapMaybe,
                                function (st) {
@@ -780,7 +781,7 @@ Elm.Render.All.make = function (_elm) {
          switch (_v0.ctor)
          {case "_Tuple2":
             return function () {
-                 var relativeForms = Render.Race.renderRelative(gameState);
+                 var relativeForms = Render.Race.renderRace(gameState);
                  var dims = Geo.floatify({ctor: "_Tuple2"
                                          ,_0: _v0._0
                                          ,_1: _v0._1});
@@ -790,7 +791,7 @@ Elm.Render.All.make = function (_elm) {
                  var bg = Graphics.Collage.filled(Render.Utils.colors.sand)(A2(Graphics.Collage.rect,
                  w$,
                  h$));
-                 var absoluteForms = A2(Render.Controls.renderAbsolute,
+                 var absoluteForms = A2(Render.Controls.renderControls,
                  gameState,
                  dims);
                  return Graphics.Element.layers(_L.fromArray([A3(Graphics.Collage.collage,
@@ -885,7 +886,7 @@ Elm.Render.Race.make = function (_elm) {
                case "Nothing":
                return gameState.isMaster ? Maybe.Just(messageBuilder(Render.Utils.startCountdownMessage)) : Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 150 and 160");
+            "between lines 151 and 161");
          }();
       }();
    });
@@ -901,7 +902,7 @@ Elm.Render.Race.make = function (_elm) {
                     _v3._0,
                     _v3._1));}
                _E.Case($moduleName,
-               "on line 130, column 26 to 62");
+               "on line 131, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -1034,7 +1035,7 @@ Elm.Render.Race.make = function (_elm) {
                          _v13._1._1)));}
                     break;}
                _E.Case($moduleName,
-               "on line 55, column 33 to 88");
+               "on line 56, column 33 to 88");
             }();
          };
          var pairs = List.isEmpty(wake) ? _L.fromArray([]) : Core.indexedMap(F2(function (v0,
@@ -1067,7 +1068,7 @@ Elm.Render.Race.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 46 and 48");
+         "between lines 47 and 49");
       }();
    });
    var renderPlayerAngles = function (player) {
@@ -1145,10 +1146,12 @@ Elm.Render.Race.make = function (_elm) {
                                                     ,rightMark]));
       }();
    });
-   var renderStartLine = F3(function (gate,
+   var renderStartLine = F4(function (gate,
    markRadius,
-   started) {
+   started,
+   timer) {
       return function () {
+         var a = started ? 0.5 + 0.5 * Basics.cos(timer * 5.0e-3) : 1;
          var $ = Game.getGateMarks(gate),
          left = $._0,
          right = $._1;
@@ -1158,15 +1161,15 @@ Elm.Render.Race.make = function (_elm) {
          },
          _L.fromArray([left,right]));
          var lineStyle = started ? Graphics.Collage.dotted(Color.green) : Graphics.Collage.solid(Color.orange);
-         var line = Graphics.Collage.traced(lineStyle)(A2(Graphics.Collage.segment,
+         var line = Graphics.Collage.alpha(a)(Graphics.Collage.traced(lineStyle)(A2(Graphics.Collage.segment,
          left,
-         right));
+         right)));
          return Graphics.Collage.group({ctor: "::"
                                        ,_0: line
                                        ,_1: marks});
       }();
    });
-   var renderRelative = function (_v23) {
+   var renderRace = function (_v23) {
       return function () {
          return function () {
             var maybeForms = _L.fromArray([A2(renderCountdown,
@@ -1185,10 +1188,11 @@ Elm.Render.Race.make = function (_elm) {
                                           ,A2(renderFinished,
                                           _v23.course,
                                           _v23.player)]);
-            var downwindOrStartLine = List.isEmpty(_v23.player.crossedGates) ? A3(renderStartLine,
+            var downwindOrStartLine = List.isEmpty(_v23.player.crossedGates) ? A4(renderStartLine,
             _v23.course.downwind,
             _v23.course.markRadius,
-            Core.isStarted(_v23.countdown)) : A3(renderGate,
+            Core.isStarted(_v23.countdown),
+            _v23.now) : A3(renderGate,
             _v23.course.downwind,
             _v23.course.markRadius,
             _U.eq(_v23.player.nextGate,
@@ -1232,7 +1236,7 @@ Elm.Render.Race.make = function (_elm) {
                              ,formatCountdown: formatCountdown
                              ,renderCountdown: renderCountdown
                              ,renderFinished: renderFinished
-                             ,renderRelative: renderRelative};
+                             ,renderRace: renderRace};
    return _elm.Render.Race.values;
 };Elm.Render = Elm.Render || {};
 Elm.Render.Controls = Elm.Render.Controls || {};
@@ -1287,7 +1291,7 @@ Elm.Render.Controls.make = function (_elm) {
                  return Maybe.Just(text);
               }() : Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 142 and 146");
+         "between lines 148 and 152");
       }();
    });
    var renderLeaderboard = F2(function (leaderboard,
@@ -1305,7 +1309,7 @@ Elm.Render.Controls.make = function (_elm) {
               }),
               leaderboard)))))));}
          _E.Case($moduleName,
-         "between lines 132 and 138");
+         "between lines 138 and 144");
       }();
    });
    var getArrow = _L.fromArray([{ctor: "_Tuple2"
@@ -1361,7 +1365,7 @@ Elm.Render.Controls.make = function (_elm) {
             case "PoleInversion":
             return renderPoleInversion;}
          _E.Case($moduleName,
-         "between lines 115 and 117");
+         "between lines 121 and 123");
       }();
    };
    var renderStockSpell = F2(function (spell,
@@ -1382,7 +1386,7 @@ Elm.Render.Controls.make = function (_elm) {
                                                                                                           ,spellGraphics])));
               }();}
          _E.Case($moduleName,
-         "between lines 82 and 91");
+         "between lines 88 and 97");
       }();
    });
    var renderWindWheel = F3(function (wind,
@@ -1424,7 +1428,7 @@ Elm.Render.Controls.make = function (_elm) {
                                                                                                                                        ,legend]))));
               }();}
          _E.Case($moduleName,
-         "between lines 63 and 78");
+         "between lines 69 and 84");
       }();
    });
    var renderPolar = F2(function (player,
@@ -1489,7 +1493,7 @@ Elm.Render.Controls.make = function (_elm) {
                                                                                                                          ,legend])));
               }();}
          _E.Case($moduleName,
-         "between lines 41 and 59");
+         "between lines 47 and 65");
       }();
    });
    var renderLapsCount = F3(function (_v21,
@@ -1512,13 +1516,18 @@ Elm.Render.Controls.make = function (_elm) {
                                               ,_1: _v21._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(Render.Utils.baseText(msg))));
               }();}
          _E.Case($moduleName,
-         "between lines 31 and 37");
+         "between lines 37 and 43");
       }();
    });
-   var renderHiddenGate = F4(function (gate,
+   var gateHintLabel = function (d) {
+      return Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(_L.append("Next gate in ",
+      _L.append(String.show(d),
+      "m")))));
+   };
+   var renderGateHint = F4(function (gate,
    _v25,
    _v26,
-   isNext) {
+   timer) {
       return function () {
          switch (_v26.ctor)
          {case "_Tuple2":
@@ -1527,117 +1536,94 @@ Elm.Render.Controls.make = function (_elm) {
                  {case "_Tuple2":
                     return function () {
                          var distance = function (isOver) {
-                            return Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(String.show(Basics.round(Basics.abs(gate.y + (isOver ? 0 - _v25._1 : _v25._1) / 2 - _v26._1))))));
+                            return Basics.round(Basics.abs(gate.y + (isOver ? 0 - _v25._1 : _v25._1) / 2 - _v26._1) / 2);
                          };
-                         var markStyle = isNext ? Graphics.Collage.filled(Color.orange) : Graphics.Collage.filled(Color.white);
+                         var a = 1 + 0.5 * Basics.cos(timer * 5.0e-3);
+                         var markStyle = Graphics.Collage.filled(Color.orange);
                          var c = 5;
-                         var over = _U.cmp(_v26._1 + _v25._1 / 2 + c,
+                         var isOver = _U.cmp(_v26._1 + _v25._1 / 2 + c,
                          gate.y) < 0;
-                         var under = _U.cmp(_v26._1 - _v25._1 / 2 - c,
+                         var isUnder = _U.cmp(_v26._1 - _v25._1 / 2 - c,
                          gate.y) > 0;
+                         var side = isOver ? _v25._1 / 2 : isUnder ? (0 - _v25._1) / 2 : 0;
                          var $ = Game.getGateMarks(gate),
                          left = $._0,
                          right = $._1;
-                         return function () {
-                            var _v33 = {ctor: "_Tuple2"
-                                       ,_0: over
-                                       ,_1: under};
-                            switch (_v33.ctor)
-                            {case "_Tuple2":
-                               switch (_v33._0)
-                                 {case true: return function () {
-                                         var d = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v26._0
-                                                                       ,_1: _v25._1 / 2 - c * 3})(distance(true));
-                                         var m = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v26._0
-                                                                       ,_1: _v25._1 / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                           ,_0: 0
-                                                                                                                                           ,_1: 0}
-                                                                                                                                          ,{ctor: "_Tuple2"
-                                                                                                                                           ,_0: 0 - c
-                                                                                                                                           ,_1: 0 - c}
-                                                                                                                                          ,{ctor: "_Tuple2"
-                                                                                                                                           ,_0: c
-                                                                                                                                           ,_1: 0 - c}]))));
-                                         return Maybe.Just(Graphics.Collage.group(_L.fromArray([m
-                                                                                               ,d])));
-                                      }();}
-                                 switch (_v33._1)
-                                 {case true: return function () {
-                                         var d = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v26._0
-                                                                       ,_1: (0 - _v25._1) / 2 + c * 3})(distance(false));
-                                         var m = Graphics.Collage.move({ctor: "_Tuple2"
-                                                                       ,_0: 0 - _v26._0
-                                                                       ,_1: (0 - _v25._1) / 2})(markStyle(Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                                 ,_0: 0
-                                                                                                                                                 ,_1: 0}
-                                                                                                                                                ,{ctor: "_Tuple2"
-                                                                                                                                                 ,_0: 0 - c
-                                                                                                                                                 ,_1: c}
-                                                                                                                                                ,{ctor: "_Tuple2"
-                                                                                                                                                 ,_0: c
-                                                                                                                                                 ,_1: c}]))));
-                                         return Maybe.Just(Graphics.Collage.group(_L.fromArray([m
-                                                                                               ,d])));
-                                      }();}
-                                 return Maybe.Nothing;}
-                            _E.Case($moduleName,
-                            "between lines 19 and 26");
-                         }();
+                         return isOver || isUnder ? Maybe.Just(function () {
+                            var textY = _U.cmp(side,
+                            0) > 0 ? 0 - c : c;
+                            var d = Graphics.Collage.alpha(a)(Graphics.Collage.move({ctor: "_Tuple2"
+                                                                                    ,_0: 0 - _v26._0
+                                                                                    ,_1: side + textY * 4})(gateHintLabel(distance(_U.cmp(side,
+                            0) > 0))));
+                            var mr = Graphics.Collage.move({ctor: "_Tuple2"
+                                                           ,_0: 0 - _v26._0 + gate.width / 2
+                                                           ,_1: side})(markStyle(A2(Render.Utils.triangle,
+                            c,
+                            _U.cmp(side,0) > 0)));
+                            var ml = Graphics.Collage.move({ctor: "_Tuple2"
+                                                           ,_0: 0 - _v26._0 - gate.width / 2
+                                                           ,_1: side})(markStyle(A2(Render.Utils.triangle,
+                            c,
+                            _U.cmp(side,0) > 0)));
+                            return Graphics.Collage.group(_L.fromArray([ml
+                                                                       ,mr
+                                                                       ,d]));
+                         }()) : Maybe.Nothing;
                       }();}
                  _E.Case($moduleName,
-                 "between lines 12 and 26");
+                 "between lines 16 and 33");
               }();}
          _E.Case($moduleName,
-         "between lines 12 and 26");
+         "between lines 16 and 33");
       }();
    });
-   var renderAbsolute = F2(function (_v36,
+   var renderControls = F2(function (_v33,
    dims) {
       return function () {
          return function () {
-            var maybeForms = _L.fromArray([A4(renderHiddenGate,
-                                          _v36.course.downwind,
-                                          dims,
-                                          _v36.player.center,
-                                          _U.eq(_v36.player.nextGate,
-                                          Maybe.Just(Game.Downwind)))
-                                          ,A4(renderHiddenGate,
-                                          _v36.course.upwind,
-                                          dims,
-                                          _v36.player.center,
-                                          _U.eq(_v36.player.nextGate,
-                                          Maybe.Just(Game.Upwind)))
+            var upwindHint = _U.eq(_v33.player.nextGate,
+            Maybe.Just(Game.Upwind)) ? A4(renderGateHint,
+            _v33.course.upwind,
+            dims,
+            _v33.player.center,
+            _v33.now) : Maybe.Nothing;
+            var downwindHint = _U.eq(_v33.player.nextGate,
+            Maybe.Just(Game.Downwind)) ? A4(renderGateHint,
+            _v33.course.downwind,
+            dims,
+            _v33.player.center,
+            _v33.now) : Maybe.Nothing;
+            var maybeForms = _L.fromArray([downwindHint
+                                          ,upwindHint
                                           ,A2(renderHelp,
-                                          _v36.countdown,
+                                          _v33.countdown,
                                           dims)
                                           ,A2(renderLeaderboard,
-                                          _v36.leaderboard,
+                                          _v33.leaderboard,
                                           dims)
                                           ,function () {
-                                             var _v38 = _v36.playerSpell;
-                                             switch (_v38.ctor)
+                                             var _v35 = _v33.playerSpell;
+                                             switch (_v35.ctor)
                                              {case "Just":
                                                 return Maybe.Just(A2(renderStockSpell,
-                                                  _v38._0,
+                                                  _v35._0,
                                                   dims));
                                                 case "Nothing":
                                                 return Maybe.Nothing;}
                                              _E.Case($moduleName,
-                                             "between lines 160 and 163");
+                                             "between lines 172 and 175");
                                           }()]);
             var justForms = _L.fromArray([A3(renderLapsCount,
                                          dims,
-                                         _v36.course,
-                                         _v36.player)
+                                         _v33.course,
+                                         _v33.player)
                                          ,A2(renderPolar,
-                                         _v36.player,
+                                         _v33.player,
                                          dims)
                                          ,A3(renderWindWheel,
-                                         _v36.wind,
-                                         _v36.player,
+                                         _v33.wind,
+                                         _v33.player,
                                          dims)]);
             return Graphics.Collage.group(_L.append(justForms,
             Core.compact(maybeForms)));
@@ -1645,7 +1631,8 @@ Elm.Render.Controls.make = function (_elm) {
       }();
    });
    _elm.Render.Controls.values = {_op: _op
-                                 ,renderHiddenGate: renderHiddenGate
+                                 ,gateHintLabel: gateHintLabel
+                                 ,renderGateHint: renderGateHint
                                  ,renderLapsCount: renderLapsCount
                                  ,renderPolar: renderPolar
                                  ,renderWindWheel: renderWindWheel
@@ -1656,7 +1643,7 @@ Elm.Render.Controls.make = function (_elm) {
                                  ,getArrow: getArrow
                                  ,renderLeaderboard: renderLeaderboard
                                  ,renderHelp: renderHelp
-                                 ,renderAbsolute: renderAbsolute};
+                                 ,renderControls: renderControls};
    return _elm.Render.Controls.values;
 };Elm.Inputs = Elm.Inputs || {};
 Elm.Inputs.make = function (_elm) {
@@ -1870,17 +1857,20 @@ Elm.Game.make = function (_elm) {
                         return function (h) {
                            return function (i) {
                               return function (j) {
-                                 return {_: {}
-                                        ,buoys: d
-                                        ,countdown: g
-                                        ,course: e
-                                        ,isMaster: j
-                                        ,leaderboard: f
-                                        ,opponents: c
-                                        ,player: b
-                                        ,playerSpell: h
-                                        ,triggeredSpells: i
-                                        ,wind: a};
+                                 return function (k) {
+                                    return {_: {}
+                                           ,buoys: d
+                                           ,countdown: h
+                                           ,course: e
+                                           ,isMaster: k
+                                           ,leaderboard: f
+                                           ,now: g
+                                           ,opponents: c
+                                           ,player: b
+                                           ,playerSpell: i
+                                           ,triggeredSpells: j
+                                           ,wind: a};
+                                 };
                               };
                            };
                         };
@@ -1995,6 +1985,7 @@ Elm.Game.make = function (_elm) {
                      ,course: defaultCourse
                      ,isMaster: false
                      ,leaderboard: _L.fromArray([])
+                     ,now: 0
                      ,opponents: _L.fromArray([])
                      ,player: defaultPlayer
                      ,playerSpell: Maybe.Nothing
@@ -2520,6 +2511,26 @@ Elm.Render.Utils.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
+   var triangle = F2(function (s,
+   isUpward) {
+      return isUpward ? Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                               ,_0: 0
+                                                               ,_1: 0}
+                                                              ,{ctor: "_Tuple2"
+                                                               ,_0: 0 - s
+                                                               ,_1: 0 - s}
+                                                              ,{ctor: "_Tuple2"
+                                                               ,_0: s
+                                                               ,_1: 0 - s}])) : Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                       ,_0: 0
+                                                                                                                       ,_1: 0}
+                                                                                                                      ,{ctor: "_Tuple2"
+                                                                                                                       ,_0: 0 - s
+                                                                                                                       ,_1: s}
+                                                                                                                      ,{ctor: "_Tuple2"
+                                                                                                                       ,_0: s
+                                                                                                                       ,_1: s}]));
+   });
    var baseText = function (s) {
       return Text.typeface(_L.fromArray(["Inconsolata"
                                         ,"monospace"]))(Text.color(Color.white)(Text.height(15)(Text.toText(s))));
@@ -2544,6 +2555,7 @@ Elm.Render.Utils.make = function (_elm) {
                               ,startCountdownMessage: startCountdownMessage
                               ,colors: colors
                               ,fullScreenMessage: fullScreenMessage
-                              ,baseText: baseText};
+                              ,baseText: baseText
+                              ,triangle: triangle};
    return _elm.Render.Utils.values;
 };

@@ -199,6 +199,7 @@ raceInputStep raceInput ({player} as gameState) =
                     playerSpell <- playerSpell,
                     triggeredSpells <- triggeredSpells,
                     leaderboard <- leaderboard,
+                    now <- now,
                     countdown <- mapMaybe (\st -> st - now) startTime,
                     isMaster <- isMaster }
 
