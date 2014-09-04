@@ -17,7 +17,7 @@ case object UpdateWind
 case object SpawnBuoy
 case object GetStartTime
 
-class RaceActor(race: Race) extends Actor {
+class RaceActor(race: Race, master: User) extends Actor {
 
   type PlayerId = String
   case class SpellCast(by: PlayerId, spell: Spell, at: DateTime, to: Seq[PlayerId]) {
@@ -89,9 +89,8 @@ class RaceActor(race: Race) extends Actor {
   }
 
   private def startCountdown(byPlayerId: String) = {
-    if (startTime.isEmpty && byPlayerId == race.userId.stringify) {
+    if (startTime.isEmpty && byPlayerId == master.id.stringify) {
       val at = DateTime.now.plusSeconds(race.countdownSeconds)
-      Logger.info(s"Race ${race.id} will start at $at")
       startTime = Some(at)
       Akka.system.scheduler.schedule(race.countdownSeconds.seconds, 20.seconds, self, SpawnBuoy)
     }
@@ -153,11 +152,11 @@ class RaceActor(race: Race) extends Actor {
       buoys = buoys,
       playerSpell = ps.flatMap(_.ownSpell),
       triggeredSpells = spellCasts.filter(_.to.contains(playerId)).map(_.spell),
-      isMaster = race.userId.stringify == playerId
+      isMaster = master.id.stringify == playerId
     )
   }
 }
 
 object RaceActor {
-  def props(race: Race) = Props(new RaceActor(race))
+  def props(race: Race, master: User) = Props(new RaceActor(race, master))
 }

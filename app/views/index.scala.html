@@ -1,16 +1,27 @@
-@(pendingRaces: Seq[(Race, Option[DateTime])])
+@(pendingRaces: Seq[(Race, User, Option[DateTime])], currentName: Option[String])
 
 @main() {
 
   <div class="content">
+
+    @currentName match {
+      case Some(n) => { Hello @n }
+      case None => {
+        <form action="@routes.Application.setName" method="post">
+          <input type="text" name="name" placeholder="What's your name?">
+          <input type="submit" value="Yep" class="btn-set-name">
+        </form>
+      }
+    }
+
     <form action="@routes.Application.createRace" method="post">
       <input type="submit" value="Create new race" class="btn-new-race">
     </form>
 
     @if(pendingRaces.nonEmpty) {
       <h2>Join pending races</h2>
-      @for((r, startTimeMaybe) <- pendingRaces) {
-        <li><a href="@routes.Game.playRace(r.id.stringify)">@startTimeMaybe.map(_.toString()).getOrElse("Not started")</a></li>
+      @for((r, master, startTimeMaybe) <- pendingRaces) {
+        <li><a href="@routes.Game.playRace(r.id.stringify)">By @master.name : @startTimeMaybe.map(_.toString()).getOrElse("Not started")</a></li>
       }
     }
   </div>

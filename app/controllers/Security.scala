@@ -12,6 +12,7 @@ case class IdentifiedRequest[A](userId: String, request: Request[A]) extends Wra
 trait Security { this: Controller =>
 
   def getUserId(implicit request: IdentifiedRequest[_]): BSONObjectID = BSONObjectID(request.userId)
+  def getUserName(implicit request: IdentifiedRequest[_]): Option[String] = request.session.get("playerName")
 
   object Identified {
 

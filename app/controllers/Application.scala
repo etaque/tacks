@@ -11,29 +11,31 @@ import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
 
 import actors.{MountRace, GetPublicRaces, RacesSupervisor}
-import models.{Course, Race}
+import models.{Course, Race, User}
 
 object Application extends Controller with Security {
-
-  val signupForm = Form(tuple(
-    "email" -> email,
-    "password" -> nonEmptyText,
-    "name" -> nonEmptyText
-  ))
 
   implicit val timeout = Timeout(5.seconds)
 
   def index = Identified.async() { implicit request =>
-    (RacesSupervisor.actorRef ? GetPublicRaces).mapTo[Seq[(Race, Option[DateTime])]].map { racesWithStart =>
-      Ok(views.html.index(racesWithStart))
+    (RacesSupervisor.actorRef ? GetPublicRaces).mapTo[Seq[(Race, User, Option[DateTime])]].map { racesWithStart =>
+      Ok(views.html.index(racesWithStart, getUserName))
+    }
+  }
+
+  def setName = Identified(parse.urlFormEncoded) { implicit request =>
+    request.body.get("name").flatMap(_.headOption) match {
+      case Some(name) => Redirect(routes.Application.index).addingToSession("playerName" -> name)
+      case None => Redirect(routes.Application.index)
     }
   }
 
   def createRace = Identified.async() { implicit request =>
     val isPrivate = request.getQueryString("isPrivate").exists(_.toBoolean)
     val race = Race(userId = getUserId, course = Course.default, isPrivate = isPrivate, countdownSeconds = 30)
+    val master = User(getUserId, getUserName.getOrElse("Anonymous"))
 
-    (RacesSupervisor.actorRef ? MountRace(race)).map { _ =>
+    (RacesSupervisor.actorRef ? MountRace(race, master)).map { _ =>
       Redirect(routes.Game.playRace(race.id.stringify))
     }
   }

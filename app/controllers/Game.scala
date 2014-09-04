@@ -22,7 +22,7 @@ object Game extends Controller with Security {
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(id))).mapTo[Option[Race]].map {
       case Some(race) => {
         val websocketUrlBase = "ws://" + request.host
-        val playerName = request.session.get("playerName").getOrElse("Anonymous")
+        val playerName = getUserName.getOrElse("Anonymous")
         Ok(views.html.playRace(race, playerName, websocketUrlBase))
       }
       case None => Redirect(routes.Application.index())

@@ -1,8 +1,5 @@
 package actors
 
-import akka.actor.Status.Failure
-import akka.util.Timeout
-
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.collection.mutable.ListBuffer
@@ -12,12 +9,13 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
 import akka.actor.{Props, Terminated, ActorRef, Actor}
 import akka.pattern.{ask,pipe}
+import akka.util.Timeout
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
-import models.Race
+import models.{Race,User}
 
 
-case class MountRace(race: Race)
+case class MountRace(race: Race, master: User)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
 case object GetPublicRaces
@@ -25,27 +23,22 @@ case object GetPublicRaces
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
-  var raceActors = Map.empty[BSONObjectID, ActorRef]
-  var races = ListBuffer[Race]()
+  var mountedRaces = Seq[(Race, User, ActorRef)]()
 
   implicit val timeout = Timeout(5.seconds)
 
   def receive = {
 
-    case MountRace(race) => {
-      Logger.debug(s"Mounting race ${race.id}")
-      races += race
-      val ref = context.actorOf(RaceActor.props(race))
-      raceActors += race.id -> ref
+    case MountRace(race, master) => {
+      val ref = context.actorOf(RaceActor.props(race, master))
+      mountedRaces = mountedRaces :+ (race, master, ref)
       context.watch(ref)
       sender ! Unit
     }
 
     case GetPublicRaces => {
-      val racesFuture = races.toSeq.filterNot(_.isPrivate).flatMap { race =>
-        getRaceActorRef(race.id).map { ref =>
-          (ref ? GetStartTime).mapTo[Option[DateTime]].map { t => (race, t) }
-        }
+      val racesFuture = mountedRaces.toSeq.filterNot(_._1.isPrivate).map { case (race, master, ref) =>
+        (ref ? GetStartTime).mapTo[Option[DateTime]].map { t => (race, master, t) }
       }
       Future.sequence(racesFuture) pipeTo sender
     }
@@ -54,12 +47,12 @@ class RacesSupervisor extends Actor {
 
     case GetRaceActorRef(raceId) => sender ! getRaceActorRef(raceId)
 
-    case Terminated(ref) => raceActors = raceActors.filterNot { case (_, v) => v == ref }
+    case Terminated(ref) => mountedRaces = mountedRaces.filterNot { case (_, _, r) => r == ref }
   }
 
-  def getRace(raceId: BSONObjectID): Option[Race] = races.find(_.id == raceId).headOption
+  def getRace(raceId: BSONObjectID): Option[Race] = mountedRaces.find(_._1.id == raceId).headOption.map(_._1)
 
-  def getRaceActorRef(raceId: BSONObjectID): Option[ActorRef] = raceActors.get(raceId)
+  def getRaceActorRef(raceId: BSONObjectID): Option[ActorRef] = mountedRaces.find(_._1.id == raceId).map(_._3)
 }
 
 object RacesSupervisor {

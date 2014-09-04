@@ -1,5 +1,6 @@
 
 GET         /                                       controllers.Application.index
+POST        /setName                                controllers.Application.setName
 POST        /races/create                           controllers.Application.createRace
 
 GET         /races/:id/play                         controllers.Game.playRace(id)
