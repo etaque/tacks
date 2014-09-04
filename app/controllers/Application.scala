@@ -10,7 +10,7 @@ import play.api.mvc._
 import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
 
-import actors.{MountRace, GetPublicRaces, RacesSupervisor}
+import actors.{MountRace, GetPendingRaces, RacesSupervisor}
 import models.{Course, Race, User}
 
 object Application extends Controller with Security {
@@ -18,7 +18,7 @@ object Application extends Controller with Security {
   implicit val timeout = Timeout(5.seconds)
 
   def index = Identified.async() { implicit request =>
-    (RacesSupervisor.actorRef ? GetPublicRaces).mapTo[Seq[(Race, User, Option[DateTime])]].map { racesWithStart =>
+    (RacesSupervisor.actorRef ? GetPendingRaces).mapTo[Seq[(Race, User, Option[DateTime])]].map { racesWithStart =>
       Ok(views.html.index(racesWithStart, getUserName))
     }
   }

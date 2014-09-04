@@ -18,12 +18,13 @@ import models.{Race,User}
 case class MountRace(race: Race, master: User)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
-case object GetPublicRaces
+case object GetPendingRaces
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
-  var mountedRaces = Seq[(Race, User, ActorRef)]()
+  type RaceMount = (Race, User, ActorRef)
+  var mountedRaces = Seq[RaceMount]()
 
   implicit val timeout = Timeout(5.seconds)
 
@@ -36,11 +37,14 @@ class RacesSupervisor extends Actor {
       sender ! Unit
     }
 
-    case GetPublicRaces => {
+    case GetPendingRaces => {
       val racesFuture = mountedRaces.toSeq.filterNot(_._1.isPrivate).map { case (race, master, ref) =>
-        (ref ? GetStartTime).mapTo[Option[DateTime]].map { t => (race, master, t) }
+        (ref ? GetStartTime).mapTo[Option[DateTime]].map {
+          case Some(t) if t.isBeforeNow => None
+          case _ @ v => Some((race, master, v) )
+        }
       }
-      Future.sequence(racesFuture) pipeTo sender
+      Future.sequence(racesFuture).map(_.flatten) pipeTo sender
     }
 
     case GetRace(raceId) => sender ! getRace(raceId)

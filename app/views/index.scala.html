@@ -1,11 +1,28 @@
 @(pendingRaces: Seq[(Race, User, Option[DateTime])], currentName: Option[String])
 
+@import org.joda.time.DateTime
+
+@secondsTo(t: DateTime) = {start in @((t.getMillis - DateTime.now.getMillis) / 1000)s, hurry up!}
+
 @main() {
 
   <div class="content">
 
     @currentName match {
-      case Some(n) => { Hello @n }
+      case Some(n) => {
+        <p>Hello @n!</p>
+
+        <form action="@routes.Application.createRace" method="post">
+          <input type="submit" value="Create new race" class="btn-new-race">
+        </form>
+
+        @if(pendingRaces.nonEmpty) {
+          <p>Or join pending:</p>
+          @for((r, master, startTimeMaybe) <- pendingRaces) {
+            <li><a href="@routes.Game.playRace(r.id.stringify)">By @master.name (@startTimeMaybe.map(secondsTo).getOrElse("Not started yet"))</a></li>
+          }
+        }
+      }
       case None => {
         <form action="@routes.Application.setName" method="post">
           <input type="text" name="name" placeholder="What's your name?">
@@ -14,16 +31,6 @@
       }
     }
 
-    <form action="@routes.Application.createRace" method="post">
-      <input type="submit" value="Create new race" class="btn-new-race">
-    </form>
-
-    @if(pendingRaces.nonEmpty) {
-      <h2>Join pending races</h2>
-      @for((r, master, startTimeMaybe) <- pendingRaces) {
-        <li><a href="@routes.Game.playRace(r.id.stringify)">By @master.name : @startTimeMaybe.map(_.toString()).getOrElse("Not started")</a></li>
-      }
-    }
   </div>
 
 }
