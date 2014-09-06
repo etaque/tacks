@@ -58,8 +58,8 @@ renderWake wake =
 
 renderPlayer : Player -> [Spell] -> Form
 renderPlayer player spells =
-  let boatPath = if(containsSpell "PoleInversion" spells) then "boat-pole-inversion" else "icon-ac72"
-      hull = image 11 20 ("/assets/images/" ++ boatPath ++ ".png") |> toForm
+  let boatPath = if(containsSpell "PoleInversion" spells) then "monohull-black" else "monohull"
+      hull = image 8 19 ("/assets/images/" ++ boatPath ++ ".png") |> toForm
         |> rotate (toRadians (player.direction + 90))
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin
@@ -78,7 +78,7 @@ renderPlayer player spells =
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
-  let hull = image 11 20 "/assets/images/icon-ac72.png" |> toForm
+  let hull = image 8 19 "/assets/images/monohull.png" |> toForm
         |> rotate (toRadians (opponent.direction + 90))
         |> move opponent.position
         |> alpha 0.5
@@ -149,13 +149,13 @@ renderCountdown : GameState -> Player -> Maybe Form
 renderCountdown gameState player =
   let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 40)
   in  case gameState.countdown of
-        Just c -> 
-          if c > 0 
+        Just c ->
+          if c > 0
             then Just <| messageBuilder (formatCountdown (getCountdown gameState.countdown))
-            else if player.nextGate == Just StartLine 
+            else if player.nextGate == Just StartLine
               then Just <| messageBuilder "Go!"
               else Nothing
-        Nothing -> 
+        Nothing ->
           if gameState.isMaster
             then Just <| messageBuilder startCountdownMessage
             else Nothing
@@ -171,7 +171,7 @@ renderRace ({player,opponents,course,buoys,triggeredSpells,now} as gameState) =
   let downwindOrStartLine = if isEmpty player.crossedGates
         then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
         else renderGate course.downwind course.markRadius (player.nextGate == Just Downwind)
-      justForms = 
+      justForms =
         [ renderBounds gameState.course.bounds
         , renderIslands gameState
         , downwindOrStartLine
@@ -180,7 +180,7 @@ renderRace ({player,opponents,course,buoys,triggeredSpells,now} as gameState) =
         , renderGusts gameState.wind
         , renderPlayer player triggeredSpells
         ]
-      maybeForms = 
+      maybeForms =
         [ renderCountdown gameState player
         , mapMaybe (\c -> group (map (renderBuoy c) buoys)) gameState.countdown
         , renderLaylines player course

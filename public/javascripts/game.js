@@ -33,7 +33,6 @@ Elm.Main.make = function (_elm) {
    var String = Elm.String.make(_elm);
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
-   var WebSocket = Elm.WebSocket.make(_elm);
    var Window = Elm.Window.make(_elm);
    var _op = {};
    var playerToRaceOutput = function (_v0) {
@@ -1008,9 +1007,9 @@ Elm.Render.Race.make = function (_elm) {
          ,_0: 0
          ,_1: -25}))(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(opponent.name)))));
          var hull = Graphics.Collage.alpha(0.5)(Graphics.Collage.move(opponent.position)(Graphics.Collage.rotate(Core.toRadians(opponent.direction + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
-         11,
-         20,
-         "/assets/images/icon-ac72.png")))));
+         8,
+         19,
+         "/assets/images/monohull.png")))));
          return Graphics.Collage.group(_L.fromArray([hull
                                                     ,name]));
       }();
@@ -1114,10 +1113,10 @@ Elm.Render.Race.make = function (_elm) {
          var angles = renderPlayerAngles(player);
          var boatPath = A2(Game.containsSpell,
          "PoleInversion",
-         spells) ? "boat-pole-inversion" : "icon-ac72";
+         spells) ? "monohull-black" : "monohull";
          var hull = Graphics.Collage.rotate(Core.toRadians(player.direction + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
-         11,
-         20,
+         8,
+         19,
          _L.append("/assets/images/",
          _L.append(boatPath,".png")))));
          var movingPart = Graphics.Collage.move(player.position)(Graphics.Collage.group(_L.append(_L.fromArray([angles
