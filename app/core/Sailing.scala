@@ -23,7 +23,4 @@ object Sailing {
     y * 2
   }
 
-  def withInertia(previousSpeed: Double, targetSpeed: Double): Double =
-    previousSpeed + (targetSpeed - previousSpeed) * 0.02
-
 }

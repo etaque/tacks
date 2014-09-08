@@ -31,6 +31,8 @@ case class PlayerState (
   windAngle: Double,
   windOrigin: Double,
   windSpeed: Double,
+  upwindVmg: Double,
+  downwindVmg: Double,
   controlMode: ControlMode,
   tackTarget: Option[Double],
   crossedGates: Seq[DateTime],
@@ -54,7 +56,7 @@ case class PlayerState (
 
 object PlayerState {
   def initial(name: String) = PlayerState(
-    DateTime.now, name, (0,0), 0, 0, 0, 0, 0,
+    DateTime.now, name, (0,0), 0, 0, 0, 0, 0, 0, 0,
     FixedHeading, None, Seq(), Some(StartLine), None, Seq())
 }
 

@@ -2,7 +2,7 @@ package actors
 
 
 import core.Sailing
-import core.steps.{GateCrossingStep, BoatMovingStep, BoatHandlingStep}
+import core.steps.{WindStep, GateCrossingStep, BoatMovingStep, BoatHandlingStep}
 
 import scala.concurrent.duration._
 import play.api.Play.current
@@ -49,6 +49,7 @@ class RaceActor(race: Race, master: User) extends Actor {
 
       val runStep =
         BoatHandlingStep.run(input) _ andThen
+          WindStep.run(wind) andThen
           BoatMovingStep.run(delta, race.course) andThen
           GateCrossingStep.run(previousStateMaybe, race.course, started) andThen
           withCollectedBuoy(race.course.boatWidth) andThen
