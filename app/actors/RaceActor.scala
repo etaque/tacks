@@ -1,6 +1,9 @@
 package actors
 
 
+import core.Sailing
+import core.steps.{GateCrossingStep, BoatMovingStep, BoatHandlingStep}
+
 import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -41,22 +44,24 @@ class RaceActor(race: Race, master: User) extends Actor {
 
   def receive = {
 
-    case PlayerUpdate(id, input) => {
+    case PlayerUpdate(id, input, delta) => {
       val previousStateMaybe = playersStates.get(id)
 
       val runStep =
-        withCollectedBuoy(race.course.boatWidth) _ andThen
-        withCastedSpell(id, input.spellCast) andThen
-        withCrossedGates(previousStateMaybe)
+        BoatHandlingStep.run(input) _ andThen
+          BoatMovingStep.run(delta, race.course) andThen
+          GateCrossingStep.run(previousStateMaybe, race.course, started) andThen
+          withCollectedBuoy(race.course.boatWidth) andThen
+          withCastedSpell(id, input.spellCast)
 
-      val newState = runStep(previousStateMaybe.fold(input.makeState)(input.updateState))
+      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial("TODO name")))
 
       playersStates += (id -> newState)
       if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
 
       if (input.startCountdown) startCountdown(byPlayerId = id)
 
-      sender ! raceUpdateFor(id)
+      sender ! raceUpdateFor(id, newState)
     }
 
     case PlayerQuit(id) => {
@@ -120,10 +125,6 @@ class RaceActor(race: Race, master: User) extends Actor {
     }
   }
 
-  private def withCrossedGates(previousStateMaybe: Option[PlayerState])(state: PlayerState): PlayerState = {
-    previousStateMaybe.fold(state)(state.updateCrossedGates(race.course, started))
-  }
-
   private def updateSpells() = {
     spellCasts = spellCasts.filterNot(_.isExpired)
   }
@@ -138,14 +139,13 @@ class RaceActor(race: Race, master: User) extends Actor {
     }
   }
 
-  private def raceUpdateFor(playerId: String) = {
+  private def raceUpdateFor(playerId: String, playerState: PlayerState) = {
     val ps = playersStates.get(playerId)
     RaceUpdate(
       now = DateTime.now,
       startTime = startTime,
       course = None, // already transmitted in initial update
-      crossedGates = ps.map(_.crossedGates).getOrElse(Nil),
-      nextGate = ps.flatMap(_.nextGate),
+      playerState = Some(playerState),
       wind = wind,
       opponents = playersStates.toSeq.filterNot(_._1 == playerId).map(_._2),
       leaderboard = leaderboard,

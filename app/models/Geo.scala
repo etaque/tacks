@@ -32,6 +32,13 @@ object Geo {
 
   def ensure360(d: Double): Double = (d + 360) % 360
 
+  def angleBetween(a1: Double, a2: Double): Double = {
+    val delta = a1 - a2
+    if (delta > 180) delta - 360
+    else if (delta <= -180) delta + 360
+    else delta
+  }
+
   implicit val pointFormat: Format[Point] = utils.JsonFormats.tuple2Format[Double,Double]
   implicit val boxFormat: Format[Box] = utils.JsonFormats.tuple2Format[Point,Point]
 }

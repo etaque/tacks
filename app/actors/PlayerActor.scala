@@ -1,5 +1,7 @@
 package actors
 
+import org.joda.time.DateTime
+
 import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.{Props, Actor, ActorRef}
@@ -9,10 +11,17 @@ import models.{PlayerInput, PlayerUpdate}
 
 class PlayerActor(id: String, raceActor: ActorRef, out: ActorRef) extends Actor {
 
+  var lastUpdate = DateTime.now
+
   def receive = {
     case pi: PlayerInput => {
       implicit val timeout = Timeout(1.second)
-      (raceActor ? PlayerUpdate(id, pi)).map(out ! _)
+      val now = DateTime.now
+      val delta = now.getMillis - lastUpdate.getMillis
+      (raceActor ? PlayerUpdate(id, pi, delta)).map { raceUpdate =>
+        lastUpdate = now
+        out ! raceUpdate
+      }
     }
   }
 
