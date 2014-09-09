@@ -5,6 +5,13 @@ import models.{Geo, PlayerState, Course}
 
 object BoatMovingStep {
 
+  /**
+   * Updates player velocity and position
+   * @param delta time elapsed in ms
+   * @param course for grounding detection
+   * @param state to update
+   * @return updated player state
+   */
   def run(delta: Long, course: Course)(state: PlayerState): PlayerState = {
 
     val velocity = withInertia(state.velocity, Sailing.ac72Speed(state.windSpeed, state.windAngle))

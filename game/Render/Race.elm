@@ -29,14 +29,14 @@ renderGate gate markRadius isNext =
 
 renderPlayerAngles : Player -> Form
 renderPlayerAngles player =
-  let windOriginRadians = toRadians (player.direction - player.windAngle)
+  let windOriginRadians = toRadians (player.heading - player.windAngle)
       windMarker = polygon [(0,4),(-4,-4),(4,-4)]
         |> filled white
         |> rotate (windOriginRadians + pi/2)
         |> move (fromPolar (25, windOriginRadians))
         |> alpha 0.5
       windAngleText = (show (abs (round player.windAngle))) ++ "&deg;" |> baseText
-        |> (if player.controlMode == FixedWindAngle then line Under else id)
+        |> (if player.controlMode == "FixedWindAngle" then line Under else id)
         |> centered |> toForm
         |> move (fromPolar (25, windOriginRadians + pi))
         |> alpha 0.5
@@ -60,7 +60,7 @@ renderPlayer : Player -> [Spell] -> Form
 renderPlayer player spells =
   let boatPath = if(containsSpell "PoleInversion" spells) then "monohull-black" else "monohull"
       hull = image 8 19 ("/assets/images/" ++ boatPath ++ ".png") |> toForm
-        |> rotate (toRadians (player.direction + 90))
+        |> rotate (toRadians (player.heading + 90))
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin
       -- fog = oval (100 + (mod (round (fst player.position)) 100)) 180
@@ -73,13 +73,13 @@ renderPlayer player spells =
         |> alpha 0.8
       fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
       movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
-      wake = renderWake player.wake
+      wake = renderWake [] --player.wake
   in group [movingPart, wake]
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
   let hull = image 8 19 "/assets/images/monohull.png" |> toForm
-        |> rotate (toRadians (opponent.direction + 90))
+        |> rotate (toRadians (opponent.heading + 90))
         |> move opponent.position
         |> alpha 0.5
       name = opponent.name |> baseText |> centered |> toForm
@@ -134,9 +134,9 @@ renderGateLaylines vmg windOrigin gate =
 renderLaylines : Player -> Course -> Maybe Form
 renderLaylines player course =
   case player.nextGate of
-    Just Upwind   -> Just <| renderGateLaylines player.upwindVmg player.windOrigin course.upwind
-    Just Downwind -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
-    _             -> Nothing
+    Just "Upwind"   -> Just <| renderGateLaylines player.upwindVmg player.windOrigin course.upwind
+    Just "Downwind" -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
+    _               -> Nothing
 
 formatCountdown : Time -> String
 formatCountdown c =
@@ -152,7 +152,7 @@ renderCountdown gameState player =
         Just c ->
           if c > 0
             then Just <| messageBuilder (formatCountdown (getCountdown gameState.countdown))
-            else if player.nextGate == Just StartLine
+            else if player.nextGate == Just "StartLine"
               then Just <| messageBuilder "Go!"
               else Nothing
         Nothing ->
@@ -167,15 +167,15 @@ renderFinished course player =
     _       -> Nothing
 
 renderRace : GameState -> Form
-renderRace ({player,opponents,course,buoys,triggeredSpells,now} as gameState) =
+renderRace ({player,opponents,course,buoys,triggeredSpells,now,center} as gameState) =
   let downwindOrStartLine = if isEmpty player.crossedGates
         then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
-        else renderGate course.downwind course.markRadius (player.nextGate == Just Downwind)
+        else renderGate course.downwind course.markRadius (player.nextGate == Just "Downwind")
       justForms =
         [ renderBounds gameState.course.bounds
         , renderIslands gameState
         , downwindOrStartLine
-        , renderGate course.upwind course.markRadius (player.nextGate == Just Upwind)
+        , renderGate course.upwind course.markRadius (player.nextGate == Just "Upwind")
         , group (map renderOpponent opponents)
         , renderGusts gameState.wind
         , renderPlayer player triggeredSpells
@@ -186,5 +186,5 @@ renderRace ({player,opponents,course,buoys,triggeredSpells,now} as gameState) =
         , renderLaylines player course
         , renderFinished gameState.course player
         ]
-  in  group (justForms ++ (compact maybeForms)) |> move (neg player.center)
+  in  group (justForms ++ (compact maybeForms)) |> move (neg center)
 

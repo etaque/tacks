@@ -20,11 +20,19 @@ object Geo {
     x > left && x < right && y > bottom && y < top
   }
 
-  def movePoint(p: Point, msDelta: Long, velocity: Double, direction: Double): Point = {
+  /**
+   * Move on!
+   * @param p initial position
+   * @param milliseconds time elapsed in ms
+   * @param velocity in m/s
+   * @param heading in degrees
+   * @return next position
+   */
+  def movePoint(p: Point, milliseconds: Long, velocity: Double, heading: Double): Point = {
     val (x,y) = p
-    val rad = angleToRadians(direction)
-    val x1 = x + msDelta * velocity * cos(rad)
-    val y1 = y + msDelta * velocity * sin(rad)
+    val rad = angleToRadians(heading)
+    val x1 = x + milliseconds * 0.001 * velocity * cos(rad)
+    val y1 = y + milliseconds * 0.001 * velocity * sin(rad)
     (x1, y1)
   }
 

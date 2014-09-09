@@ -17,7 +17,7 @@
   var ws = new WebSocket("@websocketUrlBase/races/" + raceId + "/play/socket/" + playerId);
 
   var gameDiv = document.getElementById('game');
-  var input = @Html(Json.toJson(RaceUpdate.initial(race)).toString());
+  var input = @Html(Json.toJson(RaceUpdate.initial(race).copy(playerState = Some(PlayerState.initial(playerName)))).toString());
   var game = Elm.embed(Elm.Main, gameDiv, { raceInput: input });
 
   ws.onmessage = function(event) {
@@ -31,7 +31,7 @@
   };
 
   ws.onopen = function() {
-    game.ports.raceOutput.subscribe(function(state) {
+    game.ports.playerOutput.subscribe(function(state) {
       state.name = name;
       ws.send(JSON.stringify(state))
     });

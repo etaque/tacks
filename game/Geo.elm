@@ -31,9 +31,9 @@ toBox : Point -> Float -> Float -> (Point,Point)
 toBox (x,y) w h =
   ((x + w/2, y + h/2), (x - w/2, y - h/2))
 
-movePoint : Point -> Time -> Float -> Float -> Point
-movePoint (x,y) delta velocity direction =
-  let angle = Core.toRadians direction
-      x' = x + delta * velocity * cos angle
-      y' = y + delta * velocity * sin angle
-  in (x',y')
+--movePoint : Point -> Time -> Float -> Float -> Point
+--movePoint (x,y) delta velocity direction =
+--  let angle = Core.toRadians direction
+--      x' = x + delta * velocity * cos angle
+--      y' = y + delta * velocity * sin angle
+--  in (x',y')

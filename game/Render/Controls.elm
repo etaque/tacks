@@ -42,27 +42,27 @@ renderLapsCount (w,h) course player =
       |> toForm
       |> move (w / 2 - 50, h / 2 - 30)
 
-renderPolar : Player -> (Float,Float) -> Form
-renderPolar player (w,h) =
-  let
-    absWindAngle = abs player.windAngle
-    anglePoint a = fromPolar ((polarVelocity player.windSpeed a), toRadians a)
-    points = map anglePoint [0..180]
-    maxSpeed = 100
-    polar = path points |> traced (solid white)
-    yAxis = segment (0,(maxSpeed/2)) (0,-maxSpeed) |> traced (solid white) |> alpha 0.6
-    xAxis = segment (0,0) (maxSpeed,0) |> traced (solid white) |> alpha 0.6
-    playerPoint = anglePoint absWindAngle
-    playerMark = circle 2 |> filled red |> move playerPoint
-    playerSegment = segment (0,0) playerPoint |> traced (solid white) |> alpha 0.3
-    windOriginText = ((show (round absWindAngle)) ++ "&deg;")
-      |> baseText |> centered |> toForm
-      |> move (add playerPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
-    playerProjection = segment playerPoint (0, snd playerPoint) |> traced (dotted white)
-    legend = "PLAYER\nSPEED" |> baseText |> centered |> toForm |> move (maxSpeed/2, -maxSpeed * 0.9)
-  in
-    group [yAxis, xAxis, polar, playerProjection, playerMark, playerSegment, windOriginText, legend]
-      |> move (-w/2 + 20, h/2 - maxSpeed/2 - 20)
+--renderPolar : Player -> (Float,Float) -> Form
+--renderPolar player (w,h) =
+--  let
+--    absWindAngle = abs player.windAngle
+--    anglePoint a = fromPolar ((polarVelocity player.windSpeed a), toRadians a)
+--    points = map anglePoint [0..180]
+--    maxSpeed = 100
+--    polar = path points |> traced (solid white)
+--    yAxis = segment (0,(maxSpeed/2)) (0,-maxSpeed) |> traced (solid white) |> alpha 0.6
+--    xAxis = segment (0,0) (maxSpeed,0) |> traced (solid white) |> alpha 0.6
+--    playerPoint = anglePoint absWindAngle
+--    playerMark = circle 2 |> filled red |> move playerPoint
+--    playerSegment = segment (0,0) playerPoint |> traced (solid white) |> alpha 0.3
+--    windOriginText = ((show (round absWindAngle)) ++ "&deg;")
+--      |> baseText |> centered |> toForm
+--      |> move (add playerPoint (fromPolar (20, toRadians absWindAngle))) |> alpha 0.6
+--    playerProjection = segment playerPoint (0, snd playerPoint) |> traced (dotted white)
+--    legend = "PLAYER\nSPEED" |> baseText |> centered |> toForm |> move (maxSpeed/2, -maxSpeed * 0.9)
+--  in
+--    group [yAxis, xAxis, polar, playerProjection, playerMark, playerSegment, windOriginText, legend]
+--      |> move (-w/2 + 20, h/2 - maxSpeed/2 - 20)
 
 renderWindWheel : Wind -> Player -> (Float,Float) -> Form
 renderWindWheel wind player (w,h) =
@@ -152,16 +152,16 @@ renderHelp countdownMaybe (w,h) =
     Nothing
 
 renderControls : GameState -> (Float,Float) -> Form
-renderControls ({wind,player,opponents,course,playerSpell,now,countdown} as gameState) dims =
+renderControls ({wind,player,opponents,course,now,countdown} as gameState) dims =
   let justForms =
         [ renderLapsCount dims course player
-        , renderPolar player dims
+        --, renderPolar player dims
         , renderWindWheel wind player dims
         ]
-      downwindHint = if (player.nextGate == Just Downwind)
+      downwindHint = if (player.nextGate == Just "Downwind")
         then renderGateHint course.downwind dims player.center now
         else Nothing
-      upwindHint = if (player.nextGate == Just Upwind)
+      upwindHint = if (player.nextGate == Just "Upwind")
         then renderGateHint course.upwind dims player.center now
         else Nothing
       maybeForms =
@@ -169,7 +169,7 @@ renderControls ({wind,player,opponents,course,playerSpell,now,countdown} as game
         , upwindHint
         , renderHelp gameState.countdown dims
         , renderLeaderboard gameState.leaderboard dims
-        , case playerSpell of
+        , case player.ownSpell of
             Just spell -> Just (renderStockSpell spell dims)
             Nothing -> Nothing
         ]

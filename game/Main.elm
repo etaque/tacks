@@ -22,18 +22,30 @@ port raceInput : Signal
               , bounds: ((Float,Float),(Float,Float))
               , boatWidth: Float
               }
-  , crossedGates: [Float]
-  , nextGate: Maybe String
+  , player: Maybe
+      { position : (Float,Float)
+      , heading: Float
+      , velocity: Float
+      , windAngle: Float
+      , windOrigin: Float
+      , windSpeed: Float
+      , downwindVmg: Float
+      , upwindVmg: Float
+      , controlMode: String
+      , tackTarget: Maybe Float
+      , crossedGates: [Float]
+      , nextGate: Maybe String
+      , ownSpell: Maybe { kind: String }
+      }
   , wind:
       { origin : Float
       , speed : Float
       , gusts : [{ position: (Float,Float), angle: Float, speed: Float, radius: Float }]
       }
-  , opponents: [{ position: (Float,Float), direction: Float, velocity: Float, name: String }]
+  , opponents: [{ position: (Float,Float), heading: Float, velocity: Float, name: String }]
   , buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}]
-  , playerSpell: Maybe { kind: String }
-  , triggeredSpells: [{ kind: String }]
   , leaderboard: [String]
+  , triggeredSpells: [{ kind: String }]
   , isMaster: Bool
   }
 
@@ -41,27 +53,21 @@ clock : Signal Float
 clock = inSeconds <~ fps 30
 
 input : Signal Inputs.Input
-input = sampleOn clock (lift6 Inputs.Input clock Inputs.chrono Inputs.keyboardInput
-                              Inputs.mouseInput Window.dimensions raceInput)
+input = sampleOn clock (lift6 Inputs.Input
+  clock Inputs.chrono Inputs.keyboardInput Inputs.mouseInput Window.dimensions raceInput)
 
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
 
-port raceOutput : Signal
-  { position : (Float, Float)
-  , direction: Float
-  , velocity: Float
+port playerOutput : Signal
+  { arrows: { x:Int, y:Int }
+  , lock: Bool
+  , tack: Bool
+  , subtleTurn: Bool
   , spellCast: Bool
   , startCountdown: Bool
   }
-port raceOutput = lift (playerToRaceOutput . .player) gameState
 
-playerToRaceOutput ({position, direction, velocity, spellCast, startCountdown} as player) =
-  { position = position
-  , direction = direction
-  , velocity = velocity
-  , spellCast = spellCast
-  , startCountdown = startCountdown
-  }
+port playerOutput = lift .keyboardInput input
 
 main = lift2 R.renderAll Window.dimensions gameState

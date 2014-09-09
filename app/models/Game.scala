@@ -8,11 +8,12 @@ import play.api.libs.functional.syntax._
 
 import Geo._
 
+case class Arrows(x: Int, y: Int)
 
 case class PlayerInput (
   name: String,
   tack: Boolean,
-  turn: Int,
+  arrows: Arrows,
   subtleTurn: Boolean,
   lock: Boolean,
   spellCast: Boolean,
@@ -23,7 +24,6 @@ case object FixedHeading extends ControlMode
 case object FixedAngle extends ControlMode
 
 case class PlayerState (
-  at: DateTime,
   name: String,
   position: Point,
   heading: Double,
@@ -37,8 +37,7 @@ case class PlayerState (
   tackTarget: Option[Double],
   crossedGates: Seq[DateTime],
   nextGate: Option[GateLocation],
-  ownSpell: Option[Spell] = None,
-  triggeredSpells: Seq[Spell] = Seq()
+  ownSpell: Option[Spell] = None
 ) {
 
   def isTackTargetReached: Boolean = (tackTarget, controlMode) match {
@@ -56,8 +55,8 @@ case class PlayerState (
 
 object PlayerState {
   def initial(name: String) = PlayerState(
-    DateTime.now, name, (0,0), 0, 0, 0, 0, 0, 0, 0,
-    FixedHeading, None, Seq(), Some(StartLine), None, Seq())
+    name, (0,0), 0, 0, 0, 0, 0, 0, 0,
+    FixedHeading, None, Seq(), Some(StartLine), None)
 }
 
 case class PlayerUpdate(id: String, input: PlayerInput, delta: Long)
@@ -70,7 +69,6 @@ case class RaceUpdate(
   wind: Wind,
   opponents: Seq[PlayerState] = Seq(),
   buoys: Seq[Buoy] = Seq(),
-  playerSpell: Option[Spell] = None,
   triggeredSpells: Seq[Spell] = Seq(),
   leaderboard: Seq[String] = Seq(),
   isMaster: Boolean = false
@@ -119,19 +117,35 @@ object JsonFormats {
   import Buoy.buoyFormat
   import Buoy.spellFormat
 
-  implicit val playerStateFormat: Format[PlayerState] = Json.format[PlayerState]
+  implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
+
+  implicit val playerStateFormat: Format[PlayerState] = (
+    (__ \ 'name).format[String] and
+      (__ \ 'position).format[Geo.Point] and
+      (__ \ 'heading).format[Double] and
+      (__ \ 'velocity).format[Double] and
+      (__ \ 'windAngle).format[Double] and
+      (__ \ 'windOrigin).format[Double] and
+      (__ \ 'windSpeed).format[Double] and
+      (__ \ 'upwindVmg).format[Double] and
+      (__ \ 'downwindVmg).format[Double] and
+      (__ \ 'controlMode).format[ControlMode] and
+      (__ \ 'tackTarget).format[Option[Double]] and
+      (__ \ 'crossedGates).format[Seq[DateTime]] and
+      (__ \ 'nextGate).format[Option[GateLocation]] and
+      (__ \ 'ownSpell).format[Option[Spell]]
+    )(PlayerState.apply, unlift(PlayerState.unapply))
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
     (__ \ 'now).format[DateTime] and
       (__ \ 'startTime).format[Option[DateTime]] and
       (__ \ 'course).format[Option[Course]] and
-      (__ \ 'playerState).format[Option[PlayerState]] and
+      (__ \ 'player).format[Option[PlayerState]] and
       (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[PlayerState]] and
       (__ \ 'buoys).format[Seq[Buoy]] and
-      (__ \ 'playerSpell).format[Option[Spell]] and
       (__ \ 'triggeredSpells).format[Seq[Spell]] and
       (__ \ 'leaderboard).format[Seq[String]] and
       (__ \ 'isMaster).format[Boolean]

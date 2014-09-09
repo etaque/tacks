@@ -20,11 +20,11 @@ Task: Redefine `UserInput` to include all of the information you need.
 
 type UserArrows = { x:Int, y:Int }
 
-type KeyboardInput = 
+type KeyboardInput =
   { arrows: UserArrows
-  , lockAngle: Bool
+  , lock: Bool
   , tack: Bool
-  , fineTurn: Bool
+  , subtleTurn: Bool
   , spellCast: Bool
   , startCountdown: Bool
   }
@@ -35,12 +35,10 @@ type RaceInput =
   { now: Time
   , startTime: Maybe Time
   , course: Maybe Game.Course
-  , crossedGates: [Time]
-  , nextGate: Maybe String
+  , player: Maybe Game.Player
   , wind: Game.Wind
   , opponents: [Game.Opponent]
   , buoys: [Game.Buoy]
-  , playerSpell: Maybe Game.Spell
   , triggeredSpells: [Game.Spell]
   , leaderboard: [String]
   , isMaster: Bool
@@ -50,7 +48,7 @@ mouseInput : Signal MouseInput
 mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.position
 
 keyboardInput : Signal KeyboardInput
-keyboardInput = lift6 KeyboardInput 
+keyboardInput = lift6 KeyboardInput
   Keyboard.arrows Keyboard.enter Keyboard.space Keyboard.shift
   (Keyboard.isDown (Char.toCode 'S')) (Keyboard.isDown (Char.toCode 'C'))
 

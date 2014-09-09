@@ -141,7 +141,6 @@ class RaceActor(race: Race, master: User) extends Actor {
   }
 
   private def raceUpdateFor(playerId: String, playerState: PlayerState) = {
-    val ps = playersStates.get(playerId)
     RaceUpdate(
       now = DateTime.now,
       startTime = startTime,
@@ -151,7 +150,6 @@ class RaceActor(race: Race, master: User) extends Actor {
       opponents = playersStates.toSeq.filterNot(_._1 == playerId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,
-      playerSpell = ps.flatMap(_.ownSpell),
       triggeredSpells = spellCasts.filter(_.to.contains(playerId)).map(_.spell),
       isMaster = master.id.stringify == playerId
     )

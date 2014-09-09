@@ -5,7 +5,7 @@ import models._
 object BoatHandlingStep {
 
   def run(input: PlayerInput)(state: PlayerState): PlayerState = {
-    val turned = input.turn != 0
+    val turned = input.arrows.x != 0
     val tackTarget = if (turned) None else getTackTarget(state, input.tack)
     val turn = getTurn(tackTarget, state, input)
     val heading = Geo.ensure360(state.heading + turn) // TODO inversion spell
@@ -31,7 +31,7 @@ object BoatHandlingStep {
   }
 
   def getTurn(tackTarget: Option[Double], state: PlayerState, input: PlayerInput): Double = {
-    (tackTarget, state.controlMode, input.turn) match {
+    (tackTarget, state.controlMode, input.arrows.x) match {
       case (Some(t), FixedHeading, _) => {
         val maxTurn = Seq(2.0, Math.abs(state.heading - t)).min
         if (Geo.ensure360(state.heading - t) > 180) maxTurn else -maxTurn
