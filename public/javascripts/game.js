@@ -548,7 +548,7 @@ Elm.Render.Race.make = function (_elm) {
                case "Nothing":
                return gameState.isMaster ? Maybe.Just(messageBuilder(Render.Utils.startCountdownMessage)) : Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 153 and 163");
+            "between lines 175 and 185");
          }();
       }();
    });
@@ -564,7 +564,7 @@ Elm.Render.Race.make = function (_elm) {
                     _v3._0,
                     _v3._1));}
                _E.Case($moduleName,
-               "on line 133, column 26 to 62");
+               "on line 155, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -703,7 +703,7 @@ Elm.Render.Race.make = function (_elm) {
                          _v13._1._1)));}
                     break;}
                _E.Case($moduleName,
-               "on line 56, column 33 to 88");
+               "on line 78, column 33 to 88");
             }();
          };
          var pairs = List.isEmpty(wake) ? _L.fromArray([]) : Core.indexedMap(F2(function (v0,
@@ -736,11 +736,43 @@ Elm.Render.Race.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 47 and 49");
+         "between lines 69 and 71");
       }();
    });
+   var vmgColorAndShape = function (player) {
+      return function () {
+         var s = 3;
+         var m = 3;
+         var a = Basics.abs(player.windAngle);
+         return _U.cmp(a,
+         90) < 0 ? _U.cmp(a,
+         player.upwindVmg - m) < 0 ? {ctor: "_Tuple2"
+                                     ,_0: Color.red
+                                     ,_1: A2(Graphics.Collage.rect,
+                                     s * 2,
+                                     s * 2)} : _U.cmp(a,
+         player.upwindVmg + m) > 0 ? {ctor: "_Tuple2"
+                                     ,_0: Color.orange
+                                     ,_1: Graphics.Collage.circle(s)} : {ctor: "_Tuple2"
+                                                                        ,_0: Color.green
+                                                                        ,_1: Graphics.Collage.circle(s)} : _U.cmp(a,
+         player.downwindVmg + m) > 0 ? {ctor: "_Tuple2"
+                                       ,_0: Color.red
+                                       ,_1: A2(Graphics.Collage.rect,
+                                       s * 2,
+                                       s * 2)} : _U.cmp(a,
+         player.downwindVmg - m) < 0 ? {ctor: "_Tuple2"
+                                       ,_0: Color.orange
+                                       ,_1: Graphics.Collage.circle(s)} : {ctor: "_Tuple2"
+                                                                          ,_0: Color.green
+                                                                          ,_1: Graphics.Collage.circle(s)};
+      }();
+   };
    var renderPlayerAngles = function (player) {
       return function () {
+         var $ = vmgColorAndShape(player),
+         vmgColor = $._0,
+         vmgShape = $._1;
          var windOriginRadians = Core.toRadians(player.heading - player.windAngle);
          var windMarker = Graphics.Collage.alpha(0.5)(Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
                                                                                              ,_0: 25
@@ -758,8 +790,13 @@ Elm.Render.Race.make = function (_elm) {
                                                                                                 ,_1: windOriginRadians + Basics.pi}))(Graphics.Collage.toForm(Text.centered((_U.eq(player.controlMode,
          "FixedAngle") ? Text.line(Text.Under) : Basics.id)(Render.Utils.baseText(_L.append(String.show(Basics.abs(Basics.round(player.windAngle))),
          "&deg;")))))));
+         var vmgIndicator = Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
+                                                                   ,_0: 25
+                                                                   ,_1: windOriginRadians + Basics.pi / 2}))(Graphics.Collage.group(_L.fromArray([Graphics.Collage.filled(vmgColor)(vmgShape)
+                                                                                                                                                 ,Graphics.Collage.outlined(Graphics.Collage.solid(Color.white))(vmgShape)])));
          return Graphics.Collage.group(_L.fromArray([windMarker
-                                                    ,windAngleText]));
+                                                    ,windAngleText
+                                                    ,vmgIndicator]));
       }();
    };
    var renderPlayer = F2(function (player,
@@ -886,6 +923,7 @@ Elm.Render.Race.make = function (_elm) {
    _elm.Render.Race.values = {_op: _op
                              ,renderStartLine: renderStartLine
                              ,renderGate: renderGate
+                             ,vmgColorAndShape: vmgColorAndShape
                              ,renderPlayerAngles: renderPlayerAngles
                              ,renderEqualityLine: renderEqualityLine
                              ,renderWake: renderWake
@@ -1088,11 +1126,11 @@ Elm.Render.Controls.make = function (_elm) {
                  "&deg;"))))));
                  return Graphics.Collage.alpha(0.8)(Graphics.Collage.move({ctor: "_Tuple2"
                                                                           ,_0: _v13._0 / 2 - 50
-                                                                          ,_1: _v13._1 / 2 - 120})(Graphics.Collage.group(_L.fromArray([c
-                                                                                                                                       ,windMarker
-                                                                                                                                       ,windOriginText
-                                                                                                                                       ,windSpeedText
-                                                                                                                                       ,legend]))));
+                                                                          ,_1: _v13._1 / 2 - 80})(Graphics.Collage.group(_L.fromArray([c
+                                                                                                                                      ,windMarker
+                                                                                                                                      ,windOriginText
+                                                                                                                                      ,windSpeedText
+                                                                                                                                      ,legend]))));
               }();}
          _E.Case($moduleName,
          "between lines 69 and 84");
@@ -2031,7 +2069,7 @@ Elm.Render.Utils.make = function (_elm) {
    });
    var baseText = function (s) {
       return Text.typeface(_L.fromArray(["Inconsolata"
-                                        ,"monospace"]))(Text.color(Color.white)(Text.height(15)(Text.toText(s))));
+                                        ,"monospace"]))(Text.height(15)(Text.toText(s)));
    };
    var fullScreenMessage = function (msg) {
       return Graphics.Collage.alpha(0.3)(Graphics.Collage.toForm(Text.centered(Text.color(Color.white)(Text.height(60)(Text.toText(String.toUpper(msg)))))));

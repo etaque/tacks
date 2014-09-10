@@ -81,7 +81,7 @@ renderWindWheel wind player (w,h) =
         |> baseText |> centered |> toForm
       legend = "WIND" |> baseText |> centered |> toForm |> move (0, -50)
 
-  in  group [c, windMarker, windOriginText, windSpeedText, legend] |> move (w/2 - 50, (h/2 - 120)) |> alpha 0.8
+  in  group [c, windMarker, windOriginText, windSpeedText, legend] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
 
 renderStockSpell : Spell -> (Float, Float) -> Form
 renderStockSpell spell (w,h) =

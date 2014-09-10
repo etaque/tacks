@@ -27,6 +27,20 @@ renderGate gate markRadius isNext =
       rightMark = circle markRadius |> filled colors.gateMark |> move right
   in  group [line, leftMark, rightMark]
 
+vmgColorAndShape : Player -> (Color, Shape)
+vmgColorAndShape player =
+  let a = (abs player.windAngle)
+      m = 3
+      s = 3
+  in  if a < 90 then
+        if | a < player.upwindVmg - m -> (red, rect (s*2) (s*2))
+           | a > player.upwindVmg + m -> (orange, circle s)
+           | otherwise                -> (green, circle s)
+      else
+        if | a > player.downwindVmg + m -> (red, rect (s*2) (s*2))
+           | a < player.downwindVmg - m -> (orange, circle s)
+           | otherwise                  -> (green, circle s)
+
 renderPlayerAngles : Player -> Form
 renderPlayerAngles player =
   let windOriginRadians = toRadians (player.heading - player.windAngle)
@@ -40,7 +54,11 @@ renderPlayerAngles player =
         |> centered |> toForm
         |> move (fromPolar (25, windOriginRadians + pi))
         |> alpha 0.5
-  in  group [windMarker, windAngleText]
+      (vmgColor,vmgShape) = vmgColorAndShape player
+      vmgIndicator = group [vmgShape |> filled vmgColor, vmgShape |> outlined (solid white)]
+        |> move (fromPolar(25, windOriginRadians + pi/2))
+
+  in  group [windMarker, windAngleText, vmgIndicator]
 
 renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =

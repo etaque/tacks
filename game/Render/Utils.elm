@@ -4,7 +4,7 @@ import String
 import Text
 
 helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n" ++
-  "↑ or ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
+  "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
 
 startCountdownMessage = "press C to start countdown (30s)"
 
@@ -30,7 +30,6 @@ baseText : String -> Text
 baseText s = s
   |> toText
   |> Text.height 15
-  |> Text.color white
   |> typeface ["Inconsolata", "monospace"]
 
 triangle : Float -> Bool -> Path
