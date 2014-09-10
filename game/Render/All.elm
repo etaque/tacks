@@ -16,5 +16,5 @@ renderAll (w,h) gameState =
       (w',h') = dims
       relativeForms = renderRace gameState
       absoluteForms = renderControls gameState dims
-      bg = rect w' h' |> filled colors.sand
+      bg = rect w' h' |> filled colors.seaBlue
   in  layers [collage w h [bg, group [relativeForms, absoluteForms]]]

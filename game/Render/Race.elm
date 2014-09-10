@@ -115,7 +115,8 @@ renderBounds box =
       h = snd ne - snd sw
       cw = (fst ne + fst sw) / 2
       ch = (snd ne + snd sw) / 2
-  in rect w h |> filled colors.seaBlue
+  in rect w h |> outlined (dashed white)
+              |> alpha 0.3
               |> move (cw, ch)
 
 renderGust : Wind -> Gust -> Form

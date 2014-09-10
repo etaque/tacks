@@ -450,7 +450,7 @@ Elm.Render.All.make = function (_elm) {
                  var $ = dims,
                  w$ = $._0,
                  h$ = $._1;
-                 var bg = Graphics.Collage.filled(Render.Utils.colors.sand)(A2(Graphics.Collage.rect,
+                 var bg = Graphics.Collage.filled(Render.Utils.colors.seaBlue)(A2(Graphics.Collage.rect,
                  w$,
                  h$));
                  var absoluteForms = A2(Render.Controls.renderControls,
@@ -548,7 +548,7 @@ Elm.Render.Race.make = function (_elm) {
                case "Nothing":
                return gameState.isMaster ? Maybe.Just(messageBuilder(Render.Utils.startCountdownMessage)) : Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 175 and 185");
+            "between lines 172 and 182");
          }();
       }();
    });
@@ -564,7 +564,7 @@ Elm.Render.Race.make = function (_elm) {
                     _v3._0,
                     _v3._1));}
                _E.Case($moduleName,
-               "on line 155, column 26 to 62");
+               "on line 152, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -656,9 +656,9 @@ Elm.Render.Race.make = function (_elm) {
          var ch = (Basics.snd(ne) + Basics.snd(sw)) / 2;
          return Graphics.Collage.move({ctor: "_Tuple2"
                                       ,_0: cw
-                                      ,_1: ch})(Graphics.Collage.filled(Render.Utils.colors.seaBlue)(A2(Graphics.Collage.rect,
+                                      ,_1: ch})(Graphics.Collage.alpha(0.3)(Graphics.Collage.outlined(Graphics.Collage.dashed(Color.white))(A2(Graphics.Collage.rect,
          w,
-         h)));
+         h))));
       }();
    };
    var renderBoatIcon = F2(function (boat,
@@ -703,7 +703,7 @@ Elm.Render.Race.make = function (_elm) {
                          _v13._1._1)));}
                     break;}
                _E.Case($moduleName,
-               "on line 78, column 33 to 88");
+               "on line 74, column 33 to 88");
             }();
          };
          var pairs = List.isEmpty(wake) ? _L.fromArray([]) : Core.indexedMap(F2(function (v0,
@@ -736,7 +736,7 @@ Elm.Render.Race.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 69 and 71");
+         "between lines 65 and 67");
       }();
    });
    var vmgColorAndShape = function (player) {
@@ -2085,7 +2085,7 @@ Elm.Render.Utils.make = function (_elm) {
                 148)};
    var startCountdownMessage = "press C to start countdown (30s)";
    var helpMessage = _L.append("←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n",
-   "↑ or ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell");
+   "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell");
    _elm.Render.Utils.values = {_op: _op
                               ,helpMessage: helpMessage
                               ,startCountdownMessage: startCountdownMessage
