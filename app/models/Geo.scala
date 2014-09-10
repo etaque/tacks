@@ -36,7 +36,7 @@ object Geo {
     (x1, y1)
   }
 
-  def angleToRadians(angle: Double): Double = toRadians(-angle - 90)
+  def angleToRadians(angle: Double): Double = toRadians(-angle + 90)
 
   def ensure360(d: Double): Double = (d + 360) % 360
 

@@ -152,17 +152,17 @@ renderHelp countdownMaybe (w,h) =
     Nothing
 
 renderControls : GameState -> (Float,Float) -> Form
-renderControls ({wind,player,opponents,course,now,countdown} as gameState) dims =
+renderControls ({wind,player,opponents,course,now,countdown,center} as gameState) dims =
   let justForms =
         [ renderLapsCount dims course player
         --, renderPolar player dims
         , renderWindWheel wind player dims
         ]
-      downwindHint = if (player.nextGate == Just "Downwind")
-        then renderGateHint course.downwind dims player.center now
+      downwindHint = if (player.nextGate == Just "DownwindGate")
+        then renderGateHint course.downwind dims center now
         else Nothing
-      upwindHint = if (player.nextGate == Just "Upwind")
-        then renderGateHint course.upwind dims player.center now
+      upwindHint = if (player.nextGate == Just "UpwindGate")
+        then renderGateHint course.upwind dims center now
         else Nothing
       maybeForms =
         [ downwindHint

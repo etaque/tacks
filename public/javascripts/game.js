@@ -179,6 +179,7 @@ Elm.Steps.make = function (_elm) {
    var Basics = Elm.Basics.make(_elm);
    var Color = Elm.Color.make(_elm);
    var Core = Elm.Core.make(_elm);
+   var Debug = Elm.Debug.make(_elm);
    var Game = Elm.Game.make(_elm);
    var Geo = Elm.Geo.make(_elm);
    var Graphics = Graphics || {};
@@ -208,6 +209,7 @@ Elm.Steps.make = function (_elm) {
             player = $.player,
             opponents = $.opponents,
             buoys = $.buoys,
+            wind = $.wind,
             triggeredSpells = $.triggeredSpells,
             leaderboard = $.leaderboard,
             isMaster = $.isMaster;
@@ -223,6 +225,7 @@ Elm.Steps.make = function (_elm) {
                                _v0.course,
                                Basics.id,
                                course)]
+                              ,["wind",wind]
                               ,["buoys",buoys]
                               ,["triggeredSpells"
                                ,triggeredSpells]
@@ -292,61 +295,100 @@ Elm.Steps.make = function (_elm) {
                                                 _v5._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
-                                 "between lines 110 and 123");
+                                 "between lines 112 and 125");
                               }();}
                          _E.Case($moduleName,
-                         "between lines 110 and 123");
+                         "between lines 112 and 125");
                       }();}
                  _E.Case($moduleName,
-                 "between lines 110 and 123");
+                 "between lines 112 and 125");
               }();}
          _E.Case($moduleName,
-         "between lines 110 and 123");
+         "between lines 112 and 125");
       }();
    });
-   var mouseStep = F2(function (_v18,
+   var moveStep = F5(function (frozen,
+   delta,
+   _v18,
+   dims,
    _v19) {
       return function () {
          return function () {
             return function () {
+               var newPosition = frozen ? A4(Geo.movePoint,
+               _v18.position,
+               delta,
+               _v18.velocity,
+               _v18.heading) : _v19.player.position;
+               var movedPlayer = _U.replace([["position"
+                                             ,newPosition]],
+               _v19.player);
+               var newCenter = A4(getCenterAfterMove,
+               _v18.position,
+               newPosition,
+               _v19.center,
+               Geo.floatify(dims));
+               return _U.replace([["player"
+                                  ,movedPlayer]
+                                 ,["center",newCenter]],
+               _v19);
+            }();
+         }();
+      }();
+   });
+   var mouseStep = F2(function (_v22,
+   _v23) {
+      return function () {
+         return function () {
+            return function () {
                var newCenter = function () {
-                  var _v22 = _v18.drag;
-                  switch (_v22.ctor)
+                  var _v26 = _v22.drag;
+                  switch (_v26.ctor)
                   {case "Just":
-                     switch (_v22._0.ctor)
+                     switch (_v26._0.ctor)
                        {case "_Tuple2":
                           return function () {
-                               var $ = _v18.mouse,
+                               var $ = _v22.mouse,
                                x = $._0,
                                y = $._1;
                                return A2(Geo.sub,
                                Geo.floatify({ctor: "_Tuple2"
-                                            ,_0: x - _v22._0._0
-                                            ,_1: _v22._0._1 - y}),
-                               _v19.center);
+                                            ,_0: x - _v26._0._0
+                                            ,_1: _v26._0._1 - y}),
+                               _v23.center);
                             }();}
                        break;
                      case "Nothing":
-                     return _v19.center;}
+                     return _v23.center;}
                   _E.Case($moduleName,
-                  "between lines 20 and 23");
+                  "between lines 22 and 25");
                }();
                return _U.replace([["center"
                                   ,newCenter]],
-               _v19);
+               _v23);
             }();
          }();
       }();
    });
    var stepGame = F2(function (input,
    gameState) {
-      return mouseStep(input.mouseInput)(A2(raceInputStep,
-      input.raceInput,
-      gameState));
+      return function () {
+         var previousState = gameState.player;
+         var frozen = _U.eq(input.raceInput.now,
+         gameState.now);
+         return mouseStep(input.mouseInput)(A4(moveStep,
+         frozen,
+         input.delta,
+         previousState,
+         input.windowInput)(A2(raceInputStep,
+         input.raceInput,
+         gameState)));
+      }();
    });
    _elm.Steps.values = {_op: _op
                        ,mouseStep: mouseStep
                        ,getCenterAfterMove: getCenterAfterMove
+                       ,moveStep: moveStep
                        ,raceInputStep: raceInputStep
                        ,stepGame: stepGame};
    return _elm.Steps.values;
@@ -551,12 +593,12 @@ Elm.Render.Race.make = function (_elm) {
          var _v7 = player.nextGate;
          switch (_v7.ctor)
          {case "Just": switch (_v7._0)
-              {case "Downwind":
+              {case "DownwindGate":
                  return Maybe.Just(A3(renderGateLaylines,
                    player.downwindVmg,
                    player.windOrigin,
                    course.downwind));
-                 case "Upwind":
+                 case "UpwindGate":
                  return Maybe.Just(A3(renderGateLaylines,
                    player.upwindVmg,
                    player.windOrigin,
@@ -702,7 +744,7 @@ Elm.Render.Race.make = function (_elm) {
          var windAngleText = Graphics.Collage.alpha(0.5)(Graphics.Collage.move(Basics.fromPolar({ctor: "_Tuple2"
                                                                                                 ,_0: 25
                                                                                                 ,_1: windOriginRadians + Basics.pi}))(Graphics.Collage.toForm(Text.centered((_U.eq(player.controlMode,
-         "FixedWindAngle") ? Text.line(Text.Under) : Basics.id)(Render.Utils.baseText(_L.append(String.show(Basics.abs(Basics.round(player.windAngle))),
+         "FixedAngle") ? Text.line(Text.Under) : Basics.id)(Render.Utils.baseText(_L.append(String.show(Basics.abs(Basics.round(player.windAngle))),
          "&deg;")))))));
          return Graphics.Collage.group(_L.fromArray([windMarker
                                                     ,windAngleText]));
@@ -810,7 +852,7 @@ Elm.Render.Race.make = function (_elm) {
             _v23.course.downwind,
             _v23.course.markRadius,
             _U.eq(_v23.player.nextGate,
-            Maybe.Just("Downwind")));
+            Maybe.Just("DownwindGate")));
             var justForms = _L.fromArray([renderBounds(_v23.course.bounds)
                                          ,renderIslands(_v23)
                                          ,downwindOrStartLine
@@ -818,7 +860,7 @@ Elm.Render.Race.make = function (_elm) {
                                          _v23.course.upwind,
                                          _v23.course.markRadius,
                                          _U.eq(_v23.player.nextGate,
-                                         Maybe.Just("Upwind")))
+                                         Maybe.Just("UpwindGate")))
                                          ,Graphics.Collage.group(A2(List.map,
                                          renderOpponent,
                                          _v23.opponents))
@@ -1132,16 +1174,16 @@ Elm.Render.Controls.make = function (_elm) {
       return function () {
          return function () {
             var upwindHint = _U.eq(_v29.player.nextGate,
-            Maybe.Just("Upwind")) ? A4(renderGateHint,
+            Maybe.Just("UpwindGate")) ? A4(renderGateHint,
             _v29.course.upwind,
             dims,
-            _v29.player.center,
+            _v29.center,
             _v29.now) : Maybe.Nothing;
             var downwindHint = _U.eq(_v29.player.nextGate,
-            Maybe.Just("Downwind")) ? A4(renderGateHint,
+            Maybe.Just("DownwindGate")) ? A4(renderGateHint,
             _v29.course.downwind,
             dims,
-            _v29.player.center,
+            _v29.center,
             _v29.now) : Maybe.Nothing;
             var maybeForms = _L.fromArray([downwindHint
                                           ,upwindHint
@@ -1367,7 +1409,7 @@ Elm.Game.make = function (_elm) {
                      ,origin: 0
                      ,speed: 0};
    var defaultPlayer = {_: {}
-                       ,controlMode: "FixedDirection"
+                       ,controlMode: "FixedHeading"
                        ,crossedGates: _L.fromArray([])
                        ,downwindVmg: 0
                        ,heading: 0
@@ -1575,40 +1617,59 @@ Elm.Geo.make = function (_elm) {
    var Text = Elm.Text.make(_elm);
    var Time = Elm.Time.make(_elm);
    var _op = {};
-   var toBox = F3(function (_v0,
-   w,
-   h) {
+   var movePoint = F4(function (_v0,
+   delta,
+   velocity,
+   direction) {
       return function () {
          switch (_v0.ctor)
          {case "_Tuple2":
+            return function () {
+                 var angle = Core.toRadians(direction);
+                 var x$ = _v0._0 + delta * 1.0e-3 * velocity * Basics.cos(angle);
+                 var y$ = _v0._1 + delta * 1.0e-3 * velocity * Basics.sin(angle);
+                 return {ctor: "_Tuple2"
+                        ,_0: x$
+                        ,_1: y$};
+              }();}
+         _E.Case($moduleName,
+         "between lines 36 and 39");
+      }();
+   });
+   var toBox = F3(function (_v4,
+   w,
+   h) {
+      return function () {
+         switch (_v4.ctor)
+         {case "_Tuple2":
             return {ctor: "_Tuple2"
                    ,_0: {ctor: "_Tuple2"
-                        ,_0: _v0._0 + w / 2
-                        ,_1: _v0._1 + h / 2}
+                        ,_0: _v4._0 + w / 2
+                        ,_1: _v4._1 + h / 2}
                    ,_1: {ctor: "_Tuple2"
-                        ,_0: _v0._0 - w / 2
-                        ,_1: _v0._1 - h / 2}};}
+                        ,_0: _v4._0 - w / 2
+                        ,_1: _v4._1 - h / 2}};}
          _E.Case($moduleName,
          "on line 32, column 4 to 42");
       }();
    });
-   var inBox = F2(function (_v4,
-   _v5) {
+   var inBox = F2(function (_v8,
+   _v9) {
       return function () {
-         switch (_v5.ctor)
+         switch (_v9.ctor)
          {case "_Tuple2":
-            switch (_v5._0.ctor)
+            switch (_v9._0.ctor)
               {case "_Tuple2":
-                 switch (_v5._1.ctor)
+                 switch (_v9._1.ctor)
                    {case "_Tuple2":
                       return function () {
-                           switch (_v4.ctor)
+                           switch (_v8.ctor)
                            {case "_Tuple2":
-                              return _U.cmp(_v4._0,
-                                _v5._1._0) > 0 && (_U.cmp(_v4._0,
-                                _v5._0._0) < 0 && (_U.cmp(_v4._1,
-                                _v5._1._1) > 0 && _U.cmp(_v4._1,
-                                _v5._0._1) < 0));}
+                              return _U.cmp(_v8._0,
+                                _v9._1._0) > 0 && (_U.cmp(_v8._0,
+                                _v9._0._0) < 0 && (_U.cmp(_v8._1,
+                                _v9._1._1) > 0 && _U.cmp(_v8._1,
+                                _v9._0._1) < 0));}
                            _E.Case($moduleName,
                            "on line 28, column 3 to 47");
                         }();}
@@ -1618,16 +1679,16 @@ Elm.Geo.make = function (_elm) {
          "on line 28, column 3 to 47");
       }();
    });
-   var distance = F2(function (_v16,
-   _v17) {
+   var distance = F2(function (_v20,
+   _v21) {
       return function () {
-         switch (_v17.ctor)
+         switch (_v21.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v16.ctor)
+                 switch (_v20.ctor)
                  {case "_Tuple2":
-                    return Basics.sqrt(Math.pow(_v16._0 - _v17._0,
-                      2) + Math.pow(_v16._1 - _v17._1,
+                    return Basics.sqrt(Math.pow(_v20._0 - _v21._0,
+                      2) + Math.pow(_v20._1 - _v21._1,
                       2));}
                  _E.Case($moduleName,
                  "on line 24, column 3 to 34");
@@ -1637,39 +1698,39 @@ Elm.Geo.make = function (_elm) {
       }();
    });
    var scale = F2(function (s,
-   _v24) {
-      return function () {
-         switch (_v24.ctor)
-         {case "_Tuple2":
-            return {ctor: "_Tuple2"
-                   ,_0: _v24._0 * s
-                   ,_1: _v24._1 * s};}
-         _E.Case($moduleName,
-         "on line 20, column 18 to 26");
-      }();
-   });
-   var neg = function (_v28) {
+   _v28) {
       return function () {
          switch (_v28.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple2"
-                   ,_0: 0 - _v28._0
-                   ,_1: 0 - _v28._1};}
+                   ,_0: _v28._0 * s
+                   ,_1: _v28._1 * s};}
+         _E.Case($moduleName,
+         "on line 20, column 18 to 26");
+      }();
+   });
+   var neg = function (_v32) {
+      return function () {
+         switch (_v32.ctor)
+         {case "_Tuple2":
+            return {ctor: "_Tuple2"
+                   ,_0: 0 - _v32._0
+                   ,_1: 0 - _v32._1};}
          _E.Case($moduleName,
          "on line 17, column 14 to 19");
       }();
    };
-   var sub = F2(function (_v32,
-   _v33) {
+   var sub = F2(function (_v36,
+   _v37) {
       return function () {
-         switch (_v33.ctor)
+         switch (_v37.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v32.ctor)
+                 switch (_v36.ctor)
                  {case "_Tuple2":
                     return {ctor: "_Tuple2"
-                           ,_0: _v33._0 - _v32._0
-                           ,_1: _v33._1 - _v32._1};}
+                           ,_0: _v37._0 - _v36._0
+                           ,_1: _v37._1 - _v36._1};}
                  _E.Case($moduleName,
                  "on line 14, column 22 to 36");
               }();}
@@ -1677,17 +1738,17 @@ Elm.Geo.make = function (_elm) {
          "on line 14, column 22 to 36");
       }();
    });
-   var add = F2(function (_v40,
-   _v41) {
+   var add = F2(function (_v44,
+   _v45) {
       return function () {
-         switch (_v41.ctor)
+         switch (_v45.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v40.ctor)
+                 switch (_v44.ctor)
                  {case "_Tuple2":
                     return {ctor: "_Tuple2"
-                           ,_0: _v41._0 + _v40._0
-                           ,_1: _v41._1 + _v40._1};}
+                           ,_0: _v45._0 + _v44._0
+                           ,_1: _v45._1 + _v44._1};}
                  _E.Case($moduleName,
                  "on line 11, column 22 to 36");
               }();}
@@ -1695,13 +1756,13 @@ Elm.Geo.make = function (_elm) {
          "on line 11, column 22 to 36");
       }();
    });
-   var floatify = function (_v48) {
+   var floatify = function (_v52) {
       return function () {
-         switch (_v48.ctor)
+         switch (_v52.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple2"
-                   ,_0: Basics.toFloat(_v48._0)
-                   ,_1: Basics.toFloat(_v48._1)};}
+                   ,_0: Basics.toFloat(_v52._0)
+                   ,_1: Basics.toFloat(_v52._1)};}
          _E.Case($moduleName,
          "on line 8, column 19 to 39");
       }();
@@ -1714,7 +1775,8 @@ Elm.Geo.make = function (_elm) {
                      ,scale: scale
                      ,distance: distance
                      ,inBox: inBox
-                     ,toBox: toBox};
+                     ,toBox: toBox
+                     ,movePoint: movePoint};
    return _elm.Geo.values;
 };Elm.Core = Elm.Core || {};
 Elm.Core.make = function (_elm) {
@@ -1766,7 +1828,7 @@ Elm.Core.make = function (_elm) {
                                     ,_1: list};
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 78 and 81");
+               "between lines 82 and 85");
             }();
          });
          return A3(List.foldl,
@@ -1784,7 +1846,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 71 and 73");
+         "between lines 75 and 77");
       }();
    });
    var getCountdown = function (maybeCountdown) {

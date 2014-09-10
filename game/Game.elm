@@ -34,7 +34,7 @@ type Course =
   , boatWidth: Float
   }
 
---data ControlMode = FixedDirection | FixedWindAngle
+--data ControlMode = FixedHeading | FixedWindAngle
 
 type Boat a = { a | position : Point, heading: Float, velocity: Float }
 
@@ -105,7 +105,7 @@ defaultPlayer =
   , windOrigin = 0
   , windSpeed = 0
   --, wake = []
-  , controlMode = "FixedDirection"
+  , controlMode = "FixedHeading"
   , tackTarget = Nothing
   , crossedGates = []
   , nextGate = Nothing

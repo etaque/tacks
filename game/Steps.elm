@@ -5,6 +5,8 @@ import Game (..)
 import Geo (..)
 import Core (..)
 
+import Debug
+
 {-- Part 3: Update the game ---------------------------------------------------
 
 How does the game step from one state to another based on user input?
@@ -26,7 +28,7 @@ mouseStep ({drag, mouse} as mouseInput) ({center} as gameState) =
 --tackTargetReached player targetMaybe =
 --  case (targetMaybe, player.controlMode) of
 --    (Just target, FixedWindAngle) -> abs (target - player.windAngle) < 0.1
---    (Just target, FixedDirection) -> abs (target - player.direction) < 0.1
+--    (Just target, FixedHeading) -> abs (target - player.direction) < 0.1
 --    (Nothing, _)                  -> False
 
 --getTackTarget : Player -> Bool -> Maybe Float
@@ -40,7 +42,7 @@ mouseStep ({drag, mouse} as mouseInput) ({center} as gameState) =
 --    (Nothing, True) ->
 --      case player.controlMode of
 --        FixedWindAngle -> Just -player.windAngle
---        FixedDirection -> Just (ensure360 (player.windOrigin - player.windAngle))
+--        FixedHeading -> Just (ensure360 (player.windOrigin - player.windAngle))
 --    -- sinon, pas de cible
 --    (Nothing, False) -> Nothing
 
@@ -52,14 +54,14 @@ mouseStep ({drag, mouse} as mouseInput) ({center} as gameState) =
 --    -- virement en cours
 --    (Just target, _, _, _) ->
 --      case player.controlMode of
---        FixedDirection ->
+--        FixedHeading ->
 --          let maxTurn = minimum [2, (abs (player.direction - target))]
 --          in  if ensure360 (player.direction - target) > 180 then maxTurn else -maxTurn
 --        FixedWindAngle ->
 --          let maxTurn = minimum [2, (abs (player.windAngle - target))]
 --          in  if target > 90 || (target < 0 && target >= -90) then -maxTurn else maxTurn
 --    -- pas de virement ni de touche flèche, donc contrôle auto
---    (Nothing, FixedDirection, 0, 0) -> 0
+--    (Nothing, FixedHeading, 0, 0) -> 0
 --    (Nothing, FixedWindAngle, 0, 0) -> ensure360 ((player.windOrigin + player.windAngle) - player.direction)
 --    -- changement de direction via touche flèche
 --    (Nothing, _, x, y) -> if fineTurn then x else x * 3
@@ -74,7 +76,7 @@ mouseStep ({drag, mouse} as mouseInput) ({center} as gameState) =
 --      turnedPlayer = { player | direction <- direction,
 --                            windAngle <- windAngle }
 --      tackTargetAfterTurn = if tackTargetReached turnedPlayer tackTarget then Nothing else tackTarget
---      controlMode = if | forceTurn -> FixedDirection
+--      controlMode = if | forceTurn -> FixedHeading
 --                       | arrows.y > 0 || lockAngle -> FixedWindAngle
 --                       | otherwise -> turnedPlayer.controlMode
 --  in  { turnedPlayer | controlMode <- controlMode,
@@ -136,10 +138,15 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
 --                 center <- newCenter,
 --                 wake <- newWake }
 
---moveStep : Time -> Float -> (Int,Int) -> GameState -> GameState
---moveStep now delta dims gameState =
---  let playerMoved = movePlayer now delta gameState dims gameState.player
---  in  { gameState | player <- playerMoved }
+moveStep : Bool -> Time -> Player -> (Int,Int) -> GameState -> GameState
+moveStep frozen delta ({position,velocity,heading} as previous) dims ({player,center} as gameState) =
+  let newPosition = if frozen
+        then movePoint position delta velocity heading
+        else player.position
+      movedPlayer = { player | position <- newPosition }
+      newCenter = getCenterAfterMove position newPosition center (floatify dims)
+  in  { gameState | player <- movedPlayer,
+                    center <- newCenter }
 
 --gustEffect : Player -> Wind -> Gust -> (Float,Float)
 --gustEffect player wind gust =
@@ -182,10 +189,11 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep raceInput ({player} as gameState) =
   let { now, startTime, course, player, opponents, buoys,
-        triggeredSpells, leaderboard, isMaster } = raceInput
+        wind, triggeredSpells, leaderboard, isMaster } = raceInput
   in  { gameState | opponents <- opponents,
                     player <- maybe gameState.player id player,
                     course <- maybe gameState.course id course,
+                    wind <- wind,
                     buoys <- buoys,
                     triggeredSpells <- triggeredSpells,
                     leaderboard <- leaderboard,
@@ -195,5 +203,8 @@ raceInputStep raceInput ({player} as gameState) =
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  raceInputStep input.raceInput gameState
-     |> mouseStep input.mouseInput
+  let frozen = input.raceInput.now == gameState.now
+      previousState = gameState.player
+  in  raceInputStep input.raceInput gameState
+        |> moveStep frozen input.delta previousState input.windowInput
+        |> mouseStep input.mouseInput

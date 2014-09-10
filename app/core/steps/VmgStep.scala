@@ -22,10 +22,9 @@ object VmgStep {
   def getDownwindVmg(windSpeed: Double): Double = findVmgInInterval(windSpeed, 130 to 180)
 
   def findVmgInInterval(windSpeed: Double, angles: Range): Double = {
-    val vmgValues = angles.map(vmgValue(windSpeed, _))
-    val pairs = angles.zip(vmgValues)
+    val vmgValues = angles.map(a => (a, vmgValue(windSpeed, a)))
 
-    pairs.sortBy(_._2).headOption.map(_._1.toDouble).getOrElse(0)
+    vmgValues.sortBy(_._2).reverse.headOption.map(_._1.toDouble).getOrElse(0)
   }
 
 }

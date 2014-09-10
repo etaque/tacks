@@ -1,9 +1,6 @@
 package actors
 
 
-import core.Sailing
-import core.steps.{WindStep, GateCrossingStep, BoatMovingStep, BoatHandlingStep}
-
 import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -12,6 +9,7 @@ import play.api.Logger
 import akka.actor._
 import org.joda.time.DateTime
 import models._
+import core.steps._
 
 case class Start(at: DateTime)
 case class PlayerQuit(id: String)
@@ -40,7 +38,7 @@ class RaceActor(race: Race, master: User) extends Actor {
   def started = millisBeforeStart.exists(_ <= 0)
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
-  Akka.system.scheduler.schedule(0.seconds, 10.milliseconds, self, UpdateWind)
+  Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateWind)
 
   def receive = {
 
@@ -50,6 +48,7 @@ class RaceActor(race: Race, master: User) extends Actor {
       val runStep =
         BoatHandlingStep.run(input) _ andThen
           WindStep.run(wind) andThen
+          VmgStep.run andThen
           BoatMovingStep.run(delta, race.course) andThen
           GateCrossingStep.run(previousStateMaybe, race.course, started) andThen
           withCollectedBuoy(race.course.boatWidth) andThen
@@ -131,7 +130,7 @@ class RaceActor(race: Race, master: User) extends Actor {
   }
 
   private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
-    gusts.map(_.update(race.course, wind, at, previousWindUpdate)).map { gust =>
+    gusts.map(_.update(race.course, wind, previousWindUpdate, at)).map { gust =>
       if (Geo.inBox(gust.position, race.course.bounds)) {
         gust
       } else {

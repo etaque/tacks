@@ -36,7 +36,7 @@ renderPlayerAngles player =
         |> move (fromPolar (25, windOriginRadians))
         |> alpha 0.5
       windAngleText = (show (abs (round player.windAngle))) ++ "&deg;" |> baseText
-        |> (if player.controlMode == "FixedWindAngle" then line Under else id)
+        |> (if player.controlMode == "FixedAngle" then line Under else id)
         |> centered |> toForm
         |> move (fromPolar (25, windOriginRadians + pi))
         |> alpha 0.5
@@ -134,9 +134,9 @@ renderGateLaylines vmg windOrigin gate =
 renderLaylines : Player -> Course -> Maybe Form
 renderLaylines player course =
   case player.nextGate of
-    Just "Upwind"   -> Just <| renderGateLaylines player.upwindVmg player.windOrigin course.upwind
-    Just "Downwind" -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
-    _               -> Nothing
+    Just "UpwindGate"   -> Just <| renderGateLaylines player.upwindVmg player.windOrigin course.upwind
+    Just "DownwindGate" -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
+    _                   -> Nothing
 
 formatCountdown : Time -> String
 formatCountdown c =
@@ -170,12 +170,12 @@ renderRace : GameState -> Form
 renderRace ({player,opponents,course,buoys,triggeredSpells,now,center} as gameState) =
   let downwindOrStartLine = if isEmpty player.crossedGates
         then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
-        else renderGate course.downwind course.markRadius (player.nextGate == Just "Downwind")
+        else renderGate course.downwind course.markRadius (player.nextGate == Just "DownwindGate")
       justForms =
         [ renderBounds gameState.course.bounds
         , renderIslands gameState
         , downwindOrStartLine
-        , renderGate course.upwind course.markRadius (player.nextGate == Just "Upwind")
+        , renderGate course.upwind course.markRadius (player.nextGate == Just "UpwindGate")
         , group (map renderOpponent opponents)
         , renderGusts gameState.wind
         , renderPlayer player triggeredSpells
