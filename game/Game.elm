@@ -55,6 +55,7 @@ type Player = Boat
   , windSpeed: Float
   , downwindVmg: Float
   , upwindVmg: Float
+  , trail: [Point]
   , controlMode: String
   , tackTarget: Maybe Float
   , crossedGates: [Time]
@@ -104,7 +105,7 @@ defaultPlayer =
   , windAngle = 0
   , windOrigin = 0
   , windSpeed = 0
-  --, wake = []
+  , trail = []
   , controlMode = "FixedHeading"
   , tackTarget = Nothing
   , crossedGates = []

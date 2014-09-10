@@ -18,7 +18,9 @@ object BoatMovingStep {
     val nextPosition = Geo.movePoint(state.position, delta, velocity, state.heading)
     val position = if (isStuck(nextPosition, course)) state.position else nextPosition
 
-    state.copy(velocity = velocity, position = position)
+    val trail = (position +: state.trail).take(20)
+
+    state.copy(velocity = velocity, position = position, trail = trail)
   }
 
   def withInertia(previousSpeed: Double, targetSpeed: Double): Double =

@@ -33,6 +33,7 @@ case class PlayerState (
   windSpeed: Double,
   upwindVmg: Double,
   downwindVmg: Double,
+  trail: Seq[Point],
   controlMode: ControlMode,
   tackTarget: Option[Double],
   crossedGates: Seq[DateTime],
@@ -55,7 +56,7 @@ case class PlayerState (
 
 object PlayerState {
   def initial(name: String) = PlayerState(
-    name, (0,0), 0, 0, 0, 0, 0, 0, 0,
+    name, (0,0), 0, 0, 0, 0, 0, 0, 0, Seq(),
     FixedHeading, None, Seq(), Some(StartLine), None)
 }
 
@@ -123,7 +124,7 @@ object JsonFormats {
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'name).format[String] and
-      (__ \ 'position).format[Geo.Point] and
+      (__ \ 'position).format[Point] and
       (__ \ 'heading).format[Double] and
       (__ \ 'velocity).format[Double] and
       (__ \ 'windAngle).format[Double] and
@@ -131,6 +132,7 @@ object JsonFormats {
       (__ \ 'windSpeed).format[Double] and
       (__ \ 'upwindVmg).format[Double] and
       (__ \ 'downwindVmg).format[Double] and
+      (__ \ 'trail).format[Seq[Point]] and
       (__ \ 'controlMode).format[ControlMode] and
       (__ \ 'tackTarget).format[Option[Double]] and
       (__ \ 'crossedGates).format[Seq[DateTime]] and

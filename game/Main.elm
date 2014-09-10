@@ -31,6 +31,7 @@ port raceInput : Signal
       , windSpeed: Float
       , downwindVmg: Float
       , upwindVmg: Float
+      , trail: [(Float,Float)]
       , controlMode: String
       , tackTarget: Maybe Float
       , crossedGates: [Float]

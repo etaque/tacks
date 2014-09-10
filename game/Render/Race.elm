@@ -73,7 +73,7 @@ renderPlayer player spells =
         |> alpha 0.8
       fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
       movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
-      wake = renderWake [] --player.wake
+      wake = renderWake player.trail
   in group [movingPart, wake]
 
 renderOpponent : Opponent -> Form
