@@ -56,14 +56,17 @@ renderWake wake =
       renderSegment (i,(a,b)) = segment a b |> traced style |> alpha (opacityForIndex i)
   in  group (map renderSegment pairs)
 
+renderBoatIcon : Boat a -> String -> Form
+renderBoatIcon boat name =
+  image 12 20 ("/assets/images/" ++ name ++ ".png") |> toForm
+    |> rotate (toRadians (boat.heading + 90))
+
 renderPlayer : Player -> [Spell] -> Form
 renderPlayer player spells =
-  let boatPath = if(containsSpell "PoleInversion" spells) then "monohull-black" else "49er"
-      hull = image 12 20 ("/assets/images/" ++ boatPath ++ ".png") |> toForm
-        |> rotate (toRadians (player.heading + 90))
+  let boatPath = if(containsSpell "PoleInversion" spells) then "49er-black" else "49er"
+      hull = renderBoatIcon player boatPath
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin
-      -- fog = oval (100 + (mod (round (fst player.position)) 100)) 180
       fog1 = oval 190 250
         |> filled grey
         |> rotate (snd player.position / 60)
@@ -74,12 +77,11 @@ renderPlayer player spells =
       fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
       movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
       wake = renderWake player.trail
-  in group [movingPart, wake]
+  in group [wake, movingPart]
 
 renderOpponent : Opponent -> Form
 renderOpponent opponent =
-  let hull = image 8 19 "/assets/images/monohull.png" |> toForm
-        |> rotate (toRadians (opponent.heading + 90))
+  let hull = renderBoatIcon opponent "49er"
         |> move opponent.position
         |> alpha 0.5
       name = opponent.name |> baseText |> centered |> toForm

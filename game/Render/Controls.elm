@@ -38,9 +38,9 @@ renderLapsCount (w,h) course player =
       msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
   in msg
       |> baseText
-      |> rightAligned
+      |> leftAligned
       |> toForm
-      |> move (w / 2 - 50, h / 2 - 30)
+      |> move (-w / 2 + 50, h / 2 - 30)
 
 --renderPolar : Player -> (Float,Float) -> Form
 --renderPolar player (w,h) =
@@ -140,7 +140,7 @@ renderLeaderboard leaderboard (w,h) =
     indexedMap (\i n -> (show (i + 1) ++ ". " ++ n ++ "\n")) leaderboard
       |> concat
       |> baseText |> leftAligned |> toForm
-      |> move (w/2 - 50, 0)
+      |> move (-w/2 + 50, 0)
       |> Just
 
 renderHelp : Maybe Float -> (Float,Float) -> Maybe Form

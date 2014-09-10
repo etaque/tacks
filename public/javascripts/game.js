@@ -548,7 +548,7 @@ Elm.Render.Race.make = function (_elm) {
                case "Nothing":
                return gameState.isMaster ? Maybe.Just(messageBuilder(Render.Utils.startCountdownMessage)) : Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 151 and 161");
+            "between lines 153 and 163");
          }();
       }();
    });
@@ -564,7 +564,7 @@ Elm.Render.Race.make = function (_elm) {
                     _v3._0,
                     _v3._1));}
                _E.Case($moduleName,
-               "on line 131, column 26 to 62");
+               "on line 133, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -661,6 +661,14 @@ Elm.Render.Race.make = function (_elm) {
          h)));
       }();
    };
+   var renderBoatIcon = F2(function (boat,
+   name) {
+      return Graphics.Collage.rotate(Core.toRadians(boat.heading + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
+      12,
+      20,
+      _L.append("/assets/images/",
+      _L.append(name,".png")))));
+   });
    var renderOpponent = function (opponent) {
       return function () {
          var name = Graphics.Collage.alpha(0.3)(Graphics.Collage.move(A2(Geo.add,
@@ -668,10 +676,9 @@ Elm.Render.Race.make = function (_elm) {
          {ctor: "_Tuple2"
          ,_0: 0
          ,_1: -25}))(Graphics.Collage.toForm(Text.centered(Render.Utils.baseText(opponent.name)))));
-         var hull = Graphics.Collage.alpha(0.5)(Graphics.Collage.move(opponent.position)(Graphics.Collage.rotate(Core.toRadians(opponent.heading + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
-         8,
-         19,
-         "/assets/images/monohull.png")))));
+         var hull = Graphics.Collage.alpha(0.5)(Graphics.Collage.move(opponent.position)(A2(renderBoatIcon,
+         opponent,
+         "49er")));
          return Graphics.Collage.group(_L.fromArray([hull
                                                     ,name]));
       }();
@@ -775,18 +782,16 @@ Elm.Render.Race.make = function (_elm) {
          var angles = renderPlayerAngles(player);
          var boatPath = A2(Game.containsSpell,
          "PoleInversion",
-         spells) ? "monohull-black" : "49er";
-         var hull = Graphics.Collage.rotate(Core.toRadians(player.heading + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
-         12,
-         20,
-         _L.append("/assets/images/",
-         _L.append(boatPath,".png")))));
+         spells) ? "49er-black" : "49er";
+         var hull = A2(renderBoatIcon,
+         player,
+         boatPath);
          var movingPart = Graphics.Collage.move(player.position)(Graphics.Collage.group(_L.append(_L.fromArray([angles
                                                                                                                ,eqLine
                                                                                                                ,hull]),
          fog)));
-         return Graphics.Collage.group(_L.fromArray([movingPart
-                                                    ,wake]));
+         return Graphics.Collage.group(_L.fromArray([wake
+                                                    ,movingPart]));
       }();
    });
    var renderGate = F3(function (gate,
@@ -884,6 +889,7 @@ Elm.Render.Race.make = function (_elm) {
                              ,renderPlayerAngles: renderPlayerAngles
                              ,renderEqualityLine: renderEqualityLine
                              ,renderWake: renderWake
+                             ,renderBoatIcon: renderBoatIcon
                              ,renderPlayer: renderPlayer
                              ,renderOpponent: renderOpponent
                              ,renderBounds: renderBounds
@@ -961,7 +967,7 @@ Elm.Render.Controls.make = function (_elm) {
          switch (_v4.ctor)
          {case "_Tuple2":
             return List.isEmpty(leaderboard) ? Maybe.Nothing : Maybe.Just(Graphics.Collage.move({ctor: "_Tuple2"
-                                                                                                ,_0: _v4._0 / 2 - 50
+                                                                                                ,_0: (0 - _v4._0) / 2 + 50
                                                                                                 ,_1: 0})(Graphics.Collage.toForm(Text.leftAligned(Render.Utils.baseText(List.concat(A2(Core.indexedMap,
               F2(function (i,n) {
                  return _L.append(String.show(i + 1),
@@ -1108,8 +1114,8 @@ Elm.Render.Controls.make = function (_elm) {
                  _L.append("/",
                  String.show(course.laps))));
                  return Graphics.Collage.move({ctor: "_Tuple2"
-                                              ,_0: _v17._0 / 2 - 50
-                                              ,_1: _v17._1 / 2 - 30})(Graphics.Collage.toForm(Text.rightAligned(Render.Utils.baseText(msg))));
+                                              ,_0: (0 - _v17._0) / 2 + 50
+                                              ,_1: _v17._1 / 2 - 30})(Graphics.Collage.toForm(Text.leftAligned(Render.Utils.baseText(msg))));
               }();}
          _E.Case($moduleName,
          "between lines 37 and 43");

@@ -4,11 +4,12 @@ import models._
 
 object BoatHandlingStep {
 
-  def run(input: PlayerInput)(state: PlayerState): PlayerState = {
+  def run(input: PlayerInput, triggeredSpells: Seq[Spell])(state: PlayerState): PlayerState = {
     val turned = input.arrows.x != 0
     val tackTarget = if (turned) None else getTackTarget(state, input.tack)
     val turn = getTurn(tackTarget, state, input)
-    val heading = Geo.ensure360(state.heading + turn) // TODO inversion spell
+    val inverted = triggeredSpells.exists(_.kind == PoleInversion)
+    val heading = Geo.ensure360(state.heading + (if (inverted) -turn else turn))
     val windAngle = Geo.angleBetween(heading, state.windOrigin)
 
     val turnedState = state.copy(heading = heading, windAngle = windAngle)

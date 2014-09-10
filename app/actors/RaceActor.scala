@@ -46,7 +46,7 @@ class RaceActor(race: Race, master: User) extends Actor {
       val previousStateMaybe = playersStates.get(id)
 
       val runStep =
-        BoatHandlingStep.run(input) _ andThen
+        BoatHandlingStep.run(input, spellsOn(id)) _ andThen
           WindStep.run(wind) andThen
           VmgStep.run andThen
           BoatMovingStep.run(delta, race.course) andThen
@@ -54,7 +54,7 @@ class RaceActor(race: Race, master: User) extends Actor {
           withCollectedBuoy(race.course.boatWidth) andThen
           withCastedSpell(id, input.spellCast)
 
-      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial("TODO name")))
+      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(input.name)))
 
       playersStates += (id -> newState)
       if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
@@ -139,6 +139,10 @@ class RaceActor(race: Race, master: User) extends Actor {
     }
   }
 
+  private def spellsOn(playerId: String): Seq[Spell] = {
+   spellCasts.filter(_.to.contains(playerId)).map(_.spell)
+  }
+
   private def raceUpdateFor(playerId: String, playerState: PlayerState) = {
     RaceUpdate(
       now = DateTime.now,
@@ -149,7 +153,7 @@ class RaceActor(race: Race, master: User) extends Actor {
       opponents = playersStates.toSeq.filterNot(_._1 == playerId).map(_._2),
       leaderboard = leaderboard,
       buoys = buoys,
-      triggeredSpells = spellCasts.filter(_.to.contains(playerId)).map(_.spell),
+      triggeredSpells = spellsOn(playerId),
       isMaster = master.id.stringify == playerId
     )
   }

@@ -7,26 +7,36 @@ object BoatMovingStep {
 
   /**
    * Updates player velocity and position
-   * @param delta time elapsed in ms
+   * @param elapsed time elapsed in ms
    * @param course for grounding detection
    * @param state to update
    * @return updated player state
    */
-  def run(delta: Long, course: Course)(state: PlayerState): PlayerState = {
+  def run(elapsed: Long, course: Course)(state: PlayerState): PlayerState = {
 
-    val velocity = withInertia(state.velocity, Sailing.ac72Speed(state.windSpeed, state.windAngle))
-    val nextPosition = Geo.movePoint(state.position, delta, velocity, state.heading)
-    val position = if (isStuck(nextPosition, course)) state.position else nextPosition
+    val nextVelocity = withInertia(elapsed: Long, state.velocity, Sailing.ac72Speed(state.windSpeed, state.windAngle))
+    val nextPosition = Geo.movePoint(state.position, elapsed, nextVelocity, state.heading)
+    
+    val grounded = isGrounded(nextPosition, course)
+    
+    val velocity = if (grounded) 0 else nextVelocity
+    val position = if (grounded) state.position else nextPosition
 
     val trail = (position +: state.trail).take(20)
 
     state.copy(velocity = velocity, position = position, trail = trail)
   }
 
-  def withInertia(previousSpeed: Double, targetSpeed: Double): Double =
-    previousSpeed + (targetSpeed - previousSpeed) * 0.02
+  val maxAccel = 0.03
 
-  def isStuck(p: Geo.Point, course: Course): Boolean = {
+  def withInertia(elapsed: Long, previousVelocity: Double, targetVelocity: Double): Double = {
+    val velocityDelta = targetVelocity - previousVelocity
+    val accel = velocityDelta / elapsed
+    val realAccel = if (accel > 0) math.min(accel, maxAccel) else math.max(accel, -maxAccel)
+    previousVelocity + realAccel * elapsed
+  }
+
+  def isGrounded(p: Geo.Point, course: Course): Boolean = {
     val (dl, dr) = course.downwind.segment
     val (ul, ur) = course.upwind.segment
     val halfBoatWidth = course.boatWidth / 2
