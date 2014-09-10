@@ -58,8 +58,8 @@ renderWake wake =
 
 renderPlayer : Player -> [Spell] -> Form
 renderPlayer player spells =
-  let boatPath = if(containsSpell "PoleInversion" spells) then "monohull-black" else "monohull"
-      hull = image 8 19 ("/assets/images/" ++ boatPath ++ ".png") |> toForm
+  let boatPath = if(containsSpell "PoleInversion" spells) then "monohull-black" else "49er"
+      hull = image 12 20 ("/assets/images/" ++ boatPath ++ ".png") |> toForm
         |> rotate (toRadians (player.heading + 90))
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin

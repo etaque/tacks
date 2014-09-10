@@ -775,10 +775,10 @@ Elm.Render.Race.make = function (_elm) {
          var angles = renderPlayerAngles(player);
          var boatPath = A2(Game.containsSpell,
          "PoleInversion",
-         spells) ? "monohull-black" : "monohull";
+         spells) ? "monohull-black" : "49er";
          var hull = Graphics.Collage.rotate(Core.toRadians(player.heading + 90))(Graphics.Collage.toForm(A3(Graphics.Element.image,
-         8,
-         19,
+         12,
+         20,
          _L.append("/assets/images/",
          _L.append(boatPath,".png")))));
          var movingPart = Graphics.Collage.move(player.position)(Graphics.Collage.group(_L.append(_L.fromArray([angles
