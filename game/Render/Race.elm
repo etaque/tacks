@@ -30,16 +30,19 @@ renderGate gate markRadius isNext =
 vmgColorAndShape : Player -> (Color, Shape)
 vmgColorAndShape player =
   let a = (abs player.windAngle)
-      m = 3
-      s = 3
+      margin = 3
+      s = 4
+      bad = (red, rect (s*2) (s*2))
+      good = (green, circle s)
+      warn = (orange, polygon [(-s,-s),(s,-s),(0,s)])
   in  if a < 90 then
-        if | a < player.upwindVmg - m -> (red, rect (s*2) (s*2))
-           | a > player.upwindVmg + m -> (orange, circle s)
-           | otherwise                -> (green, circle s)
+        if | a < player.upwindVmg - margin -> bad
+           | a > player.upwindVmg + margin -> warn
+           | otherwise                     -> good
       else
-        if | a > player.downwindVmg + m -> (red, rect (s*2) (s*2))
-           | a < player.downwindVmg - m -> (orange, circle s)
-           | otherwise                  -> (green, circle s)
+        if | a > player.downwindVmg + margin -> bad
+           | a < player.downwindVmg - margin -> warn
+           | otherwise                       -> good
 
 renderPlayerAngles : Player -> Form
 renderPlayerAngles player =

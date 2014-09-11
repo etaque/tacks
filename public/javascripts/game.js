@@ -548,7 +548,7 @@ Elm.Render.Race.make = function (_elm) {
                case "Nothing":
                return gameState.isMaster ? Maybe.Just(messageBuilder(Render.Utils.startCountdownMessage)) : Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 172 and 182");
+            "between lines 175 and 185");
          }();
       }();
    });
@@ -564,7 +564,7 @@ Elm.Render.Race.make = function (_elm) {
                     _v3._0,
                     _v3._1));}
                _E.Case($moduleName,
-               "on line 152, column 26 to 62");
+               "on line 155, column 26 to 62");
             }();
          };
          var windAngleRad = Core.toRadians(windOrigin);
@@ -703,7 +703,7 @@ Elm.Render.Race.make = function (_elm) {
                          _v13._1._1)));}
                     break;}
                _E.Case($moduleName,
-               "on line 74, column 33 to 88");
+               "on line 77, column 33 to 88");
             }();
          };
          var pairs = List.isEmpty(wake) ? _L.fromArray([]) : Core.indexedMap(F2(function (v0,
@@ -736,36 +736,39 @@ Elm.Render.Race.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 65 and 67");
+         "between lines 68 and 70");
       }();
    });
    var vmgColorAndShape = function (player) {
       return function () {
-         var s = 3;
-         var m = 3;
+         var s = 4;
+         var bad = {ctor: "_Tuple2"
+                   ,_0: Color.red
+                   ,_1: A2(Graphics.Collage.rect,
+                   s * 2,
+                   s * 2)};
+         var good = {ctor: "_Tuple2"
+                    ,_0: Color.green
+                    ,_1: Graphics.Collage.circle(s)};
+         var warn = {ctor: "_Tuple2"
+                    ,_0: Color.orange
+                    ,_1: Graphics.Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                ,_0: 0 - s
+                                                                ,_1: 0 - s}
+                                                               ,{ctor: "_Tuple2"
+                                                                ,_0: s
+                                                                ,_1: 0 - s}
+                                                               ,{ctor: "_Tuple2"
+                                                                ,_0: 0
+                                                                ,_1: s}]))};
+         var margin = 3;
          var a = Basics.abs(player.windAngle);
          return _U.cmp(a,
          90) < 0 ? _U.cmp(a,
-         player.upwindVmg - m) < 0 ? {ctor: "_Tuple2"
-                                     ,_0: Color.red
-                                     ,_1: A2(Graphics.Collage.rect,
-                                     s * 2,
-                                     s * 2)} : _U.cmp(a,
-         player.upwindVmg + m) > 0 ? {ctor: "_Tuple2"
-                                     ,_0: Color.orange
-                                     ,_1: Graphics.Collage.circle(s)} : {ctor: "_Tuple2"
-                                                                        ,_0: Color.green
-                                                                        ,_1: Graphics.Collage.circle(s)} : _U.cmp(a,
-         player.downwindVmg + m) > 0 ? {ctor: "_Tuple2"
-                                       ,_0: Color.red
-                                       ,_1: A2(Graphics.Collage.rect,
-                                       s * 2,
-                                       s * 2)} : _U.cmp(a,
-         player.downwindVmg - m) < 0 ? {ctor: "_Tuple2"
-                                       ,_0: Color.orange
-                                       ,_1: Graphics.Collage.circle(s)} : {ctor: "_Tuple2"
-                                                                          ,_0: Color.green
-                                                                          ,_1: Graphics.Collage.circle(s)};
+         player.upwindVmg - margin) < 0 ? bad : _U.cmp(a,
+         player.upwindVmg + margin) > 0 ? warn : good : _U.cmp(a,
+         player.downwindVmg + margin) > 0 ? bad : _U.cmp(a,
+         player.downwindVmg - margin) < 0 ? warn : good;
       }();
    };
    var renderPlayerAngles = function (player) {
