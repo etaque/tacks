@@ -23,10 +23,10 @@ object Application extends Controller with Security {
     }
   }
 
-  def setName = Identified(parse.urlFormEncoded) { implicit request =>
-    request.body.get("name").flatMap(_.headOption) match {
-      case Some(name) => Redirect(routes.Application.index).addingToSession("playerName" -> name)
-      case None => Redirect(routes.Application.index)
+  def setName = Identified(parse.multipartFormData) { implicit request =>
+    request.body.dataParts.get("name").flatMap(_.headOption) match {
+      case Some(name) => Ok.addingToSession("playerName" -> name)
+      case None => BadRequest
     }
   }
 

@@ -17,7 +17,7 @@ body {
   margin: 0;
   color: #EEE;
   font-family: @fontFamily;
-  font-size: 16px;
+  font-size: 15px;
   background-color: @seaBlue;
 }
 
@@ -55,8 +55,17 @@ a {
 }
 
 .btn-new-race {
+  font-size: 16px;
+  background-color: white;
+  border: none;
+  color: @seaBlue;
   cursor: pointer;
-  color: black;
+  padding: 4px 8px;
+  box-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+
+  &:hover {
+    box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+  }
 }
 
 .lost-in-sea {

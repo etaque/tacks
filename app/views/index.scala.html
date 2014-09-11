@@ -8,28 +8,24 @@
 
   <div class="content">
 
-    @currentName match {
-      case Some(n) => {
-        <p>Hello @n!</p>
+    <p>Hello @currentName.getOrElse("Anonymous")!
+      <a href="#" id="change-name" data-name="@currentName.getOrElse("")" data-url="@routes.Application.setName()">change name</a> </p>
 
-        <form action="@routes.Application.createRace" method="post">
-          <input type="submit" value="Create new race" class="btn-new-race">
-        </form>
+    <form action="@routes.Application.createRace" method="post">
+      <input type="submit" value="Create new race" class="btn-new-race">
+    </form>
 
-        @if(pendingRaces.nonEmpty) {
-          <p>Or join pending:</p>
-          @for((r, master, startTimeMaybe) <- pendingRaces) {
-            <li><a href="@routes.Game.playRace(r.id.stringify)">By @master.name (@startTimeMaybe.map(secondsTo).getOrElse("Not started yet"))</a></li>
-          }
-        }
-      }
-      case None => {
-        <form action="@routes.Application.setName" method="post">
-          <input type="text" name="name" placeholder="What's your name?">
-          <input type="submit" value="Yep" class="btn-set-name">
-        </form>
+    @if(pendingRaces.nonEmpty) {
+      <p>Or join pending:</p>
+      @for((r, master, startTimeMaybe) <- pendingRaces) {
+        <li><a href="@routes.Game.playRace(r.id.stringify)">By @master.name (@startTimeMaybe.map(secondsTo).getOrElse("Not started yet"))</a></li>
       }
     }
+
+    <p>&nbsp;</p>
+    <p>--</p>
+    <p>Tack is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.</p>
+    <p>Tack is open source: <a href="https://github.com/etaque/tacks">Github repository</a>. Also, you can follow me (<a href="https://twitter.com/etaque">@@etaque</a>) on Twitter.</p>
 
   </div>
 
