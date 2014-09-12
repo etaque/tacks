@@ -85,6 +85,8 @@ object RaceUpdate {
   )
 }
 
+case class RaceStatus(startTime: Option[DateTime], playerStates: Seq[(String, PlayerState)])
+
 object JsonFormats {
   import utils.JsonFormats.dateTimeFormat
 

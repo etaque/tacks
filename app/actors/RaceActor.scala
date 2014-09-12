@@ -16,7 +16,8 @@ case class PlayerQuit(id: String)
 case object UpdateGameState
 case object UpdateWind
 case object SpawnBuoy
-case object GetStartTime
+case object GetStatus
+case object AutoClean
 
 class RaceActor(race: Race, master: User) extends Actor {
 
@@ -39,6 +40,7 @@ class RaceActor(race: Race, master: User) extends Actor {
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
   Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateWind)
+  Akka.system.scheduler.schedule(1.minute, 1.minute, self, AutoClean)
 
   def receive = {
 
@@ -90,7 +92,13 @@ class RaceActor(race: Race, master: User) extends Actor {
       }
     }
 
-    case GetStartTime => sender ! startTime
+    case GetStatus => sender ! RaceStatus(startTime, playersStates.toSeq)
+
+    case AutoClean => {
+      if (leaderboard.isEmpty && race.creationTime.plusMinutes(3).isBeforeNow) {
+        self ! PoisonPill
+      }
+    }
   }
 
   private def startCountdown(byPlayerId: String) = {

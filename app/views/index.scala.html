@@ -1,8 +1,6 @@
-@(pendingRaces: Seq[(Race, User, Option[DateTime])], currentName: Option[String])
+@(races: Seq[(Race, User, RaceStatus)], currentName: Option[String])
 
 @import org.joda.time.DateTime
-
-@secondsTo(t: DateTime) = {start in @((t.getMillis - DateTime.now.getMillis) / 1000)s, hurry up!}
 
 @main() {
 
@@ -15,12 +13,31 @@
       <input type="submit" value="Create new race" class="btn-new-race">
     </form>
 
-    @if(pendingRaces.nonEmpty) {
-      <p>Or join pending:</p>
-      @for((r, master, startTimeMaybe) <- pendingRaces) {
-        <li><a href="@routes.Game.playRace(r.id.stringify)">By @master.name (@startTimeMaybe.map(secondsTo).getOrElse("Not started yet"))</a></li>
+    @if(races.nonEmpty) {
+      <p>Races:</p>
+      @for((r, master, status) <- races.sortBy(_._3.startTime.map(_.getMillis))) {
+        @defining(status.startTime.map(t => (t.getMillis - DateTime.now.getMillis) / 1000)) { secondsMaybe =>
+          <li>
+            <a href="@routes.Game.playRace(r.id.stringify)">
+              @status.playerStates.map(s => s._2.name + (if (s._1 == master.id.stringify) "*" else "")).mkString(" vs ")
+              @if(status.playerStates.isEmpty) { Empty }
+              -
+              @secondsMaybe.map { seconds =>
+                @if(seconds > 0) {
+                  start in @{seconds}s!
+                } else {
+                  started since @{math.abs(seconds)}s
+                }
+              }.getOrElse {
+                to be started
+              }
+            </a>
+          </li>
+        }
       }
     }
+
+
 
     <p>&nbsp;</p>
     <p>--</p>
