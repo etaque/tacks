@@ -95,7 +95,9 @@ class RaceActor(race: Race, master: User) extends Actor {
     case GetStatus => sender ! RaceStatus(startTime, playersStates.toSeq)
 
     case AutoClean => {
-      if (leaderboard.isEmpty && race.creationTime.plusMinutes(3).isBeforeNow) {
+      val deserted = playersStates.isEmpty && race.creationTime.plusMinutes(3).isBeforeNow
+      val finished = startTime.exists(_.plusMinutes(20).isBeforeNow)
+      if (deserted || finished) {
         self ! PoisonPill
       }
     }
