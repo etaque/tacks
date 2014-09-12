@@ -19,9 +19,10 @@
         @defining(status.startTime.map(t => (t.getMillis - DateTime.now.getMillis) / 1000)) { secondsMaybe =>
           <li>
             <a href="@routes.Game.playRace(r.id.stringify)">
+              @r.creationTime.toString("HH:mm") :
               @status.playerStates.map(s => s._2.name + (if (s._1 == master.id.stringify) "*" else "")).mkString(" vs ")
-              @if(status.playerStates.isEmpty) { Empty }
-              -
+              @if(status.playerStates.isEmpty) { empty }
+              /
               @secondsMaybe.map { seconds =>
                 @if(seconds > 0) {
                   start in @{seconds}s!
