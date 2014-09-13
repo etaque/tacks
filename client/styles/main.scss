@@ -1,8 +1,8 @@
 @import url(http://fonts.googleapis.com/css?family=Inconsolata);
 
-@seaBlue: rgb(10, 105, 148);
-@sand: rgb(239, 210, 121);
-@fontFamily: Inconsolata,monospace;
+$seaBlue: rgb(10, 105, 148);
+$sand: rgb(239, 210, 121);
+$fontFamily: Inconsolata,monospace;
 
 html,
 body {
@@ -16,13 +16,13 @@ body {
 body {
   margin: 0;
   color: #EEE;
-  font-family: @fontFamily;
+  font-family: $fontFamily;
   font-size: 15px;
-  background-color: @seaBlue;
+  background-color: $seaBlue;
 }
 
 input,textarea {
-  font-family: @fontFamily;
+  font-family: $fontFamily;
 }
 
 .wrapper {
@@ -46,7 +46,7 @@ input,textarea {
   }
 }
 
-.content {
+.home {
   padding: 20px;
 }
 
@@ -56,9 +56,10 @@ a {
 
 .btn-new-race {
   font-size: 16px;
+  text-decoration: none;
   background-color: white;
   border: none;
-  color: @seaBlue;
+  color: $seaBlue;
   cursor: pointer;
   padding: 4px 8px;
   box-shadow: 3px 3px 0px rgba(0,0,0,0.3);

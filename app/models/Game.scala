@@ -6,12 +6,12 @@ import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 
+import utils.JsonFormats.tuple2Format
 import Geo._
 
 case class Arrows(x: Int, y: Int)
 
 case class PlayerInput (
-  name: String,
   tack: Boolean,
   arrows: Arrows,
   subtleTurn: Boolean,
@@ -24,7 +24,7 @@ case object FixedHeading extends ControlMode
 case object FixedAngle extends ControlMode
 
 case class PlayerState (
-  name: String,
+  user: User,
   position: Point,
   heading: Double,
   velocity: Double,
@@ -55,12 +55,12 @@ case class PlayerState (
 }
 
 object PlayerState {
-  def initial(name: String) = PlayerState(
-    name, (0,0), 0, 0, 0, 0, 0, 0, 0, Seq(),
+  def initial(user: User) = PlayerState(
+    user, (0,0), 0, 0, 0, 0, 0, 0, 0, Seq(),
     FixedHeading, None, Seq(), Some(StartLine), None)
 }
 
-case class PlayerUpdate(id: String, input: PlayerInput, delta: Long)
+case class PlayerUpdate(user: User, input: PlayerInput, delta: Long)
 
 case class RaceUpdate(
   now: DateTime,
@@ -85,7 +85,12 @@ object RaceUpdate {
   )
 }
 
-case class RaceStatus(startTime: Option[DateTime], playerStates: Seq[(String, PlayerState)])
+case class RaceStatus(
+  race: Race,
+  master: User,
+  startTime: Option[DateTime],
+  playerStates: Seq[(String, PlayerState)]
+)
 
 object JsonFormats {
   import utils.JsonFormats.dateTimeFormat
@@ -119,13 +124,14 @@ object JsonFormats {
   import Course.courseFormat
   import Buoy.buoyFormat
   import Buoy.spellFormat
+  import User.userFormat
 
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
 
   implicit val playerStateFormat: Format[PlayerState] = (
-    (__ \ 'name).format[String] and
+    (__ \ 'user).format[User] and
       (__ \ 'position).format[Point] and
       (__ \ 'heading).format[Double] and
       (__ \ 'velocity).format[Double] and
@@ -155,4 +161,7 @@ object JsonFormats {
       (__ \ 'isMaster).format[Boolean]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
+  import User.userFormat
+  implicit val playersFormat = tuple2Format[String,PlayerState]
+  implicit val raceStatusFormat: Format[RaceStatus] = Json.format[RaceStatus]
 }

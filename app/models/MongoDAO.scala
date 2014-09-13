@@ -109,5 +109,5 @@ trait HasId {
   def id: BSONObjectID = _id
   def idToStr = id.stringify
 
-  def creationTime = new DateTime(_id.time)
+//  def creationTime = new DateTime(_id.time)
 }

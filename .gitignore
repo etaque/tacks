@@ -15,3 +15,5 @@ dist
 /.project
 /RUNNING_PID
 /.settings
+client/.sass-cache
+client/node_modules

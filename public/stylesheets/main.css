@@ -1,0 +1,75 @@
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  color: #EEE;
+  font-family: Inconsolata, monospace;
+  font-size: 15px;
+  background-color: #0a6994;
+}
+
+input, textarea {
+  font-family: Inconsolata, monospace;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.header {
+  background-color: #222;
+  color: #EEE;
+  padding: 10px 20px;
+}
+
+.logo {
+  color: white;
+  text-decoration: none;
+}
+.logo:hover {
+  text-decoration: underline;
+}
+
+.home {
+  padding: 20px;
+}
+
+a {
+  color: white;
+}
+
+.btn-new-race {
+  font-size: 16px;
+  text-decoration: none;
+  background-color: white;
+  border: none;
+  color: #0a6994;
+  cursor: pointer;
+  padding: 4px 8px;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+}
+.btn-new-race:hover {
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+}
+
+.lost-in-sea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.game {
+  flex: 1;
+}

@@ -10,6 +10,10 @@ import utils.JsonFormats.idFormat
 
 case class User(id: BSONObjectID, name: String)
 
+object User {
+  implicit val userFormat = Json.format[User]
+}
+
 // case class User(
 //   _id: BSONObjectID = BSONObjectID.generate,
 //   email: String,

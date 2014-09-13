@@ -43,7 +43,7 @@ port raceInput : Signal
       , speed : Float
       , gusts : [{ position: (Float,Float), angle: Float, speed: Float, radius: Float }]
       }
-  , opponents: [{ position: (Float,Float), heading: Float, velocity: Float, name: String }]
+  , opponents: [{ position: (Float,Float), heading: Float, velocity: Float, user: { name: String } }]
   , buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}]
   , leaderboard: [String]
   , triggeredSpells: [{ kind: String }]

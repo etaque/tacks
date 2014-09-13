@@ -12,7 +12,7 @@ import akka.pattern.{ask,pipe}
 import akka.util.Timeout
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
-import models.{RaceStatus, Race, User}
+import models.{PlayerState, RaceStatus, Race, User}
 
 
 case class MountRace(race: Race, master: User)
@@ -39,11 +39,11 @@ class RacesSupervisor extends Actor {
 
     case GetOpenRaces => {
       val racesFuture = mountedRaces.toSeq.filterNot(_._1.isPrivate).map { case (race, master, ref) =>
-        (ref ? GetStatus).mapTo[RaceStatus].map { rs =>
-          Some((race, master, rs) )
+        (ref ? GetStatus).mapTo[(Option[DateTime], Seq[(String, PlayerState)])].map { case (startTime, players) =>
+          RaceStatus(race, master, startTime, players)
         }
       }
-      Future.sequence(racesFuture).map(_.flatten) pipeTo sender
+      Future.sequence(racesFuture) pipeTo sender
     }
 
     case GetRace(raceId) => sender ! getRace(raceId)

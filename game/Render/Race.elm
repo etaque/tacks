@@ -105,7 +105,7 @@ renderOpponent opponent =
   let hull = renderBoatIcon opponent "49er"
         |> move opponent.position
         |> alpha 0.5
-      name = opponent.name |> baseText |> centered |> toForm
+      name = opponent.user.name |> baseText |> centered |> toForm
         |> move (add opponent.position (0,-25))
         |> alpha 0.3
   in group [hull, name]

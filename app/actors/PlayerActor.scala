@@ -7,18 +7,18 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import akka.actor.{Props, Actor, ActorRef}
 import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
-import models.{PlayerInput, PlayerUpdate}
+import models.{User, PlayerInput, PlayerUpdate}
 
-class PlayerActor(id: String, raceActor: ActorRef, out: ActorRef) extends Actor {
+class PlayerActor(user: User, raceActor: ActorRef, out: ActorRef) extends Actor {
 
   var lastUpdate = DateTime.now
 
   def receive = {
-    case pi: PlayerInput => {
+    case input: PlayerInput => {
       implicit val timeout = Timeout(1.second)
       val now = DateTime.now
       val delta = now.getMillis - lastUpdate.getMillis
-      (raceActor ? PlayerUpdate(id, pi, delta)).map { raceUpdate =>
+      (raceActor ? PlayerUpdate(user, input, delta)).map { raceUpdate =>
         lastUpdate = now
         out ! raceUpdate
       }
@@ -26,10 +26,10 @@ class PlayerActor(id: String, raceActor: ActorRef, out: ActorRef) extends Actor 
   }
 
   override def postStop() = {
-    raceActor ! PlayerQuit(id)
+    raceActor ! PlayerQuit(user.id.stringify)
   }
 }
 
 object PlayerActor {
-  def props(raceActor: ActorRef, id: String)(out: ActorRef) = Props(new PlayerActor(id, raceActor, out))
+  def props(raceActor: ActorRef, user: User)(out: ActorRef) = Props(new PlayerActor(user, raceActor, out))
 }

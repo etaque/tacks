@@ -1,0 +1,1 @@
+module.exports = window.jsRoutes.controllers.Api;

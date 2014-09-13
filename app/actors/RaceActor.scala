@@ -44,7 +44,8 @@ class RaceActor(race: Race, master: User) extends Actor {
 
   def receive = {
 
-    case PlayerUpdate(id, input, delta) => {
+    case PlayerUpdate(user, input, delta) => {
+      val id = user.id.stringify
       val previousStateMaybe = playersStates.get(id)
 
       val runStep =
@@ -56,7 +57,7 @@ class RaceActor(race: Race, master: User) extends Actor {
           withCollectedBuoy(race.course.boatWidth) andThen
           withCastedSpell(id, input.spellCast)
 
-      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(input.name)))
+      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(user)))
 
       playersStates += (id -> newState)
       if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
@@ -92,7 +93,7 @@ class RaceActor(race: Race, master: User) extends Actor {
       }
     }
 
-    case GetStatus => sender ! RaceStatus(startTime, playersStates.toSeq)
+    case GetStatus => sender ! (startTime, playersStates.toSeq)
 
     case AutoClean => {
       val deserted = playersStates.isEmpty && race.creationTime.plusMinutes(3).isBeforeNow
@@ -115,7 +116,7 @@ class RaceActor(race: Race, master: User) extends Actor {
     if (playersStates.values.exists(_.crossedGates.nonEmpty)) {
       leaderboard = playersStates.toSeq.sortBy {
         case (_, b) => (-b.crossedGates.length, b.crossedGates.headOption.map(_.getMillis))
-      }.map(_._2.name)
+      }.map(_._2.user.name)
     }
   }
 
@@ -129,7 +130,7 @@ class RaceActor(race: Race, master: User) extends Actor {
 
   private def withCastedSpell(id: PlayerId, castSpell: Boolean)(state: PlayerState): PlayerState = {
     state.ownSpell.filter(_ => castSpell).fold(state) { spell =>
-      Logger.debug(s"Player ${state.name} casting spell $spell")
+      Logger.debug(s"Player ${state.user.name} casting spell $spell")
       spellCasts = spellCasts :+ SpellCast(by = id, spell, at = DateTime.now, to = playersStates.keys.filterNot(_ == id).toSeq)
       state.copy(ownSpell = None)
     }

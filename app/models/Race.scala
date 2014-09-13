@@ -9,7 +9,8 @@ case class Race (
   userId: BSONObjectID,
   isPrivate: Boolean,
   course: Course,
-  countdownSeconds: Int
+  countdownSeconds: Int,
+  creationTime: DateTime = DateTime.now
 ) extends HasId
 
 object Race extends MongoDAO[Race] {

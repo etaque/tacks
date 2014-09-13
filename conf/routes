@@ -1,11 +1,15 @@
 
-GET         /                                       controllers.Application.index
-POST        /setName                                controllers.Application.setName
-POST        /races/create                           controllers.Application.createRace
+GET         /api/racesStatus                 controllers.Api.racesStatus
+POST        /api/createRace                  controllers.Api.createRace
+GET         /api/getRace/:id                 controllers.Api.getRace(id)
+GET         /api/currentUser                 controllers.Api.currentUser
+POST        /api/setName                     controllers.Api.setName
 
-GET         /races/:id/play                         controllers.Game.playRace(id)
-GET         /races/:id/play/socket/:playerId        controllers.Game.socket(id, playerId)
-
+GET         /api/playerSocket/:raceId        controllers.Api.playerSocket(raceId)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                           controllers.Assets.at(path="/public", file)
+GET         /assets/*file                    controllers.Assets.at(path="/public", file)
+
+GET         /                                controllers.Application.index(url = "")
+GET         /*url                            controllers.Application.index(url)
+
