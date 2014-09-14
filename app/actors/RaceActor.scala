@@ -19,7 +19,7 @@ case object SpawnBuoy
 case object GetStatus
 case object AutoClean
 
-class RaceActor(race: Race, master: User) extends Actor {
+class RaceActor(race: Race, master: Player) extends Actor {
 
   type PlayerId = String
   case class SpellCast(by: PlayerId, spell: Spell, at: DateTime, to: Seq[PlayerId]) {
@@ -43,8 +43,8 @@ class RaceActor(race: Race, master: User) extends Actor {
 
   def receive = {
 
-    case PlayerUpdate(user, input) => {
-      val id = user.id.stringify
+    case PlayerUpdate(player, input) => {
+      val id = player.id.stringify
       val previousStateMaybe = playersStates.get(id)
       val now = DateTime.now
       val delta = previousStateMaybe.map(now.getMillis - _.time.getMillis).getOrElse(0L)
@@ -60,7 +60,7 @@ class RaceActor(race: Race, master: User) extends Actor {
           withCollectedBuoy(race.course.boatWidth) andThen
           withCastedSpell(id, input.spellCast)
 
-      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(user))).copy(time = now)
+      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(player))).copy(time = now)
 
       playersStates += (id -> newState)
       if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
@@ -119,7 +119,7 @@ class RaceActor(race: Race, master: User) extends Actor {
     if (playersStates.values.exists(_.crossedGates.nonEmpty)) {
       leaderboard = playersStates.toSeq.sortBy {
         case (_, b) => (-b.crossedGates.length, b.crossedGates.headOption.map(_.getMillis))
-      }.map(_._2.user.name)
+      }.map(_._2.player.name)
     }
   }
 
@@ -133,7 +133,7 @@ class RaceActor(race: Race, master: User) extends Actor {
 
   private def withCastedSpell(id: PlayerId, castSpell: Boolean)(state: PlayerState): PlayerState = {
     state.ownSpell.filter(_ => castSpell).fold(state) { spell =>
-      Logger.debug(s"Player ${state.user.name} casting spell $spell")
+      Logger.debug(s"Player ${state.player.name} casting spell $spell")
       spellCasts = spellCasts :+ SpellCast(by = id, spell, at = DateTime.now, to = playersStates.keys.filterNot(_ == id).toSeq)
       state.copy(ownSpell = None)
     }
@@ -178,5 +178,5 @@ class RaceActor(race: Race, master: User) extends Actor {
 }
 
 object RaceActor {
-  def props(race: Race, master: User) = Props(new RaceActor(race, master))
+  def props(race: Race, master: Player) = Props(new RaceActor(race, master))
 }

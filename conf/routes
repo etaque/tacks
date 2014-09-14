@@ -1,5 +1,6 @@
 
 GET         /api/racesStatus                 controllers.Api.racesStatus
+GET         /api/onlineUsers                 controllers.Api.onlinePlayers
 POST        /api/createRace                  controllers.Api.createRace
 GET         /api/getRace/:id                 controllers.Api.getRace(id)
 GET         /api/currentUser                 controllers.Api.currentUser

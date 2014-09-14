@@ -2,19 +2,22 @@ package models
 
 import org.joda.time.DateTime
 import play.api.libs.json._
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson.{BSONDocumentWriter, Macros, BSONDocumentReader, BSONObjectID}
 
 case class Race (
   _id: BSONObjectID = BSONObjectID.generate,
-  userId: BSONObjectID,
+  playerId: BSONObjectID,
   isPrivate: Boolean,
   course: Course,
   countdownSeconds: Int,
   creationTime: DateTime = DateTime.now
 ) extends HasId
 
-object Race extends MongoDAO[Race] {
-  val collectionName = "races"
+object Race {
+//  val collectionName = "races"
+
+//  implicit val bsonReader: BSONDocumentReader[Race] = Macros.reader[Race]
+//  implicit val bsonWriter: BSONDocumentWriter[Race] = Macros.writer[Race]
 
   import utils.JsonFormats.idFormat
   import JsonFormats._

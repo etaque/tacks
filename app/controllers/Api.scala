@@ -31,12 +31,17 @@ object Api extends Controller with Security {
     }
   }
 
+  def onlinePlayers = Identified.async() { implicit request =>
+    (ChatRoom.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]].map { players =>
+      Ok(Json.toJson(players))
+    }
+  }
+
   def createRace = Identified.async(parse.json) { implicit request =>
     val isPrivate = request.getQueryString("isPrivate").exists(_.toBoolean)
-    val race = Race(userId = getUserId, course = Course.default, isPrivate = isPrivate, countdownSeconds = 30)
-    val master = User(getUserId, getUserName.getOrElse("Anonymous"))
+    val race = Race(playerId = getPlayerId, course = Course.default, isPrivate = isPrivate, countdownSeconds = 30)
 
-    (RacesSupervisor.actorRef ? MountRace(race, master)).map { _ =>
+    (RacesSupervisor.actorRef ? MountRace(race, request.player)).map { _ =>
       Ok(Json.toJson(race))
     }
   }
@@ -49,23 +54,18 @@ object Api extends Controller with Security {
   }
 
   def currentUser = Identified() { implicit request =>
-    val user = User(getUserId, getUserName.getOrElse("Anonymous"))
-    Ok(Json.toJson(user))
+    Ok(Json.toJson(request.player))
   }
 
   import models.JsonFormats._
   implicit val boatUpdateFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
-  def playerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { request =>
-    request.session.get("userId") match {
-      case None => Future.successful(Left(Unauthorized))
-      case Some(userId) => {
-        val user = User(BSONObjectID(userId), request.session.get("playerName").getOrElse("Anonymous"))
-        (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
-          case Some(raceActor) => Right(PlayerActor.props(raceActor, user)(_))
-          case None => Left(NotFound)
-        }
+  def playerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+    Identified.getPlayer(request).flatMap { player =>
+      (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
+        case Some(raceActor) => Right(PlayerActor.props(raceActor, player)(_))
+        case None => Left(NotFound)
       }
     }
   }

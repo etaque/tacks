@@ -12,10 +12,10 @@ import akka.pattern.{ask,pipe}
 import akka.util.Timeout
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
-import models.{PlayerState, RaceStatus, Race, User}
+import models._
 
 
-case class MountRace(race: Race, master: User)
+case class MountRace(race: Race, master: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
 case object GetOpenRaces
@@ -23,7 +23,7 @@ case object GetOpenRaces
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
-  type RaceMount = (Race, User, ActorRef)
+  type RaceMount = (Race, Player, ActorRef)
   var mountedRaces = Seq[RaceMount]()
 
   implicit val timeout = Timeout(5.seconds)

@@ -1,77 +1,73 @@
 package models
 
 import scala.concurrent.Future
-import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import play.api.Play.current
-import play.modules.reactivemongo.json.BSONFormats
-import play.modules.reactivemongo.json.BSONFormats.BSONObjectIDFormat
-import play.modules.reactivemongo.json.collection.JSONCollection
-import play.modules.reactivemongo.ReactiveMongoPlugin
 import reactivemongo.api.DefaultDB
-import reactivemongo.bson.BSONObjectID
+import reactivemongo.bson._
 import reactivemongo.core.commands.{Count, LastError}
+import reactivemongo.api.collections.default.BSONCollection
+import play.modules.reactivemongo.json.BSONFormats
+import play.modules.reactivemongo.ReactiveMongoPlugin
 import play.api.libs.concurrent.Execution.Implicits._
 import org.joda.time.DateTime
-import utils.Implicits.RichFutureOfOpt
+import _root_.utils.future.Implicits.RichFutureOfOpt
 
 
 /**
-* Convenience DAO trait for reactivemongo
-*/
+ * Convenience DAO trait for reactivemongo
+ */
 trait MongoDAO[T] {
   val collectionName: String
-  implicit val mongoFormat: Format[T]
+
+  implicit val bsonReader: BSONDocumentReader[T]
+  implicit val bsonWriter: BSONDocumentWriter[T]
 
   def db: DefaultDB = ReactiveMongoPlugin.db
-  def collection: JSONCollection = db[JSONCollection](collectionName)
+  def collection = db[BSONCollection](collectionName)
 
   def count(query: Option[JsObject] = None): Future[Int] = {
     val queryAsBSON = query.map(q => BSONFormats.BSONDocumentFormat.reads(q).get)
 
-    db.command(Count(collection.name, queryAsBSON))
+    db.command(Count(collectionName, queryAsBSON))
   }
 
   def count: Future[Int] = count(None)
 
   def save(doc: T): Future[LastError] = {
-    collection.save(doc)
+    collection.insert(doc)
   }
 
   def remove(id: BSONObjectID): Future[_] = {
-    val query = Json.obj("_id" -> id)
+    val query = BSONDocument("_id" -> id)
     collection.remove(query)
   }
 
   def remove(id: String): Future[_] = remove(BSONObjectID(id))
 
-  private def updateCommand(id: BSONObjectID, updateDoc: JsObject, command: String): Future[_] = {
+  private def updateCommand(id: BSONObjectID, updateDoc: BSONDocument, command: String): Future[_] = {
     collection.update(
-      selector = Json.obj("_id" -> id),
-      update = Json.obj(command -> updateDoc)
+      selector = BSONDocument("_id" -> id),
+      update = BSONDocument(command -> updateDoc)
     )
   }
 
-  def update(id: BSONObjectID, updateDoc: JsObject): Future[_] = {
+  def update(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
     updateCommand(id, updateDoc, "$set")
   }
 
-  def push(id: BSONObjectID, updateDoc: JsObject): Future[_] = {
+  def push(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
     updateCommand(id, updateDoc, "$push")
   }
 
-  def pull(id: BSONObjectID, updateDoc: JsObject): Future[_] = {
+  def pull(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
     updateCommand(id, updateDoc, "$pull")
   }
 
-  def update(id: String, updateDoc: JsObject): Future[_] = update(BSONObjectID(id), updateDoc)
-
-  def findOneBy(query: JsObject): Future[Option[T]] = {
-    collection.find(query).one[T]
-  }
+  def update(id: String, updateDoc: BSONDocument): Future[_] = update(BSONObjectID(id), updateDoc)
 
   def findByIdOpt(id: BSONObjectID): Future[Option[T]] = {
-    val query = Json.obj("_id" -> id)
+    val query = BSONDocument("_id" -> id)
     collection.find(query).one[T]
   }
 
@@ -87,17 +83,12 @@ trait MongoDAO[T] {
     findById(BSONObjectID(id))
   }
 
-  def findJsonById(id: BSONObjectID): Future[Option[JsValue]] = {
-    val query = Json.obj("_id" -> id)
-    collection.find(query).one[JsValue]
-  }
-
   def findAllById(ids: Seq[BSONObjectID]): Future[Seq[T]] = {
-    val query = Json.obj("_id" -> Json.obj("$in" -> ids))
+    val query = BSONDocument("_id" -> BSONDocument("$in" -> ids))
     list(query)
   }
 
-  def list(query: JsObject = Json.obj()): Future[Seq[T]] = {
+  def list(query: BSONDocument = BSONDocument()): Future[Seq[T]] = {
     collection.find(query).cursor[T].collect[Seq]()
   }
 
