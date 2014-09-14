@@ -30,6 +30,12 @@ var PlayRace = React.createClass({
 
   },
 
+  componentWillUnmount: function() {
+    if (this.state.ws) {
+      this.state.ws.close();
+    }
+  },
+
   render: function() {
     if(this.state.ws) {
       return (

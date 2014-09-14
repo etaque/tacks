@@ -17,11 +17,22 @@ var Game = React.createClass({
     };
 
     ws.onopen = function() {
-      game.ports.playerOutput.subscribe(function(state) {
-        state.name = "test";
+      var portHandler = function(state) {
         ws.send(JSON.stringify(state))
+      }
+      this.setState({
+        portHandler: portHandler,
+        game: game
+      }, function() {
+        game.ports.playerOutput.subscribe(portHandler);
       });
-    };
+    }.bind(this);
+  },
+
+  componentWillUnmount: function() {
+    if (this.state.game) {
+      this.state.game.ports.playerOutput.unsubscribe(this.state.portHandler);
+    }
   },
 
   shouldComponentUpdate: function(nextProps, nextState) {

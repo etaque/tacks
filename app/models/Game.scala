@@ -25,6 +25,7 @@ case object FixedAngle extends ControlMode
 
 case class PlayerState (
   user: User,
+  time: DateTime,
   position: Point,
   heading: Double,
   velocity: Double,
@@ -56,11 +57,11 @@ case class PlayerState (
 
 object PlayerState {
   def initial(user: User) = PlayerState(
-    user, (0,0), 0, 0, 0, 0, 0, 0, 0, Seq(),
+    user, DateTime.now, (0,0), 0, 0, 0, 0, 0, 0, 0, Seq(),
     FixedHeading, None, Seq(), Some(StartLine), None)
 }
 
-case class PlayerUpdate(user: User, input: PlayerInput, delta: Long)
+case class PlayerUpdate(user: User, input: PlayerInput)
 
 case class RaceUpdate(
   now: DateTime,
@@ -132,6 +133,7 @@ object JsonFormats {
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'user).format[User] and
+      (__ \ 'time).format[DateTime] and
       (__ \ 'position).format[Point] and
       (__ \ 'heading).format[Double] and
       (__ \ 'velocity).format[Double] and

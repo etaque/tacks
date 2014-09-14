@@ -39,14 +39,17 @@ class RaceActor(race: Race, master: User) extends Actor {
   def started = millisBeforeStart.exists(_ <= 0)
 
   Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
-  Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateWind)
-  Akka.system.scheduler.schedule(1.minute, 1.minute, self, AutoClean)
+  Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean)
 
   def receive = {
 
-    case PlayerUpdate(user, input, delta) => {
+    case PlayerUpdate(user, input) => {
       val id = user.id.stringify
       val previousStateMaybe = playersStates.get(id)
+      val now = DateTime.now
+      val delta = previousStateMaybe.map(now.getMillis - _.time.getMillis).getOrElse(0L)
+
+      if (previousWindUpdate.plusMillis(33).isBeforeNow) updateWind(now)
 
       val runStep =
         BoatHandlingStep.run(input, spellsOn(id)) _ andThen
@@ -57,7 +60,7 @@ class RaceActor(race: Race, master: User) extends Actor {
           withCollectedBuoy(race.course.boatWidth) andThen
           withCastedSpell(id, input.spellCast)
 
-      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(user)))
+      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(user))).copy(time = now)
 
       playersStates += (id -> newState)
       if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
@@ -77,15 +80,6 @@ class RaceActor(race: Race, master: User) extends Actor {
       updateSpells()
     }
 
-    case UpdateWind => {
-      val now = DateTime.now()
-      wind = Wind(
-        origin = race.course.windGenerator.windOrigin(now),
-        speed = race.course.windGenerator.windSpeed(now),
-        gusts = moveGusts(now, wind.gusts)
-      )
-      previousWindUpdate = now
-    }
 
     case SpawnBuoy => {
       if (buoys.size < 10) {
@@ -96,12 +90,21 @@ class RaceActor(race: Race, master: User) extends Actor {
     case GetStatus => sender ! (startTime, playersStates.toSeq)
 
     case AutoClean => {
-      val deserted = playersStates.isEmpty && race.creationTime.plusMinutes(3).isBeforeNow
+      val deserted = playersStates.isEmpty
       val finished = startTime.exists(_.plusMinutes(20).isBeforeNow)
       if (deserted || finished) {
         self ! PoisonPill
       }
     }
+  }
+
+  private def updateWind(now: DateTime): Unit = {
+    wind = Wind(
+      origin = race.course.windGenerator.windOrigin(now),
+      speed = race.course.windGenerator.windSpeed(now),
+      gusts = moveGusts(now, wind.gusts)
+    )
+    previousWindUpdate = now
   }
 
   private def startCountdown(byPlayerId: String) = {
