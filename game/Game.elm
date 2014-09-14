@@ -4,24 +4,6 @@ import Geo (..)
 import Json
 import Dict
 
-{-- Part 2: Model the game ----------------------------------------------------
-
-What information do you need to represent the entire game?
-
-Tasks: Redefine `GameState` to represent your particular game.
-       Redefine `defaultGame` to represent your initial game state.
-
-For example, if you want to represent many objects that just have a position,
-your GameState might just be a list of coordinates and your default game might
-be an empty list (no objects at the start):
-
-    type GameState = { objects : [(Float,Float)] }
-    defaultGame = { objects = [] }
-
-------------------------------------------------------------------------------}
-
---data GateLocation = StartLine | Downwind | Upwind
-
 type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
 type Course =
@@ -31,12 +13,17 @@ type Course =
   , markRadius: Float
   , islands: [Island]
   , bounds: (Point, Point)
+  , windShadowLength: Float
   , boatWidth: Float
   }
 
---data ControlMode = FixedHeading | FixedWindAngle
-
-type Boat a = { a | position : Point, heading: Float, velocity: Float }
+type Boat a =
+  { a | position : Point
+      , heading: Float
+      , velocity: Float
+      , windAngle: Float
+      , windOrigin: Float
+      , windSpeed: Float }
 
 type Spell = { kind : String }
 
@@ -50,10 +37,7 @@ type Buoy = { position : Point, radius : Float, spell : Spell }
 type Opponent = Boat { user : { name : String } }
 
 type Player = Boat
-  { windAngle: Float
-  , windOrigin: Float
-  , windSpeed: Float
-  , downwindVmg: Float
+  { downwindVmg: Float
   , upwindVmg: Float
   , trail: [Point]
   , controlMode: String
@@ -94,6 +78,7 @@ defaultCourse =
   , markRadius = 0
   , islands = []
   , bounds = ((0,0), (0,0))
+  , windShadowLength = 0
   , boatWidth = 0
   }
 
@@ -140,11 +125,3 @@ defaultGame =
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
-
---gateLocation : Maybe String -> Maybe GateLocation
---gateLocation s =
---  case s of
---    Just "StartLine"    -> Just StartLine
---    Just "DownwindGate" -> Just Downwind
---    Just "UpwindGate"   -> Just Upwind
---    _                   -> Nothing

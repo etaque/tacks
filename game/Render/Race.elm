@@ -77,15 +77,23 @@ renderWake wake =
       renderSegment (i,(a,b)) = segment a b |> traced style |> alpha (opacityForIndex i)
   in  group (map renderSegment pairs)
 
+renderWindShadow : Float -> Boat a -> Form
+renderWindShadow shadowLength boat =
+  let shadowDirection = (ensure360 (boat.windOrigin + 180 + (boat.windAngle / 3)))
+      arcAngles = [-15, -10, -5, 0, 5, 10, 15]
+      endPoints = map (\a -> add boat.position (fromPolar (shadowLength, toRadians (shadowDirection + a)))) arcAngles
+  in  path (boat.position :: endPoints) |> filled white |> alpha 0.1
+
 renderBoatIcon : Boat a -> String -> Form
 renderBoatIcon boat name =
   image 12 20 ("/assets/images/" ++ name ++ ".png") |> toForm
     |> rotate (toRadians (boat.heading + 90))
 
-renderPlayer : Player -> [Spell] -> Form
-renderPlayer player spells =
+renderPlayer : Player -> [Spell] -> Float -> Form
+renderPlayer player spells shadowLength =
   let boatPath = if(containsSpell "PoleInversion" spells) then "49er-black" else "49er"
       hull = renderBoatIcon player boatPath
+      windShadow = renderWindShadow shadowLength player
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin
       fog1 = oval 190 250
@@ -98,17 +106,18 @@ renderPlayer player spells =
       fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
       movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
       wake = renderWake player.trail
-  in group [wake, movingPart]
+  in group [wake, windShadow, movingPart]
 
-renderOpponent : Opponent -> Form
-renderOpponent opponent =
+renderOpponent : Float -> Opponent -> Form
+renderOpponent shadowLength opponent =
   let hull = renderBoatIcon opponent "49er"
         |> move opponent.position
         |> alpha 0.5
+      shadow = renderWindShadow shadowLength opponent
       name = opponent.user.name |> baseText |> centered |> toForm
         |> move (add opponent.position (0,-25))
         |> alpha 0.3
-  in group [hull, name]
+  in group [shadow, hull, name]
 
 
 renderBounds : (Point, Point) -> Form
@@ -200,9 +209,9 @@ renderRace ({player,opponents,course,buoys,triggeredSpells,now,center} as gameSt
         , renderIslands gameState
         , downwindOrStartLine
         , renderGate course.upwind course.markRadius (player.nextGate == Just "UpwindGate")
-        , group (map renderOpponent opponents)
+        , group (map (renderOpponent course.windShadowLength) opponents)
         , renderGusts gameState.wind
-        , renderPlayer player triggeredSpells
+        , renderPlayer player triggeredSpells course.windShadowLength
         ]
       maybeForms =
         [ renderCountdown gameState player

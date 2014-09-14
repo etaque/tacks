@@ -20,6 +20,7 @@ port raceInput : Signal
               , markRadius: Float
               , islands: [{ location : (Float,Float), radius : Float }]
               , bounds: ((Float,Float),(Float,Float))
+              , windShadowLength: Float
               , boatWidth: Float
               }
   , player: Maybe
@@ -43,7 +44,15 @@ port raceInput : Signal
       , speed : Float
       , gusts : [{ position: (Float,Float), angle: Float, speed: Float, radius: Float }]
       }
-  , opponents: [{ position: (Float,Float), heading: Float, velocity: Float, user: { name: String } }]
+  , opponents: [
+    { position: (Float,Float)
+    , heading: Float
+    , velocity: Float
+    , windAngle: Float
+    , windOrigin: Float
+    , windSpeed: Float
+    , user: { name: String }
+    }]
   , buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}]
   , leaderboard: [String]
   , triggeredSpells: [{ kind: String }]

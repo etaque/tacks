@@ -10,7 +10,7 @@ object BoatHandlingStep {
     val turn = getTurn(tackTarget, state, input)
     val inverted = triggeredSpells.exists(_.kind == PoleInversion)
     val heading = Geo.ensure360(state.heading + (if (inverted) -turn else turn))
-    val windAngle = Geo.angleBetween(heading, state.windOrigin)
+    val windAngle = Geo.angleDelta(heading, state.windOrigin)
 
     val turnedState = state.copy(heading = heading, windAngle = windAngle)
 

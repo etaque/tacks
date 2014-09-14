@@ -50,7 +50,7 @@ class RaceActor(race: Race, master: User) extends Actor {
 
       val runStep =
         BoatHandlingStep.run(input, spellsOn(id)) _ andThen
-          WindStep.run(wind) andThen
+          WindStep.run(wind, race.course.windShadowLength, opponentsTo(id)) andThen
           VmgStep.run andThen
           BoatMovingStep.run(delta, race.course) andThen
           GateCrossingStep.run(previousStateMaybe, race.course, started) andThen
@@ -154,6 +154,10 @@ class RaceActor(race: Race, master: User) extends Actor {
    spellCasts.filter(_.to.contains(playerId)).map(_.spell)
   }
 
+  private def opponentsTo(playerId: String): Seq[PlayerState] = {
+    playersStates.toSeq.filterNot(_._1 == playerId).map(_._2)
+  }
+
   private def raceUpdateFor(playerId: String, playerState: PlayerState) = {
     RaceUpdate(
       now = DateTime.now,
@@ -161,7 +165,7 @@ class RaceActor(race: Race, master: User) extends Actor {
       course = None, // already transmitted in initial update
       playerState = Some(playerState),
       wind = wind,
-      opponents = playersStates.toSeq.filterNot(_._1 == playerId).map(_._2),
+      opponents = opponentsTo(playerId),
       leaderboard = leaderboard,
       buoys = buoys,
       triggeredSpells = spellsOn(playerId),

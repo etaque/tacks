@@ -65,6 +65,7 @@ case class Course(
   bounds: Box,
   windGenerator: WindGenerator,
   gustsCount: Int,
+  windShadowLength: Double,
   boatWidth: Double // for collision detection, should be consistent with icon
 ) {
   lazy val ((right, top), (left, bottom)) = bounds
@@ -105,6 +106,7 @@ object Course {
     bounds = ((800,2200), (-800,-400)),
     windGenerator = WindGenerator(8, 10, 5, 5),
     gustsCount = 8,
+    windShadowLength = 120,
     boatWidth = 8
   )
 

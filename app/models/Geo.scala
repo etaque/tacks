@@ -14,6 +14,15 @@ object Geo {
     sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
   }
 
+  def angleBetween(p1: Point, p2: Point): Double = {
+    val xDelta = p2._1 - p1._1
+    val yDelta = p2._2 - p1._2
+
+    val rad = atan2(yDelta, xDelta)
+
+    ensure360(radiansToAngle(rad))
+  }
+
   def inBox(p: Point, b: Box): Boolean = {
     val (x,y) = p
     val ((right, top), (left, bottom)) = b
@@ -37,10 +46,11 @@ object Geo {
   }
 
   def angleToRadians(angle: Double): Double = toRadians(-angle + 90)
+  def radiansToAngle(rad: Double): Double = toDegrees(rad) + 90
 
   def ensure360(d: Double): Double = (d + 360) % 360
 
-  def angleBetween(a1: Double, a2: Double): Double = {
+  def angleDelta(a1: Double, a2: Double): Double = {
     val delta = a1 - a2
     if (delta > 180) delta - 360
     else if (delta <= -180) delta + 360
