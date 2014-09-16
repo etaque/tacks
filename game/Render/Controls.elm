@@ -75,8 +75,7 @@ renderWindWheel wind player (w,h) =
         |> move (fromPolar (r + 4, windOriginRadians))
       windOriginText = ((show (round wind.origin)) ++ "&deg;")
         |> baseText |> centered |> toForm
-        |> rotate (windOriginRadians - pi/2)
-        |> move (fromPolar (r + 20, windOriginRadians))
+        |> move (0, r + 20)
       windSpeedText = ((show (round wind.speed)) ++ "kn")
         |> baseText |> centered |> toForm
       legend = "WIND" |> baseText |> centered |> toForm |> move (0, -50)

@@ -34,11 +34,11 @@ object Gust {
   def spawnAll(course: Course) = Seq.fill(course.gustsCount)(spawn(course))
 
   def spawn(course: Course) = Gust(
-    position = (course.randomX(), course.randomY()),
-    angle = nextInt(30) - 15,
-    speed = nextInt(15) - 5,
+    position = (course.area.randomX(), course.area.randomY()),
+    angle = nextInt(20) - 15,
+    speed = nextInt(10) - 5,
     radius = 0,
-    maxRadius = nextInt(50) + 200,
+    maxRadius = nextInt(100) + 200,
     spawnedAt = DateTime.now
   )
 }

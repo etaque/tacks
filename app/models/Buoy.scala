@@ -22,7 +22,7 @@ case class Buoy(
 object Buoy {
   import scala.util.Random._
   def spawn(course: Course) = Buoy(
-    position = course.randomPoint,
+    position = course.area.randomPoint,
     radius = 5,
     spell = Spell(
       kind = nextInt(2) match {

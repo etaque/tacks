@@ -1,7 +1,7 @@
 package models
 
 import java.lang.Math._
-
+import scala.util.Random.nextInt
 import models.Geo._
 import org.joda.time.DateTime
 import play.api.libs.json.{Json, Format}
@@ -10,6 +10,25 @@ sealed trait GateLocation
 case object StartLine extends GateLocation
 case object UpwindGate extends GateLocation
 case object DownwindGate extends GateLocation
+
+case class RaceArea(rightTop: Point, leftBottom: Point) {
+  lazy val ((right, top), (left, bottom)) = (rightTop, leftBottom)
+
+  lazy val width = abs(right - left)
+  lazy val height = abs(top - bottom)
+
+  lazy val cx = (right + left) / 2
+  lazy val cy = (top + bottom) / 2
+  lazy val center = (cx, cy)
+
+  import scala.util.Random._
+
+  def randomX(margin: Double = 0): Double = nextDouble * (width - margin * 2) - width / 2 + margin + cx
+  def randomY(margin: Double = 0): Double = nextDouble * (height - margin * 2) - height / 2 + margin + cy
+  def randomPoint: Point = (randomX(0), randomY(0))
+
+  def toBox = (rightTop, leftBottom)
+}
 
 case class Gate(
   y: Double,
@@ -42,6 +61,12 @@ case class Island(
   radius: Double
 )
 
+object Island {
+  def spawn(area: RaceArea): Island = {
+    Island(area.randomPoint, nextInt(50) + 50)
+  }
+}
+
 case class WindGenerator(
   wavelength1: Int,
   amplitude1: Int,
@@ -55,6 +80,12 @@ case class WindGenerator(
     (cos(at.getMillis * 0.001 / wavelength1) * 5 - cos(at.getMillis * 0.001 / wavelength2) * 5) / 2
 }
 
+object WindGenerator {
+  def spawn = {
+    WindGenerator(nextInt(12), nextInt(12), nextInt(6), nextInt(6))
+  }
+}
+
 
 case class Course(
   upwind: Gate,
@@ -62,27 +93,12 @@ case class Course(
   laps: Int,
   markRadius: Double,
   islands: Seq[Island],
-  bounds: Box,
+  area: RaceArea,
   windGenerator: WindGenerator,
   gustsCount: Int,
   windShadowLength: Double,
   boatWidth: Double // for collision detection, should be consistent with icon
 ) {
-  lazy val ((right, top), (left, bottom)) = bounds
-
-  lazy val width = abs(right - left)
-  lazy val height = abs(top - bottom)
-
-  lazy val cx = (right + left) / 2
-  lazy val cy = (top + bottom) / 2
-  lazy val center = (cx, cy)
-
-  import scala.util.Random._
-
-  def randomX(margin: Double = 0): Double = nextDouble * (width - margin * 2) - width / 2 + margin + cx
-  def randomY(margin: Double = 0): Double = nextDouble * (height - margin * 2) - height / 2 + margin + cy
-  def randomPoint: Point = (randomX(0), randomY(0))
-
   def nextGate(crossedGates: Int): Option[GateLocation] = {
     val m = crossedGates % 2
     if (crossedGates == laps * 2 + 1) None // finished
@@ -93,24 +109,23 @@ case class Course(
 }
 
 object Course {
-  val default = Course(
-    upwind = Gate(2000, 150),
-    downwind = Gate(-100, 150),
+  val defaultRaceArea = RaceArea((800,3200), (-800,-200))
+
+  def spawn = Course(
+    upwind = Gate(3000, 200),
+    downwind = Gate(100, 200),
     laps = 2,
     markRadius = 5,
-    islands = Seq(
-      Island((-250, 300), 90),
-      Island((150, 900), 80),
-      Island((-200, 1200), 60)
-    ),
-    bounds = ((800,2200), (-800,-400)),
-    windGenerator = WindGenerator(8, 10, 5, 5),
-    gustsCount = 8,
+    islands = Seq.fill[Island](4)(Island.spawn(defaultRaceArea)),
+    area = defaultRaceArea,
+    windGenerator = WindGenerator.spawn,
+    gustsCount = 6,
     windShadowLength = 120,
-    boatWidth = 8
+    boatWidth = 4
   )
 
 
+  implicit val raceAreaFormat: Format[RaceArea] = Json.format[RaceArea]
   implicit val windGeneratorFormat: Format[WindGenerator] = Json.format[WindGenerator]
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
   implicit val islandFormat: Format[Island] = Json.format[Island]

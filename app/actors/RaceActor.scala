@@ -145,7 +145,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
   private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
     gusts.map(_.update(race.course, wind, previousWindUpdate, at)).map { gust =>
-      if (Geo.inBox(gust.position, race.course.bounds)) {
+      if (Geo.inBox(gust.position, race.course.area.toBox)) {
         gust
       } else {
         Gust.spawn(race.course)

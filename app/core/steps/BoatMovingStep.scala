@@ -42,7 +42,7 @@ object BoatMovingStep {
     val halfBoatWidth = course.boatWidth / 2
 
     val stuckOnMark = Seq(dl, dr, ul, ur).exists(m => Geo.distanceBetween(p, m) <= course.markRadius + halfBoatWidth)
-    val outOfBounds = !Geo.inBox(p, course.bounds)
+    val outOfBounds = !Geo.inBox(p, course.area.toBox)
     val onIsland = course.islands.exists(i => Geo.distanceBetween(i.location, p) <= i.radius + halfBoatWidth)
 
     stuckOnMark || outOfBounds || onIsland

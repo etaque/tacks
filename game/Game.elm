@@ -6,13 +6,14 @@ import Dict
 
 type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
+type RaceArea = { rightTop: Point, leftBottom: Point }
 type Course =
   { upwind: Gate
   , downwind: Gate
   , laps: Int
   , markRadius: Float
   , islands: [Island]
-  , bounds: (Point, Point)
+  , area: RaceArea
   , windShadowLength: Float
   , boatWidth: Float
   }
@@ -77,7 +78,7 @@ defaultCourse =
   , laps = 0
   , markRadius = 0
   , islands = []
-  , bounds = ((0,0), (0,0))
+  , area = { rightTop = (0,0), leftBottom = (0,0) }
   , windShadowLength = 0
   , boatWidth = 0
   }

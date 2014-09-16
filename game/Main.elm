@@ -19,7 +19,7 @@ port raceInput : Signal
               , laps: Int
               , markRadius: Float
               , islands: [{ location : (Float,Float), radius : Float }]
-              , bounds: ((Float,Float),(Float,Float))
+              , area: { rightTop: (Float,Float), leftBottom: (Float,Float) }
               , windShadowLength: Float
               , boatWidth: Float
               }

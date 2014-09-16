@@ -120,13 +120,13 @@ renderOpponent shadowLength opponent =
   in group [shadow, hull, name]
 
 
-renderBounds : (Point, Point) -> Form
-renderBounds box =
-  let (ne,sw) = box
-      w = fst ne - fst sw
-      h = snd ne - snd sw
-      cw = (fst ne + fst sw) / 2
-      ch = (snd ne + snd sw) / 2
+renderBounds : RaceArea -> Form
+renderBounds area =
+  let {rightTop,leftBottom} = area
+      w = fst rightTop - fst leftBottom
+      h = snd rightTop - snd leftBottom
+      cw = (fst rightTop + fst leftBottom) / 2
+      ch = (snd rightTop + snd leftBottom) / 2
   in rect w h |> outlined (dashed white)
               |> alpha 0.3
               |> move (cw, ch)
@@ -205,7 +205,7 @@ renderRace ({player,opponents,course,buoys,triggeredSpells,now,center} as gameSt
         then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
         else renderGate course.downwind course.markRadius (player.nextGate == Just "DownwindGate")
       justForms =
-        [ renderBounds gameState.course.bounds
+        [ renderBounds gameState.course.area
         , renderIslands gameState
         , downwindOrStartLine
         , renderGate course.upwind course.markRadius (player.nextGate == Just "UpwindGate")
