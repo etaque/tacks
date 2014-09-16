@@ -34,7 +34,7 @@ object Gust {
   def spawnAll(course: Course) = Seq.fill(course.gustsCount)(spawn(course))
 
   def spawn(course: Course) = Gust(
-    position = (course.randomX(), course.top),
+    position = (course.randomX(), course.randomY()),
     angle = nextInt(30) - 15,
     speed = nextInt(15) - 5,
     radius = 0,
