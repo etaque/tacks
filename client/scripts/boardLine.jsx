@@ -15,7 +15,7 @@ var BoardLine = React.createClass({
     return _.map(playerStates, ps => {
       var id = ps[0],
           p = ps[1];
-      return p.user.name + (id === master.id ? "*" : "");
+      return p.player.name + (id === master.id ? "*" : "");
     }).join(" vs ");
   },
 
