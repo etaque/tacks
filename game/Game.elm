@@ -34,7 +34,7 @@ containsSpell spellName spells =
 
 type Buoy = { position : Point, radius : Float, spell : Spell }
 
-type Opponent = Boat { user : { name : String } }
+type Opponent = Boat { player : { name : String } }
 
 type Player = Boat
   { downwindVmg: Float

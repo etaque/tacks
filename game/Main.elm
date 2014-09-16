@@ -51,7 +51,7 @@ port raceInput : Signal
     , windAngle: Float
     , windOrigin: Float
     , windSpeed: Float
-    , user: { name: String }
+    , player: { name: String }
     }]
   , buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}]
   , leaderboard: [String]

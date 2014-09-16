@@ -114,7 +114,7 @@ renderOpponent shadowLength opponent =
         |> move opponent.position
         |> alpha 0.5
       shadow = renderWindShadow shadowLength opponent
-      name = opponent.user.name |> baseText |> centered |> toForm
+      name = opponent.player.name |> baseText |> centered |> toForm
         |> move (add opponent.position (0,-25))
         |> alpha 0.3
   in group [shadow, hull, name]
