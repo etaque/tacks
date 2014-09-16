@@ -111,7 +111,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
     if (startTime.isEmpty && byPlayerId == master.id.stringify) {
       val at = DateTime.now.plusSeconds(race.countdownSeconds)
       startTime = Some(at)
-      Akka.system.scheduler.schedule(race.countdownSeconds.seconds, 20.seconds, self, SpawnBuoy)
+//      Akka.system.scheduler.schedule(race.countdownSeconds.seconds, 20.seconds, self, SpawnBuoy)
     }
   }
 
