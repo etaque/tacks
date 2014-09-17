@@ -26,6 +26,10 @@ var Game = React.createClass({
             document.title = "Race started!"
           }
         }
+      } else {
+        if (!previousData.opponents || data.opponents.length != previousData.opponents.length) {
+          document.title = "Tacks (" + (data.opponents.length + 1) + ")";
+        }
       }
       game.ports.raceInput.send(data);
       previousData = data;
