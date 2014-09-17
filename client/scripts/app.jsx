@@ -28,9 +28,6 @@ $.ajax(Api.currentUser()).done(u => {
     render: function() {
       return (
         <div className="wrapper">
-          <div className="header">
-            <Link to="/" className="logo">Tacks</Link>
-          </div>
           {this.props.activeRouteHandler() || ""}
         </div>
         );

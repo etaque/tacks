@@ -12,11 +12,15 @@ var Link = Router.Link;
 var BoardLine = React.createClass({
 
   getPlayerNames: function(playerStates, master) {
-    return _.map(playerStates, ps => {
-      var id = ps[0],
-          p = ps[1];
-      return p.player.name + (id === master.id ? "*" : "");
-    }).join(" vs ");
+    if (_.isEmpty(playerStates)) {
+      return "<empty>";
+    } else {
+      return _.map(playerStates, ps => {
+        var id = ps[0],
+            p = ps[1];
+        return p.player.name;
+      }).join(" vs ");
+    }
   },
 
   getSecondsFromStart: function(startTime, now) {
@@ -39,11 +43,12 @@ var BoardLine = React.createClass({
     var seconds = this.getSecondsFromStart(s.startTime, this.props.now)
 
     return (
-      <li>
-        <Link to="playRace" params={{id: s.race._id}}>
-          {h} : {players} / {this.getStartText(seconds)}
-        </Link>
-      </li>);
+      <tr>
+        <td>{h} by {s.master.name}</td>
+        <td>{players}</td>
+        <td>{this.getStartText(seconds)}</td>
+        <td><a href={"/race/" + s.race._id} target="blank">Join</a></td>
+      </tr>);
   }
 
 });

@@ -18,7 +18,22 @@ var Board = React.createClass({
       return <div/>;
     } else {
       return (
-        <div className="races-board"><p>Races:</p><ul>{items}</ul></div>
+        <div className="races-board">
+          <table>
+            <caption>Open races</caption>
+            <thead>
+              <tr>
+                <th>Creation</th>
+                <th>Opponents</th>
+                <th>Start</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {items}
+            </tbody>
+          </table>
+        </div>
       );
     }
   }

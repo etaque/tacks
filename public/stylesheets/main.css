@@ -26,48 +26,90 @@ input, textarea {
   height: 100%;
 }
 
-.header {
-  background-color: #222;
-  color: #EEE;
-  padding: 10px 20px;
-}
-
-.logo {
-  color: white;
-  text-decoration: none;
-}
-.logo:hover {
-  text-decoration: underline;
-}
-
 .home {
-  padding: 20px;
+  margin: 20px auto;
+  width: 800px;
+  text-align: center;
+}
+
+hr {
+  margin-top: 100px;
+  margin-bottom: 20px;
+  border: 0px solid white;
+  opacity: 0.2;
+  border-top-width: 2px;
 }
 
 a {
   color: white;
 }
 
-.btn-new-race {
-  font-size: 16px;
-  text-decoration: none;
-  background-color: white;
-  border: none;
-  color: #0a6994;
-  cursor: pointer;
-  padding: 4px 8px;
-  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
-}
-.btn-new-race:hover {
-  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+p {
+  margin: 30px 0;
 }
 
-.lost-in-sea {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
+.btn-new-race {
+  display: block;
+  font-size: 21px;
+  text-decoration: none;
+  background-color: #e69500;
+  border: none;
+  color: #074764;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 60px;
+  box-shadow: 3px 3px 0px rgba(0, 0, 0, 0.3);
+  line-height: 40px;
+}
+.btn-new-race:hover {
+  background-color: #ffae1a;
+  box-shadow: 4px 4px 0px rgba(0, 0, 0, 0.2);
+}
+.btn-new-race.loading {
+  background-color: #cc8400;
+}
+
+.user-name {
+  color: orange;
+}
+
+.change-name {
+  display: inline-block;
+  background-color: white;
+  opacity: 0.9;
+  color: #0a6994;
+  padding: 2px 4px;
+  margin-left: 10px;
+  text-decoration: none;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
+}
+.change-name:hover {
+  opacity: 1;
+}
+
+.races-board {
+  margin-top: 40px;
+}
+.races-board table {
+  width: 100%;
+  background-color: #085577;
+}
+.races-board caption {
+  width: 20%;
+  margin: 0 auto;
+  padding: 4px;
+  background-color: #095f86;
+  text-transform: uppercase;
+  color: #0c7aac;
+}
+.races-board td, .races-board th {
+  padding: 4px 4px;
+}
+.races-board td {
+  background-color: #0a6994;
+}
+.races-board tr:hover td {
+  background-color: #0b73a2;
 }
 
 .game {

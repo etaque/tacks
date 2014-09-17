@@ -17,7 +17,8 @@ var Home = React.createClass({
   getInitialState: function() {
     return {
       userName: null,
-      racesStatus: []
+      racesStatus: [],
+      loadingNewRace: false
     };
   },
 
@@ -38,7 +39,7 @@ var Home = React.createClass({
 
   loadStatus: function() {
     $.ajax(Api.racesStatus()).done(function(racesStatus) {
-      this.setState({ racesStatus: racesStatus });
+      this.setState({ racesStatus: racesStatus, loadingNewRace: false });
     }.bind(this));
   },
 
@@ -53,26 +54,34 @@ var Home = React.createClass({
 
   createRace: function(e) {
     e.preventDefault();
-    util.post(Api.createRace()).done(function(race) {
-      Router.transitionTo("playRace", { id: race._id});
-    });
+    if (this.state.loadingNewRace) return;
+
+    this.setState({ loadingNewRace: true}, function() {
+      util.post(Api.createRace()).done(function(race) {
+        setTimeout(function() {
+          this.setState({ loadingNewRace: false});
+          // Router.transitionTo("playRace", { id: race._id});
+        }.bind(this), 1000);
+      }.bind(this));
+    }.bind(this));
   },
 
   render: function() {
     return (
       <div className="home">
+        <p><img src="/assets/images/logo-tacks-wide.png"/></p>
         <p>
-          Hello {this.state.userName}!{" "}
+          Hello, <span className="user-name">{this.state.userName}</span>
           <a href="" className="change-name" onClick={this.changeName}>change name</a>
         </p>
 
-        <p><a href="" onClick={this.createRace} className="btn-new-race">Create new race</a></p>
+        <p>Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.</p>
 
         <Board status={this.state.racesStatus} />
 
-        <p>&nbsp;</p>
-        <p>--</p>
-        <p>Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.</p>
+        <a href="" onClick={this.createRace} className={util.cx({"btn-new-race": true, "loading": this.state.loadingNewRace })}>New race</a>
+
+        <hr/>
         <p>Tacks is open source: <a href="https://github.com/etaque/tacks">Github repository</a>. Also, you can follow me (<a href="https://twitter.com/etaque">@etaque</a>) on Twitter.</p>
       </div>
     );

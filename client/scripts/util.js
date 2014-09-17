@@ -9,6 +9,17 @@ function post(route, data) {
   }));
 }
 
+function cx(classNames) {
+  if (typeof classNames == 'object') {
+    return Object.keys(classNames).map(function(className) {
+      return classNames[className] ? className : '';
+    }).join(' ');
+  } else {
+    return Array.prototype.join.call(arguments, ' ');
+  }
+}
+
 module.exports = {
-  post: post
+  post: post,
+  cx: cx
 };
