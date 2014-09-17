@@ -29,7 +29,7 @@ var BoardLine = React.createClass({
 
   getStartText: function(seconds) {
     if (seconds) {
-      if (seconds > 0) return "start in " + seconds + "s!";
+      if (seconds > 0) return "" + seconds + "\"";
       else return "started since " + Math.abs(seconds) + "s";
     } else {
       return "to be started";

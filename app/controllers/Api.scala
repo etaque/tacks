@@ -24,11 +24,17 @@ object Api extends Controller with Security {
   implicit val timeout = Timeout(5.seconds)
 
   def racesStatus = Identified.async() { implicit request =>
-    (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]].map { races =>
-      Ok(Json.obj(
-        "now" -> DateTime.now,
-        "races" -> Json.toJson(races)))
+    val racesFuture = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]
+    val onlinePlayersFuture = (ChatRoom.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
+    for {
+      races <- racesFuture
+      onlinePlayers <- onlinePlayersFuture
     }
+    yield Ok(Json.obj(
+      "now" -> DateTime.now,
+      "races" -> Json.toJson(races),
+      "onlinePlayers" -> Json.toJson(onlinePlayers)
+    ))
   }
 
   def onlinePlayers = Identified.async() { implicit request =>

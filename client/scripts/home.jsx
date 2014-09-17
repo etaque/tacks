@@ -66,6 +66,10 @@ var Home = React.createClass({
     }.bind(this));
   },
 
+  formatOnlinePlayers: function(status) {
+    return _.map(status.onlinePlayers, 'name').join(", ");
+  },
+
   render: function() {
     return (
       <div className="home">
@@ -80,6 +84,8 @@ var Home = React.createClass({
         <Board status={this.state.racesStatus} />
 
         <a href="" onClick={this.createRace} className={util.cx({"btn-new-race": true, "loading": this.state.loadingNewRace })}>New race</a>
+
+        <p>Online players: {this.formatOnlinePlayers(this.state.racesStatus)}</p>
 
         <hr/>
         <p>Tacks is open source: <a href="https://github.com/etaque/tacks">Github repository</a>. Also, you can follow me (<a href="https://twitter.com/etaque">@etaque</a>) on Twitter.</p>

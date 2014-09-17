@@ -3,6 +3,7 @@
  */
 
 var React = require('react');
+var util  = require('./util');
 
 var Game = React.createClass({
 
@@ -11,9 +12,23 @@ var Game = React.createClass({
 
     var game = Elm.embed(Elm.Main, this.getDOMNode(), { raceInput: this.props.initialUpdate });
 
+    var previousData = {};
+    var started = false;
+
     ws.onmessage = function(event) {
       var data = JSON.parse(event.data);
+      if (data.startTime) {
+        if (data.now < data.startTime) {
+          document.title = "Start in " + util.timer(data.startTime - data.now);
+        } else {
+          if (!started) {
+            started = true;
+            document.title = "Race started!"
+          }
+        }
+      }
       game.ports.raceInput.send(data);
+      previousData = data;
     };
 
     ws.onopen = function() {
