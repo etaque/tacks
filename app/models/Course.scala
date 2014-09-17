@@ -82,7 +82,7 @@ case class WindGenerator(
 
 object WindGenerator {
   def spawn = {
-    WindGenerator(nextInt(12), nextInt(12), nextInt(6), nextInt(6))
+    WindGenerator(nextInt(6) + 6, nextInt(6) + 6, nextInt(3) + 3, nextInt(3) + 3)
   }
 }
 
