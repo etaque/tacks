@@ -27,6 +27,7 @@ case class PlayerState (
   player: Player,
   time: DateTime,
   position: Point,
+  isGrounded: Boolean,
   heading: Double,
   velocity: Double,
   windAngle: Double,
@@ -57,7 +58,7 @@ case class PlayerState (
 
 object PlayerState {
   def initial(player: Player) = PlayerState(
-    player, DateTime.now, (0,0), 0, 0, 0, 0, 0, 0, 0, Seq(),
+    player, DateTime.now, (0,0), false, 0, 0, 0, 0, 0, 0, 0, Seq(),
     FixedHeading, None, Seq(), Some(StartLine), None)
 }
 
@@ -135,6 +136,7 @@ object JsonFormats {
     (__ \ 'player).format[Player] and
       (__ \ 'time).format[DateTime] and
       (__ \ 'position).format[Point] and
+      (__ \ 'isGrounded).format[Boolean] and
       (__ \ 'heading).format[Double] and
       (__ \ 'velocity).format[Double] and
       (__ \ 'windAngle).format[Double] and

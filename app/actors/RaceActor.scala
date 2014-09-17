@@ -21,6 +21,9 @@ case object AutoClean
 
 class RaceActor(race: Race, master: Player) extends Actor {
 
+  val fps = 30
+  lazy val frameMillis = 1000 / fps
+
   type PlayerId = String
   case class SpellCast(by: PlayerId, spell: Spell, at: DateTime, to: Seq[PlayerId]) {
     def isExpired = at.plusSeconds(spell.duration).isBeforeNow
@@ -46,28 +49,38 @@ class RaceActor(race: Race, master: Player) extends Actor {
     case PlayerUpdate(player, input) => {
       val id = player.id.stringify
       val previousStateMaybe = playersStates.get(id)
-      val now = DateTime.now
-      val delta = previousStateMaybe.map(now.getMillis - _.time.getMillis).getOrElse(0L)
 
-      if (previousWindUpdate.plusMillis(33).isBeforeNow) updateWind(now)
+      previousStateMaybe.filter(_.time.plusMillis(frameMillis).isAfterNow) match {
 
-      val runStep =
-        BoatHandlingStep.run(input, spellsOn(id)) _ andThen
-          WindStep.run(wind, race.course.windShadowLength, opponentsTo(id)) andThen
-          VmgStep.run andThen
-          BoatMovingStep.run(delta, race.course) andThen
-          GateCrossingStep.run(previousStateMaybe, race.course, started) andThen
-          withCollectedBuoy(race.course.boatWidth) andThen
-          withCastedSpell(id, input.spellCast)
+        case Some(freshState) => sender ! raceUpdateFor(id, freshState)
 
-      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(player))).copy(time = now)
+        case None => {
+          val now = DateTime.now
+          val elapsed = previousStateMaybe.map(now.getMillis - _.time.getMillis).getOrElse(0L)
 
-      playersStates += (id -> newState)
-      if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
+          if (previousWindUpdate.plusMillis(frameMillis).isBeforeNow) updateWind(now)
 
-      if (input.startCountdown) startCountdown(byPlayerId = id)
+          val runStep =
+            BoatHandlingStep.run(input, spellsOn(id)) _ andThen
+              WindStep.run(wind, race.course.windShadowLength, opponentsTo(id)) andThen
+              VmgStep.run andThen
+              BoatMovingStep.run(elapsed, race.course) andThen
+              GateCrossingStep.run(previousStateMaybe, race.course, started) andThen
+              withCollectedBuoy(race.course.boatWidth) andThen
+              withCastedSpell(id, input.spellCast)
 
-      sender ! raceUpdateFor(id, newState)
+          val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(player))).copy(time = now)
+
+          previousStateMaybe.foreach(analyseTransition(newState))
+
+          playersStates += (id -> newState)
+          if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
+
+          if (input.startCountdown) startCountdown(byPlayerId = id)
+
+          sender ! raceUpdateFor(id, newState)
+        }
+      }
     }
 
     case PlayerQuit(id) => {
@@ -95,6 +108,14 @@ class RaceActor(race: Race, master: Player) extends Actor {
       if (deserted || finished) {
         self ! PoisonPill
       }
+    }
+  }
+
+  private def analyseTransition(newState: PlayerState)(previousState: PlayerState): Unit = {
+    (previousState.isGrounded, newState.isGrounded) match {
+      case (false, true) => Logger.debug(s"Player ${newState.player.name} grounded at ${newState.time} on ${newState.position}")
+      case (true, false) => Logger.debug(s"Player ${newState.player.name} ungrounded at ${newState.time} on ${newState.position}")
+      case _ =>
     }
   }
 

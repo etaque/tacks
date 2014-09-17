@@ -13,23 +13,27 @@ object BoatMovingStep {
    * @return updated player state
    */
   def run(elapsed: Long, course: Course)(state: PlayerState): PlayerState = {
+    if (elapsed == 0) state
+    else {
+      val nextVelocity = withInertia(elapsed, state.velocity, Sailing.ac72Speed(state.windSpeed, state.windAngle))
+      val nextPosition = Geo.movePoint(state.position, elapsed, nextVelocity, state.heading)
 
-    val nextVelocity = withInertia(elapsed: Long, state.velocity, Sailing.ac72Speed(state.windSpeed, state.windAngle))
-    val nextPosition = Geo.movePoint(state.position, elapsed, nextVelocity, state.heading)
-    
-    val grounded = isGrounded(nextPosition, course)
-    
-    val velocity = if (grounded) 0 else nextVelocity
-    val position = if (grounded) state.position else nextPosition
+      val grounded = isGrounded(nextPosition, course)
 
-    val trail = (position +: state.trail).take(20)
+      val velocity = if (grounded) 0 else nextVelocity
+      val position = if (grounded) state.position else nextPosition
 
-    state.copy(velocity = velocity, position = position, trail = trail)
+      val trail = (position +: state.trail).take(20)
+
+      state.copy(isGrounded = grounded, velocity = velocity, position = position, trail = trail)
+    }
   }
 
   val maxAccel = 0.03
 
   def withInertia(elapsed: Long, previousVelocity: Double, targetVelocity: Double): Double = {
+    require(elapsed > 0, "elapsed > 0")
+
     val velocityDelta = targetVelocity - previousVelocity
     val accel = velocityDelta / elapsed
     val realAccel = if (accel > 0) math.min(accel, maxAccel) else math.max(accel, -maxAccel)
