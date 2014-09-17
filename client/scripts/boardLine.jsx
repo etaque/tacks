@@ -6,6 +6,7 @@ var React  = require('react');
 var Router = require('react-router');
 var _      = require('lodash');
 var moment = require('moment');
+var util   = require('./util');
 
 var Link = Router.Link;
 
@@ -23,14 +24,14 @@ var BoardLine = React.createClass({
     }
   },
 
-  getSecondsFromStart: function(startTime, now) {
-    return startTime ? Math.ceil((startTime - now) / 1000) : null;
+  getMillisFromStart: function(startTime, now) {
+    return
   },
 
-  getStartText: function(seconds) {
-    if (seconds) {
-      if (seconds > 0) return "" + seconds + "\"";
-      else return "started since " + Math.abs(seconds) + "s";
+  getStartText: function(millis) {
+    if (millis) {
+      if (millis > 0) return util.timer(millis);
+      else return "started since " + util.timer(Math.abs(millis));
     } else {
       return "to be started";
     }
@@ -40,13 +41,13 @@ var BoardLine = React.createClass({
     var s = this.props.raceStatus;
     var h = moment(s.race.creationTime).format("HH:mm");
     var players = this.getPlayerNames(s.playerStates, s.master);
-    var seconds = this.getSecondsFromStart(s.startTime, this.props.now)
+    var millis = s.startTime ? (s.startTime - this.props.now) : null;
 
     return (
       <tr>
         <td>{h} by {s.master.name}</td>
         <td>{players}</td>
-        <td>{this.getStartText(seconds)}</td>
+        <td>{this.getStartText(millis)}</td>
         <td><a href={"/race/" + s.race._id} target="blank">Join</a></td>
       </tr>);
   }
