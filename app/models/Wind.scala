@@ -36,7 +36,7 @@ object Gust {
   def spawn(course: Course) = Gust(
     position = (course.area.randomX(), course.area.randomY()),
     angle = nextInt(20) - 15,
-    speed = nextInt(10) - 5,
+    speed = nextInt(10) - 3,
     radius = 0,
     maxRadius = nextInt(100) + 200,
     spawnedAt = DateTime.now
