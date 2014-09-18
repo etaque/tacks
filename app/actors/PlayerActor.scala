@@ -1,21 +1,48 @@
 package actors
 
-import scala.concurrent.duration._
-import scala.concurrent.ExecutionContext.Implicits.global
+import core.steps._
+import org.joda.time.DateTime
+
 import akka.actor.{Props, Actor, ActorRef}
-import akka.util.Timeout
-import akka.pattern.{ ask, pipe }
-import models.{Player, PlayerInput, PlayerUpdate}
+import models._
+
+case class RunStep(
+  previousState: PlayerState,
+  input: PlayerInput,
+  now: DateTime,
+  wind: Wind,
+  race: Race,
+  started: Boolean,
+  opponents: Seq[PlayerState]
+)
+
+case class StepResult(prevState: PlayerState, newState: PlayerState)
 
 class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Actor {
 
   def receive = {
-    case input: PlayerInput => {
-      implicit val timeout = Timeout(1.second)
-      (raceActor ? PlayerUpdate(player, input)).map { raceUpdate =>
-        out ! raceUpdate
+
+    case input: PlayerInput => raceActor ! PlayerUpdate(player, input)
+
+    case RunStep(previousState, input, now, wind, race, started, opponents) => {
+      val elapsed = now.getMillis - previousState.time.getMillis
+
+      val runner = if (elapsed > 0) {
+        BoatTurningStep.run(previousState, input, Nil) _ andThen
+          WindStep.run(wind, race.course.windShadowLength, opponents) andThen
+          VmgStep.run andThen
+          BoatMovingStep.run(elapsed, race.course) andThen
+          GateCrossingStep.run(previousState, race.course, started)
+      } else {
+        BoatTurningStep.run(previousState, input, Nil) _
       }
+
+      val newState = runner(previousState).copy(time = now)
+      sender ! StepResult(previousState, newState)
     }
+
+    case raceUpdate: RaceUpdate => out ! raceUpdate
+
   }
 
   override def postStop() = {

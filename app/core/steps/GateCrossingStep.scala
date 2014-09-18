@@ -5,11 +5,7 @@ import org.joda.time.DateTime
 
 object GateCrossingStep {
 
-  def run(previousStateMaybe: Option[PlayerState], course: Course, started: Boolean)(state: PlayerState): PlayerState = {
-    previousStateMaybe.fold(state)(updateCrossedGates(state, course, started))
-  }
-
-  def updateCrossedGates(state: PlayerState, course: Course, started: Boolean)(previousState: PlayerState): PlayerState = {
+  def run(previousState: PlayerState, course: Course, started: Boolean)(state: PlayerState): PlayerState = {
     val now = DateTime.now
     val crossedGates = state.crossedGates
     val step = (previousState.position, state.position)

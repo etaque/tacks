@@ -1,6 +1,5 @@
 package models
 
-import Math._
 import org.joda.time.DateTime
 import play.api.data.validation.ValidationError
 import play.api.libs.json._

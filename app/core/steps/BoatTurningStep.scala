@@ -4,13 +4,13 @@ import models._
 
 object BoatTurningStep {
 
-  def run(previousStateMaybe: Option[PlayerState], input: PlayerInput, triggeredSpells: Seq[Spell])(state: PlayerState): PlayerState = {
+  def run(previousState: PlayerState, input: PlayerInput, triggeredSpells: Seq[Spell])(state: PlayerState): PlayerState = {
     val manualTurn = input.arrows.x != 0
 
     val tackTarget = if (manualTurn) None else state.tackTarget match {
 
       case Some(_) =>
-        if (previousStateMaybe.exists(tackTargetReached(state))) None
+        if (tackTargetReached(state)(previousState)) None
         else state.tackTarget
 
       case None =>
@@ -28,7 +28,7 @@ object BoatTurningStep {
 
     val turnedState = state.copy(heading = heading, windAngle = windAngle)
 
-    val tackTargetAfterTurn = if (previousStateMaybe.exists(tackTargetReached(turnedState))) None else tackTarget
+    val tackTargetAfterTurn = if (tackTargetReached(turnedState)(previousState)) None else tackTarget
     val newControlMode = if (manualTurn) FixedHeading else if (input.lock) FixedAngle else turnedState.controlMode
 
     turnedState.copy(tackTarget = tackTargetAfterTurn, controlMode = newControlMode)

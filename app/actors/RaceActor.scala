@@ -9,7 +9,6 @@ import play.api.Logger
 import akka.actor._
 import org.joda.time.DateTime
 import models._
-import core.steps._
 
 case class Start(at: DateTime)
 case class PlayerQuit(id: String)
@@ -18,6 +17,7 @@ case object UpdateWind
 case object SpawnBuoy
 case object GetStatus
 case object AutoClean
+
 
 class RaceActor(race: Race, master: Player) extends Actor {
 
@@ -48,37 +48,20 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
     case PlayerUpdate(player, input) => {
       val id = player.id.stringify
-      val previousStateMaybe = playersStates.get(id)
+      val previousState = playersStates.getOrElse(id, PlayerState.initial(player))
 
       val now = DateTime.now
-      val elapsedMaybe = previousStateMaybe.map(now.getMillis - _.time.getMillis)
 
       if (previousWindUpdate.plusMillis(frameMillis).isBeforeNow) updateWind(now)
-
-      val runStep = elapsedMaybe match {
-
-        case Some(elapsed) if elapsed > 0 =>
-          BoatTurningStep.run(previousStateMaybe, input, spellsOn(id)) _ andThen
-            WindStep.run(wind, race.course.windShadowLength, opponentsTo(id)) andThen
-            VmgStep.run andThen
-            BoatMovingStep.run(elapsed, race.course) andThen
-            GateCrossingStep.run(previousStateMaybe, race.course, started) andThen
-            withCollectedBuoy(race.course.boatWidth) andThen
-            withCastedSpell(id, input.spellCast)
-
-        case _ =>
-          BoatTurningStep.run(previousStateMaybe, input, spellsOn(id)) _
-
-      }
-
-      val newState = runStep(previousStateMaybe.getOrElse(PlayerState.initial(player))).copy(time = now)
-
-      previousStateMaybe.foreach(analyseTransition(newState))
-
-      playersStates += (id -> newState)
-      if (previousStateMaybe.exists(_.crossedGates != newState.crossedGates)) updateLeaderboard()
-
       if (input.startCountdown) startCountdown(byPlayerId = id)
+
+      sender ! RunStep(previousState, input, now, wind, race, started, opponentsTo(id))
+    }
+
+    case StepResult(prevState, newState) => {
+      val id = newState.player.id.stringify
+      playersStates += (id -> newState)
+      if (prevState.crossedGates != newState.crossedGates) updateLeaderboard()
 
       sender ! raceUpdateFor(id, newState)
     }
@@ -90,9 +73,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
     case UpdateGameState => {
       updateLeaderboard()
-      updateSpells()
     }
-
 
     case SpawnBuoy => {
       if (buoys.size < 10) {
@@ -111,14 +92,6 @@ class RaceActor(race: Race, master: Player) extends Actor {
     }
   }
 
-  private def analyseTransition(newState: PlayerState)(previousState: PlayerState): Unit = {
-//    (previousState.isGrounded, newState.isGrounded) match {
-//      case (false, true) => Logger.debug(s"Player ${newState.player.name} grounded at ${newState.time} on ${newState.position}")
-//      case (true, false) => Logger.debug(s"Player ${newState.player.name} ungrounded at ${newState.time} on ${newState.position}")
-//      case _ =>
-//    }
-  }
-
   private def updateWind(now: DateTime): Unit = {
     wind = Wind(
       origin = race.course.windGenerator.windOrigin(now),
@@ -132,7 +105,6 @@ class RaceActor(race: Race, master: Player) extends Actor {
     if (startTime.isEmpty && byPlayerId == master.id.stringify) {
       val at = DateTime.now.plusSeconds(race.countdownSeconds)
       startTime = Some(at)
-//      Akka.system.scheduler.schedule(race.countdownSeconds.seconds, 20.seconds, self, SpawnBuoy)
     }
   }
 
@@ -144,26 +116,6 @@ class RaceActor(race: Race, master: Player) extends Actor {
     }
   }
 
-  private def withCollectedBuoy(boatWidth: Double)(state: PlayerState): PlayerState = {
-    val newSpell: Option[Spell] = state.collision(boatWidth, buoys).filter(_ => started).map { buoy =>
-      buoys = buoys.filterNot(_ == buoy) // Remove the spell from the game board
-      buoy.spell
-    }
-    newSpell.fold(state)(state.withSpell)
-  }
-
-  private def withCastedSpell(id: PlayerId, castSpell: Boolean)(state: PlayerState): PlayerState = {
-    state.ownSpell.filter(_ => castSpell).fold(state) { spell =>
-      Logger.debug(s"Player ${state.player.name} casting spell $spell")
-      spellCasts = spellCasts :+ SpellCast(by = id, spell, at = DateTime.now, to = playersStates.keys.filterNot(_ == id).toSeq)
-      state.copy(ownSpell = None)
-    }
-  }
-
-  private def updateSpells() = {
-    spellCasts = spellCasts.filterNot(_.isExpired)
-  }
-
   private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
     gusts.map(_.update(race.course, wind, previousWindUpdate, at)).map { gust =>
       if (Geo.inBox(gust.position, race.course.area.toBox)) {
@@ -172,10 +124,6 @@ class RaceActor(race: Race, master: Player) extends Actor {
         Gust.spawn(race.course)
       }
     }
-  }
-
-  private def spellsOn(playerId: String): Seq[Spell] = {
-   spellCasts.filter(_.to.contains(playerId)).map(_.spell)
   }
 
   private def opponentsTo(playerId: String): Seq[PlayerState] = {
@@ -192,7 +140,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
       opponents = opponentsTo(playerId),
       leaderboard = leaderboard,
       buoys = buoys,
-      triggeredSpells = spellsOn(playerId),
+      triggeredSpells = Nil,
       isMaster = master.id.stringify == playerId
     )
   }
