@@ -43,12 +43,6 @@ case class PlayerState (
   ownSpell: Option[Spell] = None
 ) {
 
-  def isTackTargetReached: Boolean = (tackTarget, controlMode) match {
-    case (Some(t), FixedAngle) => abs(t - windAngle) < 0.1
-    case (Some(t), FixedHeading) => abs(t - heading) < 0.1
-    case (None, _) => false
-  }
-
   def collision(boatWidth: Double, buoys: Seq[Buoy]): Option[Buoy] = buoys.find { buoy =>
     distanceBetween(buoy.position, position) <= buoy.radius + boatWidth / 2
   }
