@@ -64,7 +64,7 @@ case class Island(
 
 object Island {
   def spawn(area: RaceArea): Island = {
-    Island((area.randomX(200), area.randomY(200)), nextInt(50) + 50)
+    Island((area.randomX(200), area.randomY(400)), nextInt(50) + 50)
   }
 }
 

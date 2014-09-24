@@ -20,8 +20,6 @@ input, textarea {
 }
 
 .wrapper {
-  display: flex;
-  flex-direction: column;
   height: 100%;
 }
 
@@ -143,6 +141,5 @@ p {
 }
 
 .game {
-  flex: 1;
-  overflow: hidden;
+  height: 100%;
 }
