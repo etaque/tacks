@@ -18,6 +18,7 @@ body {
   font-family: $fontFamily;
   font-size: 15px;
   background-color: $seaBlue;
+  overflow: scroll;
 }
 
 input,textarea {

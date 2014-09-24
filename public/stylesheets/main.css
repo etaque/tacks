@@ -13,6 +13,7 @@ body {
   font-family: Inconsolata, monospace;
   font-size: 15px;
   background-color: #0a6994;
+  overflow: scroll;
 }
 
 input, textarea {
