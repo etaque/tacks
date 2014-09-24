@@ -10,7 +10,6 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden;
 }
 
 body {
@@ -126,6 +125,43 @@ p {
 
 }
 
+.finished-races {
+  width: 50%;
+  margin: 0 auto;
+  margin-top: 100px;
+
+  h3 {
+    font-size: 15px;
+    text-transform: uppercase;
+  }
+
+  h4 {
+    margin: 0 auto;
+    margin-top: 15px;
+    padding: 4px;
+    background-color: darken($seaBlue, 3%);
+    text-transform: uppercase;
+    color: lighten($seaBlue, 5%);
+  }
+
+  table {
+    width: 100%;
+    background-color: darken($seaBlue, 6%);
+  }
+
+  td {
+    padding: 4px 4px;
+    text-align: left;
+    vertical-align: top;
+
+    &.time {
+      text-align: right;
+      white-space: nowrap;
+    }
+  }
+}
+
 .game {
   flex: 1;
+  overflow: hidden;
 }

@@ -3,12 +3,10 @@
  */
 
 var React  = require('react');
-var Router = require('react-router');
 var _      = require('lodash');
 var moment = require('moment');
 var util   = require('./util');
 
-var Link = Router.Link;
 
 var BoardLine = React.createClass({
 
@@ -22,10 +20,6 @@ var BoardLine = React.createClass({
         return p.player.name;
       }).join(" vs ");
     }
-  },
-
-  getMillisFromStart: function(startTime, now) {
-    return
   },
 
   getStartText: function(millis) {

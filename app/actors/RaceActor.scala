@@ -5,16 +5,13 @@ import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
-import play.api.Logger
 import akka.actor._
 import org.joda.time.DateTime
 import models._
 
 case class Start(at: DateTime)
 case class PlayerQuit(id: String)
-case object UpdateGameState
 case object UpdateWind
-case object SpawnBuoy
 case object GetStatus
 case object AutoClean
 
@@ -31,9 +28,9 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
   val playersStates = scala.collection.mutable.Map[PlayerId, PlayerState]()
   var wind = Wind.default.copy(gusts = Gust.spawnAll(race.course))
-  var buoys = Seq[Buoy]()
-  var spellCasts = Seq[SpellCast]()
-  var leaderboard = Seq[String]()
+  var tally = scala.collection.mutable.Map[Player, Seq[DateTime]]()
+  var ranking = Seq[String]()
+  var finishersCount = 0
 
   var previousWindUpdate = DateTime.now
   var startTime: Option[DateTime] = None
@@ -41,7 +38,9 @@ class RaceActor(race: Race, master: Player) extends Actor {
   def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
   def started = millisBeforeStart.exists(_ <= 0)
 
-  Akka.system.scheduler.schedule(1.second, 1.second, self, UpdateGameState)
+  lazy val gatesToCross = race.course.laps * 2 + 1
+  def finished = tally.nonEmpty && tally.values.forall(_.length == gatesToCross)
+
   Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean)
 
   def receive = {
@@ -61,24 +60,13 @@ class RaceActor(race: Race, master: Player) extends Actor {
     case StepResult(prevState, newState) => {
       val id = newState.player.id.stringify
       playersStates += (id -> newState)
-      if (prevState.crossedGates != newState.crossedGates) updateLeaderboard()
+      if (prevState.crossedGates != newState.crossedGates) updateTally()
 
       sender ! raceUpdateFor(id, newState)
     }
 
     case PlayerQuit(id) => {
-      Logger.debug("Boat quit: " + id)
       playersStates -= id
-    }
-
-    case UpdateGameState => {
-      updateLeaderboard()
-    }
-
-    case SpawnBuoy => {
-      if (buoys.size < 10) {
-        buoys = buoys :+ Buoy.spawn(race.course)
-      }
     }
 
     case GetStatus => sender ! (startTime, playersStates.toSeq)
@@ -105,15 +93,30 @@ class RaceActor(race: Race, master: Player) extends Actor {
     if (startTime.isEmpty && byPlayerId == master.id.stringify) {
       val at = DateTime.now.plusSeconds(race.countdownSeconds)
       startTime = Some(at)
+      Race.updateStartTime(race, at)
     }
   }
 
-  private def updateLeaderboard() = {
-    if (playersStates.values.exists(_.crossedGates.nonEmpty)) {
-      leaderboard = playersStates.toSeq.sortBy {
-        case (_, b) => (-b.crossedGates.length, b.crossedGates.headOption.map(_.getMillis))
-      }.map(_._2.player.name)
+  private def updateTally() = {
+    playersStates.values.foreach { state =>
+      tally += state.player -> state.crossedGates
     }
+
+    ranking = tally.toSeq.sortBy {
+      case (player, gates) => (-gates.length, gates.headOption.map(_.getMillis))
+    }.map(_._1.name)
+
+    val fc = tally.values.count(_.length == gatesToCross)
+
+    if (fc != finishersCount) {
+      val typedTally = tally.toSeq.map(t => PlayerTally(t._1, t._2))
+      fc match {
+        case 1 => // ignore
+        case 2 => Race.save(race.copy(tally = typedTally, startTime = startTime))
+        case _ => Race.updateTally(race, typedTally)
+      }
+    }
+    finishersCount = fc
   }
 
   private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
@@ -138,9 +141,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
       playerState = Some(playerState),
       wind = wind,
       opponents = opponentsTo(playerId),
-      leaderboard = leaderboard,
-      buoys = buoys,
-      triggeredSpells = Nil,
+      leaderboard = ranking,
       isMaster = master.id.stringify == playerId
     )
   }

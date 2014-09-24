@@ -1,4 +1,4 @@
-package utils
+package tools
 
 import play.api.data.validation.ValidationError
 import play.api.libs.json._

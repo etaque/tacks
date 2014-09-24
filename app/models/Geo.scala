@@ -2,6 +2,7 @@ package models
 
 import Math._
 import play.api.libs.json._
+import reactivemongo.bson._
 
 object Geo {
   type Point = (Double,Double) // (x,y)
@@ -57,6 +58,12 @@ object Geo {
     else delta
   }
 
-  implicit val pointFormat: Format[Point] = utils.JsonFormats.tuple2Format[Double,Double]
-  implicit val boxFormat: Format[Box] = utils.JsonFormats.tuple2Format[Point,Point]
+  import reactivemongo.bson.{BSONDoubleHandler => dh}
+  implicit val pointHandler = new BSONHandler[BSONArray, (Double, Double)] {
+    def read(array: BSONArray) = (dh.read(array.getAs[BSONDouble](0).get), dh.read(array.getAs[BSONDouble](1).get))
+    def write(tuple: (Double, Double)) = BSONArray(dh.write(tuple._1), dh.write(tuple._2))
+  }
+
+  implicit val pointFormat: Format[Point] = _root_.tools.JsonFormats.tuple2Format[Double,Double]
+  implicit val boxFormat: Format[Box] = _root_.tools.JsonFormats.tuple2Format[Point,Point]
 }

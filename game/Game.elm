@@ -26,15 +26,6 @@ type Boat a =
       , windOrigin: Float
       , windSpeed: Float }
 
-type Spell = { kind : String }
-
-containsSpell : String -> [Spell] -> Bool
-containsSpell spellName spells =
-  let filtredSpells = filter (\spell -> spell.kind == spellName) spells
-  in  length filtredSpells > 0
-
-type Buoy = { position : Point, radius : Float, spell : Spell }
-
 type Opponent = Boat { player : { name : String } }
 
 type Player = Boat
@@ -45,7 +36,6 @@ type Player = Boat
   , tackTarget: Maybe Float
   , crossedGates: [Time]
   , nextGate: Maybe String -- GateLocation data type is incompatible with port inputs
-  , ownSpell: Maybe Spell
   }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
@@ -57,12 +47,10 @@ type GameState =
   , wake: [Point]
   , center: Point
   , opponents: [Opponent]
-  , buoys: [Buoy]
   , course: Course
   , leaderboard: [String]
   , now: Time
   , countdown: Maybe Time
-  , triggeredSpells: [Spell]
   , isMaster: Bool
   }
 
@@ -98,7 +86,6 @@ defaultPlayer =
   , nextGate = Nothing
   , downwindVmg = 0
   , upwindVmg = 0
-  , ownSpell = Nothing
   }
 
 defaultWind : Wind
@@ -115,12 +102,10 @@ defaultGame =
   , center = (0,0)
   , wake = []
   , opponents = []
-  , buoys = []
   , course = defaultCourse
   , leaderboard = []
   , now = 0
   , countdown = Nothing
-  , triggeredSpells = []
   , isMaster = False
   }
 

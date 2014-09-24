@@ -2,14 +2,15 @@
  * @jsx React.DOM
  */
 
-var React      = require('react');
-var BaconMixin = require('react-bacon').BaconMixin;
-var Router     = require('react-router');
-var $          = require('jquery');
-var _          = require('lodash');
-var Board      = require('./board');
-var Api        = require('./api');
-var util       = require('./util');
+var React         = require('react');
+var BaconMixin    = require('react-bacon').BaconMixin;
+var Router        = require('react-router');
+var $             = require('jquery');
+var _             = require('lodash');
+var Board         = require('./board');
+var FinishedRaces = require('./finishedRaces');
+var Api           = require('./api');
+var util          = require('./util');
 
 var Home = React.createClass({
   mixins: [BaconMixin],
@@ -67,7 +68,7 @@ var Home = React.createClass({
   },
 
   formatOnlinePlayers: function(status) {
-    return _.map(status.onlinePlayers, 'name').join(", ");
+    return (_.map(_.sortBy(status.onlinePlayers, 'name'), 'name')).join(", ");
   },
 
   render: function() {
@@ -86,6 +87,8 @@ var Home = React.createClass({
         <a href="" onClick={this.createRace} className={util.cx({"btn-new-race": true, "loading": this.state.loadingNewRace })}>New race</a>
 
         <p>Online players: {this.formatOnlinePlayers(this.state.racesStatus)}</p>
+
+        <FinishedRaces races={this.state.racesStatus.finishedRaces} />
 
         <hr/>
         <p>Tacks is open source: <a href="https://github.com/etaque/tacks">Github repository</a>. Also, you can follow me (<a href="https://twitter.com/etaque">@etaque</a>) on Twitter.</p>

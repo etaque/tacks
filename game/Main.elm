@@ -37,7 +37,6 @@ port raceInput : Signal
       , tackTarget: Maybe Float
       , crossedGates: [Float]
       , nextGate: Maybe String
-      , ownSpell: Maybe { kind: String }
       }
   , wind:
       { origin : Float
@@ -53,9 +52,7 @@ port raceInput : Signal
     , windSpeed: Float
     , player: { name: String }
     }]
-  , buoys: [{position: (Float,Float), radius: Float, spell: {kind: String}}]
   , leaderboard: [String]
-  , triggeredSpells: [{ kind: String }]
   , isMaster: Bool
   }
 
@@ -74,7 +71,6 @@ port playerOutput : Signal
   , lock: Bool
   , tack: Bool
   , subtleTurn: Bool
-  , spellCast: Bool
   , startCountdown: Bool
   }
 

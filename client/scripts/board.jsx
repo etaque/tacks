@@ -4,13 +4,12 @@
 
 var React      = require('react');
 var _          = require('lodash');
-var BaconMixin = require('react-bacon').BaconMixin;
 var BoardLine  = require('./boardLine');
 
 var Board = React.createClass({
 
   render: function() {
-    var items = _.map(this.props.status.races, status => {
+    var items = _.map(this.props.status.openRaces, status => {
       return (<BoardLine key={status.race._id} raceStatus={status} now={this.props.status.now}/>)
     }, this);
 

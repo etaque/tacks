@@ -1,10 +1,11 @@
 package models
 
-import java.lang.Math._
 import scala.util.Random.nextInt
-import models.Geo._
+import java.lang.Math._
 import org.joda.time.DateTime
-import play.api.libs.json.{Json, Format}
+import reactivemongo.bson.Macros
+
+import models.Geo._
 
 sealed trait GateLocation
 case object StartLine extends GateLocation
@@ -112,9 +113,9 @@ object Course {
   val defaultRaceArea = RaceArea((800,3200), (-800,-200))
 
   def spawn = Course(
-    upwind = Gate(3000, 200),
+    upwind = Gate(1000, 200),
     downwind = Gate(100, 200),
-    laps = 2,
+    laps = 1,
     markRadius = 5,
     islands = Seq.fill[Island](4)(Island.spawn(defaultRaceArea)),
     area = defaultRaceArea,
@@ -124,10 +125,10 @@ object Course {
     boatWidth = 4
   )
 
+  implicit val raceAreaHandler = Macros.handler[RaceArea]
+  implicit val windGeneratorHandler = Macros.handler[WindGenerator]
+  implicit val gateHandler = Macros.handler[Gate]
+  implicit val islandHandler = Macros.handler[Island]
+  implicit val courseHandler = Macros.handler[Course]
 
-  implicit val raceAreaFormat: Format[RaceArea] = Json.format[RaceArea]
-  implicit val windGeneratorFormat: Format[WindGenerator] = Json.format[WindGenerator]
-  implicit val gateFormat: Format[Gate] = Json.format[Gate]
-  implicit val islandFormat: Format[Island] = Json.format[Island]
-  implicit val courseFormat: Format[Course] = Json.format[Course]
 }

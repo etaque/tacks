@@ -1,7 +1,6 @@
 package controllers
 
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.Future
+import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.duration._
 import play.api.mvc._
 import play.api.mvc.WebSocket.FrameFormatter
@@ -16,7 +15,6 @@ import reactivemongo.bson.BSONObjectID
 import actors._
 import models._
 import models.JsonFormats._
-import models.Race.mongoFormat
 
 
 object Api extends Controller with Security {
@@ -26,14 +24,17 @@ object Api extends Controller with Security {
   def racesStatus = Identified.async() { implicit request =>
     val racesFuture = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]
     val onlinePlayersFuture = (ChatRoom.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
+    val finishedRacesFuture = Race.listFinished(10)
     for {
-      races <- racesFuture
+      openRaces <- racesFuture
       onlinePlayers <- onlinePlayersFuture
+      finishedRaces <- finishedRacesFuture
     }
     yield Ok(Json.obj(
       "now" -> DateTime.now,
-      "races" -> Json.toJson(races),
-      "onlinePlayers" -> Json.toJson(onlinePlayers)
+      "openRaces" -> Json.toJson(openRaces),
+      "onlinePlayers" -> Json.toJson(onlinePlayers),
+      "finishedRaces" -> Json.toJson(finishedRaces)
     ))
   }
 
@@ -45,7 +46,7 @@ object Api extends Controller with Security {
 
   def createRace = Identified.async(parse.json) { implicit request =>
     val isPrivate = request.getQueryString("isPrivate").exists(_.toBoolean)
-    val race = Race(playerId = getPlayerId, course = Course.spawn, isPrivate = isPrivate, countdownSeconds = 60)
+    val race = Race(playerId = getPlayerId, course = Course.spawn, isPrivate = isPrivate, countdownSeconds = 30)
 
     (RacesSupervisor.actorRef ? MountRace(race, request.player)).map { _ =>
       Ok(Json.toJson(race))

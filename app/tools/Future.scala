@@ -1,4 +1,4 @@
-package utils.future
+package tools.future
 
 //import scala.util.{ Success, Failure, Try }
 import scala.concurrent.{ Future, Promise }

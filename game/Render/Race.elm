@@ -89,22 +89,13 @@ renderBoatIcon boat name =
   image 12 20 ("/assets/images/" ++ name ++ ".png") |> toForm
     |> rotate (toRadians (boat.heading + 90))
 
-renderPlayer : Player -> [Spell] -> Float -> Form
-renderPlayer player spells shadowLength =
-  let boatPath = if(containsSpell "PoleInversion" spells) then "49er-black" else "49er"
-      hull = renderBoatIcon player boatPath
+renderPlayer : Player -> Float -> Form
+renderPlayer player shadowLength =
+  let hull = renderBoatIcon player "49er"
       windShadow = renderWindShadow shadowLength player
       angles = renderPlayerAngles player
       eqLine = renderEqualityLine player.position player.windOrigin
-      fog1 = oval 190 250
-        |> filled grey
-        |> rotate (snd player.position / 60)
-      fog2 = oval 170 230
-        |> filled white
-        |> rotate (fst player.position / 41 + 220)
-        |> alpha 0.8
-      fog = if (containsSpell "Fog" spells) then [fog1, fog2] else []
-      movingPart = group ([angles, eqLine, hull] ++ fog) |> move player.position
+      movingPart = group [angles, eqLine, hull] |> move player.position
       wake = renderWake player.trail
   in group [wake, windShadow, movingPart]
 
@@ -148,11 +139,6 @@ renderIsland {location,radius} =
 renderIslands : GameState -> Form
 renderIslands gameState =
   group (map renderIsland gameState.course.islands)
-
-renderBuoy : Time -> Buoy -> Form
-renderBuoy timer {position,radius,spell} =
-  let a = 0.4 + 0.2 * cos (timer * 0.005)
-  in  circle radius |> filled colors.buoy |> move position |> alpha a
 
 renderGateLaylines : Float -> Float -> Gate -> Form
 renderGateLaylines vmg windOrigin gate =
@@ -200,7 +186,7 @@ renderFinished course player =
     _       -> Nothing
 
 renderRace : GameState -> Form
-renderRace ({player,opponents,course,buoys,triggeredSpells,now,center} as gameState) =
+renderRace ({player,opponents,course,now,center} as gameState) =
   let downwindOrStartLine = if isEmpty player.crossedGates
         then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
         else renderGate course.downwind course.markRadius (player.nextGate == Just "DownwindGate")
@@ -211,11 +197,10 @@ renderRace ({player,opponents,course,buoys,triggeredSpells,now,center} as gameSt
         , renderGate course.upwind course.markRadius (player.nextGate == Just "UpwindGate")
         , group (map (renderOpponent course.windShadowLength) opponents)
         , renderGusts gameState.wind
-        , renderPlayer player triggeredSpells course.windShadowLength
+        , renderPlayer player course.windShadowLength
         ]
       maybeForms =
         [ renderCountdown gameState player
-        , mapMaybe (\c -> group (map (renderBuoy c) buoys)) gameState.countdown
         , renderLaylines player course
         , renderFinished gameState.course player
         ]

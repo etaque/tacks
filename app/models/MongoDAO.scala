@@ -1,22 +1,18 @@
 package models
 
+import reactivemongo.api.collections.default.BSONCollection
+
 import scala.concurrent.Future
 import play.api.libs.json._
 import play.api.Play.current
-import reactivemongo.api.DefaultDB
-import reactivemongo.bson._
-import reactivemongo.core.commands.{Count, LastError}
-import reactivemongo.api.collections.default.BSONCollection
 import play.modules.reactivemongo.json.BSONFormats
 import play.modules.reactivemongo.ReactiveMongoPlugin
+import reactivemongo.api.DefaultDB
+import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONDocumentReader, BSONObjectID}
+import reactivemongo.core.commands.{LastError, Count}
 import play.api.libs.concurrent.Execution.Implicits._
-import org.joda.time.DateTime
-import _root_.utils.future.Implicits.RichFutureOfOpt
+import tools.future.Implicits.RichFutureOfOpt
 
-
-/**
- * Convenience DAO trait for reactivemongo
- */
 trait MongoDAO[T] {
   val collectionName: String
 
@@ -83,6 +79,9 @@ trait MongoDAO[T] {
     findById(BSONObjectID(id))
   }
 
+  def findByOptId(idMaybe: Option[BSONObjectID]): Future[Option[T]] =
+    idMaybe.fold(Future.successful[Option[T]](None))(findByIdOpt)
+
   def findAllById(ids: Seq[BSONObjectID]): Future[Seq[T]] = {
     val query = BSONDocument("_id" -> BSONDocument("$in" -> ids))
     list(query)
@@ -100,5 +99,4 @@ trait HasId {
   def id: BSONObjectID = _id
   def idToStr = id.stringify
 
-//  def creationTime = new DateTime(_id.time)
 }

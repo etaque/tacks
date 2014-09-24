@@ -82,56 +82,6 @@ renderWindWheel wind player (w,h) =
 
   in  group [c, windMarker, windOriginText, windSpeedText, legend] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
 
-renderStockSpell : Spell -> (Float, Float) -> Form
-renderStockSpell spell (w,h) =
-  let spellLabel = "SPELL"
-        |> baseText
-        |> centered
-        |> toForm
-        |> move (0, 35)
-      outlineSquare = square 35
-        |> outlined (solid white)
-      spellGraphics = getSpellStockGraphic spell.kind
-  in  group [spellLabel, outlineSquare, spellGraphics]
-        |> move (w/2 - 45, h/2 - 250)
-
-renderPoleInversion =
-  let arrow = map (scale 3) getArrow
-        |> polygon
-        |> filled white
-      leftArrow = arrow
-        |> move (-1, 6)
-      rightArrow = arrow
-        |> rotate (degrees 180)
-        |> move (1, -6)
-  in  group [leftArrow, rightArrow]
-
-renderFog =
-  let upLine = segment (-12, -8) (12, -8)
-        |> traced { defaultLine | width <- 5,
-                                  color <- white }
-        |> alpha 0.6
-      midLine = upLine |> move (0, 8)
-      botLine = upLine |> move (0, 16)
-  in  group [upLine, midLine, botLine]
-
-getSpellStockGraphic : String -> Form
-getSpellStockGraphic kind =
-  case kind of
-    "PoleInversion" -> renderPoleInversion
-    "Fog" -> renderFog
-
-getArrow : Path
-getArrow =
-  [ (-3, 1)
-  , (1, 1)
-  , (1, 2)
-  , (3, 0)
-  , (1, -2)
-  , (1, -1)
-  , (-3, -1)
-  ]
-
 renderLeaderboard: [String] -> (Float,Float) -> Maybe Form
 renderLeaderboard leaderboard (w,h) =
   if (isEmpty leaderboard) then Nothing
@@ -168,9 +118,6 @@ renderControls ({wind,player,opponents,course,now,countdown,center} as gameState
         , upwindHint
         , renderHelp gameState.countdown dims
         , renderLeaderboard gameState.leaderboard dims
-        , case player.ownSpell of
-            Just spell -> Just (renderStockSpell spell dims)
-            Nothing -> Nothing
         ]
   in  group (justForms ++ (compact maybeForms))
 

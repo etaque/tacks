@@ -43,14 +43,12 @@ moveStep frozen delta ({position,velocity,heading} as previous) dims ({player,ce
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep raceInput ({player} as gameState) =
-  let { now, startTime, course, player, opponents, buoys,
-        wind, triggeredSpells, leaderboard, isMaster } = raceInput
+  let { now, startTime, course, player, opponents,
+        wind, leaderboard, isMaster } = raceInput
   in  { gameState | opponents <- opponents,
                     player <- maybe gameState.player id player,
                     course <- maybe gameState.course id course,
                     wind <- wind,
-                    buoys <- buoys,
-                    triggeredSpells <- triggeredSpells,
                     leaderboard <- leaderboard,
                     now <- now,
                     countdown <- mapMaybe (\st -> st - now) startTime,
