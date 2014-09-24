@@ -102,18 +102,18 @@ class RaceActor(race: Race, master: Player) extends Actor {
       tally += state.player -> state.crossedGates
     }
 
-    ranking = tally.toSeq.sortBy {
-      case (player, gates) => (-gates.length, gates.headOption.map(_.getMillis))
-    }.map(_._1.name)
+    val sortedTally = tally.toSeq.map(t => PlayerTally(t._1, t._2)).sortBy { pt =>
+      (-pt.gates.length, pt.gates.headOption.map(_.getMillis))
+    }
+    ranking = sortedTally.map(_.player.name)
 
     val fc = tally.values.count(_.length == gatesToCross)
 
     if (fc != finishersCount) {
-      val typedTally = tally.toSeq.map(t => PlayerTally(t._1, t._2))
       fc match {
         case 1 => // ignore
-        case 2 => Race.save(race.copy(tally = typedTally, startTime = startTime))
-        case _ => Race.updateTally(race, typedTally)
+        case 2 => Race.save(race.copy(tally = sortedTally, startTime = startTime))
+        case _ => Race.updateTally(race, sortedTally)
       }
     }
     finishersCount = fc
