@@ -16,7 +16,6 @@ var FinishedRace = React.createClass({
     var gatesCount = r.tally[0].gates.length
 
     var players = _(r.tally)
-      .sortBy(entry => entry.gates[0])
       .map((entry, i) => {
         var fromFirst = entry.gates[0] - bestTime;
         var finished = entry.gates.length == gatesCount;
