@@ -40,6 +40,12 @@ var Home = React.createClass({
 
   loadStatus: function() {
     $.ajax(Api.racesStatus()).done(function(racesStatus) {
+      var waiting = _.filter(racesStatus.openRaces, (rs) => !rs.race.startTime).length;
+      if (waiting > 0) {
+        document.title = "(" + waiting + ") Play Tacks";
+      } else {
+        document.title = "Play Tacks"
+      }
       this.setState({ racesStatus: racesStatus, loadingNewRace: false });
     }.bind(this));
   },

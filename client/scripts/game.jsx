@@ -18,8 +18,8 @@ var Game = React.createClass({
     ws.onmessage = function(event) {
       var data = JSON.parse(event.data);
       if (data.startTime) {
-        if (data.now < data.startTime) {
-          document.title = "Start in " + util.timer(data.startTime - data.now);
+        if (!started && data.now < data.startTime) {
+          document.title = util.timer(data.startTime - data.now);
         } else {
           if (!started) {
             started = true;
@@ -28,7 +28,7 @@ var Game = React.createClass({
         }
       } else {
         if (!previousData.opponents || data.opponents.length != previousData.opponents.length) {
-          document.title = "Tacks (" + (data.opponents.length + 1) + ")";
+          document.title = "(" + (data.opponents.length + 1) + ") Waiting...";
         }
       }
       game.ports.raceInput.send(data);

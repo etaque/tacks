@@ -21,7 +21,8 @@ var FinishedRace = React.createClass({
         var fromFirst = entry.gates[0] - bestTime;
         var finished = entry.gates.length == gatesCount;
         var time = entry.gates[0] - r.startTime;
-        return <FinishedRacePlayer player={entry.player} position={i + 1} time={time} fromFirst={fromFirst} finished={finished} />;
+        return <FinishedRacePlayer key={entry.player._id} player={entry.player} position={i + 1}
+                time={time} fromFirst={fromFirst} finished={finished} />;
       })
       .value();
 

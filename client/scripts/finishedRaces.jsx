@@ -10,7 +10,7 @@ var FinishedRaces = React.createClass({
 
   render: function() {
     var items = _.map(this.props.races, race => {
-      return (<FinishedRace race={race} />)
+      return (<FinishedRace key={race._id} race={race} />)
     }, this);
 
     if (_.isEmpty(items)) {
