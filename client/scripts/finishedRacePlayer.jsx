@@ -11,7 +11,9 @@ var FinishedRacePlayer = React.createClass({
 
   render: function() {
     var dt = this.props.position == 1 ? util.timer(this.props.time) :
-      (this.props.finished ? "+" + util.timer(this.props.fromFirst) : "DNF");
+      (this.props.finished ?
+        "+ " + Math.round(this.props.fromFirst / 10) / 100 + "\"":
+        "DNF");
     return (
       <tr>
         <td>{this.props.position}. {this.props.player.name}</td>
