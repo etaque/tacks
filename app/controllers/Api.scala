@@ -46,7 +46,7 @@ object Api extends Controller with Security {
 
   def createRace = Identified.async(parse.json) { implicit request =>
     val isPrivate = request.getQueryString("isPrivate").exists(_.toBoolean)
-    val race = Race(playerId = getPlayerId, course = Course.spawn, isPrivate = isPrivate, countdownSeconds = 30)
+    val race = Race(playerId = getPlayerId, course = Course.spawn, isPrivate = isPrivate, countdownSeconds = 60)
 
     (RacesSupervisor.actorRef ? MountRace(race, request.player)).map { _ =>
       Ok(Json.toJson(race))

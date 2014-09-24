@@ -64,7 +64,7 @@ case class Island(
 
 object Island {
   def spawn(area: RaceArea): Island = {
-    Island(area.randomPoint, nextInt(50) + 50)
+    Island((area.randomX(200), area.randomY(200)), nextInt(50) + 50)
   }
 }
 
@@ -75,15 +75,15 @@ case class WindGenerator(
   amplitude2: Int
 ) {
   def windOrigin(at: DateTime): Double =
-    cos(at.getMillis * 0.001 / wavelength1) * amplitude1 + cos(at.getMillis * 0.001 / wavelength2) * amplitude2
+    cos(at.getMillis * 0.0005 / wavelength1) * amplitude1 + cos(at.getMillis * 0.0005 / wavelength2) * amplitude2
 
   def windSpeed(at: DateTime): Double = Wind.defaultWindSpeed +
-    (cos(at.getMillis * 0.001 / wavelength1) * 5 - cos(at.getMillis * 0.001 / wavelength2) * 5) / 2
+    (cos(at.getMillis * 0.0005 / wavelength1) * 5 - cos(at.getMillis * 0.0005 / wavelength2) * 5) / 2
 }
 
 object WindGenerator {
   def spawn = {
-    WindGenerator(nextInt(6) + 6, nextInt(6) + 6, nextInt(3) + 3, nextInt(3) + 3)
+    WindGenerator(nextInt(6) + 6, nextInt(6) + 6, nextInt(4) + 4, nextInt(4) + 4)
   }
 }
 
@@ -113,11 +113,11 @@ object Course {
   val defaultRaceArea = RaceArea((800,3200), (-800,-200))
 
   def spawn = Course(
-    upwind = Gate(1000, 200),
+    upwind = Gate(3000, 200),
     downwind = Gate(100, 200),
-    laps = 1,
+    laps = 2,
     markRadius = 5,
-    islands = Seq.fill[Island](4)(Island.spawn(defaultRaceArea)),
+    islands = Seq.fill[Island](8)(Island.spawn(defaultRaceArea)),
     area = defaultRaceArea,
     windGenerator = WindGenerator.spawn,
     gustsCount = 6,
