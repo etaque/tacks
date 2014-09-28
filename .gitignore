@@ -1,5 +1,6 @@
 game/build/
 game/cache/
+game/elm_dependencies/
 logs
 project/project
 project/target

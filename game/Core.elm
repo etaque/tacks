@@ -14,6 +14,7 @@ toRadians deg = radians ((90 - deg) * pi / 180)
 mpsToKnts : Float -> Float
 mpsToKnts mps = mps * 3600 / 1.852 / 1000
 
+
 --angleToWind : Float -> Float -> Float
 --angleToWind playerDirection windOrigin =
 --  let delta = playerDirection - windOrigin

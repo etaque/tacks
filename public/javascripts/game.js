@@ -12080,11 +12080,13 @@ Elm.Main.make = function (_elm) {
    _E = _N.Error.make(_elm),
    $moduleName = "Main",
    $Game = Elm.Game.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Native$Json = Elm.Native.Json.make(_elm),
    $Native$Ports = Elm.Native.Ports.make(_elm),
    $Render$All = Elm.Render.All.make(_elm),
+   $Render$Utils = Elm.Render.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Steps = Elm.Steps.make(_elm),
    $Time = Elm.Time.make(_elm),
@@ -12188,6 +12190,13 @@ Elm.Main.make = function (_elm) {
    $Steps.stepGame,
    $Game.defaultGame,
    input);
+   var title = $Native$Ports.portOut("title",
+   $Native$Ports.outgoingSignal(function (v) {
+      return v;
+   }),
+   A2($Signal._op["<~"],
+   $Render$Utils.gameTitle,
+   gameState));
    var main = A3($Signal.lift2,
    $Render$All.renderAll,
    $Window.dimensions,
@@ -12471,7 +12480,7 @@ Elm.Render.All.make = function (_elm) {
                                                                     ,absoluteForms]))]))]));
               }();}
          _E.Case($moduleName,
-         "between lines 15 and 20");
+         "between lines 18 and 23");
       }();
    });
    _elm.Render.All.values = {_op: _op
@@ -12517,18 +12526,6 @@ Elm.Render.Race.make = function (_elm) {
          return $Maybe.Nothing;
       }();
    });
-   var formatCountdown = function (c) {
-      return function () {
-         var cs = $Basics.ceiling($Time.inSeconds(c));
-         var m = cs / 60 | 0;
-         var s = A2($Basics.rem,cs,60);
-         return _L.append("Start in ",
-         _L.append($String.show(m),
-         _L.append("\'",
-         _L.append($String.show(s),
-         "\"..."))));
-      }();
-   };
    var renderCountdown = F2(function (gameState,
    player) {
       return function () {
@@ -12542,12 +12539,12 @@ Elm.Render.Race.make = function (_elm) {
             switch (_v1.ctor)
             {case "Just":
                return _U.cmp(_v1._0,
-                 0) > 0 ? $Maybe.Just(messageBuilder(formatCountdown($Core.getCountdown(gameState.countdown)))) : _U.eq(player.nextGate,
+                 0) > 0 ? $Maybe.Just(messageBuilder($Render$Utils.formatCountdown($Core.getCountdown(gameState.countdown)))) : _U.eq(player.nextGate,
                  $Maybe.Just("StartLine")) ? $Maybe.Just(messageBuilder("Go!")) : $Maybe.Nothing;
                case "Nothing":
                return gameState.isMaster ? $Maybe.Just(messageBuilder($Render$Utils.startCountdownMessage)) : $Maybe.Nothing;}
             _E.Case($moduleName,
-            "between lines 170 and 180");
+            "between lines 163 and 173");
          }();
       }();
    });
@@ -12944,7 +12941,6 @@ Elm.Render.Race.make = function (_elm) {
                              ,renderIslands: renderIslands
                              ,renderGateLaylines: renderGateLaylines
                              ,renderLaylines: renderLaylines
-                             ,formatCountdown: formatCountdown
                              ,renderCountdown: renderCountdown
                              ,renderFinished: renderFinished
                              ,renderRace: renderRace};
@@ -13181,6 +13177,110 @@ Elm.Render.Controls.make = function (_elm) {
                                  ,renderHelp: renderHelp
                                  ,renderControls: renderControls};
    return _elm.Render.Controls.values;
+};Elm.Render = Elm.Render || {};
+Elm.Render.Utils = Elm.Render.Utils || {};
+Elm.Render.Utils.make = function (_elm) {
+   "use strict";
+   _elm.Render = _elm.Render || {};
+   _elm.Render.Utils = _elm.Render.Utils || {};
+   if (_elm.Render.Utils.values)
+   return _elm.Render.Utils.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _A = _N.Array.make(_elm),
+   _E = _N.Error.make(_elm),
+   $moduleName = "Render.Utils",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Game = Elm.Game.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Text = Elm.Text.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var formatCountdown = function (c) {
+      return function () {
+         var cs = $Basics.ceiling($Time.inSeconds(c));
+         var m = cs / 60 | 0;
+         var s = A2($Basics.rem,cs,60);
+         return _L.append("Start in ",
+         _L.append($String.show(m),
+         _L.append("\' ",
+         _L.append($String.show(s),
+         "\"..."))));
+      }();
+   };
+   var gameTitle = function (_v0) {
+      return function () {
+         return function () {
+            var _v2 = _v0.countdown;
+            switch (_v2.ctor)
+            {case "Just":
+               return _U.cmp(_v2._0,
+                 0) > 0 ? formatCountdown(_v2._0) : "Started";
+               case "Nothing":
+               return _L.append("(",
+                 _L.append($String.show(1 + $List.length(_v0.opponents)),
+                 ") Waiting..."));}
+            _E.Case($moduleName,
+            "between lines 50 and 54");
+         }();
+      }();
+   };
+   var triangle = F2(function (s,
+   isUpward) {
+      return isUpward ? $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                ,_0: 0
+                                                                ,_1: 0}
+                                                               ,{ctor: "_Tuple2"
+                                                                ,_0: 0 - s
+                                                                ,_1: 0 - s}
+                                                               ,{ctor: "_Tuple2"
+                                                                ,_0: s
+                                                                ,_1: 0 - s}])) : $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                         ,_0: 0
+                                                                                                                         ,_1: 0}
+                                                                                                                        ,{ctor: "_Tuple2"
+                                                                                                                         ,_0: 0 - s
+                                                                                                                         ,_1: s}
+                                                                                                                        ,{ctor: "_Tuple2"
+                                                                                                                         ,_0: s
+                                                                                                                         ,_1: s}]));
+   });
+   var baseText = function (s) {
+      return $Text.typeface(_L.fromArray(["Inconsolata"
+                                         ,"monospace"]))($Text.height(15)($Text.toText(s)));
+   };
+   var fullScreenMessage = function (msg) {
+      return $Graphics$Collage.alpha(0.3)($Graphics$Collage.toForm($Text.centered($Text.color($Color.white)($Text.height(60)($Text.toText($String.toUpper(msg)))))));
+   };
+   var colors = {_: {}
+                ,gateLine: $Color.orange
+                ,gateMark: $Color.orange
+                ,sand: A3($Color.rgb,
+                239,
+                210,
+                121)
+                ,seaBlue: A3($Color.rgb,
+                10,
+                105,
+                148)};
+   var startCountdownMessage = "press C to start countdown (60s)";
+   var helpMessage = _L.append("←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n",
+   "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell");
+   _elm.Render.Utils.values = {_op: _op
+                              ,helpMessage: helpMessage
+                              ,startCountdownMessage: startCountdownMessage
+                              ,colors: colors
+                              ,fullScreenMessage: fullScreenMessage
+                              ,baseText: baseText
+                              ,triangle: triangle
+                              ,formatCountdown: formatCountdown
+                              ,gameTitle: gameTitle};
+   return _elm.Render.Utils.values;
 };Elm.Inputs = Elm.Inputs || {};
 Elm.Inputs.make = function (_elm) {
    "use strict";
@@ -13688,7 +13788,7 @@ Elm.Core.make = function (_elm) {
                     list);
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 84 and 87");
+               "between lines 85 and 88");
             }();
          });
          return A3($List.foldl,
@@ -13706,7 +13806,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return $Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 77 and 79");
+         "between lines 78 and 80");
       }();
    });
    var getCountdown = function (maybeCountdown) {
@@ -13813,74 +13913,230 @@ Elm.Drag.make = function (_elm) {
                       ,start: start
                       ,drop: drop};
    return _elm.Drag.values;
-};Elm.Render = Elm.Render || {};
-Elm.Render.Utils = Elm.Render.Utils || {};
-Elm.Render.Utils.make = function (_elm) {
+};Elm.Html = Elm.Html || {};
+Elm.Html.make = function (_elm) {
    "use strict";
-   _elm.Render = _elm.Render || {};
-   _elm.Render.Utils = _elm.Render.Utils || {};
-   if (_elm.Render.Utils.values)
-   return _elm.Render.Utils.values;
+   _elm.Html = _elm.Html || {};
+   if (_elm.Html.values)
+   return _elm.Html.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
-   $moduleName = "Render.Utils",
+   $moduleName = "Html",
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Text = Elm.Text.make(_elm);
-   var triangle = F2(function (s,
-   isUpward) {
-      return isUpward ? $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                ,_0: 0
-                                                                ,_1: 0}
-                                                               ,{ctor: "_Tuple2"
-                                                                ,_0: 0 - s
-                                                                ,_1: 0 - s}
-                                                               ,{ctor: "_Tuple2"
-                                                                ,_0: s
-                                                                ,_1: 0 - s}])) : $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                         ,_0: 0
-                                                                                                                         ,_1: 0}
-                                                                                                                        ,{ctor: "_Tuple2"
-                                                                                                                         ,_0: 0 - s
-                                                                                                                         ,_1: s}
-                                                                                                                        ,{ctor: "_Tuple2"
-                                                                                                                         ,_0: s
-                                                                                                                         ,_1: s}]));
+   $Native$Html = Elm.Native.Html.make(_elm),
+   $String = Elm.String.make(_elm);
+   var color = function (clr) {
+      return function () {
+         var c = $Color.toRgb(clr);
+         var rgb = _L.append($String.show(c.red),
+         _L.append(", ",
+         _L.append($String.show(c.green),
+         _L.append(", ",
+         $String.show(c.blue)))));
+         return _U.eq(c.alpha,
+         1) ? _L.append("rgb(",
+         _L.append(rgb,
+         ")")) : _L.append("rgba(",
+         _L.append(rgb,
+         _L.append(", ",
+         _L.append($String.show(c.alpha),
+         ")"))));
+      }();
+   };
+   var pct = function (n) {
+      return A2($String.append,
+      $String.show(100 * n),
+      "%");
+   };
+   var em = function (n) {
+      return A2($String.append,
+      $String.show(n),
+      "em");
+   };
+   var px = function (n) {
+      return A2($String.append,
+      $String.show(n),
+      "px");
+   };
+   var bool = $Native$Html.pair;
+   _op[":="] = $Native$Html.pair;
+   var Fact = {ctor: "Fact"};
+   var toElement = $Native$Html.toElement;
+   var text = $Native$Html.text;
+   var eventNode = $Native$Html.eventNode;
+   var node = $Native$Html.node;
+   var Html = {ctor: "Html"};
+   _elm.Html.values = {_op: _op
+                      ,Html: Html
+                      ,node: node
+                      ,eventNode: eventNode
+                      ,text: text
+                      ,toElement: toElement
+                      ,Fact: Fact
+                      ,bool: bool
+                      ,px: px
+                      ,em: em
+                      ,pct: pct
+                      ,color: color};
+   return _elm.Html.values;
+};Elm.Html = Elm.Html || {};
+Elm.Html.Events = Elm.Html.Events || {};
+Elm.Html.Events.make = function (_elm) {
+   "use strict";
+   _elm.Html = _elm.Html || {};
+   _elm.Html.Events = _elm.Html.Events || {};
+   if (_elm.Html.Events.values)
+   return _elm.Html.Events.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _A = _N.Array.make(_elm),
+   _E = _N.Error.make(_elm),
+   $moduleName = "Html.Events",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Html = Elm.Native.Html.make(_elm);
+   var getAnything = $Native$Html.getAnything;
+   var getKeyboardEvent = $Native$Html.getKeyboardEvent;
+   var getMouseEvent = $Native$Html.getMouseEvent;
+   var getValueAndSelection = $Native$Html.getValueAndSelection;
+   var Backward = {ctor: "Backward"};
+   var Forward = {ctor: "Forward"};
+   var getValue = $Native$Html.getValue;
+   var getChecked = $Native$Html.getChecked;
+   var filterMap = $Native$Html.filterMap;
+   var when = F2(function (pred,
+   getter) {
+      return A2($Native$Html.filterMap,
+      function (v) {
+         return pred(v) ? $Maybe.Just(v) : $Maybe.Nothing;
+      },
+      getter);
    });
-   var baseText = function (s) {
-      return $Text.typeface(_L.fromArray(["Inconsolata"
-                                         ,"monospace"]))($Text.height(15)($Text.toText(s)));
+   var on = F4(function (name,
+   coerce,
+   handle,
+   convert) {
+      return A4($Native$Html.on,
+      name,
+      coerce,
+      handle,
+      convert);
+   });
+   var Get = {ctor: "Get"};
+   var onsubmit = F2(function (handle,
+   value) {
+      return A4($Native$Html.on,
+      "submit",
+      $Native$Html.getAnything,
+      handle,
+      $Basics.always(value));
+   });
+   var onfocus = F2(function (handle,
+   value) {
+      return A4($Native$Html.on,
+      "focus",
+      $Native$Html.getAnything,
+      handle,
+      $Basics.always(value));
+   });
+   var onblur = F2(function (handle,
+   value) {
+      return A4($Native$Html.on,
+      "blur",
+      $Native$Html.getAnything,
+      handle,
+      $Basics.always(value));
+   });
+   var onKey = function (name) {
+      return A2($Native$Html.on,
+      name,
+      $Native$Html.getKeyboardEvent);
    };
-   var fullScreenMessage = function (msg) {
-      return $Graphics$Collage.alpha(0.3)($Graphics$Collage.toForm($Text.centered($Text.color($Color.white)($Text.height(60)($Text.toText($String.toUpper(msg)))))));
+   var onkeyup = onKey("keyup");
+   var onkeydown = onKey("keydown");
+   var onkeypress = onKey("keypress");
+   var KeyboardEvent = F5(function (a,
+   b,
+   c,
+   d,
+   e) {
+      return {_: {}
+             ,altKey: b
+             ,ctrlKey: c
+             ,keyCode: a
+             ,metaKey: d
+             ,shiftKey: e};
+   });
+   var onMouse = function (name) {
+      return A2($Native$Html.on,
+      name,
+      $Native$Html.getMouseEvent);
    };
-   var colors = {_: {}
-                ,gateLine: $Color.orange
-                ,gateMark: $Color.orange
-                ,sand: A3($Color.rgb,
-                239,
-                210,
-                121)
-                ,seaBlue: A3($Color.rgb,
-                10,
-                105,
-                148)};
-   var startCountdownMessage = "press C to start countdown (60s)";
-   var helpMessage = _L.append("←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n",
-   "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell");
-   _elm.Render.Utils.values = {_op: _op
-                              ,helpMessage: helpMessage
-                              ,startCountdownMessage: startCountdownMessage
-                              ,colors: colors
-                              ,fullScreenMessage: fullScreenMessage
-                              ,baseText: baseText
-                              ,triangle: triangle};
-   return _elm.Render.Utils.values;
+   var onclick = onMouse("click");
+   var ondblclick = onMouse("dblclick");
+   var onmousemove = onMouse("mousemove");
+   var onmousedown = onMouse("mousedown");
+   var onmouseup = onMouse("mouseup");
+   var onmouseenter = onMouse("mouseenter");
+   var onmouseleave = onMouse("mouseleave");
+   var onmouseover = onMouse("mouseover");
+   var onmouseout = onMouse("mouseout");
+   var MouseEvent = F5(function (a,
+   b,
+   c,
+   d,
+   e) {
+      return {_: {}
+             ,altKey: b
+             ,button: a
+             ,ctrlKey: c
+             ,metaKey: d
+             ,shiftKey: e};
+   });
+   var EventListener = {ctor: "EventListener"};
+   _elm.Html.Events.values = {_op: _op
+                             ,EventListener: EventListener
+                             ,MouseEvent: MouseEvent
+                             ,onMouse: onMouse
+                             ,onclick: onclick
+                             ,ondblclick: ondblclick
+                             ,onmousemove: onmousemove
+                             ,onmousedown: onmousedown
+                             ,onmouseup: onmouseup
+                             ,onmouseenter: onmouseenter
+                             ,onmouseleave: onmouseleave
+                             ,onmouseover: onmouseover
+                             ,onmouseout: onmouseout
+                             ,KeyboardEvent: KeyboardEvent
+                             ,onKey: onKey
+                             ,onkeyup: onkeyup
+                             ,onkeydown: onkeydown
+                             ,onkeypress: onkeypress
+                             ,onblur: onblur
+                             ,onfocus: onfocus
+                             ,onsubmit: onsubmit
+                             ,Get: Get
+                             ,on: on
+                             ,when: when
+                             ,filterMap: filterMap
+                             ,getChecked: getChecked
+                             ,getValue: getValue
+                             ,Forward: Forward
+                             ,Backward: Backward
+                             ,getValueAndSelection: getValueAndSelection
+                             ,getMouseEvent: getMouseEvent
+                             ,getKeyboardEvent: getKeyboardEvent
+                             ,getAnything: getAnything};
+   return _elm.Html.Events.values;
 };

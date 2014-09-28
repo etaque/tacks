@@ -157,13 +157,6 @@ renderLaylines player course =
     Just "DownwindGate" -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
     _                   -> Nothing
 
-formatCountdown : Time -> String
-formatCountdown c =
-  let cs = c |> inSeconds |> ceiling
-      m = cs // 60
-      s = cs `rem` 60
-  in  "Start in " ++ (show m) ++ "'" ++ (show s) ++ "\"..."
-
 renderCountdown : GameState -> Player -> Maybe Form
 renderCountdown gameState player =
   let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 40)

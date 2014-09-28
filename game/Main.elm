@@ -8,8 +8,9 @@ import Inputs
 import Game
 import Steps
 import Render.All as R
+import Render.Utils
 
--- ports can't expand type alias for the moment... ugly manual expansion...
+-- ports can't expand type alias containing Maybe's for the moment... ugly manual expansion...
 port raceInput : Signal
   { now: Float
   , startTime: Maybe Float
@@ -66,14 +67,11 @@ input = sampleOn clock (lift6 Inputs.Input
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
 
-port playerOutput : Signal
-  { arrows: { x:Int, y:Int }
-  , lock: Bool
-  , tack: Bool
-  , subtleTurn: Bool
-  , startCountdown: Bool
-  }
-
+port playerOutput : Signal Inputs.KeyboardInput
 port playerOutput = lift .keyboardInput input
 
+port title : Signal String
+port title = Render.Utils.gameTitle <~ gameState
+
+main : Signal Element
 main = lift2 R.renderAll Window.dimensions gameState

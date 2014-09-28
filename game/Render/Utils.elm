@@ -2,6 +2,7 @@ module Render.Utils where
 
 import String
 import Text
+import Game
 
 helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n" ++
   "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
@@ -38,3 +39,16 @@ triangle s isUpward =
   else
     polygon [(0,0),(-s,s),(s,s)]
 
+formatCountdown : Time -> String
+formatCountdown c =
+  let cs = c |> inSeconds |> ceiling
+      m = cs // 60
+      s = cs `rem` 60
+  in  "Start in " ++ (show m) ++ "' " ++ (show s) ++ "\"..."
+
+gameTitle : Game.GameState -> String
+gameTitle {countdown,opponents} = case countdown of
+  Just c ->
+    if c > 0 then formatCountdown c else "Started"
+  Nothing ->
+    "(" ++ show (1 + length opponents) ++ ") Waiting..."

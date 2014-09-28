@@ -1,0 +1,12 @@
+{
+    "version": "0.1",
+    "summary": "concise, helpful summary of your project",
+    "description": "full description of this project, describe your use case",
+    "license": "BSD3",
+    "exposed-modules": [],
+    "elm-version": "0.13",
+    "dependencies": {
+        // "evancz/elm-html": "0.1.2"
+    },
+    "repository": "https://github.com/etaque/tacks.git"
+}
