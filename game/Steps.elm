@@ -34,10 +34,8 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
 
 moveStep : Bool -> Time -> Player -> (Int,Int) -> GameState -> GameState
 moveStep frozen delta ({position,velocity,heading} as previous) dims ({player,center} as gameState) =
-  let newPosition = if frozen
-        then movePoint position delta velocity heading
-        else player.position
-      movedPlayer = { player | position <- newPosition }
+  let newPosition = player.position
+      movedPlayer = { player | position <- player.position }
       newCenter = getCenterAfterMove position newPosition center (floatify dims)
   in  { gameState | player <- movedPlayer,
                     center <- newCenter }
