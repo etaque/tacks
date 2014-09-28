@@ -53,7 +53,7 @@ renderPlayerAngles player =
         |> move (fromPolar (25, windOriginRadians))
         |> alpha 0.5
       windAngleText = (show (abs (round player.windAngle))) ++ "&deg;" |> baseText
-        |> (if player.controlMode == "FixedAngle" then line Under else id)
+        |> (if player.controlMode == "FixedAngle" then Text.line Text.Under else identity)
         |> centered |> toForm
         |> move (fromPolar (25, windOriginRadians + pi))
         |> alpha 0.5
@@ -160,7 +160,7 @@ renderLaylines player course =
 formatCountdown : Time -> String
 formatCountdown c =
   let cs = c |> inSeconds |> ceiling
-      m = cs `div` 60
+      m = cs // 60
       s = cs `rem` 60
   in  "Start in " ++ (show m) ++ "'" ++ (show s) ++ "\"..."
 

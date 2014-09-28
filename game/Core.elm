@@ -1,10 +1,12 @@
 module Core where
 
+import Maybe (..)
+
 ensure360 : Float -> Float
 ensure360 val =
   let rounded = round val
       excess = val - (toFloat rounded)
-  in  ((rounded + 360) `mod` 360 |> toFloat) + excess
+  in  ((rounded + 360) % 360 |> toFloat) + excess
 
 toRadians : Float -> Float
 toRadians deg = radians ((90 - deg) * pi / 180)
@@ -68,7 +70,7 @@ isStarted : Maybe Time -> Bool
 isStarted maybeCountdown = maybe False (\n -> n <= 0) maybeCountdown
 
 getCountdown : Maybe Time -> Float
-getCountdown maybeCountdown = maybe 0 id maybeCountdown
+getCountdown maybeCountdown = maybe 0 identity maybeCountdown
 
 mapMaybe : (a -> b) -> Maybe a -> Maybe b
 mapMaybe f maybe =
@@ -87,6 +89,6 @@ compact maybes =
 average : [Float] -> Float
 average items = (sum items) / (toFloat (length items))
 
-indexedMap : (Int -> a -> b) -> [a] -> [b]
-indexedMap f xs =
-    zipWith f [ 0 .. length xs - 1 ] xs
+--indexedMap : (Int -> a -> b) -> [a] -> [b]
+--indexedMap f xs =
+--    zipWith f [ 0 .. length xs - 1 ] xs

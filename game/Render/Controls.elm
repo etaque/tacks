@@ -6,6 +6,7 @@ import Geo (..)
 import Game (..)
 import String
 import Text
+import Maybe (..)
 
 gateHintLabel: Int -> Form
 gateHintLabel d =
@@ -34,7 +35,7 @@ renderGateHint gate (w,h) (cx,cy) timer =
 
 renderLapsCount : (Float,Float) -> Course -> Player -> Form
 renderLapsCount (w,h) course player =
-  let count = minimum [(div ((length player.crossedGates) + 1) 2), course.laps]
+  let count = minimum [((length player.crossedGates) + 1) // 2, course.laps]
       msg = "LAP " ++ (show count) ++ "/" ++ (show course.laps)
   in msg
       |> baseText

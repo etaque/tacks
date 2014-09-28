@@ -5,6 +5,7 @@ import Game (..)
 import Geo (..)
 import Core (..)
 
+import Maybe (..)
 import Debug
 
 mouseStep : MouseInput -> GameState -> GameState
@@ -46,8 +47,8 @@ raceInputStep raceInput ({player} as gameState) =
   let { now, startTime, course, player, opponents,
         wind, leaderboard, isMaster } = raceInput
   in  { gameState | opponents <- opponents,
-                    player <- maybe gameState.player id player,
-                    course <- maybe gameState.course id course,
+                    player <- maybe gameState.player identity player,
+                    course <- maybe gameState.course identity course,
                     wind <- wind,
                     leaderboard <- leaderboard,
                     now <- now,

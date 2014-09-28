@@ -21,7 +21,7 @@ justWhen : Signal Bool -> Signal a -> Signal (Maybe a)
 justWhen b s = (\ b x -> if b then Just x else Nothing) <~ b ~ s
 
 joinMaybe : Maybe (Maybe a) -> Maybe a
-joinMaybe = Maybe.maybe Nothing id
+joinMaybe = Maybe.maybe Nothing identity
 
 {-| The last position of the mouse during this drag. If it's Nothing, then there
 is no drag. The first argument is the delay between now and when the last
