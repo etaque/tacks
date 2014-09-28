@@ -77,13 +77,4 @@ object Api extends Controller with Security {
     }
   }
 
-  def getRace(raceId: String) = Identified.async() { implicit request =>
-    (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
-      case None => NotFound
-      case Some(race) => Ok(Json.obj(
-        "race" -> Json.toJson(race),
-        "initialUpdate" -> Json.toJson(RaceUpdate.initial(race))
-      ))
-    }
-  }
 }

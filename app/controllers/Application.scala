@@ -1,11 +1,31 @@
 package controllers
 
+import scala.concurrent.duration._
+import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
+import akka.util.Timeout
+import akka.pattern.{ ask, pipe }
+import reactivemongo.bson.BSONObjectID
 
-object Application extends Controller {
+import actors.{GetRace, RacesSupervisor}
+import models.Race
 
-  def index(url: String) = Action { implicit request =>
+object Application extends Controller with Security {
+
+  def index = Action { implicit request =>
     Ok(views.html.index())
+  }
+
+  implicit val timeout = Timeout(5.seconds)
+
+  def playRace(raceId: String) = Identified.async() { implicit request =>
+    (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
+      case None => NotFound
+      case Some(race) => {
+        val wsUrl = routes.Api.playerSocket(race.idToStr).webSocketURL()
+        Ok(views.html.playRace(race, wsUrl))
+      }
+    }
   }
 
 }
