@@ -38,7 +38,7 @@ $.ajax(Api.currentUser()).done(u => {
     <Routes location="history">
       <Route handler={App}>
         <DefaultRoute handler={Home} status={status} userName={userName} />
-        <Route name="playRace" path="race/:id" handler={PlayRace} user={user} />
+        <Route name="playRace" path="play/:id" handler={PlayRace} user={user} />
       </Route>
     </Routes>
     ), document.getElementById("app"));
