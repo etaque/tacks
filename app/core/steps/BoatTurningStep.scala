@@ -6,6 +6,7 @@ object BoatTurningStep {
 
   def run(previousState: PlayerState, input: PlayerInput, triggeredSpells: Seq[Spell])(state: PlayerState): PlayerState = {
     val manualTurn = input.arrows.x != 0
+    val lock = input.lock || input.arrows.y > 0
 
     val tackTarget = if (manualTurn) None else state.tackTarget match {
 
@@ -29,7 +30,7 @@ object BoatTurningStep {
     val turnedState = state.copy(heading = heading, windAngle = windAngle)
 
     val tackTargetAfterTurn = if (tackTargetReached(turnedState)(previousState)) None else tackTarget
-    val newControlMode = if (manualTurn) FixedHeading else if (input.lock) FixedAngle else turnedState.controlMode
+    val newControlMode = if (manualTurn) FixedHeading else if (lock) FixedAngle else turnedState.controlMode
 
     turnedState.copy(tackTarget = tackTargetAfterTurn, controlMode = newControlMode)
   }
@@ -46,7 +47,7 @@ object BoatTurningStep {
       }
       case (None, FixedHeading, 0) => 0
       case (None, FixedAngle, 0) => Geo.ensure360(state.windOrigin + state.windAngle - state.heading)
-      case (None, _, turn) => if (input.subtleTurn) turn else turn * 3
+      case (None, _, turn) => if (input.subtleTurn || input.arrows.y < 0) turn else turn * 3
     }
   }
 
