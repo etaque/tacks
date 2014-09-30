@@ -1,6 +1,6 @@
 module Render.Utils where
 
-import String
+import String as S
 import Text
 import Game
 
@@ -18,7 +18,7 @@ colors =
 
 fullScreenMessage : String -> Form
 fullScreenMessage msg = msg
-  |> String.toUpper
+  |> S.toUpper
   |> toText
   |> Text.height 60
   |> Text.color white
@@ -38,6 +38,13 @@ triangle s isUpward =
     polygon [(0,0),(-s,-s),(s,-s)]
   else
     polygon [(0,0),(-s,s),(s,s)]
+
+fixedLength : Int -> String -> String
+fixedLength l txt =
+  if S.length txt < l then
+    S.padRight l ' ' txt
+  else
+    S.left (l - 3) txt ++ "..."
 
 formatCountdown : Time -> String
 formatCountdown c =

@@ -50,7 +50,7 @@ case class RaceUpdate(
   playerState: Option[PlayerState],
   wind: Wind,
   opponents: Seq[PlayerState] = Seq(),
-  leaderboard: Seq[String] = Seq(),
+  leaderboard: Seq[PlayerTally] = Seq(),
   isMaster: Boolean = false
 )
 

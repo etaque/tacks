@@ -36,8 +36,8 @@ type RaceInput =
   , course: Maybe Game.Course
   , player: Maybe Game.Player
   , wind: Game.Wind
-  , opponents: [Game.Opponent]
-  , leaderboard: [String]
+  , opponents: [Game.Player]
+  , leaderboard: [Game.PlayerTally]
   , isMaster: Bool
   }
 

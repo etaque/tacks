@@ -60,6 +60,7 @@ object JsonFormats {
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
+  implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'player).format[Player] and
@@ -87,12 +88,11 @@ object JsonFormats {
       (__ \ 'player).format[Option[PlayerState]] and
       (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[PlayerState]] and
-      (__ \ 'leaderboard).format[Seq[String]] and
+      (__ \ 'leaderboard).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
 
-  implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
   implicit val raceFormat: Format[Race] = Json.format[Race]
 
   implicit val raceStatusFormat: Format[RaceStatus] = Json.format[RaceStatus]

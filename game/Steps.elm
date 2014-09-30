@@ -6,7 +6,6 @@ import Geo (..)
 import Core (..)
 
 import Maybe (..)
-import Debug
 
 mouseStep : MouseInput -> GameState -> GameState
 mouseStep ({drag, mouse} as mouseInput) ({center} as gameState) =

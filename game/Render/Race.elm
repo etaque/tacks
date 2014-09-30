@@ -77,14 +77,14 @@ renderWake wake =
       renderSegment (i,(a,b)) = segment a b |> traced style |> alpha (opacityForIndex i)
   in  group (map renderSegment pairs)
 
-renderWindShadow : Float -> Boat a -> Form
+renderWindShadow : Float -> Player -> Form
 renderWindShadow shadowLength boat =
   let shadowDirection = (ensure360 (boat.windOrigin + 180 + (boat.windAngle / 3)))
       arcAngles = [-15, -10, -5, 0, 5, 10, 15]
       endPoints = map (\a -> add boat.position (fromPolar (shadowLength, toRadians (shadowDirection + a)))) arcAngles
   in  path (boat.position :: endPoints) |> filled white |> alpha 0.1
 
-renderBoatIcon : Boat a -> String -> Form
+renderBoatIcon : Player -> String -> Form
 renderBoatIcon boat name =
   image 12 20 ("/assets/images/" ++ name ++ ".png") |> toForm
     |> rotate (toRadians (boat.heading + 90))
@@ -99,7 +99,7 @@ renderPlayer player shadowLength =
       wake = renderWake player.trail
   in group [wake, windShadow, movingPart]
 
-renderOpponent : Float -> Opponent -> Form
+renderOpponent : Float -> Player -> Form
 renderOpponent shadowLength opponent =
   let hull = renderBoatIcon opponent "49er"
         |> move opponent.position
@@ -157,21 +157,6 @@ renderLaylines player course =
     Just "DownwindGate" -> Just <| renderGateLaylines player.downwindVmg player.windOrigin course.downwind
     _                   -> Nothing
 
-renderCountdown : GameState -> Player -> Maybe Form
-renderCountdown gameState player =
-  let messageBuilder msg = baseText msg |> centered |> toForm |> move (0, gameState.course.downwind.y + 40)
-  in  case gameState.countdown of
-        Just c ->
-          if c > 0
-            then Just <| messageBuilder (formatCountdown (getCountdown gameState.countdown))
-            else if player.nextGate == Just "StartLine"
-              then Just <| messageBuilder "Go!"
-              else Nothing
-        Nothing ->
-          if gameState.isMaster
-            then Just <| messageBuilder startCountdownMessage
-            else Nothing
-
 renderFinished : Course -> Player -> Maybe Form
 renderFinished course player =
   case player.nextGate of
@@ -193,8 +178,7 @@ renderRace ({player,opponents,course,now,center} as gameState) =
         , renderPlayer player course.windShadowLength
         ]
       maybeForms =
-        [ renderCountdown gameState player
-        , renderLaylines player course
+        [ renderLaylines player course
         , renderFinished gameState.course player
         ]
   in  group (justForms ++ (compact maybeForms)) |> move (neg center)

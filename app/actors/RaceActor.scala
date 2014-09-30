@@ -28,8 +28,8 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
   val playersStates = scala.collection.mutable.Map[PlayerId, PlayerState]()
   var wind = Wind.default.copy(gusts = Gust.spawnAll(race.course))
-  var tally = scala.collection.mutable.Map[Player, Seq[DateTime]]()
-  var ranking = Seq[String]()
+  var playersGates = scala.collection.mutable.Map[Player, Seq[DateTime]]()
+  var leaderboard = Seq[PlayerTally]()
   var finishersCount = 0
 
   var previousWindUpdate = DateTime.now
@@ -39,7 +39,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
   def started = millisBeforeStart.exists(_ <= 0)
 
   lazy val gatesToCross = race.course.laps * 2 + 1
-  def finished = tally.nonEmpty && tally.values.forall(_.length == gatesToCross)
+  def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == gatesToCross)
 
   Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean)
 
@@ -99,21 +99,20 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
   private def updateTally() = {
     playersStates.values.foreach { state =>
-      tally += state.player -> state.crossedGates
+      playersGates += state.player -> state.crossedGates
     }
 
-    val sortedTally = tally.toSeq.map(t => PlayerTally(t._1, t._2)).sortBy { pt =>
+    leaderboard = playersGates.toSeq.map(t => PlayerTally(t._1, t._2)).sortBy { pt =>
       (-pt.gates.length, pt.gates.headOption.map(_.getMillis))
     }
-    ranking = sortedTally.map(_.player.name)
 
-    val fc = tally.values.count(_.length == gatesToCross)
+    val fc = playersGates.values.count(_.length == gatesToCross)
 
     if (fc != finishersCount) {
       fc match {
         case 1 => // ignore
-        case 2 => Race.save(race.copy(tally = sortedTally, startTime = startTime))
-        case _ => Race.updateTally(race, sortedTally)
+        case 2 => Race.save(race.copy(tally = leaderboard, startTime = startTime))
+        case _ => Race.updateTally(race, leaderboard)
       }
     }
     finishersCount = fc
@@ -141,7 +140,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
       playerState = Some(playerState),
       wind = wind,
       opponents = opponentsTo(playerId),
-      leaderboard = ranking,
+      leaderboard = leaderboard,
       isMaster = master.id.stringify == playerId
     )
   }

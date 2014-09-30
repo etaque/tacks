@@ -7,6 +7,7 @@ import Dict
 type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
 type RaceArea = { rightTop: Point, leftBottom: Point }
+
 type Course =
   { upwind: Gate
   , downwind: Gate
@@ -18,18 +19,15 @@ type Course =
   , boatWidth: Float
   }
 
-type Boat a =
-  { a | position : Point
-      , heading: Float
-      , velocity: Float
-      , windAngle: Float
-      , windOrigin: Float
-      , windSpeed: Float }
-
-type Opponent = Boat { player : { name : String } }
-
-type Player = Boat
-  { downwindVmg: Float
+type Player =
+  { player : { name : String }
+  , position : Point
+  , heading: Float
+  , velocity: Float
+  , windAngle: Float
+  , windOrigin: Float
+  , windSpeed: Float
+  , downwindVmg: Float
   , upwindVmg: Float
   , trail: [Point]
   , controlMode: String
@@ -37,6 +35,8 @@ type Player = Boat
   , crossedGates: [Time]
   , nextGate: Maybe String -- GateLocation data type is incompatible with port inputs
   }
+
+type PlayerTally = { player: { name: String }, gates: [Time] }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gusts : [Gust] }
@@ -46,9 +46,9 @@ type GameState =
   , player: Player
   , wake: [Point]
   , center: Point
-  , opponents: [Opponent]
+  , opponents: [Player]
   , course: Course
-  , leaderboard: [String]
+  , leaderboard: [PlayerTally]
   , now: Time
   , countdown: Maybe Time
   , isMaster: Bool
@@ -73,7 +73,8 @@ defaultCourse =
 
 defaultPlayer : Player
 defaultPlayer =
-  { position = (0,0)
+  { player = { name = "" }
+  , position = (0,0)
   , heading = 0
   , velocity = 0
   , windAngle = 0
