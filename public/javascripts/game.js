@@ -10988,31 +10988,74 @@ Elm.Render.Dashboard.make = function (_elm) {
    _E = _N.Error.make(_elm),
    $moduleName = "Render.Dashboard",
    $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Core = Elm.Core.make(_elm),
    $Game = Elm.Game.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm),
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var topRightElements = function (gameState) {
-      return _L.fromArray([$Graphics$Element.empty]);
+   var getWindWheel = F2(function (wind,
+   player) {
+      return function () {
+         var legend = $Graphics$Collage.move({ctor: "_Tuple2"
+                                             ,_0: 0
+                                             ,_1: -50})($Graphics$Collage.toForm($Text.centered($Render$Utils.baseText("WIND"))));
+         var windSpeedText = $Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append($String.show($Basics.round(wind.speed)),
+         "kn"))));
+         var windOriginRadians = $Core.toRadians(wind.origin);
+         var r = 30;
+         var c = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle(r));
+         var windMarker = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
+                                                                   ,_0: r + 4
+                                                                   ,_1: windOriginRadians}))($Graphics$Collage.rotate(windOriginRadians + $Basics.pi / 2)($Graphics$Collage.filled($Color.white)($Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                                                                                                                         ,_0: 0
+                                                                                                                                                                                                                                         ,_1: 4}
+                                                                                                                                                                                                                                        ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                         ,_0: -4
+                                                                                                                                                                                                                                         ,_1: -4}
+                                                                                                                                                                                                                                        ,{ctor: "_Tuple2"
+                                                                                                                                                                                                                                         ,_0: 4
+                                                                                                                                                                                                                                         ,_1: -4}])))));
+         var windOriginText = $Graphics$Collage.move({ctor: "_Tuple2"
+                                                     ,_0: 0
+                                                     ,_1: r + 25})($Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append($String.show($Basics.round(wind.origin)),
+         "&deg;")))));
+         return A3($Graphics$Collage.collage,
+         80,
+         120,
+         _L.fromArray([c
+                      ,windMarker
+                      ,windOriginText
+                      ,windSpeedText
+                      ,legend]));
+      }();
+   });
+   var topRightElements = function (_v0) {
+      return function () {
+         return _L.fromArray([A2(getWindWheel,
+         _v0.wind,
+         _v0.player)]);
+      }();
    };
-   var getCountdown = function (_v0) {
+   var getCountdown = function (_v2) {
       return function () {
          return function () {
             var msg = function (s) {
                return $Text.centered($Render$Utils.baseText(s));
             };
             return function () {
-               var _v2 = _v0.countdown;
-               switch (_v2.ctor)
+               var _v4 = _v2.countdown;
+               switch (_v4.ctor)
                {case "Just":
-                  return _U.cmp(_v2._0,
-                    0) > 0 ? msg($Render$Utils.formatCountdown(_v2._0)) : function () {
-                       var _v4 = _v0.player.nextGate;
-                       switch (_v4.ctor)
-                       {case "Just": switch (_v4._0)
+                  return _U.cmp(_v4._0,
+                    0) > 0 ? msg($Render$Utils.formatCountdown(_v4._0)) : function () {
+                       var _v6 = _v2.player.nextGate;
+                       switch (_v6.ctor)
+                       {case "Just": switch (_v6._0)
                             {case "StartLine":
                                return msg("Go!");}
                             break;
@@ -11021,7 +11064,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                        return $Graphics$Element.empty;
                     }();
                   case "Nothing":
-                  return _v0.isMaster ? msg($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
+                  return _v2.isMaster ? msg($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
                _E.Case($moduleName,
                "between lines 48 and 59");
             }();
@@ -11039,9 +11082,9 @@ Elm.Render.Dashboard.make = function (_elm) {
       },
       countdownMaybe) ? $Text.centered($Render$Utils.baseText($Render$Utils.helpMessage)) : $Graphics$Element.empty;
    };
-   var midBottomElements = function (_v6) {
+   var midBottomElements = function (_v8) {
       return function () {
-         return _L.fromArray([getHelp(_v6.countdown)]);
+         return _L.fromArray([getHelp(_v8.countdown)]);
       }();
    };
    var getLeaderboardLine = F3(function (leaderTally,
@@ -11082,54 +11125,54 @@ Elm.Render.Dashboard.make = function (_elm) {
    var s = A2($Graphics$Element.spacer,
    20,
    20);
-   var topLeftElements = function (_v8) {
+   var topLeftElements = function (_v10) {
       return function () {
          return _L.fromArray([A2(getGatesCount,
-                             _v8.course,
-                             _v8.player)
+                             _v10.course,
+                             _v10.player)
                              ,s
-                             ,getLeaderboard(_v8.leaderboard)]);
+                             ,getLeaderboard(_v10.leaderboard)]);
       }();
    };
    var renderDashboard = F2(function (gameState,
-   _v10) {
+   _v12) {
       return function () {
-         switch (_v10.ctor)
+         switch (_v12.ctor)
          {case "_Tuple2":
             return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
-                                                         _v10._0,
-                                                         _v10._1,
+                                                         _v12._0,
+                                                         _v12._1,
                                                          A2($Graphics$Element.topLeftAt,
                                                          $Graphics$Element.Absolute(20),
                                                          $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                          $Graphics$Element.down,
                                                          topLeftElements(gameState)))
                                                          ,A3($Graphics$Element.container,
-                                                         _v10._0,
-                                                         _v10._1,
+                                                         _v12._0,
+                                                         _v12._1,
                                                          A2($Graphics$Element.midTopAt,
                                                          $Graphics$Element.Relative(0.5),
                                                          $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                          $Graphics$Element.down,
                                                          midTopElements(gameState)))
                                                          ,A3($Graphics$Element.container,
-                                                         _v10._0,
-                                                         _v10._1,
+                                                         _v12._0,
+                                                         _v12._1,
                                                          A2($Graphics$Element.topRightAt,
                                                          $Graphics$Element.Absolute(20),
                                                          $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                          $Graphics$Element.down,
                                                          topRightElements(gameState)))
                                                          ,A3($Graphics$Element.container,
-                                                         _v10._0,
-                                                         _v10._1,
+                                                         _v12._0,
+                                                         _v12._1,
                                                          A2($Graphics$Element.midBottomAt,
                                                          $Graphics$Element.Relative(0.5),
                                                          $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                          $Graphics$Element.up,
                                                          midBottomElements(gameState)))]));}
          _E.Case($moduleName,
-         "between lines 83 and 88");
+         "between lines 102 and 107");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
@@ -11139,6 +11182,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                                   ,getLeaderboard: getLeaderboard
                                   ,getHelp: getHelp
                                   ,getCountdown: getCountdown
+                                  ,getWindWheel: getWindWheel
                                   ,topLeftElements: topLeftElements
                                   ,midTopElements: midTopElements
                                   ,topRightElements: topRightElements
@@ -11484,10 +11528,6 @@ Elm.Render.Controls.make = function (_elm) {
       return function () {
          return function () {
             var dims = $Geo.floatify(intDims);
-            var justForms = _L.fromArray([A3(renderWindWheel,
-            _v12.wind,
-            _v12.player,
-            dims)]);
             var downwindHint = _U.eq(_v12.player.nextGate,
             $Maybe.Just("DownwindGate")) ? A4(renderGateHint,
             _v12.course.downwind,
@@ -11500,10 +11540,8 @@ Elm.Render.Controls.make = function (_elm) {
             dims,
             _v12.center,
             _v12.now) : $Maybe.Nothing;
-            var maybeForms = _L.fromArray([downwindHint
-                                          ,upwindHint]);
-            return $Graphics$Collage.group(_L.append(justForms,
-            $Core.compact(maybeForms)));
+            return $Graphics$Collage.group($Core.compact(_L.fromArray([downwindHint
+                                                                      ,upwindHint])));
          }();
       }();
    });

@@ -58,6 +58,25 @@ getCountdown {countdown,isMaster,player} =
             then msg startCountdownMessage
             else empty
 
+getWindWheel : Wind -> Player -> Element
+getWindWheel wind player =
+  let r = 30
+      c = circle r |> outlined (solid white)
+      windOriginRadians = toRadians wind.origin
+      windMarker = polygon [(0,4),(-4,-4),(4,-4)]
+        |> filled white
+        |> rotate (windOriginRadians + pi/2)
+        |> move (fromPolar (r + 4, windOriginRadians))
+      windOriginText = ((show (round wind.origin)) ++ "&deg;")
+        |> baseText |> centered |> toForm
+        |> move (0, r + 25)
+      windSpeedText = ((show (round wind.speed)) ++ "kn")
+        |> baseText |> centered |> toForm
+      legend = "WIND" |> baseText |> centered |> toForm |> move (0, -50)
+  in
+      collage 80 120 [c, windMarker, windOriginText, windSpeedText, legend]
+
+
 topLeftElements : GameState -> [Element]
 topLeftElements {leaderboard,course,player} =
   [ getGatesCount course player
@@ -70,8 +89,8 @@ midTopElements gameState =
   [getCountdown gameState]
 
 topRightElements : GameState -> [Element]
-topRightElements gameState =
-  [empty]
+topRightElements {wind,player} =
+  [getWindWheel wind player]
 
 midBottomElements : GameState -> [Element]
 midBottomElements {countdown} =

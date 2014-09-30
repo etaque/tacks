@@ -33,41 +33,16 @@ renderGateHint gate (w,h) (cx,cy) timer =
       else
         Nothing
 
-renderWindWheel : Wind -> Player -> (Float,Float) -> Form
-renderWindWheel wind player (w,h) =
-  let r = 25 + wind.speed * 0.5
-      c = circle r |> outlined (solid white)
-      windOriginRadians = toRadians wind.origin
-      windMarker = polygon [(0,4),(-4,-4),(4,-4)]
-        |> filled white
-        |> rotate (windOriginRadians + pi/2)
-        |> move (fromPolar (r + 4, windOriginRadians))
-      windOriginText = ((show (round wind.origin)) ++ "&deg;")
-        |> baseText |> centered |> toForm
-        |> move (0, r + 20)
-      windSpeedText = ((show (round wind.speed)) ++ "kn")
-        |> baseText |> centered |> toForm
-      legend = "WIND" |> baseText |> centered |> toForm |> move (0, -50)
-
-  in  group [c, windMarker, windOriginText, windSpeedText, legend] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
-
 renderControls : GameState -> (Int,Int) -> Form
 renderControls ({wind,player,opponents,course,now,countdown,center} as gameState) intDims =
   let dims = floatify intDims
-      justForms =
-        [ renderWindWheel wind player dims
-        ]
       downwindHint = if (player.nextGate == Just "DownwindGate")
         then renderGateHint course.downwind dims center now
         else Nothing
       upwindHint = if (player.nextGate == Just "UpwindGate")
         then renderGateHint course.upwind dims center now
         else Nothing
-      maybeForms =
-        [ downwindHint
-        , upwindHint
-        ]
-  in  group (justForms ++ (compact maybeForms))
+  in  group (compact [downwindHint, upwindHint])
 
 
 
