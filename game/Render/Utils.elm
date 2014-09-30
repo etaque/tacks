@@ -9,6 +9,8 @@ helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune directio
 
 startCountdownMessage = "press C to start countdown (60s)"
 
+emptyForm = toForm empty
+
 colors =
   { seaBlue = rgb 10 105 148
   , sand = rgb 239 210 121

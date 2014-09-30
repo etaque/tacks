@@ -10,6 +10,7 @@ import Maybe
 
 s = spacer 20 20
 
+
 getGatesCount : Course -> Player -> Element
 getGatesCount course player =
   let count = minimum [((length player.crossedGates) + 1) // 2, course.laps]
@@ -48,9 +49,10 @@ getCountdown {countdown,isMaster,player} =
         Just c ->
           if c > 0
             then msg <| formatCountdown c
-            else if player.nextGate == Just "StartLine"
-              then msg "Go!"
-              else empty
+            else case player.nextGate of
+              Just "StartLine" -> msg "Go!"
+              Nothing          -> msg "Finished"
+              _                -> empty
         Nothing ->
           if isMaster
             then msg startCountdownMessage
@@ -58,7 +60,10 @@ getCountdown {countdown,isMaster,player} =
 
 topLeftElements : GameState -> [Element]
 topLeftElements {leaderboard,course,player} =
-  [getGatesCount course player, s, getLeaderboard leaderboard]
+  [ getGatesCount course player
+  , s
+  , getLeaderboard leaderboard
+  ]
 
 midTopElements : GameState -> [Element]
 midTopElements gameState =

@@ -51,9 +51,10 @@ renderWindWheel wind player (w,h) =
 
   in  group [c, windMarker, windOriginText, windSpeedText, legend] |> move (w/2 - 50, (h/2 - 80)) |> alpha 0.8
 
-renderControls : GameState -> (Float,Float) -> Form
-renderControls ({wind,player,opponents,course,now,countdown,center} as gameState) dims =
-  let justForms =
+renderControls : GameState -> (Int,Int) -> Form
+renderControls ({wind,player,opponents,course,now,countdown,center} as gameState) intDims =
+  let dims = floatify intDims
+      justForms =
         [ renderWindWheel wind player dims
         ]
       downwindHint = if (player.nextGate == Just "DownwindGate")
