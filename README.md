@@ -1,9 +1,11 @@
 TACKS
 =====
 
-A sailing race simulator, multiplayer & realtime, using modern web stack and browser technologies.
+A sailing race simulator, multiplayer & realtime, using web stack and modern browser technologies (websockets).
 
-Server is written in Scala 2.11 with Play 2.3, Akka and uses MongoDB for database. Client is an [Elm](http://elm-lang.org/) app (FRP language that compiles to Javascript).
+Server app is powered by Scala 2.11 with Play 2.3, Akka and uses MongoDB for database. No classes except actors, code is written in a functional style. 
+
+Client is an [Elm](http://elm-lang.org/) app, an awesome statically-typed FRP language that compiles to Javascript. Welcome to the world of pureness!
 
 How to install
 --------------
@@ -14,8 +16,8 @@ How to install
 Development
 -----------
 
-Boat moving logic is done in Elm client. Players sync and race management done in server.
+Race rendering and player input logic is handled by Elm app. Players moving, sync and race management done on server in Akka actors.
 
-You will need to install [Elm platform](https://github.com/elm-lang/elm-platform/blob/master/README.md#elm-platform) to modify the client. Might take some time.
+You will have to install [Elm platform](https://github.com/elm-lang/elm-platform/blob/master/README.md#elm-platform) if you want to play with client code. It might take some time.
 
-Once you get `elm` command working, run `elm --only-js --make Main.elm && cp build/Main.js ../public/javascripts/game.js` in `game/` directory after each `*.elm` file update.
+Once you get `elm` command working, cd to `game` then run `./genGame` after each `*.elm` file update.
