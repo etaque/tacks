@@ -46,10 +46,10 @@
               </div>
               Welcome, <a href="@routes.Users.show(u.handle)">@u.handle</a>.
 
-              <form action="@routes.Users.updateName" method="post" class="update-name">
+              <form action="@routes.Users.updateStatus" method="post" class="update-name">
                 <div class="form-group">
                   <div class="input-group input-group-sm">
-                    <input type="text" name="name" value="@u.status" class="form-control"/>
+                    <input type="text" name="status" value="@u.status" class="form-control"/>
                     <div class="input-group-btn">
                       <input type="submit" value="Update status" class="btn btn-primary btn-block"/>
                     </div>

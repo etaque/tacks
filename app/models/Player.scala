@@ -68,9 +68,9 @@ object User extends MongoDAO[User] {
     result.map(_.flatMap(_.getAs[String]("password"))).flattenOpt
   }
 
-  def updateName(id: BSONObjectID, nameOption: Option[String]): Future[_] = nameOption match {
-    case Some(n) => update(id, BSONDocument("name" -> n))
-    case None => unset(id, BSONDocument("name" -> true))
+  def updateStatus(id: BSONObjectID, statusOption: Option[String]): Future[_] = statusOption match {
+    case Some(s) => update(id, BSONDocument("status" -> s))
+    case None => unset(id, BSONDocument("status" -> true))
 
   }
 

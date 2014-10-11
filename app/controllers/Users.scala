@@ -65,9 +65,9 @@ object Users extends Controller with Security {
     yield Ok(views.html.users.show(user, races, opponents))
   }
 
-  def updateName = Identified.async(parse.urlFormEncoded) { implicit request =>
-    val nameMaybe = request.body.get("name").flatMap(_.headOption).filter(_.nonEmpty)
-    User.updateName(request.player.id, nameMaybe).map { _ =>
+  def updateStatus = Identified.async(parse.urlFormEncoded) { implicit request =>
+    val statusOption = request.body.get("status").flatMap(_.headOption).filter(_.nonEmpty)
+    User.updateStatus(request.player.id, statusOption).map { _ =>
       Redirect(routes.Application.index)
     }
   }

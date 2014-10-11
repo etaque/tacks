@@ -4,7 +4,7 @@ GET         /play/:raceId                   controllers.Application.playRace(rac
 
 POST        /users/create                   controllers.Users.create
 GET         /users/:handle                  controllers.Users.show(handle: String)
-POST        /users/updateName               controllers.Users.updateName
+POST        /users/updateStatus             controllers.Users.updateStatus
 
 GET         /login                          controllers.Auth.askLogin
 POST        /login                          controllers.Auth.submitLogin
