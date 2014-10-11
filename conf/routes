@@ -2,6 +2,14 @@
 GET         /                               controllers.Application.index
 GET         /play/:raceId                   controllers.Application.playRace(raceId: String)
 
+POST        /users/create                   controllers.Users.create
+GET         /users/:handle                  controllers.Users.show(handle: String)
+POST        /users/updateName               controllers.Users.updateName
+
+GET         /login                          controllers.Auth.askLogin
+POST        /login                          controllers.Auth.submitLogin
+GET         /logout                         controllers.Auth.logout
+
 GET         /api/racesStatus                controllers.Api.racesStatus
 GET         /api/onlineUsers                controllers.Api.onlinePlayers
 POST        /api/createRace                 controllers.Api.createRace

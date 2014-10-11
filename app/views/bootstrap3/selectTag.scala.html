@@ -1,0 +1,7 @@
+@(field: Field, options: Seq[(String, String)], prompt: String = "")
+
+<select name="@field.name" id="@field.id" class="form-control">
+@for((optionValue, optionLabel) <- ("", prompt) +: options) {
+  <option value="@optionValue" @if(optionValue == field.value.getOrElse("")) {selected}>@optionLabel</option>
+}
+</select>

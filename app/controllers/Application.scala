@@ -8,12 +8,16 @@ import akka.pattern.{ ask, pipe }
 import reactivemongo.bson.BSONObjectID
 
 import actors.{GetRace, RacesSupervisor}
-import models.Race
+import models.{User, Race}
 
 object Application extends Controller with Security {
 
-  def index = Action { implicit request =>
-    Ok(views.html.index())
+  def index = Identified.async() { implicit request =>
+    for {
+      finishedRaces <- Race.listFinished(10)
+      users <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
+    }
+    yield Ok(views.html.index(request.player, finishedRaces, users, Users.userForm))
   }
 
   implicit val timeout = Timeout(5.seconds)

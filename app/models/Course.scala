@@ -100,11 +100,12 @@ case class Course(
   windShadowLength: Double,
   boatWidth: Double // for collision detection, should be consistent with icon
 ) {
+  def gatesToCross = laps * 2 + 1
+
   def nextGate(crossedGates: Int): Option[GateLocation] = {
-    val m = crossedGates % 2
-    if (crossedGates == laps * 2 + 1) None // finished
+    if (crossedGates == gatesToCross) None // finished
     else if (crossedGates == 0) Some(StartLine)
-    else if (m == 0) Some(DownwindGate)
+    else if (crossedGates % 2 == 0) Some(DownwindGate)
     else Some(UpwindGate)
   }
 }

@@ -1,0 +1,6 @@
+@(label: String, hasErrors: Boolean = false, required: Boolean = false)(controls: Html)
+
+<div class="form-group @if(hasErrors) {has-error}">
+  <label>@label</label>
+  @controls
+</div>

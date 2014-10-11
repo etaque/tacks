@@ -1,0 +1,16 @@
+$seaBlue: #23395C; //rgb(10, 105, 148);
+$mainBlue: #5899E2;
+$whiteBlue: #B1C0D8;
+$orange: #E0A349;
+$lightGray: #E6E6E6;
+
+$whiteRed: #f2dede;
+$lightRed: #ebccd1;
+$red: #a94442;
+
+
+$lightSeaBlue: lighten($seaBlue, 6%);
+$lighterSeaBlue: lighten($seaBlue, 12%);
+$darkSeaBlue: darken($seaBlue, 3%);
+$darkerSeaBlue: darken($seaBlue, 6%);
+$sand: rgb(239, 210, 121);

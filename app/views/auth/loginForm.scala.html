@@ -1,0 +1,15 @@
+@()
+
+<form action="@routes.Auth.submitLogin" method="post">
+  <div class="form-group">
+    <input type="text" name="handle" id="" class="form-control" placeholder="Handle"/>
+  </div>
+  <div class="row">
+    <div class="form-group col-md-8">
+      <input type="password" name="password" id="" class="form-control" placeholder="Password"/>
+    </div>
+    <div class="col-md-4">
+      <input type="submit" class="btn btn-primary btn-block" value="Sign in">
+    </div>
+  </div>
+</form>

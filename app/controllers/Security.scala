@@ -13,7 +13,6 @@ case class IdentifiedRequest[A](player: Player, request: Request[A]) extends Wra
 trait Security { this: Controller =>
 
   def getPlayerId(implicit request: IdentifiedRequest[_]): BSONObjectID = request.player.id
-  def getPlayerName(implicit request: IdentifiedRequest[_]): String = request.player.name
 
   object Identified {
 
@@ -21,9 +20,9 @@ trait Security { this: Controller =>
       request.session.get("playerId") match {
         case Some(id) => User.findByIdOpt(id).map {
           case Some(user) => user
-          case None => Guest(BSONObjectID(id), request.session.get("playerName").getOrElse("Anonymous"))
+          case None => Guest(BSONObjectID(id))
         }
-        case None => Future.successful(Guest(BSONObjectID.generate, request.session.get("playerName").getOrElse("Anonymous")))
+        case None => Future.successful(Guest(BSONObjectID.generate))
       }
     }
 

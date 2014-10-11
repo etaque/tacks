@@ -1,113 +1,99 @@
-@import url(http://fonts.googleapis.com/css?family=Inconsolata);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700,800);
 
-$seaBlue: rgb(10, 105, 148);
-$sand: rgb(239, 210, 121);
-$fontFamily: Inconsolata,monospace;
+@import '../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/bootstrap';
+@import 'mixins';
 
-html,
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
+
+
+@import 'layout';
+@import 'theme';
+
+
+.current-user {
+  margin-top: 50px;
 }
 
-body {
-  margin: 0;
-  color: #EEE;
-  font-family: $fontFamily;
-  font-size: 15px;
-  background-color: $seaBlue;
-  overflow: scroll;
+.login {
+  margin-top: 50px;
 }
 
-input,textarea {
-  font-family: $fontFamily;
-}
 
-.wrapper {
-  height: 100%;
-}
+.new-user {
+  margin-top: 50px;
 
-.home {
-  margin: 20px auto;
-  width: 800px;
-  text-align: center;
-}
-
-hr {
-  margin-top: 100px;
-  margin-bottom: 20px;
-  border: 0px solid white;
-  opacity: 0.2;
-  border-top-width: 2px;
-}
-
-a {
-  color: white;
-}
-
-p {
-  margin: 30px 0;
-}
-
-.btn-new-race {
-  display: block;
-  font-size: 21px;
-  text-decoration: none;
-  background-color: darken(orange, 5%);
-  border: none;
-  color: darken($seaBlue, 10%);
-  text-transform: uppercase;
-  cursor: pointer;
-  margin-top: 60px;
-  box-shadow: 3px 3px 0px rgba(0,0,0,0.3);
-  line-height: 40px;
-
-  &:hover {
-    background-color: lighten(orange, 5%);
-    box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
-  }
-
-  &.loading {
-    background-color: darken(orange, 10%);
+  legend {
+    font-size: 18px;
+    border-bottom: 1px solid $whiteBlue;
+    color: white;
   }
 }
 
-.user-name {
-  color: orange;
+.update-name {
+  margin-top: 30px;
 }
 
-.change-name {
-  display: inline-block;
-  background-color: white;
-  opacity: 0.9;
-  color: $seaBlue;
-  padding: 2px 4px;
-  margin-left: 10px;
-  text-decoration: none;
-  box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
-
-  &:hover {
-  opacity: 1;
-  }
-}
-
+//p {
+//  margin: 30px 0;
+//}
+//
+//.btn-new-race {
+//  display: block;
+//  font-size: 21px;
+//  text-decoration: none;
+//  background-color: darken(orange, 5%);
+//  border: none;
+//  color: darken($seaBlue, 10%);
+//  text-transform: uppercase;
+//  cursor: pointer;
+//  margin-top: 60px;
+//  box-shadow: 3px 3px 0px rgba(0,0,0,0.3);
+//  line-height: 40px;
+//
+//  &:hover {
+//    background-color: lighten(orange, 5%);
+//    box-shadow: 4px 4px 0px rgba(0,0,0,0.2);
+//  }
+//
+//  &.loading {
+//    background-color: darken(orange, 10%);
+//  }
+//}
+//
+//.user-name {
+//  color: orange;
+//}
+//
+//.change-name {
+//  display: inline-block;
+//  background-color: white;
+//  opacity: 0.9;
+//  color: $seaBlue;
+//  padding: 2px 4px;
+//  margin-left: 10px;
+//  text-decoration: none;
+//  box-shadow: 2px 2px 0px rgba(0,0,0,0.3);
+//
+//  &:hover {
+//  opacity: 1;
+//  }
+//}
+//
 .races-board {
   margin-top: 40px;
 
   table {
     width: 100%;
-    background-color: darken($seaBlue, 6%);
+    background-color: $darkerSeaBlue;
   }
 
   caption {
     width: 20%;
     margin: 0 auto;
     padding: 4px;
-    background-color: darken($seaBlue, 3%);
+    background-color: $darkSeaBlue;
     text-transform: uppercase;
-    color: lighten($seaBlue, 5%);
+    color: $lightSeaBlue;
   }
 
   td, th {
@@ -119,47 +105,51 @@ p {
   }
 
   tr:hover td {
-    background-color: lighten($seaBlue, 3%);
+    background-color: $lightSeaBlue;
   }
 
 }
-
-.finished-races {
-  width: 50%;
-  margin: 0 auto;
-  margin-top: 100px;
-
-  h3 {
-    font-size: 15px;
-    text-transform: uppercase;
-  }
-
-  h4 {
-    margin: 0 auto;
-    margin-top: 15px;
-    padding: 4px;
-    background-color: darken($seaBlue, 3%);
-    text-transform: uppercase;
-    color: lighten($seaBlue, 5%);
-  }
-
-  table {
-    width: 100%;
-    background-color: darken($seaBlue, 6%);
-  }
-
-  td {
-    padding: 4px 4px;
-    text-align: left;
-    vertical-align: top;
-
-    &.time {
-      text-align: right;
-      white-space: nowrap;
-    }
-  }
-}
-
-.game {
-  height: 100%;
-}
+//
+//.finished-races {
+//  width: 50%;
+//  margin: 0 auto;
+//  margin-top: 100px;
+//
+//  h3 {
+//    font-size: 15px;
+//    text-transform: uppercase;
+//  }
+//
+//  h4 {
+//    margin: 0 auto;
+//    margin-top: 15px;
+//    padding: 4px;
+//    background-color: $darkSeaBlue;
+//    text-transform: uppercase;
+//    color: $lightSeaBlue;
+//  }
+//
+//  table {
+//    width: 100%;
+//    background-color: $darkerSeaBlue;
+//  }
+//
+//  td {
+//    padding: 4px 4px;
+//    text-align: left;
+//    vertical-align: top;
+//
+//    &.time {
+//      text-align: right;
+//      white-space: nowrap;
+//    }
+//  }
+//
+//  .current-player td {
+//    color: orange;
+//  }
+//}
+//
+//.game {
+//  height: 100%;
+//}

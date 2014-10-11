@@ -11422,75 +11422,33 @@ Elm.Render.Controls.make = function (_elm) {
    $Render$Utils = Elm.Render.Utils.make(_elm),
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm);
-   var renderWindWheel = F3(function (wind,
-   player,
-   _v0) {
-      return function () {
-         switch (_v0.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var legend = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                     ,_0: 0
-                                                     ,_1: -50})($Graphics$Collage.toForm($Text.centered($Render$Utils.baseText("WIND"))));
-                 var windSpeedText = $Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append($String.show($Basics.round(wind.speed)),
-                 "kn"))));
-                 var windOriginRadians = $Core.toRadians(wind.origin);
-                 var r = 25 + wind.speed * 0.5;
-                 var c = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle(r));
-                 var windMarker = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                                           ,_0: r + 4
-                                                                           ,_1: windOriginRadians}))($Graphics$Collage.rotate(windOriginRadians + $Basics.pi / 2)($Graphics$Collage.filled($Color.white)($Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                 ,_0: 0
-                                                                                                                                                                                                                                                 ,_1: 4}
-                                                                                                                                                                                                                                                ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                 ,_0: -4
-                                                                                                                                                                                                                                                 ,_1: -4}
-                                                                                                                                                                                                                                                ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                 ,_0: 4
-                                                                                                                                                                                                                                                 ,_1: -4}])))));
-                 var windOriginText = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                             ,_0: 0
-                                                             ,_1: r + 20})($Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append($String.show($Basics.round(wind.origin)),
-                 "&deg;")))));
-                 return $Graphics$Collage.alpha(0.8)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                            ,_0: _v0._0 / 2 - 50
-                                                                            ,_1: _v0._1 / 2 - 80})($Graphics$Collage.group(_L.fromArray([c
-                                                                                                                                        ,windMarker
-                                                                                                                                        ,windOriginText
-                                                                                                                                        ,windSpeedText
-                                                                                                                                        ,legend]))));
-              }();}
-         _E.Case($moduleName,
-         "between lines 38 and 52");
-      }();
-   });
    var gateHintLabel = function (d) {
       return $Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append("Next gate in ",
       _L.append($String.show(d),
       "m")))));
    };
    var renderGateHint = F4(function (gate,
-   _v4,
-   _v5,
+   _v0,
+   _v1,
    timer) {
       return function () {
-         switch (_v5.ctor)
+         switch (_v1.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v4.ctor)
+                 switch (_v0.ctor)
                  {case "_Tuple2":
                     return function () {
                          var distance = function (isOver) {
-                            return $Basics.round($Basics.abs(gate.y + (isOver ? 0 - _v4._1 : _v4._1) / 2 - _v5._1) / 2);
+                            return $Basics.round($Basics.abs(gate.y + (isOver ? 0 - _v0._1 : _v0._1) / 2 - _v1._1) / 2);
                          };
                          var a = 1 + 0.5 * $Basics.cos(timer * 5.0e-3);
                          var markStyle = $Graphics$Collage.filled($Color.orange);
                          var c = 5;
-                         var isOver = _U.cmp(_v5._1 + _v4._1 / 2 + c,
+                         var isOver = _U.cmp(_v1._1 + _v0._1 / 2 + c,
                          gate.y) < 0;
-                         var isUnder = _U.cmp(_v5._1 - _v4._1 / 2 - c,
+                         var isUnder = _U.cmp(_v1._1 - _v0._1 / 2 - c,
                          gate.y) > 0;
-                         var side = isOver ? _v4._1 / 2 : isUnder ? (0 - _v4._1) / 2 : 0;
+                         var side = isOver ? _v0._1 / 2 : isUnder ? (0 - _v0._1) / 2 : 0;
                          var $ = $Game.getGateMarks(gate),
                          left = $._0,
                          right = $._1;
@@ -11498,16 +11456,16 @@ Elm.Render.Controls.make = function (_elm) {
                             var textY = _U.cmp(side,
                             0) > 0 ? 0 - c : c;
                             var d = $Graphics$Collage.alpha(a)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                                      ,_0: 0 - _v5._0
+                                                                                      ,_0: 0 - _v1._0
                                                                                       ,_1: side + textY * 4})(gateHintLabel(distance(_U.cmp(side,
                             0) > 0))));
                             var mr = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                            ,_0: 0 - _v5._0 + gate.width / 2
+                                                            ,_0: 0 - _v1._0 + gate.width / 2
                                                             ,_1: side})(markStyle(A2($Render$Utils.triangle,
                             c,
                             _U.cmp(side,0) > 0)));
                             var ml = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                            ,_0: 0 - _v5._0 - gate.width / 2
+                                                            ,_0: 0 - _v1._0 - gate.width / 2
                                                             ,_1: side})(markStyle(A2($Render$Utils.triangle,
                             c,
                             _U.cmp(side,0) > 0)));
@@ -11523,23 +11481,23 @@ Elm.Render.Controls.make = function (_elm) {
          "between lines 17 and 34");
       }();
    });
-   var renderControls = F2(function (_v12,
+   var renderControls = F2(function (_v8,
    intDims) {
       return function () {
          return function () {
             var dims = $Geo.floatify(intDims);
-            var downwindHint = _U.eq(_v12.player.nextGate,
+            var downwindHint = _U.eq(_v8.player.nextGate,
             $Maybe.Just("DownwindGate")) ? A4(renderGateHint,
-            _v12.course.downwind,
+            _v8.course.downwind,
             dims,
-            _v12.center,
-            _v12.now) : $Maybe.Nothing;
-            var upwindHint = _U.eq(_v12.player.nextGate,
+            _v8.center,
+            _v8.now) : $Maybe.Nothing;
+            var upwindHint = _U.eq(_v8.player.nextGate,
             $Maybe.Just("UpwindGate")) ? A4(renderGateHint,
-            _v12.course.upwind,
+            _v8.course.upwind,
             dims,
-            _v12.center,
-            _v12.now) : $Maybe.Nothing;
+            _v8.center,
+            _v8.now) : $Maybe.Nothing;
             return $Graphics$Collage.group($Core.compact(_L.fromArray([downwindHint
                                                                       ,upwindHint])));
          }();
@@ -11548,7 +11506,6 @@ Elm.Render.Controls.make = function (_elm) {
    _elm.Render.Controls.values = {_op: _op
                                  ,gateHintLabel: gateHintLabel
                                  ,renderGateHint: renderGateHint
-                                 ,renderWindWheel: renderWindWheel
                                  ,renderControls: renderControls};
    return _elm.Render.Controls.values;
 };Elm.Render = Elm.Render || {};

@@ -1,0 +1,16 @@
+@(userForm: Form[CreateUser])
+
+@main {
+
+  @logoPanel {
+
+    <div class="new-user">
+      <h1>New account</h1>
+      @views.html.users.createUserForm(userForm)
+
+
+    </div>
+
+  }
+
+}

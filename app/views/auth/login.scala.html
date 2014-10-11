@@ -1,0 +1,19 @@
+@(failureMaybe: Option[String])
+
+@main {
+
+  @logoPanel {
+
+    <div class="login">
+      <h1>Sign in</h1>
+
+      @for(failure <- failureMaybe) {
+        <div class="alert alert-danger">@failure</div>
+      }
+
+      @views.html.auth.loginForm()
+    </div>
+
+  }
+
+}

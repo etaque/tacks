@@ -1,0 +1,15 @@
+@(field: Field, options: Seq[(String, String)])
+
+<div class="input-group">
+  @for((radioValue, radioLabel) <- options) {
+    <label class="radio-inline">
+      <input
+      type="radio"
+      name="@field.name"
+      id="@radioValue"
+      value="@radioValue"
+      @if(radioValue == field.value.getOrElse("")) {checked} />
+      @radioLabel
+    </label>
+  }
+</div>

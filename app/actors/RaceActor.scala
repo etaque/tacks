@@ -93,7 +93,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
     if (startTime.isEmpty && byPlayerId == master.id.stringify) {
       val at = DateTime.now.plusSeconds(race.countdownSeconds)
       startTime = Some(at)
-      Race.updateStartTime(race, at)
+//      Race.updateStartTime(race, at)
     }
   }
 
@@ -102,7 +102,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
       playersGates += state.player -> state.crossedGates
     }
 
-    leaderboard = playersGates.toSeq.map(t => PlayerTally(t._1, t._2)).sortBy { pt =>
+    leaderboard = playersGates.toSeq.map(t => PlayerTally(t._1.id, t._2)).sortBy { pt =>
       (-pt.gates.length, pt.gates.headOption.map(_.getMillis))
     }
 

@@ -1,0 +1,45 @@
+@(race: Race, users: Seq[User], currentPlayer: Option[Player])
+
+
+@import org.joda.time.DateTime
+@import views.Helpers.timer
+
+@playerTime(startTime: DateTime, bestTime: DateTime, gates: Seq[DateTime], position: Int) = @{
+  if (position == 0) {
+    gates.headOption.map(_.getMillis - startTime.getMillis).map(timer).getOrElse("")
+  } else {
+    gates.headOption.map(_.getMillis - bestTime.getMillis).map(ms => s"""+ ${ms / 1000}\"""").getOrElse("")
+  }
+}
+
+@for(startTime <- race.startTime) {
+  @for(bestTime <- race.tally.headOption.flatMap(_.gates.headOption)) {
+    <div class="finished-race">
+      <h4>@startTime.toString("EEEE HH:mm")</h4>
+      <table>
+        <tbody>
+        @for((PlayerTally(playerId, gates), position) <- race.tally.zipWithIndex) {
+          <tr @if(currentPlayer.exists(_.id == playerId)) { class="current-player" }>
+            <td>
+              @{position + 1}.
+              @users.find(_.id == playerId) match {
+                case Some(user) => {
+                  <a href="">@user.name</a>
+                }
+                case None => { Anonymous }
+              }
+            </td>
+            <td class="time">
+            @if(gates.size == race.course.gatesToCross) {
+              @playerTime(startTime, bestTime, gates, position)
+            } else {
+              DNF
+            }
+            </td>
+          </tr>
+        }
+        </tbody>
+      </table>
+    </div>
+  }
+}

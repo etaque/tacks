@@ -80,24 +80,11 @@ var Home = React.createClass({
   render: function() {
     return (
       <div className="home">
-        <p><img src="/assets/images/logo-tacks-wide.png"/></p>
-        <p>
-          Hello, <span className="user-name">{this.state.userName}</span>
-          <a href="" className="change-name" onClick={this.changeName}>change name</a>
-        </p>
-
-        <p>Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.</p>
-
         <Board status={this.state.racesStatus} />
 
         <a href="" onClick={this.createRace} className={util.cx({"btn-new-race": true, "loading": this.state.loadingNewRace })}>New race</a>
 
         <p>Online players: {this.formatOnlinePlayers(this.state.racesStatus)}</p>
-
-        <FinishedRaces races={this.state.racesStatus.finishedRaces} />
-
-        <hr/>
-        <p>Tacks is open source: <a href="https://github.com/etaque/tacks">Github repository</a>. Also, you can follow me (<a href="https://twitter.com/etaque">@etaque</a>) on Twitter.</p>
       </div>
     );
   }

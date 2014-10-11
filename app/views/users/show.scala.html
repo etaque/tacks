@@ -1,0 +1,11 @@
+@(user: User, races: Seq[Race], opponents: Seq[User])
+
+@main {
+  @user.name
+
+  <div class="finished-races">
+    @for(race <- races) {
+      @views.html.races.finishedBoard(race, opponents, Some(user))
+    }
+  </div>
+}

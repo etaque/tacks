@@ -1,0 +1,20 @@
+@(field: Field, label: String, placeholder: String = "", help: String = "", inputType: String = "text")
+
+@import views.bootstrap3.Helpers._
+
+@formGroup(label, field.hasErrors, required = isRequired(field)) {
+  <input type="@inputType"
+    class="form-control"
+    id="@field.id"
+    name="@field.name"
+    value="@field.value.getOrElse("")"
+    placeholder="@placeholder" />
+
+  <span class="help-block">@help</span>
+
+  @defining(errorMessage(field)) { m =>
+    @if(m.size > 0) {
+      <span class="help-block error-message">@m</span>
+    }
+  }
+}

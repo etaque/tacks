@@ -82,7 +82,7 @@ trait MongoDAO[T] {
   def findByOptId(idMaybe: Option[BSONObjectID]): Future[Option[T]] =
     idMaybe.fold(Future.successful[Option[T]](None))(findByIdOpt)
 
-  def findAllById(ids: Seq[BSONObjectID]): Future[Seq[T]] = {
+  def listByIds(ids: Seq[BSONObjectID]): Future[Seq[T]] = {
     val query = BSONDocument("_id" -> BSONDocument("$in" -> ids))
     list(query)
   }
@@ -90,7 +90,7 @@ trait MongoDAO[T] {
   def list(query: BSONDocument = BSONDocument()): Future[Seq[T]] = {
     collection.find(query).cursor[T].collect[Seq]()
   }
-
+  
   def list: Future[Seq[T]] = list()
 }
 

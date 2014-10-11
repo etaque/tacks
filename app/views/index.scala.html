@@ -1,26 +1,93 @@
-@()(implicit req: RequestHeader)
+@(player: Player, finishedRaces: Seq[Race], users: Seq[User], userForm: Form[CreateUser])(implicit req: RequestHeader)
 
-<!DOCTYPE html>
+@main {
 
-<html>
-  <head>
-    <title>Tacks</title>
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-  </head>
-  <body>
-    <div id="app" class="wrapper"></div>
+  <div class="home">
 
-    @helper.javascriptRouter("jsRoutes")(
-      routes.javascript.Api.racesStatus,
-      routes.javascript.Api.currentUser,
-      routes.javascript.Api.setName,
-      routes.javascript.Api.createRace
-    )
+    <div class="row">
 
-    <script src="@routes.Assets.at("javascripts/app.js")" type="text/javascript"></script>
+      <div class="col-md-6">
+        <p class="align-center"><img src="/assets/images/logo-tacks-wide.png"/></p>
+        <p>Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.</p>
 
-    @ga()
+        @player match {
+          case u: User => {
+          }
+          case g: Guest => {
 
-  </body>
-</html>
+            <div class="login">
+              <h3>Sign in</h3>
+
+              <form action="@routes.Auth.submitLogin" method="post">
+                <div class="row">
+                  <div class="form-group col-md-5">
+                    <input type="text" name="handle" id="" class="form-control" placeholder="Handle"/>
+                  </div>
+                  <div class="form-group col-md-4">
+                    <input type="password" name="password" id="" class="form-control" placeholder="Password"/>
+                  </div>
+                  <div class="col-md-3">
+                    <input type="submit" class="btn btn-primary btn-block" value="Sign in">
+                  </div>
+                </div>
+              </form>
+            </div>
+
+          }
+        }
+      </div>
+
+      <div class="col-md-5 col-md-offset-1 user-block">
+        @player match {
+          case u: User => {
+            <div class="current-user">
+              <div class="pull-right">
+                <a href="@routes.Auth.logout" class="btn btn-default btn-sm">Logout</a>
+              </div>
+              Welcome, <a href="@routes.Users.show(u.idToStr)">@u.name</a>.
+
+              <form action="@routes.Users.updateName" method="post" class="update-name">
+                <div class="form-group">
+                  <label>Update display name</label>
+                  <div class="row">
+                    <div class="col-md-8">
+                      <input type="text" name="name" value="@u.name" class="form-control"/>
+                    </div>
+                    <div class="col-md-4">
+                      <input type="submit" value="Update" class="btn btn-primary btn-block"/>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          }
+          case g: Guest => {
+            <div class="new-user">
+              <h3>New here?</h3>
+              @views.html.users.createUserForm(userForm)
+            </div>
+          }
+        }
+      </div>
+
+    </div>
+
+    <div id="app"></div>
+
+    <div class="finished-races">
+      @for(r <- finishedRaces) {
+        @views.html.races.finishedBoard(r, users, Some(player))
+      }
+    </div>
+
+  </div>
+
+  @helper.javascriptRouter("jsRoutes")(
+    routes.javascript.Api.racesStatus,
+    routes.javascript.Api.currentUser,
+    routes.javascript.Api.setName,
+    routes.javascript.Api.createRace
+  )
+
+  <script src="@routes.Assets.at("javascripts/app.js")" type="text/javascript"></script>
+}

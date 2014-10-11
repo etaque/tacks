@@ -1,0 +1,10 @@
+@mixin placeholder {
+  &::-webkit-input-placeholder {@content}
+  &:-moz-placeholder           {@content}
+  &::-moz-placeholder          {@content}
+  &:-ms-input-placeholder      {@content}
+}
+
+@function desat-dark($color) {
+  @return desaturate(darken($color, 15%), 20%);
+}
