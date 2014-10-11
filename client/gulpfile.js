@@ -23,7 +23,7 @@ function handleError(task) {
 // see https://gist.github.com/mitchelkuijpers/11281981
 function jsx(watch) {
   var doify = watch ? watchify : browserify;
-  var bundler = doify('./scripts/app.jsx', { extensions: ['.jsx'] });
+  var bundler = doify('./scripts/liveCenter.jsx', { extensions: ['.jsx'] });
 
   bundler.transform(reactify);
   bundler.transform(shim);
@@ -35,7 +35,7 @@ function jsx(watch) {
     stream.on('error', handleError('browserify'));
 
     return stream
-      .pipe(source('app.js'))
+      .pipe(source('liveCenter.js'))
       .pipe(gulp.dest(buildDir + 'javascripts'));
   };
 
@@ -64,7 +64,7 @@ gulp.task('scss', function () {
 gulp.task('default', ['jsx:watch', 'scss'], function () {
   gulp.watch(['styles/**/*.scss'], ['scss']);
 });
-  
+
 // Build Production Files, the Default Task
 gulp.task('dist', function (cb) {
   runSequence('scss', ['jsx', 'copy'], cb);

@@ -62,8 +62,8 @@ object User extends MongoDAO[User] {
     BCrypt.checkpw(inputedPassword, storedHash)
   }
 
-  def getPassword(login: String): Future[String] = {
-    val query = BSONDocument("email" -> login)
+  def getHashedPassword(email: String): Future[String] = {
+    val query = BSONDocument("email" -> email)
     val result = collection.find(query).cursor[BSONDocument].headOption
     result.map(_.flatMap(_.getAs[String]("password"))).flattenOpt
   }

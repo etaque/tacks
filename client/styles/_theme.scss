@@ -1,5 +1,7 @@
 
 @import 'colors';
+@import 'mixins';
+
 $fontFamily: Inconsolata, monospace;
 
 body {
@@ -35,7 +37,7 @@ a {
 }
 
 .btn {
-  border-radius: 0;
+  // border-radius: 0;
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none;
@@ -43,10 +45,15 @@ a {
   background-color: white;
   border: none;
   border-bottom: 3px solid #f5f5f5;
-//  padding: 7px 12px 5px 12px;
+  padding: 7px 12px 5px 12px;
 
   &:hover {
   }
+}
+
+.btn-xs {
+  border-bottom-width: 2px;
+  padding: 2px 5px 0px 5px;
 }
 
 .btn-default {
@@ -70,6 +77,16 @@ a {
   }
 }
 
+.btn-warning {
+  background-color: $orange;
+  border-color: desat-dark($orange);
+
+  &:hover {
+    background-color: darken($orange, 5%);
+    border-color: darken(desat-dark($orange), 5%);
+  }
+}
+
 .alert {
   border-radius: 0;
   border-width: 3px;
@@ -84,6 +101,11 @@ input[type="text"], input[type="password"], textarea {
   color: $darkerSeaBlue;
   box-shadow: none;
 }
+
+.input-group-sm > .form-control {
+
+}
+
 
 .has-error {
   .form-control {

@@ -3,33 +3,29 @@
  */
 
 var React         = require('react');
-var BaconMixin    = require('react-bacon').BaconMixin;
-var Router        = require('react-router');
 var $             = require('jquery');
+var Bacon         = require('baconjs');
+var bjq           = require('bacon.jquery');
+var BaconMixin    = require('react-bacon').BaconMixin;
 var _             = require('lodash');
 var Board         = require('./board');
 var FinishedRaces = require('./finishedRaces');
+var OnlinePlayer  = require('./onlinePlayer');
 var Api           = require('./api');
 var util          = require('./util');
 
-var Home = React.createClass({
+var LiveCenter = React.createClass({
   mixins: [BaconMixin],
 
   getInitialState: function() {
     return {
-      userName: null,
       racesStatus: [],
       loadingNewRace: false
     };
   },
 
-  componentWillMount: function() {
-    this.plug(this.props.userName.changes(), 'userName');
-    this.setState({ userName: this.props.userName.get() });
-  },
-
   componentDidMount: function() {
-    this.loadStatus()
+    this.loadStatus();
     var intervalId = setInterval(this.loadStatus, 1000);
     this.setState({ intervalId: intervalId });
   },
@@ -50,15 +46,6 @@ var Home = React.createClass({
     }.bind(this));
   },
 
-  changeName: function(e) {
-    e.preventDefault();
-    var newName = window.prompt("New name?", this.state.userName);
-
-    util.post(Api.setName(), { name: newName }).done(function(res) {
-      this.props.userName.set(newName);
-    }.bind(this));
-  },
-
   createRace: function(e) {
     e.preventDefault();
     if (this.state.loadingNewRace) return;
@@ -73,22 +60,29 @@ var Home = React.createClass({
     }.bind(this));
   },
 
-  formatOnlinePlayers: function(status) {
-    return (_.map(_.sortBy(status.onlinePlayers, 'name'), 'name')).join(", ");
+  onlinePlayers: function(status) {
+    return _.map(_.sortBy(status.onlinePlayers, 'name'), function(player) {
+      return <OnlinePlayer player={player}/>;
+    });
   },
 
   render: function() {
     return (
-      <div className="home">
-        <Board status={this.state.racesStatus} />
+      <div className="row">
+        <div className="col-md-8">
+          <h2>Open races</h2>
+          <Board status={this.state.racesStatus} />
+          <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>New race</a>
+        </div>
 
-        <a href="" onClick={this.createRace} className={util.cx({"btn-new-race": true, "loading": this.state.loadingNewRace })}>New race</a>
-
-        <p>Online players: {this.formatOnlinePlayers(this.state.racesStatus)}</p>
+        <div className="col-md-4">
+          <h2>Online players</h2>
+          <ul className="online-players list-unstyled">{this.onlinePlayers(this.state.racesStatus)}</ul>
+        </div>
       </div>
     );
   }
 
 });
 
-module.exports = Home;
+React.renderComponent(<LiveCenter/>, document.getElementById("liveCenter"));

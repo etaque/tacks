@@ -6761,7 +6761,6 @@ a:hover {
 }
 
 .btn {
-  border-radius: 0;
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none;
@@ -6769,6 +6768,12 @@ a:hover {
   background-color: white;
   border: none;
   border-bottom: 3px solid #f5f5f5;
+  padding: 7px 12px 5px 12px;
+}
+
+.btn-xs, .btn-group-xs > .btn {
+  border-bottom-width: 2px;
+  padding: 2px 5px 0px 5px;
 }
 
 .btn-default {
@@ -6788,6 +6793,15 @@ a:hover {
 .btn-primary:hover {
   background-color: #428cde;
   border-color: #35679f;
+}
+
+.btn-warning {
+  background-color: #e0a349;
+  border-color: #a67936;
+}
+.btn-warning:hover {
+  background-color: #dc9833;
+  border-color: #936b30;
 }
 
 .alert {
@@ -6820,11 +6834,11 @@ input[type="text"], input[type="password"], textarea {
 }
 
 .current-user {
-  margin-top: 50px;
+  margin-top: 80px;
 }
 
 .login {
-  margin-top: 50px;
+  margin-top: 30px;
 }
 
 .new-user {
@@ -6840,27 +6854,35 @@ input[type="text"], input[type="password"], textarea {
   margin-top: 30px;
 }
 
-.races-board {
-  margin-top: 40px;
+.btn-new-race {
+  margin-top: 10px;
 }
+
 .races-board table {
   width: 100%;
   background-color: #1b2b46;
 }
-.races-board caption {
-  width: 20%;
-  margin: 0 auto;
-  padding: 4px;
-  background-color: #1f3251;
-  text-transform: uppercase;
-  color: #2b4772;
-}
 .races-board td, .races-board th {
-  padding: 4px 4px;
+  padding: 6px 8px;
 }
 .races-board td {
   background-color: #23395c;
 }
 .races-board tr:hover td {
   background-color: #2b4772;
+}
+
+.online-players li {
+  background-color: #2b4772;
+  padding: 4px 8px;
+  margin-bottom: 6px;
+}
+.online-players li .player {
+  color: white;
+  text-decoration: none;
+}
+.online-players li .player .status {
+  display: block;
+  color: #b1c0d8;
+  font-size: 12px;
 }

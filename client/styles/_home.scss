@@ -1,0 +1,66 @@
+
+.current-user {
+  margin-top: 80px;
+}
+
+.login {
+  margin-top: 30px;
+}
+
+.new-user {
+  margin-top: 50px;
+
+  legend {
+    font-size: 18px;
+    border-bottom: 1px solid $whiteBlue;
+    color: white;
+  }
+}
+
+.update-name {
+  margin-top: 30px;
+}
+
+.btn-new-race {
+  margin-top: 10px;
+}
+
+.races-board {
+
+  table {
+    width: 100%;
+    background-color: $darkerSeaBlue;
+  }
+
+  td, th {
+    padding: 6px 8px;
+  }
+
+  td {
+    background-color: $seaBlue;
+  }
+
+  tr:hover td {
+    background-color: $lightSeaBlue;
+  }
+}
+
+.online-players {
+  li {
+    background-color: $lightSeaBlue;
+    padding: 4px 8px;
+    margin-bottom: 6px;
+
+    .player {
+      color: white;
+      text-decoration: none;
+
+      .status {
+        display: block;
+        color: $whiteBlue;
+        font-size: 12px;
+      }
+    }
+
+  }
+}

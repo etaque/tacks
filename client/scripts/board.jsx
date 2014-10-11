@@ -19,7 +19,6 @@ var Board = React.createClass({
       return (
         <div className="races-board">
           <table>
-            <caption>Open races</caption>
             <thead>
               <tr>
                 <th>Creation</th>

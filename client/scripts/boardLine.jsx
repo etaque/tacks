@@ -42,7 +42,7 @@ var BoardLine = React.createClass({
         <td>{h} by {s.master.name}</td>
         <td>{players}</td>
         <td>{this.getStartText(millis)}</td>
-        <td><a href={"/play/" + s.race._id} target="blank">Join</a></td>
+        <td><a href={"/play/" + s.race._id} target="blank" className="btn btn-xs btn-block btn-default">Join</a></td>
       </tr>);
   }
 

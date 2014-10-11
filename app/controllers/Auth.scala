@@ -24,7 +24,7 @@ object Auth extends Controller {
 
     (for {
       (email, password) <- Future(form).filter(_.isDefined).map(_.get)
-      credentials <- User.getPassword(email).map(User.checkPassword(password))
+      credentials <- User.getHashedPassword(email).map(User.checkPassword(password))
       if credentials
       user <- User.findByEmail(email).flattenOpt
     }
