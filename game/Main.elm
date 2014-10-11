@@ -12,9 +12,9 @@ port raceInput : Signal
   { now: Float
   , startTime: Maybe Float
   , course: Maybe Game.Course
-  , player: Maybe Game.Player
+  , playerState: Maybe Game.PlayerState
   , wind: Game.Wind
-  , opponents: [Game.Player]
+  , opponents: [Game.PlayerState]
   , leaderboard: [Game.PlayerTally]
   , isMaster: Bool
   }

@@ -6,12 +6,12 @@ import Geo (..)
 import Game (..)
 import String
 import Text
-import Maybe
+import Maybe (maybe)
 
 s = spacer 20 20
 
 
-getGatesCount : Course -> Player -> Element
+getGatesCount : Course -> PlayerState -> Element
 getGatesCount course player =
   let count = minimum [((length player.crossedGates) + 1) // 2, course.laps]
   in  "Gate " ++ show (length player.crossedGates) ++ "/" ++ (show (1 + course.laps * 2))
@@ -23,7 +23,8 @@ getLeaderboardLine leaderTally position tally =
   let delta = if length tally.gates == length leaderTally.gates
         then "+" ++ show ((head tally.gates - head leaderTally.gates) / 1000) ++ "\""
         else "-"
-  in  show (position + 1) ++ ". " ++ (fixedLength 12 tally.player.name) ++ " " ++ delta
+      handle = maybe "Anonymous" identity tally.playerHandle
+  in  show (position + 1) ++ ". " ++ (fixedLength 12 handle) ++ " " ++ delta
 
 getLeaderboard : [PlayerTally] -> Element
 getLeaderboard leaderboard =
@@ -37,19 +38,19 @@ getLeaderboard leaderboard =
 
 getHelp : Maybe Float -> Element
 getHelp countdownMaybe =
-  if Maybe.maybe True (\c -> c > 0) countdownMaybe then
+  if maybe True (\c -> c > 0) countdownMaybe then
     helpMessage |> baseText |> centered
   else
     empty
 
 getCountdown : GameState -> Element
-getCountdown {countdown,isMaster,player} =
+getCountdown {countdown,isMaster,playerState} =
   let msg s = baseText s |> centered
   in  case countdown of
         Just c ->
           if c > 0
             then msg <| formatCountdown c
-            else case player.nextGate of
+            else case playerState.nextGate of
               Just "StartLine" -> msg "Go!"
               Nothing          -> msg "Finished"
               _                -> empty
@@ -58,7 +59,7 @@ getCountdown {countdown,isMaster,player} =
             then msg startCountdownMessage
             else empty
 
-getWindWheel : Wind -> Player -> Element
+getWindWheel : Wind -> PlayerState -> Element
 getWindWheel wind player =
   let r = 30
       c = circle r |> outlined (solid white)
@@ -78,8 +79,8 @@ getWindWheel wind player =
 
 
 topLeftElements : GameState -> [Element]
-topLeftElements {leaderboard,course,player} =
-  [ getGatesCount course player
+topLeftElements {leaderboard,course,playerState} =
+  [ getGatesCount course playerState
   , s
   , getLeaderboard leaderboard
   ]
@@ -89,8 +90,8 @@ midTopElements gameState =
   [getCountdown gameState]
 
 topRightElements : GameState -> [Element]
-topRightElements {wind,player} =
-  [getWindWheel wind player]
+topRightElements {wind,playerState} =
+  [getWindWheel wind playerState]
 
 midBottomElements : GameState -> [Element]
 midBottomElements {countdown} =

@@ -31,20 +31,20 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
   in
     (refocus x x' cx w (w * 0.2), refocus y y' cy h (h * 0.4))
 
-moveStep : Bool -> Time -> Player -> (Int,Int) -> GameState -> GameState
-moveStep frozen delta ({position,velocity,heading} as previous) dims ({player,center} as gameState) =
-  let newPosition = player.position
-      movedPlayer = { player | position <- player.position }
+moveStep : Bool -> Time -> PlayerState -> (Int,Int) -> GameState -> GameState
+moveStep frozen delta ({position,velocity,heading} as previous) dims ({playerState,center} as gameState) =
+  let newPosition = playerState.position
+      movedPlayer = { playerState | position <- playerState.position }
       newCenter = getCenterAfterMove position newPosition center (floatify dims)
-  in  { gameState | player <- movedPlayer,
+  in  { gameState | playerState <- movedPlayer,
                     center <- newCenter }
 
 raceInputStep : RaceInput -> GameState -> GameState
-raceInputStep raceInput ({player} as gameState) =
-  let { now, startTime, course, player, opponents,
+raceInputStep raceInput gameState =
+  let { now, startTime, course, playerState, opponents,
         wind, leaderboard, isMaster } = raceInput
   in  { gameState | opponents <- opponents,
-                    player <- maybe gameState.player identity player,
+                    playerState <- maybe gameState.playerState identity playerState,
                     course <- maybe gameState.course identity course,
                     wind <- wind,
                     leaderboard <- leaderboard,
@@ -55,7 +55,7 @@ raceInputStep raceInput ({player} as gameState) =
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
   let frozen = input.raceInput.now == gameState.now
-      previousState = gameState.player
+      previousState = gameState.playerState
   in  raceInputStep input.raceInput gameState
         |> moveStep frozen input.delta previousState input.windowInput
         |> mouseStep input.mouseInput

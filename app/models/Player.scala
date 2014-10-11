@@ -29,7 +29,7 @@ case class User(
   _id: BSONObjectID = BSONObjectID.generate,
   email: String,
   handle: String,
-  name: Option[String]
+  status: Option[String]
 ) extends Player with HasId { }
 
 case class CreateUser(email: String, password: String, handle: String)

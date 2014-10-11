@@ -9,9 +9,15 @@ function mountRace(wsUrl, initialInput) {
     game.ports.raceInput.send(JSON.parse(event.data));
   };
 
+  function outputProxy(playerOutput) {
+    ws.send(JSON.stringify(playerOutput));
+  }
+
   ws.onopen = function() {
-    game.ports.playerOutput.subscribe(function(state) {
-      ws.send(JSON.stringify(state));
-    });
+    game.ports.playerOutput.subscribe(outputProxy);
+  };
+
+  ws.onclose = function() {
+    game.ports.playerOutput.unsubscribe(outputProxy);
   };
 }

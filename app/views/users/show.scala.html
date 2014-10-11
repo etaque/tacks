@@ -1,7 +1,7 @@
 @(user: User, races: Seq[Race], opponents: Seq[User])
 
 @main {
-  @user.name
+  @user.status
 
   <div class="finished-races">
     @for(race <- races) {

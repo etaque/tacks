@@ -49,7 +49,7 @@ object Users extends Controller with Security {
       withErrors => Future.successful(BadRequest(views.html.users.creation(withErrors))),
       {
         case CreateUser(email, password, handle) => {
-          val user = User(email = email, handle = handle, name = None)
+          val user = User(email = email, handle = handle, status = None)
           User.create(user, password).map { _ => Redirect(routes.Application.index).withSession("playerId" -> user.idToStr) }
         }
       }

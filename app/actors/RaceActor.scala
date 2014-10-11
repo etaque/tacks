@@ -102,7 +102,12 @@ class RaceActor(race: Race, master: Player) extends Actor {
       playersGates += state.player -> state.crossedGates
     }
 
-    leaderboard = playersGates.toSeq.map(t => PlayerTally(t._1.id, t._2)).sortBy { pt =>
+    leaderboard = playersGates.toSeq.map { case (player, gates) =>
+      PlayerTally(player.id, player match {
+        case g: Guest => None
+        case u: User => Some(u.handle)
+      }, gates)
+    }.sortBy { pt =>
       (-pt.gates.length, pt.gates.headOption.map(_.getMillis))
     }
 

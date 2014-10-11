@@ -17,7 +17,7 @@ var BoardLine = React.createClass({
       return _.map(playerStates, ps => {
         var id = ps[0],
             p = ps[1];
-        return p.player.name;
+        return p.player.handle || "Anonymous";
       }).join(" vs ");
     }
   },
@@ -39,7 +39,7 @@ var BoardLine = React.createClass({
 
     return (
       <tr>
-        <td>{h} by {s.master.name}</td>
+        <td>{h} by {s.master.handle || "Anonymous"}</td>
         <td>{players}</td>
         <td>{this.getStartText(millis)}</td>
         <td><a href={"/play/" + s.race._id} target="blank" className="btn btn-xs btn-block btn-default">Join</a></td>

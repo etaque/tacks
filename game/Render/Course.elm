@@ -63,7 +63,7 @@ renderGateLaylines vmg windOrigin gate =
       drawLine (p1,p2) = segment p1 p2 |> traced (solid white)
   in  group (map drawLine [(leftMark, leftLineEnd), (rightMark, rightLineEnd)]) |> alpha 0.3
 
-renderLaylines : Player -> Course -> Form
+renderLaylines : PlayerState -> Course -> Form
 renderLaylines player course =
   case player.nextGate of
     Just "UpwindGate"   -> renderGateLaylines player.upwindVmg player.windOrigin course.upwind
@@ -71,17 +71,17 @@ renderLaylines player course =
     _                   -> emptyForm
 
 renderCourse : GameState -> Form
-renderCourse ({player,opponents,course,now,center} as gameState) =
-  let downwindOrStartLine = if isEmpty player.crossedGates
+renderCourse ({playerState,opponents,course,now,center} as gameState) =
+  let downwindOrStartLine = if isEmpty playerState.crossedGates
         then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
-        else renderGate course.downwind course.markRadius (player.nextGate == Just "DownwindGate")
+        else renderGate course.downwind course.markRadius (playerState.nextGate == Just "DownwindGate")
       forms =
         [ renderBounds gameState.course.area
         , renderIslands gameState
         , downwindOrStartLine
-        , renderGate course.upwind course.markRadius (player.nextGate == Just "UpwindGate")
+        , renderGate course.upwind course.markRadius (playerState.nextGate == Just "UpwindGate")
         , renderGusts gameState.wind
-        , renderLaylines player course
+        , renderLaylines playerState course
         ]
   in  group forms |> move (neg center)
 

@@ -5,6 +5,7 @@ import org.joda.time.DateTime
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
+import reactivemongo.bson.BSONObjectID
 import tools.JsonFormats._
 
 object JsonFormats {
@@ -43,7 +44,12 @@ object JsonFormats {
 
 
   implicit val userFormat: Format[User] = Json.format[User]
-  implicit val guestFormat: Format[Guest] = Json.format[Guest]
+
+  implicit val guestReads: Reads[Guest] = Json.reads[Guest]
+  implicit val guestWrites: Writes[Guest] = Writes {
+    (g: Guest) => Json.obj("_id" -> g._id, "handle" -> JsNull)
+  }
+  implicit val guestFormat: Format[Guest] = Format(guestReads, guestWrites)
 
   implicit val playerFormat: Format[Player] = new Format[Player] {
     override def writes(p: Player): JsValue = p match {
@@ -51,7 +57,7 @@ object JsonFormats {
       case g: Guest => guestFormat.writes(g)
     }
     override def reads(json: JsValue): JsResult[Player] = json match {
-      case o: JsObject if (o \ "email").asOpt[String].isDefined => userFormat.reads(o)
+      case o: JsObject if (o \ "handle").asOpt[String].isDefined => userFormat.reads(o)
       case o: JsObject => guestFormat.reads(o)
       case _ @ v => JsError(Seq(JsPath() -> Seq(ValidationError("Expected Player value, got: " + v.toString))))
     }
@@ -60,7 +66,12 @@ object JsonFormats {
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
-  implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
+
+  implicit val playerTallyFormat: Format[PlayerTally] = (
+    (__ \ 'playerId).format[BSONObjectID] and
+      (__ \ 'playerHandle).format[Option[String]] and
+      (__ \ 'gates).format[Seq[DateTime]]
+    )(PlayerTally.apply, unlift(PlayerTally.unapply))
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'player).format[Player] and
@@ -85,7 +96,7 @@ object JsonFormats {
     (__ \ 'now).format[DateTime] and
       (__ \ 'startTime).format[Option[DateTime]] and
       (__ \ 'course).format[Option[Course]] and
-      (__ \ 'player).format[Option[PlayerState]] and
+      (__ \ 'playerState).format[Option[PlayerState]] and
       (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[PlayerState]] and
       (__ \ 'leaderboard).format[Seq[PlayerTally]] and

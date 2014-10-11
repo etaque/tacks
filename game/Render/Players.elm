@@ -6,8 +6,9 @@ import Geo (..)
 import Game (..)
 import String
 import Text
+import Maybe (maybe)
 
-vmgColorAndShape : Player -> (Color, Shape)
+vmgColorAndShape : PlayerState -> (Color, Shape)
 vmgColorAndShape player =
   let a = (abs player.windAngle)
       margin = 3
@@ -24,7 +25,7 @@ vmgColorAndShape player =
            | a < player.downwindVmg - margin -> warn
            | otherwise                       -> good
 
-renderPlayerAngles : Player -> Form
+renderPlayerAngles : PlayerState -> Form
 renderPlayerAngles player =
   let windOriginRadians = toRadians (player.heading - player.windAngle)
       windMarker = polygon [(0,4),(-4,-4),(4,-4)]
@@ -57,19 +58,19 @@ renderWake wake =
       renderSegment (i,(a,b)) = segment a b |> traced style |> alpha (opacityForIndex i)
   in  group (map renderSegment pairs)
 
-renderWindShadow : Float -> Player -> Form
+renderWindShadow : Float -> PlayerState -> Form
 renderWindShadow shadowLength boat =
   let shadowDirection = (ensure360 (boat.windOrigin + 180 + (boat.windAngle / 3)))
       arcAngles = [-15, -10, -5, 0, 5, 10, 15]
       endPoints = map (\a -> add boat.position (fromPolar (shadowLength, toRadians (shadowDirection + a)))) arcAngles
   in  path (boat.position :: endPoints) |> filled white |> alpha 0.1
 
-renderBoatIcon : Player -> String -> Form
+renderBoatIcon : PlayerState -> String -> Form
 renderBoatIcon boat name =
   image 12 20 ("/assets/images/" ++ name ++ ".png") |> toForm
     |> rotate (toRadians (boat.heading + 90))
 
-renderPlayer : Player -> Float -> Form
+renderPlayer : PlayerState -> Float -> Form
 renderPlayer player shadowLength =
   let hull = renderBoatIcon player "49er"
       windShadow = renderWindShadow shadowLength player
@@ -79,26 +80,26 @@ renderPlayer player shadowLength =
       wake = renderWake player.trail
   in group [wake, windShadow, movingPart]
 
-renderOpponent : Float -> Player -> Form
+renderOpponent : Float -> PlayerState -> Form
 renderOpponent shadowLength opponent =
   let hull = renderBoatIcon opponent "49er"
         |> move opponent.position
         |> alpha 0.5
       shadow = renderWindShadow shadowLength opponent
-      name = opponent.player.name |> baseText |> centered |> toForm
+      name = (maybe "Anonymous" identity opponent.player.handle) |> baseText |> centered |> toForm
         |> move (add opponent.position (0,-25))
         |> alpha 0.3
   in group [shadow, hull, name]
 
-renderOpponents : Course -> [Player] -> Form
+renderOpponents : Course -> [PlayerState] -> Form
 renderOpponents course opponents =
   group <| map (renderOpponent course.windShadowLength) opponents
 
 renderPlayers : GameState -> Form
-renderPlayers ({player,opponents,course,center} as gameState) =
+renderPlayers ({playerState,opponents,course,center} as gameState) =
   let forms =
         [ renderOpponents course opponents
-        , renderPlayer player course.windShadowLength
+        , renderPlayer playerState course.windShadowLength
         ]
   in  group forms |> move (neg center)
 

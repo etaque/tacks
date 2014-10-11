@@ -18,13 +18,13 @@
       <h4>@startTime.toString("EEEE HH:mm")</h4>
       <table>
         <tbody>
-        @for((PlayerTally(playerId, gates), position) <- race.tally.zipWithIndex) {
+        @for((PlayerTally(playerId, playerHandle, gates), position) <- race.tally.zipWithIndex) {
           <tr @if(currentPlayer.exists(_.id == playerId)) { class="current-player" }>
             <td>
               @{position + 1}.
               @users.find(_.id == playerId) match {
                 case Some(user) => {
-                  <a href="">@user.name</a>
+                  <a href="">@user.status</a>
                 }
                 case None => { Anonymous }
               }

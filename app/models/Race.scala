@@ -7,7 +7,11 @@ import reactivemongo.bson._
 
 import tools.BSONHandlers.BSONDateTimeHandler
 
-case class PlayerTally(playerId: BSONObjectID, gates: Seq[DateTime])
+case class PlayerTally(
+  playerId: BSONObjectID,
+  playerHandle: Option[String],
+  gates: Seq[DateTime]
+)
 
 case class Race (
   _id: BSONObjectID = BSONObjectID.generate,

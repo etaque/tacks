@@ -19,9 +19,9 @@ type Course =
   , boatWidth: Float
   }
 
-type Player =
-  { player : { name : String }
-  , position : Point
+type PlayerState =
+  { player: { handle: Maybe String }
+  , position: Point
   , heading: Float
   , velocity: Float
   , windAngle: Float
@@ -36,17 +36,17 @@ type Player =
   , nextGate: Maybe String -- GateLocation data type is incompatible with port inputs
   }
 
-type PlayerTally = { player: { name: String }, gates: [Time] }
+type PlayerTally = { playerId: String, playerHandle: Maybe String, gates: [Time] }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gusts : [Gust] }
 
 type GameState =
   { wind: Wind
-  , player: Player
+  , playerState: PlayerState
   , wake: [Point]
   , center: Point
-  , opponents: [Player]
+  , opponents: [PlayerState]
   , course: Course
   , leaderboard: [PlayerTally]
   , now: Time
@@ -54,7 +54,7 @@ type GameState =
   , isMaster: Bool
   }
 
-type RaceState = { players : [Player] }
+--type RaceState = { players : [PlayerState] }
 
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
@@ -71,9 +71,9 @@ defaultCourse =
   , boatWidth = 0
   }
 
-defaultPlayer : Player
-defaultPlayer =
-  { player = { name = "" }
+defaultPlayerState : PlayerState
+defaultPlayerState =
+  { player = { handle = Nothing }
   , position = (0,0)
   , heading = 0
   , velocity = 0
@@ -99,7 +99,7 @@ defaultWind =
 defaultGame : GameState
 defaultGame =
   { wind = defaultWind
-  , player = defaultPlayer
+  , playerState = defaultPlayerState
   , center = (0,0)
   , wake = []
   , opponents = []
