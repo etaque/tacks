@@ -68,6 +68,12 @@ object User extends MongoDAO[User] {
     result.map(_.flatMap(_.getAs[String]("password"))).flattenOpt
   }
 
+  def updateName(id: BSONObjectID, nameOption: Option[String]): Future[_] = nameOption match {
+    case Some(n) => update(id, BSONDocument("name" -> n))
+    case None => unset(id, BSONDocument("name" -> true))
+
+  }
+
   def ensureIndexes(): Unit = {
     import reactivemongo.api.indexes.Index
     import reactivemongo.api.indexes.IndexType._

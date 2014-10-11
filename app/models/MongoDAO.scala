@@ -52,6 +52,10 @@ trait MongoDAO[T] {
     updateCommand(id, updateDoc, "$set")
   }
 
+  def unset(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
+    updateCommand(id, updateDoc, "$unset")
+  }
+
   def push(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
     updateCommand(id, updateDoc, "$push")
   }

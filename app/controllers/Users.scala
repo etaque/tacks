@@ -65,10 +65,10 @@ object Users extends Controller with Security {
     yield Ok(views.html.users.show(user, races, opponents))
   }
 
-  def updateName = Identified(parse.json) { implicit request =>
-    (request.body \ "name").asOpt[String] match {
-      case Some(name) => Ok(Json.obj()).addingToSession("playerName" -> name)
-      case None => BadRequest
+  def updateName = Identified.async(parse.urlFormEncoded) { implicit request =>
+    val nameMaybe = request.body.get("name").flatMap(_.headOption).filter(_.nonEmpty)
+    User.updateName(request.player.id, nameMaybe).map { _ =>
+      Redirect(routes.Application.index)
     }
   }
 }

@@ -44,7 +44,7 @@
               <div class="pull-right">
                 <a href="@routes.Auth.logout" class="btn btn-default btn-sm">Logout</a>
               </div>
-              Welcome, <a href="@routes.Users.show(u.idToStr)">@u.name</a>.
+              Welcome, <a href="@routes.Users.show(u.handle)">@u.handle</a>.
 
               <form action="@routes.Users.updateName" method="post" class="update-name">
                 <div class="form-group">
