@@ -12,10 +12,10 @@ startCountdownMessage = "press C to start countdown (60s)"
 emptyForm = toForm empty
 
 colors =
-  { seaBlue = rgb 10 105 148
-  , sand = rgb 239 210 121
-  , gateMark = orange
-  , gateLine = orange
+  { seaBlue = rgb 35 57 92
+  , sand = rgb 224 163 73
+  , gateMark = rgb 234 99 68
+  , gateLine = rgb 234 99 68
   }
 
 fullScreenMessage : String -> Form
