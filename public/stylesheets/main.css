@@ -6720,10 +6720,15 @@ body {
 .footer {
   margin-top: 100px;
   text-align: center;
+  width: 50%;
+}
+.footer a {
+  color: #b1c0d8;
 }
 .footer hr {
   margin-bottom: 20px;
   border-top-width: 2px;
+  border-color: #345488;
 }
 
 .align-center {
@@ -6746,6 +6751,7 @@ hr {
 }
 
 h1 {
+  margin-bottom: 30px;
   text-align: center;
   color: white;
 }

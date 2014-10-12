@@ -24,10 +24,16 @@ body {
 .footer {
   margin-top: 100px;
   text-align: center;
+  width: 50%;
+
+  a {
+    color: $whiteBlue;
+  }
 
   hr {
     margin-bottom: 20px;
     border-top-width: 2px;
+    border-color: $lighterSeaBlue;
   }
 }
 
