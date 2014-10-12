@@ -71,14 +71,16 @@
 
     <div id="liveCenter"></div>
 
-    <div class="row">
-      <div class="finished-races col-md-offset-3 col-md-6">
-        <h3>Recent races</h3>
-        @for(r <- finishedRaces) {
-          @views.html.races.finishedBoard(r, users, Some(player))
-        }
+    @if(finishedRaces.nonEmpty) {
+      <div class="row">
+        <div class="finished-races col-md-offset-3 col-md-6">
+          <h3>Recent races</h3>
+          @for(r <- finishedRaces) {
+            @views.html.races.finishedBoard(r, users, Some(player))
+          }
+        </div>
       </div>
-    </div>
+    }
 
   </div>
 
