@@ -6863,6 +6863,10 @@ input[type="text"], input[type="password"], textarea {
   margin-top: 30px;
 }
 
+.live-center {
+  margin-top: 30px;
+}
+
 .btn-new-race {
   margin-top: 10px;
 }

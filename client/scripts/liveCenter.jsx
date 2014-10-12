@@ -68,7 +68,7 @@ var LiveCenter = React.createClass({
   render: function() {
     var st = this.state.racesStatus;
     return (
-      <div className="row">
+      <div className="live-center row">
         <div className="col-md-8">
           <h2>Open races</h2>
           <Board status={st} />
