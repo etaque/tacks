@@ -17,6 +17,9 @@
         @for(race <- races) {
           @views.html.races.finishedBoard(race, opponents, Some(user))
         }
+        @if(races.isEmpty) {
+          <p>No races found.</p>
+        }
       </div>
     </div>
 
