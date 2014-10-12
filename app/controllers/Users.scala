@@ -24,8 +24,8 @@ object Users extends Controller with Security {
   })
 
   val handleFormatConstraint: Constraint[String] = Constraint("constraints.handleFormat")({ handle =>
-    if (handle.isEmpty || handle.matches("^[a-z0-9_-]{3,15}$")) Valid
-    else Invalid(Seq(ValidationError("Handle must be alphanumeric.")))
+    if (handle.isEmpty || handle.matches("^[a-zA-Z0-9_-]{3,15}$")) Valid
+    else Invalid(Seq(ValidationError("Handle must be alphanumeric and length within 3 to 15 chars.")))
   })
 
   val uniqueHandleConstraint: Constraint[String] = Constraint("constraints.uniqueHandle")({
