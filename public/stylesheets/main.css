@@ -6730,6 +6730,10 @@ body {
   text-align: center;
 }
 
+.nav a {
+  color: #b1c0d8;
+}
+
 body {
   color: #b1c0d8;
   font-family: Inconsolata, monospace;
@@ -6741,14 +6745,19 @@ hr {
   border: 0px solid #b1c0d8;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
+  text-align: center;
+  color: white;
+}
+
+h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   font-size: 19px;
   border-bottom: 2px solid #b1c0d8;
   padding-bottom: 6px;
   margin-bottom: 15px;
 }
-h1::before, h2::before, h3::before, h4::before, h5::before, h6::before {
+h2::before, h3::before, h4::before, h5::before, h6::before {
   content: '# ';
 }
 
@@ -6877,12 +6886,48 @@ input[type="text"], input[type="password"], textarea {
   padding: 4px 8px;
   margin-bottom: 6px;
 }
-.online-players li .player {
+.online-players li .user {
   color: white;
   text-decoration: none;
 }
-.online-players li .player .status {
+.online-players li .user .status {
   display: block;
   color: #b1c0d8;
   font-size: 12px;
+}
+
+.finished-races {
+  margin-top: 50px;
+}
+.finished-races caption {
+  padding: 4px;
+  margin: 0;
+  background-color: #1f3251;
+  text-transform: uppercase;
+  color: #b1c0d8;
+  font-size: 13px;
+}
+.finished-races table {
+  margin-top: 15px;
+  width: 100%;
+  background-color: #1b2b46;
+}
+.finished-races td {
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+.finished-races td.time {
+  text-align: right;
+  white-space: nowrap;
+}
+.finished-races .current-player td {
+  color: #e0a349;
+}
+.finished-races .current-player td a {
+  color: #e0a349;
+}
+
+.show-user .status {
+  text-align: center;
 }

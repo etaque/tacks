@@ -11607,16 +11607,19 @@ Elm.Render.Utils.make = function (_elm) {
       return $Graphics$Collage.alpha(0.3)($Graphics$Collage.toForm($Text.centered($Text.color($Color.white)($Text.height(60)($Text.toText($String.toUpper(msg)))))));
    };
    var colors = {_: {}
-                ,gateLine: $Color.orange
-                ,gateMark: $Color.orange
-                ,sand: A3($Color.rgb,
-                239,
-                210,
-                121)
+                ,gateLine: A3($Color.rgb,
+                234,
+                99,
+                68)
+                ,gateMark: A3($Color.rgb,
+                234,
+                99,
+                68)
+                ,sand: A3($Color.rgb,224,163,73)
                 ,seaBlue: A3($Color.rgb,
-                10,
-                105,
-                148)};
+                35,
+                57,
+                92)};
    var emptyForm = $Graphics$Collage.toForm($Graphics$Element.empty);
    var startCountdownMessage = "press C to start countdown (60s)";
    var helpMessage = _L.append("←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n",

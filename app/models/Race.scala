@@ -29,10 +29,6 @@ case class Race (
 object Race extends MongoDAO[Race] {
   val collectionName = "races"
 
-//  def updateStartTime(race: Race, time: DateTime): Future[_] = {
-//    update(race.id, BSONDocument("startTime" -> BSONDateTimeHandler.write(time)))
-//  }
-
   def updateTally(race: Race, tally: Seq[PlayerTally]): Future[_] = {
     update(race.id, BSONDocument("tally" -> tally.map(playerTallyHandler.write)))
   }
@@ -44,7 +40,7 @@ object Race extends MongoDAO[Race] {
   }
 
   def listByUserId(userId: BSONObjectID): Future[Seq[Race]] = {
-    collection.find(BSONDocument("tally.player._id" -> userId))
+    collection.find(BSONDocument("tally.playerId" -> userId))
       .sort(BSONDocument("startTime" -> -1))
       .cursor[Race].collect[Seq]()
   }
@@ -54,7 +50,7 @@ object Race extends MongoDAO[Race] {
     import reactivemongo.api.indexes.IndexType._
 
     collection.indexesManager.ensure(Index(
-      key = List("tally.player._id" -> Ascending),
+      key = List("tally.playerId" -> Ascending),
       unique = true))
   }
 

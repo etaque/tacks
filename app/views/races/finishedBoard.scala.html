@@ -15,8 +15,8 @@
 @for(startTime <- race.startTime) {
   @for(bestTime <- race.tally.headOption.flatMap(_.gates.headOption)) {
     <div class="finished-race">
-      <h4>@startTime.toString("EEEE HH:mm")</h4>
       <table>
+        <caption>@startTime.toString("EEEE HH:mm")</caption>
         <tbody>
         @for((PlayerTally(playerId, playerHandle, gates), position) <- race.tally.zipWithIndex) {
           <tr @if(currentPlayer.exists(_.id == playerId)) { class="current-player" }>
@@ -24,7 +24,7 @@
               @{position + 1}.
               @users.find(_.id == playerId) match {
                 case Some(user) => {
-                  <a href="">@user.status</a>
+                  <a href="@routes.Users.show(user.idToStr)">@user.handle</a>
                 }
                 case None => { Anonymous }
               }

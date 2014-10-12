@@ -29,12 +29,15 @@ object Api extends Controller with Security {
       openRaces <- racesFuture
       onlinePlayers <- onlinePlayersFuture
       finishedRaces <- finishedRacesFuture
+      userIds = finishedRaces.flatMap(_.tally.map(_.playerId)).distinct
+      users <- User.listByIds(userIds)
     }
     yield Ok(Json.obj(
       "now" -> DateTime.now,
       "openRaces" -> Json.toJson(openRaces),
       "onlinePlayers" -> Json.toJson(onlinePlayers),
-      "finishedRaces" -> Json.toJson(finishedRaces)
+      "finishedRaces" -> Json.toJson(finishedRaces),
+      "users" -> users.map(u => Json.toJson(u)(userFormat)) // conflict with playerFormat
     ))
   }
 

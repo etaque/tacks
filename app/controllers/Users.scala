@@ -56,9 +56,9 @@ object Users extends Controller with Security {
     )
   }
 
-  def show(handle: String) = Action.async { implicit request =>
+  def show(id: String) = Action.async { implicit request =>
     for {
-      user <- User.findByHandle(handle).flattenOpt
+      user <- User.findById(id)
       races <- Race.listByUserId(user.id)
       opponents <- User.listByIds(races.flatMap(_.tally.map(_.playerId)))
     }

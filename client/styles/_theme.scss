@@ -15,7 +15,12 @@ hr {
   border: 0px solid $whiteBlue;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1 {
+  text-align: center;
+  color: white;
+}
+
+h2, h3, h4, h5, h6 {
   text-transform: uppercase;
   font-size: 19px;
   border-bottom: 2px solid $whiteBlue;

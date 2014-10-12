@@ -54,7 +54,6 @@ var LiveCenter = React.createClass({
       util.post(Api.createRace()).done(function(race) {
         setTimeout(function() {
           this.setState({ loadingNewRace: false});
-          // Router.transitionTo("playRace", { id: race._id});
         }.bind(this), 1000);
       }.bind(this));
     }.bind(this));
@@ -67,18 +66,20 @@ var LiveCenter = React.createClass({
   },
 
   render: function() {
+    var st = this.state.racesStatus;
     return (
       <div className="row">
         <div className="col-md-8">
           <h2>Open races</h2>
-          <Board status={this.state.racesStatus} />
-          <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>New race</a>
+          <Board status={st} />
+          <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>New race</a>
         </div>
 
         <div className="col-md-4">
           <h2>Online players</h2>
-          <ul className="online-players list-unstyled">{this.onlinePlayers(this.state.racesStatus)}</ul>
+          <ul className="online-players list-unstyled">{this.onlinePlayers(st)}</ul>
         </div>
+
       </div>
     );
   }

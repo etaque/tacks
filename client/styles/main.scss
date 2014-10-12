@@ -4,54 +4,13 @@
 @import '../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/bootstrap';
 @import 'mixins';
 
-
-
 @import 'layout';
 @import 'theme';
 
 @import 'home';
 
-//
-//.finished-races {
-//  width: 50%;
-//  margin: 0 auto;
-//  margin-top: 100px;
-//
-//  h3 {
-//    font-size: 15px;
-//    text-transform: uppercase;
-//  }
-//
-//  h4 {
-//    margin: 0 auto;
-//    margin-top: 15px;
-//    padding: 4px;
-//    background-color: $darkSeaBlue;
-//    text-transform: uppercase;
-//    color: $lightSeaBlue;
-//  }
-//
-//  table {
-//    width: 100%;
-//    background-color: $darkerSeaBlue;
-//  }
-//
-//  td {
-//    padding: 4px 4px;
-//    text-align: left;
-//    vertical-align: top;
-//
-//    &.time {
-//      text-align: right;
-//      white-space: nowrap;
-//    }
-//  }
-//
-//  .current-player td {
-//    color: orange;
-//  }
-//}
-//
-//.game {
-//  height: 100%;
-//}
+.show-user {
+  .status {
+    text-align: center;
+  }
+}

@@ -16,7 +16,7 @@ var FinishedRacePlayer = React.createClass({
         "DNF");
     return (
       <tr>
-        <td>{this.props.position}. {this.props.player.name}</td>
+        <td>{this.props.position}. {this.props.handle || "Anonymous"}</td>
         <td className="time">{dt}</td>
       </tr>
       );

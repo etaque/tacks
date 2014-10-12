@@ -3,7 +3,7 @@ GET         /                               controllers.Application.index
 GET         /play/:raceId                   controllers.Application.playRace(raceId: String)
 
 POST        /users/create                   controllers.Users.create
-GET         /users/:handle                  controllers.Users.show(handle: String)
+GET         /users/:id                      controllers.Users.show(id: String)
 POST        /users/updateStatus             controllers.Users.updateStatus
 
 GET         /login                          controllers.Auth.askLogin

@@ -8,15 +8,15 @@ var OnlinePlayer = React.createClass({
 
   userTag: function(user) {
     return (
-      <a href={"/users/" + user.handle} className="player">
+      <a href={"/users/" + user._id} className="user">
         {user.handle}
-        <span className="status">{user.name}</span>
+        <span className="status">{user.status}</span>
       </a>
     );
   },
 
   guestTag: function(guest) {
-    return <span className="player">Anonymous</span>;
+    return <span className="guest">Anonymous</span>;
   },
 
   render: function() {
