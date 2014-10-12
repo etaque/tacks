@@ -60,7 +60,7 @@ var LiveCenter = React.createClass({
   },
 
   onlinePlayers: function(status) {
-    return _.map(_.sortBy(status.onlinePlayers, 'name'), function(player) {
+    return _.map(_.sortBy(status.onlinePlayers, 'handle'), function(player) {
       return <OnlinePlayer player={player}/>;
     });
   },
