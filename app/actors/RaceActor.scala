@@ -11,7 +11,7 @@ import models._
 
 case class Start(at: DateTime)
 case class PlayerQuit(id: String)
-case object UpdateWind
+case object SpawnGust
 case object GetStatus
 case object AutoClean
 
@@ -27,7 +27,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
   }
 
   val playersStates = scala.collection.mutable.Map[PlayerId, PlayerState]()
-  var wind = Wind.default.copy(gusts = Gust.spawnAll(race.course))
+  var wind = Wind.default //.copy(gusts = Gust.spawnAll(race.course))
   var playersGates = scala.collection.mutable.Map[Player, Seq[DateTime]]()
   var leaderboard = Seq[PlayerTally]()
   var finishersCount = 0
@@ -42,6 +42,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
   def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == gatesToCross)
 
   Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean)
+  Akka.system.scheduler.schedule(0.seconds, 30.seconds, self, SpawnGust)
 
   def receive = {
 
@@ -71,6 +72,8 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
     case GetStatus => sender ! (startTime, playersStates.toSeq)
 
+    case SpawnGust => spawnGust()
+
     case AutoClean => {
       val deserted = race.creationTime.plusMinutes(1).isBeforeNow && playersStates.isEmpty
       val finished = startTime.exists(_.plusMinutes(20).isBeforeNow)
@@ -93,7 +96,6 @@ class RaceActor(race: Race, master: Player) extends Actor {
     if (startTime.isEmpty && byPlayerId == master.id.stringify) {
       val at = DateTime.now.plusSeconds(race.countdownSeconds)
       startTime = Some(at)
-//      Race.updateStartTime(race, at)
     }
   }
 
@@ -124,13 +126,13 @@ class RaceActor(race: Race, master: Player) extends Actor {
   }
 
   private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
-    gusts.map(_.update(race.course, wind, previousWindUpdate, at)).map { gust =>
-      if (Geo.inBox(gust.position, race.course.area.toBox)) {
-        gust
-      } else {
-        Gust.spawn(race.course)
-      }
-    }
+    gusts
+      .map(_.update(race.course, wind, previousWindUpdate, at))
+      .filter(g => g.position._2 - g.radius > race.course.area.bottom)
+  }
+
+  private def spawnGust() = {
+    wind = wind.copy(gusts = wind.gusts :+ Gust.spawn(race.course))
   }
 
   private def opponentsTo(playerId: String): Seq[PlayerState] = {

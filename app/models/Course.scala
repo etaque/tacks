@@ -78,7 +78,7 @@ case class WindGenerator(
     cos(at.getMillis * 0.0005 / wavelength1) * amplitude1 + cos(at.getMillis * 0.0005 / wavelength2) * amplitude2
 
   def windSpeed(at: DateTime): Double = Wind.defaultWindSpeed +
-    (cos(at.getMillis * 0.0005 / wavelength1) * 5 - cos(at.getMillis * 0.0005 / wavelength2) * 5) / 2
+    (cos(at.getMillis * 0.0005 / wavelength1) * 5 - cos(at.getMillis * 0.0005 / wavelength2) * 5) * 0.5
 }
 
 object WindGenerator {

@@ -2,6 +2,8 @@ package core.steps
 
 import models.{Wind, Geo, Gust, PlayerState}
 
+case class GustEffect(origin: Double, speed: Double, factor: Double)
+
 object WindStep {
 
   val shadowImpact = -5 // knots
@@ -15,22 +17,22 @@ object WindStep {
 
     val origin =
       if (gustsEffects.isEmpty) wind.origin
-      else Geo.ensure360(wind.origin + gustsEffects.map(_._1).sum / gustsEffects.size)
+      else Geo.ensure360(wind.origin + gustsEffects.map(g => g.origin * g.factor).sum)
 
-    val speed = wind.speed + gustsEffects.map(_._2).sum + windShadow
+    val speed = wind.speed + gustsEffects.map(g => g.speed * g.factor).sum + windShadow
 
     state.copy(windOrigin = origin, windSpeed = speed)
   }
 
-  def gustEffect(state: PlayerState, wind: Wind)(gust: Gust): (Double, Double) = {
+  def gustEffect(state: PlayerState, wind: Wind)(gust: Gust): GustEffect = {
     val d = Geo.distanceBetween(state.position, gust.position)
     val fromEdge = gust.radius - d
     val factor = Math.min(fromEdge / (gust.radius * 0.2), 1)
 
-    val originEffect = Geo.angleDelta(gust.angle, wind.origin) * factor
-    val speedEffect = gust.speed * factor
+    val originEffect = Geo.angleDelta(gust.angle, wind.origin)
+    val speedEffect = gust.speed
 
-    (originEffect, speedEffect)
+    GustEffect(originEffect, speedEffect, factor)
   }
 
   def windShadowEffects(state: PlayerState, shadowLength: Double, opponents: Seq[PlayerState]): Double = {

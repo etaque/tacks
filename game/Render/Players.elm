@@ -28,21 +28,24 @@ vmgColorAndShape player =
 renderPlayerAngles : PlayerState -> Form
 renderPlayerAngles player =
   let windOriginRadians = toRadians (player.heading - player.windAngle)
-      windMarker = polygon [(0,4),(-4,-4),(4,-4)]
+      windMarker = polygon [(0,4),(-3,-5),(3,-5)]
         |> filled white
         |> rotate (windOriginRadians + pi/2)
-        |> move (fromPolar (25, windOriginRadians))
+        |> move (fromPolar (30, windOriginRadians))
         |> alpha 0.5
+      windLine = segment (0,0) (fromPolar (60, windOriginRadians))
+        |> traced (solid white)
+        |> alpha 0.1
       windAngleText = (show (abs (round player.windAngle))) ++ "&deg;" |> baseText
         |> (if player.controlMode == "FixedAngle" then Text.line Text.Under else identity)
         |> centered |> toForm
-        |> move (fromPolar (25, windOriginRadians + pi))
+        |> move (fromPolar (30, windOriginRadians + pi))
         |> alpha 0.5
       (vmgColor,vmgShape) = vmgColorAndShape player
       vmgIndicator = group [vmgShape |> filled vmgColor, vmgShape |> outlined (solid white)]
-        |> move (fromPolar(25, windOriginRadians + pi/2))
+        |> move (fromPolar(30, windOriginRadians + pi/2))
 
-  in  group [windMarker, windAngleText, vmgIndicator]
+  in  group [windLine, windMarker, windAngleText, vmgIndicator]
 
 renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =

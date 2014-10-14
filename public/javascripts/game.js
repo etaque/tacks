@@ -10828,7 +10828,7 @@ Elm.Render.Players.make = function (_elm) {
                          _v0._1._1)));}
                     break;}
                _E.Case($moduleName,
-               "on line 58, column 33 to 88");
+               "on line 61, column 33 to 88");
             }();
          };
          var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
@@ -10861,7 +10861,7 @@ Elm.Render.Players.make = function (_elm) {
                  right)));
               }();}
          _E.Case($moduleName,
-         "between lines 49 and 51");
+         "between lines 52 and 54");
       }();
    });
    var vmgColorAndShape = function (player) {
@@ -10903,26 +10903,32 @@ Elm.Render.Players.make = function (_elm) {
          vmgShape = $._1;
          var windOriginRadians = $Core.toRadians(player.heading - player.windAngle);
          var windMarker = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                                                                ,_0: 25
+                                                                                                ,_0: 30
                                                                                                 ,_1: windOriginRadians}))($Graphics$Collage.rotate(windOriginRadians + $Basics.pi / 2)($Graphics$Collage.filled($Color.white)($Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
                                                                                                                                                                                                                                                                       ,_0: 0
                                                                                                                                                                                                                                                                       ,_1: 4}
                                                                                                                                                                                                                                                                      ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                      ,_0: -4
-                                                                                                                                                                                                                                                                      ,_1: -4}
+                                                                                                                                                                                                                                                                      ,_0: -3
+                                                                                                                                                                                                                                                                      ,_1: -5}
                                                                                                                                                                                                                                                                      ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                      ,_0: 4
-                                                                                                                                                                                                                                                                      ,_1: -4}]))))));
+                                                                                                                                                                                                                                                                      ,_0: 3
+                                                                                                                                                                                                                                                                      ,_1: -5}]))))));
+         var windLine = $Graphics$Collage.alpha(0.1)($Graphics$Collage.traced($Graphics$Collage.solid($Color.white))(A2($Graphics$Collage.segment,
+         {ctor: "_Tuple2",_0: 0,_1: 0},
+         $Basics.fromPolar({ctor: "_Tuple2"
+                           ,_0: 60
+                           ,_1: windOriginRadians}))));
          var windAngleText = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                                                                   ,_0: 25
+                                                                                                   ,_0: 30
                                                                                                    ,_1: windOriginRadians + $Basics.pi}))($Graphics$Collage.toForm($Text.centered((_U.eq(player.controlMode,
          "FixedAngle") ? $Text.line($Text.Under) : $Basics.identity)($Render$Utils.baseText(_L.append($String.show($Basics.abs($Basics.round(player.windAngle))),
          "&deg;")))))));
          var vmgIndicator = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                                     ,_0: 25
+                                                                     ,_0: 30
                                                                      ,_1: windOriginRadians + $Basics.pi / 2}))($Graphics$Collage.group(_L.fromArray([$Graphics$Collage.filled(vmgColor)(vmgShape)
                                                                                                                                                      ,$Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))(vmgShape)])));
-         return $Graphics$Collage.group(_L.fromArray([windMarker
+         return $Graphics$Collage.group(_L.fromArray([windLine
+                                                     ,windMarker
                                                      ,windAngleText
                                                      ,vmgIndicator]));
       }();
