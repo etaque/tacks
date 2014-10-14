@@ -1,17 +1,13 @@
 package controllers
 
-import controllers.Api._
-import play.api.libs.json.Json
-
 import scala.concurrent.duration._
-import models.{CreateUser, Race, User}
+import scala.concurrent.{Await, Future}
 import play.api.data._
 import play.api.data.Forms._
 import play.api.data.validation.{Valid, ValidationError, Invalid, Constraint}
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
-import tools.future.Implicits._
-import scala.concurrent.{Await, Future}
+import models.{CreateUser, Race, User}
 
 object Users extends Controller with Security {
 
