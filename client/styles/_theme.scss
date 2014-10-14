@@ -98,6 +98,12 @@ a {
   border-width: 3px;
 }
 
+.alert-danger {
+  a {
+    color: $red;
+  }
+}
+
 input[type="text"], input[type="password"], textarea {
   font-family: $fontFamily;
   font-size: 15px;

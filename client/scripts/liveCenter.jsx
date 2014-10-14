@@ -20,7 +20,8 @@ var LiveCenter = React.createClass({
   getInitialState: function() {
     return {
       racesStatus: [],
-      loadingNewRace: false
+      loadingNewRace: false,
+      showWebSocketAlert: !window.WebSocket
     };
   },
 
@@ -65,21 +66,33 @@ var LiveCenter = React.createClass({
     });
   },
 
+  webSocketAlert: function(show) {
+    if (show) {
+      return (
+        <div className="alert alert-danger">
+          Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+        </div>
+        );
+    }
+  },
+
   render: function() {
     var st = this.state.racesStatus;
     return (
-      <div className="live-center row">
-        <div className="col-md-8">
-          <h2>Open races</h2>
-          <Board status={st} />
-          <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>New race</a>
-        </div>
+      <div className="live-center">
+        {this.webSocketAlert(this.state.showWebSocketAlert)}
+        <div className="row">
+          <div className="col-md-8">
+            <h2>Open races</h2>
+            <Board status={st} />
+            <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>New race</a>
+          </div>
 
-        <div className="col-md-4">
-          <h2>Online players</h2>
-          <ul className="online-players list-unstyled">{this.onlinePlayers(st)}</ul>
+          <div className="col-md-4">
+            <h2>Online players</h2>
+            <ul className="online-players list-unstyled">{this.onlinePlayers(st)}</ul>
+          </div>
         </div>
-
       </div>
     );
   }

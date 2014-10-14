@@ -6826,6 +6826,10 @@ a:hover {
   border-width: 3px;
 }
 
+.alert-danger a {
+  color: #a94442;
+}
+
 input[type="text"], input[type="password"], textarea {
   font-family: Inconsolata, monospace;
   font-size: 15px;
