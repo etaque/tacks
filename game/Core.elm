@@ -41,11 +41,10 @@ mpsToKnts mps = mps * 3600 / 1.852 / 1000
 --          + 9.427801906 * 10 ^ -5 * x2 + 4.342327445
 --  in v * 2 -- pixel speed
 
---vmgValue : Float -> Float  -> Float
---vmgValue windSpeed windAngle =
---  let windAngleRad = toRadians windAngle
---      boatSpeed = polarVelocity windSpeed windAngle
---  in  (sin windAngleRad) * boatSpeed |> abs
+getVmgValue : Float -> Float  -> Float
+getVmgValue windAngle boatSpeed =
+  let windAngleRad = toRadians windAngle
+  in  (sin windAngleRad) * boatSpeed |> abs
 
 --getVmgInInterval : Float -> [Float] -> Float
 --getVmgInInterval windSpeed angles =

@@ -53,9 +53,9 @@ renderIslands gameState =
   let renderIsland {location,radius} = circle radius |> filled colors.sand |> move location
   in  group <| map renderIsland gameState.course.islands
 
-renderGateLaylines : Float -> Float -> Gate -> Form
+renderGateLaylines : Vmg -> Float -> Gate -> Form
 renderGateLaylines vmg windOrigin gate =
-  let vmgRad = toRadians vmg
+  let vmgRad = toRadians vmg.angle
       (leftMark,rightMark) = getGateMarks gate
       windAngleRad = toRadians windOrigin
       leftLineEnd = add leftMark (fromPolar (1000, windAngleRad + vmgRad + pi/2))

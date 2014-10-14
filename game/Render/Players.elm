@@ -17,13 +17,13 @@ vmgColorAndShape player =
       good = (green, circle s)
       warn = (orange, polygon [(-s,-s),(s,-s),(0,s)])
   in  if a < 90 then
-        if | a < player.upwindVmg - margin -> bad
-           | a > player.upwindVmg + margin -> warn
-           | otherwise                     -> good
+        if | a < player.upwindVmg.angle - margin -> bad
+           | a > player.upwindVmg.angle + margin -> warn
+           | otherwise                           -> good
       else
-        if | a > player.downwindVmg + margin -> bad
-           | a < player.downwindVmg - margin -> warn
-           | otherwise                       -> good
+        if | a > player.downwindVmg.angle + margin -> bad
+           | a < player.downwindVmg.angle - margin -> warn
+           | otherwise                             -> good
 
 renderPlayerAngles : PlayerState -> Form
 renderPlayerAngles player =

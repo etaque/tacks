@@ -63,6 +63,7 @@ object JsonFormats {
     }
   }
 
+  implicit val vmgFormat: Format[Vmg] = Json.format[Vmg]
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
@@ -80,11 +81,12 @@ object JsonFormats {
       (__ \ 'isGrounded).format[Boolean] and
       (__ \ 'heading).format[Double] and
       (__ \ 'velocity).format[Double] and
+      (__ \ 'vmgValue).format[Double] and
       (__ \ 'windAngle).format[Double] and
       (__ \ 'windOrigin).format[Double] and
       (__ \ 'windSpeed).format[Double] and
-      (__ \ 'upwindVmg).format[Double] and
-      (__ \ 'downwindVmg).format[Double] and
+      (__ \ 'upwindVmg).format[Vmg] and
+      (__ \ 'downwindVmg).format[Vmg] and
       (__ \ 'trail).format[Seq[Point]] and
       (__ \ 'controlMode).format[ControlMode] and
       (__ \ 'tackTarget).format[Option[Double]] and

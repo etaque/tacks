@@ -16,6 +16,12 @@ sealed trait ControlMode
 case object FixedHeading extends ControlMode
 case object FixedAngle extends ControlMode
 
+case class Vmg(
+  angle: Double,
+  speed: Double,
+  value: Double
+)
+
 case class PlayerState (
   player: Player,
   time: DateTime,
@@ -23,11 +29,12 @@ case class PlayerState (
   isGrounded: Boolean,
   heading: Double,
   velocity: Double,
+  vmgValue: Double,
   windAngle: Double,
   windOrigin: Double,
   windSpeed: Double,
-  upwindVmg: Double,
-  downwindVmg: Double,
+  upwindVmg: Vmg,
+  downwindVmg: Vmg,
   trail: Seq[Point],
   controlMode: ControlMode,
   tackTarget: Option[Double],
@@ -37,7 +44,7 @@ case class PlayerState (
 
 object PlayerState {
   def initial(player: Player) = PlayerState(
-    player, DateTime.now, (0,0), false, 0, 0, 0, 0, 0, 0, 0, Seq(),
+    player, DateTime.now, (0,0), false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), Seq(),
     FixedHeading, None, Seq(), Some(StartLine))
 }
 

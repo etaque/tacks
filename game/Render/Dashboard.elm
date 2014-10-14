@@ -77,6 +77,23 @@ getWindWheel wind player =
   in
       collage 80 120 [c, windMarker, windOriginText, windSpeedText, legend]
 
+getVmgBar : PlayerState -> Element
+getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
+  let barHeight = 120
+      contour = rect 10 barHeight
+        |> outlined (solid white)
+      theoricVmgValue = if (abs windAngle) < 90 then upwindVmg.value else downwindVmg.value
+      height = barHeight * (minimum [vmgValue, theoricVmgValue]) / theoricVmgValue
+      level = rect 10 height
+        |> filled white
+        |> move (0, (height - barHeight) / 2)
+        |> alpha 0.5
+      bar = group [level, contour]
+        |> move (0, 10)
+      legend = "VMG" |> baseText |> centered |> toForm |> move (0, -(barHeight / 2) - 10)
+  in
+      collage 80 (barHeight + 40) [bar, legend]
+
 
 topLeftElements : GameState -> [Element]
 topLeftElements {leaderboard,course,playerState} =
@@ -91,7 +108,10 @@ midTopElements gameState =
 
 topRightElements : GameState -> [Element]
 topRightElements {wind,playerState} =
-  [getWindWheel wind playerState]
+  [ getWindWheel wind playerState
+  , s
+  , getVmgBar playerState
+  ]
 
 midBottomElements : GameState -> [Element]
 midBottomElements {countdown} =

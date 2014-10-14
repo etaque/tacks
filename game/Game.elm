@@ -8,6 +8,12 @@ type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
 type RaceArea = { rightTop: Point, leftBottom: Point }
 
+type Vmg =
+  { angle: Float
+  , speed: Float
+  , value: Float
+  }
+
 type Course =
   { upwind: Gate
   , downwind: Gate
@@ -24,11 +30,12 @@ type PlayerState =
   , position: Point
   , heading: Float
   , velocity: Float
+  , vmgValue: Float
   , windAngle: Float
   , windOrigin: Float
   , windSpeed: Float
-  , downwindVmg: Float
-  , upwindVmg: Float
+  , downwindVmg: Vmg
+  , upwindVmg: Vmg
   , trail: [Point]
   , controlMode: String
   , tackTarget: Maybe Float
@@ -71,12 +78,20 @@ defaultCourse =
   , boatWidth = 0
   }
 
+defaultVmg : Vmg
+defaultVmg =
+  { angle = 0
+  , speed = 0
+  , value = 0
+  }
+
 defaultPlayerState : PlayerState
 defaultPlayerState =
   { player = { handle = Nothing }
   , position = (0,0)
   , heading = 0
   , velocity = 0
+  , vmgValue = 0
   , windAngle = 0
   , windOrigin = 0
   , windSpeed = 0
@@ -85,8 +100,8 @@ defaultPlayerState =
   , tackTarget = Nothing
   , crossedGates = []
   , nextGate = Nothing
-  , downwindVmg = 0
-  , upwindVmg = 0
+  , downwindVmg = defaultVmg
+  , upwindVmg = defaultVmg
   }
 
 defaultWind : Wind
