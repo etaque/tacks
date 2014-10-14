@@ -10851,12 +10851,12 @@ Elm.Render.Players.make = function (_elm) {
          {case "_Tuple2":
             return function () {
                  var right = $Basics.fromPolar({ctor: "_Tuple2"
-                                               ,_0: 50
+                                               ,_0: 100
                                                ,_1: $Core.toRadians(windOrigin + 90)});
                  var left = $Basics.fromPolar({ctor: "_Tuple2"
-                                              ,_0: 50
+                                              ,_0: 100
                                               ,_1: $Core.toRadians(windOrigin - 90)});
-                 return $Graphics$Collage.alpha(0.2)($Graphics$Collage.traced($Graphics$Collage.dotted($Color.white))(A2($Graphics$Collage.segment,
+                 return $Graphics$Collage.alpha(0.1)($Graphics$Collage.traced($Graphics$Collage.dotted($Color.white))(A2($Graphics$Collage.segment,
                  left,
                  right)));
               }();}
@@ -11260,31 +11260,32 @@ Elm.Render.Course.make = function (_elm) {
                        ,_1: rightLineEnd}]))));
       }();
    });
-   var renderLaylines = F2(function (player,
-   course) {
+   var renderLaylines = function (_v4) {
       return function () {
-         var _v4 = player.nextGate;
-         switch (_v4.ctor)
-         {case "Just": switch (_v4._0)
-              {case "DownwindGate":
-                 return A3(renderGateLaylines,
-                   player.downwindVmg,
-                   player.windOrigin,
-                   course.downwind);
-                 case "UpwindGate":
-                 return A3(renderGateLaylines,
-                   player.upwindVmg,
-                   player.windOrigin,
-                   course.upwind);}
-              break;}
-         return $Render$Utils.emptyForm;
+         return function () {
+            var _v6 = _v4.playerState.nextGate;
+            switch (_v6.ctor)
+            {case "Just": switch (_v6._0)
+                 {case "DownwindGate":
+                    return A3(renderGateLaylines,
+                      _v4.playerState.downwindVmg,
+                      _v4.wind.origin,
+                      _v4.course.downwind);
+                    case "UpwindGate":
+                    return A3(renderGateLaylines,
+                      _v4.playerState.upwindVmg,
+                      _v4.wind.origin,
+                      _v4.course.upwind);}
+                 break;}
+            return $Render$Utils.emptyForm;
+         }();
       }();
-   });
+   };
    var renderIslands = function (gameState) {
       return function () {
-         var renderIsland = function (_v6) {
+         var renderIsland = function (_v8) {
             return function () {
-               return $Graphics$Collage.move(_v6.location)($Graphics$Collage.filled($Render$Utils.colors.sand)($Graphics$Collage.circle(_v6.radius)));
+               return $Graphics$Collage.move(_v8.location)($Graphics$Collage.filled($Render$Utils.colors.sand)($Graphics$Collage.circle(_v8.radius)));
             }();
          };
          return $Graphics$Collage.group(A2($List.map,
@@ -11363,31 +11364,29 @@ Elm.Render.Course.make = function (_elm) {
          marks));
       }();
    });
-   var renderCourse = function (_v8) {
+   var renderCourse = function (_v10) {
       return function () {
          return function () {
-            var downwindOrStartLine = $List.isEmpty(_v8.playerState.crossedGates) ? A4(renderStartLine,
-            _v8.course.downwind,
-            _v8.course.markRadius,
-            $Core.isStarted(_v8.countdown),
-            _v8.now) : A3(renderGate,
-            _v8.course.downwind,
-            _v8.course.markRadius,
-            _U.eq(_v8.playerState.nextGate,
+            var downwindOrStartLine = $List.isEmpty(_v10.playerState.crossedGates) ? A4(renderStartLine,
+            _v10.course.downwind,
+            _v10.course.markRadius,
+            $Core.isStarted(_v10.countdown),
+            _v10.now) : A3(renderGate,
+            _v10.course.downwind,
+            _v10.course.markRadius,
+            _U.eq(_v10.playerState.nextGate,
             $Maybe.Just("DownwindGate")));
-            var forms = _L.fromArray([renderBounds(_v8.course.area)
-                                     ,renderIslands(_v8)
+            var forms = _L.fromArray([renderBounds(_v10.course.area)
+                                     ,renderIslands(_v10)
                                      ,downwindOrStartLine
                                      ,A3(renderGate,
-                                     _v8.course.upwind,
-                                     _v8.course.markRadius,
-                                     _U.eq(_v8.playerState.nextGate,
+                                     _v10.course.upwind,
+                                     _v10.course.markRadius,
+                                     _U.eq(_v10.playerState.nextGate,
                                      $Maybe.Just("UpwindGate")))
-                                     ,renderGusts(_v8.wind)
-                                     ,A2(renderLaylines,
-                                     _v8.playerState,
-                                     _v8.course)]);
-            return $Graphics$Collage.move($Geo.neg(_v8.center))($Graphics$Collage.group(forms));
+                                     ,renderGusts(_v10.wind)
+                                     ,renderLaylines(_v10)]);
+            return $Graphics$Collage.move($Geo.neg(_v10.center))($Graphics$Collage.group(forms));
          }();
       }();
    };

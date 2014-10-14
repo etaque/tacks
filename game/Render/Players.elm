@@ -46,9 +46,9 @@ renderPlayerAngles player =
 
 renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =
-  let left = (fromPolar (50, toRadians (windOrigin - 90)))
-      right = (fromPolar (50, toRadians (windOrigin + 90)))
-  in  segment left right |> traced (dotted white) |> alpha 0.2
+  let left = (fromPolar (100, toRadians (windOrigin - 90)))
+      right = (fromPolar (100, toRadians (windOrigin + 90)))
+  in  segment left right |> traced (dotted white) |> alpha 0.1
 
 renderWake : [Point] -> Form
 renderWake wake =
