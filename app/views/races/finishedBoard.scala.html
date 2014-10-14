@@ -1,14 +1,14 @@
-@(race: Race, users: Seq[User], currentPlayer: Option[Player])
+@(race: Race, users: Seq[User], currentPlayer: Option[Player])(implicit lang: Lang)
 
 
 @import org.joda.time.DateTime
-@import views.Helpers.timer
+@import views.Helpers._
 
 @playerTime(startTime: DateTime, bestTime: DateTime, gates: Seq[DateTime], position: Int) = @{
   if (position == 0) {
     gates.headOption.map(_.getMillis - startTime.getMillis).map(timer).getOrElse("")
   } else {
-    gates.headOption.map(_.getMillis - bestTime.getMillis).map(ms => s"""+ ${ms / 1000}\"""").getOrElse("")
+    gates.headOption.map(_.getMillis - bestTime.getMillis).map(timeDelta).getOrElse("")
   }
 }
 
@@ -16,7 +16,7 @@
   @for(bestTime <- race.tally.headOption.flatMap(_.gates.headOption)) {
     <div class="finished-race">
       <table>
-        <caption>@startTime.toString("EEEE HH:mm")</caption>
+        <caption>@startTime.toString("EEEE HH:mm", lang.toLocale)</caption>
         <tbody>
         @for((PlayerTally(playerId, playerHandle, gates), position) <- race.tally.zipWithIndex) {
           <tr @if(currentPlayer.exists(_.id == playerId)) { class="current-player" }>
