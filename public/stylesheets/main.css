@@ -6940,6 +6940,11 @@ input[type="text"], input[type="password"], textarea {
   color: #e0a349;
 }
 
+.play-race {
+  overflow: hidden;
+  color: white;
+}
+
 .show-user .status {
   text-align: center;
 }
