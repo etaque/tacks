@@ -80,14 +80,19 @@ getWindWheel wind player =
 getVmgBar : PlayerState -> Element
 getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
   let barHeight = 120
-      contour = rect 10 barHeight
-        |> outlined (solid white)
+      barWidth = 8
+      contour = rect (barWidth + 6) (barHeight + 6)
+        |> outlined { defaultLine | width <- 2, color <- white, cap <- Round, join <- Smooth }
+        |> alpha 0.5
       theoricVmgValue = if (abs windAngle) < 90 then upwindVmg.value else downwindVmg.value
-      height = barHeight * (minimum [vmgValue, theoricVmgValue]) / theoricVmgValue
-      level = rect 10 height
+      boundedVmgValue = if | vmgValue > theoricVmgValue -> theoricVmgValue
+                           | vmgValue < 0               -> 0
+                           | otherwise                  -> vmgValue
+      height = barHeight * boundedVmgValue / theoricVmgValue
+      level = rect barWidth height
         |> filled white
         |> move (0, (height - barHeight) / 2)
-        |> alpha 0.5
+        |> alpha 0.8
       bar = group [level, contour]
         |> move (0, 10)
       legend = "VMG" |> baseText |> centered |> toForm |> move (0, -(barHeight / 2) - 10)

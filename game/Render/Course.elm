@@ -77,11 +77,11 @@ renderCourse ({playerState,opponents,course,now,center} as gameState) =
         else renderGate course.downwind course.markRadius (playerState.nextGate == Just "DownwindGate")
       forms =
         [ renderBounds gameState.course.area
+        , renderLaylines gameState
         , renderIslands gameState
         , downwindOrStartLine
         , renderGate course.upwind course.markRadius (playerState.nextGate == Just "UpwindGate")
         , renderGusts gameState.wind
-        , renderLaylines gameState
         ]
   in  group forms |> move (neg center)
 

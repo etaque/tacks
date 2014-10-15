@@ -11025,16 +11025,27 @@ Elm.Render.Dashboard.make = function (_elm) {
          return function () {
             var theoricVmgValue = _U.cmp($Basics.abs(_v0.windAngle),
             90) < 0 ? _v0.upwindVmg.value : _v0.downwindVmg.value;
+            var boundedVmgValue = _U.cmp(_v0.vmgValue,
+            theoricVmgValue) > 0 ? theoricVmgValue : _U.cmp(_v0.vmgValue,
+            0) < 0 ? 0 : _v0.vmgValue;
+            var barWidth = 8;
             var barHeight = 120;
-            var contour = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))(A2($Graphics$Collage.rect,
-            10,
-            barHeight));
-            var height = barHeight * $List.minimum(_L.fromArray([_v0.vmgValue
-                                                                ,theoricVmgValue])) / theoricVmgValue;
-            var level = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move({ctor: "_Tuple2"
+            var contour = $Graphics$Collage.alpha(0.5)($Graphics$Collage.outlined(_U.replace([["width"
+                                                                                              ,2]
+                                                                                             ,["color"
+                                                                                              ,$Color.white]
+                                                                                             ,["cap"
+                                                                                              ,$Graphics$Collage.Round]
+                                                                                             ,["join"
+                                                                                              ,$Graphics$Collage.Smooth]],
+            $Graphics$Collage.defaultLine))(A2($Graphics$Collage.rect,
+            barWidth + 6,
+            barHeight + 6)));
+            var height = barHeight * boundedVmgValue / theoricVmgValue;
+            var level = $Graphics$Collage.alpha(0.8)($Graphics$Collage.move({ctor: "_Tuple2"
                                                                             ,_0: 0
                                                                             ,_1: (height - barHeight) / 2})($Graphics$Collage.filled($Color.white)(A2($Graphics$Collage.rect,
-            10,
+            barWidth,
             height))));
             var bar = $Graphics$Collage.move({ctor: "_Tuple2"
                                              ,_0: 0
@@ -11230,7 +11241,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                                                          $Graphics$Element.up,
                                                          midBottomElements(gameState)))]));}
          _E.Case($moduleName,
-         "between lines 123 and 128");
+         "between lines 128 and 133");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
@@ -11430,6 +11441,7 @@ Elm.Render.Course.make = function (_elm) {
             _U.eq(_v10.playerState.nextGate,
             $Maybe.Just("DownwindGate")));
             var forms = _L.fromArray([renderBounds(_v10.course.area)
+                                     ,renderLaylines(_v10)
                                      ,renderIslands(_v10)
                                      ,downwindOrStartLine
                                      ,A3(renderGate,
@@ -11437,8 +11449,7 @@ Elm.Render.Course.make = function (_elm) {
                                      _v10.course.markRadius,
                                      _U.eq(_v10.playerState.nextGate,
                                      $Maybe.Just("UpwindGate")))
-                                     ,renderGusts(_v10.wind)
-                                     ,renderLaylines(_v10)]);
+                                     ,renderGusts(_v10.wind)]);
             return $Graphics$Collage.move($Geo.neg(_v10.center))($Graphics$Collage.group(forms));
          }();
       }();
