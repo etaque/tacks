@@ -28,13 +28,13 @@ class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Ac
       val elapsed = now.getMillis - previousState.time.getMillis
 
       val runner = if (elapsed > 0) {
-        BoatTurningStep.run(previousState, input, Nil) _ andThen
+        BoatTurningStep.run(previousState, input, elapsed) _ andThen
           WindStep.run(wind, race.course.windShadowLength, opponents) andThen
           VmgStep.run andThen
           BoatMovingStep.run(elapsed, race.course) andThen
           GateCrossingStep.run(previousState, race.course, started)
       } else {
-        BoatTurningStep.run(previousState, input, Nil) _
+        identity[PlayerState] _
       }
 
       val newState = runner(previousState).copy(time = now)
