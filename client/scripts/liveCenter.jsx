@@ -9,9 +9,9 @@ var bjq           = require('bacon.jquery');
 var BaconMixin    = require('react-bacon').BaconMixin;
 var _             = require('lodash');
 var Board         = require('./board');
-var FinishedRaces = require('./finishedRaces');
 var OnlinePlayer  = require('./onlinePlayer');
 var Api           = require('./api');
+var Messages      = require('./messages');
 var util          = require('./util');
 
 var LiveCenter = React.createClass({
@@ -70,7 +70,7 @@ var LiveCenter = React.createClass({
     if (show) {
       return (
         <div className="alert alert-danger">
-          Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+        {Messages("home.noWebSocketSupport")}
         </div>
         );
     }
@@ -83,13 +83,15 @@ var LiveCenter = React.createClass({
         {this.webSocketAlert(this.state.showWebSocketAlert)}
         <div className="row">
           <div className="col-md-8">
-            <h2>Open races</h2>
+            <h2>{Messages("home.openRaces")}</h2>
             <Board status={st} />
-            <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>New race</a>
+            <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>
+              {Messages("home.newRace")}
+            </a>
           </div>
 
           <div className="col-md-4">
-            <h2>Online players</h2>
+            <h2>{Messages("home.onlinePlayers")}</h2>
             <ul className="online-players list-unstyled">{this.onlinePlayers(st)}</ul>
           </div>
         </div>

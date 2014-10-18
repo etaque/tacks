@@ -1,11 +1,11 @@
-@(userForm: Form[CreateUser])
+@(userForm: Form[CreateUser])(implicit lang: Lang)
 
 @main {
 
   @logoPanel {
 
     <div class="new-user">
-      <h1>New account</h1>
+      <h1>@Messages("users.creation")</h1>
       @views.html.users.createUserForm(userForm)
 
 

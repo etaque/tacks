@@ -1,15 +1,15 @@
-@()
+@()(implicit lang: Lang)
 
 <form action="@routes.Auth.submitLogin" method="post">
   <div class="form-group">
-    <input type="text" name="email" id="" class="form-control" placeholder="Email"/>
+    <input type="text" name="email" id="" class="form-control" placeholder="@Messages("email")"/>
   </div>
   <div class="row">
     <div class="form-group col-md-8">
-      <input type="password" name="password" id="" class="form-control" placeholder="Password"/>
+      <input type="password" name="password" id="" class="form-control" placeholder="@Messages("password")"/>
     </div>
     <div class="col-md-4">
-      <input type="submit" class="btn btn-primary btn-block" value="Sign in">
+      <input type="submit" class="btn btn-primary btn-block" value="@Messages("login.submit")">
     </div>
   </div>
 </form>

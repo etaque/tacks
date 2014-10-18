@@ -6840,14 +6840,12 @@ input[type="text"], input[type="password"], textarea {
   box-shadow: none;
 }
 
-.has-error .form-control {
-  color: #a94442;
-}
 .has-error .error-message {
+  margin-top: 0;
   padding: 6px 12px;
-  border-left: 3px solid #ebccd1;
   background-color: #f2dede;
   color: #a94442;
+  font-size: 13px;
 }
 
 .form-actions {

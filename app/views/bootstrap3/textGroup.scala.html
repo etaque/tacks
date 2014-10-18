@@ -10,11 +10,11 @@
     value="@field.value.getOrElse("")"
     placeholder="@placeholder" />
 
-  <span class="help-block">@help</span>
-
   @defining(errorMessage(field)) { m =>
-    @if(m.size > 0) {
+    @if(m.body.size > 0) {
       <span class="help-block error-message">@m</span>
     }
   }
+
+  @if(help.size > 0) { <span class="help-block">@help</span>}
 }

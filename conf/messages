@@ -1,1 +1,45 @@
 
+error.invalid=Invalid value
+error.invalid.java.util.Date=Invalid date value
+error.required=This field is required
+error.number=Numeric value expected
+error.real=Real number value expected
+error.real.precision=Real number value with no more than {0} digit(s) including {1} decimal(s) expected
+error.min=Must be greater or equal to {0}
+error.min.strict=Must be strictly greater than {0}
+error.max=Must be less or equal to {0}
+error.max.strict=Must be strictly less than {0}
+error.minLength=Minimum length is {0}
+error.maxLength=Maximum length is {0}
+error.email=Valid email required
+error.pattern=Must satisfy {0}
+error.date=Valid date required
+error.uuid=Valid UUID required
+
+error.emailTaken=Email already taken.
+error.handleFormat=Handle must be alphanumeric and length within 3 to 15 chars.
+error.handleTaken=Handle already taken.
+
+signIn=Sign in
+email=Email
+password=Password
+
+home.intro=Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.
+home.newOnTacks=New on Tacks?
+home.openRaces=Open races
+home.newRace=New race
+home.onlinePlayers=Online players
+home.recentRaces=Recent races
+home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+
+footer.message=Tacks is an <a href="https://github.com/etaque/tacks">open source</a> game crafted by <a href="https://twitter.com/etaque">@etaque</a>.
+
+login.failed=Wrong email and/or password.
+login.title=Sign in
+login.submit=Sign me in
+
+users.creation=New account
+users.handle=Handle
+users.handle.hint=Only letters and numbers
+users.handle.constraint=Handle must be alphanumeric and length within 3 to 15 chars.
+users.createButton=Create account

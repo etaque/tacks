@@ -3,17 +3,19 @@ package controllers
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc.{Action, Controller}
+import play.api.Play.current
+import play.api.i18n.Messages
 import models.User
 import tools.future.Implicits._
 
 object Auth extends Controller {
 
-  def askLogin = Action.async { request =>
+  def askLogin = Action.async { implicit request =>
     val failure = request.flash.get("failure")
     Future.successful(Ok(views.html.auth.login(failure)))
   }
 
-  def submitLogin = Action.async { request =>
+  def submitLogin = Action.async { implicit request =>
 
     val form = for {
       data     <- request.body.asFormUrlEncoded
@@ -33,7 +35,7 @@ object Auth extends Controller {
         "playerId" -> user.idToStr
       )
     }) recover { case _ =>
-      Redirect(routes.Auth.askLogin()).withNewSession.flashing("failure" -> "Wrong email and/or password.")
+      Redirect(routes.Auth.askLogin()).withNewSession.flashing("failure" -> Messages("login.failed"))
     }
   }
 

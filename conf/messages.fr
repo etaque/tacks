@@ -1,0 +1,32 @@
+
+error.required=Champ obligatoire
+error.minLength=La longueur minimale est de {0} caractères
+error.maxLength=La longueur maximale est de {0} caractères
+error.email=Une adresse email valide est requise
+
+error.emailTaken=Adresse email déjà utilisée
+error.handleFormat=Le pseudonyme ne doit contenir que des caractères alphanumériques (chiffres ou lettres)
+error.handleTaken=Pseudonyme déjà utilisé
+
+signIn=Connexion
+email=Email
+password=Mot de passe
+
+home.intro=Tacks est un jeu temps-réel et multijoueur de régate, dans votre navigateur. Un navigateur récent est requis pour profiter pleinement du jeu (Chrome idéalement).
+home.newOnTacks=Nouveau sur Tacks?
+home.openRaces=Courses ouvertes
+home.newRace=Nouvelle course
+home.onlinePlayers=Joueurs en ligne
+home.recentRaces=Courses récentes
+home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+
+footer.message=Tacks est un jeu <a href="https://github.com/etaque/tacks">open source</a> façonné par <a href="https://twitter.com/etaque">@etaque</a>.
+
+login.failed=Addresse email ou mot de passe incorrect.
+login.title=Connexion
+login.submit=Me connecter
+
+users.creation=Nouveau compte
+users.handle=Pseudonyme
+users.handle.hint=Au moins 3 caractères alphanumériques
+users.createButton=Créer votre compte

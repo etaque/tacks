@@ -1,4 +1,4 @@
-@(content: Html)
+@(content: Html)(implicit lang: Lang)
 
 <!DOCTYPE html>
 
@@ -13,7 +13,7 @@
       @content
       <div class="footer">
         <hr/>
-        <p>Tacks is an <a href="https://github.com/etaque/tacks">open source</a> game crafted by <a href="https://twitter.com/etaque">@@etaque</a>.</p>
+        <p>@Html(Messages("footer.message"))</p>
       </div>
     </div>
 

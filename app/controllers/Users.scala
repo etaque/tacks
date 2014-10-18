@@ -4,39 +4,20 @@ import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import play.api.data._
 import play.api.data.Forms._
-import play.api.data.validation.{Valid, ValidationError, Invalid, Constraint}
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
 import models.{CreateUser, Race, User}
 
 object Users extends Controller with Security {
 
-  val uniqueEmailConstraint: Constraint[String] = Constraint("constraints.uniqueEmail")({
-    email =>
-      Await.result(User.findByEmail(email), 5.seconds) match {
-        case Some(_) => Invalid(Seq(ValidationError("Email already used.")))
-        case None => Valid
-      }
-  })
-
-  val handleFormatConstraint: Constraint[String] = Constraint("constraints.handleFormat")({ handle =>
-    if (handle.isEmpty || handle.matches("^[a-zA-Z0-9_-]{3,15}$")) Valid
-    else Invalid(Seq(ValidationError("Handle must be alphanumeric and length within 3 to 15 chars.")))
-  })
-
-  val uniqueHandleConstraint: Constraint[String] = Constraint("constraints.uniqueHandle")({
-    handle =>
-      Await.result(User.findByHandle(handle), 5.seconds) match {
-        case Some(_) => Invalid(Seq(ValidationError("Handle already taken.")))
-        case None => Valid
-      }
-  })
-
   val userForm = Form(
     mapping(
-      "email" -> email.verifying(uniqueEmailConstraint),
-      "password" -> nonEmptyText(minLength = 6),
-      "handle" -> nonEmptyText(minLength = 2).verifying(handleFormatConstraint).verifying(uniqueHandleConstraint)
+      "email" -> email
+        .verifying("error.emailTaken", email => Await.result(User.findByEmail(email), 5.seconds).isEmpty),
+      "password" -> text(minLength = 6),
+      "handle" -> text(minLength = 3)
+        .verifying("error.handleFormat", handle => handle.isEmpty || handle.matches("""\A[a-zA-Z0-9_-]\Z"""))
+        .verifying("error.handleTaken", handle => Await.result(User.findByHandle(handle), 5.seconds).isEmpty)
     )(CreateUser.apply)(CreateUser.unapply)
   )
 
