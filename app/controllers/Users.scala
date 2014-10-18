@@ -16,7 +16,7 @@ object Users extends Controller with Security {
         .verifying("error.emailTaken", email => Await.result(User.findByEmail(email), 5.seconds).isEmpty),
       "password" -> text(minLength = 6),
       "handle" -> text(minLength = 3)
-        .verifying("error.handleFormat", handle => handle.isEmpty || handle.matches("""\A[a-zA-Z0-9_-]\Z"""))
+        .verifying("error.handleFormat", handle => handle.isEmpty || handle.matches("""\A[a-zA-Z0-9_-]*\Z"""))
         .verifying("error.handleTaken", handle => Await.result(User.findByHandle(handle), 5.seconds).isEmpty)
     )(CreateUser.apply)(CreateUser.unapply)
   )
