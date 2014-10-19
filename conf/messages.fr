@@ -22,6 +22,7 @@ home.onlinePlayers=Joueurs en ligne
 home.recentRaces=Courses récentes
 home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
 home.welcome=Bienvenue
+home.updateStatus=Maj statut
 
 footer.message=Tacks est un jeu <a href="https://github.com/etaque/tacks">open source</a> façonné par <a href="https://twitter.com/etaque">@etaque</a>.
 
@@ -34,3 +35,4 @@ users.handle=Pseudonyme
 users.handle.hint=Au moins 3 caractères alphanumériques
 users.createButton=Créer votre compte
 users.finishedRaces=Courses terminées
+users.noRaces=Aucune course trouvée
