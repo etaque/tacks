@@ -3,7 +3,7 @@
 @main {
   <div class="show-user">
 
-    <div class="nav"><a href="@routes.Application.index">&larr; back to homepage</a></div>
+    <div class="nav"><a href="@routes.Application.index">&larr; @Messages("backHome")</a></div>
 
     <h1>@user.handle</h1>
 
@@ -13,7 +13,7 @@
 
     <div class="row">
       <div class="finished-races col-md-offset-3 col-md-6">
-        <h2>Finished races</h2>
+        <h2>@Messages("users.finishedRaces")</h2>
         @for(race <- races) {
           @views.html.races.finishedBoard(race, opponents, Some(user))
         }

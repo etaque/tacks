@@ -23,6 +23,8 @@ error.handleTaken=Handle already taken.
 signIn=Sign in
 email=Email
 password=Password
+logout=Logout
+backHome=Back to homepage
 
 home.intro=Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.
 home.newOnTacks=New on Tacks?
@@ -31,6 +33,7 @@ home.newRace=New race
 home.onlinePlayers=Online players
 home.recentRaces=Recent races
 home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+home.welcome=Welcome
 
 footer.message=Tacks is an <a href="https://github.com/etaque/tacks">open source</a> game crafted by <a href="https://twitter.com/etaque">@etaque</a>.
 
@@ -43,3 +46,4 @@ users.handle=Handle
 users.handle.hint=Only letters and numbers
 users.handle.constraint=Handle must be alphanumeric and length within 3 to 15 chars.
 users.createButton=Create account
+users.finishedRaces=Finished races

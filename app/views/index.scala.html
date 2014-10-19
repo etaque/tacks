@@ -28,13 +28,13 @@
               <form action="@routes.Auth.submitLogin" method="post">
                 <div class="row">
                   <div class="form-group col-md-5">
-                    <input type="text" name="email" id="" class="form-control" placeholder="Email"/>
+                    <input type="text" name="email" id="" class="form-control" placeholder="@Messages("email")"/>
                   </div>
                   <div class="form-group col-md-4">
-                    <input type="password" name="password" id="" class="form-control" placeholder="Password"/>
+                    <input type="password" name="password" id="" class="form-control" placeholder="@Messages("password")"/>
                   </div>
                   <div class="col-md-3">
-                    <input type="submit" class="btn btn-primary btn-block" value="Sign in">
+                    <input type="submit" class="btn btn-primary btn-block" value="@Messages("signIn")">
                   </div>
                 </div>
               </form>
@@ -49,9 +49,9 @@
           case u: User => {
             <div class="current-user">
               <div class="pull-right">
-                <a href="@routes.Auth.logout" class="btn btn-default btn-sm">Logout</a>
+                <a href="@routes.Auth.logout" class="btn btn-default btn-sm">@Messages("logout")</a>
               </div>
-              Welcome, <a href="@routes.Users.show(u.idToStr)">@u.handle</a>.
+              @Messages("home.welcome"), <a href="@routes.Users.show(u.idToStr)">@u.handle</a>.
 
               <form action="@routes.Users.updateStatus" method="post" class="update-name">
                 <div class="form-group">

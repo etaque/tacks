@@ -11,6 +11,8 @@ error.handleTaken=Pseudonyme déjà utilisé
 signIn=Connexion
 email=Email
 password=Mot de passe
+logout=Déconnexion
+backHome=Retour à l''accueil
 
 home.intro=Tacks est un jeu temps-réel et multijoueur de régate, dans votre navigateur. Un navigateur récent est requis pour profiter pleinement du jeu (Chrome idéalement).
 home.newOnTacks=Nouveau sur Tacks?
@@ -19,6 +21,7 @@ home.newRace=Nouvelle course
 home.onlinePlayers=Joueurs en ligne
 home.recentRaces=Courses récentes
 home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+home.welcome=Bienvenue
 
 footer.message=Tacks est un jeu <a href="https://github.com/etaque/tacks">open source</a> façonné par <a href="https://twitter.com/etaque">@etaque</a>.
 
@@ -30,3 +33,4 @@ users.creation=Nouveau compte
 users.handle=Pseudonyme
 users.handle.hint=Au moins 3 caractères alphanumériques
 users.createButton=Créer votre compte
+users.finishedRaces=Courses terminées
