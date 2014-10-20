@@ -102,7 +102,8 @@ object JsonFormats {
       (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[PlayerState]] and
       (__ \ 'leaderboard).format[Seq[PlayerTally]] and
-      (__ \ 'isMaster).format[Boolean]
+      (__ \ 'isMaster).format[Boolean] and
+      (__ \ 'langCode).format[Option[String]]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
 

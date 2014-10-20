@@ -2,6 +2,7 @@ package models
 
 import org.joda.time.DateTime
 import Geo._
+import play.api.i18n.Lang
 
 case class Arrows(x: Int, y: Int)
 
@@ -58,16 +59,18 @@ case class RaceUpdate(
   wind: Wind,
   opponents: Seq[PlayerState] = Seq(),
   leaderboard: Seq[PlayerTally] = Seq(),
-  isMaster: Boolean = false
+  isMaster: Boolean = false,
+  langCode: Option[String] = None
 )
 
 object RaceUpdate {
-  def initial(r: Race) = RaceUpdate(
+  def initial(r: Race, lang: Lang) = RaceUpdate(
     DateTime.now,
     startTime = None,
     playerState = None,
     course = Some(r.course),
-    wind = Wind.default
+    wind = Wind.default,
+    langCode = Some(lang.code)
   )
 }
 

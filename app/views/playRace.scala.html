@@ -17,7 +17,7 @@
     <script src="@routes.Assets.at("javascripts/mountRace.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
-    var initialInput = @Html(Json.toJson(RaceUpdate.initial(race)).toString());
+    var initialInput = @Html(Json.toJson(RaceUpdate.initial(race, lang)).toString());
     mountRace("@wsUrl", initialInput);
     </script>
 
