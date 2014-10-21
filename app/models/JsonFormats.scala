@@ -87,6 +87,7 @@ object JsonFormats {
       (__ \ 'windSpeed).format[Double] and
       (__ \ 'upwindVmg).format[Vmg] and
       (__ \ 'downwindVmg).format[Vmg] and
+      (__ \ 'shadowDirection).format[Double] and
       (__ \ 'trail).format[Seq[Point]] and
       (__ \ 'controlMode).format[ControlMode] and
       (__ \ 'tackTarget).format[Option[Double]] and

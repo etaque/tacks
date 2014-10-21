@@ -11,9 +11,11 @@ object WindStep {
 
   def run(wind: Wind, shadowLength: Double, opponents: Seq[PlayerState])(state: PlayerState): PlayerState = {
 
+    val shadowDirection = Geo.ensure360(state.windOrigin + 180 + (state.windAngle / 3))
+
     val gustsOnPlayer = wind.gusts.filter(g => Geo.distanceBetween(state.position, g.position) < g.radius)
     val gustsEffects = gustsOnPlayer.map(gustEffect(state, wind))
-    val windShadow = windShadowEffects(state, shadowLength, opponents)
+    val windShadow = opponents.filter(isShadowedBy(state, shadowLength)).map( _ => shadowImpact).sum
 
     val origin =
       if (gustsEffects.isEmpty) wind.origin
@@ -21,7 +23,7 @@ object WindStep {
 
     val speed = wind.speed + gustsEffects.map(g => g.speed * g.factor).sum + windShadow
 
-    state.copy(windOrigin = origin, windSpeed = speed)
+    state.copy(windOrigin = origin, windSpeed = speed, shadowDirection = shadowDirection)
   }
 
   def gustEffect(state: PlayerState, wind: Wind)(gust: Gust): GustEffect = {
@@ -35,16 +37,16 @@ object WindStep {
     GustEffect(originEffect, speedEffect, factor)
   }
 
-  def windShadowEffects(state: PlayerState, shadowLength: Double, opponents: Seq[PlayerState]): Double = {
-    opponents.filter(o => Geo.distanceBetween(o.position, state.position) <= shadowLength).filter { o =>
-      val angle = Geo.angleBetween(state.position, o.position)
-      val (min, max) = windShadowSector(o)
-      angle >= min && angle <= max
-    }.map( _ => shadowImpact).sum
+  def isShadowedBy(player: PlayerState, shadowLength: Double)(opponent: PlayerState): Boolean = {
+    Geo.distanceBetween(opponent.position, player.position) <= shadowLength && {
+      val angle = Geo.angleBetween(player.position, opponent.position)
+      val (min, max) = windShadowSector(opponent)
+      Geo.inSector(min, max)(angle)
+    }
   }
 
   def windShadowSector(state: PlayerState): (Double, Double) = {
-    val d = Geo.ensure360(state.windOrigin + 180 + (state.windAngle / 3))
-    (d - shadowArc/2, d + shadowArc/2)
+    val d = state.windOrigin + 180 + (state.windAngle / 3)
+    (Geo.ensure360(d - shadowArc/2), Geo.ensure360(d + shadowArc/2))
   }
 }

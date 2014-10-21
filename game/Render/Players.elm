@@ -62,11 +62,10 @@ renderWake wake =
   in  group (map renderSegment pairs)
 
 renderWindShadow : Float -> PlayerState -> Form
-renderWindShadow shadowLength boat =
-  let shadowDirection = (ensure360 (boat.windOrigin + 180 + (boat.windAngle / 3)))
-      arcAngles = [-15, -10, -5, 0, 5, 10, 15]
-      endPoints = map (\a -> add boat.position (fromPolar (shadowLength, toRadians (shadowDirection + a)))) arcAngles
-  in  path (boat.position :: endPoints) |> filled white |> alpha 0.1
+renderWindShadow shadowLength {windAngle, windOrigin, position, shadowDirection} =
+  let arcAngles = [-15, -10, -5, 0, 5, 10, 15]
+      endPoints = map (\a -> add position (fromPolar (shadowLength, toRadians (shadowDirection + a)))) arcAngles
+  in  path (position :: endPoints) |> filled white |> alpha 0.1
 
 renderBoatIcon : PlayerState -> String -> Form
 renderBoatIcon boat name =

@@ -58,6 +58,21 @@ object Geo {
     else delta
   }
 
+
+  /**
+   * Is angle included in sector?
+   * @param bound1 first sector bound
+   * @param bound2 second sector bound
+   * @param angle to test
+   * @return inclusion
+   */
+  def inSector(bound1: Double, bound2: Double)(angle: Double): Boolean = {
+    val a1 = -angleDelta(bound1, angle)
+    val a2 = -angleDelta(angle, bound2)
+
+    a1 >= 0 && a2 >= 0
+  }
+
   import reactivemongo.bson.{BSONDoubleHandler => dh}
   implicit val pointHandler = new BSONHandler[BSONArray, (Double, Double)] {
     def read(array: BSONArray) = (dh.read(array.getAs[BSONDouble](0).get), dh.read(array.getAs[BSONDouble](1).get))

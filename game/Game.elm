@@ -36,6 +36,7 @@ type PlayerState =
   , windSpeed: Float
   , downwindVmg: Vmg
   , upwindVmg: Vmg
+  , shadowDirection: Float
   , trail: [Point]
   , controlMode: String
   , tackTarget: Maybe Float
@@ -95,6 +96,7 @@ defaultPlayerState =
   , windAngle = 0
   , windOrigin = 0
   , windSpeed = 0
+  , shadowDirection = 0
   , trail = []
   , controlMode = "FixedHeading"
   , tackTarget = Nothing

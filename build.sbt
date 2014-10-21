@@ -12,6 +12,7 @@ libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "org.julienrf" %% "play-jsmessages" % "1.6.2",
+  "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   cache,
   ws
 )
@@ -21,5 +22,7 @@ play.PlayScala.projectSettings
 TwirlKeys.templateImports ++= Seq(
   "org.joda.time.DateTime"
 )
+
+initialCommands in console := """implicit val app = new play.core.StaticApplication(new java.io.File("."))"""
 
 scalacOptions += "-feature"
