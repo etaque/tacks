@@ -1,6 +1,5 @@
 package actors
 
-
 import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -11,10 +10,13 @@ import models._
 
 case class Start(at: DateTime)
 case class PlayerQuit(id: String)
+case object WatcherJoin
+case object WatcherQuit
+
 case object SpawnGust
 case object GetStatus
 case object AutoClean
-
+case object UpdateWatchers
 
 class RaceActor(race: Race, master: Player) extends Actor {
 
@@ -32,6 +34,8 @@ class RaceActor(race: Race, master: Player) extends Actor {
   var leaderboard = Seq[PlayerTally]()
   var finishersCount = 0
 
+  var watchers = Set[ActorRef]()
+
   var previousWindUpdate = DateTime.now
   var startTime: Option[DateTime] = None
 
@@ -41,8 +45,11 @@ class RaceActor(race: Race, master: Player) extends Actor {
   lazy val gatesToCross = race.course.laps * 2 + 1
   def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == gatesToCross)
 
-  Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean)
-  Akka.system.scheduler.schedule(0.seconds, 30.seconds, self, SpawnGust)
+  val ticks = Seq(
+    Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean),
+    Akka.system.scheduler.schedule(0.seconds, 30.seconds, self, SpawnGust),
+    Akka.system.scheduler.schedule(0.seconds, 33.milliseconds, self, UpdateWatchers)
+  )
 
   def receive = {
 
@@ -68,6 +75,14 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
     case PlayerQuit(id) => {
       playersStates -= id
+    }
+
+    case WatcherJoin => watchers += sender
+    case WatcherQuit => watchers -= sender
+
+    case UpdateWatchers => {
+      val raceUpdate = raceUpdateForWatcher
+      watchers.foreach(_ ! raceUpdate)
     }
 
     case GetStatus => sender ! (startTime, playersStates.toSeq)
@@ -151,6 +166,19 @@ class RaceActor(race: Race, master: Player) extends Actor {
       isMaster = master.id.stringify == playerId
     )
   }
+
+  private def raceUpdateForWatcher = RaceUpdate(
+    now = DateTime.now,
+    startTime = startTime,
+    course = None, // already transmitted in initial update
+    playerState = None,
+    wind = wind,
+    opponents = playersStates.values.toSeq,
+    leaderboard = leaderboard,
+    isMaster = false
+  )
+
+  override def postStop() = ticks.foreach(_.cancel())
 }
 
 object RaceActor {

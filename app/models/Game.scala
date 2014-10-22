@@ -51,6 +51,10 @@ object PlayerState {
 
 case class PlayerUpdate(player: Player, input: PlayerInput)
 
+case class WatcherInput(
+  live: Boolean
+)
+
 case class RaceUpdate(
   now: DateTime,
   startTime: Option[DateTime],

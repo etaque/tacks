@@ -1,6 +1,7 @@
 
 GET         /                               controllers.Application.index
 GET         /play/:raceId                   controllers.Application.playRace(raceId: String)
+GET         /watch/:raceId                  controllers.Application.watchRace(raceId: String)
 
 POST        /users/create                   controllers.Users.create
 GET         /users/:id                      controllers.Users.show(id: String)
@@ -17,6 +18,7 @@ GET         /api/currentUser                controllers.Api.currentUser
 POST        /api/setName                    controllers.Api.setName
 
 GET         /ws/playerSocket/:raceId        controllers.Api.playerSocket(raceId)
+GET         /ws/watcherSocket/:raceId       controllers.Api.watcherSocket(raceId)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                   controllers.Assets.at(path="/public", file)

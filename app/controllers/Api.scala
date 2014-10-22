@@ -68,7 +68,8 @@ object Api extends Controller with Security {
   }
 
   import models.JsonFormats._
-  implicit val boatUpdateFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
+  implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
+  implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
   def playerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
@@ -77,6 +78,13 @@ object Api extends Controller with Security {
         case Some(raceActor) => Right(PlayerActor.props(raceActor, player)(_))
         case None => Left(NotFound)
       }
+    }
+  }
+
+  def watcherSocket(raceId: String) = WebSocket.tryAcceptWithActor[WatcherInput, RaceUpdate] { implicit request =>
+    (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
+      case Some(raceActor) => Right(WatcherActor.props(raceActor)(_))
+      case None => Left(NotFound)
     }
   }
 
