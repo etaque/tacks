@@ -25,8 +25,14 @@ type Course =
   , boatWidth: Float
   }
 
+type Player =
+  { id: String
+  , handle: Maybe String
+  , status: Maybe String
+  }
+
 type PlayerState =
-  { player: { handle: Maybe String }
+  { player: Player
   , position: Point
   , heading: Float
   , velocity: Float
@@ -50,7 +56,7 @@ type Wind = { origin : Float, speed : Float, gusts : [Gust] }
 
 type GameState =
   { wind: Wind
-  , playerState: PlayerState
+  , playerState: Maybe PlayerState
   , wake: [Point]
   , center: Point
   , opponents: [PlayerState]
@@ -60,8 +66,6 @@ type GameState =
   , countdown: Maybe Time
   , isMaster: Bool
   }
-
---type RaceState = { players : [PlayerState] }
 
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
@@ -78,32 +82,6 @@ defaultCourse =
   , boatWidth = 0
   }
 
-defaultVmg : Vmg
-defaultVmg =
-  { angle = 0
-  , speed = 0
-  , value = 0
-  }
-
-defaultPlayerState : PlayerState
-defaultPlayerState =
-  { player = { handle = Nothing }
-  , position = (0,0)
-  , heading = 0
-  , velocity = 0
-  , vmgValue = 0
-  , windAngle = 0
-  , windOrigin = 0
-  , windSpeed = 0
-  , trail = []
-  , controlMode = "FixedHeading"
-  , tackTarget = Nothing
-  , crossedGates = []
-  , nextGate = Nothing
-  , downwindVmg = defaultVmg
-  , upwindVmg = defaultVmg
-  }
-
 defaultWind : Wind
 defaultWind =
   { origin = 0
@@ -114,7 +92,7 @@ defaultWind =
 defaultGame : GameState
 defaultGame =
   { wind = defaultWind
-  , playerState = defaultPlayerState
+  , playerState = Nothing
   , center = (0,0)
   , wake = []
   , opponents = []

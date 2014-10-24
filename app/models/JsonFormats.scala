@@ -42,12 +42,15 @@ object JsonFormats {
   implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
 
-
-  implicit val userFormat: Format[User] = Json.format[User]
+  implicit val userReads: Reads[User] = Json.reads[User]
+  implicit val userWrites: Writes[User] = Writes {
+    (u: User) => Json.obj("id" -> u.id, "handle" -> u.handle, "status" -> u.status)
+  }
+  implicit val userFormat: Format[User] = Format(userReads, userWrites)
 
   implicit val guestReads: Reads[Guest] = Json.reads[Guest]
   implicit val guestWrites: Writes[Guest] = Writes {
-    (g: Guest) => Json.obj("_id" -> g._id, "handle" -> JsNull)
+    (g: Guest) => Json.obj("id" -> g.id, "handle" -> JsNull, "status" -> JsNull)
   }
   implicit val guestFormat: Format[Guest] = Format(guestReads, guestWrites)
 

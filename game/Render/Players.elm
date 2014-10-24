@@ -73,8 +73,8 @@ renderBoatIcon boat name =
   image 12 20 ("/assets/images/" ++ name ++ ".png") |> toForm
     |> rotate (toRadians (boat.heading + 90))
 
-renderPlayer : PlayerState -> Float -> Form
-renderPlayer player shadowLength =
+renderPlayer : Float -> PlayerState -> Form
+renderPlayer shadowLength player =
   let hull = renderBoatIcon player "49er"
       windShadow = renderWindShadow shadowLength player
       angles = renderPlayerAngles player
@@ -102,7 +102,7 @@ renderPlayers : GameState -> Form
 renderPlayers ({playerState,opponents,course,center} as gameState) =
   let forms =
         [ renderOpponents course opponents
-        , renderPlayer playerState course.windShadowLength
+        , maybe (toForm empty) (renderPlayer course.windShadowLength) playerState
         ]
   in  group forms |> move (neg center)
 

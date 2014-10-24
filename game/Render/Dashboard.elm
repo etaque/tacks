@@ -43,21 +43,27 @@ getHelp countdownMaybe =
   else
     empty
 
-getCountdown : GameState -> Element
-getCountdown {countdown,isMaster,playerState} =
-  let msg s = baseText s |> centered
-  in  case countdown of
-        Just c ->
-          if c > 0
-            then msg <| formatCountdown c
-            else case playerState.nextGate of
-              Just "StartLine" -> msg "Go!"
-              Nothing          -> msg "Finished"
-              _                -> empty
-        Nothing ->
-          if isMaster
-            then msg startCountdownMessage
-            else empty
+statusMessage : String -> Element
+statusMessage s = baseText s |> centered
+
+getFinishingStatus : PlayerState -> Element
+getFinishingStatus playerState =
+  case playerState.nextGate of
+    Just "StartLine" -> statusMessage "Go!"
+    Nothing          -> statusMessage "Finished"
+    _                -> empty
+
+getStatus : GameState -> Element
+getStatus {countdown,isMaster,playerState} =
+  case countdown of
+    Just c ->
+      if c > 0
+        then statusMessage <| formatCountdown c
+        else maybe empty getFinishingStatus playerState
+    Nothing ->
+      if isMaster
+        then statusMessage startCountdownMessage
+        else empty
 
 getWindWheel : Wind -> PlayerState -> Element
 getWindWheel wind player =
@@ -102,20 +108,20 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
 
 topLeftElements : GameState -> [Element]
 topLeftElements {leaderboard,course,playerState} =
-  [ getGatesCount course playerState
+  [ maybe empty (getGatesCount course) playerState
   , s
   , getLeaderboard leaderboard
   ]
 
 midTopElements : GameState -> [Element]
 midTopElements gameState =
-  [getCountdown gameState]
+  [getStatus gameState]
 
 topRightElements : GameState -> [Element]
 topRightElements {wind,playerState} =
-  [ getWindWheel wind playerState
+  [ maybe empty (getWindWheel wind) playerState
   , s
-  , getVmgBar playerState
+  , maybe empty getVmgBar playerState
   ]
 
 midBottomElements : GameState -> [Element]

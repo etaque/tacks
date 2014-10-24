@@ -31,20 +31,20 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
   in
     (refocus x x' cx w (w * 0.2), refocus y y' cy h (h * 0.4))
 
-moveStep : Bool -> Time -> PlayerState -> (Int,Int) -> GameState -> GameState
-moveStep frozen delta ({position,velocity,heading} as previous) dims ({playerState,center} as gameState) =
-  let newPosition = playerState.position
-      movedPlayer = { playerState | position <- playerState.position }
-      newCenter = getCenterAfterMove position newPosition center (floatify dims)
-  in  { gameState | playerState <- movedPlayer,
-                    center <- newCenter }
+moveStep : Time -> Maybe PlayerState -> (Int,Int) -> GameState -> GameState
+moveStep delta previousStateMaybe dims gameState =
+  case (previousStateMaybe, gameState.playerState) of
+    (Just previousState, Just newState) ->
+      let newCenter = getCenterAfterMove previousState.position newState.position gameState.center (floatify dims)
+      in  { gameState | center <- newCenter }
+    _ -> gameState
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep raceInput gameState =
   let { now, startTime, course, playerState, opponents,
         wind, leaderboard, isMaster } = raceInput
   in  { gameState | opponents <- opponents,
-                    playerState <- maybe gameState.playerState identity playerState,
+                    playerState <- playerState,
                     course <- maybe gameState.course identity course,
                     wind <- wind,
                     leaderboard <- leaderboard,
@@ -54,8 +54,6 @@ raceInputStep raceInput gameState =
 
 stepGame : Input -> GameState -> GameState
 stepGame input gameState =
-  let frozen = input.raceInput.now == gameState.now
-      previousState = gameState.playerState
-  in  raceInputStep input.raceInput gameState
-        |> moveStep frozen input.delta previousState input.windowInput
-        |> mouseStep input.mouseInput
+  raceInputStep input.raceInput gameState
+    |> moveStep input.delta gameState.playerState input.windowInput
+    |> mouseStep input.mouseInput

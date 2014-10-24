@@ -48,8 +48,7 @@ object Api extends Controller with Security {
   }
 
   def createRace = Identified.async(parse.json) { implicit request =>
-    val isPrivate = request.getQueryString("isPrivate").exists(_.toBoolean)
-    val race = Race(playerId = getPlayerId, course = Course.spawn, isPrivate = isPrivate, countdownSeconds = 60)
+    val race = Race(playerId = getPlayerId, course = Course.spawn, countdownSeconds = 60)
 
     (RacesSupervisor.actorRef ? MountRace(race, request.player)).map { _ =>
       Ok(Json.toJson(race))
@@ -82,9 +81,11 @@ object Api extends Controller with Security {
   }
 
   def watcherSocket(raceId: String) = WebSocket.tryAcceptWithActor[WatcherInput, RaceUpdate] { implicit request =>
-    (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
-      case Some(raceActor) => Right(WatcherActor.props(raceActor)(_))
-      case None => Left(NotFound)
+    Identified.getPlayer(request).flatMap { watcher =>
+      (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
+        case Some(raceActor) => Right(WatcherActor.props(raceActor, watcher)(_))
+        case None => Left(NotFound)
+      }
     }
   }
 

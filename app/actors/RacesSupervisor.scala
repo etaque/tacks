@@ -38,8 +38,8 @@ class RacesSupervisor extends Actor {
     }
 
     case GetOpenRaces => {
-      val racesFuture = mountedRaces.toSeq.filterNot(_._1.isPrivate).map { case (race, master, ref) =>
-        (ref ? GetStatus).mapTo[(Option[DateTime], Seq[(String, PlayerState)])].map { case (startTime, players) =>
+      val racesFuture = mountedRaces.toSeq.map { case (race, master, ref) =>
+        (ref ? GetStatus).mapTo[(Option[DateTime], Seq[PlayerState])].map { case (startTime, players) =>
           RaceStatus(race, master, startTime, players)
         }
       }

@@ -9,8 +9,16 @@ function watchRace(wsUrl, initialInput) {
     game.ports.raceInput.send(JSON.parse(event.data));
   };
 
+  function outputProxy(watcherOutput) {
+    ws.send(JSON.stringify(watcherOutput));
+  }
+
   ws.onopen = function() {
-    ws.send(JSON.stringify({ live: true }));
+    game.ports.watcherOutput.subscribe(outputProxy);
+  };
+
+  ws.onclose = function() {
+    game.ports.watcherOutput.unsubscribe(outputProxy);
   };
 
 }

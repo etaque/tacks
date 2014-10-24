@@ -10299,6 +10299,7 @@ Elm.Main.make = function (_elm) {
    _A = _N.Array.make(_elm),
    _E = _N.Error.make(_elm),
    $moduleName = "Main",
+   $Basics = Elm.Basics.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -10311,6 +10312,11 @@ Elm.Main.make = function (_elm) {
    $Steps = Elm.Steps.make(_elm),
    $Time = Elm.Time.make(_elm),
    $Window = Elm.Window.make(_elm);
+   var watcherOutput = $Native$Ports.portOut("watcherOutput",
+   $Native$Ports.outgoingSignal(function (v) {
+      return v.ctor === "Nothing" ? null : v._0;
+   }),
+   $Signal.constant($Maybe.Nothing));
    var clock = A2($Signal._op["<~"],
    $Time.inSeconds,
    $Time.fps(30));
@@ -10345,8 +10351,10 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,windShadowLength: typeof v.course.windShadowLength === "number" ? v.course.windShadowLength : _E.raise("invalid input, expecting JSNumber but got " + v.course.windShadowLength)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,boatWidth: typeof v.course.boatWidth === "number" ? v.course.boatWidth : _E.raise("invalid input, expecting JSNumber but got " + v.course.boatWidth)} : _E.raise("invalid input, expecting JSObject [\"upwind\",\"downwind\",\"laps\",\"markRadius\",\"islands\",\"area\",\"windShadowLength\",\"boatWidth\"] but got " + v.course))
                                                                                                                                                                                           ,playerState: v.playerState === null ? $Maybe.Nothing : $Maybe.Just(typeof v.playerState === "object" && "player" in v.playerState && "position" in v.playerState && "heading" in v.playerState && "velocity" in v.playerState && "vmgValue" in v.playerState && "windAngle" in v.playerState && "windOrigin" in v.playerState && "windSpeed" in v.playerState && "downwindVmg" in v.playerState && "upwindVmg" in v.playerState && "trail" in v.playerState && "controlMode" in v.playerState && "tackTarget" in v.playerState && "crossedGates" in v.playerState && "nextGate" in v.playerState ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,player: typeof v.playerState.player === "object" && "handle" in v.playerState.player ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                      ,handle: v.playerState.player.handle === null ? $Maybe.Nothing : $Maybe.Just(typeof v.playerState.player.handle === "string" || typeof v.playerState.player.handle === "object" && v.playerState.player.handle instanceof String ? v.playerState.player.handle : _E.raise("invalid input, expecting JSString but got " + v.playerState.player.handle))} : _E.raise("invalid input, expecting JSObject [\"handle\"] but got " + v.playerState.player)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,player: typeof v.playerState.player === "object" && "id" in v.playerState.player && "handle" in v.playerState.player && "status" in v.playerState.player ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,id: typeof v.playerState.player.id === "string" || typeof v.playerState.player.id === "object" && v.playerState.player.id instanceof String ? v.playerState.player.id : _E.raise("invalid input, expecting JSString but got " + v.playerState.player.id)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,handle: v.playerState.player.handle === null ? $Maybe.Nothing : $Maybe.Just(typeof v.playerState.player.handle === "string" || typeof v.playerState.player.handle === "object" && v.playerState.player.handle instanceof String ? v.playerState.player.handle : _E.raise("invalid input, expecting JSString but got " + v.playerState.player.handle))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,status: v.playerState.player.status === null ? $Maybe.Nothing : $Maybe.Just(typeof v.playerState.player.status === "string" || typeof v.playerState.player.status === "object" && v.playerState.player.status instanceof String ? v.playerState.player.status : _E.raise("invalid input, expecting JSString but got " + v.playerState.player.status))} : _E.raise("invalid input, expecting JSObject [\"id\",\"handle\",\"status\"] but got " + v.playerState.player)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,position: _U.isJSArray(v.playerState.position) ? {ctor: "_Tuple2"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,_0: typeof v.playerState.position[0] === "number" ? v.playerState.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.playerState.position[0])
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,_1: typeof v.playerState.position[1] === "number" ? v.playerState.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.playerState.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.playerState.position)
@@ -10389,8 +10397,10 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                                                                                                                               })) : _E.raise("invalid input, expecting JSArray but got " + v.wind.gusts)} : _E.raise("invalid input, expecting JSObject [\"origin\",\"speed\",\"gusts\"] but got " + v.wind)
                                                                                                                                                                                           ,opponents: _U.isJSArray(v.opponents) ? _L.fromArray(v.opponents.map(function (v) {
                                                                                                                                                                                              return typeof v === "object" && "player" in v && "position" in v && "heading" in v && "velocity" in v && "vmgValue" in v && "windAngle" in v && "windOrigin" in v && "windSpeed" in v && "downwindVmg" in v && "upwindVmg" in v && "trail" in v && "controlMode" in v && "tackTarget" in v && "crossedGates" in v && "nextGate" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,player: typeof v.player === "object" && "handle" in v.player ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,handle: v.player.handle === null ? $Maybe.Nothing : $Maybe.Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _E.raise("invalid input, expecting JSString but got " + v.player.handle))} : _E.raise("invalid input, expecting JSObject [\"handle\"] but got " + v.player)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,id: typeof v.player.id === "string" || typeof v.player.id === "object" && v.player.id instanceof String ? v.player.id : _E.raise("invalid input, expecting JSString but got " + v.player.id)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,handle: v.player.handle === null ? $Maybe.Nothing : $Maybe.Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _E.raise("invalid input, expecting JSString but got " + v.player.handle))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                ,status: v.player.status === null ? $Maybe.Nothing : $Maybe.Just(typeof v.player.status === "string" || typeof v.player.status === "object" && v.player.status instanceof String ? v.player.status : _E.raise("invalid input, expecting JSString but got " + v.player.status))} : _E.raise("invalid input, expecting JSObject [\"id\",\"handle\",\"status\"] but got " + v.player)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
@@ -10430,9 +10440,7 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                           })) : _E.raise("invalid input, expecting JSArray but got " + v.leaderboard)
                                                                                                                                                                                           ,isMaster: typeof v.isMaster === "boolean" ? v.isMaster : _E.raise("invalid input, expecting JSBoolean but got " + v.isMaster)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"course\",\"playerState\",\"wind\",\"opponents\",\"leaderboard\",\"isMaster\"] but got " + v);
    }));
-   var input = A2($Signal.sampleOn,
-   clock,
-   A7($Signal.lift6,
+   var input = $Signal.sampleOn(clock)(A7($Signal.lift6,
    $Inputs.Input,
    clock,
    $Inputs.chrono,
@@ -10509,11 +10517,7 @@ Elm.Steps.make = function (_elm) {
          isMaster = $.isMaster;
          return _U.replace([["opponents"
                             ,opponents]
-                           ,["playerState"
-                            ,A3($Maybe.maybe,
-                            gameState.playerState,
-                            $Basics.identity,
-                            playerState)]
+                           ,["playerState",playerState]
                            ,["course"
                             ,A3($Maybe.maybe,
                             gameState.course,
@@ -10597,79 +10601,77 @@ Elm.Steps.make = function (_elm) {
          "between lines 19 and 32");
       }();
    });
-   var moveStep = F5(function (frozen,
-   delta,
-   _v16,
+   var moveStep = F4(function (delta,
+   previousStateMaybe,
    dims,
-   _v17) {
+   gameState) {
       return function () {
-         return function () {
-            return function () {
-               var movedPlayer = _U.replace([["position"
-                                             ,_v17.playerState.position]],
-               _v17.playerState);
-               var newPosition = _v17.playerState.position;
-               var newCenter = A4(getCenterAfterMove,
-               _v16.position,
-               newPosition,
-               _v17.center,
-               $Geo.floatify(dims));
-               return _U.replace([["playerState"
-                                  ,movedPlayer]
-                                 ,["center",newCenter]],
-               _v17);
-            }();
-         }();
+         var _v16 = {ctor: "_Tuple2"
+                    ,_0: previousStateMaybe
+                    ,_1: gameState.playerState};
+         switch (_v16.ctor)
+         {case "_Tuple2":
+            switch (_v16._0.ctor)
+              {case "Just":
+                 switch (_v16._1.ctor)
+                   {case "Just":
+                      return function () {
+                           var newCenter = A4(getCenterAfterMove,
+                           _v16._0._0.position,
+                           _v16._1._0.position,
+                           gameState.center,
+                           $Geo.floatify(dims));
+                           return _U.replace([["center"
+                                              ,newCenter]],
+                           gameState);
+                        }();}
+                   break;}
+              break;}
+         return gameState;
       }();
    });
-   var mouseStep = F2(function (_v20,
-   _v21) {
+   var mouseStep = F2(function (_v21,
+   _v22) {
       return function () {
          return function () {
             return function () {
                var newCenter = function () {
-                  var _v24 = _v20.drag;
-                  switch (_v24.ctor)
+                  var _v25 = _v21.drag;
+                  switch (_v25.ctor)
                   {case "Just":
-                     switch (_v24._0.ctor)
+                     switch (_v25._0.ctor)
                        {case "_Tuple2":
                           return function () {
-                               var $ = _v20.mouse,
+                               var $ = _v21.mouse,
                                x = $._0,
                                y = $._1;
                                return A2($Geo.sub,
                                $Geo.floatify({ctor: "_Tuple2"
-                                             ,_0: x - _v24._0._0
-                                             ,_1: _v24._0._1 - y}),
-                               _v21.center);
+                                             ,_0: x - _v25._0._0
+                                             ,_1: _v25._0._1 - y}),
+                               _v22.center);
                             }();}
                        break;
                      case "Nothing":
-                     return _v21.center;}
+                     return _v22.center;}
                   _E.Case($moduleName,
                   "between lines 12 and 15");
                }();
                return _U.replace([["center"
                                   ,newCenter]],
-               _v21);
+               _v22);
             }();
          }();
       }();
    });
    var stepGame = F2(function (input,
    gameState) {
-      return function () {
-         var previousState = gameState.playerState;
-         var frozen = _U.eq(input.raceInput.now,
-         gameState.now);
-         return mouseStep(input.mouseInput)(A4(moveStep,
-         frozen,
-         input.delta,
-         previousState,
-         input.windowInput)(A2(raceInputStep,
-         input.raceInput,
-         gameState)));
-      }();
+      return mouseStep(input.mouseInput)(A3(moveStep,
+      input.delta,
+      gameState.playerState,
+      input.windowInput)(A2(raceInputStep,
+      input.raceInput,
+      gameState)));
    });
    _elm.Steps.values = {_op: _op
                        ,mouseStep: mouseStep
@@ -10696,6 +10698,7 @@ Elm.Render.All.make = function (_elm) {
    $Game = Elm.Game.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
    $Render$Controls = Elm.Render.Controls.make(_elm),
    $Render$Course = Elm.Render.Course.make(_elm),
    $Render$Dashboard = Elm.Render.Dashboard.make(_elm),
@@ -10711,11 +10714,14 @@ Elm.Render.All.make = function (_elm) {
                  {ctor: "_Tuple2"
                  ,_0: _v0._0
                  ,_1: _v0._1});
-                 var controlsForm = A2($Render$Controls.renderControls,
+                 var controlsForm = A3($Maybe.maybe,
+                 $Graphics$Collage.toForm($Graphics$Element.empty),
+                 A2($Render$Controls.renderControls,
                  gameState,
                  {ctor: "_Tuple2"
                  ,_0: _v0._0
-                 ,_1: _v0._1});
+                 ,_1: _v0._1}),
+                 gameState.playerState);
                  var playersForms = $Render$Players.renderPlayers(gameState);
                  var courseForm = $Render$Course.renderCourse(gameState);
                  var graphics = A3($Graphics$Collage.collage,
@@ -10728,7 +10734,7 @@ Elm.Render.All.make = function (_elm) {
                                                               ,dashboard]));
               }();}
          _E.Case($moduleName,
-         "between lines 13 and 18");
+         "between lines 15 and 20");
       }();
    });
    _elm.Render.All.values = {_op: _op
@@ -10947,8 +10953,8 @@ Elm.Render.Players.make = function (_elm) {
                                                      ,vmgIndicator]));
       }();
    };
-   var renderPlayer = F2(function (player,
-   shadowLength) {
+   var renderPlayer = F2(function (shadowLength,
+   player) {
       return function () {
          var wake = renderWake(player.trail);
          var eqLine = A2(renderEqualityLine,
@@ -10975,9 +10981,10 @@ Elm.Render.Players.make = function (_elm) {
             var forms = _L.fromArray([A2(renderOpponents,
                                      _v10.course,
                                      _v10.opponents)
-                                     ,A2(renderPlayer,
-                                     _v10.playerState,
-                                     _v10.course.windShadowLength)]);
+                                     ,A3($Maybe.maybe,
+                                     $Graphics$Collage.toForm($Graphics$Element.empty),
+                                     renderPlayer(_v10.course.windShadowLength),
+                                     _v10.playerState)]);
             return $Graphics$Collage.move($Geo.neg(_v10.center))($Graphics$Collage.group(forms));
          }();
       }();
@@ -11097,38 +11104,42 @@ Elm.Render.Dashboard.make = function (_elm) {
                       ,legend]));
       }();
    });
-   var getCountdown = function (_v2) {
+   var statusMessage = function (s) {
+      return $Text.centered($Render$Utils.baseText(s));
+   };
+   var getFinishingStatus = function (playerState) {
+      return function () {
+         var _v2 = playerState.nextGate;
+         switch (_v2.ctor)
+         {case "Just": switch (_v2._0)
+              {case "StartLine":
+                 return statusMessage("Go!");}
+              break;
+            case "Nothing":
+            return statusMessage("Finished");}
+         return $Graphics$Element.empty;
+      }();
+   };
+   var getStatus = function (_v4) {
       return function () {
          return function () {
-            var msg = function (s) {
-               return $Text.centered($Render$Utils.baseText(s));
-            };
-            return function () {
-               var _v4 = _v2.countdown;
-               switch (_v4.ctor)
-               {case "Just":
-                  return _U.cmp(_v4._0,
-                    0) > 0 ? msg($Render$Utils.formatCountdown(_v4._0)) : function () {
-                       var _v6 = _v2.playerState.nextGate;
-                       switch (_v6.ctor)
-                       {case "Just": switch (_v6._0)
-                            {case "StartLine":
-                               return msg("Go!");}
-                            break;
-                          case "Nothing":
-                          return msg("Finished");}
-                       return $Graphics$Element.empty;
-                    }();
-                  case "Nothing":
-                  return _v2.isMaster ? msg($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
-               _E.Case($moduleName,
-               "between lines 49 and 60");
-            }();
+            var _v6 = _v4.countdown;
+            switch (_v6.ctor)
+            {case "Just":
+               return _U.cmp(_v6._0,
+                 0) > 0 ? statusMessage($Render$Utils.formatCountdown(_v6._0)) : A3($Maybe.maybe,
+                 $Graphics$Element.empty,
+                 getFinishingStatus,
+                 _v4.playerState);
+               case "Nothing":
+               return _v4.isMaster ? statusMessage($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
+            _E.Case($moduleName,
+            "between lines 58 and 66");
          }();
       }();
    };
    var midTopElements = function (gameState) {
-      return _L.fromArray([getCountdown(gameState)]);
+      return _L.fromArray([getStatus(gameState)]);
    };
    var getHelp = function (countdownMaybe) {
       return A3($Maybe.maybe,
@@ -11187,8 +11198,9 @@ Elm.Render.Dashboard.make = function (_elm) {
    20);
    var topLeftElements = function (_v10) {
       return function () {
-         return _L.fromArray([A2(getGatesCount,
-                             _v10.course,
+         return _L.fromArray([A3($Maybe.maybe,
+                             $Graphics$Element.empty,
+                             getGatesCount(_v10.course),
                              _v10.playerState)
                              ,s
                              ,getLeaderboard(_v10.leaderboard)]);
@@ -11196,11 +11208,15 @@ Elm.Render.Dashboard.make = function (_elm) {
    };
    var topRightElements = function (_v12) {
       return function () {
-         return _L.fromArray([A2(getWindWheel,
-                             _v12.wind,
+         return _L.fromArray([A3($Maybe.maybe,
+                             $Graphics$Element.empty,
+                             getWindWheel(_v12.wind),
                              _v12.playerState)
                              ,s
-                             ,getVmgBar(_v12.playerState)]);
+                             ,A3($Maybe.maybe,
+                             $Graphics$Element.empty,
+                             getVmgBar,
+                             _v12.playerState)]);
       }();
    };
    var renderDashboard = F2(function (gameState,
@@ -11241,7 +11257,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                                                          $Graphics$Element.up,
                                                          midBottomElements(gameState)))]));}
          _E.Case($moduleName,
-         "between lines 128 and 133");
+         "between lines 134 and 139");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
@@ -11250,7 +11266,9 @@ Elm.Render.Dashboard.make = function (_elm) {
                                   ,getLeaderboardLine: getLeaderboardLine
                                   ,getLeaderboard: getLeaderboard
                                   ,getHelp: getHelp
-                                  ,getCountdown: getCountdown
+                                  ,statusMessage: statusMessage
+                                  ,getFinishingStatus: getFinishingStatus
+                                  ,getStatus: getStatus
                                   ,getWindWheel: getWindWheel
                                   ,getVmgBar: getVmgBar
                                   ,topLeftElements: topLeftElements
@@ -11280,6 +11298,7 @@ Elm.Render.Course.make = function (_elm) {
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm),
@@ -11296,7 +11315,7 @@ Elm.Render.Course.make = function (_elm) {
                     _v0._0,
                     _v0._1));}
                _E.Case($moduleName,
-               "on line 63, column 26 to 62");
+               "on line 65, column 26 to 62");
             }();
          };
          var windAngleRad = $Core.toRadians(windOrigin);
@@ -11324,27 +11343,28 @@ Elm.Render.Course.make = function (_elm) {
                        ,_1: rightLineEnd}]))));
       }();
    });
-   var renderLaylines = function (_v4) {
+   var renderLaylines = F2(function (_v4,
+   playerState) {
       return function () {
          return function () {
-            var _v6 = _v4.playerState.nextGate;
+            var _v6 = playerState.nextGate;
             switch (_v6.ctor)
             {case "Just": switch (_v6._0)
                  {case "DownwindGate":
                     return A3(renderGateLaylines,
-                      _v4.playerState.downwindVmg,
+                      playerState.downwindVmg,
                       _v4.wind.origin,
                       _v4.course.downwind);
                     case "UpwindGate":
                     return A3(renderGateLaylines,
-                      _v4.playerState.upwindVmg,
+                      playerState.upwindVmg,
                       _v4.wind.origin,
                       _v4.course.upwind);}
                  break;}
             return $Render$Utils.emptyForm;
          }();
       }();
-   };
+   });
    var renderIslands = function (gameState) {
       return function () {
          var renderIsland = function (_v8) {
@@ -11405,6 +11425,20 @@ Elm.Render.Course.make = function (_elm) {
                                                      ,rightMark]));
       }();
    });
+   var renderUpwind = function (_v10) {
+      return function () {
+         return A3(renderGate,
+         _v10.course.upwind,
+         _v10.course.markRadius,
+         A3($Maybe.maybe,
+         false,
+         function (ps) {
+            return _U.eq(ps.nextGate,
+            $Maybe.Just("UpwindGate"));
+         },
+         _v10.playerState));
+      }();
+   };
    var renderStartLine = F4(function (gate,
    markRadius,
    started,
@@ -11428,29 +11462,42 @@ Elm.Render.Course.make = function (_elm) {
          marks));
       }();
    });
-   var renderCourse = function (_v10) {
+   var renderDownwindOrStartLine = function (_v12) {
+      return function () {
+         return A3($Maybe.maybe,
+         false,
+         function (ps) {
+            return $List.isEmpty(ps.crossedGates);
+         },
+         _v12.playerState) ? A4(renderStartLine,
+         _v12.course.downwind,
+         _v12.course.markRadius,
+         $Core.isStarted(_v12.countdown),
+         _v12.now) : A3(renderGate,
+         _v12.course.downwind,
+         _v12.course.markRadius,
+         A3($Maybe.maybe,
+         false,
+         function (ps) {
+            return _U.eq(ps.nextGate,
+            $Maybe.Just("DownwindGate"));
+         },
+         _v12.playerState));
+      }();
+   };
+   var renderCourse = function (_v14) {
       return function () {
          return function () {
-            var downwindOrStartLine = $List.isEmpty(_v10.playerState.crossedGates) ? A4(renderStartLine,
-            _v10.course.downwind,
-            _v10.course.markRadius,
-            $Core.isStarted(_v10.countdown),
-            _v10.now) : A3(renderGate,
-            _v10.course.downwind,
-            _v10.course.markRadius,
-            _U.eq(_v10.playerState.nextGate,
-            $Maybe.Just("DownwindGate")));
-            var forms = _L.fromArray([renderBounds(_v10.course.area)
-                                     ,renderLaylines(_v10)
-                                     ,renderIslands(_v10)
-                                     ,downwindOrStartLine
-                                     ,A3(renderGate,
-                                     _v10.course.upwind,
-                                     _v10.course.markRadius,
-                                     _U.eq(_v10.playerState.nextGate,
-                                     $Maybe.Just("UpwindGate")))
-                                     ,renderGusts(_v10.wind)]);
-            return $Graphics$Collage.move($Geo.neg(_v10.center))($Graphics$Collage.group(forms));
+            var forms = _L.fromArray([renderBounds(_v14.course.area)
+                                     ,A3($Maybe.maybe,
+                                     $Graphics$Collage.toForm($Graphics$Element.empty),
+                                     renderLaylines(_v14),
+                                     _v14.playerState)
+                                     ,renderIslands(_v14)
+                                     ,renderDownwindOrStartLine(_v14)
+                                     ,renderUpwind(_v14)
+                                     ,renderGusts(_v14.wind)]);
+            return $Graphics$Collage.move($Geo.neg(_v14.center))($Graphics$Collage.group(forms));
          }();
       }();
    };
@@ -11463,6 +11510,8 @@ Elm.Render.Course.make = function (_elm) {
                                ,renderIslands: renderIslands
                                ,renderGateLaylines: renderGateLaylines
                                ,renderLaylines: renderLaylines
+                               ,renderDownwindOrStartLine: renderDownwindOrStartLine
+                               ,renderUpwind: renderUpwind
                                ,renderCourse: renderCourse};
    return _elm.Render.Course.values;
 };Elm.Render = Elm.Render || {};
@@ -11550,18 +11599,19 @@ Elm.Render.Controls.make = function (_elm) {
          "between lines 17 and 34");
       }();
    });
-   var renderControls = F2(function (_v8,
-   intDims) {
+   var renderControls = F3(function (_v8,
+   intDims,
+   playerState) {
       return function () {
          return function () {
             var dims = $Geo.floatify(intDims);
-            var downwindHint = _U.eq(_v8.playerState.nextGate,
+            var downwindHint = _U.eq(playerState.nextGate,
             $Maybe.Just("DownwindGate")) ? A4(renderGateHint,
             _v8.course.downwind,
             dims,
             _v8.center,
             _v8.now) : $Maybe.Nothing;
-            var upwindHint = _U.eq(_v8.playerState.nextGate,
+            var upwindHint = _U.eq(playerState.nextGate,
             $Maybe.Just("UpwindGate")) ? A4(renderGateHint,
             _v8.course.upwind,
             dims,
@@ -11832,29 +11882,6 @@ Elm.Game.make = function (_elm) {
                      ,gusts: _L.fromArray([])
                      ,origin: 0
                      ,speed: 0};
-   var defaultVmg = {_: {}
-                    ,angle: 0
-                    ,speed: 0
-                    ,value: 0};
-   var defaultPlayerState = {_: {}
-                            ,controlMode: "FixedHeading"
-                            ,crossedGates: _L.fromArray([])
-                            ,downwindVmg: defaultVmg
-                            ,heading: 0
-                            ,nextGate: $Maybe.Nothing
-                            ,player: {_: {}
-                                     ,handle: $Maybe.Nothing}
-                            ,position: {ctor: "_Tuple2"
-                                       ,_0: 0
-                                       ,_1: 0}
-                            ,tackTarget: $Maybe.Nothing
-                            ,trail: _L.fromArray([])
-                            ,upwindVmg: defaultVmg
-                            ,velocity: 0
-                            ,vmgValue: 0
-                            ,windAngle: 0
-                            ,windOrigin: 0
-                            ,windSpeed: 0};
    var defaultGate = {_: {}
                      ,width: 0
                      ,y: 0};
@@ -11883,7 +11910,7 @@ Elm.Game.make = function (_elm) {
                      ,leaderboard: _L.fromArray([])
                      ,now: 0
                      ,opponents: _L.fromArray([])
-                     ,playerState: defaultPlayerState
+                     ,playerState: $Maybe.Nothing
                      ,wake: _L.fromArray([])
                      ,wind: defaultWind};
    var GameState = function (a) {
@@ -11987,6 +12014,14 @@ Elm.Game.make = function (_elm) {
          };
       };
    };
+   var Player = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,handle: b
+             ,id: a
+             ,status: c};
+   });
    var Course = F8(function (a,
    b,
    c,
@@ -12031,6 +12066,7 @@ Elm.Game.make = function (_elm) {
                       ,RaceArea: RaceArea
                       ,Vmg: Vmg
                       ,Course: Course
+                      ,Player: Player
                       ,PlayerState: PlayerState
                       ,PlayerTally: PlayerTally
                       ,Gust: Gust
@@ -12038,8 +12074,6 @@ Elm.Game.make = function (_elm) {
                       ,GameState: GameState
                       ,defaultGate: defaultGate
                       ,defaultCourse: defaultCourse
-                      ,defaultVmg: defaultVmg
-                      ,defaultPlayerState: defaultPlayerState
                       ,defaultWind: defaultWind
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks};

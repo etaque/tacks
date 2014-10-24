@@ -1,25 +1,25 @@
 package actors
 
 import akka.actor.{Props, ActorRef, Actor}
-import models.{WatcherInput, RaceUpdate}
+import models.{Player, WatcherUpdate, WatcherInput, RaceUpdate}
 
-class WatcherActor(raceActor: ActorRef, out: ActorRef) extends Actor {
+class WatcherActor(watcher: Player, raceActor: ActorRef, out: ActorRef) extends Actor {
 
-  raceActor ! WatcherJoin
+  raceActor ! WatcherJoin(watcher)
 
   def receive = {
 
-    case watcherInput: WatcherInput => // ignore, useless atm
+    case input: WatcherInput =>
+      raceActor ! WatcherUpdate(watcher, input)
 
-    case raceUpdate: RaceUpdate => out ! raceUpdate
+    case update: RaceUpdate =>
+      out ! update
 
   }
 
-  override def postStop() = {
-    raceActor ! WatcherQuit
-  }
+  override def postStop() = WatcherQuit(watcher)
 }
 
 object WatcherActor {
-  def props(raceActor: ActorRef)(out: ActorRef) = Props(new WatcherActor(raceActor, out))
+  def props(raceActor: ActorRef, watcher: Player)(out: ActorRef) = Props(new WatcherActor(watcher, raceActor, out))
 }

@@ -46,11 +46,20 @@ mouseInput = lift2 MouseInput (Drag.lastPosition (20 * Time.millisecond)) Mouse.
 
 keyboardInput : Signal KeyboardInput
 keyboardInput = lift5 KeyboardInput
-  Keyboard.arrows Keyboard.enter Keyboard.space Keyboard.shift (Keyboard.isDown (Char.toCode 'C'))
+  Keyboard.arrows
+  Keyboard.enter
+  Keyboard.space
+  Keyboard.shift
+  (Keyboard.isDown (Char.toCode 'C'))
 
 chrono : Signal Time
 chrono = foldp (+) 0 (fps 1)
 
-type Input = { delta: Float, chrono: Time, keyboardInput: KeyboardInput, mouseInput: MouseInput,
-               windowInput: (Int,Int), raceInput: RaceInput }
-
+type Input =
+  { delta: Float
+  , chrono: Time
+  , keyboardInput: KeyboardInput
+  , mouseInput: MouseInput
+  , windowInput: (Int,Int)
+  , raceInput: RaceInput
+  }
