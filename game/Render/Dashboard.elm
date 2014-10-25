@@ -4,12 +4,25 @@ import Render.Utils (..)
 import Core (..)
 import Geo (..)
 import Game (..)
+import Inputs (watchedPlayer)
+
 import String
 import Text
 import Maybe (maybe)
+import Graphics.Input(customButton)
 
 s = spacer 20 20
 
+getOpponent : PlayerState -> Element
+getOpponent playerState =
+  let el = maybe "Anonymous" identity playerState.player.handle
+        |> baseText
+        |> leftAligned
+  in  customButton watchedPlayer.handle (Just playerState.player.id) el el el
+
+getOpponents : [PlayerState] -> Element
+getOpponents opponents =
+  flow down (map getOpponent opponents)
 
 getGatesCount : Course -> PlayerState -> Element
 getGatesCount course player =
@@ -107,10 +120,12 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
 
 
 topLeftElements : GameState -> [Element]
-topLeftElements {leaderboard,course,playerState} =
+topLeftElements {leaderboard,course,playerState,opponents} =
   [ maybe empty (getGatesCount course) playerState
   , s
   , getLeaderboard leaderboard
+  , s
+  , getOpponents opponents
   ]
 
 midTopElements : GameState -> [Element]

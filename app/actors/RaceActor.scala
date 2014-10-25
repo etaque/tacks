@@ -143,7 +143,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
     case WatcherUpdate(watcher, input) => {
       val id = watcher.id.stringify
       watchers.get(id).foreach { context =>
-        val newState = WatcherState(input.watchedPlayerId)
+        val newState = WatcherState(input.watchedPlayerId.getOrElse(id))
         watchers += id -> context.copy(state = newState)
       }
     }

@@ -14,9 +14,7 @@ var BoardLine = React.createClass({
     if (_.isEmpty(playerStates)) {
       return "<empty>";
     } else {
-      return _.map(playerStates, ps => {
-        var id = ps[0],
-            p = ps[1];
+      return _.map(playerStates, p => {
         return p.player.handle || "Anonymous";
       }).join(" vs ");
     }

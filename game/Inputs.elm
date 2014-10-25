@@ -7,6 +7,7 @@ import Mouse
 import Drag
 import Time
 import Char
+import Graphics.Input(Input,input)
 
 {-- Part 1: Model the user input ----------------------------------------------
 
@@ -55,7 +56,7 @@ keyboardInput = lift5 KeyboardInput
 chrono : Signal Time
 chrono = foldp (+) 0 (fps 1)
 
-type Input =
+type GameInput =
   { delta: Float
   , chrono: Time
   , keyboardInput: KeyboardInput
@@ -63,3 +64,8 @@ type Input =
   , windowInput: (Int,Int)
   , raceInput: RaceInput
   }
+
+watchedPlayer : Input (Maybe String)
+watchedPlayer = input Nothing
+
+type WatcherOutput = { watchedPlayerId: Maybe String }

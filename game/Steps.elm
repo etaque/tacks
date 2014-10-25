@@ -52,7 +52,7 @@ raceInputStep raceInput gameState =
                     countdown <- mapMaybe (\st -> st - now) startTime,
                     isMaster <- isMaster }
 
-stepGame : Input -> GameState -> GameState
+stepGame : GameInput -> GameState -> GameState
 stepGame input gameState =
   raceInputStep input.raceInput gameState
     |> moveStep input.delta gameState.playerState input.windowInput

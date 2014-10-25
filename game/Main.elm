@@ -2,11 +2,13 @@ module Main where
 
 import Window
 
-import Inputs
+import Inputs (..)
 import Game
 import Steps
 import Render.All as R
 import Render.Utils
+
+import Debug
 
 port raceInput : Signal
   { now: Float
@@ -22,23 +24,23 @@ port raceInput : Signal
 clock : Signal Float
 clock = inSeconds <~ fps 30
 
-input : Signal Inputs.Input
-input = sampleOn clock <| lift6 Inputs.Input
+input : Signal GameInput
+input = sampleOn clock <| lift6 GameInput
   clock
-  Inputs.chrono
-  Inputs.keyboardInput
-  Inputs.mouseInput
+  chrono
+  keyboardInput
+  mouseInput
   Window.dimensions
   raceInput
 
 gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame Game.defaultGame input
 
-port playerOutput : Signal Inputs.KeyboardInput
+port playerOutput : Signal KeyboardInput
 port playerOutput = .keyboardInput <~ input
 
-port watcherOutput : Signal (Maybe String)
-port watcherOutput = constant Nothing --(\gs -> Just gs.player.id) <~ gameState
+port watcherOutput : Signal WatcherOutput
+port watcherOutput = WatcherOutput <~ watchedPlayer.signal
 
 port title : Signal String
 port title = Render.Utils.gameTitle <~ gameState

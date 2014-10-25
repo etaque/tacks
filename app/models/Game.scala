@@ -63,7 +63,7 @@ object PlayerState {
 case class PlayerUpdate(player: Player, input: PlayerInput)
 
 case class WatcherInput(
-  watchedPlayerId: String
+  watchedPlayerId: Option[String]
 )
 
 case class WatcherState(

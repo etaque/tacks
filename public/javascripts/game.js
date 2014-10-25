@@ -10314,9 +10314,11 @@ Elm.Main.make = function (_elm) {
    $Window = Elm.Window.make(_elm);
    var watcherOutput = $Native$Ports.portOut("watcherOutput",
    $Native$Ports.outgoingSignal(function (v) {
-      return v.ctor === "Nothing" ? null : v._0;
+      return {watchedPlayerId: v.watchedPlayerId.ctor === "Nothing" ? null : v.watchedPlayerId._0};
    }),
-   $Signal.constant($Maybe.Nothing));
+   A2($Signal._op["<~"],
+   $Inputs.WatcherOutput,
+   $Inputs.watchedPlayer.signal));
    var clock = A2($Signal._op["<~"],
    $Time.inSeconds,
    $Time.fps(30));
@@ -10441,7 +10443,7 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                           ,isMaster: typeof v.isMaster === "boolean" ? v.isMaster : _E.raise("invalid input, expecting JSBoolean but got " + v.isMaster)} : _E.raise("invalid input, expecting JSObject [\"now\",\"startTime\",\"course\",\"playerState\",\"wind\",\"opponents\",\"leaderboard\",\"isMaster\"] but got " + v);
    }));
    var input = $Signal.sampleOn(clock)(A7($Signal.lift6,
-   $Inputs.Input,
+   $Inputs.GameInput,
    clock,
    $Inputs.chrono,
    $Inputs.keyboardInput,
@@ -11022,6 +11024,8 @@ Elm.Render.Dashboard.make = function (_elm) {
    $Game = Elm.Game.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $Inputs = Elm.Inputs.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm),
@@ -11134,7 +11138,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                case "Nothing":
                return _v4.isMaster ? statusMessage($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
             _E.Case($moduleName,
-            "between lines 58 and 66");
+            "between lines 71 and 79");
          }();
       }();
    };
@@ -11193,6 +11197,27 @@ Elm.Render.Dashboard.make = function (_elm) {
          $String.show(1 + course.laps * 2))))));
       }();
    });
+   var getOpponent = function (playerState) {
+      return function () {
+         var el = $Text.leftAligned($Render$Utils.baseText(A3($Maybe.maybe,
+         "Anonymous",
+         $Basics.identity,
+         playerState.player.handle)));
+         return A5($Graphics$Input.customButton,
+         $Inputs.watchedPlayer.handle,
+         $Maybe.Just(playerState.player.id),
+         el,
+         el,
+         el);
+      }();
+   };
+   var getOpponents = function (opponents) {
+      return A2($Graphics$Element.flow,
+      $Graphics$Element.down,
+      A2($List.map,
+      getOpponent,
+      opponents));
+   };
    var s = A2($Graphics$Element.spacer,
    20,
    20);
@@ -11203,7 +11228,9 @@ Elm.Render.Dashboard.make = function (_elm) {
                              getGatesCount(_v10.course),
                              _v10.playerState)
                              ,s
-                             ,getLeaderboard(_v10.leaderboard)]);
+                             ,getLeaderboard(_v10.leaderboard)
+                             ,s
+                             ,getOpponents(_v10.opponents)]);
       }();
    };
    var topRightElements = function (_v12) {
@@ -11257,11 +11284,13 @@ Elm.Render.Dashboard.make = function (_elm) {
                                                          $Graphics$Element.up,
                                                          midBottomElements(gameState)))]));}
          _E.Case($moduleName,
-         "between lines 134 and 139");
+         "between lines 149 and 154");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
                                   ,s: s
+                                  ,getOpponent: getOpponent
+                                  ,getOpponents: getOpponents
                                   ,getGatesCount: getGatesCount
                                   ,getLeaderboardLine: getLeaderboardLine
                                   ,getLeaderboard: getLeaderboard
@@ -11766,12 +11795,18 @@ Elm.Inputs.make = function (_elm) {
    $Char = Elm.Char.make(_elm),
    $Drag = Elm.Drag.make(_elm),
    $Game = Elm.Game.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Mouse = Elm.Mouse.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
-   var Input = F6(function (a,
+   var WatcherOutput = function (a) {
+      return {_: {}
+             ,watchedPlayerId: a};
+   };
+   var watchedPlayer = $Graphics$Input.input($Maybe.Nothing);
+   var GameInput = F6(function (a,
    b,
    c,
    d,
@@ -11850,7 +11885,9 @@ Elm.Inputs.make = function (_elm) {
                         ,mouseInput: mouseInput
                         ,keyboardInput: keyboardInput
                         ,chrono: chrono
-                        ,Input: Input};
+                        ,GameInput: GameInput
+                        ,watchedPlayer: watchedPlayer
+                        ,WatcherOutput: WatcherOutput};
    return _elm.Inputs.values;
 };Elm.Game = Elm.Game || {};
 Elm.Game.make = function (_elm) {
