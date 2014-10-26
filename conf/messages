@@ -25,6 +25,7 @@ email=Email
 password=Password
 logout=Logout
 backHome=Back to homepage
+anonymous=Anonymous
 
 home.intro=Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.
 home.newOnTacks=New on Tacks?
@@ -49,3 +50,11 @@ users.handle.constraint=Handle must be alphanumeric and length within 3 to 15 ch
 users.createButton=Create account
 users.finishedRaces=Finished races
 users.noRaces=No races found
+
+liveCenter.creationTime=Creation
+liveCenter.opponents=Opponents
+liveCenter.start=Start
+liveCenter.waiting=Waiting
+liveCenter.startedSince=Started since {0}
+liveCenter.join=Join
+liveCenter.watch=Watch
