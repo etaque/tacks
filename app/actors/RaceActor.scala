@@ -84,15 +84,16 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
       updateWind(now)
 
-      watchers.foreach {
-        case (_, WatcherContext(_, state, ref)) =>
-          ref ! raceUpdateFor(state.watchedPlayerId, players.get(state.watchedPlayerId).map(_.state))
+      watchers.values.foreach {
+        case WatcherContext(watcher, state, ref) => {
+          ref ! raceUpdateForWatcher(watcher)
+        }
       }
 
-      players.foreach {
-        case (id, PlayerContext(_, input, state, ref)) => {
-          ref ! raceUpdateFor(id, Some(state))
-          ref ! RunStep(state, input, now, wind, race, started, opponentsTo(id))
+      players.values.foreach {
+        case PlayerContext(player, input, state, ref) => {
+          ref ! raceUpdateForPlayer(player, Some(state))
+          ref ! RunStep(state, input, now, wind, race, started, opponentsTo(player.id.stringify))
         }
       }
     }
@@ -227,18 +228,37 @@ class RaceActor(race: Race, master: Player) extends Actor {
     players.toSeq.filterNot(_._1 == playerId).map(_._2.state)
   }
 
-  private def raceUpdateFor(playerId: String, playerState: Option[PlayerState]) = {
+  private def raceUpdateForPlayer(player: Player, playerState: Option[PlayerState]) = {
+    val id = player.id.stringify
     RaceUpdate(
+      playerId = id,
       now = DateTime.now,
       startTime = startTime,
       course = None, // already transmitted in initial update
       playerState = playerState,
       wind = wind,
-      opponents = opponentsTo(playerId),
+      opponents = opponentsTo(id),
       leaderboard = leaderboard,
-      isMaster = playerId == master.id.stringify
+      isMaster = id == master.id.stringify,
+      watching = false
     )
   }
+
+  private def raceUpdateForWatcher(watcher: Player) = {
+    RaceUpdate(
+      playerId = watcher.id.stringify,
+      now = DateTime.now,
+      startTime = startTime,
+      course = None, // already transmitted in initial update
+      playerState = None,
+      wind = wind,
+      opponents = players.values.map(_.state).toSeq,
+      leaderboard = leaderboard,
+      isMaster = false,
+      watching = true
+    )
+  }
+
 
   override def postStop() = ticks.foreach(_.cancel())
 }

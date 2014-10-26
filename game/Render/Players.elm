@@ -4,9 +4,12 @@ import Render.Utils (..)
 import Core (..)
 import Geo (..)
 import Game (..)
+import Inputs (watchedPlayer)
+
 import String
 import Text
 import Maybe (maybe)
+import Graphics.Input (clickable)
 
 vmgColorAndShape : PlayerState -> (Color, Shape)
 vmgColorAndShape player =
@@ -25,6 +28,13 @@ vmgColorAndShape player =
            | a < player.downwindVmg.angle - margin -> warn
            | otherwise                             -> good
 
+renderVmgSign : PlayerState -> Form
+renderVmgSign player =
+  let windOriginRadians = toRadians (player.heading - player.windAngle)
+      (vmgColor,vmgShape) = vmgColorAndShape player
+  in  group [vmgShape |> filled vmgColor, vmgShape |> outlined (solid white)]
+        |> move (fromPolar(30, windOriginRadians + pi/2))
+
 renderPlayerAngles : PlayerState -> Form
 renderPlayerAngles player =
   let windOriginRadians = toRadians (player.heading - player.windAngle)
@@ -41,11 +51,8 @@ renderPlayerAngles player =
         |> centered |> toForm
         |> move (fromPolar (30, windOriginRadians + pi))
         |> alpha 0.5
-      (vmgColor,vmgShape) = vmgColorAndShape player
-      vmgIndicator = group [vmgShape |> filled vmgColor, vmgShape |> outlined (solid white)]
-        |> move (fromPolar(30, windOriginRadians + pi/2))
 
-  in  group [windLine, windMarker, windAngleText, vmgIndicator]
+  in  group [windLine, windMarker, windAngleText]
 
 renderEqualityLine : Point -> Float -> Form
 renderEqualityLine (x,y) windOrigin =
@@ -69,17 +76,19 @@ renderWindShadow shadowLength boat =
   in  path (boat.position :: endPoints) |> filled white |> alpha 0.1
 
 renderBoatIcon : PlayerState -> String -> Form
-renderBoatIcon boat name =
-  image 12 20 ("/assets/images/" ++ name ++ ".png") |> toForm
-    |> rotate (toRadians (boat.heading + 90))
+renderBoatIcon playerState name =
+  image 12 20 ("/assets/images/" ++ name ++ ".png")
+    |> toForm
+    |> rotate (toRadians (playerState.heading + 90))
 
 renderPlayer : Float -> PlayerState -> Form
 renderPlayer shadowLength player =
   let hull = renderBoatIcon player "49er"
       windShadow = renderWindShadow shadowLength player
       angles = renderPlayerAngles player
+      vmgSign = renderVmgSign player
       eqLine = renderEqualityLine player.position player.windOrigin
-      movingPart = group [angles, eqLine, hull] |> move player.position
+      movingPart = group [angles, vmgSign, eqLine, hull] |> move player.position
       wake = renderWake player.trail
   in group [wake, windShadow, movingPart]
 
@@ -99,10 +108,19 @@ renderOpponents course opponents =
   group <| map (renderOpponent course.windShadowLength) opponents
 
 renderPlayers : GameState -> Form
-renderPlayers ({playerState,opponents,course,center} as gameState) =
-  let forms =
-        [ renderOpponents course opponents
-        , maybe (toForm empty) (renderPlayer course.windShadowLength) playerState
+renderPlayers ({playerState,opponents,course,center,watchMode} as gameState) =
+  let mainPlayer = case playerState of
+        Just ps ->
+          maybe emptyForm (renderPlayer course.windShadowLength) playerState
+        Nothing -> case watchMode of
+          Watching playerId -> maybe emptyForm (renderPlayer course.windShadowLength) (findOpponent opponents playerId)
+          NotWatching -> emptyForm
+      filteredOpponents = case watchMode of
+        Watching playerId -> filter (\o -> o.player.id /= playerId) opponents
+        NotWatching -> opponents
+      forms =
+        [ renderOpponents course filteredOpponents
+        , mainPlayer
         ]
   in  group forms |> move (neg center)
 

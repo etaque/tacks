@@ -6,6 +6,7 @@ import Geo (..)
 import Core (..)
 
 import Maybe (..)
+import Debug
 
 mouseStep : MouseInput -> GameState -> GameState
 mouseStep ({drag, mouse} as mouseInput) ({center} as gameState) =
@@ -33,16 +34,27 @@ getCenterAfterMove (x,y) (x',y') (cx,cy) (w,h) =
 
 moveStep : Time -> Maybe PlayerState -> (Int,Int) -> GameState -> GameState
 moveStep delta previousStateMaybe dims gameState =
-  case (previousStateMaybe, gameState.playerState) of
-    (Just previousState, Just newState) ->
-      let newCenter = getCenterAfterMove previousState.position newState.position gameState.center (floatify dims)
-      in  { gameState | center <- newCenter }
-    _ -> gameState
+  let newCenter = case gameState.watchMode of
+        Watching playerId ->
+          case findOpponent gameState.opponents playerId of
+            Just playerState -> playerState.position
+            Nothing -> gameState.center
+        NotWatching ->
+          case (previousStateMaybe, gameState.playerState) of
+            (Just previousState, Just newState) ->
+              getCenterAfterMove previousState.position newState.position gameState.center (floatify dims)
+            _ ->
+              gameState.center
+  in  { gameState | center <- newCenter }
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep raceInput gameState =
-  let { now, startTime, course, playerState, opponents,
-        wind, leaderboard, isMaster } = raceInput
+  let { playerId, now, startTime, course, playerState, opponents,
+        wind, leaderboard, isMaster, watching } = raceInput
+      -- init: self-watching by default
+      watchMode = if watching && gameState.watchMode == NotWatching
+        then Debug.log "watchMode" Watching playerId
+        else gameState.watchMode
   in  { gameState | opponents <- opponents,
                     playerState <- playerState,
                     course <- maybe gameState.course identity course,
@@ -50,10 +62,17 @@ raceInputStep raceInput gameState =
                     leaderboard <- leaderboard,
                     now <- now,
                     countdown <- mapMaybe (\st -> st - now) startTime,
-                    isMaster <- isMaster }
+                    isMaster <- isMaster,
+                    watchMode <- watchMode }
+
+watchStep : WatcherInput -> GameState -> GameState
+watchStep input gameState =
+  let watchMode = maybe gameState.watchMode Watching input.watchedPlayerId
+  in  { gameState | watchMode <- watchMode }
 
 stepGame : GameInput -> GameState -> GameState
-stepGame input gameState =
-  raceInputStep input.raceInput gameState
-    |> moveStep input.delta gameState.playerState input.windowInput
-    |> mouseStep input.mouseInput
+stepGame {raceInput, delta, windowInput, mouseInput, watcherInput} gameState =
+  raceInputStep raceInput gameState
+    |> (if raceInput.watching then watchStep watcherInput else identity)
+    |> moveStep delta gameState.playerState windowInput
+    |> mouseStep mouseInput

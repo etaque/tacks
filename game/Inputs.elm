@@ -32,7 +32,8 @@ type KeyboardInput =
 type MouseInput = { drag: Maybe (Int,Int), mouse: (Int,Int) }
 
 type RaceInput =
-  { now: Time
+  { playerId: String
+  , now: Time
   , startTime: Maybe Time
   , course: Maybe Game.Course
   , playerState: Maybe Game.PlayerState
@@ -40,6 +41,7 @@ type RaceInput =
   , opponents: [Game.PlayerState]
   , leaderboard: [Game.PlayerTally]
   , isMaster: Bool
+  , watching: Bool
   }
 
 mouseInput : Signal MouseInput
@@ -56,6 +58,15 @@ keyboardInput = lift5 KeyboardInput
 chrono : Signal Time
 chrono = foldp (+) 0 (fps 1)
 
+watchedPlayer : Input (Maybe String)
+watchedPlayer = input Nothing
+
+type WatcherInput =
+  { watchedPlayerId: Maybe String }
+
+watcherInput : Signal WatcherInput
+watcherInput = WatcherInput <~ watchedPlayer.signal
+
 type GameInput =
   { delta: Float
   , chrono: Time
@@ -63,9 +74,6 @@ type GameInput =
   , mouseInput: MouseInput
   , windowInput: (Int,Int)
   , raceInput: RaceInput
+  , watcherInput: WatcherInput
   }
 
-watchedPlayer : Input (Maybe String)
-watchedPlayer = input Nothing
-
-type WatcherOutput = { watchedPlayerId: Maybe String }

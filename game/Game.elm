@@ -54,6 +54,8 @@ type PlayerTally = { playerId: String, playerHandle: Maybe String, gates: [Time]
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gusts : [Gust] }
 
+data WatchMode = NotWatching | Watching String
+
 type GameState =
   { wind: Wind
   , playerState: Maybe PlayerState
@@ -65,6 +67,7 @@ type GameState =
   , now: Time
   , countdown: Maybe Time
   , isMaster: Bool
+  , watchMode: WatchMode
   }
 
 defaultGate : Gate
@@ -101,7 +104,14 @@ defaultGame =
   , now = 0
   , countdown = Nothing
   , isMaster = False
+  , watchMode = NotWatching
   }
 
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
+
+findOpponent : [PlayerState] -> String -> Maybe PlayerState
+findOpponent opponents id =
+  let filtered = filter (\ps -> ps.player.id == id) opponents
+  in  if isEmpty filtered then Nothing else Just (head filtered)
+

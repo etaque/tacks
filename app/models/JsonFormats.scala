@@ -100,7 +100,8 @@ object JsonFormats {
     )(PlayerState.apply, unlift(PlayerState.unapply))
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
-    (__ \ 'now).format[DateTime] and
+    (__ \ 'playerId).format[String] and
+      (__ \ 'now).format[DateTime] and
       (__ \ 'startTime).format[Option[DateTime]] and
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'playerState).format[Option[PlayerState]] and
@@ -108,7 +109,8 @@ object JsonFormats {
       (__ \ 'opponents).format[Seq[PlayerState]] and
       (__ \ 'leaderboard).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean] and
-      (__ \ 'langCode).format[Option[String]]
+      (__ \ 'langCode).format[Option[String]] and
+      (__ \ 'watching).format[Boolean]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
 
