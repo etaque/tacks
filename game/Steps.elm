@@ -49,25 +49,24 @@ moveStep delta previousStateMaybe dims gameState =
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep raceInput gameState =
-  let { playerId, now, startTime, course, playerState, opponents,
+  let { playerId, playerState, now, startTime, course, opponents,
         wind, leaderboard, isMaster, watching } = raceInput
-      -- init: self-watching by default
-      watchMode = if watching && gameState.watchMode == NotWatching
-        then Debug.log "watchMode" Watching playerId
-        else gameState.watchMode
   in  { gameState | opponents <- opponents,
+                    playerId <- playerId,
                     playerState <- playerState,
                     course <- maybe gameState.course identity course,
                     wind <- wind,
                     leaderboard <- leaderboard,
                     now <- now,
                     countdown <- mapMaybe (\st -> st - now) startTime,
-                    isMaster <- isMaster,
-                    watchMode <- watchMode }
+                    isMaster <- isMaster }
 
 watchStep : WatcherInput -> GameState -> GameState
 watchStep input gameState =
-  let watchMode = maybe gameState.watchMode Watching input.watchedPlayerId
+  let watchMode = case (input.watchedPlayerId, gameState.watchMode) of
+        (Just id, _)           -> Watching id
+        (Nothing, NotWatching) -> Watching gameState.playerId
+        _                      -> gameState.watchMode
   in  { gameState | watchMode <- watchMode }
 
 stepGame : GameInput -> GameState -> GameState

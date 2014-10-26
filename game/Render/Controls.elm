@@ -10,12 +10,12 @@ import Maybe
 
 gateHintLabel: Int -> Form
 gateHintLabel d =
-  "Next gate in " ++ (show d) ++ "m" |> baseText |> centered |> toForm
+  (show d) ++ "m" |> baseText |> centered |> toForm
 
 renderGateHint : Gate -> (Float,Float) -> Point -> Float -> Maybe Form
 renderGateHint gate (w,h) (cx,cy) timer =
   let (left,right) = getGateMarks gate
-      c = 5
+      c = 3
       isOver = cy + h/2 + c < gate.y
       isUnder = cy - h/2 - c > gate.y
       markStyle = filled orange

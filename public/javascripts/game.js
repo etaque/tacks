@@ -10505,7 +10505,6 @@ Elm.Steps.make = function (_elm) {
    $moduleName = "Steps",
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -10514,10 +10513,23 @@ Elm.Steps.make = function (_elm) {
    var watchStep = F2(function (input,
    gameState) {
       return function () {
-         var watchMode = A3($Maybe.maybe,
-         gameState.watchMode,
-         $Game.Watching,
-         input.watchedPlayerId);
+         var watchMode = function () {
+            var _v0 = {ctor: "_Tuple2"
+                      ,_0: input.watchedPlayerId
+                      ,_1: gameState.watchMode};
+            switch (_v0.ctor)
+            {case "_Tuple2":
+               switch (_v0._0.ctor)
+                 {case "Just":
+                    return $Game.Watching(_v0._0._0);
+                    case "Nothing":
+                    switch (_v0._1.ctor)
+                      {case "NotWatching":
+                         return $Game.Watching(gameState.playerId);}
+                      break;}
+                 break;}
+            return gameState.watchMode;
+         }();
          return _U.replace([["watchMode"
                             ,watchMode]],
          gameState);
@@ -10528,22 +10540,18 @@ Elm.Steps.make = function (_elm) {
       return function () {
          var $ = raceInput,
          playerId = $.playerId,
+         playerState = $.playerState,
          now = $.now,
          startTime = $.startTime,
          course = $.course,
-         playerState = $.playerState,
          opponents = $.opponents,
          wind = $.wind,
          leaderboard = $.leaderboard,
          isMaster = $.isMaster,
          watching = $.watching;
-         var watchMode = watching && _U.eq(gameState.watchMode,
-         $Game.NotWatching) ? A3($Debug.log,
-         "watchMode",
-         $Game.Watching,
-         playerId) : gameState.watchMode;
          return _U.replace([["opponents"
                             ,opponents]
+                           ,["playerId",playerId]
                            ,["playerState",playerState]
                            ,["course"
                             ,A3($Maybe.maybe,
@@ -10559,26 +10567,25 @@ Elm.Steps.make = function (_elm) {
                                return st - now;
                             },
                             startTime)]
-                           ,["isMaster",isMaster]
-                           ,["watchMode",watchMode]],
+                           ,["isMaster",isMaster]],
          gameState);
       }();
    });
-   var getCenterAfterMove = F4(function (_v0,
-   _v1,
-   _v2,
-   _v3) {
+   var getCenterAfterMove = F4(function (_v4,
+   _v5,
+   _v6,
+   _v7) {
       return function () {
-         switch (_v3.ctor)
+         switch (_v7.ctor)
          {case "_Tuple2":
             return function () {
-                 switch (_v2.ctor)
+                 switch (_v6.ctor)
                  {case "_Tuple2":
                     return function () {
-                         switch (_v1.ctor)
+                         switch (_v5.ctor)
                          {case "_Tuple2":
                             return function () {
-                                 switch (_v0.ctor)
+                                 switch (_v4.ctor)
                                  {case "_Tuple2":
                                     return function () {
                                          var refocus = F5(function (n,
@@ -10604,17 +10611,17 @@ Elm.Steps.make = function (_elm) {
                                          });
                                          return {ctor: "_Tuple2"
                                                 ,_0: A5(refocus,
-                                                _v0._0,
-                                                _v1._0,
-                                                _v2._0,
-                                                _v3._0,
-                                                _v3._0 * 0.2)
+                                                _v4._0,
+                                                _v5._0,
+                                                _v6._0,
+                                                _v7._0,
+                                                _v7._0 * 0.2)
                                                 ,_1: A5(refocus,
-                                                _v0._1,
-                                                _v1._1,
-                                                _v2._1,
-                                                _v3._1,
-                                                _v3._1 * 0.4)};
+                                                _v4._1,
+                                                _v5._1,
+                                                _v6._1,
+                                                _v7._1,
+                                                _v7._1 * 0.4)};
                                       }();}
                                  _E.Case($moduleName,
                                  "between lines 20 and 33");
@@ -10635,22 +10642,22 @@ Elm.Steps.make = function (_elm) {
    gameState) {
       return function () {
          var newCenter = function () {
-            var _v16 = gameState.watchMode;
-            switch (_v16.ctor)
+            var _v20 = gameState.watchMode;
+            switch (_v20.ctor)
             {case "NotWatching":
                return function () {
-                    var _v18 = {ctor: "_Tuple2"
+                    var _v22 = {ctor: "_Tuple2"
                                ,_0: previousStateMaybe
                                ,_1: gameState.playerState};
-                    switch (_v18.ctor)
+                    switch (_v22.ctor)
                     {case "_Tuple2":
-                       switch (_v18._0.ctor)
+                       switch (_v22._0.ctor)
                          {case "Just":
-                            switch (_v18._1.ctor)
+                            switch (_v22._1.ctor)
                               {case "Just":
                                  return A4(getCenterAfterMove,
-                                   _v18._0._0.position,
-                                   _v18._1._0.position,
+                                   _v22._0._0.position,
+                                   _v22._1._0.position,
                                    gameState.center,
                                    $Geo.floatify(dims));}
                               break;}
@@ -10659,12 +10666,12 @@ Elm.Steps.make = function (_elm) {
                  }();
                case "Watching":
                return function () {
-                    var _v23 = A2($Game.findOpponent,
+                    var _v27 = A2($Game.findOpponent,
                     gameState.opponents,
-                    _v16._0);
-                    switch (_v23.ctor)
+                    _v20._0);
+                    switch (_v27.ctor)
                     {case "Just":
-                       return _v23._0.position;
+                       return _v27._0.position;
                        case "Nothing":
                        return gameState.center;}
                     _E.Case($moduleName,
@@ -10678,48 +10685,48 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var mouseStep = F2(function (_v25,
-   _v26) {
+   var mouseStep = F2(function (_v29,
+   _v30) {
       return function () {
          return function () {
             return function () {
                var newCenter = function () {
-                  var _v29 = _v25.drag;
-                  switch (_v29.ctor)
+                  var _v33 = _v29.drag;
+                  switch (_v33.ctor)
                   {case "Just":
-                     switch (_v29._0.ctor)
+                     switch (_v33._0.ctor)
                        {case "_Tuple2":
                           return function () {
-                               var $ = _v25.mouse,
+                               var $ = _v29.mouse,
                                x = $._0,
                                y = $._1;
                                return A2($Geo.sub,
                                $Geo.floatify({ctor: "_Tuple2"
-                                             ,_0: x - _v29._0._0
-                                             ,_1: _v29._0._1 - y}),
-                               _v26.center);
+                                             ,_0: x - _v33._0._0
+                                             ,_1: _v33._0._1 - y}),
+                               _v30.center);
                             }();}
                        break;
                      case "Nothing":
-                     return _v26.center;}
+                     return _v30.center;}
                   _E.Case($moduleName,
                   "between lines 13 and 16");
                }();
                return _U.replace([["center"
                                   ,newCenter]],
-               _v26);
+               _v30);
             }();
          }();
       }();
    });
-   var stepGame = F2(function (_v33,
+   var stepGame = F2(function (_v37,
    gameState) {
       return function () {
-         return mouseStep(_v33.mouseInput)(A3(moveStep,
-         _v33.delta,
+         return mouseStep(_v37.mouseInput)(A3(moveStep,
+         _v37.delta,
          gameState.playerState,
-         _v33.windowInput)((_v33.raceInput.watching ? watchStep(_v33.watcherInput) : $Basics.identity)(A2(raceInputStep,
-         _v33.raceInput,
+         _v37.windowInput)((_v37.raceInput.watching ? watchStep(_v37.watcherInput) : $Basics.identity)(A2(raceInputStep,
+         _v37.raceInput,
          gameState))));
       }();
    });
@@ -11125,7 +11132,8 @@ Elm.Render.Dashboard.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm),
    $String = Elm.String.make(_elm),
-   $Text = Elm.Text.make(_elm);
+   $Text = Elm.Text.make(_elm),
+   $Time = Elm.Time.make(_elm);
    var getVmgBar = function (_v0) {
       return function () {
          return function () {
@@ -11167,8 +11175,7 @@ Elm.Render.Dashboard.make = function (_elm) {
          }();
       }();
    };
-   var getWindWheel = F2(function (wind,
-   player) {
+   var getWindWheel = function (wind) {
       return function () {
          var legend = $Graphics$Collage.move({ctor: "_Tuple2"
                                              ,_0: 0
@@ -11202,43 +11209,9 @@ Elm.Render.Dashboard.make = function (_elm) {
                       ,windSpeedText
                       ,legend]));
       }();
-   });
+   };
    var statusMessage = function (s) {
       return $Text.centered($Render$Utils.baseText(s));
-   };
-   var getFinishingStatus = function (playerState) {
-      return function () {
-         var _v2 = playerState.nextGate;
-         switch (_v2.ctor)
-         {case "Just": switch (_v2._0)
-              {case "StartLine":
-                 return statusMessage("Go!");}
-              break;
-            case "Nothing":
-            return statusMessage("Finished");}
-         return $Graphics$Element.empty;
-      }();
-   };
-   var getStatus = function (_v4) {
-      return function () {
-         return function () {
-            var _v6 = _v4.countdown;
-            switch (_v6.ctor)
-            {case "Just":
-               return _U.cmp(_v6._0,
-                 0) > 0 ? statusMessage($Render$Utils.formatCountdown(_v6._0)) : A3($Maybe.maybe,
-                 $Graphics$Element.empty,
-                 getFinishingStatus,
-                 _v4.playerState);
-               case "Nothing":
-               return _v4.isMaster ? statusMessage($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
-            _E.Case($moduleName,
-            "between lines 71 and 79");
-         }();
-      }();
-   };
-   var midTopElements = function (gameState) {
-      return _L.fromArray([getStatus(gameState)]);
    };
    var getHelp = function (countdownMaybe) {
       return A3($Maybe.maybe,
@@ -11248,147 +11221,285 @@ Elm.Render.Dashboard.make = function (_elm) {
       },
       countdownMaybe) ? $Text.centered($Render$Utils.baseText($Render$Utils.helpMessage)) : $Graphics$Element.empty;
    };
-   var midBottomElements = function (_v8) {
+   var midBottomElements = F2(function (_v2,
+   playerState) {
       return function () {
-         return _L.fromArray([getHelp(_v8.countdown)]);
+         return _L.fromArray([getHelp(_v2.countdown)]);
+      }();
+   });
+   var getGatesCount = F2(function (course,
+   player) {
+      return $Text.leftAligned($Render$Utils.baseText(_L.append("Gate ",
+      _L.append($String.show($List.length(player.crossedGates)),
+      _L.append("/",
+      $String.show(1 + course.laps * 2))))));
+   });
+   var getFinishingStatus = F2(function (course,
+   playerState) {
+      return function () {
+         var _v4 = playerState.nextGate;
+         switch (_v4.ctor)
+         {case "Just": switch (_v4._0)
+              {case "StartLine":
+                 return statusMessage("Go!");}
+              break;
+            case "Nothing":
+            return statusMessage("Finished");}
+         return A2(getGatesCount,
+         course,
+         playerState);
+      }();
+   });
+   var getStatus = function (_v6) {
+      return function () {
+         return function () {
+            var _v8 = _v6.countdown;
+            switch (_v8.ctor)
+            {case "Just":
+               return _U.cmp(_v8._0,
+                 0) > 0 ? statusMessage($Render$Utils.formatCountdown(_v8._0)) : A3($Maybe.maybe,
+                 $Graphics$Element.empty,
+                 getFinishingStatus(_v6.course),
+                 _v6.playerState);
+               case "Nothing":
+               return _v6.isMaster ? statusMessage($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
+            _E.Case($moduleName,
+            "between lines 127 and 135");
+         }();
       }();
    };
-   var getLeaderboardLine = F3(function (leaderTally,
+   var midTopElements = F2(function (gameState,
+   playerState) {
+      return _L.fromArray([getStatus(gameState)]);
+   });
+   var buildBoardLine = F2(function (watching,
+   _v10) {
+      return function () {
+         return function () {
+            var deltaText = A3($Maybe.maybe,
+            "-",
+            function (d) {
+               return _L.append("+",
+               $String.show(d / 1000));
+            },
+            _v10.delta);
+            var handleText = $Render$Utils.fixedLength(12)(A3($Maybe.maybe,
+            "Anonymous",
+            $Basics.identity,
+            _v10.handle));
+            var positionText = A3($Maybe.maybe,
+            "  ",
+            function (p) {
+               return _L.append($String.show(p),
+               ".");
+            },
+            _v10.position);
+            var watchingText = _v10.watched ? "*" : " ";
+            var el = $Text.leftAligned($Render$Utils.baseText(A2($List.join,
+            " ",
+            _L.fromArray([watchingText
+                         ,positionText
+                         ,handleText
+                         ,deltaText]))));
+            return watching ? A5($Graphics$Input.customButton,
+            $Inputs.watchedPlayer.handle,
+            $Maybe.Just(_v10.id),
+            el,
+            el,
+            el) : el;
+         }();
+      }();
+   });
+   var getOpponent = F3(function (watching,
+   watchMode,
+   _v12) {
+      return function () {
+         return function () {
+            var watched = function () {
+               switch (watchMode.ctor)
+               {case "NotWatching":
+                  return false;
+                  case "Watching":
+                  return _U.eq(watchMode._0,
+                    _v12.player.id);}
+               _E.Case($moduleName,
+               "between lines 43 and 46");
+            }();
+            var line = {_: {}
+                       ,delta: $Maybe.Nothing
+                       ,handle: _v12.player.handle
+                       ,id: _v12.player.id
+                       ,position: $Maybe.Nothing
+                       ,watched: watched};
+            return A2(buildBoardLine,
+            watching,
+            line);
+         }();
+      }();
+   });
+   var getOpponents = function (_v16) {
+      return function () {
+         return function () {
+            var watching = $Maybe.isNothing(_v16.playerState);
+            return $Graphics$Element.flow($Graphics$Element.down)(A2($List.map,
+            A2(getOpponent,
+            watching,
+            _v16.watchMode),
+            _v16.opponents));
+         }();
+      }();
+   };
+   var getLeaderboardLine = F5(function (watching,
+   watchMode,
+   leaderTally,
    position,
    tally) {
       return function () {
-         var handle = A3($Maybe.maybe,
-         "Anonymous",
-         $Basics.identity,
-         tally.playerHandle);
          var delta = _U.eq($List.length(tally.gates),
-         $List.length(leaderTally.gates)) ? _L.append("+",
-         _L.append($String.show(($List.head(tally.gates) - $List.head(leaderTally.gates)) / 1000),
-         "\"")) : "-";
-         return _L.append($String.show(position + 1),
-         _L.append(". ",
-         _L.append(A2($Render$Utils.fixedLength,
-         12,
-         handle),
-         _L.append(" ",delta))));
+         $List.length(leaderTally.gates)) ? $Maybe.Just($List.head(tally.gates) - $List.head(leaderTally.gates)) : $Maybe.Nothing;
+         var watched = function () {
+            switch (watchMode.ctor)
+            {case "NotWatching":
+               return false;
+               case "Watching":
+               return _U.eq(watchMode._0,
+                 tally.playerId);}
+            _E.Case($moduleName,
+            "between lines 72 and 75");
+         }();
+         var line = {_: {}
+                    ,delta: delta
+                    ,handle: tally.playerHandle
+                    ,id: tally.playerId
+                    ,position: $Maybe.Just(position + 1)
+                    ,watched: watched};
+         return A2(buildBoardLine,
+         watching,
+         line);
       }();
    });
-   var getLeaderboard = function (leaderboard) {
-      return $List.isEmpty(leaderboard) ? $Graphics$Element.empty : function () {
-         var leader = $List.head(leaderboard);
-         return $Text.leftAligned($Render$Utils.baseText($List.join("\n")(A2($List.indexedMap,
-         getLeaderboardLine(leader),
-         leaderboard))));
+   var getLeaderboard = function (_v20) {
+      return function () {
+         return $List.isEmpty(_v20.leaderboard) ? $Graphics$Element.empty : function () {
+            var watching = $Maybe.isNothing(_v20.playerState);
+            var leader = $List.head(_v20.leaderboard);
+            return $Graphics$Element.flow($Graphics$Element.down)(A2($List.indexedMap,
+            A3(getLeaderboardLine,
+            watching,
+            _v20.watchMode,
+            leader),
+            _v20.leaderboard));
+         }();
       }();
    };
-   var getGatesCount = F2(function (course,
-   player) {
-      return function () {
-         var count = $List.minimum(_L.fromArray([($List.length(player.crossedGates) + 1) / 2 | 0
-                                                ,course.laps]));
-         return $Text.leftAligned($Render$Utils.baseText(_L.append("Gate ",
-         _L.append($String.show($List.length(player.crossedGates)),
-         _L.append("/",
-         $String.show(1 + course.laps * 2))))));
-      }();
+   var getBoard = function (gameState) {
+      return $List.isEmpty(gameState.leaderboard) ? getOpponents(gameState) : getLeaderboard(gameState);
+   };
+   var topLeftElements = F2(function (gameState,
+   playerState) {
+      return _L.fromArray([getBoard(gameState)]);
    });
-   var getOpponent = function (playerState) {
-      return function () {
-         var el = $Text.leftAligned($Render$Utils.baseText(A3($Maybe.maybe,
-         "Anonymous",
-         $Basics.identity,
-         playerState.player.handle)));
-         return A5($Graphics$Input.customButton,
-         $Inputs.watchedPlayer.handle,
-         $Maybe.Just(playerState.player.id),
-         el,
-         el,
-         el);
-      }();
-   };
-   var getOpponents = function (opponents) {
-      return A2($Graphics$Element.flow,
-      $Graphics$Element.down,
-      A2($List.map,
-      getOpponent,
-      opponents));
-   };
+   var BoardLine = F5(function (a,
+   b,
+   c,
+   d,
+   e) {
+      return {_: {}
+             ,delta: d
+             ,handle: b
+             ,id: a
+             ,position: c
+             ,watched: e};
+   });
    var s = A2($Graphics$Element.spacer,
    20,
    20);
-   var topLeftElements = function (_v10) {
+   var topRightElements = F2(function (_v22,
+   playerState) {
       return function () {
-         return _L.fromArray([A3($Maybe.maybe,
-                             $Graphics$Element.empty,
-                             getGatesCount(_v10.course),
-                             _v10.playerState)
-                             ,s
-                             ,getLeaderboard(_v10.leaderboard)
-                             ,s
-                             ,getOpponents(_v10.opponents)]);
-      }();
-   };
-   var topRightElements = function (_v12) {
-      return function () {
-         return _L.fromArray([A3($Maybe.maybe,
-                             $Graphics$Element.empty,
-                             getWindWheel(_v12.wind),
-                             _v12.playerState)
+         return _L.fromArray([getWindWheel(_v22.wind)
                              ,s
                              ,A3($Maybe.maybe,
                              $Graphics$Element.empty,
                              getVmgBar,
-                             _v12.playerState)]);
+                             playerState)]);
       }();
-   };
-   var renderDashboard = F2(function (gameState,
-   _v14) {
+   });
+   var renderDashboard = F2(function (_v24,
+   _v25) {
       return function () {
-         switch (_v14.ctor)
+         switch (_v25.ctor)
          {case "_Tuple2":
-            return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
-                                                         _v14._0,
-                                                         _v14._1,
-                                                         A2($Graphics$Element.topLeftAt,
-                                                         $Graphics$Element.Absolute(20),
-                                                         $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                         $Graphics$Element.down,
-                                                         topLeftElements(gameState)))
-                                                         ,A3($Graphics$Element.container,
-                                                         _v14._0,
-                                                         _v14._1,
-                                                         A2($Graphics$Element.midTopAt,
-                                                         $Graphics$Element.Relative(0.5),
-                                                         $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                         $Graphics$Element.down,
-                                                         midTopElements(gameState)))
-                                                         ,A3($Graphics$Element.container,
-                                                         _v14._0,
-                                                         _v14._1,
-                                                         A2($Graphics$Element.topRightAt,
-                                                         $Graphics$Element.Absolute(20),
-                                                         $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                         $Graphics$Element.down,
-                                                         topRightElements(gameState)))
-                                                         ,A3($Graphics$Element.container,
-                                                         _v14._0,
-                                                         _v14._1,
-                                                         A2($Graphics$Element.midBottomAt,
-                                                         $Graphics$Element.Relative(0.5),
-                                                         $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                         $Graphics$Element.up,
-                                                         midBottomElements(gameState)))]));}
+            return function () {
+                 return function () {
+                    var displayedPlayerState = function () {
+                       var _v30 = _v24.watchMode;
+                       switch (_v30.ctor)
+                       {case "NotWatching":
+                          return _v24.playerState;
+                          case "Watching":
+                          return $Game.selfWatching(_v24) ? A2($Game.findOpponent,
+                            _v24.opponents,
+                            _v30._0) : $Maybe.Nothing;}
+                       _E.Case($moduleName,
+                       "between lines 202 and 205");
+                    }();
+                    return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
+                                                                 _v25._0,
+                                                                 _v25._1,
+                                                                 A2($Graphics$Element.topLeftAt,
+                                                                 $Graphics$Element.Absolute(20),
+                                                                 $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                                                 $Graphics$Element.down,
+                                                                 A2(topLeftElements,
+                                                                 _v24,
+                                                                 displayedPlayerState)))
+                                                                 ,A3($Graphics$Element.container,
+                                                                 _v25._0,
+                                                                 _v25._1,
+                                                                 A2($Graphics$Element.midTopAt,
+                                                                 $Graphics$Element.Relative(0.5),
+                                                                 $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                                                 $Graphics$Element.down,
+                                                                 A2(midTopElements,
+                                                                 _v24,
+                                                                 displayedPlayerState)))
+                                                                 ,A3($Graphics$Element.container,
+                                                                 _v25._0,
+                                                                 _v25._1,
+                                                                 A2($Graphics$Element.topRightAt,
+                                                                 $Graphics$Element.Absolute(20),
+                                                                 $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                                                 $Graphics$Element.down,
+                                                                 A2(topRightElements,
+                                                                 _v24,
+                                                                 displayedPlayerState)))
+                                                                 ,A3($Graphics$Element.container,
+                                                                 _v25._0,
+                                                                 _v25._1,
+                                                                 A2($Graphics$Element.midBottomAt,
+                                                                 $Graphics$Element.Relative(0.5),
+                                                                 $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                                                 $Graphics$Element.up,
+                                                                 A2(midBottomElements,
+                                                                 _v24,
+                                                                 displayedPlayerState)))]));
+                 }();
+              }();}
          _E.Case($moduleName,
-         "between lines 149 and 154");
+         "between lines 201 and 211");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
                                   ,s: s
+                                  ,BoardLine: BoardLine
+                                  ,buildBoardLine: buildBoardLine
                                   ,getOpponent: getOpponent
                                   ,getOpponents: getOpponents
                                   ,getGatesCount: getGatesCount
                                   ,getLeaderboardLine: getLeaderboardLine
                                   ,getLeaderboard: getLeaderboard
+                                  ,getBoard: getBoard
                                   ,getHelp: getHelp
                                   ,statusMessage: statusMessage
                                   ,getFinishingStatus: getFinishingStatus
@@ -11665,9 +11776,8 @@ Elm.Render.Controls.make = function (_elm) {
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm);
    var gateHintLabel = function (d) {
-      return $Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append("Next gate in ",
-      _L.append($String.show(d),
-      "m")))));
+      return $Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append($String.show(d),
+      "m"))));
    };
    var renderGateHint = F4(function (gate,
    _v0,
@@ -11685,7 +11795,7 @@ Elm.Render.Controls.make = function (_elm) {
                          };
                          var a = 1 + 0.5 * $Basics.cos(timer * 5.0e-3);
                          var markStyle = $Graphics$Collage.filled($Color.orange);
-                         var c = 5;
+                         var c = 3;
                          var isOver = _U.cmp(_v1._1 + _v0._1 / 2 + c,
                          gate.y) < 0;
                          var isUnder = _U.cmp(_v1._1 - _v0._1 / 2 - c,
@@ -12030,6 +12140,21 @@ Elm.Game.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var selfWatching = function (_v0) {
+      return function () {
+         return function () {
+            var _v2 = _v0.watchMode;
+            switch (_v2.ctor)
+            {case "NotWatching":
+               return false;
+               case "Watching":
+               return _U.eq(_v2._0,
+                 _v0.playerId);}
+            _E.Case($moduleName,
+            "between lines 122 and 124");
+         }();
+      }();
+   };
    var findOpponent = F2(function (opponents,
    id) {
       return function () {
@@ -12084,18 +12209,21 @@ Elm.Game.make = function (_elm) {
                            return function (i) {
                               return function (j) {
                                  return function (k) {
-                                    return {_: {}
-                                           ,center: d
-                                           ,countdown: i
-                                           ,course: f
-                                           ,isMaster: j
-                                           ,leaderboard: g
-                                           ,now: h
-                                           ,opponents: e
-                                           ,playerState: b
-                                           ,wake: c
-                                           ,watchMode: k
-                                           ,wind: a};
+                                    return function (l) {
+                                       return {_: {}
+                                              ,center: e
+                                              ,countdown: j
+                                              ,course: g
+                                              ,isMaster: k
+                                              ,leaderboard: h
+                                              ,now: i
+                                              ,opponents: f
+                                              ,playerId: b
+                                              ,playerState: c
+                                              ,wake: d
+                                              ,watchMode: l
+                                              ,wind: a};
+                                    };
                                  };
                               };
                            };
@@ -12122,6 +12250,7 @@ Elm.Game.make = function (_elm) {
                      ,leaderboard: _L.fromArray([])
                      ,now: 0
                      ,opponents: _L.fromArray([])
+                     ,playerId: ""
                      ,playerState: $Maybe.Nothing
                      ,wake: _L.fromArray([])
                      ,watchMode: NotWatching
@@ -12261,7 +12390,8 @@ Elm.Game.make = function (_elm) {
                       ,defaultWind: defaultWind
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks
-                      ,findOpponent: findOpponent};
+                      ,findOpponent: findOpponent
+                      ,selfWatching: selfWatching};
    return _elm.Game.values;
 };Elm.Geo = Elm.Geo || {};
 Elm.Geo.make = function (_elm) {

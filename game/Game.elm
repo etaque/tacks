@@ -15,38 +15,38 @@ type Vmg =
   }
 
 type Course =
-  { upwind: Gate
-  , downwind: Gate
-  , laps: Int
-  , markRadius: Float
-  , islands: [Island]
-  , area: RaceArea
+  { upwind:           Gate
+  , downwind:         Gate
+  , laps:             Int
+  , markRadius:       Float
+  , islands:          [Island]
+  , area:             RaceArea
   , windShadowLength: Float
-  , boatWidth: Float
+  , boatWidth:        Float
   }
 
 type Player =
-  { id: String
+  { id:     String
   , handle: Maybe String
   , status: Maybe String
   }
 
 type PlayerState =
-  { player: Player
-  , position: Point
-  , heading: Float
-  , velocity: Float
-  , vmgValue: Float
-  , windAngle: Float
-  , windOrigin: Float
-  , windSpeed: Float
-  , downwindVmg: Vmg
-  , upwindVmg: Vmg
-  , trail: [Point]
-  , controlMode: String
-  , tackTarget: Maybe Float
+  { player:       Player
+  , position:     Point
+  , heading:      Float
+  , velocity:     Float
+  , vmgValue:     Float
+  , windAngle:    Float
+  , windOrigin:   Float
+  , windSpeed:    Float
+  , downwindVmg:  Vmg
+  , upwindVmg:    Vmg
+  , trail:        [Point]
+  , controlMode:  String
+  , tackTarget:   Maybe Float
   , crossedGates: [Time]
-  , nextGate: Maybe String -- GateLocation data type is incompatible with port inputs
+  , nextGate:     Maybe String -- GateLocation data type is incompatible with port inputs
   }
 
 type PlayerTally = { playerId: String, playerHandle: Maybe String, gates: [Time] }
@@ -57,17 +57,18 @@ type Wind = { origin : Float, speed : Float, gusts : [Gust] }
 data WatchMode = NotWatching | Watching String
 
 type GameState =
-  { wind: Wind
+  { wind:        Wind
+  , playerId:    String
   , playerState: Maybe PlayerState
-  , wake: [Point]
-  , center: Point
-  , opponents: [PlayerState]
-  , course: Course
+  , wake:        [Point]
+  , center:      Point
+  , opponents:   [PlayerState]
+  , course:      Course
   , leaderboard: [PlayerTally]
-  , now: Time
-  , countdown: Maybe Time
-  , isMaster: Bool
-  , watchMode: WatchMode
+  , now:         Time
+  , countdown:   Maybe Time
+  , isMaster:    Bool
+  , watchMode:   WatchMode
   }
 
 defaultGate : Gate
@@ -75,36 +76,37 @@ defaultGate = { y = 0, width = 0 }
 
 defaultCourse : Course
 defaultCourse =
-  { upwind = defaultGate
-  , downwind = defaultGate
-  , laps = 0
-  , markRadius = 0
-  , islands = []
-  , area = { rightTop = (0,0), leftBottom = (0,0) }
+  { upwind           = defaultGate
+  , downwind         = defaultGate
+  , laps             = 0
+  , markRadius       = 0
+  , islands          = []
+  , area             = { rightTop = (0,0), leftBottom = (0,0) }
   , windShadowLength = 0
-  , boatWidth = 0
+  , boatWidth        = 0
   }
 
 defaultWind : Wind
 defaultWind =
   { origin = 0
-  , speed = 0
-  , gusts = []
+  , speed  = 0
+  , gusts  = []
   }
 
 defaultGame : GameState
 defaultGame =
-  { wind = defaultWind
+  { wind        = defaultWind
+  , playerId    = ""
   , playerState = Nothing
-  , center = (0,0)
-  , wake = []
-  , opponents = []
-  , course = defaultCourse
+  , center      = (0,0)
+  , wake        = []
+  , opponents   = []
+  , course      = defaultCourse
   , leaderboard = []
-  , now = 0
-  , countdown = Nothing
-  , isMaster = False
-  , watchMode = NotWatching
+  , now         = 0
+  , countdown   = Nothing
+  , isMaster    = False
+  , watchMode   = NotWatching
   }
 
 getGateMarks : Gate -> (Point,Point)
@@ -114,4 +116,11 @@ findOpponent : [PlayerState] -> String -> Maybe PlayerState
 findOpponent opponents id =
   let filtered = filter (\ps -> ps.player.id == id) opponents
   in  if isEmpty filtered then Nothing else Just (head filtered)
+
+selfWatching : GameState -> Bool
+selfWatching {watchMode,playerId} =
+  case watchMode of
+    Watching pid -> pid == playerId
+    NotWatching  -> False
+
 
