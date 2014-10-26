@@ -11227,6 +11227,12 @@ Elm.Render.Dashboard.make = function (_elm) {
          return _L.fromArray([getHelp(_v2.countdown)]);
       }();
    });
+   var getMode = function (gameState) {
+      return function () {
+         var modeText = $Maybe.isNothing(gameState.playerState) ? "SPECTATOR MODE" : "PLAYER MODE";
+         return $Text.leftAligned($Render$Utils.baseText(modeText));
+      }();
+   };
    var getGatesCount = F2(function (course,
    player) {
       return $Text.leftAligned($Render$Utils.baseText(_L.append("Gate ",
@@ -11264,7 +11270,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                case "Nothing":
                return _v6.isMaster ? statusMessage($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
             _E.Case($moduleName,
-            "between lines 127 and 135");
+            "between lines 135 and 143");
          }();
       }();
    };
@@ -11294,13 +11300,13 @@ Elm.Render.Dashboard.make = function (_elm) {
                ".");
             },
             _v10.position);
-            var watchingText = _v10.watched ? "*" : " ";
-            var el = $Text.leftAligned($Render$Utils.baseText(A2($List.join,
+            var watchingText = watching ? _v10.watched ? "* " : "  " : "";
+            var el = $Text.leftAligned($Render$Utils.baseText(_L.append(watchingText,
+            A2($List.join,
             " ",
-            _L.fromArray([watchingText
-                         ,positionText
+            _L.fromArray([positionText
                          ,handleText
-                         ,deltaText]))));
+                         ,deltaText])))));
             return watching ? A5($Graphics$Input.customButton,
             $Inputs.watchedPlayer.handle,
             $Maybe.Just(_v10.id),
@@ -11395,10 +11401,6 @@ Elm.Render.Dashboard.make = function (_elm) {
    var getBoard = function (gameState) {
       return $List.isEmpty(gameState.leaderboard) ? getOpponents(gameState) : getLeaderboard(gameState);
    };
-   var topLeftElements = F2(function (gameState,
-   playerState) {
-      return _L.fromArray([getBoard(gameState)]);
-   });
    var BoardLine = F5(function (a,
    b,
    c,
@@ -11414,6 +11416,12 @@ Elm.Render.Dashboard.make = function (_elm) {
    var s = A2($Graphics$Element.spacer,
    20,
    20);
+   var topLeftElements = F2(function (gameState,
+   playerState) {
+      return _L.fromArray([getMode(gameState)
+                          ,s
+                          ,getBoard(gameState)]);
+   });
    var topRightElements = F2(function (_v22,
    playerState) {
       return function () {
@@ -11442,7 +11450,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                             _v24.opponents,
                             _v30._0) : $Maybe.Nothing;}
                        _E.Case($moduleName,
-                       "between lines 202 and 205");
+                       "between lines 213 and 216");
                     }();
                     return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
                                                                  _v25._0,
@@ -11487,7 +11495,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                  }();
               }();}
          _E.Case($moduleName,
-         "between lines 201 and 211");
+         "between lines 212 and 222");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
@@ -11500,6 +11508,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                                   ,getLeaderboardLine: getLeaderboardLine
                                   ,getLeaderboard: getLeaderboard
                                   ,getBoard: getBoard
+                                  ,getMode: getMode
                                   ,getHelp: getHelp
                                   ,statusMessage: statusMessage
                                   ,getFinishingStatus: getFinishingStatus

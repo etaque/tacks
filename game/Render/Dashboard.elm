@@ -24,11 +24,11 @@ type BoardLine =
 buildBoardLine : Bool -> BoardLine -> Element
 buildBoardLine watching {id,handle,position,delta,watched} =
   let
-    watchingText = if watched then "*" else " "
+    watchingText = if watching then (if watched then "* " else "  ") else ""
     positionText = maybe "  " (\p -> show p ++ ".") position
     handleText   = maybe "Anonymous" identity handle |> fixedLength 12
     deltaText    = maybe "-" (\d -> "+" ++ show (d / 1000)) delta
-    el = join " " [watchingText, positionText, handleText, deltaText]
+    el = watchingText ++ join " " [positionText, handleText, deltaText]
       |> baseText
       |> leftAligned
   in
@@ -104,6 +104,14 @@ getBoard gameState =
   else
     getLeaderboard gameState
 
+getMode : GameState -> Element
+getMode gameState =
+  let
+    modeText = if isNothing gameState.playerState
+      then "SPECTATOR MODE"
+      else "PLAYER MODE"
+  in
+    modeText |> baseText |> leftAligned
 
 getHelp : Maybe Float -> Element
 getHelp countdownMaybe =
@@ -178,7 +186,10 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
 
 topLeftElements : GameState -> Maybe PlayerState -> [Element]
 topLeftElements gameState playerState =
-  [ getBoard gameState ]
+  [ getMode gameState
+  , s
+  , getBoard gameState
+  ]
 
 midTopElements : GameState -> Maybe PlayerState -> [Element]
 midTopElements gameState playerState =
