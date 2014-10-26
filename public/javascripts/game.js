@@ -11797,11 +11797,20 @@ Elm.Render.Utils.make = function (_elm) {
                return _U.cmp(_v2._0,
                  0) > 0 ? formatCountdown(_v2._0) : "Started";
                case "Nothing":
-               return _L.append("(",
-                 _L.append($String.show(1 + $List.length(_v0.opponents)),
-                 ") Waiting..."));}
+               return function () {
+                    var _v4 = _v0.watchMode;
+                    switch (_v4.ctor)
+                    {case "NotWatching":
+                       return _L.append("(",
+                         _L.append($String.show(1 + $List.length(_v0.opponents)),
+                         ") Waiting..."));
+                       case "Watching":
+                       return "Waiting...";}
+                    _E.Case($moduleName,
+                    "between lines 62 and 64");
+                 }();}
             _E.Case($moduleName,
-            "between lines 59 and 63");
+            "between lines 59 and 64");
          }();
       }();
    };
