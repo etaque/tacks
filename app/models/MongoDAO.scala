@@ -100,7 +100,7 @@ trait MongoDAO[T] {
 
 trait HasId {
   def _id: BSONObjectID
-  def id: BSONObjectID = _id
+  val id: BSONObjectID = _id
   def idToStr = id.stringify
 
 }

@@ -34,5 +34,14 @@ object Application extends Controller with Security {
     }
   }
 
+  def watchRace(raceId: String) = Identified.async() { implicit request =>
+    (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
+      case None => NotFound
+      case Some(race) => {
+        val wsUrl = routes.Api.watcherSocket(race.idToStr).webSocketURL()
+        Ok(views.html.watchRace(race, wsUrl))
+      }
+    }
+  }
 }
 

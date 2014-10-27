@@ -10,12 +10,12 @@ import Maybe
 
 gateHintLabel: Int -> Form
 gateHintLabel d =
-  "Next gate in " ++ (show d) ++ "m" |> baseText |> centered |> toForm
+  (show d) ++ "m" |> baseText |> centered |> toForm
 
 renderGateHint : Gate -> (Float,Float) -> Point -> Float -> Maybe Form
 renderGateHint gate (w,h) (cx,cy) timer =
   let (left,right) = getGateMarks gate
-      c = 5
+      c = 3
       isOver = cy + h/2 + c < gate.y
       isUnder = cy - h/2 - c > gate.y
       markStyle = filled orange
@@ -33,8 +33,8 @@ renderGateHint gate (w,h) (cx,cy) timer =
       else
         Nothing
 
-renderControls : GameState -> (Int,Int) -> Form
-renderControls ({wind,playerState,opponents,course,now,countdown,center} as gameState) intDims =
+renderControls : GameState -> (Int,Int) -> PlayerState -> Form
+renderControls ({wind,opponents,course,now,countdown,center} as gameState) intDims playerState =
   let dims = floatify intDims
       downwindHint = if (playerState.nextGate == Just "DownwindGate")
         then renderGateHint course.downwind dims center now

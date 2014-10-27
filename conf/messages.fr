@@ -13,6 +13,7 @@ email=Email
 password=Mot de passe
 logout=Déconnexion
 backHome=Retour à l''accueil
+anonymous=Anonyme
 
 home.intro=Tacks est un jeu temps-réel et multijoueur de régate, dans votre navigateur. Un navigateur récent est requis pour profiter pleinement du jeu (Chrome idéalement).
 home.newOnTacks=Nouveau sur Tacks?
@@ -36,3 +37,11 @@ users.handle.hint=Au moins 3 caractères alphanumériques
 users.createButton=Créer votre compte
 users.finishedRaces=Courses terminées
 users.noRaces=Aucune course trouvée
+
+liveCenter.creationTime=Création
+liveCenter.opponents=Participants
+liveCenter.start=Départ
+liveCenter.waiting=En attente
+liveCenter.startedSince=Parti depuis {0}
+liveCenter.join=Rejoindre
+liveCenter.watch=Spectateur

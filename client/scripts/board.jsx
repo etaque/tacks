@@ -2,9 +2,10 @@
  * @jsx React.DOM
  */
 
-var React      = require('react');
-var _          = require('lodash');
-var BoardLine  = require('./boardLine');
+var React     = require('react');
+var _         = require('lodash');
+var BoardLine = require('./boardLine');
+var Messages  = require('./messages');
 
 var Board = React.createClass({
 
@@ -21,9 +22,9 @@ var Board = React.createClass({
           <table>
             <thead>
               <tr>
-                <th>Creation</th>
-                <th>Opponents</th>
-                <th>Start</th>
+                <th>{Messages('liveCenter.creationTime')}</th>
+                <th>{Messages('liveCenter.opponents')}</th>
+                <th>{Messages('liveCenter.start')}</th>
                 <th></th>
               </tr>
             </thead>

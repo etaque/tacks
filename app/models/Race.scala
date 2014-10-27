@@ -16,7 +16,6 @@ case class PlayerTally(
 case class Race (
   _id: BSONObjectID = BSONObjectID.generate,
   playerId: BSONObjectID,
-  isPrivate: Boolean,
   course: Course,
   countdownSeconds: Int,
   creationTime: DateTime = DateTime.now,

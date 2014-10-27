@@ -56,8 +56,9 @@ formatCountdown c =
   in  "Start in " ++ (show m) ++ "' " ++ (show s) ++ "\"..."
 
 gameTitle : Game.GameState -> String
-gameTitle {countdown,opponents} = case countdown of
+gameTitle {countdown,opponents,watchMode} = case countdown of
   Just c ->
     if c > 0 then formatCountdown c else "Started"
-  Nothing ->
-    "(" ++ show (1 + length opponents) ++ ") Waiting..."
+  Nothing -> case watchMode of
+    Game.Watching _  -> "Waiting..."
+    Game.NotWatching -> "(" ++ show (1 + length opponents) ++ ") Waiting..."

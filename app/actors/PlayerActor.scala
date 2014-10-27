@@ -20,6 +20,8 @@ case class StepResult(prevState: PlayerState, newState: PlayerState)
 
 class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Actor {
 
+  raceActor ! PlayerJoin(player)
+
   def receive = {
 
     case input: PlayerInput => raceActor ! PlayerUpdate(player, input)
@@ -46,7 +48,7 @@ class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Ac
   }
 
   override def postStop() = {
-    raceActor ! PlayerQuit(player.id.stringify)
+    raceActor ! PlayerQuit(player)
   }
 }
 

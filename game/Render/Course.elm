@@ -7,6 +7,8 @@ import Game (..)
 import String
 import Text
 
+import Maybe (maybe)
+
 renderStartLine : Gate -> Float -> Bool -> Time -> Form
 renderStartLine gate markRadius started timer =
   let lineStyle = if started then dotted green else solid orange
@@ -63,24 +65,31 @@ renderGateLaylines vmg windOrigin gate =
       drawLine (p1,p2) = segment p1 p2 |> traced (solid white)
   in  group (map drawLine [(leftMark, leftLineEnd), (rightMark, rightLineEnd)]) |> alpha 0.3
 
-renderLaylines : GameState -> Form
-renderLaylines {playerState,wind,course} =
+renderLaylines : GameState -> PlayerState -> Form
+renderLaylines {wind,course} playerState =
   case playerState.nextGate of
     Just "UpwindGate"   -> renderGateLaylines playerState.upwindVmg wind.origin course.upwind
     Just "DownwindGate" -> renderGateLaylines playerState.downwindVmg wind.origin course.downwind
     _                   -> emptyForm
 
+renderDownwindOrStartLine : GameState -> Form
+renderDownwindOrStartLine ({playerState,course,now,countdown} as gameState) =
+  if maybe False (\ps -> isEmpty ps.crossedGates) playerState
+    then renderStartLine course.downwind course.markRadius (isStarted countdown) now
+    else renderGate course.downwind course.markRadius (maybe False (\ps -> ps.nextGate == Just "DownwindGate") playerState)
+
+renderUpwind : GameState -> Form
+renderUpwind ({playerState,course} as gameState) =
+  renderGate course.upwind course.markRadius (maybe False (\ps -> ps.nextGate == Just "UpwindGate") playerState)
+
 renderCourse : GameState -> Form
 renderCourse ({playerState,opponents,course,now,center} as gameState) =
-  let downwindOrStartLine = if isEmpty playerState.crossedGates
-        then renderStartLine course.downwind course.markRadius (isStarted gameState.countdown) now
-        else renderGate course.downwind course.markRadius (playerState.nextGate == Just "DownwindGate")
-      forms =
+  let forms =
         [ renderBounds gameState.course.area
-        , renderLaylines gameState
+        , maybe (toForm empty) (renderLaylines gameState) playerState
         , renderIslands gameState
-        , downwindOrStartLine
-        , renderGate course.upwind course.markRadius (playerState.nextGate == Just "UpwindGate")
+        , renderDownwindOrStartLine gameState
+        , renderUpwind gameState
         , renderGusts gameState.wind
         ]
   in  group forms |> move (neg center)

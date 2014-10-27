@@ -14,11 +14,11 @@
   <body class="play-race">
 
     <script src="@routes.Assets.at("javascripts/game.js")" type="text/javascript"></script>
-    <script src="@routes.Assets.at("javascripts/mountRace.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/watchRace.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
-    var initialInput = @Html(Json.toJson(RaceUpdate.initial(request.player, race, lang, watching = false)).toString());
-    mountRace("@wsUrl", initialInput);
+    var initialInput = @Html(Json.toJson(RaceUpdate.initial(request.player, race, lang, watching = true)).toString());
+    watchRace("@wsUrl", initialInput);
     </script>
 
     @ga()

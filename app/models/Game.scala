@@ -11,7 +11,18 @@ case class PlayerInput (
   arrows: Arrows,
   subtleTurn: Boolean,
   lock: Boolean,
-  startCountdown: Boolean)
+  startCountdown: Boolean
+)
+
+object PlayerInput {
+  val initial = PlayerInput(
+    tack = false,
+    arrows = Arrows(0, 0),
+    subtleTurn = false,
+    lock = false,
+    startCountdown = false
+  )
+}
 
 sealed trait ControlMode
 case object FixedHeading extends ControlMode
@@ -52,7 +63,18 @@ object PlayerState {
 
 case class PlayerUpdate(player: Player, input: PlayerInput)
 
+case class WatcherInput(
+  watchedPlayerId: Option[String]
+)
+
+case class WatcherState(
+  watchedPlayerId: String
+)
+
+case class WatcherUpdate(watcher: Player, input: WatcherInput)
+
 case class RaceUpdate(
+  playerId: String,
   now: DateTime,
   startTime: Option[DateTime],
   course: Option[Course],
@@ -61,17 +83,20 @@ case class RaceUpdate(
   opponents: Seq[PlayerState] = Seq(),
   leaderboard: Seq[PlayerTally] = Seq(),
   isMaster: Boolean = false,
-  langCode: Option[String] = None
+  langCode: Option[String] = None,
+  watching: Boolean = false
 )
 
 object RaceUpdate {
-  def initial(r: Race, lang: Lang) = RaceUpdate(
+  def initial(p: Player, r: Race, lang: Lang, watching: Boolean) = RaceUpdate(
+    p.id.stringify,
     DateTime.now,
     startTime = None,
     playerState = None,
     course = Some(r.course),
     wind = Wind.default,
-    langCode = Some(lang.code)
+    langCode = Some(lang.code),
+    watching = watching
   )
 }
 
@@ -79,5 +104,5 @@ case class RaceStatus(
   race: Race,
   master: Player,
   startTime: Option[DateTime],
-  playerStates: Seq[(String, PlayerState)]
+  playerStates: Seq[PlayerState]
 )

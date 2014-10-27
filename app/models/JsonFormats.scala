@@ -42,12 +42,15 @@ object JsonFormats {
   implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
 
-
-  implicit val userFormat: Format[User] = Json.format[User]
+  implicit val userReads: Reads[User] = Json.reads[User]
+  implicit val userWrites: Writes[User] = Writes {
+    (u: User) => Json.obj("id" -> u.id, "handle" -> u.handle, "status" -> u.status)
+  }
+  implicit val userFormat: Format[User] = Format(userReads, userWrites)
 
   implicit val guestReads: Reads[Guest] = Json.reads[Guest]
   implicit val guestWrites: Writes[Guest] = Writes {
-    (g: Guest) => Json.obj("_id" -> g._id, "handle" -> JsNull)
+    (g: Guest) => Json.obj("id" -> g.id, "handle" -> JsNull, "status" -> JsNull)
   }
   implicit val guestFormat: Format[Guest] = Format(guestReads, guestWrites)
 
@@ -67,6 +70,8 @@ object JsonFormats {
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
   implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
+
+  implicit val watcherInputFormat: Format[WatcherInput] = Json.format[WatcherInput]
 
   implicit val playerTallyFormat: Format[PlayerTally] = (
     (__ \ 'playerId).format[BSONObjectID] and
@@ -96,7 +101,8 @@ object JsonFormats {
     )(PlayerState.apply, unlift(PlayerState.unapply))
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
-    (__ \ 'now).format[DateTime] and
+    (__ \ 'playerId).format[String] and
+      (__ \ 'now).format[DateTime] and
       (__ \ 'startTime).format[Option[DateTime]] and
       (__ \ 'course).format[Option[Course]] and
       (__ \ 'playerState).format[Option[PlayerState]] and
@@ -104,7 +110,8 @@ object JsonFormats {
       (__ \ 'opponents).format[Seq[PlayerState]] and
       (__ \ 'leaderboard).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean] and
-      (__ \ 'langCode).format[Option[String]]
+      (__ \ 'langCode).format[Option[String]] and
+      (__ \ 'watching).format[Boolean]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
 
