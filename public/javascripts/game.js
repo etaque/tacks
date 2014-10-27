@@ -11270,7 +11270,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                case "Nothing":
                return _v6.isMaster ? statusMessage($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
             _E.Case($moduleName,
-            "between lines 135 and 143");
+            "between lines 136 and 144");
          }();
       }();
    };
@@ -11346,12 +11346,20 @@ Elm.Render.Dashboard.make = function (_elm) {
    var getOpponents = function (_v16) {
       return function () {
          return function () {
+            var allOpponents = A3($Maybe.maybe,
+            _v16.opponents,
+            function (ps) {
+               return A2($List._op["::"],
+               ps,
+               _v16.opponents);
+            },
+            _v16.playerState);
             var watching = $Maybe.isNothing(_v16.playerState);
             return $Graphics$Element.flow($Graphics$Element.down)(A2($List.map,
             A2(getOpponent,
             watching,
             _v16.watchMode),
-            _v16.opponents));
+            allOpponents));
          }();
       }();
    };
@@ -11371,7 +11379,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                return _U.eq(watchMode._0,
                  tally.playerId);}
             _E.Case($moduleName,
-            "between lines 72 and 75");
+            "between lines 73 and 76");
          }();
          var line = {_: {}
                     ,delta: delta
@@ -11450,7 +11458,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                             _v24.opponents,
                             _v30._0) : $Maybe.Nothing;}
                        _E.Case($moduleName,
-                       "between lines 213 and 216");
+                       "between lines 214 and 217");
                     }();
                     return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
                                                                  _v25._0,
@@ -11495,7 +11503,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                  }();
               }();}
          _E.Case($moduleName,
-         "between lines 212 and 222");
+         "between lines 213 and 223");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op

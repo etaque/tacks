@@ -57,8 +57,9 @@ getOpponents : GameState -> Element
 getOpponents {opponents,watchMode,playerState} =
   let
     watching = isNothing playerState
+    allOpponents = maybe opponents (\ps -> ps :: opponents) playerState
   in
-    map (getOpponent watching watchMode) opponents |> flow down
+    map (getOpponent watching watchMode) allOpponents |> flow down
 
 getGatesCount : Course -> PlayerState -> Element
 getGatesCount course player =
