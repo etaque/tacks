@@ -39,7 +39,7 @@ object WindStep {
 
   def isShadowedBy(player: PlayerState, shadowLength: Double)(opponent: PlayerState): Boolean = {
     Geo.distanceBetween(opponent.position, player.position) <= shadowLength && {
-      val angle = Geo.angleBetween(player.position, opponent.position)
+      val angle = Geo.angleBetween(opponent.position, player.position)
       val (min, max) = windShadowSector(opponent)
       Geo.inSector(min, max)(angle)
     }

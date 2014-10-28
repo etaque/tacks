@@ -21,7 +21,7 @@ object Geo {
 
     val rad = atan2(yDelta, xDelta)
 
-    ensure360(radiansToAngle(rad))
+    ensure360(radiansToAngle(-rad))
   }
 
   def inBox(p: Point, b: Box): Boolean = {

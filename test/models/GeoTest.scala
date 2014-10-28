@@ -14,4 +14,14 @@ class GeoTest extends FunSuite {
     assert(!Geo.inSector(350, 15)(340))
     assert(!Geo.inSector(350, 15)(40))
   }
+
+  test("angleBetween") {
+    assert(Geo.angleBetween((0, 0), (10, 0)).round == 90)
+    assert(Geo.angleBetween((0, 0), (0, 10)).round == 0)
+
+    assert(Geo.angleBetween((0, 0), (10, 10)).round == 45)
+    assert(Geo.angleBetween((0, 0), (10, -10)).round == 135)
+    assert(Geo.angleBetween((0, 0), (-10, -10)).round == 225)
+    assert(Geo.angleBetween((0, 0), (-10, 10)).round == 315)
+  }
 }
