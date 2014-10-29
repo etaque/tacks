@@ -56,7 +56,7 @@ gulp.task('compress', function() {
 // Compile Any Other Sass Files You Added (app/styles)
 gulp.task('scss', function () {
   return gulp.src('styles/**/*.scss')
-    .pipe($.rubySass({
+    .pipe($.sass({
       style: 'expanded',
       precision: 10,
       loadPath: ['styles']
