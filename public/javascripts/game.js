@@ -10508,10 +10508,8 @@ Elm.Steps.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
    $Game = Elm.Game.make(_elm),
-   $Geo = Elm.Geo.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   $Maybe = Elm.Maybe.make(_elm);
    var watchStep = F2(function (input,
    gameState) {
       return function () {
@@ -10573,169 +10571,53 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var getCenterAfterMove = F4(function (_v4,
-   _v5,
-   _v6,
-   _v7) {
-      return function () {
-         switch (_v7.ctor)
-         {case "_Tuple2":
-            return function () {
-                 switch (_v6.ctor)
-                 {case "_Tuple2":
-                    return function () {
-                         switch (_v5.ctor)
-                         {case "_Tuple2":
-                            return function () {
-                                 switch (_v4.ctor)
-                                 {case "_Tuple2":
-                                    return function () {
-                                         var refocus = F5(function (n,
-                                         n$,
-                                         c,
-                                         d,
-                                         margin) {
-                                            return function () {
-                                               var max = c + d / 2;
-                                               var mmax = max - margin;
-                                               var min = c - d / 2;
-                                               var mmin = min + margin;
-                                               return _U.cmp(n,
-                                               min) < 0 || _U.cmp(n,
-                                               max) > 0 ? c : _U.cmp(n,
-                                               mmin) < 0 ? _U.cmp(n$,
-                                               n) < 0 ? c - (n - n$) : c : _U.cmp(n,
-                                               mmax) > 0 ? _U.cmp(n$,
-                                               n) > 0 ? c + (n$ - n) : c : _U.cmp(n$,
-                                               mmin) < 0 ? c - (n - n$) : _U.cmp(n$,
-                                               mmax) > 0 ? c + (n$ - n) : c;
-                                            }();
-                                         });
-                                         return {ctor: "_Tuple2"
-                                                ,_0: A5(refocus,
-                                                _v4._0,
-                                                _v5._0,
-                                                _v6._0,
-                                                _v7._0,
-                                                _v7._0 * 0.2)
-                                                ,_1: A5(refocus,
-                                                _v4._1,
-                                                _v5._1,
-                                                _v6._1,
-                                                _v7._1,
-                                                _v7._1 * 0.4)};
-                                      }();}
-                                 _E.Case($moduleName,
-                                 "between lines 20 and 33");
-                              }();}
-                         _E.Case($moduleName,
-                         "between lines 20 and 33");
-                      }();}
-                 _E.Case($moduleName,
-                 "between lines 20 and 33");
-              }();}
-         _E.Case($moduleName,
-         "between lines 20 and 33");
-      }();
-   });
-   var moveStep = F4(function (delta,
-   previousStateMaybe,
-   dims,
-   gameState) {
+   var centerStep = function (gameState) {
       return function () {
          var newCenter = function () {
-            var _v20 = gameState.watchMode;
-            switch (_v20.ctor)
+            var _v4 = gameState.watchMode;
+            switch (_v4.ctor)
             {case "NotWatching":
                return function () {
-                    var _v22 = {ctor: "_Tuple2"
-                               ,_0: previousStateMaybe
-                               ,_1: gameState.playerState};
-                    switch (_v22.ctor)
-                    {case "_Tuple2":
-                       switch (_v22._0.ctor)
-                         {case "Just":
-                            switch (_v22._1.ctor)
-                              {case "Just":
-                                 return A4(getCenterAfterMove,
-                                   _v22._0._0.position,
-                                   _v22._1._0.position,
-                                   gameState.center,
-                                   $Geo.floatify(dims));}
-                              break;}
-                         break;}
-                    return gameState.center;
-                 }();
-               case "Watching":
-               return function () {
-                    var _v27 = A2($Game.findOpponent,
-                    gameState.opponents,
-                    _v20._0);
-                    switch (_v27.ctor)
+                    var _v6 = gameState.playerState;
+                    switch (_v6.ctor)
                     {case "Just":
-                       return _v27._0.position;
+                       return _v6._0.position;
                        case "Nothing":
                        return gameState.center;}
                     _E.Case($moduleName,
-                    "between lines 39 and 42");
+                    "between lines 18 and 21");
+                 }();
+               case "Watching":
+               return function () {
+                    var _v8 = A2($Game.findOpponent,
+                    gameState.opponents,
+                    _v4._0);
+                    switch (_v8.ctor)
+                    {case "Just":
+                       return _v8._0.position;
+                       case "Nothing":
+                       return gameState.center;}
+                    _E.Case($moduleName,
+                    "between lines 14 and 17");
                  }();}
             _E.Case($moduleName,
-            "between lines 37 and 48");
+            "between lines 12 and 21");
          }();
          return _U.replace([["center"
                             ,newCenter]],
          gameState);
       }();
-   });
-   var mouseStep = F2(function (_v29,
-   _v30) {
-      return function () {
-         return function () {
-            return function () {
-               var newCenter = function () {
-                  var _v33 = _v29.drag;
-                  switch (_v33.ctor)
-                  {case "Just":
-                     switch (_v33._0.ctor)
-                       {case "_Tuple2":
-                          return function () {
-                               var $ = _v29.mouse,
-                               x = $._0,
-                               y = $._1;
-                               return A2($Geo.sub,
-                               $Geo.floatify({ctor: "_Tuple2"
-                                             ,_0: x - _v33._0._0
-                                             ,_1: _v33._0._1 - y}),
-                               _v30.center);
-                            }();}
-                       break;
-                     case "Nothing":
-                     return _v30.center;}
-                  _E.Case($moduleName,
-                  "between lines 13 and 16");
-               }();
-               return _U.replace([["center"
-                                  ,newCenter]],
-               _v30);
-            }();
-         }();
-      }();
-   });
-   var stepGame = F2(function (_v37,
+   };
+   var stepGame = F2(function (_v10,
    gameState) {
       return function () {
-         return mouseStep(_v37.mouseInput)(A3(moveStep,
-         _v37.delta,
-         gameState.playerState,
-         _v37.windowInput)((_v37.raceInput.watching ? watchStep(_v37.watcherInput) : $Basics.identity)(A2(raceInputStep,
-         _v37.raceInput,
-         gameState))));
+         return centerStep((_v10.raceInput.watching ? watchStep(_v10.watcherInput) : $Basics.identity)(A2(raceInputStep,
+         _v10.raceInput,
+         gameState)));
       }();
    });
    _elm.Steps.values = {_op: _op
-                       ,mouseStep: mouseStep
-                       ,getCenterAfterMove: getCenterAfterMove
-                       ,moveStep: moveStep
+                       ,centerStep: centerStep
                        ,raceInputStep: raceInputStep
                        ,watchStep: watchStep
                        ,stepGame: stepGame};
