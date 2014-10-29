@@ -47,6 +47,12 @@ gulp.task('jsx', function() { return jsx(false) });
 gulp.task('jsx:watch', function() { return jsx(true) });
 
 
+gulp.task('compress', function() {
+  gulp.src(buildDir + 'javascripts/liveCenter.js')
+    .pipe($.uglify())
+    .pipe(gulp.dest(buildDir + 'javascripts/dist'))
+});
+
 // Compile Any Other Sass Files You Added (app/styles)
 gulp.task('scss', function () {
   return gulp.src('styles/**/*.scss')
@@ -67,6 +73,6 @@ gulp.task('default', ['jsx:watch', 'scss'], function () {
 
 // Build Production Files, the Default Task
 gulp.task('dist', function (cb) {
-  runSequence('scss', ['jsx', 'copy'], cb);
+  runSequence('scss', ['jsx', 'compress'], cb);
 });
 
