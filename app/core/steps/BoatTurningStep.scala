@@ -64,13 +64,13 @@ object BoatTurningStep {
   def tackTargetReached(after: PlayerState)(before: PlayerState): Boolean = {
     (after.tackTarget, after.controlMode) match {
       case (Some(t), FixedAngle) => {
-        val beforeDelta = Geo.angleDelta(before.windAngle, t)
-        val afterDelta = Geo.angleDelta(after.windAngle, t)
+        val beforeDelta = Geo.angleDelta(before.windAngle, t).round
+        val afterDelta = Geo.angleDelta(after.windAngle, t).round
         beforeDelta < 0 && afterDelta >= 0 || beforeDelta > 0 && afterDelta <= 0
       }
       case (Some(t), FixedHeading) => {
-        val beforeDelta = Geo.angleDelta(before.heading, t)
-        val afterDelta = Geo.angleDelta(after.heading, t)
+        val beforeDelta = Geo.angleDelta(before.heading, t).round
+        val afterDelta = Geo.angleDelta(after.heading, t).round
         beforeDelta < 0 && afterDelta >= 0 || beforeDelta > 0 && afterDelta <= 0
       }
       case (None, _) => false
