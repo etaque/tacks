@@ -8,7 +8,7 @@ var OnlinePlayer = React.createClass({
 
   userTag: function(user) {
     return (
-      <a href={"/users/" + user._id} className="user">
+      <a href={"/users/" + user.id} className="user">
         {user.handle}
         <span className="status">{user.status}</span>
       </a>
