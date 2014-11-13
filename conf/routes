@@ -11,6 +11,7 @@ GET         /login                          controllers.Auth.askLogin
 POST        /login                          controllers.Auth.submitLogin
 GET         /logout                         controllers.Auth.logout
 
+POST        /api/login                      controllers.Api.login
 GET         /api/racesStatus                controllers.Api.racesStatus
 GET         /api/onlineUsers                controllers.Api.onlinePlayers
 POST        /api/createRace                 controllers.Api.createRace

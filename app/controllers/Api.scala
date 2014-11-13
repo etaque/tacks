@@ -1,10 +1,12 @@
 package controllers
 
 import play.api.libs.concurrent.Execution.Implicits._
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import play.api.mvc._
 import play.api.mvc.WebSocket.FrameFormatter
-import play.api.libs.json.Json
+import play.api.libs.json._
+import play.api.libs.functional.syntax._
 import play.api.Play.current
 import akka.actor.ActorRef
 import akka.util.Timeout
@@ -15,11 +17,36 @@ import reactivemongo.bson.BSONObjectID
 import actors._
 import models._
 import models.JsonFormats._
-
+import tools.future.Implicits._
 
 object Api extends Controller with Security {
 
   implicit val timeout = Timeout(5.seconds)
+
+  implicit val loginReads = (
+    (__ \ "email").read[String] and
+      (__ \ "password").read[String]
+    ).tupled
+
+  def login = Action.async(parse.json) { implicit request =>
+    request.body.validate(loginReads).fold(
+      errors => Future.successful(BadRequest),
+      {
+        case (email, password) => {
+          (for {
+            credentials <- User.getHashedPassword(email).map(User.checkPassword(password))
+            if credentials
+            user <- User.findByEmail(email).flattenOpt
+          }
+          yield {
+            Ok.withSession("playerId" -> user.idToStr)
+          }) recover {
+            case _ => BadRequest
+          }
+        }
+      }
+    )
+  }
 
   def racesStatus = Identified.async() { implicit request =>
     val racesFuture = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]
