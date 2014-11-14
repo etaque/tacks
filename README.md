@@ -5,13 +5,21 @@ A sailing race simulator, multiplayer & realtime, using web stack and modern bro
 
 Server app is powered by Scala 2.11 with Play 2.3, Akka and uses MongoDB for database. No classes except actors, code is written in a functional style. 
 
-Client is an [Elm](http://elm-lang.org/) app, an awesome statically-typed FRP language that compiles to Javascript. Welcome to the world of pureness!
+Game client is an [Elm](http://elm-lang.org/) app, an awesome statically-typed FRP language that compiles to Javascript. Welcome to the world of pureness!
 
 How to install
 --------------
 
+Server (Play app): 
+
  - download and install [Typesafe Activator](https://typesafe.com/activator)
  - start app with `activator run`
+
+LiveCenter client (React component):
+
+ - `cd client`
+ - `npm install`
+ - `./node_modules/gulp/bin/gulp.js`
 
 Development
 -----------
