@@ -46,6 +46,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
   def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
   def started = millisBeforeStart.exists(_ <= 0)
+  def clock: Long = millisBeforeStart.map(-_).getOrElse(-race.countdownSeconds * 1000L)
 
   val gatesToCross = race.course.laps * 2 + 1
   def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == gatesToCross)
@@ -158,7 +159,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
      * new gust
      */
     case SpawnGust => {
-      wind = wind.copy(gusts = wind.gusts :+ Gust.spawn(race.course))
+      wind = wind.copy(gusts = wind.gusts :+ Gust.generate(race.course, clock))
     }
 
     /**
@@ -178,9 +179,9 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
   private def updateWind(now: DateTime): Unit = {
     wind = Wind(
-      origin = race.course.windGenerator.windOrigin(now),
-      speed = race.course.windGenerator.windSpeed(now),
-      gusts = moveGusts(now, wind.gusts)
+      origin = race.course.windGenerator.windOrigin(clock),
+      speed = race.course.windGenerator.windSpeed(clock),
+      gusts = moveGusts(clock, wind.gusts, now.getMillis - previousWindUpdate.getMillis)
     )
     previousWindUpdate = now
   }
@@ -218,9 +219,9 @@ class RaceActor(race: Race, master: Player) extends Actor {
     finishersCount = fc
   }
 
-  private def moveGusts(at: DateTime, gusts: Seq[Gust]): Seq[Gust] = {
+  private def moveGusts(clock: Long, gusts: Seq[Gust], elapsed: Long): Seq[Gust] = {
     gusts
-      .map(_.update(race.course, wind, previousWindUpdate, at))
+      .map(_.update(race.course, wind, elapsed, clock))
       .filter(g => g.position._2 - g.radius > race.course.area.bottom)
   }
 

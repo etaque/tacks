@@ -22,10 +22,13 @@ case class RaceArea(rightTop: Point, leftBottom: Point) {
   lazy val cy = (top + bottom) / 2
   lazy val center = (cx, cy)
 
+  def genX(seed: Double, margin: Double = 0): Double = seed * (width - margin * 2) - width / 2 + margin + cx
+  def genY(seed: Double, margin: Double = 0): Double = seed * (height - margin * 2) - height / 2 + margin + cy
+
   import scala.util.Random._
 
-  def randomX(margin: Double = 0): Double = nextDouble * (width - margin * 2) - width / 2 + margin + cx
-  def randomY(margin: Double = 0): Double = nextDouble * (height - margin * 2) - height / 2 + margin + cy
+  def randomX(margin: Double = 0): Double = genX(nextDouble(), margin)
+  def randomY(margin: Double = 0): Double = genY(nextDouble(), margin)
   def randomPoint: Point = (randomX(0), randomY(0))
 
   def toBox = (rightTop, leftBottom)
@@ -74,11 +77,11 @@ case class WindGenerator(
   wavelength2: Int,
   amplitude2: Int
 ) {
-  def windOrigin(at: DateTime): Double =
-    cos(at.getMillis * 0.0005 / wavelength1) * amplitude1 + cos(at.getMillis * 0.0005 / wavelength2) * amplitude2
+  def windOrigin(clock: Long): Double =
+    cos(clock * 0.0005 / wavelength1) * amplitude1 + cos(clock * 0.0005 / wavelength2) * amplitude2
 
-  def windSpeed(at: DateTime): Double = Wind.defaultWindSpeed +
-    (cos(at.getMillis * 0.0005 / wavelength1) * 5 - cos(at.getMillis * 0.0005 / wavelength2) * 5) * 0.5
+  def windSpeed(clock: Long): Double = Wind.defaultWindSpeed +
+    (cos(clock * 0.0005 / wavelength1) * 5 - cos(clock * 0.0005 / wavelength2) * 5) * 0.5
 }
 
 object WindGenerator {

@@ -13,34 +13,32 @@ case class Gust(
   speed: Double,
   radius: Double,
   maxRadius: Double,
-  spawnedAt: DateTime
+  spawnedAt: Long // race time, ms
 ) {
   val pixelPerSecond = 1
   val maxRadiusAfterSeconds = 20
 
-  def update(course: Course, wind: Wind, lastUpdate: DateTime, now: DateTime): Gust = {
-    val delta = now.getMillis - lastUpdate.getMillis
+  def update(course: Course, wind: Wind, elapsed: Long, clock: Long): Gust = {
     val groundSpeed = (wind.speed + speed) * pixelPerSecond
     val groundDirection = ensure360(angle + 180)
-    val newPosition = movePoint(position, delta, groundSpeed, groundDirection)
-    val radius = min((now.getMillis - spawnedAt.getMillis) * 0.001 * maxRadius / maxRadiusAfterSeconds, maxRadius)
+    val newPosition = movePoint(position, elapsed, groundSpeed, groundDirection)
+    val radius = min((clock - spawnedAt) * 0.001 * maxRadius / maxRadiusAfterSeconds, maxRadius)
     copy(position = newPosition, radius = radius)
   }
 }
 
 object Gust {
-  import scala.util.Random._
-
-  def spawnAll(course: Course) = Seq.fill(course.gustsCount)(spawn(course, initial = true))
-
-  def spawn(course: Course, initial: Boolean = false) = Gust(
-    position = (course.area.randomX(100), course.area.top),
-    angle = nextInt(10) - 5,
-    speed = nextFloat * 10 - 3,
-    radius = 0,
-    maxRadius = nextInt(100) + 200,
-    spawnedAt = DateTime.now
-  )
+  def generate(course: Course, at: Long) = {
+    val seed = abs(Math.PI * at) + 1000
+    Gust(
+      position = (course.area.genX(seed % 1), course.area.top),
+      angle = seed % 10 - 5,
+      speed = seed % 10 - 3,
+      radius = 0,
+      maxRadius = seed % 100 + 200,
+      spawnedAt = at
+    )
+  }
 }
 
 case class Wind(
