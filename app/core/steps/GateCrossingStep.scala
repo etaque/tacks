@@ -5,8 +5,7 @@ import org.joda.time.DateTime
 
 object GateCrossingStep {
 
-  def run(previousState: PlayerState, course: Course, started: Boolean)(state: PlayerState): PlayerState = {
-    val now = DateTime.now
+  def run(previousState: PlayerState, course: Course, started: Boolean, now: Long)(state: PlayerState): PlayerState = {
     val crossedGates = state.crossedGates
     val step = (previousState.position, state.position)
     val nextGate = course.nextGate(crossedGates.size)

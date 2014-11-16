@@ -1,27 +1,29 @@
 
-GET         /                               controllers.Application.index
-GET         /play/:raceId                   controllers.Application.playRace(raceId: String)
-GET         /watch/:raceId                  controllers.Application.watchRace(raceId: String)
+GET         /                                       controllers.Application.index
+GET         /timeTrial/:timeTrialId                 controllers.Application.playTimeTrial(timeTrialId: String)
+GET         /play/:raceId                           controllers.Application.playRace(raceId: String)
+GET         /watch/:raceId                          controllers.Application.watchRace(raceId: String)
 
-POST        /users/create                   controllers.Users.create
-GET         /users/:id                      controllers.Users.show(id: String)
-POST        /users/updateStatus             controllers.Users.updateStatus
+POST        /users/create                           controllers.Users.create
+GET         /users/:id                              controllers.Users.show(id: String)
+POST        /users/updateStatus                     controllers.Users.updateStatus
 
-GET         /login                          controllers.Auth.askLogin
-POST        /login                          controllers.Auth.submitLogin
-GET         /logout                         controllers.Auth.logout
+GET         /login                                  controllers.Auth.askLogin
+POST        /login                                  controllers.Auth.submitLogin
+GET         /logout                                 controllers.Auth.logout
 
-POST        /api/login                      controllers.Api.login
-GET         /api/racesStatus                controllers.Api.racesStatus
-GET         /api/onlineUsers                controllers.Api.onlinePlayers
-POST        /api/createRace                 controllers.Api.createRace
-GET         /api/currentUser                controllers.Api.currentUser
-POST        /api/setName                    controllers.Api.setName
+POST        /api/login                              controllers.Api.login
+GET         /api/racesStatus                        controllers.Api.racesStatus
+GET         /api/onlineUsers                        controllers.Api.onlinePlayers
+POST        /api/createRace                         controllers.Api.createRace
+GET         /api/currentUser                        controllers.Api.currentUser
+POST        /api/setName                            controllers.Api.setName
 
-GET         /ws/playerSocket/:raceId        controllers.Api.playerSocket(raceId)
-GET         /ws/watcherSocket/:raceId       controllers.Api.watcherSocket(raceId)
+GET         /ws/playerSocket/:raceId                controllers.Api.racePlayerSocket(raceId)
+GET         /ws/watcherSocket/:raceId               controllers.Api.raceWatcherSocket(raceId)
+GET         /ws/timeTrialSocket/:timeTrialId        controllers.Api.timeTrialSocket(timeTrialId)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file                   controllers.Assets.at(path="/public", file)
+GET         /assets/*file                           controllers.Assets.at(path="/public", file)
 
 

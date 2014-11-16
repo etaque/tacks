@@ -10,7 +10,7 @@ import tools.BSONHandlers.BSONDateTimeHandler
 case class PlayerTally(
   playerId: BSONObjectID,
   playerHandle: Option[String],
-  gates: Seq[DateTime]
+  gates: Seq[Long]
 )
 
 case class Race (
@@ -22,7 +22,7 @@ case class Race (
   startTime: Option[DateTime] = None,
   tally: Seq[PlayerTally] = Nil
 ) extends HasId {
-  def ranking = tally.sortBy(_.gates.headOption.map(_.getMillis)).map(_.playerId)
+  def ranking = tally.sortBy(_.gates.headOption).map(_.playerId)
 }
 
 object Race extends MongoDAO[Race] {

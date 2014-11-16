@@ -103,7 +103,7 @@ case class Course(
   windShadowLength: Double,
   boatWidth: Double // for collision detection, should be consistent with icon
 ) {
-  def gatesToCross = laps * 2 + 1
+  val gatesToCross = laps * 2 + 1
 
   def nextGate(crossedGates: Int): Option[GateLocation] = {
     if (crossedGates == gatesToCross) None // finished

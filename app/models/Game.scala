@@ -36,7 +36,7 @@ case class Vmg(
 
 case class PlayerState (
   player: Player,
-  time: DateTime,
+  time: Long,
   position: Point,
   isGrounded: Boolean,
   heading: Double,
@@ -51,13 +51,13 @@ case class PlayerState (
   trail: Seq[Point],
   controlMode: ControlMode,
   tackTarget: Option[Double],
-  crossedGates: Seq[DateTime],
+  crossedGates: Seq[Long],
   nextGate: Option[GateLocation]
 )
 
 object PlayerState {
   def initial(player: Player) = PlayerState(
-    player, DateTime.now, (0,0), false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
+    player, DateTime.now.getMillis, (0,0), false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
     FixedHeading, None, Seq(), Some(StartLine))
 }
 
@@ -88,12 +88,12 @@ case class RaceUpdate(
 )
 
 object RaceUpdate {
-  def initial(p: Player, r: Race, lang: Lang, watching: Boolean) = RaceUpdate(
-    p.id.stringify,
+  def initial(player: Player, course: Course, lang: Lang, watching: Boolean) = RaceUpdate(
+    player.id.stringify,
     DateTime.now,
     startTime = None,
     playerState = None,
-    course = Some(r.course),
+    course = Some(course),
     wind = Wind.default,
     langCode = Some(lang.code),
     watching = watching

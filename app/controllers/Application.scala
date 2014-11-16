@@ -9,7 +9,7 @@ import akka.pattern.{ ask, pipe }
 import reactivemongo.bson.BSONObjectID
 
 import actors.{GetRace, RacesSupervisor}
-import models.{User, Race}
+import models.{TimeTrial, User, Race}
 
 object Application extends Controller with Security {
 
@@ -24,11 +24,18 @@ object Application extends Controller with Security {
 
   implicit val timeout = Timeout(5.seconds)
 
+  def playTimeTrial(timeTrialId: String) = Identified.async() { implicit request =>
+    TimeTrial.findById(timeTrialId).map { timeTrial =>
+      val wsUrl = routes.Api.timeTrialSocket(timeTrial.idToStr).webSocketURL()
+      Ok(views.html.playTimeTrial(timeTrial, wsUrl))
+    }
+  }
+
   def playRace(raceId: String) = Identified.async() { implicit request =>
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
       case None => NotFound
       case Some(race) => {
-        val wsUrl = routes.Api.playerSocket(race.idToStr).webSocketURL()
+        val wsUrl = routes.Api.racePlayerSocket(race.idToStr).webSocketURL()
         Ok(views.html.playRace(race, wsUrl))
       }
     }
@@ -38,7 +45,7 @@ object Application extends Controller with Security {
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
       case None => NotFound
       case Some(race) => {
-        val wsUrl = routes.Api.watcherSocket(race.idToStr).webSocketURL()
+        val wsUrl = routes.Api.raceWatcherSocket(race.idToStr).webSocketURL()
         Ok(views.html.watchRace(race, wsUrl))
       }
     }

@@ -1,7 +1,6 @@
 package actors
 
 import core.steps._
-import org.joda.time.DateTime
 
 import akka.actor.{Props, Actor, ActorRef}
 import models._
@@ -9,9 +8,9 @@ import models._
 case class RunStep(
   previousState: PlayerState,
   input: PlayerInput,
-  now: DateTime,
+  now: Long,
   wind: Wind,
-  race: Race,
+  course: Course,
   started: Boolean,
   opponents: Seq[PlayerState]
 )
@@ -26,15 +25,15 @@ class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Ac
 
     case input: PlayerInput => raceActor ! PlayerUpdate(player, input)
 
-    case RunStep(previousState, input, now, wind, race, started, opponents) => {
-      val elapsed = now.getMillis - previousState.time.getMillis
+    case RunStep(previousState, input, now, wind, course, started, opponents) => {
+      val elapsed = now - previousState.time
 
       val runner = if (elapsed > 0) {
         BoatTurningStep.run(previousState, input, elapsed) _ andThen
-          WindStep.run(wind, race.course.windShadowLength, opponents) andThen
+          WindStep.run(wind, course.windShadowLength, opponents) andThen
           VmgStep.run andThen
-          BoatMovingStep.run(elapsed, race.course) andThen
-          GateCrossingStep.run(previousState, race.course, started)
+          BoatMovingStep.run(elapsed, course) andThen
+          GateCrossingStep.run(previousState, course, started, now)
       } else {
         identity[PlayerState] _
       }

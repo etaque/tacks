@@ -1,14 +1,12 @@
 @(race: Race, users: Seq[User], currentPlayer: Option[Player])(implicit lang: Lang)
 
-
-@import org.joda.time.DateTime
 @import views.Helpers._
 
-@playerTime(startTime: DateTime, bestTime: DateTime, gates: Seq[DateTime], position: Int) = @{
+@playerTime(startTime: Long, bestTime: Long, gates: Seq[Long], position: Int) = @{
   if (position == 0) {
-    gates.headOption.map(_.getMillis - startTime.getMillis).map(timer).getOrElse("")
+    gates.headOption.map(_ - startTime).map(timer).getOrElse("")
   } else {
-    gates.headOption.map(_.getMillis - bestTime.getMillis).map(timeDelta).getOrElse("")
+    gates.headOption.map(_ - bestTime).map(timeDelta).getOrElse("")
   }
 }
 
@@ -31,7 +29,7 @@
             </td>
             <td class="time">
             @if(gates.size == race.course.gatesToCross) {
-              @playerTime(startTime, bestTime, gates, position)
+              @playerTime(startTime.getMillis, bestTime, gates, position)
             } else {
               DNF
             }

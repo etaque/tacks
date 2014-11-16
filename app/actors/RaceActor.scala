@@ -1,5 +1,7 @@
 package actors
 
+import tools.Conf
+
 import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -23,10 +25,9 @@ case object SpawnGust
 case object GetStatus
 case object AutoClean
 
-class RaceActor(race: Race, master: Player) extends Actor {
+class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
 
-  val fps = 30
-  val frameMillis = 1000 / fps
+  val course = race.course
 
   type PlayerId = String
   case class SpellCast(by: PlayerId, spell: Spell, at: DateTime, to: Seq[PlayerId]) {
@@ -34,28 +35,25 @@ class RaceActor(race: Race, master: Player) extends Actor {
   }
 
   val players = scala.collection.mutable.Map[PlayerId, PlayerContext]()
-  var wind = Wind.default //.copy(gusts = Gust.spawnAll(race.course))
-  var playersGates = scala.collection.mutable.Map[Player, Seq[DateTime]]()
+  var playersGates = scala.collection.mutable.Map[Player, Seq[Long]]()
   var leaderboard = Seq[PlayerTally]()
   var finishersCount = 0
 
   val watchers = scala.collection.mutable.Map[PlayerId, WatcherContext]()
 
-  var previousWindUpdate = DateTime.now
   var startTime: Option[DateTime] = None
 
   def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
   def startScheduled = startTime.isDefined
   def started = startTime.exists(_.isBeforeNow)
-  def clock: Long = millisBeforeStart.map(-_).getOrElse(-race.countdownSeconds * 1000L)
+  def clock: Long = DateTime.now.getMillis
 
-  val gatesToCross = race.course.laps * 2 + 1
-  def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == gatesToCross)
+  def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == course.gatesToCross)
 
   val ticks = Seq(
     Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean),
     Akka.system.scheduler.schedule(0.seconds, 20.seconds, self, SpawnGust),
-    Akka.system.scheduler.schedule(0.seconds, frameMillis.milliseconds, self, FrameTick)
+    Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
   )
 
   def receive = {
@@ -64,7 +62,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
      * player join => added to context Map
      */
     case PlayerJoin(player) => {
-      players += player.id.stringify -> PlayerContext(player, PlayerInput.initial, PlayerState.initial(player), sender)
+      players += player.id.stringify -> PlayerContext(player, PlayerInput.initial, PlayerState.initial(player), sender())
     }
 
     /**
@@ -82,9 +80,8 @@ class RaceActor(race: Race, master: Player) extends Actor {
      *  - tell player actor to run step
      */
     case FrameTick => {
-      val now = DateTime.now
 
-      updateWind(now)
+      updateWind()
 
       watchers.values.foreach {
         case WatcherContext(watcher, state, ref) => {
@@ -95,7 +92,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
       players.values.foreach {
         case PlayerContext(player, input, state, ref) => {
           ref ! raceUpdateForPlayer(player, Some(state))
-          ref ! RunStep(state, input, now, wind, race, started, opponentsTo(player.id.stringify))
+          ref ! RunStep(state, input, clock, wind, course, started, opponentsTo(player.id.stringify))
         }
       }
     }
@@ -130,7 +127,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
      * watcher joins => added to context Map
      */
     case WatcherJoin(watcher) => {
-      watchers += watcher.id.stringify -> WatcherContext(watcher, WatcherState(watcher.id.stringify), sender)
+      watchers += watcher.id.stringify -> WatcherContext(watcher, WatcherState(watcher.id.stringify), sender())
     }
 
     /**
@@ -159,9 +156,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
     /**
      * new gust
      */
-    case SpawnGust => {
-      wind = wind.copy(gusts = wind.gusts :+ Gust.generate(race.course, clock))
-    }
+    case SpawnGust => generateGust()
 
     /**
      * clean obsolete races
@@ -176,15 +171,6 @@ class RaceActor(race: Race, master: Player) extends Actor {
         self ! PoisonPill
       }
     }
-  }
-
-  private def updateWind(now: DateTime): Unit = {
-    wind = Wind(
-      origin = race.course.windGenerator.windOrigin(clock),
-      speed = race.course.windGenerator.windSpeed(clock),
-      gusts = if (startScheduled) moveGusts(clock, wind.gusts, now.getMillis - previousWindUpdate.getMillis) else wind.gusts
-    )
-    previousWindUpdate = now
   }
 
   private def startCountdown(byPlayerId: String) = {
@@ -205,10 +191,10 @@ class RaceActor(race: Race, master: Player) extends Actor {
         case u: User => Some(u.handle)
       }, gates)
     }.sortBy { pt =>
-      (-pt.gates.length, pt.gates.headOption.map(_.getMillis))
+      (-pt.gates.length, pt.gates.headOption)
     }
 
-    val fc = playersGates.values.count(_.length == gatesToCross)
+    val fc = playersGates.values.count(_.length == course.gatesToCross)
 
     if (fc != finishersCount) {
       fc match {
@@ -218,12 +204,6 @@ class RaceActor(race: Race, master: Player) extends Actor {
       }
     }
     finishersCount = fc
-  }
-
-  private def moveGusts(clock: Long, gusts: Seq[Gust], elapsed: Long): Seq[Gust] = {
-    gusts
-      .map(_.update(race.course, wind, elapsed, clock))
-      .filter(g => g.position._2 - g.radius > race.course.area.bottom)
   }
 
   private def opponentsTo(playerId: String): Seq[PlayerState] = {

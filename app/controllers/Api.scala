@@ -55,6 +55,7 @@ object Api extends Controller with Security {
     for {
       openRaces <- racesFuture
       onlinePlayers <- onlinePlayersFuture
+      currentTimeTrial <- TimeTrial.findCurrent
       finishedRaces <- finishedRacesFuture
       userIds = finishedRaces.flatMap(_.tally.map(_.playerId)).distinct
       users <- User.listByIds(userIds)
@@ -63,6 +64,7 @@ object Api extends Controller with Security {
       "now" -> DateTime.now,
       "openRaces" -> Json.toJson(openRaces),
       "onlinePlayers" -> Json.toJson(onlinePlayers),
+      "currentTimeTrial" -> Json.toJson(currentTimeTrial),
       "finishedRaces" -> Json.toJson(finishedRaces),
       "users" -> users.map(u => Json.toJson(u)(userFormat)) // conflict with playerFormat
     ))
@@ -98,7 +100,18 @@ object Api extends Controller with Security {
   implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
-  def playerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+  def timeTrialSocket(timeTrialId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+    for {
+      player <- Identified.getPlayer(request)
+      timeTrial <- TimeTrial.findById(timeTrialId)
+      run = TimeTrialRun(timeTrialId = timeTrial.id, playerId = player.id)
+      _ <- TimeTrialRun.save(run)
+      timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]
+    }
+    yield Right(PlayerActor.props(timeTrialActor, player)(_))
+  }
+
+  def racePlayerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     Identified.getPlayer(request).flatMap { player =>
       (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
         case Some(raceActor) => Right(PlayerActor.props(raceActor, player)(_))
@@ -107,7 +120,7 @@ object Api extends Controller with Security {
     }
   }
 
-  def watcherSocket(raceId: String) = WebSocket.tryAcceptWithActor[WatcherInput, RaceUpdate] { implicit request =>
+  def raceWatcherSocket(raceId: String) = WebSocket.tryAcceptWithActor[WatcherInput, RaceUpdate] { implicit request =>
     Identified.getPlayer(request).flatMap { watcher =>
       (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
         case Some(raceActor) => Right(WatcherActor.props(raceActor, watcher)(_))

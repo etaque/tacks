@@ -4,12 +4,16 @@ version := "1.0-SNAPSHOT"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
+resolvers += "rediscala" at "http://dl.bintray.com/etaty/maven"
+
+
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.1"
 
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23",
+  "com.etaty.rediscala" %% "rediscala" % "1.4.0",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "org.julienrf" %% "play-jsmessages" % "1.6.2",
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",

@@ -76,12 +76,12 @@ object JsonFormats {
   implicit val playerTallyFormat: Format[PlayerTally] = (
     (__ \ 'playerId).format[BSONObjectID] and
       (__ \ 'playerHandle).format[Option[String]] and
-      (__ \ 'gates).format[Seq[DateTime]]
+      (__ \ 'gates).format[Seq[Long]]
     )(PlayerTally.apply, unlift(PlayerTally.unapply))
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'player).format[Player] and
-      (__ \ 'time).format[DateTime] and
+      (__ \ 'time).format[Long] and
       (__ \ 'position).format[Point] and
       (__ \ 'isGrounded).format[Boolean] and
       (__ \ 'heading).format[Double] and
@@ -96,7 +96,7 @@ object JsonFormats {
       (__ \ 'trail).format[Seq[Point]] and
       (__ \ 'controlMode).format[ControlMode] and
       (__ \ 'tackTarget).format[Option[Double]] and
-      (__ \ 'crossedGates).format[Seq[DateTime]] and
+      (__ \ 'crossedGates).format[Seq[Long]] and
       (__ \ 'nextGate).format[Option[GateLocation]]
     )(PlayerState.apply, unlift(PlayerState.unapply))
 
@@ -118,5 +118,7 @@ object JsonFormats {
   implicit val raceFormat: Format[Race] = Json.format[Race]
 
   implicit val raceStatusFormat: Format[RaceStatus] = Json.format[RaceStatus]
+
+  implicit val timeTrialFormat: Format[TimeTrial] = Json.format[TimeTrial]
 }
 

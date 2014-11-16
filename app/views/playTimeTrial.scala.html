@@ -1,4 +1,4 @@
-@(race: Race, wsUrl: String)(implicit request: IdentifiedRequest[_], lang: Lang)
+@(timeTrial: TimeTrial, wsUrl: String)(implicit request: IdentifiedRequest[_], lang: Lang)
 
 @import play.api.libs.json.Json
 @import models.JsonFormats.raceUpdateFormat
@@ -17,7 +17,7 @@
     <script src="@routes.Assets.at("javascripts/mountRace.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
-    var initialInput = @Html(Json.toJson(RaceUpdate.initial(request.player, race.course, lang, watching = false)).toString());
+    var initialInput = @Html(Json.toJson(RaceUpdate.initial(request.player, timeTrial.course, lang, watching = false)).toString());
     mountRace("@wsUrl", initialInput);
     </script>
 

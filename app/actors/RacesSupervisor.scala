@@ -16,15 +16,19 @@ import models._
 
 
 case class MountRace(race: Race, master: Player)
+case class MountTimeTrialRun(timeTrial: TimeTrial, player: Player, run: TimeTrialRun)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
 case object GetOpenRaces
 
+case object CreateTimeTrial
+
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
-  type RaceMount = (Race, Player, ActorRef)
-  var mountedRaces = Seq[RaceMount]()
+  var mountedRaces = Seq[(Race, Player, ActorRef)]()
+
+  var mountedTimeTrials = Seq[(TimeTrial, Player, ActorRef)]()
 
   implicit val timeout = Timeout(5.seconds)
 
@@ -51,6 +55,17 @@ class RacesSupervisor extends Actor {
     case GetRaceActorRef(raceId) => sender ! getRaceActorRef(raceId)
 
     case Terminated(ref) => mountedRaces = mountedRaces.filterNot { case (_, _, r) => r == ref }
+
+    case CreateTimeTrial => {
+      TimeTrial.createForPeriod()
+    }
+
+    case MountTimeTrialRun(timeTrial, player, run) => {
+      val ref = context.actorOf(TimeTrialActor.props(timeTrial, player, run))
+      mountedTimeTrials = mountedTimeTrials :+ (timeTrial, player, ref)
+      context.watch(ref)
+      sender ! ref
+    }
   }
 
   def getRace(raceId: BSONObjectID): Option[Race] = mountedRaces.find(_._1.id == raceId).headOption.map(_._1)
@@ -64,6 +79,7 @@ object RacesSupervisor {
 
   def start() = {
 //    Akka.system.scheduler.schedule(0.microsecond, 1.minutes, actorRef, CreateRace)
+    Akka.system.scheduler.schedule(0.microsecond, 1.minutes, actorRef, CreateTimeTrial)
   }
 
 }
