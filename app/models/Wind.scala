@@ -29,7 +29,7 @@ case class Gust(
 
 object Gust {
   def generate(course: Course, at: Long) = {
-    val seed = abs(Math.PI * at) + 1000
+    val seed = abs(Math.PI * at * course.windGenerator.amplitude1) + 1000
     Gust(
       position = (course.area.genX(seed % 1), course.area.top),
       angle = seed % 10 - 5,

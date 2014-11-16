@@ -45,7 +45,8 @@ class RaceActor(race: Race, master: Player) extends Actor {
   var startTime: Option[DateTime] = None
 
   def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
-  def started = millisBeforeStart.exists(_ <= 0)
+  def startScheduled = startTime.isDefined
+  def started = startTime.exists(_.isBeforeNow)
   def clock: Long = millisBeforeStart.map(-_).getOrElse(-race.countdownSeconds * 1000L)
 
   val gatesToCross = race.course.laps * 2 + 1
@@ -53,7 +54,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
 
   val ticks = Seq(
     Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean),
-    Akka.system.scheduler.schedule(0.seconds, 30.seconds, self, SpawnGust),
+    Akka.system.scheduler.schedule(0.seconds, 20.seconds, self, SpawnGust),
     Akka.system.scheduler.schedule(0.seconds, frameMillis.milliseconds, self, FrameTick)
   )
 
@@ -181,7 +182,7 @@ class RaceActor(race: Race, master: Player) extends Actor {
     wind = Wind(
       origin = race.course.windGenerator.windOrigin(clock),
       speed = race.course.windGenerator.windSpeed(clock),
-      gusts = moveGusts(clock, wind.gusts, now.getMillis - previousWindUpdate.getMillis)
+      gusts = if (startScheduled) moveGusts(clock, wind.gusts, now.getMillis - previousWindUpdate.getMillis) else wind.gusts
     )
     previousWindUpdate = now
   }

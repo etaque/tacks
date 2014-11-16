@@ -114,20 +114,23 @@ case class Course(
 }
 
 object Course {
-  val defaultRaceArea = RaceArea((800,3200), (-800,-200))
-
-  def spawn = Course(
-    upwind = Gate(3000, 200),
-    downwind = Gate(100, 200),
-    laps = 2,
-    markRadius = 5,
-    islands = Seq.fill[Island](8)(Island.spawn(defaultRaceArea)),
-    area = defaultRaceArea,
-    windGenerator = WindGenerator.spawn,
-    gustsCount = 6,
-    windShadowLength = 120,
-    boatWidth = 4
-  )
+  def spawn = {
+    val width = 1400 + nextInt(400)
+    val height = 2000 + nextInt(2000)
+    val area = RaceArea((width/2, height + 200), (-width/2,-300))
+    Course(
+      upwind = Gate(height, 200),
+      downwind = Gate(0, 200),
+      laps = 2,
+      markRadius = 5,
+      islands = Seq.fill[Island](8)(Island.spawn(area)),
+      area = area,
+      windGenerator = WindGenerator.spawn,
+      gustsCount = 4 + nextInt(6),
+      windShadowLength = 120,
+      boatWidth = 4
+    )
+  }
 
   implicit val raceAreaHandler = Macros.handler[RaceArea]
   implicit val windGeneratorHandler = Macros.handler[WindGenerator]
