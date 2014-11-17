@@ -79,6 +79,8 @@ object JsonFormats {
       (__ \ 'gates).format[Seq[Long]]
     )(PlayerTally.apply, unlift(PlayerTally.unapply))
 
+  implicit val ghostStateFormat: Format[GhostState] = Json.format[GhostState]
+
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'player).format[Player] and
       (__ \ 'time).format[Long] and
@@ -108,6 +110,7 @@ object JsonFormats {
       (__ \ 'playerState).format[Option[PlayerState]] and
       (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[PlayerState]] and
+      (__ \ 'ghosts).format[Seq[GhostState]] and
       (__ \ 'leaderboard).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean] and
       (__ \ 'langCode).format[Option[String]] and

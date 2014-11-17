@@ -55,7 +55,7 @@ object Api extends Controller with Security {
     for {
       openRaces <- racesFuture
       onlinePlayers <- onlinePlayersFuture
-      currentTimeTrial <- TimeTrial.findCurrent
+      timeTrials <- TimeTrial.list
       finishedRaces <- finishedRacesFuture
       userIds = finishedRaces.flatMap(_.tally.map(_.playerId)).distinct
       users <- User.listByIds(userIds)
@@ -64,7 +64,7 @@ object Api extends Controller with Security {
       "now" -> DateTime.now,
       "openRaces" -> Json.toJson(openRaces),
       "onlinePlayers" -> Json.toJson(onlinePlayers),
-      "currentTimeTrial" -> Json.toJson(currentTimeTrial),
+      "timeTrials" -> Json.toJson(timeTrials),
       "finishedRaces" -> Json.toJson(finishedRaces),
       "users" -> users.map(u => Json.toJson(u)(userFormat)) // conflict with playerFormat
     ))
@@ -104,11 +104,15 @@ object Api extends Controller with Security {
     for {
       player <- Identified.getPlayer(request)
       timeTrial <- TimeTrial.findById(timeTrialId)
+      ghostRuns <- TimeTrialRun.findGhosts(timeTrial.id)
       run = TimeTrialRun(timeTrialId = timeTrial.id, playerId = player.id)
       _ <- TimeTrialRun.save(run)
       timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]
     }
-    yield Right(PlayerActor.props(timeTrialActor, player)(_))
+    yield {
+      timeTrialActor ! SetGhostRuns(ghostRuns)
+      Right(PlayerActor.props(timeTrialActor, player)(_))
+    }
   }
 
   def racePlayerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>

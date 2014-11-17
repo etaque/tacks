@@ -73,6 +73,17 @@ case class WatcherState(
 
 case class WatcherUpdate(watcher: Player, input: WatcherInput)
 
+case class GhostRun(
+  run: TimeTrialRun,
+  track: Tracking.Track,
+  playerHandle: Option[String]
+)
+
+case class GhostState(
+  position: Point,
+  handle: Option[String]
+)
+
 case class RaceUpdate(
   playerId: String,
   now: DateTime,
@@ -80,8 +91,9 @@ case class RaceUpdate(
   course: Option[Course],
   playerState: Option[PlayerState],
   wind: Wind,
-  opponents: Seq[PlayerState] = Seq(),
-  leaderboard: Seq[PlayerTally] = Seq(),
+  opponents: Seq[PlayerState] = Nil,
+  ghosts: Seq[GhostState] = Nil,
+  leaderboard: Seq[PlayerTally] = Nil,
   isMaster: Boolean = false,
   langCode: Option[String] = None,
   watching: Boolean = false

@@ -16,6 +16,8 @@ object Tracking {
   val redis = RedisClient()(Akka.system)
   val ns = "runs:"
 
+  type Track = Map[Long, Seq[Geo.Point]]
+
   implicit val geoPointFormatter = new ByteStringFormatter[Geo.Point] {
     def serialize(data: Geo.Point): ByteString = {
       ByteString(data._1 + "|" + data._2)
@@ -34,7 +36,7 @@ object Tracking {
     t.exec()
   }
 
-  def getPoints(runId: BSONObjectID): Future[Map[Long, Seq[Geo.Point]]] = {
+  def getPoints(runId: BSONObjectID): Future[Track] = {
     for {
       seconds <- redis.smembers[String](ns + runId.stringify)
       pointsBySecond <- Future.sequence(seconds.flatMap { s =>

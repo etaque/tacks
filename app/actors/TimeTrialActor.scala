@@ -10,6 +10,8 @@ import org.joda.time.DateTime
 import tools.Conf
 import models._
 
+case class SetGhostRuns(ghostRuns: Seq[GhostRun])
+
 class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extends Actor with ManageWind {
 
   val startTime = DateTime.now.plusSeconds(trial.countdownSeconds)
@@ -22,6 +24,8 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   var input = PlayerInput.initial
 
   var playerRef: Option[ActorRef] = None
+
+  var ghostRuns = Seq.empty[GhostRun]
 
   def started = clock >= 0
   def finished = state.crossedGates.length == course.gatesToCross
@@ -38,6 +42,10 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
      */
     case PlayerJoin(_) => {
       playerRef = Some(sender())
+    }
+
+    case SetGhostRuns(runs) => {
+      ghostRuns = runs
     }
 
     /**
@@ -83,6 +91,18 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     val finishTime = if (finished) state.crossedGates.headOption else None
     TimeTrialRun.updateTimes(run.id, state.crossedGates, finishTime)
   }
+  
+  def currentGhosts = {
+    val second = clock / 1000
+    val frame = ((clock % 1000) / Conf.fps).toInt
+    val idx = if (frame > 0) frame else frame + Conf.fps
+    ghostRuns.flatMap { case GhostRun(gRun, track, playerHandle) =>
+      track.get(second).flatMap { frames =>
+        if (frames.isDefinedAt(idx)) Some(GhostState(frames(idx), playerHandle))
+        else None
+      }
+    }
+  }
 
   def raceUpdate = {
     val id = player.id.stringify
@@ -94,6 +114,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
       playerState = Some(state),
       wind = wind,
       opponents = Nil,
+      ghosts = currentGhosts,
       leaderboard = Nil,
       isMaster = true,
       watching = false
