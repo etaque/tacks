@@ -18,7 +18,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   val startScheduled = true
   val course = trial.course
 
-  def clock = DateTime.now.getMillis - startTime.getMillis
+  def clock = DateTime.now.getMillis - startTime.getMillis + trial.countdownSeconds * 1000
 
   var state = PlayerState.initial(player)
   var input = PlayerInput.initial
@@ -27,7 +27,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
   var ghostRuns = Seq.empty[GhostRun]
 
-  def started = clock >= 0
+  def started = startTime.isBeforeNow
   def finished = state.crossedGates.length == course.gatesToCross
 
   val ticks = Seq(
@@ -81,7 +81,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
      */
     case StepResult(prevState, newState) => {
       state = newState
-      Tracking.pushPoint(run.id, clock / 1000, newState.position)
+      Tracking.pushStep(run.id, clock / 1000, TrackStep((clock % 1000).toInt, newState.position, newState.heading))
       if (prevState.crossedGates != newState.crossedGates) updateTally()
     }
 
@@ -94,12 +94,12 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   
   def currentGhosts = {
     val second = clock / 1000
-    val frame = ((clock % 1000) / Conf.fps).toInt
-    val idx = if (frame > 0) frame else frame + Conf.fps
+    val ms = (clock % 1000).toInt
     ghostRuns.flatMap { case GhostRun(gRun, track, playerHandle) =>
       track.get(second).flatMap { frames =>
-        if (frames.isDefinedAt(idx)) Some(GhostState(frames(idx), playerHandle))
-        else None
+        frames.sortBy(f => math.abs(f.ms - ms)).headOption.map { s =>
+          GhostState(s.position, s.heading, playerHandle)
+        }
       }
     }
   }

@@ -81,6 +81,7 @@ case class GhostRun(
 
 case class GhostState(
   position: Point,
+  heading: Double,
   handle: Option[String]
 )
 

@@ -74,15 +74,15 @@ renderWindShadow shadowLength {windAngle, windOrigin, position, shadowDirection}
       endPoints = map (\a -> add position (fromPolar (shadowLength, toRadians (shadowDirection + a)))) arcAngles
   in  path (position :: endPoints) |> filled white |> alpha 0.1
 
-renderBoatIcon : PlayerState -> String -> Form
-renderBoatIcon playerState name =
+renderBoatIcon : Float -> String -> Form
+renderBoatIcon heading name =
   image 12 20 ("/assets/images/" ++ name ++ ".png")
     |> toForm
-    |> rotate (toRadians (playerState.heading + 90))
+    |> rotate (toRadians (heading + 90))
 
 renderPlayer : Float -> PlayerState -> Form
 renderPlayer shadowLength player =
-  let hull = renderBoatIcon player "49er"
+  let hull = renderBoatIcon player.heading "49er"
       windShadow = renderWindShadow shadowLength player
       angles = renderPlayerAngles player
       vmgSign = renderVmgSign player
@@ -93,7 +93,7 @@ renderPlayer shadowLength player =
 
 renderOpponent : Float -> PlayerState -> Form
 renderOpponent shadowLength opponent =
-  let hull = renderBoatIcon opponent "49er"
+  let hull = renderBoatIcon opponent.heading "49er"
         |> move opponent.position
         |> alpha 0.5
       shadow = renderWindShadow shadowLength opponent
@@ -106,8 +106,18 @@ renderOpponents : Course -> [PlayerState] -> Form
 renderOpponents course opponents =
   group <| map (renderOpponent course.windShadowLength) opponents
 
+renderGhost : GhostState -> Form
+renderGhost {position,heading,handle} =
+  let hull = renderBoatIcon heading "49er"
+        |> move position
+        |> alpha 0.5
+      name = (maybe "Anonymous" identity handle) |> baseText |> centered |> toForm
+        |> move (add position (0,-25))
+        |> alpha 0.3
+  in group [hull, name]
+
 renderPlayers : GameState -> Form
-renderPlayers ({playerState,opponents,course,center,watchMode} as gameState) =
+renderPlayers ({playerState,opponents,ghosts,course,center,watchMode} as gameState) =
   let mainPlayer = case playerState of
         Just ps ->
           maybe emptyForm (renderPlayer course.windShadowLength) playerState
@@ -119,6 +129,7 @@ renderPlayers ({playerState,opponents,course,center,watchMode} as gameState) =
         NotWatching -> opponents
       forms =
         [ renderOpponents course filteredOpponents
+        , map renderGhost ghosts |> group
         , mainPlayer
         ]
   in  group forms |> move (neg center)

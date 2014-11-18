@@ -22,9 +22,10 @@ centerStep gameState =
 
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep raceInput gameState =
-  let { playerId, playerState, now, startTime, course, opponents,
+  let { playerId, playerState, now, startTime, course, opponents, ghosts,
         wind, leaderboard, isMaster, watching } = raceInput
   in  { gameState | opponents <- opponents,
+                    ghosts <- ghosts,
                     playerId <- playerId,
                     playerState <- playerState,
                     course <- maybe gameState.course identity course,

@@ -11,32 +11,38 @@ import redis.{ByteStringFormatter, RedisClient}
 import scala.concurrent.Future
 import scala.util.Try
 
+case class TrackStep(
+  ms: Int,
+  position: Geo.Point,
+  heading: Double
+)
+
 object Tracking {
 
   val redis = RedisClient()(Akka.system)
   val ns = "runs:"
 
-  type Track = Map[Long, Seq[Geo.Point]]
+  type Track = Map[Long, Seq[TrackStep]]
 
-  implicit val geoPointFormatter = new ByteStringFormatter[Geo.Point] {
-    def serialize(data: Geo.Point): ByteString = {
-      ByteString(data._1 + "|" + data._2)
+  implicit val geoPointFormatter = new ByteStringFormatter[TrackStep] {
+    def serialize(data: TrackStep): ByteString = {
+      ByteString(data.ms + "|" + data.position._1 + "|" + data.position._2 + "|" + data.heading)
     }
 
-    def deserialize(bs: ByteString): Geo.Point = {
+    def deserialize(bs: ByteString): TrackStep = {
       val r = bs.utf8String.split('|').toList
-      (r(0).toDouble, r(1).toDouble)
+      TrackStep(r(0).toInt, (r(1).toDouble, r(2).toDouble), r(3).toDouble)
     }
   }
 
-  def pushPoint(runId: BSONObjectID, second: Long, point: Geo.Point): Future[MultiBulk] = {
+  def pushStep(runId: BSONObjectID, second: Long, step: TrackStep): Future[MultiBulk] = {
     val t = redis.transaction()
     t.sadd(ns + runId.stringify, second)
-    t.lpush(ns + runId.stringify + ":" + second, point)
+    t.rpush(ns + runId.stringify + ":" + second, step)
     t.exec()
   }
 
-  def getPoints(runId: BSONObjectID): Future[Track] = {
+  def getTrack(runId: BSONObjectID): Future[Track] = {
     for {
       seconds <- redis.smembers[String](ns + runId.stringify)
       pointsBySecond <- Future.sequence(seconds.flatMap { s =>

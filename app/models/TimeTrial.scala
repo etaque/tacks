@@ -54,7 +54,7 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
     for {
       allRuns <- list(BSONDocument("timeTrialId" -> trialId, "finishTime" -> BSONDocument("$exists" -> true)))
       runs = scala.util.Random.shuffle(allRuns).take(count)
-      tracks <- Future.sequence(runs.map(r => Tracking.getPoints(r.id)))
+      tracks <- Future.sequence(runs.map(r => Tracking.getTrack(r.id)))
       players <- User.listByIds(runs.map(_.playerId))
     }
     yield runs.zip(tracks).map { case (run, track) =>

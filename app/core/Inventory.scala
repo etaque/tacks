@@ -8,23 +8,36 @@ object Inventory {
   def createTimeTrials() = {
     val trials = Seq(
       TimeTrial(
-        slug = "test",
+        slug = "simple",
         course = Course(
-          upwind = Gate(2000, 100),
-          downwind = Gate(0, 100),
+          upwind = Gate(500, 200),
+          downwind = Gate(0, 200),
+          laps = 1,
+          markRadius = 5,
+          islands = Nil,
+          area = RaceArea((800, 700), (-800, -300)),
+          windGenerator = WindGenerator(6, 6, 4, 4),
+          gustsCount = 0
+        ),
+        countdownSeconds = 10
+      ),
+
+      TimeTrial(
+        slug = "classic",
+        course = Course(
+          upwind = Gate(1500, 200),
+          downwind = Gate(0, 200),
           laps = 2,
           markRadius = 5,
           islands = Seq(
-            Island((0, 500), 100),
-            Island((0, 1000), 100),
-            Island((0, 1500), 100)
+            Island((-200, 300), 100),
+            Island((300, 700), 150)
           ),
-          area = RaceArea((800, 2200), (-800, -300)),
-          windGenerator = WindGenerator(6, 6, 4, 4),
-          gustsCount = 5
-
+          area = RaceArea((800, 1700), (-800, -300)),
+          windGenerator = WindGenerator(8, 6, 4, 8),
+          gustsCount = 6
         ),
-        countdownSeconds = 60
+        countdownSeconds = 30
       )
     )
 

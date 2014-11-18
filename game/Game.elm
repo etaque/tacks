@@ -52,6 +52,12 @@ type PlayerState =
 
 type PlayerTally = { playerId: String, playerHandle: Maybe String, gates: [Time] }
 
+type GhostState =
+  { position: Point
+  , heading:  Float
+  , handle:   Maybe String
+  }
+
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gusts : [Gust] }
 
@@ -64,6 +70,7 @@ type GameState =
   , wake:        [Point]
   , center:      Point
   , opponents:   [PlayerState]
+  , ghosts:      [GhostState]
   , course:      Course
   , leaderboard: [PlayerTally]
   , now:         Time
@@ -102,6 +109,7 @@ defaultGame =
   , center      = (0,0)
   , wake        = []
   , opponents   = []
+  , ghosts      = []
   , course      = defaultCourse
   , leaderboard = []
   , now         = 0

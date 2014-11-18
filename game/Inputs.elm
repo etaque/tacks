@@ -29,6 +29,7 @@ type RaceInput =
   , playerState: Maybe Game.PlayerState
   , wind:        Game.Wind
   , opponents:   [Game.PlayerState]
+  , ghosts:      [Game.GhostState]
   , leaderboard: [Game.PlayerTally]
   , isMaster:    Bool
   , watching:    Bool
