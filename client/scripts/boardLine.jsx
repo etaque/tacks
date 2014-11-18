@@ -42,8 +42,8 @@ var BoardLine = React.createClass({
         <td>{players}</td>
         <td>{this.getStartText(millis)}</td>
         <td>
-          <a href={"/play/" + s.race._id} target="blank" className="btn btn-xs btn-block btn-primary">{Messages('liveCenter.join')}</a>
-          <a href={"/watch/" + s.race._id} target="blank" className="btn btn-xs btn-block btn-default">{Messages('liveCenter.watch')}</a>
+          <a href={"/play/" + s.race._id} target="_blank" className="btn btn-xs btn-block btn-primary">{Messages('liveCenter.join')}</a>
+          <a href={"/watch/" + s.race._id} target="_blank" className="btn btn-xs btn-block btn-default">{Messages('liveCenter.watch')}</a>
         </td>
       </tr>);
   }
