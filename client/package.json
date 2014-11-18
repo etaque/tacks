@@ -30,7 +30,7 @@
   "private": true,
   "scripts": {},
   "dependencies": {
-    "react": "0.11.1",
+    "react": "0.12.0",
     "baconjs": "~0.7.22",
     "bacon.model": "~0.1.10",
     "bacon.jquery": "~0.4.9",
