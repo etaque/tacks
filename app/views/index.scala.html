@@ -1,4 +1,6 @@
 @(player: Player,
+  trials: Seq[(TimeTrial, Seq[(reactivemongo.bson.BSONObjectID, Long)])],
+  trialsUsers: Seq[User],
   finishedRaces: Seq[Race],
   users: Seq[User],
   userForm: Form[CreateUser],
@@ -8,6 +10,7 @@
 @import play.api.Play
 @import play.api.Play.current
 @import play.api.libs.json.Json
+@import views.Helpers
 
 @main {
 
@@ -79,6 +82,20 @@
     </div>
 
     <div id="liveCenter"></div>
+
+    <div class="time-trials">
+      @for((trial, ranking) <- trials) {
+        <div class="time-trial">
+          <a href="@routes.Application.playTimeTrial(trial.id.stringify)">@trial.slug</a>
+          <ol>
+            @for(((playerId, time), i) <- ranking.zipWithIndex) {
+              <li>@trialsUsers.find(_.id == playerId).map(_.handle).getOrElse("Anonymous"): @Helpers.timer(time)</li>
+
+            }
+          </ol>
+        </div>
+      }
+    </div>
 
     @if(finishedRaces.nonEmpty) {
       <div class="row">

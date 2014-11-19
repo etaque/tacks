@@ -10,7 +10,6 @@ var BaconMixin    = require('react-bacon').BaconMixin;
 var _             = require('lodash');
 var Board         = require('./board');
 var OnlinePlayer  = require('./onlinePlayer');
-var TimeTrial     = require('./timeTrial');
 var Api           = require('./api');
 var Messages      = require('./messages');
 var util          = require('./util');
@@ -67,12 +66,6 @@ var LiveCenter = React.createClass({
     });
   },
 
-  timeTrials: function(status) {
-    return _.map(status.timeTrials, function(timeTrial) {
-      return <TimeTrial key={timeTrial._id} trial={timeTrial}/>;
-    });
-  },
-
   webSocketAlert: function(show) {
     if (show) {
       return (
@@ -90,8 +83,6 @@ var LiveCenter = React.createClass({
         {this.webSocketAlert(this.state.showWebSocketAlert)}
         <div className="row">
           <div className="col-md-8">
-            <h2>{Messages("home.timeTrials")}</h2>
-            {this.timeTrials(st)}
             <h2>{Messages("home.openRaces")}</h2>
             <Board status={st} />
             <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>

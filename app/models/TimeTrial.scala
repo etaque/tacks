@@ -3,6 +3,7 @@ package models
 import play.api.libs.concurrent.Execution.Implicits._
 import org.joda.time.{LocalDate, DateTime}
 import reactivemongo.bson._
+import reactivemongo.core.commands._
 import tools.BSONHandlers.BSONDateTimeHandler
 
 import scala.concurrent.Future
@@ -48,6 +49,24 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
 
   def updateTimes(id: BSONObjectID, tally: Seq[Long], finishTime: Option[Long]): Future[_] = {
     update(id, BSONDocument("tally" -> tally, "finishTime" -> finishTime))
+  }
+
+  def ranking(trialId: BSONObjectID): Future[Seq[(BSONObjectID, Long)]] = {
+    val cmd = Aggregate(collectionName, Seq(
+      Match(BSONDocument("timeTrialId" -> trialId)),
+      GroupMulti("playerId" -> "playerId")("finishTime" -> Min("finishTime")),
+      Sort(Seq(Ascending("finishTime")))
+    ))
+
+    db.command(cmd).map { bsonStream =>
+      for {
+        doc <- bsonStream.toSeq
+        id <- doc.getAs[BSONDocument]("_id")
+        playerId <- id.getAs[BSONObjectID]("playerId")
+        finishTime <- doc.getAs[Long]("finishTime")
+      }
+      yield (playerId, finishTime)
+    }
   }
 
   def findGhosts(trialId: BSONObjectID, count: Int = 5): Future[Seq[GhostRun]] = {

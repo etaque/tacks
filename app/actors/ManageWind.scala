@@ -12,7 +12,7 @@ trait ManageWind {
   var previousWindUpdate: Option[Long] = None
 
   def generateGust() = {
-    wind = wind.copy(gusts = wind.gusts :+ Gust.generate(course, clock))
+    wind = wind.copy(gusts = wind.gusts :+ Gust.generate(course, clock / 1000))
   }
 
   def updateWind(): Unit = {

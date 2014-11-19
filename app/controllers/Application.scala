@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
@@ -9,7 +10,7 @@ import akka.pattern.{ ask, pipe }
 import reactivemongo.bson.BSONObjectID
 
 import actors.{GetRace, RacesSupervisor}
-import models.{TimeTrial, User, Race}
+import models.{TimeTrialRun, TimeTrial, User, Race}
 
 object Application extends Controller with Security {
 
@@ -18,8 +19,11 @@ object Application extends Controller with Security {
     for {
       finishedRaces <- Race.listFinished(10)
       users <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
+      timeTrials <- TimeTrial.list
+      trialsWithRanking <- Future.sequence(timeTrials.map(t => TimeTrialRun.ranking(t.id).map(r => (t, r))))
+      trialsUsers <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_._1)))
     }
-    yield Ok(views.html.index(request.player, finishedRaces, users, Users.userForm, jsMessages))
+    yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, finishedRaces, users, Users.userForm, jsMessages))
   }
 
   implicit val timeout = Timeout(5.seconds)
