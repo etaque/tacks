@@ -14,6 +14,7 @@ case class SetGhostRuns(ghostRuns: Seq[GhostRun])
 
 class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extends Actor with ManageWind {
 
+  val id = trial.id
   val startTime = DateTime.now.plusSeconds(trial.countdownSeconds)
   val startScheduled = true
   val course = trial.course
@@ -31,7 +32,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   def finished = state.crossedGates.length == course.gatesToCross
 
   val ticks = Seq(
-    Akka.system.scheduler.schedule(0.seconds, 20.seconds, self, SpawnGust),
+    Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
     Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
   )
 

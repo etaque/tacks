@@ -1,6 +1,6 @@
 package models
 
-import scala.util.Random.nextInt
+import scala.util.Random._
 import java.lang.Math._
 import org.joda.time.DateTime
 import reactivemongo.bson.Macros
@@ -22,14 +22,14 @@ case class RaceArea(rightTop: Point, leftBottom: Point) {
   lazy val cy = (top + bottom) / 2
   lazy val center = (cx, cy)
 
-  def genX(seed: Double, margin: Double = 0): Double = seed * (width - margin * 2) - width / 2 + margin + cx
-  def genY(seed: Double, margin: Double = 0): Double = seed * (height - margin * 2) - height / 2 + margin + cy
+  def genX(seed: Double, margin: Double): Double = seed % width + margin - width / 2 + cx
+  def genY(seed: Double, margin: Double): Double = seed % height + margin - height / 2 + cy
 
   import scala.util.Random._
 
-  def randomX(margin: Double = 0): Double = genX(nextDouble(), margin)
-  def randomY(margin: Double = 0): Double = genY(nextDouble(), margin)
-  def randomPoint: Point = (randomX(0), randomY(0))
+  def randomX(margin: Double = 0): Double = genX(nextDouble() * width, margin)
+  def randomY(margin: Double = 0): Double = genY(nextDouble() * height, margin)
+  def randomPoint: Point = (randomX(), randomY())
 
   def toBox = (rightTop, leftBottom)
 }
@@ -90,6 +90,30 @@ object WindGenerator {
   }
 }
 
+case class GustDef(
+  angle: Double,
+  speed: Double,
+  radius: Double
+)
+
+case class GustGenerator(
+  interval: Int,
+  defs: Seq[GustDef]
+) {
+  def nthDef(n: Int): Option[GustDef] = if (defs.isEmpty) None else defs.lift(n % defs.size)
+}
+
+object GustGenerator {
+  def spawn = {
+    GustGenerator(20, Seq.fill[GustDef](10)(
+      GustDef(
+        angle = nextInt(10) - 5,
+        speed = nextInt(10) - 3,
+        radius = nextInt(100) + 200
+      )
+    ))
+  }
+}
 
 case class Course(
   upwind: Gate,
@@ -99,7 +123,7 @@ case class Course(
   islands: Seq[Island],
   area: RaceArea,
   windGenerator: WindGenerator,
-  gustsCount: Int,
+  gustGenerator: GustGenerator,
   windShadowLength: Double = 120,
   boatWidth: Double = 4 // for collision detection, should be consistent with icon
 ) {
@@ -125,11 +149,13 @@ object Course {
       islands = Seq.fill[Island](8)(Island.spawn(area)),
       area = area,
       windGenerator = WindGenerator.spawn,
-      gustsCount = 4 + nextInt(6)
+      gustGenerator = GustGenerator.spawn
     )
   }
 
   implicit val raceAreaHandler = Macros.handler[RaceArea]
+  implicit val gustSpecHandler = Macros.handler[GustDef]
+  implicit val gustGeneratorHandler = Macros.handler[GustGenerator]
   implicit val windGeneratorHandler = Macros.handler[WindGenerator]
   implicit val gateHandler = Macros.handler[Gate]
   implicit val islandHandler = Macros.handler[Island]

@@ -17,7 +17,7 @@ object Inventory {
           islands = Nil,
           area = RaceArea((800, 700), (-800, -300)),
           windGenerator = WindGenerator(6, 6, 4, 4),
-          gustsCount = 0
+          gustGenerator = GustGenerator(10, Nil)
         ),
         countdownSeconds = 10
       ),
@@ -25,7 +25,7 @@ object Inventory {
       TimeTrial(
         slug = "classic",
         course = Course(
-          upwind = Gate(1500, 200),
+          upwind = Gate(2500, 200),
           downwind = Gate(0, 200),
           laps = 2,
           markRadius = 5,
@@ -33,9 +33,13 @@ object Inventory {
             Island((-200, 300), 100),
             Island((300, 700), 150)
           ),
-          area = RaceArea((800, 1700), (-800, -300)),
+          area = RaceArea((600, 2700), (-600, -300)),
           windGenerator = WindGenerator(8, 6, 4, 8),
-          gustsCount = 6
+          gustGenerator = GustGenerator(20, Seq(
+            GustDef(-5, 5, 200),
+            GustDef(5, 2, 300),
+            GustDef(0, -2, 100)
+          ))
         ),
         countdownSeconds = 30
       )

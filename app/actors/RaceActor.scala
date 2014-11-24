@@ -27,6 +27,7 @@ case object AutoClean
 
 class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
 
+  val id = race.id
   val course = race.course
 
   type PlayerId = String

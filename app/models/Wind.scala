@@ -3,7 +3,6 @@ package models
 import java.lang.Math._
 
 import models.Geo._
-import org.joda.time.DateTime
 import play.api.libs.json.{Json, Format}
 
 
@@ -24,20 +23,6 @@ case class Gust(
     val newPosition = movePoint(position, elapsed, groundSpeed, groundDirection)
     val radius = min((clock - spawnedAt) * 0.001 * maxRadius / maxRadiusAfterSeconds, maxRadius)
     copy(position = newPosition, radius = radius)
-  }
-}
-
-object Gust {
-  def generate(course: Course, at: Long) = {
-    val seed = abs(Math.PI * at * course.windGenerator.amplitude1) + 1000
-    Gust(
-      position = (course.area.genX(seed % 1), course.area.top),
-      angle = seed % 10 - 5,
-      speed = seed % 10 - 3,
-      radius = 0,
-      maxRadius = seed % 100 + 200,
-      spawnedAt = at
-    )
   }
 }
 
