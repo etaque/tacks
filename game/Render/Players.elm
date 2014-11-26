@@ -80,10 +80,12 @@ renderBoatIcon heading name =
     |> toForm
     |> rotate (toRadians (heading + 90))
 
-renderPlayer : Float -> PlayerState -> Form
-renderPlayer shadowLength player =
+renderPlayer : GameMode -> Float -> PlayerState -> Form
+renderPlayer gameMode shadowLength player =
   let hull = renderBoatIcon player.heading "49er"
-      windShadow = renderWindShadow shadowLength player
+      windShadow = case gameMode of
+        Race -> renderWindShadow shadowLength player
+        TimeTrial -> emptyForm
       angles = renderPlayerAngles player
       vmgSign = renderVmgSign player
       eqLine = renderEqualityLine player.position player.windOrigin
@@ -117,12 +119,12 @@ renderGhost {position,heading,handle} =
   in group [hull, name]
 
 renderPlayers : GameState -> Form
-renderPlayers ({playerState,opponents,ghosts,course,center,watchMode} as gameState) =
+renderPlayers ({playerState,opponents,ghosts,course,center,watchMode,gameMode} as gameState) =
   let mainPlayer = case playerState of
         Just ps ->
-          maybe emptyForm (renderPlayer course.windShadowLength) playerState
+          maybe emptyForm (renderPlayer gameMode course.windShadowLength) playerState
         Nothing -> case watchMode of
-          Watching playerId -> maybe emptyForm (renderPlayer course.windShadowLength) (findOpponent opponents playerId)
+          Watching playerId -> maybe emptyForm (renderPlayer gameMode course.windShadowLength) (findOpponent opponents playerId)
           NotWatching -> emptyForm
       filteredOpponents = case watchMode of
         Watching playerId -> filter (\o -> o.player.id /= playerId) opponents

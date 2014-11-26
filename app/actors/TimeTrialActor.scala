@@ -97,7 +97,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     val finishTime = if (finished) state.crossedGates.headOption else None
     TimeTrialRun.updateTimes(run.id, state.crossedGates, finishTime)
   }
-  
+
   def currentGhosts = {
     val second = clock / 1000
     val ms = (clock % 1000).toInt
@@ -123,7 +123,8 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
       ghosts = currentGhosts,
       leaderboard = Nil,
       isMaster = true,
-      watching = false
+      watching = false,
+      timeTrial = true
     )
   }
 

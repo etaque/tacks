@@ -9,17 +9,18 @@ import Render.All as R
 import Render.Utils
 
 port raceInput : Signal
-  { playerId: String
-  , now: Float
-  , startTime: Maybe Float
-  , course: Maybe Game.Course
+  { playerId:    String
+  , now:         Float
+  , startTime:   Maybe Float
+  , course:      Maybe Game.Course
   , playerState: Maybe Game.PlayerState
-  , wind: Game.Wind
-  , opponents: [Game.PlayerState]
-  , ghosts: [Game.GhostState]
+  , wind:        Game.Wind
+  , opponents:   [Game.PlayerState]
+  , ghosts:      [Game.GhostState]
   , leaderboard: [Game.PlayerTally]
-  , isMaster: Bool
-  , watching: Bool
+  , isMaster:    Bool
+  , watching:    Bool
+  , timeTrial:   Bool
   }
 
 clock : Signal Float

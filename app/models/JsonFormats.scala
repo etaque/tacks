@@ -116,7 +116,8 @@ object JsonFormats {
       (__ \ 'leaderboard).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean] and
       (__ \ 'langCode).format[Option[String]] and
-      (__ \ 'watching).format[Boolean]
+      (__ \ 'watching).format[Boolean] and
+      (__ \ 'timeTrial).format[Boolean]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
 

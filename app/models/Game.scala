@@ -97,11 +97,12 @@ case class RaceUpdate(
   leaderboard: Seq[PlayerTally] = Nil,
   isMaster: Boolean = false,
   langCode: Option[String] = None,
-  watching: Boolean = false
+  watching: Boolean = false,
+  timeTrial: Boolean = false
 )
 
 object RaceUpdate {
-  def initial(player: Player, course: Course, lang: Lang, watching: Boolean) = RaceUpdate(
+  def initial(player: Player, course: Course, lang: Lang, watching: Boolean, timeTrial: Boolean) = RaceUpdate(
     player.id.stringify,
     DateTime.now,
     startTime = None,
@@ -109,7 +110,8 @@ object RaceUpdate {
     course = Some(course),
     wind = Wind.default,
     langCode = Some(lang.code),
-    watching = watching
+    watching = watching,
+    timeTrial = timeTrial
   )
 }
 

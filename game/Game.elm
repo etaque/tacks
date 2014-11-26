@@ -62,6 +62,7 @@ type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type Wind = { origin : Float, speed : Float, gusts : [Gust] }
 
 data WatchMode = NotWatching | Watching String
+data GameMode = Race | TimeTrial
 
 type GameState =
   { wind:        Wind
@@ -77,6 +78,7 @@ type GameState =
   , countdown:   Maybe Time
   , isMaster:    Bool
   , watchMode:   WatchMode
+  , gameMode:    GameMode
   }
 
 defaultGate : Gate
@@ -116,6 +118,7 @@ defaultGame =
   , countdown   = Nothing
   , isMaster    = False
   , watchMode   = NotWatching
+  , gameMode    = Race
   }
 
 getGateMarks : Gate -> (Point,Point)

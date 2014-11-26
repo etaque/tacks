@@ -33,6 +33,7 @@ type RaceInput =
   , leaderboard: [Game.PlayerTally]
   , isMaster:    Bool
   , watching:    Bool
+  , timeTrial:   Bool
   }
 
 mouseInput : Signal MouseInput

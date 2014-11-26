@@ -223,7 +223,8 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
       opponents = opponentsTo(id),
       leaderboard = leaderboard,
       isMaster = id == master.id.stringify,
-      watching = false
+      watching = false,
+      timeTrial = false
     )
   }
 
@@ -238,7 +239,8 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
       opponents = players.values.map(_.state).toSeq,
       leaderboard = leaderboard,
       isMaster = false,
-      watching = true
+      watching = true,
+      timeTrial = false
     )
   }
 

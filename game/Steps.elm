@@ -23,7 +23,8 @@ centerStep gameState =
 raceInputStep : RaceInput -> GameState -> GameState
 raceInputStep raceInput gameState =
   let { playerId, playerState, now, startTime, course, opponents, ghosts,
-        wind, leaderboard, isMaster, watching } = raceInput
+        wind, leaderboard, isMaster, watching, timeTrial } = raceInput
+      gameMode = if timeTrial then TimeTrial else Race
   in  { gameState | opponents <- opponents,
                     ghosts <- ghosts,
                     playerId <- playerId,
@@ -33,6 +34,7 @@ raceInputStep raceInput gameState =
                     leaderboard <- leaderboard,
                     now <- now,
                     countdown <- mapMaybe (\st -> st - now) startTime,
+                    gameMode <- gameMode,
                     isMaster <- isMaster }
 
 watchStep : WatcherInput -> GameState -> GameState
