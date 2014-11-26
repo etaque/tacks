@@ -81,21 +81,28 @@
 
     </div>
 
-    <div id="liveCenter"></div>
-
-    <div class="time-trials">
-      @for((trial, ranking) <- trials) {
-        <div class="time-trial">
-          <a href="@routes.Application.playTimeTrial(trial.id.stringify)">@trial.slug</a>
-          <ol>
-            @for(((playerId, time), i) <- ranking.zipWithIndex) {
-              <li>@trialsUsers.find(_.id == playerId).map(_.handle).getOrElse("Anonymous"): @Helpers.timer(time)</li>
-
-            }
-          </ol>
+    <div class="time-trials row">
+      <div class="col-sm-12">
+        <h2>@Messages("home.timeTrials")</h2>
+      </div>
+    </div>
+      @for(row <- trials.grouped(3)) {
+        <div class="row">
+          @for((trial, ranking) <- row) {
+            <div class="time-trial col-sm-4">
+              <a href="@routes.Application.playTimeTrial(trial.id.stringify)" class="btn btn-default btn-block" target="_blank">@Messages("timeTrials." + trial.slug + ".name")</a>
+              <p>@Messages("timeTrials." + trial.slug + ".description")</p>
+              <ol>
+                @for(((playerId, time), i) <- ranking.zipWithIndex) {
+                  <li>@trialsUsers.find(_.id == playerId).map(_.handle).getOrElse("Anonymous"): @Helpers.timer(time)</li>
+                }
+              </ol>
+            </div>
+          }
         </div>
       }
-    </div>
+
+    <div id="liveCenter"></div>
 
     @if(finishedRaces.nonEmpty) {
       <div class="row">
