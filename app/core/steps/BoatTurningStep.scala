@@ -6,7 +6,7 @@ object BoatTurningStep {
 
   // degrees / ms
   val slow = 0.03
-  val medium = 0.06
+  val autoTack = 0.08
   val fast = 0.1
 
   def run(previousState: PlayerState, input: PlayerInput, elapsed: Long)(state: PlayerState): PlayerState = {
@@ -42,12 +42,12 @@ object BoatTurningStep {
   def getTurn(tackTarget: Option[Double], state: PlayerState, input: PlayerInput, elapsed: Long): Double = {
     (tackTarget, state.controlMode, input.arrows.x) match {
       case (Some(t), FixedHeading, _) => {
-        val turn = elapsed * medium
+        val turn = elapsed * autoTack
         val maxTurn = Seq(turn, Math.abs(state.heading - t)).min
         if (Geo.ensure360(state.heading - t) > 180) maxTurn else -maxTurn
       }
       case (Some(t), FixedAngle, _) => {
-        val turn = elapsed * medium
+        val turn = elapsed * autoTack
         val maxTurn = Seq(turn, Math.abs(state.windAngle - t)).min
         if (t > 90 || (t < 0 && t >= -90)) -maxTurn else maxTurn
       }
