@@ -4,7 +4,7 @@ import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
-import akka.actor.{Props, ActorRef, Actor}
+import akka.actor.{PoisonPill, Props, ActorRef, Actor}
 import org.joda.time.DateTime
 
 import tools.Conf
@@ -85,6 +85,11 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
       Tracking.pushStep(run.id, clock / 1000, TrackStep((clock % 1000).toInt, newState.position, newState.heading))
       if (prevState.crossedGates != newState.crossedGates) updateTally()
     }
+
+    /**
+     * player quit => shutdown actor
+     */
+    case PlayerQuit(_) => self ! PoisonPill
 
   }
 

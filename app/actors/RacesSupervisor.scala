@@ -26,8 +26,6 @@ case class RaceActorNotFound(raceId: BSONObjectID)
 class RacesSupervisor extends Actor {
   var mountedRaces = Seq[(Race, Player, ActorRef)]()
 
-  var mountedTimeTrials = Seq[(TimeTrial, Player, ActorRef)]()
-
   implicit val timeout = Timeout(5.seconds)
 
   def receive = {
@@ -56,7 +54,6 @@ class RacesSupervisor extends Actor {
 
     case MountTimeTrialRun(timeTrial, player, run) => {
       val ref = context.actorOf(TimeTrialActor.props(timeTrial, player, run))
-      mountedTimeTrials = mountedTimeTrials :+ (timeTrial, player, ref)
       context.watch(ref)
       sender ! ref
     }
