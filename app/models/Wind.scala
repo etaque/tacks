@@ -33,7 +33,7 @@ case class Wind(
 )
 
 object Wind {
-  val defaultWindSpeed = 15
+  val defaultWindSpeed = 17
   val default = Wind(0, defaultWindSpeed, Nil)
 
   implicit val gustFormat: Format[Gust] = Json.format[Gust]

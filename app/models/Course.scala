@@ -96,6 +96,14 @@ case class GustDef(
   radius: Double
 )
 
+object GustDef {
+  def spawn = GustDef(
+    angle = nextInt(10) - 5,
+    speed = nextInt(10) - 3,
+    radius = nextInt(100) + 200
+  )
+}
+
 case class GustGenerator(
   interval: Int,
   defs: Seq[GustDef]
@@ -105,13 +113,7 @@ case class GustGenerator(
 
 object GustGenerator {
   def spawn = {
-    GustGenerator(20, Seq.fill[GustDef](10)(
-      GustDef(
-        angle = nextInt(10) - 5,
-        speed = nextInt(10) - 3,
-        radius = nextInt(100) + 200
-      )
-    ))
+    GustGenerator(20, Seq.fill[GustDef](10)(GustDef.spawn))
   }
 }
 

@@ -1,5 +1,7 @@
 package controllers
 
+import core.Inventory
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
@@ -19,7 +21,7 @@ object Application extends Controller with Security {
     for {
       finishedRaces <- Race.listFinished(10)
       users <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
-      timeTrials <- TimeTrial.list
+      timeTrials <- Future.sequence(Inventory.all.map(_.slug).map(TimeTrial.findBySlug)).map(_.flatten)
       trialsWithRanking <- Future.sequence(timeTrials.map(t => TimeTrialRun.ranking(t.id).map(r => (t, r))))
       trialsUsers <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_._1)))
     }

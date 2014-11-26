@@ -12,7 +12,7 @@ case class TimeTrial(
   _id: BSONObjectID = BSONObjectID.generate,
   slug: String,
   course: Course,
-  countdownSeconds: Int
+  countdownSeconds: Int = 20
 ) extends HasId
 
 object TimeTrial extends MongoDAO[TimeTrial] {
