@@ -23,7 +23,7 @@ object Application extends Controller with Security {
       users <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
       timeTrials <- Future.sequence(Inventory.all.map(_.slug).map(TimeTrial.findBySlug)).map(_.flatten)
       trialsWithRanking <- Future.sequence(timeTrials.map(t => TimeTrialRun.ranking(t.id).map(r => (t, r))))
-      trialsUsers <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_._1)))
+      trialsUsers <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
     yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, finishedRaces, users, Users.userForm, jsMessages))
   }

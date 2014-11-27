@@ -1,5 +1,5 @@
 @(player: Player,
-  trials: Seq[(TimeTrial, Seq[(reactivemongo.bson.BSONObjectID, Long)])],
+  trials: Seq[(TimeTrial, Seq[RunRanking])],
   trialsUsers: Seq[User],
   finishedRaces: Seq[Race],
   users: Seq[User],
@@ -88,13 +88,13 @@
     </div>
       @for(row <- trials.grouped(3)) {
         <div class="row">
-          @for((trial, ranking) <- row) {
+          @for((trial, rankings) <- row) {
             <div class="time-trial col-sm-4">
               <a href="@routes.Application.playTimeTrial(trial.id.stringify)" class="btn btn-default btn-block" target="_blank">@Messages("timeTrials." + trial.slug + ".name")</a>
               <p>@Messages("timeTrials." + trial.slug + ".description")</p>
               <ol>
-                @for(((playerId, time), i) <- ranking.zipWithIndex) {
-                  <li>@trialsUsers.find(_.id == playerId).map(_.handle).getOrElse("Anonymous"): @Helpers.timer(time)</li>
+                @for(ranking <- rankings) {
+                  <li>@trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous"): @Helpers.timer(ranking.finishTime)</li>
                 }
               </ol>
             </div>

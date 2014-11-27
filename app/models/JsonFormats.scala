@@ -81,7 +81,12 @@ object JsonFormats {
       (__ \ 'gates).format[Seq[Long]]
     )(PlayerTally.apply, unlift(PlayerTally.unapply))
 
-  implicit val ghostStateFormat: Format[GhostState] = Json.format[GhostState]
+//  implicit val ghostStateFormat: Format[GhostState] = Json.format[GhostState]
+  implicit val ghostStateFormat: Format[GhostState] = (
+    (__ \ 'position).format[Point] and
+      (__ \ 'heading).format[Double] and
+      (__ \ 'handle).format[Option[String]]
+    )(GhostState.apply, unlift(GhostState.unapply))
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'player).format[Player] and

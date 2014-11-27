@@ -44,6 +44,12 @@ case class TimeTrialRun(
   finishTime: Option[Long] = None
 ) extends HasId
 
+case class RunRanking(
+  playerId: BSONObjectID,
+  runId: BSONObjectID,
+  finishTime: Long
+)
+
 object TimeTrialRun extends MongoDAO[TimeTrialRun] {
   val collectionName = "time_trial_runs"
 
@@ -51,28 +57,43 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
     update(id, BSONDocument("tally" -> tally, "finishTime" -> finishTime))
   }
 
-  def ranking(trialId: BSONObjectID): Future[Seq[(BSONObjectID, Long)]] = {
+  def ranking(trialId: BSONObjectID): Future[Seq[RunRanking]] = {
     val cmd = Aggregate(collectionName, Seq(
-      Match(BSONDocument("timeTrialId" -> trialId)),
-      GroupMulti("playerId" -> "playerId")("finishTime" -> Min("finishTime")),
-      Sort(Seq(Ascending("finishTime")))
+      Match(BSONDocument("timeTrialId" -> trialId, "finishTime" -> BSONDocument("$exists" -> true))),
+      Sort(Seq(Ascending("finishTime"))),
+      GroupMulti("playerId" -> "playerId")("runId" -> First("_id"), "finishTime" -> First("finishTime"))
     ))
 
     db.command(cmd).map { bsonStream =>
-      for {
+      (for {
         doc <- bsonStream.toSeq
         id <- doc.getAs[BSONDocument]("_id")
         playerId <- id.getAs[BSONObjectID]("playerId")
         finishTime <- doc.getAs[Long]("finishTime")
+        runId <- doc.getAs[BSONObjectID]("runId")
       }
-      yield (playerId, finishTime)
+      yield RunRanking(playerId, runId, finishTime)).sortBy(_.finishTime)
     }
   }
 
-  def findGhosts(trialId: BSONObjectID, count: Int = 5): Future[Seq[GhostRun]] = {
+  def filterClose(playerRanking: RunRanking, allRankings: Seq[RunRanking], count: Int): Seq[RunRanking] = {
+    val (fasters, lowers) = allRankings
+      .filterNot(_.playerId == playerRanking.playerId)
+      .sortBy(_.finishTime)
+      .partition(_.finishTime < playerRanking.finishTime)
+
+    (fasters.takeRight(count / 2 + 1) ++ lowers.take(count / 2 + 1)).takeRight(count)
+  }
+
+  def findGhosts(trial: TimeTrial, playerRun: TimeTrialRun, count: Int = 5): Future[Seq[GhostRun]] = {
     for {
-      allRuns <- list(BSONDocument("timeTrialId" -> trialId, "finishTime" -> BSONDocument("$exists" -> true)))
-      runs = scala.util.Random.shuffle(allRuns).take(count)
+      ranking <- ranking(trial.id)
+      playerRankingOpt = ranking.find(_.playerId == playerRun.playerId)
+      selectedRankings = playerRankingOpt match {
+        case Some(r) => filterClose(r, ranking, count - 1) :+ r
+        case None => scala.util.Random.shuffle(ranking).take(count)
+      }
+      runs <- listByIds(selectedRankings.map(_.runId))
       tracks <- Future.sequence(runs.map(r => Tracking.getTrack(r.id)))
       players <- User.listByIds(runs.map(_.playerId))
     }

@@ -48,11 +48,9 @@ liveCenter.startedSince=Parti depuis {0}
 liveCenter.join=Rejoindre
 liveCenter.watch=Spectateur
 
-timeTrials.simple.name=Découverte
-timeTrials.simple.description=Aller/retour simple pour découvrir le concept.
-timeTrials.classic.name=Classique
-timeTrials.classic.description=Deux tours sur parcours de taille moyenne, avec des risées et quelques îles.
-timeTrials.manyLaps.name=Ca tourne
-timeTrials.manyLaps.description=L''art de passer les portes.
+timeTrials.warmup.name=Echauffement
+timeTrials.warmup.description=Faites-vous la main sur les quatre tours de ce petit parcours.
+timeTrials.gusty.name=Rafaleux
+timeTrials.gusty.description=Deux tours sur parcours étroit, avec de nombreuses risées.
 timeTrials.archipel.name=Archipel
 timeTrials.archipel.description=Trouvez votre chemin au milieu des îles.
