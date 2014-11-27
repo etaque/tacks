@@ -14,8 +14,9 @@ emptyForm = toForm empty
 colors =
   { seaBlue = rgb 35 57 92
   , sand = rgb 224 163 73
-  , gateMark = rgb 234 99 68
+  , gateMark = white
   , gateLine = rgb 234 99 68
+  , orange = rgb 234 99 68
   }
 
 fullScreenMessage : String -> Form

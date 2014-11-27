@@ -11502,7 +11502,7 @@ Elm.Render.Course.make = function (_elm) {
                     _v0._0,
                     _v0._1));}
                _E.Case($moduleName,
-               "on line 65, column 26 to 62");
+               "on line 70, column 26 to 62");
             }();
          };
          var windAngleRad = $Core.toRadians(windOrigin);
@@ -11589,49 +11589,27 @@ Elm.Render.Course.make = function (_elm) {
          var ch = ($Basics.snd(rightTop) + $Basics.snd(leftBottom)) / 2;
          return $Graphics$Collage.move({ctor: "_Tuple2"
                                        ,_0: cw
-                                       ,_1: ch})($Graphics$Collage.alpha(0.3)($Graphics$Collage.outlined($Graphics$Collage.dashed($Color.white))(A2($Graphics$Collage.rect,
+                                       ,_1: ch})($Graphics$Collage.alpha(0.3)($Graphics$Collage.outlined(_U.replace([["width"
+                                                                                                                     ,2]
+                                                                                                                    ,["color"
+                                                                                                                     ,$Color.white]
+                                                                                                                    ,["cap"
+                                                                                                                     ,$Graphics$Collage.Round]
+                                                                                                                    ,["join"
+                                                                                                                     ,$Graphics$Collage.Smooth]],
+         $Graphics$Collage.defaultLine))(A2($Graphics$Collage.rect,
          w,
          h))));
       }();
    };
-   var renderGate = F3(function (gate,
-   markRadius,
-   isNext) {
-      return function () {
-         var lineStyle = isNext ? $Graphics$Collage.traced($Graphics$Collage.dotted($Render$Utils.colors.gateLine)) : $Graphics$Collage.traced($Graphics$Collage.solid($Render$Utils.colors.seaBlue));
-         var $ = $Game.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         var line = lineStyle(A2($Graphics$Collage.segment,
-         left,
-         right));
-         var leftMark = $Graphics$Collage.move(left)($Graphics$Collage.filled($Render$Utils.colors.gateMark)($Graphics$Collage.circle(markRadius)));
-         var rightMark = $Graphics$Collage.move(right)($Graphics$Collage.filled($Render$Utils.colors.gateMark)($Graphics$Collage.circle(markRadius)));
-         return $Graphics$Collage.group(_L.fromArray([line
-                                                     ,leftMark
-                                                     ,rightMark]));
-      }();
-   });
-   var renderUpwind = function (_v10) {
-      return function () {
-         return A3(renderGate,
-         _v10.course.upwind,
-         _v10.course.markRadius,
-         A3($Maybe.maybe,
-         false,
-         function (ps) {
-            return _U.eq(ps.nextGate,
-            $Maybe.Just("UpwindGate"));
-         },
-         _v10.playerState));
-      }();
+   var gateLineOpacity = function (timer) {
+      return 0.5 + 0.5 * $Basics.cos(timer * 5.0e-3);
    };
    var renderStartLine = F4(function (gate,
    markRadius,
    started,
    timer) {
       return function () {
-         var a = started ? 0.5 + 0.5 * $Basics.cos(timer * 5.0e-3) : 1;
          var $ = $Game.getGateMarks(gate),
          left = $._0,
          right = $._1;
@@ -11640,7 +11618,16 @@ Elm.Render.Course.make = function (_elm) {
             return $Graphics$Collage.move(g)($Graphics$Collage.filled($Render$Utils.colors.gateMark)($Graphics$Collage.circle(markRadius)));
          },
          _L.fromArray([left,right]));
-         var lineStyle = started ? $Graphics$Collage.dotted($Color.green) : $Graphics$Collage.solid($Color.orange);
+         var a = started ? gateLineOpacity(timer) : 0.5;
+         var lineStyle = started ? _U.replace([["width"
+                                               ,2]
+                                              ,["color",$Color.green]
+                                              ,["dashing"
+                                               ,_L.fromArray([3,3])]],
+         $Graphics$Collage.defaultLine) : _U.replace([["width"
+                                                      ,2]
+                                                     ,["color",$Color.white]],
+         $Graphics$Collage.defaultLine);
          var line = $Graphics$Collage.alpha(a)($Graphics$Collage.traced(lineStyle)(A2($Graphics$Collage.segment,
          left,
          right)));
@@ -11649,25 +11636,65 @@ Elm.Render.Course.make = function (_elm) {
          marks));
       }();
    });
-   var renderDownwindOrStartLine = function (_v12) {
+   var renderGate = F4(function (gate,
+   markRadius,
+   timer,
+   isNext) {
+      return function () {
+         var lineStyle = isNext ? _U.replace([["width"
+                                              ,2]
+                                             ,["color",$Color.green]
+                                             ,["dashing"
+                                              ,_L.fromArray([3,3])]],
+         $Graphics$Collage.defaultLine) : $Graphics$Collage.solid($Render$Utils.colors.seaBlue);
+         var $ = $Game.getGateMarks(gate),
+         left = $._0,
+         right = $._1;
+         var line = $Graphics$Collage.alpha(gateLineOpacity(timer))($Graphics$Collage.traced(lineStyle)(A2($Graphics$Collage.segment,
+         left,
+         right)));
+         var leftMark = $Graphics$Collage.move(left)($Graphics$Collage.filled($Render$Utils.colors.gateMark)($Graphics$Collage.circle(markRadius)));
+         var rightMark = $Graphics$Collage.move(right)($Graphics$Collage.filled($Render$Utils.colors.gateMark)($Graphics$Collage.circle(markRadius)));
+         return $Graphics$Collage.group(_L.fromArray([line
+                                                     ,leftMark
+                                                     ,rightMark]));
+      }();
+   });
+   var renderDownwindOrStartLine = function (_v10) {
       return function () {
          return A3($Maybe.maybe,
          false,
          function (ps) {
             return $List.isEmpty(ps.crossedGates);
          },
-         _v12.playerState) ? A4(renderStartLine,
-         _v12.course.downwind,
-         _v12.course.markRadius,
-         $Core.isStarted(_v12.countdown),
-         _v12.now) : A3(renderGate,
-         _v12.course.downwind,
-         _v12.course.markRadius,
+         _v10.playerState) ? A4(renderStartLine,
+         _v10.course.downwind,
+         _v10.course.markRadius,
+         $Core.isStarted(_v10.countdown),
+         _v10.now) : A4(renderGate,
+         _v10.course.downwind,
+         _v10.course.markRadius,
+         _v10.now,
          A3($Maybe.maybe,
          false,
          function (ps) {
             return _U.eq(ps.nextGate,
             $Maybe.Just("DownwindGate"));
+         },
+         _v10.playerState));
+      }();
+   };
+   var renderUpwind = function (_v12) {
+      return function () {
+         return A4(renderGate,
+         _v12.course.upwind,
+         _v12.course.markRadius,
+         _v12.now,
+         A3($Maybe.maybe,
+         false,
+         function (ps) {
+            return _U.eq(ps.nextGate,
+            $Maybe.Just("UpwindGate"));
          },
          _v12.playerState));
       }();
@@ -11689,6 +11716,7 @@ Elm.Render.Course.make = function (_elm) {
       }();
    };
    _elm.Render.Course.values = {_op: _op
+                               ,gateLineOpacity: gateLineOpacity
                                ,renderStartLine: renderStartLine
                                ,renderGate: renderGate
                                ,renderBounds: renderBounds
@@ -11869,10 +11897,10 @@ Elm.Render.Utils.make = function (_elm) {
                        case "Watching":
                        return "Waiting...";}
                     _E.Case($moduleName,
-                    "between lines 62 and 64");
+                    "between lines 63 and 65");
                  }();}
             _E.Case($moduleName,
-            "between lines 59 and 64");
+            "between lines 60 and 65");
          }();
       }();
    };
@@ -11919,7 +11947,8 @@ Elm.Render.Utils.make = function (_elm) {
                 234,
                 99,
                 68)
-                ,gateMark: A3($Color.rgb,
+                ,gateMark: $Color.white
+                ,orange: A3($Color.rgb,
                 234,
                 99,
                 68)

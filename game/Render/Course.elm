@@ -9,22 +9,27 @@ import Text
 
 import Maybe (maybe)
 
+gateLineOpacity : Float -> Float
+gateLineOpacity timer = 0.5 + 0.5 * cos (timer * 0.005)
+
 renderStartLine : Gate -> Float -> Bool -> Time -> Form
 renderStartLine gate markRadius started timer =
-  let lineStyle = if started then dotted green else solid orange
+  let lineStyle = if started
+        then { defaultLine | width <- 2, color <- green, dashing <- [3,3] }
+        else { defaultLine | width <- 2, color <- white }
+      a = if started then gateLineOpacity timer else 0.5
       line = segment left right |> traced lineStyle |> alpha a
       (left,right) = getGateMarks gate
-      a = if started then 0.5 + 0.5 * cos (timer * 0.005) else 1
       marks = map (\g -> circle markRadius |> filled colors.gateMark |> move g) [left, right]
   in  group (line :: marks)
 
-renderGate : Gate -> Float -> Bool -> Form
-renderGate gate markRadius isNext =
+renderGate : Gate -> Float -> Float -> Bool -> Form
+renderGate gate markRadius timer isNext =
   let (left,right) = getGateMarks gate
       lineStyle = if isNext
-        then traced (dotted colors.gateLine)
-        else traced (solid colors.seaBlue)
-      line = segment left right |> lineStyle
+        then { defaultLine | width <- 2, color <- green, dashing <- [3,3] }
+        else solid colors.seaBlue
+      line = segment left right |> traced lineStyle |> alpha (gateLineOpacity timer)
       leftMark = circle markRadius |> filled colors.gateMark |> move left
       rightMark = circle markRadius |> filled colors.gateMark |> move right
   in  group [line, leftMark, rightMark]
@@ -36,7 +41,7 @@ renderBounds area =
       h = snd rightTop - snd leftBottom
       cw = (fst rightTop + fst leftBottom) / 2
       ch = (snd rightTop + snd leftBottom) / 2
-  in rect w h |> outlined (dashed white)
+  in rect w h |> outlined { defaultLine | width <- 2, color <- white, cap <- Round, join <- Smooth }
               |> alpha 0.3
               |> move (cw, ch)
 
@@ -76,11 +81,11 @@ renderDownwindOrStartLine : GameState -> Form
 renderDownwindOrStartLine ({playerState,course,now,countdown} as gameState) =
   if maybe False (\ps -> isEmpty ps.crossedGates) playerState
     then renderStartLine course.downwind course.markRadius (isStarted countdown) now
-    else renderGate course.downwind course.markRadius (maybe False (\ps -> ps.nextGate == Just "DownwindGate") playerState)
+    else renderGate course.downwind course.markRadius now (maybe False (\ps -> ps.nextGate == Just "DownwindGate") playerState)
 
 renderUpwind : GameState -> Form
-renderUpwind ({playerState,course} as gameState) =
-  renderGate course.upwind course.markRadius (maybe False (\ps -> ps.nextGate == Just "UpwindGate") playerState)
+renderUpwind ({playerState,course,now} as gameState) =
+  renderGate course.upwind course.markRadius now (maybe False (\ps -> ps.nextGate == Just "UpwindGate") playerState)
 
 renderCourse : GameState -> Form
 renderCourse ({playerState,opponents,course,now,center} as gameState) =
