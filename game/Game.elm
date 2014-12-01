@@ -124,6 +124,24 @@ defaultGame =
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
 
+areaDims : RaceArea -> (Float,Float)
+areaDims {rightTop,leftBottom} =
+  let
+    (r,t) = rightTop
+    (l,b) = leftBottom
+  in
+    (r - l, t - b)
+
+areaCenters : RaceArea -> (Float,Float)
+areaCenters {rightTop,leftBottom} =
+  let
+    (r,t) = rightTop
+    (l,b) = leftBottom
+    cx = (r + l) / 2
+    cy = (t + b) / 2
+  in
+    (cx, cy)
+
 findOpponent : [PlayerState] -> String -> Maybe PlayerState
 findOpponent opponents id =
   let filtered = filter (\ps -> ps.player.id == id) opponents

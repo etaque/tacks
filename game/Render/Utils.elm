@@ -17,23 +17,21 @@ colors =
   , gateMark = white
   , gateLine = rgb 234 99 68
   , orange = rgb 234 99 68
+  , green = rgb 100 180 106
   }
-
-fullScreenMessage : String -> Form
-fullScreenMessage msg = msg
-  |> S.toUpper
-  |> toText
-  |> Text.height 60
-  |> Text.color white
-  |> centered
-  |> toForm
-  |> alpha 0.3
 
 baseText : String -> Text
 baseText s = s
   |> toText
   |> Text.height 15
   |> typeface ["Inconsolata", "monospace"]
+
+bigText : String -> Text
+bigText s = s
+  |> toText
+  |> Text.height 32
+  |> typeface ["Inconsolata", "monospace"]
+
 
 triangle : Float -> Bool -> Path
 triangle s isUpward =
@@ -54,7 +52,7 @@ formatCountdown c =
   let cs = c |> inSeconds |> ceiling
       m = cs // 60
       s = cs `rem` 60
-  in  "Start in " ++ (show m) ++ "' " ++ (show s) ++ "\"..."
+  in  (show m) ++ "' " ++ (show s) ++ "\""
 
 gameTitle : Game.GameState -> String
 gameTitle {countdown,opponents,watchMode} = case countdown of

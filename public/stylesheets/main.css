@@ -5006,7 +5006,8 @@ input[type="text"], input[type="password"], textarea {
 
 .play-race {
   overflow: hidden;
-  color: white; }
+  color: white;
+  background-color: #1C2E48; }
 
 .show-user .status {
   text-align: center; }

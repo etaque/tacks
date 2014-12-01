@@ -122,7 +122,7 @@ getHelp countdownMaybe =
     empty
 
 statusMessage : String -> Element
-statusMessage s = baseText s |> centered
+statusMessage s = bigText s |> centered
 
 getFinishingStatus : Course -> PlayerState -> Element
 getFinishingStatus course playerState =

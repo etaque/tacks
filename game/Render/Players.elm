@@ -17,7 +17,7 @@ vmgColorAndShape player =
       margin = 3
       s = 4
       bad = (red, rect (s*2) (s*2))
-      good = (green, circle s)
+      good = (colors.green, circle s)
       warn = (orange, polygon [(-s,-s),(s,-s),(0,s)])
   in  if a < 90 then
         if | a < player.upwindVmg.angle - margin -> bad
