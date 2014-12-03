@@ -12004,7 +12004,6 @@ Elm.Render.Controls.make = function (_elm) {
    _E = _N.Error.make(_elm),
    $moduleName = "Render.Controls",
    $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
    $Core = Elm.Core.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
@@ -12014,6 +12013,32 @@ Elm.Render.Controls.make = function (_elm) {
    $Render$Utils = Elm.Render.Utils.make(_elm),
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm);
+   var gateHintTriangle = F2(function (s,
+   isUpward) {
+      return isUpward ? $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                ,_0: 0
+                                                                ,_1: 0}
+                                                               ,{ctor: "_Tuple2"
+                                                                ,_0: 0 - s
+                                                                ,_1: (0 - s) * 1.5}
+                                                               ,{ctor: "_Tuple2"
+                                                                ,_0: s
+                                                                ,_1: (0 - s) * 1.5}])) : $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
+                                                                                                                                 ,_0: 0
+                                                                                                                                 ,_1: 0}
+                                                                                                                                ,{ctor: "_Tuple2"
+                                                                                                                                 ,_0: 0 - s
+                                                                                                                                 ,_1: s * 1.5}
+                                                                                                                                ,{ctor: "_Tuple2"
+                                                                                                                                 ,_0: s
+                                                                                                                                 ,_1: s * 1.5}]));
+   });
+   var topHint = A2(gateHintTriangle,
+   5,
+   true);
+   var bottomHint = A2(gateHintTriangle,
+   5,
+   false);
    var gateHintLabel = function (d) {
       return $Graphics$Collage.toForm($Text.centered($Render$Utils.baseText(_L.append($String.show(d),
       "m"))));
@@ -12033,7 +12058,14 @@ Elm.Render.Controls.make = function (_elm) {
                             return $Basics.round($Basics.abs(gate.y + (isOver ? 0 - _v0._1 : _v0._1) / 2 - _v1._1) / 2);
                          };
                          var a = 1 + 0.5 * $Basics.cos(timer * 5.0e-3);
-                         var markStyle = $Graphics$Collage.filled($Color.orange);
+                         var lineStyle = _U.replace([["width"
+                                                     ,2]
+                                                    ,["color"
+                                                     ,$Render$Utils.colors.green]
+                                                    ,["dashing"
+                                                     ,_L.fromArray([3,3])]],
+                         $Graphics$Collage.defaultLine);
+                         var markStyle = $Graphics$Collage.filled($Render$Utils.colors.orange);
                          var c = 3;
                          var isOver = _U.cmp(_v1._1 + _v0._1 / 2 + c,
                          gate.y) < 0;
@@ -12043,33 +12075,37 @@ Elm.Render.Controls.make = function (_elm) {
                          var $ = $Game.getGateMarks(gate),
                          left = $._0,
                          right = $._1;
-                         return isOver || isUnder ? $Maybe.Just(function () {
+                         return isOver || isUnder ? function () {
                             var textY = _U.cmp(side,
                             0) > 0 ? 0 - c : c;
-                            var d = $Graphics$Collage.alpha(a)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                                      ,_0: 0 - _v1._0
-                                                                                      ,_1: side + textY * 4})(gateHintLabel(distance(_U.cmp(side,
+                            var d = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move({ctor: "_Tuple2"
+                                                                                        ,_0: 0 - _v1._0
+                                                                                        ,_1: side + textY * 4})(gateHintLabel(distance(_U.cmp(side,
                             0) > 0))));
-                            var mr = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                            ,_0: 0 - _v1._0 + gate.width / 2
-                                                            ,_1: side})(markStyle(A2($Render$Utils.triangle,
-                            c,
-                            _U.cmp(side,0) > 0)));
-                            var ml = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                            ,_0: 0 - _v1._0 - gate.width / 2
-                                                            ,_1: side})(markStyle(A2($Render$Utils.triangle,
-                            c,
-                            _U.cmp(side,0) > 0)));
-                            return $Graphics$Collage.group(_L.fromArray([ml
-                                                                        ,mr
-                                                                        ,d]));
-                         }()) : $Maybe.Nothing;
+                            var triangle = $Graphics$Collage.alpha(a)($Graphics$Collage.filled($Render$Utils.colors.orange)(_U.cmp(side,
+                            0) > 0 ? topHint : bottomHint));
+                            var right = {ctor: "_Tuple2"
+                                        ,_0: 0 - _v1._0 + gate.width / 2
+                                        ,_1: side};
+                            var rightMark = $Graphics$Collage.move(right)(triangle);
+                            var left = {ctor: "_Tuple2"
+                                       ,_0: 0 - _v1._0 - gate.width / 2
+                                       ,_1: side};
+                            var leftMark = $Graphics$Collage.move(left)(triangle);
+                            var line = $Graphics$Collage.alpha(a)($Graphics$Collage.traced(lineStyle)(A2($Graphics$Collage.segment,
+                            left,
+                            right)));
+                            return $Maybe.Just($Graphics$Collage.group(_L.fromArray([line
+                                                                                    ,leftMark
+                                                                                    ,rightMark
+                                                                                    ,d])));
+                         }() : $Maybe.Nothing;
                       }();}
                  _E.Case($moduleName,
-                 "between lines 17 and 34");
+                 "between lines 31 and 57");
               }();}
          _E.Case($moduleName,
-         "between lines 17 and 34");
+         "between lines 31 and 57");
       }();
    });
    var renderControls = F3(function (_v8,
@@ -12097,6 +12133,9 @@ Elm.Render.Controls.make = function (_elm) {
    });
    _elm.Render.Controls.values = {_op: _op
                                  ,gateHintLabel: gateHintLabel
+                                 ,gateHintTriangle: gateHintTriangle
+                                 ,topHint: topHint
+                                 ,bottomHint: bottomHint
                                  ,renderGateHint: renderGateHint
                                  ,renderControls: renderControls};
    return _elm.Render.Controls.values;
@@ -12155,10 +12194,10 @@ Elm.Render.Utils.make = function (_elm) {
                        case "Watching":
                        return "Waiting...";}
                     _E.Case($moduleName,
-                    "between lines 61 and 63");
+                    "between lines 54 and 56");
                  }();}
             _E.Case($moduleName,
-            "between lines 58 and 63");
+            "between lines 51 and 56");
          }();
       }();
    };
@@ -12172,26 +12211,6 @@ Elm.Render.Utils.make = function (_elm) {
       l - 3,
       txt),
       "...");
-   });
-   var triangle = F2(function (s,
-   isUpward) {
-      return isUpward ? $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                ,_0: 0
-                                                                ,_1: 0}
-                                                               ,{ctor: "_Tuple2"
-                                                                ,_0: 0 - s
-                                                                ,_1: 0 - s}
-                                                               ,{ctor: "_Tuple2"
-                                                                ,_0: s
-                                                                ,_1: 0 - s}])) : $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                         ,_0: 0
-                                                                                                                         ,_1: 0}
-                                                                                                                        ,{ctor: "_Tuple2"
-                                                                                                                         ,_0: 0 - s
-                                                                                                                         ,_1: s}
-                                                                                                                        ,{ctor: "_Tuple2"
-                                                                                                                         ,_0: s
-                                                                                                                         ,_1: s}]));
    });
    var bigText = function (s) {
       return $Text.typeface(_L.fromArray(["Inconsolata"
@@ -12231,7 +12250,6 @@ Elm.Render.Utils.make = function (_elm) {
                               ,colors: colors
                               ,baseText: baseText
                               ,bigText: bigText
-                              ,triangle: triangle
                               ,fixedLength: fixedLength
                               ,formatCountdown: formatCountdown
                               ,gameTitle: gameTitle};

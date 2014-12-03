@@ -33,13 +33,6 @@ bigText s = s
   |> typeface ["Inconsolata", "monospace"]
 
 
-triangle : Float -> Bool -> Path
-triangle s isUpward =
-  if isUpward then
-    polygon [(0,0),(-s,-s),(s,-s)]
-  else
-    polygon [(0,0),(-s,s),(s,s)]
-
 fixedLength : Int -> String -> String
 fixedLength l txt =
   if S.length txt < l then
