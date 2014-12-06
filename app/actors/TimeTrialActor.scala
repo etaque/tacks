@@ -89,7 +89,10 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     /**
      * player quit => shutdown actor
      */
-    case PlayerQuit(_) => self ! PoisonPill
+    case PlayerQuit(_) => {
+      if (!finished) TimeTrialRun.clean(run.id)
+      self ! PoisonPill
+    }
 
   }
 

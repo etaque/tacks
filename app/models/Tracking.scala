@@ -53,4 +53,14 @@ object Tracking {
     }
     yield pointsBySecond.toMap
   }
+
+  def removeTrack(runId: BSONObjectID): Future[Long] = {
+    for {
+      seconds <- redis.smembers[String](ns + runId.stringify)
+      secondsKeys = seconds.map { s => ns + runId.stringify + ":" + s }
+      _ <- redis.del(secondsKeys: _*)
+      l <- redis.del(ns + runId.stringify)
+    }
+    yield l
+  }
 }

@@ -34,7 +34,7 @@ trait MongoDAO[T] {
     collection.insert(doc)
   }
 
-  def remove(id: BSONObjectID): Future[_] = {
+  def remove(id: BSONObjectID): Future[LastError] = {
     val query = BSONDocument("_id" -> id)
     collection.remove(query)
   }

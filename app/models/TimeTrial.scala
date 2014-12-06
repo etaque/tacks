@@ -102,6 +102,14 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
     }
   }
 
+  def clean(runId: BSONObjectID): Future[LastError] = {
+    for {
+      _ <- Tracking.removeTrack(runId)
+      e <- remove(runId)
+    }
+    yield e
+  }
+
   implicit val bsonReader: BSONDocumentReader[TimeTrialRun] = Macros.reader[TimeTrialRun]
   implicit val bsonWriter: BSONDocumentWriter[TimeTrialRun] = Macros.writer[TimeTrialRun]
 }
