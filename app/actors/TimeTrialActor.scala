@@ -31,10 +31,11 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   def started = startTime.isBeforeNow
   def finished = state.crossedGates.length == course.gatesToCross
 
-  val ticks = Seq(
-    Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
-    Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
-  )
+  val frameTick = Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
+  val gustsTick = Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust)
+  val cleanTick = Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean)
+
+  val ticks = Seq(cleanTick, gustsTick, frameTick)
 
   def receive = {
 
@@ -62,6 +63,8 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
         ref ! raceUpdate
         ref ! RunStep(state, input, clock, wind, course, started, Nil)
       }
+
+      if (timeIsOver) stopGame()
     }
 
     /**
@@ -94,6 +97,22 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
       self ! PoisonPill
     }
 
+    /**
+     * clean finished runs
+     */
+    case AutoClean => {
+      if (run.finishTime.map(run.creationTime.plus).exists(_.isBeforeNow)) {
+        playerRef.foreach(_ ! PoisonPill)
+      }
+    }
+
+  }
+
+  def timeIsOver: Boolean = run.finishTime.map(run.creationTime.plus).exists(_.plusSeconds(5).isBeforeNow)
+
+  def stopGame() = {
+    frameTick.cancel()
+    gustsTick.cancel()
   }
 
   def updateTally() = {
@@ -131,7 +150,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     )
   }
 
-  override def postStop() = ticks.foreach(_.cancel())
+  override def postStop() = ticks.filterNot(_.isCancelled).foreach(_.cancel())
 }
 
 object TimeTrialActor {

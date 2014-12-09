@@ -12,18 +12,9 @@ import models._
 
 case class Start(at: DateTime)
 
-case class PlayerContext(player: Player, input: PlayerInput, state: PlayerState, ref: ActorRef)
-case class PlayerJoin(player: Player)
-case class PlayerQuit(player: Player)
-
 case class WatcherContext(watcher: Player, state: WatcherState, ref: ActorRef)
 case class WatcherJoin(watcher: Player)
 case class WatcherQuit(watcher: Player)
-
-case object FrameTick
-case object SpawnGust
-case object GetStatus
-case object AutoClean
 
 class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
 

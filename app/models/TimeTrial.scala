@@ -42,7 +42,9 @@ case class TimeTrialRun(
   playerId: BSONObjectID,
   tally: Seq[Long] = Nil,
   finishTime: Option[Long] = None
-) extends HasId
+) extends HasId {
+  def creationTime = new DateTime(id.time)
+}
 
 case class RunRanking(
   playerId: BSONObjectID,
