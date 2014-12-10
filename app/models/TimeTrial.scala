@@ -11,15 +11,21 @@ import scala.concurrent.Future
 case class TimeTrial(
   _id: BSONObjectID = BSONObjectID.generate,
   slug: String,
+  period: String,
   course: Course,
-  countdownSeconds: Int = 20
+  countdownSeconds: Int = 20,
+  creationTime: DateTime = DateTime.now
 ) extends HasId
 
 object TimeTrial extends MongoDAO[TimeTrial] {
   val collectionName = "time_trials"
 
-  def findBySlug(slug: String): Future[Option[TimeTrial]] = {
-    collection.find(BSONDocument("slug" -> slug)).one[TimeTrial]
+  def periodKey = LocalDate.now.toString("YYYY-MM")
+
+  def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, periodKey)
+
+  def findBySlugAndPeriod(slug: String, period: String): Future[Option[TimeTrial]] = {
+    collection.find(BSONDocument("slug" -> slug, "period" -> period)).one[TimeTrial]
   }
 
   def ensureIndexes(): Unit = {
@@ -28,6 +34,10 @@ object TimeTrial extends MongoDAO[TimeTrial] {
 
     collection.indexesManager.ensure(Index(
       key = List("slug" -> Ascending),
+      unique = true))
+
+    collection.indexesManager.ensure(Index(
+      key = List("slug" -> Ascending, "period" -> Descending),
       unique = true))
   }
 

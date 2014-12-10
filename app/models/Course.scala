@@ -85,8 +85,8 @@ case class WindGenerator(
 }
 
 object WindGenerator {
-  def spawn = {
-    WindGenerator(nextInt(6) + 6, nextInt(6) + 6, nextInt(4) + 4, nextInt(4) + 4)
+  def spawn(w1: Int = 6, a1: Int = 6, w2: Int = 4, a2: Int = 4) = {
+    WindGenerator(nextInt(w1) + w1, nextInt(a1) + a1, nextInt(w2) + w2, nextInt(a2) + a2)
   }
 }
 
@@ -150,7 +150,7 @@ object Course {
       laps = 2,
       islands = Seq.fill[Island](8)(Island.spawn(area)),
       area = area,
-      windGenerator = WindGenerator.spawn,
+      windGenerator = WindGenerator.spawn(),
       gustGenerator = GustGenerator.spawn
     )
   }

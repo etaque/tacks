@@ -50,7 +50,7 @@ liveCenter.watch=Spectateur
 
 timeTrials.warmup.name=Echauffement
 timeTrials.warmup.description=Faites-vous la main sur les quatre tours de ce petit parcours.
-timeTrials.gusty.name=Rafaleux
-timeTrials.gusty.description=Deux tours sur parcours étroit, avec de nombreuses risées.
+timeTrials.inlands.name=Rafaleux
+timeTrials.inlands.description=Deux tours sur parcours étroit, avec de nombreuses risées.
 timeTrials.archipel.name=Archipel
 timeTrials.archipel.description=Trouvez votre chemin au milieu des îles.

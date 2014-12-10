@@ -1,6 +1,5 @@
 package controllers
 
-import core.Inventory
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -13,6 +12,7 @@ import reactivemongo.bson.BSONObjectID
 
 import actors.{GetRace, RacesSupervisor}
 import models.{TimeTrialRun, TimeTrial, User, Race}
+import core.TrialGenerator
 
 object Application extends Controller with Security {
 
@@ -21,7 +21,7 @@ object Application extends Controller with Security {
     for {
       finishedRaces <- Race.listFinished(10)
       users <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
-      timeTrials <- Future.sequence(Inventory.all.map(_.slug).map(TimeTrial.findBySlug)).map(_.flatten)
+      timeTrials <- Future.sequence(TrialGenerator.all.map(_.slug).map(TimeTrial.findCurrentBySlug)).map(_.flatten)
       trialsWithRanking <- Future.sequence(timeTrials.map(t => TimeTrialRun.ranking(t.id).map(r => (t, r))))
       trialsUsers <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
