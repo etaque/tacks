@@ -217,7 +217,7 @@ renderDashboard ({playerId,playerState,opponents,watchMode} as gameState) (w,h) 
   in
     layers
       [ container w h (topLeftAt (Absolute 20) (Absolute 20)) <| flow down (topLeftElements gameState displayedPlayerState)
-      , container w h (midTopAt (Relative 0.5) (Absolute 20)) <| flow down (midTopElements gameState displayedPlayerState)
+      , container w h (midTopAt (Relative 0.5) (Absolute 40)) <| flow down (midTopElements gameState displayedPlayerState)
       , container w h (topRightAt (Absolute 20) (Absolute 20)) <| flow down (topRightElements gameState displayedPlayerState)
       , container w h (midBottomAt (Relative 0.5) (Absolute 20)) <| flow up (midBottomElements gameState displayedPlayerState)
       ]

@@ -24,7 +24,8 @@ home.recentRaces=Courses récentes
 home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
 home.welcome=Bienvenue
 home.updateStatus=Maj statut
-home.timeTrials=Chronos
+home.timeTrials=Chronos de la semaine
+home.timeTrialRanking=classement intégral
 home.runTimeTrial=Jouer
 
 footer.message=Tacks est un jeu <a href="https://github.com/etaque/tacks">open source</a> façonné par <a href="https://twitter.com/etaque">@etaque</a>.
@@ -48,9 +49,9 @@ liveCenter.startedSince=Parti depuis {0}
 liveCenter.join=Rejoindre
 liveCenter.watch=Spectateur
 
-timeTrials.warmup.name=Echauffement
-timeTrials.warmup.description=Faites-vous la main sur les quatre tours de ce petit parcours.
-timeTrials.inlands.name=Rafaleux
-timeTrials.inlands.description=Deux tours sur parcours étroit, avec de nombreuses risées.
+timeTrials.warmup.name=Warm up
+timeTrials.warmup.description=Faites-vous la main sur les trois tours de ce petit parcours
+timeTrials.inlands.name=Inlands
+timeTrials.inlands.description=Deux tours sur parcours étroit, avec de nombreuses risées
 timeTrials.archipel.name=Archipel
-timeTrials.archipel.description=Trouvez votre chemin au milieu des îles.
+timeTrials.archipel.description=Trouvez votre chemin au milieu des îles

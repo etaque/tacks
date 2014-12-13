@@ -73,6 +73,89 @@
   }
 }
 
+.time-trial {
+  $br: 3px;
+
+  a.run, a.run:visited {
+    display: block;
+    height: 200px;
+    background-color: $lightSeaBlue;
+    border-radius: $br;
+    border: 3px solid $lightSeaBlue;
+    // border-bottom-right-radius: 0;
+    // border-bottom-left-radius: 0;
+    text-decoration: none;
+    position: relative;
+    text-align: center;
+
+    &:hover {
+      border-color: $lighterSeaBlue;
+      .name {
+        background-color: $lighterSeaBlue;
+      }
+    }
+
+    .name {
+      display: block;
+      padding: 10px;
+      background-color: $lightSeaBlue;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
+    }
+
+    .description {
+      position: absolute;
+      bottom: 0;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      color: $lightGray;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+
+    }
+  }
+
+  ul {
+    padding: 10px;
+    margin: 0;
+
+    li {
+      list-style: none;
+
+      .time {
+        float: right;
+      }
+
+      &.rank-3 {
+        margin-bottom: 5px;
+      }
+
+      &.current-player {
+        color: $orange;
+      }
+    }
+  }
+
+  a.ranking {
+    display: block;
+    margin: 0 10px;
+    border-radius: 3px;
+    padding: 4px 8px;
+    text-align: center;
+    text-decoration: none;
+    background-color: $lightSeaBlue;
+    color: $whiteBlue;
+
+    &:after {
+      // content: "";
+    //   border-top: 10px solid transparent;
+    //   border-bottom: 10px solid transparent;
+    //   border-left: 10px solid $lightSeaBlue;
+    }
+  }
+}
+
 .finished-races {
   margin-top: 50px;
 

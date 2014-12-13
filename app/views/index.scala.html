@@ -89,14 +89,27 @@
       @for(row <- trials.grouped(3)) {
         <div class="row">
           @for((trial, rankings) <- row) {
-            <div class="time-trial col-sm-4">
-              <a href="@routes.Application.playTimeTrial(trial.id.stringify)" class="btn btn-default btn-block" target="_blank">@Messages("timeTrials." + trial.slug + ".name")</a>
-              <p>@Messages("timeTrials." + trial.slug + ".description")</p>
-              <ol>
+            <div class="col-sm-4">
+              <div class="time-trial">
+                <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="run"
+                style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
+                  <span class="name">@Messages("timeTrials." + trial.slug + ".name")</span>
+                  <div class="description">
+                    @Messages("timeTrials." + trial.slug + ".description")
+                  </div>
+                </a>
+                <ul>
                 @for(ranking <- rankings) {
-                  <li>@trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous"): @Helpers.timer(ranking.finishTime)</li>
+                  <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }">
+                    <span class="rank">@{ranking.rank}. </span>
+                    <span class="handle">@trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous")</span>
+                    <span class="time">@Helpers.timer(ranking.finishTime)</span>
+                  </li>
                 }
-              </ol>
+                </ul>
+                <a href="" class="ranking">@Messages("home.timeTrialRanking")</a>
+
+              </div>
             </div>
           }
         </div>

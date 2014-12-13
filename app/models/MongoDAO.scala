@@ -12,6 +12,8 @@ import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONDocumentReader,
 import reactivemongo.core.commands.{LastError, Count}
 import play.api.libs.concurrent.Execution.Implicits._
 import tools.future.Implicits.RichFutureOfOpt
+import org.joda.time.DateTime
+
 
 trait MongoDAO[T] {
   val collectionName: String
@@ -94,7 +96,7 @@ trait MongoDAO[T] {
   def list(query: BSONDocument = BSONDocument()): Future[Seq[T]] = {
     collection.find(query).cursor[T].collect[Seq]()
   }
-  
+
   def list: Future[Seq[T]] = list()
 }
 
@@ -103,4 +105,5 @@ trait HasId {
   val id: BSONObjectID = _id
   def idToStr = id.stringify
 
+  def idTime = new DateTime(id.time)
 }

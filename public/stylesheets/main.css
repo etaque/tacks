@@ -4979,6 +4979,55 @@ input[type="text"], input[type="password"], textarea {
       color: #B1C0D8;
       font-size: 12px; }
 
+.time-trial a.run, .time-trial a.run:visited {
+  display: block;
+  height: 200px;
+  background-color: #2b4772;
+  border-radius: 3px;
+  border: 3px solid #2b4772;
+  text-decoration: none;
+  position: relative;
+  text-align: center; }
+  .time-trial a.run:hover, .time-trial a.run:visited:hover {
+    border-color: #345488; }
+    .time-trial a.run:hover .name, .time-trial a.run:visited:hover .name {
+      background-color: #345488; }
+  .time-trial a.run .name, .time-trial a.run:visited .name {
+    display: block;
+    padding: 10px;
+    background-color: #2b4772;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 1px;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); }
+  .time-trial a.run .description, .time-trial a.run:visited .description {
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.2);
+    color: #E6E6E6;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1); }
+.time-trial ul {
+  padding: 10px;
+  margin: 0; }
+  .time-trial ul li {
+    list-style: none; }
+    .time-trial ul li .time {
+      float: right; }
+    .time-trial ul li.rank-3 {
+      margin-bottom: 5px; }
+    .time-trial ul li.current-player {
+      color: #E0A349; }
+.time-trial a.ranking {
+  display: block;
+  margin: 0 10px;
+  border-radius: 3px;
+  padding: 4px 8px;
+  text-align: center;
+  text-decoration: none;
+  background-color: #2b4772;
+  color: #B1C0D8; }
+
 .finished-races {
   margin-top: 50px; }
   .finished-races caption {

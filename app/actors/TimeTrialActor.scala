@@ -30,6 +30,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
   def started = startTime.isBeforeNow
   def finished = state.crossedGates.length == course.gatesToCross
+  var finishTime: Option[Long] = None
 
   val frameTick = Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
   val gustsTick = Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust)
@@ -101,14 +102,18 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
      * clean finished runs
      */
     case AutoClean => {
-      if (run.finishTime.map(run.creationTime.plus).exists(_.isBeforeNow)) {
-        playerRef.foreach(_ ! PoisonPill)
-      }
+      // if (run.finishTime.map(run.creationTime.plus).exists(_.isBeforeNow)) {
+      //   playerRef.foreach(_ ! PoisonPill)
+      // }
     }
 
   }
 
-  def timeIsOver: Boolean = run.finishTime.map(run.creationTime.plus).exists(_.plusSeconds(5).isBeforeNow)
+
+  def timeIsOver: Boolean = finishTime match {
+    case Some(t) => run.creationTime.plus(t).plusSeconds(5).isBeforeNow
+    case None => false
+  }
 
   def stopGame() = {
     frameTick.cancel()
@@ -116,7 +121,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   }
 
   def updateTally() = {
-    val finishTime = if (finished) state.crossedGates.headOption else None
+    finishTime = if (finished) state.crossedGates.headOption else None
     TimeTrialRun.updateTimes(run.id, state.crossedGates, finishTime)
   }
 

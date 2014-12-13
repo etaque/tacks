@@ -11410,7 +11410,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                                                                  _v25._1,
                                                                  A2($Graphics$Element.midTopAt,
                                                                  $Graphics$Element.Relative(0.5),
-                                                                 $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                                                 $Graphics$Element.Absolute(40)))(A2($Graphics$Element.flow,
                                                                  $Graphics$Element.down,
                                                                  A2(midTopElements,
                                                                  _v24,
