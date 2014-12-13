@@ -22,8 +22,14 @@ case class RaceArea(rightTop: Point, leftBottom: Point) {
   lazy val cy = (top + bottom) / 2
   lazy val center = (cx, cy)
 
-  def genX(seed: Double, margin: Double): Double = seed % width + margin - width / 2 + cx
-  def genY(seed: Double, margin: Double): Double = seed % height + margin - height / 2 + cy
+  def genX(seed: Double, margin: Double): Double = {
+    val effectiveWidth = width - margin * 2
+    seed % effectiveWidth - effectiveWidth / 2 + cx
+  }
+  def genY(seed: Double, margin: Double): Double = {
+    val effectiveHeight = height - margin * 2
+    seed % effectiveHeight - effectiveHeight / 2 + cy
+  }
 
   import scala.util.Random._
 

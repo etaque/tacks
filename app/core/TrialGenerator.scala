@@ -22,7 +22,7 @@ object WarmUp extends TrialGenerator {
       downwind = Gate(100, 100),
       laps = 3,
       markRadius = 5,
-      islands = Seq.fill(2)(Island((area.randomX(100), area.randomY(200)), Random.nextInt(50) + 20)),// Seq(Island((200, 400), 40), Island((-200, 300), 60)),
+      islands = Seq.fill(2)(Island((area.randomX(300), area.randomY(200)), Random.nextInt(50) + 20)),// Seq(Island((200, 400), 40), Island((-200, 300), 60)),
       area = area,
       windGenerator = WindGenerator.spawn(3, 3, 2, 2),
       gustGenerator = GustGenerator(30, Seq.fill[GustDef](10)(GustDef.spawn))
@@ -55,7 +55,7 @@ object Archipel extends TrialGenerator {
       downwind = Gate(100, 200),
       laps = 1,
       markRadius = 5,
-      islands = Seq.fill(100)(Island((area.randomX(300), area.randomY(500)), Random.nextInt(50) + 50)),
+      islands = Seq.fill(100)(Island((area.randomX(400), area.randomY(500)), Random.nextInt(50) + 50)),
       area = area,
       windGenerator = WindGenerator.spawn(4, 8, 8, 6),
       gustGenerator = GustGenerator(30, Seq.fill[GustDef](10)(GustDef.spawn))
