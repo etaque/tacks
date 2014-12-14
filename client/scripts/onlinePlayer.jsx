@@ -7,11 +7,17 @@ var React = require('react');
 var OnlinePlayer = React.createClass({
 
   userTag: function(user) {
+    // return (
+    //   <a href={"/users/" + user.id} className="user">
+    //     {user.handle}
+    //     <span className="status">{user.status}</span>
+    //   </a>
+    // );
     return (
-      <a href={"/users/" + user.id} className="user">
+      <span className="user">
         {user.handle}
         <span className="status">{user.status}</span>
-      </a>
+      </span>
     );
   },
 

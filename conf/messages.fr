@@ -25,7 +25,7 @@ home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Pleas
 home.welcome=Bienvenue
 home.updateStatus=Maj statut
 home.timeTrials=Chronos de la semaine
-home.timeTrialRanking=classement intégral
+home.timeTrialRanking=meilleurs temps
 home.runTimeTrial=Jouer
 
 footer.message=Tacks est un jeu <a href="https://github.com/etaque/tacks">open source</a> façonné par <a href="https://twitter.com/etaque">@etaque</a>.
@@ -49,6 +49,8 @@ liveCenter.startedSince=Parti depuis {0}
 liveCenter.join=Rejoindre
 liveCenter.watch=Spectateur
 
+timeTrials.rankings=Classement
+timeTrials.run=Jouer
 timeTrials.warmup.name=Warm up
 timeTrials.warmup.description=Faites-vous la main sur les trois tours de ce petit parcours
 timeTrials.inlands.name=Inlands

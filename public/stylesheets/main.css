@@ -4841,8 +4841,14 @@ body {
 .align-center {
   text-align: center; }
 
-.nav a {
-  color: #B1C0D8; }
+.nav {
+  text-align: center;
+  margin-bottom: 20px; }
+  .nav img {
+    height: 120px;
+    width: auto; }
+  .nav a {
+    color: #B1C0D8; }
 
 body {
   color: #B1C0D8;
@@ -5014,19 +5020,20 @@ input[type="text"], input[type="password"], textarea {
     list-style: none; }
     .time-trial ul li .time {
       float: right; }
-    .time-trial ul li.rank-3 {
+    .time-trial ul li.rank-10 {
       margin-bottom: 5px; }
     .time-trial ul li.current-player {
       color: #E0A349; }
 .time-trial a.ranking {
   display: block;
-  margin: 0 10px;
-  border-radius: 3px;
-  padding: 4px 8px;
   text-align: center;
+  margin: 10px;
+  border-bottom: 2px solid #2b4772;
+  padding: 4px 0;
   text-decoration: none;
-  background-color: #2b4772;
   color: #B1C0D8; }
+  .time-trial a.ranking:hover {
+    background-color: #1f3251; }
 
 .finished-races {
   margin-top: 50px; }
@@ -5051,6 +5058,19 @@ input[type="text"], input[type="password"], textarea {
   .finished-races .current-player td {
     color: #E0A349; }
     .finished-races .current-player td a {
+      color: #E0A349; }
+
+.show-time-trial .time-trial {
+  margin-top: 20px;
+  margin-bottom: 20px; }
+.show-time-trial .time-trial-rankings {
+  padding: 10px;
+  margin: 0; }
+  .show-time-trial .time-trial-rankings li {
+    list-style: none; }
+    .show-time-trial .time-trial-rankings li .time {
+      float: right; }
+    .show-time-trial .time-trial-rankings li.current-player {
       color: #E0A349; }
 
 .play-race {

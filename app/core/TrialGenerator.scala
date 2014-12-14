@@ -68,7 +68,7 @@ object TrialGenerator {
   val all = Seq(WarmUp, Inlands, Archipel)
 
   def ensureTimeTrials() = {
-    val period = TimeTrial.period
+    val period = TimeTrial.currentPeriod
     all.foreach { t =>
       TimeTrial.findCurrentBySlug(t.slug).map {
         case Some(_) =>

@@ -91,13 +91,15 @@
           @for((trial, rankings) <- row) {
             <div class="col-sm-4">
               <div class="time-trial">
-                <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="run"
+                <a href="@routes.TimeTrials.show(trial.id.stringify)" class="run"
                 style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
                   <span class="name">@Messages("timeTrials." + trial.slug + ".name")</span>
                   <div class="description">
                     @Messages("timeTrials." + trial.slug + ".description")
                   </div>
                 </a>
+
+                <a href="@routes.TimeTrials.show(trial.id.stringify)" class="ranking">@Messages("home.timeTrialRanking")</a>
                 <ul>
                 @for(ranking <- rankings) {
                   <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }">
@@ -107,8 +109,6 @@
                   </li>
                 }
                 </ul>
-                @*<a href="" class="ranking">@Messages("home.timeTrialRanking")</a>*@
-
               </div>
             </div>
           }

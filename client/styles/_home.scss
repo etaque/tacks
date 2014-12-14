@@ -127,7 +127,7 @@
         float: right;
       }
 
-      &.rank-3 {
+      &.rank-10 {
         margin-bottom: 5px;
       }
 
@@ -139,19 +139,14 @@
 
   a.ranking {
     display: block;
-    margin: 0 10px;
-    border-radius: 3px;
-    padding: 4px 8px;
     text-align: center;
+    margin: 10px;
+    border-bottom: 2px solid $lightSeaBlue;
+    padding: 4px 0;
     text-decoration: none;
-    background-color: $lightSeaBlue;
     color: $whiteBlue;
-
-    &:after {
-      // content: "";
-    //   border-top: 10px solid transparent;
-    //   border-bottom: 10px solid transparent;
-    //   border-left: 10px solid $lightSeaBlue;
+    &:hover {
+      background-color: $darkSeaBlue;
     }
   }
 }
@@ -191,11 +186,4 @@
       color: $orange;
     }
   }
-
-  // .current-player td {
-  //   color: $orange;
-  //   a {
-  //     color $orange;
-  //   }
-  // }
 }

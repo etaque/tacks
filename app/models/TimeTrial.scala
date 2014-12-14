@@ -23,7 +23,7 @@ object TimeTrial extends MongoDAO[TimeTrial] {
   
   val periodFormat = "YYYY-ww"
 
-  def period = LocalDate.now.toString(periodFormat)
+  def currentPeriod = LocalDate.now.toString(periodFormat)
 
   def findAllCurrent: Future[Seq[TimeTrial]] =
     Future.sequence(TrialGenerator.all.map(_.slug).map(TimeTrial.findCurrentBySlug)).map(_.flatten)
@@ -32,9 +32,9 @@ object TimeTrial extends MongoDAO[TimeTrial] {
     Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, podiumWithPlayer(playerId, r)))))
   
   def podiumWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking]): Seq[RunRanking] = 
-    rankings.filter(r => r.rank <= 3 || r.playerId == playerId).sortBy(_.rank)
+    rankings.filter(r => r.rank <= 10 || r.playerId == playerId).sortBy(_.rank)
 
-  def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, period)
+  def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, currentPeriod)
 
   def findBySlugAndPeriod(slug: String, period: String): Future[Option[TimeTrial]] = {
     collection.find(BSONDocument("slug" -> slug, "period" -> period)).one[TimeTrial]

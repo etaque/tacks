@@ -1,0 +1,51 @@
+@(trial: TimeTrial, rankings: Seq[RunRanking], users: Seq[User])(implicit lang: Lang, req: IdentifiedRequest[_])
+
+@main {
+  <div class="show-time-trial">
+
+    <div class="nav"><a href="@routes.Application.index"><img src="/assets/images/logo-tacks-wide.png"/></a></div>
+
+
+    <div class="row">
+      <div class="col-md-offset-2 col-md-4">
+
+        <div class="time-trial">
+          <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="run"
+          style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
+            <span class="name">@Messages("timeTrials." + trial.slug + ".name")</span>
+            <div class="description">
+              @Messages("timeTrials." + trial.slug + ".description")
+            </div>
+          </a>
+        </div>
+
+        <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
+      </div>
+
+      <div class="col-md-offset-0 col-md-4">
+
+        <h3>
+          @Messages("timeTrials.rankings") #@trial.period
+        </h3>
+
+        <ul class="time-trial-rankings">
+        @for(ranking <- rankings) {
+          <li class="rank-@ranking.rank @if(ranking.playerId == req.player.id) { current-player }">
+            <span class="rank">@{ranking.rank}. </span>
+            @users.find(_.id == ranking.playerId) match {
+              case None => {
+                <span class="handle">@Messages("anonymous")</span>
+              }
+              case Some(user) => {
+                <span class="handle">@user.handle</span>
+              }
+            }
+            <span class="time">@views.Helpers.timer(ranking.finishTime)</span>
+          </li>
+        }
+        </ul>
+
+      </div>
+    </div>
+  </div>
+}

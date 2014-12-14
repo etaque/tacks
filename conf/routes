@@ -4,6 +4,8 @@ GET         /run/:timeTrialId                       controllers.Application.play
 GET         /play/:raceId                           controllers.Application.playRace(raceId: String)
 GET         /watch/:raceId                          controllers.Application.watchRace(raceId: String)
 
+GET         /time-trials/:id                        controllers.TimeTrials.show(id)
+
 POST        /users/create                           controllers.Users.create
 GET         /users/:id                              controllers.Users.show(id: String)
 POST        /users/updateStatus                     controllers.Users.updateStatus

@@ -44,6 +44,13 @@ body {
 }
 
 .nav {
+  text-align: center;
+  margin-bottom: 20px;
+
+  img {
+    height: 120px;
+    width: auto;
+  }
   a {
     color: $whiteBlue;
   }
