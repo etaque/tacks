@@ -26,6 +26,6 @@ object GateCrossingStep {
       }
       case None => crossedGates // already finished race
     }
-    state.copy(crossedGates = newCrossedGates, nextGate = nextGate)
+    state.copy(crossedGates = newCrossedGates, nextGate = course.nextGate(newCrossedGates.size))
   }
 }
