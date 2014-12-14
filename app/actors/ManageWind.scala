@@ -44,7 +44,7 @@ trait ManageWind {
   def moveGusts(clock: Long, gusts: Seq[Gust], elapsed: Long): Seq[Gust] = {
     gusts
       .map(_.update(course, wind, elapsed, clock))
-      .filter(g => g.position._2 - g.radius > course.area.bottom)
+      .filter(g => g.position._2 + g.radius > course.area.bottom)
   }
 
 }
