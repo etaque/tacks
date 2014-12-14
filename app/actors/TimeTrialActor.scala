@@ -111,7 +111,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
 
   def timeIsOver: Boolean = finishTime match {
-    case Some(t) => run.creationTime.plus(t).plusSeconds(5).isBeforeNow
+    case Some(t) => run.creationTime.plus(t).plusSeconds(10).isBeforeNow
     case None => false
   }
 
