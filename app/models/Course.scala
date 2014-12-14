@@ -133,7 +133,7 @@ case class Course(
   windGenerator: WindGenerator,
   gustGenerator: GustGenerator,
   windShadowLength: Double = 120,
-  boatWidth: Double = 4 // for collision detection, should be consistent with icon
+  boatWidth: Double = 3 // for collision detection, should be consistent with icon
 ) {
   val gatesToCross = laps * 2 + 1
 
