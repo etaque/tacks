@@ -9,13 +9,14 @@ import Text
 
 import Maybe (maybe)
 
-arcShape : Float -> Int -> Int -> Shape
-arcShape r a b =
+arcShape : Float -> Int -> Int -> Int -> Shape
+arcShape r start length way =
   let
-    (a', b') = if a > b then (b,a) else (a,b)
-    steps = map (\s -> toFloat (s * 10)) [(a' // 10)..(b' // 10)]
+    steps = [0..(length // 10)]
+    realSteps = map (\s -> toFloat (start + s * 10 * -way)) steps
+    radSteps = map toRadians realSteps
   in
-    map (\t -> fromPolar (r, t)) (map toRadians steps)
+    map (\t -> fromPolar (r, t)) radSteps
 
 clockwiseArrowTip : Float -> Shape
 clockwiseArrowTip l =
@@ -31,13 +32,18 @@ nextLineStyle = { defaultLine | width <- 2, color <- colors.green, dashing <- [3
 arrowLineStyle : LineStyle
 arrowLineStyle = { defaultLine | width <- 2, color <- white, cap <- Round, join <- Smooth }
 
-renderAroundArrow : Int -> Int -> Bool -> Float -> Form
-renderAroundArrow headAngle tailAngle clockwise markRadius =
+renderAroundArrow : Int -> Bool -> Float -> Float -> Form
+renderAroundArrow headAngle clockwise markRadius timer =
   let
     r = markRadius * 4
-    arc = path (arcShape r headAngle tailAngle)
+    slidingAngle = 135
+    arcAngle = 60
+    way = if clockwise then 1 else -1
+    timedAngle = floatMod (timer / 15) slidingAngle
+    currentSlidingAngle = ((round timedAngle) - slidingAngle) * way
+    arc = path (arcShape r (headAngle + currentSlidingAngle) arcAngle way)
       |> traced arrowLineStyle
-    arrowRad = toRadians (toFloat headAngle)
+    arrowRad = toRadians <| toFloat <| currentSlidingAngle + headAngle
     arrowTip = if clockwise then clockwiseArrowTip else counterClockwiseArrowTip
     arrow = path (arrowTip markRadius)
       |> traced arrowLineStyle
@@ -45,17 +51,19 @@ renderAroundArrow headAngle tailAngle clockwise markRadius =
       |> move (fromPolar (r, arrowRad))
   in
     group [arc, arrow]
+      |> alpha (timedAngle / (toFloat slidingAngle) * 0.2)
 
-aroundLeftUpwind = renderAroundArrow -90 120 False
-aroundRightUpwind = renderAroundArrow 90 -120 True
-aroundLeftDownwind = renderAroundArrow 300 60 True
-aroundRightDownwind = renderAroundArrow 60 300 False
+aroundLeftUpwind = renderAroundArrow -45 False
+aroundRightUpwind = renderAroundArrow 45 True
+aroundLeftDownwind = renderAroundArrow 225 True
+aroundRightDownwind = renderAroundArrow 135 False
 
-renderStraightArrow : Float -> Bool -> Form
-renderStraightArrow markRadius bottomUp =
+renderStraightArrow : Float -> Bool -> Float -> Form
+renderStraightArrow markRadius bottomUp timer =
   let
     lineLength = toFloat (markRadius * 4)
     l = markRadius
+    way = if bottomUp then 1 else -1
     bodyShape = if bottomUp
       then [(0, -lineLength), (0,0)]
       else [(0, 0), (0, lineLength)]
@@ -66,8 +74,11 @@ renderStraightArrow markRadius bottomUp =
       else [(-l,l), (0,0), (l,l)]
     tip = path tipShape
       |> traced arrowLineStyle
+    arrowY = floatMod (timer * 0.02) 30
   in
     group [body, tip]
+      |> move (0, arrowY * way)
+      |> alpha ((arrowY * way) / 30 * 0.2)
 
 
 gateLineOpacity : Float -> Float
@@ -95,12 +106,12 @@ renderGateLine gate lineStyle =
 
 data GateLocation = Upwind | Downwind
 
-renderGateHelpers : Gate -> Float -> GateLocation -> Form
-renderGateHelpers gate markRadius gateLoc =
+renderGateHelpers : Gate -> Float -> GateLocation -> Float -> Form
+renderGateHelpers gate markRadius gateLoc timer =
   let (left,right) = getGateMarks gate
       (leftHelper,rightHelper) = case gateLoc of
-        Upwind   -> (aroundLeftUpwind markRadius, aroundRightUpwind markRadius)
-        Downwind -> (aroundLeftDownwind markRadius, aroundRightDownwind markRadius)
+        Upwind   -> (aroundLeftUpwind markRadius timer, aroundRightUpwind markRadius timer)
+        Downwind -> (aroundLeftDownwind markRadius timer, aroundRightDownwind markRadius timer)
   in  group [move left leftHelper, move right rightHelper]
 
 
@@ -112,9 +123,9 @@ renderStartLine gate markRadius started timer =
       a = if started then gateLineOpacity timer else 1
       line = renderGateLine gate lineStyle |> alpha a
       marks = renderGateMarks gate markRadius
-      helper = renderStraightArrow markRadius True
-        |> move (0, gate.y - markRadius * 3)
-        |> alpha (a * 0.5)
+      helper = if started
+        then renderStraightArrow markRadius True timer |> move (0, gate.y - markRadius * 3)
+        else emptyForm
   in  group [helper, line, marks]
 
 renderGate : Gate -> Float -> Float -> Bool -> GateLocation -> Form
@@ -123,7 +134,7 @@ renderGate gate markRadius timer isNext gateType =
     a = gateLineOpacity timer
     line = if isNext then renderGateLine gate nextLineStyle |> alpha a else emptyForm
     marks = renderGateMarks gate markRadius
-    helpers = if isNext then renderGateHelpers gate markRadius gateType |> alpha (a * 0.3) else emptyForm
+    helpers = if isNext then renderGateHelpers gate markRadius gateType timer else emptyForm
   in
     group [line, marks, helpers]
 
@@ -133,7 +144,7 @@ renderFinishLine gate markRadius timer =
     a = gateLineOpacity timer
     line = renderGateLine gate nextLineStyle |> alpha a
     marks = renderGateMarks gate markRadius
-    helper = renderStraightArrow markRadius False
+    helper = renderStraightArrow markRadius False timer
       |> move (0, gate.y + markRadius * 3)
       |> alpha (a * 0.5)
   in
@@ -219,4 +230,3 @@ renderCourse ({playerState,opponents,course,now,center} as gameState) =
       ]
   in
     group forms |> move (neg center)
-

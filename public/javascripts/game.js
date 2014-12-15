@@ -11636,7 +11636,7 @@ Elm.Render.Course.make = function (_elm) {
                     _v0._0,
                     _v0._1));}
                _E.Case($moduleName,
-               "on line 180, column 24 to 61");
+               "on line 200, column 24 to 61");
             }();
          };
          var windAngleRad = $Core.toRadians(windOrigin);
@@ -11789,9 +11789,14 @@ Elm.Render.Course.make = function (_elm) {
                                    ,["join"
                                     ,$Graphics$Collage.Smooth]],
    $Graphics$Collage.defaultLine);
-   var renderStraightArrow = F2(function (markRadius,
-   bottomUp) {
+   var renderStraightArrow = F3(function (markRadius,
+   bottomUp,
+   timer) {
       return function () {
+         var arrowY = A2($Core.floatMod,
+         timer * 2.0e-2,
+         30);
+         var way = bottomUp ? 1 : -1;
          var l = markRadius;
          var tipShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
                                                  ,_0: 0 - l
@@ -11822,8 +11827,10 @@ Elm.Render.Course.make = function (_elm) {
                                                                             ,_0: 0
                                                                             ,_1: lineLength}]);
          var body = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(bodyShape));
-         return $Graphics$Collage.group(_L.fromArray([body
-                                                     ,tip]));
+         return $Graphics$Collage.alpha(arrowY * way / 30 * 0.2)($Graphics$Collage.move({ctor: "_Tuple2"
+                                                                                        ,_0: 0
+                                                                                        ,_1: arrowY * way})($Graphics$Collage.group(_L.fromArray([body
+                                                                                                                                                 ,tip]))));
       }();
    });
    var nextLineStyle = _U.replace([["width"
@@ -11838,15 +11845,16 @@ Elm.Render.Course.make = function (_elm) {
    started,
    timer) {
       return function () {
+         var helper = started ? $Graphics$Collage.move({ctor: "_Tuple2"
+                                                       ,_0: 0
+                                                       ,_1: gate.y - markRadius * 3})(A3(renderStraightArrow,
+         markRadius,
+         true,
+         timer)) : $Render$Utils.emptyForm;
          var marks = A2(renderGateMarks,
          gate,
          markRadius);
          var a = started ? gateLineOpacity(timer) : 1;
-         var helper = $Graphics$Collage.alpha(a * 0.5)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                              ,_0: 0
-                                                                              ,_1: gate.y - markRadius * 3})(A2(renderStraightArrow,
-         markRadius,
-         true)));
          var lineStyle = started ? nextLineStyle : _U.replace([["width"
                                                                ,2]
                                                               ,["color"
@@ -11873,9 +11881,10 @@ Elm.Render.Course.make = function (_elm) {
          nextLineStyle));
          var helper = $Graphics$Collage.alpha(a * 0.5)($Graphics$Collage.move({ctor: "_Tuple2"
                                                                               ,_0: 0
-                                                                              ,_1: gate.y + markRadius * 3})(A2(renderStraightArrow,
+                                                                              ,_1: gate.y + markRadius * 3})(A3(renderStraightArrow,
          markRadius,
-         false)));
+         false,
+         timer)));
          return $Graphics$Collage.group(_L.fromArray([helper
                                                      ,line
                                                      ,marks]));
@@ -11899,86 +11908,94 @@ Elm.Render.Course.make = function (_elm) {
                            ,_0: 0 - l
                            ,_1: 0 - l}]);
    };
-   var arcShape = F3(function (r,
-   a,
-   b) {
+   var arcShape = F4(function (r,
+   start,
+   length,
+   way) {
       return function () {
-         var $ = _U.cmp(a,
-         b) > 0 ? {ctor: "_Tuple2"
-                  ,_0: b
-                  ,_1: a} : {ctor: "_Tuple2"
-                            ,_0: a
-                            ,_1: b},
-         a$ = $._0,
-         b$ = $._1;
-         var steps = A2($List.map,
+         var steps = _L.range(0,
+         length / 10 | 0);
+         var realSteps = A2($List.map,
          function (s) {
-            return $Basics.toFloat(s * 10);
+            return $Basics.toFloat(start + s * 10 * (0 - way));
          },
-         _L.range(a$ / 10 | 0,
-         b$ / 10 | 0));
+         steps);
+         var radSteps = A2($List.map,
+         $Core.toRadians,
+         realSteps);
          return A2($List.map,
          function (t) {
             return $Basics.fromPolar({ctor: "_Tuple2"
                                      ,_0: r
                                      ,_1: t});
          },
-         A2($List.map,
-         $Core.toRadians,
-         steps));
+         radSteps);
       }();
    });
    var renderAroundArrow = F4(function (headAngle,
-   tailAngle,
    clockwise,
-   markRadius) {
+   markRadius,
+   timer) {
       return function () {
          var arrowTip = clockwise ? clockwiseArrowTip : counterClockwiseArrowTip;
-         var arrowRad = $Core.toRadians($Basics.toFloat(headAngle));
+         var way = clockwise ? 1 : -1;
+         var arcAngle = 60;
+         var slidingAngle = 135;
+         var timedAngle = A2($Core.floatMod,
+         timer / 15,
+         slidingAngle);
+         var currentSlidingAngle = ($Basics.round(timedAngle) - slidingAngle) * way;
+         var arrowRad = $Core.toRadians($Basics.toFloat(currentSlidingAngle + headAngle));
          var r = markRadius * 4;
-         var arc = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(A3(arcShape,
+         var arc = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(A4(arcShape,
          r,
-         headAngle,
-         tailAngle)));
+         headAngle + currentSlidingAngle,
+         arcAngle,
+         way)));
          var arrow = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
                                                               ,_0: r
                                                               ,_1: arrowRad}))($Graphics$Collage.rotate(arrowRad - $Basics.pi / 2)($Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(arrowTip(markRadius)))));
-         return $Graphics$Collage.group(_L.fromArray([arc
-                                                     ,arrow]));
+         return $Graphics$Collage.alpha(timedAngle / $Basics.toFloat(slidingAngle) * 0.2)($Graphics$Collage.group(_L.fromArray([arc
+                                                                                                                               ,arrow])));
       }();
    });
-   var aroundLeftUpwind = A3(renderAroundArrow,
-   -90,
-   120,
+   var aroundLeftUpwind = A2(renderAroundArrow,
+   -45,
    false);
-   var aroundRightUpwind = A3(renderAroundArrow,
-   90,
-   -120,
+   var aroundRightUpwind = A2(renderAroundArrow,
+   45,
    true);
-   var aroundLeftDownwind = A3(renderAroundArrow,
-   300,
-   60,
+   var aroundLeftDownwind = A2(renderAroundArrow,
+   225,
    true);
-   var aroundRightDownwind = A3(renderAroundArrow,
-   60,
-   300,
+   var aroundRightDownwind = A2(renderAroundArrow,
+   135,
    false);
-   var renderGateHelpers = F3(function (gate,
+   var renderGateHelpers = F4(function (gate,
    markRadius,
-   gateLoc) {
+   gateLoc,
+   timer) {
       return function () {
          var $ = function () {
             switch (gateLoc.ctor)
             {case "Downwind":
                return {ctor: "_Tuple2"
-                      ,_0: aroundLeftDownwind(markRadius)
-                      ,_1: aroundRightDownwind(markRadius)};
+                      ,_0: A2(aroundLeftDownwind,
+                      markRadius,
+                      timer)
+                      ,_1: A2(aroundRightDownwind,
+                      markRadius,
+                      timer)};
                case "Upwind":
                return {ctor: "_Tuple2"
-                      ,_0: aroundLeftUpwind(markRadius)
-                      ,_1: aroundRightUpwind(markRadius)};}
+                      ,_0: A2(aroundLeftUpwind,
+                      markRadius,
+                      timer)
+                      ,_1: A2(aroundRightUpwind,
+                      markRadius,
+                      timer)};}
             _E.Case($moduleName,
-            "between lines 101 and 104");
+            "between lines 121 and 124");
          }(),
          leftHelper = $._0,
          rightHelper = $._1;
@@ -11999,6 +12016,11 @@ Elm.Render.Course.make = function (_elm) {
    isNext,
    gateType) {
       return function () {
+         var helpers = isNext ? A4(renderGateHelpers,
+         gate,
+         markRadius,
+         gateType,
+         timer) : $Render$Utils.emptyForm;
          var marks = A2(renderGateMarks,
          gate,
          markRadius);
@@ -12006,10 +12028,6 @@ Elm.Render.Course.make = function (_elm) {
          var line = isNext ? $Graphics$Collage.alpha(a)(A2(renderGateLine,
          gate,
          nextLineStyle)) : $Render$Utils.emptyForm;
-         var helpers = isNext ? $Graphics$Collage.alpha(a * 0.3)(A3(renderGateHelpers,
-         gate,
-         markRadius,
-         gateType)) : $Render$Utils.emptyForm;
          return $Graphics$Collage.group(_L.fromArray([line
                                                      ,marks
                                                      ,helpers]));
@@ -13126,7 +13144,7 @@ Elm.Core.make = function (_elm) {
                     list);
                   case "Nothing": return list;}
                _E.Case($moduleName,
-               "between lines 84 and 87");
+               "between lines 88 and 91");
             }();
          });
          return A3($List.foldl,
@@ -13144,7 +13162,7 @@ Elm.Core.make = function (_elm) {
             case "Nothing":
             return $Maybe.Nothing;}
          _E.Case($moduleName,
-         "between lines 77 and 79");
+         "between lines 81 and 83");
       }();
    });
    var getCountdown = function (maybeCountdown) {
@@ -13161,6 +13179,12 @@ Elm.Core.make = function (_elm) {
       },
       maybeCountdown);
    };
+   var floatMod = F2(function (val,
+   div) {
+      return $Basics.toFloat(A2($Basics._op["%"],
+      $Basics.floor(val),
+      div));
+   });
    var mpsToKnts = function (mps) {
       return mps * 3600 / 1.852 / 1000;
    };
@@ -13187,6 +13211,7 @@ Elm.Core.make = function (_elm) {
                       ,ensure360: ensure360
                       ,toRadians: toRadians
                       ,mpsToKnts: mpsToKnts
+                      ,floatMod: floatMod
                       ,getVmgValue: getVmgValue
                       ,isStarted: isStarted
                       ,getCountdown: getCountdown

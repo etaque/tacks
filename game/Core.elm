@@ -15,6 +15,10 @@ mpsToKnts : Float -> Float
 mpsToKnts mps = mps * 3600 / 1.852 / 1000
 
 
+floatMod : Float -> Int -> Float
+floatMod val div =
+  (floor val) % div |> toFloat
+
 --angleToWind : Float -> Float -> Float
 --angleToWind playerDirection windOrigin =
 --  let delta = playerDirection - windOrigin
