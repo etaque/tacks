@@ -11149,79 +11149,19 @@ Elm.Render.Dashboard.make = function (_elm) {
                       ,legend]));
       }();
    };
-   var getRaceTimer = function (_v2) {
-      return function () {
-         return function () {
-            var _v4 = _v2.countdown;
-            switch (_v4.ctor)
-            {case "Just":
-               return A2($Render$Utils.formatTimer,
-                 _v4._0,
-                 false);
-               case "Nothing":
-               return "start pending";}
-            _E.Case($moduleName,
-            "between lines 191 and 193");
-         }();
-      }();
-   };
-   var getTrialTimer = function (_v6) {
-      return function () {
-         return function () {
-            var _v8 = {ctor: "_Tuple2"
-                      ,_0: _v6.countdown
-                      ,_1: _v6.playerState};
-            switch (_v8.ctor)
-            {case "_Tuple2":
-               switch (_v8._0.ctor)
-                 {case "Just":
-                    switch (_v8._1.ctor)
-                      {case "Just":
-                         return function () {
-                              var o = _U.cmp(_v8._0._0,
-                              0) > 0 ? 1 : 0.5;
-                              var t = $Maybe.isNothing(_v8._1._0.nextGate) ? $List.head(_v8._1._0.crossedGates) : _v8._0._0;
-                              return A2($Render$Utils.formatTimer,
-                              t,
-                              $Maybe.isNothing(_v8._1._0.nextGate));
-                           }();}
-                      break;}
-                 break;}
-            return "";
-         }();
-      }();
-   };
-   var getMainStatus = function (_v13) {
-      return function () {
-         return function () {
-            var s = function () {
-               var _v15 = _v13.gameMode;
-               switch (_v15.ctor)
-               {case "Race":
-                  return getRaceTimer(_v13);
-                  case "TimeTrial":
-                  return getTrialTimer(_v13);}
-               _E.Case($moduleName,
-               "between lines 172 and 175");
-            }();
-            var op = $Game.isInProgress(_v13) ? 0.5 : 1;
-            return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.bigText(s)));
-         }();
-      }();
-   };
-   var getTimeTrialFinishingStatus = F2(function (_v16,
-   _v17) {
+   var getTimeTrialFinishingStatus = F2(function (_v2,
+   _v3) {
       return function () {
          return function () {
             return function () {
-               var _v20 = A2($Game.findPlayerGhost,
-               _v16.playerId,
-               _v16.ghosts);
-               switch (_v20.ctor)
+               var _v6 = A2($Game.findPlayerGhost,
+               _v2.playerId,
+               _v2.ghosts);
+               switch (_v6.ctor)
                {case "Just":
                   return function () {
-                       var newTime = $List.head(_v17.crossedGates);
-                       var previousTime = $List.head(_v20._0.gates);
+                       var newTime = $List.head(_v3.crossedGates);
+                       var previousTime = $List.head(_v6._0.gates);
                        return _U.cmp(newTime,
                        previousTime) < 0 ? _L.append($String.show(newTime - previousTime),
                        "ms\nnew best time!") : _L.append("+",
@@ -11231,7 +11171,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                   case "Nothing":
                   return "new best time!";}
                _E.Case($moduleName,
-               "between lines 155 and 164");
+               "between lines 188 and 197");
             }();
          }();
       }();
@@ -11243,53 +11183,119 @@ Elm.Render.Dashboard.make = function (_elm) {
       _L.append("/",
       $String.show(1 + course.laps * 2))));
    });
-   var getFinishingStatus = F2(function (_v22,
+   var getFinishingStatus = F2(function (_v8,
    playerState) {
       return function () {
          return function () {
-            var _v24 = playerState.nextGate;
-            switch (_v24.ctor)
-            {case "Just": switch (_v24._0)
+            var _v10 = playerState.nextGate;
+            switch (_v10.ctor)
+            {case "Just": switch (_v10._0)
                  {case "StartLine":
                     return "go!";}
                  break;
                case "Nothing":
                return function () {
-                    var _v26 = _v22.gameMode;
-                    switch (_v26.ctor)
+                    var _v12 = _v8.gameMode;
+                    switch (_v12.ctor)
                     {case "Race": return "finished";
                        case "TimeTrial":
                        return A2(getTimeTrialFinishingStatus,
-                         _v22,
+                         _v8,
                          playerState);}
                     _E.Case($moduleName,
-                    "between lines 143 and 146");
+                    "between lines 176 and 179");
                  }();}
             return A2(getGatesCount,
-            _v22.course,
+            _v8.course,
             playerState);
          }();
       }();
    });
-   var getSubStatus = function (_v27) {
+   var getSubStatus = function (_v13) {
       return function () {
          return function () {
             var s = function () {
-               var _v29 = _v27.countdown;
-               switch (_v29.ctor)
+               var _v15 = _v13.countdown;
+               switch (_v15.ctor)
                {case "Just":
-                  return _U.cmp(_v29._0,
+                  return _U.cmp(_v15._0,
                     0) > 0 ? "be ready" : A3($Maybe.maybe,
                     "",
-                    getFinishingStatus(_v27),
-                    _v27.playerState);
+                    getFinishingStatus(_v13),
+                    _v13.playerState);
                   case "Nothing":
-                  return _v27.isMaster ? $Render$Utils.startCountdownMessage : "";}
+                  return _v13.isMaster ? $Render$Utils.startCountdownMessage : "";}
                _E.Case($moduleName,
-               "between lines 127 and 136");
+               "between lines 160 and 169");
             }();
             var op = 1;
             return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.baseText(s)));
+         }();
+      }();
+   };
+   var getRaceTimer = function (_v17) {
+      return function () {
+         return function () {
+            var _v19 = {ctor: "_Tuple2"
+                       ,_0: _v17.countdown
+                       ,_1: _v17.playerState};
+            switch (_v19.ctor)
+            {case "_Tuple2":
+               switch (_v19._0.ctor)
+                 {case "Just":
+                    switch (_v19._1.ctor)
+                      {case "Just":
+                         return function () {
+                              var t = $Maybe.isNothing(_v19._1._0.nextGate) ? $List.head(_v19._1._0.crossedGates) : _v19._0._0;
+                              return A2($Render$Utils.formatTimer,
+                              t,
+                              $Maybe.isNothing(_v19._1._0.nextGate));
+                           }();}
+                      break;}
+                 break;}
+            return "start pending";
+         }();
+      }();
+   };
+   var getTrialTimer = function (_v24) {
+      return function () {
+         return function () {
+            var _v26 = {ctor: "_Tuple2"
+                       ,_0: _v24.countdown
+                       ,_1: _v24.playerState};
+            switch (_v26.ctor)
+            {case "_Tuple2":
+               switch (_v26._0.ctor)
+                 {case "Just":
+                    switch (_v26._1.ctor)
+                      {case "Just":
+                         return function () {
+                              var t = $Maybe.isNothing(_v26._1._0.nextGate) ? $List.head(_v26._1._0.crossedGates) : _v26._0._0;
+                              return A2($Render$Utils.formatTimer,
+                              t,
+                              $Maybe.isNothing(_v26._1._0.nextGate));
+                           }();}
+                      break;}
+                 break;}
+            return "";
+         }();
+      }();
+   };
+   var getMainStatus = function (_v31) {
+      return function () {
+         return function () {
+            var s = function () {
+               var _v33 = _v31.gameMode;
+               switch (_v33.ctor)
+               {case "Race":
+                  return getRaceTimer(_v31);
+                  case "TimeTrial":
+                  return getTrialTimer(_v31);}
+               _E.Case($moduleName,
+               "between lines 127 and 130");
+            }();
+            var op = $Game.isInProgress(_v31) ? 0.5 : 1;
+            return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.bigText(s)));
          }();
       }();
    };
@@ -11323,10 +11329,10 @@ Elm.Render.Dashboard.make = function (_elm) {
       },
       countdownMaybe) ? $Text.centered($Render$Utils.baseText($Render$Utils.helpMessage)) : $Graphics$Element.empty;
    };
-   var midBottomElements = F2(function (_v31,
+   var midBottomElements = F2(function (_v34,
    playerState) {
       return function () {
-         return _L.fromArray([getHelp(_v31.countdown)]);
+         return _L.fromArray([getHelp(_v34.countdown)]);
       }();
    });
    var getMode = function (gameState) {
@@ -11336,7 +11342,7 @@ Elm.Render.Dashboard.make = function (_elm) {
       }();
    };
    var buildBoardLine = F2(function (watching,
-   _v33) {
+   _v36) {
       return function () {
          return function () {
             var deltaText = A3($Maybe.maybe,
@@ -11345,19 +11351,19 @@ Elm.Render.Dashboard.make = function (_elm) {
                return _L.append("+",
                $String.show(d / 1000));
             },
-            _v33.delta);
+            _v36.delta);
             var handleText = $Render$Utils.fixedLength(12)(A3($Maybe.maybe,
             "Anonymous",
             $Basics.identity,
-            _v33.handle));
+            _v36.handle));
             var positionText = A3($Maybe.maybe,
             "  ",
             function (p) {
                return _L.append($String.show(p),
                ".");
             },
-            _v33.position);
-            var watchingText = watching ? _v33.watched ? "* " : "  " : "";
+            _v36.position);
+            var watchingText = watching ? _v36.watched ? "* " : "  " : "";
             var el = $Text.leftAligned($Render$Utils.baseText(_L.append(watchingText,
             A2($List.join,
             " ",
@@ -11366,7 +11372,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                          ,deltaText])))));
             return watching ? A5($Graphics$Input.customButton,
             $Inputs.watchedPlayer.handle,
-            $Maybe.Just(_v33.id),
+            $Maybe.Just(_v36.id),
             el,
             el,
             el) : el;
@@ -11375,7 +11381,7 @@ Elm.Render.Dashboard.make = function (_elm) {
    });
    var getOpponent = F3(function (watching,
    watchMode,
-   _v35) {
+   _v38) {
       return function () {
          return function () {
             var watched = function () {
@@ -11384,14 +11390,14 @@ Elm.Render.Dashboard.make = function (_elm) {
                   return false;
                   case "Watching":
                   return _U.eq(watchMode._0,
-                    _v35.player.id);}
+                    _v38.player.id);}
                _E.Case($moduleName,
                "between lines 44 and 47");
             }();
             var line = {_: {}
                        ,delta: $Maybe.Nothing
-                       ,handle: _v35.player.handle
-                       ,id: _v35.player.id
+                       ,handle: _v38.player.handle
+                       ,id: _v38.player.id
                        ,position: $Maybe.Nothing
                        ,watched: watched};
             return A2(buildBoardLine,
@@ -11400,22 +11406,22 @@ Elm.Render.Dashboard.make = function (_elm) {
          }();
       }();
    });
-   var getOpponents = function (_v39) {
+   var getOpponents = function (_v42) {
       return function () {
          return function () {
             var allOpponents = A3($Maybe.maybe,
-            _v39.opponents,
+            _v42.opponents,
             function (ps) {
                return A2($List._op["::"],
                ps,
-               _v39.opponents);
+               _v42.opponents);
             },
-            _v39.playerState);
-            var watching = $Maybe.isNothing(_v39.playerState);
+            _v42.playerState);
+            var watching = $Maybe.isNothing(_v42.playerState);
             return $Graphics$Element.flow($Graphics$Element.down)(A2($List.map,
             A2(getOpponent,
             watching,
-            _v39.watchMode),
+            _v42.watchMode),
             allOpponents));
          }();
       }();
@@ -11449,17 +11455,17 @@ Elm.Render.Dashboard.make = function (_elm) {
          line);
       }();
    });
-   var getLeaderboard = function (_v43) {
+   var getLeaderboard = function (_v46) {
       return function () {
-         return $List.isEmpty(_v43.leaderboard) ? $Graphics$Element.empty : function () {
-            var watching = $Maybe.isNothing(_v43.playerState);
-            var leader = $List.head(_v43.leaderboard);
+         return $List.isEmpty(_v46.leaderboard) ? $Graphics$Element.empty : function () {
+            var watching = $Maybe.isNothing(_v46.playerState);
+            var leader = $List.head(_v46.leaderboard);
             return $Graphics$Element.flow($Graphics$Element.down)(A2($List.indexedMap,
             A3(getLeaderboardLine,
             watching,
-            _v43.watchMode,
+            _v46.watchMode,
             leader),
-            _v43.leaderboard));
+            _v46.leaderboard));
          }();
       }();
    };
@@ -11490,10 +11496,10 @@ Elm.Render.Dashboard.make = function (_elm) {
                           ,s
                           ,getBoard(gameState)]);
    });
-   var topRightElements = F2(function (_v45,
+   var topRightElements = F2(function (_v48,
    playerState) {
       return function () {
-         return _L.fromArray([getWindWheel(_v45.wind)
+         return _L.fromArray([getWindWheel(_v48.wind)
                              ,s
                              ,A3($Maybe.maybe,
                              $Graphics$Element.empty,
@@ -11501,67 +11507,67 @@ Elm.Render.Dashboard.make = function (_elm) {
                              playerState)]);
       }();
    });
-   var renderDashboard = F2(function (_v47,
-   _v48) {
+   var renderDashboard = F2(function (_v50,
+   _v51) {
       return function () {
-         switch (_v48.ctor)
+         switch (_v51.ctor)
          {case "_Tuple2":
             return function () {
                  return function () {
                     var displayedPlayerState = function () {
-                       var _v53 = _v47.watchMode;
-                       switch (_v53.ctor)
+                       var _v56 = _v50.watchMode;
+                       switch (_v56.ctor)
                        {case "NotWatching":
-                          return _v47.playerState;
+                          return _v50.playerState;
                           case "Watching":
-                          return $Game.selfWatching(_v47) ? A2($Game.findOpponent,
-                            _v47.opponents,
-                            _v53._0) : $Maybe.Nothing;}
+                          return $Game.selfWatching(_v50) ? A2($Game.findOpponent,
+                            _v50.opponents,
+                            _v56._0) : $Maybe.Nothing;}
                        _E.Case($moduleName,
-                       "between lines 273 and 276");
+                       "between lines 277 and 280");
                     }();
                     return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
-                                                                 _v48._0,
-                                                                 _v48._1,
+                                                                 _v51._0,
+                                                                 _v51._1,
                                                                  A2($Graphics$Element.topLeftAt,
                                                                  $Graphics$Element.Absolute(20),
                                                                  $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                                  $Graphics$Element.down,
                                                                  A2(topLeftElements,
-                                                                 _v47,
+                                                                 _v50,
                                                                  displayedPlayerState)))
                                                                  ,A3($Graphics$Element.container,
-                                                                 _v48._0,
-                                                                 _v48._1,
+                                                                 _v51._0,
+                                                                 _v51._1,
                                                                  A2($Graphics$Element.midTopAt,
                                                                  $Graphics$Element.Relative(0.5),
-                                                                 $Graphics$Element.Absolute(30)))(A2(midTopElement,
-                                                                 _v47,
+                                                                 $Graphics$Element.Absolute(20)))(A2(midTopElement,
+                                                                 _v50,
                                                                  displayedPlayerState))
                                                                  ,A3($Graphics$Element.container,
-                                                                 _v48._0,
-                                                                 _v48._1,
+                                                                 _v51._0,
+                                                                 _v51._1,
                                                                  A2($Graphics$Element.topRightAt,
                                                                  $Graphics$Element.Absolute(20),
                                                                  $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                                  $Graphics$Element.down,
                                                                  A2(topRightElements,
-                                                                 _v47,
+                                                                 _v50,
                                                                  displayedPlayerState)))
                                                                  ,A3($Graphics$Element.container,
-                                                                 _v48._0,
-                                                                 _v48._1,
+                                                                 _v51._0,
+                                                                 _v51._1,
                                                                  A2($Graphics$Element.midBottomAt,
                                                                  $Graphics$Element.Relative(0.5),
                                                                  $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                                  $Graphics$Element.up,
                                                                  A2(midBottomElements,
-                                                                 _v47,
+                                                                 _v50,
                                                                  displayedPlayerState)))]));
                  }();
               }();}
          _E.Case($moduleName,
-         "between lines 272 and 282");
+         "between lines 276 and 286");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
@@ -11576,13 +11582,13 @@ Elm.Render.Dashboard.make = function (_elm) {
                                   ,getBoard: getBoard
                                   ,getMode: getMode
                                   ,getHelp: getHelp
+                                  ,getMainStatus: getMainStatus
+                                  ,getTrialTimer: getTrialTimer
+                                  ,getRaceTimer: getRaceTimer
                                   ,getSubStatus: getSubStatus
                                   ,getFinishingStatus: getFinishingStatus
                                   ,getGatesCount: getGatesCount
                                   ,getTimeTrialFinishingStatus: getTimeTrialFinishingStatus
-                                  ,getMainStatus: getMainStatus
-                                  ,getTrialTimer: getTrialTimer
-                                  ,getRaceTimer: getRaceTimer
                                   ,getWindWheel: getWindWheel
                                   ,getVmgBar: getVmgBar
                                   ,topLeftElements: topLeftElements
@@ -12342,10 +12348,10 @@ Elm.Render.Utils.make = function (_elm) {
                        case "Watching":
                        return "Waiting...";}
                     _E.Case($moduleName,
-                    "between lines 69 and 71");
+                    "between lines 62 and 64");
                  }();}
             _E.Case($moduleName,
-            "between lines 66 and 71");
+            "between lines 59 and 64");
          }();
       }();
    };

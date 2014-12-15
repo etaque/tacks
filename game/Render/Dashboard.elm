@@ -136,16 +136,19 @@ getTrialTimer {countdown, playerState} =
     (Just c, Just s) ->
       let
         t = if isNothing s.nextGate then head s.crossedGates else c
-        o = if c > 0 then 1 else 0.5
       in
         formatTimer t (isNothing s.nextGate)
     _ -> ""
 
 getRaceTimer : GameState -> String
 getRaceTimer {countdown, playerState} =
-  case countdown of
-    Just c  -> formatTimer c False
-    Nothing -> "start pending"
+  case (countdown, playerState) of
+    (Just c, Just s) ->
+      let
+        t = if isNothing s.nextGate then head s.crossedGates else c
+      in
+        formatTimer t (isNothing s.nextGate)
+    _ -> "start pending"
 
 
 -- Sub status (normal font size)
