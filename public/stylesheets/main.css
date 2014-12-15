@@ -5024,6 +5024,8 @@ input[type="text"], input[type="password"], textarea {
     list-style: none; }
     .time-trial ul li .time {
       float: right; }
+    .time-trial ul li .rank:after {
+      content: "."; }
     .time-trial ul li.rank-10 {
       margin-bottom: 5px; }
     .time-trial ul li.current-player {

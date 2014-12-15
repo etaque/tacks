@@ -102,16 +102,18 @@
                 </a>
                 <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
 
-                <span class="ranking">@Messages("home.timeTrialRanking")</span>
-                <ul>
-                @for(ranking <- rankings) {
-                  <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }">
-                    <span class="rank">@{ranking.rank}. </span>
-                    <span class="handle">@trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous")</span>
-                    <span class="time">@Helpers.timer(ranking.finishTime)</span>
-                  </li>
+                @if(rankings.nonEmpty) {
+                  <span class="ranking">@Messages("home.timeTrialRanking")</span>
+                  <ul>
+                  @for(ranking <- rankings) {
+                    <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }">
+                      <span class="rank">@ranking.rank</span>
+                      <span class="handle">@trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous")</span>
+                      <span class="time">@Helpers.timer(ranking.finishTime)</span>
+                    </li>
+                  }
+                  </ul>
                 }
-                </ul>
               </div>
             </div>
           }

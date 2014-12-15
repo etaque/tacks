@@ -21,7 +21,7 @@ case class TimeTrial(
 object TimeTrial extends MongoDAO[TimeTrial] {
   val collectionName = "time_trials"
 
-  val periodFormat = "YYYY-ww"
+  val periodFormat = "YYYY-MM"
 
   def currentPeriod = LocalDate.now.toString(periodFormat)
 

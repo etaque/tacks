@@ -184,7 +184,7 @@ getGatesCount course player =
   "gate " ++ show (length player.crossedGates) ++ "/" ++ (show (1 + course.laps * 2))
 
 getTimeTrialFinishingStatus : GameState -> PlayerState -> String
-getTimeTrialFinishingStatus {playerId,ghosts} {crossedGates} =
+getTimeTrialFinishingStatus {playerId,ghosts} {player,crossedGates} =
   case findPlayerGhost playerId ghosts of
     Just playerGhost ->
       let
@@ -194,7 +194,10 @@ getTimeTrialFinishingStatus {playerId,ghosts} {crossedGates} =
         if newTime < previousTime
           then show (newTime - previousTime) ++ "ms\nnew best time!"
           else "+" ++ show (newTime - previousTime) ++ "ms\ntry again?"
-    Nothing -> "new best time!"
+    Nothing ->
+      case player.handle of
+        Just _ -> "you did it!"
+        Nothing -> "please create an account to save your run"
 
 --
 

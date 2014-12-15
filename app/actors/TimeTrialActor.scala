@@ -38,6 +38,8 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
   val ticks = Seq(cleanTick, gustsTick, frameTick)
 
+  def shouldSaveRun = player.isInstanceOf[User]
+
   def receive = {
 
     /**
@@ -86,15 +88,17 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
      */
     case StepResult(prevState, newState) => {
       state = newState
-      Tracking.pushStep(run.id, clock / 1000, TrackStep((clock % 1000).toInt, newState.position, newState.heading))
-      if (prevState.crossedGates != newState.crossedGates) updateTally()
+      if (shouldSaveRun) {
+        Tracking.pushStep(run.id, clock / 1000, TrackStep((clock % 1000).toInt, newState.position, newState.heading))
+        if (prevState.crossedGates != newState.crossedGates) updateTally()
+      }
     }
 
     /**
      * player quit => shutdown actor
      */
     case PlayerQuit(_) => {
-      if (!finished) TimeTrialRun.clean(run.id)
+      if (shouldSaveRun && !finished) TimeTrialRun.clean(run.id)
       self ! PoisonPill
     }
 
@@ -108,7 +112,6 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     }
 
   }
-
 
   def timeIsOver: Boolean = finishTime match {
     case Some(t) => run.creationTime.plus(t).plusSeconds(10).isBeforeNow

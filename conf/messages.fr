@@ -24,7 +24,7 @@ home.recentRaces=Courses récentes
 home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
 home.welcome=Bienvenue
 home.updateStatus=Maj statut
-home.timeTrials=Chronos de la semaine
+home.timeTrials=Chronos du mois
 home.timeTrialRanking=meilleurs temps
 home.runTimeTrial=Jouer
 
@@ -49,7 +49,7 @@ liveCenter.startedSince=Parti depuis {0}
 liveCenter.join=Rejoindre
 liveCenter.watch=Spectateur
 
-timeTrials.rankings=Classement
+timeTrials.rankings=Classement du mois
 timeTrials.run=Nouveau run
 timeTrials.warmup.name=Warmup
 timeTrials.warmup.description=Faites-vous la main sur les trois tours de ce petit parcours

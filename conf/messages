@@ -37,6 +37,8 @@ home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Pleas
 home.welcome=Welcome
 home.updateStatus=Update status
 home.timeTrials=Time trials
+home.timeTrialRanking=leaderboard
+home.runTimeTrial=Play
 
 footer.message=Tacks is an <a href="https://github.com/etaque/tacks">open source</a> game crafted by <a href="https://twitter.com/etaque">@etaque</a>.
 
@@ -59,3 +61,12 @@ liveCenter.waiting=Waiting
 liveCenter.startedSince=Started since {0}
 liveCenter.join=Join
 liveCenter.watch=Watch
+
+timeTrials.rankings=Current leaderboard
+timeTrials.run=New run
+timeTrials.warmup.name=Warmup
+timeTrials.warmup.description=Get your hands warm with the three laps of this short course
+timeTrials.inlands.name=Inlands
+timeTrials.inlands.description=Two laps on a narrow course, with many gusts & lulls
+timeTrials.archipel.name=Archipel
+timeTrials.archipel.description=Find your way througs the many islands of this course
