@@ -20,7 +20,7 @@ case class TimeTrial(
 
 object TimeTrial extends MongoDAO[TimeTrial] {
   val collectionName = "time_trials"
-  
+
   val periodFormat = "YYYY-ww"
 
   def currentPeriod = LocalDate.now.toString(periodFormat)
@@ -28,10 +28,10 @@ object TimeTrial extends MongoDAO[TimeTrial] {
   def findAllCurrent: Future[Seq[TimeTrial]] =
     Future.sequence(TrialGenerator.all.map(_.slug).map(TimeTrial.findCurrentBySlug)).map(_.flatten)
 
-  def zipWithPodiums(timeTrials: Seq[TimeTrial], playerId: BSONObjectID): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
-    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, podiumWithPlayer(playerId, r)))))
-  
-  def podiumWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking]): Seq[RunRanking] = 
+  def zipWithTops(timeTrials: Seq[TimeTrial], playerId: BSONObjectID): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
+    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, topWithPlayer(playerId, r)))))
+
+  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking]): Seq[RunRanking] =
     rankings.filter(r => r.rank <= 10 || r.playerId == playerId).sortBy(_.rank)
 
   def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, currentPeriod)
@@ -43,10 +43,6 @@ object TimeTrial extends MongoDAO[TimeTrial] {
   def ensureIndexes(): Unit = {
     import reactivemongo.api.indexes.Index
     import reactivemongo.api.indexes.IndexType._
-
-    collection.indexesManager.ensure(Index(
-      key = List("slug" -> Ascending),
-      unique = true))
 
     collection.indexesManager.ensure(Index(
       key = List("slug" -> Ascending, "period" -> Descending),
@@ -124,7 +120,7 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
       players <- User.listByIds(runs.map(_.playerId))
     }
     yield runs.zip(tracks).map { case (run, track) =>
-      GhostRun(run, track, players.find(_.id == run.playerId).map(_.handle))
+      GhostRun(run, track, run.playerId, players.find(_.id == run.playerId).map(_.handle))
     }
   }
 

@@ -4985,9 +4985,13 @@ input[type="text"], input[type="password"], textarea {
       color: #B1C0D8;
       font-size: 12px; }
 
+.time-trials {
+  margin-top: 20px; }
+
 .time-trial a.run, .time-trial a.run:visited {
   display: block;
   height: 200px;
+  margin-bottom: 10px;
   background-color: #2b4772;
   border-radius: 3px;
   border: 3px solid #2b4772;
@@ -5024,16 +5028,15 @@ input[type="text"], input[type="password"], textarea {
       margin-bottom: 5px; }
     .time-trial ul li.current-player {
       color: #E0A349; }
-.time-trial a.ranking {
+.time-trial .ranking {
   display: block;
   text-align: center;
   margin: 10px;
+  margin-bottom: 0;
   border-bottom: 2px solid #2b4772;
   padding: 4px 0;
   text-decoration: none;
   color: #B1C0D8; }
-  .time-trial a.ranking:hover {
-    background-color: #1f3251; }
 
 .finished-races {
   margin-top: 50px; }
@@ -5061,8 +5064,7 @@ input[type="text"], input[type="password"], textarea {
       color: #E0A349; }
 
 .show-time-trial .time-trial {
-  margin-top: 20px;
-  margin-bottom: 20px; }
+  margin-top: 20px; }
 .show-time-trial .time-trial-rankings {
   padding: 10px;
   margin: 0; }

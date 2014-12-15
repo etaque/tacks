@@ -1,5 +1,6 @@
 package models
 
+import reactivemongo.bson.BSONObjectID
 import org.joda.time.DateTime
 import Geo._
 import play.api.i18n.Lang
@@ -76,14 +77,21 @@ case class WatcherUpdate(watcher: Player, input: WatcherInput)
 case class GhostRun(
   run: TimeTrialRun,
   track: Tracking.Track,
+  playerId: BSONObjectID,
   playerHandle: Option[String]
 )
 
 case class GhostState(
   position: Point,
   heading: Double,
-  handle: Option[String]
+  id: BSONObjectID,
+  handle: Option[String],
+  gates: Seq[Long]
 )
+
+object GhostState {
+  def initial(id: BSONObjectID, handle: Option[String]) = GhostState((0,0), 0, id, handle, Nil)
+}
 
 case class RaceUpdate(
   playerId: String,

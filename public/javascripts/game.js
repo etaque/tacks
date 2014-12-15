@@ -10429,12 +10429,16 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,nextGate: v.nextGate === null ? $Maybe.Nothing : $Maybe.Just(typeof v.nextGate === "string" || typeof v.nextGate === "object" && v.nextGate instanceof String ? v.nextGate : _E.raise("invalid input, expecting JSString but got " + v.nextGate))} : _E.raise("invalid input, expecting JSObject [\"player\",\"position\",\"heading\",\"velocity\",\"vmgValue\",\"windAngle\",\"windOrigin\",\"windSpeed\",\"downwindVmg\",\"upwindVmg\",\"shadowDirection\",\"trail\",\"controlMode\",\"tackTarget\",\"crossedGates\",\"nextGate\"] but got " + v);
                                                                                                                                                                                                                                                                      })) : _E.raise("invalid input, expecting JSArray but got " + v.opponents)
                                                                                                                                                                                                                                                                      ,ghosts: _U.isJSArray(v.ghosts) ? _L.fromArray(v.ghosts.map(function (v) {
-                                                                                                                                                                                                                                                                        return typeof v === "object" && "position" in v && "heading" in v && "handle" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                             ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                   ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
-                                                                                                                                                                                                                                                                                                                                                                                                   ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
-                                                                                                                                                                                                                                                                                                                                                             ,heading: typeof v.heading === "number" ? v.heading : _E.raise("invalid input, expecting JSNumber but got " + v.heading)
-                                                                                                                                                                                                                                                                                                                                                             ,handle: v.handle === null ? $Maybe.Nothing : $Maybe.Just(typeof v.handle === "string" || typeof v.handle === "object" && v.handle instanceof String ? v.handle : _E.raise("invalid input, expecting JSString but got " + v.handle))} : _E.raise("invalid input, expecting JSObject [\"position\",\"heading\",\"handle\"] but got " + v);
+                                                                                                                                                                                                                                                                        return typeof v === "object" && "position" in v && "heading" in v && "id" in v && "handle" in v && "gates" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                          ,position: _U.isJSArray(v.position) ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                ,_0: typeof v.position[0] === "number" ? v.position[0] : _E.raise("invalid input, expecting JSNumber but got " + v.position[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                ,_1: typeof v.position[1] === "number" ? v.position[1] : _E.raise("invalid input, expecting JSNumber but got " + v.position[1])} : _E.raise("invalid input, expecting JSArray but got " + v.position)
+                                                                                                                                                                                                                                                                                                                                                                                          ,heading: typeof v.heading === "number" ? v.heading : _E.raise("invalid input, expecting JSNumber but got " + v.heading)
+                                                                                                                                                                                                                                                                                                                                                                                          ,id: typeof v.id === "string" || typeof v.id === "object" && v.id instanceof String ? v.id : _E.raise("invalid input, expecting JSString but got " + v.id)
+                                                                                                                                                                                                                                                                                                                                                                                          ,handle: v.handle === null ? $Maybe.Nothing : $Maybe.Just(typeof v.handle === "string" || typeof v.handle === "object" && v.handle instanceof String ? v.handle : _E.raise("invalid input, expecting JSString but got " + v.handle))
+                                                                                                                                                                                                                                                                                                                                                                                          ,gates: _U.isJSArray(v.gates) ? _L.fromArray(v.gates.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                                                             return typeof v === "number" ? v : _E.raise("invalid input, expecting JSNumber but got " + v);
+                                                                                                                                                                                                                                                                                                                                                                                          })) : _E.raise("invalid input, expecting JSArray but got " + v.gates)} : _E.raise("invalid input, expecting JSObject [\"position\",\"heading\",\"id\",\"handle\",\"gates\"] but got " + v);
                                                                                                                                                                                                                                                                      })) : _E.raise("invalid input, expecting JSArray but got " + v.ghosts)
                                                                                                                                                                                                                                                                      ,leaderboard: _U.isJSArray(v.leaderboard) ? _L.fromArray(v.leaderboard.map(function (v) {
                                                                                                                                                                                                                                                                         return typeof v === "object" && "playerId" in v && "playerHandle" in v && "gates" in v ? {_: {}
@@ -11145,9 +11149,172 @@ Elm.Render.Dashboard.make = function (_elm) {
                       ,legend]));
       }();
    };
-   var statusMessage = function (s) {
-      return $Text.centered($Render$Utils.bigText(s));
+   var getRaceTimer = function (_v2) {
+      return function () {
+         return function () {
+            var _v4 = _v2.countdown;
+            switch (_v4.ctor)
+            {case "Just":
+               return A2($Render$Utils.formatTimer,
+                 _v4._0,
+                 false);
+               case "Nothing":
+               return "start pending";}
+            _E.Case($moduleName,
+            "between lines 191 and 193");
+         }();
+      }();
    };
+   var getTrialTimer = function (_v6) {
+      return function () {
+         return function () {
+            var _v8 = {ctor: "_Tuple2"
+                      ,_0: _v6.countdown
+                      ,_1: _v6.playerState};
+            switch (_v8.ctor)
+            {case "_Tuple2":
+               switch (_v8._0.ctor)
+                 {case "Just":
+                    switch (_v8._1.ctor)
+                      {case "Just":
+                         return function () {
+                              var o = _U.cmp(_v8._0._0,
+                              0) > 0 ? 1 : 0.5;
+                              var t = $Maybe.isNothing(_v8._1._0.nextGate) ? $List.head(_v8._1._0.crossedGates) : _v8._0._0;
+                              return A2($Render$Utils.formatTimer,
+                              t,
+                              $Maybe.isNothing(_v8._1._0.nextGate));
+                           }();}
+                      break;}
+                 break;}
+            return "";
+         }();
+      }();
+   };
+   var getMainStatus = function (_v13) {
+      return function () {
+         return function () {
+            var s = function () {
+               var _v15 = _v13.gameMode;
+               switch (_v15.ctor)
+               {case "Race":
+                  return getRaceTimer(_v13);
+                  case "TimeTrial":
+                  return getTrialTimer(_v13);}
+               _E.Case($moduleName,
+               "between lines 172 and 175");
+            }();
+            var op = $Game.isInProgress(_v13) ? 0.5 : 1;
+            return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.bigText(s)));
+         }();
+      }();
+   };
+   var getTimeTrialFinishingStatus = F2(function (_v16,
+   _v17) {
+      return function () {
+         return function () {
+            return function () {
+               var _v20 = A2($Game.findPlayerGhost,
+               _v16.playerId,
+               _v16.ghosts);
+               switch (_v20.ctor)
+               {case "Just":
+                  return function () {
+                       var newTime = $List.head(_v17.crossedGates);
+                       var previousTime = $List.head(_v20._0.gates);
+                       return _U.cmp(newTime,
+                       previousTime) < 0 ? _L.append($String.show(newTime - previousTime),
+                       "ms\nnew best time!") : _L.append("+",
+                       _L.append($String.show(newTime - previousTime),
+                       "ms\ntry again?"));
+                    }();
+                  case "Nothing":
+                  return "new best time!";}
+               _E.Case($moduleName,
+               "between lines 155 and 164");
+            }();
+         }();
+      }();
+   });
+   var getGatesCount = F2(function (course,
+   player) {
+      return _L.append("gate ",
+      _L.append($String.show($List.length(player.crossedGates)),
+      _L.append("/",
+      $String.show(1 + course.laps * 2))));
+   });
+   var getFinishingStatus = F2(function (_v22,
+   playerState) {
+      return function () {
+         return function () {
+            var _v24 = playerState.nextGate;
+            switch (_v24.ctor)
+            {case "Just": switch (_v24._0)
+                 {case "StartLine":
+                    return "go!";}
+                 break;
+               case "Nothing":
+               return function () {
+                    var _v26 = _v22.gameMode;
+                    switch (_v26.ctor)
+                    {case "Race": return "finished";
+                       case "TimeTrial":
+                       return A2(getTimeTrialFinishingStatus,
+                         _v22,
+                         playerState);}
+                    _E.Case($moduleName,
+                    "between lines 143 and 146");
+                 }();}
+            return A2(getGatesCount,
+            _v22.course,
+            playerState);
+         }();
+      }();
+   });
+   var getSubStatus = function (_v27) {
+      return function () {
+         return function () {
+            var s = function () {
+               var _v29 = _v27.countdown;
+               switch (_v29.ctor)
+               {case "Just":
+                  return _U.cmp(_v29._0,
+                    0) > 0 ? "be ready" : A3($Maybe.maybe,
+                    "",
+                    getFinishingStatus(_v27),
+                    _v27.playerState);
+                  case "Nothing":
+                  return _v27.isMaster ? $Render$Utils.startCountdownMessage : "";}
+               _E.Case($moduleName,
+               "between lines 127 and 136");
+            }();
+            var op = 1;
+            return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.baseText(s)));
+         }();
+      }();
+   };
+   var midTopElement = F2(function (gameState,
+   playerState) {
+      return function () {
+         var subStatus = getSubStatus(gameState);
+         var mainStatus = getMainStatus(gameState);
+         var maxWidth = $List.maximum(_L.fromArray([$Graphics$Element.widthOf(mainStatus)
+                                                   ,$Graphics$Element.widthOf(subStatus)]));
+         var subStatusCentered = A4($Graphics$Element.container,
+         maxWidth,
+         $Graphics$Element.heightOf(subStatus),
+         $Graphics$Element.midTop,
+         subStatus);
+         var mainStatusCentered = A4($Graphics$Element.container,
+         maxWidth,
+         $Graphics$Element.heightOf(mainStatus),
+         $Graphics$Element.midTop,
+         mainStatus);
+         return A2($Graphics$Element.above,
+         mainStatusCentered,
+         subStatusCentered);
+      }();
+   });
    var getHelp = function (countdownMaybe) {
       return A3($Maybe.maybe,
       true,
@@ -11156,10 +11323,10 @@ Elm.Render.Dashboard.make = function (_elm) {
       },
       countdownMaybe) ? $Text.centered($Render$Utils.baseText($Render$Utils.helpMessage)) : $Graphics$Element.empty;
    };
-   var midBottomElements = F2(function (_v2,
+   var midBottomElements = F2(function (_v31,
    playerState) {
       return function () {
-         return _L.fromArray([getHelp(_v2.countdown)]);
+         return _L.fromArray([getHelp(_v31.countdown)]);
       }();
    });
    var getMode = function (gameState) {
@@ -11168,53 +11335,8 @@ Elm.Render.Dashboard.make = function (_elm) {
          return $Text.leftAligned($Render$Utils.baseText(modeText));
       }();
    };
-   var getGatesCount = F2(function (course,
-   player) {
-      return $Text.leftAligned($Render$Utils.baseText(_L.append("Gate ",
-      _L.append($String.show($List.length(player.crossedGates)),
-      _L.append("/",
-      $String.show(1 + course.laps * 2))))));
-   });
-   var getFinishingStatus = F2(function (course,
-   playerState) {
-      return function () {
-         var _v4 = playerState.nextGate;
-         switch (_v4.ctor)
-         {case "Just": switch (_v4._0)
-              {case "StartLine":
-                 return statusMessage("Go!");}
-              break;
-            case "Nothing":
-            return statusMessage("Finished");}
-         return A2(getGatesCount,
-         course,
-         playerState);
-      }();
-   });
-   var getStatus = function (_v6) {
-      return function () {
-         return function () {
-            var _v8 = _v6.countdown;
-            switch (_v8.ctor)
-            {case "Just":
-               return _U.cmp(_v8._0,
-                 0) > 0 ? statusMessage($Render$Utils.formatCountdown(_v8._0)) : A3($Maybe.maybe,
-                 $Graphics$Element.empty,
-                 getFinishingStatus(_v6.course),
-                 _v6.playerState);
-               case "Nothing":
-               return _v6.isMaster ? statusMessage($Render$Utils.startCountdownMessage) : $Graphics$Element.empty;}
-            _E.Case($moduleName,
-            "between lines 136 and 144");
-         }();
-      }();
-   };
-   var midTopElements = F2(function (gameState,
-   playerState) {
-      return _L.fromArray([getStatus(gameState)]);
-   });
    var buildBoardLine = F2(function (watching,
-   _v10) {
+   _v33) {
       return function () {
          return function () {
             var deltaText = A3($Maybe.maybe,
@@ -11223,19 +11345,19 @@ Elm.Render.Dashboard.make = function (_elm) {
                return _L.append("+",
                $String.show(d / 1000));
             },
-            _v10.delta);
+            _v33.delta);
             var handleText = $Render$Utils.fixedLength(12)(A3($Maybe.maybe,
             "Anonymous",
             $Basics.identity,
-            _v10.handle));
+            _v33.handle));
             var positionText = A3($Maybe.maybe,
             "  ",
             function (p) {
                return _L.append($String.show(p),
                ".");
             },
-            _v10.position);
-            var watchingText = watching ? _v10.watched ? "* " : "  " : "";
+            _v33.position);
+            var watchingText = watching ? _v33.watched ? "* " : "  " : "";
             var el = $Text.leftAligned($Render$Utils.baseText(_L.append(watchingText,
             A2($List.join,
             " ",
@@ -11244,7 +11366,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                          ,deltaText])))));
             return watching ? A5($Graphics$Input.customButton,
             $Inputs.watchedPlayer.handle,
-            $Maybe.Just(_v10.id),
+            $Maybe.Just(_v33.id),
             el,
             el,
             el) : el;
@@ -11253,7 +11375,7 @@ Elm.Render.Dashboard.make = function (_elm) {
    });
    var getOpponent = F3(function (watching,
    watchMode,
-   _v12) {
+   _v35) {
       return function () {
          return function () {
             var watched = function () {
@@ -11262,14 +11384,14 @@ Elm.Render.Dashboard.make = function (_elm) {
                   return false;
                   case "Watching":
                   return _U.eq(watchMode._0,
-                    _v12.player.id);}
+                    _v35.player.id);}
                _E.Case($moduleName,
-               "between lines 43 and 46");
+               "between lines 44 and 47");
             }();
             var line = {_: {}
                        ,delta: $Maybe.Nothing
-                       ,handle: _v12.player.handle
-                       ,id: _v12.player.id
+                       ,handle: _v35.player.handle
+                       ,id: _v35.player.id
                        ,position: $Maybe.Nothing
                        ,watched: watched};
             return A2(buildBoardLine,
@@ -11278,22 +11400,22 @@ Elm.Render.Dashboard.make = function (_elm) {
          }();
       }();
    });
-   var getOpponents = function (_v16) {
+   var getOpponents = function (_v39) {
       return function () {
          return function () {
             var allOpponents = A3($Maybe.maybe,
-            _v16.opponents,
+            _v39.opponents,
             function (ps) {
                return A2($List._op["::"],
                ps,
-               _v16.opponents);
+               _v39.opponents);
             },
-            _v16.playerState);
-            var watching = $Maybe.isNothing(_v16.playerState);
+            _v39.playerState);
+            var watching = $Maybe.isNothing(_v39.playerState);
             return $Graphics$Element.flow($Graphics$Element.down)(A2($List.map,
             A2(getOpponent,
             watching,
-            _v16.watchMode),
+            _v39.watchMode),
             allOpponents));
          }();
       }();
@@ -11314,7 +11436,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                return _U.eq(watchMode._0,
                  tally.playerId);}
             _E.Case($moduleName,
-            "between lines 73 and 76");
+            "between lines 69 and 72");
          }();
          var line = {_: {}
                     ,delta: delta
@@ -11327,17 +11449,17 @@ Elm.Render.Dashboard.make = function (_elm) {
          line);
       }();
    });
-   var getLeaderboard = function (_v20) {
+   var getLeaderboard = function (_v43) {
       return function () {
-         return $List.isEmpty(_v20.leaderboard) ? $Graphics$Element.empty : function () {
-            var watching = $Maybe.isNothing(_v20.playerState);
-            var leader = $List.head(_v20.leaderboard);
+         return $List.isEmpty(_v43.leaderboard) ? $Graphics$Element.empty : function () {
+            var watching = $Maybe.isNothing(_v43.playerState);
+            var leader = $List.head(_v43.leaderboard);
             return $Graphics$Element.flow($Graphics$Element.down)(A2($List.indexedMap,
             A3(getLeaderboardLine,
             watching,
-            _v20.watchMode,
+            _v43.watchMode,
             leader),
-            _v20.leaderboard));
+            _v43.leaderboard));
          }();
       }();
    };
@@ -11356,6 +11478,9 @@ Elm.Render.Dashboard.make = function (_elm) {
              ,position: c
              ,watched: e};
    });
+   var xs = A2($Graphics$Element.spacer,
+   5,
+   5);
    var s = A2($Graphics$Element.spacer,
    20,
    20);
@@ -11365,10 +11490,10 @@ Elm.Render.Dashboard.make = function (_elm) {
                           ,s
                           ,getBoard(gameState)]);
    });
-   var topRightElements = F2(function (_v22,
+   var topRightElements = F2(function (_v45,
    playerState) {
       return function () {
-         return _L.fromArray([getWindWheel(_v22.wind)
+         return _L.fromArray([getWindWheel(_v45.wind)
                              ,s
                              ,A3($Maybe.maybe,
                              $Graphics$Element.empty,
@@ -11376,90 +11501,92 @@ Elm.Render.Dashboard.make = function (_elm) {
                              playerState)]);
       }();
    });
-   var renderDashboard = F2(function (_v24,
-   _v25) {
+   var renderDashboard = F2(function (_v47,
+   _v48) {
       return function () {
-         switch (_v25.ctor)
+         switch (_v48.ctor)
          {case "_Tuple2":
             return function () {
                  return function () {
                     var displayedPlayerState = function () {
-                       var _v30 = _v24.watchMode;
-                       switch (_v30.ctor)
+                       var _v53 = _v47.watchMode;
+                       switch (_v53.ctor)
                        {case "NotWatching":
-                          return _v24.playerState;
+                          return _v47.playerState;
                           case "Watching":
-                          return $Game.selfWatching(_v24) ? A2($Game.findOpponent,
-                            _v24.opponents,
-                            _v30._0) : $Maybe.Nothing;}
+                          return $Game.selfWatching(_v47) ? A2($Game.findOpponent,
+                            _v47.opponents,
+                            _v53._0) : $Maybe.Nothing;}
                        _E.Case($moduleName,
-                       "between lines 214 and 217");
+                       "between lines 273 and 276");
                     }();
                     return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
-                                                                 _v25._0,
-                                                                 _v25._1,
+                                                                 _v48._0,
+                                                                 _v48._1,
                                                                  A2($Graphics$Element.topLeftAt,
                                                                  $Graphics$Element.Absolute(20),
                                                                  $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                                  $Graphics$Element.down,
                                                                  A2(topLeftElements,
-                                                                 _v24,
+                                                                 _v47,
                                                                  displayedPlayerState)))
                                                                  ,A3($Graphics$Element.container,
-                                                                 _v25._0,
-                                                                 _v25._1,
+                                                                 _v48._0,
+                                                                 _v48._1,
                                                                  A2($Graphics$Element.midTopAt,
                                                                  $Graphics$Element.Relative(0.5),
-                                                                 $Graphics$Element.Absolute(40)))(A2($Graphics$Element.flow,
-                                                                 $Graphics$Element.down,
-                                                                 A2(midTopElements,
-                                                                 _v24,
-                                                                 displayedPlayerState)))
+                                                                 $Graphics$Element.Absolute(30)))(A2(midTopElement,
+                                                                 _v47,
+                                                                 displayedPlayerState))
                                                                  ,A3($Graphics$Element.container,
-                                                                 _v25._0,
-                                                                 _v25._1,
+                                                                 _v48._0,
+                                                                 _v48._1,
                                                                  A2($Graphics$Element.topRightAt,
                                                                  $Graphics$Element.Absolute(20),
                                                                  $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                                  $Graphics$Element.down,
                                                                  A2(topRightElements,
-                                                                 _v24,
+                                                                 _v47,
                                                                  displayedPlayerState)))
                                                                  ,A3($Graphics$Element.container,
-                                                                 _v25._0,
-                                                                 _v25._1,
+                                                                 _v48._0,
+                                                                 _v48._1,
                                                                  A2($Graphics$Element.midBottomAt,
                                                                  $Graphics$Element.Relative(0.5),
                                                                  $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
                                                                  $Graphics$Element.up,
                                                                  A2(midBottomElements,
-                                                                 _v24,
+                                                                 _v47,
                                                                  displayedPlayerState)))]));
                  }();
               }();}
          _E.Case($moduleName,
-         "between lines 213 and 223");
+         "between lines 272 and 282");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op
                                   ,s: s
+                                  ,xs: xs
                                   ,BoardLine: BoardLine
                                   ,buildBoardLine: buildBoardLine
                                   ,getOpponent: getOpponent
                                   ,getOpponents: getOpponents
-                                  ,getGatesCount: getGatesCount
                                   ,getLeaderboardLine: getLeaderboardLine
                                   ,getLeaderboard: getLeaderboard
                                   ,getBoard: getBoard
                                   ,getMode: getMode
                                   ,getHelp: getHelp
-                                  ,statusMessage: statusMessage
+                                  ,getSubStatus: getSubStatus
                                   ,getFinishingStatus: getFinishingStatus
-                                  ,getStatus: getStatus
+                                  ,getGatesCount: getGatesCount
+                                  ,getTimeTrialFinishingStatus: getTimeTrialFinishingStatus
+                                  ,getMainStatus: getMainStatus
+                                  ,getTrialTimer: getTrialTimer
+                                  ,getRaceTimer: getRaceTimer
                                   ,getWindWheel: getWindWheel
                                   ,getVmgBar: getVmgBar
                                   ,topLeftElements: topLeftElements
-                                  ,midTopElements: midTopElements
+                                  ,midTopElement: midTopElement
                                   ,topRightElements: topRightElements
                                   ,midBottomElements: midBottomElements
                                   ,renderDashboard: renderDashboard};
@@ -12164,17 +12291,36 @@ Elm.Render.Utils.make = function (_elm) {
    $String = Elm.String.make(_elm),
    $Text = Elm.Text.make(_elm),
    $Time = Elm.Time.make(_elm);
-   var formatCountdown = function (c) {
+   var formatTimer = F2(function (t,
+   showMs) {
       return function () {
-         var cs = $Basics.ceiling($Time.inSeconds(c));
-         var m = cs / 60 | 0;
-         var s = A2($Basics.rem,cs,60);
-         return _L.append($String.show(m),
-         _L.append("\' ",
-         _L.append($String.show(s),
-         "\"")));
+         var t$ = $Basics.abs($Basics.ceiling(t));
+         var totalSeconds = t$ / 1000 | 0;
+         var minutes = totalSeconds / 60 | 0;
+         var sMinutes = $String.show(minutes);
+         var seconds = showMs || _U.cmp(t,
+         0) < 1 ? A2($Basics.rem,
+         totalSeconds,
+         60) : A2($Basics.rem,
+         totalSeconds,
+         60) + 1;
+         var sSeconds = A3($String.padLeft,
+         2,
+         _U.chr("0"),
+         $String.show(seconds));
+         var millis = A2($Basics.rem,
+         t$,
+         1000);
+         var sMillis = showMs ? _L.append(".",
+         A3($String.padLeft,
+         3,
+         _U.chr("0"),
+         $String.show(millis))) : "";
+         return _L.append(sMinutes,
+         _L.append(":",
+         _L.append(sSeconds,sMillis)));
       }();
-   };
+   });
    var gameTitle = function (_v0) {
       return function () {
          return function () {
@@ -12182,7 +12328,9 @@ Elm.Render.Utils.make = function (_elm) {
             switch (_v2.ctor)
             {case "Just":
                return _U.cmp(_v2._0,
-                 0) > 0 ? formatCountdown(_v2._0) : "Started";
+                 0) > 0 ? A2(formatTimer,
+                 _v2._0,
+                 false) : "Started";
                case "Nothing":
                return function () {
                     var _v4 = _v0.watchMode;
@@ -12194,10 +12342,10 @@ Elm.Render.Utils.make = function (_elm) {
                        case "Watching":
                        return "Waiting...";}
                     _E.Case($moduleName,
-                    "between lines 54 and 56");
+                    "between lines 69 and 71");
                  }();}
             _E.Case($moduleName,
-            "between lines 51 and 56");
+            "between lines 66 and 71");
          }();
       }();
    };
@@ -12251,7 +12399,7 @@ Elm.Render.Utils.make = function (_elm) {
                               ,baseText: baseText
                               ,bigText: bigText
                               ,fixedLength: fixedLength
-                              ,formatCountdown: formatCountdown
+                              ,formatTimer: formatTimer
                               ,gameTitle: gameTitle};
    return _elm.Render.Utils.values;
 };Elm.Inputs = Elm.Inputs || {};
@@ -12404,22 +12552,43 @@ Elm.Game.make = function (_elm) {
    _E = _N.Error.make(_elm),
    $moduleName = "Game",
    $Basics = Elm.Basics.make(_elm),
+   $Core = Elm.Core.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Time = Elm.Time.make(_elm);
-   var selfWatching = function (_v0) {
+   var isInProgress = function (_v0) {
       return function () {
          return function () {
-            var _v2 = _v0.watchMode;
+            var _v2 = {ctor: "_Tuple2"
+                      ,_0: _v0.countdown
+                      ,_1: _v0.playerState};
             switch (_v2.ctor)
+            {case "_Tuple2":
+               switch (_v2._0.ctor)
+                 {case "Just":
+                    switch (_v2._1.ctor)
+                      {case "Just":
+                         return _U.cmp(_v2._0._0,
+                           0) < 1 && $Maybe.isJust(_v2._1._0.nextGate);}
+                      break;}
+                 break;}
+            return false;
+         }();
+      }();
+   };
+   var selfWatching = function (_v7) {
+      return function () {
+         return function () {
+            var _v9 = _v7.watchMode;
+            switch (_v9.ctor)
             {case "NotWatching":
                return false;
                case "Watching":
-               return _U.eq(_v2._0,
-                 _v0.playerId);}
+               return _U.eq(_v9._0,
+                 _v7.playerId);}
             _E.Case($moduleName,
-            "between lines 152 and 154");
+            "between lines 159 and 161");
          }();
       }();
    };
@@ -12435,13 +12604,13 @@ Elm.Game.make = function (_elm) {
          return $List.isEmpty(filtered) ? $Maybe.Nothing : $Maybe.Just($List.head(filtered));
       }();
    });
-   var areaCenters = function (_v4) {
+   var areaCenters = function (_v11) {
       return function () {
          return function () {
-            var $ = _v4.leftBottom,
+            var $ = _v11.leftBottom,
             l = $._0,
             b = $._1;
-            var $ = _v4.rightTop,
+            var $ = _v11.rightTop,
             r = $._0,
             t = $._1;
             var cx = (r + l) / 2;
@@ -12452,13 +12621,13 @@ Elm.Game.make = function (_elm) {
          }();
       }();
    };
-   var areaDims = function (_v6) {
+   var areaDims = function (_v13) {
       return function () {
          return function () {
-            var $ = _v6.leftBottom,
+            var $ = _v13.leftBottom,
             l = $._0,
             b = $._1;
-            var $ = _v6.rightTop,
+            var $ = _v13.rightTop,
             r = $._0,
             t = $._1;
             return {ctor: "_Tuple2"
@@ -12467,6 +12636,14 @@ Elm.Game.make = function (_elm) {
          }();
       }();
    };
+   var findPlayerGhost = F2(function (playerId,
+   ghosts) {
+      return A2($Core.find,
+      function (g) {
+         return _U.eq(g.id,playerId);
+      },
+      ghosts);
+   });
    var getGateMarks = function (gate) {
       return {ctor: "_Tuple2"
              ,_0: {ctor: "_Tuple2"
@@ -12581,12 +12758,16 @@ Elm.Game.make = function (_elm) {
              ,radius: d
              ,speed: c};
    });
-   var GhostState = F3(function (a,
+   var GhostState = F5(function (a,
    b,
-   c) {
+   c,
+   d,
+   e) {
       return {_: {}
-             ,handle: c
+             ,gates: e
+             ,handle: d
              ,heading: b
+             ,id: c
              ,position: a};
    });
    var PlayerTally = F3(function (a,
@@ -12714,10 +12895,12 @@ Elm.Game.make = function (_elm) {
                       ,defaultWind: defaultWind
                       ,defaultGame: defaultGame
                       ,getGateMarks: getGateMarks
+                      ,findPlayerGhost: findPlayerGhost
                       ,areaDims: areaDims
                       ,areaCenters: areaCenters
                       ,findOpponent: findOpponent
-                      ,selfWatching: selfWatching};
+                      ,selfWatching: selfWatching
+                      ,isInProgress: isInProgress};
    return _elm.Game.values;
 };Elm.Geo = Elm.Geo || {};
 Elm.Geo.make = function (_elm) {
@@ -12913,6 +13096,15 @@ Elm.Core.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var find = F2(function (f,
+   list) {
+      return function () {
+         var filtered = A2($List.filter,
+         f,
+         list);
+         return $List.isEmpty(filtered) ? $Maybe.Nothing : $Maybe.Just($List.head(filtered));
+      }();
+   });
    var average = function (items) {
       return $List.sum(items) / $Basics.toFloat($List.length(items));
    };
@@ -12994,7 +13186,8 @@ Elm.Core.make = function (_elm) {
                       ,getCountdown: getCountdown
                       ,mapMaybe: mapMaybe
                       ,compact: compact
-                      ,average: average};
+                      ,average: average
+                      ,find: find};
    return _elm.Core.values;
 };Elm.Drag = Elm.Drag || {};
 Elm.Drag.make = function (_elm) {

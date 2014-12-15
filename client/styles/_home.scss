@@ -73,12 +73,17 @@
   }
 }
 
+.time-trials {
+  margin-top: 20px;
+}
+
 .time-trial {
   $br: 3px;
 
   a.run, a.run:visited {
     display: block;
     height: 200px;
+    margin-bottom: 10px;
     background-color: $lightSeaBlue;
     border-radius: $br;
     border: 3px solid $lightSeaBlue;
@@ -137,17 +142,15 @@
     }
   }
 
-  a.ranking {
+  .ranking {
     display: block;
     text-align: center;
     margin: 10px;
+    margin-bottom: 0;
     border-bottom: 2px solid $lightSeaBlue;
     padding: 4px 0;
     text-decoration: none;
     color: $whiteBlue;
-    &:hover {
-      background-color: $darkSeaBlue;
-    }
   }
 }
 

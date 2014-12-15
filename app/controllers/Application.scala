@@ -19,7 +19,7 @@ object Application extends Controller with Security {
       finishedRaces     <- Race.listFinished(10)
       users             <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
       timeTrials        <- TimeTrial.findAllCurrent
-      trialsWithRanking <- TimeTrial.zipWithPodiums(timeTrials, request.player.id)
+      trialsWithRanking <- TimeTrial.zipWithTops(timeTrials, request.player.id)
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
     yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, finishedRaces, users, Users.userForm, jsMessages))

@@ -1,8 +1,9 @@
 module Game where
 
+import Maybe
+
 import Geo (..)
-import Json
-import Dict
+import Core
 
 type Gate = { y: Float, width: Float }
 type Island = { location : Point, radius : Float }
@@ -55,7 +56,9 @@ type PlayerTally = { playerId: String, playerHandle: Maybe String, gates: [Time]
 type GhostState =
   { position: Point
   , heading:  Float
+  , id:       String
   , handle:   Maybe String
+  , gates:    [Time]
   }
 
 type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
@@ -124,6 +127,10 @@ defaultGame =
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
 
+findPlayerGhost : String -> [GhostState] -> Maybe GhostState
+findPlayerGhost playerId ghosts =
+  Core.find (\g -> g.id == playerId) ghosts
+
 areaDims : RaceArea -> (Float,Float)
 areaDims {rightTop,leftBottom} =
   let
@@ -153,4 +160,9 @@ selfWatching {watchMode,playerId} =
     Watching pid -> pid == playerId
     NotWatching  -> False
 
+isInProgress : GameState -> Bool
+isInProgress {countdown,playerState} =
+  case (countdown, playerState) of
+    (Just c, Just ps) -> c <= 0 && Maybe.isJust ps.nextGate
+    _ -> False
 

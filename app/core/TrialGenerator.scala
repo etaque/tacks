@@ -70,9 +70,10 @@ object TrialGenerator {
   def ensureTimeTrials() = {
     val period = TimeTrial.currentPeriod
     all.foreach { t =>
-      TimeTrial.findCurrentBySlug(t.slug).map {
+      TimeTrial.findBySlugAndPeriod(t.slug, period).map {
         case Some(_) =>
         case None => {
+          play.Logger.info(s"time trial '${t.slug}' not found for period $period, creating...")
           val trial = TimeTrial(slug = t.slug, course = t.generateCourse(), period = period)
           TimeTrial.save(trial)
         }

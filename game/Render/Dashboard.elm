@@ -8,10 +8,11 @@ import Inputs (watchedPlayer)
 
 import String
 import Text
-import Maybe (maybe,isNothing)
+import Maybe (maybe,isNothing,isJust)
 import Graphics.Input(customButton)
 
 s = spacer 20 20
+xs = spacer 5 5
 
 type BoardLine =
   { id:       String
@@ -61,11 +62,6 @@ getOpponents {opponents,watchMode,playerState} =
   in
     map (getOpponent watching watchMode) allOpponents |> flow down
 
-getGatesCount : Course -> PlayerState -> Element
-getGatesCount course player =
-  "Gate " ++ show (length player.crossedGates) ++ "/" ++ (show (1 + course.laps * 2))
-    |> baseText
-    |> leftAligned
 
 getLeaderboardLine : Bool -> WatchMode -> PlayerTally -> Int -> PlayerTally -> Element
 getLeaderboardLine watching watchMode leaderTally position tally =
@@ -121,27 +117,83 @@ getHelp countdownMaybe =
   else
     empty
 
-statusMessage : String -> Element
-statusMessage s = bigText s |> centered
 
-getFinishingStatus : Course -> PlayerState -> Element
-getFinishingStatus course playerState =
+-- Main status (big font size)
+
+getMainStatus : GameState -> Element
+getMainStatus ({countdown, gameMode, playerState} as gameState) =
+  let
+    op = if isInProgress gameState then 0.5 else 1
+    s = case gameMode of
+      TimeTrial -> getTrialTimer gameState
+      Race      -> getRaceTimer gameState
+  in
+    bigText s |> centered |> opacity op
+
+getTrialTimer : GameState -> String
+getTrialTimer {countdown, playerState} =
+  case (countdown, playerState) of
+    (Just c, Just s) ->
+      let
+        t = if isNothing s.nextGate then head s.crossedGates else c
+        o = if c > 0 then 1 else 0.5
+      in
+        formatTimer t (isNothing s.nextGate)
+    _ -> ""
+
+getRaceTimer : GameState -> String
+getRaceTimer {countdown, playerState} =
+  case countdown of
+    Just c  -> formatTimer c False
+    Nothing -> "start pending"
+
+
+-- Sub status (normal font size)
+
+getSubStatus : GameState -> Element
+getSubStatus ({countdown,isMaster,playerState,course,gameMode} as gameState) =
+  let
+    op = 1
+    s = case countdown of
+      Just c ->
+        if c > 0
+          then "be ready"
+          else maybe "" (getFinishingStatus gameState) playerState
+      Nothing ->
+        if isMaster
+          then startCountdownMessage
+          else "" -- start pending
+  in
+    baseText s |> centered |> opacity op
+
+
+getFinishingStatus : GameState -> PlayerState -> String
+getFinishingStatus ({course,gameMode} as gameState) playerState =
   case playerState.nextGate of
-    Nothing          -> statusMessage "Finished"
-    Just "StartLine" -> statusMessage "Go!"
+    Nothing -> case gameMode of
+      Race      -> "finished"
+      TimeTrial -> getTimeTrialFinishingStatus gameState playerState
+    Just "StartLine" -> "go!"
     _                -> getGatesCount course playerState
 
-getStatus : GameState -> Element
-getStatus {countdown,isMaster,playerState,course} =
-  case countdown of
-    Just c ->
-      if c > 0
-        then statusMessage <| formatCountdown c
-        else maybe empty (getFinishingStatus course) playerState
-    Nothing ->
-      if isMaster
-        then statusMessage startCountdownMessage
-        else empty
+getGatesCount : Course -> PlayerState -> String
+getGatesCount course player =
+  "gate " ++ show (length player.crossedGates) ++ "/" ++ (show (1 + course.laps * 2))
+
+getTimeTrialFinishingStatus : GameState -> PlayerState -> String
+getTimeTrialFinishingStatus {playerId,ghosts} {crossedGates} =
+  case findPlayerGhost playerId ghosts of
+    Just playerGhost ->
+      let
+        previousTime = head playerGhost.gates
+        newTime = head crossedGates
+      in
+        if newTime < previousTime
+          then show (newTime - previousTime) ++ "ms\nnew best time!"
+          else "+" ++ show (newTime - previousTime) ++ "ms\ntry again?"
+    Nothing -> "new best time!"
+
+--
 
 getWindWheel : Wind -> Element
 getWindWheel wind =
@@ -192,9 +244,17 @@ topLeftElements gameState playerState =
   , getBoard gameState
   ]
 
-midTopElements : GameState -> Maybe PlayerState -> [Element]
-midTopElements gameState playerState =
-  [ getStatus gameState ]
+midTopElement : GameState -> Maybe PlayerState -> Element
+midTopElement gameState playerState =
+  --getMainStatus gameState `above` getSubStatus gameState
+  let
+    mainStatus = getMainStatus gameState
+    subStatus = getSubStatus gameState
+    maxWidth = maximum [widthOf mainStatus, widthOf subStatus]
+    mainStatusCentered = container maxWidth (heightOf mainStatus) midTop mainStatus
+    subStatusCentered = container maxWidth (heightOf subStatus) midTop subStatus
+  in
+    mainStatusCentered `above` subStatusCentered
 
 topRightElements : GameState -> Maybe PlayerState -> [Element]
 topRightElements {wind,opponents} playerState =
@@ -217,7 +277,7 @@ renderDashboard ({playerId,playerState,opponents,watchMode} as gameState) (w,h) 
   in
     layers
       [ container w h (topLeftAt (Absolute 20) (Absolute 20)) <| flow down (topLeftElements gameState displayedPlayerState)
-      , container w h (midTopAt (Relative 0.5) (Absolute 40)) <| flow down (midTopElements gameState displayedPlayerState)
+      , container w h (midTopAt (Relative 0.5) (Absolute 20)) <| midTopElement gameState displayedPlayerState
       , container w h (topRightAt (Absolute 20) (Absolute 20)) <| flow down (topRightElements gameState displayedPlayerState)
       , container w h (midBottomAt (Relative 0.5) (Absolute 20)) <| flow up (midBottomElements gameState displayedPlayerState)
       ]

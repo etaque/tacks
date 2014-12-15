@@ -89,6 +89,13 @@ compact maybes =
 average : [Float] -> Float
 average items = (sum items) / (toFloat (length items))
 
+find : (a -> Bool) -> [a] -> Maybe a
+find f list =
+  let
+    filtered = filter f list
+  in
+    if isEmpty filtered then Nothing else Just (head filtered)
+
 --indexedMap : (Int -> a -> b) -> [a] -> [b]
 --indexedMap f xs =
 --    zipWith f [ 0 .. length xs - 1 ] xs

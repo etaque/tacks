@@ -50,8 +50,8 @@ liveCenter.join=Rejoindre
 liveCenter.watch=Spectateur
 
 timeTrials.rankings=Classement
-timeTrials.run=Jouer
-timeTrials.warmup.name=Warm up
+timeTrials.run=Nouveau run
+timeTrials.warmup.name=Warmup
 timeTrials.warmup.description=Faites-vous la main sur les trois tours de ce petit parcours
 timeTrials.inlands.name=Inlands
 timeTrials.inlands.description=Deux tours sur parcours étroit, avec de nombreuses risées

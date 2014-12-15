@@ -26,7 +26,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
   var playerRef: Option[ActorRef] = None
 
-  var ghostRuns = Seq.empty[GhostRun]
+  var ghosts = Map.empty[GhostRun, GhostState]
 
   def started = startTime.isBeforeNow
   def finished = state.crossedGates.length == course.gatesToCross
@@ -48,7 +48,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     }
 
     case SetGhostRuns(runs) => {
-      ghostRuns = runs
+      ghosts = runs.map(r => (r, GhostState.initial(r.playerId, r.playerHandle))).toMap
     }
 
     /**
@@ -125,16 +125,16 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     TimeTrialRun.updateTimes(run.id, state.crossedGates, finishTime)
   }
 
-  def currentGhosts = {
+  def currentGhosts: Seq[GhostState] = {
     val second = clock / 1000
     val ms = (clock % 1000).toInt
-    ghostRuns.flatMap { case GhostRun(gRun, track, playerHandle) =>
+    ghosts.map { case (GhostRun(gRun, track, playerId, playerHandle), ghostState) =>
       track.get(second).flatMap { frames =>
         frames.sortBy(f => math.abs(f.ms - ms)).headOption.map { s =>
-          GhostState(s.position, s.heading, playerHandle)
+          GhostState(s.position, s.heading, playerId, playerHandle, gRun.tally)
         }
-      }
-    }
+      }.getOrElse(ghostState)
+    }.toSeq
   }
 
   def raceUpdate = {

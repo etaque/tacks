@@ -40,17 +40,25 @@ fixedLength l txt =
   else
     S.left (l - 3) txt ++ "..."
 
-formatCountdown : Time -> String
-formatCountdown c =
-  let cs = c |> inSeconds |> ceiling
-      m = cs // 60
-      s = cs `rem` 60
-  in  (show m) ++ "' " ++ (show s) ++ "\""
+formatTimer : Time -> Bool -> String
+formatTimer t showMs =
+  let
+    t' = t |> ceiling |> abs
+    totalSeconds = t' // 1000
+    minutes = totalSeconds // 60
+    seconds = if showMs || t <= 0 then totalSeconds `rem` 60 else (totalSeconds `rem` 60) + 1
+    millis = t' `rem` 1000
+    sMinutes = show minutes
+    sSeconds = S.padLeft 2 '0' (show seconds)
+    sMillis = if showMs then "." ++ (S.padLeft 3 '0' (show millis)) else ""
+  in
+    sMinutes ++ ":" ++ sSeconds ++ sMillis
+
 
 gameTitle : Game.GameState -> String
 gameTitle {countdown,opponents,watchMode} = case countdown of
   Just c ->
-    if c > 0 then formatCountdown c else "Started"
+    if c > 0 then formatTimer c False else "Started"
   Nothing -> case watchMode of
     Game.Watching _  -> "Waiting..."
     Game.NotWatching -> "(" ++ show (1 + length opponents) ++ ") Waiting..."
