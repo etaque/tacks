@@ -41,7 +41,7 @@ object Inlands extends TrialGenerator {
     islands = Nil,
     area = RaceArea((600, 2700), (-600, -200)),
     windGenerator = WindGenerator.spawn(6, 4, 6, 4),
-    gustGenerator = GustGenerator(10, Seq.fill[GustDef](30)(GustDef.spawn))
+    gustGenerator = GustGenerator(15, Seq.fill[GustDef](30)(GustDef.spawn))
   )
 }
 
@@ -55,9 +55,9 @@ object Archipel extends TrialGenerator {
       downwind = Gate(100, 200),
       laps = 1,
       markRadius = 5,
-      islands = Seq.fill(100)(Island((area.randomX(400), area.randomY(500)), Random.nextInt(50) + 50)),
+      islands = Seq.fill(100)(Island((area.randomX(600), area.randomY(600)), Random.nextInt(50) + 50)),
       area = area,
-      windGenerator = WindGenerator.spawn(4, 8, 8, 6),
+      windGenerator = WindGenerator.spawn(4, 4, 6, 6),
       gustGenerator = GustGenerator(30, Seq.fill[GustDef](10)(GustDef.spawn))
     )
   }
