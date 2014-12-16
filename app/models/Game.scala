@@ -76,7 +76,7 @@ case class WatcherUpdate(watcher: Player, input: WatcherInput)
 
 case class GhostRun(
   run: TimeTrialRun,
-  track: Tracking.Track,
+  tracks: Seq[RunTrack],
   playerId: BSONObjectID,
   playerHandle: Option[String]
 )
@@ -90,7 +90,7 @@ case class GhostState(
 )
 
 object GhostState {
-  def initial(id: BSONObjectID, handle: Option[String]) = GhostState((0,0), 0, id, handle, Nil)
+  def initial(id: BSONObjectID, handle: Option[String], gates: Seq[Long]) = GhostState((0,0), 0, id, handle, gates)
 }
 
 case class RaceUpdate(

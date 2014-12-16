@@ -116,7 +116,7 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
         case None => scala.util.Random.shuffle(ranking).take(count)
       }
       runs <- listByIds(selectedRankings.map(_.runId))
-      tracks <- Future.sequence(runs.map(r => Tracking.getTrack(r.id)))
+      tracks <- Future.sequence(runs.map(r => RunTrack.listForRun(r.id)))
       players <- User.listByIds(runs.map(_.playerId))
     }
     yield runs.zip(tracks).map { case (run, track) =>
@@ -126,7 +126,7 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
 
   def clean(runId: BSONObjectID): Future[LastError] = {
     for {
-      _ <- Tracking.removeTrack(runId)
+      _ <- RunTrack.removeRun(runId)
       e <- remove(runId)
     }
     yield e

@@ -20,6 +20,10 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   val course = trial.course
 
   def clock = DateTime.now.getMillis - startTime.getMillis + trial.countdownSeconds * 1000
+  def currentSecond = clock / 1000
+
+  var activeSecond = currentSecond
+  var activePoints = Seq.empty[TrackPoint]
 
   var state = PlayerState.initial(player)
   var input = PlayerInput.initial
@@ -50,7 +54,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     }
 
     case SetGhostRuns(runs) => {
-      ghosts = runs.map(r => (r, GhostState.initial(r.playerId, r.playerHandle))).toMap
+      ghosts = runs.map(r => (r, GhostState.initial(r.playerId, r.playerHandle, r.run.tally))).toMap
     }
 
     /**
@@ -89,7 +93,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     case StepResult(prevState, newState) => {
       state = newState
       if (shouldSaveRun) {
-        Tracking.pushStep(run.id, clock / 1000, TrackStep((clock % 1000).toInt, newState.position, newState.heading))
+        trackPoint(newState)
         if (prevState.crossedGates != newState.crossedGates) updateTally()
       }
     }
@@ -106,9 +110,6 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
      * clean finished runs
      */
     case AutoClean => {
-      // if (run.finishTime.map(run.creationTime.plus).exists(_.isBeforeNow)) {
-      //   playerRef.foreach(_ ! PoisonPill)
-      // }
     }
 
   }
@@ -128,13 +129,26 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     TimeTrialRun.updateTimes(run.id, state.crossedGates, finishTime)
   }
 
+  def trackPoint(state: PlayerState) = {
+    val p = TrackPoint((clock % 1000).toInt, state.position, state.heading)
+    if (currentSecond == activeSecond) {
+      activePoints :+= p
+    } else {
+      val track = RunTrack(runId = run.id, second = activeSecond, points = activePoints)
+      RunTrack.save(track).map { _ =>
+        activeSecond = currentSecond
+        activePoints = Seq(p)
+      }
+    }
+  }
+
   def currentGhosts: Seq[GhostState] = {
     val second = clock / 1000
     val ms = (clock % 1000).toInt
-    ghosts.map { case (GhostRun(gRun, track, playerId, playerHandle), ghostState) =>
-      track.get(second).flatMap { frames =>
-        frames.sortBy(f => math.abs(f.ms - ms)).headOption.map { s =>
-          GhostState(s.position, s.heading, playerId, playerHandle, gRun.tally)
+    ghosts.map { case (GhostRun(gRun, tracks, playerId, playerHandle), ghostState) =>
+      tracks.find(_.second == second).flatMap { track =>
+        track.points.sortBy(p => math.abs(p.ms - ms)).headOption.map { p =>
+          ghostState.copy(position = p.p, heading = p.h)
         }
       }.getOrElse(ghostState)
     }.toSeq

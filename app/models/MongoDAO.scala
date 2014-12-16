@@ -93,8 +93,8 @@ trait MongoDAO[T] {
     list(query)
   }
 
-  def list(query: BSONDocument = BSONDocument()): Future[Seq[T]] = {
-    collection.find(query).cursor[T].collect[Seq]()
+  def list(query: BSONDocument = BSONDocument(), sort: BSONDocument = BSONDocument()): Future[Seq[T]] = {
+    collection.find(query).sort(sort).cursor[T].collect[Seq]()
   }
 
   def list: Future[Seq[T]] = list()

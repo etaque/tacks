@@ -16,13 +16,13 @@ object WarmUp extends TrialGenerator {
   val slug = "warmup"
 
   def generateCourse() = {
-    val area = RaceArea((500, 700), (-500, -100))
+    val area = RaceArea((500, 800), (-500, -100))
     Course(
       upwind = Gate(600, 100),
       downwind = Gate(100, 100),
       laps = 3,
       markRadius = 5,
-      islands = Seq.fill(2)(Island((area.randomX(300), area.randomY(200)), Random.nextInt(50) + 20)),// Seq(Island((200, 400), 40), Island((-200, 300), 60)),
+      islands = Nil,
       area = area,
       windGenerator = WindGenerator.spawn(3, 3, 2, 2),
       gustGenerator = GustGenerator(30, Seq.fill[GustDef](10)(GustDef.spawn))

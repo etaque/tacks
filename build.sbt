@@ -12,7 +12,6 @@ scalaVersion := "2.11.4"
 
 libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23",
-  "com.etaty.rediscala" %% "rediscala" % "1.4.0",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "org.julienrf" %% "play-jsmessages" % "1.6.2",
   "org.scalacheck" %% "scalacheck" % "1.12.1" % "test",
