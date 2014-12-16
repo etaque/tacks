@@ -11062,6 +11062,7 @@ Elm.Render.Dashboard.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Color = Elm.Color.make(_elm),
    $Core = Elm.Core.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
@@ -11161,7 +11162,9 @@ Elm.Render.Dashboard.make = function (_elm) {
                {case "Just":
                   return function () {
                        var newTime = $List.head(_v3.crossedGates);
-                       var previousTime = $List.head(_v6._0.gates);
+                       var previousTime = $List.head(A2($Debug.log,
+                       "gates",
+                       _v6._0.gates));
                        return _U.cmp(newTime,
                        previousTime) < 0 ? _L.append($String.show(newTime - previousTime),
                        "ms\nnew best time!") : _L.append("+",
@@ -11177,10 +11180,10 @@ Elm.Render.Dashboard.make = function (_elm) {
                           case "Nothing":
                           return "please create an account to save your run";}
                        _E.Case($moduleName,
-                       "between lines 198 and 200");
+                       "between lines 196 and 198");
                     }();}
                _E.Case($moduleName,
-               "between lines 188 and 200");
+               "between lines 186 and 198");
             }();
          }();
       }();
@@ -11212,7 +11215,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                          _v10,
                          playerState);}
                     _E.Case($moduleName,
-                    "between lines 176 and 179");
+                    "between lines 174 and 177");
                  }();}
             return A2(getGatesCount,
             _v10.course,
@@ -11235,7 +11238,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                   case "Nothing":
                   return _v15.isMaster ? $Render$Utils.startCountdownMessage : "";}
                _E.Case($moduleName,
-               "between lines 160 and 169");
+               "between lines 158 and 167");
             }();
             var op = 1;
             return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.baseText(s)));
@@ -11301,7 +11304,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                   case "TimeTrial":
                   return getTrialTimer(_v33);}
                _E.Case($moduleName,
-               "between lines 127 and 130");
+               "between lines 125 and 128");
             }();
             var op = $Game.isInProgress(_v33) ? 0.5 : 1;
             return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.bigText(s)));
@@ -11345,10 +11348,7 @@ Elm.Render.Dashboard.make = function (_elm) {
       }();
    });
    var getMode = function (gameState) {
-      return function () {
-         var modeText = $Maybe.isNothing(gameState.playerState) ? "SPECTATOR MODE" : "PLAYER MODE";
-         return $Text.leftAligned($Render$Utils.baseText(modeText));
-      }();
+      return $Maybe.isNothing(gameState.playerState) ? $Text.leftAligned($Render$Utils.baseText("SPECTATOR MODE")) : $Graphics$Element.empty;
    };
    var buildBoardLine = F2(function (watching,
    _v38) {
@@ -11401,7 +11401,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                   return _U.eq(watchMode._0,
                     _v40.player.id);}
                _E.Case($moduleName,
-               "between lines 44 and 47");
+               "between lines 46 and 49");
             }();
             var line = {_: {}
                        ,delta: $Maybe.Nothing
@@ -11451,7 +11451,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                return _U.eq(watchMode._0,
                  tally.playerId);}
             _E.Case($moduleName,
-            "between lines 69 and 72");
+            "between lines 71 and 74");
          }();
          var line = {_: {}
                     ,delta: delta
@@ -11479,7 +11479,8 @@ Elm.Render.Dashboard.make = function (_elm) {
       }();
    };
    var getBoard = function (gameState) {
-      return $List.isEmpty(gameState.leaderboard) ? getOpponents(gameState) : getLeaderboard(gameState);
+      return _U.eq(gameState.gameMode,
+      $Game.TimeTrial) ? $Graphics$Element.empty : $List.isEmpty(gameState.leaderboard) ? getOpponents(gameState) : getLeaderboard(gameState);
    };
    var BoardLine = F5(function (a,
    b,
@@ -11533,7 +11534,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                             _v52.opponents,
                             _v58._0) : $Maybe.Nothing;}
                        _E.Case($moduleName,
-                       "between lines 280 and 283");
+                       "between lines 278 and 281");
                     }();
                     return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
                                                                  _v53._0,
@@ -11576,7 +11577,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                  }();
               }();}
          _E.Case($moduleName,
-         "between lines 279 and 289");
+         "between lines 277 and 287");
       }();
    });
    _elm.Render.Dashboard.values = {_op: _op

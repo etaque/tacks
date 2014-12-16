@@ -96,19 +96,15 @@ getLeaderboard {leaderboard,watchMode,playerState} =
 
 getBoard : GameState -> Element
 getBoard gameState =
-  if isEmpty gameState.leaderboard then
-    getOpponents gameState
-  else
-    getLeaderboard gameState
+  if | gameState.gameMode == TimeTrial -> empty
+     | isEmpty gameState.leaderboard -> getOpponents gameState
+     | otherwise -> getLeaderboard gameState
 
 getMode : GameState -> Element
 getMode gameState =
-  let
-    modeText = if isNothing gameState.playerState
-      then "SPECTATOR MODE"
-      else "PLAYER MODE"
-  in
-    modeText |> baseText |> leftAligned
+  if isNothing gameState.playerState
+    then "SPECTATOR MODE" |> baseText |> leftAligned
+    else empty
 
 getHelp : Maybe Float -> Element
 getHelp countdownMaybe =
