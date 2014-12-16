@@ -4,8 +4,13 @@ import String as S
 import Text
 import Game
 
-helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n" ++
-  "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
+helpMessage =
+  "ARROWS: turn left/right\n" ++
+  "ENTER:  lock angle to wind\n" ++
+  "SPACE:  tack or jibe"
+
+--helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n" ++
+--  "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
 
 startCountdownMessage = "press C to start countdown (60s)"
 

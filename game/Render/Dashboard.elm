@@ -106,12 +106,15 @@ getMode gameState =
     then "SPECTATOR MODE" |> baseText |> leftAligned
     else empty
 
-getHelp : Maybe Float -> Element
-getHelp countdownMaybe =
-  if maybe True (\c -> c > 0) countdownMaybe then
-    helpMessage |> baseText |> centered
-  else
-    empty
+getHelp : GameState -> Element
+getHelp gameState =
+  case gameState.gameMode of
+    Race -> empty
+    TimeTrial -> helpMessage |> baseText |> leftAligned |> opacity 0.8
+  --if maybe True (\c -> c > 0) countdownMaybe then
+  --  helpMessage |> baseText |> centered
+  --else
+  --  empty
 
 
 -- Main status (big font size)
@@ -244,6 +247,7 @@ topLeftElements gameState playerState =
   [ getMode gameState
   , s
   , getBoard gameState
+  , getHelp gameState
   ]
 
 midTopElement : GameState -> Maybe PlayerState -> Element
@@ -265,9 +269,13 @@ topRightElements {wind,opponents} playerState =
   , maybe empty getVmgBar playerState
   ]
 
-midBottomElements : GameState -> Maybe PlayerState -> [Element]
-midBottomElements {countdown} playerState =
-  [ getHelp countdown ]
+--midBottomElements : GameState -> Maybe PlayerState -> [Element]
+--midBottomElements {countdown} playerState =
+--  [ getHelp countdown ]
+
+leftBottomElements : GameState -> Maybe PlayerState -> [Element]
+leftBottomElements gameState playerState =
+  [ getHelp gameState ]
 
 
 renderDashboard : GameState -> (Int,Int) -> Element
@@ -281,5 +289,6 @@ renderDashboard ({playerId,playerState,opponents,watchMode} as gameState) (w,h) 
       [ container w h (topLeftAt (Absolute 20) (Absolute 20)) <| flow down (topLeftElements gameState displayedPlayerState)
       , container w h (midTopAt (Relative 0.5) (Absolute 20)) <| midTopElement gameState displayedPlayerState
       , container w h (topRightAt (Absolute 20) (Absolute 20)) <| flow down (topRightElements gameState displayedPlayerState)
-      , container w h (midBottomAt (Relative 0.5) (Absolute 20)) <| flow up (midBottomElements gameState displayedPlayerState)
+      --, container w h (bottomLeftAt (Absolute 20) (Absolute 20)) <| flow up (leftBottomElements gameState displayedPlayerState)
+      --, container w h (midBottomAt (Relative 0.5) (Absolute 20)) <| flow up (midBottomElements gameState displayedPlayerState)
       ]
