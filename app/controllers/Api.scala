@@ -106,7 +106,6 @@ object Api extends Controller with Security {
       timeTrial <- TimeTrial.findById(timeTrialId)
       run = TimeTrialRun(timeTrialId = timeTrial.id, playerId = player.id)
       ghostRuns <- TimeTrialRun.findGhosts(timeTrial, run)
-      _ <- TimeTrialRun.save(run)
       timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]
     }
     yield {

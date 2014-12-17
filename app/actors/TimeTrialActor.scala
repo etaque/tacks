@@ -44,6 +44,8 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
   def shouldSaveRun = player.isInstanceOf[User]
 
+  if (shouldSaveRun) TimeTrialRun.save(run)
+
   def receive = {
 
     /**
