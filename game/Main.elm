@@ -1,6 +1,9 @@
 module Main where
 
 import Window
+import Signal (..)
+import Time (..)
+import Graphics.Element (Element)
 
 import Inputs (..)
 import Game
@@ -15,9 +18,9 @@ port raceInput : Signal
   , course:      Maybe Game.Course
   , playerState: Maybe Game.PlayerState
   , wind:        Game.Wind
-  , opponents:   [Game.PlayerState]
-  , ghosts:      [Game.GhostState]
-  , leaderboard: [Game.PlayerTally]
+  , opponents:   List Game.PlayerState
+  , ghosts:      List Game.GhostState
+  , leaderboard: List Game.PlayerTally
   , isMaster:    Bool
   , watching:    Bool
   , timeTrial:   Bool
@@ -27,11 +30,10 @@ clock : Signal Float
 clock = inSeconds <~ fps 30
 
 input : Signal GameInput
-input = sampleOn clock <| lift7 GameInput
+input = sampleOn clock <| map5 GameInput
   clock
-  chrono
+  --chrono
   keyboardInput
-  mouseInput
   Window.dimensions
   raceInput
   watcherInput
@@ -49,4 +51,4 @@ port title : Signal String
 port title = Render.Utils.gameTitle <~ gameState
 
 main : Signal Element
-main = lift2 R.renderAll Window.dimensions gameState
+main = map2 R.renderAll Window.dimensions gameState

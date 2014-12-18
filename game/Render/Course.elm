@@ -7,7 +7,11 @@ import Game (..)
 import String
 import Text
 
-import Maybe (maybe)
+import Maybe as M
+import List (..)
+import Graphics.Collage (..)
+import Color (white,black)
+import Time (Time)
 
 arcShape : Float -> Int -> Int -> Int -> Shape
 arcShape r start length way =
@@ -104,7 +108,7 @@ renderGateLine gate lineStyle =
   let (left,right) = getGateMarks gate
   in  segment left right |> traced lineStyle
 
-data GateLocation = Upwind | Downwind
+type GateLocation = Upwind | Downwind
 
 renderGateHelpers : Gate -> Float -> GateLocation -> Float -> Form
 renderGateHelpers gate markRadius gateLoc timer =
@@ -202,9 +206,9 @@ renderLaylines {wind,course} playerState =
 renderDownwind : GameState -> Form
 renderDownwind ({playerState,course,now,countdown} as gameState) =
   let
-    isFirstGate = maybe False (\ps -> isEmpty ps.crossedGates) playerState
-    isLastGate = maybe False (\ps -> (length ps.crossedGates) == course.laps * 2) playerState
-    isNext = maybe False (\ps -> ps.nextGate == Just "DownwindGate") playerState
+    isFirstGate = M.map (\ps -> isEmpty ps.crossedGates) playerState |> M.withDefault False
+    isLastGate = M.map (\ps -> (length ps.crossedGates) == course.laps * 2) playerState |> M.withDefault False
+    isNext = M.map (\ps -> ps.nextGate == Just "DownwindGate") playerState |> M.withDefault False
   in
     if | isFirstGate -> renderStartLine course.downwind course.markRadius (isStarted countdown) now
        | isLastGate  -> renderFinishLine course.downwind course.markRadius now
@@ -213,7 +217,7 @@ renderDownwind ({playerState,course,now,countdown} as gameState) =
 renderUpwind : GameState -> Form
 renderUpwind ({playerState,course,now} as gameState) =
   let
-    isNext = maybe False (\ps -> ps.nextGate == Just "UpwindGate") playerState
+    isNext = M.map (\ps -> ps.nextGate == Just "UpwindGate") playerState |> M.withDefault False
   in
     renderGate course.upwind course.markRadius now isNext Upwind
 
@@ -222,7 +226,7 @@ renderCourse ({playerState,opponents,course,now,center} as gameState) =
   let
     forms =
       [ renderBounds gameState.course.area
-      , maybe (toForm empty) (renderLaylines gameState) playerState
+      , M.map (renderLaylines gameState) playerState |> M.withDefault emptyForm
       , renderIslands gameState
       , renderDownwind gameState
       , renderUpwind gameState

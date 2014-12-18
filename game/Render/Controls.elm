@@ -4,13 +4,15 @@ import Render.Utils (..)
 import Core (..)
 import Geo (..)
 import Game (..)
+
 import String
 import Text
 import Maybe
+import Graphics.Collage (..)
 
 gateHintLabel: Int -> Form
 gateHintLabel d =
-  (show d) ++ "m" |> baseText |> centered |> toForm
+  (toString d) ++ "m" |> baseText |> Text.centered |> toForm
 
 
 gateHintTriangle : Float -> Bool -> Path

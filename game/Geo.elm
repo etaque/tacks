@@ -2,8 +2,10 @@ module Geo where
 
 import Core
 
-type Point = (Float, Float)
-type Segment = (Point, Point)
+import Time (..)
+
+type alias Point = (Float, Float)
+type alias Segment = (Point, Point)
 
 floatify (x,y) = (toFloat x, toFloat y)
 

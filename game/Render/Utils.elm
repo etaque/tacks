@@ -1,8 +1,14 @@
 module Render.Utils where
 
-import String as S
-import Text
 import Game
+
+import String as S
+import Text as T
+import List (..)
+import Time (..)
+import Graphics.Collage as C
+import Graphics.Element as E
+import Color (rgb, white)
 
 helpMessage =
   "ARROWS: turn left/right\n" ++
@@ -14,7 +20,7 @@ helpMessage =
 
 startCountdownMessage = "press C to start countdown (60s)"
 
-emptyForm = toForm empty
+emptyForm = C.toForm E.empty
 
 colors =
   { seaBlue = rgb 35 57 92
@@ -25,17 +31,17 @@ colors =
   , green = rgb 100 180 106
   }
 
-baseText : String -> Text
+baseText : String -> T.Text
 baseText s = s
-  |> toText
-  |> Text.height 15
-  |> typeface ["Inconsolata", "monospace"]
+  |> T.fromString
+  |> T.height 15
+  |> T.typeface ["Inconsolata", "monospace"]
 
-bigText : String -> Text
+bigText : String -> T.Text
 bigText s = s
-  |> toText
-  |> Text.height 32
-  |> typeface ["Inconsolata", "monospace"]
+  |> T.fromString
+  |> T.height 32
+  |> T.typeface ["Inconsolata", "monospace"]
 
 
 fixedLength : Int -> String -> String
@@ -53,9 +59,9 @@ formatTimer t showMs =
     minutes = totalSeconds // 60
     seconds = if showMs || t <= 0 then totalSeconds `rem` 60 else (totalSeconds `rem` 60) + 1
     millis = t' `rem` 1000
-    sMinutes = show minutes
-    sSeconds = S.padLeft 2 '0' (show seconds)
-    sMillis = if showMs then "." ++ (S.padLeft 3 '0' (show millis)) else ""
+    sMinutes = toString minutes
+    sSeconds = S.padLeft 2 '0' (toString seconds)
+    sMillis = if showMs then "." ++ (S.padLeft 3 '0' (toString millis)) else ""
   in
     sMinutes ++ ":" ++ sSeconds ++ sMillis
 
@@ -66,4 +72,4 @@ gameTitle {countdown,opponents,watchMode} = case countdown of
     if c > 0 then formatTimer c False else "Started"
   Nothing -> case watchMode of
     Game.Watching _  -> "Waiting..."
-    Game.NotWatching -> "(" ++ show (1 + length opponents) ++ ") Waiting..."
+    Game.NotWatching -> "(" ++ toString (1 + length opponents) ++ ") Waiting..."

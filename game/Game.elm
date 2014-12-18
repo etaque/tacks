@@ -1,38 +1,40 @@
 module Game where
 
-import Maybe
-
 import Geo (..)
 import Core
 
-type Gate = { y: Float, width: Float }
-type Island = { location : Point, radius : Float }
-type RaceArea = { rightTop: Point, leftBottom: Point }
+import Maybe as M
+import Time (..)
+import List (..)
 
-type Vmg =
+type alias Gate = { y: Float, width: Float }
+type alias Island = { location : Point, radius : Float }
+type alias RaceArea = { rightTop: Point, leftBottom: Point }
+
+type alias Vmg =
   { angle: Float
   , speed: Float
   , value: Float
   }
 
-type Course =
+type alias Course =
   { upwind:           Gate
   , downwind:         Gate
   , laps:             Int
   , markRadius:       Float
-  , islands:          [Island]
+  , islands:          List Island
   , area:             RaceArea
   , windShadowLength: Float
   , boatWidth:        Float
   }
 
-type Player =
+type alias Player =
   { id:     String
   , handle: Maybe String
   , status: Maybe String
   }
 
-type PlayerState =
+type alias PlayerState =
   { player:          Player
   , position:        Point
   , heading:         Float
@@ -44,39 +46,39 @@ type PlayerState =
   , downwindVmg:     Vmg
   , upwindVmg:       Vmg
   , shadowDirection: Float
-  , trail:           [Point]
+  , trail:           List Point
   , controlMode:     String
   , tackTarget:      Maybe Float
-  , crossedGates:    [Time]
-  , nextGate:        Maybe String -- GateLocation data type is incompatible with port inputs
+  , crossedGates:    List Time
+  , nextGate:        Maybe String
   }
 
-type PlayerTally = { playerId: String, playerHandle: Maybe String, gates: [Time] }
+type alias PlayerTally = { playerId: String, playerHandle: Maybe String, gates: List Time }
 
-type GhostState =
+type alias GhostState =
   { position: Point
   , heading:  Float
   , id:       String
   , handle:   Maybe String
-  , gates:    [Time]
+  , gates:    List Time
   }
 
-type Gust = { position : Point, angle: Float, speed: Float, radius: Float }
-type Wind = { origin : Float, speed : Float, gusts : [Gust] }
+type alias Gust = { position : Point, angle: Float, speed: Float, radius: Float }
+type alias Wind = { origin : Float, speed : Float, gusts : List Gust }
 
-data WatchMode = NotWatching | Watching String
-data GameMode = Race | TimeTrial
+type WatchMode = NotWatching | Watching String
+type GameMode = Race | TimeTrial
 
-type GameState =
+type alias GameState =
   { wind:        Wind
   , playerId:    String
   , playerState: Maybe PlayerState
-  , wake:        [Point]
+  , wake:        List Point
   , center:      Point
-  , opponents:   [PlayerState]
-  , ghosts:      [GhostState]
+  , opponents:   List PlayerState
+  , ghosts:      List GhostState
   , course:      Course
-  , leaderboard: [PlayerTally]
+  , leaderboard: List PlayerTally
   , now:         Time
   , countdown:   Maybe Time
   , isMaster:    Bool
@@ -127,7 +129,7 @@ defaultGame =
 getGateMarks : Gate -> (Point,Point)
 getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
 
-findPlayerGhost : String -> [GhostState] -> Maybe GhostState
+findPlayerGhost : String -> List GhostState -> Maybe GhostState
 findPlayerGhost playerId ghosts =
   Core.find (\g -> g.id == playerId) ghosts
 
@@ -149,7 +151,7 @@ areaCenters {rightTop,leftBottom} =
   in
     (cx, cy)
 
-findOpponent : [PlayerState] -> String -> Maybe PlayerState
+findOpponent : List PlayerState -> String -> Maybe PlayerState
 findOpponent opponents id =
   let filtered = filter (\ps -> ps.player.id == id) opponents
   in  if isEmpty filtered then Nothing else Just (head filtered)
@@ -163,6 +165,8 @@ selfWatching {watchMode,playerId} =
 isInProgress : GameState -> Bool
 isInProgress {countdown,playerState} =
   case (countdown, playerState) of
-    (Just c, Just ps) -> c <= 0 && Maybe.isJust ps.nextGate
+    (Just c, Just ps) -> c <= 0 && case ps.nextGate of
+      Just _ -> True
+      Nothing -> False
     _ -> False
 

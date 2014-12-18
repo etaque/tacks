@@ -7,14 +7,20 @@ import Game (..)
 import Inputs (watchedPlayer)
 
 import String
-import Text
-import Maybe (maybe,isNothing,isJust)
-import Graphics.Input(customButton)
+import Text (leftAligned,centered)
+import List (..)
+import Maybe as M
+import Graphics.Input (customButton)
+import Graphics.Element (..)
+import Graphics.Collage (..)
+import Color (white)
+import Time (Time)
+import Signal
 
 s = spacer 20 20
 xs = spacer 5 5
 
-type BoardLine =
+type alias BoardLine =
   { id:       String
   , handle:   Maybe String
   , position: Maybe Int
@@ -26,15 +32,15 @@ buildBoardLine : Bool -> BoardLine -> Element
 buildBoardLine watching {id,handle,position,delta,watched} =
   let
     watchingText = if watching then (if watched then "* " else "  ") else ""
-    positionText = maybe "  " (\p -> show p ++ ".") position
-    handleText   = maybe "Anonymous" identity handle |> fixedLength 12
-    deltaText    = maybe "-" (\d -> "+" ++ show (d / 1000)) delta
-    el = watchingText ++ join " " [positionText, handleText, deltaText]
+    positionText = M.map (\p -> toString p ++ ".") position |> M.withDefault "  "
+    handleText   = M.withDefault "Anonymous" handle |> fixedLength 12
+    deltaText    = M.map (\d -> "+" ++ toString (d / 1000)) delta |> M.withDefault "-"
+    el = watchingText ++ String.join " " [positionText, handleText, deltaText]
       |> baseText
       |> leftAligned
   in
     if watching then
-      customButton watchedPlayer.handle (Just id) el el el
+      customButton (Signal.send watchedPlayer (Just id)) el el el
     else
       el
 
@@ -57,8 +63,10 @@ getOpponent watching watchMode {player} =
 getOpponents : GameState -> Element
 getOpponents {opponents,watchMode,playerState} =
   let
-    watching = isNothing playerState
-    allOpponents = maybe opponents (\ps -> ps :: opponents) playerState
+    watching = case playerState of
+      Nothing -> True
+      _ -> False
+    allOpponents = M.map (\ps -> ps :: opponents) playerState |> M.withDefault opponents
   in
     map (getOpponent watching watchMode) allOpponents |> flow down
 
@@ -160,7 +168,7 @@ getSubStatus ({countdown,isMaster,playerState,course,gameMode} as gameState) =
       Just c ->
         if c > 0
           then "be ready"
-          else maybe "" (getFinishingStatus gameState) playerState
+          else M.map (getFinishingStatus gameState) playerState |> M.withDefault ""
       Nothing ->
         if isMaster
           then startCountdownMessage
@@ -180,7 +188,7 @@ getFinishingStatus ({course,gameMode} as gameState) playerState =
 
 getGatesCount : Course -> PlayerState -> String
 getGatesCount course player =
-  "gate " ++ show (length player.crossedGates) ++ "/" ++ (show (1 + course.laps * 2))
+  "gate " ++ toString (length player.crossedGates) ++ "/" ++ (toString (1 + course.laps * 2))
 
 getTimeTrialFinishingStatus : GameState -> PlayerState -> String
 getTimeTrialFinishingStatus {playerId,ghosts} {player,crossedGates} =
@@ -191,8 +199,8 @@ getTimeTrialFinishingStatus {playerId,ghosts} {player,crossedGates} =
         newTime = head crossedGates
       in
         if newTime < previousTime
-          then show (newTime - previousTime) ++ "ms\nnew best time!"
-          else "+" ++ show (newTime - previousTime) ++ "ms\ntry again?"
+          then toString (newTime - previousTime) ++ "ms\nnew best time!"
+          else "+" ++ toString (newTime - previousTime) ++ "ms\ntry again?"
     Nothing ->
       case player.handle of
         Just _ -> "you did it!"
@@ -210,10 +218,10 @@ getWindWheel wind =
       |> filled white
       |> rotate (windOriginRadians + pi/2)
       |> move (fromPolar (r + 4, windOriginRadians))
-    windOriginText = ((show (round wind.origin)) ++ "&deg;")
+    windOriginText = ((toString (round wind.origin)) ++ "&deg;")
       |> baseText |> centered |> toForm
       |> move (0, r + 25)
-    windSpeedText = ((show (round wind.speed)) ++ "kn")
+    windSpeedText = ((toString (round wind.speed)) ++ "kn")
       |> baseText |> centered |> toForm
     legend = "WIND" |> baseText |> centered |> toForm |> move (0, -50)
   in
@@ -242,7 +250,7 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
       collage 80 (barHeight + 40) [bar, legend]
 
 
-topLeftElements : GameState -> Maybe PlayerState -> [Element]
+topLeftElements : GameState -> Maybe PlayerState -> List Element
 topLeftElements gameState playerState =
   [ getMode gameState
   , s
@@ -262,18 +270,18 @@ midTopElement gameState playerState =
   in
     mainStatusCentered `above` subStatusCentered
 
-topRightElements : GameState -> Maybe PlayerState -> [Element]
+topRightElements : GameState -> Maybe PlayerState -> List Element
 topRightElements {wind,opponents} playerState =
   [ getWindWheel wind
   , s
-  , maybe empty getVmgBar playerState
+  , M.map getVmgBar playerState |> M.withDefault empty
   ]
 
 --midBottomElements : GameState -> Maybe PlayerState -> [Element]
 --midBottomElements {countdown} playerState =
 --  [ getHelp countdown ]
 
-leftBottomElements : GameState -> Maybe PlayerState -> [Element]
+leftBottomElements : GameState -> Maybe PlayerState -> List Element
 leftBottomElements gameState playerState =
   [ getHelp gameState ]
 

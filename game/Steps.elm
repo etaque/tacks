@@ -5,7 +5,7 @@ import Game (..)
 import Geo (..)
 import Core (..)
 
-import Maybe (..)
+import Maybe as M
 
 centerStep : GameState -> GameState
 centerStep gameState =
@@ -29,11 +29,11 @@ raceInputStep raceInput gameState =
                     ghosts <- ghosts,
                     playerId <- playerId,
                     playerState <- playerState,
-                    course <- maybe gameState.course identity course,
+                    course <- M.withDefault gameState.course course,
                     wind <- wind,
                     leaderboard <- leaderboard,
                     now <- now,
-                    countdown <- mapMaybe (\st -> st - now) startTime,
+                    countdown <- M.map (\st -> st - now) startTime,
                     gameMode <- gameMode,
                     isMaster <- isMaster }
 
@@ -46,7 +46,7 @@ watchStep input gameState =
   in  { gameState | watchMode <- watchMode }
 
 stepGame : GameInput -> GameState -> GameState
-stepGame {raceInput, delta, windowInput, mouseInput, watcherInput} gameState =
+stepGame {raceInput, delta, windowInput, watcherInput} gameState =
   raceInputStep raceInput gameState
     |> (if raceInput.watching then watchStep watcherInput else identity)
     |> centerStep
