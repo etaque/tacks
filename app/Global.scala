@@ -15,7 +15,7 @@ object Global extends GlobalSettings {
 
     RacesSupervisor.start()
 
-    val trialsFreq = if (play.Play.isDev) 10.seconds else 1.hour
+    val trialsFreq = if (play.Play.isDev) 5.seconds else 1.hour
     Akka.system.scheduler.schedule(10.seconds, trialsFreq)(TrialGenerator.ensureTimeTrials())
   }
 }

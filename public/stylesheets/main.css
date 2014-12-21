@@ -5017,6 +5017,8 @@ input[type="text"], input[type="password"], textarea {
     background-color: rgba(0, 0, 0, 0.2);
     color: #E6E6E6;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1); }
+.time-trial .btn-block {
+  margin-bottom: 30px; }
 .time-trial ul {
   padding: 10px;
   margin: 0; }

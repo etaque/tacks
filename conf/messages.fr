@@ -57,3 +57,10 @@ timeTrials.inlands.name=Inlands
 timeTrials.inlands.description=Deux tours sur parcours étroit, avec de nombreuses risées
 timeTrials.archipel.name=Archipel
 timeTrials.archipel.description=Trouvez votre chemin au milieu des îles
+timeTrials.grid.name=Grid
+timeTrials.grid.description=Un glitch dans la matrice est-il à l'origine de cet ensemble d'' îles en pointillé ?
+timeTrials.tracks.name=Tracks
+timeTrials.tracks.description=Tous les chemins mènent à l''arrivée
+timeTrials.ultimate.name=Ultimate
+timeTrials.ultimate.description=Mais quel esprit torturé a bien pu créer ce circuit...
+
