@@ -41,7 +41,11 @@
               }
             }
             @if(ranking.isRecent) { <abbr title="@Messages("timeTrials.recent")">*</abbr> }
-            <span class="time">@views.Helpers.timer(ranking.finishTime)</span>
+            <span class="time">@if(ranking.rank == 1) {
+              @views.Helpers.timer(ranking.finishTime)
+            } else {
+              @views.Helpers.timeDelta(ranking.finishTime - rankings.map(_.finishTime).min)
+            }</span>
           </li>
         }
         </ul>

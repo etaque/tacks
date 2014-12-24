@@ -112,7 +112,11 @@
                         @trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous")
                       </span>
                       @if(ranking.isRecent) { <abbr title="@Messages("timeTrials.recent")">*</abbr> }
-                      <span class="time">@Helpers.timer(ranking.finishTime)</span>
+                      <span class="time">@if(ranking.rank == 1) {
+                        @Helpers.timer(ranking.finishTime)
+                      } else {
+                        @Helpers.timeDelta(ranking.finishTime - rankings.map(_.finishTime).min)
+                      }</span>
                     </li>
                   }
                   </ul>

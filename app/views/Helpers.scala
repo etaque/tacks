@@ -9,8 +9,13 @@ object Helpers {
     val m = math.floor(c / 60).toInt
     val s = "%02d".format(c % 60)
     val ms = "%03d".format(t % 1000)
-    s"""$m:$s.$ms"""
+    s"$m:$s.$ms"
   }
 
-  def timeDelta(ms: Long): String = "+ " + "%1.3f".format(ms * 0.001) + "\""
+  def timeDelta(t: Long): String = {
+    val s = t / 1000
+    val ms = "%03d".format(t % 1000)
+    s"+ $s.$ms"
+  }
+
 }
