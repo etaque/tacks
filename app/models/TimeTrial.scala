@@ -69,7 +69,9 @@ case class RunRanking(
   playerId: BSONObjectID,
   runId: BSONObjectID,
   finishTime: Long
-)
+) {
+  def isRecent = new DateTime(runId.time).plusDays(1).isAfterNow
+}
 
 object TimeTrialRun extends MongoDAO[TimeTrialRun] {
   val collectionName = "time_trial_runs"
