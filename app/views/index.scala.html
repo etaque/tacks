@@ -108,7 +108,10 @@
                   @for(ranking <- rankings) {
                     <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }">
                       <span class="rank">@ranking.rank</span>
-                      <span class="handle">@trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous")</span>
+                      <span class="handle">
+                        @trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous")
+                      </span>
+                      @if(ranking.isRecent) { <abbr title="@Messages("timeTrials.recent")">*</abbr> }
                       <span class="time">@Helpers.timer(ranking.finishTime)</span>
                     </li>
                   }
