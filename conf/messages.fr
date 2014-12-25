@@ -15,7 +15,7 @@ logout=Déconnexion
 backHome=Retour à l''accueil
 anonymous=Anonyme
 
-home.intro=Tacks est un jeu temps-réel et multijoueur de régate, dans votre navigateur. Un navigateur récent est requis pour profiter pleinement du jeu (Chrome idéalement).
+home.intro=Tacks est un jeu temps-réel et multijoueur de régate. Un navigateur récent est requis pour profiter pleinement du jeu (Chrome ou Safari recommandés).
 home.newOnTacks=Nouveau sur Tacks?
 home.openRaces=Courses libres
 home.newRace=Nouvelle course
@@ -51,16 +51,18 @@ liveCenter.watch=Spectateur
 
 timeTrials.rankings=Classement du mois
 timeTrials.run=Nouveau run
+timeTrials.recent=Couru il y a moins de 24h
+
 timeTrials.warmup.name=Warmup
-timeTrials.warmup.description=Faites-vous la main sur les trois tours de ce petit parcours
+timeTrials.warmup.description=faites-vous la main sur les trois tours de ce petit parcours
+timeTrials.classic.name=Classic
+timeTrials.classic.description=les fondamentaux, quelques îles et des risées sur deux tours
 timeTrials.inlands.name=Inlands
-timeTrials.inlands.description=Deux tours sur parcours étroit, avec de nombreuses risées
-timeTrials.archipel.name=Archipel
-timeTrials.archipel.description=Trouvez votre chemin au milieu des îles
-timeTrials.grid.name=Grid
-timeTrials.grid.description=Un glitch dans la matrice est-il à l'origine de cet ensemble d'' îles en pointillé ?
-timeTrials.tracks.name=Tracks
-timeTrials.tracks.description=Tous les chemins mènent à l''arrivée
-timeTrials.ultimate.name=Ultimate
-timeTrials.ultimate.description=Mais quel esprit torturé a bien pu créer ce circuit...
+timeTrials.inlands.description=étroit avec de nombreuses risées, votre plan d''eau intérieur préféré
+timeTrials.archipel.name=Anarchipel
+timeTrials.archipel.description=ça ne ressemble à rien de connu, donc ça mérite le détour
+timeTrials.oysterpark.name=Oyster Park
+timeTrials.oysterpark.description=votre cauchemar sur l''eau enfin transposé sur votre écran !
+timeTrials.minefield.name=Minefield
+timeTrials.minefield.description=regardez bien où vous mettez l''étrave...
 

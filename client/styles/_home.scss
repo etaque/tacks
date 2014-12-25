@@ -79,6 +79,7 @@
 
 .time-trial {
   $br: 3px;
+  margin-bottom: 30px;
 
   a.run, a.run:visited {
     display: block;
@@ -113,16 +114,14 @@
     .description {
       position: absolute;
       bottom: 0;
+      left: 0;
+      right: 0;
       padding: 10px;
       background-color: rgba(0, 0, 0, 0.2);
       color: $lightGray;
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 
     }
-  }
-
-  .btn-block {
-    margin-bottom: 30px;
   }
 
   ul {
@@ -134,10 +133,6 @@
 
       .time {
         float: right;
-      }
-
-      .rank:after {
-        content: ".";
       }
 
       &.rank-10 {

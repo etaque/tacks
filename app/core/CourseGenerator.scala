@@ -7,12 +7,12 @@ import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.util.Random
 
-trait TrialGenerator {
+trait CourseGenerator {
   def slug: String
   def generateCourse(): Course
 }
 
-object WarmUp extends TrialGenerator {
+object WarmUp extends CourseGenerator {
   val slug = "warmup"
 
   def generateCourse() = {
@@ -29,7 +29,26 @@ object WarmUp extends TrialGenerator {
   }
 }
 
-object Inlands extends TrialGenerator {
+object Classic extends CourseGenerator {
+  val slug = "classic"
+
+  def generateCourse() = {
+    val width = 1400
+    val height = 2000
+    val area = RaceArea((width/2, height + 200), (-width/2,-300))
+    Course(
+      upwind = Gate(height, 200),
+      downwind = Gate(0, 200),
+      laps = 2,
+      islands = Seq.fill[Island](5)(Island.spawn(area)),
+      area = area,
+      windGenerator = WindGenerator.spawn(),
+      gustGenerator = GustGenerator.spawn()
+    )
+  }
+}
+
+object Inlands extends CourseGenerator {
   val slug = "inlands"
 
   def generateCourse() = Course(
@@ -37,13 +56,13 @@ object Inlands extends TrialGenerator {
     downwind = Gate(100, 200),
     laps = 2,
     islands = Nil,
-    area = RaceArea((600, 2700), (-600, -200)),
+    area = RaceArea((500, 2700), (-500, -200)),
     windGenerator = WindGenerator.spawn(6, 4, 6, 4),
-    gustGenerator = GustGenerator(interval = 15, Seq.fill[GustDef](30)(GustDef.spawn))
+    gustGenerator = GustGenerator(interval = 10, Seq.fill[GustDef](30)(GustDef.spawn))
   )
 }
 
-object Archipel extends TrialGenerator {
+object Archipel extends CourseGenerator {
   val slug = "archipel"
 
   def generateCourse() = {
@@ -60,7 +79,7 @@ object Archipel extends TrialGenerator {
   }
 }
 
-object Grid extends TrialGenerator {
+object Grid extends CourseGenerator {
   val slug = "grid"
 
   def generateCourse() = {
@@ -90,38 +109,9 @@ object Grid extends TrialGenerator {
     )
   }
 }
-//
-//object Sine extends TrialGenerator {
-//  val slug = "sine"
-//
-//  def generateCourse() = {
-//    val upwind = Gate(3100, 200)
-//    val downwind = Gate(100, 200)
-//    val area = RaceArea((800, upwind.y + 500), (-800, downwind.y - 300))
-//
-//    val islands = for {
-//      i <- 1.to(7)
-//      j <- 1.to(6)
-//      x = area.left + math.sin(i) * area.width / 2)
-//      y = j * 200 + downwind.y
-//      radius = 50 + Random.nextInt(20)
-//    }
-//    yield Island((x, y), radius)
-//
-//    Course(
-//      upwind = upwind,
-//      downwind = downwind,
-//      laps = 2,
-//      islands = islands,
-//      area = area,
-//      windGenerator = WindGenerator.spawn(4, 3, 2, 1),
-//      gustGenerator = GustGenerator(interval = 30, Seq.fill[GustDef](10)(GustDef.spawn))
-//    )
-//  }
-//}
 
-object Tracks extends TrialGenerator {
-  val slug = "tracks"
+object OysterPark extends CourseGenerator {
+  val slug = "oysterpark"
 
   def generateCourse() = {
     val upwind = Gate(1800, 250)
@@ -131,9 +121,9 @@ object Tracks extends TrialGenerator {
     val islands = for {
       i <- 1.to(5)
       j <- 1.to(40)
-      x = i * 250 + area.left
+      x = i * 250 + area.left + (i * Math.PI * 100) % 100 - 50
       y = j * 40 + downwind.y
-      radius = 20
+      radius = 15
     }
     yield if ((j + i) % 5 == 0) None else Some(Island((x, y), radius))
 
@@ -149,22 +139,22 @@ object Tracks extends TrialGenerator {
   }
 }
 
-object Ultimate extends TrialGenerator {
-  val slug = "ultimate"
+object Minefield extends CourseGenerator {
+  val slug = "minefield"
 
   def generateCourse() = {
-    val upwind = Gate(5100, 200)
-    val downwind = Gate(100, 200)
+    val upwind = Gate(5100, 400)
+    val downwind = Gate(100, 400)
     val area = RaceArea((800, upwind.y + 500), (-800, downwind.y - 300))
 
     val r = 60
 
     val islands = for {
       i <- 1.to(7)
-      j <- 1.to(13)
+      j <- 1.to(15)
       x = i * 200 + area.left + Random.nextInt(r) - r/2
       y = j * 200 + downwind.y + Random.nextInt(r) - r/2 + 600
-      radius = 40 + Random.nextInt(60)
+      radius = 40 + Random.nextInt(40)
     }
     yield Island((x, y), radius)
 
@@ -180,44 +170,44 @@ object Ultimate extends TrialGenerator {
   }
 }
 
+//
+//object Odissey extends TrialGenerator {
+//  val slug = "odissey"
+//
+//  def generateCourse() = {
+//    val upwind = Gate(8100, 200)
+//    val downwind = Gate(100, 200)
+//    val area = RaceArea((2000, upwind.y + 500), (-2000, downwind.y - 300))
+//
+//    val r = 200
+//    val spacing = 300
+//
+//    val islands = for {
+//      i <- 1.to((area.width / spacing).toInt - 1)
+//      j <- 1.to(((upwind.y - downwind.y) / spacing).toInt - 1)
+//      x = i * spacing + area.left + Random.nextInt(r) - r/2
+//      y = j * spacing + downwind.y + Random.nextInt(r) - r/2
+//      radius = 60 + Random.nextInt(100)
+//    }
+//    yield Island((x, y), radius)
+//
+//    Course(
+//      upwind = upwind,
+//      downwind = downwind,
+//      laps = 1,
+//      islands = islands,
+//      area = area,
+//      windGenerator = WindGenerator.spawn(5, 5, 3, 3),
+//      gustGenerator = GustGenerator(interval = 15, Seq.fill[GustDef](10)(GustDef.spawn))
+//    )
+//  }
+//}
 
-object Odissey extends TrialGenerator {
-  val slug = "odissey"
-
-  def generateCourse() = {
-    val upwind = Gate(8100, 200)
-    val downwind = Gate(100, 200)
-    val area = RaceArea((2000, upwind.y + 500), (-2000, downwind.y - 300))
-
-    val r = 200
-    val spacing = 300
-
-    val islands = for {
-      i <- 1.to((area.width / spacing).toInt - 1)
-      j <- 1.to(((upwind.y - downwind.y) / spacing).toInt - 1)
-      x = i * spacing + area.left + Random.nextInt(r) - r/2
-      y = j * spacing + downwind.y + Random.nextInt(r) - r/2
-      radius = 60 + Random.nextInt(100)
-    }
-    yield Island((x, y), radius)
-
-    Course(
-      upwind = upwind,
-      downwind = downwind,
-      laps = 1,
-      islands = islands,
-      area = area,
-      windGenerator = WindGenerator.spawn(5, 5, 3, 3),
-      gustGenerator = GustGenerator(interval = 15, Seq.fill[GustDef](10)(GustDef.spawn))
-    )
-  }
-}
 
 
+object CourseGenerator {
 
-object TrialGenerator {
-
-  val all = Seq(WarmUp, Inlands, Archipel, Tracks, Ultimate, Odissey)
+  val all = Seq(WarmUp, Classic, Inlands, Archipel, OysterPark, Minefield)
 
   def ensureTimeTrials() = {
     val period = TimeTrial.currentPeriod

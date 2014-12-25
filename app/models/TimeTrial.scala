@@ -1,6 +1,6 @@
 package models
 
-import core.TrialGenerator
+import core.CourseGenerator
 import play.api.libs.concurrent.Execution.Implicits._
 import org.joda.time.{LocalDate, DateTime}
 import reactivemongo.bson._
@@ -26,13 +26,13 @@ object TimeTrial extends MongoDAO[TimeTrial] {
   def currentPeriod = LocalDate.now.toString(periodFormat)
 
   def findAllCurrent: Future[Seq[TimeTrial]] =
-    Future.sequence(TrialGenerator.all.map(_.slug).map(TimeTrial.findCurrentBySlug)).map(_.flatten)
+    Future.sequence(CourseGenerator.all.map(_.slug).map(TimeTrial.findCurrentBySlug)).map(_.flatten)
 
-  def zipWithTops(timeTrials: Seq[TimeTrial], playerId: BSONObjectID): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
-    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, topWithPlayer(playerId, r)))))
+  def zipWithTops(timeTrials: Seq[TimeTrial], playerId: BSONObjectID, rankingLength: Int): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
+    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, topWithPlayer(playerId, r, rankingLength)))))
 
-  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking]): Seq[RunRanking] =
-    rankings.filter(r => r.rank <= 10 || r.playerId == playerId).sortBy(_.rank)
+  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking], rankingLength: Int): Seq[RunRanking] =
+    rankings.filter(r => r.rank <= rankingLength || r.playerId == playerId).sortBy(_.rank)
 
   def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, currentPeriod)
 
