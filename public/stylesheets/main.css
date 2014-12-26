@@ -4988,57 +4988,59 @@ input[type="text"], input[type="password"], textarea {
 .time-trials {
   margin-top: 20px; }
 
-.time-trial a.run, .time-trial a.run:visited {
-  display: block;
-  height: 200px;
-  margin-bottom: 10px;
-  background-color: #2b4772;
-  border-radius: 3px;
-  border: 3px solid #2b4772;
-  text-decoration: none;
-  position: relative;
-  text-align: center; }
-  .time-trial a.run:hover, .time-trial a.run:visited:hover {
-    border-color: #345488; }
-    .time-trial a.run:hover .name, .time-trial a.run:visited:hover .name {
-      background-color: #345488; }
-  .time-trial a.run .name, .time-trial a.run:visited .name {
+.time-trial {
+  margin-bottom: 30px; }
+  .time-trial a.run, .time-trial a.run:visited {
     display: block;
-    padding: 10px;
+    height: 200px;
+    margin-bottom: 10px;
     background-color: #2b4772;
-    text-transform: uppercase;
-    font-weight: bold;
-    letter-spacing: 1px;
-    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); }
-  .time-trial a.run .description, .time-trial a.run:visited .description {
-    position: absolute;
-    bottom: 0;
+    border-radius: 3px;
+    border: 3px solid #2b4772;
+    text-decoration: none;
+    position: relative;
+    text-align: center; }
+    .time-trial a.run:hover, .time-trial a.run:visited:hover {
+      border-color: #345488; }
+      .time-trial a.run:hover .name, .time-trial a.run:visited:hover .name {
+        background-color: #345488; }
+    .time-trial a.run .name, .time-trial a.run:visited .name {
+      display: block;
+      padding: 10px;
+      background-color: #2b4772;
+      text-transform: uppercase;
+      font-weight: bold;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); }
+    .time-trial a.run .description, .time-trial a.run:visited .description {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      color: #E6E6E6;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1); }
+  .time-trial ul {
     padding: 10px;
-    background-color: rgba(0, 0, 0, 0.2);
-    color: #E6E6E6;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1); }
-.time-trial ul {
-  padding: 10px;
-  margin: 0; }
-  .time-trial ul li {
-    list-style: none; }
-    .time-trial ul li .time {
-      float: right; }
-    .time-trial ul li .rank:after {
-      content: "."; }
-    .time-trial ul li.rank-10 {
-      margin-bottom: 5px; }
-    .time-trial ul li.current-player {
-      color: #E0A349; }
-.time-trial .ranking {
-  display: block;
-  text-align: center;
-  margin: 10px;
-  margin-bottom: 0;
-  border-bottom: 2px solid #2b4772;
-  padding: 4px 0;
-  text-decoration: none;
-  color: #B1C0D8; }
+    margin: 0; }
+    .time-trial ul li {
+      list-style: none; }
+      .time-trial ul li .time {
+        float: right; }
+      .time-trial ul li.rank-10 {
+        margin-bottom: 5px; }
+      .time-trial ul li.current-player {
+        color: #E0A349; }
+  .time-trial .ranking {
+    display: block;
+    text-align: center;
+    margin: 10px;
+    margin-bottom: 0;
+    border-bottom: 2px solid #2b4772;
+    padding: 4px 0;
+    text-decoration: none;
+    color: #B1C0D8; }
 
 .finished-races {
   margin-top: 50px; }
@@ -5065,17 +5067,20 @@ input[type="text"], input[type="password"], textarea {
     .finished-races .current-player td a {
       color: #E0A349; }
 
-.show-time-trial .time-trial {
-  margin-top: 20px; }
-.show-time-trial .time-trial-rankings {
+.time-trial-rankings {
   padding: 10px;
   margin: 0; }
-  .show-time-trial .time-trial-rankings li {
+  .time-trial-rankings li {
     list-style: none; }
-    .show-time-trial .time-trial-rankings li .time {
+    .time-trial-rankings li .rank:after {
+      content: "."; }
+    .time-trial-rankings li .time {
       float: right; }
-    .show-time-trial .time-trial-rankings li.current-player {
+    .time-trial-rankings li.current-player {
       color: #E0A349; }
+
+.show-time-trial .time-trial {
+  margin-top: 20px; }
 
 .play-race {
   overflow: hidden;

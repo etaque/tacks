@@ -1,25 +1,29 @@
 
+.time-trial-rankings {
+  padding: 10px;
+  margin: 0;
+
+  li {
+    list-style: none;
+
+    .rank:after {
+      content: ".";
+    }
+
+    .time {
+      float: right;
+    }
+
+    &.current-player {
+      color: $orange;
+    }
+  }
+}
+
 .show-time-trial {
 
   .time-trial {
     margin-top: 20px;
-  }
-
-  .time-trial-rankings {
-    padding: 10px;
-    margin: 0;
-
-    li {
-      list-style: none;
-
-      .time {
-        float: right;
-      }
-
-      &.current-player {
-        color: $orange;
-      }
-    }
   }
 
 }

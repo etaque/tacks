@@ -28,22 +28,7 @@
           @Messages("timeTrials.rankings")
         </h3>
 
-        <ul class="time-trial-rankings">
-        @for(ranking <- rankings) {
-          <li class="rank-@ranking.rank @if(ranking.playerId == req.player.id) { current-player }">
-            <span class="rank">@{ranking.rank}. </span>
-            @users.find(_.id == ranking.playerId) match {
-              case None => {
-                <span class="handle">@Messages("anonymous")</span>
-              }
-              case Some(user) => {
-                <span class="handle">@user.handle</span>
-              }
-            }
-            <span class="time">@views.Helpers.timer(ranking.finishTime)</span>
-          </li>
-        }
-        </ul>
+        @views.html.timeTrials.ranking(rankings, users, req.player)
 
       </div>
     </div>

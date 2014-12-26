@@ -118,7 +118,7 @@ case class GustGenerator(
 }
 
 object GustGenerator {
-  def spawn = {
+  def spawn() = {
     GustGenerator(20, Seq.fill[GustDef](10)(GustDef.spawn))
   }
 }

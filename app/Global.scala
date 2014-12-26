@@ -1,5 +1,5 @@
 import actors.RacesSupervisor
-import core.TrialGenerator
+import core.{CourseGenerator}
 import models.{TimeTrial, User}
 import play.api.{Application, GlobalSettings}
 import scala.concurrent.duration._
@@ -15,7 +15,7 @@ object Global extends GlobalSettings {
 
     RacesSupervisor.start()
 
-    val trialsFreq = if (play.Play.isDev) 10.seconds else 1.hour
-    Akka.system.scheduler.schedule(10.seconds, trialsFreq)(TrialGenerator.ensureTimeTrials())
+    val trialsFreq = if (play.Play.isDev) 5.seconds else 1.hour
+    Akka.system.scheduler.schedule(10.seconds, trialsFreq)(CourseGenerator.ensureTimeTrials())
   }
 }

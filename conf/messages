@@ -64,9 +64,16 @@ liveCenter.watch=Watch
 
 timeTrials.rankings=Current leaderboard
 timeTrials.run=New run
+
 timeTrials.warmup.name=Warmup
-timeTrials.warmup.description=Get your hands warm with the three laps of this short course
+timeTrials.warmup.description=get your hands warm with the three laps of this short course
+timeTrials.classic.name=Classic
+timeTrials.classic.description=back to basics: les fondamentaux : some islands and gusts on a tow laps course
 timeTrials.inlands.name=Inlands
-timeTrials.inlands.description=Two laps on a narrow course, with many gusts & lulls
-timeTrials.archipel.name=Archipel
-timeTrials.archipel.description=Find your way througs the many islands of this course
+timeTrials.inlands.description=a narrow course with many gusts & lulls, your favorite inland spot
+timeTrials.archipel.name=Anarchipel
+timeTrials.archipel.description=a mess but it's worth a look
+timeTrials.oysterpark.name=Oyster Park
+timeTrials.oysterpark.description=a real life nightmare, finally on your screen!
+timeTrials.minefield.name=Minefield
+timeTrials.minefield.description=watch your bow...

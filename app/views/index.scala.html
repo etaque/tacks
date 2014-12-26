@@ -104,15 +104,7 @@
 
                 @if(rankings.nonEmpty) {
                   <span class="ranking">@Messages("home.timeTrialRanking")</span>
-                  <ul>
-                  @for(ranking <- rankings) {
-                    <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }">
-                      <span class="rank">@ranking.rank</span>
-                      <span class="handle">@trialsUsers.find(_.id == ranking.playerId).map(_.handle).getOrElse("Anonymous")</span>
-                      <span class="time">@Helpers.timer(ranking.finishTime)</span>
-                    </li>
-                  }
-                  </ul>
+                  @views.html.timeTrials.ranking(rankings, trialsUsers, player)
                 }
               </div>
             </div>
@@ -120,6 +112,7 @@
         </div>
       }
 
+    @*
     @if(finishedRaces.nonEmpty) {
       <div class="row">
         <div class="finished-races col-md-offset-3 col-md-6">
@@ -130,6 +123,7 @@
         </div>
       </div>
     }
+    *@
 
   </div>
 
