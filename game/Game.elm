@@ -86,6 +86,34 @@ type alias GameState =
   , gameMode:    GameMode
   }
 
+
+defaultVmg : Vmg
+defaultVmg = { angle = 0, speed = 0, value = 0}
+
+defaultPlayer : Player
+defaultPlayer = { id = "", handle = Nothing, status = Nothing }
+
+defaultPlayerState : PlayerState
+defaultPlayerState =
+  { player          = defaultPlayer
+  , position        = (0,0)
+  , heading         = 0
+  , velocity        = 0
+  , vmgValue        = 0
+  , windAngle       = 0
+  , windOrigin      = 0
+  , windSpeed       = 0
+  , downwindVmg     = defaultVmg
+  , upwindVmg       = defaultVmg
+  , shadowDirection = 0
+  , trail           = []
+  , controlMode     = ""
+  , tackTarget      = Nothing
+  , crossedGates    = []
+  , nextGate        = Nothing
+  }
+
+
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
 

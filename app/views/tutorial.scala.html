@@ -1,0 +1,22 @@
+@()(implicit request: IdentifiedRequest[_], lang: Lang)
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Tacks</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+  </head>
+  <body class="play-race">
+
+    <script src="@routes.Assets.at("javascripts/tut.js")" type="text/javascript"></script>
+
+    <script type="text/javascript">
+    var tut = Elm.fullscreen(Elm.Tut.Main);
+    </script>
+
+    @ga()
+
+  </body>
+</html>

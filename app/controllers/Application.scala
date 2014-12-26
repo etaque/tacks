@@ -53,5 +53,9 @@ object Application extends Controller with Security {
       }
     }
   }
+
+  def tutorial = Identified.apply() { implicit request =>
+    Ok(views.html.tutorial())
+  }
 }
 

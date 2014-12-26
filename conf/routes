@@ -6,6 +6,8 @@ GET         /watch/:raceId                          controllers.Application.watc
 
 GET         /time-trials/:id                        controllers.TimeTrials.show(id)
 
+GET         /tutorial                               controllers.Application.tutorial
+
 POST        /users/create                           controllers.Users.create
 GET         /users/:id                              controllers.Users.show(id: String)
 POST        /users/updateStatus                     controllers.Users.updateStatus
