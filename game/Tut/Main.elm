@@ -12,12 +12,16 @@ import Tut.Steps (..)
 import Tut.Render (render)
 
 clock : Signal Float
-clock = inSeconds <~ fps 30
+clock = fps 30
+
+--time : Signal Float
+--time = foldp (+) 0 clock
 
 input : Signal TutInput
-input = sampleOn clock <| map3 TutInput
+input = sampleOn clock <| map4 TutInput
   clock
   keyboardInput
+  nextStepInput
   Window.dimensions
 
 tutState : Signal TutState
