@@ -8,7 +8,6 @@ trait ManageWind {
   def id: BSONObjectID
   def course: Course
   def clock: Long
-  def startScheduled: Boolean
 
   var wind = Wind.default
   var previousWindUpdate: Option[Long] = None

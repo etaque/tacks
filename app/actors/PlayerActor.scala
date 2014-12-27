@@ -44,6 +44,7 @@ class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Ac
 
     case raceUpdate: RaceUpdate => out ! raceUpdate
 
+    case tutUpdate: TutorialUpdate => out ! tutUpdate
   }
 
   override def postStop() = {

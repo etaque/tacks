@@ -7,6 +7,7 @@ import List (..)
 
 import Render.Utils (..)
 import Render.Players (..)
+import Render.Course (renderBounds)
 
 import Game (..)
 import Tut.State (..)
@@ -49,7 +50,7 @@ renderHelpers (w,h) tutState =
   let
     (w',h') = (toFloat w, toFloat h)
     i = (round tutState.stepTime) % 2000 |> toFloat
-    a = i / 2000 * 0.5
+    a = i / 2000 * 0.2
     y = h' / 4 - (i / 50)
     windArrow = windArrowPath
       |> filled white
@@ -62,8 +63,9 @@ render : (Int,Int) -> TutState -> Element
 render (w,h) tutState =
   let
     playerForms = renderTutPlayer False False False tutState.playerState
+    bounds = renderBounds tutState.course.area
     helpers = renderHelpers (w,h) tutState
-    graphics = collage w h [group [playerForms, helpers]]
+    graphics = collage w h [group [bounds, playerForms, helpers]]
     dashboard = renderDashboard tutState (w,h)
   in
     layers [graphics, dashboard]

@@ -55,7 +55,8 @@ object Application extends Controller with Security {
   }
 
   def tutorial = Identified.apply() { implicit request =>
-    Ok(views.html.tutorial())
+    val wsUrl = routes.Api.tutorialSocket().webSocketURL()
+    Ok(views.html.tutorial(wsUrl))
   }
 }
 

@@ -10,6 +10,20 @@ import tools.JsonFormats._
 
 object JsonFormats {
 
+  implicit val tutorialStepFormat: Format[TutorialStep] = new Format[TutorialStep] {
+    override def reads(json: JsValue): JsResult[TutorialStep] = json match {
+      case JsString("TurningStep") => JsSuccess(TurningStep)
+      case JsString("GateStep") => JsSuccess(GateStep)
+      case JsString("VmgStep") => JsSuccess(LockStep)
+      case _ @ v => JsError(Seq(JsPath() -> Seq(ValidationError("Expected TutorialStep value, got: " + v.toString))))
+    }
+    override def writes(o: TutorialStep): JsValue = JsString(o match {
+      case TurningStep => "TurningStep"
+      case GateStep => "GateStep"
+      case LockStep => "VmgStep"
+    })
+  }
+
   implicit val gateLocationFormat: Format[GateLocation] = new Format[GateLocation] {
     override def reads(json: JsValue): JsResult[GateLocation] = json match {
       case JsString("StartLine") => JsSuccess(StartLine)
@@ -126,6 +140,12 @@ object JsonFormats {
       (__ \ 'timeTrial).format[Boolean]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
+  implicit val tutorialUpdateFormat: Format[TutorialUpdate] = (
+    (__ \ 'now).format[Long] and
+      (__ \ 'playerState).format[PlayerState] and
+      (__ \ 'course).format[Option[Course]] and
+      (__ \ 'step).format[TutorialStep]
+    )(TutorialUpdate.apply, unlift(TutorialUpdate.unapply))
 
   implicit val raceFormat: Format[Race] = Json.format[Race]
 

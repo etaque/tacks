@@ -17,6 +17,7 @@ import models._
 
 case class MountRace(race: Race, master: Player)
 case class MountTimeTrialRun(timeTrial: TimeTrial, player: Player, run: TimeTrialRun)
+case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
 case object GetOpenRaces
@@ -56,6 +57,13 @@ class RacesSupervisor extends Actor {
       val ref = context.actorOf(TimeTrialActor.props(timeTrial, player, run))
       context.watch(ref)
       sender ! ref
+    }
+
+    case MountTutorial(player) => {
+      val ref = context.actorOf(TutorialActor.props(player))
+      context.watch(ref)
+      sender ! ref
+
     }
   }
 

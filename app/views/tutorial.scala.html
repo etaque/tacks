@@ -1,4 +1,7 @@
-@()(implicit request: IdentifiedRequest[_], lang: Lang)
+@(wsUrl: String)(implicit request: IdentifiedRequest[_], lang: Lang)
+
+@import play.api.libs.json.Json
+@import models.JsonFormats.tutorialUpdateFormat
 
 <!DOCTYPE html>
 
@@ -11,9 +14,12 @@
   <body class="play-race">
 
     <script src="@routes.Assets.at("javascripts/tut.js")" type="text/javascript"></script>
+    <script src="@routes.Assets.at("javascripts/mountWebSocket.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
-    var tut = Elm.fullscreen(Elm.Tut.Main);
+    var initialInput = @Html(Json.toJson(TutorialUpdate.initial(request.player)).toString());
+    var wsUrl = "@wsUrl";
+    mountWebSocket(wsUrl, Elm.Tut.Main, "serverUpdate", "playerOutput", initialInput);
     </script>
 
     @ga()

@@ -26,6 +26,7 @@ POST        /api/setName                            controllers.Api.setName
 GET         /ws/playerSocket/:raceId                controllers.Api.racePlayerSocket(raceId)
 GET         /ws/watcherSocket/:raceId               controllers.Api.raceWatcherSocket(raceId)
 GET         /ws/timeTrialSocket/:timeTrialId        controllers.Api.timeTrialSocket(timeTrialId)
+GET         /ws/tutorialSocket                      controllers.Api.tutorialSocket
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                           controllers.Assets.at(path="/public", file)

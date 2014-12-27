@@ -99,6 +99,7 @@ object Api extends Controller with Security {
   implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
   implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
+  implicit val tutorialUpdateFormatter = FrameFormatter.jsonFrame[TutorialUpdate]
 
   def timeTrialSocket(timeTrialId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
@@ -129,6 +130,16 @@ object Api extends Controller with Security {
         case Some(raceActor) => Right(WatcherActor.props(raceActor, watcher)(_))
         case None => Left(NotFound)
       }
+    }
+  }
+
+  def tutorialSocket = WebSocket.tryAcceptWithActor[PlayerInput, TutorialUpdate] { implicit request =>
+    for {
+      player <- Identified.getPlayer(request)
+      ref <- (RacesSupervisor.actorRef ? MountTutorial(player)).mapTo[ActorRef]
+    }
+    yield {
+      Right(PlayerActor.props(ref, player)(_))
     }
   }
 

@@ -94,6 +94,7 @@ object WindGenerator {
   def spawn(w1: Int = 6, a1: Int = 6, w2: Int = 4, a2: Int = 4) = {
     WindGenerator(nextInt(w1) + w1, nextInt(a1) + a1, nextInt(w2) + w2, nextInt(a2) + a2)
   }
+  val empty = WindGenerator(0, 1, 0, 1)
 }
 
 case class GustDef(
@@ -121,6 +122,7 @@ object GustGenerator {
   def spawn() = {
     GustGenerator(20, Seq.fill[GustDef](10)(GustDef.spawn))
   }
+  val empty = GustGenerator(0, Nil)
 }
 
 case class Course(
@@ -159,6 +161,22 @@ object Course {
       windGenerator = WindGenerator.spawn(),
       gustGenerator = GustGenerator.spawn
     )
+  }
+
+  def forTutorial = {
+    val width = 600
+    val height = 600
+    val area = RaceArea((width/2, height + 200), (-width/2,-300))
+    Course(
+      upwind = Gate(height, 200),
+      downwind = Gate(0, 200),
+      laps = 1,
+      islands = Nil,
+      area = area,
+      windGenerator = WindGenerator.empty,
+      gustGenerator = GustGenerator.empty
+    )
+
   }
 
   implicit val raceAreaHandler = Macros.handler[RaceArea]
