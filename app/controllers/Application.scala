@@ -1,5 +1,7 @@
 package controllers
 
+import play.api.libs.json.Json
+
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
@@ -9,7 +11,7 @@ import akka.pattern.ask
 import reactivemongo.bson.BSONObjectID
 
 import actors.{GetRace, RacesSupervisor}
-import models.{TimeTrial, User, Race}
+import models.{RaceUpdate, TimeTrial, User, Race}
 
 object Application extends Controller with Security {
 
@@ -26,11 +28,13 @@ object Application extends Controller with Security {
   }
 
   implicit val timeout = Timeout(5.seconds)
+  import models.JsonFormats.raceUpdateFormat
 
   def playTimeTrial(timeTrialId: String) = Identified.async() { implicit request =>
     TimeTrial.findById(timeTrialId).map { timeTrial =>
       val wsUrl = routes.Api.timeTrialSocket(timeTrial.idToStr).webSocketURL()
-      Ok(views.html.playTimeTrial(timeTrial, wsUrl))
+      val initialInput = Json.toJson(RaceUpdate.initial(request.player, timeTrial.course, timeTrial = true))
+      Ok(views.html.game(initialInput, wsUrl))
     }
   }
 
@@ -39,7 +43,8 @@ object Application extends Controller with Security {
       case None => NotFound
       case Some(race) => {
         val wsUrl = routes.Api.racePlayerSocket(race.idToStr).webSocketURL()
-        Ok(views.html.playRace(race, wsUrl))
+        val initialInput = Json.toJson(RaceUpdate.initial(request.player, race.course))
+        Ok(views.html.game(initialInput, wsUrl))
       }
     }
   }
@@ -49,7 +54,8 @@ object Application extends Controller with Security {
       case None => NotFound
       case Some(race) => {
         val wsUrl = routes.Api.raceWatcherSocket(race.idToStr).webSocketURL()
-        Ok(views.html.watchRace(race, wsUrl))
+        val initialInput = Json.toJson(RaceUpdate.initial(request.player, race.course, watching = true))
+        Ok(views.html.game(initialInput, wsUrl))
       }
     }
   }

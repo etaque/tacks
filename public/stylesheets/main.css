@@ -5082,7 +5082,7 @@ input[type="text"], input[type="password"], textarea {
 .show-time-trial .time-trial {
   margin-top: 20px; }
 
-.play-race {
+.fullscreen {
   overflow: hidden;
   color: white;
   background-color: #1C2E48; }

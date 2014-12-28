@@ -1,0 +1,15 @@
+@(title: String = "Tacks")(content: Html)(implicit request: IdentifiedRequest[_], lang: Lang)
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>@title</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+  </head>
+  <body class="fullscreen">
+    @content
+    @ga()
+  </body>
+</html>

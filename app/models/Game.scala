@@ -110,17 +110,18 @@ case class RaceUpdate(
 )
 
 object RaceUpdate {
-  def initial(player: Player, course: Course, lang: Lang, watching: Boolean, timeTrial: Boolean) = RaceUpdate(
-    player.id.stringify,
-    DateTime.now,
-    startTime = None,
-    playerState = None,
-    course = Some(course),
-    wind = Wind.default,
-    langCode = Some(lang.code),
-    watching = watching,
-    timeTrial = timeTrial
-  )
+  def initial(player: Player, course: Course, watching: Boolean = false, timeTrial: Boolean = false)(implicit lang: Lang) =
+    RaceUpdate(
+      player.id.stringify,
+      DateTime.now,
+      startTime = None,
+      playerState = None,
+      course = Some(course),
+      wind = Wind.default,
+      langCode = Some(lang.code),
+      watching = watching,
+      timeTrial = timeTrial
+    )
 }
 
 case class RaceStatus(
