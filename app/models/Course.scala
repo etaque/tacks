@@ -164,15 +164,12 @@ object Course {
   }
 
   def forTutorial = {
-    val width = 600
-    val height = 600
-    val area = RaceArea((width/2, height + 200), (-width/2,-300))
     Course(
-      upwind = Gate(height, 200),
-      downwind = Gate(0, 200),
+      upwind = Gate(320, 200),
+      downwind = Gate(-320, 200),
       laps = 1,
       islands = Nil,
-      area = area,
+      area = RaceArea(rightTop = (300,300), leftBottom = (-300,-300)),
       windGenerator = WindGenerator.empty,
       gustGenerator = GustGenerator.empty
     )

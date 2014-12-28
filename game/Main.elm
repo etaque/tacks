@@ -38,4 +38,4 @@ port title : Signal String
 port title = Render.Utils.gameTitle <~ gameState
 
 main : Signal Element
-main = map2 R.renderAll Window.dimensions gameState
+main = map2 R.render Window.dimensions gameState

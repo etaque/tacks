@@ -2482,6 +2482,140 @@ Elm.Keyboard.make = function (_elm) {
                           ,lastPressed: lastPressed};
    return _elm.Keyboard.values;
 };
+Elm.Layout = Elm.Layout || {};
+Elm.Layout.make = function (_elm) {
+   "use strict";
+   _elm.Layout = _elm.Layout || {};
+   if (_elm.Layout.values)
+   return _elm.Layout.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Layout",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm);
+   var centerElements = function (elements) {
+      return function () {
+         var maxWidth = $List.maximum(A2($List.map,
+         $Graphics$Element.widthOf,
+         elements));
+         return A2($List.map,
+         function (e) {
+            return A4($Graphics$Element.container,
+            maxWidth,
+            $Graphics$Element.heightOf(e),
+            $Graphics$Element.midTop,
+            e);
+         },
+         elements);
+      }();
+   };
+   var assembleDashboardLayout = F2(function (_v0,
+   _v1) {
+      return function () {
+         return function () {
+            switch (_v0.ctor)
+            {case "_Tuple2":
+               return _L.fromArray([A3($Graphics$Element.container,
+                                   _v0._0,
+                                   _v0._1,
+                                   A2($Graphics$Element.topLeftAt,
+                                   $Graphics$Element.Absolute(20),
+                                   $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                   $Graphics$Element.down,
+                                   _v1.topLeft))
+                                   ,A3($Graphics$Element.container,
+                                   _v0._0,
+                                   _v0._1,
+                                   A2($Graphics$Element.midTopAt,
+                                   $Graphics$Element.Relative(0.5),
+                                   $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                   $Graphics$Element.down,
+                                   centerElements(_v1.topCenter)))
+                                   ,A3($Graphics$Element.container,
+                                   _v0._0,
+                                   _v0._1,
+                                   A2($Graphics$Element.topRightAt,
+                                   $Graphics$Element.Absolute(20),
+                                   $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                   $Graphics$Element.down,
+                                   _v1.topRight))]);}
+            _U.badCase($moduleName,
+            "between lines 29 and 32");
+         }();
+      }();
+   });
+   var assembleLayout = F3(function (_v6,
+   _v7,
+   _v8) {
+      return function () {
+         return function () {
+            switch (_v7.ctor)
+            {case "_Tuple2":
+               return function () {
+                    switch (_v6.ctor)
+                    {case "_Tuple2":
+                       return function () {
+                            var dashboardElements = A2(assembleDashboardLayout,
+                            {ctor: "_Tuple2"
+                            ,_0: _v6._0
+                            ,_1: _v6._1},
+                            _v8.dashboard);
+                            var absStackElements = A3($Graphics$Collage.collage,
+                            _v6._0,
+                            _v6._1,
+                            _v8.absStack);
+                            var relStackElements = A3($Graphics$Collage.collage,
+                            _v6._0,
+                            _v6._1,
+                            A2($List.map,
+                            $Graphics$Collage.move({ctor: "_Tuple2"
+                                                   ,_0: 0 - _v7._0
+                                                   ,_1: 0 - _v7._1}),
+                            _v8.relStack));
+                            return $Graphics$Element.layers(A2($List.append,
+                            _L.fromArray([relStackElements
+                                         ,absStackElements]),
+                            dashboardElements));
+                         }();}
+                    _U.badCase($moduleName,
+                    "between lines 36 and 41");
+                 }();}
+            _U.badCase($moduleName,
+            "between lines 36 and 41");
+         }();
+      }();
+   });
+   var Layout = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,absStack: c
+             ,dashboard: a
+             ,relStack: b};
+   });
+   var DashboardLayout = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,bottomCenter: d
+             ,topCenter: c
+             ,topLeft: a
+             ,topRight: b};
+   });
+   _elm.Layout.values = {_op: _op
+                        ,DashboardLayout: DashboardLayout
+                        ,Layout: Layout
+                        ,centerElements: centerElements
+                        ,assembleDashboardLayout: assembleDashboardLayout
+                        ,assembleLayout: assembleLayout};
+   return _elm.Layout.values;
+};
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
    "use strict";
@@ -8470,11 +8604,11 @@ Elm.Tut.Dashboard.make = function (_elm) {
    $moduleName = "Tut.Dashboard",
    $Basics = Elm.Basics.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
+   $Layout = Elm.Layout.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm),
    $Text = Elm.Text.make(_elm),
    $Tut$State = Elm.Tut.State.make(_elm);
-   var midBottomElements = function (tutState) {
+   var bottomCenterElements = function (tutState) {
       return _L.fromArray([$Text.leftAligned($Render$Utils.baseText("when ready, press ESC for next step"))]);
    };
    var topRightElements = function (tutState) {
@@ -8489,98 +8623,64 @@ Elm.Tut.Dashboard.make = function (_elm) {
    var getMainStatus = function (tutState) {
       return $Text.centered($Render$Utils.bigText("Hello there!"));
    };
-   var midTopElement = function (tutState) {
-      return function () {
-         var subStatus = getSubStatus(tutState);
-         var mainStatus = getMainStatus(tutState);
-         var maxWidth = $List.maximum(_L.fromArray([$Graphics$Element.widthOf(mainStatus)
-                                                   ,$Graphics$Element.widthOf(subStatus)]));
-         var subStatusCentered = A4($Graphics$Element.container,
-         maxWidth,
-         $Graphics$Element.heightOf(subStatus),
-         $Graphics$Element.midTop,
-         subStatus);
-         var mainStatusCentered = A4($Graphics$Element.container,
-         maxWidth,
-         $Graphics$Element.heightOf(mainStatus),
-         $Graphics$Element.midTop,
-         mainStatus);
-         return A2($Graphics$Element.above,
-         mainStatusCentered,
-         subStatusCentered);
-      }();
+   var topCenterElements = function (tutState) {
+      return _L.fromArray([getMainStatus(tutState)
+                          ,getSubStatus(tutState)]);
    };
-   var renderDashboard = F2(function (_v0,
+   var buildDashboard = F2(function (_v0,
    _v1) {
       return function () {
          switch (_v1.ctor)
          {case "_Tuple2":
             return function () {
-                 return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
-                                                              _v1._0,
-                                                              _v1._1,
-                                                              A2($Graphics$Element.topLeftAt,
-                                                              $Graphics$Element.Absolute(20),
-                                                              $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                              $Graphics$Element.down,
-                                                              topLeftElements(_v0)))
-                                                              ,A3($Graphics$Element.container,
-                                                              _v1._0,
-                                                              _v1._1,
-                                                              A2($Graphics$Element.midTopAt,
-                                                              $Graphics$Element.Relative(0.5),
-                                                              $Graphics$Element.Absolute(20)))(midTopElement(_v0))
-                                                              ,A3($Graphics$Element.container,
-                                                              _v1._0,
-                                                              _v1._1,
-                                                              A2($Graphics$Element.topRightAt,
-                                                              $Graphics$Element.Absolute(20),
-                                                              $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                              $Graphics$Element.down,
-                                                              topRightElements(_v0)))
-                                                              ,A3($Graphics$Element.container,
-                                                              _v1._0,
-                                                              _v1._1,
-                                                              A2($Graphics$Element.midBottomAt,
-                                                              $Graphics$Element.Relative(0.5),
-                                                              $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                              $Graphics$Element.up,
-                                                              midBottomElements(_v0)))]));
+                 return {_: {}
+                        ,bottomCenter: bottomCenterElements(_v0)
+                        ,topCenter: topCenterElements(_v0)
+                        ,topLeft: topLeftElements(_v0)
+                        ,topRight: topRightElements(_v0)};
               }();}
          _U.badCase($moduleName,
-         "between lines 49 and 54");
+         "between lines 36 and 39");
       }();
    });
    _elm.Tut.Dashboard.values = {_op: _op
                                ,getMainStatus: getMainStatus
                                ,getSubStatus: getSubStatus
                                ,topLeftElements: topLeftElements
-                               ,midTopElement: midTopElement
+                               ,topCenterElements: topCenterElements
                                ,topRightElements: topRightElements
-                               ,midBottomElements: midBottomElements
-                               ,renderDashboard: renderDashboard};
+                               ,bottomCenterElements: bottomCenterElements
+                               ,buildDashboard: buildDashboard};
    return _elm.Tut.Dashboard.values;
 };
 Elm.Tut = Elm.Tut || {};
-Elm.Tut.Inputs = Elm.Tut.Inputs || {};
-Elm.Tut.Inputs.make = function (_elm) {
+Elm.Tut.IO = Elm.Tut.IO || {};
+Elm.Tut.IO.make = function (_elm) {
    "use strict";
    _elm.Tut = _elm.Tut || {};
-   _elm.Tut.Inputs = _elm.Tut.Inputs || {};
-   if (_elm.Tut.Inputs.values)
-   return _elm.Tut.Inputs.values;
+   _elm.Tut.IO = _elm.Tut.IO || {};
+   if (_elm.Tut.IO.values)
+   return _elm.Tut.IO.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
-   $moduleName = "Tut.Inputs",
+   $moduleName = "Tut.IO",
    $Char = Elm.Char.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var TutOutput = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,keyboard: a
+             ,step: b
+             ,window: c};
+   });
    var TutInput = F5(function (a,
    b,
    c,
@@ -8602,11 +8702,12 @@ Elm.Tut.Inputs.make = function (_elm) {
              ,step: c};
    });
    var nextStepInput = $Keyboard.isDown($Char.toCode(_U.chr("N")));
-   _elm.Tut.Inputs.values = {_op: _op
-                            ,nextStepInput: nextStepInput
-                            ,ServerUpdate: ServerUpdate
-                            ,TutInput: TutInput};
-   return _elm.Tut.Inputs.values;
+   _elm.Tut.IO.values = {_op: _op
+                        ,nextStepInput: nextStepInput
+                        ,ServerUpdate: ServerUpdate
+                        ,TutInput: TutInput
+                        ,TutOutput: TutOutput};
+   return _elm.Tut.IO.values;
 };
 Elm.Tut = Elm.Tut || {};
 Elm.Tut.Main = Elm.Tut.Main || {};
@@ -8627,11 +8728,22 @@ Elm.Tut.Main.make = function (_elm) {
    $Inputs = Elm.Inputs.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm),
-   $Tut$Inputs = Elm.Tut.Inputs.make(_elm),
+   $Tut$IO = Elm.Tut.IO.make(_elm),
    $Tut$Render = Elm.Tut.Render.make(_elm),
    $Tut$State = Elm.Tut.State.make(_elm),
    $Tut$Steps = Elm.Tut.Steps.make(_elm),
    $Window = Elm.Window.make(_elm);
+   var doOutput = F2(function (_v0,
+   _v1) {
+      return function () {
+         return function () {
+            return {_: {}
+                   ,keyboard: _v0.keyboard
+                   ,step: $Basics.toString(_v1.step)
+                   ,window: _v0.window};
+         }();
+      }();
+   });
    var clock = $Time.fps(30);
    var serverUpdate = _P.portIn("serverUpdate",
    _P.incomingSignal(function (v) {
@@ -8756,10 +8868,10 @@ Elm.Tut.Main.make = function (_elm) {
       v);
    }));
    var input = $Signal.sampleOn(clock)(A6($Signal.map5,
-   $Tut$Inputs.TutInput,
+   $Tut$IO.TutInput,
    clock,
    $Inputs.keyboardInput,
-   $Tut$Inputs.nextStepInput,
+   $Tut$IO.nextStepInput,
    $Window.dimensions,
    serverUpdate));
    var tutState = A3($Signal.foldp,
@@ -8770,6 +8882,22 @@ Elm.Tut.Main.make = function (_elm) {
    $Tut$Render.render,
    $Window.dimensions,
    tutState);
+   var tutOutput = _P.portOut("tutOutput",
+   _P.outgoingSignal(function (v) {
+      return {keyboard: {arrows: {x: v.keyboard.arrows.x
+                                 ,y: v.keyboard.arrows.y}
+                        ,lock: v.keyboard.lock
+                        ,tack: v.keyboard.tack
+                        ,subtleTurn: v.keyboard.subtleTurn
+                        ,startCountdown: v.keyboard.startCountdown}
+             ,step: v.step
+             ,window: [v.window._0
+                      ,v.window._1]};
+   }),
+   A3($Signal.map2,
+   doOutput,
+   input,
+   tutState));
    var playerOutput = _P.portOut("playerOutput",
    _P.outgoingSignal(function (v) {
       return {arrows: {x: v.arrows.x
@@ -8788,6 +8916,7 @@ Elm.Tut.Main.make = function (_elm) {
                           ,clock: clock
                           ,input: input
                           ,tutState: tutState
+                          ,doOutput: doOutput
                           ,main: main};
    return _elm.Tut.Main.values;
 };
@@ -8810,6 +8939,7 @@ Elm.Tut.Render.make = function (_elm) {
    $Game = Elm.Game.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Layout = Elm.Layout.make(_elm),
    $List = Elm.List.make(_elm),
    $Render$Course = Elm.Render.Course.make(_elm),
    $Render$Players = Elm.Render.Players.make(_elm),
@@ -8866,7 +8996,7 @@ Elm.Tut.Render.make = function (_elm) {
                  return $Graphics$Collage.alpha(a)($Graphics$Collage.group(arrowForms));
               }();}
          _U.badCase($moduleName,
-         "between lines 50 and 60");
+         "between lines 51 and 61");
       }();
    });
    var renderTutPlayer = F4(function (showLines,
@@ -8897,33 +9027,35 @@ Elm.Tut.Render.make = function (_elm) {
          switch (_v4.ctor)
          {case "_Tuple2":
             return function () {
-                 var dashboard = A2($Tut$Dashboard.renderDashboard,
-                 tutState,
-                 {ctor: "_Tuple2"
-                 ,_0: _v4._0
-                 ,_1: _v4._1});
                  var helpers = A2(renderHelpers,
                  {ctor: "_Tuple2"
                  ,_0: _v4._0
                  ,_1: _v4._1},
                  tutState);
                  var bounds = $Render$Course.renderBounds(tutState.course.area);
-                 var playerForms = A4(renderTutPlayer,
+                 var playerForm = A4(renderTutPlayer,
                  false,
                  false,
                  false,
                  tutState.playerState);
-                 var graphics = A3($Graphics$Collage.collage,
-                 _v4._0,
-                 _v4._1,
-                 _L.fromArray([$Graphics$Collage.group(_L.fromArray([bounds
-                                                                    ,playerForms
-                                                                    ,helpers]))]));
-                 return $Graphics$Element.layers(_L.fromArray([graphics
-                                                              ,dashboard]));
+                 var layout = {_: {}
+                              ,absStack: _L.fromArray([helpers])
+                              ,dashboard: A2($Tut$Dashboard.buildDashboard,
+                              tutState,
+                              {ctor: "_Tuple2"
+                              ,_0: _v4._0
+                              ,_1: _v4._1})
+                              ,relStack: _L.fromArray([bounds
+                                                      ,playerForm])};
+                 return A3($Layout.assembleLayout,
+                 {ctor: "_Tuple2"
+                 ,_0: _v4._0
+                 ,_1: _v4._1},
+                 {ctor: "_Tuple2",_0: 0,_1: 0},
+                 layout);
               }();}
          _U.badCase($moduleName,
-         "between lines 64 and 71");
+         "between lines 66 and 77");
       }();
    });
    _elm.Tut.Render.values = {_op: _op
@@ -8992,7 +9124,7 @@ Elm.Tut.Steps.make = function (_elm) {
    $moduleName = "Tut.Steps",
    $Basics = Elm.Basics.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Tut$Inputs = Elm.Tut.Inputs.make(_elm),
+   $Tut$IO = Elm.Tut.IO.make(_elm),
    $Tut$State = Elm.Tut.State.make(_elm);
    var timeStep = F2(function (delta,
    tutState) {

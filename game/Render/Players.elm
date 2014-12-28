@@ -167,5 +167,5 @@ renderPlayers ({playerState,opponents,ghosts,course,center,watchMode,gameMode} a
         , renderGhosts ghosts
         , mainPlayer
         ]
-  in  group forms |> move (neg center)
+  in  group forms
 

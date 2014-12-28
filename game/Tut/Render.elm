@@ -10,8 +10,9 @@ import Render.Players (..)
 import Render.Course (renderBounds)
 
 import Game (..)
+import Layout (assembleLayout)
 import Tut.State (..)
-import Tut.Dashboard (renderDashboard)
+import Tut.Dashboard (buildDashboard)
 
 import Debug
 
@@ -59,13 +60,18 @@ renderHelpers (w,h) tutState =
   in
     group arrowForms |> alpha a
 
+
 render : (Int,Int) -> TutState -> Element
 render (w,h) tutState =
   let
-    playerForms = renderTutPlayer False False False tutState.playerState
+    playerForm = renderTutPlayer False False False tutState.playerState
     bounds = renderBounds tutState.course.area
     helpers = renderHelpers (w,h) tutState
-    graphics = collage w h [group [bounds, playerForms, helpers]]
-    dashboard = renderDashboard tutState (w,h)
+
+    layout =
+      { dashboard = buildDashboard tutState (w,h)
+      , relStack  = [ bounds, playerForm ]
+      , absStack  = [ helpers ]
+      }
   in
-    layers [graphics, dashboard]
+    assembleLayout (w,h) (0,0) layout

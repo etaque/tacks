@@ -95,11 +95,9 @@ object Api extends Controller with Security {
     Ok(Json.toJson(request.player))
   }
 
-  import models.JsonFormats._
   implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
   implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
-  implicit val tutorialUpdateFormatter = FrameFormatter.jsonFrame[TutorialUpdate]
 
   def timeTrialSocket(timeTrialId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
@@ -133,7 +131,10 @@ object Api extends Controller with Security {
     }
   }
 
-  def tutorialSocket = WebSocket.tryAcceptWithActor[PlayerInput, TutorialUpdate] { implicit request =>
+  implicit val tutorialInputFrameFormatter = FrameFormatter.jsonFrame[TutorialInput]
+  implicit val tutorialUpdateFormatter = FrameFormatter.jsonFrame[TutorialUpdate]
+
+  def tutorialSocket = WebSocket.tryAcceptWithActor[TutorialInput, TutorialUpdate] { implicit request =>
     for {
       player <- Identified.getPlayer(request)
       ref <- (RacesSupervisor.actorRef ? MountTutorial(player)).mapTo[ActorRef]

@@ -1,7 +1,8 @@
-module Tut.Inputs where
+module Tut.IO where
 
 import Inputs (..)
 import Game
+import Tut.State (..)
 
 import Keyboard
 import Char
@@ -22,4 +23,10 @@ type alias TutInput =
   , next:         Bool
   , window:       (Int,Int)
   , serverUpdate: ServerUpdate
+  }
+
+type alias TutOutput =
+  { keyboard: KeyboardInput
+  , step:     String
+  , window:   (Int,Int)
   }

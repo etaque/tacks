@@ -14,10 +14,10 @@ class TutorialActor(player: Player) extends Actor with ManageWind {
 
   var playerRef: Option[ActorRef] = None
 
-  var step = TutorialStep.initial
+  var step: TutorialStep = TutorialStep.initial
 
   var playerState = PlayerState.initial(player)
-  var input = PlayerInput.initial
+  var input = TutorialInput.initial
 
   val course = Course.forTutorial
   val id = player.id
@@ -45,14 +45,15 @@ class TutorialActor(player: Player) extends Actor with ManageWind {
     case FrameTick => {
       playerRef.foreach { ref =>
         ref ! update
-        ref ! RunStep(playerState, input, clock, wind, course, started = true, Nil)
+        ref ! RunStep(playerState, input.keyboard, clock, wind, course, started = true, Nil)
       }
+      step = input.step
     }
 
     /**
      * player input coming from websocket through player actor
      */
-    case PlayerUpdate(_, newInput) => {
+    case newInput: TutorialInput => {
       input = newInput
     }
 

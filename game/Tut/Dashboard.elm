@@ -6,14 +6,12 @@ import Text (centered,leftAligned)
 import List (..)
 
 import Render.Utils (..)
-
---import Game (..)
+import Layout (..)
 import Tut.State (..)
 
 getMainStatus : TutState -> Element
 getMainStatus tutState =
   bigText "Hello there!" |> centered
-
 
 getSubStatus : TutState -> Element
 getSubStatus tutState =
@@ -22,33 +20,21 @@ getSubStatus tutState =
 topLeftElements : TutState -> List Element
 topLeftElements tutState = []
 
-midTopElement : TutState -> Element
-midTopElement tutState =
-  let
-    mainStatus = getMainStatus tutState
-    subStatus = getSubStatus tutState
-    maxWidth = maximum [widthOf mainStatus, widthOf subStatus]
-    mainStatusCentered = container maxWidth (heightOf mainStatus) midTop mainStatus
-    subStatusCentered = container maxWidth (heightOf subStatus) midTop subStatus
-  in
-    mainStatusCentered `above` subStatusCentered
+topCenterElements : TutState -> List Element
+topCenterElements tutState =
+  [getMainStatus tutState, getSubStatus tutState]
 
 topRightElements : TutState -> List Element
 topRightElements tutState = []
-  --[ getWindWheel wind
-  --, s
-  --, M.map getVmgBar playerState |> M.withDefault empty
-  --]
 
-midBottomElements : TutState -> List Element
-midBottomElements tutState =
+bottomCenterElements : TutState -> List Element
+bottomCenterElements tutState =
   [ baseText "when ready, press ESC for next step" |> leftAligned ]
 
-renderDashboard : TutState -> (Int,Int) -> Element
-renderDashboard ({playerState,step} as tutState) (w,h) =
-  layers
-    [ container w h (topLeftAt (Absolute 20) (Absolute 20)) <| flow down (topLeftElements tutState)
-    , container w h (midTopAt (Relative 0.5) (Absolute 20)) <| midTopElement tutState
-    , container w h (topRightAt (Absolute 20) (Absolute 20)) <| flow down (topRightElements tutState)
-    , container w h (midBottomAt (Relative 0.5) (Absolute 20)) <| flow up (midBottomElements tutState)
-    ]
+buildDashboard : TutState -> (Int,Int) -> DashboardLayout
+buildDashboard ({playerState,step} as tutState) (w,h) =
+  { topLeft = topLeftElements tutState
+  , topRight = topRightElements tutState
+  , topCenter = topCenterElements tutState
+  , bottomCenter = bottomCenterElements tutState
+  }

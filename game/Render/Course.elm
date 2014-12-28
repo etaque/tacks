@@ -233,4 +233,4 @@ renderCourse ({playerState,opponents,course,now,center} as gameState) =
       , renderGusts gameState.wind
       ]
   in
-    group forms |> move (neg center)
+    group forms

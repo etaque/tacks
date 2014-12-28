@@ -5,6 +5,7 @@ import Core (..)
 import Geo (..)
 import Game (..)
 import Inputs (watchedPlayer)
+import Layout (..)
 
 import String
 import Text (leftAligned,centered)
@@ -253,50 +254,31 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
 topLeftElements : GameState -> Maybe PlayerState -> List Element
 topLeftElements gameState playerState =
   [ getMode gameState
-  , s
   , getBoard gameState
   , getHelp gameState
   ]
 
-midTopElement : GameState -> Maybe PlayerState -> Element
-midTopElement gameState playerState =
-  --getMainStatus gameState `above` getSubStatus gameState
-  let
-    mainStatus = getMainStatus gameState
-    subStatus = getSubStatus gameState
-    maxWidth = maximum [widthOf mainStatus, widthOf subStatus]
-    mainStatusCentered = container maxWidth (heightOf mainStatus) midTop mainStatus
-    subStatusCentered = container maxWidth (heightOf subStatus) midTop subStatus
-  in
-    mainStatusCentered `above` subStatusCentered
+topCenterElements : GameState -> Maybe PlayerState -> List Element
+topCenterElements gameState playerState =
+  [ getMainStatus gameState
+  , getSubStatus gameState
+  ]
 
 topRightElements : GameState -> Maybe PlayerState -> List Element
 topRightElements {wind,opponents} playerState =
   [ getWindWheel wind
-  , s
   , M.map getVmgBar playerState |> M.withDefault empty
   ]
 
---midBottomElements : GameState -> Maybe PlayerState -> [Element]
---midBottomElements {countdown} playerState =
---  [ getHelp countdown ]
-
-leftBottomElements : GameState -> Maybe PlayerState -> List Element
-leftBottomElements gameState playerState =
-  [ getHelp gameState ]
-
-
-renderDashboard : GameState -> (Int,Int) -> Element
-renderDashboard ({playerId,playerState,opponents,watchMode} as gameState) (w,h) =
+buildDashboard : GameState -> (Int,Int) -> DashboardLayout
+buildDashboard ({playerId,playerState,opponents,watchMode} as gameState) (w,h) =
   let
     displayedPlayerState = case watchMode of
       Watching playerId -> if selfWatching gameState then findOpponent opponents playerId else Nothing
       NotWatching       -> playerState
   in
-    layers
-      [ container w h (topLeftAt (Absolute 20) (Absolute 20)) <| flow down (topLeftElements gameState displayedPlayerState)
-      , container w h (midTopAt (Relative 0.5) (Absolute 20)) <| midTopElement gameState displayedPlayerState
-      , container w h (topRightAt (Absolute 20) (Absolute 20)) <| flow down (topRightElements gameState displayedPlayerState)
-      --, container w h (bottomLeftAt (Absolute 20) (Absolute 20)) <| flow up (leftBottomElements gameState displayedPlayerState)
-      --, container w h (midBottomAt (Relative 0.5) (Absolute 20)) <| flow up (midBottomElements gameState displayedPlayerState)
-      ]
+    { topLeft = topLeftElements gameState displayedPlayerState
+    , topRight = topRightElements gameState displayedPlayerState
+    , topCenter = topCenterElements gameState displayedPlayerState
+    , bottomCenter = []
+    }

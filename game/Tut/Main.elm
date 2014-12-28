@@ -6,7 +6,7 @@ import Time (..)
 import Graphics.Element (Element)
 
 import Inputs (..)
-import Tut.Inputs (..)
+import Tut.IO (..)
 import Tut.State (..)
 import Tut.Steps (..)
 import Tut.Render (render)
@@ -26,6 +26,13 @@ input = sampleOn clock <| map5 TutInput
 
 tutState : Signal TutState
 tutState = foldp mainStep defaultTutState input
+
+doOutput : TutInput -> TutState -> TutOutput
+doOutput {keyboard,window} {step} =
+  { keyboard = keyboard, window = window, step = toString step }
+
+port tutOutput : Signal TutOutput
+port tutOutput = map2 doOutput input tutState
 
 port playerOutput : Signal KeyboardInput
 port playerOutput = .keyboard <~ input

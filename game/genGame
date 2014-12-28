@@ -1,1 +1,0 @@
-elm --only-js --make --bundle-runtime Main.elm && cp build/Main.js ../public/javascripts/game.js

@@ -21,3 +21,9 @@ defaultTutState =
   , stepTime    = 0
   , course      = defaultCourse
   }
+
+--stepToString : Step -> String
+--stepToString step = case step of
+--  TurningStep -> "TurningStep"
+--  GateStep -> "GateStep"
+--  VmgStep -> "VmgStep"

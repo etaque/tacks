@@ -89,6 +89,8 @@ object JsonFormats {
 
   implicit val watcherInputFormat: Format[WatcherInput] = Json.format[WatcherInput]
 
+  implicit val tutorialInputFormat: Format[TutorialInput] = Json.format[TutorialInput]
+
   implicit val playerTallyFormat: Format[PlayerTally] = (
     (__ \ 'playerId).format[BSONObjectID] and
       (__ \ 'playerHandle).format[Option[String]] and

@@ -2482,6 +2482,140 @@ Elm.Keyboard.make = function (_elm) {
                           ,lastPressed: lastPressed};
    return _elm.Keyboard.values;
 };
+Elm.Layout = Elm.Layout || {};
+Elm.Layout.make = function (_elm) {
+   "use strict";
+   _elm.Layout = _elm.Layout || {};
+   if (_elm.Layout.values)
+   return _elm.Layout.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Layout",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm);
+   var centerElements = function (elements) {
+      return function () {
+         var maxWidth = $List.maximum(A2($List.map,
+         $Graphics$Element.widthOf,
+         elements));
+         return A2($List.map,
+         function (e) {
+            return A4($Graphics$Element.container,
+            maxWidth,
+            $Graphics$Element.heightOf(e),
+            $Graphics$Element.midTop,
+            e);
+         },
+         elements);
+      }();
+   };
+   var assembleDashboardLayout = F2(function (_v0,
+   _v1) {
+      return function () {
+         return function () {
+            switch (_v0.ctor)
+            {case "_Tuple2":
+               return _L.fromArray([A3($Graphics$Element.container,
+                                   _v0._0,
+                                   _v0._1,
+                                   A2($Graphics$Element.topLeftAt,
+                                   $Graphics$Element.Absolute(20),
+                                   $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                   $Graphics$Element.down,
+                                   _v1.topLeft))
+                                   ,A3($Graphics$Element.container,
+                                   _v0._0,
+                                   _v0._1,
+                                   A2($Graphics$Element.midTopAt,
+                                   $Graphics$Element.Relative(0.5),
+                                   $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                   $Graphics$Element.down,
+                                   centerElements(_v1.topCenter)))
+                                   ,A3($Graphics$Element.container,
+                                   _v0._0,
+                                   _v0._1,
+                                   A2($Graphics$Element.topRightAt,
+                                   $Graphics$Element.Absolute(20),
+                                   $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
+                                   $Graphics$Element.down,
+                                   _v1.topRight))]);}
+            _U.badCase($moduleName,
+            "between lines 29 and 32");
+         }();
+      }();
+   });
+   var assembleLayout = F3(function (_v6,
+   _v7,
+   _v8) {
+      return function () {
+         return function () {
+            switch (_v7.ctor)
+            {case "_Tuple2":
+               return function () {
+                    switch (_v6.ctor)
+                    {case "_Tuple2":
+                       return function () {
+                            var dashboardElements = A2(assembleDashboardLayout,
+                            {ctor: "_Tuple2"
+                            ,_0: _v6._0
+                            ,_1: _v6._1},
+                            _v8.dashboard);
+                            var absStackElements = A3($Graphics$Collage.collage,
+                            _v6._0,
+                            _v6._1,
+                            _v8.absStack);
+                            var relStackElements = A3($Graphics$Collage.collage,
+                            _v6._0,
+                            _v6._1,
+                            A2($List.map,
+                            $Graphics$Collage.move({ctor: "_Tuple2"
+                                                   ,_0: 0 - _v7._0
+                                                   ,_1: 0 - _v7._1}),
+                            _v8.relStack));
+                            return $Graphics$Element.layers(A2($List.append,
+                            _L.fromArray([relStackElements
+                                         ,absStackElements]),
+                            dashboardElements));
+                         }();}
+                    _U.badCase($moduleName,
+                    "between lines 36 and 41");
+                 }();}
+            _U.badCase($moduleName,
+            "between lines 36 and 41");
+         }();
+      }();
+   });
+   var Layout = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,absStack: c
+             ,dashboard: a
+             ,relStack: b};
+   });
+   var DashboardLayout = F4(function (a,
+   b,
+   c,
+   d) {
+      return {_: {}
+             ,bottomCenter: d
+             ,topCenter: c
+             ,topLeft: a
+             ,topRight: b};
+   });
+   _elm.Layout.values = {_op: _op
+                        ,DashboardLayout: DashboardLayout
+                        ,Layout: Layout
+                        ,centerElements: centerElements
+                        ,assembleDashboardLayout: assembleDashboardLayout
+                        ,assembleLayout: assembleLayout};
+   return _elm.Layout.values;
+};
 Elm.List = Elm.List || {};
 Elm.List.make = function (_elm) {
    "use strict";
@@ -3014,7 +3148,7 @@ Elm.Main.make = function (_elm) {
    $Render$Utils.gameTitle,
    gameState));
    var main = A3($Signal.map2,
-   $Render$All.renderAll,
+   $Render$All.render,
    $Window.dimensions,
    gameState);
    var playerOutput = _P.portOut("playerOutput",
@@ -7240,25 +7374,20 @@ Elm.Render.All.make = function (_elm) {
    $moduleName = "Render.All",
    $Basics = Elm.Basics.make(_elm),
    $Game = Elm.Game.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Layout = Elm.Layout.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Render$Controls = Elm.Render.Controls.make(_elm),
    $Render$Course = Elm.Render.Course.make(_elm),
    $Render$Dashboard = Elm.Render.Dashboard.make(_elm),
    $Render$Players = Elm.Render.Players.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm);
-   var renderAll = F2(function (_v0,
+   var render = F2(function (_v0,
    gameState) {
       return function () {
          switch (_v0.ctor)
          {case "_Tuple2":
             return function () {
-                 var dashboard = A2($Render$Dashboard.renderDashboard,
-                 gameState,
-                 {ctor: "_Tuple2"
-                 ,_0: _v0._0
-                 ,_1: _v0._1});
                  var controlsForm = $Maybe.withDefault($Render$Utils.emptyForm)(A2($Maybe.map,
                  A2($Render$Controls.renderControls,
                  gameState,
@@ -7266,23 +7395,30 @@ Elm.Render.All.make = function (_elm) {
                  ,_0: _v0._0
                  ,_1: _v0._1}),
                  gameState.playerState));
-                 var playersForms = $Render$Players.renderPlayers(gameState);
+                 var playersForm = $Render$Players.renderPlayers(gameState);
                  var courseForm = $Render$Course.renderCourse(gameState);
-                 var graphics = A3($Graphics$Collage.collage,
-                 _v0._0,
-                 _v0._1,
-                 _L.fromArray([$Graphics$Collage.group(_L.fromArray([courseForm
-                                                                    ,playersForms
-                                                                    ,controlsForm]))]));
-                 return $Graphics$Element.layers(_L.fromArray([graphics
-                                                              ,dashboard]));
+                 var layout = {_: {}
+                              ,absStack: _L.fromArray([controlsForm])
+                              ,dashboard: A2($Render$Dashboard.buildDashboard,
+                              gameState,
+                              {ctor: "_Tuple2"
+                              ,_0: _v0._0
+                              ,_1: _v0._1})
+                              ,relStack: _L.fromArray([courseForm
+                                                      ,playersForm])};
+                 return A3($Layout.assembleLayout,
+                 {ctor: "_Tuple2"
+                 ,_0: _v0._0
+                 ,_1: _v0._1},
+                 gameState.center,
+                 layout);
               }();}
          _U.badCase($moduleName,
-         "between lines 17 and 23");
+         "between lines 35 and 47");
       }();
    });
    _elm.Render.All.values = {_op: _op
-                            ,renderAll: renderAll};
+                            ,render: render};
    return _elm.Render.All.values;
 };
 Elm.Render = Elm.Render || {};
@@ -7934,7 +8070,7 @@ Elm.Render.Course.make = function (_elm) {
                                      ,renderDownwind(_v15)
                                      ,renderUpwind(_v15)
                                      ,renderGusts(_v15.wind)]);
-            return $Graphics$Collage.move($Geo.neg(_v15.center))($Graphics$Collage.group(forms));
+            return $Graphics$Collage.group(forms);
          }();
       }();
    };
@@ -7993,6 +8129,7 @@ Elm.Render.Dashboard.make = function (_elm) {
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Graphics$Input = Elm.Graphics.Input.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
+   $Layout = Elm.Layout.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm),
@@ -8078,19 +8215,28 @@ Elm.Render.Dashboard.make = function (_elm) {
                       ,legend]));
       }();
    };
-   var getTimeTrialFinishingStatus = F2(function (_v2,
-   _v3) {
+   var topRightElements = F2(function (_v2,
+   playerState) {
+      return function () {
+         return _L.fromArray([getWindWheel(_v2.wind)
+                             ,$Maybe.withDefault($Graphics$Element.empty)(A2($Maybe.map,
+                             getVmgBar,
+                             playerState))]);
+      }();
+   });
+   var getTimeTrialFinishingStatus = F2(function (_v4,
+   _v5) {
       return function () {
          return function () {
             return function () {
-               var _v6 = A2($Game.findPlayerGhost,
-               _v2.playerId,
-               _v2.ghosts);
-               switch (_v6.ctor)
+               var _v8 = A2($Game.findPlayerGhost,
+               _v4.playerId,
+               _v4.ghosts);
+               switch (_v8.ctor)
                {case "Just":
                   return function () {
-                       var newTime = $List.head(_v3.crossedGates);
-                       var previousTime = $List.head(_v6._0.gates);
+                       var newTime = $List.head(_v5.crossedGates);
+                       var previousTime = $List.head(_v8._0.gates);
                        return _U.cmp(newTime,
                        previousTime) < 0 ? A2($Basics._op["++"],
                        $Basics.toString(newTime - previousTime),
@@ -8102,17 +8248,17 @@ Elm.Render.Dashboard.make = function (_elm) {
                     }();
                   case "Nothing":
                   return function () {
-                       var _v8 = _v3.player.handle;
-                       switch (_v8.ctor)
+                       var _v10 = _v5.player.handle;
+                       switch (_v10.ctor)
                        {case "Just":
                           return "you did it!";
                           case "Nothing":
                           return "please create an account to save your run";}
                        _U.badCase($moduleName,
-                       "between lines 205 and 207");
+                       "between lines 206 and 208");
                     }();}
                _U.badCase($moduleName,
-               "between lines 195 and 207");
+               "between lines 196 and 208");
             }();
          }();
       }();
@@ -8127,72 +8273,72 @@ Elm.Render.Dashboard.make = function (_elm) {
       "/",
       $Basics.toString(1 + course.laps * 2))));
    });
-   var getFinishingStatus = F2(function (_v10,
+   var getFinishingStatus = F2(function (_v12,
    playerState) {
       return function () {
          return function () {
-            var _v12 = playerState.nextGate;
-            switch (_v12.ctor)
-            {case "Just": switch (_v12._0)
+            var _v14 = playerState.nextGate;
+            switch (_v14.ctor)
+            {case "Just": switch (_v14._0)
                  {case "StartLine":
                     return "go!";}
                  break;
                case "Nothing":
                return function () {
-                    var _v14 = _v10.gameMode;
-                    switch (_v14.ctor)
+                    var _v16 = _v12.gameMode;
+                    switch (_v16.ctor)
                     {case "Race": return "finished";
                        case "TimeTrial":
                        return A2(getTimeTrialFinishingStatus,
-                         _v10,
+                         _v12,
                          playerState);}
                     _U.badCase($moduleName,
-                    "between lines 183 and 186");
+                    "between lines 184 and 187");
                  }();}
             return A2(getGatesCount,
-            _v10.course,
+            _v12.course,
             playerState);
          }();
       }();
    });
-   var getSubStatus = function (_v15) {
+   var getSubStatus = function (_v17) {
       return function () {
          return function () {
             var s = function () {
-               var _v17 = _v15.countdown;
-               switch (_v17.ctor)
+               var _v19 = _v17.countdown;
+               switch (_v19.ctor)
                {case "Just":
-                  return _U.cmp(_v17._0,
+                  return _U.cmp(_v19._0,
                     0) > 0 ? "be ready" : $Maybe.withDefault("")(A2($Maybe.map,
-                    getFinishingStatus(_v15),
-                    _v15.playerState));
+                    getFinishingStatus(_v17),
+                    _v17.playerState));
                   case "Nothing":
-                  return _v15.isMaster ? $Render$Utils.startCountdownMessage : "";}
+                  return _v17.isMaster ? $Render$Utils.startCountdownMessage : "";}
                _U.badCase($moduleName,
-               "between lines 167 and 176");
+               "between lines 168 and 177");
             }();
             var op = 1;
             return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.baseText(s)));
          }();
       }();
    };
-   var getRaceTimer = function (_v19) {
+   var getRaceTimer = function (_v21) {
       return function () {
          return function () {
-            var _v21 = {ctor: "_Tuple2"
-                       ,_0: _v19.countdown
-                       ,_1: _v19.playerState};
-            switch (_v21.ctor)
+            var _v23 = {ctor: "_Tuple2"
+                       ,_0: _v21.countdown
+                       ,_1: _v21.playerState};
+            switch (_v23.ctor)
             {case "_Tuple2":
-               switch (_v21._0.ctor)
+               switch (_v23._0.ctor)
                  {case "Just":
-                    switch (_v21._1.ctor)
+                    switch (_v23._1.ctor)
                       {case "Just":
                          return function () {
-                              var t = $Core.isNothing(_v21._1._0.nextGate) ? $List.head(_v21._1._0.crossedGates) : _v21._0._0;
+                              var t = $Core.isNothing(_v23._1._0.nextGate) ? $List.head(_v23._1._0.crossedGates) : _v23._0._0;
                               return A2($Render$Utils.formatTimer,
                               t,
-                              $Core.isNothing(_v21._1._0.nextGate));
+                              $Core.isNothing(_v23._1._0.nextGate));
                            }();}
                       break;}
                  break;}
@@ -8200,23 +8346,23 @@ Elm.Render.Dashboard.make = function (_elm) {
          }();
       }();
    };
-   var getTrialTimer = function (_v26) {
+   var getTrialTimer = function (_v28) {
       return function () {
          return function () {
-            var _v28 = {ctor: "_Tuple2"
-                       ,_0: _v26.countdown
-                       ,_1: _v26.playerState};
-            switch (_v28.ctor)
+            var _v30 = {ctor: "_Tuple2"
+                       ,_0: _v28.countdown
+                       ,_1: _v28.playerState};
+            switch (_v30.ctor)
             {case "_Tuple2":
-               switch (_v28._0.ctor)
+               switch (_v30._0.ctor)
                  {case "Just":
-                    switch (_v28._1.ctor)
+                    switch (_v30._1.ctor)
                       {case "Just":
                          return function () {
-                              var t = $Core.isNothing(_v28._1._0.nextGate) ? $List.head(_v28._1._0.crossedGates) : _v28._0._0;
+                              var t = $Core.isNothing(_v30._1._0.nextGate) ? $List.head(_v30._1._0.crossedGates) : _v30._0._0;
                               return A2($Render$Utils.formatTimer,
                               t,
-                              $Core.isNothing(_v28._1._0.nextGate));
+                              $Core.isNothing(_v30._1._0.nextGate));
                            }();}
                       break;}
                  break;}
@@ -8224,67 +8370,46 @@ Elm.Render.Dashboard.make = function (_elm) {
          }();
       }();
    };
-   var getMainStatus = function (_v33) {
+   var getMainStatus = function (_v35) {
       return function () {
          return function () {
             var s = function () {
-               var _v35 = _v33.gameMode;
-               switch (_v35.ctor)
+               var _v37 = _v35.gameMode;
+               switch (_v37.ctor)
                {case "Race":
-                  return getRaceTimer(_v33);
+                  return getRaceTimer(_v35);
                   case "TimeTrial":
-                  return getTrialTimer(_v33);}
+                  return getTrialTimer(_v35);}
                _U.badCase($moduleName,
-               "between lines 134 and 137");
+               "between lines 135 and 138");
             }();
-            var op = $Game.isInProgress(_v33) ? 0.5 : 1;
+            var op = $Game.isInProgress(_v35) ? 0.5 : 1;
             return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.bigText(s)));
          }();
       }();
    };
-   var midTopElement = F2(function (gameState,
+   var topCenterElements = F2(function (gameState,
    playerState) {
-      return function () {
-         var subStatus = getSubStatus(gameState);
-         var mainStatus = getMainStatus(gameState);
-         var maxWidth = $List.maximum(_L.fromArray([$Graphics$Element.widthOf(mainStatus)
-                                                   ,$Graphics$Element.widthOf(subStatus)]));
-         var subStatusCentered = A4($Graphics$Element.container,
-         maxWidth,
-         $Graphics$Element.heightOf(subStatus),
-         $Graphics$Element.midTop,
-         subStatus);
-         var mainStatusCentered = A4($Graphics$Element.container,
-         maxWidth,
-         $Graphics$Element.heightOf(mainStatus),
-         $Graphics$Element.midTop,
-         mainStatus);
-         return A2($Graphics$Element.above,
-         mainStatusCentered,
-         subStatusCentered);
-      }();
+      return _L.fromArray([getMainStatus(gameState)
+                          ,getSubStatus(gameState)]);
    });
    var getHelp = function (gameState) {
       return function () {
-         var _v36 = gameState.gameMode;
-         switch (_v36.ctor)
+         var _v38 = gameState.gameMode;
+         switch (_v38.ctor)
          {case "Race":
             return $Graphics$Element.empty;
             case "TimeTrial":
             return $Graphics$Element.opacity(0.8)($Text.leftAligned($Render$Utils.baseText($Render$Utils.helpMessage)));}
          _U.badCase($moduleName,
-         "between lines 119 and 125");
+         "between lines 120 and 126");
       }();
    };
-   var leftBottomElements = F2(function (gameState,
-   playerState) {
-      return _L.fromArray([getHelp(gameState)]);
-   });
    var getMode = function (gameState) {
       return $Core.isNothing(gameState.playerState) ? $Text.leftAligned($Render$Utils.baseText("SPECTATOR MODE")) : $Graphics$Element.empty;
    };
    var buildBoardLine = F2(function (watching,
-   _v37) {
+   _v39) {
       return function () {
          return function () {
             var deltaText = $Maybe.withDefault("-")(A2($Maybe.map,
@@ -8293,18 +8418,18 @@ Elm.Render.Dashboard.make = function (_elm) {
                "+",
                $Basics.toString(d / 1000));
             },
-            _v37.delta));
+            _v39.delta));
             var handleText = $Render$Utils.fixedLength(12)(A2($Maybe.withDefault,
             "Anonymous",
-            _v37.handle));
+            _v39.handle));
             var positionText = $Maybe.withDefault("  ")(A2($Maybe.map,
             function (p) {
                return A2($Basics._op["++"],
                $Basics.toString(p),
                ".");
             },
-            _v37.position));
-            var watchingText = watching ? _v37.watched ? "* " : "  " : "";
+            _v39.position));
+            var watchingText = watching ? _v39.watched ? "* " : "  " : "";
             var el = $Text.leftAligned($Render$Utils.baseText(A2($Basics._op["++"],
             watchingText,
             A2($String.join,
@@ -8315,7 +8440,7 @@ Elm.Render.Dashboard.make = function (_elm) {
             return watching ? A4($Graphics$Input.customButton,
             A2($Signal.send,
             $Inputs.watchedPlayer,
-            $Maybe.Just(_v37.id)),
+            $Maybe.Just(_v39.id)),
             el,
             el,
             el) : el;
@@ -8324,7 +8449,7 @@ Elm.Render.Dashboard.make = function (_elm) {
    });
    var getOpponent = F3(function (watching,
    watchMode,
-   _v39) {
+   _v41) {
       return function () {
          return function () {
             var watched = function () {
@@ -8333,14 +8458,14 @@ Elm.Render.Dashboard.make = function (_elm) {
                   return false;
                   case "Watching":
                   return _U.eq(watchMode._0,
-                    _v39.player.id);}
+                    _v41.player.id);}
                _U.badCase($moduleName,
-               "between lines 50 and 53");
+               "between lines 51 and 54");
             }();
             var line = {_: {}
                        ,delta: $Maybe.Nothing
-                       ,handle: _v39.player.handle
-                       ,id: _v39.player.id
+                       ,handle: _v41.player.handle
+                       ,id: _v41.player.id
                        ,position: $Maybe.Nothing
                        ,watched: watched};
             return A2(buildBoardLine,
@@ -8349,26 +8474,26 @@ Elm.Render.Dashboard.make = function (_elm) {
          }();
       }();
    });
-   var getOpponents = function (_v43) {
+   var getOpponents = function (_v45) {
       return function () {
          return function () {
-            var allOpponents = $Maybe.withDefault(_v43.opponents)(A2($Maybe.map,
+            var allOpponents = $Maybe.withDefault(_v45.opponents)(A2($Maybe.map,
             function (ps) {
                return A2($List._op["::"],
                ps,
-               _v43.opponents);
+               _v45.opponents);
             },
-            _v43.playerState));
+            _v45.playerState));
             var watching = function () {
-               var _v45 = _v43.playerState;
-               switch (_v45.ctor)
+               var _v47 = _v45.playerState;
+               switch (_v47.ctor)
                {case "Nothing": return true;}
                return false;
             }();
             return $Graphics$Element.flow($Graphics$Element.down)(A2($List.map,
             A2(getOpponent,
             watching,
-            _v43.watchMode),
+            _v45.watchMode),
             allOpponents));
          }();
       }();
@@ -8389,7 +8514,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                return _U.eq(watchMode._0,
                  tally.playerId);}
             _U.badCase($moduleName,
-            "between lines 77 and 80");
+            "between lines 78 and 81");
          }();
          var line = {_: {}
                     ,delta: delta
@@ -8402,17 +8527,17 @@ Elm.Render.Dashboard.make = function (_elm) {
          line);
       }();
    });
-   var getLeaderboard = function (_v48) {
+   var getLeaderboard = function (_v50) {
       return function () {
-         return $List.isEmpty(_v48.leaderboard) ? $Graphics$Element.empty : function () {
-            var watching = $Core.isNothing(_v48.playerState);
-            var leader = $List.head(_v48.leaderboard);
+         return $List.isEmpty(_v50.leaderboard) ? $Graphics$Element.empty : function () {
+            var watching = $Core.isNothing(_v50.playerState);
+            var leader = $List.head(_v50.leaderboard);
             return $Graphics$Element.flow($Graphics$Element.down)(A2($List.indexedMap,
             A3(getLeaderboardLine,
             watching,
-            _v48.watchMode,
+            _v50.watchMode,
             leader),
-            _v48.leaderboard));
+            _v50.leaderboard));
          }();
       }();
    };
@@ -8420,6 +8545,48 @@ Elm.Render.Dashboard.make = function (_elm) {
       return _U.eq(gameState.gameMode,
       $Game.TimeTrial) ? $Graphics$Element.empty : $List.isEmpty(gameState.leaderboard) ? getOpponents(gameState) : getLeaderboard(gameState);
    };
+   var topLeftElements = F2(function (gameState,
+   playerState) {
+      return _L.fromArray([getMode(gameState)
+                          ,getBoard(gameState)
+                          ,getHelp(gameState)]);
+   });
+   var buildDashboard = F2(function (_v52,
+   _v53) {
+      return function () {
+         switch (_v53.ctor)
+         {case "_Tuple2":
+            return function () {
+                 return function () {
+                    var displayedPlayerState = function () {
+                       var _v58 = _v52.watchMode;
+                       switch (_v58.ctor)
+                       {case "NotWatching":
+                          return _v52.playerState;
+                          case "Watching":
+                          return $Game.selfWatching(_v52) ? A2($Game.findOpponent,
+                            _v52.opponents,
+                            _v58._0) : $Maybe.Nothing;}
+                       _U.badCase($moduleName,
+                       "between lines 281 and 284");
+                    }();
+                    return {_: {}
+                           ,bottomCenter: _L.fromArray([])
+                           ,topCenter: A2(topCenterElements,
+                           _v52,
+                           displayedPlayerState)
+                           ,topLeft: A2(topLeftElements,
+                           _v52,
+                           displayedPlayerState)
+                           ,topRight: A2(topRightElements,
+                           _v52,
+                           displayedPlayerState)};
+                 }();
+              }();}
+         _U.badCase($moduleName,
+         "between lines 280 and 289");
+      }();
+   });
    var BoardLine = F5(function (a,
    b,
    c,
@@ -8438,76 +8605,6 @@ Elm.Render.Dashboard.make = function (_elm) {
    var s = A2($Graphics$Element.spacer,
    20,
    20);
-   var topLeftElements = F2(function (gameState,
-   playerState) {
-      return _L.fromArray([getMode(gameState)
-                          ,s
-                          ,getBoard(gameState)
-                          ,getHelp(gameState)]);
-   });
-   var topRightElements = F2(function (_v50,
-   playerState) {
-      return function () {
-         return _L.fromArray([getWindWheel(_v50.wind)
-                             ,s
-                             ,$Maybe.withDefault($Graphics$Element.empty)(A2($Maybe.map,
-                             getVmgBar,
-                             playerState))]);
-      }();
-   });
-   var renderDashboard = F2(function (_v52,
-   _v53) {
-      return function () {
-         switch (_v53.ctor)
-         {case "_Tuple2":
-            return function () {
-                 return function () {
-                    var displayedPlayerState = function () {
-                       var _v58 = _v52.watchMode;
-                       switch (_v58.ctor)
-                       {case "NotWatching":
-                          return _v52.playerState;
-                          case "Watching":
-                          return $Game.selfWatching(_v52) ? A2($Game.findOpponent,
-                            _v52.opponents,
-                            _v58._0) : $Maybe.Nothing;}
-                       _U.badCase($moduleName,
-                       "between lines 292 and 295");
-                    }();
-                    return $Graphics$Element.layers(_L.fromArray([A3($Graphics$Element.container,
-                                                                 _v53._0,
-                                                                 _v53._1,
-                                                                 A2($Graphics$Element.topLeftAt,
-                                                                 $Graphics$Element.Absolute(20),
-                                                                 $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                                 $Graphics$Element.down,
-                                                                 A2(topLeftElements,
-                                                                 _v52,
-                                                                 displayedPlayerState)))
-                                                                 ,A3($Graphics$Element.container,
-                                                                 _v53._0,
-                                                                 _v53._1,
-                                                                 A2($Graphics$Element.midTopAt,
-                                                                 $Graphics$Element.Relative(0.5),
-                                                                 $Graphics$Element.Absolute(20)))(A2(midTopElement,
-                                                                 _v52,
-                                                                 displayedPlayerState))
-                                                                 ,A3($Graphics$Element.container,
-                                                                 _v53._0,
-                                                                 _v53._1,
-                                                                 A2($Graphics$Element.topRightAt,
-                                                                 $Graphics$Element.Absolute(20),
-                                                                 $Graphics$Element.Absolute(20)))(A2($Graphics$Element.flow,
-                                                                 $Graphics$Element.down,
-                                                                 A2(topRightElements,
-                                                                 _v52,
-                                                                 displayedPlayerState)))]));
-                 }();
-              }();}
-         _U.badCase($moduleName,
-         "between lines 291 and 302");
-      }();
-   });
    _elm.Render.Dashboard.values = {_op: _op
                                   ,s: s
                                   ,xs: xs
@@ -8530,10 +8627,9 @@ Elm.Render.Dashboard.make = function (_elm) {
                                   ,getWindWheel: getWindWheel
                                   ,getVmgBar: getVmgBar
                                   ,topLeftElements: topLeftElements
-                                  ,midTopElement: midTopElement
+                                  ,topCenterElements: topCenterElements
                                   ,topRightElements: topRightElements
-                                  ,leftBottomElements: leftBottomElements
-                                  ,renderDashboard: renderDashboard};
+                                  ,buildDashboard: buildDashboard};
    return _elm.Render.Dashboard.values;
 };
 Elm.Render = Elm.Render || {};
@@ -8863,7 +8959,7 @@ Elm.Render.Players.make = function (_elm) {
                                      filteredOpponents)
                                      ,renderGhosts(_v15.ghosts)
                                      ,mainPlayer]);
-            return $Graphics$Collage.move($Geo.neg(_v15.center))($Graphics$Collage.group(forms));
+            return $Graphics$Collage.group(forms);
          }();
       }();
    };

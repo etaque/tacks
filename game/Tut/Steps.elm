@@ -1,7 +1,7 @@
 module Tut.Steps where
 
 import Tut.State (..)
-import Tut.Inputs (..)
+import Tut.IO (..)
 
 import Maybe as M
 import Debug
@@ -17,10 +17,12 @@ serverStep serverUpdate tutState =
     stepTime = if typedStep == tutState.step then tutState.stepTime else 0
     newCourse = M.withDefault tutState.course course
   in
-    { tutState | playerState <- playerState,
-                 step <- typedStep,
-                 course <- newCourse,
-                 stepTime <- stepTime }
+    { tutState |
+      playerState <- playerState,
+      step        <- typedStep,
+      course      <- newCourse,
+      stepTime    <- stepTime
+    }
 
 timeStep : Float -> TutState -> TutState
 timeStep delta tutState =
