@@ -853,7 +853,7 @@ Elm.Game.make = function (_elm) {
                               {case "Just": return true;
                                  case "Nothing": return false;}
                               _U.badCase($moduleName,
-                              "between lines 168 and 171");
+                              "between lines 196 and 199");
                            }();}
                       break;}
                  break;}
@@ -872,7 +872,7 @@ Elm.Game.make = function (_elm) {
                return _U.eq(_v11._0,
                  _v9.playerId);}
             _U.badCase($moduleName,
-            "between lines 161 and 163");
+            "between lines 189 and 191");
          }();
       }();
    };
@@ -959,6 +959,33 @@ Elm.Game.make = function (_elm) {
                        ,markRadius: 0
                        ,upwind: defaultGate
                        ,windShadowLength: 0};
+   var defaultPlayer = {_: {}
+                       ,handle: $Maybe.Nothing
+                       ,id: ""
+                       ,status: $Maybe.Nothing};
+   var defaultVmg = {_: {}
+                    ,angle: 0
+                    ,speed: 0
+                    ,value: 0};
+   var defaultPlayerState = {_: {}
+                            ,controlMode: ""
+                            ,crossedGates: _L.fromArray([])
+                            ,downwindVmg: defaultVmg
+                            ,heading: 0
+                            ,nextGate: $Maybe.Nothing
+                            ,player: defaultPlayer
+                            ,position: {ctor: "_Tuple2"
+                                       ,_0: 0
+                                       ,_1: 0}
+                            ,shadowDirection: 0
+                            ,tackTarget: $Maybe.Nothing
+                            ,trail: _L.fromArray([])
+                            ,upwindVmg: defaultVmg
+                            ,velocity: 0
+                            ,vmgValue: 0
+                            ,windAngle: 0
+                            ,windOrigin: 0
+                            ,windSpeed: 0};
    var GameState = function (a) {
       return function (b) {
          return function (c) {
@@ -1174,6 +1201,9 @@ Elm.Game.make = function (_elm) {
                       ,Race: Race
                       ,TimeTrial: TimeTrial
                       ,GameState: GameState
+                      ,defaultVmg: defaultVmg
+                      ,defaultPlayer: defaultPlayer
+                      ,defaultPlayerState: defaultPlayerState
                       ,defaultGate: defaultGate
                       ,defaultCourse: defaultCourse
                       ,defaultWind: defaultWind
@@ -2696,7 +2726,6 @@ Elm.Main.make = function (_elm) {
    $Game = Elm.Game.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
    $Render$All = Elm.Render.All.make(_elm),
    $Render$Utils = Elm.Render.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm),

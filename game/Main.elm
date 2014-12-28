@@ -11,20 +11,7 @@ import Steps
 import Render.All as R
 import Render.Utils
 
-port raceInput : Signal
-  { playerId:    String
-  , now:         Float
-  , startTime:   Maybe Float
-  , course:      Maybe Game.Course
-  , playerState: Maybe Game.PlayerState
-  , wind:        Game.Wind
-  , opponents:   List Game.PlayerState
-  , ghosts:      List Game.GhostState
-  , leaderboard: List Game.PlayerTally
-  , isMaster:    Bool
-  , watching:    Bool
-  , timeTrial:   Bool
-  }
+port raceInput : Signal RaceInput
 
 clock : Signal Float
 clock = inSeconds <~ fps 30
