@@ -27,6 +27,8 @@ home.updateStatus=Maj statut
 home.timeTrials=Chronos du mois
 home.timeTrialRanking=meilleurs temps
 home.runTimeTrial=Jouer
+home.leaderboard=Classement général
+home.fullLeaderboard=Voir la suite
 
 footer.message=Tacks est un jeu <a href="https://github.com/etaque/tacks">open source</a> façonné par <a href="https://twitter.com/etaque">@etaque</a>.
 
@@ -66,3 +68,5 @@ timeTrials.oysterpark.description=votre cauchemar sur l''eau enfin transposé su
 timeTrials.minefield.name=Minefield
 timeTrials.minefield.description=regardez bien où vous mettez l''étrave...
 
+leaderboard.title=Classement général
+leaderboard.total=Total

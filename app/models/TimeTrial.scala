@@ -28,11 +28,11 @@ object TimeTrial extends MongoDAO[TimeTrial] {
   def findAllCurrent: Future[Seq[TimeTrial]] =
     Future.sequence(CourseGenerator.all.map(_.slug).map(TimeTrial.findCurrentBySlug)).map(_.flatten)
 
-  def zipWithTops(timeTrials: Seq[TimeTrial], playerId: BSONObjectID, rankingLength: Int): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
-    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, topWithPlayer(playerId, r, rankingLength)))))
+  def zipWithRankings(timeTrials: Seq[TimeTrial]): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
+    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, r.sortBy(_.rank)))))
 
-  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking], rankingLength: Int): Seq[RunRanking] =
-    rankings.filter(r => r.rank <= rankingLength || r.playerId == playerId).sortBy(_.rank)
+//  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking], rankingLength: Int): Seq[RunRanking] =
+//    rankings.filter(r => r.rank <= rankingLength || r.playerId == playerId).sortBy(_.rank)
 
   def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, currentPeriod)
 

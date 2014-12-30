@@ -39,6 +39,8 @@ home.updateStatus=Update status
 home.timeTrials=Time trials
 home.timeTrialRanking=leaderboard
 home.runTimeTrial=Play
+home.leaderboard=Overall leaderboard
+home.fullLeaderboard=See all
 
 footer.message=Tacks is an <a href="https://github.com/etaque/tacks">open source</a> game crafted by <a href="https://twitter.com/etaque">@etaque</a>.
 
@@ -77,3 +79,6 @@ timeTrials.oysterpark.name=Oyster Park
 timeTrials.oysterpark.description=a real life nightmare, finally on your screen!
 timeTrials.minefield.name=Minefield
 timeTrials.minefield.description=watch your bow...
+
+leaderboard.title=Overall leaderboard
+leaderboard.total=Sum

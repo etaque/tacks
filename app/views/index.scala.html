@@ -1,11 +1,12 @@
 @(player: Player,
   trials: Seq[(TimeTrial, Seq[RunRanking])],
   trialsUsers: Seq[User],
+  trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard,
   finishedRaces: Seq[Race],
   users: Seq[User],
   userForm: Form[CreateUser],
   jsMessages: jsmessages.api.JsMessages
-)(implicit req: RequestHeader, lang: Lang)
+)(implicit req: IdentifiedRequest[_], lang: Lang)
 
 @import play.api.Play
 @import play.api.Play.current
@@ -18,7 +19,7 @@
 
     <div class="row">
 
-      <div class="col-md-6">
+      <div class="col-lg-6">
         <p class="align-center"><img src="/assets/images/logo-tacks-wide.png"/></p>
         <p class="align-center">@Messages("home.intro")</p>
 
@@ -49,7 +50,7 @@
         }
       </div>
 
-      <div class="col-md-5 col-md-offset-1 user-block">
+      <div class="col-lg-5 col-lg-offset-1 user-block">
         @player match {
           case u: User => {
             <div class="current-user">
@@ -81,17 +82,39 @@
 
     </div>
 
-    <div id="liveCenter"></div>
+    <div class="row">
+      <div class="col-lg-8">
+        <div id="liveCenter"></div>
+      </div>
+
+      <div class="col-lg-4 leaderboard-top10">
+        <h2>@Messages("home.leaderboard", 10)</h2>
+        <ul>
+        @for((rank, playerId, points) <- trialLeaderboard.take(10)) {
+          <li class="@if(playerId == player.id) { current-player }">
+            <span class="rank">@rank</span>
+            <span class="handle">
+              @trialsUsers.find(_.id == playerId).map(_.handle).getOrElse("Anonymous")
+            </span>
+            <span class="points">@{points} pts</span>
+          </li>
+        }
+        </ul>
+        <a href="@routes.TimeTrials.leaderboard()" class="btn btn-block btn-xs btn-default btn-full-leaderboard">@Messages("home.fullLeaderboard")</a>
+
+      </div>
+
+    </div>
 
     <div class="time-trials row">
-      <div class="col-sm-12">
+      <div class="col-lg-12">
         <h2>@Messages("home.timeTrials")</h2>
       </div>
     </div>
       @for(row <- trials.grouped(3)) {
         <div class="row">
           @for((trial, rankings) <- row) {
-            <div class="col-sm-4">
+            <div class="col-lg-4">
               <div class="time-trial">
                 <a href="@routes.TimeTrials.show(trial.id.stringify)" class="run"
                 style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
@@ -104,13 +127,14 @@
 
                 @if(rankings.nonEmpty) {
                   <span class="ranking">@Messages("home.timeTrialRanking")</span>
-                  @views.html.timeTrials.ranking(rankings, trialsUsers, player)
+                  @views.html.timeTrials.ranking(rankings.filter(r => r.rank <= 5 || r.playerId == player.id), trialsUsers, player)
                 }
               </div>
             </div>
           }
         </div>
       }
+
 
     @*
     @if(finishedRaces.nonEmpty) {

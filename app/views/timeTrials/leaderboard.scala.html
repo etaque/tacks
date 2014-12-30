@@ -1,0 +1,43 @@
+@(byTrial: Seq[(TimeTrial, core.TimeTrialLeaderboard.Leaderboard)],
+  overall: core.TimeTrialLeaderboard.Leaderboard,
+  users: Seq[User]
+)(implicit req: IdentifiedRequest[_], lang: Lang)
+
+@main {
+  @defining(byTrial.map(_._1)) { trials =>
+
+    <div class="nav"><a href="@routes.Application.index"><img src="/assets/images/logo-tacks-wide.png"/></a></div>
+
+    <h1>@Messages("leaderboard.title")</h1>
+
+    <table class="table-leaderboard">
+      <tr>
+        <th></th>
+        <th>@Messages("leaderboard.total")</th>
+        @for(trial <- trials) {
+          <th class="trial"><a href="@routes.TimeTrials.show(trial.idToStr)">@Messages("timeTrials." + trial.slug + ".name")</a></th>
+        }
+      </tr>
+      @for((overallRank, playerId, overallPoints) <- overall) {
+        <tr class="@if(playerId == req.player.id) { current-player }">
+          <td>
+            @{overallRank}.
+            @users.find(_.id == playerId).map(_.handle).getOrElse("?")
+          </td>
+          <td class="overall-points">@overallPoints</td>
+          @for(trial <- trials) {
+            <td class="points">
+              @byTrial.find(_._1.id == trial.id).flatMap(_._2.find(_._2 == playerId)) match {
+                case Some((rank, _, points)) => {
+                  @points
+                }
+                case None => { - }
+              }
+            </td>
+          }
+        </tr>
+      }
+    </table>
+
+  }
+}

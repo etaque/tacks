@@ -1,5 +1,7 @@
 package controllers
 
+import core.TimeTrialLeaderboard
+
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
@@ -19,10 +21,11 @@ object Application extends Controller with Security {
       finishedRaces     <- Race.listFinished(10)
       users             <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
       timeTrials        <- TimeTrial.findAllCurrent
-      trialsWithRanking <- TimeTrial.zipWithTops(timeTrials, request.player.id, rankingLength = 5)
+      trialsWithRanking <- TimeTrial.zipWithRankings(timeTrials)
+      leaderboard       = TimeTrialLeaderboard.forTrials(trialsWithRanking)
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
-    yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, finishedRaces, users, Users.userForm, jsMessages))
+    yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, leaderboard, finishedRaces, users, Users.userForm, jsMessages))
   }
 
   implicit val timeout = Timeout(5.seconds)

@@ -27,3 +27,34 @@
   }
 
 }
+
+.table-leaderboard {
+  width: 100%;
+
+  td, th {
+    padding: 4px 8px;
+  }
+
+  th {
+    text-align: center;
+  }
+
+  tr:nth-child(even) td {
+    background-color: $lightSeaBlue;
+
+  }
+
+  .current-player {
+    color: $orange;
+  }
+
+  .overall-points, .points {
+    width: 100px;
+    text-align: center;
+  }
+
+  .trial a {
+    text-transform: uppercase;
+    text-decoration: none;
+  }
+}

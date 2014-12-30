@@ -1,4 +1,8 @@
 
+.home .row {
+  margin-top: 10px;
+}
+
 .current-user {
   margin-top: 80px;
 }
@@ -22,7 +26,7 @@
 }
 
 .live-center {
-  margin-top: 30px;
+  // margin-top: 30px;
 }
 
 .btn-new-race {
@@ -54,6 +58,8 @@
     background-color: $lightSeaBlue;
     padding: 4px 8px;
     margin-bottom: 6px;
+    margin-right: 6px;
+    display: inline-block;
 
     .user {
       color: white;
@@ -71,6 +77,34 @@
     }
 
   }
+}
+
+.leaderboard-top10 {
+
+  ul {
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    list-style: none;
+
+    .rank:after {
+      content: ".";
+    }
+
+    &.current-player {
+      color: $orange;
+    }
+
+    .points {
+      float: right;
+    }
+  }
+}
+
+.btn-full-leaderboard {
+  margin-top: 15px;
 }
 
 .time-trials {

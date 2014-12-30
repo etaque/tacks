@@ -81,20 +81,15 @@ var LiveCenter = React.createClass({
     return (
       <div className="live-center">
         {this.webSocketAlert(this.state.showWebSocketAlert)}
-        <div className="row">
-          <div className="col-md-8">
-            <h2>{Messages("home.openRaces")}</h2>
-            <Board status={st} />
-            <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>
-              {Messages("home.newRace")}
-            </a>
-          </div>
 
-          <div className="col-md-4">
-            <h2>{Messages("home.onlinePlayers")}</h2>
-            <ul className="online-players list-unstyled">{this.onlinePlayers(st)}</ul>
-          </div>
-        </div>
+        <h2>{Messages("home.openRaces")}</h2>
+        <Board status={st} />
+        <a href="" onClick={this.createRace} className={"btn btn-warning btn-block btn-lg btn-new-race" + (this.state.loadingNewRace ? "loading" : "")}>
+          {Messages("home.newRace")}
+        </a>
+
+        <h2>{Messages("home.onlinePlayers")}</h2>
+        <ul className="online-players list-unstyled">{this.onlinePlayers(st)}</ul>
       </div>
     );
   }

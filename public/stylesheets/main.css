@@ -4941,6 +4941,9 @@ input[type="text"], input[type="password"], textarea {
 .form-actions {
   margin-top: 30px; }
 
+.home .row {
+  margin-top: 10px; }
+
 .current-user {
   margin-top: 80px; }
 
@@ -4955,9 +4958,6 @@ input[type="text"], input[type="password"], textarea {
     color: white; }
 
 .update-name {
-  margin-top: 30px; }
-
-.live-center {
   margin-top: 30px; }
 
 .btn-new-race {
@@ -4976,7 +4976,9 @@ input[type="text"], input[type="password"], textarea {
 .online-players li {
   background-color: #2b4772;
   padding: 4px 8px;
-  margin-bottom: 6px; }
+  margin-bottom: 6px;
+  margin-right: 6px;
+  display: inline-block; }
   .online-players li .user {
     color: white;
     text-decoration: none; }
@@ -4984,6 +4986,21 @@ input[type="text"], input[type="password"], textarea {
       display: block;
       color: #B1C0D8;
       font-size: 12px; }
+
+.leaderboard-top10 ul {
+  padding: 0;
+  margin: 0; }
+.leaderboard-top10 li {
+  list-style: none; }
+  .leaderboard-top10 li .rank:after {
+    content: "."; }
+  .leaderboard-top10 li.current-player {
+    color: #E0A349; }
+  .leaderboard-top10 li .points {
+    float: right; }
+
+.btn-full-leaderboard {
+  margin-top: 15px; }
 
 .time-trials {
   margin-top: 20px; }
@@ -5081,6 +5098,23 @@ input[type="text"], input[type="password"], textarea {
 
 .show-time-trial .time-trial {
   margin-top: 20px; }
+
+.table-leaderboard {
+  width: 100%; }
+  .table-leaderboard td, .table-leaderboard th {
+    padding: 4px 8px; }
+  .table-leaderboard th {
+    text-align: center; }
+  .table-leaderboard tr:nth-child(even) td {
+    background-color: #2b4772; }
+  .table-leaderboard .current-player {
+    color: #E0A349; }
+  .table-leaderboard .overall-points, .table-leaderboard .points {
+    width: 100px;
+    text-align: center; }
+  .table-leaderboard .trial a {
+    text-transform: uppercase;
+    text-decoration: none; }
 
 .play-race {
   overflow: hidden;
