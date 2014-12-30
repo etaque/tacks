@@ -163,19 +163,6 @@ object Course {
     )
   }
 
-  def forTutorial = {
-    Course(
-      upwind = Gate(320, 200),
-      downwind = Gate(-320, 200),
-      laps = 1,
-      islands = Nil,
-      area = RaceArea(rightTop = (300,300), leftBottom = (-300,-300)),
-      windGenerator = WindGenerator.empty,
-      gustGenerator = GustGenerator.empty
-    )
-
-  }
-
   implicit val raceAreaHandler = Macros.handler[RaceArea]
   implicit val gustSpecHandler = Macros.handler[GustDef]
   implicit val gustGeneratorHandler = Macros.handler[GustGenerator]

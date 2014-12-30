@@ -10,18 +10,16 @@ import tools.JsonFormats._
 
 object JsonFormats {
 
-  implicit val tutorialStepFormat: Format[TutorialStep] = new Format[TutorialStep] {
-    override def reads(json: JsValue): JsResult[TutorialStep] = json match {
-      case JsString("TurningStep") => JsSuccess(TurningStep)
-      case JsString("GateStep") => JsSuccess(GateStep)
-      case JsString("VmgStep") => JsSuccess(LockStep)
-      case _ @ v => JsError(Seq(JsPath() -> Seq(ValidationError("Expected TutorialStep value, got: " + v.toString))))
+  def readsValueError(expectedClass: String, value: String) =
+    JsError(Seq(JsPath() -> Seq(ValidationError(s"Expected $expectedClass value, got: " + value.toString))))
+
+  implicit val tutorialStepFormat: Format[Tutorial.Step] = new Format[Tutorial.Step] {
+    override def reads(json: JsValue): JsResult[Tutorial.Step] = json match {
+      case JsString(s) => Tutorial.steps.find(_.toString == s).map(JsSuccess(_))
+        .getOrElse(readsValueError("Tutorial.Step", s))
+      case _ @ v => readsValueError("Tutorial.Step", v.toString())
     }
-    override def writes(o: TutorialStep): JsValue = JsString(o match {
-      case TurningStep => "TurningStep"
-      case GateStep => "GateStep"
-      case LockStep => "VmgStep"
-    })
+    override def writes(o: Tutorial.Step): JsValue = JsString(o.toString)
   }
 
   implicit val gateLocationFormat: Format[GateLocation] = new Format[GateLocation] {
@@ -29,7 +27,7 @@ object JsonFormats {
       case JsString("StartLine") => JsSuccess(StartLine)
       case JsString("DownwindGate") => JsSuccess(DownwindGate)
       case JsString("UpwindGate") => JsSuccess(UpwindGate)
-      case _ @ v => JsError(Seq(JsPath() -> Seq(ValidationError("Expected GateLocation value, got: " + v.toString))))
+      case _ @ v => readsValueError("GateLocation", v.toString())
     }
     override def writes(o: GateLocation): JsValue = JsString(o match {
       case StartLine => "StartLine"
@@ -42,7 +40,7 @@ object JsonFormats {
     override def reads(json: JsValue): JsResult[ControlMode] = json match {
       case JsString("FixedAngle") => JsSuccess(FixedAngle)
       case JsString("FixedHeading") => JsSuccess(FixedHeading)
-      case _ @ v => JsError(Seq(JsPath() -> Seq(ValidationError("Expected ControlMode value, got: " + v.toString))))
+      case _ @ v => readsValueError("ControlMode", v.toString())
     }
     override def writes(o: ControlMode): JsValue = JsString(o match {
       case FixedAngle => "FixedAngle"
@@ -78,7 +76,7 @@ object JsonFormats {
     override def reads(json: JsValue): JsResult[Player] = json match {
       case o: JsObject if (o \ "handle").asOpt[String].isDefined => userFormat.reads(o)
       case o: JsObject => guestFormat.reads(o)
-      case _ @ v => JsError(Seq(JsPath() -> Seq(ValidationError("Expected Player value, got: " + v.toString))))
+      case _ @ v => readsValueError("Player", v.toString())
     }
   }
 
@@ -146,7 +144,8 @@ object JsonFormats {
     (__ \ 'now).format[Long] and
       (__ \ 'playerState).format[PlayerState] and
       (__ \ 'course).format[Option[Course]] and
-      (__ \ 'step).format[TutorialStep]
+      (__ \ 'step).format[Tutorial.Step] and
+      (__ \ 'messages).format[Option[Seq[(String,String)]]]
     )(TutorialUpdate.apply, unlift(TutorialUpdate.unapply))
 
   implicit val raceFormat: Format[Race] = Json.format[Race]

@@ -8,14 +8,17 @@ import List (..)
 import Render.Utils (..)
 import Layout (..)
 import Tut.State (..)
+import Messages (..)
 
 getMainStatus : TutState -> Element
 getMainStatus tutState =
-  bigText "Hello there!" |> centered
+  msg ("tutorial.steps." ++ (toString tutState.step) ++ ".title") tutState.messages
+    |> bigText |> centered
 
 getSubStatus : TutState -> Element
 getSubStatus tutState =
-  baseText "This is your boat. Wind is coming from the top of the screen.\nYou can turn with LEFT/RIGHT keyboard arrows." |> centered
+  msg ("tutorial.steps." ++ (toString tutState.step) ++ ".subtitle") tutState.messages
+    |> baseText |> centered
 
 topLeftElements : TutState -> List Element
 topLeftElements tutState = []
@@ -31,8 +34,8 @@ bottomCenterElements : TutState -> List Element
 bottomCenterElements tutState =
   [ baseText "when ready, press ESC for next step" |> leftAligned ]
 
-buildDashboard : TutState -> (Int,Int) -> DashboardLayout
-buildDashboard ({playerState,step} as tutState) (w,h) =
+buildDashboard : TutState -> DashboardLayout
+buildDashboard tutState =
   { topLeft = topLeftElements tutState
   , topRight = topRightElements tutState
   , topCenter = topCenterElements tutState

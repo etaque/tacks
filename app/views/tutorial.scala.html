@@ -1,7 +1,4 @@
-@(wsUrl: String)(implicit request: IdentifiedRequest[_], lang: Lang)
-
-@import play.api.libs.json.Json
-@import models.JsonFormats.tutorialUpdateFormat
+@(wsUrl: String, initialInput: play.api.libs.json.JsValue)(implicit request: IdentifiedRequest[_], lang: Lang)
 
 @fullscreen(Messages("tutorial.metaTitle")) {
 
@@ -9,7 +6,7 @@
     <script src="@routes.Assets.at("javascripts/mountWebSocket.js")" type="text/javascript"></script>
 
     <script type="text/javascript">
-    var initialInput = @Html(Json.toJson(TutorialUpdate.initial(request.player)).toString());
+    var initialInput = @Html(initialInput.toString());
     var wsUrl = "@wsUrl";
     mountWebSocket(wsUrl, Elm.Tut.Main, "serverUpdate", "tutOutput", initialInput);
     </script>

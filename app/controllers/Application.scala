@@ -1,17 +1,18 @@
 package controllers
 
-import play.api.libs.json.Json
 
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import play.api.Play.current
+import play.api.libs.json.Json
 import akka.util.Timeout
 import akka.pattern.ask
 import reactivemongo.bson.BSONObjectID
+import jsmessages.api.JsMessages
 
 import actors.{GetRace, RacesSupervisor}
-import models.{RaceUpdate, TimeTrial, User, Race}
+import models._
 
 object Application extends Controller with Security {
 
@@ -60,9 +61,13 @@ object Application extends Controller with Security {
     }
   }
 
+  import models.JsonFormats.tutorialUpdateFormat
+
   def tutorial = Identified.apply() { implicit request =>
     val wsUrl = routes.Api.tutorialSocket().webSocketURL()
-    Ok(views.html.tutorial(wsUrl))
+    val messages = JsMessages.filtering(_.startsWith("tutorial")).messages
+    val initialInput = Json.toJson(TutorialUpdate.initial(request.player, messages))
+    Ok(views.html.tutorial(wsUrl, initialInput))
   }
 }
 

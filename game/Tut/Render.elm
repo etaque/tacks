@@ -7,14 +7,14 @@ import List (..)
 
 import Render.Utils (..)
 import Render.Players (..)
-import Render.Course (renderBounds)
+import Render.Course (..)
+import Render.Gates (..)
 
 import Game (..)
 import Layout (assembleLayout)
 import Tut.State (..)
 import Tut.Dashboard (buildDashboard)
 
-import Debug
 
 renderTutPlayer : Bool -> Bool -> Bool -> PlayerState -> Form
 renderTutPlayer showLines showAngles showVmg player =
@@ -34,6 +34,7 @@ renderTutPlayer showLines showAngles showVmg player =
   in
     group [wake, movingPart]
 
+
 windArrowPath : Path
 windArrowPath =
   path
@@ -46,32 +47,87 @@ windArrowPath =
     , (-10,10)
     ]
 
-renderHelpers : (Int,Int) -> TutState -> Form
-renderHelpers (w,h) tutState =
+
+renderWindHelpers : Float -> Course -> Form
+renderWindHelpers stepTime course =
   let
-    (w',h') = (toFloat w, toFloat h)
-    i = (round tutState.stepTime) % 2000 |> toFloat
+    i = (round stepTime) % 2000 |> toFloat
     a = i / 2000 * 0.2
-    y = h' / 4 - (i / 50)
+    w = areaWidth course.area
+    t =
+    y = course.upwind.y - 80 - (i / 50)
     windArrow = windArrowPath
       |> filled white
       |> scale 2
-    arrowForms = map (\x -> move (x,y) windArrow) [-w' / 6, 0, w' / 6]
+    arrowForms = map (\x -> move (x,y) windArrow) [-w / 3, 0, w / 3]
   in
     group arrowForms |> alpha a
 
 
+renderAbsStack : (Int,Int) -> TutState -> List Form
+renderAbsStack dims {course,step,stepTime} =
+  case step of
+    --CourseStep ->
+    --  [ renderWindHelpers dims stepTime course ]
+    _ ->
+      [ ]
+
+
+renderRelStack : TutState -> List Form
+renderRelStack ({course,step,stepTime,playerState} as tutState) =
+  case step of
+    InitialStep ->
+      [ ]
+    CourseStep ->
+      [ renderBounds course.area
+      , renderIslands course
+      , renderGate course.downwind course.markRadius stepTime False Downwind
+      , renderGate course.upwind course.markRadius stepTime False Upwind
+      , renderWindHelpers stepTime course
+      , renderTutPlayer False False False playerState
+      ]
+    TheoryStep ->
+      [ ]
+    GateStep ->
+      [ renderBounds course.area
+      , renderIslands course
+      , renderStartLine course.downwind course.markRadius True stepTime
+      , renderGate course.upwind course.markRadius stepTime True Upwind
+      ]
+    LapStep ->
+      [ renderBounds course.area
+      , renderIslands course
+      , renderDownwind (Just playerState) course stepTime True
+      , renderUpwind (Just playerState) course stepTime
+      , renderTutPlayer False True True playerState
+      ]
+    _ ->
+      [ ]
+
+courseCenter : (Int,Int) -> TutState -> (Float,Float)
+courseCenter (w,h) {step,playerState} =
+  --(toFloat w / 4, 0)
+  playerState.position
+  --(0,0)
+  --case step of
+  --  InitialStep ->
+  --    (0,0)
+  --  CourseStep ->
+  --    (0,0)
+  --  TurningStep ->
+  --    (0,0)
+  --  TheoryStep ->
+  --    (0,0)
+  --  _ ->
+  --    playerState.position
+
 render : (Int,Int) -> TutState -> Element
 render (w,h) tutState =
   let
-    playerForm = renderTutPlayer False False False tutState.playerState
-    bounds = renderBounds tutState.course.area
-    helpers = renderHelpers (w,h) tutState
-
     layout =
-      { dashboard = buildDashboard tutState (w,h)
-      , relStack  = [ bounds, playerForm ]
-      , absStack  = [ helpers ]
+      { dashboard = buildDashboard tutState
+      , relStack  = renderRelStack tutState
+      , absStack  = renderAbsStack (w,h) tutState
       }
   in
-    assembleLayout (w,h) (0,0) layout
+    assembleLayout (w,h) (courseCenter (w,h) tutState) layout

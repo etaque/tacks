@@ -66,3 +66,17 @@ timeTrials.oysterpark.description=votre cauchemar sur l''eau enfin transposé su
 timeTrials.minefield.name=Minefield
 timeTrials.minefield.description=regardez bien où vous mettez l''étrave...
 
+tutorial.metaTitle=Tutoriel
+tutorial.steps.InitialStep.title=Hey hey
+tutorial.steps.InitialStep.subtitle=Voici quelques conseils pour prendre le jeu en main.
+tutorial.steps.CourseStep.title=Voici la zone de course
+tutorial.steps.CourseStep.subtitle=Le vent souffle du haut vers le bas de l''écran.\nUtilisez les flèches gauche et droite de votre clavier pour manoeuvrer votre bateau et explorer les environs.
+tutorial.steps.GateStep.title=Voici le parcours
+tutorial.steps.GateStep.subtitle=Le parcours de régate est représenté par les bouées oranges.\nLa ligne de départ, en bas, doit être passée en remontant le vent (de bas en haut).\nLes portes suivantes doivent être passées de l'intérieur et contournées par l'extérieur.
+tutorial.steps.TurningStep.title=Voici votre bateau
+tutorial.steps.TurningStep.subtitle=
+tutorial.steps.TheoryStep.title=Un peu de théorie
+tutorial.steps.TheoryStep.subtitle=Pour remonter au vent, le plus rapide n''est pas la ligne droite : il faut tirer des bords.\nC''est aussi vrai pour redescendre le vent.
+tutorial.steps.LapStep.title=Mise en pratique
+tutorial.steps.LapStep.subtitle=Ligne de départ, porte au vent, ligne d''arrivée, une île à éviter. Simple !
+

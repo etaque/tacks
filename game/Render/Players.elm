@@ -99,13 +99,13 @@ rotateHull : Float -> Form -> Form
 rotateHull heading = rotate (toRadians (heading + 90))
 
 
-renderPlayer : GameMode -> Float -> PlayerState -> Form
-renderPlayer gameMode shadowLength player =
+renderPlayer : Bool -> Float -> PlayerState -> Form
+renderPlayer displayWindShadow shadowLength player =
   let
     hull = rotateHull player.heading baseHull
-    windShadow = case gameMode of
-      Race -> renderWindShadow shadowLength player
-      TimeTrial -> emptyForm
+    windShadow = if displayWindShadow
+      then renderWindShadow shadowLength player
+      else emptyForm
     angles = renderPlayerAngles player
     vmgSign = renderVmgSign player
     eqLine = renderEqualityLine player.position player.windOrigin
@@ -151,21 +151,24 @@ renderGhosts ghosts =
 
 renderPlayers : GameState -> Form
 renderPlayers ({playerState,opponents,ghosts,course,center,watchMode,gameMode} as gameState) =
-  let mainPlayer = case playerState of
-        Just ps ->
-          renderPlayer gameMode course.windShadowLength ps
-        Nothing -> case watchMode of
-          Watching playerId ->
-            M.map (renderPlayer gameMode course.windShadowLength) (findOpponent opponents playerId)
-              |> M.withDefault emptyForm
-          NotWatching -> emptyForm
-      filteredOpponents = case watchMode of
-        Watching playerId -> filter (\o -> o.player.id /= playerId) opponents
-        NotWatching -> opponents
-      forms =
-        [ renderOpponents course filteredOpponents
-        , renderGhosts ghosts
-        , mainPlayer
-        ]
-  in  group forms
+  let
+    displayWindShadow = gameMode == Race
+    mainPlayer = case playerState of
+      Just ps ->
+        renderPlayer displayWindShadow course.windShadowLength ps
+      Nothing -> case watchMode of
+        Watching playerId ->
+          M.map (renderPlayer displayWindShadow course.windShadowLength) (findOpponent opponents playerId)
+            |> M.withDefault emptyForm
+        NotWatching -> emptyForm
+    filteredOpponents = case watchMode of
+      Watching playerId -> filter (\o -> o.player.id /= playerId) opponents
+      NotWatching -> opponents
+    forms =
+      [ renderOpponents course filteredOpponents
+      , renderGhosts ghosts
+      , mainPlayer
+      ]
+  in
+    group forms
 

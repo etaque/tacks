@@ -1,5 +1,7 @@
 package actors
 
+import models.Tutorial.LapStep
+
 import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
@@ -14,12 +16,13 @@ class TutorialActor(player: Player) extends Actor with ManageWind {
 
   var playerRef: Option[ActorRef] = None
 
-  var step: TutorialStep = TutorialStep.initial
+  var step: Tutorial.Step = Tutorial.InitialStep
 
-  var playerState = PlayerState.initial(player)
+  val initialPlayerState = PlayerState.initial(player)
+  var playerState = initialPlayerState
   var input = TutorialInput.initial
 
-  val course = Course.forTutorial
+  var course = Tutorial.courseForStep(step, input)
   val id = player.id
 
   def clock: Long = DateTime.now.getMillis
@@ -45,9 +48,10 @@ class TutorialActor(player: Player) extends Actor with ManageWind {
     case FrameTick => {
       playerRef.foreach { ref =>
         ref ! update
-        ref ! RunStep(playerState, input.keyboard, clock, wind, course, started = true, Nil)
+        if (Tutorial.isRunning(step)) {
+          ref ! RunStep(playerState, input.keyboard, clock, wind, course, started = true, Nil)
+        }
       }
-      step = input.step
     }
 
     /**
@@ -55,6 +59,9 @@ class TutorialActor(player: Player) extends Actor with ManageWind {
      */
     case newInput: TutorialInput => {
       input = newInput
+
+      if (newInput.step != step) applyNewStep(newInput.step)
+      step = newInput.step
     }
 
     /**
@@ -73,11 +80,19 @@ class TutorialActor(player: Player) extends Actor with ManageWind {
     }
   }
 
+  def applyNewStep(newStep: Tutorial.Step): Unit = {
+    course = Tutorial.courseForStep(step, input)
+    playerState = step match {
+      case LapStep => initialPlayerState.copy(position = (0, course.downwind.y - 50))
+      case _ => initialPlayerState
+    }
+  }
+
   def update = {
     TutorialUpdate(
       clock,
       playerState = playerState,
-      course = None,
+      course = Some(course),
       step = step
     )
   }

@@ -1,29 +1,63 @@
 module Tut.State where
 
 import Game (..)
+import Messages (..)
+import Core (find)
 
-type Step = TurningStep | GateStep | VmgStep
+import Maybe as M
+import List (..)
+
+
+type Step
+  = InitialStep
+  | CourseStep
+  | TurningStep
+  | TheoryStep
+  | GateStep
+  | LapStep
+  | VmgStep
+  | FinalStep
+
+orderedSteps : List Step
+orderedSteps =
+  [ InitialStep
+  , CourseStep
+  --, TurningStep
+  , TheoryStep
+  , GateStep
+  , LapStep
+  , VmgStep
+  , FinalStep
+  ]
+
+stepTransitions : List (Step,Step)
+stepTransitions = map2 (,) orderedSteps (tail orderedSteps)
+
+nextStep : Step -> Step
+nextStep s =
+  find (\t -> fst t == s) stepTransitions
+    |> M.map snd
+    |> M.withDefault FinalStep
+
+
+stepFromString : String -> Step
+stepFromString s =
+  find (\s' -> (toString s' == s)) orderedSteps |> M.withDefault InitialStep
+
 
 type alias TutState =
   { playerState: PlayerState
   , step:        Step
   , stepTime:    Float
   , course:      Course
+  , messages:    Messages
 }
-
-initialStep : Step
-initialStep = TurningStep
 
 defaultTutState : TutState
 defaultTutState =
   { playerState = defaultPlayerState
-  , step        = initialStep
+  , step        = InitialStep
   , stepTime    = 0
   , course      = defaultCourse
+  , messages    = emptyMessages
   }
-
---stepToString : Step -> String
---stepToString step = case step of
---  TurningStep -> "TurningStep"
---  GateStep -> "GateStep"
---  VmgStep -> "VmgStep"

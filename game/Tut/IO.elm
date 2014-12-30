@@ -2,6 +2,7 @@ module Tut.IO where
 
 import Inputs (..)
 import Game
+import Messages (Messages)
 import Tut.State (..)
 
 import Keyboard
@@ -15,6 +16,7 @@ type alias ServerUpdate =
   { playerState: Game.PlayerState
   , course:      Maybe Game.Course
   , step:        String
+  , messages:    Maybe (List (String,String))
   }
 
 type alias TutInput =

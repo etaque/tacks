@@ -853,7 +853,7 @@ Elm.Game.make = function (_elm) {
                               {case "Just": return true;
                                  case "Nothing": return false;}
                               _U.badCase($moduleName,
-                              "between lines 196 and 199");
+                              "between lines 208 and 211");
                            }();}
                       break;}
                  break;}
@@ -872,7 +872,7 @@ Elm.Game.make = function (_elm) {
                return _U.eq(_v11._0,
                  _v9.playerId);}
             _U.badCase($moduleName,
-            "between lines 189 and 191");
+            "between lines 201 and 203");
          }();
       }();
    };
@@ -905,13 +905,23 @@ Elm.Game.make = function (_elm) {
          }();
       }();
    };
-   var areaDims = function (_v15) {
+   var areaBottom = function (_v15) {
+      return function () {
+         return $Basics.snd(_v15.leftBottom);
+      }();
+   };
+   var areaTop = function (_v17) {
+      return function () {
+         return $Basics.snd(_v17.rightTop);
+      }();
+   };
+   var areaDims = function (_v19) {
       return function () {
          return function () {
-            var $ = _v15.leftBottom,
+            var $ = _v19.leftBottom,
             l = $._0,
             b = $._1;
-            var $ = _v15.rightTop,
+            var $ = _v19.rightTop,
             r = $._0,
             t = $._1;
             return {ctor: "_Tuple2"
@@ -919,6 +929,12 @@ Elm.Game.make = function (_elm) {
                    ,_1: t - b};
          }();
       }();
+   };
+   var areaWidth = function ($) {
+      return $Basics.fst(areaDims($));
+   };
+   var areaHeight = function ($) {
+      return $Basics.snd(areaDims($));
    };
    var findPlayerGhost = F2(function (playerId,
    ghosts) {
@@ -1211,6 +1227,10 @@ Elm.Game.make = function (_elm) {
                       ,getGateMarks: getGateMarks
                       ,findPlayerGhost: findPlayerGhost
                       ,areaDims: areaDims
+                      ,areaTop: areaTop
+                      ,areaBottom: areaBottom
+                      ,areaWidth: areaWidth
+                      ,areaHeight: areaHeight
                       ,areaCenters: areaCenters
                       ,findOpponent: findOpponent
                       ,selfWatching: selfWatching
@@ -7414,7 +7434,7 @@ Elm.Render.All.make = function (_elm) {
                  layout);
               }();}
          _U.badCase($moduleName,
-         "between lines 35 and 47");
+         "between lines 18 and 30");
       }();
    });
    _elm.Render.All.values = {_op: _op
@@ -7589,91 +7609,21 @@ Elm.Render.Course.make = function (_elm) {
    $Color = Elm.Color.make(_elm),
    $Core = Elm.Core.make(_elm),
    $Game = Elm.Game.make(_elm),
-   $Geo = Elm.Geo.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Render$Utils = Elm.Render.Utils.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var renderGateLaylines = F4(function (vmg,
-   windOrigin,
-   area,
-   gate) {
+   $Render$Gates = Elm.Render.Gates.make(_elm),
+   $Render$Utils = Elm.Render.Utils.make(_elm);
+   var renderIslands = function (course) {
       return function () {
-         var drawLine = function (_v0) {
+         var renderIsland = function (_v0) {
             return function () {
-               switch (_v0.ctor)
-               {case "_Tuple2":
-                  return $Graphics$Collage.traced($Graphics$Collage.dotted($Color.white))(A2($Graphics$Collage.segment,
-                    _v0._0,
-                    _v0._1));}
-               _U.badCase($moduleName,
-               "on line 195, column 24 to 61");
-            }();
-         };
-         var windAngleRad = $Core.toRadians(windOrigin);
-         var $ = $Game.getGateMarks(gate),
-         leftMark = $._0,
-         rightMark = $._1;
-         var vmgRad = $Core.toRadians(vmg.angle);
-         var $ = $Game.areaDims(area),
-         w = $._0,
-         h = $._1;
-         var lineLength = w / 2;
-         var leftLineEnd = A2($Geo.add,
-         leftMark,
-         $Basics.fromPolar({ctor: "_Tuple2"
-                           ,_0: lineLength
-                           ,_1: windAngleRad + vmgRad + $Basics.pi / 2}));
-         var rightLineEnd = A2($Geo.add,
-         rightMark,
-         $Basics.fromPolar({ctor: "_Tuple2"
-                           ,_0: lineLength
-                           ,_1: windAngleRad - vmgRad - $Basics.pi / 2}));
-         return $Graphics$Collage.alpha(0.3)($Graphics$Collage.group(A2($List.map,
-         drawLine,
-         _L.fromArray([{ctor: "_Tuple2"
-                       ,_0: leftMark
-                       ,_1: leftLineEnd}
-                      ,{ctor: "_Tuple2"
-                       ,_0: rightMark
-                       ,_1: rightLineEnd}]))));
-      }();
-   });
-   var renderLaylines = F2(function (_v4,
-   playerState) {
-      return function () {
-         return function () {
-            var _v6 = playerState.nextGate;
-            switch (_v6.ctor)
-            {case "Just": switch (_v6._0)
-                 {case "DownwindGate":
-                    return A4(renderGateLaylines,
-                      playerState.downwindVmg,
-                      _v4.wind.origin,
-                      _v4.course.area,
-                      _v4.course.downwind);
-                    case "UpwindGate":
-                    return A4(renderGateLaylines,
-                      playerState.upwindVmg,
-                      _v4.wind.origin,
-                      _v4.course.area,
-                      _v4.course.upwind);}
-                 break;}
-            return $Render$Utils.emptyForm;
-         }();
-      }();
-   });
-   var renderIslands = function (gameState) {
-      return function () {
-         var renderIsland = function (_v8) {
-            return function () {
-               return $Graphics$Collage.move(_v8.location)($Graphics$Collage.filled($Render$Utils.colors.sand)($Graphics$Collage.circle(_v8.radius)));
+               return $Graphics$Collage.move(_v0.location)($Graphics$Collage.filled($Render$Utils.colors.sand)($Graphics$Collage.circle(_v0.radius)));
             }();
          };
          return $Graphics$Collage.group(A2($List.map,
          renderIsland,
-         gameState.course.islands));
+         course.islands));
       }();
    };
    var renderGust = F2(function (wind,
@@ -7718,392 +7668,116 @@ Elm.Render.Course.make = function (_elm) {
                                                                                       ,stroke])));
       }();
    };
-   var Downwind = {ctor: "Downwind"};
-   var Upwind = {ctor: "Upwind"};
-   var renderGateLine = F2(function (gate,
-   lineStyle) {
+   var renderLaylines = F3(function (wind,
+   course,
+   playerState) {
       return function () {
-         var $ = $Game.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         return $Graphics$Collage.traced(lineStyle)(A2($Graphics$Collage.segment,
-         left,
-         right));
+         var _v2 = playerState.nextGate;
+         switch (_v2.ctor)
+         {case "Just": switch (_v2._0)
+              {case "DownwindGate":
+                 return A4($Render$Gates.renderGateLaylines,
+                   playerState.downwindVmg,
+                   wind.origin,
+                   course.area,
+                   course.downwind);
+                 case "UpwindGate":
+                 return A4($Render$Gates.renderGateLaylines,
+                   playerState.upwindVmg,
+                   wind.origin,
+                   course.area,
+                   course.upwind);}
+              break;}
+         return $Render$Utils.emptyForm;
       }();
    });
-   var renderGateMark = F2(function (radius,
-   position) {
+   var renderUpwind = F3(function (playerState,
+   course,
+   now) {
       return function () {
-         var outer = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle(radius));
-         var inner = $Graphics$Collage.filled($Render$Utils.colors.orange)($Graphics$Collage.circle(radius));
-         return $Graphics$Collage.move(position)($Graphics$Collage.group(_L.fromArray([inner
-                                                                                      ,outer])));
-      }();
-   });
-   var renderGateMarks = F2(function (gate,
-   markRadius) {
-      return function () {
-         var $ = $Game.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         return $Graphics$Collage.group(A2($List.map,
-         renderGateMark(markRadius),
-         _L.fromArray([left,right])));
-      }();
-   });
-   var gateLineOpacity = function (timer) {
-      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
-   };
-   var arrowLineStyle = _U.replace([["width"
-                                    ,2]
-                                   ,["color",$Color.white]
-                                   ,["cap",$Graphics$Collage.Round]
-                                   ,["join"
-                                    ,$Graphics$Collage.Smooth]],
-   $Graphics$Collage.defaultLine);
-   var renderStraightArrow = F3(function (markRadius,
-   bottomUp,
-   timer) {
-      return function () {
-         var arrowY = A2($Core.floatMod,
-         timer * 2.0e-2,
-         30);
-         var way = bottomUp ? 1 : -1;
-         var l = markRadius;
-         var tipShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
-                                                 ,_0: 0 - l
-                                                 ,_1: 0 - l}
-                                                ,{ctor: "_Tuple2",_0: 0,_1: 0}
-                                                ,{ctor: "_Tuple2"
-                                                 ,_0: l
-                                                 ,_1: 0 - l}]) : _L.fromArray([{ctor: "_Tuple2"
-                                                                               ,_0: 0 - l
-                                                                               ,_1: l}
-                                                                              ,{ctor: "_Tuple2"
-                                                                               ,_0: 0
-                                                                               ,_1: 0}
-                                                                              ,{ctor: "_Tuple2"
-                                                                               ,_0: l
-                                                                               ,_1: l}]);
-         var tip = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(tipShape));
-         var lineLength = $Basics.toFloat(markRadius * 4);
-         var bodyShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
-                                                  ,_0: 0
-                                                  ,_1: 0 - lineLength}
-                                                 ,{ctor: "_Tuple2"
-                                                  ,_0: 0
-                                                  ,_1: 0}]) : _L.fromArray([{ctor: "_Tuple2"
-                                                                            ,_0: 0
-                                                                            ,_1: 0}
-                                                                           ,{ctor: "_Tuple2"
-                                                                            ,_0: 0
-                                                                            ,_1: lineLength}]);
-         var body = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(bodyShape));
-         return $Graphics$Collage.alpha(arrowY * way / 30 * 0.2)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                                        ,_0: 0
-                                                                                        ,_1: arrowY * way})($Graphics$Collage.group(_L.fromArray([body
-                                                                                                                                                 ,tip]))));
-      }();
-   });
-   var nextLineStyle = _U.replace([["width"
-                                   ,2]
-                                  ,["color"
-                                   ,$Render$Utils.colors.green]
-                                  ,["dashing"
-                                   ,_L.fromArray([3,3])]],
-   $Graphics$Collage.defaultLine);
-   var renderStartLine = F4(function (gate,
-   markRadius,
-   started,
-   timer) {
-      return function () {
-         var helper = started ? $Graphics$Collage.move({ctor: "_Tuple2"
-                                                       ,_0: 0
-                                                       ,_1: gate.y - markRadius * 3})(A3(renderStraightArrow,
-         markRadius,
-         true,
-         timer)) : $Render$Utils.emptyForm;
-         var marks = A2(renderGateMarks,
-         gate,
-         markRadius);
-         var a = started ? gateLineOpacity(timer) : 1;
-         var lineStyle = started ? nextLineStyle : _U.replace([["width"
-                                                               ,2]
-                                                              ,["color"
-                                                               ,$Render$Utils.colors.orange]],
-         $Graphics$Collage.defaultLine);
-         var line = $Graphics$Collage.alpha(a)(A2(renderGateLine,
-         gate,
-         lineStyle));
-         return $Graphics$Collage.group(_L.fromArray([helper
-                                                     ,line
-                                                     ,marks]));
-      }();
-   });
-   var renderFinishLine = F3(function (gate,
-   markRadius,
-   timer) {
-      return function () {
-         var marks = A2(renderGateMarks,
-         gate,
-         markRadius);
-         var a = gateLineOpacity(timer);
-         var line = $Graphics$Collage.alpha(a)(A2(renderGateLine,
-         gate,
-         nextLineStyle));
-         var helper = $Graphics$Collage.alpha(a * 0.5)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                              ,_0: 0
-                                                                              ,_1: gate.y + markRadius * 3})(A3(renderStraightArrow,
-         markRadius,
-         false,
-         timer)));
-         return $Graphics$Collage.group(_L.fromArray([helper
-                                                     ,line
-                                                     ,marks]));
-      }();
-   });
-   var counterClockwiseArrowTip = function (l) {
-      return _L.fromArray([{ctor: "_Tuple2"
-                           ,_0: l
-                           ,_1: l}
-                          ,{ctor: "_Tuple2",_0: 0,_1: 0}
-                          ,{ctor: "_Tuple2"
-                           ,_0: l
-                           ,_1: 0 - l}]);
-   };
-   var clockwiseArrowTip = function (l) {
-      return _L.fromArray([{ctor: "_Tuple2"
-                           ,_0: 0 - l
-                           ,_1: l}
-                          ,{ctor: "_Tuple2",_0: 0,_1: 0}
-                          ,{ctor: "_Tuple2"
-                           ,_0: 0 - l
-                           ,_1: 0 - l}]);
-   };
-   var arcShape = F4(function (r,
-   start,
-   length,
-   way) {
-      return function () {
-         var steps = _L.range(0,
-         length / 10 | 0);
-         var realSteps = A2($List.map,
-         function (s) {
-            return $Basics.toFloat(start + s * 10 * (0 - way));
+         var isNext = $Maybe.withDefault(false)(A2($Maybe.map,
+         function (ps) {
+            return _U.eq(ps.nextGate,
+            $Maybe.Just("UpwindGate"));
          },
-         steps);
-         var radSteps = A2($List.map,
-         $Core.toRadians,
-         realSteps);
-         return A2($List.map,
-         function (t) {
-            return $Basics.fromPolar({ctor: "_Tuple2"
-                                     ,_0: r
-                                     ,_1: t});
+         playerState));
+         return A5($Render$Gates.renderGate,
+         course.upwind,
+         course.markRadius,
+         now,
+         isNext,
+         $Render$Gates.Upwind);
+      }();
+   });
+   var renderDownwind = F4(function (playerState,
+   course,
+   now,
+   started) {
+      return function () {
+         var isNext = $Maybe.withDefault(false)(A2($Maybe.map,
+         function (ps) {
+            return _U.eq(ps.nextGate,
+            $Maybe.Just("DownwindGate"));
          },
-         radSteps);
+         playerState));
+         var isLastGate = $Maybe.withDefault(false)(A2($Maybe.map,
+         function (ps) {
+            return _U.eq($List.length(ps.crossedGates),
+            course.laps * 2);
+         },
+         playerState));
+         var isFirstGate = $Maybe.withDefault(false)(A2($Maybe.map,
+         function (ps) {
+            return $List.isEmpty(ps.crossedGates);
+         },
+         playerState));
+         return isFirstGate ? A4($Render$Gates.renderStartLine,
+         course.downwind,
+         course.markRadius,
+         started,
+         now) : isLastGate ? A3($Render$Gates.renderFinishLine,
+         course.downwind,
+         course.markRadius,
+         now) : A5($Render$Gates.renderGate,
+         course.downwind,
+         course.markRadius,
+         now,
+         isNext,
+         $Render$Gates.Downwind);
       }();
    });
-   var renderAroundArrow = F4(function (headAngle,
-   clockwise,
-   markRadius,
-   timer) {
-      return function () {
-         var arrowTip = clockwise ? clockwiseArrowTip : counterClockwiseArrowTip;
-         var way = clockwise ? 1 : -1;
-         var arcAngle = 60;
-         var slidingAngle = 135;
-         var timedAngle = A2($Core.floatMod,
-         timer / 15,
-         slidingAngle);
-         var currentSlidingAngle = ($Basics.round(timedAngle) - slidingAngle) * way;
-         var arrowRad = $Core.toRadians($Basics.toFloat(currentSlidingAngle + headAngle));
-         var r = markRadius * 4;
-         var arc = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(A4(arcShape,
-         r,
-         headAngle + currentSlidingAngle,
-         arcAngle,
-         way)));
-         var arrow = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                              ,_0: r
-                                                              ,_1: arrowRad}))($Graphics$Collage.rotate(arrowRad - $Basics.pi / 2)($Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(arrowTip(markRadius)))));
-         return $Graphics$Collage.alpha(timedAngle / $Basics.toFloat(slidingAngle) * 0.2)($Graphics$Collage.group(_L.fromArray([arc
-                                                                                                                               ,arrow])));
-      }();
-   });
-   var aroundLeftUpwind = A2(renderAroundArrow,
-   -45,
-   false);
-   var aroundRightUpwind = A2(renderAroundArrow,
-   45,
-   true);
-   var aroundLeftDownwind = A2(renderAroundArrow,
-   225,
-   true);
-   var aroundRightDownwind = A2(renderAroundArrow,
-   135,
-   false);
-   var renderGateHelpers = F4(function (gate,
-   markRadius,
-   gateLoc,
-   timer) {
-      return function () {
-         var $ = function () {
-            switch (gateLoc.ctor)
-            {case "Downwind":
-               return {ctor: "_Tuple2"
-                      ,_0: A2(aroundLeftDownwind,
-                      markRadius,
-                      timer)
-                      ,_1: A2(aroundRightDownwind,
-                      markRadius,
-                      timer)};
-               case "Upwind":
-               return {ctor: "_Tuple2"
-                      ,_0: A2(aroundLeftUpwind,
-                      markRadius,
-                      timer)
-                      ,_1: A2(aroundRightUpwind,
-                      markRadius,
-                      timer)};}
-            _U.badCase($moduleName,
-            "between lines 116 and 119");
-         }(),
-         leftHelper = $._0,
-         rightHelper = $._1;
-         var $ = $Game.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         return $Graphics$Collage.group(_L.fromArray([A2($Graphics$Collage.move,
-                                                     left,
-                                                     leftHelper)
-                                                     ,A2($Graphics$Collage.move,
-                                                     right,
-                                                     rightHelper)]));
-      }();
-   });
-   var renderGate = F5(function (gate,
-   markRadius,
-   timer,
-   isNext,
-   gateType) {
-      return function () {
-         var helpers = isNext ? A4(renderGateHelpers,
-         gate,
-         markRadius,
-         gateType,
-         timer) : $Render$Utils.emptyForm;
-         var marks = A2(renderGateMarks,
-         gate,
-         markRadius);
-         var a = gateLineOpacity(timer);
-         var line = isNext ? $Graphics$Collage.alpha(a)(A2(renderGateLine,
-         gate,
-         nextLineStyle)) : $Render$Utils.emptyForm;
-         return $Graphics$Collage.group(_L.fromArray([line
-                                                     ,marks
-                                                     ,helpers]));
-      }();
-   });
-   var renderDownwind = function (_v11) {
+   var renderCourse = function (_v4) {
       return function () {
          return function () {
-            var isNext = $Maybe.withDefault(false)(A2($Maybe.map,
-            function (ps) {
-               return _U.eq(ps.nextGate,
-               $Maybe.Just("DownwindGate"));
-            },
-            _v11.playerState));
-            var isLastGate = $Maybe.withDefault(false)(A2($Maybe.map,
-            function (ps) {
-               return _U.eq($List.length(ps.crossedGates),
-               _v11.course.laps * 2);
-            },
-            _v11.playerState));
-            var isFirstGate = $Maybe.withDefault(false)(A2($Maybe.map,
-            function (ps) {
-               return $List.isEmpty(ps.crossedGates);
-            },
-            _v11.playerState));
-            return isFirstGate ? A4(renderStartLine,
-            _v11.course.downwind,
-            _v11.course.markRadius,
-            $Core.isStarted(_v11.countdown),
-            _v11.now) : isLastGate ? A3(renderFinishLine,
-            _v11.course.downwind,
-            _v11.course.markRadius,
-            _v11.now) : A5(renderGate,
-            _v11.course.downwind,
-            _v11.course.markRadius,
-            _v11.now,
-            isNext,
-            Downwind);
-         }();
-      }();
-   };
-   var renderUpwind = function (_v13) {
-      return function () {
-         return function () {
-            var isNext = $Maybe.withDefault(false)(A2($Maybe.map,
-            function (ps) {
-               return _U.eq(ps.nextGate,
-               $Maybe.Just("UpwindGate"));
-            },
-            _v13.playerState));
-            return A5(renderGate,
-            _v13.course.upwind,
-            _v13.course.markRadius,
-            _v13.now,
-            isNext,
-            Upwind);
-         }();
-      }();
-   };
-   var renderCourse = function (_v15) {
-      return function () {
-         return function () {
-            var forms = _L.fromArray([renderBounds(_v15.course.area)
+            var forms = _L.fromArray([renderBounds(_v4.course.area)
                                      ,$Maybe.withDefault($Render$Utils.emptyForm)(A2($Maybe.map,
-                                     renderLaylines(_v15),
-                                     _v15.playerState))
-                                     ,renderIslands(_v15)
-                                     ,renderDownwind(_v15)
-                                     ,renderUpwind(_v15)
-                                     ,renderGusts(_v15.wind)]);
+                                     A2(renderLaylines,
+                                     _v4.wind,
+                                     _v4.course),
+                                     _v4.playerState))
+                                     ,renderIslands(_v4.course)
+                                     ,A4(renderDownwind,
+                                     _v4.playerState,
+                                     _v4.course,
+                                     _v4.now,
+                                     $Core.isStarted(_v4.countdown))
+                                     ,A3(renderUpwind,
+                                     _v4.playerState,
+                                     _v4.course,
+                                     _v4.now)
+                                     ,renderGusts(_v4.wind)]);
             return $Graphics$Collage.group(forms);
          }();
       }();
    };
    _elm.Render.Course.values = {_op: _op
-                               ,arcShape: arcShape
-                               ,clockwiseArrowTip: clockwiseArrowTip
-                               ,counterClockwiseArrowTip: counterClockwiseArrowTip
-                               ,nextLineStyle: nextLineStyle
-                               ,arrowLineStyle: arrowLineStyle
-                               ,renderAroundArrow: renderAroundArrow
-                               ,aroundLeftUpwind: aroundLeftUpwind
-                               ,aroundRightUpwind: aroundRightUpwind
-                               ,aroundLeftDownwind: aroundLeftDownwind
-                               ,aroundRightDownwind: aroundRightDownwind
-                               ,renderStraightArrow: renderStraightArrow
-                               ,gateLineOpacity: gateLineOpacity
-                               ,renderGateMark: renderGateMark
-                               ,renderGateMarks: renderGateMarks
-                               ,renderGateLine: renderGateLine
-                               ,Upwind: Upwind
-                               ,Downwind: Downwind
-                               ,renderGateHelpers: renderGateHelpers
-                               ,renderStartLine: renderStartLine
-                               ,renderGate: renderGate
-                               ,renderFinishLine: renderFinishLine
+                               ,renderDownwind: renderDownwind
+                               ,renderUpwind: renderUpwind
+                               ,renderLaylines: renderLaylines
                                ,renderBounds: renderBounds
                                ,renderGust: renderGust
                                ,renderGusts: renderGusts
                                ,renderIslands: renderIslands
-                               ,renderGateLaylines: renderGateLaylines
-                               ,renderLaylines: renderLaylines
-                               ,renderDownwind: renderDownwind
-                               ,renderUpwind: renderUpwind
                                ,renderCourse: renderCourse};
    return _elm.Render.Course.values;
 };
@@ -8568,7 +8242,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                             _v52.opponents,
                             _v58._0) : $Maybe.Nothing;}
                        _U.badCase($moduleName,
-                       "between lines 281 and 284");
+                       "between lines 276 and 279");
                     }();
                     return {_: {}
                            ,bottomCenter: _L.fromArray([])
@@ -8584,7 +8258,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 280 and 289");
+         "between lines 275 and 284");
       }();
    });
    var BoardLine = F5(function (a,
@@ -8631,6 +8305,386 @@ Elm.Render.Dashboard.make = function (_elm) {
                                   ,topRightElements: topRightElements
                                   ,buildDashboard: buildDashboard};
    return _elm.Render.Dashboard.values;
+};
+Elm.Render = Elm.Render || {};
+Elm.Render.Gates = Elm.Render.Gates || {};
+Elm.Render.Gates.make = function (_elm) {
+   "use strict";
+   _elm.Render = _elm.Render || {};
+   _elm.Render.Gates = _elm.Render.Gates || {};
+   if (_elm.Render.Gates.values)
+   return _elm.Render.Gates.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Render.Gates",
+   $Basics = Elm.Basics.make(_elm),
+   $Color = Elm.Color.make(_elm),
+   $Core = Elm.Core.make(_elm),
+   $Game = Elm.Game.make(_elm),
+   $Geo = Elm.Geo.make(_elm),
+   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Render$Utils = Elm.Render.Utils.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var renderGateLaylines = F4(function (vmg,
+   windOrigin,
+   area,
+   gate) {
+      return function () {
+         var drawLine = function (_v0) {
+            return function () {
+               switch (_v0.ctor)
+               {case "_Tuple2":
+                  return $Graphics$Collage.traced($Graphics$Collage.dotted($Color.white))(A2($Graphics$Collage.segment,
+                    _v0._0,
+                    _v0._1));}
+               _U.badCase($moduleName,
+               "on line 183, column 24 to 61");
+            }();
+         };
+         var windAngleRad = $Core.toRadians(windOrigin);
+         var $ = $Game.getGateMarks(gate),
+         leftMark = $._0,
+         rightMark = $._1;
+         var vmgRad = $Core.toRadians(vmg.angle);
+         var $ = $Game.areaDims(area),
+         w = $._0,
+         h = $._1;
+         var lineLength = w / 2;
+         var leftLineEnd = A2($Geo.add,
+         leftMark,
+         $Basics.fromPolar({ctor: "_Tuple2"
+                           ,_0: lineLength
+                           ,_1: windAngleRad + vmgRad + $Basics.pi / 2}));
+         var rightLineEnd = A2($Geo.add,
+         rightMark,
+         $Basics.fromPolar({ctor: "_Tuple2"
+                           ,_0: lineLength
+                           ,_1: windAngleRad - vmgRad - $Basics.pi / 2}));
+         return $Graphics$Collage.alpha(0.3)($Graphics$Collage.group(A2($List.map,
+         drawLine,
+         _L.fromArray([{ctor: "_Tuple2"
+                       ,_0: leftMark
+                       ,_1: leftLineEnd}
+                      ,{ctor: "_Tuple2"
+                       ,_0: rightMark
+                       ,_1: rightLineEnd}]))));
+      }();
+   });
+   var renderGateLine = F2(function (gate,
+   lineStyle) {
+      return function () {
+         var $ = $Game.getGateMarks(gate),
+         left = $._0,
+         right = $._1;
+         return $Graphics$Collage.traced(lineStyle)(A2($Graphics$Collage.segment,
+         left,
+         right));
+      }();
+   });
+   var renderGateMark = F2(function (radius,
+   position) {
+      return function () {
+         var outer = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle(radius));
+         var inner = $Graphics$Collage.filled($Render$Utils.colors.orange)($Graphics$Collage.circle(radius));
+         return $Graphics$Collage.move(position)($Graphics$Collage.group(_L.fromArray([inner
+                                                                                      ,outer])));
+      }();
+   });
+   var renderGateMarks = F2(function (gate,
+   markRadius) {
+      return function () {
+         var $ = $Game.getGateMarks(gate),
+         left = $._0,
+         right = $._1;
+         return $Graphics$Collage.group(A2($List.map,
+         renderGateMark(markRadius),
+         _L.fromArray([left,right])));
+      }();
+   });
+   var gateLineOpacity = function (timer) {
+      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
+   };
+   var arrowLineStyle = _U.replace([["width"
+                                    ,2]
+                                   ,["color",$Color.white]
+                                   ,["cap",$Graphics$Collage.Round]
+                                   ,["join"
+                                    ,$Graphics$Collage.Smooth]],
+   $Graphics$Collage.defaultLine);
+   var renderStraightArrow = F3(function (markRadius,
+   bottomUp,
+   timer) {
+      return function () {
+         var arrowY = A2($Core.floatMod,
+         timer * 2.0e-2,
+         30);
+         var way = bottomUp ? 1 : -1;
+         var l = markRadius;
+         var tipShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
+                                                 ,_0: 0 - l
+                                                 ,_1: 0 - l}
+                                                ,{ctor: "_Tuple2",_0: 0,_1: 0}
+                                                ,{ctor: "_Tuple2"
+                                                 ,_0: l
+                                                 ,_1: 0 - l}]) : _L.fromArray([{ctor: "_Tuple2"
+                                                                               ,_0: 0 - l
+                                                                               ,_1: l}
+                                                                              ,{ctor: "_Tuple2"
+                                                                               ,_0: 0
+                                                                               ,_1: 0}
+                                                                              ,{ctor: "_Tuple2"
+                                                                               ,_0: l
+                                                                               ,_1: l}]);
+         var tip = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(tipShape));
+         var lineLength = $Basics.toFloat(markRadius * 4);
+         var bodyShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
+                                                  ,_0: 0
+                                                  ,_1: 0 - lineLength}
+                                                 ,{ctor: "_Tuple2"
+                                                  ,_0: 0
+                                                  ,_1: 0}]) : _L.fromArray([{ctor: "_Tuple2"
+                                                                            ,_0: 0
+                                                                            ,_1: 0}
+                                                                           ,{ctor: "_Tuple2"
+                                                                            ,_0: 0
+                                                                            ,_1: lineLength}]);
+         var body = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(bodyShape));
+         return $Graphics$Collage.alpha(arrowY * way / 30 * 0.2)($Graphics$Collage.move({ctor: "_Tuple2"
+                                                                                        ,_0: 0
+                                                                                        ,_1: arrowY * way})($Graphics$Collage.group(_L.fromArray([body
+                                                                                                                                                 ,tip]))));
+      }();
+   });
+   var nextLineStyle = _U.replace([["width"
+                                   ,2]
+                                  ,["color"
+                                   ,$Render$Utils.colors.green]
+                                  ,["dashing"
+                                   ,_L.fromArray([3,3])]],
+   $Graphics$Collage.defaultLine);
+   var renderStartLine = F4(function (gate,
+   markRadius,
+   started,
+   timer) {
+      return function () {
+         var helper = started ? $Graphics$Collage.move({ctor: "_Tuple2"
+                                                       ,_0: 0
+                                                       ,_1: gate.y - markRadius * 3})(A3(renderStraightArrow,
+         markRadius,
+         true,
+         timer)) : $Render$Utils.emptyForm;
+         var marks = A2(renderGateMarks,
+         gate,
+         markRadius);
+         var a = started ? gateLineOpacity(timer) : 1;
+         var lineStyle = started ? nextLineStyle : _U.replace([["width"
+                                                               ,2]
+                                                              ,["color"
+                                                               ,$Render$Utils.colors.orange]],
+         $Graphics$Collage.defaultLine);
+         var line = $Graphics$Collage.alpha(a)(A2(renderGateLine,
+         gate,
+         lineStyle));
+         return $Graphics$Collage.group(_L.fromArray([helper
+                                                     ,line
+                                                     ,marks]));
+      }();
+   });
+   var renderFinishLine = F3(function (gate,
+   markRadius,
+   timer) {
+      return function () {
+         var marks = A2(renderGateMarks,
+         gate,
+         markRadius);
+         var a = gateLineOpacity(timer);
+         var line = $Graphics$Collage.alpha(a)(A2(renderGateLine,
+         gate,
+         nextLineStyle));
+         var helper = $Graphics$Collage.alpha(a * 0.5)($Graphics$Collage.move({ctor: "_Tuple2"
+                                                                              ,_0: 0
+                                                                              ,_1: gate.y + markRadius * 3})(A3(renderStraightArrow,
+         markRadius,
+         false,
+         timer)));
+         return $Graphics$Collage.group(_L.fromArray([helper
+                                                     ,line
+                                                     ,marks]));
+      }();
+   });
+   var counterClockwiseArrowTip = function (l) {
+      return _L.fromArray([{ctor: "_Tuple2"
+                           ,_0: l
+                           ,_1: l}
+                          ,{ctor: "_Tuple2",_0: 0,_1: 0}
+                          ,{ctor: "_Tuple2"
+                           ,_0: l
+                           ,_1: 0 - l}]);
+   };
+   var clockwiseArrowTip = function (l) {
+      return _L.fromArray([{ctor: "_Tuple2"
+                           ,_0: 0 - l
+                           ,_1: l}
+                          ,{ctor: "_Tuple2",_0: 0,_1: 0}
+                          ,{ctor: "_Tuple2"
+                           ,_0: 0 - l
+                           ,_1: 0 - l}]);
+   };
+   var arcShape = F4(function (r,
+   start,
+   length,
+   way) {
+      return function () {
+         var steps = _L.range(0,
+         length / 10 | 0);
+         var realSteps = A2($List.map,
+         function (s) {
+            return $Basics.toFloat(start + s * 10 * (0 - way));
+         },
+         steps);
+         var radSteps = A2($List.map,
+         $Core.toRadians,
+         realSteps);
+         return A2($List.map,
+         function (t) {
+            return $Basics.fromPolar({ctor: "_Tuple2"
+                                     ,_0: r
+                                     ,_1: t});
+         },
+         radSteps);
+      }();
+   });
+   var renderAroundArrow = F4(function (headAngle,
+   clockwise,
+   markRadius,
+   timer) {
+      return function () {
+         var arrowTip = clockwise ? clockwiseArrowTip : counterClockwiseArrowTip;
+         var way = clockwise ? 1 : -1;
+         var arcAngle = 60;
+         var slidingAngle = 135;
+         var timedAngle = A2($Core.floatMod,
+         timer / 15,
+         slidingAngle);
+         var currentSlidingAngle = ($Basics.round(timedAngle) - slidingAngle) * way;
+         var arrowRad = $Core.toRadians($Basics.toFloat(currentSlidingAngle + headAngle));
+         var r = markRadius * 4;
+         var arc = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(A4(arcShape,
+         r,
+         headAngle + currentSlidingAngle,
+         arcAngle,
+         way)));
+         var arrow = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
+                                                              ,_0: r
+                                                              ,_1: arrowRad}))($Graphics$Collage.rotate(arrowRad - $Basics.pi / 2)($Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(arrowTip(markRadius)))));
+         return $Graphics$Collage.alpha(timedAngle / $Basics.toFloat(slidingAngle) * 0.2)($Graphics$Collage.group(_L.fromArray([arc
+                                                                                                                               ,arrow])));
+      }();
+   });
+   var aroundLeftUpwind = A2(renderAroundArrow,
+   -45,
+   false);
+   var aroundRightUpwind = A2(renderAroundArrow,
+   45,
+   true);
+   var aroundLeftDownwind = A2(renderAroundArrow,
+   225,
+   true);
+   var aroundRightDownwind = A2(renderAroundArrow,
+   135,
+   false);
+   var renderGateHelpers = F4(function (gate,
+   markRadius,
+   gateLoc,
+   timer) {
+      return function () {
+         var $ = function () {
+            switch (gateLoc.ctor)
+            {case "Downwind":
+               return {ctor: "_Tuple2"
+                      ,_0: A2(aroundLeftDownwind,
+                      markRadius,
+                      timer)
+                      ,_1: A2(aroundRightDownwind,
+                      markRadius,
+                      timer)};
+               case "Upwind":
+               return {ctor: "_Tuple2"
+                      ,_0: A2(aroundLeftUpwind,
+                      markRadius,
+                      timer)
+                      ,_1: A2(aroundRightUpwind,
+                      markRadius,
+                      timer)};}
+            _U.badCase($moduleName,
+            "between lines 129 and 132");
+         }(),
+         leftHelper = $._0,
+         rightHelper = $._1;
+         var $ = $Game.getGateMarks(gate),
+         left = $._0,
+         right = $._1;
+         return $Graphics$Collage.group(_L.fromArray([A2($Graphics$Collage.move,
+                                                     left,
+                                                     leftHelper)
+                                                     ,A2($Graphics$Collage.move,
+                                                     right,
+                                                     rightHelper)]));
+      }();
+   });
+   var renderGate = F5(function (gate,
+   markRadius,
+   timer,
+   isNext,
+   gateType) {
+      return function () {
+         var helpers = isNext ? A4(renderGateHelpers,
+         gate,
+         markRadius,
+         gateType,
+         timer) : $Render$Utils.emptyForm;
+         var marks = A2(renderGateMarks,
+         gate,
+         markRadius);
+         var a = gateLineOpacity(timer);
+         var line = isNext ? $Graphics$Collage.alpha(a)(A2(renderGateLine,
+         gate,
+         nextLineStyle)) : $Render$Utils.emptyForm;
+         return $Graphics$Collage.group(_L.fromArray([line
+                                                     ,marks
+                                                     ,helpers]));
+      }();
+   });
+   var Downwind = {ctor: "Downwind"};
+   var Upwind = {ctor: "Upwind"};
+   _elm.Render.Gates.values = {_op: _op
+                              ,Upwind: Upwind
+                              ,Downwind: Downwind
+                              ,arcShape: arcShape
+                              ,clockwiseArrowTip: clockwiseArrowTip
+                              ,counterClockwiseArrowTip: counterClockwiseArrowTip
+                              ,nextLineStyle: nextLineStyle
+                              ,arrowLineStyle: arrowLineStyle
+                              ,renderAroundArrow: renderAroundArrow
+                              ,aroundLeftUpwind: aroundLeftUpwind
+                              ,aroundRightUpwind: aroundRightUpwind
+                              ,aroundLeftDownwind: aroundLeftDownwind
+                              ,aroundRightDownwind: aroundRightDownwind
+                              ,renderStraightArrow: renderStraightArrow
+                              ,gateLineOpacity: gateLineOpacity
+                              ,renderGateMark: renderGateMark
+                              ,renderGateMarks: renderGateMarks
+                              ,renderGateLine: renderGateLine
+                              ,renderGateHelpers: renderGateHelpers
+                              ,renderStartLine: renderStartLine
+                              ,renderGate: renderGate
+                              ,renderFinishLine: renderFinishLine
+                              ,renderGateLaylines: renderGateLaylines};
+   return _elm.Render.Gates.values;
 };
 Elm.Render = Elm.Render || {};
 Elm.Render.Players = Elm.Render.Players || {};
@@ -8875,7 +8929,7 @@ Elm.Render.Players.make = function (_elm) {
                                                                                                                                          ,$Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))(vmgShape)])));
       }();
    };
-   var renderPlayer = F3(function (gameMode,
+   var renderPlayer = F3(function (displayWindShadow,
    shadowLength,
    player) {
       return function () {
@@ -8885,17 +8939,9 @@ Elm.Render.Players.make = function (_elm) {
          player.windOrigin);
          var vmgSign = renderVmgSign(player);
          var angles = renderPlayerAngles(player);
-         var windShadow = function () {
-            switch (gameMode.ctor)
-            {case "Race":
-               return A2(renderWindShadow,
-                 shadowLength,
-                 player);
-               case "TimeTrial":
-               return $Render$Utils.emptyForm;}
-            _U.badCase($moduleName,
-            "between lines 106 and 109");
-         }();
+         var windShadow = displayWindShadow ? A2(renderWindShadow,
+         shadowLength,
+         player) : $Render$Utils.emptyForm;
          var hull = A2(rotateHull,
          player.heading,
          baseHull);
@@ -8908,56 +8954,58 @@ Elm.Render.Players.make = function (_elm) {
                                                      ,movingPart]));
       }();
    });
-   var renderPlayers = function (_v15) {
+   var renderPlayers = function (_v14) {
       return function () {
          return function () {
             var filteredOpponents = function () {
-               var _v17 = _v15.watchMode;
-               switch (_v17.ctor)
+               var _v16 = _v14.watchMode;
+               switch (_v16.ctor)
                {case "NotWatching":
-                  return _v15.opponents;
+                  return _v14.opponents;
                   case "Watching":
                   return A2($List.filter,
                     function (o) {
                        return !_U.eq(o.player.id,
-                       _v17._0);
+                       _v16._0);
                     },
-                    _v15.opponents);}
+                    _v14.opponents);}
                _U.badCase($moduleName,
-               "between lines 162 and 165");
+               "between lines 164 and 167");
             }();
+            var displayWindShadow = _U.eq(_v14.gameMode,
+            $Game.Race);
             var mainPlayer = function () {
-               var _v19 = _v15.playerState;
-               switch (_v19.ctor)
+               var _v18 = _v14.playerState;
+               switch (_v18.ctor)
                {case "Just":
                   return A3(renderPlayer,
-                    _v15.gameMode,
-                    _v15.course.windShadowLength,
-                    _v19._0);
+                    displayWindShadow,
+                    _v14.course.windShadowLength,
+                    _v18._0);
                   case "Nothing":
                   return function () {
-                       var _v21 = _v15.watchMode;
-                       switch (_v21.ctor)
+                       var _v20 = _v14.watchMode;
+                       switch (_v20.ctor)
                        {case "NotWatching":
                           return $Render$Utils.emptyForm;
                           case "Watching":
                           return $Maybe.withDefault($Render$Utils.emptyForm)(A2($Maybe.map,
                             A2(renderPlayer,
-                            _v15.gameMode,
-                            _v15.course.windShadowLength),
+                            displayWindShadow,
+                            _v14.course.windShadowLength),
                             A2($Game.findOpponent,
-                            _v15.opponents,
-                            _v21._0)));}
+                            _v14.opponents,
+                            _v20._0)));}
                        _U.badCase($moduleName,
-                       "between lines 157 and 162");
+                       "between lines 159 and 164");
                     }();}
                _U.badCase($moduleName,
-               "between lines 154 and 162");
+               "between lines 156 and 164");
             }();
             var forms = _L.fromArray([A2(renderOpponents,
-                                     _v15.course,
+                                     _v14.course,
                                      filteredOpponents)
-                                     ,renderGhosts(_v15.ghosts)
+                                     ,renderGhosts(_v14.ghosts)
                                      ,mainPlayer]);
             return $Graphics$Collage.group(forms);
          }();

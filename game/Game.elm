@@ -169,6 +169,18 @@ areaDims {rightTop,leftBottom} =
   in
     (r - l, t - b)
 
+areaTop : RaceArea -> Float
+areaTop {rightTop} = snd rightTop
+
+areaBottom : RaceArea -> Float
+areaBottom {leftBottom} = snd leftBottom
+
+areaWidth : RaceArea -> Float
+areaWidth = areaDims >> fst
+
+areaHeight : RaceArea -> Float
+areaHeight = areaDims >> snd
+
 areaCenters : RaceArea -> (Float,Float)
 areaCenters {rightTop,leftBottom} =
   let
