@@ -28,6 +28,7 @@ backHome=Back to homepage
 anonymous=Anonymous
 
 home.intro=Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.
+home.blog=Blog
 home.newOnTacks=New on Tacks?
 home.openRaces=Open races
 home.newRace=New race
@@ -82,3 +83,5 @@ timeTrials.minefield.description=watch your bow...
 
 leaderboard.title=Overall leaderboard
 leaderboard.total=Sum
+
+blog.title=Blog

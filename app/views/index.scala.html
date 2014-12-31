@@ -22,6 +22,7 @@
       <div class="col-lg-6">
         <p class="align-center"><img src="/assets/images/logo-tacks-wide.png"/></p>
         <p class="align-center">@Messages("home.intro")</p>
+        <p class="align-center"><a href="@routes.Blog.index()">@Messages("home.blog")</a></p>
 
         @player match {
           case u: User => {

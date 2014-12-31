@@ -4818,7 +4818,6 @@ html, body {
 
 body {
   margin: 0;
-  font-size: 15px;
   overflow: scroll; }
 
 .wrapper {
@@ -5011,7 +5010,9 @@ input[type="text"], input[type="password"], textarea {
     display: block;
     height: 200px;
     margin-bottom: 10px;
-    background-color: #2b4772;
+    background-color: #23395C;
+    background-repeat: no-repeat;
+    background-position: center;
     border-radius: 3px;
     border: 3px solid #2b4772;
     text-decoration: none;
