@@ -1,36 +1,40 @@
 @(trial: TimeTrial, rankings: Seq[RunRanking], users: Seq[User])(implicit lang: Lang, req: IdentifiedRequest[_])
 
 @main {
-  <div class="show-time-trial">
 
-    <div class="nav"><a href="@routes.Application.index"><img src="/assets/images/logo-tacks-wide.png"/></a></div>
+  <div class="title-wrapper">
+    <div class="container">
+      <h1 class="uppercase">@Messages("timeTrials." + trial.slug + ".name")</h1>
+      <p>
+        &laquo; @Messages("timeTrials." + trial.slug + ".description") &raquo;
+      </p>
+    </div>
+  </div>
 
 
-    <div class="row">
-      <div class="col-md-offset-2 col-md-4">
+  <div class="light-wrapper">
+    <div class="container show-time-trial">
 
-        <div class="time-trial">
-          <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="run"
-          style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
-            <span class="name">@Messages("timeTrials." + trial.slug + ".name")</span>
-            <div class="description">
-              @Messages("timeTrials." + trial.slug + ".description")
-            </div>
-          </a>
+      <div class="row">
+        <div class="col-md-offset-3 col-md-3">
+
+          <div class="trial-picture" style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
+          </div>
+
+          <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
         </div>
 
-        <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
-      </div>
+        <div class="col-md-offset-0 col-md-4">
 
-      <div class="col-md-offset-0 col-md-4">
+          <h3>
+            @trial.creationTime.toString("MMMM yyyy").capitalize
+          </h3>
 
-        <h3>
-          @Messages("timeTrials.rankings")
-        </h3>
+          @views.html.timeTrials.ranking(rankings, users, req.player)
 
-        @views.html.timeTrials.ranking(rankings, users, req.player)
-
+        </div>
       </div>
     </div>
+
   </div>
 }

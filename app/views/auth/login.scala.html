@@ -1,11 +1,10 @@
-@(failureMaybe: Option[String])(implicit lang: Lang)
+@(failureMaybe: Option[String])(implicit req: IdentifiedRequest[_], lang: Lang)
 
 @main {
 
-  @logoPanel {
+  @panel(Messages("login.title")) {
 
     <div class="login">
-      <h1>@Messages("login.title")</h1>
 
       @for(failure <- failureMaybe) {
         <div class="alert alert-danger">@failure</div>

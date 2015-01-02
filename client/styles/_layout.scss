@@ -14,12 +14,6 @@ body {
   overflow: scroll;
 }
 
-
-.wrapper {
-  margin: 20px auto;
-  width: 960px;
-}
-
 .footer {
   margin-top: 100px;
   text-align: center;
@@ -42,6 +36,10 @@ body {
   text-align: center;
 }
 
+.nav-main {
+  margin-left: 20px;
+}
+
 .nav {
   text-align: center;
   margin-bottom: 20px;
@@ -50,6 +48,7 @@ body {
     height: 120px;
     width: auto;
   }
+
   a {
     color: $whiteBlue;
   }

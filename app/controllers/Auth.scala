@@ -8,9 +8,9 @@ import play.api.i18n.Messages
 import models.User
 import tools.future.Implicits._
 
-object Auth extends Controller {
+object Auth extends Controller with Security {
 
-  def askLogin = Action.async { implicit request =>
+  def askLogin = Identified.async() { implicit request =>
     val failure = request.flash.get("failure")
     Future.successful(Ok(views.html.auth.login(failure)))
   }

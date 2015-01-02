@@ -12,106 +12,109 @@
 @import play.api.Play.current
 @import play.api.libs.json.Json
 @import views.Helpers
+@import views.html.bootstrap3._
 
 @main {
 
-  <div class="home">
 
-    <div class="row">
+  <div class="title-wrapper">
+    <div class="container">
 
-      <div class="col-lg-6">
-        <p class="align-center"><img src="/assets/images/logo-tacks-wide.png"/></p>
-        <p class="align-center">@Messages("home.intro")</p>
-        <p class="align-center"><a href="@routes.Blog.index()">@Messages("home.blog")</a></p>
+      @player match {
 
-        @player match {
-          case u: User => {
-          }
-          case g: Guest => {
+        case u: User => {
+          <h1>@Messages("home.welcome", u.handle)</h1>
 
-            <div class="login">
-              <h3>@Messages("signIn")</h3>
+          @trialLeaderboard.find(_._2 == u.id) match {
+            case Some((r, _, p)) => {
+              <p class="align-center">@Html(Messages("home.ranked", r, p))</p>
+            }
+            case None => {
+              <p class="align-center">@Messages("home.notRanked")</p>
 
-              <form action="@routes.Auth.submitLogin" method="post">
-                <div class="row">
-                  <div class="form-group col-md-5">
-                    <input type="text" name="email" id="" class="form-control" placeholder="@Messages("email")"/>
-                  </div>
-                  <div class="form-group col-md-4">
-                    <input type="password" name="password" id="" class="form-control" placeholder="@Messages("password")"/>
-                  </div>
-                  <div class="col-md-3">
-                    <input type="submit" class="btn btn-primary btn-block" value="@Messages("signIn")">
-                  </div>
+              @trials.find(_._1.slug == core.WarmUp.slug).map { case (t, _) =>
+                <div class="align-center">
+                  <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning">@Messages("home.runWarmUp")</a>
                 </div>
-              </form>
-            </div>
-
+              }
+            }
           }
         }
-      </div>
 
-      <div class="col-lg-5 col-lg-offset-1 user-block">
-        @player match {
-          case u: User => {
-            <div class="current-user">
-              <div class="pull-right">
-                <a href="@routes.Auth.logout" class="btn btn-default btn-sm">@Messages("logout")</a>
+        case _ => {
+
+          <h1>@Messages("home.title")</h1>
+          <p class="align-center">@Html(Messages("home.intro"))</p>
+
+
+          <div class="row">
+            <div class="col-lg-6 col-lg-offset-3">
+
+              <form action="@routes.Users.create" method="post" class="form-new-user row">
+                <div class="form-group col-lg-6">
+                  <input type="text" name="email" class="form-control" placeholder="@Messages("email")"/>
+                </div>
+                <div class="form-group col-lg-6">
+                  <input type="password" name="password" class="form-control" placeholder="@Messages("password")"/>
+                </div>
+                <div class="form-group col-lg-6">
+                  <input type="text" name="handle" class="form-control" placeholder="@Messages("users.handle")"/>
+                </div>
+                <div class="form-group col-lg-6">
+                  <input type="submit" value="@Messages("users.createButton")" class="btn btn-primary btn-block" />
+                </div>
+              </form>
+
+            </div>
+          </div>
+
+          <p class="align-center">@Messages("or") <a href="@routes.Auth.askLogin()">@Messages("home.doLog")</a></p>
+
+
+        }
+      }
+
+    </div>
+  </div>
+
+  <div class="light-wrapper">
+    <div class="container">
+
+      <h2>@Messages("home.races")</h2>
+
+      @player match {
+
+        case u: User => {
+          <div class="row">
+            <form action="@routes.Users.updateStatus" method="post" class="col-lg-offset-3 col-lg-6 update-name">
+              <div class="form-group">
+                <div class="input-group input-group-sm">
+                  <span class="input-group-addon" id="basic-addon1">@Messages("home.status")</span>
+                  <input type="text" name="status" value="@u.status" class="form-control"/>
+                  <div class="input-group-btn">
+                    <input type="submit" value="@Messages("home.updateStatus")" class="btn btn-default btn-block"/>
+                  </div>
+                </div>
               </div>
-              @Messages("home.welcome"), <a href="@routes.Users.show(u.idToStr)">@u.handle</a>.
-
-              <form action="@routes.Users.updateStatus" method="post" class="update-name">
-                <div class="form-group">
-                  <div class="input-group input-group-sm">
-                    <input type="text" name="status" value="@u.status" class="form-control"/>
-                    <div class="input-group-btn">
-                      <input type="submit" value="@Messages("home.updateStatus")" class="btn btn-primary btn-block"/>
-                    </div>
-                  </div>
-                </div>
-              </form>
-            </div>
-          }
-          case g: Guest => {
-            <div class="new-user">
-              <h3>@Messages("home.newOnTacks")</h3>
-              @views.html.users.createUserForm(userForm)
-            </div>
-          }
+            </form>
+          </div>
         }
-      </div>
 
-    </div>
-
-    <div class="row">
-      <div class="col-lg-8">
-        <div id="liveCenter"></div>
-      </div>
-
-      <div class="col-lg-4 leaderboard-top10">
-        <h2>@Messages("home.leaderboard", 10)</h2>
-        <ul>
-        @for((rank, playerId, points) <- trialLeaderboard.take(10)) {
-          <li class="@if(playerId == player.id) { current-player }">
-            <span class="rank">@rank</span>
-            <span class="handle">
-              @trialsUsers.find(_.id == playerId).map(_.handle).getOrElse("Anonymous")
-            </span>
-            <span class="points">@{points} pts</span>
-          </li>
+        case p: Player => {
         }
-        </ul>
-        <a href="@routes.TimeTrials.leaderboard()" class="btn btn-block btn-xs btn-default btn-full-leaderboard">@Messages("home.fullLeaderboard")</a>
+      }
 
-      </div>
+      <div id="liveCenter"></div>
 
     </div>
+  </div>
 
-    <div class="time-trials row">
-      <div class="col-lg-12">
-        <h2>@Messages("home.timeTrials")</h2>
-      </div>
-    </div>
+  <div class="dark-wrapper home-trials">
+    <div class="container">
+
+      <h2>@Messages("home.timeTrials")</h2>
+      <p class="subtitle">@org.joda.time.LocalDate.now.toString("MMMM yyyy")</p>
+
       @for(row <- trials.grouped(3)) {
         <div class="row">
           @for((trial, rankings) <- row) {
@@ -127,7 +130,6 @@
                 <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
 
                 @if(rankings.nonEmpty) {
-                  <span class="ranking">@Messages("home.timeTrialRanking")</span>
                   @views.html.timeTrials.ranking(rankings.filter(r => r.rank <= 5 || r.playerId == player.id), trialsUsers, player)
                 }
               </div>
@@ -136,20 +138,7 @@
         </div>
       }
 
-
-    @*
-    @if(finishedRaces.nonEmpty) {
-      <div class="row">
-        <div class="finished-races col-md-offset-3 col-md-6">
-          <h3>@Messages("home.recentRaces")</h3>
-          @for(r <- finishedRaces) {
-            @views.html.races.finishedBoard(r, users, Some(player))
-          }
-        </div>
-      </div>
-    }
-    *@
-
+    </div>
   </div>
 
   @helper.javascriptRouter("jsRoutes")(

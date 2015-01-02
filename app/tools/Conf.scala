@@ -1,5 +1,6 @@
 package tools
 
+import org.joda.time.LocalDate
 import play.api.Play.current
 import play.api.Play
 
@@ -8,6 +9,8 @@ object Conf {
 
   val fps = 30
   val frameMillis = 1000 / fps
+
+  val earliestTimeTrial = new LocalDate(2014,12,1)
 
   val prismicApi = getString("prismic.api")
 

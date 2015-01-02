@@ -6,29 +6,13 @@ var React = require('react');
 
 var OnlinePlayer = React.createClass({
 
-  userTag: function(user) {
-    // return (
-    //   <a href={"/users/" + user.id} className="user">
-    //     {user.handle}
-    //     <span className="status">{user.status}</span>
-    //   </a>
-    // );
-    return (
-      <span className="user">
-        {user.handle}
-        <span className="status">{user.status}</span>
-      </span>
-    );
-  },
-
-  guestTag: function(guest) {
-    return <span className="guest">Anonymous</span>;
-  },
-
   render: function() {
     var p = this.props.player;
     return (
-      <li>{p.handle ? this.userTag(p) : this.guestTag(p)}</li>
+      <li>
+        <span className="handle">{p.handle}</span>
+        <span className="status">{p.status}</span>
+      </li>
     );
   }
 

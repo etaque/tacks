@@ -1,0 +1,27 @@
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url('/assets/fonts/Proxima Nova Regular.otf');
+}
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url('/assets/fonts/Museo Slab.otf');
+}
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url('/assets/fonts/Proxima Nova Alt Thin.otf');
+}
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url('/assets/fonts/Proxima Nova Alt Light.otf');
+}
+
+
+// $fontFamily: "Source Sans Pro";
+$fontFamily: "Proxima Nova Regular";
+$lightFontFamily: "Proxima Nova Thin";
+$headerFontFamily: "Museo Slab";
+$mono: "Inconsolata";

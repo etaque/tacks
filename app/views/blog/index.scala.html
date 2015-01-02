@@ -1,15 +1,25 @@
-@(posts: Seq[BlogPost], linkResolver: io.prismic.DocumentLinkResolver)
+@(posts: Seq[BlogPost], linkResolver: io.prismic.DocumentLinkResolver)(implicit req: IdentifiedRequest[_], lang: Lang)
 
 @main {
-  <div class="nav"><a href="@routes.Application.index"><img src="/assets/images/logo-tacks-wide.png"/></a></div>
 
-  <h1>@Messages("blog.title")</h1>
+  <div class="title-wrapper">
+    <div class="container">
+      <h1>@Messages("blog.title")</h1>
+      <p>@Messages("blog.subtitle")</p>
+    </div>
+  </div>
 
-  @for(post <- posts) {
-    <h2><a href="@routes.Blog.show(post.id, post.slug)">@post.title</a></h2>
-    <a href="@routes.Blog.show(post.id, post.slug)#disqus_thread"></a>
-    @Html(post.body.asHtml(linkResolver))
-  }
+  <div class="light-wrapper">
+    <div class="container">
+
+    @for(post <- posts) {
+      <h3><a href="@routes.Blog.show(post.id, post.slug)">@post.title</a></h3>
+      <a href="@routes.Blog.show(post.id, post.slug)#disqus_thread"></a>
+      @Html(post.body.asHtml(linkResolver))
+    }
+
+    </div>
+  </div>
 
   <script type="text/javascript">
   /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */

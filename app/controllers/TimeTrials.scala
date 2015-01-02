@@ -16,16 +16,19 @@ object TimeTrials extends Controller with Security  {
     yield Ok(views.html.timeTrials.show(trial, rankings, users))
   }
 
-  def leaderboard = Identified.async() { implicit request =>
+  def currentLeaderboard = leaderboard(TimeTrial.currentPeriod)
+
+  def leaderboard(period: String) = Identified.async() { implicit request =>
+    val date = TimeTrial.parsePeriod(period)
     for {
-      timeTrials <- TimeTrial.findAllCurrent
+      timeTrials <- TimeTrial.findAllForPeriod(period)
       trialsWithRanking <- TimeTrial.zipWithRankings(timeTrials)
       users <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
     yield {
       val byTrial = TimeTrialLeaderboard.zipWithLeaderboard(trialsWithRanking)
       val overall = TimeTrialLeaderboard.summarize(byTrial.map(_._2))
-      Ok(views.html.timeTrials.leaderboard(byTrial, overall, users))
+      Ok(views.html.timeTrials.leaderboard(byTrial, overall, users, date))
     }
   }
 }

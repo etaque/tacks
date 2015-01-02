@@ -24,26 +24,42 @@ signIn=Sign in
 email=Email
 password=Password
 logout=Logout
-backHome=Back to homepage
 anonymous=Anonymous
 
-home.intro=Tacks is a realtime multiplayer sailboat racing game, in your browser. Being in its early stage, it's a bit rough. You'll need Chrome browser on a recent computer.
-home.blog=Blog
-home.newOnTacks=New on Tacks?
+menu.home=Home
+menu.blog=Blog
+menu.leaderboard=Leaderboard
+menu.login=Login
+menu.register=Sign up
+menu.logout=Logout
+
+home.title=Sailing tactics from the sofa
+home.intro=Tacks is a <strong>regatta simulation</strong> game.\
+  <br>Engage yourself in a <strong>realtime multiplayer</strong> race or \
+  attempt to break your <strong>time trial</strong> scores to climb the rankings.\
+  <br>You'll need a recent browser to fully enjoy the game (Chrome or Safari advised).
+home.doLog=sign in
+home.welcome=Welcome, {0}
+home.ranked=Your rank is {0} on time trials leaderboard, with {1} points.
+home.notRanked=You didn''t run any time trials.
+home.runWarmUp=Let''s do a little warm up?
+home.races=Realtime races
 home.openRaces=Open races
 home.newRace=New race
 home.onlinePlayers=Online players
 home.recentRaces=Recent races
 home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
-home.welcome=Welcome
+home.status=Status
 home.updateStatus=Update status
+home.onlineGuestsOne=1 anonymous player.
+home.onlineGuestsMany={0} anonymous players.
 home.timeTrials=Time trials
 home.timeTrialRanking=leaderboard
 home.runTimeTrial=Play
 home.leaderboard=Overall leaderboard
 home.fullLeaderboard=See all
 
-footer.message=Tacks is an <a href="https://github.com/etaque/tacks">open source</a> game crafted by <a href="https://twitter.com/etaque">@etaque</a>.
+footer.message=An <a href="https://github.com/etaque/tacks">open source</a> game created by <a href="https://twitter.com/etaque">@etaque</a>.
 
 login.failed=Wrong email and/or password.
 login.title=Sign in
@@ -52,11 +68,11 @@ login.submit=Sign me in
 users.creation=New account
 users.handle=Handle
 users.handle.hint=Only letters and numbers
-users.handle.constraint=Handle must be alphanumeric and length within 3 to 15 chars.
 users.createButton=Create account
 users.finishedRaces=Finished races
 users.noRaces=No races found
 
+liveCenter.emptyBoard=No race currently open
 liveCenter.creationTime=Creation
 liveCenter.opponents=Opponents
 liveCenter.start=Start
@@ -67,6 +83,7 @@ liveCenter.watch=Watch
 
 timeTrials.rankings=Current leaderboard
 timeTrials.run=New run
+timeTrials.title=Contre la montre
 
 timeTrials.warmup.name=Warmup
 timeTrials.warmup.description=get your hands warm with the three laps of this short course
@@ -85,3 +102,5 @@ leaderboard.title=Overall leaderboard
 leaderboard.total=Sum
 
 blog.title=Blog
+blog.subtitle=Game updates, hints & various stuff.
+blog.back=Back to blog

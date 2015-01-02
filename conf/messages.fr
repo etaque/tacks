@@ -12,25 +12,43 @@ signIn=Connexion
 email=Email
 password=Mot de passe
 logout=Déconnexion
-backHome=Retour à l''accueil
 anonymous=Anonyme
+or=ou
 
-home.intro=Tacks est un jeu temps-réel et multijoueur de régate. Un navigateur récent est requis pour profiter pleinement du jeu (Chrome ou Safari recommandés).
-home.newOnTacks=Nouveau sur Tacks?
-home.openRaces=Courses libres
+menu.home=Accueil
+menu.blog=Blog
+menu.leaderboard=Classement
+menu.login=Connexion
+menu.register=Inscription
+menu.logout=Déconnexion
+
+home.title=Tactiquez depuis votre canapé
+home.intro=Tacks est un jeu de <strong>simulation de régate</strong>.\
+<br>Participez à une régate <strong>multijoueur en temps réel</strong> ou tentez un <strong>contre la montre</strong> pour grimper dans le classement.\
+<br>Un navigateur récent est requis pour profiter pleinement du jeu (Chrome ou Safari recommandés).
+home.doLog=connectez-vous
+home.welcome=Bienvenue, {0}
+home.ranked=Tu occupes la {0}<sup>e</sup> place au classement des contre-la-montre, avec {1} points.
+home.notRanked=Tu n''as pas encore couru de course contre-la-montre.
+home.runWarmUp=Un petit parcours d''échauffement ?
+home.races=Courses temps réel
+home.openRaces=Courses ouvertes
 home.newRace=Nouvelle course
 home.onlinePlayers=Joueurs en ligne
 home.recentRaces=Courses récentes
-home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
-home.welcome=Bienvenue
-home.updateStatus=Maj statut
-home.timeTrials=Chronos du mois
+home.noWebSocketSupport=Votre navigateur ne supporte pas la technologie WebSocket. \
+  Utilisez un <a href="http://caniuse.com/#feat=websockets">navigateur compatible</a> pour profiter de Tacks.
+home.status=Statut
+home.updateStatus=Valider
+home.onlineGuestsOne=Un joueur anonyme.
+home.onlineGuestsMany={0} joueurs anonymes.
+home.timeTrials=Courses contre la montre
 home.timeTrialRanking=meilleurs temps
 home.runTimeTrial=Jouer
-home.leaderboard=Classement général
+home.leaderboard=Classement du mois
 home.fullLeaderboard=Voir la suite
 
-footer.message=Tacks est un jeu <a href="https://github.com/etaque/tacks">open source</a> façonné par <a href="https://twitter.com/etaque">@etaque</a>.
+footer.message=un jeu <a href="https://github.com/etaque/tacks">open source</a> créé par <a href="https://twitter.com/etaque">@etaque</a>.
 
 login.failed=Addresse email ou mot de passe incorrect.
 login.title=Connexion
@@ -39,10 +57,11 @@ login.submit=Me connecter
 users.creation=Nouveau compte
 users.handle=Pseudonyme
 users.handle.hint=Au moins 3 caractères alphanumériques
-users.createButton=Créer votre compte
+users.createButton=Créez votre compte
 users.finishedRaces=Courses terminées
 users.noRaces=Aucune course trouvée
 
+liveCenter.emptyBoard=Pas de course ouverte pour le moment.
 liveCenter.creationTime=Création
 liveCenter.opponents=Participants
 liveCenter.start=Départ
@@ -70,3 +89,7 @@ timeTrials.minefield.description=regardez bien où vous mettez l''étrave...
 
 leaderboard.title=Classement général
 leaderboard.total=Total
+
+blog.title=Blog
+blog.subtitle=Nouveautés du jeu, conseils pour progresser, etc.
+blog.back=Retour au blog

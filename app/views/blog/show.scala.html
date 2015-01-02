@@ -1,23 +1,39 @@
-@(post: BlogPost, linkResolver: io.prismic.DocumentLinkResolver)
+@(post: BlogPost, linkResolver: io.prismic.DocumentLinkResolver)(implicit req: IdentifiedRequest[_], lang: Lang)
 
 @main {
-  <div class="nav"><a href="@routes.Application.index"><img src="/assets/images/logo-tacks-wide.png"/></a></div>
+  <div class="title-wrapper">
+    <div class="container">
+      <h1><a href="@routes.Blog.index">@Messages("blog.title")</a></h1>
+      <p>@Messages("blog.subtitle")</p>
+    </div>
 
-  <h1>@post.title</h1>
-  @Html(post.body.asHtml(linkResolver))
+  </div>
 
-  <div id="disqus_thread"></div>
-  <script type="text/javascript">
-  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
-  var disqus_shortname = '@tools.Conf.disqus'; // required: replace example with your forum shortname
+  <div class="light-wrapper">
+    <div class="container">
+      <p class="subtitle">
+        <a href="@routes.Blog.index">&larr; @Messages("blog.back")</a>
+      </p>
+      <h3>@post.title</h3>
 
-  /* * * DON'T EDIT BELOW THIS LINE * * */
-  (function() {
-  var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-  dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-  (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-  })();
-  </script>
-  <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      <div class="post-body">
+      @Html(post.body.asHtml(linkResolver))
+      </div>
 
+      <div id="disqus_thread"></div>
+      <script type="text/javascript">
+      /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+      var disqus_shortname = '@tools.Conf.disqus'; // required: replace example with your forum shortname
+
+      /* * * DON'T EDIT BELOW THIS LINE * * */
+      (function() {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+      })();
+      </script>
+      <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+    </div>
+  </div>
 }

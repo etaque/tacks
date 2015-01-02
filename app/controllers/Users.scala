@@ -21,7 +21,11 @@ object Users extends Controller with Security {
     )(CreateUser.apply)(CreateUser.unapply)
   )
 
-  def create = Action.async { implicit request =>
+  def creation = Identified.apply() { implicit request =>
+    Ok(views.html.users.creation(userForm))
+  }
+
+  def create = Identified.async() { implicit request =>
     userForm.bindFromRequest.fold(
       withErrors => Future.successful(BadRequest(views.html.users.creation(withErrors))),
       {
@@ -33,7 +37,7 @@ object Users extends Controller with Security {
     )
   }
 
-  def show(id: String) = Action.async { implicit request =>
+  def show(id: String) = Identified.async() { implicit request =>
     for {
       user <- User.findById(id)
       races <- Race.listByUserId(user.id)

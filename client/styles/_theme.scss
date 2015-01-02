@@ -1,59 +1,179 @@
 
 @import 'colors';
 @import 'mixins';
+@import 'fonts';
 
-$fontFamily: Inconsolata, monospace;
 
 body {
-  color: $whiteBlue;
+  color: $darkGray;
   font-family: $fontFamily;
   font-size: 15px;
   background-color: $seaBlue;
 }
 
 hr {
-  border: 0px solid $whiteBlue;
+  border: 0 solid $whiteBlue;
 }
 
 h1 {
   margin-bottom: 30px;
   text-align: center;
-  color: white;
 }
 
 h2, h3, h4, h5, h6 {
-  text-transform: uppercase;
-  font-size: 19px;
-  border-bottom: 2px solid $whiteBlue;
-  padding-bottom: 6px;
+  font-family: $headerFontFamily;
+  font-size: 21px;
   margin-bottom: 15px;
-
-  &::before {
-    content: '# ';
-  }
 }
 
 a {
   text-decoration: underline;
-  color: white;
+  color: $seaBlue;
 
   &:hover {
+    color: $lightSeaBlue;
+  }
+}
+
+@mixin white-links {
+  a {
+    color: white;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+
+    &.btn:hover {
+      text-decoration: none;
+    }
+  }
+}
+
+
+.navbar {
+  margin-bottom: 0;
+  height: 80px;
+  background-color: white;
+  @include linear-gradient($smokeWhite, white);
+  border: none;
+  border-radius: 0;
+
+  .navbar-brand {
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav {
+    margin-bottom: 0;
+  }
+
+  .navbar-nav > li > a {
+    line-height: 80px;
+    padding: 0 20px;
+    font-size: 14px;
+    text-transform: uppercase;
+    color: $gray;
+    text-decoration: none;
+
+
+    &:hover {
+      background-color: whitesmoke;
+      color: $lightSeaBlue;
+    }
+  }
+}
+
+.title-wrapper {
+  background-color: $seaBlue;
+  @include linear-gradient($seaBlue, $lightSeaBlue);
+  box-shadow: 0 2px 3px $darkerSeaBlue inset;
+  color: $whiteBlue;
+  padding: 40px;
+  text-align: center;
+
+  @include white-links;
+
+  h1 {
+    color: white;
+    font-family: $lightFontFamily;
+    font-size: 40px;
+    font-weight: 300;
+    margin: 0;
+
+    a {
+      color: white;
+      text-decoration: none;
+    }
+  }
+
+  p {
+    font-family: $lightFontFamily;
+    margin-top: 10px;
+  }
+
+  strong {
+    font-family: $fontFamily;
     color: white;
   }
 }
 
+.light-wrapper, .dark-wrapper {
+
+  .container {
+    padding: 30px 0 50px 0;
+  }
+
+  h2, p.subtitle {
+    font-family: $lightFontFamily;
+    text-align: center;
+  }
+
+  h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 32px;
+    color: white;
+  }
+}
+
+.light-wrapper {
+  background-color: $smokeWhite;
+
+  h2 {
+    color: $darkGray;
+  }
+}
+
+.dark-wrapper {
+  background-color: $seaBlue;
+  @include linear-gradient($seaBlue, $lightSeaBlue);
+  @include white-links;
+  color: $whiteBlue;
+
+  box-shadow: 0px 2px 3px $darkerSeaBlue inset;
+}
+
+.footer-wrapper {
+  @include white-links;
+  box-shadow: 0px 2px 3px $darkerSeaBlue inset;
+  text-align: center;
+  color: $whiteBlue;
+  padding: 20px;
+  font-family: $lightFontFamily;
+}
+
 .btn {
-  // border-radius: 0;
   font-weight: bold;
   text-transform: uppercase;
   text-decoration: none;
-  letter-spacing: 1px;
   background-color: white;
   border: none;
   border-bottom: 3px solid #f5f5f5;
   padding: 7px 12px 5px 12px;
 
   &:hover {
+    text-decoration: none;
   }
 }
 
@@ -64,12 +184,13 @@ a {
 
 .btn-default {
   background-color: $lightGray;
-  border-color: desat-dark($lightGray);
-  color: $seaBlue;
+  border-color: darken($lightGray, 5%);
+  color: $gray;
 
   &:hover {
     background-color: darken($lightGray, 5%);
-    border-color: darken(desat-dark($lightGray), 5%);
+    border-color: darken($lightGray, 10%);
+    color: $darkGray;
   }
 }
 
@@ -105,13 +226,9 @@ a {
 }
 
 input[type="text"], input[type="password"], textarea {
-  font-family: $fontFamily;
-  font-size: 15px;
-  border: none;
   border-radius: 0;
-  background-color: white;
-  color: $darkerSeaBlue;
-  box-shadow: none;
+//  font-family: $fontFamily;
+//  font-size: 15px;
 }
 
 .input-group-sm > .form-control {
@@ -132,4 +249,8 @@ input[type="text"], input[type="password"], textarea {
 
 .form-actions {
   margin-top: 30px;
+}
+
+.uppercase {
+  text-transform: uppercase;
 }
