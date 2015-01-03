@@ -24,7 +24,7 @@ object TimeTrial extends MongoDAO[TimeTrial] {
 
   val periodFormat = "YYYY-MM"
 
-  def currentPeriod = "2014-12" // LocalDate.now.toString(periodFormat)
+  def currentPeriod = LocalDate.now.toString(periodFormat)
   def parsePeriod(p: String): LocalDate = Try(LocalDate.parse(p)).toOption.getOrElse(LocalDate.now)
 
   def findAllCurrent: Future[Seq[TimeTrial]] = findAllForPeriod(currentPeriod)
