@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "org.julienrf" %% "play-jsmessages" % "1.6.2",
+  "io.prismic" %% "scala-kit" % "1.2.13",
   "org.scalacheck" %% "scalacheck" % "1.12.1" % "test",
   "org.scalatest" %% "scalatest" % "2.2.2" % "test",
   cache,

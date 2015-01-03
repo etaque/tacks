@@ -1,14 +1,11 @@
-@(userForm: Form[CreateUser])(implicit lang: Lang)
+@(userForm: Form[CreateUser])(implicit req: IdentifiedRequest[_], lang: Lang)
 
 @main {
 
-  @logoPanel {
+  @panel(Messages("users.creation")) {
 
     <div class="new-user">
-      <h1>@Messages("users.creation")</h1>
       @views.html.users.createUserForm(userForm)
-
-
     </div>
 
   }

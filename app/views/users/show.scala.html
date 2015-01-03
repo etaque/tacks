@@ -1,4 +1,4 @@
-@(user: User, races: Seq[Race], opponents: Seq[User])(implicit lang: Lang)
+@(user: User, races: Seq[Race], opponents: Seq[User])(implicit req: IdentifiedRequest[_], lang: Lang)
 
 @main {
   <div class="show-user">

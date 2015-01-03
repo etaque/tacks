@@ -8,6 +8,7 @@ import reactivemongo.core.commands._
 import tools.BSONHandlers.BSONDateTimeHandler
 
 import scala.concurrent.Future
+import scala.util.Try
 
 case class TimeTrial(
   _id: BSONObjectID = BSONObjectID.generate,
@@ -24,15 +25,26 @@ object TimeTrial extends MongoDAO[TimeTrial] {
   val periodFormat = "YYYY-MM"
 
   def currentPeriod = LocalDate.now.toString(periodFormat)
+  def parsePeriod(p: String): LocalDate = Try(LocalDate.parse(p)).toOption.getOrElse(LocalDate.now)
 
-  def findAllCurrent: Future[Seq[TimeTrial]] =
-    Future.sequence(CourseGenerator.all.map(_.slug).map(TimeTrial.findCurrentBySlug)).map(_.flatten)
+  def isOpen(t: TimeTrial) = t.period == TimeTrial.currentPeriod
 
-  def zipWithTops(timeTrials: Seq[TimeTrial], playerId: BSONObjectID, rankingLength: Int): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
-    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, topWithPlayer(playerId, r, rankingLength)))))
+  def listCurrent: Future[Seq[TimeTrial]] = listForPeriod(currentPeriod)
 
-  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking], rankingLength: Int): Seq[RunRanking] =
-    rankings.filter(r => r.rank <= rankingLength || r.playerId == playerId).sortBy(_.rank)
+  def listForPeriod(period: String): Future[Seq[TimeTrial]] = {
+    val futures = CourseGenerator.all.map(gen => TimeTrial.findBySlugAndPeriod(gen.slug, period))
+    Future.sequence(futures).map(_.flatten)
+  }
+  
+  def listForSlug(slug: String): Future[Seq[TimeTrial]] = {
+    list(BSONDocument("slug" -> slug), BSONDocument("period" -> -1))
+  }
+
+  def zipWithRankings(timeTrials: Seq[TimeTrial]): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
+    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, r.sortBy(_.rank)))))
+
+//  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking], rankingLength: Int): Seq[RunRanking] =
+//    rankings.filter(r => r.rank <= rankingLength || r.playerId == playerId).sortBy(_.rank)
 
   def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, currentPeriod)
 
@@ -70,7 +82,8 @@ case class RunRanking(
   runId: BSONObjectID,
   finishTime: Long
 ) {
-  def isRecent = new DateTime(runId.time).plusDays(1).isAfterNow
+  def creationTime = new DateTime(runId.time)
+  def isRecent = creationTime.plusDays(1).isAfterNow
 }
 
 object TimeTrialRun extends MongoDAO[TimeTrialRun] {

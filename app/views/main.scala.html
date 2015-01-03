@@ -1,4 +1,4 @@
-@(content: Html)(implicit lang: Lang)
+@(content: Html)(implicit req: IdentifiedRequest[_], lang: Lang)
 
 <!DOCTYPE html>
 
@@ -9,12 +9,42 @@
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
   </head>
   <body>
-    <div class="wrapper">
+    <nav class="navbar">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="@routes.Application.index">
+            <img src="@routes.Assets.at("images/logo-tacks-3.png")" alt="">
+          </a>
+        </div>
+        <ul class="nav navbar-nav nav-main">
+          <li><a href="@routes.Application.index()">@Messages("menu.home")</a></li>
+          <li><a href="@routes.TimeTrials.currentLeaderboard()">@Messages("menu.leaderboard")</a></li>
+          <li><a href="@routes.Blog.index()">@Messages("menu.blog")</a></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right nav-user">
+          @req.player match {
+            case u: User => {
+              <li><a href="@routes.Auth.logout">@Messages("menu.logout")</a></li>
+            }
+            case g: Guest => {
+              <li><a href="@routes.Auth.askLogin">@Messages("menu.login")</a></li>
+              <li><a href="@routes.Users.creation()">@Messages("menu.register")</a></li>
+            }
+          }
+        </ul>
+      </div>
+    </nav>
+
+    <div class="content">
       @content
-      <div class="footer">
-        <hr/>
+    </div>
+
+    <div class="footer-wrapper">
+      <div class="container">
         <p>@Html(Messages("footer.message"))</p>
       </div>
+
     </div>
 
     @ga()

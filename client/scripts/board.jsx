@@ -15,24 +15,22 @@ var Board = React.createClass({
     }, this);
 
     if (_.isEmpty(items)) {
-      return <div/>;
+      return <div className="empty-board">{Messages('liveCenter.emptyBoard')}</div>;
     } else {
       return (
-        <div className="races-board">
-          <table>
-            <thead>
-              <tr>
-                <th>{Messages('liveCenter.creationTime')}</th>
-                <th>{Messages('liveCenter.opponents')}</th>
-                <th>{Messages('liveCenter.start')}</th>
-                <th></th>
-              </tr>
-            </thead>
-            <tbody>
-              {items}
-            </tbody>
-          </table>
-        </div>
+        <table className="table-open-races">
+          <thead>
+            <tr>
+              <th>{Messages('liveCenter.creationTime')}</th>
+              <th>{Messages('liveCenter.opponents')}</th>
+              <th>{Messages('liveCenter.start')}</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {items}
+          </tbody>
+        </table>
       );
     }
   }

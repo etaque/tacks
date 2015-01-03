@@ -1,0 +1,43 @@
+@(posts: Seq[BlogPost], linkResolver: io.prismic.DocumentLinkResolver)(implicit req: IdentifiedRequest[_], lang: Lang)
+
+@main {
+
+  <div class="title-wrapper">
+    <div class="container">
+      <h1>@Messages("blog.title")</h1>
+      <p>@Messages("blog.subtitle")</p>
+    </div>
+  </div>
+
+  <div class="light-wrapper">
+    <div class="container">
+
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+
+        @for(post <- posts) {
+          <h3><a href="@routes.Blog.show(post.id, post.slug)">@post.title</a></h3>
+          @Html(post.body.asHtml(linkResolver))
+          <a href="@routes.Blog.show(post.id, post.slug)#disqus_thread"></a>
+        }
+
+        </div>
+      </div>
+
+
+    </div>
+  </div>
+
+  <script type="text/javascript">
+  /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+  var disqus_shortname = '@tools.Conf.disqus'; // required: replace example with your forum shortname
+
+  /* * * DON'T EDIT BELOW THIS LINE * * */
+  (function () {
+  var s = document.createElement('script'); s.async = true;
+  s.type = 'text/javascript';
+  s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+  (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+  }());
+  </script>
+}

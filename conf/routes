@@ -4,11 +4,14 @@ GET         /run/:timeTrialId                       controllers.Application.play
 GET         /play/:raceId                           controllers.Application.playRace(raceId: String)
 GET         /watch/:raceId                          controllers.Application.watchRace(raceId: String)
 
+GET         /time-trials/leaderboard                controllers.TimeTrials.currentLeaderboard
+GET         /time-trials/leaderboard/:period        controllers.TimeTrials.leaderboard(period)
 GET         /time-trials/:id                        controllers.TimeTrials.show(id)
 
 GET         /tutorial                               controllers.Application.tutorial
 
-POST        /users/create                           controllers.Users.create
+GET         /register                               controllers.Users.creation
+POST        /register                               controllers.Users.create
 GET         /users/:id                              controllers.Users.show(id: String)
 POST        /users/updateStatus                     controllers.Users.updateStatus
 
@@ -27,6 +30,9 @@ GET         /ws/playerSocket/:raceId                controllers.Api.racePlayerSo
 GET         /ws/watcherSocket/:raceId               controllers.Api.raceWatcherSocket(raceId)
 GET         /ws/timeTrialSocket/:timeTrialId        controllers.Api.timeTrialSocket(timeTrialId)
 GET         /ws/tutorialSocket                      controllers.Api.tutorialSocket
+
+GET         /blog                                   controllers.Blog.index
+GET         /blog/:id/:slug                         controllers.Blog.show(id, slug)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                           controllers.Assets.at(path="/public", file)

@@ -1,0 +1,80 @@
+@(byTrial: Seq[(TimeTrial, core.TimeTrialLeaderboard.Leaderboard)],
+  overall: core.TimeTrialLeaderboard.Leaderboard,
+  users: Seq[User],
+  date: org.joda.time.LocalDate
+)(implicit req: IdentifiedRequest[_], lang: Lang)
+
+@main {
+  @defining(byTrial.map(_._1)) { trials =>
+
+    <div class="title-wrapper">
+      <div class="container">
+        <h1>@Messages("leaderboard.title")</h1>
+        <div class="row">
+          <div class="col-md-2 previous-period">
+            <p>
+              @defining(date.minusMonths(1)) { prevDate =>
+                @if(! prevDate.isBefore(tools.Conf.earliestTimeTrial)) {
+                  <a href="@routes.TimeTrials.leaderboard(prevDate.toString(TimeTrial.periodFormat))">&larr; @prevDate.toString("MMMM yyyy")</a>
+                }
+              }
+            </p>
+          </div>
+          <div class="col-md-8">
+            <p>@date.toString("MMMM yyyy")</p>
+          </div>
+          <div class="col-md-2">
+            <p>
+            @defining(date.plusMonths(1)) { nextDate =>
+              @if(nextDate.toDateTimeAtStartOfDay.isBeforeNow) {
+                <a href="@routes.TimeTrials.leaderboard(nextDate.toString(TimeTrial.periodFormat))">@nextDate.toString("MMMM yyyy") &rarr;</a>
+              }
+            }
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="light-wrapper">
+
+      <div class="container">
+        <table class="table-leaderboard">
+          <thead>
+            <tr>
+              <th></th>
+              <th>@Messages("leaderboard.total")</th>
+              @for(trial <- trials) {
+                <th class="trial"><a href="@routes.TimeTrials.show(trial.idToStr)">@Messages("timeTrials." + trial.slug + ".name")</a></th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+          @for((overallRank, playerId, overallPoints) <- overall) {
+            <tr class="@if(playerId == req.player.id) { current-player }">
+              <td>
+                @{overallRank}.
+                @users.find(_.id == playerId).map(_.handle).getOrElse("?")
+              </td>
+              <td class="overall-points">@overallPoints</td>
+              @for(trial <- trials) {
+                <td class="points">
+                @byTrial.find(_._1.id == trial.id).flatMap(_._2.find(_._2 == playerId)) match {
+                  case Some((rank, _, points)) => {
+                    @points
+                  }
+                  case None => { - }
+                }
+                </td>
+              }
+            </tr>
+          }
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+
+  }
+}

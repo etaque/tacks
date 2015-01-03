@@ -4,7 +4,8 @@
 
 <ul class="time-trial-rankings">
 @for(ranking <- rankings) {
-  <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }">
+  <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }"
+    title="@ranking.creationTime.toString("EEEE d - HH:mm")">
 
     <span class="rank">@ranking.rank</span>
 

@@ -11,14 +11,7 @@ body {
 
 body {
   margin: 0;
-  font-size: 15px;
   overflow: scroll;
-}
-
-
-.wrapper {
-  margin: 20px auto;
-  width: 960px;
 }
 
 .footer {
@@ -43,16 +36,23 @@ body {
   text-align: center;
 }
 
-.nav {
-  text-align: center;
-  margin-bottom: 20px;
-
-  img {
-    height: 120px;
-    width: auto;
+nav {
+  .nav-main {
+    margin-left: 20px;
   }
-  a {
-    color: $whiteBlue;
+
+  .nav {
+    text-align: center;
+    margin-bottom: 20px;
+
+    img {
+      height: 120px;
+      width: auto;
+    }
+
+    a {
+      color: $whiteBlue;
+    }
   }
 }
 
