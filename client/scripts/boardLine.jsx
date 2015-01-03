@@ -17,7 +17,7 @@ var BoardLine = React.createClass({
     } else {
       return _.map(playerStates, p => {
         return p.player.handle || Messages("anonymous");
-      }).join(" vs ");
+      }).join(", ");
     }
   },
 
@@ -38,11 +38,11 @@ var BoardLine = React.createClass({
 
     return (
       <tr>
-        <td>{h} by {s.master.handle || Messages('anonymous')}</td>
+        <td>{Messages('liveCenter.by', h, s.master.handle || Messages('anonymous'))}</td>
         <td>{players}</td>
         <td>{this.getStartText(millis)}</td>
         <td>
-          <a href={"/play/" + s.race._id} target="_blank" className="btn btn-xs btn-block btn-primary">{Messages('liveCenter.join')}</a>
+          <a href={"/play/" + s.race._id} target="_blank" className="btn btn-xs btn-block btn-warning">{Messages('liveCenter.join')}</a>
         </td>
       </tr>);
   }

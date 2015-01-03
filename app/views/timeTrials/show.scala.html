@@ -1,4 +1,4 @@
-@(trial: TimeTrial, rankings: Seq[RunRanking], users: Seq[User])(implicit lang: Lang, req: IdentifiedRequest[_])
+@(trial: TimeTrial, rankings: Seq[RunRanking], users: Seq[User], allPeriods: Seq[TimeTrial])(implicit lang: Lang, req: IdentifiedRequest[_])
 
 @main {
 
@@ -21,7 +21,19 @@
           <div class="trial-picture" style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
           </div>
 
-          <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
+          @if(TimeTrial.isOpen(trial)) {
+            <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
+          } else {
+            <button type="button" class="btn btn-default btn-disabled btn-block" disabled>@Messages("timeTrials.closed")</button>
+          }
+
+          <ul class="nav  nav-stacked">
+          @for(t <- allPeriods) {
+            <li @if(t.id == trial.id) { class="active" }>
+              <a href="@routes.TimeTrials.show(t.idToStr)">@t.creationTime.toString("MMMM yyyy").capitalize</a>
+            </li>
+          }
+          </ul>
         </div>
 
         <div class="col-md-offset-0 col-md-4">

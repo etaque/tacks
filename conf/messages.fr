@@ -29,7 +29,7 @@ home.intro=Tacks est un jeu de <strong>simulation de régate</strong>.\
 home.doLog=connectez-vous
 home.welcome=Bienvenue, {0}
 home.ranked=Tu occupes la {0}<sup>e</sup> place au classement des contre-la-montre, avec {1} points.
-home.notRanked=Tu n''as pas encore couru de course contre-la-montre.
+home.notRanked=Tu n''as pas encore couru de course contre-la-montre ce mois-ci.
 home.runWarmUp=Un petit parcours d''échauffement ?
 home.races=Courses temps réel
 home.openRaces=Courses ouvertes
@@ -69,10 +69,12 @@ liveCenter.waiting=En attente
 liveCenter.startedSince=Parti depuis {0}
 liveCenter.join=Rejoindre
 liveCenter.watch=Spectateur
+liveCenter.by={0} par {1}
 
 timeTrials.rankings=Classement du mois
 timeTrials.run=Nouveau run
 timeTrials.recent=Couru il y a moins de 24h
+timeTrials.closed=Course archivée
 
 timeTrials.warmup.name=Warmup
 timeTrials.warmup.description=faites-vous la main sur les trois tours de ce petit parcours

@@ -34,7 +34,7 @@
 
               @trials.find(_._1.slug == core.WarmUp.slug).map { case (t, _) =>
                 <div class="align-center">
-                  <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning">@Messages("home.runWarmUp")</a>
+                  <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.runWarmUp")</a>
                 </div>
               }
             }
@@ -82,29 +82,35 @@
 
       <h2>@Messages("home.races")</h2>
 
-      @player match {
+      <div class="row">
+        <div class="col-lg-10 col-lg-offset-1">
 
-        case u: User => {
-          <div class="row">
-            <form action="@routes.Users.updateStatus" method="post" class="col-lg-offset-3 col-lg-6 update-name">
-              <div class="form-group">
-                <div class="input-group input-group-sm">
-                  <span class="input-group-addon" id="basic-addon1">@Messages("home.status")</span>
-                  <input type="text" name="status" value="@u.status" class="form-control"/>
-                  <div class="input-group-btn">
-                    <input type="submit" value="@Messages("home.updateStatus")" class="btn btn-default btn-block"/>
+          @player match {
+
+            case u: User => {
+              <div class="row">
+                <form action="@routes.Users.updateStatus" method="post" class="col-lg-offset-3 col-lg-6 update-name">
+                  <div class="form-group">
+                    <div class="input-group input-group-sm">
+                      <span class="input-group-addon" id="basic-addon1">@Messages("home.status")</span>
+                      <input type="text" name="status" value="@u.status" class="form-control"/>
+                      <div class="input-group-btn">
+                        <input type="submit" value="@Messages("home.updateStatus")" class="btn btn-default btn-block"/>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </form>
               </div>
-            </form>
-          </div>
-        }
+            }
 
-        case p: Player => {
-        }
-      }
+            case p: Player => {
+            }
+          }
 
-      <div id="liveCenter"></div>
+          <div id="liveCenter"></div>
+
+        </div>
+      </div>
 
     </div>
   </div>

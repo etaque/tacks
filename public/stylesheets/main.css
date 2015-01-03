@@ -4835,16 +4835,15 @@ body {
 .align-center {
   text-align: center; }
 
-.nav-main {
+nav .nav-main {
   margin-left: 20px; }
-
-.nav {
+nav .nav {
   text-align: center;
   margin-bottom: 20px; }
-  .nav img {
+  nav .nav img {
     height: 120px;
     width: auto; }
-  .nav a {
+  nav .nav a {
     color: #B1C0D8; }
 
 @font-face {
@@ -5122,6 +5121,8 @@ input[type="text"], input[type="password"], textarea {
   .live-center .table-open-races td {
     padding: 10px;
     border-bottom: 1px solid #f8f9fb; }
+    .live-center .table-open-races td:not(:last-child) {
+      font-family: "Inconsolata"; }
   .live-center .table-open-races tr:last-child td {
     border-bottom: none; }
 .live-center .empty-board {
@@ -5304,6 +5305,17 @@ input[type="text"], input[type="password"], textarea {
   background-position: center;
   border-radius: 3px;
   border: 3px solid #2b4772; }
+.show-time-trial .nav {
+  margin-top: 30px; }
+  .show-time-trial .nav li a:hover {
+    background-color: white;
+    box-shadow: 0px 1px 2px #E6E6E6; }
+  .show-time-trial .nav li.active {
+    background-color: white; }
+    .show-time-trial .nav li.active a {
+      color: #7b8087;
+      text-decoration: none;
+      box-shadow: 0px 1px 2px #E6E6E6; }
 
 .previous-period {
   text-align: left; }

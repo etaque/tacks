@@ -27,11 +27,17 @@ object TimeTrial extends MongoDAO[TimeTrial] {
   def currentPeriod = LocalDate.now.toString(periodFormat)
   def parsePeriod(p: String): LocalDate = Try(LocalDate.parse(p)).toOption.getOrElse(LocalDate.now)
 
-  def findAllCurrent: Future[Seq[TimeTrial]] = findAllForPeriod(currentPeriod)
+  def isOpen(t: TimeTrial) = t.period == TimeTrial.currentPeriod
 
-  def findAllForPeriod(period: String): Future[Seq[TimeTrial]] = {
+  def listCurrent: Future[Seq[TimeTrial]] = listForPeriod(currentPeriod)
+
+  def listForPeriod(period: String): Future[Seq[TimeTrial]] = {
     val futures = CourseGenerator.all.map(gen => TimeTrial.findBySlugAndPeriod(gen.slug, period))
     Future.sequence(futures).map(_.flatten)
+  }
+  
+  def listForSlug(slug: String): Future[Seq[TimeTrial]] = {
+    list(BSONDocument("slug" -> slug), BSONDocument("period" -> -1))
   }
 
   def zipWithRankings(timeTrials: Seq[TimeTrial]): Future[Seq[(TimeTrial, Seq[RunRanking])]] =

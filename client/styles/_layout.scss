@@ -36,21 +36,23 @@ body {
   text-align: center;
 }
 
-.nav-main {
-  margin-left: 20px;
-}
-
-.nav {
-  text-align: center;
-  margin-bottom: 20px;
-
-  img {
-    height: 120px;
-    width: auto;
+nav {
+  .nav-main {
+    margin-left: 20px;
   }
 
-  a {
-    color: $whiteBlue;
+  .nav {
+    text-align: center;
+    margin-bottom: 20px;
+
+    img {
+      height: 120px;
+      width: auto;
+    }
+
+    a {
+      color: $whiteBlue;
+    }
   }
 }
 

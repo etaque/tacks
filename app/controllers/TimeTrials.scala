@@ -12,8 +12,9 @@ object TimeTrials extends Controller with Security  {
       trial <- TimeTrial.findById(id)
       rankings <- TimeTrialRun.rankings(trial.id)
       users <- User.listByIds(rankings.map(_.playerId))
+      allForSlug <- TimeTrial.listForSlug(trial.slug)
     }
-    yield Ok(views.html.timeTrials.show(trial, rankings, users))
+    yield Ok(views.html.timeTrials.show(trial, rankings, users, allForSlug))
   }
 
   def currentLeaderboard = leaderboard(TimeTrial.currentPeriod)
@@ -21,7 +22,7 @@ object TimeTrials extends Controller with Security  {
   def leaderboard(period: String) = Identified.async() { implicit request =>
     val date = TimeTrial.parsePeriod(period)
     for {
-      timeTrials <- TimeTrial.findAllForPeriod(period)
+      timeTrials <- TimeTrial.listForPeriod(period)
       trialsWithRanking <- TimeTrial.zipWithRankings(timeTrials)
       users <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }

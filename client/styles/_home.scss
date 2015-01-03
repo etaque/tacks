@@ -32,6 +32,10 @@
       padding: 10px;
       border-bottom: 1px solid $smokeWhite;
 
+      &:not(:last-child) {
+        font-family: $mono;
+      }
+
     }
 
     tr:last-child td {

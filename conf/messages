@@ -41,7 +41,7 @@ home.intro=Tacks is a <strong>regatta simulation</strong> game.\
 home.doLog=sign in
 home.welcome=Welcome, {0}
 home.ranked=Your rank is {0} on time trials leaderboard, with {1} points.
-home.notRanked=You didn''t run any time trials.
+home.notRanked=You didn''t run any time trials this month.
 home.runWarmUp=Let''s do a little warm up?
 home.races=Realtime races
 home.openRaces=Open races
@@ -76,14 +76,16 @@ liveCenter.emptyBoard=No race currently open
 liveCenter.creationTime=Creation
 liveCenter.opponents=Opponents
 liveCenter.start=Start
-liveCenter.waiting=Waiting
+liveCenter.waiting=Pending
 liveCenter.startedSince=Started since {0}
 liveCenter.join=Join
 liveCenter.watch=Watch
+liveCenter.by={0} by {1}
 
 timeTrials.rankings=Current leaderboard
 timeTrials.run=New run
-timeTrials.title=Contre la montre
+timeTrials.title=Time trial
+timeTrials.closed=Closed race
 
 timeTrials.warmup.name=Warmup
 timeTrials.warmup.description=get your hands warm with the three laps of this short course

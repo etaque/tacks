@@ -20,7 +20,7 @@ object Application extends Controller with Security {
     for {
       finishedRaces     <- Race.listFinished(10)
       users             <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
-      timeTrials        <- TimeTrial.findAllCurrent
+      timeTrials        <- TimeTrial.listCurrent
       trialsWithRanking <- TimeTrial.zipWithRankings(timeTrials)
       leaderboard       = TimeTrialLeaderboard.forTrials(trialsWithRanking)
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
