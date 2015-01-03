@@ -12,11 +12,18 @@
   <div class="light-wrapper">
     <div class="container">
 
-    @for(post <- posts) {
-      <h3><a href="@routes.Blog.show(post.id, post.slug)">@post.title</a></h3>
-      <a href="@routes.Blog.show(post.id, post.slug)#disqus_thread"></a>
-      @Html(post.body.asHtml(linkResolver))
-    }
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+
+        @for(post <- posts) {
+          <h3><a href="@routes.Blog.show(post.id, post.slug)">@post.title</a></h3>
+          @Html(post.body.asHtml(linkResolver))
+          <a href="@routes.Blog.show(post.id, post.slug)#disqus_thread"></a>
+        }
+
+        </div>
+      </div>
+
 
     </div>
   </div>
