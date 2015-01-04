@@ -1,14 +1,19 @@
 package controllers
 
+import play.api.cache.Cache
+import play.api.libs.json.Json
+import play.modules.reactivemongo.MongoController
+import reactivemongo.bson.BSONObjectID
+import reactivemongo.api.gridfs.Implicits._
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
-import models.{CreateUser, Race, User}
+import models.{Avatar, CreateUser, Race, User}
 
-object Users extends Controller with Security {
+object Users extends Controller with Security with MongoController {
 
   val userForm = Form(
     mapping(
@@ -21,23 +26,23 @@ object Users extends Controller with Security {
     )(CreateUser.apply)(CreateUser.unapply)
   )
 
-  def creation = Identified.apply() { implicit request =>
+  def creation = PlayerAction.apply() { implicit request =>
     Ok(views.html.users.creation(userForm))
   }
 
-  def create = Identified.async() { implicit request =>
+  def create = PlayerAction.async() { implicit request =>
     userForm.bindFromRequest.fold(
       withErrors => Future.successful(BadRequest(views.html.users.creation(withErrors))),
       {
         case CreateUser(email, password, handle) => {
-          val user = User(email = email, handle = handle, status = None)
+          val user = User(email = email, handle = handle, status = None, avatarId = None)
           User.create(user, password).map { _ => Redirect(routes.Application.index).withSession("playerId" -> user.idToStr) }
         }
       }
     )
   }
 
-  def show(id: String) = Identified.async() { implicit request =>
+  def show(id: String) = PlayerAction.async() { implicit request =>
     for {
       user <- User.findById(id)
       races <- Race.listByUserId(user.id)

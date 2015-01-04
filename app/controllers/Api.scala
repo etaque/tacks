@@ -48,7 +48,7 @@ object Api extends Controller with Security {
     )
   }
 
-  def racesStatus = Identified.async() { implicit request =>
+  def racesStatus = PlayerAction.async() { implicit request =>
     val racesFuture = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]
     val onlinePlayersFuture = (ChatRoom.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     val finishedRacesFuture = Race.listFinished(10)
@@ -70,13 +70,13 @@ object Api extends Controller with Security {
     ))
   }
 
-  def onlinePlayers = Identified.async() { implicit request =>
+  def onlinePlayers = PlayerAction.async() { implicit request =>
     (ChatRoom.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]].map { players =>
       Ok(Json.toJson(players))
     }
   }
 
-  def createRace = Identified.async(parse.json) { implicit request =>
+  def createRace = PlayerAction.async(parse.json) { implicit request =>
     val race = Race(playerId = getPlayerId, course = Course.spawn, countdownSeconds = 60)
 
     (RacesSupervisor.actorRef ? MountRace(race, request.player)).map { _ =>
@@ -84,14 +84,14 @@ object Api extends Controller with Security {
     }
   }
 
-  def setName = Identified(parse.json) { implicit request =>
+  def setName = PlayerAction(parse.json) { implicit request =>
     (request.body \ "name").asOpt[String] match {
       case Some(name) => Ok(Json.obj()).addingToSession("playerName" -> name)
       case None => BadRequest
     }
   }
 
-  def currentUser = Identified() { implicit request =>
+  def currentUser = PlayerAction() { implicit request =>
     Ok(Json.toJson(request.player))
   }
 
@@ -102,7 +102,7 @@ object Api extends Controller with Security {
 
   def timeTrialSocket(timeTrialId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
-      player <- Identified.getPlayer(request)
+      player <- PlayerAction.getPlayer(request)
       timeTrial <- TimeTrial.findById(timeTrialId)
       run = TimeTrialRun(timeTrialId = timeTrial.id, playerId = player.id)
       ghostRuns <- TimeTrialRun.findGhosts(timeTrial, run)
@@ -115,7 +115,7 @@ object Api extends Controller with Security {
   }
 
   def racePlayerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
-    Identified.getPlayer(request).flatMap { player =>
+    PlayerAction.getPlayer(request).flatMap { player =>
       (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
         case Some(raceActor) => Right(PlayerActor.props(raceActor, player)(_))
         case None => Left(NotFound)
@@ -124,7 +124,7 @@ object Api extends Controller with Security {
   }
 
   def raceWatcherSocket(raceId: String) = WebSocket.tryAcceptWithActor[WatcherInput, RaceUpdate] { implicit request =>
-    Identified.getPlayer(request).flatMap { watcher =>
+    PlayerAction.getPlayer(request).flatMap { watcher =>
       (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
         case Some(raceActor) => Right(WatcherActor.props(raceActor, watcher)(_))
         case None => Left(NotFound)

@@ -1,4 +1,4 @@
-@(posts: Seq[BlogPost], linkResolver: io.prismic.DocumentLinkResolver)(implicit req: IdentifiedRequest[_], lang: Lang)
+@(posts: Seq[BlogPost], linkResolver: io.prismic.DocumentLinkResolver)(implicit req: PlayerRequest[_], lang: Lang)
 
 @main {
 

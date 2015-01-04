@@ -2,7 +2,7 @@
   overall: core.TimeTrialLeaderboard.Leaderboard,
   users: Seq[User],
   date: org.joda.time.LocalDate
-)(implicit req: IdentifiedRequest[_], lang: Lang)
+)(implicit req: PlayerRequest[_], lang: Lang)
 
 @main {
   @defining(byTrial.map(_._1)) { trials =>

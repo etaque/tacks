@@ -1,4 +1,4 @@
-@(race: Race, wsUrl: String)(implicit request: IdentifiedRequest[_], lang: Lang)
+@(race: Race, wsUrl: String)(implicit request: PlayerRequest[_], lang: Lang)
 
 @import play.api.libs.json.Json
 @import models.JsonFormats.raceUpdateFormat
