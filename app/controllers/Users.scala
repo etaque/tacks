@@ -105,6 +105,10 @@ object Users extends Controller with Security with MongoController {
 
   def showAvatar(id: String) = Action.async {
     val cursor = Avatar.read(BSONObjectID(id))
-    serve(Avatar.store, cursor).map(_.withHeaders(CONTENT_DISPOSITION -> CONTENT_DISPOSITION_INLINE))
+    serve(Avatar.store, cursor).map(_.withHeaders(
+      CONTENT_DISPOSITION -> CONTENT_DISPOSITION_INLINE,
+      ETAG -> id,
+      CACHE_CONTROL -> "max-age-290304000"
+    ))
   }
 }
