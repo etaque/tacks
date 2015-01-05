@@ -5227,6 +5227,11 @@ input[type="text"], input[type="password"], textarea {
 .home-trials .btn-full-leaderboard {
   margin-top: 15px; }
 
+.fullscreen {
+  overflow: hidden;
+  color: white;
+  background-color: #1C2E48; }
+
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url('/assets/fonts/Proxima Nova Regular.otf'); }
@@ -5380,11 +5385,6 @@ input[type="text"], input[type="password"], textarea {
   .table-leaderboard .overall-points, .table-leaderboard .points {
     width: 115px;
     text-align: center; }
-
-.fullscreen {
-  overflow: hidden;
-  color: white;
-  background-color: #1C2E48; }
 
 .post-body {
   font-weight: normal; }

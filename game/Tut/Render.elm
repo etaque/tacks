@@ -54,7 +54,7 @@ renderWindHelpers stepTime course =
     i = (round stepTime) % 2000 |> toFloat
     a = i / 2000 * 0.2
     w = areaWidth course.area
-    t =
+--     t =
     y = course.upwind.y - 80 - (i / 50)
     windArrow = windArrowPath
       |> filled white

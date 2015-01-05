@@ -3880,7 +3880,8 @@ Elm.Native.Graphics.Collage.make = function(localRuntime) {
             ++i;
             if (!kid) {
                 div.appendChild(node);
-            } else if (kid.getContext) {
+            //} else if (kid.getContext) {
+            } else {
                 div.insertBefore(node, kid);
             }
         }
@@ -3938,6 +3939,7 @@ Elm.Native.Graphics.Collage.make = function(localRuntime) {
         collage:F3(collage)
     };
 };
+
 
 // setup
 Elm.Native = Elm.Native || {};

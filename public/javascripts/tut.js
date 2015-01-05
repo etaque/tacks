@@ -4560,7 +4560,8 @@ Elm.Native.Graphics.Collage.make = function(localRuntime) {
             ++i;
             if (!kid) {
                 div.appendChild(node);
-            } else if (kid.getContext) {
+            //} else if (kid.getContext) {
+            } else {
                 div.insertBefore(node, kid);
             }
         }
@@ -4618,6 +4619,7 @@ Elm.Native.Graphics.Collage.make = function(localRuntime) {
         collage:F3(collage)
     };
 };
+
 
 // setup
 Elm.Native = Elm.Native || {};
@@ -10036,7 +10038,7 @@ Elm.Tut.Render.make = function (_elm) {
             {case "_Tuple2":
                return _v1.playerState.position;}
             _U.badCase($moduleName,
-            "on line 117, column 3 to 23");
+            "on line 110, column 3 to 23");
          }();
       }();
    });
@@ -10074,13 +10076,12 @@ Elm.Tut.Render.make = function (_elm) {
    course) {
       return function () {
          var windArrow = $Graphics$Collage.scale(2)($Graphics$Collage.filled($Color.white)(windArrowPath));
-         var t = course.upwind.y;
          var w = $Game.areaWidth(course.area);
          var i = $Basics.toFloat(A2($Basics._op["%"],
          $Basics.round(stepTime),
          2000));
          var a = i / 2000 * 0.2;
-         var y = t - 80 - i / 50;
+         var y = course.upwind.y - 80 - i / 50;
          var arrowForms = A2($List.map,
          function (x) {
             return A2($Graphics$Collage.move,
@@ -10208,7 +10209,7 @@ Elm.Tut.Render.make = function (_elm) {
                  layout);
               }();}
          _U.badCase($moduleName,
-         "between lines 133 and 140");
+         "between lines 126 and 133");
       }();
    });
    _elm.Tut.Render.values = {_op: _op
