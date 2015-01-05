@@ -4840,11 +4840,18 @@ nav .nav-main {
 nav .nav {
   text-align: center;
   margin-bottom: 20px; }
-  nav .nav img {
+  nav .nav .logo {
     height: 120px;
     width: auto; }
   nav .nav a {
     color: #B1C0D8; }
+nav .nav-user img {
+  width: 19px;
+  height: 19px;
+  display: inline-block;
+  margin-right: 5px;
+  border-radius: 2px;
+  vertical-align: text-bottom; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -5141,18 +5148,25 @@ input[type="text"], input[type="password"], textarea {
   margin: 0; }
   .live-center .online-users li {
     background-color: white;
-    padding: 4px 8px;
+    padding: 6px 8px;
     color: #7b8087;
     border-bottom: 1px solid #f8f9fb;
     text-decoration: none; }
     .live-center .online-users li:last-child {
       border-bottom: none; }
+    .live-center .online-users li img {
+      width: 19px;
+      height: 19px;
+      border-radius: 2px;
+      display: inline-block;
+      margin-right: 8px; }
     .live-center .online-users li .handle {
       font-family: "Inconsolata"; }
     .live-center .online-users li .status {
       display: block;
       color: #B1C0D8;
-      font-size: 12px; }
+      font-size: 12px;
+      margin-top: 2px; }
 .live-center .online-guests {
   padding: 8px;
   font-size: 14px;
@@ -5231,6 +5245,9 @@ input[type="text"], input[type="password"], textarea {
     padding: 5px 10px; }
     .time-trial-rankings li:last-child {
       border-bottom: none; }
+    .time-trial-rankings li .rank {
+      width: 20px;
+      display: inline-block; }
     .time-trial-rankings li .rank:after {
       content: "."; }
     .time-trial-rankings li .time {
@@ -5342,6 +5359,11 @@ input[type="text"], input[type="password"], textarea {
     border-bottom: 1px solid #f8f9fb; }
   .table-leaderboard th:last-child td {
     border-bottom: none; }
+  .table-leaderboard .rank {
+    width: 10px;
+    padding-right: 0; }
+  .table-leaderboard .user {
+    padding-left: 5px; }
   .table-leaderboard .current-player {
     color: #E0A349; }
   .table-leaderboard .overall-points, .table-leaderboard .points {
@@ -5355,3 +5377,18 @@ input[type="text"], input[type="password"], textarea {
 
 .post-body {
   font-weight: normal; }
+
+.upload-avatar {
+  text-align: center; }
+  .upload-avatar label {
+    display: block; }
+  .upload-avatar img {
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px #E6E6E6; }
+  .upload-avatar input[type='file'] {
+    display: inline; }
+  .upload-avatar .alert {
+    margin-top: 15px; }
+  .upload-avatar .form-remove-avatar {
+    margin-top: 50px; }

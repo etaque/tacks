@@ -66,13 +66,21 @@
 
     li {
       background-color: white;
-      padding: 4px 8px;
+      padding: 6px 8px;
       color: $gray;
       border-bottom: 1px solid $smokeWhite;
       text-decoration: none;
 
       &:last-child {
         border-bottom: none;
+      }
+
+      img {
+        width: 19px;
+        height: 19px;
+        border-radius: 2px;
+        display: inline-block;
+        margin-right: 8px;
       }
 
       .handle {
@@ -83,6 +91,7 @@
         display: block;
         color: $whiteBlue;
         font-size: 12px;
+        margin-top: 2px;
       }
     }
   }

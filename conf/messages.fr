@@ -20,6 +20,7 @@ menu.blog=Blog
 menu.leaderboard=Classement
 menu.login=Connexion
 menu.register=Inscription
+menu.me=Compte
 menu.logout=Déconnexion
 
 home.title=Tactiquez depuis votre canapé
@@ -60,6 +61,11 @@ users.handle.hint=Au moins 3 caractères alphanumériques
 users.createButton=Créez votre compte
 users.finishedRaces=Courses terminées
 users.noRaces=Aucune course trouvée
+
+me.edit=Compte
+me.updateAvatar=Modifier votre avatar
+me.avatarUpdated=Avatar modifié avec succès.
+me.removeAvatar=Supprimer l''image
 
 liveCenter.emptyBoard=Pas de course ouverte pour le moment.
 liveCenter.creationTime=Création

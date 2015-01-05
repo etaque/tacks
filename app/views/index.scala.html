@@ -4,18 +4,10 @@
   trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard,
   finishedRaces: Seq[Race],
   users: Seq[User],
-  userForm: Form[CreateUser],
-  jsMessages: jsmessages.api.JsMessages
-)(implicit req: IdentifiedRequest[_], lang: Lang)
-
-@import play.api.Play
-@import play.api.Play.current
-@import play.api.libs.json.Json
-@import views.Helpers
-@import views.html.bootstrap3._
+  userForm: Form[CreateUser]
+)(implicit req: PlayerRequest[_], lang: Lang)
 
 @main {
-
 
   <div class="title-wrapper">
     <div class="container">
@@ -146,20 +138,4 @@
 
     </div>
   </div>
-
-  @helper.javascriptRouter("jsRoutes")(
-    routes.javascript.Api.racesStatus,
-    routes.javascript.Api.currentUser,
-    routes.javascript.Api.createRace
-  )
-
-  <script type="text/javascript">
-    @Html(jsMessages(Some("window.jsMessages")).body)
-  </script>
-
-  @if(Play.isProd) {
-    <script src="@routes.Assets.at("javascripts/dist/liveCenter.js")" type="text/javascript"></script>
-  } else {
-    <script src="@routes.Assets.at("javascripts/liveCenter.js")" type="text/javascript"></script>
-  }
 }

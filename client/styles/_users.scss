@@ -1,0 +1,28 @@
+@import "colors";
+
+.upload-avatar {
+  text-align: center;
+
+  label {
+    display: block;
+  }
+
+  img {
+    margin-bottom: 20px;
+//    border: 3px solid $lightGray;
+    border-radius: 5px;
+    box-shadow: 0 2px 2px $lightGray;
+  }
+
+  input[type='file'] {
+    display: inline;
+  }
+
+  .alert {
+    margin-top: 15px;
+  }
+
+  .form-remove-avatar {
+    margin-top: 50px;
+  }
+}

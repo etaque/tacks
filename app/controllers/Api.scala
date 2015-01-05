@@ -51,22 +51,14 @@ object Api extends Controller with Security {
   def racesStatus = PlayerAction.async() { implicit request =>
     val racesFuture = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]
     val onlinePlayersFuture = (ChatRoom.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
-    val finishedRacesFuture = Race.listFinished(10)
     for {
       openRaces <- racesFuture
       onlinePlayers <- onlinePlayersFuture
-      timeTrials <- TimeTrial.list
-      finishedRaces <- finishedRacesFuture
-      userIds = finishedRaces.flatMap(_.tally.map(_.playerId)).distinct
-      users <- User.listByIds(userIds)
     }
     yield Ok(Json.obj(
       "now" -> DateTime.now,
       "openRaces" -> Json.toJson(openRaces),
-      "onlinePlayers" -> Json.toJson(onlinePlayers),
-      "timeTrials" -> Json.toJson(timeTrials),
-      "finishedRaces" -> Json.toJson(finishedRaces),
-      "users" -> users.map(u => Json.toJson(u)(userFormat)) // conflict with playerFormat
+      "onlinePlayers" -> Json.toJson(onlinePlayers)
     ))
   }
 

@@ -17,6 +17,11 @@
       border-bottom: none;
     }
 
+    .rank {
+      width: 20px;
+      display: inline-block;
+    }
+
     .rank:after {
       content: ".";
     }
@@ -191,6 +196,15 @@
     }
   }
 
+  .rank {
+    width: 10px;
+    padding-right: 0;
+  }
+
+  .user {
+    padding-left: 5px;
+  }
+
   .current-player {
     color: $orange;
   }
@@ -199,4 +213,5 @@
     width: 110px;
     text-align: center;
   }
+
 }

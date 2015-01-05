@@ -5,8 +5,8 @@
 var React    = require('react');
 var _        = require('lodash');
 var moment   = require('moment');
-var util     = require('./util');
-var Messages = require('./messages');
+var util     = require('../util');
+var Messages = require('../messages');
 
 
 var BoardLine = React.createClass({

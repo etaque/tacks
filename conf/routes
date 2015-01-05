@@ -10,8 +10,14 @@ GET         /time-trials/:id                        controllers.TimeTrials.show(
 
 GET         /register                               controllers.Users.creation
 POST        /register                               controllers.Users.create
-GET         /users/:id                              controllers.Users.show(id: String)
+
 POST        /users/updateStatus                     controllers.Users.updateStatus
+GET         /me/edit                                controllers.Users.edit
+POST        /me/uploadAvatar                        controllers.Users.uploadAvatar
+POST        /me/removeAvatar                        controllers.Users.removeAvatar
+
+GET         /users/:id                              controllers.Users.show(id: String)
+GET         /avatars/:id                            controllers.Users.showAvatar(id)
 
 GET         /login                                  controllers.Auth.askLogin
 POST        /login                                  controllers.Auth.submitLogin

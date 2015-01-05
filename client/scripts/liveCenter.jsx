@@ -6,18 +6,14 @@
 
 var React         = require('react');
 var $             = require('jquery');
-var Bacon         = require('baconjs');
-var bjq           = require('bacon.jquery');
-var BaconMixin    = require('react-bacon').BaconMixin;
 var _             = require('lodash');
-var Board         = require('./board');
-var OnlinePlayer  = require('./onlinePlayer');
+var Board         = require('./liveCenter/board');
+var OnlinePlayer  = require('./liveCenter/onlinePlayer');
 var Api           = require('./api');
 var Messages      = require('./messages');
 var util          = require('./util');
 
 var LiveCenter = React.createClass({
-  mixins: [BaconMixin],
 
   getInitialState: function() {
     return {
@@ -113,4 +109,6 @@ var LiveCenter = React.createClass({
 
 });
 
-React.render(<LiveCenter/>, document.getElementById("liveCenter"));
+//React.render(<LiveCenter/>, document.getElementById("liveCenter"));
+
+module.exports = LiveCenter;

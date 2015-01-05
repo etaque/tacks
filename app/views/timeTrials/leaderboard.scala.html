@@ -43,6 +43,7 @@
           <thead>
             <tr>
               <th></th>
+              <th></th>
               <th>@Messages("leaderboard.total")</th>
               @for(trial <- trials) {
                 <th class="trial"><a href="@routes.TimeTrials.show(trial.idToStr)">@Messages("timeTrials." + trial.slug + ".name")</a></th>
@@ -52,9 +53,14 @@
           <tbody>
           @for((overallRank, playerId, overallPoints) <- overall) {
             <tr class="@if(playerId == req.player.id) { current-player }">
-              <td>
+              <td class="rank">
                 @{overallRank}.
-                @users.find(_.id == playerId).map(_.handle).getOrElse("?")
+              </td>
+              <td class="user">
+                @users.find(_.id == playerId).map { u =>
+                  @views.html.users.avatar(u)
+                  @u.handle
+                }
               </td>
               <td class="overall-points">@overallPoints</td>
               @for(trial <- trials) {
