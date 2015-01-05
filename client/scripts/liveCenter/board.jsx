@@ -5,7 +5,7 @@
 var React     = require('react');
 var _         = require('lodash');
 var BoardLine = require('./boardLine');
-var Messages  = require('./messages');
+var Messages  = require('../messages');
 
 var Board = React.createClass({
 

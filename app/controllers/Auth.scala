@@ -10,7 +10,7 @@ import tools.future.Implicits._
 
 object Auth extends Controller with Security {
 
-  def askLogin = Identified.async() { implicit request =>
+  def askLogin = PlayerAction.async() { implicit request =>
     val failure = request.flash.get("failure")
     Future.successful(Ok(views.html.auth.login(failure)))
   }

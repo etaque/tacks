@@ -3,6 +3,7 @@ package models
 import org.mindrot.jbcrypt.BCrypt
 import reactivemongo.bson._
 import play.api.libs.concurrent.Execution.Implicits._
+import reactivemongo.core.commands.LastError
 import scala.concurrent.Future
 import tools.future.Implicits._
 
@@ -29,7 +30,8 @@ case class User(
   _id: BSONObjectID = BSONObjectID.generate,
   email: String,
   handle: String,
-  status: Option[String]
+  status: Option[String],
+  avatarId: Option[BSONObjectID]
 ) extends Player with HasId { }
 
 case class CreateUser(email: String, password: String, handle: String)
@@ -48,8 +50,12 @@ object User extends MongoDAO[User] {
     collection.find(BSONDocument("email" -> email)).one[User]
   }
 
-  def findByHandle(email: String): Future[Option[User]] = {
-    collection.find(BSONDocument("handle" -> email)).one[User]
+  def findByHandleOpt(handle: String): Future[Option[User]] = {
+    collection.find(BSONDocument("handle" -> handle)).one[User]
+  }
+  
+  def findByHandle(handle: String): Future[User] = {
+    findByHandleOpt(handle).flattenOpt("user not found for handle: " + handle)
   }
 
   private def makePasswordHash(password: String): String = {
@@ -71,7 +77,13 @@ object User extends MongoDAO[User] {
   def updateStatus(id: BSONObjectID, statusOption: Option[String]): Future[_] = statusOption match {
     case Some(s) => update(id, BSONDocument("status" -> s))
     case None => unset(id, BSONDocument("status" -> true))
+  }
 
+  def updateAvatarId(id: BSONObjectID, avatarIdOption: Option[BSONObjectID]): Future[LastError] = {
+    avatarIdOption match {
+      case Some(avatarId) => update(id, BSONDocument("avatarId" -> avatarId))
+      case None => unset(id, BSONDocument("avatarId" -> true))
+    }
   }
 
   def ensureIndexes(): Unit = {

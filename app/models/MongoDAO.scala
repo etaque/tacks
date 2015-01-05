@@ -43,30 +43,30 @@ trait MongoDAO[T] {
 
   def remove(id: String): Future[_] = remove(BSONObjectID(id))
 
-  private def updateCommand(id: BSONObjectID, updateDoc: BSONDocument, command: String): Future[_] = {
+  private def updateCommand(id: BSONObjectID, updateDoc: BSONDocument, command: String): Future[LastError] = {
     collection.update(
       selector = BSONDocument("_id" -> id),
       update = BSONDocument(command -> updateDoc)
     )
   }
 
-  def update(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
+  def update(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
     updateCommand(id, updateDoc, "$set")
   }
 
-  def unset(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
+  def unset(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
     updateCommand(id, updateDoc, "$unset")
   }
 
-  def push(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
+  def push(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
     updateCommand(id, updateDoc, "$push")
   }
 
-  def pull(id: BSONObjectID, updateDoc: BSONDocument): Future[_] = {
+  def pull(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
     updateCommand(id, updateDoc, "$pull")
   }
 
-  def update(id: String, updateDoc: BSONDocument): Future[_] = update(BSONObjectID(id), updateDoc)
+  def update(id: String, updateDoc: BSONDocument): Future[LastError] = update(BSONObjectID(id), updateDoc)
 
   def findByIdOpt(id: BSONObjectID): Future[Option[T]] = {
     val query = BSONDocument("_id" -> id)

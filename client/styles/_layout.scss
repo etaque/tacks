@@ -45,13 +45,24 @@ nav {
     text-align: center;
     margin-bottom: 20px;
 
-    img {
+    .logo {
       height: 120px;
       width: auto;
     }
 
     a {
       color: $whiteBlue;
+    }
+  }
+
+  .nav-user {
+    img {
+      width: 19px;
+      height: 19px;
+      display: inline-block;
+      margin-right: 5px;
+      border-radius: 2px;
+      vertical-align: text-bottom;
     }
   }
 }

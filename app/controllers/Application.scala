@@ -16,8 +16,7 @@ import models._
 
 object Application extends Controller with Security {
 
-  def index = Identified.async() { implicit request =>
-    val jsMessages = jsmessages.api.JsMessages.default
+  def index = PlayerAction.async() { implicit request =>
     for {
       finishedRaces     <- Race.listFinished(10)
       users             <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
@@ -26,13 +25,13 @@ object Application extends Controller with Security {
       leaderboard       = TimeTrialLeaderboard.forTrials(trialsWithRanking)
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
-    yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, leaderboard, finishedRaces, users, Users.userForm, jsMessages))
+    yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
   }
 
   implicit val timeout = Timeout(5.seconds)
   import models.JsonFormats.raceUpdateFormat
 
-  def playTimeTrial(timeTrialId: String) = Identified.async() { implicit request =>
+  def playTimeTrial(timeTrialId: String) = PlayerAction.async() { implicit request =>
     TimeTrial.findById(timeTrialId).map { timeTrial =>
       val wsUrl = routes.Api.timeTrialSocket(timeTrial.idToStr).webSocketURL()
       val initialInput = Json.toJson(RaceUpdate.initial(request.player, timeTrial.course, timeTrial = true))
@@ -40,7 +39,7 @@ object Application extends Controller with Security {
     }
   }
 
-  def playRace(raceId: String) = Identified.async() { implicit request =>
+  def playRace(raceId: String) = PlayerAction.async() { implicit request =>
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
       case None => NotFound
       case Some(race) => {
@@ -51,7 +50,7 @@ object Application extends Controller with Security {
     }
   }
 
-  def watchRace(raceId: String) = Identified.async() { implicit request =>
+  def watchRace(raceId: String) = PlayerAction.async() { implicit request =>
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
       case None => NotFound
       case Some(race) => {
@@ -64,7 +63,7 @@ object Application extends Controller with Security {
 
   import models.JsonFormats.tutorialUpdateFormat
 
-  def tutorial = Identified.apply() { implicit request =>
+  def tutorial = PlayerAction.apply() { implicit request =>
     val wsUrl = routes.Api.tutorialSocket().webSocketURL()
     val messages = JsMessages.filtering(_.startsWith("tutorial")).messages
     val initialInput = Json.toJson(TutorialUpdate.initial(request.player, messages))

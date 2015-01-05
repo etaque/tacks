@@ -58,7 +58,7 @@ object JsonFormats {
 
   implicit val userReads: Reads[User] = Json.reads[User]
   implicit val userWrites: Writes[User] = Writes {
-    (u: User) => Json.obj("id" -> u.id, "handle" -> u.handle, "status" -> u.status)
+    (u: User) => Json.obj("id" -> u.id, "handle" -> u.handle, "status" -> u.status, "avatarId" -> u.avatarId)
   }
   implicit val userFormat: Format[User] = Format(userReads, userWrites)
 

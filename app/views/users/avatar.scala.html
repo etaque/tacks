@@ -1,0 +1,5 @@
+@(user: User, size: Int = 19)
+
+@defining(user.avatarId.map(id => routes.Users.showAvatar(id.stringify)).getOrElse(routes.Assets.at("images/default-avatar.png"))) { avatarUrl =>
+  <img src="@avatarUrl" width="@size" height="@size" class="avatar">
+}

@@ -12,7 +12,7 @@ object Blog extends Controller with Security with Prismic {
     case _ => routes.Blog.index().url
   }
 
-  def index = Identified.async() { implicit request =>
+  def index = PlayerAction.async() { implicit request =>
     for {
       api <- apiBuilder
       posts <- BlogPost.listAll()(api)
@@ -20,7 +20,7 @@ object Blog extends Controller with Security with Prismic {
     yield Ok(views.html.blog.index(posts, makeLinkResolver(api)))
   }
 
-  def show(id: String, slug: String) = Identified.async() { implicit request =>
+  def show(id: String, slug: String) = PlayerAction.async() { implicit request =>
     for {
       api <- apiBuilder
       postOption <- BlogPost.findByIdOpt(id)(api)

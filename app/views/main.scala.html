@@ -1,4 +1,8 @@
-@(content: Html)(implicit req: IdentifiedRequest[_], lang: Lang)
+@(content: Html)(implicit req: PlayerRequest[_], lang: Lang)
+
+@import play.api.Play
+@import play.api.Play.current
+@import play.api.libs.json.Json
 
 <!DOCTYPE html>
 
@@ -13,7 +17,7 @@
       <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" href="@routes.Application.index">
-            <img src="@routes.Assets.at("images/logo-tacks-3.png")" alt="">
+            <img src="@routes.Assets.at("images/logo-tacks-3.png")" class="logo" alt="">
           </a>
         </div>
         <ul class="nav navbar-nav nav-main">
@@ -25,6 +29,7 @@
         <ul class="nav navbar-nav navbar-right nav-user">
           @req.player match {
             case u: User => {
+              <li><a href="@routes.Users.show(u.handle)">@views.html.users.avatar(u) @Messages("menu.me")</a></li>
               <li><a href="@routes.Auth.logout">@Messages("menu.logout")</a></li>
             }
             case g: Guest => {
@@ -49,5 +54,20 @@
 
     @ga()
 
+    @helper.javascriptRouter("jsRoutes")(
+      routes.javascript.Api.racesStatus,
+      routes.javascript.Api.currentUser,
+      routes.javascript.Api.createRace
+    )
+
+    <script type="text/javascript">
+    @Html(jsmessages.api.JsMessages.default.apply(Some("window.jsMessages")).body)
+    </script>
+
+    @if(Play.isProd) {
+      <script src="@routes.Assets.at("javascripts/dist/main.js")" type="text/javascript"></script>
+    } else {
+      <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
+    }
   </body>
 </html>

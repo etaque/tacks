@@ -1,4 +1,4 @@
-@(wsUrl: String, initialInput: play.api.libs.json.JsValue)(implicit request: IdentifiedRequest[_], lang: Lang)
+@(wsUrl: String, initialInput: play.api.libs.json.JsValue)(implicit request: PlayerRequest[_], lang: Lang)
 
 @fullscreen(Messages("tutorial.metaTitle")) {
 

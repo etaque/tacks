@@ -2,7 +2,7 @@
   overall: core.TimeTrialLeaderboard.Leaderboard,
   users: Seq[User],
   date: org.joda.time.LocalDate
-)(implicit req: IdentifiedRequest[_], lang: Lang)
+)(implicit req: PlayerRequest[_], lang: Lang)
 
 @main {
   @defining(byTrial.map(_._1)) { trials =>
@@ -43,18 +43,26 @@
           <thead>
             <tr>
               <th></th>
+              <th></th>
               <th>@Messages("leaderboard.total")</th>
               @for(trial <- trials) {
-                <th class="trial"><a href="@routes.TimeTrials.show(trial.idToStr)">@Messages("timeTrials." + trial.slug + ".name")</a></th>
+                <th class="trial-name"><a href="@routes.TimeTrials.show(trial.idToStr)">@Messages("timeTrials." + trial.slug + ".name")</a></th>
               }
             </tr>
           </thead>
           <tbody>
           @for((overallRank, playerId, overallPoints) <- overall) {
             <tr class="@if(playerId == req.player.id) { current-player }">
-              <td>
+              <td class="rank">
                 @{overallRank}.
-                @users.find(_.id == playerId).map(_.handle).getOrElse("?")
+              </td>
+              <td class="user">
+                @users.find(_.id == playerId).map { u =>
+                  <a href="@routes.Users.show(u.handle)" class="user-avatar">
+                    @views.html.users.avatar(u)
+                    <span class="handle">@u.handle</span>
+                  </a>
+                }
               </td>
               <td class="overall-points">@overallPoints</td>
               @for(trial <- trials) {

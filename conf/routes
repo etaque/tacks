@@ -12,8 +12,12 @@ GET         /tutorial                               controllers.Application.tuto
 
 GET         /register                               controllers.Users.creation
 POST        /register                               controllers.Users.create
-GET         /users/:id                              controllers.Users.show(id: String)
+
 POST        /users/updateStatus                     controllers.Users.updateStatus
+GET         /me/edit                                controllers.Users.edit
+POST        /me/uploadAvatar                        controllers.Users.uploadAvatar
+POST        /me/removeAvatar                        controllers.Users.removeAvatar
+GET         /avatars/:id                            controllers.Users.showAvatar(id)
 
 GET         /login                                  controllers.Auth.askLogin
 POST        /login                                  controllers.Auth.submitLogin
@@ -33,6 +37,8 @@ GET         /ws/tutorialSocket                      controllers.Api.tutorialSock
 
 GET         /blog                                   controllers.Blog.index
 GET         /blog/:id/:slug                         controllers.Blog.show(id, slug)
+
+GET         /players/:handle                                controllers.Users.show(handle)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                           controllers.Assets.at(path="/public", file)

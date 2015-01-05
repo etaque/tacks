@@ -1,25 +1,55 @@
-@(user: User, races: Seq[Race], opponents: Seq[User])(implicit req: IdentifiedRequest[_], lang: Lang)
+@(user: User,
+  trials: Seq[(TimeTrial, Seq[RunRanking])],
+  trialsUsers: Seq[User],
+  trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard
+)(implicit req: PlayerRequest[_], lang: Lang)
 
 @main {
   <div class="show-user">
 
-    <div class="nav"><a href="@routes.Application.index">&larr; @Messages("backHome")</a></div>
-
-    <h1>@user.handle</h1>
-
-    @user.status.map { status =>
-      <div class="status">@status</div>
-    }
-
-    <div class="row">
-      <div class="finished-races col-md-offset-3 col-md-6">
-        <h2>@Messages("users.finishedRaces")</h2>
-        @for(race <- races) {
-          @views.html.races.finishedBoard(race, opponents, Some(user))
+    <div class="title-wrapper">
+      <div class="container">
+        @views.html.users.avatar(user, 160)
+        <h1>@user.handle</h1>
+        <p class="align-center">@Messages("profile.registeredSince", user.idTime.toString("dd MMMM yyyy"))</p>
+        @if(user.id == req.player.id) {
+          <p class="center"><a href="@routes.Users.edit()" class="btn btn-primary btn-sm">@Messages("profile.edit")</a></p>
         }
-        @if(races.isEmpty) {
-          <p>@Messages("users.noRaces")</p>
+      </div>
+    </div>
+
+
+    <div class="light-wrapper">
+      <div class="container">
+
+
+        <a name="trials"></a>
+        <h2>@Messages("profile.timeTrials")</h2>
+        <p class="subtitle">@org.joda.time.LocalDate.now.toString("MMMM yyyy")</p>
+
+        @for(row <- trials.grouped(3)) {
+          <div class="row">
+          @for((trial, rankings) <- row) {
+            <div class="col-lg-4">
+              <div class="user-time-trial">
+                <a href="@routes.TimeTrials.show(trial.id.stringify)" class="trial-name">
+                  @Messages("timeTrials." + trial.slug + ".name")
+                </a>
+
+                @if(rankings.nonEmpty) {
+                  @views.html.timeTrials.ranking(rankings, trialsUsers, user, windowMaybe = Some(5))
+                }
+
+                @if(req.player.id == user.id) {
+                  <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank"
+                    class="btn btn-warning btn-block btn-sm btn-run-trial">@Messages("timeTrials.run")</a>
+                }
+              </div>
+            </div>
+          }
+          </div>
         }
+
       </div>
     </div>
 

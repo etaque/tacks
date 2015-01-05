@@ -1,20 +1,26 @@
 package controllers
 
+import scala.concurrent.Future
 import actors.{Ping, ChatRoom}
 import models.{Guest, Player, User}
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import reactivemongo.bson.BSONObjectID
 
-import scala.concurrent.Future
-
-case class IdentifiedRequest[A](player: Player, request: Request[A]) extends WrappedRequest(request)
+case class PlayerRequest[A](player: Player, request: Request[A]) extends WrappedRequest(request)
 
 trait Security { this: Controller =>
 
-  def getPlayerId(implicit request: IdentifiedRequest[_]): BSONObjectID = request.player.id
+  def getPlayerId(implicit request: PlayerRequest[_]): BSONObjectID = request.player.id
 
-  object Identified {
+  def asUser[A](f: User => Future[Result])(implicit req: PlayerRequest[A]): Future[Result] = {
+    req.player match {
+      case u: User => f(u)
+      case _ => Future.successful(Redirect(routes.Auth.askLogin()))
+    }
+  }
+
+  object PlayerAction {
 
     def getPlayer(implicit request: RequestHeader): Future[Player] = {
       request.session.get("playerId") match {
@@ -28,19 +34,19 @@ trait Security { this: Controller =>
 
     def pingChatRoom(player: Player) = ChatRoom.actorRef ! Ping(player)
 
-    def apply[A](bp: BodyParser[A] = parse.anyContent)(f: IdentifiedRequest[A] => Result): Action[A] =
+    def apply[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Result): Action[A] =
       Action.async(bp) { implicit request =>
         getPlayer.map { player =>
           pingChatRoom(player)
-          f(IdentifiedRequest(player, request)).addingToSession("playerId" -> player.id.stringify)
+          f(PlayerRequest(player, request)).addingToSession("playerId" -> player.id.stringify)
         }
       }
 
-    def async[A](bp: BodyParser[A] = parse.anyContent)(f: IdentifiedRequest[A] => Future[Result]): Action[A] =
+    def async[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Future[Result]): Action[A] =
       Action.async(bp) { implicit request =>
         getPlayer.flatMap { player =>
           pingChatRoom(player)
-          f(IdentifiedRequest(player, request)).map(_.addingToSession("playerId" -> player.id.stringify))
+          f(PlayerRequest(player, request)).map(_.addingToSession("playerId" -> player.id.stringify))
         }
       }
   }

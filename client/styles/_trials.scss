@@ -6,7 +6,9 @@
   margin: 0;
   padding: 0;
   background-color: white;
-  box-shadow: 0 2px 2px $lightGray;
+  box-shadow: 0 1px 2px $lightGray;
+  border: 2px solid white;
+  border-radius: 4px;
 
   li {
     list-style: none;
@@ -14,7 +16,16 @@
     padding: 5px 10px;
 
     &:last-child {
-      border-bottom: none;
+      border-bottom-color: transparent;
+    }
+
+    .rank {
+      width: 20px;
+      display: inline-block;
+    }
+
+    .avatar {
+      border-radius: 2px;
     }
 
     .rank:after {
@@ -26,13 +37,27 @@
     }
 
     &.current-player {
-      color: $orange;
+      background-color: $smokeWhite;
+      color: $mainBlue;
+
+      .user-avatar .handle {
+        color: $mainBlue;
+      }
+    }
+
+    &.empty {
+      color: $gray;
+    }
+
+    &.out-of-window {
+      border-top: 1px solid $mainBlue;
+      padding-top: 4px;
     }
   }
 }
 
 
-.time-trial {
+.home-time-trial {
   $br: 3px;
   margin-bottom: 30px;
 
@@ -77,39 +102,6 @@
       font-family: $lightFontFamily;
     }
   }
-
-  ul {
-    padding: 10px;
-    margin: 0;
-    font-family: $mono;
-
-    li {
-      list-style: none;
-
-      .time {
-        float: right;
-      }
-
-      &.rank-10 {
-        margin-bottom: 5px;
-      }
-
-      &.current-player {
-        color: $orange;
-      }
-    }
-  }
-
-  .ranking {
-    display: block;
-    text-align: center;
-    margin: 10px;
-    margin-bottom: 0;
-    border-bottom: 2px solid $lightSeaBlue;
-    padding: 4px 0;
-    text-decoration: none;
-    color: $whiteBlue;
-  }
 }
 
 .show-time-trial {
@@ -149,7 +141,6 @@
       }
     }
   }
-
 }
 
 .previous-period {
@@ -166,17 +157,25 @@
   }
 
   th {
-    padding: 5px;
+    padding: 0px;
     text-align: center;
     border-bottom-width: 2px;
-    background-color: $orange;
+    background-color: $lighterSeaBlue;
     color: white;
     font-size: 13px;
 
     a {
+      display: block;
+      padding: 5px;
       color: white;
-      text-decoration: underline;
+      text-decoration: none;
       text-transform: uppercase;
+      font-family: $lightFontFamily;
+      letter-spacing: 1px;
+
+      &:hover {
+        background-color: $lightSeaBlue;
+      }
     }
   }
 
@@ -191,12 +190,28 @@
     }
   }
 
-  .current-player {
-    color: $orange;
+  .rank {
+    width: 10px;
+    padding-right: 0;
+  }
+
+  .user {
+    padding-left: 5px;
+    white-space: nowrap;
+  }
+
+  .current-player td {
+    background-color: $smokeWhite;
+    color: $mainBlue;
+
+    .user-avatar .handle {
+      color: $mainBlue;
+    }
   }
 
   .overall-points, .points {
-    width: 110px;
+    width: 115px;
     text-align: center;
   }
+
 }

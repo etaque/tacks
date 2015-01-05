@@ -5,7 +5,7 @@
 var React  = require('react');
 var _      = require('lodash');
 var moment = require('moment');
-var util   = require('./util');
+var util   = require('../util');
 
 var FinishedRacePlayer = React.createClass({
 

@@ -10,6 +10,7 @@ $container-large-desktop: (940px + $grid-gutter-width);
 @import 'theme';
 
 @import 'home';
-@import 'timeTrials';
 @import 'fullscreen';
+@import 'trials';
 @import 'blog';
+@import 'users';

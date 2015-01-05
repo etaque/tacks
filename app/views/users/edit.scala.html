@@ -1,0 +1,41 @@
+@(user: User)(implicit req: PlayerRequest[_], lang: Lang)
+
+@main {
+
+  <div class="title-wrapper">
+    <div class="container">
+      <h1>@Messages("me.edit")</h1>
+    </div>
+  </div>
+
+  <div class="light-wrapper">
+    <div class="container">
+
+      <div class="row">
+
+        <div class="col-lg-6 col-lg-offset-3 upload-avatar">
+          @*<label for="picture">@Messages("me.updateAvatar")</label>*@
+          <h3>@Messages("me.updateAvatar")</h3>
+
+          <div class="alert alert-success" style="display: none">@Messages("me.avatarUpdated")</div>
+
+          @views.html.users.avatar(user, 160)
+
+          <p>
+            <input type="file" name="picture" id="uploadPicture" accept="@Avatar.contentTypes.mkString(",")"
+            data-action="@routes.Users.uploadAvatar()" />
+          </p>
+
+          @user.avatarId.map { avatarId =>
+            <form action="@routes.Users.removeAvatar()" method="post" class="form-remove-avatar">
+              <input type="submit" value="@Messages("me.removeAvatar")" class="btn btn-default" />
+            </form>
+          }
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+
+}

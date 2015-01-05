@@ -1,11 +1,11 @@
-@(rankings: Seq[RunRanking], rankingUsers: Seq[User], player: Player)
+@(rankings: Seq[RunRanking], rankingUsers: Seq[User], player: Player, windowMaybe: Option[Int] = None)
 
 @import views.Helpers
+@import views.timeTrials.RankingExtract
 
-<ul class="time-trial-rankings">
-@for(ranking <- rankings) {
-  <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player }"
-    title="@ranking.creationTime.toString("EEEE d - HH:mm")">
+@rankingLine(ranking: RunRanking, outOfWindow: Boolean = false) = {
+  <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player } @if(outOfWindow) { out-of-window }"
+  title="@ranking.creationTime.toString("EEEE d - HH:mm")">
 
     <span class="rank">@ranking.rank</span>
 
@@ -14,7 +14,10 @@
         <span class="handle">@Messages("anonymous")</span>
       }
       case Some(user) => {
+        <a href="@routes.Users.show(user.handle)" class="user-avatar">
+          @views.html.users.avatar(user)
         <span class="handle">@user.handle</span>
+        </a>
       }
     }
 
@@ -28,4 +31,27 @@
 
   </li>
 }
+
+<ul class="time-trial-rankings">
+  @defining(RankingExtract.make(rankings, player, windowMaybe)) { extract =>
+
+    @for(ranking <- extract.inWindow) {
+      @rankingLine(ranking)
+    }
+
+    @extract.outOfWindow match {
+      case Some(rankingOutOfWindow) => {
+        @*<li class="empty">...</li>*@
+        @rankingLine(rankingOutOfWindow, outOfWindow = true)
+      }
+      case None => {
+        @for(length <- windowMaybe.filter(_ > extract.inWindow.length)) {
+          @for(_ <- 1.to(length - extract.inWindow.length)) {
+            <li class="empty">&nbsp;</li>
+          }
+        }
+      }
+    }
+
+  }
 </ul>

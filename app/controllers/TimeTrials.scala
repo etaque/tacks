@@ -7,7 +7,7 @@ import play.api.mvc.Controller
 
 object TimeTrials extends Controller with Security  {
 
-  def show(id: String) = Identified.async() { implicit request =>
+  def show(id: String) = PlayerAction.async() { implicit request =>
     for {
       trial <- TimeTrial.findById(id)
       rankings <- TimeTrialRun.rankings(trial.id)
@@ -19,7 +19,7 @@ object TimeTrials extends Controller with Security  {
 
   def currentLeaderboard = leaderboard(TimeTrial.currentPeriod)
 
-  def leaderboard(period: String) = Identified.async() { implicit request =>
+  def leaderboard(period: String) = PlayerAction.async() { implicit request =>
     val date = TimeTrial.parsePeriod(period)
     for {
       timeTrials <- TimeTrial.listForPeriod(period)
