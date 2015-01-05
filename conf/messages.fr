@@ -20,7 +20,7 @@ menu.blog=Blog
 menu.leaderboard=Classement
 menu.login=Connexion
 menu.register=Inscription
-menu.me=Compte
+menu.me=Profil
 menu.logout=Déconnexion
 
 home.title=Tactiquez depuis votre canapé
@@ -30,6 +30,7 @@ home.intro=Tacks est un jeu de <strong>simulation de régate</strong>.\
 home.doLog=connectez-vous
 home.welcome=Bienvenue, {0}
 home.ranked=Tu occupes la {0}<sup>e</sup> place au classement des contre-la-montre, avec {1} points.
+home.profile=Voir mon profil
 home.notRanked=Tu n''as pas encore couru de course contre-la-montre ce mois-ci.
 home.runWarmUp=Un petit parcours d''échauffement ?
 home.races=Courses temps réel
@@ -59,10 +60,12 @@ users.creation=Nouveau compte
 users.handle=Pseudonyme
 users.handle.hint=Au moins 3 caractères alphanumériques
 users.createButton=Créez votre compte
-users.finishedRaces=Courses terminées
-users.noRaces=Aucune course trouvée
 
-me.edit=Compte
+profile.registeredSince=Inscrit depuis le {0}
+profile.timeTrials=Courses contre la montre
+profile.edit=Modifier mon profil
+
+me.edit=Modification du profil
 me.updateAvatar=Modifier votre avatar
 me.avatarUpdated=Avatar modifié avec succès.
 me.removeAvatar=Supprimer l''image

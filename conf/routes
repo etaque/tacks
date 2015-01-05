@@ -15,8 +15,6 @@ POST        /users/updateStatus                     controllers.Users.updateStat
 GET         /me/edit                                controllers.Users.edit
 POST        /me/uploadAvatar                        controllers.Users.uploadAvatar
 POST        /me/removeAvatar                        controllers.Users.removeAvatar
-
-GET         /users/:id                              controllers.Users.show(id: String)
 GET         /avatars/:id                            controllers.Users.showAvatar(id)
 
 GET         /login                                  controllers.Auth.askLogin
@@ -36,6 +34,8 @@ GET         /ws/timeTrialSocket/:timeTrialId        controllers.Api.timeTrialSoc
 
 GET         /blog                                   controllers.Blog.index
 GET         /blog/:id/:slug                         controllers.Blog.show(id, slug)
+
+GET         /players/:handle                                controllers.Users.show(handle)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                           controllers.Assets.at(path="/public", file)

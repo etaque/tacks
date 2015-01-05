@@ -5089,6 +5089,16 @@ input[type="text"], input[type="password"], textarea {
 .uppercase {
   text-transform: uppercase; }
 
+.user-avatar {
+  display: inline-block;
+  text-decoration: none;
+  color: #7b8087; }
+  .user-avatar:hover {
+    text-decoration: none;
+    color: #51585E; }
+    .user-avatar:hover .handle {
+      text-decoration: underline; }
+
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url('/assets/fonts/Proxima Nova Regular.otf'); }
@@ -5238,26 +5248,38 @@ input[type="text"], input[type="password"], textarea {
   margin: 0;
   padding: 0;
   background-color: white;
-  box-shadow: 0 2px 2px #E6E6E6; }
+  box-shadow: 0 1px 2px #E6E6E6;
+  border: 2px solid white;
+  border-radius: 4px; }
   .time-trial-rankings li {
     list-style: none;
     border-bottom: 1px solid #f8f9fb;
     padding: 5px 10px; }
     .time-trial-rankings li:last-child {
-      border-bottom: none; }
+      border-bottom-color: transparent; }
     .time-trial-rankings li .rank {
       width: 20px;
       display: inline-block; }
+    .time-trial-rankings li .avatar {
+      border-radius: 2px; }
     .time-trial-rankings li .rank:after {
       content: "."; }
     .time-trial-rankings li .time {
       float: right; }
     .time-trial-rankings li.current-player {
-      color: #E0A349; }
+      background-color: #f8f9fb;
+      color: #5899E2; }
+      .time-trial-rankings li.current-player .user-avatar .handle {
+        color: #5899E2; }
+    .time-trial-rankings li.empty {
+      color: #7b8087; }
+    .time-trial-rankings li.out-of-window {
+      border-top: 1px solid #5899E2;
+      padding-top: 4px; }
 
-.time-trial {
+.home-time-trial {
   margin-bottom: 30px; }
-  .time-trial a.run, .time-trial a.run:visited {
+  .home-time-trial a.run, .home-time-trial a.run:visited {
     display: block;
     height: 200px;
     margin-bottom: 10px;
@@ -5269,17 +5291,17 @@ input[type="text"], input[type="password"], textarea {
     text-decoration: none;
     position: relative;
     text-align: center; }
-    .time-trial a.run:hover, .time-trial a.run:visited:hover {
+    .home-time-trial a.run:hover, .home-time-trial a.run:visited:hover {
       border-color: #345488; }
-      .time-trial a.run:hover .name, .time-trial a.run:visited:hover .name {
+      .home-time-trial a.run:hover .name, .home-time-trial a.run:visited:hover .name {
         background-color: #345488; }
-    .time-trial a.run .name, .time-trial a.run:visited .name {
+    .home-time-trial a.run .name, .home-time-trial a.run:visited .name {
       display: block;
       padding: 10px;
       background-color: #2b4772;
       text-transform: uppercase;
       box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); }
-    .time-trial a.run .description, .time-trial a.run:visited .description {
+    .home-time-trial a.run .description, .home-time-trial a.run:visited .description {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -5290,27 +5312,6 @@ input[type="text"], input[type="password"], textarea {
       text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
       font-size: 14px;
       font-family: "Proxima Nova Thin"; }
-  .time-trial ul {
-    padding: 10px;
-    margin: 0;
-    font-family: "Inconsolata"; }
-    .time-trial ul li {
-      list-style: none; }
-      .time-trial ul li .time {
-        float: right; }
-      .time-trial ul li.rank-10 {
-        margin-bottom: 5px; }
-      .time-trial ul li.current-player {
-        color: #E0A349; }
-  .time-trial .ranking {
-    display: block;
-    text-align: center;
-    margin: 10px;
-    margin-bottom: 0;
-    border-bottom: 2px solid #2b4772;
-    padding: 4px 0;
-    text-decoration: none;
-    color: #B1C0D8; }
 
 .show-time-trial h3 {
   margin-top: 0; }
@@ -5344,16 +5345,22 @@ input[type="text"], input[type="password"], textarea {
   .table-leaderboard tbody {
     font-family: "Inconsolata"; }
   .table-leaderboard th {
-    padding: 5px;
+    padding: 0px;
     text-align: center;
     border-bottom-width: 2px;
-    background-color: #E0A349;
+    background-color: #345488;
     color: white;
     font-size: 13px; }
     .table-leaderboard th a {
+      display: block;
+      padding: 5px;
       color: white;
-      text-decoration: underline;
-      text-transform: uppercase; }
+      text-decoration: none;
+      text-transform: uppercase;
+      font-family: "Proxima Nova Thin";
+      letter-spacing: 1px; }
+      .table-leaderboard th a:hover {
+        background-color: #2b4772; }
   .table-leaderboard td {
     padding: 5px 10px;
     border-bottom: 1px solid #f8f9fb; }
@@ -5363,11 +5370,15 @@ input[type="text"], input[type="password"], textarea {
     width: 10px;
     padding-right: 0; }
   .table-leaderboard .user {
-    padding-left: 5px; }
-  .table-leaderboard .current-player {
-    color: #E0A349; }
+    padding-left: 5px;
+    white-space: nowrap; }
+  .table-leaderboard .current-player td {
+    background-color: #f8f9fb;
+    color: #5899E2; }
+    .table-leaderboard .current-player td .user-avatar .handle {
+      color: #5899E2; }
   .table-leaderboard .overall-points, .table-leaderboard .points {
-    width: 110px;
+    width: 115px;
     text-align: center; }
 
 .play-race {
@@ -5377,6 +5388,22 @@ input[type="text"], input[type="password"], textarea {
 
 .post-body {
   font-weight: normal; }
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url('/assets/fonts/Proxima Nova Regular.otf'); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url('/assets/fonts/Museo Slab.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url('/assets/fonts/Proxima Nova Alt Thin.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
 .upload-avatar {
   text-align: center; }
@@ -5392,3 +5419,30 @@ input[type="text"], input[type="password"], textarea {
     margin-top: 15px; }
   .upload-avatar .form-remove-avatar {
     margin-top: 50px; }
+
+.show-user .title-wrapper .avatar {
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 2px #1f3251; }
+.show-user .user-time-trial {
+  margin-top: 20px;
+  margin-bottom: 30px; }
+  .show-user .user-time-trial .trial-name {
+    display: block;
+    padding: 5px 10px;
+    font-family: "Proxima Nova Thin";
+    font-size: 16px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    background-color: #345488;
+    border-radius: 4px 4px 0 0;
+    box-shadow: 0 1px 2px #E6E6E6;
+    letter-spacing: 1px;
+    color: white; }
+    .show-user .user-time-trial .trial-name:hover {
+      background-color: #2b4772; }
+  .show-user .user-time-trial .time-trial-rankings {
+    border-radius: 0 0 4px 4px; }
+  .show-user .user-time-trial .btn-run-trial {
+    margin-top: 8px; }

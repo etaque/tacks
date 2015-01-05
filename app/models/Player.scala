@@ -50,8 +50,12 @@ object User extends MongoDAO[User] {
     collection.find(BSONDocument("email" -> email)).one[User]
   }
 
-  def findByHandle(email: String): Future[Option[User]] = {
-    collection.find(BSONDocument("handle" -> email)).one[User]
+  def findByHandleOpt(handle: String): Future[Option[User]] = {
+    collection.find(BSONDocument("handle" -> handle)).one[User]
+  }
+  
+  def findByHandle(handle: String): Future[User] = {
+    findByHandleOpt(handle).flattenOpt("user not found for handle: " + handle)
   }
 
   private def makePasswordHash(password: String): String = {

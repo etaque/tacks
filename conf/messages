@@ -31,6 +31,7 @@ menu.blog=Blog
 menu.leaderboard=Leaderboard
 menu.login=Login
 menu.register=Sign up
+menu.me=Profile
 menu.logout=Logout
 
 home.title=Sailing tactics from the sofa
@@ -41,6 +42,7 @@ home.intro=Tacks is a <strong>regatta simulation</strong> game.\
 home.doLog=sign in
 home.welcome=Welcome, {0}
 home.ranked=Your rank is {0} on time trials leaderboard, with {1} points.
+home.profile=Go to profile
 home.notRanked=You didn''t run any time trials this month.
 home.runWarmUp=Let''s do a little warm up?
 home.races=Realtime races
@@ -69,8 +71,15 @@ users.creation=New account
 users.handle=Handle
 users.handle.hint=Only letters and numbers
 users.createButton=Create account
-users.finishedRaces=Finished races
-users.noRaces=No races found
+
+profile.registeredSince=Registered since {0}
+profile.timeTrials=Time trial races
+profile.edit=Edit profile
+
+me.edit=Edit profile
+me.updateAvatar=Your picture
+me.avatarUpdated=Picture successfully updated
+me.removeAvatar=Delete picture
 
 liveCenter.emptyBoard=No race currently open
 liveCenter.creationTime=Creation

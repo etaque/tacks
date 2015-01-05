@@ -20,6 +20,7 @@
           @trialLeaderboard.find(_._2 == u.id) match {
             case Some((r, _, p)) => {
               <p class="align-center">@Html(Messages("home.ranked", r, p))</p>
+              <a href="@routes.Users.show(u.handle)" class="btn btn-primary">@Messages("home.profile")</a>
             }
             case None => {
               <p class="align-center">@Messages("home.notRanked")</p>
@@ -61,7 +62,6 @@
           </div>
 
           <p class="align-center">@Messages("or") <a href="@routes.Auth.askLogin()">@Messages("home.doLog")</a></p>
-
 
         }
       }
@@ -117,7 +117,7 @@
         <div class="row">
           @for((trial, rankings) <- row) {
             <div class="col-lg-4">
-              <div class="time-trial">
+              <div class="home-time-trial">
                 <a href="@routes.TimeTrials.show(trial.id.stringify)" class="run"
                 style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
                   <span class="name">@Messages("timeTrials." + trial.slug + ".name")</span>
@@ -126,10 +126,6 @@
                   </div>
                 </a>
                 <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
-
-                @if(rankings.nonEmpty) {
-                  @views.html.timeTrials.ranking(rankings.filter(r => r.rank <= 5 || r.playerId == player.id), trialsUsers, player)
-                }
               </div>
             </div>
           }

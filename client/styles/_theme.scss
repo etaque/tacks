@@ -227,14 +227,7 @@ a {
 
 input[type="text"], input[type="password"], textarea {
   border-radius: 0;
-//  font-family: $fontFamily;
-//  font-size: 15px;
 }
-
-.input-group-sm > .form-control {
-
-}
-
 
 .has-error {
 
@@ -253,4 +246,19 @@ input[type="text"], input[type="password"], textarea {
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.user-avatar {
+  display: inline-block;
+  text-decoration: none;
+  color: $gray;
+
+  &:hover {
+    text-decoration: none;
+    color: $darkGray;
+
+    .handle {
+      text-decoration: underline;
+    }
+  }
 }

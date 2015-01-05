@@ -12,7 +12,7 @@ var OnlinePlayer = React.createClass({
     return (
       <li>
         <img src={ avatarUrl }/>
-        <span className="handle">{p.handle}</span>
+        <a href={"/players/" + p.handle} className="handle">{p.handle}</a>
         <span className="status">{p.status}</span>
       </li>
     );

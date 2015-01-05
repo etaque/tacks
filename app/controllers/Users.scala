@@ -1,6 +1,7 @@
 package controllers
 
 import com.sksamuel.scrimage.Image
+import core.TimeTrialLeaderboard
 import play.api.cache.Cache
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json.Json
@@ -14,7 +15,7 @@ import play.api.data._
 import play.api.data.Forms._
 import play.api.mvc._
 import play.api.libs.concurrent.Execution.Implicits._
-import models.{Avatar, CreateUser, Race, User}
+import models._
 
 object Users extends Controller with Security with MongoController {
 
@@ -25,7 +26,7 @@ object Users extends Controller with Security with MongoController {
       "password" -> text(minLength = 6),
       "handle" -> text(minLength = 3)
         .verifying("error.handleFormat", handle => handle.isEmpty || handle.matches("""\A[a-zA-Z0-9_-]*\Z"""))
-        .verifying("error.handleTaken", handle => Await.result(User.findByHandle(handle), 5.seconds).isEmpty)
+        .verifying("error.handleTaken", handle => Await.result(User.findByHandleOpt(handle), 5.seconds).isEmpty)
     )(CreateUser.apply)(CreateUser.unapply)
   )
 
@@ -45,13 +46,15 @@ object Users extends Controller with Security with MongoController {
     )
   }
 
-  def show(id: String) = PlayerAction.async() { implicit request =>
+  def show(handle: String) = PlayerAction.async() { implicit request =>
     for {
-      user <- User.findById(id)
-      races <- Race.listByUserId(user.id)
-      opponents <- User.listByIds(races.flatMap(_.tally.map(_.playerId)))
+      user <- User.findByHandle(handle)
+      timeTrials <- TimeTrial.listCurrent
+      trialsWithRanking <- TimeTrial.zipWithRankings(timeTrials)
+      leaderboard = TimeTrialLeaderboard.forTrials(trialsWithRanking)
+      trialsUsers <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
-    yield Ok(views.html.users.show(user, races, opponents))
+    yield Ok(views.html.users.show(user, trialsWithRanking, trialsUsers, leaderboard))
   }
 
   def edit = PlayerAction.async() { implicit request =>

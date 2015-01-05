@@ -29,7 +29,7 @@
         <ul class="nav navbar-nav navbar-right nav-user">
           @req.player match {
             case u: User => {
-              <li><a href="@routes.Users.edit">@views.html.users.avatar(u) @Messages("menu.me")</a></li>
+              <li><a href="@routes.Users.show(u.handle)">@views.html.users.avatar(u) @Messages("menu.me")</a></li>
               <li><a href="@routes.Auth.logout">@Messages("menu.logout")</a></li>
             }
             case g: Guest => {
