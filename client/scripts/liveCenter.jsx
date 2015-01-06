@@ -17,9 +17,10 @@ var LiveCenter = React.createClass({
 
   getInitialState: function() {
     return {
-      racesStatus: [],
+      racesStatus: {},
       loadingNewRace: false,
-      showWebSocketAlert: !window.WebSocket
+      showWebSocketAlert: !window.WebSocket,
+      generator: null
     };
   },
 
@@ -34,6 +35,7 @@ var LiveCenter = React.createClass({
   },
 
   loadStatus: function() {
+    var currentGenerator = this.state.generator;
     $.ajax(Api.racesStatus()).done(function(racesStatus) {
       var waiting = _.filter(racesStatus.openRaces, function(rs) { return !rs.race.startTime }).length;
       if (waiting > 0) {
@@ -41,7 +43,8 @@ var LiveCenter = React.createClass({
       } else {
         document.title = "Play Tacks"
       }
-      this.setState({ racesStatus: racesStatus, loadingNewRace: false });
+      var generator = currentGenerator || racesStatus.generators[0];
+      this.setState({ racesStatus: racesStatus, loadingNewRace: false, generator: generator });
     }.bind(this));
   },
 
@@ -49,13 +52,26 @@ var LiveCenter = React.createClass({
     e.preventDefault();
     if (this.state.loadingNewRace) return;
 
-    this.setState({ loadingNewRace: true}, function() {
-      util.post(Api.createRace()).done(function(race) {
+    this.setState({ loadingNewRace: true}, function(newState) {
+      util.post(Api.createRace(this.state.generator)).done(function(race) {
         setTimeout(function() {
           this.setState({ loadingNewRace: false});
         }.bind(this), 1000);
       }.bind(this));
     }.bind(this));
+  },
+
+  setGenerator: function(e) {
+    e.preventDefault();
+    this.setState({
+      generator: $(e.target).val()
+    });
+  },
+
+  generatorOptions: function(generators) {
+    return _.map(generators, function(c) {
+      return <option value={ c } key={c}>{ Messages("generators." + c + ".name") }</option>;
+    });
   },
 
   onlineUsers: function(players) {
@@ -85,19 +101,29 @@ var LiveCenter = React.createClass({
 
   render: function() {
     var st = this.state.racesStatus;
+    var btnClassName = "btn btn-primary btn-block btn-new-race " + (this.state.loadingNewRace ? "loading" : "");
     return (
       <div className="live-center">
         {this.webSocketAlert(this.state.showWebSocketAlert)}
 
         <div className="row">
-          <div className="col-lg-8">
+          <div className="col-lg-9">
             <h3>{Messages("home.openRaces")}</h3>
             <Board status={st} />
-            <a href="" onClick={this.createRace} className={"btn btn-primary btn-block btn-new-race " + (this.state.loadingNewRace ? "loading" : "")}>
-            {Messages("home.newRace")}
-            </a>
+            <div className="row row-new-race">
+              <div className="col-lg-4">
+                <select className="form-control" onChange={ this.setGenerator } value={ this.state.generator }>
+                  { this.generatorOptions(st.generators) }
+                </select>
+              </div>
+              <div className="col-lg-8">
+                <a href="" onClick={ this.createRace } className={ btnClassName }>
+                  { Messages("home.newRace") }
+                </a>
+              </div>
+            </div>
           </div>
-          <div className="col-lg-4">
+          <div className="col-lg-3">
             <h3>{Messages("home.onlinePlayers")}</h3>
             <ul className="online-users list-unstyled">{this.onlineUsers(st.onlinePlayers)}</ul>
             <div className="online-guests">{this.onlineGuests(st.onlinePlayers)}</div>
@@ -108,7 +134,5 @@ var LiveCenter = React.createClass({
   }
 
 });
-
-//React.render(<LiveCenter/>, document.getElementById("liveCenter"));
 
 module.exports = LiveCenter;

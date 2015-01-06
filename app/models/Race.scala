@@ -17,6 +17,7 @@ case class Race (
   _id: BSONObjectID = BSONObjectID.generate,
   playerId: BSONObjectID,
   course: Course,
+  generator: String,
   countdownSeconds: Int,
   creationTime: DateTime = DateTime.now,
   startTime: Option[DateTime] = None,

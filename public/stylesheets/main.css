@@ -5090,13 +5090,18 @@ input[type="text"], input[type="password"], textarea {
   text-transform: uppercase; }
 
 .user-avatar {
+  font-family: "Inconsolata";
   display: inline-block;
   text-decoration: none;
   color: #7b8087; }
-  .user-avatar:hover {
+  .user-avatar .avatar {
+    border-radius: 2px;
+    display: inline-block;
+    margin-right: 6px; }
+  .user-avatara:hover {
     text-decoration: none;
     color: #51585E; }
-    .user-avatar:hover .handle {
+    .user-avatara:hover .handle {
       text-decoration: underline; }
 
 @font-face {
@@ -5130,16 +5135,32 @@ input[type="text"], input[type="password"], textarea {
   background-color: white;
   box-shadow: 0 2px 2px #E6E6E6; }
   .live-center .table-open-races th {
-    padding: 5px 10px;
+    padding: 4px 12px;
     border-bottom-width: 2px;
     background-color: #345488;
     color: #B1C0D8;
     font-size: 13px; }
+    .live-center .table-open-races th.generator {
+      text-align: center; }
   .live-center .table-open-races td {
-    padding: 10px;
-    border-bottom: 1px solid #f8f9fb; }
-    .live-center .table-open-races td:not(:last-child) {
+    padding: 8px 12px;
+    border-bottom: 1px solid #B1C0D8;
+    background-color: white; }
+    .live-center .table-open-races td.generator {
+      background-color: #5899E2;
+      text-align: center;
+      font-family: "Proxima Nova Thin";
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: white;
+      border-color: #3b73b3; }
+    .live-center .table-open-races td.countdown {
       font-family: "Inconsolata"; }
+    .live-center .table-open-races td.players .user-avatar {
+      display: block;
+      margin-bottom: 2px; }
+      .live-center .table-open-races td.players .user-avatar:last-child {
+        margin-bottom: 0; }
   .live-center .table-open-races tr:last-child td {
     border-bottom: none; }
 .live-center .empty-board {
@@ -5147,10 +5168,10 @@ input[type="text"], input[type="password"], textarea {
   box-shadow: 0 2px 2px #E6E6E6;
   padding: 10px 15px;
   color: #7b8087; }
-.live-center .btn-new-race {
+.live-center .row-new-race {
   margin-top: 20px; }
-  .live-center .btn-new-race.loading {
-    opacity: 0.5; }
+.live-center .btn-new-race.loading {
+  opacity: 0.5; }
 .live-center .online-users {
   background-color: white;
   box-shadow: 0 2px 2px #E6E6E6;
@@ -5164,18 +5185,6 @@ input[type="text"], input[type="password"], textarea {
     text-decoration: none; }
     .live-center .online-users li:last-child {
       border-bottom: none; }
-    .live-center .online-users li img {
-      width: 19px;
-      height: 19px;
-      border-radius: 2px;
-      display: inline-block;
-      margin-right: 6px; }
-    .live-center .online-users li a {
-      font-family: "Inconsolata";
-      color: #7b8087;
-      text-decoration: none; }
-      .live-center .online-users li a:hover {
-        text-decoration: underline; }
     .live-center .online-users li .status {
       display: block;
       color: #51585E;
@@ -5186,50 +5195,43 @@ input[type="text"], input[type="password"], textarea {
   font-size: 14px;
   color: #7b8087; }
 
-.home-trials .leaderboard {
-  margin: 0;
-  padding: 0;
-  font-family: "Inconsolata";
-  background-color: #23395C;
-  box-shadow: 0 2px 2px #1f3251;
-  background-color: #2b4772;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #23395C, #2b4772);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #23395C, #2b4772);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #23395C, #2b4772);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, #23395C, #2b4772);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772'); }
-  .home-trials .leaderboard li {
-    list-style: none;
-    border-bottom: 1px solid #1f3251;
-    padding: 5px 10px; }
-    .home-trials .leaderboard li:last-child {
-      border-bottom: none; }
-    .home-trials .leaderboard li .rank:after {
-      content: "."; }
-    .home-trials .leaderboard li.current-player {
-      color: #E0A349; }
-    .home-trials .leaderboard li .points {
-      float: right; }
-.home-trials .time-trial {
-  margin-top: 20px; }
-.home-trials .time-trial-rankings {
-  background-color: transparent;
-  box-shadow: none;
-  margin-top: 8px;
-  padding: 0; }
-  .home-trials .time-trial-rankings li {
-    padding: 0px 10px;
-    border-bottom: none; }
-.home-trials .btn-full-leaderboard {
-  margin-top: 15px; }
+.home-time-trial {
+  margin-top: 30px; }
+  .home-time-trial a.run, .home-time-trial a.run:visited {
+    display: block;
+    height: 200px;
+    margin-bottom: 10px;
+    background-color: #23395C;
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: 3px;
+    border: 3px solid #2b4772;
+    text-decoration: none;
+    position: relative;
+    text-align: center; }
+    .home-time-trial a.run:hover, .home-time-trial a.run:visited:hover {
+      border-color: #345488; }
+      .home-time-trial a.run:hover .name, .home-time-trial a.run:visited:hover .name {
+        background-color: #345488; }
+    .home-time-trial a.run .name, .home-time-trial a.run:visited .name {
+      display: block;
+      padding: 10px;
+      background-color: #2b4772;
+      text-transform: uppercase;
+      font-family: "Proxima Nova Thin";
+      letter-spacing: 1px;
+      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); }
+    .home-time-trial a.run .description, .home-time-trial a.run:visited .description {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      color: #B1C0D8;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+      font-family: "Proxima Nova Thin"; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -5264,8 +5266,6 @@ input[type="text"], input[type="password"], textarea {
     .time-trial-rankings li .rank {
       width: 20px;
       display: inline-block; }
-    .time-trial-rankings li .avatar {
-      border-radius: 2px; }
     .time-trial-rankings li .rank:after {
       content: "."; }
     .time-trial-rankings li .time {
@@ -5280,42 +5280,6 @@ input[type="text"], input[type="password"], textarea {
     .time-trial-rankings li.out-of-window {
       border-top: 1px solid #5899E2;
       padding-top: 4px; }
-
-.home-time-trial {
-  margin-bottom: 30px; }
-  .home-time-trial a.run, .home-time-trial a.run:visited {
-    display: block;
-    height: 200px;
-    margin-bottom: 10px;
-    background-color: #23395C;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: 3px;
-    border: 3px solid #2b4772;
-    text-decoration: none;
-    position: relative;
-    text-align: center; }
-    .home-time-trial a.run:hover, .home-time-trial a.run:visited:hover {
-      border-color: #345488; }
-      .home-time-trial a.run:hover .name, .home-time-trial a.run:visited:hover .name {
-        background-color: #345488; }
-    .home-time-trial a.run .name, .home-time-trial a.run:visited .name {
-      display: block;
-      padding: 10px;
-      background-color: #2b4772;
-      text-transform: uppercase;
-      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); }
-    .home-time-trial a.run .description, .home-time-trial a.run:visited .description {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.2);
-      color: #B1C0D8;
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-      font-family: "Proxima Nova Thin"; }
 
 .show-time-trial h3 {
   margin-top: 0; }

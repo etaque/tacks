@@ -75,7 +75,7 @@
       <h2>@Messages("home.races")</h2>
 
       <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
+        <div class="col-lg-12 col-lg-offset-0">
 
           @player match {
 
@@ -120,9 +120,9 @@
               <div class="home-time-trial">
                 <a href="@routes.TimeTrials.show(trial.id.stringify)" class="run"
                 style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
-                  <span class="name">@Messages("timeTrials." + trial.slug + ".name")</span>
+                  <span class="name">@Messages("generators." + trial.slug + ".name")</span>
                   <div class="description">
-                    @Messages("timeTrials." + trial.slug + ".description")
+                    @Messages("generators." + trial.slug + ".description")
                   </div>
                 </a>
                 <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>

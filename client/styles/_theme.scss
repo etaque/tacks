@@ -249,11 +249,21 @@ input[type="text"], input[type="password"], textarea {
 }
 
 .user-avatar {
+  font-family: $mono;
   display: inline-block;
   text-decoration: none;
   color: $gray;
 
-  &:hover {
+  .avatar {
+    border-radius: 2px;
+    display: inline-block;
+    margin-right: 6px;
+  }
+
+  .handle {
+  }
+
+  &a:hover {
     text-decoration: none;
     color: $darkGray;
 

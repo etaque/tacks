@@ -209,6 +209,8 @@ object CourseGenerator {
 
   val all = Seq(WarmUp, Classic, Inlands, Archipel, OysterPark, Minefield)
 
+  def findBySlug(slug: String): Option[CourseGenerator] = all.find(_.slug == slug)
+
   def ensureTimeTrials() = {
     val period = TimeTrial.currentPeriod
     all.foreach { t =>

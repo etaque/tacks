@@ -23,8 +23,8 @@ function timer(millis) {
   var c = Math.ceil(millis / 1000);
   var m = Math.floor(c / 60);
   var s = c % 60;
-  if (m == 0) return "" + s + "\"";
-  else return "" + m + "' " + s + "\"";
+  if (m == 0) return s;
+  else return "" + m + ":" + s;
 }
 
 module.exports = {

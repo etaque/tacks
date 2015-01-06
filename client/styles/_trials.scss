@@ -24,10 +24,6 @@
       display: inline-block;
     }
 
-    .avatar {
-      border-radius: 2px;
-    }
-
     .rank:after {
       content: ".";
     }
@@ -52,54 +48,6 @@
     &.out-of-window {
       border-top: 1px solid $mainBlue;
       padding-top: 4px;
-    }
-  }
-}
-
-
-.home-time-trial {
-  $br: 3px;
-  margin-bottom: 30px;
-
-  a.run, a.run:visited {
-    display: block;
-    height: 200px;
-    margin-bottom: 10px;
-    background-color: $seaBlue;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: $br;
-    border: 3px solid $lightSeaBlue;
-    text-decoration: none;
-    position: relative;
-    text-align: center;
-
-    &:hover {
-      border-color: $lighterSeaBlue;
-      .name {
-        background-color: $lighterSeaBlue;
-      }
-    }
-
-    .name {
-      display: block;
-      padding: 10px;
-      background-color: $lightSeaBlue;
-      text-transform: uppercase;
-      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
-    }
-
-    .description {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.2);
-      color: $whiteBlue;
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-      font-family: $lightFontFamily;
     }
   }
 }

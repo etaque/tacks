@@ -21,9 +21,10 @@ var Board = React.createClass({
         <table className="table-open-races">
           <thead>
             <tr>
-              <th>{Messages('liveCenter.creationTime')}</th>
+              <th className="generator">{Messages('liveCenter.generator')}</th>
+              <th>{Messages('liveCenter.master')}</th>
               <th>{Messages('liveCenter.opponents')}</th>
-              <th>{Messages('liveCenter.start')}</th>
+              <th>{Messages('liveCenter.countdown')}</th>
               <th></th>
             </tr>
           </thead>
