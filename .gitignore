@@ -1,6 +1,7 @@
 game/build/
 game/cache/
 game/elm_dependencies/
+game/elm-stuff/
 public/javascripts/liveCenter.js
 logs
 project/project
