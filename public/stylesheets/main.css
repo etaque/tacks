@@ -5169,14 +5169,18 @@ input[type="text"], input[type="password"], textarea {
       height: 19px;
       border-radius: 2px;
       display: inline-block;
-      margin-right: 8px; }
-    .live-center .online-users li .handle {
-      font-family: "Inconsolata"; }
+      margin-right: 6px; }
+    .live-center .online-users li a {
+      font-family: "Inconsolata";
+      color: #7b8087;
+      text-decoration: none; }
+      .live-center .online-users li a:hover {
+        text-decoration: underline; }
     .live-center .online-users li .status {
       display: block;
-      color: #B1C0D8;
+      color: #51585E;
       font-size: 12px;
-      margin-top: 2px; }
+      margin-top: 4px; }
 .live-center .online-guests {
   padding: 8px;
   font-size: 14px;
