@@ -4896,21 +4896,7 @@ a {
 .navbar {
   margin-bottom: 0;
   height: 80px;
-  background-color: white;
-  background-color: white;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f9fb), to(white));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #f8f9fb, white);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #f8f9fb, white);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #f8f9fb, white);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #f8f9fb, white);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, #f8f9fb, white);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f8f9fb', EndColorStr='white');
+  background-color: #397fce;
   border: none;
   border-radius: 0; }
   .navbar .navbar-brand {
@@ -4923,11 +4909,13 @@ a {
     padding: 0 20px;
     font-size: 14px;
     text-transform: uppercase;
-    color: #7b8087;
-    text-decoration: none; }
+    color: white;
+    text-decoration: none;
+    font-family: "Proxima Nova Thin";
+    letter-spacing: 1px;
+    transition: all 0.1s ease-in; }
     .navbar .navbar-nav > li > a:hover {
-      background-color: whitesmoke;
-      color: #2b4772; }
+      background-color: #5899E2; }
 
 .title-wrapper {
   background-color: #23395C;
@@ -5035,7 +5023,8 @@ a {
   background-color: white;
   border: none;
   border-bottom: 3px solid #f5f5f5;
-  padding: 7px 12px 5px 12px; }
+  padding: 7px 12px 5px 12px;
+  transition: all 0.1s ease-in; }
   .btn:hover {
     text-decoration: none; }
 
@@ -5316,7 +5305,7 @@ input[type="text"], input[type="password"], textarea {
     padding: 0px;
     text-align: center;
     border-bottom-width: 2px;
-    background-color: #345488;
+    background-color: #397fce;
     color: white;
     font-size: 13px; }
     .table-leaderboard th a {
@@ -5326,9 +5315,10 @@ input[type="text"], input[type="password"], textarea {
       text-decoration: none;
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
-      letter-spacing: 1px; }
+      letter-spacing: 1px;
+      transition: all 0.1s ease-in; }
       .table-leaderboard th a:hover {
-        background-color: #2b4772; }
+        background-color: #5899E2; }
   .table-leaderboard td {
     padding: 5px 10px;
     border-bottom: 1px solid #f8f9fb; }

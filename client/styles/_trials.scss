@@ -108,7 +108,7 @@
     padding: 0px;
     text-align: center;
     border-bottom-width: 2px;
-    background-color: $lighterSeaBlue;
+    background-color: $navBlue;
     color: white;
     font-size: 13px;
 
@@ -120,9 +120,10 @@
       text-transform: uppercase;
       font-family: $lightFontFamily;
       letter-spacing: 1px;
+      transition: all .1s ease-in;
 
       &:hover {
-        background-color: $lightSeaBlue;
+        background-color: $mainBlue;
       }
     }
   }
