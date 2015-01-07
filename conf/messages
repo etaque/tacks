@@ -49,8 +49,8 @@ home.races=Realtime races
 home.openRaces=Open races
 home.newRace=New race
 home.onlinePlayers=Online players
-home.recentRaces=Recent races
-home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+home.noWebSocketSupport=Your browser doesn't support WebSocket technology. \
+  Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
 home.status=Status
 home.updateStatus=Update status
 home.onlineGuestsOne=1 anonymous player.

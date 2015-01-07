@@ -4888,15 +4888,17 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 15px; }
 
 a {
-  text-decoration: underline;
-  color: #23395C; }
+  color: #387ac4;
+  transition: all 0.1s ease-in;
+  text-decoration: none; }
   a:hover {
-    color: #2b4772; }
+    color: #5899E2;
+    text-decoration: none; }
 
 .navbar {
   margin-bottom: 0;
   height: 80px;
-  background-color: #397fce;
+  background-color: #387ac4;
   border: none;
   border-radius: 0; }
   .navbar .navbar-brand {
@@ -4910,10 +4912,8 @@ a {
     font-size: 14px;
     text-transform: uppercase;
     color: white;
-    text-decoration: none;
     font-family: "Proxima Nova Thin";
-    letter-spacing: 1px;
-    transition: all 0.1s ease-in; }
+    letter-spacing: 1px; }
     .navbar .navbar-nav > li > a:hover {
       background-color: #5899E2; }
 
@@ -4938,12 +4938,7 @@ a {
   padding: 40px;
   text-align: center; }
   .title-wrapper a {
-    color: white;
-    text-decoration: none; }
-    .title-wrapper a:hover {
-      text-decoration: underline; }
-    .title-wrapper a.btn:hover {
-      text-decoration: none; }
+    color: white; }
   .title-wrapper h1 {
     color: white;
     font-family: "Proxima Nova Thin";
@@ -4951,8 +4946,7 @@ a {
     font-weight: 300;
     margin: 0; }
     .title-wrapper h1 a {
-      color: white;
-      text-decoration: none; }
+      color: white; }
   .title-wrapper p {
     font-family: "Proxima Nova Thin";
     margin-top: 10px; }
@@ -4995,12 +4989,7 @@ a {
   color: #B1C0D8;
   box-shadow: 0px 2px 3px #1b2b46 inset; }
   .dark-wrapper a {
-    color: white;
-    text-decoration: none; }
-    .dark-wrapper a:hover {
-      text-decoration: underline; }
-    .dark-wrapper a.btn:hover {
-      text-decoration: none; }
+    color: white; }
 
 .footer-wrapper {
   box-shadow: 0px 2px 3px #1b2b46 inset;
@@ -5009,24 +4998,16 @@ a {
   padding: 20px;
   font-family: "Proxima Nova Thin"; }
   .footer-wrapper a {
-    color: white;
-    text-decoration: none; }
-    .footer-wrapper a:hover {
-      text-decoration: underline; }
-    .footer-wrapper a.btn:hover {
-      text-decoration: none; }
+    color: white; }
 
 .btn {
   font-weight: bold;
   text-transform: uppercase;
-  text-decoration: none;
   background-color: white;
   border: none;
   border-bottom: 3px solid #f5f5f5;
   padding: 7px 12px 5px 12px;
   transition: all 0.1s ease-in; }
-  .btn:hover {
-    text-decoration: none; }
 
 .btn-xs, .btn-group-xs > .btn {
   border-bottom-width: 2px;
@@ -5081,17 +5062,15 @@ input[type="text"], input[type="password"], textarea {
 .user-avatar {
   font-family: "Inconsolata";
   display: inline-block;
-  text-decoration: none;
   color: #7b8087; }
   .user-avatar .avatar {
     border-radius: 2px;
-    display: inline-block;
-    margin-right: 6px; }
-  .user-avatara:hover {
-    text-decoration: none;
-    color: #51585E; }
-    .user-avatara:hover .handle {
-      text-decoration: underline; }
+    display: inline-block; }
+
+a.user-avatar:hover {
+  color: #7b8087; }
+  a.user-avatar:hover .handle {
+    text-decoration: underline; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -5170,8 +5149,7 @@ input[type="text"], input[type="password"], textarea {
     background-color: white;
     padding: 6px 8px;
     color: #7b8087;
-    border-bottom: 1px solid #f8f9fb;
-    text-decoration: none; }
+    border-bottom: 1px solid #f8f9fb; }
     .live-center .online-users li:last-child {
       border-bottom: none; }
     .live-center .online-users li .status {
@@ -5194,22 +5172,18 @@ input[type="text"], input[type="password"], textarea {
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 3px;
-    border: 3px solid #2b4772;
-    text-decoration: none;
     position: relative;
-    text-align: center; }
-    .home-time-trial a.run:hover, .home-time-trial a.run:visited:hover {
-      border-color: #345488; }
-      .home-time-trial a.run:hover .name, .home-time-trial a.run:visited:hover .name {
-        background-color: #345488; }
+    text-align: center;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2); }
+    .home-time-trial a.run:hover .name, .home-time-trial a.run:visited:hover .name {
+      background-color: #5899E2; }
     .home-time-trial a.run .name, .home-time-trial a.run:visited .name {
       display: block;
       padding: 10px;
-      background-color: #2b4772;
+      background-color: #387ac4;
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
-      letter-spacing: 1px;
-      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1); }
+      letter-spacing: 1px; }
     .home-time-trial a.run .description, .home-time-trial a.run:visited .description {
       position: absolute;
       bottom: 0;
@@ -5244,8 +5218,7 @@ input[type="text"], input[type="password"], textarea {
   padding: 0;
   background-color: white;
   box-shadow: 0 1px 2px #E6E6E6;
-  border: 2px solid white;
-  border-radius: 4px; }
+  border: 2px solid white; }
   .time-trial-rankings li {
     list-style: none;
     border-bottom: 1px solid #f8f9fb;
@@ -5277,20 +5250,20 @@ input[type="text"], input[type="password"], textarea {
   height: 200px;
   background-color: #23395C;
   background-repeat: no-repeat;
-  background-position: center;
-  border-radius: 3px;
-  border: 3px solid #2b4772; }
+  background-position: center; }
 .show-time-trial .nav {
-  margin-top: 30px; }
-  .show-time-trial .nav li a:hover {
-    background-color: white;
-    box-shadow: 0px 1px 2px #E6E6E6; }
-  .show-time-trial .nav li.active {
-    background-color: white; }
+  margin-top: 30px;
+  background-color: #387ac4;
+  box-shadow: 0px 1px 2px #E6E6E6; }
+  .show-time-trial .nav li {
+    margin: 0; }
+    .show-time-trial .nav li a {
+      color: white;
+      text-decoration: none; }
+      .show-time-trial .nav li a:hover {
+        background-color: #5899E2; }
     .show-time-trial .nav li.active a {
-      color: #7b8087;
-      text-decoration: none;
-      box-shadow: 0px 1px 2px #E6E6E6; }
+      background-color: #23395C; }
 
 .previous-period {
   text-align: left; }
@@ -5302,21 +5275,21 @@ input[type="text"], input[type="password"], textarea {
   .table-leaderboard tbody {
     font-family: "Inconsolata"; }
   .table-leaderboard th {
-    padding: 0px;
     text-align: center;
     border-bottom-width: 2px;
-    background-color: #397fce;
+    background-color: #387ac4;
     color: white;
-    font-size: 13px; }
+    font-size: 13px;
+    white-space: nowrap; }
     .table-leaderboard th a {
       display: block;
-      padding: 5px;
+      height: 100%;
+      padding: 10px 5px;
       color: white;
       text-decoration: none;
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
-      letter-spacing: 1px;
-      transition: all 0.1s ease-in; }
+      letter-spacing: 1px; }
       .table-leaderboard th a:hover {
         background-color: #5899E2; }
   .table-leaderboard td {
@@ -5387,20 +5360,19 @@ input[type="text"], input[type="password"], textarea {
   margin-bottom: 30px; }
   .show-user .user-time-trial .trial-name {
     display: block;
-    padding: 5px 10px;
+    padding: 10px;
     font-family: "Proxima Nova Thin";
     font-size: 16px;
     text-align: center;
     text-transform: uppercase;
     text-decoration: none;
-    background-color: #345488;
-    border-radius: 4px 4px 0 0;
+    background-color: #387ac4;
     box-shadow: 0 1px 2px #E6E6E6;
     letter-spacing: 1px;
     color: white; }
     .show-user .user-time-trial .trial-name:hover {
-      background-color: #2b4772; }
+      background-color: #5899E2; }
   .show-user .user-time-trial .time-trial-rankings {
-    border-radius: 0 0 4px 4px; }
+    border-radius: 0; }
   .show-user .user-time-trial .btn-run-trial {
-    margin-top: 8px; }
+    margin-top: 10px; }

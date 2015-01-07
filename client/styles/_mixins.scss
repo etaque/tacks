@@ -10,7 +10,7 @@
 }
 
 @function little-desat-dark($color) {
-  @return desaturate(darken($color, 10%), 10%);
+  @return desaturate(darken($color, 12%), 15%);
 }
 
 @mixin blur {

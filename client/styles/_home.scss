@@ -98,7 +98,6 @@
       padding: 6px 8px;
       color: $gray;
       border-bottom: 1px solid $smokeWhite;
-      text-decoration: none;
 
       &:last-child {
         border-bottom: none;
@@ -134,26 +133,23 @@
     background-repeat: no-repeat;
     background-position: center;
     border-radius: $br;
-    border: 3px solid $lightSeaBlue;
-    text-decoration: none;
     position: relative;
     text-align: center;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      border-color: $lighterSeaBlue;
       .name {
-        background-color: $lighterSeaBlue;
+        background-color: $mainBlue;
       }
     }
 
     .name {
       display: block;
       padding: 10px;
-      background-color: $lightSeaBlue;
+      background-color: $navBlue;
       text-transform: uppercase;
       font-family: $lightFontFamily;
       letter-spacing: 1px;
-      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
     }
 
     .description {

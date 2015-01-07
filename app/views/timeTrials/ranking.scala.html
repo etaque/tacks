@@ -16,7 +16,7 @@
       case Some(user) => {
         <a href="@routes.Users.show(user.handle)" class="user-avatar">
           @views.html.users.avatar(user)
-        <span class="handle">@user.handle</span>
+          <span class="handle">@user.handle</span>
         </a>
       }
     }
@@ -41,7 +41,6 @@
 
     @extract.outOfWindow match {
       case Some(rankingOutOfWindow) => {
-        @*<li class="empty">...</li>*@
         @rankingLine(rankingOutOfWindow, outOfWindow = true)
       }
       case None => {

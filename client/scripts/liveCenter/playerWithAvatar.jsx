@@ -18,6 +18,7 @@ var PlayerWithAvatar = React.createClass({
       return (
         <a href={"/players/" + p.handle} className="user-avatar">
           { img }
+          { " " }
           { handle }
         </a>
       );
@@ -25,6 +26,7 @@ var PlayerWithAvatar = React.createClass({
       return (
         <span className="user-avatar">
           { img }
+          { " " }
           { handle }
         </span>
       );
