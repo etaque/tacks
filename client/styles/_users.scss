@@ -35,6 +35,29 @@
     box-shadow: 0 2px 2px $darkSeaBlue;
   }
 
+  .badge-rank {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    text-align: center;
+    background-color: $orange;
+    color: white;
+    font-family: $lightFontFamily;
+    border-radius: 50px;
+    line-height: 50px;
+    width: 50px;
+    font-size: 21px;
+
+    sup {
+      font-size: 13px;
+    }
+
+    &:hover {
+      background-color: lighten($orange, 5%);
+    }
+  }
+
   .user-time-trial {
     margin-top: 20px;
     margin-bottom: 30px;

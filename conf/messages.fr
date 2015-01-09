@@ -15,6 +15,10 @@ logout=Déconnexion
 anonymous=Anonyme
 or=ou
 
+rank.first=er
+rank.second=nd
+rank.nth=e
+
 menu.home=Accueil
 menu.blog=Blog
 menu.leaderboard=Classement

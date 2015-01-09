@@ -5355,6 +5355,23 @@ a.user-avatar:hover {
   margin-bottom: 20px;
   border-radius: 5px;
   box-shadow: 0 2px 2px #1f3251; }
+.show-user .badge-rank {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 15px;
+  text-align: center;
+  background-color: #E0A349;
+  color: white;
+  font-family: "Proxima Nova Thin";
+  border-radius: 50px;
+  line-height: 50px;
+  width: 50px;
+  font-size: 21px; }
+  .show-user .badge-rank sup {
+    font-size: 13px; }
+  .show-user .badge-rank:hover {
+    background-color: #e4ae5f; }
 .show-user .user-time-trial {
   margin-top: 20px;
   margin-bottom: 30px; }
