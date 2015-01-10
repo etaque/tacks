@@ -1,5 +1,6 @@
 package controllers
 
+import core.{WarmUp, CourseGenerator}
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -18,6 +19,8 @@ import actors._
 import models._
 import models.JsonFormats._
 import tools.future.Implicits._
+
+import scala.util.Try
 
 object Api extends Controller with Security {
 
@@ -58,7 +61,8 @@ object Api extends Controller with Security {
     yield Ok(Json.obj(
       "now" -> DateTime.now,
       "openRaces" -> Json.toJson(openRaces),
-      "onlinePlayers" -> Json.toJson(onlinePlayers)
+      "onlinePlayers" -> Json.toJson(onlinePlayers),
+      "generators" -> Json.toJson(CourseGenerator.all.map(_.slug))
     ))
   }
 
@@ -68,8 +72,19 @@ object Api extends Controller with Security {
     }
   }
 
-  def createRace = PlayerAction.async(parse.json) { implicit request =>
-    val race = Race(playerId = getPlayerId, course = Course.spawn, countdownSeconds = 60)
+  def createRace(generatorSlug: String) = PlayerAction.async(parse.json) { implicit request =>
+    val generator = CourseGenerator.findBySlug(generatorSlug).getOrElse(WarmUp)
+
+    val countdown = request.getQueryString("countdown")
+      .flatMap(c => Try(c.toInt).toOption)
+      .getOrElse(60)
+
+    val race = Race(
+      playerId = getPlayerId,
+      course = generator.generateCourse(),
+      generator = generator.slug,
+      countdownSeconds = countdown
+    )
 
     (RacesSupervisor.actorRef ? MountRace(race, request.player)).map { _ =>
       Ok(Json.toJson(race))

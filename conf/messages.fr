@@ -15,6 +15,10 @@ logout=Déconnexion
 anonymous=Anonyme
 or=ou
 
+rank.first=er
+rank.second=nd
+rank.nth=e
+
 menu.home=Accueil
 menu.blog=Blog
 menu.leaderboard=Classement
@@ -51,6 +55,10 @@ home.leaderboard=Classement du mois
 home.fullLeaderboard=Voir la suite
 
 footer.message=un jeu <a href="https://github.com/etaque/tacks">open source</a> créé par <a href="https://twitter.com/etaque">@etaque</a>.
+footer.about=A propos
+
+notFound.title=Page non trouvée
+notFound.subtitle=A un moment donné, quelqu''un s''est troué... En général c''est la faute des équipiers.
 
 login.failed=Addresse email ou mot de passe incorrect.
 login.title=Connexion
@@ -71,32 +79,31 @@ me.avatarUpdated=Avatar modifié avec succès.
 me.removeAvatar=Supprimer l''image
 
 liveCenter.emptyBoard=Pas de course ouverte pour le moment.
-liveCenter.creationTime=Création
+liveCenter.generator=Plan d''eau
+liveCenter.master=Initiateur
 liveCenter.opponents=Participants
-liveCenter.start=Départ
-liveCenter.waiting=En attente
-liveCenter.startedSince=Parti depuis {0}
+liveCenter.countdown=Chrono
+liveCenter.startingIn=-{0}s
+liveCenter.startedSince=+{0}s
 liveCenter.join=Rejoindre
-liveCenter.watch=Spectateur
-liveCenter.by={0} par {1}
 
 timeTrials.rankings=Classement du mois
 timeTrials.run=Nouveau run
 timeTrials.recent=Couru il y a moins de 24h
 timeTrials.closed=Course archivée
 
-timeTrials.warmup.name=Warmup
-timeTrials.warmup.description=faites-vous la main sur les trois tours de ce petit parcours
-timeTrials.classic.name=Classic
-timeTrials.classic.description=les fondamentaux, quelques îles et des risées sur deux tours
-timeTrials.inlands.name=Inlands
-timeTrials.inlands.description=étroit avec de nombreuses risées, votre plan d''eau intérieur préféré
-timeTrials.archipel.name=Anarchipel
-timeTrials.archipel.description=ça ne ressemble à rien de connu, donc ça mérite le détour
-timeTrials.oysterpark.name=Oyster Park
-timeTrials.oysterpark.description=votre cauchemar sur l''eau enfin transposé sur votre écran !
-timeTrials.minefield.name=Minefield
-timeTrials.minefield.description=regardez bien où vous mettez l''étrave...
+generators.warmup.name=Warmup
+generators.warmup.description=faites-vous la main sur les trois tours de ce petit parcours
+generators.classic.name=Classic
+generators.classic.description=les fondamentaux, quelques îles et des risées sur deux tours
+generators.inlands.name=Inlands
+generators.inlands.description=étroit avec de nombreuses risées, votre plan d''eau intérieur préféré
+generators.archipel.name=Anarchipel
+generators.archipel.description=ça ne ressemble à rien de connu, donc ça mérite le détour
+generators.oysterpark.name=Oyster Park
+generators.oysterpark.description=votre cauchemar sur l''eau enfin transposé sur votre écran !
+generators.minefield.name=Minefield
+generators.minefield.description=regardez bien où vous mettez l''étrave...
 
 tutorial.metaTitle=Tutoriel
 tutorial.steps.InitialStep.title=Hey hey

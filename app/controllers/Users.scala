@@ -108,7 +108,7 @@ object Users extends Controller with Security with MongoController {
     serve(Avatar.store, cursor).map(_.withHeaders(
       CONTENT_DISPOSITION -> CONTENT_DISPOSITION_INLINE,
       ETAG -> id,
-      CACHE_CONTROL -> "max-age-290304000"
+      CACHE_CONTROL -> "max-age=290304000"
     ))
   }
 }

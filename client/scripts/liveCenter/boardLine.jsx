@@ -7,44 +7,47 @@ var _        = require('lodash');
 var moment   = require('moment');
 var util     = require('../util');
 var Messages = require('../messages');
-
+var PlayerWithAvatar = require('./playerWithAvatar');
 
 var BoardLine = React.createClass({
 
-  getPlayerNames: function(playerStates, master) {
-    if (_.isEmpty(playerStates)) {
-      return "-";
-    } else {
-      return _.map(playerStates, p => {
-        return p.player.handle || Messages("anonymous");
-      }).join(", ");
-    }
+  getPlayers: function(playerStates) {
+    return _.map(playerStates, p => {
+      return <PlayerWithAvatar player={p.player} />;
+    });
   },
 
-  getStartText: function(millis) {
+  getCountdown: function(millis) {
     if (millis) {
-      if (millis > 0) return util.timer(millis);
+      if (millis > 0) return Messages('liveCenter.startingIn', Math.ceil(millis / 1000));
       else return Messages("liveCenter.startedSince", util.timer(Math.abs(millis)));
     } else {
-      return Messages("liveCenter.waiting");
+      return "";
     }
   },
 
   render: function() {
     var s = this.props.raceStatus;
-    var h = moment(s.race.creationTime).format("HH:mm");
-    var players = this.getPlayerNames(s.playerStates, s.master);
+    var players = this.getPlayers(s.playerStates);
     var millis = s.startTime ? (s.startTime - this.props.now) : null;
 
     return (
       <tr>
-        <td>{Messages('liveCenter.by', h, s.master.handle || Messages('anonymous'))}</td>
-        <td>{players}</td>
-        <td>{this.getStartText(millis)}</td>
-        <td>
-          <a href={"/play/" + s.race._id} target="_blank" className="btn btn-xs btn-block btn-warning">{Messages('liveCenter.join')}</a>
+        <td className="generator">
+          { Messages('generators.' + s.race.generator + '.name') }
         </td>
-      </tr>);
+        <td className="master"><PlayerWithAvatar player={ s.master } /></td>
+        <td className="players">
+          { players }
+        </td>
+        <td className="countdown">{ this.getCountdown(millis) }</td>
+        <td>
+          <a href={ "/play/" + s.race._id } target="_blank" className="btn btn-block btn-warning">
+            { Messages("liveCenter.join") }
+          </a>
+        </td>
+      </tr>
+    );
   }
 
 });

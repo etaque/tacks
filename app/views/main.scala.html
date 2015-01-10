@@ -11,29 +11,35 @@
     <title>Tacks</title>
     <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-192x192.png")" sizes="192x192">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-160x160.png")" sizes="160x160">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-96x96.png")" sizes="96x96">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-16x16.png")" sizes="16x16">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-32x32.png")" sizes="32x32">
   </head>
   <body>
     <nav class="navbar">
       <div class="container">
         <div class="navbar-header">
           <a class="navbar-brand" href="@routes.Application.index">
-            <img src="@routes.Assets.at("images/logo-tacks-3.png")" class="logo" alt="">
+            <img src="@routes.Assets.at("images/logo-header-2.png")" class="logo" alt="">
           </a>
         </div>
         <ul class="nav navbar-nav nav-main">
           <li><a href="@routes.Application.index()">@Messages("menu.home")</a></li>
           <li><a href="@routes.TimeTrials.currentLeaderboard()">@Messages("menu.leaderboard")</a></li>
-          <li><a href="@routes.Blog.index()">@Messages("menu.blog")</a></li>
+          <li><a href="@routes.Prismic.blog()">@Messages("menu.blog")</a></li>
         </ul>
 
         <ul class="nav navbar-nav navbar-right nav-user">
           @req.player match {
             case u: User => {
               <li><a href="@routes.Users.show(u.handle)">@views.html.users.avatar(u) @Messages("menu.me")</a></li>
-              <li><a href="@routes.Auth.logout">@Messages("menu.logout")</a></li>
+              <li><a href="@routes.Auth.logout()">@Messages("menu.logout")</a></li>
             }
             case g: Guest => {
-              <li><a href="@routes.Auth.askLogin">@Messages("menu.login")</a></li>
+              <li><a href="@routes.Auth.askLogin()">@Messages("menu.login")</a></li>
               <li><a href="@routes.Users.creation()">@Messages("menu.register")</a></li>
             }
           }
@@ -47,7 +53,7 @@
 
     <div class="footer-wrapper">
       <div class="container">
-        <p>@Html(Messages("footer.message"))</p>
+        <p><a href="@routes.Prismic.about()">@Messages("footer.about")</a></p>
       </div>
 
     </div>

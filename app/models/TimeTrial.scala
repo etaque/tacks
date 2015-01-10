@@ -119,7 +119,7 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
       .sortBy(_.finishTime)
       .partition(_.finishTime < playerRanking.finishTime)
 
-    (fasters.takeRight(count / 2 + 1) ++ lowers.take(count / 2 + 1)).takeRight(count)
+    fasters.takeRight(count - 1) ++ lowers.take(1)
   }
 
   def findGhosts(trial: TimeTrial, playerRun: TimeTrialRun, count: Int = 5): Future[Seq[GhostRun]] = {

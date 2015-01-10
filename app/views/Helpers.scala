@@ -18,5 +18,9 @@ object Helpers {
     s"+ $s.$ms"
   }
 
-
+  def rankSuffixKey(r: Int): String = r match {
+    case 1 => "rank.first"
+    case 2 => "rank.second"
+    case _ => "rank.nth"
+  }
 }

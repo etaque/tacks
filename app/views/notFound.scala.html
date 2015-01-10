@@ -1,0 +1,16 @@
+@()(implicit request: PlayerRequest[_], lang: Lang)
+
+@main {
+  <div class="title-wrapper not-found">
+    <div class="container">
+      <h1>@Messages("notFound.title")</h1>
+      <p class="subtitle">@Messages("notFound.subtitle")</p>
+    </div>
+  </div>
+  <div class="light-wrapper">
+    <div class="container">
+      <p class="align-center"><img src="@routes.Assets.at("images/18ftcrash.jpg")" alt="49er crash"/></p>
+
+    </div>
+  </div>
+}

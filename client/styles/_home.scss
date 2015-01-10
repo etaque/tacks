@@ -1,5 +1,6 @@
 @import 'colors';
 @import 'fonts';
+@import 'mixins';
 
 .form-new-user {
   margin-top: 15px;
@@ -21,21 +22,46 @@
     box-shadow: 0 2px 2px $lightGray;
 
     th {
-      padding: 5px 10px;
+      padding: 4px 12px;
       border-bottom-width: 2px;
       background-color: $lighterSeaBlue;
       color: $whiteBlue;
       font-size: 13px;
+
+      &.generator {
+        text-align: center;
+      }
     }
 
     td {
-      padding: 10px;
-      border-bottom: 1px solid $smokeWhite;
+      padding: 8px 12px;
+      border-bottom: 1px solid $whiteBlue;
+      background-color: white;
 
-      &:not(:last-child) {
+      &.generator {
+        background-color: $mainBlue;
+        text-align: center;
+        font-family: $lightFontFamily;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: white;
+        border-color: desat-dark($mainBlue);
+      }
+
+      &.countdown {
         font-family: $mono;
       }
 
+      &.players {
+        .user-avatar {
+          display: block;
+          margin-bottom: 2px;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
     }
 
     tr:last-child td {
@@ -50,8 +76,11 @@
     color: $gray;
   }
 
-  .btn-new-race {
+  .row-new-race {
     margin-top: 20px;
+  }
+
+  .btn-new-race {
 
     &.loading {
       opacity: 0.5;
@@ -69,29 +98,16 @@
       padding: 6px 8px;
       color: $gray;
       border-bottom: 1px solid $smokeWhite;
-      text-decoration: none;
 
       &:last-child {
         border-bottom: none;
       }
 
-      img {
-        width: 19px;
-        height: 19px;
-        border-radius: 2px;
-        display: inline-block;
-        margin-right: 8px;
-      }
-
-      .handle {
-        font-family: $mono;
-      }
-
       .status {
         display: block;
-        color: $whiteBlue;
+        color: $darkGray;
         font-size: 12px;
-        margin-top: 2px;
+        margin-top: 4px;
       }
     }
   }
@@ -104,58 +120,52 @@
 
 }
 
-.home-trials {
 
-  .leaderboard {
-    margin: 0;
-    padding: 0;
-    font-family: $mono;
+.home-time-trial {
+  $br: 3px;
+  margin-top: 30px;
+
+  a.run, a.run:visited {
+    display: block;
+    height: 200px;
+    margin-bottom: 10px;
     background-color: $seaBlue;
-    box-shadow: 0 2px 2px $darkSeaBlue;
-    @include linear-gradient($seaBlue, $lightSeaBlue);
+    background-repeat: no-repeat;
+    background-position: center;
+    border-radius: $br;
+    position: relative;
+    text-align: center;
+    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 
-    li {
-      list-style: none;
-      border-bottom: 1px solid $darkSeaBlue;
-      padding: 5px 10px;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .rank:after {
-        content: ".";
-      }
-
-      &.current-player {
-        color: $orange;
-      }
-
-      .points {
-        float: right;
+    &:hover {
+      .name {
+        background-color: $mainBlue;
       }
     }
-  }
 
-  .time-trial {
-    margin-top: 20px;
-  }
-
-  .time-trial-rankings {
-    background-color: transparent; // $darkSeaBlue;
-    box-shadow: none;
-    margin-top: 8px;
-    padding: 0;
-
-    li {
-      padding: 0px 10px;
-      border-bottom: none;
+    .name {
+      display: block;
+      padding: 10px;
+      background-color: $navBlue;
+      text-transform: uppercase;
+      font-family: $lightFontFamily;
+      letter-spacing: 1px;
     }
-  }
 
-  .btn-full-leaderboard {
-    margin-top: 15px;
+    .description {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.2);
+      color: $whiteBlue;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+      font-size: 14px;
+      font-family: $lightFontFamily;
+    }
   }
 }
+
 
 

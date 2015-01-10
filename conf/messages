@@ -26,6 +26,10 @@ password=Password
 logout=Logout
 anonymous=Anonymous
 
+rank.first=er
+rank.second=nd
+rank.nth=e
+
 menu.home=Home
 menu.blog=Blog
 menu.leaderboard=Leaderboard
@@ -49,8 +53,8 @@ home.races=Realtime races
 home.openRaces=Open races
 home.newRace=New race
 home.onlinePlayers=Online players
-home.recentRaces=Recent races
-home.noWebSocketSupport=Your browser doesn't support WebSocket technology. Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
+home.noWebSocketSupport=Your browser doesn't support WebSocket technology. \
+  Please use a <a href="http://caniuse.com/#feat=websockets">compatible web browser</a> to enjoy Tacks.
 home.status=Status
 home.updateStatus=Update status
 home.onlineGuestsOne=1 anonymous player.
@@ -62,6 +66,10 @@ home.leaderboard=Overall leaderboard
 home.fullLeaderboard=See all
 
 footer.message=An <a href="https://github.com/etaque/tacks">open source</a> game created by <a href="https://twitter.com/etaque">@etaque</a>.
+footer.about=About
+
+notFound.title=Page not found
+notFound.subtitle=Somehow, somewhere, somebody made a mistake... probably crew's fault.
 
 login.failed=Wrong email and/or password.
 login.title=Sign in
@@ -82,32 +90,31 @@ me.avatarUpdated=Picture successfully updated
 me.removeAvatar=Delete picture
 
 liveCenter.emptyBoard=No race currently open
-liveCenter.creationTime=Creation
+liveCenter.generator=Race area
+liveCenter.master=Initiator
 liveCenter.opponents=Opponents
-liveCenter.start=Start
-liveCenter.waiting=Pending
-liveCenter.startedSince=Started since {0}
+liveCenter.countdown=Countdown
+liveCenter.startingIn=-{0}s
+liveCenter.startedSince=+{0}s
 liveCenter.join=Join
-liveCenter.watch=Watch
-liveCenter.by={0} by {1}
 
 timeTrials.rankings=Current leaderboard
 timeTrials.run=New run
 timeTrials.title=Time trial
 timeTrials.closed=Closed race
 
-timeTrials.warmup.name=Warmup
-timeTrials.warmup.description=get your hands warm with the three laps of this short course
-timeTrials.classic.name=Classic
-timeTrials.classic.description=back to basics: les fondamentaux : some islands and gusts on a tow laps course
-timeTrials.inlands.name=Inlands
-timeTrials.inlands.description=a narrow course with many gusts & lulls, your favorite inland spot
-timeTrials.archipel.name=Anarchipel
-timeTrials.archipel.description=a mess but it's worth a look
-timeTrials.oysterpark.name=Oyster Park
-timeTrials.oysterpark.description=a real life nightmare, finally on your screen!
-timeTrials.minefield.name=Minefield
-timeTrials.minefield.description=watch your bow...
+generators.warmup.name=Warmup
+generators.warmup.description=get your hands warm with the three laps of this short course
+generators.classic.name=Classic
+generators.classic.description=back to basics: les fondamentaux : some islands and gusts on a tow laps course
+generators.inlands.name=Inlands
+generators.inlands.description=a narrow course with many gusts & lulls, your favorite inland spot
+generators.archipel.name=Anarchipel
+generators.archipel.description=a mess but it's worth a look
+generators.oysterpark.name=Oyster Park
+generators.oysterpark.description=a real life nightmare, finally on your screen!
+generators.minefield.name=Minefield
+generators.minefield.description=watch your bow...
 
 leaderboard.title=Overall leaderboard
 leaderboard.total=Sum

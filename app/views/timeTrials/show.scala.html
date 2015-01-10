@@ -4,9 +4,9 @@
 
   <div class="title-wrapper">
     <div class="container">
-      <h1 class="uppercase">@Messages("timeTrials." + trial.slug + ".name")</h1>
+      <h1 class="uppercase">@Messages("generators." + trial.slug + ".name")</h1>
       <p>
-        &laquo; @Messages("timeTrials." + trial.slug + ".description") &raquo;
+        &laquo; @Messages("generators." + trial.slug + ".description") &raquo;
       </p>
     </div>
   </div>
@@ -27,7 +27,7 @@
             <button type="button" class="btn btn-default btn-disabled btn-block" disabled>@Messages("timeTrials.closed")</button>
           }
 
-          <ul class="nav  nav-stacked">
+          <ul class="nav nav-stacked">
           @for(t <- allPeriods) {
             <li @if(t.id == trial.id) { class="active" }>
               <a href="@routes.TimeTrials.show(t.idToStr)">@t.creationTime.toString("MMMM yyyy").capitalize</a>

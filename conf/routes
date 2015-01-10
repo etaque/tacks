@@ -26,7 +26,7 @@ GET         /logout                                 controllers.Auth.logout
 POST        /api/login                              controllers.Api.login
 GET         /api/racesStatus                        controllers.Api.racesStatus
 GET         /api/onlineUsers                        controllers.Api.onlinePlayers
-POST        /api/createRace                         controllers.Api.createRace
+POST        /api/createRace/:generator              controllers.Api.createRace(generator)
 GET         /api/currentUser                        controllers.Api.currentUser
 POST        /api/setName                            controllers.Api.setName
 
@@ -35,10 +35,12 @@ GET         /ws/watcherSocket/:raceId               controllers.Api.raceWatcherS
 GET         /ws/timeTrialSocket/:timeTrialId        controllers.Api.timeTrialSocket(timeTrialId)
 GET         /ws/tutorialSocket                      controllers.Api.tutorialSocket
 
-GET         /blog                                   controllers.Blog.index
-GET         /blog/:id/:slug                         controllers.Blog.show(id, slug)
+GET         /blog                                   controllers.Prismic.blog
+GET         /blog/:id/:slug                         controllers.Prismic.post(id, slug)
 
-GET         /players/:handle                                controllers.Users.show(handle)
+GET         /about                                  controllers.Prismic.about
+
+GET         /players/:handle                        controllers.Users.show(handle)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                           controllers.Assets.at(path="/public", file)

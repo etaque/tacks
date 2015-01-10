@@ -8,7 +8,6 @@
   background-color: white;
   box-shadow: 0 1px 2px $lightGray;
   border: 2px solid white;
-  border-radius: 4px;
 
   li {
     list-style: none;
@@ -22,10 +21,6 @@
     .rank {
       width: 20px;
       display: inline-block;
-    }
-
-    .avatar {
-      border-radius: 2px;
     }
 
     .rank:after {
@@ -56,54 +51,6 @@
   }
 }
 
-
-.home-time-trial {
-  $br: 3px;
-  margin-bottom: 30px;
-
-  a.run, a.run:visited {
-    display: block;
-    height: 200px;
-    margin-bottom: 10px;
-    background-color: $seaBlue;
-    background-repeat: no-repeat;
-    background-position: center;
-    border-radius: $br;
-    border: 3px solid $lightSeaBlue;
-    text-decoration: none;
-    position: relative;
-    text-align: center;
-
-    &:hover {
-      border-color: $lighterSeaBlue;
-      .name {
-        background-color: $lighterSeaBlue;
-      }
-    }
-
-    .name {
-      display: block;
-      padding: 10px;
-      background-color: $lightSeaBlue;
-      text-transform: uppercase;
-      box-shadow: 0 2px 1px rgba(0, 0, 0, 0.1);
-    }
-
-    .description {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.2);
-      color: $whiteBlue;
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-      font-family: $lightFontFamily;
-    }
-  }
-}
-
 .show-time-trial {
 
   h3 {
@@ -116,27 +63,28 @@
     background-color: $seaBlue;
     background-repeat: no-repeat;
     background-position: center;
-    border-radius: 3px;
-    border: 3px solid $lightSeaBlue;
   }
 
   .nav {
     margin-top: 30px;
+    background-color: $navBlue;
+    box-shadow: 0px 1px 2px $lightGray;
 
     li {
+      margin: 0;
+
       a {
+        color: white;
+        text-decoration: none;
+
         &:hover {
-          background-color: white;
-          box-shadow: 0px 1px 2px $lightGray;
+          background-color: $mainBlue;
         }
       }
 
       &.active {
-        background-color: white;
         a {
-          color: $gray;
-          text-decoration: none;
-          box-shadow: 0px 1px 2px $lightGray;
+          background-color: $seaBlue;
         }
       }
     }
@@ -157,16 +105,17 @@
   }
 
   th {
-    padding: 0px;
     text-align: center;
     border-bottom-width: 2px;
-    background-color: $lighterSeaBlue;
+    background-color: $navBlue;
     color: white;
     font-size: 13px;
+    white-space: nowrap;
 
     a {
       display: block;
-      padding: 5px;
+      height: 100%;
+      padding: 10px 5px;
       color: white;
       text-decoration: none;
       text-transform: uppercase;
@@ -174,7 +123,7 @@
       letter-spacing: 1px;
 
       &:hover {
-        background-color: $lightSeaBlue;
+        background-color: $mainBlue;
       }
     }
   }

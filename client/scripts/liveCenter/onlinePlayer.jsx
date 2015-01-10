@@ -3,17 +3,17 @@
  */
 
 var React = require('react');
+var PlayerWithAvatar = require('./playerWithAvatar');
 
 var OnlinePlayer = React.createClass({
 
   render: function() {
     var p = this.props.player;
-    var avatarUrl = p.avatarId ? ("/avatars/" + p.avatarId) : "/assets/images/default-avatar.png";
+    var status = p.status ? (<span className="status">{p.status}</span>) : "";
     return (
       <li>
-        <img src={ avatarUrl }/>
-        <a href={"/players/" + p.handle} className="handle">{p.handle}</a>
-        <span className="status">{p.status}</span>
+        <PlayerWithAvatar player={ p } withLink={ true } />
+        {status}
       </li>
     );
   }
