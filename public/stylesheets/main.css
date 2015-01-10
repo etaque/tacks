@@ -5072,6 +5072,15 @@ a.user-avatar:hover {
   a.user-avatar:hover .handle {
     text-decoration: underline; }
 
+.article .block-img {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  text-align: center; }
+.article .legend {
+  margin-bottom: 30px;
+  text-align: center;
+  font-style: italic; }
+
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url('/assets/fonts/Proxima Nova Regular.otf'); }
@@ -5393,3 +5402,7 @@ a.user-avatar:hover {
     border-radius: 0; }
   .show-user .user-time-trial .btn-run-trial {
     margin-top: 10px; }
+
+.not-found img {
+  border: 3px solid white;
+  border-radius: 2px; }

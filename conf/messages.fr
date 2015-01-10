@@ -55,6 +55,10 @@ home.leaderboard=Classement du mois
 home.fullLeaderboard=Voir la suite
 
 footer.message=un jeu <a href="https://github.com/etaque/tacks">open source</a> créé par <a href="https://twitter.com/etaque">@etaque</a>.
+footer.about=A propos
+
+notFound.title=Page non trouvée
+notFound.subtitle=A un moment donné, quelqu''un s''est troué... En général c''est la faute des équipiers.
 
 login.failed=Addresse email ou mot de passe incorrect.
 login.title=Connexion

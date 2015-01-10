@@ -11,7 +11,7 @@ import akka.pattern.ask
 import reactivemongo.bson.BSONObjectID
 
 import actors.{GetRace, RacesSupervisor}
-import models.{TimeTrial, User, Race}
+import models.{Article, TimeTrial, User, Race}
 
 object Application extends Controller with Security {
 

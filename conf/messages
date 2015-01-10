@@ -66,6 +66,10 @@ home.leaderboard=Overall leaderboard
 home.fullLeaderboard=See all
 
 footer.message=An <a href="https://github.com/etaque/tacks">open source</a> game created by <a href="https://twitter.com/etaque">@etaque</a>.
+footer.about=About
+
+notFound.title=Page not found
+notFound.subtitle=Somehow, somewhere, somebody made a mistake... probably crew's fault.
 
 login.failed=Wrong email and/or password.
 login.title=Sign in
