@@ -81,7 +81,7 @@
 
             case u: User => {
               <div class="row">
-                <form action="@routes.Users.updateStatus" method="post" class="col-lg-offset-3 col-lg-6 update-name">
+                <form action="@routes.Users.updateStatus" method="post" class="col-md-offset-3 col-md-6 update-name">
                   <div class="form-group">
                     <div class="input-group input-group-sm">
                       <span class="input-group-addon" id="basic-addon1">@Messages("home.status")</span>
@@ -116,7 +116,7 @@
       @for(row <- trials.grouped(3)) {
         <div class="row">
           @for((trial, rankings) <- row) {
-            <div class="col-lg-4">
+            <div class="col-md-4">
               <div class="home-time-trial">
                 <a href="@routes.TimeTrials.show(trial.id.stringify)" class="run"
                 style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">

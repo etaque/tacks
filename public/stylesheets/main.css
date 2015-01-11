@@ -4914,7 +4914,7 @@ a {
     color: white;
     font-family: "Proxima Nova Thin";
     letter-spacing: 1px; }
-    .navbar .navbar-nav > li > a:hover {
+    .navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:active {
       background-color: #5899E2; }
 
 .title-wrapper {
@@ -4955,7 +4955,8 @@ a {
     color: white; }
 
 .light-wrapper .container, .dark-wrapper .container {
-  padding: 30px 0 50px 0; }
+  padding-top: 30px;
+  padding-bottom: 50px; }
 .light-wrapper h2, .light-wrapper p.subtitle, .dark-wrapper h2, .dark-wrapper p.subtitle {
   font-family: "Proxima Nova Thin";
   text-align: center; }
@@ -5267,6 +5268,7 @@ a.user-avatar:hover {
   background-position: center; }
 .show-time-trial .nav {
   margin-top: 30px;
+  margin-bottom: 30px;
   background-color: #387ac4;
   box-shadow: 0px 1px 2px #E6E6E6; }
   .show-time-trial .nav li {

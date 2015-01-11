@@ -107,23 +107,23 @@ var LiveCenter = React.createClass({
         {this.webSocketAlert(this.state.showWebSocketAlert)}
 
         <div className="row">
-          <div className="col-lg-9">
+          <div className="col-md-9">
             <h3>{Messages("home.openRaces")}</h3>
             <Board status={st} />
             <div className="row row-new-race">
-              <div className="col-lg-4">
+              <div className="col-md-4 form-group">
                 <select className="form-control" onChange={ this.setGenerator } value={ this.state.generator }>
                   { this.generatorOptions(st.generators) }
                 </select>
               </div>
-              <div className="col-lg-8">
+              <div className="col-md-8 form-group">
                 <a href="" onClick={ this.createRace } className={ btnClassName }>
                   { Messages("home.newRace") }
                 </a>
               </div>
             </div>
           </div>
-          <div className="col-lg-3">
+          <div className="col-md-3">
             <h3>{Messages("home.onlinePlayers")}</h3>
             <ul className="online-users list-unstyled">{this.onlineUsers(st.onlinePlayers)}</ul>
             <div className="online-guests">{this.onlineGuests(st.onlinePlayers)}</div>
