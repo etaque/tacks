@@ -26,9 +26,10 @@ password=Password
 logout=Logout
 anonymous=Anonymous
 
-rank.first=er
+rank.first=st
 rank.second=nd
-rank.nth=e
+rank.third=rd
+rank.nth=th
 
 menu.home=Home
 menu.blog=Blog

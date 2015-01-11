@@ -17,6 +17,7 @@ or=ou
 
 rank.first=er
 rank.second=nd
+rank.third=e
 rank.nth=e
 
 menu.home=Accueil
