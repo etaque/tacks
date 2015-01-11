@@ -37,24 +37,6 @@ body {
 }
 
 nav {
-  .nav-main {
-    margin-left: 20px;
-  }
-
-  .nav {
-    text-align: center;
-    margin-bottom: 20px;
-
-    .logo {
-      height: 120px;
-      width: auto;
-    }
-
-    a {
-      color: $whiteBlue;
-    }
-  }
-
   .nav-user {
     img {
       width: 19px;
@@ -67,3 +49,22 @@ nav {
   }
 }
 
+.navbar-brand {
+  img {
+    max-height: 100%;
+    width: auto;
+  }
+}
+
+@media screen and (min-width: $screen-sm-min) {
+  nav {
+    .nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .navbar-brand {
+      height: 80px;
+    }
+  }
+}

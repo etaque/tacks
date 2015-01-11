@@ -4835,16 +4835,6 @@ body {
 .align-center {
   text-align: center; }
 
-nav .nav-main {
-  margin-left: 20px; }
-nav .nav {
-  text-align: center;
-  margin-bottom: 20px; }
-  nav .nav .logo {
-    height: 120px;
-    width: auto; }
-  nav .nav a {
-    color: #B1C0D8; }
 nav .nav-user img {
   width: 19px;
   height: 19px;
@@ -4852,6 +4842,18 @@ nav .nav-user img {
   margin-right: 5px;
   border-radius: 2px;
   vertical-align: text-bottom; }
+
+.navbar-brand img {
+  max-height: 100%;
+  width: auto; }
+
+@media screen and (min-width: 768px) {
+  nav .nav {
+    text-align: center;
+    margin-bottom: 20px; }
+  nav .navbar-brand {
+    height: 80px; }
+ }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -4897,25 +4899,37 @@ a {
 
 .navbar {
   margin-bottom: 0;
-  height: 80px;
   background-color: #387ac4;
   border: none;
   border-radius: 0; }
   .navbar .navbar-brand {
     margin: 0;
     padding: 0; }
+  .navbar .navbar-toggle {
+    border-color: #B1C0D8; }
+    .navbar .navbar-toggle .icon-bar {
+      background-color: #B1C0D8; }
   .navbar .nav {
     margin-bottom: 0; }
   .navbar .navbar-nav > li > a {
-    line-height: 80px;
-    padding: 0 20px;
-    font-size: 14px;
     text-transform: uppercase;
     color: white;
     font-family: "Proxima Nova Thin";
     letter-spacing: 1px; }
     .navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:active {
       background-color: #5899E2; }
+
+@media screen and (min-width: 768px) {
+  nav .nav {
+    text-align: center;
+    margin-bottom: 20px; }
+  nav .nav-main {
+    margin-left: 20px; }
+  nav .navbar-nav > li > a {
+    line-height: 80px;
+    padding: 0 20px;
+    font-size: 14px; }
+ }
 
 .title-wrapper {
   background-color: #23395C;

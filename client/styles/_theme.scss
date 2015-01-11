@@ -52,7 +52,6 @@ a {
 
 .navbar {
   margin-bottom: 0;
-  height: 80px;
   background-color: $navBlue;
   border: none;
   border-radius: 0;
@@ -62,14 +61,19 @@ a {
     padding: 0;
   }
 
+  .navbar-toggle {
+    border-color: $whiteBlue;
+
+    .icon-bar {
+      background-color: $whiteBlue;
+    }
+  }
+
   .nav {
     margin-bottom: 0;
   }
 
   .navbar-nav > li > a {
-    line-height: 80px;
-    padding: 0 20px;
-    font-size: 14px;
     text-transform: uppercase;
     color: white;
     font-family: $lightFontFamily;
@@ -77,6 +81,26 @@ a {
 
     &:hover, &:active {
       background-color: $mainBlue;
+    }
+  }
+}
+
+@media screen and (min-width: $screen-sm-min) {
+
+  nav {
+    .nav {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .nav-main {
+      margin-left: 20px;
+    }
+
+    .navbar-nav > li > a {
+      line-height: 80px;
+      padding: 0 20px;
+      font-size: 14px;
     }
   }
 }

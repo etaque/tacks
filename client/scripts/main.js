@@ -2,6 +2,9 @@ var $ = require('jquery');
 var React = require('react');
 var LiveCenter = React.createFactory(require('./liveCenter.jsx'));
 
+window.$ = window.jQuery = $;
+require('../node_modules/bootstrap-sass/assets/javascripts/bootstrap/transition');
+require('../node_modules/bootstrap-sass/assets/javascripts/bootstrap/collapse');
 
 $(function() {
 
@@ -34,25 +37,5 @@ $(function() {
     });
 
   });
-  //
-  //$(".upload-avatar input:file").change(function(e) {
-  //  if (this.files[0]) {
-  //    var data = new FormData();
-  //    data.append('avatar', this.files[0]);
-  //    $.ajax({
-  //      url: $(this).data().action,
-  //      data: data,
-  //      cache: false,
-  //      contentType: false,
-  //      processData: false,
-  //      type: 'POST',
-  //      success: function(data) {
-  //        $('.upload-avatar img').attr("src", data.url);
-  //        $('.upload-avatar .alert').slideDown();
-  //        $('.upload-avatar input').val('');
-  //      }
-  //    });
-  //  }
-  //});
 
 });
