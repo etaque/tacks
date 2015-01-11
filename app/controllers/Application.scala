@@ -1,5 +1,6 @@
 package controllers
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
@@ -26,6 +27,10 @@ object Application extends Controller with Security {
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
     yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
+  }
+
+  def notFound(path: String) = PlayerAction.async() { implicit request =>
+    Future.successful(NotFound(views.html.notFound()))
   }
 
   implicit val timeout = Timeout(5.seconds)

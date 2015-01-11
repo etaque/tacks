@@ -1,5 +1,7 @@
 package controllers
 
+import tools.future.FutureFlattenOptException
+
 import scala.concurrent.Future
 import actors.{Ping, ChatRoom}
 import models.{Guest, Player, User}
@@ -46,7 +48,10 @@ trait Security { this: Controller =>
       Action.async(bp) { implicit request =>
         getPlayer.flatMap { player =>
           pingChatRoom(player)
-          f(PlayerRequest(player, request)).map(_.addingToSession("playerId" -> player.id.stringify))
+          implicit val playerRequest = PlayerRequest(player, request)
+          f(playerRequest).map(_.addingToSession("playerId" -> player.id.stringify)).recover {
+            case e: FutureFlattenOptException => NotFound(views.html.notFound())
+          }
         }
       }
   }
