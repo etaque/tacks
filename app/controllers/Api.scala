@@ -138,6 +138,16 @@ object Api extends Controller with Security {
     }
   }
 
+  implicit val notifEventFormat: Format[NotificationEvent] = Json.format[NotificationEvent]
+  implicit val notifEventFrameFormatter = FrameFormatter.jsonFrame[NotificationEvent]
+
+  def notificationsSocket = WebSocket.tryAcceptWithActor[JsValue, NotificationEvent] { implicit request =>
+    for {
+      player <- PlayerAction.getPlayer(request)
+    }
+    yield Right(NotifiableActor.props(player)(_))
+  }
+
   implicit val tutorialInputFrameFormatter = FrameFormatter.jsonFrame[TutorialInput]
   implicit val tutorialUpdateFormatter = FrameFormatter.jsonFrame[TutorialUpdate]
 

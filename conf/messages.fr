@@ -126,3 +126,6 @@ leaderboard.total=Total
 blog.title=Blog
 blog.subtitle=Nouveautés du jeu, conseils pour progresser, etc.
 blog.back=Retour au blog
+
+notifications.events.newRace.title=Nouvelle course
+notifications.events.newRace.body=Par {1} sur le plan d''eau {0}

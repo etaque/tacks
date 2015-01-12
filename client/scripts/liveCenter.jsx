@@ -9,8 +9,8 @@ var $             = require('jquery');
 var _             = require('lodash');
 var Board         = require('./liveCenter/board');
 var OnlinePlayer  = require('./liveCenter/onlinePlayer');
-var Api           = require('./api');
 var Messages      = require('./messages');
+var routes        = require('./routes');
 var util          = require('./util');
 
 var LiveCenter = React.createClass({
@@ -36,7 +36,7 @@ var LiveCenter = React.createClass({
 
   loadStatus: function() {
     var currentGenerator = this.state.generator;
-    $.ajax(Api.racesStatus()).done(function(racesStatus) {
+    $.ajax(routes.Api.racesStatus()).done(function(racesStatus) {
       var waiting = _.filter(racesStatus.openRaces, function(rs) { return !rs.race.startTime }).length;
       if (waiting > 0) {
         document.title = "(" + waiting + ") Play Tacks";
@@ -53,7 +53,7 @@ var LiveCenter = React.createClass({
     if (this.state.loadingNewRace) return;
 
     this.setState({ loadingNewRace: true}, function(newState) {
-      util.post(Api.createRace(this.state.generator)).done(function(race) {
+      util.post(routes.Api.createRace(this.state.generator)).done(function(race) {
         setTimeout(function() {
           this.setState({ loadingNewRace: false});
         }.bind(this), 1000);

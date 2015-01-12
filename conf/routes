@@ -30,10 +30,11 @@ POST        /api/createRace/:generator              controllers.Api.createRace(g
 GET         /api/currentUser                        controllers.Api.currentUser
 POST        /api/setName                            controllers.Api.setName
 
-GET         /ws/playerSocket/:raceId                controllers.Api.racePlayerSocket(raceId)
-GET         /ws/watcherSocket/:raceId               controllers.Api.raceWatcherSocket(raceId)
-GET         /ws/timeTrialSocket/:timeTrialId        controllers.Api.timeTrialSocket(timeTrialId)
-GET         /ws/tutorialSocket                      controllers.Api.tutorialSocket
+GET         /ws/racePlayer/:raceId                  controllers.Api.racePlayerSocket(raceId)
+GET         /ws/raceWatcher/:raceId                 controllers.Api.raceWatcherSocket(raceId)
+GET         /ws/timeTrialPlayer/:timeTrialId        controllers.Api.timeTrialSocket(timeTrialId)
+GET         /ws/tutorial                            controllers.Api.tutorialSocket
+GET         /ws/notifications                       controllers.Api.notificationsSocket
 
 GET         /blog                                   controllers.Prismic.blog
 GET         /blog/:id/:slug                         controllers.Prismic.post(id, slug)

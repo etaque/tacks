@@ -26,6 +26,7 @@ case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
   var mountedRaces = Seq[(Race, Player, ActorRef)]()
+  var subscribers = Seq.empty[(Player, ActorRef)]
 
   implicit val timeout = Timeout(5.seconds)
 
@@ -36,6 +37,10 @@ class RacesSupervisor extends Actor {
       mountedRaces = mountedRaces :+ (race, master, ref)
       context.watch(ref)
       sender ! Unit
+      master match {
+        case u: User => RacesSupervisor.notifyNewRace(subscribers, race, u)
+        case g: Guest =>
+      }
     }
 
     case GetOpenRaces => {
@@ -63,7 +68,14 @@ class RacesSupervisor extends Actor {
       val ref = context.actorOf(TutorialActor.props(player))
       context.watch(ref)
       sender ! ref
+    }
 
+    case Subscribe(player, ref) => {
+      subscribers = subscribers :+ (player, ref)
+    }
+
+    case Unsubscribe(player, ref) => {
+      subscribers = subscribers.filterNot(_._2 == ref)
     }
   }
 
@@ -78,6 +90,12 @@ object RacesSupervisor {
 
   def start() = {
 //    Akka.system.scheduler.schedule(0.microsecond, 1.minutes, actorRef, CreateRace)
+  }
+
+  def notifyNewRace(subscribers: Seq[(Player, ActorRef)], race: Race, master: User) = {
+    subscribers.filter(_._1.id != master.id).foreach { case (_, ref) =>
+      ref ! NotificationEvent("newRace", Seq(race.generator, master.handle))
+    }
   }
 
 }

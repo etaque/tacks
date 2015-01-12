@@ -123,3 +123,7 @@ leaderboard.total=Sum
 blog.title=Blog
 blog.subtitle=Game updates, hints & various stuff.
 blog.back=Back to blog
+
+
+notifications.events.newRace.title=New live race
+notifications.events.newRace.body=By {1} on race area {0}

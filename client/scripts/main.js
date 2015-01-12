@@ -1,12 +1,15 @@
 var $ = require('jquery');
 var React = require('react');
 var LiveCenter = React.createFactory(require('./liveCenter.jsx'));
+var notifications = require('./notifications');
 
 window.$ = window.jQuery = $;
 require('../node_modules/bootstrap-sass/assets/javascripts/bootstrap/transition');
 require('../node_modules/bootstrap-sass/assets/javascripts/bootstrap/collapse');
 
 $(function() {
+
+  notifications();
 
   $("#liveCenter").each(function() {
     React.render(LiveCenter(), this);
