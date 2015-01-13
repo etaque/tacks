@@ -2,8 +2,6 @@ package actors
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-import scala.collection.mutable.ListBuffer
-import play.api.Logger
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
@@ -21,6 +19,7 @@ case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
 case object GetOpenRaces
+case class NotifyNewRace(raceActor: ActorRef, race: Race, master: User)
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
@@ -38,7 +37,7 @@ class RacesSupervisor extends Actor {
       context.watch(ref)
       sender ! Unit
       master match {
-        case u: User => RacesSupervisor.notifyNewRace(subscribers, race, u)
+        case u: User => Akka.system.scheduler.scheduleOnce(10.seconds, self, NotifyNewRace(ref, race, u))
         case g: Guest =>
       }
     }
@@ -77,6 +76,10 @@ class RacesSupervisor extends Actor {
     case Unsubscribe(player, ref) => {
       subscribers = subscribers.filterNot(_._2 == ref)
     }
+
+    case NotifyNewRace(ref, race, master) => {
+       RacesSupervisor.notifyNewRace(subscribers, ref, race, master)
+    }
   }
 
   def getRace(raceId: BSONObjectID): Option[Race] = mountedRaces.find(_._1.id == raceId).headOption.map(_._1)
@@ -88,13 +91,20 @@ object RacesSupervisor {
 
   val actorRef = Akka.system.actorOf(Props[RacesSupervisor])
 
+  implicit val timeout = Timeout(5.seconds)
+
   def start() = {
 //    Akka.system.scheduler.schedule(0.microsecond, 1.minutes, actorRef, CreateRace)
   }
 
-  def notifyNewRace(subscribers: Seq[(Player, ActorRef)], race: Race, master: User) = {
-    subscribers.filter(_._1.id != master.id).foreach { case (_, ref) =>
-      ref ! NotificationEvent("newRace", Seq(race.generator, master.handle))
+  def notifyNewRace(subscribers: Seq[(Player, ActorRef)], raceActor: ActorRef, race: Race, master: User) = {
+    (raceActor ? GetStatus).mapTo[(Option[DateTime], Seq[PlayerState])].map { case (startTime, playerStates) =>
+      subscribers.collect {
+        // notify only users, excluding master & those who already joined
+        case (u: User, ref: ActorRef) if u.id != master.id && !playerStates.map(_.player.id).contains(u.id) => (u, ref)
+      }.foreach { case (_, ref) =>
+        ref ! NotificationEvent("newRace", Seq(race.generator, master.handle))
+      }
     }
   }
 
