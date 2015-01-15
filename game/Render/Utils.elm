@@ -18,7 +18,7 @@ helpMessage =
 --helpMessage = "←/→ to turn left/right, SHIFT + ←/→ to fine tune direction, \n" ++
 --  "ENTER to lock angle to wind, SPACE to tack/jibe, S to cast a spell"
 
-startCountdownMessage = "press C to start countdown (60s)"
+startCountdownMessage = "press C to start countdown (30s)"
 
 emptyForm = C.toForm E.empty
 

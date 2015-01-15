@@ -80,7 +80,7 @@ object Api extends Controller with Security {
 
     val countdown = request.getQueryString("countdown")
       .flatMap(c => Try(c.toInt).toOption)
-      .getOrElse(60)
+      .getOrElse(30)
 
     val race = Race(
       playerId = getPlayerId,

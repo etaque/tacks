@@ -86,7 +86,7 @@ var LiveCenter = React.createClass({
 
   onlineGuests: function(players) {
     var c = _.reject(players, 'handle').length;
-    return c > 1 ? Messages("home.onlineGuestsMany", c) : Messages("home.onlineGuestsOne");
+    return c == 0 ? "" : (c > 1 ? Messages("home.onlineGuestsMany", c) : Messages("home.onlineGuestsOne"));
   },
 
   webSocketAlert: function(show) {
