@@ -165,7 +165,7 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
 case class RichRun(
   r: TimeTrialRun,
   t: TimeTrial,
-  u: User
+  p: Player
 )
 
 object RichRun {

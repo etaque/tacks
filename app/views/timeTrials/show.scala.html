@@ -57,19 +57,24 @@
           <h3 class="block-title secondary">@Messages("timeTrials.recentRuns")</h3>
           @if(lastRuns.nonEmpty) {
             <ul class="list-recent-runs">
-            @for(RichRun(run, _, user) <- lastRuns) {
-              <li>
-                <a href="@routes.Users.show(user.handle)" class="user-avatar">
-                  @views.html.users.avatar(user)
-                  <span class="handle">@user.handle</span>
-                </a>
+            @for(RichRun(run, _, player) <- lastRuns) {
+              @player match {
+                case user: User => {
+                  <li>
+                    <a href="@routes.Users.show(user.handle)" class="user-avatar">
+                      @views.html.users.avatar(user)
+                    <span class="handle">@user.handle</span>
+                    </a>
 
-                <span class="finish-time">
-                @run.finishTime.map(views.Helpers.timer)
-                </span>
+                    <span class="finish-time">
+                    @run.finishTime.map(views.Helpers.timer)
+                    </span>
 
-                <span class="time-ago" title="@run.creationTime.toString("EEEE d - HH:mm")">@Helpers.timeAgo(run.time)</span>
-              </li>
+                    <span class="time-ago" title="@run.creationTime.toString("EEEE d - HH:mm")">@Helpers.timeAgo(run.time)</span>
+                  </li>
+                }
+                case _ => { }
+              }
             }
             </ul>
           }

@@ -19,12 +19,14 @@ case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
 case object GetOpenRaces
+case object GetLiveRuns
 case class NotifyNewRace(raceActor: ActorRef, race: Race, master: User)
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
-  var mountedRaces = Seq[(Race, Player, ActorRef)]()
+  var mountedRaces = Seq.empty[(Race, Player, ActorRef)]
+  var mountedRuns = Seq.empty[(RichRun, ActorRef)]
   var subscribers = Seq.empty[(Player, ActorRef)]
 
   implicit val timeout = Timeout(5.seconds)
@@ -55,10 +57,18 @@ class RacesSupervisor extends Actor {
 
     case GetRaceActorRef(raceId) => sender ! getRaceActorRef(raceId)
 
-    case Terminated(ref) => mountedRaces = mountedRaces.filterNot { case (_, _, r) => r == ref }
+    case GetLiveRuns => {
+      sender ! mountedRuns.map(_._1)
+    }
+
+    case Terminated(ref) => {
+      mountedRaces = mountedRaces.filterNot(_._3 == ref)
+      mountedRuns = mountedRuns.filterNot(_._2 == ref)
+    }
 
     case MountTimeTrialRun(timeTrial, player, run) => {
       val ref = context.actorOf(TimeTrialActor.props(timeTrial, player, run))
+      mountedRuns = mountedRuns :+ (RichRun(run, timeTrial, player), ref)
       context.watch(ref)
       sender ! ref
     }
