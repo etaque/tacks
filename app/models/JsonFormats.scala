@@ -108,6 +108,7 @@ object JsonFormats {
       (__ \ 'time).format[Long] and
       (__ \ 'position).format[Point] and
       (__ \ 'isGrounded).format[Boolean] and
+      (__ \ 'isTurning).format[Boolean] and
       (__ \ 'heading).format[Double] and
       (__ \ 'velocity).format[Double] and
       (__ \ 'vmgValue).format[Double] and

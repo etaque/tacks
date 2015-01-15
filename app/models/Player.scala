@@ -103,7 +103,7 @@ object User extends MongoDAO[User] {
   implicit val bsonWriter: BSONDocumentWriter[User] = Macros.writer[User]
 }
 
-case class Guest(_id: BSONObjectID) extends Player with HasId
+case class Guest(_id: BSONObjectID = BSONObjectID.generate) extends Player with HasId
 
 object Guest {
   implicit val bsonHandler = Macros.handler[Guest]

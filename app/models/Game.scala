@@ -13,7 +13,12 @@ case class PlayerInput (
   subtleTurn: Boolean,
   lock: Boolean,
   startCountdown: Boolean
-)
+) {
+  def manualTurn = arrows.x != 0
+  def isTurning = manualTurn && !subtleTurn
+  def isSubtleTurning = manualTurn && subtleTurn
+  def isLocking = arrows.y > 0 || lock
+}
 
 object PlayerInput {
   val initial = PlayerInput(
@@ -40,6 +45,7 @@ case class PlayerState (
   time: Long,
   position: Point,
   isGrounded: Boolean,
+  isTurning: Boolean,
   heading: Double,
   velocity: Double,
   vmgValue: Double,
@@ -54,11 +60,18 @@ case class PlayerState (
   tackTarget: Option[Double],
   crossedGates: Seq[Long],
   nextGate: Option[GateLocation]
-)
+) {
+  def upwind = math.abs(windAngle) < 90
+  def closestVmgAngle = if (upwind) upwindVmg.angle else downwindVmg.angle
+  def headingOnVmg = Geo.ensure360(if (windAngle < 0) windOrigin - closestVmgAngle else windOrigin + closestVmgAngle)
+  def deltaToVmg = Geo.angleDelta(heading, headingOnVmg)
+
+  def toDebug = s"t:$time turning:$isTurning heading:$heading windAngle:$windAngle control:$controlMode tack:$tackTarget"
+}
 
 object PlayerState {
   def initial(player: Player) = PlayerState(
-    player, DateTime.now.getMillis, (0,0), false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
+    player, DateTime.now.getMillis, (0,0), false, false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
     FixedHeading, None, Seq(), Some(StartLine))
 }
 
