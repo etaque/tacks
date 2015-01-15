@@ -2,7 +2,7 @@ package controllers
 
 import core.TimeTrialLeaderboard
 import play.api.libs.concurrent.Execution.Implicits._
-import models.{User, TimeTrialRun, TimeTrial}
+import models.{RichRun, User, TimeTrialRun, TimeTrial}
 import play.api.mvc.Controller
 
 object TimeTrials extends Controller with Security  {
@@ -13,8 +13,12 @@ object TimeTrials extends Controller with Security  {
       rankings <- TimeTrialRun.rankings(trial.id)
       users <- User.listByIds(rankings.map(_.playerId))
       allForSlug <- TimeTrial.listForSlug(trial.slug)
+      allForPeriod <- TimeTrial.listForPeriod(trial.period)
+      lastRuns <- TimeTrialRun.listRecent(trial.id, 10)
+      richRuns <- RichRun.fromRuns(lastRuns, Some(trial))
+      runsCount <- TimeTrialRun.countForTrial(trial.id)
     }
-    yield Ok(views.html.timeTrials.show(trial, rankings, users, allForSlug))
+    yield Ok(views.html.timeTrials.show(trial, rankings, users, allForSlug, allForPeriod, runsCount, richRuns))
   }
 
   def currentLeaderboard = leaderboard(TimeTrial.currentPeriod)

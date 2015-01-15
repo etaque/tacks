@@ -26,7 +26,7 @@ object Application extends Controller with Security {
       leaderboard       = TimeTrialLeaderboard.forTrials(trialsWithRanking)
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
-    yield Ok(views.html.index(request.player, trialsWithRanking, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
+    yield Ok(views.html.index(request.player, timeTrials, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
   }
 
   def notFound(path: String) = PlayerAction.async() { implicit request =>

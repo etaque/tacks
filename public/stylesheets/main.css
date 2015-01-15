@@ -4888,6 +4888,15 @@ h2, h3, h4, h5, h6 {
   font-family: "Museo Slab";
   font-size: 21px;
   margin-bottom: 15px; }
+  h2.block-title, h3.block-title, h4.block-title, h5.block-title, h6.block-title {
+    text-align: center;
+    background-color: #387ac4;
+    color: white;
+    font-size: 15px;
+    padding: 10px;
+    margin-bottom: 0; }
+    h2.block-title.secondary, h3.block-title.secondary, h4.block-title.secondary, h5.block-title.secondary, h6.block-title.secondary {
+      background-color: #b0b3b8; }
 
 a {
   color: #387ac4;
@@ -4961,6 +4970,8 @@ a {
     margin: 0; }
     .title-wrapper h1 a {
       color: white; }
+      .title-wrapper h1 a:hover {
+        color: #5899E2; }
   .title-wrapper p {
     font-family: "Proxima Nova Thin";
     margin-top: 10px; }
@@ -5241,36 +5252,105 @@ a.user-avatar:hover {
   font-family: "Proxima Nova Light";
   src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
-.time-trial-rankings {
+.nav-trials {
+  text-align: center;
+  margin-top: 50px; }
+  .nav-trials li {
+    display: inline-block;
+    font-size: 13px;
+    margin: 0; }
+    .nav-trials li a {
+      display: inline-block;
+      padding: 10px 20px;
+      text-transform: uppercase;
+      font-family: "Proxima Nova Thin";
+      letter-spacing: 1px;
+      color: white; }
+    .nav-trials li.active a {
+      background-color: #23395C;
+      color: #5899E2; }
+    .nav-trials li:hover a {
+      background-color: #23395C; }
+  .nav-trials li + li {
+    margin-left: 10px; }
+
+.previous-period {
+  text-align: left; }
+
+.next-period {
+  text-align: right; }
+
+.period {
+  color: white;
+  font-family: "Proxima Nova Thin";
+  display: inline-block;
+  line-height: 30px;
+  padding: 0 15px;
+  border: 1px solid white;
+  border-radius: 20px; }
+
+a.period {
+  color: #5899E2;
+  border-color: #5899E2;
+  background-color: #23395C; }
+  a.period:hover {
+    background-color: #1f3251; }
+
+.row-show-ranking {
+  margin-top: 30px; }
+
+.list-time-trial-rankings {
   font-family: "Inconsolata";
   margin: 0;
   padding: 0;
   background-color: white;
   box-shadow: 0 1px 2px #E6E6E6;
   border: 2px solid white; }
-  .time-trial-rankings li {
+  .list-time-trial-rankings li {
     list-style: none;
     border-bottom: 1px solid #f8f9fb;
-    padding: 5px 10px; }
-    .time-trial-rankings li:last-child {
+    padding: 5px 8px; }
+    .list-time-trial-rankings li:last-child {
       border-bottom-color: transparent; }
-    .time-trial-rankings li .rank {
+    .list-time-trial-rankings li .rank {
       width: 20px;
       display: inline-block; }
-    .time-trial-rankings li .rank:after {
+    .list-time-trial-rankings li .rank:after {
       content: "."; }
-    .time-trial-rankings li .time {
+    .list-time-trial-rankings li .time {
       float: right; }
-    .time-trial-rankings li.current-player {
+    .list-time-trial-rankings li.current-player {
       background-color: #f8f9fb;
       color: #5899E2; }
-      .time-trial-rankings li.current-player .user-avatar .handle {
+      .list-time-trial-rankings li.current-player .user-avatar .handle {
         color: #5899E2; }
-    .time-trial-rankings li.empty {
+    .list-time-trial-rankings li.empty {
       color: #7b8087; }
-    .time-trial-rankings li.out-of-window {
+    .list-time-trial-rankings li.out-of-window {
       border-top: 1px solid #5899E2;
       padding-top: 4px; }
+
+.list-recent-runs {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  box-shadow: 0 1px 2px #E6E6E6;
+  border: 2px solid white; }
+  .list-recent-runs li {
+    list-style: none;
+    border-bottom: 1px solid #f8f9fb;
+    padding: 5px 8px; }
+    .list-recent-runs li .time-ago {
+      color: #b0b3b8;
+      font-size: 14px;
+      font-family: "Proxima Nova Thin";
+      float: right;
+      margin-right: 10px; }
+    .list-recent-runs li .finish-time {
+      font-family: "Inconsolata";
+      float: right; }
+    .list-recent-runs li:last-child {
+      border-bottom-color: transparent; }
 
 .show-time-trial h3 {
   margin-top: 0; }
@@ -5295,13 +5375,11 @@ a.user-avatar:hover {
     .show-time-trial .nav li.active a {
       background-color: #23395C; }
 
-.previous-period {
-  text-align: left; }
-
 .table-leaderboard {
   width: 100%;
   background-color: white;
-  box-shadow: 0 2px 2px #E6E6E6; }
+  box-shadow: 0 2px 2px #E6E6E6;
+  margin-top: 20px; }
   .table-leaderboard tbody {
     font-family: "Inconsolata"; }
   .table-leaderboard th {

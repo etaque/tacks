@@ -1,5 +1,5 @@
 @(player: Player,
-  trials: Seq[(TimeTrial, Seq[RunRanking])],
+  trials: Seq[TimeTrial],
   trialsUsers: Seq[User],
   trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard,
   finishedRaces: Seq[Race],
@@ -25,7 +25,7 @@
             case None => {
               <p class="align-center">@Messages("home.notRanked")</p>
 
-              @trials.find(_._1.slug == core.WarmUp.slug).map { case (t, _) =>
+              @trials.find(_.slug == core.WarmUp.slug).map { t =>
                 <div class="align-center">
                   <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.runWarmUp")</a>
                 </div>
@@ -39,6 +39,12 @@
           <h1>@Messages("home.title")</h1>
           <p class="align-center">@Html(Messages("home.intro"))</p>
 
+          @trials.find(_.slug == core.WarmUp.slug).map { t =>
+            <div class="align-center">
+              <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-primary" target="blank">@Messages("home.tryIt")</a>
+            </div>
+            <p class="align-center">@Messages("home.orSignup")</p>
+          }
 
           <div class="row">
             <div class="col-lg-6 col-lg-offset-3">
@@ -111,26 +117,9 @@
     <div class="container">
 
       <h2>@Messages("home.timeTrials")</h2>
-      <p class="subtitle">@org.joda.time.LocalDate.now.toString("MMMM yyyy")</p>
+      <p class="subtitle"><span class="period">@org.joda.time.LocalDate.now.toString("MMMM yyyy")</span></p>
 
-      @for(row <- trials.grouped(3)) {
-        <div class="row">
-          @for((trial, rankings) <- row) {
-            <div class="col-md-4">
-              <div class="home-time-trial">
-                <a href="@routes.TimeTrials.show(trial.id.stringify)" class="run"
-                style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
-                  <span class="name">@Messages("generators." + trial.slug + ".name")</span>
-                  <div class="description">
-                    @Messages("generators." + trial.slug + ".description")
-                  </div>
-                </a>
-                <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
-              </div>
-            </div>
-          }
-        </div>
-      }
+      @views.html.timeTrials.catalog(trials)
 
     </div>
   </div>

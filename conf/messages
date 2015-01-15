@@ -26,6 +26,14 @@ password=Password
 logout=Logout
 anonymous=Anonymous
 
+secondsAgo={0} seconds ago
+minuteAgo=1 minute ago
+minutesAgo={0} minutes ago
+hourAgo=1 hour ago
+hoursAgo={0} hours ago
+dayAgo=1 day ago
+daysAgo={0} days ago
+
 rank.first=st
 rank.second=nd
 rank.third=rd
@@ -33,17 +41,19 @@ rank.nth=th
 
 menu.home=Home
 menu.blog=Blog
-menu.leaderboard=Leaderboard
+menu.timeTrials=Time trials
 menu.login=Login
 menu.register=Sign up
 menu.me=Profile
 menu.logout=Logout
 
 home.title=Sailing tactics from the sofa
-home.intro=Tacks is a <strong>regatta simulation</strong> game.\
+home.intro=Tacks is a free <strong>regatta simulation</strong> game.\
   <br>Engage yourself in a <strong>realtime multiplayer</strong> race or \
   attempt to break your <strong>time trial</strong> scores to climb the rankings.\
   <br>You'll need a recent browser to fully enjoy the game (Chrome or Safari advised).
+home.tryIt=Come try it!
+home.orSignup=Registration is optional for playing but required to keep your scores.
 home.doLog=sign in
 home.welcome=Welcome, {0}
 home.ranked=Your rank is {0} on time trials leaderboard, with {1} points.
@@ -99,9 +109,15 @@ liveCenter.startingIn=-{0}s
 liveCenter.startedSince=+{0}s
 liveCenter.join=Join
 
+timeTrials.title=Time trials
+timeTrials.leaderboard.general=Overall leaderboard
+timeTrials.leaderboard.courses=Race areas
+timeTrials.leaderboard.total=Points
 timeTrials.rankings=Current leaderboard
+timeTrials.trialRankings=Ranking
+timeTrials.recentRuns=Recent activity
+timeTrials.recent=Ran less than one day ago
 timeTrials.run=New run
-timeTrials.title=Time trial
 timeTrials.closed=Closed race
 
 generators.warmup.name=Warmup
@@ -116,9 +132,6 @@ generators.oysterpark.name=Oyster Park
 generators.oysterpark.description=a real life nightmare, finally on your screen!
 generators.minefield.name=Minefield
 generators.minefield.description=watch your bow...
-
-leaderboard.title=Overall leaderboard
-leaderboard.total=Sum
 
 blog.title=Blog
 blog.subtitle=Game updates, hints & various stuff.

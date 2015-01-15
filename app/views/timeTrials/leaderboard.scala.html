@@ -9,42 +9,47 @@
 
     <div class="title-wrapper">
       <div class="container">
-        <h1>@Messages("leaderboard.title")</h1>
+        <h1>@Messages("timeTrials.title")</h1>
+
         <div class="row">
-          <div class="col-md-2 previous-period">
+          <div class="col-md-4 previous-period">
             <p>
-              @defining(date.minusMonths(1)) { prevDate =>
-                @if(! prevDate.isBefore(tools.Conf.earliestTimeTrial)) {
-                  <a href="@routes.TimeTrials.leaderboard(prevDate.toString(TimeTrial.periodFormat))">&larr; @prevDate.toString("MMMM yyyy")</a>
-                }
+            @defining(date.minusMonths(1)) { prevDate =>
+              @if(! prevDate.isBefore(tools.Conf.earliestTimeTrial)) {
+                <a href="@routes.TimeTrials.leaderboard(prevDate.toString(TimeTrial.periodFormat))" class="period">&larr; @prevDate.toString("MMMM yyyy")</a>
               }
+            }
             </p>
           </div>
-          <div class="col-md-8">
-            <p>@date.toString("MMMM yyyy")</p>
+          <div class="col-md-4 align-center">
+            <p><span class="period">@date.toString("MMMM yyyy")</span></p>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-4 next-period">
             <p>
             @defining(date.plusMonths(1)) { nextDate =>
               @if(nextDate.toDateTimeAtStartOfDay.isBeforeNow) {
-                <a href="@routes.TimeTrials.leaderboard(nextDate.toString(TimeTrial.periodFormat))">@nextDate.toString("MMMM yyyy") &rarr;</a>
+                <a href="@routes.TimeTrials.leaderboard(nextDate.toString(TimeTrial.periodFormat))" class="period">@nextDate.toString("MMMM yyyy") &rarr;</a>
               }
             }
             </p>
           </div>
         </div>
+
       </div>
     </div>
 
     <div class="light-wrapper">
 
       <div class="container">
+
+        <h2>@Messages("timeTrials.leaderboard.general")</h2>
+
         <table class="table-leaderboard">
           <thead>
             <tr>
               <th></th>
               <th></th>
-              <th>@Messages("leaderboard.total")</th>
+              <th>@Messages("timeTrials.leaderboard.total")</th>
               @for(trial <- trials) {
                 <th class="trial-name"><a href="@routes.TimeTrials.show(trial.idToStr)">@Messages("generators." + trial.slug + ".name")</a></th>
               }
@@ -83,6 +88,15 @@
       </div>
     </div>
 
+    <div class="dark-wrapper home-trials">
+      <div class="container">
+
+        <h2>@Messages("timeTrials.leaderboard.courses")</h2>
+
+        @views.html.timeTrials.catalog(byTrial.map(_._1))
+
+      </div>
+    </div>
 
   }
 }

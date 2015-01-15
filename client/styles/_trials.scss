@@ -1,7 +1,74 @@
 @import 'colors';
 @import 'fonts';
 
-.time-trial-rankings {
+.nav-trials {
+  text-align: center;
+  margin-top: 50px;
+
+  li {
+    display: inline-block;
+    font-size: 13px;
+    margin: 0;
+
+    a {
+      display: inline-block;
+      padding: 10px 20px;
+      text-transform: uppercase;
+      font-family: $lightFontFamily;
+      letter-spacing: 1px;
+//      background-color: $navBlue;
+      color: white;
+//      border-radius: 2px;
+    }
+
+    &.active a {
+      background-color: $seaBlue;
+      color:  $mainBlue;
+    }
+
+    &:hover a {
+      background-color: $seaBlue;
+    }
+  }
+
+  li + li {
+    margin-left: 10px;
+  }
+}
+
+.previous-period {
+  text-align: left;
+}
+
+.next-period {
+  text-align: right;
+}
+
+.period {
+  color: white;
+  font-family: $lightFontFamily;
+  display: inline-block;
+  line-height: 30px;
+  padding: 0 15px;
+  border: 1px solid white;
+  border-radius: 20px;
+}
+
+a.period {
+  color: $mainBlue;
+  border-color: $mainBlue;
+  background-color: $seaBlue;
+
+  &:hover {
+    background-color: $darkSeaBlue;
+  }
+}
+
+.row-show-ranking {
+  margin-top: 30px;
+}
+
+.list-time-trial-rankings {
   font-family: $mono;
   margin: 0;
   padding: 0;
@@ -12,7 +79,7 @@
   li {
     list-style: none;
     border-bottom: 1px solid $smokeWhite;
-    padding: 5px 10px;
+    padding: 5px 8px;
 
     &:last-child {
       border-bottom-color: transparent;
@@ -47,6 +114,38 @@
     &.out-of-window {
       border-top: 1px solid $mainBlue;
       padding-top: 4px;
+    }
+  }
+}
+
+.list-recent-runs {
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  box-shadow: 0 1px 2px $lightGray;
+  border: 2px solid white;
+
+  li {
+    list-style: none;
+    border-bottom: 1px solid $smokeWhite;
+    padding: 5px 8px;
+
+    .time-ago {
+      color: $mediumGray;
+      font-size: 14px;
+      font-family: $lightFontFamily;
+      float: right;
+//      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .finish-time {
+      font-family: $mono;
+      float: right;
+    }
+
+    &:last-child {
+      border-bottom-color: transparent;
     }
   }
 }
@@ -92,14 +191,11 @@
   }
 }
 
-.previous-period {
-  text-align: left;
-}
-
 .table-leaderboard {
   width: 100%;
   background-color: white;
   box-shadow: 0 2px 2px $lightGray;
+  margin-top: 20px;
 
   tbody {
     font-family: $mono;

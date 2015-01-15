@@ -1,13 +1,30 @@
-@(trial: TimeTrial, rankings: Seq[RunRanking], users: Seq[User], allPeriods: Seq[TimeTrial])(implicit lang: Lang, req: PlayerRequest[_])
+@(trial: TimeTrial, 
+  rankings: Seq[RunRanking], 
+  users: Seq[User], 
+  allForSlug: Seq[TimeTrial],
+  allForPeriod: Seq[TimeTrial],
+  runsCount: Int,
+  lastRuns: Seq[RichRun]
+)(implicit lang: Lang, req: PlayerRequest[_])
+
+@import views.Helpers
 
 @main {
 
   <div class="title-wrapper">
     <div class="container">
-      <h1 class="uppercase">@Messages("generators." + trial.slug + ".name")</h1>
-      <p>
-        &laquo; @Messages("generators." + trial.slug + ".description") &raquo;
+      <h1><a href="@routes.TimeTrials.leaderboard(trial.period)">@Messages("timeTrials.title")</a></h1>
+
+      <p class="align-center">
+        <span class="period">@trial.creationTime.toString("MMMM yyyy")</span>
       </p>
+
+      <ul class="nav nav-trials">
+      @for(t <- allForPeriod) {
+        <li @if(t.id == trial.id) { class="active" }><a href="@routes.TimeTrials.show(t.idToStr)">@Messages(s"generators.${t.slug}.name")</a></li>
+      }
+      </ul>
+
     </div>
   </div>
 
@@ -15,36 +32,55 @@
   <div class="light-wrapper">
     <div class="container show-time-trial">
 
+      <h2 class="uppercase">@Messages("generators." + trial.slug + ".name")</h2>
+@*      <p class="align-center">
+        @Messages("timeTrials.runsCount", runsCount)
+      </p>*@
+
       <div class="row">
-        <div class="col-md-offset-3 col-md-3">
-
-          <div class="trial-picture" style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
-          </div>
-
+        <div class="col-md-offset-4 col-md-4">
+          <p class="align-center">
           @if(TimeTrial.isOpen(trial)) {
             <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
           } else {
             <button type="button" class="btn btn-default btn-disabled btn-block" disabled>@Messages("timeTrials.closed")</button>
           }
+          </p>
+        </div>
+      </div>
 
-          <ul class="nav nav-stacked">
-          @for(t <- allPeriods) {
-            <li @if(t.id == trial.id) { class="active" }>
-              <a href="@routes.TimeTrials.show(t.idToStr)">@t.creationTime.toString("MMMM yyyy").capitalize</a>
-            </li>
+      <p class="align-center">&laquo; @Messages(s"generators.${trial.slug}.description") &raquo;</p>
+
+      <div class="row row-show-ranking">
+
+        <div class="col-md-offset-2 col-md-4">
+          <h3 class="block-title secondary">@Messages("timeTrials.recentRuns")</h3>
+          @if(lastRuns.nonEmpty) {
+            <ul class="list-recent-runs">
+            @for(RichRun(run, _, user) <- lastRuns) {
+              <li>
+                <a href="@routes.Users.show(user.handle)" class="user-avatar">
+                  @views.html.users.avatar(user)
+                  <span class="handle">@user.handle</span>
+                </a>
+
+                <span class="finish-time">
+                @run.finishTime.map(views.Helpers.timer)
+                </span>
+
+                <span class="time-ago" title="@run.creationTime.toString("EEEE d - HH:mm")">@Helpers.timeAgo(run.time)</span>
+              </li>
+            }
+            </ul>
           }
-          </ul>
         </div>
 
         <div class="col-md-offset-0 col-md-4">
-
-          <h3>
-            @trial.creationTime.toString("MMMM yyyy").capitalize
-          </h3>
-
+          <h3 class="block-title">@Messages("timeTrials.trialRankings")</h3>
           @views.html.timeTrials.ranking(rankings, users, req.player)
-
         </div>
+
+
       </div>
     </div>
 

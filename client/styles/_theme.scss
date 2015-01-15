@@ -24,6 +24,20 @@ h2, h3, h4, h5, h6 {
   font-family: $headerFontFamily;
   font-size: 21px;
   margin-bottom: 15px;
+
+  &.block-title {
+    text-align: center;
+    background-color: $navBlue;
+    color: white;
+    font-size: 15px;
+    padding: 10px;
+    margin-bottom: 0;
+
+    &.secondary {
+      background-color: $mediumGray;
+    }
+  }
+
 }
 
 a {
@@ -124,6 +138,10 @@ a {
 
     a {
       color: white;
+
+      &:hover {
+        color: $mainBlue;
+      }
     }
   }
 

@@ -70,6 +70,7 @@ case class TimeTrialRun(
   _id: BSONObjectID = BSONObjectID.generate,
   timeTrialId: BSONObjectID,
   playerId: BSONObjectID,
+  time: DateTime,
   tally: Seq[Long] = Nil,
   finishTime: Option[Long] = None
 ) extends HasId {
@@ -91,6 +92,16 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
 
   def updateTimes(id: BSONObjectID, tally: Seq[Long], finishTime: Option[Long]): Future[_] = {
     update(id, BSONDocument("tally" -> tally, "finishTime" -> finishTime))
+  }
+
+  def listRecent(trialId: BSONObjectID, count: Int): Future[Seq[TimeTrialRun]] = {
+    collection.find(BSONDocument("timeTrialId" -> trialId, "finishTime" -> BSONDocument("$exists" -> true)))
+      .sort(BSONDocument("time" -> -1))
+      .cursor[TimeTrialRun].collect[Seq](upTo = count)
+  }
+
+  def countForTrial(trialId: BSONObjectID): Future[Int] = {
+    count(Some(BSONDocument("timeTrialId" -> trialId)))
   }
 
   def rankings(trialId: BSONObjectID): Future[Seq[RunRanking]] = {
@@ -151,4 +162,28 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
   implicit val bsonWriter: BSONDocumentWriter[TimeTrialRun] = Macros.writer[TimeTrialRun]
 }
 
+case class RichRun(
+  r: TimeTrialRun,
+  t: TimeTrial,
+  u: User
+)
 
+object RichRun {
+  def fromRuns(runs: Seq[TimeTrialRun], trial: Option[TimeTrial]): Future[Seq[RichRun]] = {
+    val playerIds = runs.map(_.playerId)
+    val trialIds = runs.map(_.timeTrialId)
+    for {
+      users <- User.listByIds(playerIds)
+      trials <- trial.fold(TimeTrial.listByIds(trialIds))(t => Future.successful(Seq(t)))
+    }
+    yield {
+      runs.flatMap { run =>
+        for {
+          trial <- trials.find(_.id == run.timeTrialId)
+          user <- users.find(_.id == run.playerId)
+        }
+        yield RichRun(run, trial, user)
+      }
+    }
+  }
+}

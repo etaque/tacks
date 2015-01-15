@@ -15,6 +15,14 @@ logout=Déconnexion
 anonymous=Anonyme
 or=ou
 
+secondsAgo=il y a {0} secondes
+minuteAgo=il y a une minute
+minutesAgo=il y a {0} minutes
+hourAgo=il y a une heure
+hoursAgo=il y a {0} heures
+dayAgo=il y a un jour
+daysAgo=il y a {0} jours
+
 rank.first=er
 rank.second=nd
 rank.third=e
@@ -22,16 +30,18 @@ rank.nth=e
 
 menu.home=Accueil
 menu.blog=Blog
-menu.leaderboard=Classement
+menu.timeTrials=Contre la montre
 menu.login=Connexion
 menu.register=Inscription
 menu.me=Profil
 menu.logout=Déconnexion
 
 home.title=Tactiquez depuis votre canapé
-home.intro=Tacks est un jeu de <strong>simulation de régate</strong>.\
+home.intro=Tacks est un jeu de <strong>simulation de régate</strong> gratuit.\
 <br>Participez à une régate <strong>multijoueur en temps réel</strong> ou tentez un <strong>contre la montre</strong> pour grimper dans le classement.\
 <br>Un navigateur récent est requis pour profiter pleinement du jeu (Chrome ou Safari recommandés).
+home.tryIt=Esssayez donc !
+home.orSignup=L''inscription est optionnelle pour jouer mais nécessaire pour conserver vos scores.
 home.doLog=connectez-vous
 home.welcome=Bienvenue, {0}
 home.ranked=Tu occupes la {0}<sup>e</sup> place au classement des contre-la-montre, avec {1} points.
@@ -88,11 +98,6 @@ liveCenter.startingIn=-{0}s
 liveCenter.startedSince=+{0}s
 liveCenter.join=Rejoindre
 
-timeTrials.rankings=Classement du mois
-timeTrials.run=Nouveau run
-timeTrials.recent=Couru il y a moins de 24h
-timeTrials.closed=Course archivée
-
 generators.warmup.name=Warmup
 generators.warmup.description=faites-vous la main sur les trois tours de ce petit parcours
 generators.classic.name=Classic
@@ -120,8 +125,15 @@ tutorial.steps.TheoryStep.subtitle=Pour remonter au vent, le plus rapide n''est 
 tutorial.steps.LapStep.title=Mise en pratique
 tutorial.steps.LapStep.subtitle=Ligne de départ, porte au vent, ligne d''arrivée, une île à éviter. Simple !
 
-leaderboard.title=Classement général
-leaderboard.total=Total
+timeTrials.title=Courses contre la montre
+timeTrials.leaderboard.general=Classement général
+timeTrials.leaderboard.courses=Plans d''eau
+timeTrials.leaderboard.total=Total
+timeTrials.trialRankings=Meilleurs temps
+timeTrials.run=Nouveau run
+timeTrials.recentRuns=Activité récente
+timeTrials.recent=Couru il y a moins de 24h
+timeTrials.closed=Course archivée
 
 blog.title=Blog
 blog.subtitle=Nouveautés du jeu, conseils pour progresser, etc.

@@ -24,10 +24,8 @@ trait MongoDAO[T] {
   def db: DefaultDB = ReactiveMongoPlugin.db
   def collection = db[BSONCollection](collectionName)
 
-  def count(query: Option[JsObject] = None): Future[Int] = {
-    val queryAsBSON = query.map(q => BSONFormats.BSONDocumentFormat.reads(q).get)
-
-    db.command(Count(collectionName, queryAsBSON))
+  def count(query: Option[BSONDocument] = None): Future[Int] = {
+    db.command(Count(collectionName, query))
   }
 
   def count: Future[Int] = count(None)

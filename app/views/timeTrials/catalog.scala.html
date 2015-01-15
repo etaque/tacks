@@ -1,0 +1,20 @@
+@(trials: Seq[TimeTrial])
+
+@for(row <- trials.grouped(3)) {
+  <div class="row">
+  @for(trial <- row) {
+    <div class="col-md-4">
+      <div class="home-time-trial">
+        <a href="@routes.TimeTrials.show(trial.id.stringify)" class="run"
+        style="background-image: url(@routes.Assets.at(s"images/trials-${trial.slug}.png"))">
+          <span class="name">@Messages("generators." + trial.slug + ".name")</span>
+          <div class="description">
+          @Messages("generators." + trial.slug + ".description")
+          </div>
+        </a>
+        <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank" class="btn btn-warning btn-block">@Messages("timeTrials.run")</a>
+      </div>
+    </div>
+  }
+  </div>
+}
