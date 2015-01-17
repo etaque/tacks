@@ -140,7 +140,7 @@ object RaceUpdate {
 
 case class RaceStatus(
   race: Race,
-  master: Player,
+  master: Option[Player],
   startTime: Option[DateTime],
   playerStates: Seq[PlayerState]
 )

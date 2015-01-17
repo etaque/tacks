@@ -1,5 +1,6 @@
 package actors
 
+import reactivemongo.bson.BSONObjectID
 import tools.Conf
 
 import scala.concurrent.duration._
@@ -16,7 +17,7 @@ case class WatcherContext(watcher: Player, state: WatcherState, ref: ActorRef)
 case class WatcherJoin(watcher: Player)
 case class WatcherQuit(watcher: Player)
 
-class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
+class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWind {
 
   val id = race.id
   val course = race.course
@@ -33,7 +34,7 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
 
   val watchers = scala.collection.mutable.Map[PlayerId, WatcherContext]()
 
-  var startTime: Option[DateTime] = None
+  var startTime: Option[DateTime] = if (master.isEmpty) Some(DateTime.now.plusSeconds(race.countdownSeconds)) else None
 
   def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
   def startScheduled = startTime.isDefined
@@ -97,7 +98,7 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
       val id = player.id.stringify
 
       players.get(id).foreach { context =>
-        if (input.startCountdown) startCountdown(byPlayerId = id)
+        if (input.startCountdown) startCountdown(byPlayerId = player.id)
         players += (id -> context.copy(input = input))
       }
     }
@@ -155,8 +156,11 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
      * kill remaining players and watchers actors
      */
     case AutoClean => {
-      val deserted = race.creationTime.plusMinutes(1).isBeforeNow && players.isEmpty
-      val finished = startTime.exists(_.plusMinutes(20).isBeforeNow)
+      val deserted = master match {
+        case Some(_) => players.isEmpty && race.creationTime.plusMinutes(1).isBeforeNow
+        case None => players.isEmpty && startTime.exists(_.isBeforeNow)
+      }
+      val finished = startTime.exists(_.plusMinutes(10).isBeforeNow)
       if (deserted || finished) {
         players.values.foreach(_.ref ! PoisonPill)
         watchers.values.foreach(_.ref ! PoisonPill)
@@ -165,8 +169,8 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
     }
   }
 
-  private def startCountdown(byPlayerId: String) = {
-    if (startTime.isEmpty && byPlayerId == master.id.stringify) {
+  private def startCountdown(byPlayerId: BSONObjectID) = {
+    if (startTime.isEmpty && master.exists(_.id == byPlayerId)) {
       val at = DateTime.now.plusSeconds(race.countdownSeconds)
       startTime = Some(at)
     }
@@ -213,7 +217,7 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
       wind = wind,
       opponents = opponentsTo(id),
       leaderboard = leaderboard,
-      isMaster = id == master.id.stringify,
+      isMaster = master.exists(_.id == player.id),
       watching = false,
       timeTrial = false
     )
@@ -240,5 +244,5 @@ class RaceActor(race: Race, master: Player) extends Actor with ManageWind {
 }
 
 object RaceActor {
-  def props(race: Race, master: Player) = Props(new RaceActor(race, master))
+  def props(race: Race, master: Option[Player]) = Props(new RaceActor(race, master))
 }

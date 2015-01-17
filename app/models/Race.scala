@@ -15,10 +15,10 @@ case class PlayerTally(
 
 case class Race (
   _id: BSONObjectID = BSONObjectID.generate,
-  playerId: BSONObjectID,
+  playerId: Option[BSONObjectID] = None,
   course: Course,
   generator: String,
-  countdownSeconds: Int,
+  countdownSeconds: Int = 30,
   creationTime: DateTime = DateTime.now,
   startTime: Option[DateTime] = None,
   tally: Seq[PlayerTally] = Nil

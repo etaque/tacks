@@ -96,6 +96,7 @@ me.updateSettingsSuccess=Paramètres enregistrés.
 liveCenter.emptyBoard=Pas de course ouverte pour le moment.
 liveCenter.generator=Plan d''eau
 liveCenter.master=Initiateur
+liveCenter.serverRace=[serveur]
 liveCenter.opponents=Participants
 liveCenter.countdown=Chrono
 liveCenter.startingIn=-{0}s

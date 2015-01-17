@@ -12,6 +12,8 @@ object Conf {
 
   val earliestTimeTrial = new LocalDate(2014,12,1)
 
+  val serverRacesCountdownSeconds = 10 * 60
+
   val prismicApi = getString("prismic.api")
 
   val disqus = getString("disqus")

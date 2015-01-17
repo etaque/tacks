@@ -19,10 +19,18 @@ var BoardLine = React.createClass({
 
   getCountdown: function(millis) {
     if (millis) {
-      if (millis > 0) return Messages('liveCenter.startingIn', Math.ceil(millis / 1000));
+      if (millis > 0) return Messages('liveCenter.startingIn', util.timer(millis));
       else return Messages("liveCenter.startedSince", util.timer(Math.abs(millis)));
     } else {
       return "";
+    }
+  },
+
+  getMaster: function(player) {
+    if (player) {
+      return <PlayerWithAvatar player={ player } />;
+    } else {
+      return <span className="user-avatar">{ Messages("liveCenter.serverRace") }</span>;
     }
   },
 
@@ -36,7 +44,7 @@ var BoardLine = React.createClass({
         <td className="generator">
           { Messages('generators.' + s.race.generator + '.name') }
         </td>
-        <td className="master"><PlayerWithAvatar player={ s.master } /></td>
+        <td className="master">{ this.getMaster(s.master) }</td>
         <td className="players">
           { players }
         </td>

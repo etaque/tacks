@@ -107,6 +107,7 @@ me.updateSettingsSuccess=Settings saved.
 liveCenter.emptyBoard=No race currently open
 liveCenter.generator=Race area
 liveCenter.master=Initiator
+liveCenter.serverRace=[server]
 liveCenter.opponents=Opponents
 liveCenter.countdown=Countdown
 liveCenter.startingIn=-{0}s

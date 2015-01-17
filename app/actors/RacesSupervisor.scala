@@ -1,5 +1,7 @@
 package actors
 
+import tools.Conf
+
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import play.api.libs.concurrent.Akka
@@ -11,6 +13,7 @@ import akka.util.Timeout
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
 import models._
+import core.Classic
 
 
 case class MountRace(race: Race, master: Player)
@@ -18,6 +21,7 @@ case class MountTimeTrialRun(timeTrial: TimeTrial, player: Player, run: TimeTria
 case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
+case object CreateRace
 case object GetOpenRaces
 case object GetLiveRuns
 case class NotifyNewRace(raceActor: ActorRef, race: Race, master: User)
@@ -25,7 +29,7 @@ case class NotifyNewRace(raceActor: ActorRef, race: Race, master: User)
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
-  var mountedRaces = Seq.empty[(Race, Player, ActorRef)]
+  var mountedRaces = Seq.empty[(Race, Option[Player], ActorRef)]
   var mountedRuns = Seq.empty[(RichRun, ActorRef)]
   var subscribers = Seq.empty[(Player, ActorRef)]
 
@@ -33,9 +37,20 @@ class RacesSupervisor extends Actor {
 
   def receive = {
 
+    case CreateRace => {
+      val race = new Race(
+        course = Classic.generateCourse(),
+        generator = Classic.slug,
+        countdownSeconds = Conf.serverRacesCountdownSeconds
+      )
+      val ref = context.actorOf(RaceActor.props(race, None))
+      mountedRaces = mountedRaces :+ (race, None, ref)
+      context.watch(ref)
+    }
+
     case MountRace(race, master) => {
-      val ref = context.actorOf(RaceActor.props(race, master))
-      mountedRaces = mountedRaces :+ (race, master, ref)
+      val ref = context.actorOf(RaceActor.props(race, Some(master)))
+      mountedRaces = mountedRaces :+ (race, Some(master), ref)
       context.watch(ref)
       sender ! Unit
       master match {
@@ -104,7 +119,7 @@ object RacesSupervisor {
   implicit val timeout = Timeout(5.seconds)
 
   def start() = {
-//    Akka.system.scheduler.schedule(0.microsecond, 1.minutes, actorRef, CreateRace)
+    Akka.system.scheduler.schedule(0.microsecond, Conf.serverRacesCountdownSeconds.seconds, actorRef, CreateRace)
   }
 
   def notifyNewRace(subscribers: Seq[(Player, ActorRef)], raceActor: ActorRef, race: Race, master: User) = {
