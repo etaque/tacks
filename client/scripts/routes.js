@@ -1,1 +1,1 @@
-module.exports = window.jsRoutes.controllers;
+module.exports = window.jsRoutes && window.jsRoutes.controllers;

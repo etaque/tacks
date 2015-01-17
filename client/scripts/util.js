@@ -27,8 +27,14 @@ function timer(millis) {
   else return "" + m + ":" + s;
 }
 
+function readData(id, el) {
+  var value = $.trim($(('#' + id), el).html());
+  return value && JSON.parse(value);
+}
+
 module.exports = {
   post: post,
   cx: cx,
-  timer: timer
+  timer: timer,
+  readData: readData
 };

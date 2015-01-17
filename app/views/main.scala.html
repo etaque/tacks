@@ -1,9 +1,5 @@
 @(content: Html)(implicit req: PlayerRequest[_], lang: Lang)
 
-@import play.api.Play
-@import play.api.Play.current
-@import play.api.libs.json.Json
-
 <!DOCTYPE html>
 
 <html>
@@ -72,22 +68,6 @@
     </div>
 
     @ga()
-
-    @helper.javascriptRouter("jsRoutes")(
-      routes.javascript.Api.racesStatus,
-      routes.javascript.Api.currentUser,
-      routes.javascript.Api.createRace,
-      routes.javascript.Api.notificationsSocket
-    )
-
-    <script type="text/javascript">
-    @Html(jsmessages.api.JsMessages.default.apply(Some("window.jsMessages")).body)
-    </script>
-
-    @if(Play.isProd) {
-      <script src="@routes.Assets.at("javascripts/dist/main.js")" type="text/javascript"></script>
-    } else {
-      <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
-    }
+    @views.html.scripts()
   </body>
 </html>

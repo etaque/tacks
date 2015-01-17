@@ -36,11 +36,18 @@ object Application extends Controller with Security {
   implicit val timeout = Timeout(5.seconds)
   import models.JsonFormats.raceUpdateFormat
 
+  def showHelp(implicit request: PlayerRequest[_]): Boolean = {
+   request.player match {
+     case u: User => false
+     case g: Guest => false
+   }
+  }
+
   def playTimeTrial(timeTrialId: String) = PlayerAction.async() { implicit request =>
     TimeTrial.findById(timeTrialId).map { timeTrial =>
       val wsUrl = routes.Api.timeTrialSocket(timeTrial.idToStr).webSocketURL()
       val initialInput = Json.toJson(RaceUpdate.initial(request.player, timeTrial.course, timeTrial = true))
-      Ok(views.html.game(initialInput, wsUrl))
+      Ok(views.html.game(initialInput, wsUrl, showHelp))
     }
   }
 
@@ -50,7 +57,7 @@ object Application extends Controller with Security {
       case Some(race) => {
         val wsUrl = routes.Api.racePlayerSocket(race.idToStr).webSocketURL()
         val initialInput = Json.toJson(RaceUpdate.initial(request.player, race.course))
-        Ok(views.html.game(initialInput, wsUrl))
+        Ok(views.html.game(initialInput, wsUrl, showHelp))
       }
     }
   }

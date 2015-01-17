@@ -1,0 +1,26 @@
+@()(implicit req: PlayerRequest[_], lang: Lang)
+
+@import play.api.Play.current
+
+<script src="@routes.Assets.at("javascripts/game.js")" type="text/javascript"></script>
+<script type="text/javascript">
+window.Elm = Elm
+</script>
+
+@helper.javascriptRouter("jsRoutes")(
+  routes.javascript.Api.racesStatus,
+  routes.javascript.Api.currentUser,
+  routes.javascript.Api.createRace,
+  routes.javascript.Api.notificationsSocket
+)
+
+<script type="text/javascript">
+@Html(jsmessages.api.JsMessages.default.apply(Some("window.jsMessages")).body)
+</script>
+
+@if(play.api.Play.isProd) {
+  <script src="@routes.Assets.at("javascripts/dist/main.js")" type="text/javascript"></script>
+} else {
+  <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
+}
+

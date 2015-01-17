@@ -1,7 +1,11 @@
+"use strict";
+
 var $ = require('jquery');
 var React = require('react');
 var LiveCenter = React.createFactory(require('./liveCenter.jsx'));
 var notifications = require('./notifications');
+var fileUpload = require('./fileUpload');
+var mountElm = require('./mountElm');
 
 window.$ = window.jQuery = $;
 require('../node_modules/bootstrap-sass/assets/javascripts/bootstrap/transition');
@@ -11,34 +15,16 @@ $(function() {
 
   notifications();
 
+  $(".upload-avatar").each(function() {
+    fileUpload(this, "avatar");
+  });
+
   $("#liveCenter").each(function() {
     React.render(LiveCenter(), this);
   });
 
-  $(".upload-avatar").each(function() {
-    var $div = $(this),
-      $input = $div.find("input:file");
-
-    $input.change(function(e) {
-      if (this.files[0]) {
-        var data = new FormData();
-        data.append('avatar', this.files[0]);
-        $.ajax({
-          url: $(this).data().action,
-          data: data,
-          cache: false,
-          contentType: false,
-          processData: false,
-          type: 'POST',
-          success: function(data) {
-            $div.find('img').attr("src", data.url);
-            $div.find('.alert').fadeIn();
-            $input.replaceWith($input.val('').clone(true));
-          }
-        });
-      }
-    });
-
-  });
+  $(".elm-game").each(function() {
+    mountElm();
+  })
 
 });
