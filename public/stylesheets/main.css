@@ -5098,15 +5098,6 @@ a.user-avatar:hover {
   a.user-avatar:hover .handle {
     text-decoration: underline; }
 
-.article .block-img {
-  margin-top: 30px;
-  margin-bottom: 15px;
-  text-align: center; }
-.article .legend {
-  margin-bottom: 30px;
-  text-align: center;
-  font-style: italic; }
-
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url('/assets/fonts/Proxima Nova Regular.otf'); }
@@ -5420,8 +5411,21 @@ a.period {
     width: 115px;
     text-align: center; }
 
-.post-body {
-  font-weight: normal; }
+.post .block-img, .article .block-img {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  text-align: center; }
+  .post .block-img img, .article .block-img img {
+    box-shadow: 0 2px 2px #E6E6E6;
+    border: 2px solid white;
+    border-radius: 2px; }
+.post .legend, .article .legend {
+  margin-bottom: 30px;
+  text-align: center;
+  font-style: italic; }
+
+.post + .post {
+  margin-top: 50px; }
 
 @font-face {
   font-family: "Proxima Nova Regular";

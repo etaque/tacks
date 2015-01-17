@@ -19,7 +19,10 @@ object Prismic extends Controller with Security {
       api <- apiBuilder
       posts <- BlogPost.listAll()(api)
     }
-    yield Ok(views.html.prismic.blog(posts, makeLinkResolver(api)))
+    yield {
+      val sortedPosts = posts.sortWith((p1, p2) => p1.date.isAfter(p2.date))
+      Ok(views.html.prismic.blog(sortedPosts, makeLinkResolver(api)))
+    }
   }
 
   def post(id: String, slug: String) = PlayerAction.async() { implicit request =>

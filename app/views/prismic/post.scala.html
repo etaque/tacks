@@ -18,9 +18,10 @@
           <p class="subtitle">
             <a href="@routes.Prismic.blog">&larr; @Messages("blog.back")</a>
           </p>
+
           <h3>@post.title</h3>
 
-          <div class="post-body">
+          <div class="post">
           @Html(post.body.asHtml(linkResolver))
           </div>
 
