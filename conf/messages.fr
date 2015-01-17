@@ -85,9 +85,13 @@ profile.timeTrials=Courses contre la montre
 profile.edit=Modifier mon profil
 
 me.edit=Modification du profil
-me.updateAvatar=Modifier votre avatar
+me.updateAvatar=Avatar
 me.avatarUpdated=Avatar modifié avec succès.
 me.removeAvatar=Supprimer l''image
+me.settings=Paramètres
+me.vmgMagnet=Angle de VMG magnétique
+me.updateSettings=Enregistrer
+me.updateSettingsSuccess=Paramètres enregistrés.
 
 liveCenter.emptyBoard=Pas de course ouverte pour le moment.
 liveCenter.generator=Plan d''eau

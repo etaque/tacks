@@ -15,6 +15,7 @@ POST        /register                               controllers.Users.create
 
 POST        /users/updateStatus                     controllers.Users.updateStatus
 GET         /me/edit                                controllers.Users.edit
+POST        /me/updateSettings                      controllers.Users.update
 POST        /me/uploadAvatar                        controllers.Users.uploadAvatar
 POST        /me/removeAvatar                        controllers.Users.removeAvatar
 GET         /avatars/:id                            controllers.Users.showAvatar(id)

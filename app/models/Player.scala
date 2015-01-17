@@ -10,9 +10,13 @@ import tools.future.Implicits._
 sealed trait Player {
   val _id: BSONObjectID
   def id: BSONObjectID
+
+  def vmgMagnet: Int
 }
 
 object Player {
+
+  val defaultVmgMagnet = 15
 
   implicit val bsonHandler = new BSONHandler[BSONDocument, Player] {
     def read(bson: BSONDocument) = bson.getAs[String]("email") match {
@@ -31,7 +35,8 @@ case class User(
   email: String,
   handle: String,
   status: Option[String],
-  avatarId: Option[BSONObjectID]
+  avatarId: Option[BSONObjectID],
+  vmgMagnet: Int
 ) extends Player with HasId { }
 
 case class CreateUser(email: String, password: String, handle: String)
@@ -79,6 +84,10 @@ object User extends MongoDAO[User] {
     case None => unset(id, BSONDocument("status" -> true))
   }
 
+  def updateSettings(id: BSONObjectID, vmgMagnet: Int): Future[LastError] = {
+    update(id, BSONDocument("vmgMagnet" -> vmgMagnet))
+  }
+
   def updateAvatarId(id: BSONObjectID, avatarIdOption: Option[BSONObjectID]): Future[LastError] = {
     avatarIdOption match {
       case Some(avatarId) => update(id, BSONDocument("avatarId" -> avatarId))
@@ -103,7 +112,9 @@ object User extends MongoDAO[User] {
   implicit val bsonWriter: BSONDocumentWriter[User] = Macros.writer[User]
 }
 
-case class Guest(_id: BSONObjectID = BSONObjectID.generate) extends Player with HasId
+case class Guest(_id: BSONObjectID = BSONObjectID.generate) extends Player with HasId {
+  val vmgMagnet = Player.defaultVmgMagnet
+}
 
 object Guest {
   implicit val bsonHandler = Macros.handler[Guest]

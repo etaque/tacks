@@ -3,6 +3,7 @@ package controllers
 import com.sksamuel.scrimage.Image
 import core.TimeTrialLeaderboard
 import play.api.cache.Cache
+import play.api.i18n.Messages
 import play.api.libs.iteratee.Enumerator
 import play.api.libs.json.Json
 import play.modules.reactivemongo.MongoController
@@ -39,7 +40,7 @@ object Users extends Controller with Security with MongoController {
       withErrors => Future.successful(BadRequest(views.html.users.creation(withErrors))),
       {
         case CreateUser(email, password, handle) => {
-          val user = User(email = email, handle = handle, status = None, avatarId = None)
+          val user = User(email = email, handle = handle, status = None, avatarId = None, vmgMagnet = Player.defaultVmgMagnet)
           User.create(user, password).map { _ => Redirect(routes.Application.index).withSession("playerId" -> user.idToStr) }
         }
       }
@@ -57,16 +58,38 @@ object Users extends Controller with Security with MongoController {
     yield Ok(views.html.users.show(user, trialsWithRanking, trialsUsers, leaderboard))
   }
 
+
+  val updateForm = Form(
+    single(
+      "vmgMagnet" -> number(min = 0, max = 30)
+    )
+  )
+
   def edit = PlayerAction.async() { implicit request =>
     asUser { user =>
-      Future.successful(Ok(views.html.users.edit(user)))
+      Future.successful(Ok(views.html.users.edit(user, updateForm.fill(user.vmgMagnet))))
+    }
+  }
+
+  def update = PlayerAction.async(parse.urlFormEncoded) { implicit request =>
+    asUser { user =>
+      updateForm.bindFromRequest.fold(
+        withErrors => Future.successful(BadRequest(views.html.users.edit(user, withErrors))),
+        vmgMagnet => {
+          User.updateSettings(user.id, vmgMagnet).map { _ =>
+            Ok(views.html.users.edit(user, updateForm.fill(vmgMagnet), Some(Messages("me.updateSettingsSuccess"))))
+          }
+        }
+      )
     }
   }
 
   def updateStatus = PlayerAction.async(parse.urlFormEncoded) { implicit request =>
-    val statusOption = request.body.get("status").flatMap(_.headOption).filter(_.nonEmpty)
-    User.updateStatus(request.player.id, statusOption).map { _ =>
-      Redirect(routes.Application.index())
+    asUser { user =>
+      val statusOption = request.body.get("status").flatMap(_.headOption).filter(_.nonEmpty)
+      User.updateStatus(user.id, statusOption).map { _ =>
+        Redirect(routes.Application.index())
+      }
     }
   }
 

@@ -96,9 +96,13 @@ profile.timeTrials=Time trial races
 profile.edit=Edit profile
 
 me.edit=Edit profile
-me.updateAvatar=Your picture
+me.updateAvatar=Picture
 me.avatarUpdated=Picture successfully updated
 me.removeAvatar=Delete picture
+me.settings=Settings
+me.vmgMagnet=Magnetic VMG angle
+me.updateSettings=Save
+me.updateSettingsSuccess=Settings saved.
 
 liveCenter.emptyBoard=No race currently open
 liveCenter.generator=Race area

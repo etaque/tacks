@@ -2,7 +2,6 @@
 @import "fonts";
 
 .upload-avatar {
-  text-align: center;
 
   label {
     display: block;
@@ -24,6 +23,12 @@
 
   .form-remove-avatar {
     margin-top: 50px;
+  }
+}
+
+.form-settings {
+  .vmg-magnet {
+    width: 80px;
   }
 }
 

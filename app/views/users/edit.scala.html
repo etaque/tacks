@@ -1,4 +1,4 @@
-@(user: User)(implicit req: PlayerRequest[_], lang: Lang)
+@(user: User, form: Form[Int], message: Option[String] = None)(implicit req: PlayerRequest[_], lang: Lang)
 
 @main {
 
@@ -13,8 +13,7 @@
 
       <div class="row">
 
-        <div class="col-lg-6 col-lg-offset-3 upload-avatar">
-          @*<label for="picture">@Messages("me.updateAvatar")</label>*@
+        <div class="col-lg-4 col-lg-offset-2 upload-avatar">
           <h3>@Messages("me.updateAvatar")</h3>
 
           <div class="alert alert-success" style="display: none">@Messages("me.avatarUpdated")</div>
@@ -33,6 +32,28 @@
           }
         </div>
 
+        <div class="col-lg-4 col-lg-offset-0 update-settings">
+          <h3>@Messages("me.settings")</h3>
+
+          @message.map { m =>
+            <div class="alert alert-success">
+              @m
+            </div>
+          }
+
+          <form action="@routes.Users.update()" method="post" class="form-vertical form-settings">
+
+            <div class="form-group">
+              <label>@Messages("me.vmgMagnet")</label>
+              <input type="number" value="@form("vmgMagnet").value" min="0" max="30"
+                class="form-control vmg-magnet" id="vmgMagnet" name="vmgMagnet" />
+            </div>
+
+            <div class="form-actions">
+              <input type="submit" value="@Messages("me.updateSettings")" class="btn btn-primary" />
+            </div>
+          </form>
+        </div>
       </div>
 
     </div>

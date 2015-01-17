@@ -5439,20 +5439,21 @@ a.period {
   font-family: "Proxima Nova Light";
   src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
-.upload-avatar {
-  text-align: center; }
-  .upload-avatar label {
-    display: block; }
-  .upload-avatar img {
-    margin-bottom: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 2px #E6E6E6; }
-  .upload-avatar input[type='file'] {
-    display: inline; }
-  .upload-avatar .alert {
-    margin-top: 15px; }
-  .upload-avatar .form-remove-avatar {
-    margin-top: 50px; }
+.upload-avatar label {
+  display: block; }
+.upload-avatar img {
+  margin-bottom: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 2px #E6E6E6; }
+.upload-avatar input[type='file'] {
+  display: inline; }
+.upload-avatar .alert {
+  margin-top: 15px; }
+.upload-avatar .form-remove-avatar {
+  margin-top: 50px; }
+
+.form-settings .vmg-magnet {
+  width: 80px; }
 
 .show-user .title-wrapper .avatar {
   margin-bottom: 20px;
