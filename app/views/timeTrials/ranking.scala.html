@@ -1,7 +1,8 @@
-@(rankings: Seq[RunRanking], rankingUsers: Seq[User], player: Player, windowMaybe: Option[Int] = None)
+@(rankings: Seq[RunRanking], rankingUsers: Seq[User], player: Player, windowMaybe: Option[Int] = None)(implicit lang: Lang, req: PlayerRequest[_])
 
 @import views.Helpers
 @import views.timeTrials.RankingExtract
+@import tools.DateFormats._
 
 @rankingLine(ranking: RunRanking, outOfWindow: Boolean = false) = {
   <li class="rank-@ranking.rank @if(ranking.playerId == player.id) { current-player } @if(outOfWindow) { out-of-window }">
@@ -22,7 +23,7 @@
 
     @if(ranking.isRecent) { <abbr title="@Messages("timeTrials.recent")">*</abbr> }
 
-    <span class="time" title="@ranking.creationTime.toString("EEEE d - HH:mm")">@if(ranking.rank == 1) {
+    <span class="time" title="@formatDateTimeInMonth(ranking.creationTime)">@if(ranking.rank == 1) {
       @Helpers.timer(ranking.finishTime)
     } else {
       @Helpers.timeDelta(ranking.finishTime - rankings.map(_.finishTime).min)

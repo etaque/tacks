@@ -7,6 +7,8 @@
   userForm: Form[CreateUser]
 )(implicit req: PlayerRequest[_], lang: Lang)
 
+@import tools.DateFormats._
+
 @main {
 
   <div class="title-wrapper">
@@ -117,7 +119,7 @@
     <div class="container">
 
       <h2>@Messages("home.timeTrials")</h2>
-      <p class="subtitle"><span class="period">@org.joda.time.LocalDate.now.toString("MMMM yyyy")</span></p>
+      <p class="subtitle"><span class="period">@formatMonthYear(org.joda.time.LocalDate.now)</span></p>
 
       @views.html.timeTrials.catalog(trials)
 

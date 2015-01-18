@@ -4,6 +4,8 @@
   trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard
 )(implicit req: PlayerRequest[_], lang: Lang)
 
+@import tools.DateFormats._
+
 @main {
   <div class="show-user">
 
@@ -11,7 +13,7 @@
       <div class="container">
         @views.html.users.avatar(user, 160)
         <h1>@user.handle</h1>
-        <p class="align-center">@Messages("profile.registeredSince", user.idTime.toString("dd MMMM yyyy"))</p>
+        <p class="align-center">@Messages("profile.registeredSince", formatDateFullMonth(user.creationTime.toLocalDate))</p>
         @if(user.id == req.player.id) {
           <p class="center"><a href="@routes.Users.edit()" class="btn btn-primary btn-sm">@Messages("profile.edit")</a></p>
         }
@@ -25,7 +27,7 @@
 
         <a name="trials"></a>
         <h2>@Messages("profile.timeTrials")</h2>
-        <p class="subtitle">@org.joda.time.LocalDate.now.toString("MMMM yyyy")</p>
+        <p class="subtitle">@formatMonthYear(org.joda.time.LocalDate.now)</p>
 
         @trialLeaderboard.find(_._2 == user.id) match {
           case Some((r, _, p)) => {

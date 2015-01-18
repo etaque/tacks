@@ -7,6 +7,8 @@ import play.api.Play
 object Conf {
   private val conf = Play.application.configuration
 
+  val defaultTimezone = "Europe/Paris"
+
   val fps = 30
   val frameMillis = 1000 / fps
 

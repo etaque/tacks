@@ -4,6 +4,8 @@
   date: org.joda.time.LocalDate
 )(implicit req: PlayerRequest[_], lang: Lang)
 
+@import tools.DateFormats._
+
 @main {
   @defining(byTrial.map(_._1)) { trials =>
 
@@ -16,19 +18,19 @@
             <p>
             @defining(date.minusMonths(1)) { prevDate =>
               @if(! prevDate.isBefore(tools.Conf.earliestTimeTrial)) {
-                <a href="@routes.TimeTrials.leaderboard(prevDate.toString(TimeTrial.periodFormat))" class="period">&larr; @prevDate.toString("MMMM yyyy")</a>
+                <a href="@routes.TimeTrials.leaderboard(prevDate.toString(TimeTrial.periodFormat))" class="period">&larr; @formatMonthYear(prevDate)</a>
               }
             }
             </p>
           </div>
           <div class="col-md-4 align-center">
-            <p><span class="period">@date.toString("MMMM yyyy")</span></p>
+            <p><span class="period">@formatMonthYear(date)</span></p>
           </div>
           <div class="col-md-4 next-period">
             <p>
             @defining(date.plusMonths(1)) { nextDate =>
               @if(nextDate.toDateTimeAtStartOfDay.isBeforeNow) {
-                <a href="@routes.TimeTrials.leaderboard(nextDate.toString(TimeTrial.periodFormat))" class="period">@nextDate.toString("MMMM yyyy") &rarr;</a>
+                <a href="@routes.TimeTrials.leaderboard(nextDate.toString(TimeTrial.periodFormat))" class="period">@formatMonthYear(nextDate) &rarr;</a>
               }
             }
             </p>

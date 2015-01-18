@@ -8,6 +8,7 @@
 )(implicit lang: Lang, req: PlayerRequest[_])
 
 @import views.Helpers
+@import tools.DateFormats._
 
 @main {
 
@@ -16,7 +17,7 @@
       <h1><a href="@routes.TimeTrials.leaderboard(trial.period)">@Messages("timeTrials.title")</a></h1>
 
       <p class="align-center">
-        <span class="period">@trial.creationTime.toString("MMMM yyyy")</span>
+        <span class="period">@formatMonthYear(trial.creationTime.toLocalDate)</span>
       </p>
 
       <ul class="nav nav-trials">
@@ -33,9 +34,6 @@
     <div class="container show-time-trial">
 
       <h2 class="uppercase">@Messages("generators." + trial.slug + ".name")</h2>
-@*      <p class="align-center">
-        @Messages("timeTrials.runsCount", runsCount)
-      </p>*@
 
       <div class="row">
         <div class="col-md-offset-4 col-md-4">
@@ -70,7 +68,7 @@
                     @run.finishTime.map(views.Helpers.timer)
                     </span>
 
-                    <span class="time-ago" title="@run.creationTime.toString("EEEE d - HH:mm")">@Helpers.timeAgo(run.time)</span>
+                    <span class="time-ago" title="@formatDateTimeInMonth(run.creationTime)">@Helpers.timeAgo(run.time)</span>
                   </li>
                 }
                 case _ => { }

@@ -1,4 +1,4 @@
-@(trials: Seq[TimeTrial])
+@(trials: Seq[TimeTrial])(implicit req: PlayerRequest[_], lang: Lang)
 
 @for(row <- trials.grouped(3)) {
   <div class="row">
