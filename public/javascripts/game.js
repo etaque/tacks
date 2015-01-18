@@ -7923,10 +7923,10 @@ Elm.Render.Dashboard.make = function (_elm) {
                           case "Nothing":
                           return "please create an account to save your run";}
                        _U.badCase($moduleName,
-                       "between lines 206 and 208");
+                       "between lines 215 and 217");
                     }();}
                _U.badCase($moduleName,
-               "between lines 196 and 208");
+               "between lines 205 and 217");
             }();
          }();
       }();
@@ -7961,7 +7961,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                          _v12,
                          playerState);}
                     _U.badCase($moduleName,
-                    "between lines 184 and 187");
+                    "between lines 193 and 196");
                  }();}
             return A2(getGatesCount,
             _v12.course,
@@ -7983,14 +7983,21 @@ Elm.Render.Dashboard.make = function (_elm) {
                   case "Nothing":
                   return _v17.isMaster ? $Render$Utils.startCountdownMessage : "";}
                _U.badCase($moduleName,
-               "between lines 168 and 177");
+               "between lines 177 and 186");
             }();
             var op = 1;
             return $Graphics$Element.opacity(op)($Text.centered($Render$Utils.baseText(s)));
          }();
       }();
    };
-   var getRaceTimer = function (_v21) {
+   var getFinishTime = function (gates) {
+      return function () {
+         var start = $List.head($List.reverse(gates));
+         var finish = $List.head(gates);
+         return finish - start;
+      }();
+   };
+   var getTrialTimer = function (_v21) {
       return function () {
          return function () {
             var _v23 = {ctor: "_Tuple2"
@@ -8003,18 +8010,18 @@ Elm.Render.Dashboard.make = function (_elm) {
                     switch (_v23._1.ctor)
                       {case "Just":
                          return function () {
-                              var t = $Core.isNothing(_v23._1._0.nextGate) ? $List.head(_v23._1._0.crossedGates) : _v23._0._0;
+                              var t = $Core.isNothing(_v23._1._0.nextGate) ? getFinishTime(_v23._1._0.crossedGates) : _v23._0._0;
                               return A2($Render$Utils.formatTimer,
                               t,
                               $Core.isNothing(_v23._1._0.nextGate));
                            }();}
                       break;}
                  break;}
-            return "start pending";
+            return "";
          }();
       }();
    };
-   var getTrialTimer = function (_v28) {
+   var getRaceTimer = function (_v28) {
       return function () {
          return function () {
             var _v30 = {ctor: "_Tuple2"
@@ -8027,14 +8034,14 @@ Elm.Render.Dashboard.make = function (_elm) {
                     switch (_v30._1.ctor)
                       {case "Just":
                          return function () {
-                              var t = $Core.isNothing(_v30._1._0.nextGate) ? $List.head(_v30._1._0.crossedGates) : _v30._0._0;
+                              var t = $Core.isNothing(_v30._1._0.nextGate) ? getFinishTime(_v30._1._0.crossedGates) : _v30._0._0;
                               return A2($Render$Utils.formatTimer,
                               t,
                               $Core.isNothing(_v30._1._0.nextGate));
                            }();}
                       break;}
                  break;}
-            return "";
+            return "start pending";
          }();
       }();
    };
@@ -8236,7 +8243,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                             _v52.opponents,
                             _v58._0) : $Maybe.Nothing;}
                        _U.badCase($moduleName,
-                       "between lines 276 and 279");
+                       "between lines 285 and 288");
                     }();
                     return {_: {}
                            ,bottomCenter: _L.fromArray([])
@@ -8252,7 +8259,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 275 and 284");
+         "between lines 284 and 293");
       }();
    });
    var BoardLine = F5(function (a,
@@ -8286,6 +8293,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                                   ,getMode: getMode
                                   ,getHelp: getHelp
                                   ,getMainStatus: getMainStatus
+                                  ,getFinishTime: getFinishTime
                                   ,getTrialTimer: getTrialTimer
                                   ,getRaceTimer: getRaceTimer
                                   ,getSubStatus: getSubStatus
@@ -9149,7 +9157,7 @@ Elm.Render.Utils.make = function (_elm) {
                 57,
                 92)};
    var emptyForm = $Graphics$Collage.toForm($Graphics$Element.empty);
-   var startCountdownMessage = "press C to start countdown (60s)";
+   var startCountdownMessage = "press C to start countdown (30s)";
    var helpMessage = A2($Basics._op["++"],
    "ARROWS: turn left/right\n",
    A2($Basics._op["++"],

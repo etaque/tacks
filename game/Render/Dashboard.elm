@@ -138,12 +138,21 @@ getMainStatus ({countdown, gameMode, playerState} as gameState) =
   in
     bigText s |> centered |> opacity op
 
+getFinishTime : List Float -> Float
+getFinishTime gates =
+  let
+    finish = head gates
+    start = head (reverse gates)
+  in
+    finish - start
+
+
 getTrialTimer : GameState -> String
 getTrialTimer {countdown, playerState} =
   case (countdown, playerState) of
     (Just c, Just s) ->
       let
-        t = if isNothing s.nextGate then head s.crossedGates else c
+        t = if isNothing s.nextGate then getFinishTime s.crossedGates else c
       in
         formatTimer t (isNothing s.nextGate)
     _ -> ""
@@ -153,7 +162,7 @@ getRaceTimer {countdown, playerState} =
   case (countdown, playerState) of
     (Just c, Just s) ->
       let
-        t = if isNothing s.nextGate then head s.crossedGates else c
+        t = if isNothing s.nextGate then getFinishTime s.crossedGates else c
       in
         formatTimer t (isNothing s.nextGate)
     _ -> "start pending"
