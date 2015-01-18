@@ -28,8 +28,6 @@ POST        /api/login                              controllers.Api.login
 GET         /api/racesStatus                        controllers.Api.racesStatus
 GET         /api/onlineUsers                        controllers.Api.onlinePlayers
 POST        /api/createRace/:generator              controllers.Api.createRace(generator)
-GET         /api/currentUser                        controllers.Api.currentUser
-POST        /api/setName                            controllers.Api.setName
 
 GET         /ws/racePlayer/:raceId                  controllers.Api.racePlayerSocket(raceId)
 GET         /ws/raceWatcher/:raceId                 controllers.Api.raceWatcherSocket(raceId)

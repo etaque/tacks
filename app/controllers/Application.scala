@@ -75,7 +75,7 @@ object Application extends Controller with Security {
 
   import models.JsonFormats.tutorialUpdateFormat
 
-  def tutorial = PlayerAction.apply() { implicit request =>
+  def tutorial = PlayerAction() { implicit request =>
     val wsUrl = routes.Api.tutorialSocket().webSocketURL()
     val messages = JsMessages.filtering(_.startsWith("tutorial")).messages
     val initialInput = Json.toJson(TutorialUpdate.initial(request.player, messages))

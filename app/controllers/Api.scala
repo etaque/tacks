@@ -94,17 +94,6 @@ object Api extends Controller with Security {
     }
   }
 
-  def setName = PlayerAction(parse.json) { implicit request =>
-    (request.body \ "name").asOpt[String] match {
-      case Some(name) => Ok(Json.obj()).addingToSession("playerName" -> name)
-      case None => BadRequest
-    }
-  }
-
-  def currentUser = PlayerAction() { implicit request =>
-    Ok(Json.toJson(request.player))
-  }
-
   implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
   implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]

@@ -41,7 +41,9 @@ object Users extends Controller with Security with MongoController {
       {
         case CreateUser(email, password, handle) => {
           val user = User(email = email, handle = handle, status = None, avatarId = None, vmgMagnet = Player.defaultVmgMagnet)
-          User.create(user, password).map { _ => Redirect(routes.Application.index).withSession("playerId" -> user.idToStr) }
+          User.create(user, password).map { _ =>
+            Redirect(routes.Application.index).withSession("playerId" -> user.idToStr)
+          }
         }
       }
     )

@@ -1,11 +1,13 @@
 package models
 
+import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
 import reactivemongo.bson._
 import play.api.libs.concurrent.Execution.Implicits._
 import reactivemongo.core.commands.LastError
 import scala.concurrent.Future
 import tools.future.Implicits._
+import tools.BSONHandlers.BSONDateTimeHandler
 
 sealed trait Player {
   val _id: BSONObjectID
@@ -36,7 +38,8 @@ case class User(
   handle: String,
   status: Option[String],
   avatarId: Option[BSONObjectID],
-  vmgMagnet: Int
+  vmgMagnet: Int = Player.defaultVmgMagnet,
+  creationTime: DateTime = DateTime.now
 ) extends Player with HasId { }
 
 case class CreateUser(email: String, password: String, handle: String)

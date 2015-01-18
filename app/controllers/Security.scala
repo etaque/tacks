@@ -37,19 +37,19 @@ trait Security { this: Controller =>
     def pingChatRoom(player: Player) = ChatRoom.actorRef ! Ping(player)
 
     def apply[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Result): Action[A] =
-      Action.async(bp) { implicit request =>
-        getPlayer.map { player =>
-          pingChatRoom(player)
-          f(PlayerRequest(player, request)).addingToSession("playerId" -> player.id.stringify)
-        }
-      }
+      async(bp)(f andThen Future.successful _)
 
     def async[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Future[Result]): Action[A] =
       Action.async(bp) { implicit request =>
         getPlayer.flatMap { player =>
           pingChatRoom(player)
           implicit val playerRequest = PlayerRequest(player, request)
-          f(playerRequest).map(_.addingToSession("playerId" -> player.id.stringify)).recover {
+          f(playerRequest).map { result =>
+            player match {
+              case g: Guest if request.session.get("playerId").isEmpty => result.addingToSession("playerId" -> player.id.stringify)
+              case _ => result
+            }
+          }.recover {
             case e: FutureFlattenOptException => NotFound(views.html.notFound())
           }
         }
