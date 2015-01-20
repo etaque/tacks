@@ -59,7 +59,7 @@ home.welcome=Welcome, {0}
 home.ranked=Your rank is {0} on time trials leaderboard, with {1} points.
 home.profile=Go to profile
 home.notRanked=You didn''t run any time trials this month.
-home.runWarmUp=Let''s do a little warm up?
+home.runClassic=Let''s do a classic run?
 home.races=Realtime races
 home.openRaces=Open races
 home.newRace=New race
@@ -125,7 +125,7 @@ timeTrials.recent=Ran less than one day ago
 timeTrials.run=New run
 timeTrials.closed=Closed race
 
-generators.warmup.name=Warmup
+generators.warmup.name=Short Track
 generators.warmup.description=get your hands warm with the three laps of this short course
 generators.classic.name=Classic
 generators.classic.description=back to basics: les fondamentaux : some islands and gusts on a tow laps course

@@ -27,9 +27,9 @@
             case None => {
               <p class="align-center">@Messages("home.notRanked")</p>
 
-              @trials.find(_.slug == core.WarmUp.slug).map { t =>
+              @trials.find(_.slug == core.Classic.slug).map { t =>
                 <div class="align-center">
-                  <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.runWarmUp")</a>
+                  <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.runClassic")</a>
                 </div>
               }
             }
@@ -41,7 +41,7 @@
           <h1>@Messages("home.title")</h1>
           <p class="align-center">@Html(Messages("home.intro"))</p>
 
-          @trials.find(_.slug == core.WarmUp.slug).map { t =>
+          @trials.find(_.slug == core.Classic.slug).map { t =>
             <div class="align-center">
               <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-primary" target="blank">@Messages("home.tryIt")</a>
             </div>

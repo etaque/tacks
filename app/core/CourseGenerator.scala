@@ -38,7 +38,7 @@ object Classic extends CourseGenerator {
     val area = RaceArea((width/2, height + 200), (-width/2,-300))
     Course(
       upwind = Gate(height, 200),
-      downwind = Gate(0, 200),
+      downwind = Gate(100, 200),
       laps = 2,
       islands = Seq.fill[Island](5)(Island.spawn(area)),
       area = area,
@@ -207,7 +207,7 @@ object Minefield extends CourseGenerator {
 
 object CourseGenerator {
 
-  val all = Seq(WarmUp, Classic, Inlands, Archipel, OysterPark, Minefield)
+  val all = Seq(Classic, WarmUp, Archipel, Inlands, OysterPark, Minefield)
 
   def findBySlug(slug: String): Option[CourseGenerator] = all.find(_.slug == slug)
 
