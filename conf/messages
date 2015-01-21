@@ -52,8 +52,10 @@ home.intro=Tacks is a free <strong>regatta simulation</strong> game.\
   <br>Engage yourself in a <strong>realtime multiplayer</strong> race or \
   attempt to break your <strong>time trial</strong> scores to climb the rankings.\
   <br>You'll need a recent browser to fully enjoy the game (Chrome or Safari advised).
-home.tryIt=Come try it!
+home.tryIt=Come try the classic run!
 home.orSignup=Registration is optional for playing but required to keep your scores.
+home.handlePlaceholder=What''s your player name?
+home.setHandle=Submit
 home.doLog=sign in
 home.welcome=Welcome, {0}
 home.ranked=Your rank is {0} on time trials leaderboard, with {1} points.
@@ -128,11 +130,11 @@ timeTrials.closed=Closed race
 generators.warmup.name=Short Track
 generators.warmup.description=get your hands warm with the three laps of this short course
 generators.classic.name=Classic
-generators.classic.description=back to basics: les fondamentaux : some islands and gusts on a tow laps course
+generators.classic.description=back to basics: some islands and gusts on a two laps course
 generators.inlands.name=Inlands
 generators.inlands.description=a narrow course with many gusts & lulls, your favorite inland spot
 generators.archipel.name=Anarchipel
-generators.archipel.description=a mess but it's worth a look
+generators.archipel.description=a mess but it''s worth a look
 generators.oysterpark.name=Oyster Park
 generators.oysterpark.description=a real life nightmare, finally on your screen!
 generators.minefield.name=Minefield

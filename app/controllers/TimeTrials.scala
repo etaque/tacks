@@ -31,8 +31,8 @@ object TimeTrials extends Controller with Security  {
       users <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
     }
     yield {
-      val byTrial = TimeTrialLeaderboard.zipWithLeaderboard(trialsWithRanking)
-      val overall = TimeTrialLeaderboard.summarize(byTrial.map(_._2))
+      val byTrial = TimeTrialLeaderboard.leaderboardByTrial(trialsWithRanking, users)
+      val overall = TimeTrialLeaderboard.globalLeaderboard(byTrial.map(_._2))
       Ok(views.html.timeTrials.leaderboard(byTrial, overall, users, date))
     }
   }

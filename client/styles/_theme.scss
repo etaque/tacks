@@ -286,24 +286,21 @@ input[type="text"], input[type="password"], textarea {
   text-transform: uppercase;
 }
 
-.user-avatar {
+.player-avatar {
   font-family: $mono;
   display: inline-block;
-  color: $gray;
+  color: $mediumGray;
 
   .avatar {
     border-radius: 2px;
     display: inline-block;
   }
-
-  .handle {
-  }
 }
 
-a.user-avatar:hover {
+a.player-avatar {
   color: $gray;
 
-  .handle {
+  &:hover .handle {
     text-decoration: underline;
   }
 }

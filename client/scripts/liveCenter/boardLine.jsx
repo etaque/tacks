@@ -13,7 +13,7 @@ var BoardLine = React.createClass({
 
   getPlayers: function(playerStates) {
     return _.map(playerStates, p => {
-      return <PlayerWithAvatar player={p.player} />;
+      return <PlayerWithAvatar player={p.player} withLink={ true } />;
     });
   },
 
@@ -28,9 +28,9 @@ var BoardLine = React.createClass({
 
   getMaster: function(player) {
     if (player) {
-      return <PlayerWithAvatar player={ player } />;
+      return <PlayerWithAvatar player={ player } withLink={ true } />;
     } else {
-      return <span className="user-avatar">{ Messages("liveCenter.serverRace") }</span>;
+      return <span className="player-avatar">{ Messages("liveCenter.serverRace") }</span>;
     }
   },
 

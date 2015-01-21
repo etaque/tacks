@@ -14,6 +14,7 @@ sealed trait Player {
   def id: BSONObjectID
 
   def vmgMagnet: Int
+  def handleOpt: Option[String]
 }
 
 object Player {
@@ -40,7 +41,9 @@ case class User(
   avatarId: Option[BSONObjectID],
   vmgMagnet: Int = Player.defaultVmgMagnet,
   creationTime: DateTime = DateTime.now
-) extends Player with HasId { }
+) extends Player with HasId {
+  def handleOpt = Some(handle)
+}
 
 case class CreateUser(email: String, password: String, handle: String)
 
@@ -115,8 +118,12 @@ object User extends MongoDAO[User] {
   implicit val bsonWriter: BSONDocumentWriter[User] = Macros.writer[User]
 }
 
-case class Guest(_id: BSONObjectID = BSONObjectID.generate) extends Player with HasId {
+case class Guest(
+  _id: BSONObjectID = BSONObjectID.generate,
+  handle: Option[String] = None
+) extends Player with HasId {
   val vmgMagnet = Player.defaultVmgMagnet
+  def handleOpt = handle
 }
 
 object Guest {

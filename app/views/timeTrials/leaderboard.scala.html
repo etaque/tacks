@@ -65,7 +65,7 @@
               </td>
               <td class="user">
                 @users.find(_.id == playerId).map { u =>
-                  <a href="@routes.Users.show(u.handle)" class="user-avatar">
+                  <a href="@routes.Users.show(u.handle)" class="player-avatar">
                     @views.html.users.avatar(u)
                     <span class="handle">@u.handle</span>
                   </a>

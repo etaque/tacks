@@ -1,4 +1,8 @@
-@(rankings: Seq[RunRanking], rankingUsers: Seq[User], player: Player, windowMaybe: Option[Int] = None)(implicit lang: Lang, req: PlayerRequest[_])
+@(rankings: Seq[RunRanking],
+  rankingUsers: Seq[User],
+  player: Player,
+  windowMaybe: Option[Int] = None
+)(implicit lang: Lang, req: PlayerRequest[_])
 
 @import views.Helpers
 @import views.timeTrials.RankingExtract
@@ -11,10 +15,13 @@
 
     @rankingUsers.find(_.id == ranking.playerId) match {
       case None => {
-        <span class="handle">@Messages("anonymous")</span>
+        <span class="player-avatar">
+          @views.html.users.avatar(ranking.playerAsGuest)
+          <span class="handle">@ranking.playerHandle.getOrElse(Messages("anonymous"))</span>
+        </span>
       }
       case Some(user) => {
-        <a href="@routes.Users.show(user.handle)" class="user-avatar">
+        <a href="@routes.Users.show(user.handle)" class="player-avatar">
           @views.html.users.avatar(user)
           <span class="handle">@user.handle</span>
         </a>

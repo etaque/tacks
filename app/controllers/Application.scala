@@ -23,10 +23,15 @@ object Application extends Controller with Security {
       users             <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
       timeTrials        <- TimeTrial.listCurrent
       trialsWithRanking <- TimeTrial.zipWithRankings(timeTrials)
-      leaderboard       = TimeTrialLeaderboard.forTrials(trialsWithRanking)
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
+      leaderboard        = TimeTrialLeaderboard.forTrials(trialsWithRanking, trialsUsers)
     }
-    yield Ok(views.html.index(request.player, timeTrials, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
+    yield Ok(views.html.index(timeTrials, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
+  }
+
+  def setHandle = PlayerAction(parse.urlFormEncoded) { implicit request =>
+    val handle = request.body.get("handle").flatMap(_.headOption).getOrElse("")
+    Redirect(routes.Application.index()).addingToSession("playerHandle" -> handle)
   }
 
   def notFound(path: String) = PlayerAction.async() { implicit request =>

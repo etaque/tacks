@@ -1,5 +1,13 @@
-@(user: User, size: Int = 19)
+@(player: Player, size: Int = 19)
 
-@defining(user.avatarId.map(id => routes.Users.showAvatar(id.stringify)).getOrElse(routes.Assets.at("images/default-avatar.png"))) { avatarUrl =>
-  <img src="@avatarUrl" width="@size" height="@size" class="avatar">
+@player match {
+  case u: User => {
+    @defining(u.avatarId.map(id => routes.Users.showAvatar(id.stringify))) { avatarUrl =>
+      <img src="@avatarUrl.getOrElse(routes.Assets.at("images/avatar-user.png"))" width="@size" height="@size" class="avatar avatar-user">
+    }
+  }
+  case g: Guest => {
+    <img src="@routes.Assets.at("images/avatar-guest.png")" width="@size" height="@size" class="avatar avatar-guest">
+  }
 }
+

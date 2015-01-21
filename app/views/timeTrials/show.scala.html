@@ -1,5 +1,5 @@
 @(trial: TimeTrial, 
-  rankings: Seq[RunRanking], 
+  rankings: Seq[RunRanking],
   users: Seq[User], 
   allForSlug: Seq[TimeTrial],
   allForPeriod: Seq[TimeTrial],
@@ -56,23 +56,28 @@
           @if(lastRuns.nonEmpty) {
             <ul class="list-recent-runs">
             @for(RichRun(run, _, player) <- lastRuns) {
-              @player match {
-                case user: User => {
-                  <li>
-                    <a href="@routes.Users.show(user.handle)" class="user-avatar">
-                      @views.html.users.avatar(user)
-                    <span class="handle">@user.handle</span>
+              <li>
+                @player match {
+                  case u: User => {
+                    <a href="@routes.Users.show(u.handle)" class="player-avatar">
+                      @views.html.users.avatar(u)
+                    <span class="handle">@u.handle</span>
                     </a>
-
-                    <span class="finish-time">
-                    @run.finishTime.map(views.Helpers.timer)
+                  }
+                  case g: Guest => {
+                    <span class="player-avatar">
+                      @views.html.users.avatar(g)
+                      <span class="handle">@g.handle.getOrElse(Messages("anonymous"))</span>
                     </span>
-
-                    <span class="time-ago" title="@formatDateTimeInMonth(run.creationTime)">@Helpers.timeAgo(run.time)</span>
-                  </li>
+                  }
                 }
-                case _ => { }
-              }
+
+                <span class="finish-time">
+                @run.finishTime.map(views.Helpers.timer)
+                </span>
+
+                <span class="time-ago" title="@formatDateTimeInMonth(run.creationTime)">@Helpers.timeAgo(run.time)</span>
+              </li>
             }
             </ul>
           }

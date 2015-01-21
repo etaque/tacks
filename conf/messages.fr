@@ -42,6 +42,8 @@ home.intro=Tacks est un jeu de <strong>simulation de régate</strong> gratuit.\
 <br>Un navigateur récent est requis pour profiter pleinement du jeu (Chrome ou Safari recommandés).
 home.tryIt=Esssayez donc !
 home.orSignup=L''inscription est optionnelle pour jouer mais nécessaire pour conserver vos scores.
+home.handlePlaceholder=Quel est votre pseudo ?
+home.setHandle=Valider
 home.doLog=connectez-vous
 home.welcome=Bienvenue, {0}
 home.ranked=Tu occupes la {0}<sup>e</sup> place au classement des contre-la-montre, avec {1} points.
@@ -102,6 +104,8 @@ liveCenter.countdown=Chrono
 liveCenter.startingIn=-{0}s
 liveCenter.startedSince=+{0}s
 liveCenter.join=Rejoindre
+liveCenter.user=Joueur enregistré
+liveCenter.guest=Joueur de passage
 
 generators.warmup.name=Short Track
 generators.warmup.description=épreuve de précision : portes étroites, petit parcours sur trois tours.

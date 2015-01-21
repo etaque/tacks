@@ -6,11 +6,11 @@ $orange: #E0A349;
 $lightOrange: lighten($orange, 12%);
 $lighterOrange: lighten($orange, 25%);
 
-$smokeWhite: #f8f9fb;
-$lightGray: #E6E6E6;
+$darkGray: #51585E;
 $gray: #7b8087;
 $mediumGray: lighten($gray, 20%);
-$darkGray: #51585E;
+$lightGray: #E6E6E6;
+$smokeWhite: #f8f9fb;
 
 $whiteRed: #f2dede;
 $lightRed: #ebccd1;
@@ -22,3 +22,5 @@ $lighterSeaBlue: lighten($seaBlue, 12%);
 $darkSeaBlue: darken($seaBlue, 3%);
 $darkerSeaBlue: darken($seaBlue, 6%);
 $sand: rgb(239, 210, 121);
+
+$currentPlayerColor: $mainBlue;

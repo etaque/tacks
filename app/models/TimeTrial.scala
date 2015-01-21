@@ -40,8 +40,17 @@ object TimeTrial extends MongoDAO[TimeTrial] {
     list(BSONDocument("slug" -> slug), BSONDocument("period" -> -1))
   }
 
-  def zipWithRankings(timeTrials: Seq[TimeTrial]): Future[Seq[(TimeTrial, Seq[RunRanking])]] =
-    Future.sequence(timeTrials.map(t => TimeTrialRun.rankings(t.id).map(r => (t, r.sortBy(_.rank)))))
+  def zipWithRankings(timeTrials: Seq[TimeTrial]): Future[Seq[(TimeTrial, Seq[RunRanking])]] = {
+    Future.sequence(
+      timeTrials.map { trial =>
+        for {
+          rankings <- TimeTrialRun.rankings(trial.id) //.map(_.sortBy(_.rank))
+//          rankedRuns <- TimeTrialRun.zipWithRankings(rankings)
+        }
+        yield (trial, rankings)
+      }
+    )
+  }
 
 //  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking], rankingLength: Int): Seq[RunRanking] =
 //    rankings.filter(r => r.rank <= rankingLength || r.playerId == playerId).sortBy(_.rank)
@@ -70,21 +79,25 @@ case class TimeTrialRun(
   _id: BSONObjectID = BSONObjectID.generate,
   timeTrialId: BSONObjectID,
   playerId: BSONObjectID,
+  playerHandle: Option[String] = None,
   time: DateTime,
   tally: Seq[Long] = Nil,
   finishTime: Option[Long] = None
 ) extends HasId {
   def creationTime = idTime
+  def playerAsGuest = Guest(playerId, playerHandle)
 }
 
 case class RunRanking(
   rank: Int,
   playerId: BSONObjectID,
+  playerHandle: Option[String],
   runId: BSONObjectID,
   finishTime: Long
 ) {
   def creationTime = new DateTime(runId.time)
   def isRecent = creationTime.plusDays(1).isAfterNow
+  def playerAsGuest = Guest(playerId, playerHandle)
 }
 
 object TimeTrialRun extends MongoDAO[TimeTrialRun] {
@@ -108,7 +121,13 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
     val cmd = Aggregate(collectionName, Seq(
       Match(BSONDocument("timeTrialId" -> trialId, "finishTime" -> BSONDocument("$exists" -> true))),
       Sort(Seq(Ascending("finishTime"))),
-      GroupMulti("playerId" -> "playerId")("runId" -> First("_id"), "finishTime" -> First("finishTime")),
+      GroupMulti(
+        "playerId" -> "playerId"
+      )(
+        "runId" -> First("_id"),
+        "playerHandle" -> First("playerHandle"),
+        "finishTime" -> First("finishTime")
+      ),
       Sort(Seq(Ascending("finishTime")))
     ))
 
@@ -119,10 +138,21 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
         playerId <- id.getAs[BSONObjectID]("playerId")
         finishTime <- doc.getAs[Long]("finishTime")
         runId <- doc.getAs[BSONObjectID]("runId")
+        playerHandle = doc.getAs[String]("playerHandle")
       }
-      yield RunRanking(i + 1, playerId, runId, finishTime)
+      yield RunRanking(i + 1, playerId, playerHandle, runId, finishTime)
     }
   }
+
+//  def zipWithRankings(rankings: Seq[RunRanking]): Future[Seq[(TimeTrialRun, RunRanking)]] = {
+//    listByIds(rankings.map(_.runId)).map { runs =>
+//      rankings.map { ranking =>
+//        (ranking, runs.find(_.id == ranking.runId))
+//      }.collect {
+//        case (ranking, Some(run)) => (run, ranking)
+//      }
+//    }
+//  }
 
   def filterClose(playerRanking: RunRanking, allRankings: Seq[RunRanking], count: Int): Seq[RunRanking] = {
     val (fasters, lowers) = allRankings

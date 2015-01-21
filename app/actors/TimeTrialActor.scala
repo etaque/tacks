@@ -42,7 +42,10 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
   val ticks = Seq(cleanTick, gustsTick, frameTick)
 
-  def shouldSaveRun = player.isInstanceOf[User]
+  def shouldSaveRun = player match {
+    case u: User => true
+    case g: Guest => g.handle.isDefined
+  }
 
   if (shouldSaveRun) TimeTrialRun.save(run)
 

@@ -1,11 +1,10 @@
-@(player: Player,
-  trials: Seq[TimeTrial],
+@(trials: Seq[TimeTrial],
   trialsUsers: Seq[User],
   trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard,
   finishedRaces: Seq[Race],
   users: Seq[User],
   userForm: Form[CreateUser]
-)(implicit req: PlayerRequest[_], lang: Lang)
+)(implicit request: PlayerRequest[_], lang: Lang)
 
 @import tools.DateFormats._
 
@@ -14,7 +13,7 @@
   <div class="title-wrapper">
     <div class="container">
 
-      @player match {
+      @request.player match {
 
         case u: User => {
           <h1>@Messages("home.welcome", u.handle)</h1>
@@ -36,18 +35,30 @@
           }
         }
 
-        case _ => {
+        case g: Guest => {
 
           <h1>@Messages("home.title")</h1>
           <p class="align-center">@Html(Messages("home.intro"))</p>
 
+          <form action="@routes.Application.setHandle" method="post" class="form-set-handle row">
+            <div class="col-lg-4 col-lg-offset-4">
+              <div class="input-group">
+                <input type="text" name="handle" class="form-control" value="@g.handle.getOrElse("")" placeholder="@Messages("home.handlePlaceholder")"/>
+                <span class="input-group-btn">
+                  <input type="submit" value="@Messages("home.setHandle")" class="btn btn-primary" />
+                </span>
+              </div>
+            </div>
+          </form>
+
           @trials.find(_.slug == core.Classic.slug).map { t =>
             <div class="align-center">
-              <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-primary" target="blank">@Messages("home.tryIt")</a>
+              <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.tryIt")</a>
             </div>
-            <p class="align-center">@Messages("home.orSignup")</p>
+            @*<p class="align-center">@Messages("home.orSignup")</p>*@
           }
 
+          @*
           <div class="row">
             <div class="col-lg-6 col-lg-offset-3">
 
@@ -70,6 +81,7 @@
           </div>
 
           <p class="align-center">@Messages("or") <a href="@routes.Auth.askLogin()">@Messages("home.doLog")</a></p>
+          *@
 
         }
       }
@@ -85,7 +97,7 @@
       <div class="row">
         <div class="col-lg-12 col-lg-offset-0">
 
-          @player match {
+          @request.player match {
 
             case u: User => {
               <div class="row">

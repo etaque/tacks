@@ -54,8 +54,8 @@ object Users extends Controller with Security with MongoController {
       user <- User.findByHandle(handle)
       timeTrials <- TimeTrial.listCurrent
       trialsWithRanking <- TimeTrial.zipWithRankings(timeTrials)
-      leaderboard = TimeTrialLeaderboard.forTrials(trialsWithRanking)
       trialsUsers <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
+      leaderboard = TimeTrialLeaderboard.forTrials(trialsWithRanking, trialsUsers)
     }
     yield Ok(views.html.users.show(user, trialsWithRanking, trialsUsers, leaderboard))
   }

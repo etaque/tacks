@@ -5085,17 +5085,17 @@ input[type="text"], input[type="password"], textarea {
 .uppercase {
   text-transform: uppercase; }
 
-.user-avatar {
+.player-avatar {
   font-family: "Inconsolata";
   display: inline-block;
-  color: #7b8087; }
-  .user-avatar .avatar {
+  color: #b0b3b8; }
+  .player-avatar .avatar {
     border-radius: 2px;
     display: inline-block; }
 
-a.user-avatar:hover {
+a.player-avatar {
   color: #7b8087; }
-  a.user-avatar:hover .handle {
+  a.player-avatar:hover .handle {
     text-decoration: underline; }
 
 @font-face {
@@ -5120,6 +5120,10 @@ a.user-avatar:hover {
   background-color: #f8f9fb;
   border-radius: 5px;
   box-shadow: 0 2px 2px #1f3251; }
+
+.form-set-handle {
+  margin-top: 20px;
+  margin-bottom: 20px; }
 
 .update-name {
   margin-top: 30px; }
@@ -5150,10 +5154,10 @@ a.user-avatar:hover {
       border-color: #3b73b3; }
     .live-center .table-open-races td.countdown {
       font-family: "Inconsolata"; }
-    .live-center .table-open-races td.players .user-avatar {
+    .live-center .table-open-races td.players .player-avatar {
       display: block;
       margin-bottom: 2px; }
-      .live-center .table-open-races td.players .user-avatar:last-child {
+      .live-center .table-open-races td.players .player-avatar:last-child {
         margin-bottom: 0; }
   .live-center .table-open-races tr:last-child td {
     border-bottom: none; }
@@ -5313,7 +5317,7 @@ a.period {
     .list-time-trial-rankings li.current-player {
       background-color: #f8f9fb;
       color: #5899E2; }
-      .list-time-trial-rankings li.current-player .user-avatar .handle {
+      .list-time-trial-rankings li.current-player .player-avatar .handle {
         color: #5899E2; }
     .list-time-trial-rankings li.empty {
       color: #7b8087; }
@@ -5405,7 +5409,7 @@ a.period {
   .table-leaderboard .current-player td {
     background-color: #f8f9fb;
     color: #5899E2; }
-    .table-leaderboard .current-player td .user-avatar .handle {
+    .table-leaderboard .current-player td .player-avatar .handle {
       color: #5899E2; }
   .table-leaderboard .overall-points, .table-leaderboard .points {
     width: 115px;

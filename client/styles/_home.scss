@@ -10,6 +10,11 @@
   box-shadow: 0 2px 2px $darkSeaBlue;
 }
 
+.form-set-handle {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
 .update-name {
   margin-top: 30px;
 }
@@ -53,7 +58,7 @@
       }
 
       &.players {
-        .user-avatar {
+        .player-avatar {
           display: block;
           margin-bottom: 2px;
 

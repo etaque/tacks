@@ -28,7 +28,7 @@ trait Security { this: Controller =>
       request.session.get("playerId") match {
         case Some(id) => User.findByIdOpt(id).map {
           case Some(user) => user
-          case None => Guest(BSONObjectID(id))
+          case None => Guest(BSONObjectID(id), request.session.get("playerHandle"))
         }
         case None => Future.successful(Guest(BSONObjectID.generate))
       }
@@ -37,7 +37,7 @@ trait Security { this: Controller =>
     def pingChatRoom(player: Player) = ChatRoom.actorRef ! Ping(player)
 
     def apply[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Result): Action[A] =
-      async(bp)(f andThen Future.successful _)
+      async(bp)(f andThen Future.successful)
 
     def async[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Future[Result]): Action[A] =
       Action.async(bp) { implicit request =>

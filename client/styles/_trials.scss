@@ -100,10 +100,10 @@ a.period {
 
     &.current-player {
       background-color: $smokeWhite;
-      color: $mainBlue;
+      color: $currentPlayerColor;
 
-      .user-avatar .handle {
-        color: $mainBlue;
+      .player-avatar .handle {
+        color: $currentPlayerColor;
       }
     }
 
@@ -248,10 +248,10 @@ a.period {
 
   .current-player td {
     background-color: $smokeWhite;
-    color: $mainBlue;
+    color: $currentPlayerColor;
 
-    .user-avatar .handle {
-      color: $mainBlue;
+    .player-avatar .handle {
+      color: $currentPlayerColor;
     }
   }
 

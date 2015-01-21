@@ -94,6 +94,13 @@ object Api extends Controller with Security {
     }
   }
 
+  def setHandle = PlayerAction(parse.json) { implicit request =>
+    (request.body \ "handle").asOpt[String] match {
+      case Some(handle) => Ok(Json.obj()).addingToSession("playerHandle" -> handle)
+      case None => BadRequest
+    }
+  }
+
   implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
   implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
@@ -102,7 +109,12 @@ object Api extends Controller with Security {
     for {
       player <- PlayerAction.getPlayer(request)
       timeTrial <- TimeTrial.findById(timeTrialId)
-      run = TimeTrialRun(timeTrialId = timeTrial.id, playerId = player.id, time = DateTime.now)
+      run = TimeTrialRun(
+        timeTrialId = timeTrial.id,
+        playerId = player.id,
+        playerHandle = player.handleOpt,
+        time = DateTime.now
+      )
       ghostRuns <- TimeTrialRun.findGhosts(timeTrial, run)
       timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]
     }

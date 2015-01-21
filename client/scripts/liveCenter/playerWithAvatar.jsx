@@ -7,16 +7,26 @@ var Messages = require('../messages');
 
 var PlayerWithAvatar = React.createClass({
 
+  getAvatarUrl: function(player) {
+    if (player.avatarId) {
+      return "/avatars/" + player.avatarId;
+    } else if (player.guest) {
+      return "/assets/images/avatar-guest.png";
+    } else {
+      return "/assets/images/avatar-user.png";
+    }
+  },
+
   render: function() {
     var p = this.props.player;
-    var avatarUrl = p.avatarId ? ("/avatars/" + p.avatarId) : "/assets/images/default-avatar.png";
+    var avatarUrl = this.getAvatarUrl(p);
 
     var img = <img src={ avatarUrl } className="avatar" width="19" height="19" />;
     var handle = <span className="handle">{ p.handle || Messages("anonymous") }</span>;
 
-    if (this.props.withLink && p.handle) {
+    if (this.props.withLink && p.user) {
       return (
-        <a href={"/players/" + p.handle} className="user-avatar">
+        <a href={"/players/" + p.handle} className="player-avatar">
           { img }
           { " " }
           { handle }
@@ -24,7 +34,7 @@ var PlayerWithAvatar = React.createClass({
       );
     } else {
       return (
-        <span className="user-avatar">
+        <span className="player-avatar">
           { img }
           { " " }
           { handle }
