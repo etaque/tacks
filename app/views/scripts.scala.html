@@ -10,7 +10,8 @@ window.Elm = Elm
 @helper.javascriptRouter("jsRoutes")(
   routes.javascript.Api.racesStatus,
   routes.javascript.Api.createRace,
-  routes.javascript.Api.notificationsSocket
+  routes.javascript.WebSockets.notifications,
+  routes.javascript.WebSockets.chatRoom
 )
 
 <script type="text/javascript">

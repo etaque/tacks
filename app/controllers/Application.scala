@@ -50,7 +50,7 @@ object Application extends Controller with Security {
 
   def playTimeTrial(timeTrialId: String) = PlayerAction.async() { implicit request =>
     TimeTrial.findById(timeTrialId).map { timeTrial =>
-      val wsUrl = routes.Api.timeTrialSocket(timeTrial.idToStr).webSocketURL()
+      val wsUrl = routes.WebSockets.timeTrial(timeTrial.idToStr).webSocketURL()
       val initialInput = Json.toJson(RaceUpdate.initial(request.player, timeTrial.course, timeTrial = true))
       Ok(views.html.game(initialInput, wsUrl, showHelp))
     }
@@ -60,7 +60,7 @@ object Application extends Controller with Security {
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
       case None => NotFound
       case Some(race) => {
-        val wsUrl = routes.Api.racePlayerSocket(race.idToStr).webSocketURL()
+        val wsUrl = routes.WebSockets.racePlayer(race.idToStr).webSocketURL()
         val initialInput = Json.toJson(RaceUpdate.initial(request.player, race.course))
         Ok(views.html.game(initialInput, wsUrl, showHelp))
       }
@@ -71,7 +71,7 @@ object Application extends Controller with Security {
     (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
       case None => NotFound
       case Some(race) => {
-        val wsUrl = routes.Api.raceWatcherSocket(race.idToStr).webSocketURL()
+        val wsUrl = routes.WebSockets.raceWatcher(race.idToStr).webSocketURL()
         val initialInput = Json.toJson(RaceUpdate.initial(request.player, race.course, watching = true))
         Ok(views.html.game(initialInput, wsUrl))
       }
@@ -81,7 +81,7 @@ object Application extends Controller with Security {
   import models.JsonFormats.tutorialUpdateFormat
 
   def tutorial = PlayerAction() { implicit request =>
-    val wsUrl = routes.Api.tutorialSocket().webSocketURL()
+    val wsUrl = routes.WebSockets.tutorial().webSocketURL()
     val messages = JsMessages.filtering(_.startsWith("tutorial")).messages
     val initialInput = Json.toJson(TutorialUpdate.initial(request.player, messages))
     Ok(views.html.tutorial(wsUrl, initialInput))

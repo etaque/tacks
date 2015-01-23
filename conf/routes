@@ -31,11 +31,12 @@ GET         /api/racesStatus                        controllers.Api.racesStatus
 GET         /api/onlineUsers                        controllers.Api.onlinePlayers
 POST        /api/createRace/:generator              controllers.Api.createRace(generator)
 
-GET         /ws/racePlayer/:raceId                  controllers.Api.racePlayerSocket(raceId)
-GET         /ws/raceWatcher/:raceId                 controllers.Api.raceWatcherSocket(raceId)
-GET         /ws/timeTrialPlayer/:timeTrialId        controllers.Api.timeTrialSocket(timeTrialId)
-GET         /ws/tutorial                            controllers.Api.tutorialSocket
-GET         /ws/notifications                       controllers.Api.notificationsSocket
+GET         /ws/racePlayer/:raceId                  controllers.WebSockets.racePlayer(raceId)
+GET         /ws/raceWatcher/:raceId                 controllers.WebSockets.raceWatcher(raceId)
+GET         /ws/timeTrialPlayer/:timeTrialId        controllers.WebSockets.timeTrial(timeTrialId)
+GET         /ws/tutorial                            controllers.WebSockets.tutorial
+GET         /ws/notifications                       controllers.WebSockets.notifications
+GET         /ws/chatRoom                            controllers.WebSockets.chatRoom
 
 GET         /blog                                   controllers.Prismic.blog
 GET         /blog/:id/:slug                         controllers.Prismic.post(id, slug)

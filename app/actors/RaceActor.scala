@@ -28,7 +28,7 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
   }
 
   val players = scala.collection.mutable.Map[PlayerId, PlayerContext]()
-  var playersGates = scala.collection.mutable.Map[Player, Seq[Long]]()
+  val playersGates = scala.collection.mutable.Map[Player, Seq[Long]]()
   var leaderboard = Seq[PlayerTally]()
   var finishersCount = 0
 

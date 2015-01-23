@@ -5,11 +5,9 @@ import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import play.api.mvc._
-import play.api.mvc.WebSocket.FrameFormatter
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.Play.current
-import akka.actor.ActorRef
 import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
 import org.joda.time.DateTime
@@ -98,70 +96,6 @@ object Api extends Controller with Security {
     (request.body \ "handle").asOpt[String] match {
       case Some(handle) => Ok(Json.obj()).addingToSession("playerHandle" -> handle)
       case None => BadRequest
-    }
-  }
-
-  implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
-  implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
-  implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
-
-  def timeTrialSocket(timeTrialId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
-    for {
-      player <- PlayerAction.getPlayer(request)
-      timeTrial <- TimeTrial.findById(timeTrialId)
-      run = TimeTrialRun(
-        timeTrialId = timeTrial.id,
-        playerId = player.id,
-        playerHandle = player.handleOpt,
-        time = DateTime.now
-      )
-      ghostRuns <- TimeTrialRun.findGhosts(timeTrial, run)
-      timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]
-    }
-    yield {
-      timeTrialActor ! SetGhostRuns(ghostRuns)
-      Right(PlayerActor.props(timeTrialActor, player)(_))
-    }
-  }
-
-  def racePlayerSocket(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
-    PlayerAction.getPlayer(request).flatMap { player =>
-      (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
-        case Some(raceActor) => Right(PlayerActor.props(raceActor, player)(_))
-        case None => Left(NotFound)
-      }
-    }
-  }
-
-  def raceWatcherSocket(raceId: String) = WebSocket.tryAcceptWithActor[WatcherInput, RaceUpdate] { implicit request =>
-    PlayerAction.getPlayer(request).flatMap { watcher =>
-      (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
-        case Some(raceActor) => Right(WatcherActor.props(raceActor, watcher)(_))
-        case None => Left(NotFound)
-      }
-    }
-  }
-
-  implicit val notifEventFormat: Format[NotificationEvent] = Json.format[NotificationEvent]
-  implicit val notifEventFrameFormatter = FrameFormatter.jsonFrame[NotificationEvent]
-
-  def notificationsSocket = WebSocket.tryAcceptWithActor[JsValue, NotificationEvent] { implicit request =>
-    for {
-      player <- PlayerAction.getPlayer(request)
-    }
-    yield Right(NotifiableActor.props(player)(_))
-  }
-
-  implicit val tutorialInputFrameFormatter = FrameFormatter.jsonFrame[TutorialInput]
-  implicit val tutorialUpdateFormatter = FrameFormatter.jsonFrame[TutorialUpdate]
-
-  def tutorialSocket = WebSocket.tryAcceptWithActor[TutorialInput, TutorialUpdate] { implicit request =>
-    for {
-      player <- PlayerAction.getPlayer(request)
-      ref <- (RacesSupervisor.actorRef ? MountTutorial(player)).mapTo[ActorRef]
-    }
-    yield {
-      Right(PlayerActor.props(ref, player)(_))
     }
   }
 
