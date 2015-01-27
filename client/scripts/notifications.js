@@ -6,7 +6,7 @@ function notifications() {
   if ('Notification' in window) {
 
     Notification.requestPermission(function() {
-      var ws = new WebSocket(routes.Api.notificationsSocket().webSocketURL());
+      var ws = new WebSocket(routes.WebSockets.notifications().webSocketURL());
 
       ws.onmessage = function (msg) {
         var event = JSON.parse(msg.data);

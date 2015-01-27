@@ -1,15 +1,27 @@
 package actors
 
 import akka.actor.{Props, ActorRef, Actor}
-import models.Player
+import models.{Chat, Player}
 
 class ChatPlayerActor(player: Player, out: ActorRef) extends Actor {
 
+  val room = ChatRoom.actorRef
+
+  room ! PlayerJoin(player)
+
   def receive = {
-    case m: ChatMessage => {
-      if (sender == out) ChatRoom.actorRef ! m
-      else out ! m
+    case a: Chat.Action => {
+      out ! a
     }
+
+    case Chat.SubmitMessage(content) => {
+      val msg = Chat.NewMessage(player, content)
+      room ! msg
+    }
+  }
+
+  override def postStop() = {
+    room ! PlayerQuit(player)
   }
 
 }

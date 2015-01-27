@@ -24,7 +24,11 @@ $(function() {
   });
 
   $(".elm-game").each(function() {
-    mountElm();
-  })
+    mountElm.mountGame();
+  });
+
+  $("#chat").each(function() {
+    mountElm.mountChat(this);
+  });
 
 });

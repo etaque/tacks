@@ -6,7 +6,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import akka.actor.ActorRef
 import akka.pattern.{ ask, pipe }
 import org.joda.time.DateTime
-import play.api.libs.json.{JsValue, Json, Format}
+import play.api.libs.json.{JsString, JsValue, Json, Format}
 import play.api.mvc.{Controller, WebSocket}
 import play.api.mvc.WebSocket.FrameFormatter
 import play.api.Play.current
@@ -73,10 +73,12 @@ object WebSockets extends Controller with Security {
   }
 
 
-  implicit val chatMessageFormat: Format[ChatMessage] = Json.format[ChatMessage]
-  implicit val chatMessageFrameFormatter = FrameFormatter.jsonFrame[ChatMessage]
+  import Chat.actionFormat
+  import Chat.submitMessageFormat
+  implicit val chatActionFrameFormatter = FrameFormatter.jsonFrame[Chat.Action]
+  implicit val submitMessageFrameFormatter = FrameFormatter.jsonFrame[Chat.SubmitMessage]
 
-  def chatRoom = WebSocket.tryAcceptWithActor[ChatMessage, ChatMessage] { implicit request =>
+  def chatRoom = WebSocket.tryAcceptWithActor[Chat.SubmitMessage, Chat.Action] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
     }

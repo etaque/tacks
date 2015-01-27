@@ -3,7 +3,6 @@ package controllers
 import tools.future.FutureFlattenOptException
 
 import scala.concurrent.Future
-import actors.{Ping, ChatRoom}
 import models.{Guest, Player, User}
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
@@ -34,15 +33,12 @@ trait Security { this: Controller =>
       }
     }
 
-    def pingChatRoom(player: Player) = ChatRoom.actorRef ! Ping(player)
-
     def apply[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Result): Action[A] =
       async(bp)(f andThen Future.successful)
 
     def async[A](bp: BodyParser[A] = parse.anyContent)(f: PlayerRequest[A] => Future[Result]): Action[A] =
       Action.async(bp) { implicit request =>
         getPlayer.flatMap { player =>
-          pingChatRoom(player)
           implicit val playerRequest = PlayerRequest(player, request)
           f(playerRequest).map { result =>
             player match {
