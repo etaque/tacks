@@ -24,14 +24,12 @@ case class GetRaceActorRef(raceId: BSONObjectID)
 case object CreateRace
 case object GetOpenRaces
 case object GetLiveRuns
-case class NotifyNewRace(raceActor: ActorRef, race: Race, master: User)
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
   var mountedRaces = Seq.empty[(Race, Option[Player], ActorRef)]
   var mountedRuns = Seq.empty[(RichRun, ActorRef)]
-  var subscribers = Seq.empty[(Player, ActorRef)]
 
   implicit val timeout = Timeout(5.seconds)
 
@@ -94,17 +92,6 @@ class RacesSupervisor extends Actor {
       sender ! ref
     }
 
-    case Subscribe(player, ref) => {
-      subscribers = subscribers :+ (player, ref)
-    }
-
-    case Unsubscribe(player, ref) => {
-      subscribers = subscribers.filterNot(_._2 == ref)
-    }
-
-    case NotifyNewRace(ref, race, master) => {
-       RacesSupervisor.notifyNewRace(subscribers, ref, race, master)
-    }
   }
 
   def getRace(raceId: BSONObjectID): Option[Race] = mountedRaces.find(_._1.id == raceId).headOption.map(_._1)
@@ -119,18 +106,8 @@ object RacesSupervisor {
   implicit val timeout = Timeout(5.seconds)
 
   def start() = {
-    Akka.system.scheduler.schedule(0.microsecond, Conf.serverRacesCountdownSeconds.seconds, actorRef, CreateRace)
+    // Akka.system.scheduler.schedule(0.microsecond, Conf.serverRacesCountdownSeconds.seconds, actorRef, CreateRace)
   }
 
-  def notifyNewRace(subscribers: Seq[(Player, ActorRef)], raceActor: ActorRef, race: Race, master: User) = {
-    (raceActor ? GetStatus).mapTo[(Option[DateTime], Seq[PlayerState])].map { case (startTime, playerStates) =>
-      subscribers.collect {
-        // notify only users, excluding master & those who already joined
-        case (u: User, ref: ActorRef) if u.id != master.id && !playerStates.map(_.player.id).contains(u.id) => (u, ref)
-      }.foreach { case (_, ref) =>
-        ref ! NotificationEvent("newRace", Seq(race.generator, master.handle))
-      }
-    }
-  }
 
 }

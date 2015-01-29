@@ -7,6 +7,7 @@
 )(implicit request: PlayerRequest[_], lang: Lang)
 
 @import tools.DateFormats._
+@import play.api.Play.current
 
 @main {
 
@@ -55,38 +56,10 @@
             <div class="align-center">
               <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.tryIt")</a>
             </div>
-            @*<p class="align-center">@Messages("home.orSignup")</p>*@
           }
-
-          @*
-          <div class="row">
-            <div class="col-lg-6 col-lg-offset-3">
-
-              <form action="@routes.Users.create" method="post" class="form-new-user row">
-                <div class="form-group col-lg-6">
-                  <input type="text" name="email" class="form-control" placeholder="@Messages("email")"/>
-                </div>
-                <div class="form-group col-lg-6">
-                  <input type="password" name="password" class="form-control" placeholder="@Messages("password")"/>
-                </div>
-                <div class="form-group col-lg-6">
-                  <input type="text" name="handle" class="form-control" placeholder="@Messages("users.handle")"/>
-                </div>
-                <div class="form-group col-lg-6">
-                  <input type="submit" value="@Messages("users.createButton")" class="btn btn-primary btn-block" />
-                </div>
-              </form>
-
-            </div>
-          </div>
-
-          <p class="align-center">@Messages("or") <a href="@routes.Auth.askLogin()">@Messages("home.doLog")</a></p>
-          *@
 
         }
       }
-
-      <div id="chat"></div>
 
     </div>
   </div>
@@ -97,31 +70,14 @@
       <h2>@Messages("home.races")</h2>
 
       <div class="row">
-        <div class="col-lg-12 col-lg-offset-0">
-
-          @request.player match {
-
-            case u: User => {
-              <div class="row">
-                <form action="@routes.Users.updateStatus" method="post" class="col-md-offset-3 col-md-6 update-name">
-                  <div class="form-group">
-                    <div class="input-group input-group-sm">
-                      <span class="input-group-addon" id="basic-addon1">@Messages("home.status")</span>
-                      <input type="text" name="status" value="@u.status" class="form-control"/>
-                      <div class="input-group-btn">
-                        <input type="submit" value="@Messages("home.updateStatus")" class="btn btn-default btn-block"/>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </div>
-            }
-
-            case p: Player => {
-            }
-          }
+        <div class="col-lg-10 col-lg-offset-1">
 
           <div id="liveCenter"></div>
+
+          <script id="messages" type="custom-data">
+            @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.filtering(_.startsWith("chat.")).messages).toString())
+          </script>
+          <div id="chat"></div>
 
         </div>
       </div>

@@ -5,15 +5,17 @@ import List (..)
 import Maybe as M
 import String as S
 import Json.Decode as Json
+import Result
 
 import Html (..)
 import Html.Attributes (..)
 import Html.Events (..)
 
+import Messages
 import Game (Player, defaultPlayer)
 import Chat.Model (..)
+import Chat.Views as V
 
-import Debug
 
 update : Action -> Model -> Model
 update action model =
@@ -23,12 +25,18 @@ update action model =
 
     SetPlayer p ->
       { model |
-        currentPlayer <- p
+        currentPlayer <- p,
+        statusField <- M.withDefault "" p.status
       }
 
-    UpdateField s ->
+    UpdateMessageField s ->
       { model |
-        field <- s
+        messageField <- s
+      }
+
+    UpdateStatusField s ->
+      { model |
+        statusField <- s
       }
 
     UpdatePlayers players ->
@@ -41,65 +49,25 @@ update action model =
         messages <- model.messages ++ [{ player = player, content = content }]
       }
 
+    SubmitMessage content ->
+      { model |
+        messageField <- ""
+      }
 
-view : Model -> Html
-view model =
-  div [ class "chat-wrapper" ]
-    [ div [ class "chat-messages" ] [ messagesList model.messages ]
-    , div [ class "chat-players" ] [ playersList model.players ]
-    , messageForm model.field
-    ]
+    SubmitStatus _ -> model
 
-messagesList : List Message -> Html
-messagesList messages =
-  let
-    messageItems = map (\m -> li [] [ text m.content ]) messages
-  in
-    ul [] messageItems
+port serverInput : Signal Json.Value
 
-playersList : List Player -> Html
-playersList players =
-  let
-    playersItems = map (\p -> li [] [ text (M.withDefault "Anonymous" p.handle) ]) players
-  in
-    ul [] playersItems
+port messagesStore: Json.Value
 
-onEnter : Signal.Message -> Attribute
-onEnter message =
-    on "keydown"
-      (Json.customDecoder keyCode is13)
-      (always message)
-
-is13 : Int -> Result String ()
-is13 code =
-  if code == 13 then Ok () else Err "not the right key code"
-
-messageForm : String -> Html
-messageForm field =
-  div [ class "form-chat" ]
-    [ input
-      [ type' "text"
-      , value field
-      , on "input" targetValue (Signal.send localUpdates << UpdateField)
-      , onEnter (Signal.send submitMessages { content = field })
-      ]
-      []
-    , input
-      [ type' "submit"
-      , value "Submit"
-      , onClick (Signal.send submitMessages { content = field })
-      ]
-      []
-    ]
-
+translator : Messages.Translator
+translator = Messages.translator (Messages.fromJson messagesStore)
 
 main : Signal Html
-main = Signal.map view model
+main = Signal.map (V.view translator) model
 
 model : Signal Model
 model = Signal.foldp update emptyModel updates
-
-port serverInput : Signal Json.Value
 
 handleServerInput : Json.Value -> Action
 handleServerInput value =
@@ -107,19 +75,30 @@ handleServerInput value =
     Err e -> NoOp
     Ok action -> action
 
-localUpdates : Signal.Channel Action
-localUpdates = Signal.channel NoOp
-
 updates : Signal Action
 updates = Signal.mergeMany
-  [ Signal.subscribe localUpdates
+  [ Signal.subscribe V.localUpdates
   , Signal.map handleServerInput serverInput
-  , Signal.map (\_ -> UpdateField "") (Signal.subscribe submitMessages)
   ]
 
-submitMessages : Signal.Channel SubmitMessage
-submitMessages = Signal.channel { content = "" }
+isOutputAction : Action -> Bool
+isOutputAction action =
+  case action of
+    SubmitMessage content -> not (S.isEmpty content)
+    SubmitStatus _ -> True
+    _ -> False
 
-port localOutput : Signal SubmitMessage
-port localOutput = Signal.subscribe submitMessages
+port localOutput : Signal Json.Value
+port localOutput =
+  Signal.keepIf isOutputAction NoOp updates
+    |> Signal.map actionEncoder
 
+port scrollDown : Signal ()
+port scrollDown =
+  let
+    isNewMessage action = case action of
+      NewMessage _ _ -> True
+      _ -> False
+  in
+    Signal.keepIf isNewMessage NoOp updates
+      |> Signal.map (\_ -> ())

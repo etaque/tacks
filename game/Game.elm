@@ -32,6 +32,9 @@ type alias Player =
   { id:     String
   , handle: Maybe String
   , status: Maybe String
+  , avatarId: Maybe String
+  , guest: Bool
+  , user: Bool
   }
 
 type alias PlayerState =
@@ -91,7 +94,7 @@ defaultVmg : Vmg
 defaultVmg = { angle = 0, speed = 0, value = 0}
 
 defaultPlayer : Player
-defaultPlayer = { id = "", handle = Nothing, status = Nothing }
+defaultPlayer = { id = "", handle = Nothing, user = False, guest = False, status = Nothing, avatarId = Nothing }
 
 defaultPlayerState : PlayerState
 defaultPlayerState =

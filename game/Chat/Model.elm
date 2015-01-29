@@ -3,6 +3,7 @@ module Chat.Model where
 import Maybe as M
 import List
 import Json.Decode (..)
+import Json.Encode as E
 
 import Game (Player, defaultPlayer)
 
@@ -11,7 +12,8 @@ type alias Model =
   { messages: List Message
   , players: List Player
   , currentPlayer: Player
-  , field: String
+  , messageField: String
+  , statusField: String
   }
 
 type alias Message =
@@ -24,19 +26,19 @@ emptyModel =
   { messages = []
   , players = []
   , currentPlayer = defaultPlayer
-  , field = ""
+  , messageField = ""
+  , statusField = ""
   }
 
 type Action
   = NoOp
   | SetPlayer Player
-  | UpdateField String
+  | UpdateMessageField String
+  | UpdateStatusField String
   | UpdatePlayers (List Player)
   | NewMessage Player String
-
-type alias SubmitMessage =
-  { content: String }
-
+  | SubmitMessage String
+  | SubmitStatus String
 
 actionDecoder : Decoder Action
 actionDecoder =
@@ -51,8 +53,12 @@ specificActionDecoder tag =
     "SetPlayer" ->
       object1 SetPlayer ("player" := playerDecoder)
 
-    "UpdateField" ->
-      object1 UpdateField
+    "UpdateMessageField" ->
+      object1 UpdateMessageField
+        ("content" := string)
+
+    "UpdateStatusField" ->
+      object1 UpdateStatusField
         ("content" := string)
 
     "UpdatePlayers" ->
@@ -70,7 +76,28 @@ specificActionDecoder tag =
 
 playerDecoder : Decoder Player
 playerDecoder =
-  object3 Player
+  object6 Player
     ("id" := string)
     (maybe ("handle" := string))
     (maybe ("status" := string))
+    (maybe ("avatarId" := string))
+    ("guest" := bool)
+    ("user" := bool)
+
+actionEncoder : Action -> Value
+actionEncoder action =
+  case action of
+
+    SubmitMessage content ->
+      E.object
+        [ ("tag", E.string "SubmitMessage")
+        , ("content", E.string content)
+        ]
+
+    SubmitStatus content ->
+      E.object
+        [ ("tag", E.string "SubmitStatus")
+        , ("content", E.string content)
+        ]
+
+    _ -> E.object [ ("tag", E.string "NoOp") ]

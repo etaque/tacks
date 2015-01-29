@@ -74,11 +74,9 @@ object WebSockets extends Controller with Security {
 
 
   import Chat.actionFormat
-  import Chat.submitMessageFormat
   implicit val chatActionFrameFormatter = FrameFormatter.jsonFrame[Chat.Action]
-  implicit val submitMessageFrameFormatter = FrameFormatter.jsonFrame[Chat.SubmitMessage]
 
-  def chatRoom = WebSocket.tryAcceptWithActor[Chat.SubmitMessage, Chat.Action] { implicit request =>
+  def chatRoom = WebSocket.tryAcceptWithActor[Chat.Action, Chat.Action] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
     }

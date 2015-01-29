@@ -322,128 +322,80 @@ Elm.Chat.Main.make = function (_elm) {
    $moduleName = "Chat.Main",
    $Basics = Elm.Basics.make(_elm),
    $Chat$Model = Elm.Chat.Model.make(_elm),
-   $Game = Elm.Game.make(_elm),
+   $Chat$Views = Elm.Chat.Views.make(_elm),
    $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Messages = Elm.Messages.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var submitMessages = $Signal.channel({_: {}
-                                        ,content: ""});
-   var localOutput = _P.portOut("localOutput",
-   _P.outgoingSignal(function (v) {
-      return {content: v.content};
-   }),
-   $Signal.subscribe(submitMessages));
-   var localUpdates = $Signal.channel($Chat$Model.NoOp);
-   var handleServerInput = function (value) {
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm);
+   var isOutputAction = function (action) {
       return function () {
-         var _v0 = A2($Json$Decode.decodeValue,
-         $Chat$Model.actionDecoder,
-         value);
-         switch (_v0.ctor)
-         {case "Err":
-            return $Chat$Model.NoOp;
-            case "Ok": return _v0._0;}
-         _U.badCase($moduleName,
-         "between lines 106 and 108");
+         switch (action.ctor)
+         {case "SubmitMessage":
+            return $Basics.not($String.isEmpty(action._0));
+            case "SubmitStatus":
+            return true;}
+         return false;
       }();
    };
+   var handleServerInput = function (value) {
+      return function () {
+         var _v3 = A2($Json$Decode.decodeValue,
+         $Chat$Model.actionDecoder,
+         value);
+         switch (_v3.ctor)
+         {case "Err":
+            return $Chat$Model.NoOp;
+            case "Ok": return _v3._0;}
+         _U.badCase($moduleName,
+         "between lines 74 and 76");
+      }();
+   };
+   var messagesStore = _P.portIn("messagesStore",
+   function (v) {
+      return v;
+   });
+   var translator = $Messages.translator($Messages.fromJson(messagesStore));
    var serverInput = _P.portIn("serverInput",
    _P.incomingSignal(function (v) {
       return v;
    }));
-   var updates = $Signal.mergeMany(_L.fromArray([$Signal.subscribe(localUpdates)
+   var updates = $Signal.mergeMany(_L.fromArray([$Signal.subscribe($Chat$Views.localUpdates)
                                                 ,A2($Signal.map,
                                                 handleServerInput,
-                                                serverInput)
-                                                ,A2($Signal.map,
-                                                function (_v3) {
-                                                   return function () {
-                                                      return $Chat$Model.UpdateField("");
-                                                   }();
-                                                },
-                                                $Signal.subscribe(submitMessages))]));
-   var is13 = function (code) {
-      return _U.eq(code,
-      13) ? $Result.Ok({ctor: "_Tuple0"}) : $Result.Err("not the right key code");
-   };
-   var onEnter = function (message) {
-      return A3($Html$Events.on,
-      "keydown",
-      A2($Json$Decode.customDecoder,
-      $Html$Events.keyCode,
-      is13),
-      $Basics.always(message));
-   };
-   var messageForm = function (field) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("form-chat")]),
-      _L.fromArray([A2($Html.input,
-                   _L.fromArray([$Html$Attributes.type$("text")
-                                ,$Html$Attributes.value(field)
-                                ,A3($Html$Events.on,
-                                "input",
-                                $Html$Events.targetValue,
-                                function ($) {
-                                   return $Signal.send(localUpdates)($Chat$Model.UpdateField($));
-                                })
-                                ,onEnter(A2($Signal.send,
-                                submitMessages,
-                                {_: {},content: field}))]),
-                   _L.fromArray([]))
-                   ,A2($Html.input,
-                   _L.fromArray([$Html$Attributes.type$("submit")
-                                ,$Html$Attributes.value("Submit")
-                                ,$Html$Events.onClick(A2($Signal.send,
-                                submitMessages,
-                                {_: {},content: field}))]),
-                   _L.fromArray([]))]));
-   };
-   var playersList = function (players) {
-      return function () {
-         var playersItems = A2($List.map,
-         function (p) {
-            return A2($Html.li,
-            _L.fromArray([]),
-            _L.fromArray([$Html.text(A2($Maybe.withDefault,
-            "Anonymous",
-            p.handle))]));
-         },
-         players);
-         return A2($Html.ul,
-         _L.fromArray([]),
-         playersItems);
-      }();
-   };
-   var messagesList = function (messages) {
-      return function () {
-         var messageItems = A2($List.map,
-         function (m) {
-            return A2($Html.li,
-            _L.fromArray([]),
-            _L.fromArray([$Html.text(m.content)]));
-         },
-         messages);
-         return A2($Html.ul,
-         _L.fromArray([]),
-         messageItems);
-      }();
-   };
-   var view = function (model) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("chat-wrapper")]),
-      _L.fromArray([A2($Html.div,
-                   _L.fromArray([$Html$Attributes.$class("chat-messages")]),
-                   _L.fromArray([messagesList(model.messages)]))
-                   ,A2($Html.div,
-                   _L.fromArray([$Html$Attributes.$class("chat-players")]),
-                   _L.fromArray([playersList(model.players)]))
-                   ,messageForm(model.field)]));
-   };
+                                                serverInput)]));
+   var localOutput = _P.portOut("localOutput",
+   _P.outgoingSignal(function (v) {
+      return v;
+   }),
+   $Signal.map($Chat$Model.actionEncoder)(A3($Signal.keepIf,
+   isOutputAction,
+   $Chat$Model.NoOp,
+   updates)));
+   var scrollDown = _P.portOut("scrollDown",
+   _P.outgoingSignal(function (v) {
+      return [];
+   }),
+   function () {
+      var isNewMessage = function (action) {
+         return function () {
+            switch (action.ctor)
+            {case "NewMessage":
+               return true;}
+            return false;
+         }();
+      };
+      return $Signal.map(function (_v9) {
+         return function () {
+            return {ctor: "_Tuple0"};
+         }();
+      })(A3($Signal.keepIf,
+      isNewMessage,
+      $Chat$Model.NoOp,
+      updates));
+   }());
    var update = F2(function (action,
    model) {
       return function () {
@@ -459,18 +411,32 @@ Elm.Chat.Main.make = function (_elm) {
             case "NoOp": return model;
             case "SetPlayer":
             return _U.replace([["currentPlayer"
-                               ,action._0]],
+                               ,action._0]
+                              ,["statusField"
+                               ,A2($Maybe.withDefault,
+                               "",
+                               action._0.status)]],
               model);
-            case "UpdateField":
-            return _U.replace([["field"
+            case "SubmitMessage":
+            return _U.replace([["messageField"
+                               ,""]],
+              model);
+            case "SubmitStatus":
+            return model;
+            case "UpdateMessageField":
+            return _U.replace([["messageField"
                                ,action._0]],
               model);
             case "UpdatePlayers":
             return _U.replace([["players"
                                ,action._0]],
+              model);
+            case "UpdateStatusField":
+            return _U.replace([["statusField"
+                               ,action._0]],
               model);}
          _U.badCase($moduleName,
-         "between lines 20 and 42");
+         "between lines 22 and 57");
       }();
    });
    var model = A3($Signal.foldp,
@@ -478,22 +444,16 @@ Elm.Chat.Main.make = function (_elm) {
    $Chat$Model.emptyModel,
    updates);
    var main = A2($Signal.map,
-   view,
+   $Chat$Views.view(translator),
    model);
    _elm.Chat.Main.values = {_op: _op
                            ,update: update
-                           ,view: view
-                           ,messagesList: messagesList
-                           ,playersList: playersList
-                           ,onEnter: onEnter
-                           ,is13: is13
-                           ,messageForm: messageForm
+                           ,translator: translator
                            ,main: main
                            ,model: model
                            ,handleServerInput: handleServerInput
-                           ,localUpdates: localUpdates
                            ,updates: updates
-                           ,submitMessages: submitMessages};
+                           ,isOutputAction: isOutputAction};
    return _elm.Chat.Main.values;
 };
 Elm.Chat = Elm.Chat || {};
@@ -512,8 +472,31 @@ Elm.Chat.Model.make = function (_elm) {
    $moduleName = "Chat.Model",
    $Basics = Elm.Basics.make(_elm),
    $Game = Elm.Game.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm);
-   var playerDecoder = A4($Json$Decode.object3,
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm);
+   var actionEncoder = function (action) {
+      return function () {
+         switch (action.ctor)
+         {case "SubmitMessage":
+            return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
+                                                     ,_0: "tag"
+                                                     ,_1: $Json$Encode.string("SubmitMessage")}
+                                                    ,{ctor: "_Tuple2"
+                                                     ,_0: "content"
+                                                     ,_1: $Json$Encode.string(action._0)}]));
+            case "SubmitStatus":
+            return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
+                                                     ,_0: "tag"
+                                                     ,_1: $Json$Encode.string("SubmitStatus")}
+                                                    ,{ctor: "_Tuple2"
+                                                     ,_0: "content"
+                                                     ,_1: $Json$Encode.string(action._0)}]));}
+         return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
+                                                  ,_0: "tag"
+                                                  ,_1: $Json$Encode.string("NoOp")}]));
+      }();
+   };
+   var playerDecoder = A7($Json$Decode.object6,
    $Game.Player,
    A2($Json$Decode._op[":="],
    "id",
@@ -523,9 +506,23 @@ Elm.Chat.Model.make = function (_elm) {
    $Json$Decode.string)),
    $Json$Decode.maybe(A2($Json$Decode._op[":="],
    "status",
-   $Json$Decode.string)));
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "avatarId",
+   $Json$Decode.string)),
+   A2($Json$Decode._op[":="],
+   "guest",
+   $Json$Decode.bool),
+   A2($Json$Decode._op[":="],
+   "user",
+   $Json$Decode.bool));
+   var SubmitStatus = function (a) {
+      return {ctor: "SubmitStatus"
+             ,_0: a};
+   };
    var SubmitMessage = function (a) {
-      return {_: {},content: a};
+      return {ctor: "SubmitMessage"
+             ,_0: a};
    };
    var NewMessage = F2(function (a,
    b) {
@@ -537,8 +534,12 @@ Elm.Chat.Model.make = function (_elm) {
       return {ctor: "UpdatePlayers"
              ,_0: a};
    };
-   var UpdateField = function (a) {
-      return {ctor: "UpdateField"
+   var UpdateStatusField = function (a) {
+      return {ctor: "UpdateStatusField"
+             ,_0: a};
+   };
+   var UpdateMessageField = function (a) {
+      return {ctor: "UpdateMessageField"
              ,_0: a};
    };
    var SetPlayer = function (a) {
@@ -566,9 +567,9 @@ Elm.Chat.Model.make = function (_elm) {
               A2($Json$Decode._op[":="],
               "player",
               playerDecoder));
-            case "UpdateField":
+            case "UpdateMessageField":
             return A2($Json$Decode.object1,
-              UpdateField,
+              UpdateMessageField,
               A2($Json$Decode._op[":="],
               "content",
               $Json$Decode.string));
@@ -577,7 +578,13 @@ Elm.Chat.Model.make = function (_elm) {
               UpdatePlayers,
               A2($Json$Decode._op[":="],
               "players",
-              $Json$Decode.list(playerDecoder)));}
+              $Json$Decode.list(playerDecoder)));
+            case "UpdateStatusField":
+            return A2($Json$Decode.object1,
+              UpdateStatusField,
+              A2($Json$Decode._op[":="],
+              "content",
+              $Json$Decode.string));}
          return $Json$Decode.fail(A2($Basics._op["++"],
          tag,
          " is not a recognized tag for actions"));
@@ -590,24 +597,27 @@ Elm.Chat.Model.make = function (_elm) {
    specificActionDecoder);
    var emptyModel = {_: {}
                     ,currentPlayer: $Game.defaultPlayer
-                    ,field: ""
+                    ,messageField: ""
                     ,messages: _L.fromArray([])
-                    ,players: _L.fromArray([])};
+                    ,players: _L.fromArray([])
+                    ,statusField: ""};
    var Message = F2(function (a,
    b) {
       return {_: {}
              ,content: a
              ,player: b};
    });
-   var Model = F4(function (a,
+   var Model = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
              ,currentPlayer: c
-             ,field: d
+             ,messageField: d
              ,messages: a
-             ,players: b};
+             ,players: b
+             ,statusField: e};
    });
    _elm.Chat.Model.values = {_op: _op
                             ,Model: Model
@@ -615,14 +625,225 @@ Elm.Chat.Model.make = function (_elm) {
                             ,emptyModel: emptyModel
                             ,NoOp: NoOp
                             ,SetPlayer: SetPlayer
-                            ,UpdateField: UpdateField
+                            ,UpdateMessageField: UpdateMessageField
+                            ,UpdateStatusField: UpdateStatusField
                             ,UpdatePlayers: UpdatePlayers
                             ,NewMessage: NewMessage
                             ,SubmitMessage: SubmitMessage
+                            ,SubmitStatus: SubmitStatus
                             ,actionDecoder: actionDecoder
                             ,specificActionDecoder: specificActionDecoder
-                            ,playerDecoder: playerDecoder};
+                            ,playerDecoder: playerDecoder
+                            ,actionEncoder: actionEncoder};
    return _elm.Chat.Model.values;
+};
+Elm.Chat = Elm.Chat || {};
+Elm.Chat.Views = Elm.Chat.Views || {};
+Elm.Chat.Views.make = function (_elm) {
+   "use strict";
+   _elm.Chat = _elm.Chat || {};
+   _elm.Chat.Views = _elm.Chat.Views || {};
+   if (_elm.Chat.Views.values)
+   return _elm.Chat.Views.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Chat.Views",
+   $Basics = Elm.Basics.make(_elm),
+   $Chat$Model = Elm.Chat.Model.make(_elm),
+   $Game = Elm.Game.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Messages = Elm.Messages.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var is13 = function (code) {
+      return _U.eq(code,
+      13) ? $Result.Ok({ctor: "_Tuple0"}) : $Result.Err("not the right key code");
+   };
+   var onEnter = function (message) {
+      return A3($Html$Events.on,
+      "keydown",
+      A2($Json$Decode.customDecoder,
+      $Html$Events.keyCode,
+      is13),
+      $Basics.always(message));
+   };
+   var playerWithAvatar = function (player) {
+      return function () {
+         var handle = A2($Maybe.withDefault,
+         "",
+         player.handle);
+         var handleSpan = A2($Html.span,
+         _L.fromArray([$Html$Attributes.$class("handle")]),
+         _L.fromArray([$Html.text(A2($Maybe.withDefault,
+         "Anonymous",
+         player.handle))]));
+         var avatarUrl = function () {
+            var _v0 = player.avatarId;
+            switch (_v0.ctor)
+            {case "Just":
+               return A2($Basics._op["++"],
+                 "/avatars/",
+                 _v0._0);
+               case "Nothing":
+               return player.user ? "/assets/images/avatar-user.png" : "/assets/images/avatar-guest.png";}
+            _U.badCase($moduleName,
+            "between lines 86 and 89");
+         }();
+         var avatarImg = A2($Html.img,
+         _L.fromArray([$Html$Attributes.src(avatarUrl)
+                      ,$Html$Attributes.$class("avatar")
+                      ,$Html$Attributes.width(19)
+                      ,$Html$Attributes.height(19)]),
+         _L.fromArray([]));
+         return player.guest ? A2($Html.span,
+         _L.fromArray([$Html$Attributes.$class("player-avatar")]),
+         _L.fromArray([avatarImg
+                      ,$Html.text(" ")
+                      ,handleSpan])) : A2($Html.a,
+         _L.fromArray([$Html$Attributes.href(A2($Basics._op["++"],
+                      "/players/",
+                      handle))
+                      ,$Html$Attributes.target("_blank")
+                      ,$Html$Attributes.$class("player-avatar")]),
+         _L.fromArray([avatarImg
+                      ,$Html.text(" ")
+                      ,handleSpan]));
+      }();
+   };
+   var playerItem = function (player) {
+      return function () {
+         var status = function () {
+            var _v2 = player.status;
+            switch (_v2.ctor)
+            {case "Just":
+               return A2($Html.span,
+                 _L.fromArray([$Html$Attributes.$class("status")]),
+                 _L.fromArray([$Html.text(_v2._0)]));
+               case "Nothing":
+               return $Html.text("");}
+            _U.badCase($moduleName,
+            "between lines 76 and 79");
+         }();
+         return A2($Html.li,
+         _L.fromArray([]),
+         _L.fromArray([playerWithAvatar(player)
+                      ,status]));
+      }();
+   };
+   var playersList = function (players) {
+      return A2($Html.ul,
+      _L.fromArray([$Html$Attributes.$class("list-unstyled chat-players")]),
+      A2($List.map,
+      playerItem,
+      players));
+   };
+   var messageItem = function (message) {
+      return A2($Html.li,
+      _L.fromArray([]),
+      _L.fromArray([A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("player-avatar")]),
+                   _L.fromArray([$Html.text(A2($Maybe.withDefault,
+                   "Anonymous",
+                   message.player.handle))]))
+                   ,A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("content")]),
+                   _L.fromArray([$Html.text(message.content)]))]));
+   };
+   var messagesList = function (messages) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("chat-box")]),
+      _L.fromArray([A2($Html.ul,
+      _L.fromArray([$Html$Attributes.$class("list-unstyled chat-messages")]),
+      A2($List.map,
+      messageItem,
+      messages))]));
+   };
+   var localUpdates = $Signal.channel($Chat$Model.NoOp);
+   var statusForm = F2(function (t,
+   field) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("chat-status-form")]),
+      _L.fromArray([A2($Html.input,
+      _L.fromArray([$Html$Attributes.type$("text")
+                   ,$Html$Attributes.$class("form-control")
+                   ,$Html$Attributes.value(field)
+                   ,$Html$Attributes.placeholder(t("chat.statusPlaceholder"))
+                   ,A3($Html$Events.on,
+                   "input",
+                   $Html$Events.targetValue,
+                   function ($) {
+                      return $Signal.send(localUpdates)($Chat$Model.UpdateStatusField($));
+                   })
+                   ,onEnter(A2($Signal.send,
+                   localUpdates,
+                   $Chat$Model.SubmitStatus(field)))]),
+      _L.fromArray([]))]));
+   });
+   var messageForm = F2(function (t,
+   field) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("chat-message-form")]),
+      _L.fromArray([A2($Html.input,
+      _L.fromArray([$Html$Attributes.type$("text")
+                   ,$Html$Attributes.$class("form-control")
+                   ,$Html$Attributes.value(field)
+                   ,$Html$Attributes.placeholder(t("chat.messagePlaceholder"))
+                   ,A3($Html$Events.on,
+                   "input",
+                   $Html$Events.targetValue,
+                   function ($) {
+                      return $Signal.send(localUpdates)($Chat$Model.UpdateMessageField($));
+                   })
+                   ,onEnter(A2($Signal.send,
+                   localUpdates,
+                   $Chat$Model.SubmitMessage(field)))]),
+      _L.fromArray([]))]));
+   });
+   var view = F2(function (t,
+   model) {
+      return function () {
+         var rightElements = model.currentPlayer.user ? _L.fromArray([A2(statusForm,
+                                                                     t,
+                                                                     model.statusField)
+                                                                     ,playersList(model.players)]) : _L.fromArray([playersList(model.players)]);
+         var leftElements = _L.fromArray([messagesList(model.messages)
+                                         ,A2(messageForm,
+                                         t,
+                                         model.messageField)]);
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("chat-wrapper")]),
+         _L.fromArray([A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("chat-top")]),
+                      _L.fromArray([$Html.text(t("chat.title"))]))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("chat-left")]),
+                      leftElements)
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("chat-right")]),
+                      rightElements)]));
+      }();
+   });
+   _elm.Chat.Views.values = {_op: _op
+                            ,localUpdates: localUpdates
+                            ,view: view
+                            ,messagesList: messagesList
+                            ,messageItem: messageItem
+                            ,statusForm: statusForm
+                            ,playersList: playersList
+                            ,playerItem: playerItem
+                            ,playerWithAvatar: playerWithAvatar
+                            ,onEnter: onEnter
+                            ,is13: is13
+                            ,messageForm: messageForm};
+   return _elm.Chat.Views.values;
 };
 Elm.Color = Elm.Color || {};
 Elm.Color.make = function (_elm) {
@@ -2247,7 +2468,7 @@ Elm.Game.make = function (_elm) {
                               {case "Just": return true;
                                  case "Nothing": return false;}
                               _U.badCase($moduleName,
-                              "between lines 208 and 211");
+                              "between lines 211 and 214");
                            }();}
                       break;}
                  break;}
@@ -2266,7 +2487,7 @@ Elm.Game.make = function (_elm) {
                return _U.eq(_v11._0,
                  _v9.playerId);}
             _U.badCase($moduleName,
-            "between lines 201 and 203");
+            "between lines 204 and 206");
          }();
       }();
    };
@@ -2370,9 +2591,12 @@ Elm.Game.make = function (_elm) {
                        ,upwind: defaultGate
                        ,windShadowLength: 0};
    var defaultPlayer = {_: {}
+                       ,avatarId: $Maybe.Nothing
+                       ,guest: false
                        ,handle: $Maybe.Nothing
                        ,id: ""
-                       ,status: $Maybe.Nothing};
+                       ,status: $Maybe.Nothing
+                       ,user: false};
    var defaultVmg = {_: {}
                     ,angle: 0
                     ,speed: 0
@@ -2548,13 +2772,19 @@ Elm.Game.make = function (_elm) {
          };
       };
    };
-   var Player = F3(function (a,
+   var Player = F6(function (a,
    b,
-   c) {
+   c,
+   d,
+   e,
+   f) {
       return {_: {}
+             ,avatarId: d
+             ,guest: e
              ,handle: b
              ,id: a
-             ,status: c};
+             ,status: c
+             ,user: f};
    });
    var Course = F8(function (a,
    b,
@@ -5420,13 +5650,19 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.course.boatWidth)} : _U.badPort("an object with fields \'upwind\', \'downwind\', \'laps\', \'markRadius\', \'islands\', \'area\', \'windShadowLength\', \'boatWidth\'",
                                                                                                                                                                                                                                                                      v.course))
                                                                                                                                                                                                                                                                      ,playerState: v.playerState === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerState === "object" && "player" in v.playerState && "position" in v.playerState && "heading" in v.playerState && "velocity" in v.playerState && "vmgValue" in v.playerState && "windAngle" in v.playerState && "windOrigin" in v.playerState && "windSpeed" in v.playerState && "downwindVmg" in v.playerState && "upwindVmg" in v.playerState && "shadowDirection" in v.playerState && "trail" in v.playerState && "controlMode" in v.playerState && "tackTarget" in v.playerState && "crossedGates" in v.playerState && "nextGate" in v.playerState ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,player: typeof v.playerState.player === "object" && "id" in v.playerState.player && "handle" in v.playerState.player && "status" in v.playerState.player ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,id: typeof v.playerState.player.id === "string" || typeof v.playerState.player.id === "object" && v.playerState.player.id instanceof String ? v.playerState.player.id : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       v.playerState.player.id)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,handle: v.playerState.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerState.player.handle === "string" || typeof v.playerState.player.handle === "object" && v.playerState.player.handle instanceof String ? v.playerState.player.handle : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       v.playerState.player.handle))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       ,status: v.playerState.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerState.player.status === "string" || typeof v.playerState.player.status === "object" && v.playerState.player.status instanceof String ? v.playerState.player.status : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       v.playerState.player.status))} : _U.badPort("an object with fields \'id\', \'handle\', \'status\'",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,player: typeof v.playerState.player === "object" && "id" in v.playerState.player && "handle" in v.playerState.player && "status" in v.playerState.player && "avatarId" in v.playerState.player && "guest" in v.playerState.player && "user" in v.playerState.player ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,id: typeof v.playerState.player.id === "string" || typeof v.playerState.player.id === "object" && v.playerState.player.id instanceof String ? v.playerState.player.id : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.playerState.player.id)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,handle: v.playerState.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerState.player.handle === "string" || typeof v.playerState.player.handle === "object" && v.playerState.player.handle instanceof String ? v.playerState.player.handle : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.playerState.player.handle))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,status: v.playerState.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerState.player.status === "string" || typeof v.playerState.player.status === "object" && v.playerState.player.status instanceof String ? v.playerState.player.status : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.playerState.player.status))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,avatarId: v.playerState.player.avatarId === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerState.player.avatarId === "string" || typeof v.playerState.player.avatarId === "object" && v.playerState.player.avatarId instanceof String ? v.playerState.player.avatarId : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.playerState.player.avatarId))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,guest: typeof v.playerState.player.guest === "boolean" ? v.playerState.player.guest : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.playerState.player.guest)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,user: typeof v.playerState.player.user === "boolean" ? v.playerState.player.user : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.playerState.player.user)} : _U.badPort("an object with fields \'id\', \'handle\', \'status\', \'avatarId\', \'guest\', \'user\'",
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.playerState.player)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,position: typeof v.playerState.position === "object" && v.playerState.position instanceof Array ? {ctor: "_Tuple2"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               ,_0: typeof v.playerState.position[0] === "number" ? v.playerState.position[0] : _U.badPort("a number",
@@ -5510,13 +5746,19 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                                                                                                      v.wind)
                                                                                                                                                                                                                                                                      ,opponents: typeof v.opponents === "object" && v.opponents instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.opponents.map(function (v) {
                                                                                                                                                                                                                                                                         return typeof v === "object" && "player" in v && "position" in v && "heading" in v && "velocity" in v && "vmgValue" in v && "windAngle" in v && "windOrigin" in v && "windSpeed" in v && "downwindVmg" in v && "upwindVmg" in v && "shadowDirection" in v && "trail" in v && "controlMode" in v && "tackTarget" in v && "crossedGates" in v && "nextGate" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,id: typeof v.player.id === "string" || typeof v.player.id === "object" && v.player.id instanceof String ? v.player.id : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     v.player.id)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,handle: v.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     v.player.handle))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,status: v.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.status === "string" || typeof v.player.status === "object" && v.player.status instanceof String ? v.player.status : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     v.player.status))} : _U.badPort("an object with fields \'id\', \'handle\', \'status\'",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player && "avatarId" in v.player && "guest" in v.player && "user" in v.player ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,id: typeof v.player.id === "string" || typeof v.player.id === "object" && v.player.id instanceof String ? v.player.id : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.player.id)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,handle: v.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.player.handle))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,status: v.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.status === "string" || typeof v.player.status === "object" && v.player.status instanceof String ? v.player.status : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.player.status))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,avatarId: v.player.avatarId === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.avatarId === "string" || typeof v.player.avatarId === "object" && v.player.avatarId instanceof String ? v.player.avatarId : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.player.avatarId))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,guest: typeof v.player.guest === "boolean" ? v.player.guest : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.player.guest)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,user: typeof v.player.user === "boolean" ? v.player.user : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.player.user)} : _U.badPort("an object with fields \'id\', \'handle\', \'status\', \'avatarId\', \'guest\', \'user\'",
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          v.player)
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          ,position: typeof v.position === "object" && v.position instanceof Array ? {ctor: "_Tuple2"
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ,_0: typeof v.position[0] === "number" ? v.position[0] : _U.badPort("a number",
@@ -5746,6 +5988,52 @@ Elm.Maybe.make = function (_elm) {
                        ,Just: Just
                        ,Nothing: Nothing};
    return _elm.Maybe.values;
+};
+Elm.Messages = Elm.Messages || {};
+Elm.Messages.make = function (_elm) {
+   "use strict";
+   _elm.Messages = _elm.Messages || {};
+   if (_elm.Messages.values)
+   return _elm.Messages.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "Messages",
+   $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm);
+   var translator = F2(function (messages,
+   key) {
+      return $Maybe.withDefault(key)(A2($Dict.get,
+      key,
+      messages));
+   });
+   var msg = F2(function (key,
+   messages) {
+      return $Maybe.withDefault(key)(A2($Dict.get,
+      key,
+      messages));
+   });
+   var fromList = function (l) {
+      return $Dict.fromList(l);
+   };
+   var emptyMessages = $Dict.empty;
+   var fromJson = function (value) {
+      return $Maybe.withDefault(emptyMessages)($Result.toMaybe(A2($Json$Decode.decodeValue,
+      $Json$Decode.dict($Json$Decode.string),
+      value)));
+   };
+   _elm.Messages.values = {_op: _op
+                          ,emptyMessages: emptyMessages
+                          ,fromList: fromList
+                          ,fromJson: fromJson
+                          ,msg: msg
+                          ,translator: translator};
+   return _elm.Messages.values;
 };
 Elm.Native.Array = {};
 Elm.Native.Array.make = function(elm) {
@@ -12672,11 +12960,13 @@ Elm.Native.VirtualDom.make = function(elm) {
     var List = Elm.Native.List.make(elm);
     var Utils = Elm.Native.Utils.make(elm);
 
+    var ATTRIBUTE_KEY = 'UniqueNameThatOthersAreVeryUnlikelyToUse';
+
     function listToProperties(list) {
         var object = {};
         while (list.ctor !== '[]') {
             var entry = list._0;
-            if (entry.key === 'attributes') {
+            if (entry.key === ATTRIBUTE_KEY) {
               object.attributes = object.attributes || {};
               object.attributes[entry.value.attrKey] = entry.value.attrValue;
             }
@@ -12718,9 +13008,6 @@ Elm.Native.VirtualDom.make = function(elm) {
     }
 
     function property(key, value) {
-        if (key == 'attributes') {
-          throw new Error("Cannot assign the attributes property directly");
-        }
         return {
             key: key,
             value: value
@@ -12729,10 +13016,10 @@ Elm.Native.VirtualDom.make = function(elm) {
 
     function attribute(key, value) {
         return {
-            key: 'attributes',
+            key: ATTRIBUTE_KEY,
             value: {
-              attrKey: key,
-              attrValue: value
+                attrKey: key,
+                attrValue: value
             }
         };
     }
@@ -12821,9 +13108,6 @@ Elm.Native.VirtualDom.make = function(elm) {
     function updateAndReplace(node, oldModel, newModel) {
         var patches = diff(oldModel, newModel);
         var newNode = patch(node, patches);
-        if (newNode !== node) {
-            node.parentNode.replaceChild(newNode, node);
-        }
         return newNode;
     }
 

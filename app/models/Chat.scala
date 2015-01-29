@@ -5,15 +5,14 @@ import JsonFormats.playerFormat
 
 object Chat {
 
-  case class SubmitMessage(content: String)
-
-  implicit val submitMessageFormat: Format[SubmitMessage] = Json.format[SubmitMessage]
-
   sealed trait Action
   case object NoOp extends Action
   case class SetPlayer(p: Player) extends Action
   case class UpdatePlayers(players: Seq[Player]) extends Action
   case class NewMessage(p: Player, content: String) extends Action
+  case class NewStatus(u: User, content: String) extends Action
+  case class SubmitMessage(content: String) extends Action
+  case class SubmitStatus(content: String) extends Action
 
   implicit val actionFormat: Format[Action] = new Format[Action] {
 
@@ -21,25 +20,23 @@ object Chat {
     def player(p: Player) = Json.obj("player" -> playerFormat.writes(p))
 
     override def writes(o: Action): JsValue = o match {
-      case NoOp => tag("NoOp")
       case SetPlayer(p) => tag("SetPlayer") ++ player(p)
       case UpdatePlayers(players) => tag("UpdatePlayers") ++ Json.obj("players" -> JsArray(players.map(playerFormat.writes)))
       case NewMessage(p, c) => tag("NewMessage") ++ player(p) ++ Json.obj("content" -> JsString(c))
+      case _ => tag("NoOp")
     }
 
     override def reads(json: JsValue): JsResult[Action] = json \ "tag" match {
 
-//      case JsArray(Seq(JsString("SetPlayer"), jsonPlayer)) =>
-//        playerFormat.reads(jsonPlayer).map(SetPlayer)
-//
-//      case JsArray(Seq(JsString("PlayerJoin"), jsonPlayer)) =>
-//        playerFormat.reads(jsonPlayer).map(PlayerJoin)
-//
-//      case JsArray(Seq(JsString("PlayerQuit"), jsonPlayer)) =>
-//        playerFormat.reads(jsonPlayer).map(PlayerQuit)
-//
-//      case JsArray(Seq(JsString("Message"), jsonPlayer, JsString(content))) =>
-//        playerFormat.reads(jsonPlayer).map(player => Message(player, content))
+      case JsString("SubmitMessage") => json \ "content" match {
+        case JsString(content) => JsSuccess(SubmitMessage(content))
+        case _ => JsSuccess(NoOp)
+      }
+
+      case JsString("SubmitStatus") => json \ "content" match {
+        case JsString(content) => JsSuccess(SubmitStatus(content))
+        case _ => JsSuccess(NoOp)
+      }
 
       case _ => JsSuccess(NoOp)
     }

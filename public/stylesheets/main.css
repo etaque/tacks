@@ -5069,9 +5069,6 @@ a {
 .alert-danger a {
   color: #a94442; }
 
-input[type="text"], input[type="password"], textarea {
-  border-radius: 0; }
-
 .has-error .error-message {
   margin-top: 0;
   padding: 6px 12px;
@@ -5128,69 +5125,197 @@ a.player-avatar {
 .update-name {
   margin-top: 30px; }
 
-.live-center .table-open-races {
-  width: 100%;
-  background-color: white;
-  box-shadow: 0 2px 2px #E6E6E6; }
-  .live-center .table-open-races th {
-    padding: 4px 12px;
-    border-bottom-width: 2px;
-    background-color: #345488;
-    color: #B1C0D8;
-    font-size: 13px; }
-    .live-center .table-open-races th.generator {
-      text-align: center; }
-  .live-center .table-open-races td {
-    padding: 8px 12px;
-    border-bottom: 1px solid #B1C0D8;
-    background-color: white; }
-    .live-center .table-open-races td.generator {
-      background-color: #5899E2;
-      text-align: center;
-      font-family: "Proxima Nova Thin";
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      color: white;
-      border-color: #3b73b3; }
-    .live-center .table-open-races td.countdown {
-      font-family: "Inconsolata"; }
-    .live-center .table-open-races td.players .player-avatar {
-      display: block;
-      margin-bottom: 2px; }
-      .live-center .table-open-races td.players .player-avatar:last-child {
-        margin-bottom: 0; }
-  .live-center .table-open-races tr:last-child td {
-    border-bottom: none; }
-.live-center .empty-board {
+.chat-wrapper {
+  margin-top: 30px;
+  position: relative;
+  height: 321px;
   background-color: white;
   box-shadow: 0 2px 2px #E6E6E6;
-  padding: 10px 15px;
-  color: #7b8087; }
-.live-center .row-new-race {
-  margin-top: 20px; }
-.live-center .btn-new-race.loading {
-  opacity: 0.5; }
-.live-center .online-users {
-  background-color: white;
-  box-shadow: 0 2px 2px #E6E6E6;
-  padding: 0;
-  margin: 0; }
-  .live-center .online-users li {
-    background-color: white;
-    padding: 6px 8px;
+  border: 3px solid white; }
+  .chat-wrapper .chat-top {
+    line-height: 27px;
+    text-align: center;
+    background-color: #E6E6E6;
     color: #7b8087;
-    border-bottom: 1px solid #f8f9fb; }
-    .live-center .online-users li:last-child {
+    text-transform: uppercase;
+    font-family: "Proxima Nova Thin";
+    letter-spacing: 1px; }
+  .chat-wrapper .chat-left {
+    position: absolute;
+    top: 30px;
+    left: 0;
+    right: 200px;
+    bottom: 0; }
+  .chat-wrapper .chat-right {
+    position: absolute;
+    top: 30px;
+    width: 200px;
+    right: 0;
+    bottom: 0;
+    border-left: 3px solid white; }
+  .chat-wrapper .chat-box {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 250px;
+    background-color: #2b4772;
+    /* Fallback Color */
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
+    /* Saf4+, Chrome */
+    background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
+    /* Chrome 10+, Saf5.1+, iOS 5+ */
+    background-image: -moz-linear-gradient(top, #23395C, #2b4772);
+    /* FF3.6 */
+    background-image: -ms-linear-gradient(top, #23395C, #2b4772);
+    /* IE10 */
+    background-image: -o-linear-gradient(top, #23395C, #2b4772);
+    /* Opera 11.10+ */
+    background-image: linear-gradient(top, #23395C, #2b4772);
+    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772'); }
+    .chat-wrapper .chat-box .chat-messages {
+      overflow: auto;
+      position: absolute;
+      width: 100%;
+      bottom: 5px;
+      max-height: 240px;
+      margin-bottom: 0; }
+      .chat-wrapper .chat-box .chat-messages li {
+        margin: 0 10px;
+        color: white; }
+        .chat-wrapper .chat-box .chat-messages li .player-avatar {
+          color: #B1C0D8; }
+        .chat-wrapper .chat-box .chat-messages li .player-avatar:after {
+          content: ":"; }
+        .chat-wrapper .chat-box .chat-messages li .content {
+          display: inline-block;
+          margin-left: 5px;
+          font-size: 14px; }
+  .chat-wrapper .chat-message-form input[type="text"] {
+    border-radius: 0;
+    border: none;
+    border-top: 2px solid white;
+    background-color: #5899E2;
+    color: white;
+    height: 35px;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.075) inset; }
+    .chat-wrapper .chat-message-form input[type="text"]::-webkit-input-placeholder {
+      /* WebKit browsers */
+      color: #B1C0D8; }
+    .chat-wrapper .chat-message-form input[type="text"]:-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 */
+      color: #B1C0D8;
+      opacity: 1; }
+    .chat-wrapper .chat-message-form input[type="text"]::-moz-placeholder {
+      /* Mozilla Firefox 19+ */
+      color: #B1C0D8;
+      opacity: 1; }
+    .chat-wrapper .chat-message-form input[type="text"]:-ms-input-placeholder {
+      /* Internet Explorer 10+ */
+      color: #B1C0D8; }
+  .chat-wrapper .chat-status-form input[type="text"] {
+    border-radius: 0;
+    height: 30px;
+    padding: 4px 8px;
+    background-color: #f8f9fb;
+    border: 1px solid #E6E6E6;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; }
+    .chat-wrapper .chat-status-form input[type="text"]::-webkit-input-placeholder {
+      /* WebKit browsers */
+      color: #b0b3b8; }
+    .chat-wrapper .chat-status-form input[type="text"]:-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 */
+      color: #b0b3b8;
+      opacity: 1; }
+    .chat-wrapper .chat-status-form input[type="text"]::-moz-placeholder {
+      /* Mozilla Firefox 19+ */
+      color: #b0b3b8;
+      opacity: 1; }
+    .chat-wrapper .chat-status-form input[type="text"]:-ms-input-placeholder {
+      /* Internet Explorer 10+ */
+      color: #b0b3b8; }
+  .chat-wrapper .chat-players {
+    background-color: white;
+    padding: 0;
+    margin: 0;
+    height: 285px;
+    overflow-y: scroll; }
+    .chat-wrapper .chat-players li {
+      background-color: white;
+      margin: 4px 4px 0 4px;
+      color: #7b8087; }
+      .chat-wrapper .chat-players li .status {
+        display: block;
+        color: #51585E;
+        font-size: 12px;
+        margin-top: 2px; }
+  .chat-wrapper .chat-status-form + .chat-players {
+    height: 255px; }
+
+.live-center {
+  margin-top: 30px; }
+  .live-center .table-open-races {
+    width: 100%;
+    background-color: white;
+    box-shadow: 0 2px 2px #E6E6E6; }
+    .live-center .table-open-races th {
+      padding: 4px 12px;
+      border-bottom-width: 2px;
+      background-color: #345488;
+      color: #B1C0D8;
+      font-size: 13px; }
+      .live-center .table-open-races th.generator {
+        text-align: center; }
+    .live-center .table-open-races td {
+      padding: 8px 12px;
+      border-bottom: 1px solid #B1C0D8;
+      background-color: white; }
+      .live-center .table-open-races td.generator {
+        background-color: #5899E2;
+        text-align: center;
+        font-family: "Proxima Nova Thin";
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        color: white;
+        border-color: #3b73b3; }
+      .live-center .table-open-races td.countdown {
+        font-family: "Inconsolata"; }
+      .live-center .table-open-races td.players .player-avatar {
+        display: block;
+        margin-bottom: 2px; }
+        .live-center .table-open-races td.players .player-avatar:last-child {
+          margin-bottom: 0; }
+    .live-center .table-open-races tr:last-child td {
       border-bottom: none; }
-    .live-center .online-users li .status {
-      display: block;
-      color: #51585E;
-      font-size: 12px;
-      margin-top: 4px; }
-.live-center .online-guests {
-  padding: 8px;
-  font-size: 14px;
-  color: #7b8087; }
+  .live-center .empty-board {
+    background-color: white;
+    box-shadow: 0 2px 2px #E6E6E6;
+    padding: 10px 15px;
+    color: #7b8087; }
+  .live-center .row-new-race {
+    margin-top: 20px; }
+  .live-center .btn-new-race.loading {
+    opacity: 0.5; }
+  .live-center .online-users {
+    background-color: white;
+    box-shadow: 0 2px 2px #E6E6E6;
+    padding: 0;
+    margin: 0; }
+    .live-center .online-users li {
+      background-color: white;
+      padding: 6px 8px;
+      color: #7b8087;
+      border-bottom: 1px solid #f8f9fb; }
+      .live-center .online-users li:last-child {
+        border-bottom: none; }
+      .live-center .online-users li .status {
+        display: block;
+        color: #51585E;
+        font-size: 12px;
+        margin-top: 4px; }
+  .live-center .online-guests {
+    padding: 8px;
+    font-size: 14px;
+    color: #7b8087; }
 
 .home-time-trial {
   margin-top: 30px; }

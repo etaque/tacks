@@ -3,20 +3,16 @@ package actors
 import akka.actor.{Props, ActorRef, Actor}
 import models.Player
 
-case class NotificationEvent(key: String, params: Seq[String])
-case class Subscribe(player: Player, ref: ActorRef)
-case class Unsubscribe(player: Player, ref: ActorRef)
-
 class NotifiableActor(player: Player, out: ActorRef) extends Actor {
 
-  RacesSupervisor.actorRef ! Subscribe(player, self)
+  LiveCenter.actorRef ! Subscribe(player, self)
 
   def receive = {
     case e: NotificationEvent => out forward e
   }
 
   override def postStop() = {
-    RacesSupervisor.actorRef ! Unsubscribe(player, self)
+    LiveCenter.actorRef ! Unsubscribe(player, self)
   }
 }
 

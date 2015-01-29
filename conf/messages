@@ -78,6 +78,10 @@ home.runTimeTrial=Play
 home.leaderboard=Overall leaderboard
 home.fullLeaderboard=See all
 
+chat.title=Live room
+chat.messagePlaceholder=Press enter to send message
+chat.statusPlaceholder=Status
+
 footer.message=An <a href="https://github.com/etaque/tacks">open source</a> game created by <a href="https://twitter.com/etaque">@etaque</a>.
 footer.about=About
 

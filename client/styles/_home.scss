@@ -19,7 +19,140 @@
   margin-top: 30px;
 }
 
+.chat-wrapper {
+
+  $titleHeight: 30px;
+  $boxHeight: 250px;
+  $messageInputHeight: 35px;
+  $statusInputHeight: 30px;
+
+  margin-top: 30px;
+  position: relative;
+  height: ($titleHeight + $boxHeight + $messageInputHeight + 6px);
+  background-color: white;
+  box-shadow: 0 2px 2px $lightGray;
+  border: 3px solid white;
+
+
+  .chat-top {
+    line-height: ($titleHeight - 3px);
+    text-align: center;
+    background-color: $lightGray;
+    color: $gray;
+    text-transform: uppercase;
+    font-family: $lightFontFamily;
+    letter-spacing: 1px;
+  }
+
+  .chat-left {
+    position: absolute;
+    top: $titleHeight;
+    left: 0;
+    right: 200px;
+    bottom: 0;
+  }
+
+  .chat-right {
+    position: absolute;
+    top: $titleHeight;
+    width: 200px;
+    right: 0;
+    bottom: 0;
+    border-left: 3px solid white;
+  }
+
+
+  .chat-box {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: $boxHeight;
+    @include linear-gradient($seaBlue, $lightSeaBlue);
+
+    .chat-messages {
+      overflow: auto;
+      position: absolute;
+      width: 100%;
+      bottom: 5px;
+      max-height: ($boxHeight - 10px);
+      margin-bottom: 0;
+
+      li {
+        margin: 0 10px;
+        color: white;
+
+        .player-avatar {
+          color: $whiteBlue;
+        }
+
+        .player-avatar:after {
+          content: ":";
+        }
+
+        .content {
+          display: inline-block;
+          margin-left: 5px;
+          font-size: 14px;
+        }
+      }
+    }
+
+  }
+
+  .chat-message-form {
+    input[type="text"] {
+      border-radius: 0;
+      border: none;
+      border-top: 2px solid white;
+      background-color: $mainBlue;
+      color: white;
+      height: $messageInputHeight;
+      box-shadow: 0 2px 2px $shadow inset;
+      @include placeholder-color($whiteBlue);
+    }
+  }
+
+  .chat-status-form {
+    input[type="text"] {
+      border-radius: 0;
+      height: $statusInputHeight;
+      padding: 4px 8px;
+      background-color: $smokeWhite;
+      border: 1px solid $lightGray;
+      box-shadow: 0 1px 1px $shadow inset;
+      @include placeholder-color($mediumGray);
+    }
+  }
+
+  .chat-players {
+    background-color: white;
+    padding: 0;
+    margin: 0;
+    height: $boxHeight + $messageInputHeight;
+    overflow-y: scroll;
+
+    li {
+      background-color: white;
+      margin: 4px 4px 0 4px;
+      color: $gray;
+
+      .status {
+        display: block;
+        color: $darkGray;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .chat-status-form + .chat-players {
+    height: ($boxHeight + $messageInputHeight - $statusInputHeight);
+  }
+
+}
+
 .live-center {
+  margin-top: 30px;
 
   .table-open-races {
     width: 100%;
