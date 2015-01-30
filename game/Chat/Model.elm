@@ -32,6 +32,7 @@ emptyModel =
 
 type Action
   = NoOp
+  | Ping
   | SetPlayer Player
   | UpdateMessageField String
   | UpdateStatusField String
@@ -49,6 +50,8 @@ specificActionDecoder tag =
   case tag of
 
     "NoOp" -> succeed NoOp
+
+    "Ping" -> succeed Ping
 
     "SetPlayer" ->
       object1 SetPlayer ("player" := playerDecoder)
@@ -99,5 +102,7 @@ actionEncoder action =
         [ ("tag", E.string "SubmitStatus")
         , ("content", E.string content)
         ]
+
+    Ping -> E.object [ ("tag", E.string "Ping") ]
 
     _ -> E.object [ ("tag", E.string "NoOp") ]

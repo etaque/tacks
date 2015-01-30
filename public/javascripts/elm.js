@@ -329,7 +329,8 @@ Elm.Chat.Main.make = function (_elm) {
    $Messages = Elm.Messages.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm);
+   $String = Elm.String.make(_elm),
+   $Time = Elm.Time.make(_elm);
    var isOutputAction = function (action) {
       return function () {
          switch (action.ctor)
@@ -350,7 +351,7 @@ Elm.Chat.Main.make = function (_elm) {
             return $Chat$Model.NoOp;
             case "Ok": return _v3._0;}
          _U.badCase($moduleName,
-         "between lines 74 and 76");
+         "between lines 73 and 75");
       }();
    };
    var messagesStore = _P.portIn("messagesStore",
@@ -370,10 +371,22 @@ Elm.Chat.Main.make = function (_elm) {
    _P.outgoingSignal(function (v) {
       return v;
    }),
-   $Signal.map($Chat$Model.actionEncoder)(A3($Signal.keepIf,
-   isOutputAction,
-   $Chat$Model.NoOp,
-   updates)));
+   function () {
+      var output = $Signal.mergeMany(_L.fromArray([A3($Signal.keepIf,
+                                                  isOutputAction,
+                                                  $Chat$Model.NoOp,
+                                                  updates)
+                                                  ,A2($Signal.map,
+                                                  function (_v6) {
+                                                     return function () {
+                                                        return $Chat$Model.Ping;
+                                                     }();
+                                                  },
+                                                  $Time.every(10 * $Time.second))]));
+      return A2($Signal.map,
+      $Chat$Model.actionEncoder,
+      output);
+   }());
    var scrollDown = _P.portOut("scrollDown",
    _P.outgoingSignal(function (v) {
       return [];
@@ -387,7 +400,7 @@ Elm.Chat.Main.make = function (_elm) {
             return false;
          }();
       };
-      return $Signal.map(function (_v9) {
+      return $Signal.map(function (_v11) {
          return function () {
             return {ctor: "_Tuple0"};
          }();
@@ -408,7 +421,6 @@ Elm.Chat.Main.make = function (_elm) {
                                              ,content: action._1
                                              ,player: action._0}]))]],
               model);
-            case "NoOp": return model;
             case "SetPlayer":
             return _U.replace([["currentPlayer"
                                ,action._0]
@@ -421,8 +433,6 @@ Elm.Chat.Main.make = function (_elm) {
             return _U.replace([["messageField"
                                ,""]],
               model);
-            case "SubmitStatus":
-            return model;
             case "UpdateMessageField":
             return _U.replace([["messageField"
                                ,action._0]],
@@ -435,8 +445,7 @@ Elm.Chat.Main.make = function (_elm) {
             return _U.replace([["statusField"
                                ,action._0]],
               model);}
-         _U.badCase($moduleName,
-         "between lines 22 and 57");
+         return model;
       }();
    });
    var model = A3($Signal.foldp,
@@ -477,7 +486,11 @@ Elm.Chat.Model.make = function (_elm) {
    var actionEncoder = function (action) {
       return function () {
          switch (action.ctor)
-         {case "SubmitMessage":
+         {case "Ping":
+            return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
+                                                     ,_0: "tag"
+                                                     ,_1: $Json$Encode.string("Ping")}]));
+            case "SubmitMessage":
             return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
                                                      ,_0: "tag"
                                                      ,_1: $Json$Encode.string("SubmitMessage")}
@@ -546,6 +559,7 @@ Elm.Chat.Model.make = function (_elm) {
       return {ctor: "SetPlayer"
              ,_0: a};
    };
+   var Ping = {ctor: "Ping"};
    var NoOp = {ctor: "NoOp"};
    var specificActionDecoder = function (tag) {
       return function () {
@@ -561,6 +575,8 @@ Elm.Chat.Model.make = function (_elm) {
               $Json$Decode.string));
             case "NoOp":
             return $Json$Decode.succeed(NoOp);
+            case "Ping":
+            return $Json$Decode.succeed(Ping);
             case "SetPlayer":
             return A2($Json$Decode.object1,
               SetPlayer,
@@ -624,6 +640,7 @@ Elm.Chat.Model.make = function (_elm) {
                             ,Message: Message
                             ,emptyModel: emptyModel
                             ,NoOp: NoOp
+                            ,Ping: Ping
                             ,SetPlayer: SetPlayer
                             ,UpdateMessageField: UpdateMessageField
                             ,UpdateStatusField: UpdateStatusField

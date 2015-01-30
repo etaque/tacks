@@ -25,7 +25,9 @@ class ChatPlayerActor(player: Player, out: ActorRef) extends Actor {
     }
 
     case a: Chat.Action => {
-      out ! a
+      if (out != sender) {
+        out ! a
+      }
     }
 
   }

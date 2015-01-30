@@ -6,6 +6,7 @@ import Maybe as M
 import String as S
 import Json.Decode as Json
 import Result
+import Time (..)
 
 import Html (..)
 import Html.Attributes (..)
@@ -20,8 +21,6 @@ import Chat.Views as V
 update : Action -> Model -> Model
 update action model =
   case action of
-
-    NoOp -> model
 
     SetPlayer p ->
       { model |
@@ -54,7 +53,7 @@ update action model =
         messageField <- ""
       }
 
-    SubmitStatus _ -> model
+    _ -> model
 
 port serverInput : Signal Json.Value
 
@@ -90,8 +89,13 @@ isOutputAction action =
 
 port localOutput : Signal Json.Value
 port localOutput =
-  Signal.keepIf isOutputAction NoOp updates
-    |> Signal.map actionEncoder
+  let
+    output = Signal.mergeMany
+      [ Signal.keepIf isOutputAction NoOp updates
+      , Signal.map (\_ -> Ping) (every (10 * second))
+      ]
+  in
+    Signal.map actionEncoder output
 
 port scrollDown : Signal ()
 port scrollDown =
