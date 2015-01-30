@@ -30,8 +30,12 @@ object Application extends Controller with Security {
   }
 
   def setHandle = PlayerAction(parse.urlFormEncoded) { implicit request =>
-    val handle = request.body.get("handle").flatMap(_.headOption).getOrElse("")
-    Redirect(routes.Application.index()).addingToSession("playerHandle" -> handle)
+    val handleOpt = request.body.get("handle").flatMap(_.headOption).filter(_.nonEmpty)
+    handleOpt match {
+      case Some(handle) => Redirect(routes.Application.index()).addingToSession("playerHandle" -> handle)
+      case None => Redirect(routes.Application.index()).removingFromSession("playerHandle")
+    }
+
   }
 
   def notFound(path: String) = PlayerAction.async() { implicit request =>
