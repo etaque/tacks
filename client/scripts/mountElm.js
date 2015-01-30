@@ -34,9 +34,9 @@ function mountChat(div) {
     messagesStore: messages
   };
 
-  var mount = mountWebSocket(div, wsUrl, window.Elm.Chat.Main, "serverInput", "localOutput", initialInput);
+  var game = mountWebSocket(div, wsUrl, window.Elm.Chat.Main, "serverInput", "localOutput", initialInput);
 
-  mount.game.ports["scrollDown"].subscribe(function() {
+  game.ports["scrollDown"].subscribe(function() {
     var el = document.getElementsByClassName("chat-messages")[0];
     if (el) {
       setTimeout(function() {
@@ -48,29 +48,39 @@ function mountChat(div) {
 
 function mountWebSocket(div, wsUrl, elmApp, inPort, outPort, initialInput) {
 
-  var ws = new WebSocket(wsUrl);
   var game = div ? Elm.embed(elmApp, div, initialInput) : Elm.fullscreen(elmApp, initialInput);
+  var ws;
 
-  ws.onmessage = function(event) {
-    game.ports[inPort].send(JSON.parse(event.data));
-  };
+  function createWebSocket() {
 
-  function outputProxy(output) {
-    ws.send(JSON.stringify(output));
+    ws = new WebSocket(wsUrl);
+
+    ws.onmessage = function(event) {
+      game.ports[inPort].send(JSON.parse(event.data));
+    };
+
+    function outputProxy(output) {
+      ws.send(JSON.stringify(output));
+    }
+
+    ws.onopen = function() {
+      console.log("WebSocket open:", wsUrl);
+      game.ports[outPort].subscribe(outputProxy);
+    };
+
+    ws.onclose = function() {
+      game.ports[outPort].unsubscribe(outputProxy);
+      console.log("WebSocket closed, will try to reconnect in 10s...", wsUrl);
+
+      setTimeout(function () {
+        createWebSocket();
+      }, 10*1000);
+    };
   }
 
-  ws.onopen = function() {
-    game.ports[outPort].subscribe(outputProxy);
-  };
+  createWebSocket();
 
-  ws.onclose = function() {
-    game.ports[outPort].unsubscribe(outputProxy);
-  };
-
-  return {
-    ws: ws,
-    game: game
-  }
+  return game;
 }
 
 module.exports = {

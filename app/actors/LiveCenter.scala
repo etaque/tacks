@@ -1,5 +1,6 @@
 package actors
 
+import play.api.Logger
 import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.duration._
@@ -33,30 +34,36 @@ class LiveCenter extends Actor {
 
     case Subscribe(player, ref) => {
       state = state.copy(subscribers = state.subscribers :+ (player, ref))
+      Logger.debug("Player ref subscribed to notifications: " + player.toString)
       LiveCenter.sendPlayersUpdate(state)
     }
 
     case Unsubscribe(player, ref) => {
       state = state.copy(subscribers = state.subscribers.filterNot(_._2 == ref))
+      Logger.debug("Player ref unsubscribed from notifications: " + player.toString)
       LiveCenter.sendPlayersUpdate(state)
     }
 
     case PlayerJoin(player) => {
       state = state.copy(chatRoom = state.chatRoom :+ (player, sender))
+      Logger.debug("Player ref joined chat room: " + player.toString)
       LiveCenter.sendPlayersUpdate(state)
     }
 
     case PlayerQuit(player) => {
       state = state.copy(chatRoom = state.chatRoom.filterNot(_._2 == sender))
+      Logger.debug("Player ref left chat room: " + player.toString)
       LiveCenter.sendPlayersUpdate(state)
     }
 
     case m: Chat.NewMessage => {
       state.chatRoom.foreach(_._2 ! m)
+      Logger.debug("Player sent new message: " + m.toString)
     }
 
     case Chat.NewStatus(user, content) => {
       state = LiveCenter.updateStatus(state, user.id, content)
+      Logger.debug("Player submitted new status: " + user.toString)
       LiveCenter.sendPlayersUpdate(state)
       User.updateStatus(user.id, Some(content))
     }
@@ -77,7 +84,8 @@ object LiveCenter {
   implicit val timeout = Timeout(1.seconds)
 
   def sendPlayersUpdate(state: LiveCenterState) = {
-    val distinctPlayers = state.subscribers.map(_._1).distinct.sortBy(_.handleOpt)
+    val distinctPlayers = (state.subscribers.map(_._1) ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
+    Logger.debug(s"Sending players update to ${state.chatRoom.size} refs: " + distinctPlayers.toString)
     state.chatRoom.foreach(_._2 ! Chat.UpdatePlayers(distinctPlayers))
   }
 

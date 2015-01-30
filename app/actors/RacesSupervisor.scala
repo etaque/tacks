@@ -52,7 +52,7 @@ class RacesSupervisor extends Actor {
       context.watch(ref)
       sender ! Unit
       master match {
-        case u: User => Akka.system.scheduler.scheduleOnce(10.seconds, self, NotifyNewRace(ref, race, u))
+        case u: User => Akka.system.scheduler.scheduleOnce(10.seconds, LiveCenter.actorRef, NotifyNewRace(ref, race, u))
         case g: Guest =>
       }
     }
