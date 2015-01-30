@@ -170,40 +170,6 @@ object Minefield extends CourseGenerator {
   }
 }
 
-//
-//object Odissey extends TrialGenerator {
-//  val slug = "odissey"
-//
-//  def generateCourse() = {
-//    val upwind = Gate(8100, 200)
-//    val downwind = Gate(100, 200)
-//    val area = RaceArea((2000, upwind.y + 500), (-2000, downwind.y - 300))
-//
-//    val r = 200
-//    val spacing = 300
-//
-//    val islands = for {
-//      i <- 1.to((area.width / spacing).toInt - 1)
-//      j <- 1.to(((upwind.y - downwind.y) / spacing).toInt - 1)
-//      x = i * spacing + area.left + Random.nextInt(r) - r/2
-//      y = j * spacing + downwind.y + Random.nextInt(r) - r/2
-//      radius = 60 + Random.nextInt(100)
-//    }
-//    yield Island((x, y), radius)
-//
-//    Course(
-//      upwind = upwind,
-//      downwind = downwind,
-//      laps = 1,
-//      islands = islands,
-//      area = area,
-//      windGenerator = WindGenerator.spawn(5, 5, 3, 3),
-//      gustGenerator = GustGenerator(interval = 15, Seq.fill[GustDef](10)(GustDef.spawn))
-//    )
-//  }
-//}
-
-
 
 object CourseGenerator {
 

@@ -35,7 +35,7 @@ object TimeTrial extends MongoDAO[TimeTrial] {
     val futures = CourseGenerator.all.map(gen => TimeTrial.findBySlugAndPeriod(gen.slug, period))
     Future.sequence(futures).map(_.flatten)
   }
-  
+
   def listForSlug(slug: String): Future[Seq[TimeTrial]] = {
     list(BSONDocument("slug" -> slug), BSONDocument("period" -> -1))
   }
@@ -44,16 +44,12 @@ object TimeTrial extends MongoDAO[TimeTrial] {
     Future.sequence(
       timeTrials.map { trial =>
         for {
-          rankings <- TimeTrialRun.rankings(trial.id) //.map(_.sortBy(_.rank))
-//          rankedRuns <- TimeTrialRun.zipWithRankings(rankings)
+          rankings <- TimeTrialRun.rankings(trial.id)
         }
         yield (trial, rankings)
       }
     )
   }
-
-//  def topWithPlayer(playerId: BSONObjectID, rankings: Seq[RunRanking], rankingLength: Int): Seq[RunRanking] =
-//    rankings.filter(r => r.rank <= rankingLength || r.playerId == playerId).sortBy(_.rank)
 
   def findCurrentBySlug(slug: String): Future[Option[TimeTrial]] = findBySlugAndPeriod(slug, currentPeriod)
 
@@ -143,16 +139,6 @@ object TimeTrialRun extends MongoDAO[TimeTrialRun] {
       yield RunRanking(i + 1, playerId, playerHandle, runId, finishTime)
     }
   }
-
-//  def zipWithRankings(rankings: Seq[RunRanking]): Future[Seq[(TimeTrialRun, RunRanking)]] = {
-//    listByIds(rankings.map(_.runId)).map { runs =>
-//      rankings.map { ranking =>
-//        (ranking, runs.find(_.id == ranking.runId))
-//      }.collect {
-//        case (ranking, Some(run)) => (run, ranking)
-//      }
-//    }
-//  }
 
   def filterClose(playerRanking: RunRanking, allRankings: Seq[RunRanking], count: Int): Seq[RunRanking] = {
     val (fasters, lowers) = allRankings
