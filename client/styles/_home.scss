@@ -21,44 +21,47 @@
 
 .chat-wrapper {
 
-  $titleHeight: 30px;
-  $boxHeight: 250px;
+  $totalHeight: 300px;
+  $topHeight: 32px;
   $messageInputHeight: 35px;
-  $statusInputHeight: 30px;
+  $statusInputHeight: $topHeight;
+  $boxHeight: $totalHeight - $topHeight - $messageInputHeight - 6px;
 
   margin-top: 30px;
   position: relative;
-  height: ($titleHeight + $boxHeight + $messageInputHeight + 6px);
-  background-color: white;
-  box-shadow: 0 2px 2px $lightGray;
-  border: 3px solid white;
+  height: $totalHeight;
 
 
   .chat-top {
-    line-height: ($titleHeight - 3px);
+    line-height: ($topHeight);
     text-align: center;
-    background-color: $lightGray;
-    color: $gray;
+    background-color: $lightSeaBlue;
+    color: $whiteBlue;
     text-transform: uppercase;
     font-family: $lightFontFamily;
     letter-spacing: 1px;
+    box-shadow: 0px 2px 2px $darkSeaBlue inset;
   }
 
   .chat-left {
     position: absolute;
-    top: $titleHeight;
+    top: 0;
     left: 0;
-    right: 200px;
+    right: 215px;
     bottom: 0;
-  }
+    box-shadow: 0 2px 2px $lightGray;
+    border: 3px solid white;
+    @include linear-gradient($smokeWhite, white);
+}
 
   .chat-right {
     position: absolute;
-    top: $titleHeight;
+    top: 0;
     width: 200px;
     right: 0;
     bottom: 0;
-    border-left: 3px solid white;
+    box-shadow: 0 2px 2px $lightGray;
+    background-color: white;
   }
 
 
@@ -67,22 +70,22 @@
     overflow: hidden;
     width: 100%;
     height: $boxHeight;
-    @include linear-gradient($seaBlue, $lightSeaBlue);
 
     .chat-messages {
       overflow: auto;
       position: absolute;
       width: 100%;
-      bottom: 5px;
-      max-height: ($boxHeight - 10px);
+      bottom: 0;
+      max-height: $boxHeight;
       margin-bottom: 0;
+      padding-bottom: 3px;
 
       li {
-        margin: 0 10px;
-        color: white;
+        margin: 0 6px;
 
         .player-avatar {
-          color: $whiteBlue;
+          display: inline-block;
+          margin-right: 5px;
         }
 
         .player-avatar:after {
@@ -90,8 +93,6 @@
         }
 
         .content {
-          display: inline-block;
-          margin-left: 5px;
           font-size: 14px;
         }
       }
@@ -100,19 +101,22 @@
   }
 
   .chat-message-form {
+
     input[type="text"] {
       border-radius: 0;
-      border: none;
-      border-top: 2px solid white;
-      background-color: $mainBlue;
-      color: white;
+      border: 1px solid $lightGray;
+      background-color: $smokeWhite;
       height: $messageInputHeight;
-      box-shadow: 0 2px 2px $shadow inset;
-      @include placeholder-color($whiteBlue);
+      padding: 4px 8px;
+      box-shadow: 0 1px 1px $shadow inset;
+      @include placeholder-color($mediumGray);
     }
   }
 
   .chat-status-form {
+    padding: 3px;
+    padding-bottom: 0;
+
     input[type="text"] {
       border-radius: 0;
       height: $statusInputHeight;
@@ -127,13 +131,14 @@
   .chat-players {
     background-color: white;
     padding: 0;
-    margin: 0;
-    height: $boxHeight + $messageInputHeight;
-    overflow-y: scroll;
+    margin: 3px;
+    height: $totalHeight - 6px;
+    overflow-y: auto;
 
     li {
       background-color: white;
-      margin: 4px 4px 0 4px;
+      margin: 0;
+      padding: 3px;
       color: $gray;
 
       .status {
@@ -146,7 +151,7 @@
   }
 
   .chat-status-form + .chat-players {
-    height: ($boxHeight + $messageInputHeight - $statusInputHeight);
+    height: $totalHeight - $statusInputHeight - 9px;
   }
 
 }

@@ -69,18 +69,12 @@
 
       <h2>@Messages("home.races")</h2>
 
-      <div class="row">
-        <div class="col-lg-10 col-lg-offset-1">
+      <div id="liveCenter"></div>
 
-          <div id="liveCenter"></div>
-
-          <script id="messages" type="custom-data">
-            @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.filtering(_.startsWith("chat.")).messages).toString())
-          </script>
-          <div id="chat"></div>
-
-        </div>
-      </div>
+      <script id="messages" type="custom-data">
+        @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.filtering(_.startsWith("chat.")).messages).toString())
+      </script>
+      <div id="chat"></div>
 
     </div>
   </div>

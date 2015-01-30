@@ -831,16 +831,16 @@ Elm.Chat.Views.make = function (_elm) {
                                                                      t,
                                                                      model.statusField)
                                                                      ,playersList(model.players)]) : _L.fromArray([playersList(model.players)]);
-         var leftElements = _L.fromArray([messagesList(model.messages)
+         var leftElements = _L.fromArray([A2($Html.div,
+                                         _L.fromArray([$Html$Attributes.$class("chat-top")]),
+                                         _L.fromArray([$Html.text(t("chat.title"))]))
+                                         ,messagesList(model.messages)
                                          ,A2(messageForm,
                                          t,
                                          model.messageField)]);
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("chat-wrapper")]),
          _L.fromArray([A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("chat-top")]),
-                      _L.fromArray([$Html.text(t("chat.title"))]))
-                      ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("chat-left")]),
                       leftElements)
                       ,A2($Html.div,

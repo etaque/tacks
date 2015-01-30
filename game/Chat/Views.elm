@@ -23,7 +23,8 @@ view : Translator -> Model -> Html
 view t model =
   let
     leftElements =
-      [ messagesList model.messages
+      [ div [ class "chat-top" ] [ text (t "chat.title") ]
+      , messagesList model.messages
       , messageForm t model.messageField
       ]
     rightElements = if model.currentPlayer.user
@@ -35,8 +36,7 @@ view t model =
         [ playersList model.players ]
   in
     div [ class "chat-wrapper" ]
-      [ div [ class "chat-top" ] [ text (t "chat.title") ]
-      , div [ class "chat-left" ] leftElements
+      [ div [ class "chat-left" ] leftElements
       , div [ class "chat-right" ] rightElements
       ]
 
