@@ -1,0 +1,17 @@
+@(form: Form[TournamentData])(implicit req: PlayerRequest[_], lang: Lang)
+
+@main {
+
+  @panel(Messages("tournaments.new")) {
+    <div class="new-tournament">
+      <form action="@routes.Tournaments.create()" method="post">
+        @views.html.tournaments.form(form)
+        <div class="form-actions">
+          <input type="submit" value="@Messages("tournaments.createButton")" class="btn btn-primary btn-block" />
+        </div>
+        <div class="align-center"><a href="@routes.Tournaments.index">@Messages("cancel")</a></div>
+      </form>
+    </div>
+  }
+
+}

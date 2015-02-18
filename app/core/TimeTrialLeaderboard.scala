@@ -10,6 +10,25 @@ object TimeTrialLeaderboard {
   type Points = Int
   type Leaderboard = Seq[(Int, PlayerId, Points)]
 
+//  def forRaces(races: Seq[Race], users: Seq[User]): Leaderboard = {
+//    globalLeaderboard(leaderboardByRace(races).map(_._2))
+//  }
+//
+//  def leaderboardByRace(races: Seq[Race]): Seq[(Race, Leaderboard)] = {
+//    races.map { race =>
+//      (race, forRace(race))
+//    }
+//  }
+//
+//  def forRace(race: Race): Leaderboard = {
+//    val items = race.rankings.map {
+//      case RaceRanking(rank, playerId, _, _) => {
+//        (playerId, race.rankings.length - rank + 1)
+//      }
+//    }
+//    ranked(items)
+//  }
+
   def forTrials(trialsWithRankings: Seq[(TimeTrial, Seq[RunRanking])], users: Seq[User]): Leaderboard = {
     globalLeaderboard(leaderboardByTrial(trialsWithRankings, users).map(_._2))
   }

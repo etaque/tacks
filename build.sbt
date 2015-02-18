@@ -25,7 +25,9 @@ libraryDependencies ++= Seq(
 play.PlayScala.projectSettings
 
 TwirlKeys.templateImports ++= Seq(
-  "org.joda.time.DateTime"
+  "org.joda.time.DateTime",
+  "views.Helpers._",
+  "tools.DateFormats._"
 )
 
 initialCommands in console := """implicit val app = new play.core.StaticApplication(new java.io.File("."))"""

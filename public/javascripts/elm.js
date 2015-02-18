@@ -1,4 +1,26 @@
 var Elm = Elm || { Native: {} };
+Elm.AnimationFrame = Elm.AnimationFrame || {};
+Elm.AnimationFrame.make = function (_elm) {
+   "use strict";
+   _elm.AnimationFrame = _elm.AnimationFrame || {};
+   if (_elm.AnimationFrame.values)
+   return _elm.AnimationFrame.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   _P = _N.Ports.make(_elm),
+   $moduleName = "AnimationFrame",
+   $Native$AnimationFrame = Elm.Native.AnimationFrame.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var frameWhen = $Native$AnimationFrame.frameWhen;
+   var frame = frameWhen($Signal.constant(true));
+   _elm.AnimationFrame.values = {_op: _op
+                                ,frameWhen: frameWhen
+                                ,frame: frame};
+   return _elm.AnimationFrame.values;
+};
 Elm.Array = Elm.Array || {};
 Elm.Array.make = function (_elm) {
    "use strict";
@@ -6052,6 +6074,53 @@ Elm.Messages.make = function (_elm) {
                           ,translator: translator};
    return _elm.Messages.values;
 };
+Elm.Native.AnimationFrame = {};
+Elm.Native.AnimationFrame.make = function(elm) {
+
+  elm.Native = elm.Native || {};
+  elm.Native.AnimationFrame = elm.Native.AnimationFrame || {};
+  if (elm.Native.AnimationFrame.values) return elm.Native.AnimationFrame.values;
+
+  var Signal = Elm.Signal.make(elm);
+  var NS = Elm.Native.Signal.make(elm);
+
+  // TODO Should be elm.requestAnimationFrame, and should be shimmed if we care
+  // about IE9. Do we care about IE9?
+  var requestAnimationFrame = window.requestAnimationFrame || function () {};
+  var cancelAnimationFrame = window.cancelAnimationFrame || function () {};
+
+  function frameWhen(isOn) {
+    var prev = 0, curr = prev, diff = 0, wasOn = true;
+    var ticker = NS.input(diff);
+    function tick(zero) {
+      return function(curr) {
+        diff = zero ? 0 : curr - prev;
+        if (prev > curr) {
+          diff = 0;
+        }
+        prev = curr;
+        elm.notify(ticker.id, diff);
+      };
+    }
+    var rafID = 0;
+    function f(isOn, t) {
+      if (isOn) {
+        rafID = requestAnimationFrame(tick(!wasOn && isOn));
+      } else if (wasOn) {
+        cancelAnimationFrame(rafID);
+      }
+      wasOn = isOn;
+      return t;
+    }
+    return A3( Signal.map2, F2(f), isOn, ticker );
+  }
+
+  return elm.Native.AnimationFrame.values = {
+    frameWhen : frameWhen
+  };
+
+};
+
 Elm.Native.Array = {};
 Elm.Native.Array.make = function(elm) {
     elm.Native = elm.Native || {};

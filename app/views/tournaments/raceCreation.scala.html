@@ -1,0 +1,30 @@
+@(tournament: Tournament, form: Form[TournamentRaceData])(implicit req: PlayerRequest[_], lang: Lang)
+
+@import views.html.bootstrap3._
+
+@main {
+
+  @panel(tournament.name) {
+
+    <h2>@Messages("tournaments.races.new")</h2>
+
+    <div class="new-tournament">
+
+      <form action="@routes.Tournaments.createRace(tournament.id.stringify)" method="post">
+
+        @selectGroup(form("generator"), Messages("tournaments.races.generator"),
+          core.CourseGenerator.all.map(g => (g.slug, Messages(s"generators.${g.slug}.name"))))
+
+        @textGroup(form("startTime"), Messages("tournaments.races.startTime"), inputType = "datetime-local")
+
+        <div class="form-actions">
+          <input type="submit" value="@Messages("tournaments.races.createButton")" class="btn btn-primary btn-block" />
+        </div>
+
+        <p class="align-center"><a href="@routes.Tournaments.show(tournament.id.stringify)">@Messages("cancel")</a></p>
+      </form>
+    </div>
+
+  }
+
+}

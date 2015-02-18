@@ -7,7 +7,7 @@ import scala.concurrent.duration._
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
-import akka.actor.{Props, Terminated, ActorRef, Actor}
+import akka.actor._
 import akka.pattern.{ask,pipe}
 import akka.util.Timeout
 import org.joda.time.DateTime
@@ -17,6 +17,7 @@ import core.Classic
 
 
 case class MountRace(race: Race, master: Player)
+case class UnmountRace(race: Race)
 case class MountTimeTrialRun(timeTrial: TimeTrial, player: Player, run: TimeTrialRun)
 case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
@@ -47,13 +48,16 @@ class RacesSupervisor extends Actor {
     }
 
     case MountRace(race, master) => {
-      val ref = context.actorOf(RaceActor.props(race, Some(master)))
-      mountedRaces = mountedRaces :+ (race, Some(master), ref)
-      context.watch(ref)
-      sender ! Unit
-      master match {
-        case u: User => Akka.system.scheduler.scheduleOnce(10.seconds, LiveCenter.actorRef, NotifyNewRace(ref, race, u))
-        case g: Guest =>
+      if (!mountedRaces.exists(_._1.id == race.id)) {
+        val ref = context.actorOf(RaceActor.props(race, Some(master)))
+        mountedRaces = mountedRaces :+ (race, Some(master), ref)
+        context.watch(ref)
+        Race.updateMounted(race.id, true)
+        sender ! Unit
+        master match {
+          case u: User => Akka.system.scheduler.scheduleOnce(10.seconds, LiveCenter.actorRef, NotifyNewRace(ref, race, u))
+          case g: Guest =>
+        }
       }
     }
 
@@ -72,6 +76,17 @@ class RacesSupervisor extends Actor {
 
     case GetLiveRuns => {
       sender ! mountedRuns.map(_._1)
+    }
+
+    case UnmountRace(race) => {
+      Race.updateMounted(race.id, false)
+      mountedRaces.find(_._1.id == race.id) match {
+        case Some((_, _, ref)) => {
+          if (sender != ref) ref ! PoisonPill
+        }
+        case None =>
+      }
+      sender ! Unit
     }
 
     case Terminated(ref) => {

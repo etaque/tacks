@@ -1,0 +1,148 @@
+@import 'fonts';
+@import 'colors';
+@import 'theme';
+
+.open-tournaments {
+  @include fold-panels();
+
+  .left {
+    h3 {
+      margin-top: 8px;
+      margin-right: 10px;
+      color: $whiteBlue;
+    }
+  }
+
+  ul {
+    margin-bottom: 0;
+
+    li {
+      a {
+        display: block;
+        padding: 5px 10px;
+
+        &:hover {
+          background-color: $seaBlue;
+        }
+      }
+
+      .tournament-name {
+        @include upclassic;
+        color: $mainBlue;
+      }
+
+      .tournament-time {
+        font-family: $lightFontFamily;
+        display: block;
+        font-size: 14px;
+        color: white;
+      }
+
+      & + li {
+        margin-top: 10px;
+      }
+    }
+  }
+}
+
+.finished-tournaments {
+  @include fold-panels;
+
+  .left {
+
+    a {
+      display: block;
+      padding: 5px 10px;
+
+      &:hover {
+        background-color: $seaBlue;
+      }
+    }
+
+    .tournament-name {
+      @include upclassic;
+      color: $mainBlue;
+    }
+
+    .tournament-time {
+      font-family: $lightFontFamily;
+      display: block;
+      font-size: 14px;
+      color: white;
+    }
+  }
+
+}
+
+.tournament-program {
+  @include fold-panels;
+
+  ul {
+
+    li {
+
+      & + li {
+        margin-top: 10px;
+      }
+    }
+  }
+
+  .race-generator {
+    @include upclassic;
+    color: white;
+  }
+
+  .race-time {
+    font-family: $lightFontFamily;
+    font-size: 14px;
+    color: $whiteBlue;
+  }
+}
+
+.tournament-leaderboard {
+  margin-bottom: 20px;
+
+  .race-number {
+    display: inline-block;
+    width: 18px;
+    line-height: 16px;
+    color: $whiteBlue;
+//    border: 1px solid white;
+    border-radius: 10px;
+    margin-bottom: 2px;
+//    font-size: 10px;
+    &::after {
+      content: ".";
+    }
+  }
+
+  .race-rank {
+    display: inline-block;
+    border-radius: 10px;
+    width: 20px;
+  }
+
+  .race-rank-1 {
+    background-color: $orange;
+    color: white;
+  }
+
+  .race-rank-dnc {
+    color: $lightGray;
+  }
+
+}
+
+.finished-race {
+  margin-top: 20px;
+  margin-bottom: 0;
+
+  .generator-name {
+    padding: 5px;
+    font-family: $lightFontFamily;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1px;
+  }
+}

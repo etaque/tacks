@@ -1,0 +1,18 @@
+@(field: Field, label: String, help: String = "")
+
+@import views.bootstrap3.Helpers._
+
+@formGroup(label, field.hasErrors, required = isRequired(field)) {
+  <textarea
+    class="form-control"
+    id="@field.id"
+    name="@field.name">@field.value.getOrElse("")</textarea>
+
+  @defining(errorMessage(field)) { m =>
+    @if(m.body.size > 0) {
+      <span class="help-block error-message">@m</span>
+    }
+  }
+
+  @if(help.size > 0) { <span class="help-block">@help</span>}
+}

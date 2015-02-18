@@ -1,0 +1,171 @@
+@import 'colors';
+@import 'fonts';
+
+
+.table-leaderboard {
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 2px $lightGray;
+  margin-top: 20px;
+
+  tbody {
+    font-family: $mono;
+  }
+
+  th {
+    text-align: center;
+    border-bottom-width: 2px;
+    background-color: $navBlue;
+    color: white;
+    font-size: 13px;
+    white-space: nowrap;
+    vertical-align: bottom;
+    text-transform: uppercase;
+    font-family: $lightFontFamily;
+    padding: 5px;
+
+    .generator-name {
+      display: block;
+      height: 100%;
+      color: white;
+      text-decoration: none;
+      letter-spacing: 1px;
+    }
+
+    a:hover {
+      background-color: $mainBlue;
+    }
+  }
+
+  td {
+    padding: 5px 10px;
+    border-bottom: 1px solid $smokeWhite;
+  }
+
+  th:last-child {
+    td {
+      border-bottom: none;
+    }
+  }
+
+  .rank {
+    width: 10px;
+    padding-right: 0;
+  }
+
+  .user {
+    padding-left: 5px;
+    white-space: nowrap;
+  }
+  .current-player td {
+    background-color: $smokeWhite;
+    color: $currentPlayerColor;
+
+    .player-avatar .handle {
+      color: $currentPlayerColor;
+    }
+  }
+
+  .overall-points, .points {
+    width: 115px;
+    text-align: center;
+  }
+
+}
+
+
+.rankings {
+  font-family: $mono;
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  box-shadow: 0 1px 2px $lightGray;
+  border: 2px solid white;
+
+  li {
+    list-style: none;
+    border-bottom: 1px solid $smokeWhite;
+    padding: 5px 8px;
+
+    &:last-child {
+      border-bottom-color: transparent;
+    }
+
+    .rank {
+      width: 20px;
+      display: inline-block;
+    }
+
+    .rank:after {
+      content: ".";
+    }
+
+    .time {
+      float: right;
+    }
+
+    &.current-player {
+      background-color: $smokeWhite;
+      color: $currentPlayerColor;
+
+      .player-avatar .handle {
+        color: $currentPlayerColor;
+      }
+    }
+
+    &.empty {
+      color: $gray;
+    }
+
+    &.out-of-window {
+      border-top: 1px solid $mainBlue;
+      padding-top: 4px;
+    }
+  }
+}
+
+.rankings-dark {
+  font-family: $mono;
+  margin: 0;
+  padding: 0;
+
+  li {
+    list-style: none;
+    margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+      border-bottom-color: transparent;
+    }
+
+    .rank {
+      width: 20px;
+      display: inline-block;
+    }
+
+    .rank:after {
+      content: ".";
+    }
+
+    .time, .points {
+      float: right;
+    }
+
+    .player-avatar {
+      color: $whiteBlue;
+    }
+
+    a.player-avatar {
+      color: white;
+    }
+
+    &.current-player {
+      background-color: $smokeWhite;
+      color: $currentPlayerColor;
+
+      .player-avatar .handle {
+        color: $currentPlayerColor;
+      }
+    }
+  }
+}

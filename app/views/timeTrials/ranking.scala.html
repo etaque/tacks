@@ -13,20 +13,7 @@
 
     <span class="rank">@ranking.rank</span>
 
-    @rankingUsers.find(_.id == ranking.playerId) match {
-      case None => {
-        <span class="player-avatar">
-          @views.html.users.avatar(ranking.playerAsGuest)
-          <span class="handle">@ranking.playerHandle.getOrElse(Messages("anonymous"))</span>
-        </span>
-      }
-      case Some(user) => {
-        <a href="@routes.Users.show(user.handle)" class="player-avatar">
-          @views.html.users.avatar(user)
-          <span class="handle">@user.handle</span>
-        </a>
-      }
-    }
+    @views.html.users.playerWithAvatar(ranking.findPlayer(rankingUsers))
 
     @if(ranking.isRecent) { <abbr title="@Messages("timeTrials.recent")">*</abbr> }
 

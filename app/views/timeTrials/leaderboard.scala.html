@@ -51,9 +51,11 @@
             <tr>
               <th></th>
               <th></th>
-              <th>@Messages("timeTrials.leaderboard.total")</th>
+              <th>@Messages("total")</th>
               @for(trial <- trials) {
-                <th class="trial-name"><a href="@routes.TimeTrials.show(trial.idToStr)">@Messages("generators." + trial.slug + ".name")</a></th>
+                <th class="trial">
+                  <a href="@routes.TimeTrials.show(trial.idToStr)" class="generator-name">@Messages("generators." + trial.slug + ".name")</a>
+                </th>
               }
             </tr>
           </thead>

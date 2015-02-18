@@ -5,6 +5,7 @@ import org.mindrot.jbcrypt.BCrypt
 import reactivemongo.bson._
 import play.api.libs.concurrent.Execution.Implicits._
 import reactivemongo.core.commands.LastError
+import tools.Conf
 import scala.concurrent.Future
 import tools.future.Implicits._
 import tools.BSONHandlers.BSONDateTimeHandler
@@ -15,6 +16,20 @@ sealed trait Player {
 
   def vmgMagnet: Int
   def handleOpt: Option[String]
+  def isAdmin: Boolean
+}
+
+trait WithPlayer {
+  def playerId: BSONObjectID
+  def playerHandle: Option[String]
+
+  def playerTuple = (playerId, playerHandle)
+
+  def playerAsGuest = Guest(playerId, playerHandle)
+  def findPlayer(users: Seq[User]): Player = users.find(_.id == playerId) match {
+    case Some(user) => user
+    case None => playerAsGuest
+  }
 }
 
 object Player {
@@ -43,6 +58,7 @@ case class User(
   creationTime: DateTime = DateTime.now
 ) extends Player with HasId {
   def handleOpt = Some(handle)
+  def isAdmin = Conf.adminHandles.contains(handle)
 }
 
 case class CreateUser(email: String, password: String, handle: String)
@@ -124,6 +140,7 @@ case class Guest(
 ) extends Player with HasId {
   val vmgMagnet = Player.defaultVmgMagnet
   def handleOpt = handle
+  val isAdmin = false
 }
 
 object Guest {

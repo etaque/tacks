@@ -207,8 +207,8 @@ td, th {
 
 @font-face {
   font-family: 'Glyphicons Halflings';
-  src: url('bootstrap/glyphicons-halflings-regular.eot');
-  src: url('bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg'); }
+  src: url('/assets/fonts/bootstrap/glyphicons-halflings-regular.eot');
+  src: url('/assets/fonts/bootstrap/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/assets/fonts/bootstrap/glyphicons-halflings-regular.woff') format('woff'), url('/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf') format('truetype'), url('/assets/fonts/bootstrap/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg'); }
 
 .glyphicon {
   position: relative;
@@ -5037,7 +5037,7 @@ a {
 
 .btn-xs, .btn-group-xs > .btn {
   border-bottom-width: 2px;
-  padding: 2px 5px 0px 5px; }
+  padding: 3px 5px 1px 5px; }
 
 .btn-default {
   background-color: #E6E6E6;
@@ -5069,6 +5069,9 @@ a {
 .alert-danger a {
   color: #a94442; }
 
+input[type="text"], input[type="password"], input[type="datetime-local"], textarea {
+  border-radius: 0; }
+
 .has-error .error-message {
   margin-top: 0;
   padding: 6px 12px;
@@ -5082,6 +5085,11 @@ a {
 .uppercase {
   text-transform: uppercase; }
 
+.upclassic {
+  text-transform: uppercase;
+  font-family: "Proxima Nova Thin";
+  letter-spacing: 1px; }
+
 .player-avatar {
   font-family: "Inconsolata";
   display: inline-block;
@@ -5094,6 +5102,126 @@ a.player-avatar {
   color: #7b8087; }
   a.player-avatar:hover .handle {
     text-decoration: underline; }
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url('/assets/fonts/Proxima Nova Regular.otf'); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url('/assets/fonts/Museo Slab.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url('/assets/fonts/Proxima Nova Alt Thin.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
+
+.table-leaderboard {
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 2px #E6E6E6;
+  margin-top: 20px; }
+  .table-leaderboard tbody {
+    font-family: "Inconsolata"; }
+  .table-leaderboard th {
+    text-align: center;
+    border-bottom-width: 2px;
+    background-color: #387ac4;
+    color: white;
+    font-size: 13px;
+    white-space: nowrap;
+    vertical-align: bottom;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Thin";
+    padding: 5px; }
+    .table-leaderboard th .generator-name {
+      display: block;
+      height: 100%;
+      color: white;
+      text-decoration: none;
+      letter-spacing: 1px; }
+    .table-leaderboard th a:hover {
+      background-color: #5899E2; }
+  .table-leaderboard td {
+    padding: 5px 10px;
+    border-bottom: 1px solid #f8f9fb; }
+  .table-leaderboard th:last-child td {
+    border-bottom: none; }
+  .table-leaderboard .rank {
+    width: 10px;
+    padding-right: 0; }
+  .table-leaderboard .user {
+    padding-left: 5px;
+    white-space: nowrap; }
+  .table-leaderboard .current-player td {
+    background-color: #f8f9fb;
+    color: #5899E2; }
+    .table-leaderboard .current-player td .player-avatar .handle {
+      color: #5899E2; }
+  .table-leaderboard .overall-points, .table-leaderboard .points {
+    width: 115px;
+    text-align: center; }
+
+.rankings {
+  font-family: "Inconsolata";
+  margin: 0;
+  padding: 0;
+  background-color: white;
+  box-shadow: 0 1px 2px #E6E6E6;
+  border: 2px solid white; }
+  .rankings li {
+    list-style: none;
+    border-bottom: 1px solid #f8f9fb;
+    padding: 5px 8px; }
+    .rankings li:last-child {
+      border-bottom-color: transparent; }
+    .rankings li .rank {
+      width: 20px;
+      display: inline-block; }
+    .rankings li .rank:after {
+      content: "."; }
+    .rankings li .time {
+      float: right; }
+    .rankings li.current-player {
+      background-color: #f8f9fb;
+      color: #5899E2; }
+      .rankings li.current-player .player-avatar .handle {
+        color: #5899E2; }
+    .rankings li.empty {
+      color: #7b8087; }
+    .rankings li.out-of-window {
+      border-top: 1px solid #5899E2;
+      padding-top: 4px; }
+
+.rankings-dark {
+  font-family: "Inconsolata";
+  margin: 0;
+  padding: 0; }
+  .rankings-dark li {
+    list-style: none;
+    margin-bottom: 10px; }
+    .rankings-dark li:last-child {
+      margin-bottom: 0;
+      border-bottom-color: transparent; }
+    .rankings-dark li .rank {
+      width: 20px;
+      display: inline-block; }
+    .rankings-dark li .rank:after {
+      content: "."; }
+    .rankings-dark li .time, .rankings-dark li .points {
+      float: right; }
+    .rankings-dark li .player-avatar {
+      color: #B1C0D8; }
+    .rankings-dark li a.player-avatar {
+      color: white; }
+    .rankings-dark li.current-player {
+      background-color: #f8f9fb;
+      color: #5899E2; }
+      .rankings-dark li.current-player .player-avatar .handle {
+        color: #5899E2; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -5498,50 +5626,386 @@ a.period {
     .show-time-trial .nav li.active a {
       background-color: #23395C; }
 
-.table-leaderboard {
-  width: 100%;
-  background-color: white;
-  box-shadow: 0 2px 2px #E6E6E6;
-  margin-top: 20px; }
-  .table-leaderboard tbody {
-    font-family: "Inconsolata"; }
-  .table-leaderboard th {
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url('/assets/fonts/Proxima Nova Regular.otf'); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url('/assets/fonts/Museo Slab.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url('/assets/fonts/Proxima Nova Alt Thin.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url('/assets/fonts/Proxima Nova Regular.otf'); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url('/assets/fonts/Museo Slab.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url('/assets/fonts/Proxima Nova Alt Thin.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
+
+body {
+  color: #51585E;
+  font-family: "Proxima Nova Regular";
+  font-size: 15px;
+  background-color: #23395C; }
+
+hr {
+  border: 0 solid #B1C0D8; }
+
+h1 {
+  margin-bottom: 30px;
+  text-align: center; }
+
+h2, h3, h4, h5, h6 {
+  font-family: "Museo Slab";
+  font-size: 21px;
+  margin-bottom: 15px; }
+  h2.block-title, h3.block-title, h4.block-title, h5.block-title, h6.block-title {
     text-align: center;
-    border-bottom-width: 2px;
     background-color: #387ac4;
     color: white;
-    font-size: 13px;
-    white-space: nowrap; }
-    .table-leaderboard th a {
+    font-size: 15px;
+    padding: 10px;
+    margin-bottom: 0; }
+    h2.block-title.secondary, h3.block-title.secondary, h4.block-title.secondary, h5.block-title.secondary, h6.block-title.secondary {
+      background-color: #b0b3b8; }
+
+a {
+  color: #387ac4;
+  transition: all 0.1s ease-in;
+  text-decoration: none; }
+  a:hover {
+    color: #5899E2;
+    text-decoration: none; }
+
+.navbar {
+  margin-bottom: 0;
+  background-color: #387ac4;
+  border: none;
+  border-radius: 0; }
+  .navbar .navbar-brand {
+    margin: 0;
+    padding: 0; }
+  .navbar .navbar-toggle {
+    border-color: #B1C0D8; }
+    .navbar .navbar-toggle .icon-bar {
+      background-color: #B1C0D8; }
+  .navbar .nav {
+    margin-bottom: 0; }
+  .navbar .navbar-nav > li > a {
+    text-transform: uppercase;
+    color: white;
+    font-family: "Proxima Nova Thin";
+    letter-spacing: 1px; }
+    .navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:active {
+      background-color: #5899E2; }
+
+@media screen and (min-width: 768px) {
+  nav .nav {
+    text-align: center;
+    margin-bottom: 20px; }
+  nav .nav-main {
+    margin-left: 20px; }
+  nav .navbar-nav > li > a {
+    line-height: 80px;
+    padding: 0 20px;
+    font-size: 14px; }
+ }
+
+.title-wrapper {
+  background-color: #23395C;
+  background-color: #2b4772;
+  /* Fallback Color */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
+  /* Chrome 10+, Saf5.1+, iOS 5+ */
+  background-image: -moz-linear-gradient(top, #23395C, #2b4772);
+  /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #23395C, #2b4772);
+  /* IE10 */
+  background-image: -o-linear-gradient(top, #23395C, #2b4772);
+  /* Opera 11.10+ */
+  background-image: linear-gradient(top, #23395C, #2b4772);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772');
+  box-shadow: 0 2px 3px #1b2b46 inset;
+  color: #B1C0D8;
+  padding: 40px;
+  text-align: center; }
+  .title-wrapper a {
+    color: white; }
+  .title-wrapper h1 {
+    color: white;
+    font-family: "Proxima Nova Thin";
+    font-size: 40px;
+    font-weight: 300;
+    margin: 0; }
+    .title-wrapper h1 a {
+      color: white; }
+      .title-wrapper h1 a:hover {
+        color: #5899E2; }
+  .title-wrapper p {
+    font-family: "Proxima Nova Thin";
+    margin-top: 10px; }
+  .title-wrapper strong {
+    font-family: "Proxima Nova Regular";
+    color: white; }
+
+.light-wrapper .container, .dark-wrapper .container {
+  padding-top: 30px;
+  padding-bottom: 50px; }
+.light-wrapper h2, .light-wrapper p.subtitle, .dark-wrapper h2, .dark-wrapper p.subtitle {
+  font-family: "Proxima Nova Thin";
+  text-align: center; }
+.light-wrapper h2, .dark-wrapper h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  font-size: 32px;
+  color: white; }
+
+.light-wrapper {
+  background-color: #f8f9fb; }
+  .light-wrapper h2 {
+    color: #51585E; }
+
+.dark-wrapper {
+  background-color: #23395C;
+  background-color: #2b4772;
+  /* Fallback Color */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
+  /* Chrome 10+, Saf5.1+, iOS 5+ */
+  background-image: -moz-linear-gradient(top, #23395C, #2b4772);
+  /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #23395C, #2b4772);
+  /* IE10 */
+  background-image: -o-linear-gradient(top, #23395C, #2b4772);
+  /* Opera 11.10+ */
+  background-image: linear-gradient(top, #23395C, #2b4772);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772');
+  color: #B1C0D8;
+  box-shadow: 0px 2px 3px #1b2b46 inset; }
+  .dark-wrapper a {
+    color: white; }
+
+.footer-wrapper {
+  box-shadow: 0px 2px 3px #1b2b46 inset;
+  text-align: center;
+  color: #B1C0D8;
+  padding: 20px;
+  font-family: "Proxima Nova Thin"; }
+  .footer-wrapper a {
+    color: white; }
+
+.btn {
+  font-weight: bold;
+  text-transform: uppercase;
+  background-color: white;
+  border: none;
+  border-bottom: 3px solid #f5f5f5;
+  padding: 7px 12px 5px 12px;
+  transition: all 0.1s ease-in; }
+
+.btn-xs, .btn-group-xs > .btn {
+  border-bottom-width: 2px;
+  padding: 3px 5px 1px 5px; }
+
+.btn-default {
+  background-color: #E6E6E6;
+  border-color: #d9d9d9;
+  color: #7b8087; }
+  .btn-default:hover {
+    background-color: #d9d9d9;
+    border-color: #cdcdcd;
+    color: #51585E; }
+
+.btn-primary {
+  background-color: #5899E2;
+  border-color: #3b73b3; }
+  .btn-primary:hover {
+    background-color: #428cde;
+    border-color: #35679f; }
+
+.btn-warning {
+  background-color: #E0A349;
+  border-color: #a67936; }
+  .btn-warning:hover {
+    background-color: #dc9833;
+    border-color: #936b30; }
+
+.alert {
+  border-radius: 0;
+  border-width: 3px; }
+
+.alert-danger a {
+  color: #a94442; }
+
+input[type="text"], input[type="password"], input[type="datetime-local"], textarea {
+  border-radius: 0; }
+
+.has-error .error-message {
+  margin-top: 0;
+  padding: 6px 12px;
+  background-color: #f2dede;
+  color: #a94442;
+  font-size: 13px; }
+
+.form-actions {
+  margin-top: 30px; }
+
+.uppercase {
+  text-transform: uppercase; }
+
+.upclassic {
+  text-transform: uppercase;
+  font-family: "Proxima Nova Thin";
+  letter-spacing: 1px; }
+
+.player-avatar {
+  font-family: "Inconsolata";
+  display: inline-block;
+  color: #b0b3b8; }
+  .player-avatar .avatar {
+    border-radius: 2px;
+    display: inline-block; }
+
+a.player-avatar {
+  color: #7b8087; }
+  a.player-avatar:hover .handle {
+    text-decoration: underline; }
+
+.open-tournaments {
+  margin-top: 30px;
+  margin-bottom: 15px; }
+  .open-tournaments .left {
+    text-align: right; }
+    .open-tournaments .left h3 {
+      font-size: 16px;
+      margin: 0; }
+  .open-tournaments .right {
+    text-align: left;
+    border-left: 1px solid #345488; }
+  .open-tournaments .left h3 {
+    margin-top: 8px;
+    margin-right: 10px;
+    color: #B1C0D8; }
+  .open-tournaments ul {
+    margin-bottom: 0; }
+    .open-tournaments ul li a {
       display: block;
-      height: 100%;
-      padding: 10px 5px;
-      color: white;
-      text-decoration: none;
+      padding: 5px 10px; }
+      .open-tournaments ul li a:hover {
+        background-color: #23395C; }
+    .open-tournaments ul li .tournament-name {
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
-      letter-spacing: 1px; }
-      .table-leaderboard th a:hover {
-        background-color: #5899E2; }
-  .table-leaderboard td {
-    padding: 5px 10px;
-    border-bottom: 1px solid #f8f9fb; }
-  .table-leaderboard th:last-child td {
-    border-bottom: none; }
-  .table-leaderboard .rank {
-    width: 10px;
-    padding-right: 0; }
-  .table-leaderboard .user {
-    padding-left: 5px;
-    white-space: nowrap; }
-  .table-leaderboard .current-player td {
-    background-color: #f8f9fb;
-    color: #5899E2; }
-    .table-leaderboard .current-player td .player-avatar .handle {
+      letter-spacing: 1px;
       color: #5899E2; }
-  .table-leaderboard .overall-points, .table-leaderboard .points {
-    width: 115px;
-    text-align: center; }
+    .open-tournaments ul li .tournament-time {
+      font-family: "Proxima Nova Thin";
+      display: block;
+      font-size: 14px;
+      color: white; }
+    .open-tournaments ul li + li {
+      margin-top: 10px; }
+
+.finished-tournaments {
+  margin-top: 30px;
+  margin-bottom: 15px; }
+  .finished-tournaments .left {
+    text-align: right; }
+    .finished-tournaments .left h3 {
+      font-size: 16px;
+      margin: 0; }
+  .finished-tournaments .right {
+    text-align: left;
+    border-left: 1px solid #345488; }
+  .finished-tournaments .left a {
+    display: block;
+    padding: 5px 10px; }
+    .finished-tournaments .left a:hover {
+      background-color: #23395C; }
+  .finished-tournaments .left .tournament-name {
+    text-transform: uppercase;
+    font-family: "Proxima Nova Thin";
+    letter-spacing: 1px;
+    color: #5899E2; }
+  .finished-tournaments .left .tournament-time {
+    font-family: "Proxima Nova Thin";
+    display: block;
+    font-size: 14px;
+    color: white; }
+
+.tournament-program {
+  margin-top: 30px;
+  margin-bottom: 15px; }
+  .tournament-program .left {
+    text-align: right; }
+    .tournament-program .left h3 {
+      font-size: 16px;
+      margin: 0; }
+  .tournament-program .right {
+    text-align: left;
+    border-left: 1px solid #345488; }
+  .tournament-program ul li + li {
+    margin-top: 10px; }
+  .tournament-program .race-generator {
+    text-transform: uppercase;
+    font-family: "Proxima Nova Thin";
+    letter-spacing: 1px;
+    color: white; }
+  .tournament-program .race-time {
+    font-family: "Proxima Nova Thin";
+    font-size: 14px;
+    color: #B1C0D8; }
+
+.tournament-leaderboard {
+  margin-bottom: 20px; }
+  .tournament-leaderboard .race-number {
+    display: inline-block;
+    width: 18px;
+    line-height: 16px;
+    color: #B1C0D8;
+    border-radius: 10px;
+    margin-bottom: 2px; }
+    .tournament-leaderboard .race-number::after {
+      content: "."; }
+  .tournament-leaderboard .race-rank {
+    display: inline-block;
+    border-radius: 10px;
+    width: 20px; }
+  .tournament-leaderboard .race-rank-1 {
+    background-color: #E0A349;
+    color: white; }
+  .tournament-leaderboard .race-rank-dnc {
+    color: #E6E6E6; }
+
+.finished-race {
+  margin-top: 20px;
+  margin-bottom: 0; }
+  .finished-race .generator-name {
+    padding: 5px;
+    font-family: "Proxima Nova Thin";
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    letter-spacing: 1px; }
 
 .post .block-img, .article .block-img {
   margin-top: 30px;

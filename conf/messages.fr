@@ -3,6 +3,7 @@ error.required=Champ obligatoire
 error.minLength=La longueur minimale est de {0} caractères
 error.maxLength=La longueur maximale est de {0} caractères
 error.email=Une adresse email valide est requise
+error.date=Une date valide est requise
 
 error.emailTaken=Adresse email déjà utilisée
 error.handleFormat=Le pseudonyme ne doit contenir que des caractères alphanumériques (chiffres ou lettres)
@@ -14,6 +15,11 @@ password=Mot de passe
 logout=Déconnexion
 anonymous=Anonyme
 or=ou
+total=Total
+points=Points
+submit=Valider
+edit=Modifier
+cancel=Annuler
 
 secondsAgo=il y a {0} secondes
 minuteAgo=il y a une minute
@@ -30,6 +36,7 @@ rank.nth=e
 
 menu.home=Accueil
 menu.blog=Blog
+menu.tournaments=Tournois
 menu.timeTrials=Contre la montre
 menu.login=Connexion
 menu.register=Inscription
@@ -111,6 +118,28 @@ liveCenter.join=Rejoindre
 liveCenter.user=Joueur enregistré
 liveCenter.guest=Joueur de passage
 
+tournaments.title = Tournois temps réel
+tournaments.openTournaments = Tournois ouverts
+tournaments.finishedTournaments = Tournois terminés
+tournaments.liveCenter = Courses ouvertes
+tournaments.new = Créer un tournoi
+tournaments.name = Nom
+tournaments.meetTime = Date de RDV
+tournaments.description = Description
+tournaments.createButton = Créer
+tournaments.program = Programme
+tournaments.emptyLeaderboard = Aucune course programmée pour le moment.
+tournaments.rankings = Classement général
+tournaments.addRace = Ajouter une course
+tournaments.races.emptyStartTime = Date non déterminée
+tournaments.races.new = Ajout d''une course
+tournaments.races.generator = Plan d''eau
+tournaments.races.startTime = Date/heure de départ
+tournaments.races.createButton = Valider
+tournaments.show.back = Retour
+tournaments.edit = Modification du tournoi
+
+
 generators.warmup.name=Short Track
 generators.warmup.description=épreuve de précision : portes étroites, petit parcours sur trois tours.
 generators.classic.name=Classic
@@ -141,7 +170,6 @@ tutorial.steps.LapStep.subtitle=Ligne de départ, porte au vent, ligne d''arriv�
 timeTrials.title=Courses contre la montre
 timeTrials.leaderboard.general=Classement général
 timeTrials.leaderboard.courses=Plans d''eau
-timeTrials.leaderboard.total=Total
 timeTrials.trialRankings=Meilleurs temps
 timeTrials.run=Nouveau run
 timeTrials.recentRuns=Activité récente

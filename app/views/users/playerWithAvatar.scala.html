@@ -1,0 +1,16 @@
+@(player: Player)(implicit req: PlayerRequest[_], lang: Lang)
+
+@player match {
+  case g: Guest => {
+    <span class="player-avatar">
+      @views.html.users.avatar(g)
+    <span class="handle">@g.handle.getOrElse(Messages("anonymous"))</span>
+    </span>
+  }
+  case u: User => {
+    <a href="@routes.Users.show(u.handle)" class="player-avatar">
+      @views.html.users.avatar(u)
+    <span class="handle">@u.handle</span>
+    </a>
+  }
+}

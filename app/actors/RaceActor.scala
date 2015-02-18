@@ -1,15 +1,15 @@
 package actors
 
-import reactivemongo.bson.BSONObjectID
-import tools.Conf
-
 import scala.concurrent.duration._
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import akka.actor._
+import reactivemongo.bson.BSONObjectID
 import org.joda.time.DateTime
+
 import models._
+import tools.Conf
 
 case class Start(at: DateTime)
 
@@ -17,31 +17,47 @@ case class WatcherContext(watcher: Player, state: WatcherState, ref: ActorRef)
 case class WatcherJoin(watcher: Player)
 case class WatcherQuit(watcher: Player)
 
-class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWind {
-
-  val id = race.id
-  val course = race.course
-
-  type PlayerId = String
-  case class SpellCast(by: PlayerId, spell: Spell, at: DateTime, to: Seq[PlayerId]) {
-    def isExpired = at.plusSeconds(spell.duration).isBeforeNow
-  }
-
-  val players = scala.collection.mutable.Map[PlayerId, PlayerContext]()
-  val playersGates = scala.collection.mutable.Map[Player, Seq[Long]]()
-  var leaderboard = Seq[PlayerTally]()
-  var finishersCount = 0
-
-  val watchers = scala.collection.mutable.Map[PlayerId, WatcherContext]()
-
-  var startTime: Option[DateTime] = if (master.isEmpty) Some(DateTime.now.plusSeconds(race.countdownSeconds)) else None
-
+case class RaceState(
+  race: Race,
+  course: Course,
+  master: Option[Player],
+  gates: Map[Player, Seq[Long]] = Map.empty,
+  leaderboard: Seq[PlayerTally] = Nil,
+  finishersCount: Int = 0,
+  startTime: Option[DateTime] = None
+) {
   def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
   def startScheduled = startTime.isDefined
   def started = startTime.exists(_.isBeforeNow)
   def clock: Long = DateTime.now.getMillis
 
-  def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == course.gatesToCross)
+  def someFinished = gates.values.exists(_.length == course.gatesToCross)
+  def allFinished = gates.nonEmpty && gates.values.forall(_.length == course.gatesToCross)
+  def finishers = leaderboard.filter(_.gates.length == course.gatesToCross)
+
+  def rankings: Seq[RaceRanking] = {
+    finishers.sortBy(_.gates.headOption).zipWithIndex.map { case (playerState, i) =>
+      playerState.gates.headOption.map { time =>
+        RaceRanking(i + 1, playerState.playerId, playerState.playerHandle, time, finishers.size - i + 1)
+      }
+    }.flatten
+  }
+}
+
+
+class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWind {
+
+  val id = race.id
+  val course = race.course
+
+  var raceState = RaceState(race, course, master,
+    startTime = if (master.isEmpty) Some(DateTime.now.plusSeconds(race.countdownSeconds)) else None)
+
+  type PlayerId = String
+  val players = scala.collection.mutable.Map[PlayerId, PlayerContext]()
+  val watchers = scala.collection.mutable.Map[PlayerId, WatcherContext]()
+
+  def clock: Long = DateTime.now.getMillis
 
   val ticks = Seq(
     Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean),
@@ -85,7 +101,7 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
       players.values.foreach {
         case PlayerContext(player, input, state, ref) => {
           ref ! raceUpdateForPlayer(player, Some(state))
-          ref ! RunStep(state, input, clock, wind, course, started, opponentsTo(player.id.stringify))
+          ref ! RunStep(state, input, clock, wind, course, raceState.started, opponentsTo(player.id.stringify))
         }
       }
     }
@@ -98,7 +114,9 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
       val id = player.id.stringify
 
       players.get(id).foreach { context =>
-        if (input.startCountdown) startCountdown(byPlayerId = player.id)
+        if (input.startCountdown) {
+          raceState = RaceActor.startCountdown(raceState, byPlayerId = player.id)
+        }
         players += (id -> context.copy(input = input))
       }
     }
@@ -112,7 +130,10 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
 
       players.get(id).foreach { context =>
         players += (id -> context.copy(state = newState))
-        if (prevState.crossedGates != newState.crossedGates) updateTally()
+        if (prevState.crossedGates != newState.crossedGates) {
+          raceState = RaceActor.updateTally(raceState, players.values.map(_.state).toSeq)
+          Race.updateFromState(raceState)
+        }
       }
     }
 
@@ -144,7 +165,7 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
     /**
      * race status, for live center
      */
-    case GetStatus => sender ! (startTime, players.values.map(_.state).toSeq)
+    case GetStatus => sender ! (raceState.startTime, players.values.map(_.state).toSeq)
 
     /**
      * new gust
@@ -153,96 +174,124 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
 
     /**
      * clean obsolete races
-     * kill remaining players and watchers actors
      */
     case AutoClean => {
-      val deserted = master match {
-        case Some(_) => players.isEmpty && race.creationTime.plusMinutes(1).isBeforeNow
-        case None => players.isEmpty && startTime.exists(_.isBeforeNow)
-      }
-      val finished = startTime.exists(_.plusMinutes(10).isBeforeNow)
-      if (deserted || finished) {
-        players.values.foreach(_.ref ! PoisonPill)
-        watchers.values.foreach(_.ref ! PoisonPill)
+      if (RaceActor.canShutdown(raceState, players.isEmpty, self)) {
         self ! PoisonPill
       }
     }
   }
 
-  private def startCountdown(byPlayerId: BSONObjectID) = {
-    if (startTime.isEmpty && master.exists(_.id == byPlayerId)) {
-      val at = DateTime.now.plusSeconds(race.countdownSeconds)
-      startTime = Some(at)
-    }
-  }
-
-  private def updateTally() = {
-    players.values.foreach { context =>
-      playersGates += context.player -> context.state.crossedGates
-    }
-
-    leaderboard = playersGates.toSeq.map { case (player, gates) =>
-      PlayerTally(player.id, player match {
-        case g: Guest => None
-        case u: User => Some(u.handle)
-      }, gates)
-    }.sortBy { pt =>
-      (-pt.gates.length, pt.gates.headOption)
-    }
-
-    val fc = playersGates.values.count(_.length == course.gatesToCross)
-
-    if (fc != finishersCount) {
-      fc match {
-        case 1 => // ignore
-        case 2 => Race.save(race.copy(tally = leaderboard, startTime = startTime))
-        case _ => Race.updateTally(race, leaderboard)
-      }
-    }
-    finishersCount = fc
-  }
-
-  private def opponentsTo(playerId: String): Seq[PlayerState] = {
+  def opponentsTo(playerId: String): Seq[PlayerState] = {
     players.toSeq.filterNot(_._1 == playerId).map(_._2.state)
   }
 
-  private def raceUpdateForPlayer(player: Player, playerState: Option[PlayerState]) = {
+  def raceUpdateForPlayer(player: Player, playerState: Option[PlayerState]) = {
     val id = player.id.stringify
     RaceUpdate(
       playerId = id,
       now = DateTime.now,
-      startTime = startTime,
+      startTime = raceState.startTime,
       course = None, // already transmitted in initial update
       playerState = playerState,
       wind = wind,
       opponents = opponentsTo(id),
-      leaderboard = leaderboard,
+      leaderboard = raceState.leaderboard,
       isMaster = master.exists(_.id == player.id),
       watching = false,
       timeTrial = false
     )
   }
 
-  private def raceUpdateForWatcher(watcher: Player) = {
+  def raceUpdateForWatcher(watcher: Player) = {
     RaceUpdate(
       playerId = watcher.id.stringify,
       now = DateTime.now,
-      startTime = startTime,
+      startTime = raceState.startTime,
       course = None, // already transmitted in initial update
       playerState = None,
       wind = wind,
       opponents = players.values.map(_.state).toSeq,
-      leaderboard = leaderboard,
+      leaderboard = raceState.leaderboard,
       isMaster = false,
       watching = true,
       timeTrial = false
     )
   }
 
-
-  override def postStop() = ticks.foreach(_.cancel())
+  /**
+   * kill remaining players and watchers actors
+   */
+  override def postStop() = {
+    ticks.foreach(_.cancel())
+    players.values.foreach(_.ref ! PoisonPill)
+    watchers.values.foreach(_.ref ! PoisonPill)
+    RaceActor.finishOrRemove(raceState)
+  }
 }
 
 object RaceActor {
   def props(race: Race, master: Option[Player]) = Props(new RaceActor(race, master))
+
+  def finishOrRemove(raceState: RaceState): Unit = {
+    raceState.race.tournamentId match {
+      case Some(_) => {
+        if (raceState.someFinished) {
+          Race.setFinished(raceState.race.id)
+        }
+      }
+      case None => {
+        if (raceState.rankings.size >= 2) {
+          Race.setFinished(raceState.race.id)
+        } else {
+          Race.remove(raceState.race.id)
+        }
+      }
+    }
+  }
+
+  def startCountdown(state: RaceState, byPlayerId: BSONObjectID): RaceState = {
+    if (state.startTime.isEmpty && state.master.exists(_.id == byPlayerId)) {
+      val at = DateTime.now.plusSeconds(state.race.countdownSeconds)
+      state.copy(startTime = Some(at))
+    } else {
+      state
+    }
+  }
+
+  def canShutdown(state: RaceState, isEmpty: Boolean, ref: ActorRef): Boolean = {
+    state.race.tournamentId match {
+      case Some(_) => state.allFinished
+      case None => {
+        val deserted = state.master match {
+          case Some(_) => isEmpty && state.race.creationTime.plusMinutes(1).isBeforeNow
+          case None => isEmpty && state.startTime.exists(_.isBeforeNow)
+        }
+        val timeout = state.startTime.exists(_.plusMinutes(10).isBeforeNow)
+        deserted || timeout
+      }
+    }
+  }
+
+  def updateTally(raceState: RaceState, playerStates: Seq[PlayerState]): RaceState = {
+
+    val gates = playerStates.foldLeft(raceState.gates) { (gates, ps) =>
+      gates + (ps.player -> ps.crossedGates)
+    }
+
+    val leaderboard = gates.toSeq.map { case (player, pGates) =>
+      PlayerTally(player.id, player.handleOpt, pGates)
+    }.sortBy { pt =>
+      (-pt.gates.length, pt.gates.headOption)
+    }
+
+    val newFinishersCount = gates.values.count(_.length == raceState.course.gatesToCross)
+
+    raceState.copy(
+      gates = gates,
+      leaderboard = leaderboard,
+      finishersCount = newFinishersCount
+    )
+  }
+
 }

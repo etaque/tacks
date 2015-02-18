@@ -21,6 +21,13 @@ trait Security { this: Controller =>
     }
   }
 
+  def asAdmin[A](f: User => Future[Result])(implicit req: PlayerRequest[A]): Future[Result] = {
+    req.player match {
+      case u: User if u.isAdmin => f(u)
+      case _ => Future.successful(Forbidden)
+    }
+  }
+
   object PlayerAction {
 
     def getPlayer(implicit request: RequestHeader): Future[Player] = {

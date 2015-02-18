@@ -6,6 +6,17 @@ GET         /run/:timeTrialId                       controllers.Application.play
 GET         /play/:raceId                           controllers.Application.playRace(raceId: String)
 GET         /watch/:raceId                          controllers.Application.watchRace(raceId: String)
 
+GET         /tournaments                            controllers.Tournaments.index
+GET         /tournaments/new                        controllers.Tournaments.creation
+POST        /tournaments                            controllers.Tournaments.create
+GET         /tournaments/:id                        controllers.Tournaments.show(id)
+GET         /tournaments/:id/edit                   controllers.Tournaments.edit(id)
+POST        /tournaments/:id                        controllers.Tournaments.update(id)
+GET         /tournaments/:id/races/new              controllers.Tournaments.raceCreation(id)
+POST        /tournaments/:id/races                  controllers.Tournaments.createRace(id)
+POST        /tournaments/:id/mountRace/:raceId      controllers.Tournaments.mountRace(id, raceId)
+POST        /tournaments/:id/unmountRace/:raceId    controllers.Tournaments.unmountRace(id, raceId)
+
 GET         /time-trials/leaderboard                controllers.TimeTrials.currentLeaderboard
 GET         /time-trials/leaderboard/:period        controllers.TimeTrials.leaderboard(period)
 GET         /time-trials/:id                        controllers.TimeTrials.show(id)

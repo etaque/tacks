@@ -79,9 +79,8 @@ case class TimeTrialRun(
   time: DateTime,
   tally: Seq[Long] = Nil,
   finishTime: Option[Long] = None
-) extends HasId {
+) extends HasId with WithPlayer {
   def creationTime = idTime
-  def playerAsGuest = Guest(playerId, playerHandle)
 }
 
 case class RunRanking(
@@ -90,10 +89,9 @@ case class RunRanking(
   playerHandle: Option[String],
   runId: BSONObjectID,
   finishTime: Long
-) {
+) extends WithPlayer {
   def creationTime = new DateTime(runId.time)
   def isRecent = creationTime.plusDays(1).isAfterNow
-  def playerAsGuest = Guest(playerId, playerHandle)
 }
 
 object TimeTrialRun extends MongoDAO[TimeTrialRun] {

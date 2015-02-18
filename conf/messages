@@ -41,6 +41,7 @@ rank.nth=th
 
 menu.home=Home
 menu.blog=Blog
+menu.liveRaces=Temps réel
 menu.timeTrials=Time trials
 menu.login=Login
 menu.register=Sign up
@@ -119,6 +120,8 @@ liveCenter.countdown=Countdown
 liveCenter.startingIn=-{0}s
 liveCenter.startedSince=+{0}s
 liveCenter.join=Join
+
+liveRaces.title=Realtime races
 
 timeTrials.title=Time trials
 timeTrials.leaderboard.general=Overall leaderboard

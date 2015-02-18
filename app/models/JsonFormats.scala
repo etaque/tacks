@@ -103,6 +103,14 @@ object JsonFormats {
 
   implicit val tutorialInputFormat: Format[TutorialInput] = Json.format[TutorialInput]
 
+  implicit val raceRankingFormat: Format[RaceRanking] = (
+    (__ \ 'rank).format[Int] and
+      (__ \ 'playerId).format[BSONObjectID] and
+      (__ \ 'playerHandle).format[Option[String]] and
+      (__ \ 'finishTime).format[Long] and
+      (__ \ 'points).format[Int]
+    )(RaceRanking.apply, unlift(RaceRanking.unapply))
+
   implicit val playerTallyFormat: Format[PlayerTally] = (
     (__ \ 'playerId).format[BSONObjectID] and
       (__ \ 'playerHandle).format[Option[String]] and
