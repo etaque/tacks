@@ -39,3 +39,28 @@ movePoint (x,y) delta velocity direction =
       x' = x + delta * 0.001 * velocity * cos angle
       y' = y + delta * 0.001 * velocity * sin angle
   in (x',y')
+
+ensure360 : Float -> Float
+ensure360 val =
+  let rounded = round val
+      excess = val - (toFloat rounded)
+  in  ((rounded + 360) % 360 |> toFloat) + excess
+
+angleDelta : Float -> Float -> Float
+angleDelta a1 a2 =
+  let
+    delta = a1 - a2
+  in
+    if | delta > 180   -> delta - 360
+       | delta <= -180 -> delta + 360
+       | otherwise     -> delta
+
+{-| is angle included in sector?
+-}
+inSector : Float -> Float -> Float -> Bool
+inSector b1 b2 angle =
+  let
+    a1 = -(angleDelta b1 angle)
+    a2 = -(angleDelta angle b2)
+  in
+    a1 >= 0 && a2 >= 0

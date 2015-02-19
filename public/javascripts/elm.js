@@ -1347,6 +1347,15 @@ Elm.Core.make = function (_elm) {
    var isJust = function (m) {
       return $Basics.not(isNothing(m));
    };
+   var floatRange = F2(function (from,
+   to) {
+      return A2($List.map,
+      $Basics.toFloat,
+      _L.range(from,to));
+   });
+   var headMaybe = function (list) {
+      return $List.isEmpty(list) ? $Maybe.Nothing : $Maybe.Just($List.head(list));
+   };
    var find = F2(function (f,
    list) {
       return function () {
@@ -1355,6 +1364,12 @@ Elm.Core.make = function (_elm) {
          list);
          return $List.isEmpty(filtered) ? $Maybe.Nothing : $Maybe.Just($List.head(filtered));
       }();
+   });
+   var exists = F2(function (f,
+   list) {
+      return isJust(A2(find,
+      f,
+      list));
    });
    var average = function (items) {
       return $List.sum(items) / $Basics.toFloat($List.length(items));
@@ -1371,7 +1386,7 @@ Elm.Core.make = function (_elm) {
                     list);
                   case "Nothing": return list;}
                _U.badCase($moduleName,
-               "between lines 38 and 41");
+               "between lines 39 and 42");
             }();
          });
          return A3($List.foldl,
@@ -1411,17 +1426,7 @@ Elm.Core.make = function (_elm) {
          return $Basics.abs($Basics.sin(windAngleRad) * boatSpeed);
       }();
    });
-   var ensure360 = function (val) {
-      return function () {
-         var rounded = $Basics.round(val);
-         var excess = val - $Basics.toFloat(rounded);
-         return $Basics.toFloat(A2($Basics._op["%"],
-         rounded + 360,
-         360)) + excess;
-      }();
-   };
    _elm.Core.values = {_op: _op
-                      ,ensure360: ensure360
                       ,toRadians: toRadians
                       ,mpsToKnts: mpsToKnts
                       ,floatMod: floatMod
@@ -1431,6 +1436,9 @@ Elm.Core.make = function (_elm) {
                       ,compact: compact
                       ,average: average
                       ,find: find
+                      ,exists: exists
+                      ,headMaybe: headMaybe
+                      ,floatRange: floatRange
                       ,isNothing: isNothing
                       ,isJust: isJust};
    return _elm.Core.values;
@@ -2485,7 +2493,7 @@ Elm.Game.make = function (_elm) {
                               {case "Just": return true;
                                  case "Nothing": return false;}
                               _U.badCase($moduleName,
-                              "between lines 211 and 214");
+                              "between lines 217 and 220");
                            }();}
                       break;}
                  break;}
@@ -2504,7 +2512,7 @@ Elm.Game.make = function (_elm) {
                return _U.eq(_v11._0,
                  _v9.playerId);}
             _U.badCase($moduleName,
-            "between lines 204 and 206");
+            "between lines 210 and 212");
          }();
       }();
    };
@@ -2740,6 +2748,23 @@ Elm.Game.make = function (_elm) {
              ,playerHandle: b
              ,playerId: a};
    });
+   var upwind = function (s) {
+      return _U.cmp($Basics.abs(s.windAngle),
+      90) < 0;
+   };
+   var closestVmgAngle = function (s) {
+      return upwind(s) ? s.upwindVmg.angle : s.downwindVmg.angle;
+   };
+   var windAngleOnVmg = function (s) {
+      return _U.cmp(s.windAngle,
+      0) < 0 ? 0 - closestVmgAngle(s) : closestVmgAngle(s);
+   };
+   var deltaToVmg = function (s) {
+      return s.windAngle - windAngleOnVmg(s);
+   };
+   var headingOnVmg = function (s) {
+      return $Geo.ensure360(s.windOrigin + closestVmgAngle(s));
+   };
    var PlayerState = function (a) {
       return function (b) {
          return function (c) {
@@ -2849,6 +2874,11 @@ Elm.Game.make = function (_elm) {
                       ,Course: Course
                       ,Player: Player
                       ,PlayerState: PlayerState
+                      ,upwind: upwind
+                      ,closestVmgAngle: closestVmgAngle
+                      ,windAngleOnVmg: windAngleOnVmg
+                      ,headingOnVmg: headingOnVmg
+                      ,deltaToVmg: deltaToVmg
                       ,PlayerTally: PlayerTally
                       ,GhostState: GhostState
                       ,Gust: Gust
@@ -2893,6 +2923,38 @@ Elm.Geo.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var angleDelta = F2(function (a1,
+   a2) {
+      return function () {
+         var delta = a1 - a2;
+         return _U.cmp(delta,
+         180) > 0 ? delta - 360 : _U.cmp(delta,
+         -180) < 1 ? delta + 360 : delta;
+      }();
+   });
+   var inSector = F3(function (b1,
+   b2,
+   angle) {
+      return function () {
+         var a2 = 0 - A2(angleDelta,
+         angle,
+         b2);
+         var a1 = 0 - A2(angleDelta,
+         b1,
+         angle);
+         return _U.cmp(a1,
+         0) > -1 && _U.cmp(a2,0) > -1;
+      }();
+   });
+   var ensure360 = function (val) {
+      return function () {
+         var rounded = $Basics.round(val);
+         var excess = val - $Basics.toFloat(rounded);
+         return $Basics.toFloat(A2($Basics._op["%"],
+         rounded + 360,
+         360)) + excess;
+      }();
+   };
    var movePoint = F4(function (_v0,
    delta,
    velocity,
@@ -3052,7 +3114,10 @@ Elm.Geo.make = function (_elm) {
                      ,distance: distance
                      ,inBox: inBox
                      ,toBox: toBox
-                     ,movePoint: movePoint};
+                     ,movePoint: movePoint
+                     ,ensure360: ensure360
+                     ,angleDelta: angleDelta
+                     ,inSector: inSector};
    return _elm.Geo.values;
 };
 Elm.Graphics = Elm.Graphics || {};
@@ -4921,6 +4986,7 @@ Elm.Inputs.make = function (_elm) {
    _L = _N.List.make(_elm),
    _P = _N.Ports.make(_elm),
    $moduleName = "Inputs",
+   $Basics = Elm.Basics.make(_elm),
    $Char = Elm.Char.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
@@ -4984,6 +5050,19 @@ Elm.Inputs.make = function (_elm) {
          };
       };
    };
+   var isLocking = function (ki) {
+      return _U.cmp(ki.arrows.y,
+      0) > 0 || ki.lock;
+   };
+   var manualTurn = function (ki) {
+      return !_U.eq(ki.arrows.x,0);
+   };
+   var isTurning = function (ki) {
+      return manualTurn(ki) && $Basics.not(ki.subtleTurn);
+   };
+   var isSubtleTurning = function (ki) {
+      return manualTurn(ki) && ki.subtleTurn;
+   };
    var KeyboardInput = F5(function (a,
    b,
    c,
@@ -5010,6 +5089,10 @@ Elm.Inputs.make = function (_elm) {
    _elm.Inputs.values = {_op: _op
                         ,UserArrows: UserArrows
                         ,KeyboardInput: KeyboardInput
+                        ,manualTurn: manualTurn
+                        ,isTurning: isTurning
+                        ,isSubtleTurning: isSubtleTurning
+                        ,isLocking: isLocking
                         ,RaceInput: RaceInput
                         ,keyboardInput: keyboardInput
                         ,watchedPlayer: watchedPlayer

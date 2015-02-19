@@ -8,7 +8,7 @@ import Keyboard
 import Char
 import Graphics.Input
 
-type alias UserArrows = { x:Int, y:Int }
+type alias UserArrows = { x: Int, y: Int }
 
 type alias KeyboardInput =
   { arrows:         UserArrows
@@ -17,6 +17,11 @@ type alias KeyboardInput =
   , subtleTurn:     Bool
   , startCountdown: Bool
   }
+
+manualTurn ki = ki.arrows.x /= 0
+isTurning ki = manualTurn ki && not ki.subtleTurn
+isSubtleTurning ki = manualTurn ki && ki.subtleTurn
+isLocking ki = ki.arrows.y > 0 || ki.lock
 
 type alias RaceInput =
   { playerId:    String
@@ -57,4 +62,3 @@ type alias GameInput =
   , raceInput:     RaceInput
   , watcherInput:  WatcherInput
   }
-

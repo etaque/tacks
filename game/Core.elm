@@ -4,11 +4,7 @@ import Maybe as M
 import Time (..)
 import List (..)
 
-ensure360 : Float -> Float
-ensure360 val =
-  let rounded = round val
-      excess = val - (toFloat rounded)
-  in  ((rounded + 360) % 360 |> toFloat) + excess
+
 
 toRadians : Float -> Float
 toRadians deg = radians ((90 - deg) * pi / 180)
@@ -19,6 +15,8 @@ mpsToKnts mps = mps * 3600 / 1.852 / 1000
 floatMod : Float -> Int -> Float
 floatMod val div =
   (floor val) % div |> toFloat
+
+--
 
 getVmgValue : Float -> Float  -> Float
 getVmgValue windAngle boatSpeed =
@@ -31,6 +29,9 @@ isStarted maybeCountdown = M.map (\n -> n <= 0) maybeCountdown |> M.withDefault 
 
 getCountdown : Maybe Time -> Float
 getCountdown maybeCountdown = M.withDefault 0 maybeCountdown
+
+
+-- List
 
 compact : List (Maybe a) -> List a
 compact maybes =
@@ -49,6 +50,20 @@ find f list =
     filtered = filter f list
   in
     if isEmpty filtered then Nothing else Just (head filtered)
+
+exists : (a -> Bool) -> List a -> Bool
+exists f list =
+  isJust (find f list)
+
+headMaybe : List a -> Maybe a
+headMaybe list =
+  if isEmpty list then Nothing else Just (head list)
+
+floatRange : Int -> Int -> List Float
+floatRange from to =
+  map toFloat [ from .. to ]
+
+-- Maybe
 
 isNothing : Maybe a -> Bool
 isNothing m =

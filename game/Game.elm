@@ -56,6 +56,12 @@ type alias PlayerState =
   , nextGate:        Maybe String
   }
 
+upwind s = abs s.windAngle < 90
+closestVmgAngle s = if upwind s then s.upwindVmg.angle else s.downwindVmg.angle
+windAngleOnVmg s = if s.windAngle < 0 then -(closestVmgAngle s) else closestVmgAngle s
+headingOnVmg s = ensure360 (s.windOrigin + closestVmgAngle s)
+deltaToVmg s = s.windAngle - windAngleOnVmg s
+
 type alias PlayerTally = { playerId: String, playerHandle: Maybe String, gates: List Time }
 
 type alias GhostState =
