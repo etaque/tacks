@@ -4,6 +4,7 @@ import Inputs (..)
 import Game (..)
 import Geo (..)
 import Core (..)
+import Steps.Util (..)
 
 import Maybe as M
 import List as L
@@ -19,7 +20,7 @@ movingStep elapsed course state =
   else
     let
       baseSpeed = polarSpeed state.windSpeed state.windAngle
-      nextVelocity = withInertia elapsed state.velocity
+      nextVelocity = withInertia elapsed state.velocity baseSpeed
 
       nextPosition = movePoint state.position elapsed nextVelocity state.heading
 
@@ -28,7 +29,7 @@ movingStep elapsed course state =
       velocity = if grounded then 0 else nextVelocity
       position = if grounded then state.position else nextPosition
 
-      trail = take 20 (position :: state.trail)
+      trail = L.take 20 (position :: state.trail)
     in
       { state
         | isGrounded <- grounded
@@ -58,9 +59,9 @@ isGrounded p course =
     marks = [dl, dr, ul, ur]
     halfBoatWidth = course.boatWidth / 2
 
-    stuckOnMark = exists (\m -> (distanceBetween p m) <= course.markRadius + halfBoatWidth) marks
-    outOfBounds = not (inBox p course.area)
-    onIsland = exists (\i -> (distanceBetween i.location p) <= i.radius + halfBoatWidth) course.islands
-
+    stuckOnMark = exists (\m -> (distance p m) <= course.markRadius + halfBoatWidth) marks
+    outOfBounds = not (inBox p (areaBox course.area))
+    onIsland = exists (\i -> (distance i.location p) <= i.radius + halfBoatWidth) course.islands
+  in
     stuckOnMark || outOfBounds || onIsland
 

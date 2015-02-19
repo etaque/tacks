@@ -64,7 +64,8 @@ object JsonFormats {
       "guest" -> false,
       "handle" -> u.handle,
       "status" -> u.status,
-      "avatarId" -> u.avatarId
+      "avatarId" -> u.avatarId,
+      "vmgMagnet" -> u.vmgMagnet
     )
   }
   implicit val userFormat: Format[User] = Format(userReads, userWrites)
@@ -77,7 +78,8 @@ object JsonFormats {
       "guest" -> true,
       "handle" -> g.handle,
       "status" -> JsNull,
-      "avatarId" -> JsNull
+      "avatarId" -> JsNull,
+      "vmgMagnet" -> g.vmgMagnet
     )
   }
   implicit val guestFormat: Format[Guest] = Format(guestReads, guestWrites)

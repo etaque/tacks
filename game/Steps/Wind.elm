@@ -19,15 +19,15 @@ shadowImpact = -5 -- knots
 shadowArc = 30 -- degrees
 
 
-windStep : Wind -> Double -> List PlayerState -> PlayerState -> PlayerState
-windStep wind shadowLength opponents state =
+windStep : GameState -> PlayerState -> PlayerState
+windStep ({wind,course,opponents} as gameState) state =
   let
     shadowDirection = ensure360 (state.windOrigin + 180 + (state.windAngle / 3))
 
-    gustsOnPlayer = L.filter (\g -> (distanceBetween state.position g.position) < g.radius) wind.gusts
+    gustsOnPlayer = L.filter (\g -> (distance state.position g.position) < g.radius) wind.gusts
     gustsEffects = L.map (gustEffect state wind) gustsOnPlayer
     windShadow =
-      L.filter (isShadowedBy state shadowLength) opponents
+      L.filter (isShadowedBy state course.windShadowLength) opponents
       |> L.map (\_ -> shadowImpact)
       |> L.sum
 
@@ -50,7 +50,7 @@ windStep wind shadowLength opponents state =
 gustEffect : PlayerState -> Wind -> Gust -> GustEffect
 gustEffect state wind gust =
   let
-    d = distanceBetween state.position gust.position
+    d = distance state.position gust.position
     fromEdge = gust.radius - d
     factor = L.minimum [fromEdge / (gust.radius * 0.2), 1]
 
@@ -65,7 +65,7 @@ gustEffect state wind gust =
 
 isShadowedBy : PlayerState -> Float -> PlayerState -> Bool
 isShadowedBy state shadowLength opponent =
-  (distanceBetween opponent.position state.position) <= shadowLength &&
+  (distance opponent.position state.position) <= shadowLength &&
     let
       angle = angleBetween opponent.position state.position
       (min, max) = windShadowSector opponent
@@ -73,7 +73,7 @@ isShadowedBy state shadowLength opponent =
       inSector min max angle
 
 
-windShadowSector : State -> (Float,Float)
+windShadowSector : PlayerState -> (Float,Float)
 windShadowSector state =
   let
     d = state.windOrigin + 180 + (state.windAngle / 3)

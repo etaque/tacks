@@ -7,9 +7,45 @@ import Maybe as M
 import Time (..)
 import List (..)
 
+
 type alias Gate = { y: Float, width: Float }
 type alias Island = { location : Point, radius : Float }
 type alias RaceArea = { rightTop: Point, leftBottom: Point }
+
+areaBox : RaceArea -> (Point,Point)
+areaBox {rightTop,leftBottom} =
+  (rightTop, leftBottom)
+
+areaDims : RaceArea -> (Float,Float)
+areaDims {rightTop,leftBottom} =
+  let
+    (r,t) = rightTop
+    (l,b) = leftBottom
+  in
+    (r - l, t - b)
+
+areaTop : RaceArea -> Float
+areaTop {rightTop} = snd rightTop
+
+areaBottom : RaceArea -> Float
+areaBottom {leftBottom} = snd leftBottom
+
+areaWidth : RaceArea -> Float
+areaWidth = areaDims >> fst
+
+areaHeight : RaceArea -> Float
+areaHeight = areaDims >> snd
+
+areaCenters : RaceArea -> (Float,Float)
+areaCenters {rightTop,leftBottom} =
+  let
+    (r,t) = rightTop
+    (l,b) = leftBottom
+    cx = (r + l) / 2
+    cy = (t + b) / 2
+  in
+    (cx, cy)
+
 
 type alias Vmg =
   { angle: Float
@@ -33,6 +69,7 @@ type alias Player =
   , handle: Maybe String
   , status: Maybe String
   , avatarId: Maybe String
+  , vmgMagnet: Int
   , guest: Bool
   , user: Bool
   }
@@ -40,6 +77,8 @@ type alias Player =
 type alias PlayerState =
   { player:          Player
   , position:        Point
+  , isGrounded:      Bool
+  , isTurning:       Bool
   , heading:         Float
   , velocity:        Float
   , vmgValue:        Float
@@ -95,17 +134,29 @@ type alias GameState =
   , gameMode:    GameMode
   }
 
+isStarted : Maybe Time -> Bool
+isStarted maybeCountdown = M.map (\n -> n <= 0) maybeCountdown |> M.withDefault False
 
 defaultVmg : Vmg
 defaultVmg = { angle = 0, speed = 0, value = 0}
 
 defaultPlayer : Player
-defaultPlayer = { id = "", handle = Nothing, user = False, guest = False, status = Nothing, avatarId = Nothing }
+defaultPlayer =
+  { id = ""
+  , handle = Nothing
+  , user = False
+  , guest = False
+  , status = Nothing
+  , avatarId = Nothing
+  , vmgMagnet = 0
+  }
 
 defaultPlayerState : PlayerState
 defaultPlayerState =
   { player          = defaultPlayer
   , position        = (0,0)
+  , isGrounded      = False
+  , isTurning       = False
   , heading         = 0
   , velocity        = 0
   , vmgValue        = 0
@@ -169,36 +220,6 @@ getGateMarks gate = ((-gate.width / 2, gate.y), (gate.width / 2, gate.y))
 findPlayerGhost : String -> List GhostState -> Maybe GhostState
 findPlayerGhost playerId ghosts =
   Core.find (\g -> g.id == playerId) ghosts
-
-areaDims : RaceArea -> (Float,Float)
-areaDims {rightTop,leftBottom} =
-  let
-    (r,t) = rightTop
-    (l,b) = leftBottom
-  in
-    (r - l, t - b)
-
-areaTop : RaceArea -> Float
-areaTop {rightTop} = snd rightTop
-
-areaBottom : RaceArea -> Float
-areaBottom {leftBottom} = snd leftBottom
-
-areaWidth : RaceArea -> Float
-areaWidth = areaDims >> fst
-
-areaHeight : RaceArea -> Float
-areaHeight = areaDims >> snd
-
-areaCenters : RaceArea -> (Float,Float)
-areaCenters {rightTop,leftBottom} =
-  let
-    (r,t) = rightTop
-    (l,b) = leftBottom
-    cx = (r + l) / 2
-    cy = (t + b) / 2
-  in
-    (cx, cy)
 
 findOpponent : List PlayerState -> String -> Maybe PlayerState
 findOpponent opponents id =

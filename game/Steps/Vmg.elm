@@ -3,6 +3,7 @@ module Steps.Vmg where
 import Game (..)
 import Geo (..)
 import Core (..)
+import Steps.Util (..)
 
 import Maybe as M
 import List as L
@@ -13,7 +14,7 @@ vmgStep state =
   let
     vmgValue = getVmgValue state.windAngle state.velocity
     upwindVmg = getUpwindVmg state.windSpeed
-    downwindVmg = getDownwindVmg staet.windSpeed
+    downwindVmg = getDownwindVmg state.windSpeed
   in
     { state
       | vmgValue <- vmgValue
@@ -27,8 +28,8 @@ makeVmg windSpeed windAngle =
     boatSpeed = polarSpeed windSpeed windAngle
     value = getVmgValue windAngle boatSpeed
   in
-    { windAngle = windAngle
-    , windSpeed = windSpeed
+    { angle = windAngle
+    , speed = windSpeed
     , value = value
     }
 

@@ -9,6 +9,9 @@ import List (..)
 toRadians : Float -> Float
 toRadians deg = radians ((90 - deg) * pi / 180)
 
+toDegrees : Float -> Float
+toDegrees rad = degrees (-rad) + 90
+
 mpsToKnts : Float -> Float
 mpsToKnts mps = mps * 3600 / 1.852 / 1000
 
@@ -18,14 +21,12 @@ floatMod val div =
 
 --
 
-getVmgValue : Float -> Float  -> Float
-getVmgValue windAngle boatSpeed =
-  let windAngleRad = toRadians windAngle
-  in  (sin windAngleRad) * boatSpeed |> abs
+--getVmgValue : Float -> Float  -> Float
+--getVmgValue windAngle boatSpeed =
+--  let windAngleRad = toRadians windAngle
+--  in  (sin windAngleRad) * boatSpeed |> abs
 
 
-isStarted : Maybe Time -> Bool
-isStarted maybeCountdown = M.map (\n -> n <= 0) maybeCountdown |> M.withDefault False
 
 getCountdown : Maybe Time -> Float
 getCountdown maybeCountdown = M.withDefault 0 maybeCountdown

@@ -55,6 +55,15 @@ angleDelta a1 a2 =
        | delta <= -180 -> delta + 360
        | otherwise     -> delta
 
+angleBetween : Point -> Point -> Float
+angleBetween (x1, y1) (x2, y2) =
+  let
+    xDelta = x2 - x1
+    yDelta = y2 - y1
+    rad = atan2 yDelta xDelta
+  in
+    ensure360 (Core.toDegrees rad)
+
 {-| is angle included in sector?
 -}
 inSector : Float -> Float -> Float -> Bool

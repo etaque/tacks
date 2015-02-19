@@ -43,12 +43,12 @@ turningStep elapsed input state =
 tackTargetReached : PlayerState -> Bool
 tackTargetReached state =
   M.map (\target -> abs (angleDelta state.windAngle target) < 1) state.tackTarget
-    |> M.withDefault false
+    |> M.withDefault False
 
 
 getTackTarget : PlayerState -> KeyboardInput -> Bool -> Maybe Float
 getTackTarget state input targetReached =
-  if input.manualTurn then
+  if manualTurn input then
     -- a manual turn means no tack
     Nothing
   else
@@ -67,7 +67,7 @@ autoVmgTarget state input =
   if not (L.isEmpty state.crossedGates) &&
       state.isTurning &&
       not (manualTurn input) &&
-      (abs (deltaToVmg state)) < state.player.vmgMagnet
+      (abs (deltaToVmg state)) < (toFloat state.player.vmgMagnet) then
     Just (windAngleOnVmg state)
   else
     Nothing
@@ -76,7 +76,7 @@ autoVmgTarget state input =
 getTurn : Maybe Float -> PlayerState -> KeyboardInput -> Float -> Float
 getTurn tackTarget state input elapsed =
   if manualTurn input then
-    input.arrows.x * elapsed * (if input.subtleTurn then slow else fast)
+    (toFloat input.arrows.x) * elapsed * (if input.subtleTurn then slow else fast)
   else
     case tackTarget of
 
