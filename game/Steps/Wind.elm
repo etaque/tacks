@@ -7,7 +7,6 @@ import Core (..)
 import Maybe as M
 import List as L
 
-
 type alias GustEffect =
   { origin: Float
   , speed: Float
@@ -16,6 +15,8 @@ type alias GustEffect =
 
 
 shadowImpact = -5 -- knots
+
+shadowArc : Float
 shadowArc = 30 -- degrees
 
 
@@ -26,6 +27,7 @@ windStep ({wind,course,opponents} as gameState) state =
 
     gustsOnPlayer = L.filter (\g -> (distance state.position g.position) < g.radius) wind.gusts
     gustsEffects = L.map (gustEffect state wind) gustsOnPlayer
+
     windShadow =
       L.filter (isShadowedBy state course.windShadowLength) opponents
       |> L.map (\_ -> shadowImpact)
@@ -74,8 +76,5 @@ isShadowedBy state shadowLength opponent =
 
 
 windShadowSector : OpponentState -> (Float,Float)
-windShadowSector state =
-  let
-    d = state.windOrigin + 180 + (state.windAngle / 3)
-  in
-    (ensure360 (d - shadowArc/2), ensure360 (d + shadowArc/2))
+windShadowSector {shadowDirection} =
+  (ensure360 (shadowDirection - shadowArc/2), ensure360 (shadowDirection + shadowArc/2))

@@ -1389,7 +1389,7 @@ Elm.Core.make = function (_elm) {
                     list);
                   case "Nothing": return list;}
                _U.badCase($moduleName,
-               "between lines 40 and 43");
+               "between lines 32 and 35");
             }();
          });
          return A3($List.foldl,
@@ -1409,11 +1409,8 @@ Elm.Core.make = function (_elm) {
       $Basics.floor(val),
       div));
    });
-   var mpsToKnts = function (mps) {
-      return mps * 3600 / 1.852 / 1000;
-   };
    var toDegrees = function (rad) {
-      return $Basics.degrees(0 - rad) + 90;
+      return (0 - rad) * 180 / $Basics.pi + 90;
    };
    var toRadians = function (deg) {
       return $Basics.radians((90 - deg) * $Basics.pi / 180);
@@ -1421,7 +1418,6 @@ Elm.Core.make = function (_elm) {
    _elm.Core.values = {_op: _op
                       ,toRadians: toRadians
                       ,toDegrees: toDegrees
-                      ,mpsToKnts: mpsToKnts
                       ,floatMod: floatMod
                       ,getCountdown: getCountdown
                       ,compact: compact
@@ -15896,12 +15892,11 @@ Elm.Steps.Wind.make = function (_elm) {
       }();
    });
    var shadowArc = 30;
-   var windShadowSector = function (state) {
+   var windShadowSector = function (_v0) {
       return function () {
-         var d = state.windOrigin + 180 + state.windAngle / 3;
          return {ctor: "_Tuple2"
-                ,_0: $Geo.ensure360(d - shadowArc / 2)
-                ,_1: $Geo.ensure360(d + shadowArc / 2)};
+                ,_0: $Geo.ensure360(_v0.shadowDirection - shadowArc / 2)
+                ,_1: $Geo.ensure360(_v0.shadowDirection + shadowArc / 2)};
       }();
    };
    var isShadowedBy = F3(function (state,
@@ -15924,19 +15919,19 @@ Elm.Steps.Wind.make = function (_elm) {
       }();
    });
    var shadowImpact = -5;
-   var windStep = F2(function (_v0,
+   var windStep = F2(function (_v2,
    state) {
       return function () {
          return function () {
-            var windShadow = $List.sum($List.map(function (_v2) {
+            var windShadow = $List.sum($List.map(function (_v4) {
                return function () {
                   return shadowImpact;
                }();
             })(A2($List.filter,
             A2(isShadowedBy,
             state,
-            _v0.course.windShadowLength),
-            _v0.opponents)));
+            _v2.course.windShadowLength),
+            _v2.opponents)));
             var gustsOnPlayer = A2($List.filter,
             function (g) {
                return _U.cmp(A2($Geo.distance,
@@ -15944,19 +15939,19 @@ Elm.Steps.Wind.make = function (_elm) {
                g.position),
                g.radius) < 0;
             },
-            _v0.wind.gusts);
+            _v2.wind.gusts);
             var gustsEffects = A2($List.map,
-            A2(gustEffect,state,_v0.wind),
+            A2(gustEffect,state,_v2.wind),
             gustsOnPlayer);
-            var origin = $List.isEmpty(gustsEffects) ? _v0.wind.origin : function () {
+            var origin = $List.isEmpty(gustsEffects) ? _v2.wind.origin : function () {
                var totalEffect = $List.sum(A2($List.map,
                function (g) {
                   return g.origin * g.factor;
                },
                gustsEffects));
-               return $Geo.ensure360(_v0.wind.origin + totalEffect);
+               return $Geo.ensure360(_v2.wind.origin + totalEffect);
             }();
-            var speed = _v0.wind.speed + $List.sum(A2($List.map,
+            var speed = _v2.wind.speed + $List.sum(A2($List.map,
             function (g) {
                return g.speed * g.factor;
             },

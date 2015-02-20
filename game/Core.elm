@@ -10,22 +10,14 @@ toRadians : Float -> Float
 toRadians deg = radians ((90 - deg) * pi / 180)
 
 toDegrees : Float -> Float
-toDegrees rad = degrees (-rad) + 90
+toDegrees rad = -rad * 180 / pi + 90
 
-mpsToKnts : Float -> Float
-mpsToKnts mps = mps * 3600 / 1.852 / 1000
 
 floatMod : Float -> Int -> Float
 floatMod val div =
   (floor val) % div |> toFloat
 
 --
-
---getVmgValue : Float -> Float  -> Float
---getVmgValue windAngle boatSpeed =
---  let windAngleRad = toRadians windAngle
---  in  (sin windAngleRad) * boatSpeed |> abs
-
 
 
 getCountdown : Maybe Time -> Float
