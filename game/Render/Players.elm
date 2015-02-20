@@ -4,7 +4,6 @@ import Render.Utils (..)
 import Core (..)
 import Geo (..)
 import Game (..)
-import Inputs (watchedPlayer)
 
 import String
 import Text (..)
@@ -83,7 +82,7 @@ renderWake wake =
   in
     group (map renderSegment pairs)
 
-renderWindShadow : Float -> PlayerState -> Form
+renderWindShadow : Float -> OpponentState -> Form
 renderWindShadow shadowLength {windAngle, windOrigin, position, shadowDirection} =
   let
     arcAngles = [-15, -10, -5, 0, 5, 10, 15]
@@ -100,36 +99,36 @@ rotateHull heading = rotate (toRadians (heading + 90))
 
 
 renderPlayer : Bool -> Float -> PlayerState -> Form
-renderPlayer displayWindShadow shadowLength player =
+renderPlayer displayWindShadow shadowLength state =
   let
-    hull = rotateHull player.heading baseHull
+    hull = rotateHull state.heading baseHull
     windShadow = if displayWindShadow
-      then renderWindShadow shadowLength player
+      then renderWindShadow shadowLength (asOpponentState state)
       else emptyForm
-    angles = renderPlayerAngles player
-    vmgSign = renderVmgSign player
-    eqLine = renderEqualityLine player.position player.windOrigin
-    movingPart = group [angles, vmgSign, eqLine, hull] |> move player.position
-    wake = renderWake player.trail
+    angles = renderPlayerAngles state
+    vmgSign = renderVmgSign state
+    eqLine = renderEqualityLine state.position state.windOrigin
+    movingPart = group [angles, vmgSign, eqLine, hull] |> move state.position
+    wake = renderWake state.trail
   in
     group [wake, windShadow, movingPart]
 
 
-renderOpponent : Float -> PlayerState -> Form
-renderOpponent shadowLength opponent =
+renderOpponent : Float -> Opponent -> Form
+renderOpponent shadowLength {state,player} =
   let
-    hull = rotateHull opponent.heading baseHull
-      |> move opponent.position
+    hull = rotateHull state.heading baseHull
+      |> move state.position
       |> alpha 0.5
-    shadow = renderWindShadow shadowLength opponent
-    name = (M.withDefault "Anonymous" opponent.player.handle)
+    shadow = renderWindShadow shadowLength state
+    name = (M.withDefault "Anonymous" player.handle)
       |> baseText |> centered |> toForm
-      |> move (add opponent.position (0,-25))
+      |> move (add state.position (0,-25))
       |> alpha 0.3
   in
     group [shadow, hull, name]
 
-renderOpponents : Course -> List PlayerState -> Form
+renderOpponents : Course -> List Opponent -> Form
 renderOpponents course opponents =
   group <| map (renderOpponent course.windShadowLength) opponents
 
@@ -150,22 +149,12 @@ renderGhosts ghosts =
 
 
 renderPlayers : GameState -> Form
-renderPlayers ({playerState,opponents,ghosts,course,center,watchMode,gameMode} as gameState) =
+renderPlayers ({playerState,opponents,ghosts,course,center,gameMode} as gameState) =
   let
     displayWindShadow = gameMode == Race
-    mainPlayer = case playerState of
-      Just ps ->
-        renderPlayer displayWindShadow course.windShadowLength ps
-      Nothing -> case watchMode of
-        Watching playerId ->
-          M.map (renderPlayer displayWindShadow course.windShadowLength) (findOpponent opponents playerId)
-            |> M.withDefault emptyForm
-        NotWatching -> emptyForm
-    filteredOpponents = case watchMode of
-      Watching playerId -> filter (\o -> o.player.id /= playerId) opponents
-      NotWatching -> opponents
+    mainPlayer = renderPlayer displayWindShadow course.windShadowLength playerState
     forms =
-      [ renderOpponents course filteredOpponents
+      [ renderOpponents course opponents
       , renderGhosts ghosts
       , mainPlayer
       ]

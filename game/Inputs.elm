@@ -23,21 +23,6 @@ isTurning ki = manualTurn ki && not ki.subtleTurn
 isSubtleTurning ki = manualTurn ki && ki.subtleTurn
 isLocking ki = ki.arrows.y > 0 || ki.lock
 
-type alias RaceInput =
-  { playerId:    String
-  , now:         Time
-  , startTime:   Maybe Time
-  , course:      Maybe Game.Course
-  , playerState: Maybe Game.PlayerState
-  , wind:        Game.Wind
-  , opponents:   List Game.PlayerState
-  , ghosts:      List Game.GhostState
-  , leaderboard: List Game.PlayerTally
-  , isMaster:    Bool
-  , watching:    Bool
-  , timeTrial:   Bool
-  }
-
 keyboardInput : Signal KeyboardInput
 keyboardInput = map5 KeyboardInput
   Keyboard.arrows
@@ -46,19 +31,25 @@ keyboardInput = map5 KeyboardInput
   Keyboard.shift
   (Keyboard.isDown (Char.toCode 'C'))
 
-watchedPlayer : Channel (Maybe String)
-watchedPlayer = channel Nothing
 
-type alias WatcherInput =
-  { watchedPlayerId: Maybe String }
-
-watcherInput : Signal WatcherInput
-watcherInput = WatcherInput <~ (subscribe watchedPlayer)
+type alias RaceInput =
+  { now:         Time
+  , startTime:   Maybe Time
+  , wind:        Game.Wind
+  , opponents:   List Game.Opponent
+  , ghosts:      List Game.GhostState
+  , leaderboard: List Game.PlayerTally
+  , isMaster:    Bool
+  }
 
 type alias GameInput =
   { delta:         Float
   , keyboardInput: KeyboardInput
   , windowInput:   (Int,Int)
   , raceInput:     RaceInput
-  , watcherInput:  WatcherInput
+  }
+
+type alias PlayerOutput =
+  { state: Game.OpponentState
+  , input: KeyboardInput
   }

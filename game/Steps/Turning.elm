@@ -99,3 +99,5 @@ getTurn tackTarget state input elapsed =
           "FixedAngle" ->
             -- no tack, fixed angle => adapt to wind origin
             ensure360 (state.windOrigin + state.windAngle - state.heading)
+          _ ->
+            0

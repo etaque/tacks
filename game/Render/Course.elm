@@ -15,22 +15,22 @@ import Color (white,black)
 import Time (Time)
 
 
-renderDownwind : (Maybe PlayerState) -> Course -> Float -> Bool -> Form
+renderDownwind : PlayerState -> Course -> Float -> Bool -> Form
 renderDownwind playerState course now started =
   let
-    isFirstGate = M.map (\ps -> isEmpty ps.crossedGates) playerState |> M.withDefault False
-    isLastGate = M.map (\ps -> (length ps.crossedGates) == course.laps * 2) playerState |> M.withDefault False
-    isNext = M.map (\ps -> ps.nextGate == Just "DownwindGate") playerState |> M.withDefault False
+    isFirstGate = isEmpty playerState.crossedGates
+    isLastGate = length playerState.crossedGates == course.laps * 2
+    isNext = playerState.nextGate == Just "DownwindGate"
   in
     if | isFirstGate -> renderStartLine course.downwind course.markRadius started now
        | isLastGate  -> renderFinishLine course.downwind course.markRadius now
        | otherwise   -> renderGate course.downwind course.markRadius now isNext Downwind
 
 
-renderUpwind : (Maybe PlayerState) -> Course -> Float -> Form
+renderUpwind : PlayerState -> Course -> Float -> Form
 renderUpwind playerState course now =
   let
-    isNext = M.map (\ps -> ps.nextGate == Just "UpwindGate") playerState |> M.withDefault False
+    isNext = playerState.nextGate == Just "UpwindGate"
   in
     renderGate course.upwind course.markRadius now isNext Upwind
 
@@ -80,7 +80,7 @@ renderCourse {playerState,course,now,countdown,wind} =
   let
     forms =
       [ renderBounds course.area
-      , M.map (renderLaylines wind course) playerState |> M.withDefault emptyForm
+      , renderLaylines wind course playerState
       , renderIslands course
       , renderDownwind playerState course now (isStarted countdown)
       , renderUpwind playerState course now

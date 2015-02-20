@@ -70,11 +70,11 @@ object TutorialUpdate {
 }
 
 case class TutorialInput(
-  keyboard: PlayerInput,
+  keyboard: KeyboardInput,
   step: Tutorial.Step,
   window: (Int,Int)
 )
 
 object TutorialInput {
-  def initial = TutorialInput(PlayerInput.initial, Tutorial.InitialStep, (0,0))
+  def initial = TutorialInput(KeyboardInput.initial, Tutorial.InitialStep, (0,0))
 }

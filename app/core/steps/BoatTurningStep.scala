@@ -9,7 +9,7 @@ object BoatTurningStep {
   val autoTack = 0.08
   val fast = 0.1
 
-  def run(previousState: PlayerState, input: PlayerInput, elapsed: Long)(state: PlayerState): PlayerState = {
+  def run(previousState: PlayerState, input: KeyboardInput, elapsed: Long)(state: PlayerState): PlayerState = {
     val lock = input.lock || input.arrows.y > 0
 
     val targetReached = tackTargetReached(state)
@@ -40,7 +40,7 @@ object BoatTurningStep {
     }
   }
 
-  def getTackTarget(state: PlayerState, input: PlayerInput, targetReached: Boolean): Option[Double] = {
+  def getTackTarget(state: PlayerState, input: KeyboardInput, targetReached: Boolean): Option[Double] = {
     if (input.manualTurn) {
       // a manual turn means no tack
       None
@@ -71,7 +71,7 @@ object BoatTurningStep {
     }
   }
 
-  def autoVmgTarget(state: PlayerState, input: PlayerInput): Option[Double] = {
+  def autoVmgTarget(state: PlayerState, input: KeyboardInput): Option[Double] = {
     if (state.crossedGates.nonEmpty && state.isTurning &&
       !input.manualTurn && math.abs(state.deltaToVmg) < state.player.vmgMagnet) {
 
@@ -82,7 +82,7 @@ object BoatTurningStep {
     }
   }
 
-  def getTurn(tackTarget: Option[Double], state: PlayerState, input: PlayerInput, elapsed: Long): Double = {
+  def getTurn(tackTarget: Option[Double], state: PlayerState, input: KeyboardInput, elapsed: Long): Double = {
 
     if (input.manualTurn) {
       val rotation = if (input.subtleTurn) slow else fast

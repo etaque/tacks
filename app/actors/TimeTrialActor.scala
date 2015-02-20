@@ -25,8 +25,8 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   var activeSecond = currentSecond
   var activePoints = Seq.empty[TrackPoint]
 
-  var state = PlayerState.initial(player)
-  var input = PlayerInput.initial
+  var state = OpponentState.initial
+  var input = KeyboardInput.initial
 
   var playerRef: Option[ActorRef] = None
 
@@ -73,7 +73,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
         updateWind()
 
         ref ! raceUpdate
-        ref ! RunStep(state, input, clock, wind, course, started, Nil)
+//        ref ! RunStep(state, input, clock, wind, course, started, Nil)
       }
 
       if (timeIsOver) stopGame()
@@ -87,21 +87,27 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     /**
      * player input coming from websocket through player actor
      */
-    case PlayerUpdate(_, newInput) => {
+    case PlayerUpdate(player, PlayerInput(newState, newInput)) => {
       input = newInput
-    }
-
-    /**
-     * step result coming from player actor
-     * context is updated
-     */
-    case StepResult(prevState, newState) => {
+      val prevState = state
       state = newState
       if (shouldSaveRun) {
         trackPoint(newState)
         if (prevState.crossedGates != newState.crossedGates) updateTally()
       }
     }
+
+//    /**
+//     * step result coming from player actor
+//     * context is updated
+//     */
+//    case StepResult(prevState, newState) => {
+//      state = newState
+//      if (shouldSaveRun) {
+//        trackPoint(newState)
+//        if (prevState.crossedGates != newState.crossedGates) updateTally()
+//      }
+//    }
 
     /**
      * player quit => shutdown actor
@@ -134,7 +140,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     TimeTrialRun.updateTimes(run.id, state.crossedGates, finishTime)
   }
 
-  def trackPoint(state: PlayerState) = {
+  def trackPoint(state: OpponentState) = {
     val p = TrackPoint((clock % 1000).toInt, state.position, state.heading)
     if (currentSecond == activeSecond) {
       activePoints :+= p
@@ -160,20 +166,14 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   }
 
   def raceUpdate = {
-    val id = player.id.stringify
     RaceUpdate(
-      playerId = id,
       now = DateTime.now,
       startTime = Some(startTime),
-      course = None, // already transmitted in initial update
-      playerState = Some(state),
       wind = wind,
       opponents = Nil,
       ghosts = currentGhosts,
       leaderboard = Nil,
-      isMaster = true,
-      watching = false,
-      timeTrial = true
+      isMaster = true
     )
   }
 

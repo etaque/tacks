@@ -67,9 +67,7 @@ formatTimer t showMs =
 
 
 gameTitle : Game.GameState -> String
-gameTitle {countdown,opponents,watchMode} = case countdown of
+gameTitle {countdown,opponents} = case countdown of
   Just c ->
     if c > 0 then formatTimer c False else "Started"
-  Nothing -> case watchMode of
-    Game.Watching _  -> "Waiting..."
-    Game.NotWatching -> "(" ++ toString (1 + length opponents) ++ ") Waiting..."
+  Nothing -> "(" ++ toString (1 + length opponents) ++ ") Waiting..."

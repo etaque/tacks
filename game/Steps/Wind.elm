@@ -63,17 +63,17 @@ gustEffect state wind gust =
     }
 
 
-isShadowedBy : PlayerState -> Float -> PlayerState -> Bool
+isShadowedBy : PlayerState -> Float -> Opponent -> Bool
 isShadowedBy state shadowLength opponent =
-  (distance opponent.position state.position) <= shadowLength &&
+  (distance opponent.state.position state.position) <= shadowLength &&
     let
-      angle = angleBetween opponent.position state.position
-      (min, max) = windShadowSector opponent
+      angle = angleBetween opponent.state.position state.position
+      (min, max) = windShadowSector opponent.state
     in
       inSector min max angle
 
 
-windShadowSector : PlayerState -> (Float,Float)
+windShadowSector : OpponentState -> (Float,Float)
 windShadowSector state =
   let
     d = state.windOrigin + 180 + (state.windAngle / 3)

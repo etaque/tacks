@@ -13,26 +13,29 @@ import Render.Utils
 
 port raceInput : Signal RaceInput
 
+port gameSetup : Game.GameSetup
+
 clock : Signal Float
 clock = inSeconds <~ fps 30
 
 input : Signal GameInput
-input = sampleOn clock <| map5 GameInput
+input = sampleOn clock <| map4 GameInput
   clock
   --chrono
   keyboardInput
   Window.dimensions
   raceInput
-  watcherInput
+
+initialState : Game.GameState
+initialState = Game.defaultGame gameSetup
 
 gameState : Signal Game.GameState
-gameState = foldp Steps.stepGame Game.defaultGame input
+gameState = foldp Steps.stepGame initialState input
 
-port playerOutput : Signal KeyboardInput
-port playerOutput = .keyboardInput <~ input
-
-port watcherOutput : Signal WatcherInput
-port watcherOutput = .watcherInput <~ input
+port playerOutput : Signal PlayerOutput
+port playerOutput = map2 PlayerOutput
+  (.playerState >> Game.asOpponentState <~ gameState)
+  (.keyboardInput <~ input)
 
 port title : Signal String
 port title = Render.Utils.gameTitle <~ gameState

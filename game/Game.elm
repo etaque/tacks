@@ -76,6 +76,7 @@ type alias Player =
 
 type alias PlayerState =
   { player:          Player
+  , time:            Float
   , position:        Point
   , isGrounded:      Bool
   , isTurning:       Bool
@@ -101,6 +102,35 @@ windAngleOnVmg s = if s.windAngle < 0 then -(closestVmgAngle s) else closestVmgA
 headingOnVmg s = ensure360 (s.windOrigin + closestVmgAngle s)
 deltaToVmg s = s.windAngle - windAngleOnVmg s
 
+asOpponentState : PlayerState -> OpponentState
+asOpponentState {time,position,heading,velocity,windAngle,windOrigin,shadowDirection,crossedGates} =
+  { time = time
+  , position = position
+  , heading = heading
+  , velocity = velocity
+  , windAngle = windAngle
+  , windOrigin = windOrigin
+  , shadowDirection = shadowDirection
+  , crossedGates = crossedGates
+  }
+
+
+type alias OpponentState =
+  { time: Float
+  , position: Point
+  , heading: Float
+  , velocity: Float
+  , windAngle: Float
+  , windOrigin: Float
+  , shadowDirection: Float
+  , crossedGates: List Time
+  }
+
+type alias Opponent =
+  { player: Player
+  , state: OpponentState
+  }
+
 type alias PlayerTally = { playerId: String, playerHandle: Maybe String, gates: List Time }
 
 type alias GhostState =
@@ -114,24 +144,27 @@ type alias GhostState =
 type alias Gust = { position : Point, angle: Float, speed: Float, radius: Float }
 type alias Wind = { origin : Float, speed : Float, gusts : List Gust }
 
-type WatchMode = NotWatching | Watching String
 type GameMode = Race | TimeTrial
 
 type alias GameState =
   { wind:        Wind
-  , playerId:    String
-  , playerState: Maybe PlayerState
+  , playerState: PlayerState
   , wake:        List Point
   , center:      Point
-  , opponents:   List PlayerState
+  , opponents:   List Opponent
   , ghosts:      List GhostState
   , course:      Course
   , leaderboard: List PlayerTally
   , now:         Time
   , countdown:   Maybe Time
   , isMaster:    Bool
-  , watchMode:   WatchMode
   , gameMode:    GameMode
+  }
+
+type alias GameSetup =
+  { course: Course
+  , player: Player
+  , timeTrial: Bool
   }
 
 isStarted : Maybe Time -> Bool
@@ -151,9 +184,10 @@ defaultPlayer =
   , vmgMagnet = 0
   }
 
-defaultPlayerState : PlayerState
-defaultPlayerState =
-  { player          = defaultPlayer
+defaultPlayerState : Player -> PlayerState
+defaultPlayerState player =
+  { player          = player
+  , time            = 0
   , position        = (0,0)
   , isGrounded      = False
   , isTurning       = False
@@ -167,7 +201,7 @@ defaultPlayerState =
   , upwindVmg       = defaultVmg
   , shadowDirection = 0
   , trail           = []
-  , controlMode     = ""
+  , controlMode     = "FixedDirection"
   , tackTarget      = Nothing
   , crossedGates    = []
   , nextGate        = Nothing
@@ -177,17 +211,17 @@ defaultPlayerState =
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
 
-defaultCourse : Course
-defaultCourse =
-  { upwind           = defaultGate
-  , downwind         = defaultGate
-  , laps             = 0
-  , markRadius       = 0
-  , islands          = []
-  , area             = { rightTop = (0,0), leftBottom = (0,0) }
-  , windShadowLength = 0
-  , boatWidth        = 0
-  }
+--defaultCourse : Course
+--defaultCourse =
+--  { upwind           = defaultGate
+--  , downwind         = defaultGate
+--  , laps             = 0
+--  , markRadius       = 0
+--  , islands          = []
+--  , area             = { rightTop = (0,0), leftBottom = (0,0) }
+--  , windShadowLength = 0
+--  , boatWidth        = 0
+--  }
 
 defaultWind : Wind
 defaultWind =
@@ -196,22 +230,20 @@ defaultWind =
   , gusts  = []
   }
 
-defaultGame : GameState
-defaultGame =
+defaultGame : GameSetup -> GameState
+defaultGame {course,player,timeTrial} =
   { wind        = defaultWind
-  , playerId    = ""
-  , playerState = Nothing
+  , playerState = defaultPlayerState player
   , center      = (0,0)
   , wake        = []
   , opponents   = []
   , ghosts      = []
-  , course      = defaultCourse
+  , course      = course
   , leaderboard = []
   , now         = 0
   , countdown   = Nothing
   , isMaster    = False
-  , watchMode   = NotWatching
-  , gameMode    = Race
+  , gameMode    = if timeTrial then TimeTrial else Race
   }
 
 getGateMarks : Gate -> (Point,Point)
@@ -226,17 +258,9 @@ findOpponent opponents id =
   let filtered = filter (\ps -> ps.player.id == id) opponents
   in  if isEmpty filtered then Nothing else Just (head filtered)
 
-selfWatching : GameState -> Bool
-selfWatching {watchMode,playerId} =
-  case watchMode of
-    Watching pid -> pid == playerId
-    NotWatching  -> False
-
 isInProgress : GameState -> Bool
 isInProgress {countdown,playerState} =
-  case (countdown, playerState) of
-    (Just c, Just ps) -> c <= 0 && case ps.nextGate of
-      Just _ -> True
-      Nothing -> False
-    _ -> False
+  case countdown of
+    Just c -> c <= 0
+    Nothing -> False
 

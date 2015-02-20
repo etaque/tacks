@@ -59,8 +59,8 @@ class RacesSupervisor extends Actor {
 
     case GetOpenRaces => {
       val racesFuture = mountedRaces.toSeq.map { case (race, master, ref) =>
-        (ref ? GetStatus).mapTo[(Option[DateTime], Seq[PlayerState])].map { case (startTime, players) =>
-          RaceStatus(race, master, startTime, players)
+        (ref ? GetStatus).mapTo[(Option[DateTime], Seq[Opponent])].map { case (startTime, opponents) =>
+          RaceStatus(race, master, startTime, opponents)
         }
       }
       Future.sequence(racesFuture) pipeTo sender

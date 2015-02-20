@@ -14,6 +14,7 @@ import jsmessages.api.JsMessages
 import core.TimeTrialLeaderboard
 import actors.{GetRace, RacesSupervisor}
 import models._
+import models.JsonFormats._
 
 object Application extends Controller with Security {
 
@@ -43,7 +44,6 @@ object Application extends Controller with Security {
   }
 
   implicit val timeout = Timeout(5.seconds)
-  import models.JsonFormats.raceUpdateFormat
 
   def showHelp(implicit request: PlayerRequest[_]): Boolean = {
    request.player match {
@@ -55,8 +55,9 @@ object Application extends Controller with Security {
   def playTimeTrial(timeTrialId: String) = PlayerAction.async() { implicit request =>
     TimeTrial.findById(timeTrialId).map { timeTrial =>
       val wsUrl = routes.WebSockets.timeTrial(timeTrial.idToStr).webSocketURL()
-      val initialInput = Json.toJson(RaceUpdate.initial(request.player, timeTrial.course, timeTrial = true))
-      Ok(views.html.game(initialInput, wsUrl, showHelp))
+      val initialInput = Json.toJson(RaceUpdate.initial)
+      val gameSetup = Json.toJson(GameSetup(request.player, timeTrial.course, timeTrial = true))
+      Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
     }
   }
 
@@ -65,24 +66,12 @@ object Application extends Controller with Security {
       case None => NotFound
       case Some(race) => {
         val wsUrl = routes.WebSockets.racePlayer(race.idToStr).webSocketURL()
-        val initialInput = Json.toJson(RaceUpdate.initial(request.player, race.course))
-        Ok(views.html.game(initialInput, wsUrl, showHelp))
+        val initialInput = Json.toJson(RaceUpdate.initial)
+        val gameSetup = Json.toJson(GameSetup(request.player, race.course, timeTrial = false))
+        Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
       }
     }
   }
-
-  def watchRace(raceId: String) = PlayerAction.async() { implicit request =>
-    (RacesSupervisor.actorRef ? GetRace(BSONObjectID(raceId))).mapTo[Option[Race]].map {
-      case None => NotFound
-      case Some(race) => {
-        val wsUrl = routes.WebSockets.raceWatcher(race.idToStr).webSocketURL()
-        val initialInput = Json.toJson(RaceUpdate.initial(request.player, race.course, watching = true))
-        Ok(views.html.game(initialInput, wsUrl))
-      }
-    }
-  }
-
-  import models.JsonFormats.tutorialUpdateFormat
 
   def tutorial = PlayerAction() { implicit request =>
     val wsUrl = routes.WebSockets.tutorial().webSocketURL()
