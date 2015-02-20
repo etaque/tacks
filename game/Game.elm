@@ -74,6 +74,10 @@ type alias Player =
   , user: Bool
   }
 
+type ControlMode = FixedAngle | FixedHeading
+
+type GateLocation = DownwindGate | UpwindGate | StartLine
+
 type alias PlayerState =
   { player:          Player
   , time:            Float
@@ -90,10 +94,10 @@ type alias PlayerState =
   , upwindVmg:       Vmg
   , shadowDirection: Float
   , trail:           List Point
-  , controlMode:     String
+  , controlMode:     ControlMode
   , tackTarget:      Maybe Float
   , crossedGates:    List Time
-  , nextGate:        Maybe String
+  , nextGate:        Maybe GateLocation
   }
 
 upwind s = abs s.windAngle < 90
@@ -201,10 +205,10 @@ defaultPlayerState player =
   , upwindVmg       = defaultVmg
   , shadowDirection = 0
   , trail           = []
-  , controlMode     = "FixedDirection"
+  , controlMode     = FixedHeading
   , tackTarget      = Nothing
   , crossedGates    = []
-  , nextGate        = Nothing
+  , nextGate        = Just StartLine
   }
 
 

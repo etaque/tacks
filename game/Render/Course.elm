@@ -20,7 +20,7 @@ renderDownwind playerState course now started =
   let
     isFirstGate = isEmpty playerState.crossedGates
     isLastGate = length playerState.crossedGates == course.laps * 2
-    isNext = playerState.nextGate == Just "DownwindGate"
+    isNext = playerState.nextGate == Just DownwindGate
   in
     if | isFirstGate -> renderStartLine course.downwind course.markRadius started now
        | isLastGate  -> renderFinishLine course.downwind course.markRadius now
@@ -30,7 +30,7 @@ renderDownwind playerState course now started =
 renderUpwind : PlayerState -> Course -> Float -> Form
 renderUpwind playerState course now =
   let
-    isNext = playerState.nextGate == Just "UpwindGate"
+    isNext = playerState.nextGate == Just UpwindGate
   in
     renderGate course.upwind course.markRadius now isNext Upwind
 
@@ -38,9 +38,9 @@ renderUpwind playerState course now =
 renderLaylines : Wind -> Course -> PlayerState -> Form
 renderLaylines wind course playerState =
   case playerState.nextGate of
-    Just "UpwindGate"   -> renderGateLaylines playerState.upwindVmg wind.origin course.area course.upwind
-    Just "DownwindGate" -> renderGateLaylines playerState.downwindVmg wind.origin course.area course.downwind
-    _                   -> emptyForm
+    Just UpwindGate   -> renderGateLaylines playerState.upwindVmg wind.origin course.area course.upwind
+    Just DownwindGate -> renderGateLaylines playerState.downwindVmg wind.origin course.area course.downwind
+    _                 -> emptyForm
 
 
 renderBounds : RaceArea -> Form

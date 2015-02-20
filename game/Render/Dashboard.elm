@@ -149,11 +149,16 @@ getSubStatus ({countdown,isMaster,playerState,course,gameMode} as gameState) =
 getFinishingStatus : GameState -> String
 getFinishingStatus ({course,gameMode,playerState} as gameState) =
   case playerState.nextGate of
-    Nothing -> case gameMode of
-      Race      -> "finished"
-      TimeTrial -> getTimeTrialFinishingStatus gameState playerState
-    Just "StartLine" -> "go!"
-    _                -> getGatesCount course playerState
+    Nothing ->
+      case gameMode of
+        Race ->
+          "finished"
+        TimeTrial ->
+          getTimeTrialFinishingStatus gameState playerState
+    Just StartLine ->
+      "go!"
+    _ ->
+      getGatesCount course playerState
 
 getGatesCount : Course -> PlayerState -> String
 getGatesCount course player =

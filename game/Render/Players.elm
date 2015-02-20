@@ -14,7 +14,6 @@ import Color (..)
 import Graphics.Collage (..)
 import Graphics.Element (..)
 
-import Debug (log)
 
 vmgColorAndShape : PlayerState -> (Color, Shape)
 vmgColorAndShape player =
@@ -55,7 +54,7 @@ renderPlayerAngles player =
       |> traced (solid white)
       |> alpha 0.1
     windAngleText = (toString (abs (round player.windAngle))) ++ "&deg;" |> baseText
-      |> (if player.controlMode == "FixedAngle" then line Under else identity)
+      |> (if player.controlMode == FixedAngle then line Under else identity)
       |> centered |> toForm
       |> move (fromPolar (30, windOriginRadians + pi))
       |> alpha 0.5

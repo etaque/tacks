@@ -16,16 +16,16 @@ gateCrossingStep previousState {course,countdown,now} ({crossedGates,position} a
 
     newCrossedGates = case getNextGate course (L.length crossedGates) of
 
-      Just "StartLine" ->
+      Just StartLine ->
         if | started && gateCrossedFromSouth course.downwind step -> now :: crossedGates
            | otherwise                                            -> crossedGates
 
-      Just "UpwindGate" ->
+      Just UpwindGate ->
         if | gateCrossedFromSouth course.upwind step   -> now :: crossedGates
            | gateCrossedFromSouth course.downwind step -> L.tail crossedGates
            | otherwise                                 -> crossedGates
 
-      Just "DownwindGate" ->
+      Just DownwindGate ->
         if | gateCrossedFromNorth course.downwind step -> now :: crossedGates
            | gateCrossedFromNorth course.upwind step   -> L.tail crossedGates
            | otherwise                                 -> crossedGates
@@ -42,12 +42,12 @@ gateCrossingStep previousState {course,countdown,now} ({crossedGates,position} a
 
 
 
-getNextGate : Course -> Int -> Maybe String
+getNextGate : Course -> Int -> Maybe GateLocation
 getNextGate course crossedGates =
   if | crossedGates == course.laps * 2 + 1 -> Nothing
-     | crossedGates == 0                   -> Just "StartLine"
-     | crossedGates % 2 == 0           -> Just "DownwindGate"
-     | otherwise                           -> Just "UpwindGate"
+     | crossedGates == 0                   -> Just StartLine
+     | crossedGates % 2 == 0               -> Just DownwindGate
+     | otherwise                           -> Just UpwindGate
 
 
 gateCrossedInX : Gate -> Segment -> Bool

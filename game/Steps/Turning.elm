@@ -8,7 +8,6 @@ import Core (..)
 import Maybe as M
 import List as L
 
-
 slow = 0.03
 autoTack = 0.08
 fast = 0.1
@@ -17,7 +16,7 @@ fast = 0.1
 turningStep : Float -> KeyboardInput -> PlayerState -> PlayerState
 turningStep elapsed input state =
   let
-    lock = input.lock || input.arrows.x > 0
+    lock = input.lock || input.arrows.y > 0
 
     targetReached = tackTargetReached state
     tackTarget = getTackTarget state input targetReached
@@ -27,8 +26,8 @@ turningStep elapsed input state =
     windAngle = angleDelta heading state.windOrigin
 
     newControlMode =
-      if | manualTurn input -> "FixedHeading"
-         | lock || targetReached -> "FixedAngle"
+      if | manualTurn input -> FixedHeading
+         | lock || targetReached -> FixedAngle
          | otherwise -> state.controlMode
   in
     { state
@@ -93,11 +92,9 @@ getTurn tackTarget state input elapsed =
 
       Nothing ->
         case state.controlMode of
-          "FixedHeading" ->
+          FixedHeading ->
             -- no tack, fixed heading => no turn
             0
-          "FixedAngle" ->
+          FixedAngle ->
             -- no tack, fixed angle => adapt to wind origin
             ensure360 (state.windOrigin + state.windAngle - state.heading)
-          _ ->
-            0

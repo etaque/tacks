@@ -1434,33 +1434,6 @@ Elm.Core.make = function (_elm) {
                       ,isJust: isJust};
    return _elm.Core.values;
 };
-Elm.Debug = Elm.Debug || {};
-Elm.Debug.make = function (_elm) {
-   "use strict";
-   _elm.Debug = _elm.Debug || {};
-   if (_elm.Debug.values)
-   return _elm.Debug.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   _P = _N.Ports.make(_elm),
-   $moduleName = "Debug",
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Native$Debug = Elm.Native.Debug.make(_elm);
-   var trace = $Native$Debug.tracePath;
-   var watchSummary = $Native$Debug.watchSummary;
-   var watch = $Native$Debug.watch;
-   var crash = $Native$Debug.crash;
-   var log = $Native$Debug.log;
-   _elm.Debug.values = {_op: _op
-                       ,log: log
-                       ,crash: crash
-                       ,watch: watch
-                       ,watchSummary: watchSummary
-                       ,trace: trace};
-   return _elm.Debug.values;
-};
 Elm.Dict = Elm.Dict || {};
 Elm.Dict.make = function (_elm) {
    "use strict";
@@ -2474,7 +2447,7 @@ Elm.Game.make = function (_elm) {
                return _U.cmp(_v2._0,0) < 1;
                case "Nothing": return false;}
             _U.badCase($moduleName,
-            "between lines 263 and 265");
+            "between lines 267 and 269");
          }();
       }();
    };
@@ -2526,30 +2499,6 @@ Elm.Game.make = function (_elm) {
                     ,angle: 0
                     ,speed: 0
                     ,value: 0};
-   var defaultPlayerState = function (player) {
-      return {_: {}
-             ,controlMode: "FixedDirection"
-             ,crossedGates: _L.fromArray([])
-             ,downwindVmg: defaultVmg
-             ,heading: 0
-             ,isGrounded: false
-             ,isTurning: false
-             ,nextGate: $Maybe.Nothing
-             ,player: player
-             ,position: {ctor: "_Tuple2"
-                        ,_0: 0
-                        ,_1: 0}
-             ,shadowDirection: 0
-             ,tackTarget: $Maybe.Nothing
-             ,time: 0
-             ,trail: _L.fromArray([])
-             ,upwindVmg: defaultVmg
-             ,velocity: 0
-             ,vmgValue: 0
-             ,windAngle: 0
-             ,windOrigin: 0
-             ,windSpeed: 0};
-   };
    var isStarted = function (maybeCountdown) {
       return $Maybe.withDefault(false)(A2($Maybe.map,
       function (n) {
@@ -2604,25 +2553,6 @@ Elm.Game.make = function (_elm) {
    };
    var TimeTrial = {ctor: "TimeTrial"};
    var Race = {ctor: "Race"};
-   var defaultGame = function (_v4) {
-      return function () {
-         return {_: {}
-                ,center: {ctor: "_Tuple2"
-                         ,_0: 0
-                         ,_1: 0}
-                ,countdown: $Maybe.Nothing
-                ,course: _v4.course
-                ,gameMode: _v4.timeTrial ? TimeTrial : Race
-                ,ghosts: _L.fromArray([])
-                ,isMaster: false
-                ,leaderboard: _L.fromArray([])
-                ,now: 0
-                ,opponents: _L.fromArray([])
-                ,playerState: defaultPlayerState(_v4.player)
-                ,wake: _L.fromArray([])
-                ,wind: defaultWind};
-      }();
-   };
    var Wind = F3(function (a,b,c) {
       return {_: {}
              ,gusts: c
@@ -2683,17 +2613,17 @@ Elm.Game.make = function (_elm) {
              ,windAngle: e
              ,windOrigin: f};
    });
-   var asOpponentState = function (_v6) {
+   var asOpponentState = function (_v4) {
       return function () {
          return {_: {}
-                ,crossedGates: _v6.crossedGates
-                ,heading: _v6.heading
-                ,position: _v6.position
-                ,shadowDirection: _v6.shadowDirection
-                ,time: _v6.time
-                ,velocity: _v6.velocity
-                ,windAngle: _v6.windAngle
-                ,windOrigin: _v6.windOrigin};
+                ,crossedGates: _v4.crossedGates
+                ,heading: _v4.heading
+                ,position: _v4.position
+                ,shadowDirection: _v4.shadowDirection
+                ,time: _v4.time
+                ,velocity: _v4.velocity
+                ,windAngle: _v4.windAngle
+                ,windOrigin: _v4.windOrigin};
       }();
    };
    var upwind = function (s) {
@@ -2771,6 +2701,54 @@ Elm.Game.make = function (_elm) {
          };
       };
    };
+   var StartLine = {ctor: "StartLine"};
+   var UpwindGate = {ctor: "UpwindGate"};
+   var DownwindGate = {ctor: "DownwindGate"};
+   var FixedHeading = {ctor: "FixedHeading"};
+   var defaultPlayerState = function (player) {
+      return {_: {}
+             ,controlMode: FixedHeading
+             ,crossedGates: _L.fromArray([])
+             ,downwindVmg: defaultVmg
+             ,heading: 0
+             ,isGrounded: false
+             ,isTurning: false
+             ,nextGate: $Maybe.Just(StartLine)
+             ,player: player
+             ,position: {ctor: "_Tuple2"
+                        ,_0: 0
+                        ,_1: 0}
+             ,shadowDirection: 0
+             ,tackTarget: $Maybe.Nothing
+             ,time: 0
+             ,trail: _L.fromArray([])
+             ,upwindVmg: defaultVmg
+             ,velocity: 0
+             ,vmgValue: 0
+             ,windAngle: 0
+             ,windOrigin: 0
+             ,windSpeed: 0};
+   };
+   var defaultGame = function (_v6) {
+      return function () {
+         return {_: {}
+                ,center: {ctor: "_Tuple2"
+                         ,_0: 0
+                         ,_1: 0}
+                ,countdown: $Maybe.Nothing
+                ,course: _v6.course
+                ,gameMode: _v6.timeTrial ? TimeTrial : Race
+                ,ghosts: _L.fromArray([])
+                ,isMaster: false
+                ,leaderboard: _L.fromArray([])
+                ,now: 0
+                ,opponents: _L.fromArray([])
+                ,playerState: defaultPlayerState(_v6.player)
+                ,wake: _L.fromArray([])
+                ,wind: defaultWind};
+      }();
+   };
+   var FixedAngle = {ctor: "FixedAngle"};
    var Player = F7(function (a,
    b,
    c,
@@ -2894,6 +2872,11 @@ Elm.Game.make = function (_elm) {
                       ,Vmg: Vmg
                       ,Course: Course
                       ,Player: Player
+                      ,FixedAngle: FixedAngle
+                      ,FixedHeading: FixedHeading
+                      ,DownwindGate: DownwindGate
+                      ,UpwindGate: UpwindGate
+                      ,StartLine: StartLine
                       ,PlayerState: PlayerState
                       ,upwind: upwind
                       ,closestVmgAngle: closestVmgAngle
@@ -13490,13 +13473,13 @@ Elm.Render.Controls.make = function (_elm) {
          return function () {
             var dims = $Geo.floatify(intDims);
             var downwindHint = _U.eq(_v8.playerState.nextGate,
-            $Maybe.Just("DownwindGate")) ? A4(renderGateHint,
+            $Maybe.Just($Game.DownwindGate)) ? A4(renderGateHint,
             _v8.course.downwind,
             dims,
             _v8.center,
             _v8.now) : $Maybe.Nothing;
             var upwindHint = _U.eq(_v8.playerState.nextGate,
-            $Maybe.Just("UpwindGate")) ? A4(renderGateHint,
+            $Maybe.Just($Game.UpwindGate)) ? A4(renderGateHint,
             _v8.course.upwind,
             dims,
             _v8.center,
@@ -13597,7 +13580,8 @@ Elm.Render.Course.make = function (_elm) {
       return function () {
          var _v2 = playerState.nextGate;
          switch (_v2.ctor)
-         {case "Just": switch (_v2._0)
+         {case "Just":
+            switch (_v2._0.ctor)
               {case "DownwindGate":
                  return A4($Render$Gates.renderGateLaylines,
                    playerState.downwindVmg,
@@ -13619,7 +13603,7 @@ Elm.Render.Course.make = function (_elm) {
    now) {
       return function () {
          var isNext = _U.eq(playerState.nextGate,
-         $Maybe.Just("UpwindGate"));
+         $Maybe.Just($Game.UpwindGate));
          return A5($Render$Gates.renderGate,
          course.upwind,
          course.markRadius,
@@ -13634,7 +13618,7 @@ Elm.Render.Course.make = function (_elm) {
    started) {
       return function () {
          var isNext = _U.eq(playerState.nextGate,
-         $Maybe.Just("DownwindGate"));
+         $Maybe.Just($Game.DownwindGate));
          var isLastGate = _U.eq($List.length(playerState.crossedGates),
          course.laps * 2);
          var isFirstGate = $List.isEmpty(playerState.crossedGates);
@@ -13829,10 +13813,10 @@ Elm.Render.Dashboard.make = function (_elm) {
                           case "Nothing":
                           return "please create an account to save your run";}
                        _U.badCase($moduleName,
-                       "between lines 174 and 176");
+                       "between lines 179 and 181");
                     }();}
                _U.badCase($moduleName,
-               "between lines 164 and 176");
+               "between lines 169 and 181");
             }();
          }();
       }();
@@ -13852,7 +13836,8 @@ Elm.Render.Dashboard.make = function (_elm) {
          return function () {
             var _v14 = _v12.playerState.nextGate;
             switch (_v14.ctor)
-            {case "Just": switch (_v14._0)
+            {case "Just":
+               switch (_v14._0.ctor)
                  {case "StartLine":
                     return "go!";}
                  break;
@@ -13866,7 +13851,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                          _v12,
                          _v12.playerState);}
                     _U.badCase($moduleName,
-                    "between lines 152 and 155");
+                    "between lines 153 and 158");
                  }();}
             return A2(getGatesCount,
             _v12.course,
@@ -14040,7 +14025,7 @@ Elm.Render.Dashboard.make = function (_elm) {
                                  ,topLeft: topLeftElements(gameState)
                                  ,topRight: topRightElements(gameState)};}
          _U.badCase($moduleName,
-         "between lines 242 and 245");
+         "between lines 247 and 250");
       }();
    });
    var BoardLine = F4(function (a,
@@ -14595,7 +14580,7 @@ Elm.Render.Players.make = function (_elm) {
                          _v6._1._1)));}
                     break;}
                _U.badCase($moduleName,
-               "on line 81, column 31 to 86");
+               "on line 80, column 31 to 86");
             }();
          };
          var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
@@ -14633,7 +14618,7 @@ Elm.Render.Players.make = function (_elm) {
                  right)));
               }();}
          _U.badCase($moduleName,
-         "between lines 67 and 71");
+         "between lines 66 and 70");
       }();
    });
    var renderPlayerAngles = function (player) {
@@ -14658,7 +14643,7 @@ Elm.Render.Players.make = function (_elm) {
          var windAngleText = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
                                                                                                    ,_0: 30
                                                                                                    ,_1: windOriginRadians + $Basics.pi}))($Graphics$Collage.toForm($Text.centered((_U.eq(player.controlMode,
-         "FixedAngle") ? $Text.line($Text.Under) : $Basics.identity)($Render$Utils.baseText(A2($Basics._op["++"],
+         $Game.FixedAngle) ? $Text.line($Text.Under) : $Basics.identity)($Render$Utils.baseText(A2($Basics._op["++"],
          $Basics.toString($Basics.abs($Basics.round(player.windAngle))),
          "&deg;")))))));
          return $Graphics$Collage.group(_L.fromArray([windLine
@@ -15329,7 +15314,7 @@ Elm.Steps.make = function (_elm) {
       return function () {
          return centerStep(A2(playerStep,
          _v0.keyboardInput,
-         _v0.delta)(A2(raceInputStep,
+         _v0.delta * 1000)(A2(raceInputStep,
          _v0.raceInput,
          gameState)));
       }();
@@ -15418,10 +15403,10 @@ Elm.Steps.GateCrossing.make = function (_elm) {
    crossedGates) {
       return _U.eq(crossedGates,
       course.laps * 2 + 1) ? $Maybe.Nothing : _U.eq(crossedGates,
-      0) ? $Maybe.Just("StartLine") : _U.eq(A2($Basics._op["%"],
+      0) ? $Maybe.Just($Game.StartLine) : _U.eq(A2($Basics._op["%"],
       crossedGates,
       2),
-      0) ? $Maybe.Just("DownwindGate") : $Maybe.Just("UpwindGate");
+      0) ? $Maybe.Just($Game.DownwindGate) : $Maybe.Just($Game.UpwindGate);
    });
    var gateCrossingStep = F3(function (previousState,
    _v16,
@@ -15438,7 +15423,8 @@ Elm.Steps.GateCrossing.make = function (_elm) {
                   _v16.course,
                   $List.length(_v17.crossedGates));
                   switch (_v20.ctor)
-                  {case "Just": switch (_v20._0)
+                  {case "Just":
+                     switch (_v20._0.ctor)
                        {case "DownwindGate":
                           return A2(gateCrossedFromNorth,
                             _v16.course.downwind,
@@ -15502,7 +15488,6 @@ Elm.Steps.Moving.make = function (_elm) {
    $moduleName = "Steps.Moving",
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $List = Elm.List.make(_elm),
@@ -15577,7 +15562,7 @@ Elm.Steps.Moving.make = function (_elm) {
          var grounded = A2(isGrounded,
          nextPosition,
          course);
-         var position = $Debug.log("position: ")(grounded ? state.position : nextPosition);
+         var position = grounded ? state.position : nextPosition;
          var trail = A2($List.take,
          20,
          A2($List._op["::"],
@@ -15637,7 +15622,7 @@ Elm.Steps.Turning.make = function (_elm) {
               state,
               input);}
          _U.badCase($moduleName,
-         "between lines 56 and 62");
+         "between lines 55 and 61");
       }();
    });
    var tackTargetReached = function (state) {
@@ -15672,14 +15657,15 @@ Elm.Steps.Turning.make = function (_elm) {
             case "Nothing":
             return function () {
                  var _v4 = state.controlMode;
-                 switch (_v4)
+                 switch (_v4.ctor)
                  {case "FixedAngle":
                     return $Geo.ensure360(state.windOrigin + state.windAngle - state.heading);
                     case "FixedHeading": return 0;}
-                 return 0;
+                 _U.badCase($moduleName,
+                 "between lines 94 and 100");
               }();}
          _U.badCase($moduleName,
-         "between lines 81 and 103");
+         "between lines 80 and 100");
       }();
    });
    var turningStep = F3(function (elapsed,
@@ -15700,9 +15686,9 @@ Elm.Steps.Turning.make = function (_elm) {
          var windAngle = A2($Geo.angleDelta,
          heading,
          state.windOrigin);
-         var lock = input.lock || _U.cmp(input.arrows.x,
+         var lock = input.lock || _U.cmp(input.arrows.y,
          0) > 0;
-         var newControlMode = $Inputs.manualTurn(input) ? "FixedHeading" : lock || targetReached ? "FixedAngle" : state.controlMode;
+         var newControlMode = $Inputs.manualTurn(input) ? $Game.FixedHeading : lock || targetReached ? $Game.FixedAngle : state.controlMode;
          return _U.replace([["heading"
                             ,heading]
                            ,["windAngle",windAngle]

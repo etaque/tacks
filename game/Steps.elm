@@ -13,7 +13,6 @@ import Steps.Wind (windStep)
 
 import Maybe as M
 
-
 centerStep : GameState -> GameState
 centerStep gameState =
   let newCenter = gameState.playerState.position
@@ -47,5 +46,5 @@ playerStep keyboardInput elapsed gameState =
 stepGame : GameInput -> GameState -> GameState
 stepGame {raceInput, delta, windowInput, keyboardInput} gameState =
   raceInputStep raceInput gameState
-    |> playerStep keyboardInput delta
+    |> playerStep keyboardInput (delta * 1000)
     |> centerStep
