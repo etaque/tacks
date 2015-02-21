@@ -61,7 +61,7 @@ getPlayerEntries {opponents,playerState} =
 getLeaderboardLine : PlayerTally -> Int -> PlayerTally -> Element
 getLeaderboardLine leaderTally position tally =
   let
-    delta = if length tally.gates == length leaderTally.gates
+    delta = if length tally.gates == length leaderTally.gates && not (isEmpty tally.gates)
       then Just (head tally.gates - head leaderTally.gates)
       else Nothing
     line =
@@ -75,14 +75,11 @@ getLeaderboardLine leaderTally position tally =
 
 getLeaderboard : GameState -> Element
 getLeaderboard {leaderboard,playerState} =
-  if isEmpty leaderboard then
-    empty
-  else
-    let
-      leader = head leaderboard
-    in
-      indexedMap (getLeaderboardLine leader) leaderboard
-        |> flow down
+  let
+    showLeader leader =
+      indexedMap (getLeaderboardLine leader) leaderboard |> flow down
+  in
+    M.map showLeader (headMaybe leaderboard) |> M.withDefault empty
 
 getBoard : GameState -> Element
 getBoard gameState =
@@ -109,11 +106,14 @@ getMainStatus ({countdown, gameMode, playerState} as gameState) =
 
 getFinishTime : List Float -> Float
 getFinishTime gates =
-  let
-    finish = head gates
-    start = head (reverse gates)
-  in
-    finish - start
+  if isEmpty gates then
+    0
+  else
+    let
+      finish = head gates
+      start = head (reverse gates)
+    in
+      finish - start
 
 
 getTimer : GameState -> String
@@ -169,12 +169,16 @@ getTimeTrialFinishingStatus {playerState,ghosts} {player,crossedGates} =
   case findPlayerGhost playerState.player.id ghosts of
     Just playerGhost ->
       let
-        previousTime = head playerGhost.gates
-        newTime = head crossedGates
+        previousTimeMaybe = headMaybe playerGhost.gates
+        newTimeMaybe = headMaybe crossedGates
       in
-        if newTime < previousTime
-          then toString (newTime - previousTime) ++ "ms\nnew best time!"
-          else "+" ++ toString (newTime - previousTime) ++ "ms\ntry again?"
+        case (previousTimeMaybe, newTimeMaybe) of
+          (Just previousTime, Just newTime) ->
+            if newTime < previousTime
+              then toString (newTime - previousTime) ++ "ms\nnew best time!"
+              else "+" ++ toString (newTime - previousTime) ++ "ms\ntry again?"
+          _ ->
+            ""
     Nothing ->
       case player.handle of
         Just _ -> "you did it!"

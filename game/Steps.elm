@@ -30,17 +30,22 @@ raceInputStep raceInput gameState =
                     countdown <- M.map (\st -> st - now) startTime,
                     isMaster <- isMaster }
 
+playerTimeStep : Float -> PlayerState -> PlayerState
+playerTimeStep elapsed state =
+  { state | time <- state.time + elapsed }
+
 playerStep : KeyboardInput -> Float -> GameState -> GameState
 playerStep keyboardInput elapsed gameState =
   let
-    newPlayerState =
+    playerState =
       turningStep elapsed keyboardInput gameState.playerState
         |> windStep gameState
         |> vmgStep
         |> movingStep elapsed gameState.course
         |> gateCrossingStep gameState.playerState gameState
+        |> playerTimeStep elapsed
   in
-    { gameState | playerState <- newPlayerState }
+    { gameState | playerState <- playerState }
 
 
 stepGame : GameInput -> GameState -> GameState
