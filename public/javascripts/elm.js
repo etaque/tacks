@@ -2574,7 +2574,7 @@ Elm.Game.make = function (_elm) {
                                                           ,now: i
                                                           ,opponents: e
                                                           ,playerState: b
-                                                          ,rtd: p
+                                                          ,roundTripDelay: p
                                                           ,serverNow: j
                                                           ,startTime: k
                                                           ,wake: c
@@ -2792,7 +2792,7 @@ Elm.Game.make = function (_elm) {
                 ,playerState: A2(defaultPlayerState,
                 _v10.player,
                 _v10.now)
-                ,rtd: 0
+                ,roundTripDelay: 0
                 ,serverNow: _v10.now
                 ,startTime: $Maybe.Nothing
                 ,wake: _L.fromArray([])
@@ -15344,9 +15344,13 @@ Elm.Steps.make = function (_elm) {
    _P = _N.Ports.make(_elm),
    $moduleName = "Steps",
    $Basics = Elm.Basics.make(_elm),
+   $Core = Elm.Core.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game = Elm.Game.make(_elm),
+   $Geo = Elm.Geo.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
    $Steps$GateCrossing = Elm.Steps.GateCrossing.make(_elm),
    $Steps$Moving = Elm.Steps.Moving.make(_elm),
    $Steps$Turning = Elm.Steps.Turning.make(_elm),
@@ -15375,41 +15379,105 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    });
+   var moveOpponentState = F2(function (state,
+   delta) {
+      return function () {
+         var position = A4($Geo.movePoint,
+         state.position,
+         delta,
+         state.velocity,
+         state.heading);
+         return _U.replace([["position"
+                            ,position]],
+         state);
+      }();
+   });
+   var updateOpponent = F3(function (previousMaybe,
+   delta,
+   opponent) {
+      return function () {
+         switch (previousMaybe.ctor)
+         {case "Just":
+            return _U.eq(previousMaybe._0.state.time,
+              opponent.state.time) ? _U.replace([["state"
+                                                 ,A2(moveOpponentState,
+                                                 opponent.state,
+                                                 delta)]],
+              opponent) : opponent;
+            case "Nothing":
+            return opponent;}
+         _U.badCase($moduleName,
+         "between lines 34 and 41");
+      }();
+   });
+   var updateOpponents = F3(function (previousOpponents,
+   delta,
+   newOpponents) {
+      return function () {
+         var findPrevious = function (o) {
+            return A2($Core.find,
+            function (po) {
+               return _U.eq(po.player.id,
+               o.player.id);
+            },
+            previousOpponents);
+         };
+         return A2($List.map,
+         function (o) {
+            return A3(updateOpponent,
+            findPrevious(o),
+            delta,
+            o);
+         },
+         newOpponents);
+      }();
+   });
    var raceInputStep = F3(function (raceInput,
-   _v0,
-   gameState) {
+   _v2,
+   _v3) {
       return function () {
          return function () {
-            var _ = A2($Debug.log,
-            "rtd",
-            gameState.rtd);
-            var $ = raceInput,
-            serverNow = $.serverNow,
-            startTime = $.startTime,
-            opponents = $.opponents,
-            ghosts = $.ghosts,
-            wind = $.wind,
-            leaderboard = $.leaderboard,
-            isMaster = $.isMaster,
-            initial = $.initial,
-            clientTime = $.clientTime;
-            var stalled = _U.eq(serverNow,
-            gameState.serverNow);
-            var rtd = stalled ? gameState.rtd : _v0.time - clientTime;
-            var now = gameState.live ? stalled ? serverNow + _v0.delta : serverNow + rtd / 2 : serverNow;
-            return _U.replace([["opponents"
-                               ,opponents]
-                              ,["ghosts",ghosts]
-                              ,["wind",wind]
-                              ,["leaderboard",leaderboard]
-                              ,["serverNow",serverNow]
-                              ,["now",now]
-                              ,["startTime",startTime]
-                              ,["isMaster",isMaster]
-                              ,["live",$Basics.not(initial)]
-                              ,["localTime",_v0.time]
-                              ,["rtd",_v0.time - clientTime]],
-            gameState);
+            return function () {
+               var $ = raceInput,
+               serverNow = $.serverNow,
+               startTime = $.startTime,
+               opponents = $.opponents,
+               ghosts = $.ghosts,
+               wind = $.wind,
+               leaderboard = $.leaderboard,
+               isMaster = $.isMaster,
+               initial = $.initial,
+               clientTime = $.clientTime;
+               var stalled = _U.eq(serverNow,
+               _v3.serverNow);
+               var roundTripDelay = stalled ? _v3.roundTripDelay : _v2.time - clientTime;
+               var now = _v3.live ? _v3.now + _v2.delta : serverNow;
+               var newPlayerState = _U.replace([["time"
+                                                ,now]],
+               _v3.playerState);
+               var _ = A2($Debug.log,
+               "diff",
+               now - serverNow);
+               var updatedOpponents = A3(updateOpponents,
+               _v3.opponents,
+               _v2.delta,
+               opponents);
+               return _U.replace([["opponents"
+                                  ,updatedOpponents]
+                                 ,["ghosts",ghosts]
+                                 ,["wind",wind]
+                                 ,["leaderboard",leaderboard]
+                                 ,["serverNow",serverNow]
+                                 ,["now",now]
+                                 ,["playerState",newPlayerState]
+                                 ,["startTime",startTime]
+                                 ,["isMaster",isMaster]
+                                 ,["live",$Basics.not(initial)]
+                                 ,["localTime",_v2.time]
+                                 ,["roundTripDelay"
+                                  ,_v2.time - clientTime]],
+               _v3);
+            }();
          }();
       }();
    });
@@ -15421,19 +15489,22 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    };
-   var stepGame = F2(function (_v2,
+   var stepGame = F2(function (_v6,
    gameState) {
       return function () {
          return centerStep(A2(playerStep,
-         _v2.keyboardInput,
-         _v2.clock.delta)(A3(raceInputStep,
-         _v2.raceInput,
-         _v2.clock,
+         _v6.keyboardInput,
+         _v6.clock.delta)(A3(raceInputStep,
+         _v6.raceInput,
+         _v6.clock,
          gameState)));
       }();
    });
    _elm.Steps.values = {_op: _op
                        ,centerStep: centerStep
+                       ,moveOpponentState: moveOpponentState
+                       ,updateOpponent: updateOpponent
+                       ,updateOpponents: updateOpponents
                        ,raceInputStep: raceInputStep
                        ,playerTimeStep: playerTimeStep
                        ,playerStep: playerStep

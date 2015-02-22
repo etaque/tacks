@@ -12,14 +12,43 @@ import Steps.Vmg (vmgStep)
 import Steps.Wind (windStep)
 
 import Maybe as M
+import List as L
+import Debug
 
 centerStep : GameState -> GameState
 centerStep gameState =
   let newCenter = gameState.playerState.position
   in  { gameState | center <- newCenter }
 
+
+moveOpponentState : OpponentState -> Float -> OpponentState
+moveOpponentState state delta =
+  let
+    position = movePoint state.position delta state.velocity state.heading
+  in
+    { state | position <- position }
+
+
+updateOpponent : Maybe Opponent -> Float -> Opponent -> Opponent
+updateOpponent previousMaybe delta opponent =
+  case previousMaybe of
+    Just previous ->
+      if previous.state.time == opponent.state.time then
+        { opponent | state <- moveOpponentState opponent.state delta }
+      else
+        opponent
+    Nothing ->
+      opponent
+
+updateOpponents : List Opponent -> Float -> List Opponent -> List Opponent
+updateOpponents previousOpponents delta newOpponents =
+  let
+    findPrevious o = find (\po -> po.player.id == o.player.id) previousOpponents
+  in
+    L.map (\o -> updateOpponent (findPrevious o) delta o) newOpponents
+
 raceInputStep : RaceInput -> Clock -> GameState -> GameState
-raceInputStep raceInput {delta,time} gameState =
+raceInputStep raceInput {delta,time} ({playerState} as gameState) =
   let
     { serverNow, startTime, opponents, ghosts, wind, leaderboard, isMaster, initial, clientTime } = raceInput
 
@@ -31,25 +60,27 @@ raceInputStep raceInput {delta,time} gameState =
       time - clientTime
 
     now = if gameState.live then
-      if stalled then -- simulate with local delta
-        serverNow + delta
-      else -- apply round trip delay
-        serverNow + (roundTripDelay / 2)
+      gameState.now + delta
     else
       serverNow
+
+    updatedOpponents = updateOpponents gameState.opponents delta opponents
+
+    newPlayerState = { playerState | time <- now }
   in
     { gameState
-      | opponents <- opponents
+      | opponents <- updatedOpponents
       , ghosts <- ghosts
       , wind <- wind
       , leaderboard <- leaderboard
       , serverNow <- serverNow
       , now <- now
+      , playerState <- newPlayerState
       , startTime <- startTime
       , isMaster <- isMaster
       , live <- not initial
       , localTime <- time
-      , roundTripDelay <- time - clientTime
+      , roundTripDelay <- roundTripDelay
     }
 
 playerTimeStep : Float -> PlayerState -> PlayerState
