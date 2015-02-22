@@ -9,24 +9,25 @@ import List as L
 
 
 gateCrossingStep : PlayerState -> GameState -> PlayerState -> PlayerState
-gateCrossingStep previousState {course,countdown,now} ({crossedGates,position} as state) =
+gateCrossingStep previousState ({course} as gameState) ({crossedGates,position} as state) =
   let
     step = (previousState.position, position)
-    started = isStarted countdown
+    started = isStarted gameState
+    t = raceTime gameState
 
     newCrossedGates = case getNextGate course (L.length crossedGates) of
 
       Just StartLine ->
-        if | started && gateCrossedFromSouth course.downwind step -> now :: crossedGates
+        if | started && gateCrossedFromSouth course.downwind step -> t :: crossedGates
            | otherwise                                            -> crossedGates
 
       Just UpwindGate ->
-        if | gateCrossedFromSouth course.upwind step   -> now :: crossedGates
+        if | gateCrossedFromSouth course.upwind step   -> t :: crossedGates
            | gateCrossedFromSouth course.downwind step -> L.tail crossedGates
            | otherwise                                 -> crossedGates
 
       Just DownwindGate ->
-        if | gateCrossedFromNorth course.downwind step -> now :: crossedGates
+        if | gateCrossedFromNorth course.downwind step -> t :: crossedGates
            | gateCrossedFromNorth course.upwind step   -> L.tail crossedGates
            | otherwise                                 -> crossedGates
 

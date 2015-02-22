@@ -97,45 +97,37 @@ getHelp gameState =
 -- Main status (big font size)
 
 getMainStatus : GameState -> Element
-getMainStatus ({countdown, gameMode, playerState} as gameState) =
+getMainStatus ({gameMode, playerState} as gameState) =
   let
-    op = if isInProgress gameState then 0.5 else 1
+    op = if isStarted gameState then 0.5 else 1
     s = getTimer gameState
   in
     bigText s |> centered |> opacity op
 
-getFinishTime : List Float -> Float
-getFinishTime gates =
-  if isEmpty gates then
-    0
-  else
-    let
-      finish = head gates
-      start = head (reverse gates)
-    in
-      finish - start
-
 
 getTimer : GameState -> String
-getTimer {countdown, playerState} =
-  case countdown of
-    Just c ->
+getTimer {startTime, now, playerState} =
+  case startTime of
+    Just t ->
       let
-        t = if isNothing playerState.nextGate then getFinishTime playerState.crossedGates else c
+        timer =
+          if isNothing playerState.nextGate then
+            M.withDefault 0 (headMaybe playerState.crossedGates)
+          else
+            t - now
       in
-        formatTimer t (isNothing playerState.nextGate)
+        formatTimer timer (isNothing playerState.nextGate)
     Nothing -> "start pending"
 
 
 -- Sub status (normal font size)
 
 getSubStatus : GameState -> Element
-getSubStatus ({countdown,isMaster,playerState,course,gameMode} as gameState) =
+getSubStatus ({startTime,now,isMaster,playerState,course,gameMode} as gameState) =
   let
-    op = 1
-    s = case countdown of
-      Just c ->
-        if c > 0
+    s = case startTime of
+      Just t ->
+        if t > now
           then "be ready"
           else getFinishingStatus gameState
       Nothing ->
@@ -143,7 +135,7 @@ getSubStatus ({countdown,isMaster,playerState,course,gameMode} as gameState) =
           then startCountdownMessage
           else "" -- start pending
   in
-    baseText s |> centered |> opacity op
+    baseText s |> centered
 
 
 getFinishingStatus : GameState -> String

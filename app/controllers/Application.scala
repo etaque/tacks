@@ -10,6 +10,7 @@ import akka.util.Timeout
 import akka.pattern.ask
 import reactivemongo.bson.BSONObjectID
 import jsmessages.api.JsMessages
+import org.joda.time.DateTime
 
 import core.TimeTrialLeaderboard
 import actors.{GetRace, RacesSupervisor}
@@ -54,9 +55,10 @@ object Application extends Controller with Security {
 
   def playTimeTrial(timeTrialId: String) = PlayerAction.async() { implicit request =>
     TimeTrial.findById(timeTrialId).map { timeTrial =>
-      val wsUrl = routes.WebSockets.timeTrial(timeTrial.idToStr).webSocketURL()
+      val now = DateTime.now
+      val wsUrl = routes.WebSockets.timeTrial(timeTrial.idToStr, now.getMillis).webSocketURL()
       val initialInput = Json.toJson(RaceUpdate.initial)
-      val gameSetup = Json.toJson(GameSetup(request.player, timeTrial.course, timeTrial = true))
+      val gameSetup = Json.toJson(GameSetup(now, request.player, timeTrial.course, timeTrial = true))
       Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
     }
   }
@@ -67,7 +69,7 @@ object Application extends Controller with Security {
       case Some(race) => {
         val wsUrl = routes.WebSockets.racePlayer(race.idToStr).webSocketURL()
         val initialInput = Json.toJson(RaceUpdate.initial)
-        val gameSetup = Json.toJson(GameSetup(request.player, race.course, timeTrial = false))
+        val gameSetup = Json.toJson(GameSetup(DateTime.now, request.player, race.course, timeTrial = false))
         Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
       }
     }

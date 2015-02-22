@@ -24,7 +24,7 @@ object WebSockets extends Controller with Security {
   implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
-  def timeTrial(timeTrialId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+  def timeTrial(timeTrialId: String, time: Long) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
       timeTrial <- TimeTrial.findById(timeTrialId)
@@ -32,7 +32,7 @@ object WebSockets extends Controller with Security {
         timeTrialId = timeTrial.id,
         playerId = player.id,
         playerHandle = player.handleOpt,
-        time = DateTime.now
+        time = new DateTime(time)
       )
       ghostRuns <- TimeTrialRun.findGhosts(timeTrial, run)
       timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]

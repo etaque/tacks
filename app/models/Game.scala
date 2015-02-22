@@ -105,7 +105,7 @@ case class Opponent(
   player: Player
 )
 
-case class PlayerInput(state: OpponentState, input: KeyboardInput)
+case class PlayerInput(state: OpponentState, input: KeyboardInput, localTime: Long)
 case class PlayerUpdate(player: Player, playerInput: PlayerInput)
 
 case class GhostRun(
@@ -128,19 +128,22 @@ object GhostState {
 }
 
 case class GameSetup(
+  now: DateTime,
   player: Player,
   course: Course,
   timeTrial: Boolean
 )
 
 case class RaceUpdate(
-  now: DateTime,
+  serverNow: DateTime,
   startTime: Option[DateTime],
   wind: Wind,
   opponents: Seq[Opponent] = Nil,
   ghosts: Seq[GhostState] = Nil,
   leaderboard: Seq[PlayerTally] = Nil,
-  isMaster: Boolean = false
+  isMaster: Boolean = false,
+  initial: Boolean = false,
+  clientTime: Long = 0
 )
 
 object RaceUpdate {
@@ -148,7 +151,8 @@ object RaceUpdate {
     RaceUpdate(
       DateTime.now,
       startTime = None,
-      wind = Wind.default
+      wind = Wind.default,
+      initial = true
     )
 }
 

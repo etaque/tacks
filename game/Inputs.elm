@@ -33,17 +33,24 @@ keyboardInput = map5 KeyboardInput
 
 
 type alias RaceInput =
-  { now:         Time
+  { serverNow:   Time
   , startTime:   Maybe Time
   , wind:        Game.Wind
   , opponents:   List Game.Opponent
   , ghosts:      List Game.GhostState
   , leaderboard: List Game.PlayerTally
   , isMaster:    Bool
+  , initial:     Bool
+  , clientTime:  Time
+  }
+
+type alias Clock =
+  { delta: Float
+  , time: Float
   }
 
 type alias GameInput =
-  { delta:         Float
+  { clock:         Clock
   , keyboardInput: KeyboardInput
   , windowInput:   (Int,Int)
   , raceInput:     RaceInput
@@ -52,4 +59,5 @@ type alias GameInput =
 type alias PlayerOutput =
   { state: Game.OpponentState
   , input: KeyboardInput
+  , localTime: Float
   }

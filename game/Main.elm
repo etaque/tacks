@@ -15,8 +15,8 @@ port raceInput : Signal RaceInput
 
 port gameSetup : Game.GameSetup
 
-clock : Signal Float
-clock = inSeconds <~ fps 30
+clock : Signal Clock
+clock = map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
 
 input : Signal GameInput
 input = sampleOn clock <| map4 GameInput
@@ -33,9 +33,10 @@ gameState : Signal Game.GameState
 gameState = foldp Steps.stepGame initialState input
 
 port playerOutput : Signal PlayerOutput
-port playerOutput = map2 PlayerOutput
+port playerOutput = map3 PlayerOutput
   (.playerState >> Game.asOpponentState <~ gameState)
   (.keyboardInput <~ input)
+  (.localTime <~ gameState)
 
 port title : Signal String
 port title = Render.Utils.gameTitle <~ gameState

@@ -64,49 +64,26 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
 
     /**
      * game heartbeat:
-     *  - update wind (origin, speed and gusts positions)
-     *  - send a race update to watchers actors for websocket transmission
-     *  - send a race update to players actor for websocket transmission
-     *  - tell player actor to run step
+     * update wind (origin, speed and gusts positions)
      */
     case FrameTick => {
-
       updateWind()
-
-      players.values.foreach {
-        case PlayerContext(player, input, state, ref) => {
-          ref ! raceUpdateForPlayer(player)
-//          ref ! RunStep(state, input, clock, wind, course, started, opponentsTo(player.id.stringify))
-        }
-      }
     }
 
     /**
-     * player input coming from websocket through player actor
+     * player update coming from websocket through player actor
      * context is updated, race started if requested
      */
-    case PlayerUpdate(player, PlayerInput(state, input)) => {
+    case PlayerUpdate(player, PlayerInput(state, input, clientTime)) => {
       val id = player.id.stringify
 
       players.get(id).foreach { context =>
         if (input.startCountdown) startCountdown(byPlayerId = player.id)
         players += (id -> context.copy(input = input, state = state))
         if (context.state.crossedGates != state.crossedGates) updateTally()
+        context.ref ! raceUpdateForPlayer(player, clientTime)
       }
     }
-
-//    /**
-//     * step result coming from player actor
-//     * context is updated
-//     */
-//    case StepResult(prevState, newState) => {
-//      val id = newState.player.id.stringify
-//
-//      players.get(id).foreach { context =>
-//        players += (id -> context.copy(state = newState))
-//        if (prevState.crossedGates != newState.crossedGates) updateTally()
-//      }
-//    }
 
     /**
      * race status, for live center
@@ -172,14 +149,15 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
     players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
   }
 
-  private def raceUpdateForPlayer(player: Player) = {
+  private def raceUpdateForPlayer(player: Player, clientTime: Long) = {
     RaceUpdate(
-      now = DateTime.now,
+      serverNow = DateTime.now,
       startTime = startTime,
       wind = wind,
       opponents = opponentsTo(player.id.stringify),
       leaderboard = leaderboard,
-      isMaster = master.exists(_.id == player.id)
+      isMaster = master.exists(_.id == player.id),
+      clientTime = clientTime
     )
   }
 

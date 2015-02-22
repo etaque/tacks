@@ -160,19 +160,21 @@ type alias GameState =
   , course:      Course
   , leaderboard: List PlayerTally
   , now:         Time
-  , countdown:   Maybe Time
+  , serverNow:   Time
+  , startTime:   Maybe Time
   , isMaster:    Bool
   , gameMode:    GameMode
+  , live:        Bool
+  , localTime:   Time
+  , roundTripDelay: Float
   }
 
 type alias GameSetup =
-  { course: Course
+  { now: Time
+  , course: Course
   , player: Player
   , timeTrial: Bool
   }
-
-isStarted : Maybe Time -> Bool
-isStarted maybeCountdown = M.map (\n -> n <= 0) maybeCountdown |> M.withDefault False
 
 defaultVmg : Vmg
 defaultVmg = { angle = 0, speed = 0, value = 0}
@@ -188,10 +190,10 @@ defaultPlayer =
   , vmgMagnet = 0
   }
 
-defaultPlayerState : Player -> PlayerState
-defaultPlayerState player =
+defaultPlayerState : Player -> Float -> PlayerState
+defaultPlayerState player now =
   { player          = player
-  , time            = 0
+  , time            = now
   , position        = (0,0)
   , isGrounded      = False
   , isTurning       = False
@@ -235,19 +237,23 @@ defaultWind =
   }
 
 defaultGame : GameSetup -> GameState
-defaultGame {course,player,timeTrial} =
+defaultGame {now,course,player,timeTrial} =
   { wind        = defaultWind
-  , playerState = defaultPlayerState player
+  , playerState = defaultPlayerState player now
   , center      = (0,0)
   , wake        = []
   , opponents   = []
   , ghosts      = []
   , course      = course
   , leaderboard = []
-  , now         = 0
-  , countdown   = Nothing
+  , now         = now
+  , serverNow   = now
+  , startTime   = Nothing
   , isMaster    = False
   , gameMode    = if timeTrial then TimeTrial else Race
+  , live        = False
+  , localTime   = 0
+  , roundTripDelay = 0
   }
 
 getGateMarks : Gate -> (Point,Point)
@@ -262,9 +268,18 @@ findOpponent opponents id =
   let filtered = filter (\ps -> ps.player.id == id) opponents
   in  if isEmpty filtered then Nothing else Just (head filtered)
 
-isInProgress : GameState -> Bool
-isInProgress {countdown,playerState} =
-  case countdown of
-    Just c -> c <= 0
+raceTime : GameState -> Float
+raceTime {now,startTime} =
+  case startTime of
+    Just t -> now - t
+    Nothing -> 0
+
+isStarted : GameState -> Bool
+isStarted {now,startTime} =
+  case startTime of
+    Just t -> now >= t
     Nothing -> False
+
+--isStarted : Maybe Time -> Bool
+--isStarted maybeCountdown = M.map (\n -> n <= 0) maybeCountdown |> M.withDefault False
 

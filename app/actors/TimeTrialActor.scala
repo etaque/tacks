@@ -15,7 +15,7 @@ case class SetGhostRuns(ghostRuns: Seq[GhostRun])
 class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extends Actor with ManageWind {
 
   val id = trial.id
-  val startTime = DateTime.now.plusSeconds(trial.countdownSeconds)
+  val startTime = run.time.plusSeconds(trial.countdownSeconds)
   val startScheduled = true
   val course = trial.course
 
@@ -64,16 +64,11 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
     /**
      * game heartbeat:
-     *  - update wind (origin, speed and gusts positions)
-     *  - send a race update to players actor for websocket transmission
-     *  - tell player actor to run step
+     * update wind (origin, speed and gusts positions)
      */
     case FrameTick => {
       playerRef.foreach { ref =>
         updateWind()
-
-        ref ! raceUpdate
-//        ref ! RunStep(state, input, clock, wind, course, started, Nil)
       }
 
       if (timeIsOver) stopGame()
@@ -85,29 +80,23 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     case SpawnGust => generateGust()
 
     /**
-     * player input coming from websocket through player actor
+     * player update coming from websocket through player actor
+     * send a race update to player actor for websocket transmission
      */
-    case PlayerUpdate(player, PlayerInput(newState, newInput)) => {
+    case PlayerUpdate(_, PlayerInput(newState, newInput, clientTime)) => {
       input = newInput
       val prevState = state
       state = newState
+
+      playerRef.foreach { ref =>
+        ref ! raceUpdate(clientTime)
+      }
+
       if (shouldSaveRun) {
         trackPoint(newState)
         if (prevState.crossedGates != newState.crossedGates) updateTally()
       }
     }
-
-//    /**
-//     * step result coming from player actor
-//     * context is updated
-//     */
-//    case StepResult(prevState, newState) => {
-//      state = newState
-//      if (shouldSaveRun) {
-//        trackPoint(newState)
-//        if (prevState.crossedGates != newState.crossedGates) updateTally()
-//      }
-//    }
 
     /**
      * player quit => shutdown actor
@@ -165,15 +154,16 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     }.toSeq
   }
 
-  def raceUpdate = {
+  def raceUpdate(clientTime: Long) = {
     RaceUpdate(
-      now = DateTime.now,
+      serverNow = DateTime.now,
       startTime = Some(startTime),
       wind = wind,
       opponents = Nil,
       ghosts = currentGhosts,
       leaderboard = Nil,
-      isMaster = true
+      isMaster = true,
+      clientTime = clientTime
     )
   }
 
