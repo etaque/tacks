@@ -15463,7 +15463,6 @@ Elm.Steps.make = function (_elm) {
    $moduleName = "Steps",
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -15525,7 +15524,7 @@ Elm.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 117 and 124");
+         "between lines 114 and 121");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -15568,7 +15567,7 @@ Elm.Steps.make = function (_elm) {
                var stalled = _U.eq(serverNow,
                _v3.serverNow);
                var roundTripDelay = stalled ? _v3.roundTripDelay : _v2.time - clientTime;
-               var now = initial ? serverNow : _v3.now + _v2.delta;
+               var now = _v3.live ? _v3.now + _v2.delta : serverNow;
                var newPlayerState = _U.replace([["time"
                                                 ,now]],
                _v3.playerState);
@@ -15654,9 +15653,6 @@ Elm.Steps.make = function (_elm) {
                switch (_v14.ctor)
                {case "Just":
                   return function () {
-                       var _ = A2($Debug.log,
-                       "clockSeconds",
-                       clockSeconds);
                        var cts = _v12.creationTime / 1000;
                        var seed = clockSeconds * cts + cts;
                        var position = {ctor: "_Tuple2"
@@ -15672,9 +15668,6 @@ Elm.Steps.make = function (_elm) {
                                   ,radius: 0
                                   ,spawnedAt: clock
                                   ,speed: _v14._0.speed};
-                       var _ = A2($Debug.log,
-                       "newGust",
-                       gust);
                        var newGusts = A2($List._op["::"],
                        gust,
                        _v12.wind.gusts);
@@ -15684,16 +15677,13 @@ Elm.Steps.make = function (_elm) {
                                                  ,_v12.wind.gustCounter + 1]
                                                 ,["lastGustTime",clock]],
                        _v12.wind);
-                       var _ = A2($Debug.log,
-                       "gustDef",
-                       _v14._0);
                        return _U.replace([["wind"
                                           ,newWind]],
                        _v12);
                     }();
                   case "Nothing": return _v12;}
                _U.badCase($moduleName,
-               "between lines 49 and 73");
+               "between lines 49 and 70");
             }() : _v12;
          }();
       }();

@@ -139,10 +139,12 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
     else
       time - clientTime
 
-    now = if initial then
-      serverNow
-    else
+    now = if gameState.live then
       gameState.now + delta
+    else
+      serverNow
+
+    --_ = Debug.log "nowDelta" (now - serverNow)
 
     updatedOpponents = updateOpponents gameState.opponents delta opponents
 
