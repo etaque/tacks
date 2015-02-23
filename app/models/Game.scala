@@ -129,6 +129,8 @@ object GhostState {
 
 case class GameSetup(
   now: DateTime,
+  creationTime: DateTime,
+  countdown: Int,
   player: Player,
   course: Course,
   timeTrial: Boolean

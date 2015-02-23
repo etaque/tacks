@@ -25,6 +25,9 @@ trait ManageWind {
         maxRadius = gustDef.radius,
         spawnedAt = clock
       )
+      println(gustDef)
+      println(gust)
+      println(clockSecond)
       wind = wind.copy(gusts = wind.gusts :+ gust)
       gustCounter += 1
     }

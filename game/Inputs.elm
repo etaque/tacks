@@ -35,7 +35,7 @@ keyboardInput = map5 KeyboardInput
 type alias RaceInput =
   { serverNow:   Time
   , startTime:   Maybe Time
-  , wind:        Game.Wind
+  --, wind:        Game.Wind
   , opponents:   List Game.Opponent
   , ghosts:      List Game.GhostState
   , leaderboard: List Game.PlayerTally

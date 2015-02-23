@@ -13,9 +13,12 @@ toDegrees : Float -> Float
 toDegrees rad = -rad * 180 / pi + 90
 
 
-floatMod : Float -> Int -> Float
+floatMod : Float -> Float -> Float
 floatMod val div =
-  (floor val) % div |> toFloat
+  let
+    flooredQuotient = val / div |> floor |> toFloat
+  in
+    val - flooredQuotient * div
 
 --
 
@@ -36,6 +39,11 @@ compact maybes =
 
 average : List Float -> Float
 average items = (sum items) / (toFloat (length items))
+
+-- get element at index n from the list
+lift : Int -> List a -> Maybe a
+lift n items =
+  drop n items |> headMaybe
 
 find : (a -> Bool) -> List a -> Maybe a
 find f list =

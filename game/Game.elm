@@ -46,11 +46,37 @@ areaCenters {rightTop,leftBottom} =
   in
     (cx, cy)
 
+genX : Float -> Float -> RaceArea -> Float
+genX seed margin area =
+  let
+    effectiveWidth = (areaWidth area) - margin * 2
+    (cx,_) = areaCenters area
+  in
+    (Core.floatMod seed effectiveWidth) - effectiveWidth / 2 + cx
+
 
 type alias Vmg =
   { angle: Float
   , speed: Float
   , value: Float
+  }
+
+type alias WindGenerator =
+  { wavelength1: Float
+  , amplitude1: Float
+  , wavelength2: Float
+  , amplitude2: Float
+  }
+
+type alias GustDef =
+  { angle: Float
+  , speed: Float
+  , radius: Float
+  }
+
+type alias GustGenerator =
+  { interval: Int
+  , defs: List GustDef
   }
 
 type alias Course =
@@ -60,6 +86,8 @@ type alias Course =
   , markRadius:       Float
   , islands:          List Island
   , area:             RaceArea
+  , windGenerator:    WindGenerator
+  , gustGenerator:    GustGenerator
   , windShadowLength: Float
   , boatWidth:        Float
   }
@@ -145,8 +173,22 @@ type alias GhostState =
   , gates:    List Time
   }
 
-type alias Gust = { position : Point, angle: Float, speed: Float, radius: Float }
-type alias Wind = { origin : Float, speed : Float, gusts : List Gust }
+type alias Gust =
+  { position : Point
+  , angle: Float
+  , speed: Float
+  , radius: Float
+  , maxRadius: Float
+  , spawnedAt: Float
+  }
+
+type alias Wind =
+  { origin : Float
+  , speed : Float
+  , gusts : List Gust
+  , gustCounter : Int
+  , lastGustTime : Float
+  }
 
 type GameMode = Race | TimeTrial
 
@@ -161,7 +203,9 @@ type alias GameState =
   , leaderboard: List PlayerTally
   , now:         Time
   , serverNow:   Time
+  , countdown:   Float
   , startTime:   Maybe Time
+  , creationTime: Time
   , isMaster:    Bool
   , gameMode:    GameMode
   , live:        Bool
@@ -169,8 +213,23 @@ type alias GameState =
   , roundTripDelay: Float
   }
 
+serverClock : GameState -> Float
+serverClock {now,startTime,gameMode,countdown} =
+  case gameMode of
+    Race ->
+      now
+    TimeTrial ->
+      case startTime of
+        Just t ->
+          now - t + countdown * 1000
+        Nothing ->
+          0
+
+
 type alias GameSetup =
   { now: Time
+  , creationTime: Time
+  , countdown: Float
   , course: Course
   , player: Player
   , timeTrial: Bool
@@ -229,16 +288,18 @@ defaultGate = { y = 0, width = 0 }
 --  , boatWidth        = 0
 --  }
 
-defaultWind : Wind
-defaultWind =
+defaultWind : Float -> Wind
+defaultWind now =
   { origin = 0
   , speed  = 0
   , gusts  = []
+  , gustCounter = 0
+  , lastGustTime = 0
   }
 
 defaultGame : GameSetup -> GameState
-defaultGame {now,course,player,timeTrial} =
-  { wind        = defaultWind
+defaultGame {now,creationTime,course,player,timeTrial,countdown} =
+  { wind        = defaultWind now
   , playerState = defaultPlayerState player now
   , center      = (0,0)
   , wake        = []
@@ -248,7 +309,9 @@ defaultGame {now,course,player,timeTrial} =
   , leaderboard = []
   , now         = now
   , serverNow   = now
+  , countdown   = countdown
   , startTime   = Nothing
+  , creationTime = creationTime
   , isMaster    = False
   , gameMode    = if timeTrial then TimeTrial else Race
   , live        = False

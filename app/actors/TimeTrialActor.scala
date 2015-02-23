@@ -67,9 +67,9 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
      * update wind (origin, speed and gusts positions)
      */
     case FrameTick => {
-      playerRef.foreach { ref =>
-        updateWind()
-      }
+//      playerRef.foreach { ref =>
+//        updateWind()
+//      }
 
       if (timeIsOver) stopGame()
     }
@@ -77,7 +77,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     /**
      * new gust
      */
-    case SpawnGust => generateGust()
+    case SpawnGust => //generateGust()
 
     /**
      * player update coming from websocket through player actor

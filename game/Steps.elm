@@ -20,6 +20,86 @@ centerStep gameState =
   let newCenter = gameState.playerState.position
   in  { gameState | center <- newCenter }
 
+--
+
+updateWindStep : Float -> GameState -> GameState
+updateWindStep elapsed ({course,wind} as gameState) =
+  let
+    clock = serverClock gameState
+    origin = windOrigin course.windGenerator clock
+    speed = windSpeed course.windGenerator clock
+    gusts = L.map (updateGust course wind elapsed clock) wind.gusts
+      |> L.filter (\g -> (snd g.position) + g.radius > areaBottom course.area)
+    newWind = { wind
+      | origin <- origin
+      , speed <- speed
+      , gusts <- gusts
+      }
+  in
+    { gameState | wind <- newWind }
+
+generateGustStep : GameState -> GameState
+generateGustStep ({course,wind,creationTime} as gameState) =
+  let
+    clock = serverClock gameState
+    clockSeconds = clock / 1000 |> floor |> toFloat
+    shouldGenerate = (clock - wind.lastGustTime) >= (toFloat course.gustGenerator.interval * 1000) || wind.gustCounter == 0
+  in
+    if shouldGenerate then
+      case nthGustDef wind.gustCounter course.gustGenerator of
+        Just gustDef ->
+          let
+            cts = creationTime / 1000
+            seed = clockSeconds * cts + cts
+            position = (genX seed 100 course.area, areaTop course.area)
+            gust =
+              { position = position
+              , angle = gustDef.angle
+              , speed = gustDef.speed
+              , radius = 0
+              , maxRadius = gustDef.radius
+              , spawnedAt = clock
+              }
+            newGusts = gust :: wind.gusts
+            newWind = { wind | gusts <- newGusts, gustCounter <- wind.gustCounter + 1, lastGustTime <- clock }
+          in
+            { gameState | wind <- newWind }
+
+        Nothing ->
+          gameState
+    else
+      gameState
+
+nthGustDef : Int -> GustGenerator -> Maybe GustDef
+nthGustDef n {defs} =
+  if L.isEmpty defs then Nothing else lift (n % (L.length defs)) defs
+
+
+updateGust : Course -> Wind -> Float -> Float -> Gust -> Gust
+updateGust course wind elapsed clock gust =
+  let
+    groundSpeed = wind.speed + gust.speed
+    groundDirection = ensure360 (gust.angle + 180)
+
+    newPosition = movePoint gust.position elapsed groundSpeed groundDirection
+
+    maxRadiusAfterSeconds = 20
+    radius = L.minimum [ (clock - gust.spawnedAt) * 0.001 * gust.maxRadius / maxRadiusAfterSeconds, gust.maxRadius ]
+  in
+    { gust | position <- newPosition, radius <- radius }
+
+windOrigin : WindGenerator -> Float -> Float
+windOrigin {wavelength1,amplitude1,wavelength2,amplitude2} clock =
+  cos (clock * 0.0005 / wavelength1) * amplitude1 + cos (clock * 0.0005 / wavelength2) * amplitude2
+
+baseWindSpeed : Float
+baseWindSpeed = 17
+
+windSpeed : WindGenerator -> Float -> Float
+windSpeed {wavelength1,amplitude1,wavelength2,amplitude2} clock =
+  baseWindSpeed + (cos (clock * 0.0005 / wavelength1) * 4 - cos (clock * 0.0005 / wavelength2) * 5) * 0.5
+
+--
 
 moveOpponentState : OpponentState -> Float -> OpponentState
 moveOpponentState state delta =
@@ -50,7 +130,7 @@ updateOpponents previousOpponents delta newOpponents =
 raceInputStep : RaceInput -> Clock -> GameState -> GameState
 raceInputStep raceInput {delta,time} ({playerState} as gameState) =
   let
-    { serverNow, startTime, opponents, ghosts, wind, leaderboard, isMaster, initial, clientTime } = raceInput
+    { serverNow, startTime, opponents, ghosts, leaderboard, isMaster, initial, clientTime } = raceInput
 
     stalled = serverNow == gameState.serverNow
 
@@ -59,10 +139,10 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
     else
       time - clientTime
 
-    now = if gameState.live then
-      gameState.now + delta
-    else
+    now = if initial then
       serverNow
+    else
+      gameState.now + delta
 
     updatedOpponents = updateOpponents gameState.opponents delta opponents
 
@@ -71,7 +151,7 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
     { gameState
       | opponents <- updatedOpponents
       , ghosts <- ghosts
-      , wind <- wind
+      --, wind <- wind
       , leaderboard <- leaderboard
       , serverNow <- serverNow
       , now <- now
@@ -105,5 +185,7 @@ playerStep keyboardInput elapsed gameState =
 stepGame : GameInput -> GameState -> GameState
 stepGame {raceInput, clock, windowInput, keyboardInput} gameState =
   raceInputStep raceInput clock gameState
+    |> generateGustStep
+    |> updateWindStep clock.delta
     |> playerStep keyboardInput clock.delta
     |> centerStep
