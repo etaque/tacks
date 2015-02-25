@@ -36,13 +36,13 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
   def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
   def startScheduled = startTime.isDefined
   def started = startTime.exists(_.isBeforeNow)
-  def clock: Long = DateTime.now.getMillis
+  def clock: Long = DateTime.now.getMillis - id.time
 
   def finished = playersGates.nonEmpty && playersGates.values.forall(_.length == course.gatesToCross)
 
   val ticks = Seq(
     Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean),
-    Akka.system.scheduler.schedule(0.seconds, 20.seconds, self, SpawnGust),
+    Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
     Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
   )
 

@@ -42,26 +42,32 @@ generateGustStep : GameState -> GameState
 generateGustStep ({course,wind,creationTime} as gameState) =
   let
     clock = serverClock gameState
-    clockSeconds = clock / 1000 |> floor |> toFloat
-    shouldGenerate = (clock - wind.lastGustTime) >= (toFloat course.gustGenerator.interval * 1000) || wind.gustCounter == 0
+    nextGustTime = toFloat <| wind.gustCounter * course.gustGenerator.interval * 1000
   in
-    if shouldGenerate then
+    if clock >= nextGustTime || wind.gustCounter == 0 then
       case nthGustDef wind.gustCounter course.gustGenerator of
         Just gustDef ->
           let
-            cts = creationTime / 1000
-            seed = clockSeconds * cts + cts
+            gustSeconds = nextGustTime / 1000 |> floor |> toFloat
+            creationTimeSeconds = creationTime / 1000 |> floor |> toFloat
+            seed = gustSeconds * creationTimeSeconds + creationTimeSeconds
+
             position = (genX seed 100 course.area, areaTop course.area)
+
             gust =
               { position = position
               , angle = gustDef.angle
               , speed = gustDef.speed
               , radius = 0
               , maxRadius = gustDef.radius
-              , spawnedAt = clock
+              , spawnedAt = nextGustTime
               }
+
             newGusts = gust :: wind.gusts
-            newWind = { wind | gusts <- newGusts, gustCounter <- wind.gustCounter + 1, lastGustTime <- clock }
+            newWind = { wind
+              | gusts <- newGusts
+              , gustCounter <- wind.gustCounter + 1
+              }
           in
             { gameState | wind <- newWind }
 
@@ -144,16 +150,24 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
     else
       serverNow
 
-    --_ = Debug.log "nowDelta" (now - serverNow)
-
     updatedOpponents = updateOpponents gameState.opponents delta opponents
 
     newPlayerState = { playerState | time <- now }
+
+    wind = case gameState.gameMode of
+      Race ->
+        if not initial && not gameState.live then
+          raceInput.wind
+        else
+          gameState.wind
+      TimeTrial ->
+        gameState.wind
+
   in
     { gameState
       | opponents <- updatedOpponents
       , ghosts <- ghosts
-      --, wind <- wind
+      , wind <- wind
       , leaderboard <- leaderboard
       , serverNow <- serverNow
       , now <- now

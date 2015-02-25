@@ -187,7 +187,6 @@ type alias Wind =
   , speed : Float
   , gusts : List Gust
   , gustCounter : Int
-  , lastGustTime : Float
   }
 
 type GameMode = Race | TimeTrial
@@ -214,10 +213,10 @@ type alias GameState =
   }
 
 serverClock : GameState -> Float
-serverClock {now,startTime,gameMode,countdown} =
+serverClock {now,startTime,creationTime,gameMode,countdown} =
   case gameMode of
     Race ->
-      now
+      now - creationTime
     TimeTrial ->
       case startTime of
         Just t ->
@@ -294,7 +293,6 @@ defaultWind now =
   , speed  = 0
   , gusts  = []
   , gustCounter = 0
-  , lastGustTime = 0
   }
 
 defaultGame : GameSetup -> GameState

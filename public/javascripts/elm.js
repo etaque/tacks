@@ -2479,7 +2479,7 @@ Elm.Game.make = function (_elm) {
                  _v2._0) > -1;
                case "Nothing": return false;}
             _U.badCase($moduleName,
-            "between lines 342 and 344");
+            "between lines 340 and 342");
          }();
       }();
    };
@@ -2492,7 +2492,7 @@ Elm.Game.make = function (_elm) {
                return _v4.now - _v6._0;
                case "Nothing": return 0;}
             _U.badCase($moduleName,
-            "between lines 336 and 338");
+            "between lines 334 and 336");
          }();
       }();
    };
@@ -2529,7 +2529,6 @@ Elm.Game.make = function (_elm) {
       return {_: {}
              ,gustCounter: 0
              ,gusts: _L.fromArray([])
-             ,lastGustTime: 0
              ,origin: 0
              ,speed: 0};
    };
@@ -2567,7 +2566,8 @@ Elm.Game.make = function (_elm) {
          return function () {
             var _v10 = _v8.gameMode;
             switch (_v10.ctor)
-            {case "Race": return _v8.now;
+            {case "Race":
+               return _v8.now - _v8.creationTime;
                case "TimeTrial":
                return function () {
                     var _v11 = _v8.startTime;
@@ -2576,10 +2576,10 @@ Elm.Game.make = function (_elm) {
                        return _v8.now - _v11._0 + _v8.countdown * 1000;
                        case "Nothing": return 0;}
                     _U.badCase($moduleName,
-                    "between lines 222 and 226");
+                    "between lines 221 and 225");
                  }();}
             _U.badCase($moduleName,
-            "between lines 218 and 226");
+            "between lines 217 and 225");
          }();
       }();
    };
@@ -2640,15 +2640,13 @@ Elm.Game.make = function (_elm) {
    };
    var TimeTrial = {ctor: "TimeTrial"};
    var Race = {ctor: "Race"};
-   var Wind = F5(function (a,
+   var Wind = F4(function (a,
    b,
    c,
-   d,
-   e) {
+   d) {
       return {_: {}
              ,gustCounter: d
              ,gusts: c
-             ,lastGustTime: e
              ,origin: a
              ,speed: b};
    });
@@ -5204,23 +5202,25 @@ Elm.Inputs.make = function (_elm) {
              ,delta: a
              ,time: b};
    });
-   var RaceInput = F8(function (a,
+   var RaceInput = F9(function (a,
    b,
    c,
    d,
    e,
    f,
    g,
-   h) {
+   h,
+   i) {
       return {_: {}
-             ,clientTime: h
-             ,ghosts: d
-             ,initial: g
-             ,isMaster: f
-             ,leaderboard: e
-             ,opponents: c
+             ,clientTime: i
+             ,ghosts: e
+             ,initial: h
+             ,isMaster: g
+             ,leaderboard: f
+             ,opponents: d
              ,serverNow: a
-             ,startTime: b};
+             ,startTime: b
+             ,wind: c};
    });
    var isLocking = function (ki) {
       return _U.cmp(ki.arrows.y,
@@ -5977,99 +5977,128 @@ Elm.Main.make = function (_elm) {
    var initialState = $Game.defaultGame(gameSetup);
    var raceInput = _P.portIn("raceInput",
    _P.incomingSignal(function (v) {
-      return typeof v === "object" && "serverNow" in v && "startTime" in v && "opponents" in v && "ghosts" in v && "leaderboard" in v && "isMaster" in v && "initial" in v && "clientTime" in v ? {_: {}
-                                                                                                                                                                                                  ,serverNow: typeof v.serverNow === "number" ? v.serverNow : _U.badPort("a number",
-                                                                                                                                                                                                  v.serverNow)
-                                                                                                                                                                                                  ,startTime: v.startTime === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.startTime === "number" ? v.startTime : _U.badPort("a number",
-                                                                                                                                                                                                  v.startTime))
-                                                                                                                                                                                                  ,opponents: typeof v.opponents === "object" && v.opponents instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.opponents.map(function (v) {
-                                                                                                                                                                                                     return typeof v === "object" && "player" in v && "state" in v ? {_: {}
-                                                                                                                                                                                                                                                                     ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player && "avatarId" in v.player && "vmgMagnet" in v.player && "guest" in v.player && "user" in v.player ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,id: typeof v.player.id === "string" || typeof v.player.id === "object" && v.player.id instanceof String ? v.player.id : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.player.id)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,handle: v.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.player.handle))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,status: v.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.status === "string" || typeof v.player.status === "object" && v.player.status instanceof String ? v.player.status : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.player.status))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,avatarId: v.player.avatarId === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.avatarId === "string" || typeof v.player.avatarId === "object" && v.player.avatarId instanceof String ? v.player.avatarId : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.player.avatarId))
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,vmgMagnet: typeof v.player.vmgMagnet === "number" ? v.player.vmgMagnet : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.player.vmgMagnet)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,guest: typeof v.player.guest === "boolean" ? v.player.guest : _U.badPort("a boolean (true or false)",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.player.guest)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,user: typeof v.player.user === "boolean" ? v.player.user : _U.badPort("a boolean (true or false)",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.player.user)} : _U.badPort("an object with fields \'id\', \'handle\', \'status\', \'avatarId\', \'vmgMagnet\', \'guest\', \'user\'",
-                                                                                                                                                                                                                                                                     v.player)
-                                                                                                                                                                                                                                                                     ,state: typeof v.state === "object" && "time" in v.state && "position" in v.state && "heading" in v.state && "velocity" in v.state && "windAngle" in v.state && "windOrigin" in v.state && "shadowDirection" in v.state && "crossedGates" in v.state ? {_: {}
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,time: typeof v.state.time === "number" ? v.state.time : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.time)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,position: typeof v.state.position === "object" && v.state.position instanceof Array ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,_0: typeof v.state.position[0] === "number" ? v.state.position[0] : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.state.position[0])
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   ,_1: typeof v.state.position[1] === "number" ? v.state.position[1] : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   v.state.position[1])} : _U.badPort("an array",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.position)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,heading: typeof v.state.heading === "number" ? v.state.heading : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.heading)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,velocity: typeof v.state.velocity === "number" ? v.state.velocity : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.velocity)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,windAngle: typeof v.state.windAngle === "number" ? v.state.windAngle : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.windAngle)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,windOrigin: typeof v.state.windOrigin === "number" ? v.state.windOrigin : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.windOrigin)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,shadowDirection: typeof v.state.shadowDirection === "number" ? v.state.shadowDirection : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.shadowDirection)
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            ,crossedGates: typeof v.state.crossedGates === "object" && v.state.crossedGates instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.state.crossedGates.map(function (v) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               return typeof v === "number" ? v : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               v);
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            })) : _U.badPort("an array",
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            v.state.crossedGates)} : _U.badPort("an object with fields \'time\', \'position\', \'heading\', \'velocity\', \'windAngle\', \'windOrigin\', \'shadowDirection\', \'crossedGates\'",
-                                                                                                                                                                                                                                                                     v.state)} : _U.badPort("an object with fields \'player\', \'state\'",
-                                                                                                                                                                                                     v);
-                                                                                                                                                                                                  })) : _U.badPort("an array",
-                                                                                                                                                                                                  v.opponents)
-                                                                                                                                                                                                  ,ghosts: typeof v.ghosts === "object" && v.ghosts instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.ghosts.map(function (v) {
-                                                                                                                                                                                                     return typeof v === "object" && "position" in v && "heading" in v && "id" in v && "handle" in v && "gates" in v ? {_: {}
-                                                                                                                                                                                                                                                                                                                       ,position: typeof v.position === "object" && v.position instanceof Array ? {ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                                                                                                                                                  ,_0: typeof v.position[0] === "number" ? v.position[0] : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                  v.position[0])
-                                                                                                                                                                                                                                                                                                                                                                                                  ,_1: typeof v.position[1] === "number" ? v.position[1] : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                                                                                                  v.position[1])} : _U.badPort("an array",
-                                                                                                                                                                                                                                                                                                                       v.position)
-                                                                                                                                                                                                                                                                                                                       ,heading: typeof v.heading === "number" ? v.heading : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                       v.heading)
-                                                                                                                                                                                                                                                                                                                       ,id: typeof v.id === "string" || typeof v.id === "object" && v.id instanceof String ? v.id : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                       v.id)
-                                                                                                                                                                                                                                                                                                                       ,handle: v.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.handle === "string" || typeof v.handle === "object" && v.handle instanceof String ? v.handle : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                                                       v.handle))
-                                                                                                                                                                                                                                                                                                                       ,gates: typeof v.gates === "object" && v.gates instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.gates.map(function (v) {
-                                                                                                                                                                                                                                                                                                                          return typeof v === "number" ? v : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                                          v);
-                                                                                                                                                                                                                                                                                                                       })) : _U.badPort("an array",
-                                                                                                                                                                                                                                                                                                                       v.gates)} : _U.badPort("an object with fields \'position\', \'heading\', \'id\', \'handle\', \'gates\'",
-                                                                                                                                                                                                     v);
-                                                                                                                                                                                                  })) : _U.badPort("an array",
-                                                                                                                                                                                                  v.ghosts)
-                                                                                                                                                                                                  ,leaderboard: typeof v.leaderboard === "object" && v.leaderboard instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.leaderboard.map(function (v) {
-                                                                                                                                                                                                     return typeof v === "object" && "playerId" in v && "playerHandle" in v && "gates" in v ? {_: {}
-                                                                                                                                                                                                                                                                                              ,playerId: typeof v.playerId === "string" || typeof v.playerId === "object" && v.playerId instanceof String ? v.playerId : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                              v.playerId)
-                                                                                                                                                                                                                                                                                              ,playerHandle: v.playerHandle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerHandle === "string" || typeof v.playerHandle === "object" && v.playerHandle instanceof String ? v.playerHandle : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                              v.playerHandle))
-                                                                                                                                                                                                                                                                                              ,gates: typeof v.gates === "object" && v.gates instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.gates.map(function (v) {
-                                                                                                                                                                                                                                                                                                 return typeof v === "number" ? v : _U.badPort("a number",
-                                                                                                                                                                                                                                                                                                 v);
-                                                                                                                                                                                                                                                                                              })) : _U.badPort("an array",
-                                                                                                                                                                                                                                                                                              v.gates)} : _U.badPort("an object with fields \'playerId\', \'playerHandle\', \'gates\'",
-                                                                                                                                                                                                     v);
-                                                                                                                                                                                                  })) : _U.badPort("an array",
-                                                                                                                                                                                                  v.leaderboard)
-                                                                                                                                                                                                  ,isMaster: typeof v.isMaster === "boolean" ? v.isMaster : _U.badPort("a boolean (true or false)",
-                                                                                                                                                                                                  v.isMaster)
-                                                                                                                                                                                                  ,initial: typeof v.initial === "boolean" ? v.initial : _U.badPort("a boolean (true or false)",
-                                                                                                                                                                                                  v.initial)
-                                                                                                                                                                                                  ,clientTime: typeof v.clientTime === "number" ? v.clientTime : _U.badPort("a number",
-                                                                                                                                                                                                  v.clientTime)} : _U.badPort("an object with fields \'serverNow\', \'startTime\', \'opponents\', \'ghosts\', \'leaderboard\', \'isMaster\', \'initial\', \'clientTime\'",
+      return typeof v === "object" && "serverNow" in v && "startTime" in v && "wind" in v && "opponents" in v && "ghosts" in v && "leaderboard" in v && "isMaster" in v && "initial" in v && "clientTime" in v ? {_: {}
+                                                                                                                                                                                                                 ,serverNow: typeof v.serverNow === "number" ? v.serverNow : _U.badPort("a number",
+                                                                                                                                                                                                                 v.serverNow)
+                                                                                                                                                                                                                 ,startTime: v.startTime === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.startTime === "number" ? v.startTime : _U.badPort("a number",
+                                                                                                                                                                                                                 v.startTime))
+                                                                                                                                                                                                                 ,wind: typeof v.wind === "object" && "origin" in v.wind && "speed" in v.wind && "gusts" in v.wind && "gustCounter" in v.wind ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                ,origin: typeof v.wind.origin === "number" ? v.wind.origin : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                v.wind.origin)
+                                                                                                                                                                                                                                                                                                                                                ,speed: typeof v.wind.speed === "number" ? v.wind.speed : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                v.wind.speed)
+                                                                                                                                                                                                                                                                                                                                                ,gusts: typeof v.wind.gusts === "object" && v.wind.gusts instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.wind.gusts.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                   return typeof v === "object" && "position" in v && "angle" in v && "speed" in v && "radius" in v && "maxRadius" in v && "spawnedAt" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,position: typeof v.position === "object" && v.position instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,_0: typeof v.position[0] === "number" ? v.position[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         v.position[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         ,_1: typeof v.position[1] === "number" ? v.position[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         v.position[1])} : _U.badPort("an array",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              v.position)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,angle: typeof v.angle === "number" ? v.angle : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              v.angle)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,speed: typeof v.speed === "number" ? v.speed : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              v.speed)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,radius: typeof v.radius === "number" ? v.radius : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              v.radius)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,maxRadius: typeof v.maxRadius === "number" ? v.maxRadius : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              v.maxRadius)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,spawnedAt: typeof v.spawnedAt === "number" ? v.spawnedAt : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              v.spawnedAt)} : _U.badPort("an object with fields \'position\', \'angle\', \'speed\', \'radius\', \'maxRadius\', \'spawnedAt\'",
+                                                                                                                                                                                                                                                                                                                                                   v);
+                                                                                                                                                                                                                                                                                                                                                })) : _U.badPort("an array",
+                                                                                                                                                                                                                                                                                                                                                v.wind.gusts)
+                                                                                                                                                                                                                                                                                                                                                ,gustCounter: typeof v.wind.gustCounter === "number" ? v.wind.gustCounter : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                v.wind.gustCounter)} : _U.badPort("an object with fields \'origin\', \'speed\', \'gusts\', \'gustCounter\'",
+                                                                                                                                                                                                                 v.wind)
+                                                                                                                                                                                                                 ,opponents: typeof v.opponents === "object" && v.opponents instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.opponents.map(function (v) {
+                                                                                                                                                                                                                    return typeof v === "object" && "player" in v && "state" in v ? {_: {}
+                                                                                                                                                                                                                                                                                    ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player && "avatarId" in v.player && "vmgMagnet" in v.player && "guest" in v.player && "user" in v.player ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,id: typeof v.player.id === "string" || typeof v.player.id === "object" && v.player.id instanceof String ? v.player.id : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.player.id)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,handle: v.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.player.handle))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,status: v.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.status === "string" || typeof v.player.status === "object" && v.player.status instanceof String ? v.player.status : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.player.status))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,avatarId: v.player.avatarId === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.avatarId === "string" || typeof v.player.avatarId === "object" && v.player.avatarId instanceof String ? v.player.avatarId : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.player.avatarId))
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,vmgMagnet: typeof v.player.vmgMagnet === "number" ? v.player.vmgMagnet : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.player.vmgMagnet)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,guest: typeof v.player.guest === "boolean" ? v.player.guest : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.player.guest)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,user: typeof v.player.user === "boolean" ? v.player.user : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.player.user)} : _U.badPort("an object with fields \'id\', \'handle\', \'status\', \'avatarId\', \'vmgMagnet\', \'guest\', \'user\'",
+                                                                                                                                                                                                                                                                                    v.player)
+                                                                                                                                                                                                                                                                                    ,state: typeof v.state === "object" && "time" in v.state && "position" in v.state && "heading" in v.state && "velocity" in v.state && "windAngle" in v.state && "windOrigin" in v.state && "shadowDirection" in v.state && "crossedGates" in v.state ? {_: {}
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,time: typeof v.state.time === "number" ? v.state.time : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.time)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,position: typeof v.state.position === "object" && v.state.position instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,_0: typeof v.state.position[0] === "number" ? v.state.position[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.state.position[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  ,_1: typeof v.state.position[1] === "number" ? v.state.position[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  v.state.position[1])} : _U.badPort("an array",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.position)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,heading: typeof v.state.heading === "number" ? v.state.heading : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.heading)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,velocity: typeof v.state.velocity === "number" ? v.state.velocity : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.velocity)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,windAngle: typeof v.state.windAngle === "number" ? v.state.windAngle : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.windAngle)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,windOrigin: typeof v.state.windOrigin === "number" ? v.state.windOrigin : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.windOrigin)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,shadowDirection: typeof v.state.shadowDirection === "number" ? v.state.shadowDirection : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.shadowDirection)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           ,crossedGates: typeof v.state.crossedGates === "object" && v.state.crossedGates instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.state.crossedGates.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              return typeof v === "number" ? v : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              v);
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           })) : _U.badPort("an array",
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           v.state.crossedGates)} : _U.badPort("an object with fields \'time\', \'position\', \'heading\', \'velocity\', \'windAngle\', \'windOrigin\', \'shadowDirection\', \'crossedGates\'",
+                                                                                                                                                                                                                                                                                    v.state)} : _U.badPort("an object with fields \'player\', \'state\'",
+                                                                                                                                                                                                                    v);
+                                                                                                                                                                                                                 })) : _U.badPort("an array",
+                                                                                                                                                                                                                 v.opponents)
+                                                                                                                                                                                                                 ,ghosts: typeof v.ghosts === "object" && v.ghosts instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.ghosts.map(function (v) {
+                                                                                                                                                                                                                    return typeof v === "object" && "position" in v && "heading" in v && "id" in v && "handle" in v && "gates" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                                                      ,position: typeof v.position === "object" && v.position instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                                                                                                                                                                                                                                                                                 ,_0: typeof v.position[0] === "number" ? v.position[0] : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                 v.position[0])
+                                                                                                                                                                                                                                                                                                                                                                                                                 ,_1: typeof v.position[1] === "number" ? v.position[1] : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                                                                                                 v.position[1])} : _U.badPort("an array",
+                                                                                                                                                                                                                                                                                                                                      v.position)
+                                                                                                                                                                                                                                                                                                                                      ,heading: typeof v.heading === "number" ? v.heading : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                      v.heading)
+                                                                                                                                                                                                                                                                                                                                      ,id: typeof v.id === "string" || typeof v.id === "object" && v.id instanceof String ? v.id : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                      v.id)
+                                                                                                                                                                                                                                                                                                                                      ,handle: v.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.handle === "string" || typeof v.handle === "object" && v.handle instanceof String ? v.handle : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                                                      v.handle))
+                                                                                                                                                                                                                                                                                                                                      ,gates: typeof v.gates === "object" && v.gates instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.gates.map(function (v) {
+                                                                                                                                                                                                                                                                                                                                         return typeof v === "number" ? v : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                                         v);
+                                                                                                                                                                                                                                                                                                                                      })) : _U.badPort("an array",
+                                                                                                                                                                                                                                                                                                                                      v.gates)} : _U.badPort("an object with fields \'position\', \'heading\', \'id\', \'handle\', \'gates\'",
+                                                                                                                                                                                                                    v);
+                                                                                                                                                                                                                 })) : _U.badPort("an array",
+                                                                                                                                                                                                                 v.ghosts)
+                                                                                                                                                                                                                 ,leaderboard: typeof v.leaderboard === "object" && v.leaderboard instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.leaderboard.map(function (v) {
+                                                                                                                                                                                                                    return typeof v === "object" && "playerId" in v && "playerHandle" in v && "gates" in v ? {_: {}
+                                                                                                                                                                                                                                                                                                             ,playerId: typeof v.playerId === "string" || typeof v.playerId === "object" && v.playerId instanceof String ? v.playerId : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                             v.playerId)
+                                                                                                                                                                                                                                                                                                             ,playerHandle: v.playerHandle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.playerHandle === "string" || typeof v.playerHandle === "object" && v.playerHandle instanceof String ? v.playerHandle : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                             v.playerHandle))
+                                                                                                                                                                                                                                                                                                             ,gates: typeof v.gates === "object" && v.gates instanceof Array ? Elm.Native.List.make(_elm).fromArray(v.gates.map(function (v) {
+                                                                                                                                                                                                                                                                                                                return typeof v === "number" ? v : _U.badPort("a number",
+                                                                                                                                                                                                                                                                                                                v);
+                                                                                                                                                                                                                                                                                                             })) : _U.badPort("an array",
+                                                                                                                                                                                                                                                                                                             v.gates)} : _U.badPort("an object with fields \'playerId\', \'playerHandle\', \'gates\'",
+                                                                                                                                                                                                                    v);
+                                                                                                                                                                                                                 })) : _U.badPort("an array",
+                                                                                                                                                                                                                 v.leaderboard)
+                                                                                                                                                                                                                 ,isMaster: typeof v.isMaster === "boolean" ? v.isMaster : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                 v.isMaster)
+                                                                                                                                                                                                                 ,initial: typeof v.initial === "boolean" ? v.initial : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                 v.initial)
+                                                                                                                                                                                                                 ,clientTime: typeof v.clientTime === "number" ? v.clientTime : _U.badPort("a number",
+                                                                                                                                                                                                                 v.clientTime)} : _U.badPort("an object with fields \'serverNow\', \'startTime\', \'wind\', \'opponents\', \'ghosts\', \'leaderboard\', \'isMaster\', \'initial\', \'clientTime\'",
       v);
    }));
    var input = $Signal.sampleOn(clock)(A5($Signal.map4,
@@ -15463,6 +15492,7 @@ Elm.Steps.make = function (_elm) {
    $moduleName = "Steps",
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -15524,7 +15554,7 @@ Elm.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 114 and 121");
+         "between lines 120 and 127");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -15575,9 +15605,22 @@ Elm.Steps.make = function (_elm) {
                _v3.opponents,
                _v2.delta,
                opponents);
+               var wind = function () {
+                  var _v6 = _v3.gameMode;
+                  switch (_v6.ctor)
+                  {case "Race":
+                     return $Basics.not(initial) && $Basics.not(_v3.live) ? A2($Debug.log,
+                       "raceInput.wind",
+                       raceInput.wind) : _v3.wind;
+                     case "TimeTrial":
+                     return _v3.wind;}
+                  _U.badCase($moduleName,
+                  "between lines 157 and 166");
+               }();
                return _U.replace([["opponents"
                                   ,updatedOpponents]
                                  ,["ghosts",ghosts]
+                                 ,["wind",wind]
                                  ,["leaderboard",leaderboard]
                                  ,["serverNow",serverNow]
                                  ,["now",now]
@@ -15594,16 +15637,16 @@ Elm.Steps.make = function (_elm) {
       }();
    });
    var baseWindSpeed = 17;
-   var windSpeed = F2(function (_v6,
+   var windSpeed = F2(function (_v7,
    clock) {
       return function () {
-         return baseWindSpeed + ($Basics.cos(clock * 5.0e-4 / _v6.wavelength1) * 4 - $Basics.cos(clock * 5.0e-4 / _v6.wavelength2) * 5) * 0.5;
+         return baseWindSpeed + ($Basics.cos(clock * 5.0e-4 / _v7.wavelength1) * 4 - $Basics.cos(clock * 5.0e-4 / _v7.wavelength2) * 5) * 0.5;
       }();
    });
-   var windOrigin = F2(function (_v8,
+   var windOrigin = F2(function (_v9,
    clock) {
       return function () {
-         return $Basics.cos(clock * 5.0e-4 / _v8.wavelength1) * _v8.amplitude1 + $Basics.cos(clock * 5.0e-4 / _v8.wavelength2) * _v8.amplitude2;
+         return $Basics.cos(clock * 5.0e-4 / _v9.wavelength1) * _v9.amplitude1 + $Basics.cos(clock * 5.0e-4 / _v9.wavelength2) * _v9.amplitude2;
       }();
    });
    var updateGust = F5(function (course,
@@ -15629,94 +15672,93 @@ Elm.Steps.make = function (_elm) {
       }();
    });
    var nthGustDef = F2(function (n,
-   _v10) {
+   _v11) {
       return function () {
-         return $List.isEmpty(_v10.defs) ? $Maybe.Nothing : A2($Core.lift,
+         return $List.isEmpty(_v11.defs) ? $Maybe.Nothing : A2($Core.lift,
          A2($Basics._op["%"],
          n,
-         $List.length(_v10.defs)),
-         _v10.defs);
+         $List.length(_v11.defs)),
+         _v11.defs);
       }();
    });
-   var generateGustStep = function (_v12) {
+   var generateGustStep = function (_v13) {
       return function () {
          return function () {
-            var clock = $Game.serverClock(_v12);
-            var clockSeconds = $Basics.toFloat($Basics.floor(clock / 1000));
-            var shouldGenerate = _U.cmp(clock - _v12.wind.lastGustTime,
-            $Basics.toFloat(_v12.course.gustGenerator.interval) * 1000) > -1 || _U.eq(_v12.wind.gustCounter,
-            0);
-            return shouldGenerate ? function () {
-               var _v14 = A2(nthGustDef,
-               _v12.wind.gustCounter,
-               _v12.course.gustGenerator);
-               switch (_v14.ctor)
+            var nextGustTime = $Basics.toFloat(_v13.wind.gustCounter * _v13.course.gustGenerator.interval * 1000);
+            var clock = $Game.serverClock(_v13);
+            return _U.cmp(clock,
+            nextGustTime) > -1 || _U.eq(_v13.wind.gustCounter,
+            0) ? function () {
+               var _v15 = A2(nthGustDef,
+               _v13.wind.gustCounter,
+               _v13.course.gustGenerator);
+               switch (_v15.ctor)
                {case "Just":
                   return function () {
-                       var cts = _v12.creationTime / 1000;
-                       var seed = clockSeconds * cts + cts;
+                       var creationTimeSeconds = $Basics.toFloat($Basics.floor(_v13.creationTime / 1000));
+                       var gustSeconds = $Basics.toFloat($Basics.floor(nextGustTime / 1000));
+                       var seed = gustSeconds * creationTimeSeconds + creationTimeSeconds;
                        var position = {ctor: "_Tuple2"
                                       ,_0: A3($Game.genX,
                                       seed,
                                       100,
-                                      _v12.course.area)
-                                      ,_1: $Game.areaTop(_v12.course.area)};
+                                      _v13.course.area)
+                                      ,_1: $Game.areaTop(_v13.course.area)};
                        var gust = {_: {}
-                                  ,angle: _v14._0.angle
-                                  ,maxRadius: _v14._0.radius
+                                  ,angle: _v15._0.angle
+                                  ,maxRadius: _v15._0.radius
                                   ,position: position
                                   ,radius: 0
-                                  ,spawnedAt: clock
-                                  ,speed: _v14._0.speed};
+                                  ,spawnedAt: nextGustTime
+                                  ,speed: _v15._0.speed};
                        var newGusts = A2($List._op["::"],
                        gust,
-                       _v12.wind.gusts);
+                       _v13.wind.gusts);
                        var newWind = _U.replace([["gusts"
                                                  ,newGusts]
                                                 ,["gustCounter"
-                                                 ,_v12.wind.gustCounter + 1]
-                                                ,["lastGustTime",clock]],
-                       _v12.wind);
+                                                 ,_v13.wind.gustCounter + 1]],
+                       _v13.wind);
                        return _U.replace([["wind"
                                           ,newWind]],
-                       _v12);
+                       _v13);
                     }();
-                  case "Nothing": return _v12;}
+                  case "Nothing": return _v13;}
                _U.badCase($moduleName,
-               "between lines 49 and 70");
-            }() : _v12;
+               "between lines 48 and 76");
+            }() : _v13;
          }();
       }();
    };
    var updateWindStep = F2(function (elapsed,
-   _v16) {
+   _v17) {
       return function () {
          return function () {
-            var clock = $Game.serverClock(_v16);
+            var clock = $Game.serverClock(_v17);
             var origin = A2(windOrigin,
-            _v16.course.windGenerator,
+            _v17.course.windGenerator,
             clock);
             var speed = A2(windSpeed,
-            _v16.course.windGenerator,
+            _v17.course.windGenerator,
             clock);
             var gusts = $List.filter(function (g) {
                return _U.cmp($Basics.snd(g.position) + g.radius,
-               $Game.areaBottom(_v16.course.area)) > 0;
+               $Game.areaBottom(_v17.course.area)) > 0;
             })(A2($List.map,
             A4(updateGust,
-            _v16.course,
-            _v16.wind,
+            _v17.course,
+            _v17.wind,
             elapsed,
             clock),
-            _v16.wind.gusts));
+            _v17.wind.gusts));
             var newWind = _U.replace([["origin"
                                       ,origin]
                                      ,["speed",speed]
                                      ,["gusts",gusts]],
-            _v16.wind);
+            _v17.wind);
             return _U.replace([["wind"
                                ,newWind]],
-            _v16);
+            _v17);
          }();
       }();
    });
@@ -15728,14 +15770,14 @@ Elm.Steps.make = function (_elm) {
          gameState);
       }();
    };
-   var stepGame = F2(function (_v18,
+   var stepGame = F2(function (_v19,
    gameState) {
       return function () {
          return centerStep(A2(playerStep,
-         _v18.keyboardInput,
-         _v18.clock.delta)(updateWindStep(_v18.clock.delta)(generateGustStep(A3(raceInputStep,
-         _v18.raceInput,
-         _v18.clock,
+         _v19.keyboardInput,
+         _v19.clock.delta)(updateWindStep(_v19.clock.delta)(generateGustStep(A3(raceInputStep,
+         _v19.raceInput,
+         _v19.clock,
          gameState)))));
       }();
    });
