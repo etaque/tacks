@@ -1,9 +1,13 @@
-@(initialInput: play.api.libs.json.JsValue, wsUrl: String, showHelp: Boolean = false)(implicit request: PlayerRequest[_], lang: Lang)
+@(gameSetup: play.api.libs.json.JsValue, initialInput: play.api.libs.json.JsValue, wsUrl: String, showHelp: Boolean = false)(implicit request: PlayerRequest[_], lang: Lang)
 
 @fullscreen() {
 
   <script id="initialInput" type="custom-data">
     @Html(initialInput.toString())
+  </script>
+
+  <script id="gameSetup" type="custom-data">
+    @Html(gameSetup.toString())
   </script>
 
   <script id="wsUrl" type="custom-data">

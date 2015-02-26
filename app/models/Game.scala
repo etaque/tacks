@@ -7,7 +7,7 @@ import play.api.i18n.Lang
 
 case class Arrows(x: Int, y: Int)
 
-case class PlayerInput (
+case class KeyboardInput(
   tack: Boolean,
   arrows: Arrows,
   subtleTurn: Boolean,
@@ -20,8 +20,8 @@ case class PlayerInput (
   def isLocking = arrows.y > 0 || lock
 }
 
-object PlayerInput {
-  val initial = PlayerInput(
+object KeyboardInput {
+  val initial = KeyboardInput(
     tack = false,
     arrows = Arrows(0, 0),
     subtleTurn = false,
@@ -40,7 +40,7 @@ case class Vmg(
   value: Double
 )
 
-case class PlayerState (
+case class PlayerState(
   player: Player,
   time: Long,
   position: Point,
@@ -76,17 +76,37 @@ object PlayerState {
     FixedHeading, None, Seq(), Some(StartLine))
 }
 
-case class PlayerUpdate(player: Player, input: PlayerInput)
-
-case class WatcherInput(
-  watchedPlayerId: Option[String]
+case class OpponentState(
+  time: Long,
+  position: Point,
+  heading: Double,
+  velocity: Double,
+  windAngle: Double,
+  windOrigin: Double,
+  shadowDirection: Double,
+  crossedGates: Seq[Long]
 )
 
-case class WatcherState(
-  watchedPlayerId: String
+object OpponentState {
+  def initial = OpponentState(
+    time = 0,
+    position = (0,0),
+    heading = 0,
+    velocity = 0,
+    windAngle = 0,
+    windOrigin = 0,
+    shadowDirection = 0,
+    crossedGates = Nil
+  )
+}
+
+case class Opponent(
+  state: OpponentState,
+  player: Player
 )
 
-case class WatcherUpdate(watcher: Player, input: WatcherInput)
+case class PlayerInput(state: OpponentState, input: KeyboardInput, localTime: Long)
+case class PlayerUpdate(player: Player, playerInput: PlayerInput)
 
 case class GhostRun(
   run: TimeTrialRun,
@@ -107,34 +127,34 @@ object GhostState {
   def initial(id: BSONObjectID, handle: Option[String], gates: Seq[Long]) = GhostState((0,0), 0, id, handle, gates)
 }
 
-case class RaceUpdate(
-  playerId: String,
+case class GameSetup(
   now: DateTime,
+  creationTime: DateTime,
+  countdown: Int,
+  player: Player,
+  course: Course,
+  timeTrial: Boolean
+)
+
+case class RaceUpdate(
+  serverNow: DateTime,
   startTime: Option[DateTime],
-  course: Option[Course],
-  playerState: Option[PlayerState],
   wind: Wind,
-  opponents: Seq[PlayerState] = Nil,
+  opponents: Seq[Opponent] = Nil,
   ghosts: Seq[GhostState] = Nil,
   leaderboard: Seq[PlayerTally] = Nil,
   isMaster: Boolean = false,
-  langCode: Option[String] = None,
-  watching: Boolean = false,
-  timeTrial: Boolean = false
+  initial: Boolean = false,
+  clientTime: Long = 0
 )
 
 object RaceUpdate {
-  def initial(player: Player, course: Course, watching: Boolean = false, timeTrial: Boolean = false)(implicit lang: Lang) =
+  def initial =
     RaceUpdate(
-      player.id.stringify,
       DateTime.now,
       startTime = None,
-      playerState = None,
-      course = Some(course),
       wind = Wind.default,
-      langCode = Some(lang.code),
-      watching = watching,
-      timeTrial = timeTrial
+      initial = true
     )
 }
 
@@ -142,5 +162,5 @@ case class RaceStatus(
   race: Race,
   master: Option[Player],
   startTime: Option[DateTime],
-  playerStates: Seq[PlayerState]
+  opponents: Seq[Opponent]
 )

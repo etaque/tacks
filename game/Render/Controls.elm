@@ -58,13 +58,13 @@ renderGateHint gate (w,h) (cx,cy) timer =
     else
       Nothing
 
-renderControls : GameState -> (Int,Int) -> PlayerState -> Form
-renderControls ({wind,opponents,course,now,countdown,center} as gameState) intDims playerState =
+renderControls : GameState -> (Int,Int) -> Form
+renderControls ({playerState,wind,opponents,course,now,center} as gameState) intDims =
   let dims = floatify intDims
-      downwindHint = if (playerState.nextGate == Just "DownwindGate")
+      downwindHint = if (playerState.nextGate == Just DownwindGate)
         then renderGateHint course.downwind dims center now
         else Nothing
-      upwindHint = if (playerState.nextGate == Just "UpwindGate")
+      upwindHint = if (playerState.nextGate == Just UpwindGate)
         then renderGateHint course.upwind dims center now
         else Nothing
   in  group (compact [downwindHint, upwindHint])

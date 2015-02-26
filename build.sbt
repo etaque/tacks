@@ -4,8 +4,6 @@ version := "1.0-SNAPSHOT"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
-resolvers += "rediscala" at "http://dl.bintray.com/etaty/maven"
-
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.4"

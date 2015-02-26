@@ -22,10 +22,9 @@ object WebSockets extends Controller with Security {
   implicit val timeout = Timeout(5.seconds)
 
   implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
-  implicit val watcherInputFrameFormatter = FrameFormatter.jsonFrame[WatcherInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
-  def timeTrial(timeTrialId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+  def timeTrial(timeTrialId: String, time: Long) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
       timeTrial <- TimeTrial.findById(timeTrialId)
@@ -33,7 +32,7 @@ object WebSockets extends Controller with Security {
         timeTrialId = timeTrial.id,
         playerId = player.id,
         playerHandle = player.handleOpt,
-        time = DateTime.now
+        time = new DateTime(time)
       )
       ghostRuns <- TimeTrialRun.findGhosts(timeTrial, run)
       timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]
@@ -48,15 +47,6 @@ object WebSockets extends Controller with Security {
     PlayerAction.getPlayer(request).flatMap { player =>
       (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
         case Some(raceActor) => Right(PlayerActor.props(raceActor, player)(_))
-        case None => Left(NotFound)
-      }
-    }
-  }
-
-  def raceWatcher(raceId: String) = WebSocket.tryAcceptWithActor[WatcherInput, RaceUpdate] { implicit request =>
-    PlayerAction.getPlayer(request).flatMap { watcher =>
-      (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
-        case Some(raceActor) => Right(WatcherActor.props(raceActor, watcher)(_))
         case None => Left(NotFound)
       }
     }

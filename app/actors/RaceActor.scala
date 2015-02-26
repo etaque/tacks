@@ -12,10 +12,9 @@ import models._
 import tools.Conf
 
 case class Start(at: DateTime)
-
-case class WatcherContext(watcher: Player, state: WatcherState, ref: ActorRef)
-case class WatcherJoin(watcher: Player)
-case class WatcherQuit(watcher: Player)
+case class PlayerContext(player: Player, input: KeyboardInput, state: OpponentState, ref: ActorRef) {
+  def asOpponent = Opponent(state, player)
+}
 
 case class RaceState(
   race: Race,
@@ -55,13 +54,12 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
 
   type PlayerId = String
   val players = scala.collection.mutable.Map[PlayerId, PlayerContext]()
-  val watchers = scala.collection.mutable.Map[PlayerId, WatcherContext]()
 
   def clock: Long = DateTime.now.getMillis
 
   val ticks = Seq(
     Akka.system.scheduler.schedule(10.seconds, 10.seconds, self, AutoClean),
-    Akka.system.scheduler.schedule(0.seconds, 20.seconds, self, SpawnGust),
+    Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
     Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
   )
 
@@ -71,7 +69,7 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
      * player join => added to context Map
      */
     case PlayerJoin(player) => {
-      players += player.id.stringify -> PlayerContext(player, PlayerInput.initial, PlayerState.initial(player), sender())
+      players += player.id.stringify -> PlayerContext(player, KeyboardInput.initial, OpponentState.initial, sender())
     }
 
     /**
@@ -83,34 +81,17 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
 
     /**
      * game heartbeat:
-     *  - update wind (origin, speed and gusts positions)
-     *  - send a race update to watchers actors for websocket transmission
-     *  - send a race update to players actor for websocket transmission
-     *  - tell player actor to run step
+     * update wind (origin, speed and gusts positions)
      */
     case FrameTick => {
-
       updateWind()
-
-      watchers.values.foreach {
-        case WatcherContext(watcher, state, ref) => {
-          ref ! raceUpdateForWatcher(watcher)
-        }
-      }
-
-      players.values.foreach {
-        case PlayerContext(player, input, state, ref) => {
-          ref ! raceUpdateForPlayer(player, Some(state))
-          ref ! RunStep(state, input, clock, wind, course, raceState.started, opponentsTo(player.id.stringify))
-        }
-      }
     }
 
     /**
-     * player input coming from websocket through player actor
+     * player update coming from websocket through player actor
      * context is updated, race started if requested
      */
-    case PlayerUpdate(player, input) => {
+    case PlayerUpdate(player, PlayerInput(state, input, clientTime)) => {
       val id = player.id.stringify
 
       players.get(id).foreach { context =>
@@ -118,47 +99,11 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
           raceState = RaceActor.startCountdown(raceState, byPlayerId = player.id)
         }
         players += (id -> context.copy(input = input))
-      }
-    }
-
-    /**
-     * step result coming from player actor
-     * context is updated
-     */
-    case StepResult(prevState, newState) => {
-      val id = newState.player.id.stringify
-
-      players.get(id).foreach { context =>
-        players += (id -> context.copy(state = newState))
-        if (prevState.crossedGates != newState.crossedGates) {
-          raceState = RaceActor.updateTally(raceState, players.values.map(_.state).toSeq)
+        if (context.state.crossedGates != state.crossedGates) {
+          raceState = RaceActor.updateTally(raceState, players.values.map(_.asOpponent).toSeq)
           Race.updateFromState(raceState)
         }
-      }
-    }
-
-    /**
-     * watcher joins => added to context Map
-     */
-    case WatcherJoin(watcher) => {
-      watchers += watcher.id.stringify -> WatcherContext(watcher, WatcherState(watcher.id.stringify), sender())
-    }
-
-    /**
-     * watcher quits => removed from context Map
-     */
-    case WatcherQuit(watcher) => {
-      watchers -= watcher.id.stringify
-    }
-
-    /**
-     * watcher updates watcher player id => context updated
-     */
-    case WatcherUpdate(watcher, input) => {
-      val id = watcher.id.stringify
-      watchers.get(id).foreach { context =>
-        val newState = WatcherState(input.watchedPlayerId.getOrElse(id))
-        watchers += id -> context.copy(state = newState)
+        context.ref ! raceUpdateForPlayer(player, clientTime)
       }
     }
 
@@ -182,50 +127,25 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
     }
   }
 
-  def opponentsTo(playerId: String): Seq[PlayerState] = {
-    players.toSeq.filterNot(_._1 == playerId).map(_._2.state)
+  def opponentsTo(playerId: String): Seq[Opponent] = {
+    players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
   }
 
-  def raceUpdateForPlayer(player: Player, playerState: Option[PlayerState]) = {
-    val id = player.id.stringify
+  def raceUpdateForPlayer(player: Player, clientTime: Long) = {
     RaceUpdate(
-      playerId = id,
-      now = DateTime.now,
+      serverNow = DateTime.now,
       startTime = raceState.startTime,
-      course = None, // already transmitted in initial update
-      playerState = playerState,
       wind = wind,
-      opponents = opponentsTo(id),
+      opponents = opponentsTo(player.id.stringify),
       leaderboard = raceState.leaderboard,
       isMaster = master.exists(_.id == player.id),
-      watching = false,
-      timeTrial = false
+      clientTime = clientTime
     )
   }
 
-  def raceUpdateForWatcher(watcher: Player) = {
-    RaceUpdate(
-      playerId = watcher.id.stringify,
-      now = DateTime.now,
-      startTime = raceState.startTime,
-      course = None, // already transmitted in initial update
-      playerState = None,
-      wind = wind,
-      opponents = players.values.map(_.state).toSeq,
-      leaderboard = raceState.leaderboard,
-      isMaster = false,
-      watching = true,
-      timeTrial = false
-    )
-  }
-
-  /**
-   * kill remaining players and watchers actors
-   */
   override def postStop() = {
     ticks.foreach(_.cancel())
     players.values.foreach(_.ref ! PoisonPill)
-    watchers.values.foreach(_.ref ! PoisonPill)
     RaceActor.finishOrRemove(raceState)
   }
 }
@@ -273,10 +193,10 @@ object RaceActor {
     }
   }
 
-  def updateTally(raceState: RaceState, playerStates: Seq[PlayerState]): RaceState = {
+  def updateTally(raceState: RaceState, playerStates: Seq[Opponent]): RaceState = {
 
     val gates = playerStates.foldLeft(raceState.gates) { (gates, ps) =>
-      gates + (ps.player -> ps.crossedGates)
+      gates + (ps.player -> ps.state.crossedGates)
     }
 
     val leaderboard = gates.toSeq.map { case (player, pGates) =>

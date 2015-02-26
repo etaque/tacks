@@ -29,12 +29,13 @@ case class Gust(
 case class Wind(
   origin: Double,
   speed: Double,
-  gusts: Seq[Gust]
+  gusts: Seq[Gust],
+  gustCounter: Int
 )
 
 object Wind {
   val defaultWindSpeed = 17
-  val default = Wind(0, defaultWindSpeed, Nil)
+  val default = Wind(0, defaultWindSpeed, Nil, 0)
 
   implicit val gustFormat: Format[Gust] = Json.format[Gust]
   implicit val windFormat: Format[Wind] = Json.format[Wind]

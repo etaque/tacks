@@ -8,7 +8,7 @@ import Keyboard
 import Char
 import Graphics.Input
 
-type alias UserArrows = { x:Int, y:Int }
+type alias UserArrows = { x: Int, y: Int }
 
 type alias KeyboardInput =
   { arrows:         UserArrows
@@ -18,20 +18,10 @@ type alias KeyboardInput =
   , startCountdown: Bool
   }
 
-type alias RaceInput =
-  { playerId:    String
-  , now:         Time
-  , startTime:   Maybe Time
-  , course:      Maybe Game.Course
-  , playerState: Maybe Game.PlayerState
-  , wind:        Game.Wind
-  , opponents:   List Game.PlayerState
-  , ghosts:      List Game.GhostState
-  , leaderboard: List Game.PlayerTally
-  , isMaster:    Bool
-  , watching:    Bool
-  , timeTrial:   Bool
-  }
+manualTurn ki = ki.arrows.x /= 0
+isTurning ki = manualTurn ki && not ki.subtleTurn
+isSubtleTurning ki = manualTurn ki && ki.subtleTurn
+isLocking ki = ki.arrows.y > 0 || ki.lock
 
 keyboardInput : Signal KeyboardInput
 keyboardInput = map5 KeyboardInput
@@ -41,20 +31,33 @@ keyboardInput = map5 KeyboardInput
   Keyboard.shift
   (Keyboard.isDown (Char.toCode 'C'))
 
-watchedPlayer : Channel (Maybe String)
-watchedPlayer = channel Nothing
 
-type alias WatcherInput =
-  { watchedPlayerId: Maybe String }
+type alias RaceInput =
+  { serverNow:   Time
+  , startTime:   Maybe Time
+  , wind:        Game.Wind
+  , opponents:   List Game.Opponent
+  , ghosts:      List Game.GhostState
+  , leaderboard: List Game.PlayerTally
+  , isMaster:    Bool
+  , initial:     Bool
+  , clientTime:  Time
+  }
 
-watcherInput : Signal WatcherInput
-watcherInput = WatcherInput <~ (subscribe watchedPlayer)
+type alias Clock =
+  { delta: Float
+  , time: Float
+  }
 
 type alias GameInput =
-  { delta:         Float
+  { clock:         Clock
   , keyboardInput: KeyboardInput
   , windowInput:   (Int,Int)
   , raceInput:     RaceInput
-  , watcherInput:  WatcherInput
   }
 
+type alias PlayerOutput =
+  { state: Game.OpponentState
+  , input: KeyboardInput
+  , localTime: Float
+  }

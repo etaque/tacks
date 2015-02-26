@@ -1,9 +1,7 @@
-import akka.actor.ActorRef
-import models.{PlayerState, PlayerInput, Player}
+import models.Player
 
 package object actors {
 
-  case class PlayerContext(player: Player, input: PlayerInput, state: PlayerState, ref: ActorRef)
   case class PlayerJoin(player: Player)
   case class PlayerQuit(player: Player)
 

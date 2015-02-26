@@ -18,8 +18,7 @@ render (w,h) gameState =
   let
     courseForm = renderCourse gameState
     playersForm = renderPlayers gameState
-    controlsForm = M.map (renderControls gameState (w,h)) gameState.playerState
-      |> M.withDefault emptyForm
+    controlsForm = renderControls gameState (w,h)
 
     layout =
       { dashboard = buildDashboard gameState (w,h)

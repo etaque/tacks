@@ -6,7 +6,10 @@ var routes = require('./routes');
 
 function mountGame() {
   var wsUrl = readData("wsUrl");
-  var initialInput = { raceInput: readData("initialInput") };
+  var initialInput = {
+    gameSetup: readData("gameSetup"),
+    raceInput: readData("initialInput")
+  };
 
   function start() {
     mountWebSocket(null, wsUrl, window.Elm.Main, "raceInput", "playerOutput", initialInput);

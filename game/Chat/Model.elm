@@ -79,11 +79,12 @@ specificActionDecoder tag =
 
 playerDecoder : Decoder Player
 playerDecoder =
-  object6 Player
+  object7 Player
     ("id" := string)
     (maybe ("handle" := string))
     (maybe ("status" := string))
     (maybe ("avatarId" := string))
+    ("vmgMagnet" := int)
     ("guest" := bool)
     ("user" := bool)
 

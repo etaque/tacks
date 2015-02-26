@@ -15,7 +15,7 @@ case class SetGhostRuns(ghostRuns: Seq[GhostRun])
 class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extends Actor with ManageWind {
 
   val id = trial.id
-  val startTime = DateTime.now.plusSeconds(trial.countdownSeconds)
+  val startTime = run.time.plusSeconds(trial.countdownSeconds)
   val startScheduled = true
   val course = trial.course
 
@@ -25,8 +25,8 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
   var activeSecond = currentSecond
   var activePoints = Seq.empty[TrackPoint]
 
-  var state = PlayerState.initial(player)
-  var input = PlayerInput.initial
+  var state = OpponentState.initial
+  var input = KeyboardInput.initial
 
   var playerRef: Option[ActorRef] = None
 
@@ -64,17 +64,12 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
 
     /**
      * game heartbeat:
-     *  - update wind (origin, speed and gusts positions)
-     *  - send a race update to players actor for websocket transmission
-     *  - tell player actor to run step
+     * update wind (origin, speed and gusts positions)
      */
     case FrameTick => {
-      playerRef.foreach { ref =>
-        updateWind()
-
-        ref ! raceUpdate
-        ref ! RunStep(state, input, clock, wind, course, started, Nil)
-      }
+//      playerRef.foreach { ref =>
+//        updateWind()
+//      }
 
       if (timeIsOver) stopGame()
     }
@@ -82,21 +77,21 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     /**
      * new gust
      */
-    case SpawnGust => generateGust()
+    case SpawnGust => //generateGust()
 
     /**
-     * player input coming from websocket through player actor
+     * player update coming from websocket through player actor
+     * send a race update to player actor for websocket transmission
      */
-    case PlayerUpdate(_, newInput) => {
+    case PlayerUpdate(_, PlayerInput(newState, newInput, clientTime)) => {
       input = newInput
-    }
-
-    /**
-     * step result coming from player actor
-     * context is updated
-     */
-    case StepResult(prevState, newState) => {
+      val prevState = state
       state = newState
+
+      playerRef.foreach { ref =>
+        ref ! raceUpdate(clientTime)
+      }
+
       if (shouldSaveRun) {
         trackPoint(newState)
         if (prevState.crossedGates != newState.crossedGates) updateTally()
@@ -134,7 +129,7 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     TimeTrialRun.updateTimes(run.id, state.crossedGates, finishTime)
   }
 
-  def trackPoint(state: PlayerState) = {
+  def trackPoint(state: OpponentState) = {
     val p = TrackPoint((clock % 1000).toInt, state.position, state.heading)
     if (currentSecond == activeSecond) {
       activePoints :+= p
@@ -159,21 +154,16 @@ class TimeTrialActor(trial: TimeTrial, player: Player, run: TimeTrialRun) extend
     }.toSeq
   }
 
-  def raceUpdate = {
-    val id = player.id.stringify
+  def raceUpdate(clientTime: Long) = {
     RaceUpdate(
-      playerId = id,
-      now = DateTime.now,
+      serverNow = DateTime.now,
       startTime = Some(startTime),
-      course = None, // already transmitted in initial update
-      playerState = Some(state),
       wind = wind,
       opponents = Nil,
       ghosts = currentGhosts,
       leaderboard = Nil,
       isMaster = true,
-      watching = false,
-      timeTrial = true
+      clientTime = clientTime
     )
   }
 

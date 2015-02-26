@@ -49,7 +49,7 @@ class TutorialActor(player: Player) extends Actor with ManageWind {
       playerRef.foreach { ref =>
         ref ! update
         if (Tutorial.isRunning(step)) {
-          ref ! RunStep(playerState, input.keyboard, clock, wind, course, started = true, Nil)
+//          ref ! RunStep(playerState, input.keyboard, clock, wind, course, started = true, Nil)
         }
       }
     }

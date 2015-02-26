@@ -64,7 +64,8 @@ object JsonFormats {
       "guest" -> false,
       "handle" -> u.handle,
       "status" -> u.status,
-      "avatarId" -> u.avatarId
+      "avatarId" -> u.avatarId,
+      "vmgMagnet" -> u.vmgMagnet
     )
   }
   implicit val userFormat: Format[User] = Format(userReads, userWrites)
@@ -77,7 +78,8 @@ object JsonFormats {
       "guest" -> true,
       "handle" -> g.handle,
       "status" -> JsNull,
-      "avatarId" -> JsNull
+      "avatarId" -> JsNull,
+      "vmgMagnet" -> g.vmgMagnet
     )
   }
   implicit val guestFormat: Format[Guest] = Format(guestReads, guestWrites)
@@ -94,12 +96,13 @@ object JsonFormats {
     }
   }
 
+  implicit val opponentStateFormat: Format[OpponentState] = Json.format[OpponentState]
+  implicit val opponentFormat: Format[Opponent] = Json.format[Opponent]
+
   implicit val vmgFormat: Format[Vmg] = Json.format[Vmg]
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
+  implicit val keyboardInputFormat: Format[KeyboardInput] = Json.format[KeyboardInput]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
-  implicit val playerUpdateFormat: Format[PlayerUpdate] = Json.format[PlayerUpdate]
-
-  implicit val watcherInputFormat: Format[WatcherInput] = Json.format[WatcherInput]
 
   implicit val tutorialInputFormat: Format[TutorialInput] = Json.format[TutorialInput]
 
@@ -147,20 +150,18 @@ object JsonFormats {
       (__ \ 'nextGate).format[Option[GateLocation]]
     )(PlayerState.apply, unlift(PlayerState.unapply))
 
+  implicit val gameSetupFormat: Format[GameSetup] = Json.format[GameSetup]
+
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
-    (__ \ 'playerId).format[String] and
-      (__ \ 'now).format[DateTime] and
+      (__ \ 'serverNow).format[DateTime] and
       (__ \ 'startTime).format[Option[DateTime]] and
-      (__ \ 'course).format[Option[Course]] and
-      (__ \ 'playerState).format[Option[PlayerState]] and
       (__ \ 'wind).format[Wind] and
-      (__ \ 'opponents).format[Seq[PlayerState]] and
+      (__ \ 'opponents).format[Seq[Opponent]] and
       (__ \ 'ghosts).format[Seq[GhostState]] and
       (__ \ 'leaderboard).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean] and
-      (__ \ 'langCode).format[Option[String]] and
-      (__ \ 'watching).format[Boolean] and
-      (__ \ 'timeTrial).format[Boolean]
+      (__ \ 'initial).format[Boolean] and
+      (__ \ 'clientTime).format[Long]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
   implicit val tutorialUpdateFormat: Format[TutorialUpdate] = (
