@@ -25,11 +25,6 @@ case class RaceState(
   finishersCount: Int = 0,
   startTime: Option[DateTime] = None
 ) {
-  def millisBeforeStart: Option[Long] = startTime.map(_.getMillis - DateTime.now.getMillis)
-  def startScheduled = startTime.isDefined
-  def started = startTime.exists(_.isBeforeNow)
-  def clock: Long = DateTime.now.getMillis
-
   def someFinished = gates.values.exists(_.length == course.gatesToCross)
   def allFinished = gates.nonEmpty && gates.values.forall(_.length == course.gatesToCross)
   def finishers = leaderboard.filter(_.gates.length == course.gatesToCross)
