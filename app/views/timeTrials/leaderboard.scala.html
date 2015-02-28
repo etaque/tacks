@@ -1,4 +1,5 @@
-@(byTrial: Seq[(TimeTrial, core.TimeTrialLeaderboard.Leaderboard)],
+@(trialsWithRanking: Seq[(TimeTrial, Seq[RunRanking])],
+  byTrial: Seq[(TimeTrial, core.TimeTrialLeaderboard.Leaderboard)],
   overall: core.TimeTrialLeaderboard.Leaderboard,
   users: Seq[User],
   date: org.joda.time.LocalDate
@@ -43,6 +44,29 @@
     <div class="light-wrapper">
 
       <div class="container">
+
+        <h2>@Messages("timeTrials.leaderboard.courses")</h2>
+
+        @for(row <- trialsWithRanking.grouped(3)) {
+          <div class="row">
+          @for((trial, rankings) <- row) {
+            <div class="col-md-4">
+              <div class="ranked-time-trial">
+                <a href="@routes.TimeTrials.show(trial.id.stringify)" class="trial-name">
+                  @Messages("generators." + trial.slug + ".name")
+                </a>
+
+                @if(rankings.nonEmpty) {
+                  @views.html.timeTrials.ranking(rankings, users, req.player, windowMaybe = Some(5))
+                }
+
+                <a href="@routes.Application.playTimeTrial(trial.id.stringify)" target="_blank"
+                  class="btn btn-warning btn-block btn-sm btn-run-trial">@Messages("timeTrials.run")</a>
+              </div>
+            </div>
+          }
+          </div>
+        }
 
         <h2>@Messages("timeTrials.leaderboard.general")</h2>
 
@@ -92,6 +116,7 @@
       </div>
     </div>
 
+    @*
     <div class="dark-wrapper home-trials">
       <div class="container">
 
@@ -101,6 +126,7 @@
 
       </div>
     </div>
+    *@
 
   }
 }

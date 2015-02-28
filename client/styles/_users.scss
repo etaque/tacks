@@ -63,34 +63,4 @@
     }
   }
 
-  .user-time-trial {
-    margin-top: 20px;
-    margin-bottom: 30px;
-
-    .trial-name {
-      display: block;
-      padding: 10px;
-      font-family: $lightFontFamily;
-      font-size: 16px;
-      text-align: center;
-      text-transform: uppercase;
-      text-decoration: none;
-      background-color: $navBlue;
-      box-shadow: 0 1px 2px $lightGray;
-      letter-spacing: 1px;
-      color: white;
-
-      &:hover {
-        background-color: $mainBlue;
-      }
-    }
-
-    .time-trial-rankings {
-      border-radius: 0;
-    }
-
-    .btn-run-trial {
-      margin-top: 10px;
-    }
-  }
 }

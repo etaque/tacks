@@ -5550,6 +5550,28 @@ a.period {
 .row-show-ranking {
   margin-top: 30px; }
 
+.ranked-time-trial {
+  margin-top: 20px;
+  margin-bottom: 30px; }
+  .ranked-time-trial .trial-name {
+    display: block;
+    padding: 10px;
+    font-family: "Proxima Nova Thin";
+    font-size: 16px;
+    text-align: center;
+    text-transform: uppercase;
+    text-decoration: none;
+    background-color: #387ac4;
+    box-shadow: 0 1px 2px #E6E6E6;
+    letter-spacing: 1px;
+    color: white; }
+    .ranked-time-trial .trial-name:hover {
+      background-color: #5899E2; }
+  .ranked-time-trial .time-trial-rankings {
+    border-radius: 0; }
+  .ranked-time-trial .btn-run-trial {
+    margin-top: 10px; }
+
 .list-time-trial-rankings {
   font-family: "Inconsolata";
   margin: 0;
@@ -6076,24 +6098,3 @@ a.player-avatar {
     font-size: 13px; }
   .show-user .badge-rank:hover {
     background-color: #e4ae5f; }
-.show-user .user-time-trial {
-  margin-top: 20px;
-  margin-bottom: 30px; }
-  .show-user .user-time-trial .trial-name {
-    display: block;
-    padding: 10px;
-    font-family: "Proxima Nova Thin";
-    font-size: 16px;
-    text-align: center;
-    text-transform: uppercase;
-    text-decoration: none;
-    background-color: #387ac4;
-    box-shadow: 0 1px 2px #E6E6E6;
-    letter-spacing: 1px;
-    color: white; }
-    .show-user .user-time-trial .trial-name:hover {
-      background-color: #5899E2; }
-  .show-user .user-time-trial .time-trial-rankings {
-    border-radius: 0; }
-  .show-user .user-time-trial .btn-run-trial {
-    margin-top: 10px; }

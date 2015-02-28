@@ -40,7 +40,7 @@
           <div class="row">
           @for((trial, rankings) <- row) {
             <div class="col-md-4">
-              <div class="user-time-trial">
+              <div class="ranked-time-trial">
                 <a href="@routes.TimeTrials.show(trial.id.stringify)" class="trial-name">
                   @Messages("generators." + trial.slug + ".name")
                 </a>

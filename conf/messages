@@ -41,7 +41,7 @@ rank.nth=th
 
 menu.home=Home
 menu.blog=Blog
-menu.liveRaces=Temps réel
+menu.tournaments=Tournaments
 menu.timeTrials=Time trials
 menu.login=Login
 menu.register=Sign up
@@ -133,6 +133,27 @@ timeTrials.recentRuns=Recent activity
 timeTrials.recent=Ran less than one day ago
 timeTrials.run=New run
 timeTrials.closed=Closed race
+
+tournaments.title = Realtime races
+tournaments.openTournaments = Open tournaments
+tournaments.finishedTournaments = Finished tournaments
+tournaments.liveCenter = Open races
+tournaments.new = New tournament
+tournaments.name = Name
+tournaments.meetTime = Meet time
+tournaments.description = Description
+tournaments.createButton = Create
+tournaments.program = Schedule
+tournaments.emptyLeaderboard = No scheduled race at the moment.
+tournaments.rankings = Overall ranking
+tournaments.addRace = Add race
+tournaments.races.emptyStartTime = Undefined date
+tournaments.races.new = New race
+tournaments.races.generator = Race area
+tournaments.races.startTime = Start time
+tournaments.races.createButton = Submit
+tournaments.show.back = Back
+tournaments.edit = Edit tournament
 
 generators.warmup.name=Short Track
 generators.warmup.description=get your hands warm with the three laps of this short course

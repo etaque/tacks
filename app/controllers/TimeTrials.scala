@@ -33,7 +33,7 @@ object TimeTrials extends Controller with Security  {
     yield {
       val byTrial = TimeTrialLeaderboard.leaderboardByTrial(trialsWithRanking, users)
       val overall = TimeTrialLeaderboard.globalLeaderboard(byTrial.map(_._2))
-      Ok(views.html.timeTrials.leaderboard(byTrial, overall, users, date))
+      Ok(views.html.timeTrials.leaderboard(trialsWithRanking, byTrial, overall, users, date))
     }
   }
 }
