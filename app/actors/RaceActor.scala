@@ -105,7 +105,7 @@ class RaceActor(race: Race, master: Option[Player]) extends Actor with ManageWin
     /**
      * race status, for live center
      */
-    case GetStatus => sender ! (raceState.startTime, players.values.map(_.state).toSeq)
+    case GetStatus => sender ! (raceState.startTime, players.values.map(_.asOpponent).toSeq)
 
     /**
      * new gust

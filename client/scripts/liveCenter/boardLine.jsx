@@ -36,7 +36,7 @@ var BoardLine = React.createClass({
 
   render: function() {
     var s = this.props.raceStatus;
-    var players = this.getPlayers(s.playerStates);
+    var players = this.getPlayers(s.opponents);
     var millis = s.startTime ? (s.startTime - this.props.now) : null;
 
     return (

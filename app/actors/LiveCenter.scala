@@ -67,7 +67,7 @@ class LiveCenter extends Actor {
       LiveCenter.sendPlayersUpdate(state)
       User.updateStatus(user.id, Some(content))
     }
-    
+
     case GetOnlinePlayers => sender ! state.subscribers.map(_._1).distinct
 
     case NotifyNewRace(ref, race, master) => {
