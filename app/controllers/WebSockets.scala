@@ -43,6 +43,15 @@ object WebSockets extends Controller with Security {
     }
   }
 
+  def raceCoursePlayer(raceCourseId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+    PlayerAction.getPlayer(request).flatMap { player =>
+      (RacesSupervisor.actorRef ? GetRaceCourseActorRef(BSONObjectID(raceCourseId))).mapTo[Option[ActorRef]].map {
+        case Some(raceCourseActor) => Right(PlayerActor.props(raceCourseActor, player)(_))
+        case None => Left(NotFound)
+      }
+    }
+  }
+
   def racePlayer(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     PlayerAction.getPlayer(request).flatMap { player =>
       (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {

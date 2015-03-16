@@ -4,6 +4,7 @@ POST        /setHandle                                         controllers.Appli
 
 GET         /run/:timeTrialId                                  controllers.Application.playTimeTrial(timeTrialId: String)
 GET         /play/:raceId                                      controllers.Application.playRace(raceId: String)
+GET         /course/:raceCourseId                              controllers.Application.playRaceCourse(raceCourseId: String)
 
 GET         /tournaments                                       controllers.Tournaments.index
 GET         /tournaments/new                                   controllers.Tournaments.creation
@@ -42,6 +43,7 @@ GET         /api/onlineUsers                                   controllers.Api.o
 POST        /api/createRace/:generator                         controllers.Api.createRace(generator)
 
 GET         /ws/racePlayer/:raceId                             controllers.WebSockets.racePlayer(raceId)
+GET         /ws/raceCoursePlayer/:raceCourseId                 controllers.WebSockets.raceCoursePlayer(raceCourseId)
 GET         /ws/timeTrialPlayer/:timeTrialId/:startTime        controllers.WebSockets.timeTrial(timeTrialId: String, startTime: Long)
 GET         /ws/tutorial                                       controllers.WebSockets.tutorial
 GET         /ws/notifications                                  controllers.WebSockets.notifications

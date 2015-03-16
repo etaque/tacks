@@ -22,6 +22,7 @@ case class MountTimeTrialRun(timeTrial: TimeTrial, player: Player, run: TimeTria
 case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
+case class GetRaceCourseActorRef(raceCourseId: BSONObjectID)
 case object CreateRace
 case object GetOpenRaces
 case object GetLiveRuns
@@ -74,6 +75,8 @@ class RacesSupervisor extends Actor {
 
     case GetRaceActorRef(raceId) => sender ! getRaceActorRef(raceId)
 
+    case GetRaceCourseActorRef(raceCourseId) => sender ! getRaceCourseActorRef(raceCourseId)
+
     case GetLiveRuns => {
       sender ! mountedRuns.map(_._1)
     }
@@ -112,6 +115,8 @@ class RacesSupervisor extends Actor {
   def getRace(raceId: BSONObjectID): Option[Race] = mountedRaces.find(_._1.id == raceId).headOption.map(_._1)
 
   def getRaceActorRef(raceId: BSONObjectID): Option[ActorRef] = mountedRaces.find(_._1.id == raceId).map(_._3)
+
+  def getRaceCourseActorRef(raceCourseId: BSONObjectID): Option[ActorRef] = None
 }
 
 object RacesSupervisor {

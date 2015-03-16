@@ -75,6 +75,18 @@ object Application extends Controller with Security {
     }
   }
 
+  def playRaceCourse(id: String) = PlayerAction.async() { implicit request =>
+    RaceCourse.findByIdOpt(id).map {
+      case None => NotFound
+      case Some(raceCourse) => {
+        val wsUrl = routes.WebSockets.raceCoursePlayer(raceCourse.idToStr).webSocketURL()
+        val initialInput = Json.toJson(RaceUpdate.initial)
+        val gameSetup = Json.toJson(GameSetup(DateTime.now, raceCourse.idTime, raceCourse.countdown, request.player, raceCourse.course, timeTrial = false))
+        Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
+      }
+    }
+  }
+
   def tutorial = PlayerAction() { implicit request =>
     val wsUrl = routes.WebSockets.tutorial().webSocketURL()
     val messages = JsMessages.filtering(_.startsWith("tutorial")).messages

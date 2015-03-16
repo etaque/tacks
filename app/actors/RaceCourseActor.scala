@@ -11,13 +11,6 @@ import org.joda.time.DateTime
 import models._
 import tools.Conf
 
-case class RaceCourse(
-  _id: BSONObjectID,
-  course: Course,
-  countdown: Int,
-  startCycle: Int
-) extends HasId
-
 case class Run(
   id: BSONObjectID = BSONObjectID.generate,
   startTime: DateTime,
