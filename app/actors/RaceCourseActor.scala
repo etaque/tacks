@@ -18,7 +18,8 @@ case class Run(
 )
 
 case class RaceCourseState(
-  nextRun: Run,
+  raceCourse: RaceCourse,
+  nextRun: Option[Run],
   liveRuns: Seq[Run]
 ) {
   def leaderboardFor(runId: BSONObjectID): Seq[PlayerTally] = {
@@ -26,7 +27,7 @@ case class RaceCourseState(
   }
 }
 
-case object SpawnRun
+case object RotateNextRun
 
 class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
 
@@ -34,10 +35,8 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
   val course = raceCourse.course
 
   var state = RaceCourseState(
-    nextRun = Run(
-      startTime = DateTime.now.plusSeconds(raceCourse.countdown),
-      leaderboard = Nil
-    ),
+    raceCourse = raceCourse,
+    nextRun = None,
     liveRuns = Nil
   )
 
@@ -45,8 +44,11 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
 
   def clock: Long = DateTime.now.getMillis
 
-  val spawnRunTick = Akka.system.scheduler.schedule(
-    raceCourse.startCycle.seconds, raceCourse.startCycle.seconds, self, SpawnRun)
+  val ticks = Seq(
+    Akka.system.scheduler.schedule(1.second, 1.second, self, RotateNextRun),
+    Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
+    Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
+  )
 
   def receive = {
 
@@ -80,9 +82,9 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
       val id = player.id.stringify
 
       players.get(id).foreach { context =>
-        // if (input.startCountdown) {
-        //   raceState = RaceActor.startCountdown(raceState, byPlayerId = player.id)
-        // }
+        if (input.startCountdown) {
+          state = RaceCourseActor.startCountdown(state, byPlayerId = player.id)
+        }
         players += (id -> context.copy(input = input, state = opState))
         if (context.state.crossedGates != opState.crossedGates) {
           // TODO
@@ -98,8 +100,8 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
      */
     case SpawnGust => generateGust()
 
-    case SpawnRun => {
-      state = RaceCourseActor.spawnRun(state)
+    case RotateNextRun => {
+      state = RaceCourseActor.rotateNextRun(state)
     }
   }
 
@@ -114,23 +116,46 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
   def raceUpdateForPlayer(player: Player, clientTime: Long) = {
     RaceUpdate(
       serverNow = DateTime.now,
-      startTime = Some(state.nextRun.startTime),
+      startTime = state.nextRun.map(_.startTime),
       wind = wind,
       opponents = opponentsTo(player.id.stringify),
       leaderboard = leaderboardFor(player.id.stringify),
       clientTime = clientTime
     )
   }
+
+  override def postStop() = {
+    ticks.foreach(_.cancel())
+  }
 }
 
 object RaceCourseActor {
   def props(raceCourse: RaceCourse) = Props(new RaceCourseActor(raceCourse))
 
-  def spawnRun(state: RaceCourseState): RaceCourseState = {
-    state
+  def rotateNextRun(state: RaceCourseState): RaceCourseState = {
+    state.nextRun match {
+      case Some(nextRun) if nextRun.startTime.plusSeconds(state.raceCourse.countdown).isBeforeNow => {
+        state.copy(nextRun = None, liveRuns = state.liveRuns :+ nextRun)
+      }
+      case _ => state
+    }
   }
 
   def updateTally(state: RaceCourseState, playerStates: Seq[Opponent]): RaceCourseState = {
+    // TODO
     state
+  }
+
+  def startCountdown(state: RaceCourseState, byPlayerId: BSONObjectID): RaceCourseState = {
+    state.nextRun match {
+      case None => {
+        val run = Run(
+          startTime = DateTime.now.plusSeconds(state.raceCourse.countdown),
+          leaderboard = Nil
+        )
+        state.copy(nextRun = Some(run))
+      }
+      case Some(_) => state
+    }
   }
 }

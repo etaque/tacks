@@ -1,4 +1,5 @@
-@(trials: Seq[TimeTrial],
+@(raceCourses: Seq[RaceCourse],
+  trials: Seq[TimeTrial],
   trialsUsers: Seq[User],
   trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard,
   finishedRaces: Seq[Race],
@@ -68,6 +69,12 @@
     <div class="container">
 
       <h2>@Messages("home.races")</h2>
+
+      <ul>
+        @for(rc <- raceCourses) {
+          <li><a href="@routes.Application.playRaceCourse(rc.idToStr)">@rc.slug</a></li>
+        }
+      </ul>
 
       <div id="liveCenter"></div>
 

@@ -189,7 +189,7 @@ type alias Wind =
   , gustCounter : Int
   }
 
-type GameMode = Race | TimeTrial
+type GameMode = Race | TimeTrial | RaceCourse
 
 type alias GameState =
   { wind:        Wind
@@ -217,6 +217,8 @@ serverClock {now,startTime,creationTime,gameMode,countdown} =
   case gameMode of
     Race ->
       now - creationTime
+    RaceCourse ->
+      now
     TimeTrial ->
       case startTime of
         Just t ->
@@ -231,7 +233,7 @@ type alias GameSetup =
   , countdown: Float
   , course: Course
   , player: Player
-  , timeTrial: Bool
+  , gameMode: String
   }
 
 defaultVmg : Vmg
@@ -296,7 +298,7 @@ defaultWind now =
   }
 
 defaultGame : GameSetup -> GameState
-defaultGame {now,creationTime,course,player,timeTrial,countdown} =
+defaultGame {now,creationTime,course,player,gameMode,countdown} =
   { wind        = defaultWind now
   , playerState = defaultPlayerState player now
   , center      = (0,0)
@@ -311,7 +313,10 @@ defaultGame {now,creationTime,course,player,timeTrial,countdown} =
   , startTime   = Nothing
   , creationTime = creationTime
   , isMaster    = False
-  , gameMode    = if timeTrial then TimeTrial else Race
+  , gameMode    = case gameMode of
+                    "TimeTrial" -> TimeTrial
+                    "Race" -> Race
+                    "RaceCourse" -> RaceCourse
   , live        = False
   , localTime   = 0
   , roundTripDelay = 0

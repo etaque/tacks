@@ -14,13 +14,30 @@ object Global extends GlobalSettings {
 
     User.ensureIndexes()
     TimeTrial.ensureIndexes()
+    RaceCourse.ensureIndexes()
 
     RacesSupervisor.start()
+
+    ensureRaceCourses()
 
     val trialsFreq = if (play.Play.isDev) 5.seconds else 1.hour
     Akka.system.scheduler.schedule(10.seconds, trialsFreq)(CourseGenerator.ensureTimeTrials())
 
     genData()
+  }
+
+  def ensureRaceCourses() = {
+
+    CourseGenerator.all.foreach { gen =>
+      RaceCourse.findBySlug(gen.slug).map {
+        case Some(_) => // do nothing
+        case None => {
+          val rc = RaceCourse(BSONObjectID.generate, gen.slug, gen.generateCourse(), 30, 60)
+          RaceCourse.save(rc)
+        }
+      }
+    }
+
   }
 
   def genData() = {

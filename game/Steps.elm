@@ -23,23 +23,30 @@ centerStep gameState =
 --
 
 updateWindStep : Float -> GameState -> GameState
-updateWindStep elapsed ({course,wind} as gameState) =
-  let
-    clock = serverClock gameState
-    origin = windOrigin course.windGenerator clock
-    speed = windSpeed course.windGenerator clock
-    gusts = L.map (updateGust course wind elapsed clock) wind.gusts
-      |> L.filter (\g -> (snd g.position) + g.radius > areaBottom course.area)
-    newWind = { wind
-      | origin <- origin
-      , speed <- speed
-      , gusts <- gusts
-      }
-  in
-    { gameState | wind <- newWind }
+updateWindStep elapsed ({course} as gameState) =
+  case gameState.gameMode of
+    TimeTrial ->
+      let
+        clock = serverClock gameState
+        origin = windOrigin course.windGenerator clock
+        speed = windSpeed course.windGenerator clock
+        wind = spawnGust gameState
+        gusts = L.map (updateGust course wind elapsed clock) wind.gusts
+          |> L.filter (\g -> (snd g.position) + g.radius > areaBottom course.area)
+        newWind = { wind
+          | origin <- origin
+          , speed <- speed
+          , gusts <- gusts
+          }
+      in
+        { gameState | wind <- newWind }
+    _ ->
+      gameState
 
-generateGustStep : GameState -> GameState
-generateGustStep ({course,wind,creationTime} as gameState) =
+
+
+spawnGust : GameState -> Wind
+spawnGust ({course,wind,creationTime} as gameState) =
   let
     clock = serverClock gameState
     nextGustTime = toFloat <| wind.gustCounter * course.gustGenerator.interval * 1000
@@ -69,12 +76,12 @@ generateGustStep ({course,wind,creationTime} as gameState) =
               , gustCounter <- wind.gustCounter + 1
               }
           in
-            { gameState | wind <- newWind }
+            newWind
 
         Nothing ->
-          gameState
+          wind
     else
-      gameState
+      wind
 
 nthGustDef : Int -> GustGenerator -> Maybe GustDef
 nthGustDef n {defs} =
@@ -155,13 +162,10 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
     newPlayerState = { playerState | time <- now }
 
     wind = case gameState.gameMode of
-      Race ->
-        if not initial && not gameState.live then
-          raceInput.wind
-        else
-          gameState.wind
       TimeTrial ->
         gameState.wind
+      _ ->
+        raceInput.wind
 
   in
     { gameState
@@ -201,7 +205,6 @@ playerStep keyboardInput elapsed gameState =
 stepGame : GameInput -> GameState -> GameState
 stepGame {raceInput, clock, windowInput, keyboardInput} gameState =
   raceInputStep raceInput clock gameState
-    |> generateGustStep
     |> updateWindStep clock.delta
     |> playerStep keyboardInput clock.delta
     |> centerStep

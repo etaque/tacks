@@ -134,7 +134,7 @@ case class GameSetup(
   countdown: Int,
   player: Player,
   course: Course,
-  timeTrial: Boolean
+  gameMode: String
 )
 
 case class RaceUpdate(

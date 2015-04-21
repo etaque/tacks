@@ -21,6 +21,7 @@ object Application extends Controller with Security {
 
   def index = PlayerAction.async() { implicit request =>
     for {
+      raceCourses       <- RaceCourse.list
       finishedRaces     <- Race.listFinished(10)
       users             <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
       timeTrials        <- TimeTrial.listCurrent
@@ -28,7 +29,7 @@ object Application extends Controller with Security {
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
       leaderboard        = TimeTrialLeaderboard.forTrials(trialsWithRanking, trialsUsers)
     }
-    yield Ok(views.html.index(timeTrials, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
+    yield Ok(views.html.index(raceCourses, timeTrials, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
   }
 
   def setHandle = PlayerAction(parse.urlFormEncoded) { implicit request =>
@@ -58,7 +59,7 @@ object Application extends Controller with Security {
       val now = DateTime.now
       val wsUrl = routes.WebSockets.timeTrial(timeTrial.idToStr, now.getMillis).webSocketURL()
       val initialInput = Json.toJson(RaceUpdate.initial)
-      val gameSetup = Json.toJson(GameSetup(now, timeTrial.idTime, timeTrial.countdownSeconds, request.player, timeTrial.course, timeTrial = true))
+      val gameSetup = Json.toJson(GameSetup(now, timeTrial.idTime, timeTrial.countdownSeconds, request.player, timeTrial.course, "TimeTrial"))
       Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
     }
   }
@@ -69,7 +70,7 @@ object Application extends Controller with Security {
       case Some(race) => {
         val wsUrl = routes.WebSockets.racePlayer(race.idToStr).webSocketURL()
         val initialInput = Json.toJson(RaceUpdate.initial)
-        val gameSetup = Json.toJson(GameSetup(DateTime.now, race.idTime, race.countdownSeconds, request.player, race.course, timeTrial = false))
+        val gameSetup = Json.toJson(GameSetup(DateTime.now, race.idTime, race.countdownSeconds, request.player, race.course, "Race"))
         Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
       }
     }
@@ -81,7 +82,7 @@ object Application extends Controller with Security {
       case Some(raceCourse) => {
         val wsUrl = routes.WebSockets.raceCoursePlayer(raceCourse.idToStr).webSocketURL()
         val initialInput = Json.toJson(RaceUpdate.initial)
-        val gameSetup = Json.toJson(GameSetup(DateTime.now, raceCourse.idTime, raceCourse.countdown, request.player, raceCourse.course, timeTrial = false))
+        val gameSetup = Json.toJson(GameSetup(DateTime.now, raceCourse.idTime, raceCourse.countdown, request.player, raceCourse.course, "RaceCourse"))
         Ok(views.html.game(gameSetup, initialInput, wsUrl, showHelp))
       }
     }

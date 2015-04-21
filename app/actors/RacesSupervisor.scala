@@ -22,7 +22,7 @@ case class MountTimeTrialRun(timeTrial: TimeTrial, player: Player, run: TimeTria
 case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
-case class GetRaceCourseActorRef(raceCourseId: BSONObjectID)
+case class GetRaceCourseActorRef(raceCourse: RaceCourse)
 case object CreateRace
 case object GetOpenRaces
 case object GetLiveRuns
@@ -31,6 +31,7 @@ case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
   var mountedRaces = Seq.empty[(Race, Option[Player], ActorRef)]
+  var mountedRaceCourses = Seq.empty[(RaceCourse, ActorRef)]
   var mountedRuns = Seq.empty[(RichRun, ActorRef)]
 
   implicit val timeout = Timeout(5.seconds)
@@ -75,7 +76,7 @@ class RacesSupervisor extends Actor {
 
     case GetRaceActorRef(raceId) => sender ! getRaceActorRef(raceId)
 
-    case GetRaceCourseActorRef(raceCourseId) => sender ! getRaceCourseActorRef(raceCourseId)
+    case GetRaceCourseActorRef(raceCourse) => sender ! getRaceCourseActorRef(raceCourse)
 
     case GetLiveRuns => {
       sender ! mountedRuns.map(_._1)
@@ -116,7 +117,13 @@ class RacesSupervisor extends Actor {
 
   def getRaceActorRef(raceId: BSONObjectID): Option[ActorRef] = mountedRaces.find(_._1.id == raceId).map(_._3)
 
-  def getRaceCourseActorRef(raceCourseId: BSONObjectID): Option[ActorRef] = None
+  def getRaceCourseActorRef(raceCourse: RaceCourse): ActorRef = {
+    mountedRaceCourses.find(_._1.id == raceCourse.id).map(_._2).getOrElse {
+      val ref = context.actorOf(RaceCourseActor.props(raceCourse))
+      mountedRaceCourses = mountedRaceCourses :+ (raceCourse, ref)
+      ref
+    }
+  }
 }
 
 object RacesSupervisor {

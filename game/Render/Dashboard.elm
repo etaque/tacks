@@ -90,8 +90,8 @@ getBoard gameState =
 getHelp : GameState -> Element
 getHelp gameState =
   case gameState.gameMode of
-    Race -> empty
     TimeTrial -> helpMessage |> baseText |> leftAligned |> opacity 0.8
+    _ -> empty
 
 
 -- Main status (big font size)
@@ -143,10 +143,10 @@ getFinishingStatus ({course,gameMode,playerState} as gameState) =
   case playerState.nextGate of
     Nothing ->
       case gameMode of
-        Race ->
-          "finished"
         TimeTrial ->
           getTimeTrialFinishingStatus gameState playerState
+        _ ->
+          "finished"
     Just StartLine ->
       "go!"
     _ ->
