@@ -14,6 +14,7 @@ import tools.Conf
 case class Run(
   id: BSONObjectID = BSONObjectID.generate,
   startTime: DateTime,
+  playerIds: Seq[BSONObjectID],
   leaderboard: Seq[PlayerTally]
 )
 
@@ -22,8 +23,20 @@ case class RaceCourseState(
   nextRun: Option[Run],
   liveRuns: Seq[Run]
 ) {
-  def leaderboardFor(runId: BSONObjectID): Seq[PlayerTally] = {
+  def runLeaderboard(runId: BSONObjectID): Seq[PlayerTally] = {
     liveRuns.find(_.id == runId).map(_.leaderboard).getOrElse(Nil)
+  }
+
+  def playerRun(playerId: BSONObjectID): Option[Run] = {
+    liveRuns.find(_.playerIds.contains(playerId)).orElse(nextRun)
+  }
+
+  def withUpdatedRun(run: Run): RaceCourseState = {
+    if (nextRun.map(_.id).contains(run.id)) copy(nextRun = Some(run))
+    else liveRuns.indexWhere(_.id == run.id) match {
+      case -1 => this
+      case i => copy(liveRuns = liveRuns.updated(i, run))
+    }
   }
 }
 
@@ -82,15 +95,17 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
       val id = player.id.stringify
 
       players.get(id).foreach { context =>
+        val newContext = context.copy(input = input, state = opState)
+        players += (id -> newContext)
+
         if (input.startCountdown) {
           state = RaceCourseActor.startCountdown(state, byPlayerId = player.id)
         }
-        players += (id -> context.copy(input = input, state = opState))
-        if (context.state.crossedGates != opState.crossedGates) {
-          // TODO
-          state = RaceCourseActor.updateTally(state, players.values.map(_.asOpponent).toSeq)
-          // Race.updateFromState(raceState)
+
+        if (context.state.crossedGates != newContext.state.crossedGates) {
+          state = RaceCourseActor.gateCrossedUpdate(state, newContext, players.toMap)
         }
+
         context.ref ! raceUpdateForPlayer(player, clientTime)
       }
     }
@@ -105,21 +120,21 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
     }
   }
 
-  def opponentsTo(playerId: String): Seq[Opponent] = {
+  def playerOpponents(playerId: String): Seq[Opponent] = {
     players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
   }
 
-  def leaderboardFor(playerId: String): Seq[PlayerTally] = {
-    players.get(playerId).flatMap(_.state.runId).map(state.leaderboardFor).getOrElse(Nil)
+  def playerLeaderboard(playerId: String): Seq[PlayerTally] = {
+    state.playerRun(BSONObjectID(playerId)).map(_.id).map(state.runLeaderboard).getOrElse(Nil)
   }
 
   def raceUpdateForPlayer(player: Player, clientTime: Long) = {
     RaceUpdate(
       serverNow = DateTime.now,
-      startTime = state.nextRun.map(_.startTime),
+      startTime = RaceCourseActor.playerStartTime(state, player),
       wind = wind,
-      opponents = opponentsTo(player.id.stringify),
-      leaderboard = leaderboardFor(player.id.stringify),
+      opponents = playerOpponents(player.id.stringify),
+      leaderboard = playerLeaderboard(player.id.stringify),
       clientTime = clientTime
     )
   }
@@ -141,9 +156,28 @@ object RaceCourseActor {
     }
   }
 
-  def updateTally(state: RaceCourseState, playerStates: Seq[Opponent]): RaceCourseState = {
-    // TODO
-    state
+  def playerStartTime(state: RaceCourseState, player: Player): Option[DateTime] = {
+    state.playerRun(player.id).map(_.startTime)
+  }
+
+  def gateCrossedUpdate(state: RaceCourseState, context: PlayerContext, players: Map[String,PlayerContext]): RaceCourseState = {
+    state.playerRun(context.player.id).map { run =>
+
+      val playerIds =
+        if (context.state.crossedGates.length == 1) run.playerIds :+ context.player.id
+        else run.playerIds
+
+      val leaderboard = playerIds.map(_.stringify).flatMap(players.get).map { context =>
+        PlayerTally(context.player.id, context.player.handleOpt, context.state.crossedGates)
+      }.sortBy { pt =>
+        (-pt.gates.length, pt.gates.headOption)
+      }
+
+      val updatedRun = run.copy(playerIds = playerIds, leaderboard = leaderboard)
+
+      state.withUpdatedRun(updatedRun)
+
+    }.getOrElse(state)
   }
 
   def startCountdown(state: RaceCourseState, byPlayerId: BSONObjectID): RaceCourseState = {
@@ -151,6 +185,7 @@ object RaceCourseActor {
       case None => {
         val run = Run(
           startTime = DateTime.now.plusSeconds(state.raceCourse.countdown),
+          playerIds = Nil,
           leaderboard = Nil
         )
         state.copy(nextRun = Some(run))

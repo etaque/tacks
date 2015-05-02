@@ -84,8 +84,7 @@ case class OpponentState(
   windAngle: Double,
   windOrigin: Double,
   shadowDirection: Double,
-  crossedGates: Seq[Long],
-  runId: Option[BSONObjectID] = None
+  crossedGates: Seq[Long]
 )
 
 object OpponentState {

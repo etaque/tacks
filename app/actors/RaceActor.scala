@@ -11,11 +11,6 @@ import org.joda.time.DateTime
 import models._
 import tools.Conf
 
-case class Start(at: DateTime)
-case class PlayerContext(player: Player, input: KeyboardInput, state: OpponentState, ref: ActorRef) {
-  def asOpponent = Opponent(state, player)
-}
-
 case class RaceState(
   race: Race,
   course: Course,
