@@ -11,32 +11,32 @@ import org.joda.time.DateTime
 import models._
 import tools.Conf
 
-case class Run(
-  id: BSONObjectID = BSONObjectID.generate,
-  startTime: DateTime,
-  playerIds: Seq[BSONObjectID],
-  leaderboard: Seq[PlayerTally]
-)
-
 case class RaceCourseState(
   raceCourse: RaceCourse,
-  nextRun: Option[Run],
-  liveRuns: Seq[Run]
+  nextRun: Option[RaceCourseRun],
+  liveRuns: Seq[RaceCourseRun]
 ) {
   def runLeaderboard(runId: BSONObjectID): Seq[PlayerTally] = {
     liveRuns.find(_.id == runId).map(_.leaderboard).getOrElse(Nil)
   }
 
-  def playerRun(playerId: BSONObjectID): Option[Run] = {
+  def playerRun(playerId: BSONObjectID): Option[RaceCourseRun] = {
     liveRuns.find(_.playerIds.contains(playerId)).orElse(nextRun)
   }
 
-  def withUpdatedRun(run: Run): RaceCourseState = {
+  def withUpdatedRun(run: RaceCourseRun): RaceCourseState = {
     if (nextRun.map(_.id).contains(run.id)) copy(nextRun = Some(run))
     else liveRuns.indexWhere(_.id == run.id) match {
       case -1 => this
       case i => copy(liveRuns = liveRuns.updated(i, run))
     }
+  }
+
+  def escapePlayer(playerId: BSONObjectID): RaceCourseState = {
+    copy(
+      nextRun = nextRun.map(_.removePlayerId(playerId)),
+      liveRuns = liveRuns.map(_.removePlayerId(playerId))
+    )
   }
 }
 
@@ -100,6 +100,10 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
 
         if (input.startCountdown) {
           state = RaceCourseActor.startCountdown(state, byPlayerId = player.id)
+        }
+
+        if (input.escapeRun) {
+          state = state.escapePlayer(player.id)
         }
 
         if (context.state.crossedGates != newContext.state.crossedGates) {
@@ -175,6 +179,8 @@ object RaceCourseActor {
 
       val updatedRun = run.copy(playerIds = playerIds, leaderboard = leaderboard)
 
+      RaceCourseRun.upsert(updatedRun)
+
       state.withUpdatedRun(updatedRun)
 
     }.getOrElse(state)
@@ -183,7 +189,9 @@ object RaceCourseActor {
   def startCountdown(state: RaceCourseState, byPlayerId: BSONObjectID): RaceCourseState = {
     state.nextRun match {
       case None => {
-        val run = Run(
+        val run = RaceCourseRun(
+          _id = BSONObjectID.generate,
+          raceCourseId = state.raceCourse.id,
           startTime = DateTime.now.plusSeconds(state.raceCourse.countdown),
           playerIds = Nil,
           leaderboard = Nil

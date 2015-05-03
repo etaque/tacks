@@ -12,7 +12,8 @@ case class KeyboardInput(
   arrows: Arrows,
   subtleTurn: Boolean,
   lock: Boolean,
-  startCountdown: Boolean
+  startCountdown: Boolean,
+  escapeRun: Boolean
 ) {
   def manualTurn = arrows.x != 0
   def isTurning = manualTurn && !subtleTurn
@@ -26,7 +27,8 @@ object KeyboardInput {
     arrows = Arrows(0, 0),
     subtleTurn = false,
     lock = false,
-    startCountdown = false
+    startCountdown = false,
+    escapeRun = false
   )
 }
 

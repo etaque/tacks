@@ -5190,6 +5190,7 @@ Elm.Inputs.make = function (_elm) {
    $Char = Elm.Char.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
+   $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
@@ -5236,6 +5237,28 @@ Elm.Inputs.make = function (_elm) {
              ,startTime: b
              ,wind: c};
    });
+   var toKeyboardInput = F2(function (arrows,
+   keys) {
+      return {_: {}
+             ,arrows: arrows
+             ,escapeRun: A2($List.member,
+             27,
+             keys)
+             ,lock: A2($List.member,13,keys)
+             ,startCountdown: A2($List.member,
+             $Char.toCode(_U.chr("C")),
+             keys)
+             ,subtleTurn: A2($List.member,
+             16,
+             keys)
+             ,tack: A2($List.member,
+             32,
+             keys)};
+   });
+   var keyboardInput = A3($Signal.map2,
+   toKeyboardInput,
+   $Keyboard.arrows,
+   $Keyboard.keysDown);
    var isLocking = function (ki) {
       return _U.cmp(ki.arrows.y,
       0) > 0 || ki.lock;
@@ -5249,25 +5272,20 @@ Elm.Inputs.make = function (_elm) {
    var isSubtleTurning = function (ki) {
       return manualTurn(ki) && ki.subtleTurn;
    };
-   var KeyboardInput = F5(function (a,
+   var KeyboardInput = F6(function (a,
    b,
    c,
    d,
-   e) {
+   e,
+   f) {
       return {_: {}
              ,arrows: a
+             ,escapeRun: f
              ,lock: b
              ,startCountdown: e
              ,subtleTurn: d
              ,tack: c};
    });
-   var keyboardInput = A6($Signal.map5,
-   KeyboardInput,
-   $Keyboard.arrows,
-   $Keyboard.enter,
-   $Keyboard.space,
-   $Keyboard.shift,
-   $Keyboard.isDown($Char.toCode(_U.chr("C"))));
    var UserArrows = F2(function (a,
    b) {
       return {_: {},x: a,y: b};
@@ -5279,6 +5297,7 @@ Elm.Inputs.make = function (_elm) {
                         ,isTurning: isTurning
                         ,isSubtleTurning: isSubtleTurning
                         ,isLocking: isLocking
+                        ,toKeyboardInput: toKeyboardInput
                         ,keyboardInput: keyboardInput
                         ,RaceInput: RaceInput
                         ,Clock: Clock
@@ -6154,7 +6173,8 @@ Elm.Main.make = function (_elm) {
                      ,lock: v.input.lock
                      ,tack: v.input.tack
                      ,subtleTurn: v.input.subtleTurn
-                     ,startCountdown: v.input.startCountdown}
+                     ,startCountdown: v.input.startCountdown
+                     ,escapeRun: v.input.escapeRun}
              ,localTime: v.localTime};
    }),
    A4($Signal.map3,
@@ -15511,6 +15531,15 @@ Elm.Steps.make = function (_elm) {
    $Steps$Turning = Elm.Steps.Turning.make(_elm),
    $Steps$Vmg = Elm.Steps.Vmg.make(_elm),
    $Steps$Wind = Elm.Steps.Wind.make(_elm);
+   var runEscapeStep = F2(function (doEscape,
+   playerState) {
+      return function () {
+         var crossedGates = doEscape ? _L.fromArray([]) : playerState.crossedGates;
+         return _U.replace([["crossedGates"
+                            ,crossedGates]],
+         playerState);
+      }();
+   });
    var playerTimeStep = F2(function (elapsed,
    state) {
       return _U.replace([["time"
@@ -15521,14 +15550,14 @@ Elm.Steps.make = function (_elm) {
    elapsed,
    gameState) {
       return function () {
-         var playerState = playerTimeStep(elapsed)(A2($Steps$GateCrossing.gateCrossingStep,
+         var playerState = runEscapeStep(keyboardInput.escapeRun)(playerTimeStep(elapsed)(A2($Steps$GateCrossing.gateCrossingStep,
          gameState.playerState,
          gameState)(A2($Steps$Moving.movingStep,
          elapsed,
          gameState.course)($Steps$Vmg.vmgStep($Steps$Wind.windStep(gameState)(A3($Steps$Turning.turningStep,
          elapsed,
          keyboardInput,
-         gameState.playerState))))));
+         gameState.playerState)))))));
          return _U.replace([["playerState"
                             ,playerState]],
          gameState);
@@ -15804,6 +15833,7 @@ Elm.Steps.make = function (_elm) {
                        ,updateOpponents: updateOpponents
                        ,raceInputStep: raceInputStep
                        ,playerTimeStep: playerTimeStep
+                       ,runEscapeStep: runEscapeStep
                        ,playerStep: playerStep
                        ,stepGame: stepGame};
    return _elm.Steps.values;

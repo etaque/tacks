@@ -187,6 +187,13 @@ playerTimeStep : Float -> PlayerState -> PlayerState
 playerTimeStep elapsed state =
   { state | time <- state.time + elapsed }
 
+runEscapeStep : Bool -> PlayerState -> PlayerState
+runEscapeStep doEscape playerState =
+  let
+    crossedGates = if doEscape then [] else playerState.crossedGates
+  in
+    { playerState | crossedGates <- crossedGates }
+    
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState
 playerStep keyboardInput elapsed gameState =
@@ -198,6 +205,7 @@ playerStep keyboardInput elapsed gameState =
         |> movingStep elapsed gameState.course
         |> gateCrossingStep gameState.playerState gameState
         |> playerTimeStep elapsed
+        |> runEscapeStep keyboardInput.escapeRun
   in
     { gameState | playerState <- playerState }
 

@@ -4,6 +4,7 @@ import Game
 
 import Signal (..)
 import Time (..)
+import List as L
 import Keyboard
 import Char
 import Graphics.Input
@@ -16,6 +17,7 @@ type alias KeyboardInput =
   , tack:           Bool
   , subtleTurn:     Bool
   , startCountdown: Bool
+  , escapeRun:      Bool
   }
 
 manualTurn ki = ki.arrows.x /= 0
@@ -23,13 +25,20 @@ isTurning ki = manualTurn ki && not ki.subtleTurn
 isSubtleTurning ki = manualTurn ki && ki.subtleTurn
 isLocking ki = ki.arrows.y > 0 || ki.lock
 
+toKeyboardInput : UserArrows -> List Keyboard.KeyCode -> KeyboardInput
+toKeyboardInput arrows keys =
+  { arrows = arrows
+  , lock = L.member 13 keys
+  , tack = L.member 32 keys
+  , subtleTurn = L.member 16 keys
+  , startCountdown = L.member (Char.toCode 'C') keys
+  , escapeRun = L.member 27 keys
+  }
+
 keyboardInput : Signal KeyboardInput
-keyboardInput = map5 KeyboardInput
+keyboardInput = map2 toKeyboardInput
   Keyboard.arrows
-  Keyboard.enter
-  Keyboard.space
-  Keyboard.shift
-  (Keyboard.isDown (Char.toCode 'C'))
+  Keyboard.keysDown
 
 
 type alias RaceInput =
