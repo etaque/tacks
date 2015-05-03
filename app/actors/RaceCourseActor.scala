@@ -122,6 +122,10 @@ class RaceCourseActor(raceCourse: RaceCourse) extends Actor with ManageWind {
     case RotateNextRun => {
       state = RaceCourseActor.rotateNextRun(state)
     }
+
+    case GetStatus => {
+      sender ! (state.nextRun, players.values.map(_.asOpponent))
+    }
   }
 
   def playerOpponents(playerId: String): Seq[Opponent] = {

@@ -26,6 +26,7 @@ case class GetRaceCourseActorRef(raceCourse: RaceCourse)
 case object CreateRace
 case object GetOpenRaces
 case object GetLiveRuns
+case object GetRaceCourses
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
@@ -80,6 +81,15 @@ class RacesSupervisor extends Actor {
 
     case GetLiveRuns => {
       sender ! mountedRuns.map(_._1)
+    }
+
+    case GetRaceCourses => {
+      val raceCoursesFuture = mountedRaceCourses.toSeq.map { case (raceCourse, ref) =>
+        (ref ? GetStatus).mapTo[(Option[RaceCourseRun], Seq[Opponent])].map { case (nextRun, opponents) =>
+          RaceCourseStatus(raceCourse, nextRun, opponents)
+        }
+      }
+      Future.sequence(raceCoursesFuture) pipeTo sender
     }
 
     case UnmountRace(race) => {

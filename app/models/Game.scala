@@ -166,3 +166,9 @@ case class RaceStatus(
   startTime: Option[DateTime],
   opponents: Seq[Opponent]
 )
+
+case class RaceCourseStatus(
+  raceCourse: RaceCourse,
+  nextRun: Option[RaceCourseRun],
+  opponents: Seq[Opponent]
+)

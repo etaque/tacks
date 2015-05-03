@@ -176,6 +176,10 @@ object JsonFormats {
 
   implicit val raceStatusFormat: Format[RaceStatus] = Json.format[RaceStatus]
 
+  implicit val raceCourseFormat: Format[RaceCourse] = Json.format[RaceCourse]
+  implicit val raceCourseRunFormat: Format[RaceCourseRun] = Json.format[RaceCourseRun]
+  implicit val raceCourseStatusFormat: Format[RaceCourseStatus] = Json.format[RaceCourseStatus]
+
   implicit val runFormat: Format[TimeTrialRun] = Json.format[TimeTrialRun]
   implicit val timeTrialFormat: Format[TimeTrial] = Json.format[TimeTrial]
   implicit val richRunFormat: Format[RichRun] = Json.format[RichRun]
