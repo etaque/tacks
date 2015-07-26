@@ -21,7 +21,6 @@ object Application extends Controller with Security {
 
   def index = PlayerAction.async() { implicit request =>
     for {
-      raceCourses       <- RaceCourse.list
       finishedRaces     <- Race.listFinished(10)
       users             <- User.listByIds(finishedRaces.flatMap(_.tally.map(_.playerId)))
       timeTrials        <- TimeTrial.listCurrent
@@ -29,7 +28,7 @@ object Application extends Controller with Security {
       trialsUsers       <- User.listByIds(trialsWithRanking.flatMap(_._2.map(_.playerId)))
       leaderboard        = TimeTrialLeaderboard.forTrials(trialsWithRanking, trialsUsers)
     }
-    yield Ok(views.html.index(raceCourses, timeTrials, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
+    yield Ok(views.html.index(timeTrials, trialsUsers, leaderboard, finishedRaces, users, Users.userForm))
   }
 
   def setHandle = PlayerAction(parse.urlFormEncoded) { implicit request =>

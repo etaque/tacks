@@ -84,12 +84,7 @@ class RacesSupervisor extends Actor {
     }
 
     case GetRaceCourses => {
-      val raceCoursesFuture = mountedRaceCourses.toSeq.map { case (raceCourse, ref) =>
-        (ref ? GetStatus).mapTo[(Option[RaceCourseRun], Seq[Opponent])].map { case (nextRun, opponents) =>
-          RaceCourseStatus(raceCourse, nextRun, opponents)
-        }
-      }
-      Future.sequence(raceCoursesFuture) pipeTo sender
+      RaceCourse.list.flatMap { raceCourses => Future.sequence(raceCourses.map(getRaceCourseStatus)) } pipeTo sender
     }
 
     case UnmountRace(race) => {
@@ -121,6 +116,19 @@ class RacesSupervisor extends Actor {
       sender ! ref
     }
 
+  }
+
+  def getRaceCourseStatus(raceCourse: RaceCourse): Future[RaceCourseStatus] = {
+    mountedRaceCourses.find(_._1.slug == raceCourse.slug) match {
+      case Some((raceCourse, ref)) => {
+        (ref ? GetStatus).mapTo[(Option[RaceCourseRun], Seq[Opponent])].map { case (nextRun, opponents) =>
+          RaceCourseStatus(raceCourse, nextRun, opponents)
+        }
+      }
+      case None => {
+        Future.successful(RaceCourseStatus(raceCourse, None, Nil))
+      }
+    }
   }
 
   def getRace(raceId: BSONObjectID): Option[Race] = mountedRaces.find(_._1.id == raceId).headOption.map(_._1)

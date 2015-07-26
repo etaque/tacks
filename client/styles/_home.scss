@@ -159,6 +159,36 @@
 .live-center {
   margin-top: 30px;
 
+  .race-course {
+    background-color: white;
+    box-shadow: 0 1px 1px $shadow inset;
+    margin-bottom: 30px;
+    
+    .name {
+      color: white;
+      display: block;
+      text-align: center;
+      padding: 10px;
+      background-color: $navBlue;
+      text-transform: uppercase;
+      font-family: $lightFontFamily;
+      letter-spacing: 1px;
+    }
+
+    .players {
+      padding: 10px;
+
+      .player-avatar {
+        display: block;
+      }
+
+      .empty {
+        color: $gray;
+        font-size: 13px;
+      }
+    }
+  }
+
   .table-open-races {
     width: 100%;
     background-color: white;

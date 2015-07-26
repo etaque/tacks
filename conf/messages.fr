@@ -73,9 +73,11 @@ home.timeTrialRanking=meilleurs temps
 home.runTimeTrial=Jouer
 home.leaderboard=Classement du mois
 home.fullLeaderboard=Voir la suite
+home.emptyRaceCourse=Plan d''eau vide
 
 chat.title=Live room
 chat.messagePlaceholder=Touche Entrée pour envoyer le message
+
 chat.statusPlaceholder=statut
 
 footer.message=un jeu <a href="https://github.com/etaque/tacks">open source</a> créé par <a href="https://twitter.com/etaque">@etaque</a>.

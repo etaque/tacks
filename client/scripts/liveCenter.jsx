@@ -7,6 +7,7 @@
 var React         = require('react');
 var $             = require('jquery');
 var _             = require('lodash');
+var RaceCourseBoard = require('./liveCenter/raceCourseBoard');
 var Board         = require('./liveCenter/board');
 var Messages      = require('./messages');
 var routes        = require('./routes');
@@ -85,24 +86,10 @@ var LiveCenter = React.createClass({
 
   render: function() {
     var st = this.state.racesStatus;
-    var btnClassName = "btn btn-primary btn-block btn-new-race " + (this.state.loadingNewRace ? "loading" : "");
     return (
       <div className="live-center">
         {this.webSocketAlert(this.state.showWebSocketAlert)}
-
-        <Board status={st} />
-        <div className="row row-new-race">
-          <div className="col-md-4 form-group">
-            <select className="form-control" onChange={ this.setGenerator } value={ this.state.generator }>
-              { this.generatorOptions(st.generators) }
-            </select>
-          </div>
-          <div className="col-md-8 form-group">
-            <a href="" onClick={ this.createRace } className={ btnClassName }>
-              { Messages("home.newRace") }
-            </a>
-          </div>
-        </div>
+        <RaceCourseBoard raceCourses={ st.raceCourses } />
       </div>
     );
   }

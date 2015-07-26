@@ -5384,6 +5384,26 @@ a.player-avatar {
 
 .live-center {
   margin-top: 30px; }
+  .live-center .race-course {
+    background-color: white;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    margin-bottom: 30px; }
+    .live-center .race-course .name {
+      color: white;
+      display: block;
+      text-align: center;
+      padding: 10px;
+      background-color: #387ac4;
+      text-transform: uppercase;
+      font-family: "Proxima Nova Thin";
+      letter-spacing: 1px; }
+    .live-center .race-course .players {
+      padding: 10px; }
+      .live-center .race-course .players .player-avatar {
+        display: block; }
+      .live-center .race-course .players .empty {
+        color: #7b8087;
+        font-size: 13px; }
   .live-center .table-open-races {
     width: 100%;
     background-color: white;
