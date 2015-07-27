@@ -8,7 +8,6 @@ var watchify    = require('watchify');
 var reactify    = require('reactify');
 var source      = require('vinyl-source-stream');
 var shim        = require('browserify-shim');
-var es6arrow    = require('es6-arrow-function');
 var runSequence = require('run-sequence');
 
 var buildDir   = '../public/';
@@ -17,7 +16,7 @@ function handleError(task) {
   return function(err) {
     $.util.log($.util.colors.red(err));
     $.notify.onError(task + " failed")(err);
-  }
+  };
 }
 
 // see https://gist.github.com/mitchelkuijpers/11281981
@@ -27,7 +26,6 @@ function jsx(watch) {
 
   bundler.transform(reactify);
   bundler.transform(shim);
-  bundler.transform(es6arrow);
 
   var rebundle = function() {
     var stream = bundler.bundle({debug: true});
@@ -43,14 +41,14 @@ function jsx(watch) {
   return rebundle();
 }
 
-gulp.task('jsx', function() { return jsx(false) });
-gulp.task('jsx:watch', function() { return jsx(true) });
+gulp.task('jsx', function() { return jsx(false); });
+gulp.task('jsx:watch', function() { return jsx(true); });
 
 
 gulp.task('compress', function() {
   gulp.src(buildDir + 'javascripts/main.js')
     .pipe($.uglify())
-    .pipe(gulp.dest(buildDir + 'javascripts/dist'))
+    .pipe(gulp.dest(buildDir + 'javascripts/dist'));
 });
 
 // Compile Any Other Sass Files You Added (app/styles)
