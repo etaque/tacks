@@ -1,22 +1,22 @@
 module Chat.Views where
 
 import Signal
-import List (..)
+import List exposing (..)
 import Maybe as M
 import String as S
 import Json.Decode as Json
 
-import Html (..)
-import Html.Attributes (..)
-import Html.Events (..)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
-import Game (Player)
-import Chat.Model (..)
-import Messages (Translator)
+import Game exposing (Player)
+import Chat.Model exposing (..)
+import Messages exposing (Translator)
 
 
-localUpdates : Signal.Channel Action
-localUpdates = Signal.channel NoOp
+localUpdates : Signal.Mailbox Action
+localUpdates = Signal.mailbox NoOp
 
 
 view : Translator -> Model -> Html
@@ -60,8 +60,8 @@ statusForm t field =
       , class "form-control"
       , value field
       , placeholder (t "chat.statusPlaceholder")
-      , on "input" targetValue (Signal.send localUpdates << UpdateStatusField)
-      , onEnter (Signal.send localUpdates (SubmitStatus field))
+      , on "input" targetValue (\s -> Signal.message localUpdates.address (UpdateStatusField s))
+      , onEnter localUpdates.address (SubmitStatus field)
       ]
       []
     ]
@@ -96,11 +96,12 @@ playerWithAvatar player =
       else
         a [ href ("/players/" ++ handle), target "_blank", class "player-avatar" ] [avatarImg, text " ", handleSpan]
 
-onEnter : Signal.Message -> Attribute
-onEnter message =
+
+onEnter : Signal.Address a -> a -> Attribute
+onEnter address value =
     on "keydown"
       (Json.customDecoder keyCode is13)
-      (always message)
+      (\_ -> Signal.message address value)
 
 is13 : Int -> Result String ()
 is13 code =
@@ -114,8 +115,8 @@ messageForm t field =
       , class "form-control"
       , value field
       , placeholder (t "chat.messagePlaceholder")
-      , on "input" targetValue (Signal.send localUpdates << UpdateMessageField)
-      , onEnter (Signal.send localUpdates (SubmitMessage field))
+      , on "input" targetValue (\msg -> Signal.message localUpdates.address (UpdateMessageField msg))
+      , onEnter localUpdates.address (SubmitMessage field)
       ]
       []
     ]

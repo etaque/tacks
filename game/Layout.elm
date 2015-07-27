@@ -1,8 +1,8 @@
 module Layout where
 
-import Graphics.Collage (..)
-import Graphics.Element (..)
-import List (..)
+import Graphics.Collage exposing (..)
+import Graphics.Element exposing (..)
+import List exposing (..)
 
 type alias DashboardLayout =
   { topLeft:      List Element
@@ -20,15 +20,15 @@ type alias Layout =
 centerElements : List Element -> List Element
 centerElements elements =
   let
-    maxWidth = maximum (map widthOf elements)
+    maxWidth = maximum (map widthOf elements) |> Maybe.withDefault 0
   in
     map (\e -> container maxWidth (heightOf e) midTop e) elements
 
 assembleDashboardLayout : (Int,Int) -> DashboardLayout -> List Element
 assembleDashboardLayout (w,h) {topLeft,topRight,topCenter,bottomCenter} =
-  [ container w h (topLeftAt (Absolute 20) (Absolute 20)) <| flow down topLeft
-  , container w h (midTopAt (Relative 0.5) (Absolute 20)) <| flow down (centerElements topCenter)
-  , container w h (topRightAt (Absolute 20) (Absolute 20)) <| flow down topRight
+  [ container w h (topLeftAt (absolute 20) (absolute 20)) <| flow down topLeft
+  , container w h (midTopAt (relative 0.5) (absolute 20)) <| flow down (centerElements topCenter)
+  , container w h (topRightAt (absolute 20) (absolute 20)) <| flow down topRight
   ]
 
 assembleLayout : (Int,Int) -> (Float,Float) -> Layout -> Element

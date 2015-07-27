@@ -1,16 +1,16 @@
 module Render.All where
 
-import Game (..)
+import Game exposing (..)
 
-import Render.Utils (colors, emptyForm)
-import Render.Course (renderCourse)
-import Render.Players (renderPlayers)
-import Render.Controls (renderControls)
-import Render.Dashboard (buildDashboard)
-import Layout (..)
+import Render.Utils exposing (colors, emptyForm)
+import Render.Course exposing (renderCourse)
+import Render.Players exposing (renderPlayers)
+import Render.Controls exposing (renderControls)
+import Render.Dashboard exposing (buildDashboard)
+import Layout exposing (..)
 
-import Graphics.Collage (..)
-import Graphics.Element (..)
+import Graphics.Collage exposing (..)
+import Graphics.Element exposing (..)
 import Maybe as M
 
 render : (Int,Int) -> GameState -> Element

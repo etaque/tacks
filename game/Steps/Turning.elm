@@ -1,9 +1,9 @@
 module Steps.Turning where
 
-import Inputs (..)
-import Game (..)
-import Geo (..)
-import Core (..)
+import Inputs exposing (..)
+import Game exposing (..)
+import Geo exposing (..)
+import Core exposing (..)
 
 import Maybe as M
 import List as L

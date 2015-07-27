@@ -1,15 +1,15 @@
 module Steps where
 
-import Inputs (..)
-import Game (..)
-import Geo (..)
-import Core (..)
+import Inputs exposing (..)
+import Game exposing (..)
+import Geo exposing (..)
+import Core exposing (..)
 
-import Steps.GateCrossing (gateCrossingStep)
-import Steps.Moving (movingStep)
-import Steps.Turning (turningStep)
-import Steps.Vmg (vmgStep)
-import Steps.Wind (windStep)
+import Steps.GateCrossing exposing (gateCrossingStep)
+import Steps.Moving exposing (movingStep)
+import Steps.Turning exposing (turningStep)
+import Steps.Vmg exposing (vmgStep)
+import Steps.Wind exposing (windStep)
 
 import Maybe as M
 import List as L
@@ -97,7 +97,7 @@ updateGust course wind elapsed clock gust =
     newPosition = movePoint gust.position elapsed groundSpeed groundDirection
 
     maxRadiusAfterSeconds = 20
-    radius = L.minimum [ (clock - gust.spawnedAt) * 0.001 * gust.maxRadius / maxRadiusAfterSeconds, gust.maxRadius ]
+    radius = min ((clock - gust.spawnedAt) * 0.001 * gust.maxRadius / maxRadiusAfterSeconds) gust.maxRadius
   in
     { gust | position <- newPosition, radius <- radius }
 

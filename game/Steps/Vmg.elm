@@ -1,9 +1,9 @@
 module Steps.Vmg where
 
-import Game (..)
-import Geo (..)
-import Core (..)
-import Steps.Util (..)
+import Game exposing (..)
+import Geo exposing (..)
+import Core exposing (..)
+import Steps.Util exposing (..)
 
 import Maybe as M
 import List as L
@@ -49,6 +49,6 @@ findVmgInInterval : Float -> Int -> Int -> Vmg
 findVmgInInterval windSpeed minAngle maxAngle =
   let
     vmgs = L.map (makeVmg windSpeed) (floatRange minAngle maxAngle)
-    bestMaybe = L.sortBy .value vmgs |> L.reverse |> headMaybe
+    bestMaybe = L.sortBy .value vmgs |> L.reverse |> L.head
   in
     M.withDefault defaultVmg bestMaybe

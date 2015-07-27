@@ -1,18 +1,19 @@
 module Render.Controls where
 
-import Render.Utils (..)
-import Core (..)
-import Geo (..)
-import Game (..)
+import Render.Utils exposing (..)
+import Core exposing (..)
+import Geo exposing (..)
+import Game exposing (..)
 
 import String
 import Text
 import Maybe
-import Graphics.Collage (..)
+import Graphics.Collage exposing (..)
+import Graphics.Element as E
 
 gateHintLabel: Int -> Form
 gateHintLabel d =
-  (toString d) ++ "m" |> baseText |> Text.centered |> toForm
+  (toString d) ++ "m" |> baseText |> E.centered |> toForm
 
 
 gateHintTriangle : Float -> Bool -> Path

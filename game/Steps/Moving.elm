@@ -1,10 +1,10 @@
 module Steps.Moving where
 
-import Inputs (..)
-import Game (..)
-import Geo (..)
-import Core (..)
-import Steps.Util (..)
+import Inputs exposing (..)
+import Game exposing (..)
+import Geo exposing (..)
+import Core exposing (..)
+import Steps.Util exposing (..)
 
 import Maybe as M
 import List as L
@@ -45,8 +45,8 @@ withInertia elapsed previousVelocity targetVelocity =
     velocityDelta = targetVelocity - previousVelocity
     accel = velocityDelta / elapsed
     realAccel = if accel > 0
-      then L.minimum [accel, maxAccel]
-      else L.maximum [accel, -maxAccel]
+      then min accel maxAccel
+      else max accel -maxAccel
   in
     previousVelocity + realAccel * elapsed
 

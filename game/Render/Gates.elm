@@ -1,17 +1,17 @@
 module Render.Gates where
 
-import Render.Utils (..)
-import Core (..)
-import Geo (..)
-import Game (..)
+import Render.Utils exposing (..)
+import Core exposing (..)
+import Geo exposing (..)
+import Game exposing (..)
 import String
 import Text
 
 import Maybe as M
-import List (..)
-import Graphics.Collage (..)
-import Color (white,black)
-import Time (Time)
+import List exposing (..)
+import Graphics.Collage exposing (..)
+import Color exposing (white,black)
+import Time exposing (Time)
 
 
 type GateLocation = Upwind | Downwind

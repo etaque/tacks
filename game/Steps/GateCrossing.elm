@@ -1,8 +1,8 @@
 module Steps.GateCrossing where
 
-import Game (..)
-import Geo (..)
-import Core (..)
+import Game exposing (..)
+import Geo exposing (..)
+import Core exposing (..)
 
 import Maybe as M
 import List as L
@@ -23,12 +23,12 @@ gateCrossingStep previousState ({course} as gameState) ({crossedGates,position} 
 
       Just UpwindGate ->
         if | gateCrossedFromSouth course.upwind step   -> t :: crossedGates
-           | gateCrossedFromSouth course.downwind step -> L.tail crossedGates
+           | gateCrossedFromSouth course.downwind step -> L.tail crossedGates |> M.withDefault []
            | otherwise                                 -> crossedGates
 
       Just DownwindGate ->
         if | gateCrossedFromNorth course.downwind step -> t :: crossedGates
-           | gateCrossedFromNorth course.upwind step   -> L.tail crossedGates
+           | gateCrossedFromNorth course.upwind step   -> L.tail crossedGates |> M.withDefault []
            | otherwise                                 -> crossedGates
 
       Nothing ->

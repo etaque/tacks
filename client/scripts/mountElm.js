@@ -29,6 +29,14 @@ function mountGame() {
   }
 }
 
+function mountLiveCenter(div) {
+  var initialInput = {
+    messagesStore: readData("messages")
+  };
+
+  var liveCenter = Elm.embed(window.Elm.LiveCenter.Main, div, initialInput);
+}
+
 function mountChat(div) {
   var wsUrl = routes.WebSockets.chatRoom().webSocketURL();
   var messages = readData("messages");
@@ -89,5 +97,6 @@ function mountWebSocket(div, wsUrl, elmApp, inPort, outPort, initialInput) {
 module.exports = {
   mountGame: mountGame,
   mountChat: mountChat,
+  mountLiveCenter: mountLiveCenter,
   mountWebSocket: mountWebSocket
 };

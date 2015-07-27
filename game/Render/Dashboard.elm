@@ -1,20 +1,19 @@
 module Render.Dashboard where
 
-import Render.Utils (..)
-import Core (..)
-import Geo (..)
-import Game (..)
-import Layout (..)
+import Render.Utils exposing (..)
+import Core exposing (..)
+import Geo exposing (..)
+import Game exposing (..)
+import Layout exposing (..)
 
 import String
-import Text (leftAligned,centered)
-import List (..)
+import List exposing (..)
 import Maybe as M
-import Graphics.Input (customButton)
-import Graphics.Element (..)
-import Graphics.Collage (..)
-import Color (white)
-import Time (Time)
+import Graphics.Input exposing (customButton)
+import Graphics.Element exposing (..)
+import Graphics.Collage exposing (..)
+import Color exposing (white)
+import Time exposing (Time)
 import Signal
 
 s = spacer 20 20
@@ -61,9 +60,15 @@ getPlayerEntries {opponents,playerState} =
 getLeaderboardLine : PlayerTally -> Int -> PlayerTally -> Element
 getLeaderboardLine leaderTally position tally =
   let
-    delta = if length tally.gates == length leaderTally.gates && not (isEmpty tally.gates)
-      then Just (head tally.gates - head leaderTally.gates)
-      else Nothing
+    delta = if length tally.gates == length leaderTally.gates
+      then
+        case (head tally.gates, head leaderTally.gates) of
+          (Just g1, Just g2) ->
+            Just (g1 - g2)
+          _ ->
+            Nothing
+      else
+        Nothing
     line =
       { id       = tally.playerId
       , handle   = tally.playerHandle
@@ -79,7 +84,7 @@ getLeaderboard {leaderboard,playerState} =
     showLeader leader =
       indexedMap (getLeaderboardLine leader) leaderboard |> flow down
   in
-    M.map showLeader (headMaybe leaderboard) |> M.withDefault empty
+    M.map showLeader (head leaderboard) |> M.withDefault empty
 
 getBoard : GameState -> Element
 getBoard gameState =
@@ -112,7 +117,7 @@ getTimer {startTime, now, playerState} =
       let
         timer =
           if isNothing playerState.nextGate then
-            M.withDefault 0 (headMaybe playerState.crossedGates)
+            M.withDefault 0 (head playerState.crossedGates)
           else
             t - now
       in
@@ -161,8 +166,8 @@ getTimeTrialFinishingStatus {playerState,ghosts} {player,crossedGates} =
   case findPlayerGhost playerState.player.id ghosts of
     Just playerGhost ->
       let
-        previousTimeMaybe = headMaybe playerGhost.gates
-        newTimeMaybe = headMaybe crossedGates
+        previousTimeMaybe = head playerGhost.gates
+        newTimeMaybe = head crossedGates
       in
         case (previousTimeMaybe, newTimeMaybe) of
           (Just previousTime, Just newTime) ->

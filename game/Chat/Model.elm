@@ -2,10 +2,10 @@ module Chat.Model where
 
 import Maybe as M
 import List
-import Json.Decode (..)
+import Json.Decode exposing (..)
 import Json.Encode as E
 
-import Game (Player, defaultPlayer)
+import Game exposing (Player, defaultPlayer)
 
 
 type alias Model =

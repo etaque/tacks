@@ -1,21 +1,20 @@
 module Chat.Main where
 
-import Signal
-import List (..)
+import List exposing (..)
 import Maybe as M
 import String as S
 import Json.Decode as Json
 import Result
-import Time (..)
+import Time exposing (..)
 
-import Html (..)
-import Html.Attributes (..)
-import Html.Events (..)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 
 import Messages
-import Game (Player, defaultPlayer)
-import Chat.Model (..)
-import Chat.Views as V
+import Game exposing (Player, defaultPlayer)
+import Chat.Model exposing (..)
+import Chat.Views as V exposing (localUpdates)
 
 
 update : Action -> Model -> Model
@@ -76,7 +75,7 @@ handleServerInput value =
 
 updates : Signal Action
 updates = Signal.mergeMany
-  [ Signal.subscribe V.localUpdates
+  [ localUpdates.signal
   , Signal.map handleServerInput serverInput
   ]
 
@@ -91,7 +90,7 @@ port localOutput : Signal Json.Value
 port localOutput =
   let
     output = Signal.mergeMany
-      [ Signal.keepIf isOutputAction NoOp updates
+      [ Signal.filter isOutputAction NoOp updates
       , Signal.map (\_ -> Ping) (every (10 * second))
       ]
   in
@@ -104,5 +103,5 @@ port scrollDown =
       NewMessage _ _ -> True
       _ -> False
   in
-    Signal.keepIf isNewMessage NoOp updates
+    Signal.filter isNewMessage NoOp updates
       |> Signal.map (\_ -> ())

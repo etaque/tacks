@@ -1,11 +1,11 @@
 module Main where
 
 import Window
-import Signal (..)
-import Time (..)
-import Graphics.Element (Element)
+import Signal exposing (..)
+import Time exposing (..)
+import Graphics.Element exposing (Element)
 
-import Inputs (..)
+import Inputs exposing (..)
 import Game
 import Steps
 import Render.All as R

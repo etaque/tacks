@@ -4,11 +4,11 @@ import Game
 
 import String as S
 import Text as T
-import List (..)
-import Time (..)
+import List exposing (..)
+import Time exposing (..)
 import Graphics.Collage as C
 import Graphics.Element as E
-import Color (rgb, white)
+import Color exposing (rgb, white)
 
 helpMessage =
   "ARROWS: turn left/right\n" ++

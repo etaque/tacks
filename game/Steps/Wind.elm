@@ -1,8 +1,8 @@
 module Steps.Wind where
 
-import Game (..)
-import Geo (..)
-import Core (..)
+import Game exposing (..)
+import Geo exposing (..)
+import Core exposing (..)
 
 import Maybe as M
 import List as L
@@ -54,7 +54,7 @@ gustEffect state wind gust =
   let
     d = distance state.position gust.position
     fromEdge = gust.radius - d
-    factor = L.minimum [fromEdge / (gust.radius * 0.2), 1]
+    factor = min (fromEdge / (gust.radius * 0.2)) 1
 
     originEffect = angleDelta gust.angle wind.origin
     speedEffect = gust.speed

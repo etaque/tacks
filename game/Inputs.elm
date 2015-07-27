@@ -2,9 +2,10 @@ module Inputs where
 
 import Game
 
-import Signal (..)
-import Time (..)
+import Signal exposing (..)
+import Time exposing (..)
 import List as L
+import Set as S exposing (..)
 import Keyboard
 import Char
 import Graphics.Input
@@ -25,18 +26,18 @@ isTurning ki = manualTurn ki && not ki.subtleTurn
 isSubtleTurning ki = manualTurn ki && ki.subtleTurn
 isLocking ki = ki.arrows.y > 0 || ki.lock
 
-toKeyboardInput : UserArrows -> List Keyboard.KeyCode -> KeyboardInput
+toKeyboardInput : UserArrows -> Set Keyboard.KeyCode -> KeyboardInput
 toKeyboardInput arrows keys =
   { arrows = arrows
-  , lock = L.member 13 keys
-  , tack = L.member 32 keys
-  , subtleTurn = L.member 16 keys
-  , startCountdown = L.member (Char.toCode 'C') keys
-  , escapeRun = L.member 27 keys
+  , lock = S.member 13 keys
+  , tack = S.member 32 keys
+  , subtleTurn = S.member 16 keys
+  , startCountdown = S.member (Char.toCode 'C') keys
+  , escapeRun = S.member 27 keys
   }
 
 keyboardInput : Signal KeyboardInput
-keyboardInput = map2 toKeyboardInput
+keyboardInput = Signal.map2 toKeyboardInput
   Keyboard.arrows
   Keyboard.keysDown
 

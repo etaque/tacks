@@ -7,16 +7,16 @@ import Html exposing (Html)
 import Messages
 
 import LiveCenter.State exposing (..)
-import LiveCenter.Views as V exposing (localActions)
+import LiveCenter.Views exposing (mainView, localActions)
 import LiveCenter.Update as U exposing (Action, updateState)
 
 
-port serverInput : Signal U.ServerInput
+-- port serverInput : Signal U.ServerInput
 port messagesStore : Json.Value
 
 
 main : Signal Html
-main = Signal.map (V.view translator) state
+main = Signal.map (mainView translator) state
 
 translator : Messages.Translator
 translator = Messages.translator (Messages.fromJson messagesStore)
@@ -26,8 +26,8 @@ state = Signal.foldp updateState emptyState updates
 
 updates : Signal Action
 updates = Signal.mergeMany
-  [ Signal.map U.ServerUpdate serverInput
-  , localActions.signal
+  [ -- Signal.map U.ServerUpdate serverInput
+   localActions.signal
   ]
 
 

@@ -83,6 +83,17 @@ object WebSockets extends Controller with Security {
   }
 
 
+  // import RaceCourseStatus.format
+  // implicit val raceCourseStatusFrameFormatter = FrameFormatter.jsonFrame[RaceCourseStatus]
+
+  // def liveCenter = WebSocket.tryAcceptWithActor[PlayerInput, RaceCourseStatus] { implicit request =>
+  //   for {
+  //     player <- PlayerAction.getPlayer(request)
+  //   }
+  //   yield Right(LiveCenterActor.props(player)(_))
+  // }
+
+
   implicit val tutorialInputFrameFormatter = FrameFormatter.jsonFrame[TutorialInput]
   implicit val tutorialUpdateFormatter = FrameFormatter.jsonFrame[TutorialUpdate]
 

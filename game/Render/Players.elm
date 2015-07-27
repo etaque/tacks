@@ -1,18 +1,18 @@
 module Render.Players where
 
-import Render.Utils (..)
-import Core (..)
-import Geo (..)
-import Game (..)
+import Render.Utils exposing (..)
+import Core exposing (..)
+import Geo exposing (..)
+import Game exposing (..)
 
 import String
-import Text (..)
-import List (..)
+import Text exposing (..)
+import List exposing (..)
 import Maybe as M
-import Graphics.Input (clickable)
-import Color (..)
-import Graphics.Collage (..)
-import Graphics.Element (..)
+import Graphics.Input exposing (clickable)
+import Color exposing (..)
+import Graphics.Collage exposing (..)
+import Graphics.Element exposing (..)
 
 
 vmgColorAndShape : PlayerState -> (Color, Shape)
@@ -74,7 +74,7 @@ renderWake wake =
   let
     pairs = if (isEmpty wake)
       then []
-      else map2 (,) wake (tail wake) |> indexedMap (,)
+      else map2 (,) wake (tail wake |> M.withDefault []) |> indexedMap (,)
     style = { defaultLine | color <- white, width <- 3 }
     opacityForIndex i = 0.3 - 0.3 * (toFloat i) / (toFloat (length wake))
     renderSegment (i,(a,b)) = segment a b |> traced style |> alpha (opacityForIndex i)
