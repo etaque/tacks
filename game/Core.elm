@@ -1,8 +1,8 @@
 module Core where
 
 import Maybe as M
-import Time (..)
-import List (..)
+import Time exposing (..)
+import List exposing (..)
 
 
 
@@ -43,22 +43,19 @@ average items = (sum items) / (toFloat (length items))
 -- get element at index n from the list
 lift : Int -> List a -> Maybe a
 lift n items =
-  drop n items |> headMaybe
+  drop n items |> head
 
 find : (a -> Bool) -> List a -> Maybe a
 find f list =
-  let
-    filtered = filter f list
-  in
-    if isEmpty filtered then Nothing else Just (head filtered)
+  filter f list |> head
 
 exists : (a -> Bool) -> List a -> Bool
 exists f list =
   isJust (find f list)
 
-headMaybe : List a -> Maybe a
-headMaybe list =
-  if isEmpty list then Nothing else Just (head list)
+-- headMaybe : List a -> Maybe a
+-- headMaybe list =
+--   if isEmpty list then Nothing else Just (head list)
 
 floatRange : Int -> Int -> List Float
 floatRange from to =

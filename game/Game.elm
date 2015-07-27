@@ -1,11 +1,11 @@
 module Game where
 
-import Geo (..)
+import Geo exposing (..)
 import Core
 
 import Maybe as M
-import Time (..)
-import List (..)
+import Time exposing (..)
+import List exposing (..)
 
 
 type alias Gate = { y: Float, width: Float }
@@ -331,8 +331,7 @@ findPlayerGhost playerId ghosts =
 
 findOpponent : List PlayerState -> String -> Maybe PlayerState
 findOpponent opponents id =
-  let filtered = filter (\ps -> ps.player.id == id) opponents
-  in  if isEmpty filtered then Nothing else Just (head filtered)
+  Core.find (\ps -> ps.player.id == id) opponents
 
 raceTime : GameState -> Float
 raceTime {now,startTime} =

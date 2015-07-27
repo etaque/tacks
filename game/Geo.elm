@@ -2,7 +2,7 @@ module Geo where
 
 import Core
 
-import Time (..)
+import Time exposing (..)
 
 type alias Point = (Float, Float)
 type alias Segment = (Point, Point)
