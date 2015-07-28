@@ -49,7 +49,7 @@ object Api extends Controller with Security {
     )
   }
 
-  def racesStatus = PlayerAction.async() { implicit request =>
+  def liveStatus = PlayerAction.async() { implicit request =>
     val racesFu = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]
     val runsFu = (RacesSupervisor.actorRef ? GetLiveRuns).mapTo[Seq[RichRun]]
     val raceCoursesFu = (RacesSupervisor.actorRef ? GetRaceCourses).mapTo[Seq[RaceCourseStatus]]
@@ -61,6 +61,7 @@ object Api extends Controller with Security {
       onlinePlayers <- onlinePlayersFu
     }
     yield Ok(Json.obj(
+      "currentPlayer" -> request.player,
       "now" -> DateTime.now,
       "raceCourses" -> Json.toJson(raceCourses),
       "openRaces" -> Json.toJson(races),
@@ -70,11 +71,11 @@ object Api extends Controller with Security {
     ))
   }
 
-  def onlinePlayers = PlayerAction.async() { implicit request =>
-    (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]].map { players =>
-      Ok(Json.toJson(players))
-    }
-  }
+  // def onlinePlayers = PlayerAction.async() { implicit request =>
+  //   (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]].map { players =>
+  //     Ok(Json.toJson(players))
+  //   }
+  // }
 
   def createRace(generatorSlug: String) = PlayerAction.async(parse.json) { implicit request =>
     val generator = CourseGenerator.findBySlug(generatorSlug).getOrElse(WarmUp)

@@ -1,18 +1,23 @@
 module LiveCenter.Main where
 
 import Json.Decode as Json
-
 import Html exposing (Html)
+import Task exposing (Task)
+import Http
+import Time exposing (every, second)
 
 import Messages
 
 import LiveCenter.State exposing (..)
-import LiveCenter.Views exposing (mainView, localActions)
-import LiveCenter.Update as U exposing (Action, updateState)
+import LiveCenter.Views exposing (mainView)
+import LiveCenter.Update as U exposing (Action, updateState, actionsMailbox)
 
 
--- port serverInput : Signal U.ServerInput
 port messagesStore : Json.Value
+
+port serverUpdateRunner : Signal (Task Http.Error ())
+port serverUpdateRunner =
+  Signal.map (\_ -> U.runServerUpdate) (every second)
 
 
 main : Signal Html
@@ -25,9 +30,6 @@ state : Signal State
 state = Signal.foldp updateState emptyState updates
 
 updates : Signal Action
-updates = Signal.mergeMany
-  [ -- Signal.map U.ServerUpdate serverInput
-   localActions.signal
-  ]
-
+updates =
+  actionsMailbox.signal
 

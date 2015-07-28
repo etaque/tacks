@@ -5,17 +5,17 @@ import Html.Attributes exposing (..)
 -- import Html.Events exposing (..)
 
 import LiveCenter.State exposing (..)
-import LiveCenter.Update exposing (..)
+-- import LiveCenter.Update exposing (actionsMailbox)
 import Messages exposing (Translator)
 
 
-localActions : Signal.Mailbox Action
-localActions = Signal.mailbox NoOp
-
 mainView : Translator -> State -> Html
 mainView t state =
-  div [] []
+  div [] (List.map (raceCourseStatusView t) state.courses)
 
 raceCourseStatusView : Translator -> RaceCourseStatus -> Html
 raceCourseStatusView t {raceCourse,opponents} =
-  div [ class "race-course-status" ] [ text raceCourse.slug ]
+  div [ class "race-course-status" ]
+    [ a [ href ("/course/" ++ raceCourse.id) ] [ text raceCourse.slug ]
+    , text (toString raceCourse.countdown)
+    ]

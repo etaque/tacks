@@ -38,8 +38,7 @@ POST        /login                                             controllers.Auth.
 GET         /logout                                            controllers.Auth.logout
 
 POST        /api/login                                         controllers.Api.login
-GET         /api/racesStatus                                   controllers.Api.racesStatus
-GET         /api/onlineUsers                                   controllers.Api.onlinePlayers
+GET         /api/liveStatus                                    controllers.Api.liveStatus
 POST        /api/createRace/:generator                         controllers.Api.createRace(generator)
 
 GET         /ws/racePlayer/:raceId                             controllers.WebSockets.racePlayer(raceId)
