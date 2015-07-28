@@ -2,21 +2,21 @@ module Render.Dashboard where
 
 import Render.Utils exposing (..)
 import Core exposing (..)
-import Geo exposing (..)
 import Game exposing (..)
 import Layout exposing (..)
 
 import String
 import List exposing (..)
 import Maybe as M
-import Graphics.Input exposing (customButton)
 import Graphics.Element exposing (..)
 import Graphics.Collage exposing (..)
 import Color exposing (white)
 import Time exposing (Time)
-import Signal
 
+s : Element
 s = spacer 20 20
+
+xs : Element
 xs = spacer 5 5
 
 type alias BoardLine =
@@ -88,21 +88,18 @@ getLeaderboard {leaderboard,playerState} =
 
 getBoard : GameState -> Element
 getBoard gameState =
-  if | gameState.gameMode == TimeTrial -> empty
-     | isEmpty gameState.leaderboard -> getPlayerEntries gameState
+  if | isEmpty gameState.leaderboard -> getPlayerEntries gameState
      | otherwise -> getLeaderboard gameState
 
 getHelp : GameState -> Element
 getHelp gameState =
-  case gameState.gameMode of
-    TimeTrial -> helpMessage |> baseText |> leftAligned |> opacity 0.8
-    _ -> empty
+  helpMessage |> baseText |> leftAligned |> opacity 0.8
 
 
 -- Main status (big font size)
 
 getMainStatus : GameState -> Element
-getMainStatus ({gameMode, playerState} as gameState) =
+getMainStatus ({playerState} as gameState) =
   let
     op = if isStarted gameState then 0.5 else 1
     s = getTimer gameState
@@ -128,7 +125,7 @@ getTimer {startTime, now, playerState} =
 -- Sub status (normal font size)
 
 getSubStatus : GameState -> Element
-getSubStatus ({startTime,now,isMaster,playerState,course,gameMode} as gameState) =
+getSubStatus ({startTime,now,isMaster,playerState,course} as gameState) =
   let
     s = case startTime of
       Just t ->
@@ -144,14 +141,10 @@ getSubStatus ({startTime,now,isMaster,playerState,course,gameMode} as gameState)
 
 
 getFinishingStatus : GameState -> String
-getFinishingStatus ({course,gameMode,playerState} as gameState) =
+getFinishingStatus ({course,playerState} as gameState) =
   case playerState.nextGate of
     Nothing ->
-      case gameMode of
-        TimeTrial ->
-          getTimeTrialFinishingStatus gameState playerState
-        _ ->
-          "finished"
+      "finished"
     Just StartLine ->
       "go!"
     _ ->

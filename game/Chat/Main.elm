@@ -1,6 +1,5 @@
 module Chat.Main where
 
-import List exposing (..)
 import Maybe as M
 import String as S
 import Json.Decode as Json
@@ -8,11 +7,8 @@ import Result
 import Time exposing (..)
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 
 import Messages
-import Game exposing (Player, defaultPlayer)
 import Chat.Model exposing (..)
 import Chat.Views as V exposing (localUpdates)
 

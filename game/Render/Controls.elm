@@ -5,8 +5,6 @@ import Core exposing (..)
 import Geo exposing (..)
 import Game exposing (..)
 
-import String
-import Text
 import Maybe
 import Graphics.Collage exposing (..)
 import Graphics.Element as E

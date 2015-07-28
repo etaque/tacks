@@ -148,10 +148,9 @@ renderGhosts ghosts =
 
 
 renderPlayers : GameState -> Form
-renderPlayers ({playerState,opponents,ghosts,course,center,gameMode} as gameState) =
+renderPlayers ({playerState,opponents,ghosts,course,center} as gameState) =
   let
-    displayWindShadow = gameMode == Race
-    mainPlayer = renderPlayer displayWindShadow course.windShadowLength playerState
+    mainPlayer = renderPlayer True course.windShadowLength playerState
     forms =
       [ renderOpponents course opponents
       , renderGhosts ghosts

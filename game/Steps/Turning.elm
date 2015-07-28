@@ -3,13 +3,17 @@ module Steps.Turning where
 import Inputs exposing (..)
 import Game exposing (..)
 import Geo exposing (..)
-import Core exposing (..)
 
 import Maybe as M
 import List as L
 
+slow : Float
 slow = 0.03
+
+autoTack : Float
 autoTack = 0.08
+
+fast : Float
 fast = 0.1
 
 

@@ -1,15 +1,14 @@
 module Steps.Moving where
 
-import Inputs exposing (..)
 import Game exposing (..)
 import Geo exposing (..)
 import Core exposing (..)
 import Steps.Util exposing (..)
 
-import Maybe as M
 import List as L
 
 
+maxAccel : Float
 maxAccel = 0.03
 
 

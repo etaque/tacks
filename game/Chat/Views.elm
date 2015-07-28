@@ -3,7 +3,6 @@ module Chat.Views where
 import Signal
 import List exposing (..)
 import Maybe as M
-import String as S
 import Json.Decode as Json
 
 import Html exposing (..)

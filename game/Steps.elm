@@ -13,93 +13,12 @@ import Steps.Wind exposing (windStep)
 
 import Maybe as M
 import List as L
-import Debug
 
 centerStep : GameState -> GameState
 centerStep gameState =
   let newCenter = gameState.playerState.position
   in  { gameState | center <- newCenter }
 
---
-
-updateWindStep : Float -> GameState -> GameState
-updateWindStep elapsed ({course} as gameState) =
-  case gameState.gameMode of
-    TimeTrial ->
-      let
-        clock = serverClock gameState
-        origin = windOrigin course.windGenerator clock
-        speed = windSpeed course.windGenerator clock
-        wind = spawnGust gameState
-        gusts = L.map (updateGust course wind elapsed clock) wind.gusts
-          |> L.filter (\g -> (snd g.position) + g.radius > areaBottom course.area)
-        newWind = { wind
-          | origin <- origin
-          , speed <- speed
-          , gusts <- gusts
-          }
-      in
-        { gameState | wind <- newWind }
-    _ ->
-      gameState
-
-
-
-spawnGust : GameState -> Wind
-spawnGust ({course,wind,creationTime} as gameState) =
-  let
-    clock = serverClock gameState
-    nextGustTime = toFloat <| wind.gustCounter * course.gustGenerator.interval * 1000
-  in
-    if clock >= nextGustTime || wind.gustCounter == 0 then
-      case nthGustDef wind.gustCounter course.gustGenerator of
-        Just gustDef ->
-          let
-            gustSeconds = nextGustTime / 1000 |> floor |> toFloat
-            creationTimeSeconds = creationTime / 1000 |> floor |> toFloat
-            seed = gustSeconds * creationTimeSeconds + creationTimeSeconds
-
-            position = (genX seed 100 course.area, areaTop course.area)
-
-            gust =
-              { position = position
-              , angle = gustDef.angle
-              , speed = gustDef.speed
-              , radius = 0
-              , maxRadius = gustDef.radius
-              , spawnedAt = nextGustTime
-              }
-
-            newGusts = gust :: wind.gusts
-            newWind = { wind
-              | gusts <- newGusts
-              , gustCounter <- wind.gustCounter + 1
-              }
-          in
-            newWind
-
-        Nothing ->
-          wind
-    else
-      wind
-
-nthGustDef : Int -> GustGenerator -> Maybe GustDef
-nthGustDef n {defs} =
-  if L.isEmpty defs then Nothing else lift (n % (L.length defs)) defs
-
-
-updateGust : Course -> Wind -> Float -> Float -> Gust -> Gust
-updateGust course wind elapsed clock gust =
-  let
-    groundSpeed = wind.speed + gust.speed
-    groundDirection = ensure360 (gust.angle + 180)
-
-    newPosition = movePoint gust.position elapsed groundSpeed groundDirection
-
-    maxRadiusAfterSeconds = 20
-    radius = min ((clock - gust.spawnedAt) * 0.001 * gust.maxRadius / maxRadiusAfterSeconds) gust.maxRadius
-  in
-    { gust | position <- newPosition, radius <- radius }
 
 windOrigin : WindGenerator -> Float -> Float
 windOrigin {wavelength1,amplitude1,wavelength2,amplitude2} clock =
@@ -161,11 +80,7 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
 
     newPlayerState = { playerState | time <- now }
 
-    wind = case gameState.gameMode of
-      TimeTrial ->
-        gameState.wind
-      _ ->
-        raceInput.wind
+    wind = raceInput.wind
 
   in
     { gameState
@@ -193,7 +108,6 @@ runEscapeStep doEscape playerState =
     crossedGates = if doEscape then [] else playerState.crossedGates
   in
     { playerState | crossedGates <- crossedGates }
-    
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState
 playerStep keyboardInput elapsed gameState =
@@ -213,6 +127,6 @@ playerStep keyboardInput elapsed gameState =
 stepGame : GameInput -> GameState -> GameState
 stepGame {raceInput, clock, windowInput, keyboardInput} gameState =
   raceInputStep raceInput clock gameState
-    |> updateWindStep clock.delta
+    -- |> updateWindStep clock.delta
     |> playerStep keyboardInput clock.delta
     |> centerStep

@@ -2,11 +2,7 @@ module Render.Course where
 
 import Render.Utils exposing (..)
 import Render.Gates exposing (..)
-import Core exposing (..)
-import Geo exposing (..)
 import Game exposing (..)
-import String
-import Text
 
 import Maybe as M
 import List exposing (..)

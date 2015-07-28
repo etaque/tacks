@@ -4,10 +4,7 @@ import Render.Utils exposing (..)
 import Core exposing (..)
 import Geo exposing (..)
 import Game exposing (..)
-import String
-import Text
 
-import Maybe as M
 import List exposing (..)
 import Graphics.Collage exposing (..)
 import Color exposing (white,black)
