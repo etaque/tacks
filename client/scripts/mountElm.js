@@ -33,6 +33,7 @@ function mountLiveCenter(div) {
   var initialInput = {
     messagesStore: readData("messages")
   };
+  console.log(initialInput);
 
   var liveCenter = Elm.embed(window.Elm.LiveCenter.Main, div, initialInput);
 }

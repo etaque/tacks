@@ -18,22 +18,6 @@
 
         case u: User => {
           <h1>@Messages("home.welcome", u.handle)</h1>
-
-          @trialLeaderboard.find(_._2 == u.id) match {
-            case Some((r, _, p)) => {
-              <p class="align-center">@Html(Messages("home.ranked", r, p))</p>
-              <a href="@routes.Users.show(u.handle)" class="btn btn-primary">@Messages("home.profile")</a>
-            }
-            case None => {
-              <p class="align-center">@Messages("home.notRanked")</p>
-
-              @trials.find(_.slug == core.Classic.slug).map { t =>
-                <div class="align-center">
-                  <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.runClassic")</a>
-                </div>
-              }
-            }
-          }
         }
 
         case g: Guest => {
@@ -52,40 +36,25 @@
             </div>
           </form>
 
-          @trials.find(_.slug == core.Classic.slug).map { t =>
-            <div class="align-center">
-              <a href="@routes.Application.playTimeTrial(t.idToStr)" class="btn btn-warning" target="blank">@Messages("home.tryIt")</a>
-            </div>
-          }
-
         }
       }
 
-    </div>
-  </div>
 
-  <div class="light-wrapper">
-    <div class="container">
-
-      <h2>@Messages("home.races")</h2>
+      <script id="messages" type="custom-data">
+        @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.default.messages).toString())
+      </script>
 
       <div id="liveCenter"></div>
 
-      <script id="messages" type="custom-data">
-        @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.filtering(_.startsWith("chat.")).messages).toString())
-      </script>
-      <div id="chat"></div>
+      <!-- <div id="chat"></div> -->
 
     </div>
   </div>
 
-  <div class="dark-wrapper home-trials">
+  <div class="light-wrapper hall-of-fame">
     <div class="container">
 
-      <h2>@Messages("home.timeTrials")</h2>
-      <p class="subtitle"><span class="period">@formatMonthYear(org.joda.time.LocalDate.now)</span></p>
-
-      @views.html.timeTrials.catalog(trials)
+      <h2>@Messages("home.hallOfFame")</h2>
 
     </div>
   </div>

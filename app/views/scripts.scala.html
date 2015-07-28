@@ -2,10 +2,8 @@
 
 @import play.api.Play.current
 
-<script src="@routes.Assets.at("javascripts/elm.js")" type="text/javascript"></script>
-<!-- <script src="@routes.Assets.at("javascripts/liveCenter.js")" type="text/javascript"></script> -->
 <script type="text/javascript">
-window.Elm = Elm
+@Html(jsmessages.api.JsMessages.default.apply(Some("window.jsMessages")).body)
 </script>
 
 @helper.javascriptRouter("jsRoutes")(
@@ -15,8 +13,10 @@ window.Elm = Elm
   routes.javascript.WebSockets.chatRoom
 )
 
+<script src="@routes.Assets.at("javascripts/elm.js")" type="text/javascript"></script>
+<!-- <script src="@routes.Assets.at("javascripts/liveCenter.js")" type="text/javascript"></script> -->
 <script type="text/javascript">
-@Html(jsmessages.api.JsMessages.default.apply(Some("window.jsMessages")).body)
+window.Elm = Elm
 </script>
 
 @if(play.api.Play.isProd) {

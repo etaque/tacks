@@ -6766,6 +6766,8 @@ Elm.LiveCenter.Views.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "LiveCenter.Views",
    $Basics = Elm.Basics.make(_elm),
+   $Chat$Views = Elm.Chat.Views.make(_elm),
+   $Game = Elm.Game.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
@@ -6774,30 +6776,53 @@ Elm.LiveCenter.Views.make = function (_elm) {
    $Messages = Elm.Messages.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var opponentView = function (_v0) {
+      return function () {
+         return A2($Html.li,
+         _L.fromArray([$Html$Attributes.$class("opponent")]),
+         _L.fromArray([$Chat$Views.playerWithAvatar(_v0.player)]));
+      }();
+   };
+   var opponentsList = function (opponents) {
+      return A2($Html.ul,
+      _L.fromArray([$Html$Attributes.$class("race-course-opponents")]),
+      A2($List.map,
+      opponentView,
+      opponents));
+   };
    var raceCourseStatusView = F2(function (t,
-   _v0) {
+   _v2) {
       return function () {
          return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("col-md-4")]),
+         _L.fromArray([A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("race-course-status")]),
          _L.fromArray([A2($Html.a,
                       _L.fromArray([$Html$Attributes.href(A2($Basics._op["++"],
-                      "/course/",
-                      _v0.raceCourse.id))]),
-                      _L.fromArray([$Html.text(_v0.raceCourse.slug)]))
-                      ,$Html.text($Basics.toString(_v0.raceCourse.countdown))]));
+                                   "/course/",
+                                   _v2.raceCourse.id))
+                                   ,$Html$Attributes.target("course")]),
+                      _L.fromArray([$Html.text(t(A2($Basics._op["++"],
+                      "generators.",
+                      A2($Basics._op["++"],
+                      _v2.raceCourse.slug,
+                      ".name"))))]))
+                      ,opponentsList(_v2.opponents)]))]));
       }();
    });
    var mainView = F2(function (t,
    state) {
       return A2($Html.div,
-      _L.fromArray([]),
+      _L.fromArray([$Html$Attributes.$class("row")]),
       A2($List.map,
       raceCourseStatusView(t),
       state.courses));
    });
    _elm.LiveCenter.Views.values = {_op: _op
                                   ,mainView: mainView
-                                  ,raceCourseStatusView: raceCourseStatusView};
+                                  ,raceCourseStatusView: raceCourseStatusView
+                                  ,opponentsList: opponentsList
+                                  ,opponentView: opponentView};
    return _elm.LiveCenter.Views.values;
 };
 Elm.Main = Elm.Main || {};
