@@ -10,8 +10,16 @@ import Layout exposing (..)
 
 import Graphics.Element exposing (..)
 
-render : (Int,Int) -> GameState -> Element
-render (w,h) gameState =
+renderApp : (Int,Int) -> AppState -> Element
+renderApp dims appState =
+  case appState.gameState of
+    Just gameState ->
+      renderGame dims gameState
+    Nothing ->
+      empty
+
+renderGame : (Int,Int) -> GameState -> Element
+renderGame (w,h) gameState =
   let
     courseForm = renderCourse gameState
     playersForm = renderPlayers gameState

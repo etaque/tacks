@@ -8,9 +8,189 @@ import Time exposing (..)
 import List exposing (..)
 
 
+type alias AppState =
+  { player : Player
+  , courses : List RaceCourseStatus
+  , screen : Screen
+  , gameState : Maybe GameState
+  }
+
+initialAppState : AppState
+initialAppState =
+  { player = defaultPlayer
+  , courses = []
+  , screen = Index
+  , gameState = Nothing
+  }
+
+type Screen
+  = Index
+  | Leaderboard RaceCourse
+  | Play RaceCourse
+
+type alias RaceCourseStatus =
+  { raceCourse: RaceCourse
+  , opponents: List Opponent
+  }
+
+type alias RaceCourse =
+  { id: String
+  , slug: String
+  -- , course: Course
+  , countdown: Int
+  , startCycle: Int
+  }
+
+type alias GameState =
+  { wind:        Wind
+  , playerState: PlayerState
+  , wake:        List Point
+  , center:      Point
+  , opponents:   List Opponent
+  , ghosts:      List GhostState
+  , course:      Course
+  , leaderboard: List PlayerTally
+  , now:         Time
+  , serverNow:   Time
+  , countdown:   Float
+  , startTime:   Maybe Time
+  , creationTime: Time
+  , isMaster:    Bool
+  , live:        Bool
+  , localTime:   Time
+  , roundTripDelay: Float
+  }
+
+-- Wind
+
+type alias Wind =
+  { origin : Float
+  , speed : Float
+  , gusts : List Gust
+  , gustCounter : Int
+  }
+
+type alias Gust =
+  { position : Point
+  , angle: Float
+  , speed: Float
+  , radius: Float
+  , maxRadius: Float
+  , spawnedAt: Float
+  }
+
 type alias Gate = { y: Float, width: Float }
+
 type alias Island = { location : Point, radius : Float }
+
 type alias RaceArea = { rightTop: Point, leftBottom: Point }
+
+-- Player
+
+type alias PlayerState =
+  { player:          Player
+  , time:            Float
+  , position:        Point
+  , isGrounded:      Bool
+  , isTurning:       Bool
+  , heading:         Float
+  , velocity:        Float
+  , vmgValue:        Float
+  , windAngle:       Float
+  , windOrigin:      Float
+  , windSpeed:       Float
+  , downwindVmg:     Vmg
+  , upwindVmg:       Vmg
+  , shadowDirection: Float
+  , trail:           List Point
+  , controlMode:     ControlMode
+  , tackTarget:      Maybe Float
+  , crossedGates:    List Time
+  , nextGate:        Maybe GateLocation
+  }
+
+type ControlMode = FixedAngle | FixedHeading
+
+type alias Player =
+  { id:     String
+  , handle: Maybe String
+  , status: Maybe String
+  , avatarId: Maybe String
+  , vmgMagnet: Int
+  , guest: Bool
+  , user: Bool
+  }
+
+type alias Vmg =
+  { angle: Float
+  , speed: Float
+  , value: Float
+  }
+
+type alias Opponent =
+  { player: Player
+  , state: OpponentState
+  }
+
+type alias OpponentState =
+  { time: Float
+  , position: Point
+  , heading: Float
+  , velocity: Float
+  , windAngle: Float
+  , windOrigin: Float
+  , shadowDirection: Float
+  , crossedGates: List Time
+  }
+
+type alias PlayerTally =
+  { playerId: String
+  , playerHandle: Maybe String
+  , gates: List Time
+  }
+
+type alias GhostState =
+  { position: Point
+  , heading:  Float
+  , id:       String
+  , handle:   Maybe String
+  , gates:    List Time
+  }
+
+-- Course
+
+type alias Course =
+  { upwind:           Gate
+  , downwind:         Gate
+  , laps:             Int
+  , markRadius:       Float
+  , islands:          List Island
+  , area:             RaceArea
+  , windGenerator:    WindGenerator
+  -- , gustGenerator:    GustGenerator
+  , windShadowLength: Float
+  , boatWidth:        Float
+  }
+
+type GateLocation = DownwindGate | UpwindGate | StartLine
+
+type alias WindGenerator =
+  { wavelength1: Float
+  , amplitude1: Float
+  , wavelength2: Float
+  , amplitude2: Float
+  }
+
+type alias GustDef =
+  { angle: Float
+  , speed: Float
+  , radius: Float
+  }
+
+-- type alias GustGenerator =
+--   { interval: Int
+--   , defs: List GustDef
+--   }
 
 areaBox : RaceArea -> (Point,Point)
 areaBox {rightTop,leftBottom} =
@@ -54,80 +234,6 @@ genX seed margin area =
   in
     (Core.floatMod seed effectiveWidth) - effectiveWidth / 2 + cx
 
-
-type alias Vmg =
-  { angle: Float
-  , speed: Float
-  , value: Float
-  }
-
-type alias WindGenerator =
-  { wavelength1: Float
-  , amplitude1: Float
-  , wavelength2: Float
-  , amplitude2: Float
-  }
-
-type alias GustDef =
-  { angle: Float
-  , speed: Float
-  , radius: Float
-  }
-
-type alias GustGenerator =
-  { interval: Int
-  , defs: List GustDef
-  }
-
-type alias Course =
-  { upwind:           Gate
-  , downwind:         Gate
-  , laps:             Int
-  , markRadius:       Float
-  , islands:          List Island
-  , area:             RaceArea
-  , windGenerator:    WindGenerator
-  , gustGenerator:    GustGenerator
-  , windShadowLength: Float
-  , boatWidth:        Float
-  }
-
-type alias Player =
-  { id:     String
-  , handle: Maybe String
-  , status: Maybe String
-  , avatarId: Maybe String
-  , vmgMagnet: Int
-  , guest: Bool
-  , user: Bool
-  }
-
-type ControlMode = FixedAngle | FixedHeading
-
-type GateLocation = DownwindGate | UpwindGate | StartLine
-
-type alias PlayerState =
-  { player:          Player
-  , time:            Float
-  , position:        Point
-  , isGrounded:      Bool
-  , isTurning:       Bool
-  , heading:         Float
-  , velocity:        Float
-  , vmgValue:        Float
-  , windAngle:       Float
-  , windOrigin:      Float
-  , windSpeed:       Float
-  , downwindVmg:     Vmg
-  , upwindVmg:       Vmg
-  , shadowDirection: Float
-  , trail:           List Point
-  , controlMode:     ControlMode
-  , tackTarget:      Maybe Float
-  , crossedGates:    List Time
-  , nextGate:        Maybe GateLocation
-  }
-
 upwind s = abs s.windAngle < 90
 closestVmgAngle s = if upwind s then s.upwindVmg.angle else s.downwindVmg.angle
 windAngleOnVmg s = if s.windAngle < 0 then -(closestVmgAngle s) else closestVmgAngle s
@@ -145,70 +251,6 @@ asOpponentState {time,position,heading,velocity,windAngle,windOrigin,shadowDirec
   , shadowDirection = shadowDirection
   , crossedGates = crossedGates
   }
-
-
-type alias OpponentState =
-  { time: Float
-  , position: Point
-  , heading: Float
-  , velocity: Float
-  , windAngle: Float
-  , windOrigin: Float
-  , shadowDirection: Float
-  , crossedGates: List Time
-  }
-
-type alias Opponent =
-  { player: Player
-  , state: OpponentState
-  }
-
-type alias PlayerTally = { playerId: String, playerHandle: Maybe String, gates: List Time }
-
-type alias GhostState =
-  { position: Point
-  , heading:  Float
-  , id:       String
-  , handle:   Maybe String
-  , gates:    List Time
-  }
-
-type alias Gust =
-  { position : Point
-  , angle: Float
-  , speed: Float
-  , radius: Float
-  , maxRadius: Float
-  , spawnedAt: Float
-  }
-
-type alias Wind =
-  { origin : Float
-  , speed : Float
-  , gusts : List Gust
-  , gustCounter : Int
-  }
-
-type alias GameState =
-  { wind:        Wind
-  , playerState: PlayerState
-  , wake:        List Point
-  , center:      Point
-  , opponents:   List Opponent
-  , ghosts:      List GhostState
-  , course:      Course
-  , leaderboard: List PlayerTally
-  , now:         Time
-  , serverNow:   Time
-  , countdown:   Float
-  , startTime:   Maybe Time
-  , creationTime: Time
-  , isMaster:    Bool
-  , live:        Bool
-  , localTime:   Time
-  , roundTripDelay: Float
-  }
-
 
 type alias GameSetup =
   { now: Time

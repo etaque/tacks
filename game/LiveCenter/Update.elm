@@ -5,6 +5,7 @@ import Http
 import Task exposing (Task)
 import Json.Decode as Json
 
+import Game exposing (..)
 import LiveCenter.State exposing (..)
 import LiveCenter.Decoders exposing (serverInputDecoder)
 

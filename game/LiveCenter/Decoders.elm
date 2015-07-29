@@ -3,7 +3,7 @@ module LiveCenter.Decoders where
 
 import Json.Decode as Json exposing (..)
 
-import Game exposing (Player,Opponent,OpponentState)
+import Game exposing (..)
 import Geo exposing (Point)
 import Chat.Model exposing (playerDecoder)
 

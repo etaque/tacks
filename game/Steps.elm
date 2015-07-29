@@ -14,24 +14,29 @@ import Steps.Wind exposing (windStep)
 import Maybe as M
 import List as L
 
+
+mainStep : AppInput -> AppState -> AppState
+mainStep {gameInput} appState =
+  let
+    newGameState = M.map (stepGame gameInput) appState.gameState
+  in
+    { appState | gameState <- newGameState }
+
+stepGame : GameInput -> GameState -> GameState
+stepGame {raceInput, clock, windowInput, keyboardInput} gameState =
+  raceInputStep raceInput clock gameState
+    -- |> updateWindStep clock.delta
+    |> playerStep keyboardInput clock.delta
+    |> centerStep
+
+
+--
+
 centerStep : GameState -> GameState
 centerStep gameState =
   let newCenter = gameState.playerState.position
   in  { gameState | center <- newCenter }
 
-
-windOrigin : WindGenerator -> Float -> Float
-windOrigin {wavelength1,amplitude1,wavelength2,amplitude2} clock =
-  cos (clock * 0.0005 / wavelength1) * amplitude1 + cos (clock * 0.0005 / wavelength2) * amplitude2
-
-baseWindSpeed : Float
-baseWindSpeed = 17
-
-windSpeed : WindGenerator -> Float -> Float
-windSpeed {wavelength1,amplitude1,wavelength2,amplitude2} clock =
-  baseWindSpeed + (cos (clock * 0.0005 / wavelength1) * 4 - cos (clock * 0.0005 / wavelength2) * 5) * 0.5
-
---
 
 moveOpponentState : OpponentState -> Float -> OpponentState
 moveOpponentState state delta =
@@ -123,10 +128,3 @@ playerStep keyboardInput elapsed gameState =
   in
     { gameState | playerState <- playerState }
 
-
-stepGame : GameInput -> GameState -> GameState
-stepGame {raceInput, clock, windowInput, keyboardInput} gameState =
-  raceInputStep raceInput clock gameState
-    -- |> updateWindStep clock.delta
-    |> playerStep keyboardInput clock.delta
-    |> centerStep

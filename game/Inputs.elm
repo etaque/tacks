@@ -10,15 +10,42 @@ import Keyboard
 import Char
 import Graphics.Input
 
-type alias UserArrows = { x: Int, y: Int }
+type alias AppInput =
+  { gameInput : GameInput }
+
+type alias GameInput =
+  { clock : Clock
+  , keyboardInput : KeyboardInput
+  , windowInput : (Int,Int)
+  , raceInput : RaceInput
+  }
+
+type alias Clock =
+  { delta : Float
+  , time : Float
+  }
 
 type alias KeyboardInput =
-  { arrows:         UserArrows
-  , lock:           Bool
-  , tack:           Bool
-  , subtleTurn:     Bool
-  , startCountdown: Bool
-  , escapeRun:      Bool
+  { arrows : UserArrows
+  , lock : Bool
+  , tack : Bool
+  , subtleTurn : Bool
+  , startCountdown : Bool
+  , escapeRun : Bool
+  }
+
+type alias UserArrows = { x : Int, y : Int }
+
+type alias RaceInput =
+  { serverNow:   Time
+  , startTime:   Maybe Time
+  , wind:        Game.Wind
+  , opponents:   List Game.Opponent
+  , ghosts:      List Game.GhostState
+  , leaderboard: List Game.PlayerTally
+  , isMaster:    Bool
+  , initial:     Bool
+  , clientTime:  Time
   }
 
 manualTurn ki = ki.arrows.x /= 0
@@ -40,31 +67,6 @@ keyboardInput : Signal KeyboardInput
 keyboardInput = Signal.map2 toKeyboardInput
   Keyboard.arrows
   Keyboard.keysDown
-
-
-type alias RaceInput =
-  { serverNow:   Time
-  , startTime:   Maybe Time
-  , wind:        Game.Wind
-  , opponents:   List Game.Opponent
-  , ghosts:      List Game.GhostState
-  , leaderboard: List Game.PlayerTally
-  , isMaster:    Bool
-  , initial:     Bool
-  , clientTime:  Time
-  }
-
-type alias Clock =
-  { delta: Float
-  , time: Float
-  }
-
-type alias GameInput =
-  { clock:         Clock
-  , keyboardInput: KeyboardInput
-  , windowInput:   (Int,Int)
-  , raceInput:     RaceInput
-  }
 
 type alias PlayerOutput =
   { state: Game.OpponentState

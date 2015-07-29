@@ -1,7 +1,7 @@
 module LiveCenter.State where
 
 
-import Game exposing (Player, defaultPlayer, Opponent)
+import Game exposing (..)
 
 
 type alias State =
@@ -16,20 +16,6 @@ emptyState =
   , currentPlayer = defaultPlayer
   , course = Nothing
   }
-
-type alias RaceCourseStatus =
-  { raceCourse: RaceCourse
-  , opponents: List Opponent
-  }
-
-type alias RaceCourse =
-  { id: String
-  , slug: String
-  -- , course: Course
-  , countdown: Int
-  , startCycle: Int
-  }
-
 
 type alias ServerInput =
   { raceCourses: List RaceCourseStatus

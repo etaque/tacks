@@ -2,9 +2,7 @@ module Steps.Wind where
 
 import Game exposing (..)
 import Geo exposing (..)
-import Core exposing (..)
 
-import Maybe as M
 import List as L
 
 type alias GustEffect =
@@ -14,6 +12,7 @@ type alias GustEffect =
   }
 
 
+shadowImpact : Float
 shadowImpact = -5 -- knots
 
 shadowArc : Float
