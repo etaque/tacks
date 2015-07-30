@@ -6,7 +6,7 @@ import Json.Decode exposing (..)
 import Json.Encode as E
 
 import Game exposing (Player, defaultPlayer)
-
+import Inputs exposing (playerDecoder)
 
 type alias Model =
   { messages: List Message
@@ -77,16 +77,6 @@ specificActionDecoder tag =
         fail <| tag ++ " is not a recognized tag for actions"
 
 
-playerDecoder : Decoder Player
-playerDecoder =
-  object7 Player
-    ("id" := string)
-    (maybe ("handle" := string))
-    (maybe ("status" := string))
-    (maybe ("avatarId" := string))
-    ("vmgMagnet" := int)
-    ("guest" := bool)
-    ("user" := bool)
 
 actionEncoder : Action -> Value
 actionEncoder action =

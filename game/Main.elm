@@ -1,43 +1,72 @@
 module Main where
 
 import Window
-import Signal exposing (..)
-import Time exposing (..)
+import Time exposing (timestamp, fps, every, second)
 import Graphics.Element exposing (Element)
+import Task exposing (Task)
+import Http
+import Json.Decode as Json
 
 import Inputs exposing (..)
-import Game exposing (AppState, initialAppState)
+import Outputs exposing (..)
+import State exposing (AppState, initialAppState)
 import Steps exposing (mainStep)
 import Render.All exposing (renderApp)
+import Core exposing (isJust)
+import Messages
 
 
-port raceInput : Signal RaceInput
+-- Inputs
+
+port liveCenterRunner : Signal (Task Http.Error ())
+port liveCenterRunner =
+  Signal.map (\_ -> runServerUpdate) (every second)
+
+port raceInput : Signal (Maybe RaceInput)
+
+port messagesStore : Json.Value
+
+
+-- Signals
+
+main : Signal Element
+main =
+  Signal.map2 (renderApp translator) Window.dimensions appState
+
+translator : Messages.Translator
+translator =
+  Messages.translator (Messages.fromJson messagesStore)
 
 clock : Signal Clock
-clock = map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
+clock =
+  Signal.map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
 
-gameInput : Signal GameInput
-gameInput = sampleOn clock <| map4 GameInput
-  clock
-  keyboardInput
-  Window.dimensions
-  raceInput
+gameInput : Signal (Maybe GameInput)
+gameInput =
+  Signal.map4 extractGameInput clock keyboardInput Window.dimensions raceInput
+    |> Signal.sampleOn clock
+    -- |> Signal.dropRepeats
 
 appInput : Signal AppInput
-appInput = map AppInput gameInput
+appInput =
+  Signal.map2 AppInput actionsMailbox.signal gameInput
 
 appState : Signal AppState
-appState = foldp mainStep initialAppState appInput
+appState =
+  Signal.foldp mainStep initialAppState appInput
 
--- port playerOutput : Signal PlayerOutput
--- port playerOutput =
---   map3 PlayerOutput
---     (.playerState >> Game.asOpponentState <~ gameState)
---     (.keyboardInput <~ gameInput)
---     (.localTime <~ gameState)
+
+-- Outputs
+
+port playerOutput : Signal (Maybe PlayerOutput)
+port playerOutput =
+  Signal.map2 extractPlayerOutput appState appInput
+    |> Signal.dropRepeats
 
 -- port title : Signal String
 -- port title = Render.Utils.gameTitle <~ gameState
 
-main : Signal Element
-main = map2 renderApp Window.dimensions appState
+port activeRaceCourse : Signal (Maybe String)
+port activeRaceCourse =
+  Signal.map getActiveRaceCourse appState
+

@@ -8,39 +8,6 @@ import Time exposing (..)
 import List exposing (..)
 
 
-type alias AppState =
-  { player : Player
-  , courses : List RaceCourseStatus
-  , screen : Screen
-  , gameState : Maybe GameState
-  }
-
-initialAppState : AppState
-initialAppState =
-  { player = defaultPlayer
-  , courses = []
-  , screen = Index
-  , gameState = Nothing
-  }
-
-type Screen
-  = Index
-  | Leaderboard RaceCourse
-  | Play RaceCourse
-
-type alias RaceCourseStatus =
-  { raceCourse: RaceCourse
-  , opponents: List Opponent
-  }
-
-type alias RaceCourse =
-  { id: String
-  , slug: String
-  -- , course: Course
-  , countdown: Int
-  , startCycle: Int
-  }
-
 type alias GameState =
   { wind:        Wind
   , playerState: PlayerState

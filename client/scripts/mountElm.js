@@ -5,35 +5,73 @@ var readData = require('./util').readData;
 var routes = require('./routes');
 
 function mountGame() {
-  var wsUrl = readData("wsUrl");
-  var initialInput = {
-    gameSetup: readData("gameSetup"),
-    raceInput: readData("initialInput")
-  };
+  var game = Elm.fullscreen(window.Elm.Main, {
+    raceInput: null,
+    messagesStore: readData("messages")
+  });
 
-  function start() {
-    mountWebSocket(null, wsUrl, window.Elm.Main, "raceInput", "playerOutput", initialInput);
-  }
+  var ws, wsUrl;
 
-  if (wsUrl && initialInput) {
-    var $help = $("#help");
-
-    if ($help.length) {
-      $("#startGame").click(function() {
-        $help.hide();
-        start();
-      });
-    } else {
-      start();
+  game.ports.activeRaceCourse.subscribe(function(id) {
+    if (ws) {
+      ws.close();
     }
-  }
+
+    if (id) {
+      wsUrl = routes.WebSockets.raceCoursePlayer(id).webSocketURL();
+      ws = new WebSocket(wsUrl);
+
+      function outputProxy(output) {
+        ws.send(JSON.stringify(output));
+      }
+
+      ws.onmessage = function(event) {
+        game.ports.raceInput.send(JSON.parse(event.data));
+      };
+
+      ws.onopen = function() {
+        console.log("WebSocket open:", wsUrl);
+        game.ports.playerOutput.subscribe(outputProxy);
+      };
+
+      ws.onclose = function() {
+        game.ports.playerOutput.unsubscribe(outputProxy);
+      };
+    }
+  });
+
 }
+
+
+// function mountGame() {
+//   var wsUrl = readData("wsUrl");
+//   var initialInput = {
+//     // gameSetup: readData("gameSetup"),
+//     raceInput: readData("initialInput")
+//   };
+
+//   function start() {
+//     mountWebSocket(null, wsUrl, window.Elm.Main, "raceInput", "playerOutput", initialInput);
+//   }
+
+//   if (wsUrl && initialInput) {
+//     var $help = $("#help");
+
+//     if ($help.length) {
+//       $("#startGame").click(function() {
+//         $help.hide();
+//         start();
+//       });
+//     } else {
+//       start();
+//     }
+//   }
+// }
 
 function mountLiveCenter(div) {
   var initialInput = {
     messagesStore: readData("messages")
   };
-  console.log(initialInput);
 
   var liveCenter = Elm.embed(window.Elm.LiveCenter.Main, div, initialInput);
 }

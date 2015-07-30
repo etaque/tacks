@@ -2,25 +2,26 @@ module LiveCenter.Views where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
--- import Html.Events exposing (..)
+import Html.Events exposing (..)
 
 import Chat.Views exposing (playerWithAvatar)
-import LiveCenter.State exposing (..)
+import State exposing (..)
 import Game exposing (OpponentState,Opponent)
--- import LiveCenter.Update exposing (actionsMailbox)
 import Messages exposing (Translator)
+import Inputs exposing (actionsMailbox)
 
-
-mainView : Translator -> State -> Html
-mainView t state =
+indexView : Translator -> LiveCenterState -> Html
+indexView t state =
   div [ class "row" ] (List.map (raceCourseStatusView t) state.courses)
 
 raceCourseStatusView : Translator -> RaceCourseStatus -> Html
 raceCourseStatusView t {raceCourse,opponents} =
   div [ class "col-md-4" ]
     [ div [ class "race-course-status" ]
-      [ a [ href ("/course/" ++ raceCourse.id), target "course" ]
-          [ text (t <| "generators." ++ raceCourse.slug ++ ".name") ]
+      [ a
+        [ onClick actionsMailbox.address (Inputs.Navigate (State.Play raceCourse))
+        ]
+        [ text (t <| "generators." ++ raceCourse.slug ++ ".name") ]
       , opponentsList opponents
       ]
     ]

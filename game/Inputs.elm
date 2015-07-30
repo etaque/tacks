@@ -1,7 +1,5 @@
 module Inputs where
 
-import Game
-
 import Signal exposing (..)
 import Time exposing (..)
 import List as L
@@ -9,9 +7,50 @@ import Set as S exposing (..)
 import Keyboard
 import Char
 import Graphics.Input
+import Json.Decode as Json exposing (..)
+import Task exposing (Task)
+import Http
+
+import Game exposing (..)
+import State exposing (..)
+import Geo exposing (Point)
+
 
 type alias AppInput =
-  { gameInput : GameInput }
+  { action : Action
+  , gameInput : Maybe GameInput
+  }
+
+
+-- Actions
+
+type Action
+  = NoOp
+  | LiveCenterUpdate LiveCenterInput
+  | Navigate State.Screen
+
+actionsMailbox : Signal.Mailbox Action
+actionsMailbox =
+  Signal.mailbox NoOp
+
+
+-- LiveCenter
+
+fetchServerUpdate : Task Http.Error Action
+fetchServerUpdate =
+  Http.get (Json.map LiveCenterUpdate liveCenterInputDecoder) "/api/liveStatus"
+
+runServerUpdate : Task Http.Error ()
+runServerUpdate =
+  fetchServerUpdate `Task.andThen` (Signal.send actionsMailbox.address)
+
+type alias LiveCenterInput =
+  { raceCourses: List State.RaceCourseStatus
+  , currentPlayer: Game.Player
+  }
+
+
+-- Game
 
 type alias GameInput =
   { clock : Clock
@@ -48,6 +87,11 @@ type alias RaceInput =
   , clientTime:  Time
   }
 
+extractGameInput : Clock -> KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe GameInput
+extractGameInput clock keyboardInput dims maybeRaceInput =
+  Maybe.map (GameInput clock keyboardInput dims) maybeRaceInput
+
+
 manualTurn ki = ki.arrows.x /= 0
 isTurning ki = manualTurn ki && not ki.subtleTurn
 isSubtleTurning ki = manualTurn ki && ki.subtleTurn
@@ -68,8 +112,55 @@ keyboardInput = Signal.map2 toKeyboardInput
   Keyboard.arrows
   Keyboard.keysDown
 
-type alias PlayerOutput =
-  { state: Game.OpponentState
-  , input: KeyboardInput
-  , localTime: Float
-  }
+
+liveCenterInputDecoder : Json.Decoder LiveCenterInput
+liveCenterInputDecoder =
+  object2 LiveCenterInput
+    ("raceCourses" := (Json.list <| raceCourseStatusDecoder))
+    ("currentPlayer" := playerDecoder)
+
+raceCourseStatusDecoder : Json.Decoder RaceCourseStatus
+raceCourseStatusDecoder =
+  object2 RaceCourseStatus
+    ("raceCourse" := raceCourseDecoder)
+    ("opponents" := (Json.list <| opponentDecoder))
+
+raceCourseDecoder : Json.Decoder RaceCourse
+raceCourseDecoder =
+  object4 RaceCourse
+    ("_id" := string)
+    ("slug" := string)
+    ("countdown" := int)
+    ("startCycle" := int)
+
+opponentDecoder : Json.Decoder Opponent
+opponentDecoder =
+  object2 Opponent
+    ("player" := playerDecoder)
+    ("state" := opponentStateDecoder)
+
+playerDecoder : Decoder Player
+playerDecoder =
+  object7 Player
+    ("id" := string)
+    (maybe ("handle" := string))
+    (maybe ("status" := string))
+    (maybe ("avatarId" := string))
+    ("vmgMagnet" := int)
+    ("guest" := bool)
+    ("user" := bool)
+opponentStateDecoder : Json.Decoder OpponentState
+opponentStateDecoder =
+  object8 OpponentState
+    ("time" := float)
+    ("position" := pointDecoder)
+    ("heading" := float)
+    ("velocity" := float)
+    ("windAngle" := float)
+    ("windOrigin" := float)
+    ("shadowDirection" := float)
+    ("crossedGates" := list float)
+
+pointDecoder : Json.Decoder Point
+pointDecoder =
+  tuple2 (,) float float

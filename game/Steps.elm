@@ -2,6 +2,7 @@ module Steps where
 
 import Inputs exposing (..)
 import Game exposing (..)
+import State exposing (..)
 import Geo exposing (..)
 import Core exposing (..)
 
@@ -16,14 +17,36 @@ import List as L
 
 
 mainStep : AppInput -> AppState -> AppState
-mainStep {gameInput} appState =
+mainStep appInput appState =
   let
-    newGameState = M.map (stepGame gameInput) appState.gameState
-  in
-    { appState | gameState <- newGameState }
+    newState = actionStep appInput.action appState
 
-stepGame : GameInput -> GameState -> GameState
-stepGame {raceInput, clock, windowInput, keyboardInput} gameState =
+    newGameState = case (newState.screen, appState.gameState, appInput.gameInput) of
+      (Play raceCourse, Just gameState, Just gameInput) ->
+        Just (gameStep gameInput gameState)
+      _ ->
+        Nothing
+  in
+    { newState | gameState <- newGameState }
+
+actionStep : Action -> AppState -> AppState
+actionStep action appState =
+  case action of
+    Navigate newScreen ->
+      { appState | screen <- newScreen }
+    LiveCenterUpdate liveCenterInput ->
+      { appState | liveCenterState <- liveCenterStep liveCenterInput appState.liveCenterState }
+    _ ->
+      appState
+
+liveCenterStep : LiveCenterInput -> LiveCenterState -> LiveCenterState
+liveCenterStep input state =
+  { state | courses <- input.raceCourses
+          , player <- input.currentPlayer
+  }
+
+gameStep : GameInput -> GameState -> GameState
+gameStep {raceInput, clock, windowInput, keyboardInput} gameState =
   raceInputStep raceInput clock gameState
     -- |> updateWindStep clock.delta
     |> playerStep keyboardInput clock.delta

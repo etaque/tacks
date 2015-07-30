@@ -53,6 +53,10 @@ object Application extends Controller with Security {
    }
   }
 
+  def game = PlayerAction.async() { implicit request =>
+    Future.successful(Ok(views.html.game2()))
+  }
+
   def playTimeTrial(timeTrialId: String) = PlayerAction.async() { implicit request =>
     TimeTrial.findById(timeTrialId).map { timeTrial =>
       val now = DateTime.now

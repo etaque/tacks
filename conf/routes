@@ -2,6 +2,8 @@
 GET         /                                                  controllers.Application.index
 POST        /setHandle                                         controllers.Application.setHandle
 
+GET         /game                                              controllers.Application.game
+
 GET         /run/:timeTrialId                                  controllers.Application.playTimeTrial(timeTrialId: String)
 GET         /play/:raceId                                      controllers.Application.playRace(raceId: String)
 GET         /course/:raceCourseId                              controllers.Application.playRaceCourse(raceCourseId: String)
