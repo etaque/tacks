@@ -2327,7 +2327,7 @@ Elm.Game.make = function (_elm) {
                  _v2._0) > -1;
                case "Nothing": return false;}
             _U.badCase($moduleName,
-            "between lines 331 and 333");
+            "between lines 341 and 343");
          }();
       }();
    };
@@ -2340,7 +2340,7 @@ Elm.Game.make = function (_elm) {
                return _v4.now - _v6._0;
                case "Nothing": return 0;}
             _U.badCase($moduleName,
-            "between lines 325 and 327");
+            "between lines 335 and 337");
          }();
       }();
    };
@@ -2370,13 +2370,11 @@ Elm.Game.make = function (_elm) {
                   ,_0: gate.width / 2
                   ,_1: gate.y}};
    };
-   var defaultWind = function (now) {
-      return {_: {}
-             ,gustCounter: 0
-             ,gusts: _L.fromArray([])
-             ,origin: 0
-             ,speed: 0};
-   };
+   var defaultWind = {_: {}
+                     ,gustCounter: 0
+                     ,gusts: _L.fromArray([])
+                     ,origin: 0
+                     ,speed: 0};
    var defaultGate = {_: {}
                      ,width: 0
                      ,y: 0};
@@ -2392,18 +2390,6 @@ Elm.Game.make = function (_elm) {
                     ,angle: 0
                     ,speed: 0
                     ,value: 0};
-   var GameSetup = F5(function (a,
-   b,
-   c,
-   d,
-   e) {
-      return {_: {}
-             ,countdown: c
-             ,course: d
-             ,creationTime: b
-             ,now: a
-             ,player: e};
-   });
    var asOpponentState = function (_v8) {
       return function () {
          return {_: {}
@@ -2488,7 +2474,7 @@ Elm.Game.make = function (_elm) {
             switch (_.ctor)
             {case "_Tuple2": return _._0;}
             _U.badCase($moduleName,
-            "on line 200, column 14 to 30");
+            "on line 210, column 14 to 30");
          }();
          var effectiveWidth = areaWidth(area) - margin * 2;
          return A2($Core.floatMod,
@@ -2506,14 +2492,6 @@ Elm.Game.make = function (_elm) {
                 ,_1: _v21.leftBottom};
       }();
    };
-   var GustDef = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,angle: a
-             ,radius: c
-             ,speed: b};
-   });
    var WindGenerator = F4(function (a,
    b,
    c,
@@ -2527,25 +2505,19 @@ Elm.Game.make = function (_elm) {
    var StartLine = {ctor: "StartLine"};
    var UpwindGate = {ctor: "UpwindGate"};
    var DownwindGate = {ctor: "DownwindGate"};
-   var Course = F9(function (a,
+   var Course = F6(function (a,
    b,
    c,
    d,
    e,
-   f,
-   g,
-   h,
-   i) {
+   f) {
       return {_: {}
-             ,area: f
-             ,boatWidth: i
+             ,area: e
              ,downwind: b
-             ,islands: e
+             ,islands: d
              ,laps: c
-             ,markRadius: d
              ,upwind: a
-             ,windGenerator: g
-             ,windShadowLength: h};
+             ,windGenerator: f};
    });
    var GhostState = F5(function (a,
    b,
@@ -2639,32 +2611,31 @@ Elm.Game.make = function (_elm) {
              ,windOrigin: 0
              ,windSpeed: 0};
    });
-   var defaultGame = function (_v23) {
-      return function () {
-         return {_: {}
-                ,center: {ctor: "_Tuple2"
-                         ,_0: 0
-                         ,_1: 0}
-                ,countdown: _v23.countdown
-                ,course: _v23.course
-                ,creationTime: _v23.creationTime
-                ,ghosts: _L.fromArray([])
-                ,isMaster: false
-                ,leaderboard: _L.fromArray([])
-                ,live: false
-                ,localTime: 0
-                ,now: _v23.now
-                ,opponents: _L.fromArray([])
-                ,playerState: A2(defaultPlayerState,
-                _v23.player,
-                _v23.now)
-                ,roundTripDelay: 0
-                ,serverNow: _v23.now
-                ,startTime: $Maybe.Nothing
-                ,wake: _L.fromArray([])
-                ,wind: defaultWind(_v23.now)};
-      }();
-   };
+   var defaultGame = F3(function (now,
+   course,
+   player) {
+      return {_: {}
+             ,center: {ctor: "_Tuple2"
+                      ,_0: 0
+                      ,_1: 0}
+             ,countdown: 0
+             ,course: course
+             ,ghosts: _L.fromArray([])
+             ,isMaster: false
+             ,leaderboard: _L.fromArray([])
+             ,live: false
+             ,localTime: 0
+             ,now: now
+             ,opponents: _L.fromArray([])
+             ,playerState: A2(defaultPlayerState,
+             player,
+             now)
+             ,roundTripDelay: 0
+             ,serverNow: now
+             ,startTime: $Maybe.Nothing
+             ,wake: _L.fromArray([])
+             ,wind: defaultWind};
+   });
    var FixedAngle = {ctor: "FixedAngle"};
    var PlayerState = function (a) {
       return function (b) {
@@ -2778,26 +2749,23 @@ Elm.Game.make = function (_elm) {
                                           return function (n) {
                                              return function (o) {
                                                 return function (p) {
-                                                   return function (q) {
-                                                      return {_: {}
-                                                             ,center: d
-                                                             ,countdown: k
-                                                             ,course: g
-                                                             ,creationTime: m
-                                                             ,ghosts: f
-                                                             ,isMaster: n
-                                                             ,leaderboard: h
-                                                             ,live: o
-                                                             ,localTime: p
-                                                             ,now: i
-                                                             ,opponents: e
-                                                             ,playerState: b
-                                                             ,roundTripDelay: q
-                                                             ,serverNow: j
-                                                             ,startTime: l
-                                                             ,wake: c
-                                                             ,wind: a};
-                                                   };
+                                                   return {_: {}
+                                                          ,center: d
+                                                          ,countdown: k
+                                                          ,course: g
+                                                          ,ghosts: f
+                                                          ,isMaster: m
+                                                          ,leaderboard: h
+                                                          ,live: n
+                                                          ,localTime: o
+                                                          ,now: i
+                                                          ,opponents: e
+                                                          ,playerState: b
+                                                          ,roundTripDelay: p
+                                                          ,serverNow: j
+                                                          ,startTime: l
+                                                          ,wake: c
+                                                          ,wind: a};
                                                 };
                                              };
                                           };
@@ -2814,7 +2782,13 @@ Elm.Game.make = function (_elm) {
          };
       };
    };
+   var windShadowLength = 120;
+   var boatWidth = 3;
+   var markRadius = 5;
    _elm.Game.values = {_op: _op
+                      ,markRadius: markRadius
+                      ,boatWidth: boatWidth
+                      ,windShadowLength: windShadowLength
                       ,GameState: GameState
                       ,Wind: Wind
                       ,Gust: Gust
@@ -2835,7 +2809,6 @@ Elm.Game.make = function (_elm) {
                       ,UpwindGate: UpwindGate
                       ,StartLine: StartLine
                       ,WindGenerator: WindGenerator
-                      ,GustDef: GustDef
                       ,areaBox: areaBox
                       ,areaDims: areaDims
                       ,areaTop: areaTop
@@ -2850,7 +2823,6 @@ Elm.Game.make = function (_elm) {
                       ,headingOnVmg: headingOnVmg
                       ,deltaToVmg: deltaToVmg
                       ,asOpponentState: asOpponentState
-                      ,GameSetup: GameSetup
                       ,defaultVmg: defaultVmg
                       ,defaultPlayer: defaultPlayer
                       ,defaultPlayerState: defaultPlayerState
@@ -5299,6 +5271,28 @@ Elm.Inputs.make = function (_elm) {
    $State = Elm.State.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var windGeneratorDecoder = A5($Json$Decode.object4,
+   $Game.WindGenerator,
+   A2($Json$Decode._op[":="],
+   "wavelength1",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "amplitude1",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "wavelength2",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "amplitude2",
+   $Json$Decode.$float));
+   var gateDecoder = A3($Json$Decode.object2,
+   $Game.Gate,
+   A2($Json$Decode._op[":="],
+   "y",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "width",
+   $Json$Decode.$float));
    var pointDecoder = A3($Json$Decode.tuple2,
    F2(function (v0,v1) {
       return {ctor: "_Tuple2"
@@ -5307,6 +5301,42 @@ Elm.Inputs.make = function (_elm) {
    }),
    $Json$Decode.$float,
    $Json$Decode.$float);
+   var islandDecoder = A3($Json$Decode.object2,
+   $Game.Island,
+   A2($Json$Decode._op[":="],
+   "location",
+   pointDecoder),
+   A2($Json$Decode._op[":="],
+   "radius",
+   $Json$Decode.$float));
+   var raceAreaDecoder = A3($Json$Decode.object2,
+   $Game.RaceArea,
+   A2($Json$Decode._op[":="],
+   "rightTop",
+   pointDecoder),
+   A2($Json$Decode._op[":="],
+   "leftBottom",
+   pointDecoder));
+   var courseDecoder = A7($Json$Decode.object6,
+   $Game.Course,
+   A2($Json$Decode._op[":="],
+   "upwind",
+   gateDecoder),
+   A2($Json$Decode._op[":="],
+   "downwind",
+   gateDecoder),
+   A2($Json$Decode._op[":="],
+   "laps",
+   $Json$Decode.$int),
+   A2($Json$Decode._op[":="],
+   "islands",
+   $Json$Decode.list(islandDecoder)),
+   A2($Json$Decode._op[":="],
+   "area",
+   raceAreaDecoder),
+   A2($Json$Decode._op[":="],
+   "windGenerator",
+   windGeneratorDecoder));
    var opponentStateDecoder = A9($Json$Decode.object8,
    $Game.OpponentState,
    A2($Json$Decode._op[":="],
@@ -5364,7 +5394,7 @@ Elm.Inputs.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "state",
    opponentStateDecoder));
-   var raceCourseDecoder = A5($Json$Decode.object4,
+   var raceCourseDecoder = A6($Json$Decode.object5,
    $State.RaceCourse,
    A2($Json$Decode._op[":="],
    "_id",
@@ -5372,6 +5402,9 @@ Elm.Inputs.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "slug",
    $Json$Decode.string),
+   A2($Json$Decode._op[":="],
+   "course",
+   courseDecoder),
    A2($Json$Decode._op[":="],
    "countdown",
    $Json$Decode.$int),
@@ -5419,6 +5452,16 @@ Elm.Inputs.make = function (_elm) {
    var isSubtleTurning = function (ki) {
       return manualTurn(ki) && ki.subtleTurn;
    };
+   var initialRaceInput = {_: {}
+                          ,clientTime: 0
+                          ,ghosts: _L.fromArray([])
+                          ,initial: true
+                          ,isMaster: false
+                          ,leaderboard: _L.fromArray([])
+                          ,opponents: _L.fromArray([])
+                          ,serverNow: 0
+                          ,startTime: $Maybe.Nothing
+                          ,wind: $Game.defaultWind};
    var RaceInput = F9(function (a,
    b,
    c,
@@ -5443,6 +5486,13 @@ Elm.Inputs.make = function (_elm) {
    b) {
       return {_: {},x: a,y: b};
    });
+   var emptyKeyboardInput = {_: {}
+                            ,arrows: {_: {},x: 0,y: 0}
+                            ,escapeRun: false
+                            ,lock: false
+                            ,startCountdown: false
+                            ,subtleTurn: false
+                            ,tack: false};
    var KeyboardInput = F6(function (a,
    b,
    c,
@@ -5515,10 +5565,12 @@ Elm.Inputs.make = function (_elm) {
    var runServerUpdate = A2($Task.andThen,
    fetchServerUpdate,
    $Signal.send(actionsMailbox.address));
-   var AppInput = F2(function (a,
-   b) {
+   var AppInput = F3(function (a,
+   b,
+   c) {
       return {_: {}
              ,action: a
+             ,clock: c
              ,gameInput: b};
    });
    _elm.Inputs.values = {_op: _op
@@ -5533,8 +5585,10 @@ Elm.Inputs.make = function (_elm) {
                         ,GameInput: GameInput
                         ,Clock: Clock
                         ,KeyboardInput: KeyboardInput
+                        ,emptyKeyboardInput: emptyKeyboardInput
                         ,UserArrows: UserArrows
                         ,RaceInput: RaceInput
+                        ,initialRaceInput: initialRaceInput
                         ,extractGameInput: extractGameInput
                         ,manualTurn: manualTurn
                         ,isTurning: isTurning
@@ -5548,7 +5602,12 @@ Elm.Inputs.make = function (_elm) {
                         ,opponentDecoder: opponentDecoder
                         ,playerDecoder: playerDecoder
                         ,opponentStateDecoder: opponentStateDecoder
-                        ,pointDecoder: pointDecoder};
+                        ,pointDecoder: pointDecoder
+                        ,courseDecoder: courseDecoder
+                        ,gateDecoder: gateDecoder
+                        ,islandDecoder: islandDecoder
+                        ,raceAreaDecoder: raceAreaDecoder
+                        ,windGeneratorDecoder: windGeneratorDecoder};
    return _elm.Inputs.values;
 };
 Elm.Json = Elm.Json || {};
@@ -6440,6 +6499,7 @@ Elm.Main.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Main",
    $Basics = Elm.Basics.make(_elm),
+   $Core = Elm.Core.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -6464,7 +6524,7 @@ Elm.Main.make = function (_elm) {
                                  ,delta: _v0._1
                                  ,time: _v0._0};}
          _U.badCase($moduleName,
-         "on line 42, column 32 to 62");
+         "on line 43, column 32 to 62");
       }();
    },
    $Time.timestamp($Time.fps(30)));
@@ -6607,10 +6667,11 @@ Elm.Main.make = function (_elm) {
    $Inputs.keyboardInput,
    $Window.dimensions,
    raceInput));
-   var appInput = A3($Signal.map2,
+   var appInput = A4($Signal.map3,
    $Inputs.AppInput,
    $Inputs.actionsMailbox.signal,
-   gameInput);
+   gameInput,
+   clock);
    var appState = A3($Signal.foldp,
    $Steps.mainStep,
    $State.initialAppState,
@@ -6623,9 +6684,9 @@ Elm.Main.make = function (_elm) {
    function (v) {
       return v.ctor === "Nothing" ? null : v._0;
    },
-   A2($Signal.map,
+   $Signal.dropRepeats(A2($Signal.map,
    $Outputs.getActiveRaceCourse,
-   appState));
+   appState)));
    var playerOutput = Elm.Native.Port.make(_elm).outboundSignal("playerOutput",
    function (v) {
       return v.ctor === "Nothing" ? null : {state: {time: v._0.state.time
@@ -6648,7 +6709,9 @@ Elm.Main.make = function (_elm) {
                                                    ,escapeRun: v._0.input.escapeRun}
                                            ,localTime: v._0.localTime};
    },
-   $Signal.dropRepeats(A3($Signal.map2,
+   A2($Signal.filter,
+   $Core.isJust,
+   $Maybe.Nothing)(A3($Signal.map2,
    $Outputs.extractPlayerOutput,
    appState,
    appInput)));
@@ -15321,32 +15384,24 @@ Elm.Outputs.make = function (_elm) {
          return $Maybe.Nothing;
       }();
    };
-   var makePlayerOutput = F2(function (gameInput,
+   var makePlayerOutput = F2(function (keyboardInput,
    gameState) {
       return {_: {}
-             ,input: gameInput.keyboardInput
+             ,input: A2($Maybe.withDefault,
+             $Inputs.emptyKeyboardInput,
+             keyboardInput)
              ,localTime: gameState.localTime
              ,state: $Game.asOpponentState(gameState.playerState)};
    });
    var extractPlayerOutput = F2(function (appState,
    appInput) {
-      return function () {
-         var _v2 = {ctor: "_Tuple2"
-                   ,_0: appState.gameState
-                   ,_1: appInput.gameInput};
-         switch (_v2.ctor)
-         {case "_Tuple2":
-            switch (_v2._0.ctor)
-              {case "Just":
-                 switch (_v2._1.ctor)
-                   {case "Just":
-                      return $Maybe.Just(A2(makePlayerOutput,
-                        _v2._1._0,
-                        _v2._0._0));}
-                   break;}
-              break;}
-         return $Maybe.Nothing;
-      }();
+      return A2($Maybe.map,
+      makePlayerOutput(A2($Maybe.map,
+      function (_) {
+         return _.keyboardInput;
+      },
+      appInput.gameInput)),
+      appState.gameState);
    });
    var PlayerOutput = F3(function (a,
    b,
@@ -15743,9 +15798,8 @@ Elm.Render.Course.make = function (_elm) {
       return function () {
          var isNext = _U.eq(playerState.nextGate,
          $Maybe.Just($Game.UpwindGate));
-         return A5($Render$Gates.renderGate,
+         return A4($Render$Gates.renderGate,
          course.upwind,
-         course.markRadius,
          now,
          isNext,
          $Render$Gates.Upwind);
@@ -15761,16 +15815,13 @@ Elm.Render.Course.make = function (_elm) {
          var isLastGate = _U.eq($List.length(playerState.crossedGates),
          course.laps * 2);
          var isFirstGate = $List.isEmpty(playerState.crossedGates);
-         return isFirstGate ? A4($Render$Gates.renderStartLine,
+         return isFirstGate ? A3($Render$Gates.renderStartLine,
          course.downwind,
-         course.markRadius,
          started,
-         now) : isLastGate ? A3($Render$Gates.renderFinishLine,
+         now) : isLastGate ? A2($Render$Gates.renderFinishLine,
          course.downwind,
-         course.markRadius,
-         now) : A5($Render$Gates.renderGate,
+         now) : A4($Render$Gates.renderGate,
          course.downwind,
-         course.markRadius,
          now,
          isNext,
          $Render$Gates.Downwind);
@@ -16295,26 +16346,24 @@ Elm.Render.Gates.make = function (_elm) {
          right));
       }();
    });
-   var renderGateMark = F2(function (radius,
-   position) {
+   var renderGateMark = function (position) {
       return function () {
-         var outer = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle(radius));
-         var inner = $Graphics$Collage.filled($Render$Utils.colors.orange)($Graphics$Collage.circle(radius));
+         var outer = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle($Game.markRadius));
+         var inner = $Graphics$Collage.filled($Render$Utils.colors.orange)($Graphics$Collage.circle($Game.markRadius));
          return $Graphics$Collage.move(position)($Graphics$Collage.group(_L.fromArray([inner
                                                                                       ,outer])));
       }();
-   });
-   var renderGateMarks = F2(function (gate,
-   markRadius) {
+   };
+   var renderGateMarks = function (gate) {
       return function () {
          var $ = $Game.getGateMarks(gate),
          left = $._0,
          right = $._1;
          return $Graphics$Collage.group(A2($List.map,
-         renderGateMark(markRadius),
+         renderGateMark,
          _L.fromArray([left,right])));
       }();
-   });
+   };
    var gateLineOpacity = function (timer) {
       return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
    };
@@ -16325,15 +16374,14 @@ Elm.Render.Gates.make = function (_elm) {
                                    ,["join"
                                     ,$Graphics$Collage.Smooth]],
    $Graphics$Collage.defaultLine);
-   var renderStraightArrow = F3(function (markRadius,
-   bottomUp,
+   var renderStraightArrow = F2(function (bottomUp,
    timer) {
       return function () {
          var arrowY = A2($Core.floatMod,
          timer * 2.0e-2,
          30);
          var way = bottomUp ? 1 : -1;
-         var l = markRadius;
+         var l = $Game.markRadius;
          var tipShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
                                                  ,_0: 0 - l
                                                  ,_1: 0 - l}
@@ -16350,7 +16398,7 @@ Elm.Render.Gates.make = function (_elm) {
                                                                                ,_0: l
                                                                                ,_1: l}]);
          var tip = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(tipShape));
-         var lineLength = $Basics.toFloat(markRadius * 4);
+         var lineLength = $Game.markRadius * 4;
          var bodyShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
                                                   ,_0: 0
                                                   ,_1: 0 - lineLength}
@@ -16376,20 +16424,16 @@ Elm.Render.Gates.make = function (_elm) {
                                   ,["dashing"
                                    ,_L.fromArray([3,3])]],
    $Graphics$Collage.defaultLine);
-   var renderStartLine = F4(function (gate,
-   markRadius,
+   var renderStartLine = F3(function (gate,
    started,
    timer) {
       return function () {
          var helper = started ? $Graphics$Collage.move({ctor: "_Tuple2"
                                                        ,_0: 0
-                                                       ,_1: gate.y - markRadius * 3})(A3(renderStraightArrow,
-         markRadius,
+                                                       ,_1: gate.y - $Game.markRadius * 3})(A2(renderStraightArrow,
          true,
          timer)) : $Render$Utils.emptyForm;
-         var marks = A2(renderGateMarks,
-         gate,
-         markRadius);
+         var marks = renderGateMarks(gate);
          var a = started ? gateLineOpacity(timer) : 1;
          var lineStyle = started ? nextLineStyle : _U.replace([["width"
                                                                ,2]
@@ -16404,21 +16448,17 @@ Elm.Render.Gates.make = function (_elm) {
                                                      ,marks]));
       }();
    });
-   var renderFinishLine = F3(function (gate,
-   markRadius,
+   var renderFinishLine = F2(function (gate,
    timer) {
       return function () {
-         var marks = A2(renderGateMarks,
-         gate,
-         markRadius);
+         var marks = renderGateMarks(gate);
          var a = gateLineOpacity(timer);
          var line = $Graphics$Collage.alpha(a)(A2(renderGateLine,
          gate,
          nextLineStyle));
          var helper = $Graphics$Collage.alpha(a * 0.5)($Graphics$Collage.move({ctor: "_Tuple2"
                                                                               ,_0: 0
-                                                                              ,_1: gate.y + markRadius * 3})(A3(renderStraightArrow,
-         markRadius,
+                                                                              ,_1: gate.y + $Game.markRadius * 3})(A2(renderStraightArrow,
          false,
          timer)));
          return $Graphics$Collage.group(_L.fromArray([helper
@@ -16468,9 +16508,8 @@ Elm.Render.Gates.make = function (_elm) {
          radSteps);
       }();
    });
-   var renderAroundArrow = F4(function (headAngle,
+   var renderAroundArrow = F3(function (headAngle,
    clockwise,
-   markRadius,
    timer) {
       return function () {
          var arrowTip = clockwise ? clockwiseArrowTip : counterClockwiseArrowTip;
@@ -16482,7 +16521,7 @@ Elm.Render.Gates.make = function (_elm) {
          slidingAngle);
          var currentSlidingAngle = ($Basics.round(timedAngle) - slidingAngle) * way;
          var arrowRad = $Core.toRadians($Basics.toFloat(currentSlidingAngle + headAngle));
-         var r = markRadius * 4;
+         var r = $Game.markRadius * 4;
          var arc = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(A4(arcShape,
          r,
          headAngle + currentSlidingAngle,
@@ -16490,7 +16529,7 @@ Elm.Render.Gates.make = function (_elm) {
          way)));
          var arrow = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
                                                               ,_0: r
-                                                              ,_1: arrowRad}))($Graphics$Collage.rotate(arrowRad - $Basics.pi / 2)($Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(arrowTip(markRadius)))));
+                                                              ,_1: arrowRad}))($Graphics$Collage.rotate(arrowRad - $Basics.pi / 2)($Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(arrowTip($Game.markRadius)))));
          return $Graphics$Collage.alpha(timedAngle / $Basics.toFloat(slidingAngle) * 0.2)($Graphics$Collage.group(_L.fromArray([arc
                                                                                                                                ,arrow])));
       }();
@@ -16507,8 +16546,7 @@ Elm.Render.Gates.make = function (_elm) {
    var aroundRightDownwind = A2(renderAroundArrow,
    135,
    false);
-   var renderGateHelpers = F4(function (gate,
-   markRadius,
+   var renderGateHelpers = F3(function (gate,
    gateLoc,
    timer) {
       return function () {
@@ -16516,20 +16554,12 @@ Elm.Render.Gates.make = function (_elm) {
             switch (gateLoc.ctor)
             {case "Downwind":
                return {ctor: "_Tuple2"
-                      ,_0: A2(aroundLeftDownwind,
-                      markRadius,
-                      timer)
-                      ,_1: A2(aroundRightDownwind,
-                      markRadius,
-                      timer)};
+                      ,_0: aroundLeftDownwind(timer)
+                      ,_1: aroundRightDownwind(timer)};
                case "Upwind":
                return {ctor: "_Tuple2"
-                      ,_0: A2(aroundLeftUpwind,
-                      markRadius,
-                      timer)
-                      ,_1: A2(aroundRightUpwind,
-                      markRadius,
-                      timer)};}
+                      ,_0: aroundLeftUpwind(timer)
+                      ,_1: aroundRightUpwind(timer)};}
             _U.badCase($moduleName,
             "between lines 126 and 129");
          }(),
@@ -16546,20 +16576,16 @@ Elm.Render.Gates.make = function (_elm) {
                                                      rightHelper)]));
       }();
    });
-   var renderGate = F5(function (gate,
-   markRadius,
+   var renderGate = F4(function (gate,
    timer,
    isNext,
    gateType) {
       return function () {
-         var helpers = isNext ? A4(renderGateHelpers,
+         var helpers = isNext ? A3(renderGateHelpers,
          gate,
-         markRadius,
          gateType,
          timer) : $Render$Utils.emptyForm;
-         var marks = A2(renderGateMarks,
-         gate,
-         markRadius);
+         var marks = renderGateMarks(gate);
          var a = gateLineOpacity(timer);
          var line = isNext ? $Graphics$Collage.alpha(a)(A2(renderGateLine,
          gate,
@@ -16652,8 +16678,7 @@ Elm.Render.Players.make = function (_elm) {
       renderGhost,
       ghosts));
    };
-   var renderWindShadow = F2(function (shadowLength,
-   _v2) {
+   var renderWindShadow = function (_v2) {
       return function () {
          return function () {
             var arcAngles = _L.fromArray([-15
@@ -16668,7 +16693,7 @@ Elm.Render.Players.make = function (_elm) {
                return A2($Geo.add,
                _v2.position,
                $Basics.fromPolar({ctor: "_Tuple2"
-                                 ,_0: shadowLength
+                                 ,_0: $Game.windShadowLength
                                  ,_1: $Core.toRadians(_v2.shadowDirection + a)}));
             },
             arcAngles);
@@ -16677,9 +16702,8 @@ Elm.Render.Players.make = function (_elm) {
             endPoints))));
          }();
       }();
-   });
-   var renderOpponent = F2(function (shadowLength,
-   _v4) {
+   };
+   var renderOpponent = function (_v4) {
       return function () {
          return function () {
             var name = $Graphics$Collage.alpha(0.3)($Graphics$Collage.move(A2($Geo.add,
@@ -16689,9 +16713,7 @@ Elm.Render.Players.make = function (_elm) {
             ,_1: -25}))($Graphics$Collage.toForm($Graphics$Element.centered($Render$Utils.baseText(A2($Maybe.withDefault,
             "Anonymous",
             _v4.player.handle))))));
-            var shadow = A2(renderWindShadow,
-            shadowLength,
-            _v4.state);
+            var shadow = renderWindShadow(_v4.state);
             var hull = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move(_v4.state.position)(A2(rotateHull,
             _v4.state.heading,
             baseHull)));
@@ -16700,11 +16722,11 @@ Elm.Render.Players.make = function (_elm) {
                                                         ,name]));
          }();
       }();
-   });
+   };
    var renderOpponents = F2(function (course,
    opponents) {
       return $Graphics$Collage.group(A2($List.map,
-      renderOpponent(course.windShadowLength),
+      renderOpponent,
       opponents));
    });
    var renderWake = function (wake) {
@@ -16842,8 +16864,7 @@ Elm.Render.Players.make = function (_elm) {
                                                                                                                                          ,$Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))(vmgShape)])));
       }();
    };
-   var renderPlayer = F3(function (displayWindShadow,
-   shadowLength,
+   var renderPlayer = F2(function (displayWindShadow,
    state) {
       return function () {
          var wake = renderWake(state.trail);
@@ -16852,9 +16873,7 @@ Elm.Render.Players.make = function (_elm) {
          state.windOrigin);
          var vmgSign = renderVmgSign(state);
          var angles = renderPlayerAngles(state);
-         var windShadow = displayWindShadow ? A2(renderWindShadow,
-         shadowLength,
-         $Game.asOpponentState(state)) : $Render$Utils.emptyForm;
+         var windShadow = displayWindShadow ? renderWindShadow($Game.asOpponentState(state)) : $Render$Utils.emptyForm;
          var hull = A2(rotateHull,
          state.heading,
          baseHull);
@@ -16870,9 +16889,8 @@ Elm.Render.Players.make = function (_elm) {
    var renderPlayers = function (_v16) {
       return function () {
          return function () {
-            var mainPlayer = A3(renderPlayer,
+            var mainPlayer = A2(renderPlayer,
             true,
-            _v16.course.windShadowLength,
             _v16.playerState);
             var forms = _L.fromArray([A2(renderOpponents,
                                      _v16.course,
@@ -17547,15 +17565,17 @@ Elm.State.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var RaceCourse = F4(function (a,
+   var RaceCourse = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
-             ,countdown: c
+             ,countdown: d
+             ,course: c
              ,id: a
              ,slug: b
-             ,startCycle: d};
+             ,startCycle: e};
    });
    var RaceCourseStatus = F2(function (a,
    b) {
@@ -17688,7 +17708,7 @@ Elm.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 74 and 81");
+         "between lines 85 and 92");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -17803,40 +17823,56 @@ Elm.Steps.make = function (_elm) {
          return appState;
       }();
    });
+   var initGameState = F3(function (clock,
+   appState,
+   raceCourse) {
+      return A3($Game.defaultGame,
+      clock.time,
+      raceCourse.course,
+      appState.liveCenterState.player);
+   });
    var mainStep = F2(function (appInput,
    appState) {
       return function () {
-         var newState = A2(actionStep,
+         var newAppState = A2(actionStep,
          appInput.action,
          appState);
          var newGameState = function () {
-            var _v11 = {ctor: "_Tuple3"
-                       ,_0: newState.screen
-                       ,_1: appState.gameState
-                       ,_2: appInput.gameInput};
+            var _v11 = newAppState.screen;
             switch (_v11.ctor)
-            {case "_Tuple3":
-               switch (_v11._0.ctor)
-                 {case "Play":
-                    switch (_v11._1.ctor)
-                      {case "Just":
-                         switch (_v11._2.ctor)
-                           {case "Just":
-                              return $Maybe.Just(A2(gameStep,
-                                _v11._2._0,
-                                _v11._1._0));}
-                           break;}
-                      break;}
-                 break;}
+            {case "Play":
+               return function () {
+                    var gameState = A2($Maybe.withDefault,
+                    A3(initGameState,
+                    appInput.clock,
+                    newAppState,
+                    _v11._0),
+                    appState.gameState);
+                    return function () {
+                       var _v13 = appInput.gameInput;
+                       switch (_v13.ctor)
+                       {case "Just":
+                          return $Maybe.Just(A2(gameStep,
+                            _v13._0,
+                            gameState));
+                          case "Nothing":
+                          return $Maybe.Just(_U.replace([["now"
+                                                         ,appInput.clock.time]],
+                            gameState));}
+                       _U.badCase($moduleName,
+                       "between lines 29 and 34");
+                    }();
+                 }();}
             return $Maybe.Nothing;
          }();
          return _U.replace([["gameState"
                             ,newGameState]],
-         newState);
+         newAppState);
       }();
    });
    _elm.Steps.values = {_op: _op
                        ,mainStep: mainStep
+                       ,initGameState: initGameState
                        ,actionStep: actionStep
                        ,liveCenterStep: liveCenterStep
                        ,gameStep: gameStep
@@ -18026,7 +18062,7 @@ Elm.Steps.Moving.make = function (_elm) {
          var outOfBounds = $Basics.not(A2($Geo.inBox,
          p,
          $Game.areaBox(course.area)));
-         var halfBoatWidth = course.boatWidth / 2;
+         var halfBoatWidth = $Game.boatWidth / 2;
          var onIsland = A2($Core.exists,
          function (i) {
             return _U.cmp(A2($Geo.distance,
@@ -18050,7 +18086,7 @@ Elm.Steps.Moving.make = function (_elm) {
             return _U.cmp(A2($Geo.distance,
             p,
             m),
-            course.markRadius + halfBoatWidth) < 1;
+            $Game.markRadius + halfBoatWidth) < 1;
          },
          marks);
          return stuckOnMark || (outOfBounds || onIsland);
@@ -18441,13 +18477,12 @@ Elm.Steps.Wind.make = function (_elm) {
                 ,_1: $Geo.ensure360(_v0.shadowDirection + shadowArc / 2)};
       }();
    };
-   var isShadowedBy = F3(function (state,
-   shadowLength,
+   var isShadowedBy = F2(function (state,
    opponent) {
       return _U.cmp(A2($Geo.distance,
       opponent.state.position,
       state.position),
-      shadowLength) < 1 && function () {
+      $Game.windShadowLength) < 1 && function () {
          var $ = windShadowSector(opponent.state),
          min = $._0,
          max = $._1;
@@ -18470,9 +18505,7 @@ Elm.Steps.Wind.make = function (_elm) {
                   return shadowImpact;
                }();
             })(A2($List.filter,
-            A2(isShadowedBy,
-            state,
-            _v2.course.windShadowLength),
+            isShadowedBy(state),
             _v2.opponents)));
             var gustsOnPlayer = A2($List.filter,
             function (g) {

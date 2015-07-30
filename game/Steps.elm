@@ -19,15 +19,26 @@ import List as L
 mainStep : AppInput -> AppState -> AppState
 mainStep appInput appState =
   let
-    newState = actionStep appInput.action appState
+    newAppState = actionStep appInput.action appState
 
-    newGameState = case (newState.screen, appState.gameState, appInput.gameInput) of
-      (Play raceCourse, Just gameState, Just gameInput) ->
-        Just (gameStep gameInput gameState)
+    newGameState = case newAppState.screen of
+      Play raceCourse ->
+        let
+          gameState = M.withDefault (initGameState appInput.clock newAppState raceCourse) appState.gameState
+        in
+          case appInput.gameInput of
+            Just gameInput ->
+              Just (gameStep gameInput gameState)
+            Nothing ->
+              Just { gameState | now <- appInput.clock.time }
       _ ->
         Nothing
   in
-    { newState | gameState <- newGameState }
+    { newAppState | gameState <- newGameState }
+
+initGameState : Inputs.Clock -> AppState -> RaceCourse -> GameState
+initGameState clock appState raceCourse =
+  defaultGame clock.time raceCourse.course appState.liveCenterState.player
 
 actionStep : Action -> AppState -> AppState
 actionStep action appState =

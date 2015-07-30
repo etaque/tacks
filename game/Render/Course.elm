@@ -18,9 +18,9 @@ renderDownwind playerState course now started =
     isLastGate = length playerState.crossedGates == course.laps * 2
     isNext = playerState.nextGate == Just DownwindGate
   in
-    if | isFirstGate -> renderStartLine course.downwind course.markRadius started now
-       | isLastGate  -> renderFinishLine course.downwind course.markRadius now
-       | otherwise   -> renderGate course.downwind course.markRadius now isNext Downwind
+    if | isFirstGate -> renderStartLine course.downwind started now
+       | isLastGate  -> renderFinishLine course.downwind now
+       | otherwise   -> renderGate course.downwind now isNext Downwind
 
 
 renderUpwind : PlayerState -> Course -> Float -> Form
@@ -28,7 +28,7 @@ renderUpwind playerState course now =
   let
     isNext = playerState.nextGate == Just UpwindGate
   in
-    renderGate course.upwind course.markRadius now isNext Upwind
+    renderGate course.upwind now isNext Upwind
 
 
 renderLaylines : Wind -> Course -> PlayerState -> Form

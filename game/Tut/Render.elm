@@ -81,8 +81,8 @@ renderRelStack ({course,step,stepTime,playerState} as tutState) =
     CourseStep ->
       [ renderBounds course.area
       , renderIslands course
-      , renderGate course.downwind course.markRadius stepTime False Downwind
-      , renderGate course.upwind course.markRadius stepTime False Upwind
+      , renderGate course.downwind markRadius stepTime False Downwind
+      , renderGate course.upwind markRadius stepTime False Upwind
       , renderWindHelpers stepTime course
       , renderTutPlayer False False False playerState
       ]
@@ -91,8 +91,8 @@ renderRelStack ({course,step,stepTime,playerState} as tutState) =
     GateStep ->
       [ renderBounds course.area
       , renderIslands course
-      , renderStartLine course.downwind course.markRadius True stepTime
-      , renderGate course.upwind course.markRadius stepTime True Upwind
+      , renderStartLine course.downwind markRadius True stepTime
+      , renderGate course.upwind markRadius stepTime True Upwind
       ]
     LapStep ->
       [ renderBounds course.area

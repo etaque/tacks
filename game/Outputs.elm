@@ -13,16 +13,14 @@ type alias PlayerOutput =
 
 extractPlayerOutput : State.AppState -> AppInput -> Maybe PlayerOutput
 extractPlayerOutput appState appInput =
-  case (appState.gameState, appInput.gameInput) of
-    (Just gameState, Just gameInput) ->
-      Just (makePlayerOutput gameInput gameState)
-    _ ->
-      Nothing
+  Maybe.map
+    (makePlayerOutput (Maybe.map .keyboardInput appInput.gameInput))
+    appState.gameState
 
-makePlayerOutput : GameInput -> Game.GameState -> PlayerOutput
-makePlayerOutput gameInput gameState =
+makePlayerOutput : Maybe KeyboardInput -> Game.GameState -> PlayerOutput
+makePlayerOutput keyboardInput gameState =
   { state = Game.asOpponentState gameState.playerState
-  , input = gameInput.keyboardInput
+  , input = Maybe.withDefault emptyKeyboardInput keyboardInput
   , localTime = gameState.localTime
   }
 

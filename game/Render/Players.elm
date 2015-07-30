@@ -81,11 +81,11 @@ renderWake wake =
   in
     group (map renderSegment pairs)
 
-renderWindShadow : Float -> OpponentState -> Form
-renderWindShadow shadowLength {windAngle, windOrigin, position, shadowDirection} =
+renderWindShadow : OpponentState -> Form
+renderWindShadow {windAngle, windOrigin, position, shadowDirection} =
   let
     arcAngles = [-15, -10, -5, 0, 5, 10, 15]
-    endPoints = map (\a -> add position (fromPolar (shadowLength, toRadians (shadowDirection + a)))) arcAngles
+    endPoints = map (\a -> add position (fromPolar (windShadowLength, toRadians (shadowDirection + a)))) arcAngles
   in
     path (position :: endPoints) |> filled white |> alpha 0.1
 
@@ -97,12 +97,12 @@ rotateHull : Float -> Form -> Form
 rotateHull heading = rotate (toRadians (heading + 90))
 
 
-renderPlayer : Bool -> Float -> PlayerState -> Form
-renderPlayer displayWindShadow shadowLength state =
+renderPlayer : Bool -> PlayerState -> Form
+renderPlayer displayWindShadow state =
   let
     hull = rotateHull state.heading baseHull
     windShadow = if displayWindShadow
-      then renderWindShadow shadowLength (asOpponentState state)
+      then renderWindShadow (asOpponentState state)
       else emptyForm
     angles = renderPlayerAngles state
     vmgSign = renderVmgSign state
@@ -113,13 +113,13 @@ renderPlayer displayWindShadow shadowLength state =
     group [wake, windShadow, movingPart]
 
 
-renderOpponent : Float -> Opponent -> Form
-renderOpponent shadowLength {state,player} =
+renderOpponent : Opponent -> Form
+renderOpponent {state,player} =
   let
     hull = rotateHull state.heading baseHull
       |> move state.position
       |> alpha 0.5
-    shadow = renderWindShadow shadowLength state
+    shadow = renderWindShadow state
     name = (M.withDefault "Anonymous" player.handle)
       |> baseText |> centered |> toForm
       |> move (add state.position (0,-25))
@@ -129,7 +129,7 @@ renderOpponent shadowLength {state,player} =
 
 renderOpponents : Course -> List Opponent -> Form
 renderOpponents course opponents =
-  group <| map (renderOpponent course.windShadowLength) opponents
+  group <| map renderOpponent opponents
 
 
 renderGhost : GhostState -> Form
@@ -150,7 +150,7 @@ renderGhosts ghosts =
 renderPlayers : GameState -> Form
 renderPlayers ({playerState,opponents,ghosts,course,center} as gameState) =
   let
-    mainPlayer = renderPlayer True course.windShadowLength playerState
+    mainPlayer = renderPlayer True playerState
     forms =
       [ renderOpponents course opponents
       , renderGhosts ghosts

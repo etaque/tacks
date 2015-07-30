@@ -37,7 +37,7 @@ type alias RaceCourseStatus =
 type alias RaceCourse =
   { id: String
   , slug: String
-  -- , course: Course
+  , course: Course
   , countdown: Int
   , startCycle: Int
   }

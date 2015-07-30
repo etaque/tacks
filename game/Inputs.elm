@@ -19,6 +19,7 @@ import Geo exposing (Point)
 type alias AppInput =
   { action : Action
   , gameInput : Maybe GameInput
+  , clock: Clock
   }
 
 
@@ -73,6 +74,16 @@ type alias KeyboardInput =
   , escapeRun : Bool
   }
 
+emptyKeyboardInput : KeyboardInput
+emptyKeyboardInput =
+  { arrows = { x = 0, y = 0 }
+  , lock = False
+  , tack = False
+  , subtleTurn = False
+  , startCountdown = False
+  , escapeRun = False
+  }
+
 type alias UserArrows = { x : Int, y : Int }
 
 type alias RaceInput =
@@ -86,6 +97,20 @@ type alias RaceInput =
   , initial:     Bool
   , clientTime:  Time
   }
+
+initialRaceInput : RaceInput
+initialRaceInput =
+  { serverNow = 0
+  , startTime = Nothing
+  , wind = defaultWind
+  , opponents = []
+  , ghosts = []
+  , leaderboard = []
+  , isMaster = False
+  , initial = True
+  , clientTime = 0
+  }
+
 
 extractGameInput : Clock -> KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe GameInput
 extractGameInput clock keyboardInput dims maybeRaceInput =
@@ -113,6 +138,8 @@ keyboardInput = Signal.map2 toKeyboardInput
   Keyboard.keysDown
 
 
+-- Decoders
+
 liveCenterInputDecoder : Json.Decoder LiveCenterInput
 liveCenterInputDecoder =
   object2 LiveCenterInput
@@ -127,9 +154,10 @@ raceCourseStatusDecoder =
 
 raceCourseDecoder : Json.Decoder RaceCourse
 raceCourseDecoder =
-  object4 RaceCourse
+  object5 RaceCourse
     ("_id" := string)
     ("slug" := string)
+    ("course" := courseDecoder)
     ("countdown" := int)
     ("startCycle" := int)
 
@@ -149,6 +177,7 @@ playerDecoder =
     ("vmgMagnet" := int)
     ("guest" := bool)
     ("user" := bool)
+
 opponentStateDecoder : Json.Decoder OpponentState
 opponentStateDecoder =
   object8 OpponentState
@@ -164,3 +193,39 @@ opponentStateDecoder =
 pointDecoder : Json.Decoder Point
 pointDecoder =
   tuple2 (,) float float
+
+courseDecoder : Json.Decoder Course
+courseDecoder =
+  object6 Course
+    ("upwind" := gateDecoder)
+    ("downwind" := gateDecoder)
+    ("laps" := int)
+    ("islands" := list islandDecoder)
+    ("area" := raceAreaDecoder)
+    ("windGenerator" := windGeneratorDecoder)
+
+gateDecoder : Json.Decoder Gate
+gateDecoder =
+  object2 Gate
+    ("y" := float)
+    ("width" := float)
+
+islandDecoder : Json.Decoder Island
+islandDecoder =
+  object2 Island
+    ("location" := pointDecoder)
+    ("radius" := float)
+
+raceAreaDecoder : Json.Decoder RaceArea
+raceAreaDecoder =
+  object2 RaceArea
+    ("rightTop" := pointDecoder)
+    ("leftBottom" := pointDecoder)
+
+windGeneratorDecoder : Json.Decoder WindGenerator
+windGeneratorDecoder =
+  object4 WindGenerator
+    ("wavelength1" := float)
+    ("amplitude1" := float)
+    ("wavelength2" := float)
+    ("amplitude2" := float)

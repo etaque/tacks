@@ -15,6 +15,7 @@ import Render.All exposing (renderApp)
 import Core exposing (isJust)
 import Messages
 
+import Debug
 
 -- Inputs
 
@@ -49,7 +50,7 @@ gameInput =
 
 appInput : Signal AppInput
 appInput =
-  Signal.map2 AppInput actionsMailbox.signal gameInput
+  Signal.map3 AppInput actionsMailbox.signal gameInput clock
 
 appState : Signal AppState
 appState =
@@ -61,7 +62,7 @@ appState =
 port playerOutput : Signal (Maybe PlayerOutput)
 port playerOutput =
   Signal.map2 extractPlayerOutput appState appInput
-    |> Signal.dropRepeats
+    |> Signal.filter isJust Nothing
 
 -- port title : Signal String
 -- port title = Render.Utils.gameTitle <~ gameState
@@ -69,4 +70,5 @@ port playerOutput =
 port activeRaceCourse : Signal (Maybe String)
 port activeRaceCourse =
   Signal.map getActiveRaceCourse appState
+    |> Signal.dropRepeats
 

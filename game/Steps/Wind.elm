@@ -28,7 +28,7 @@ windStep ({wind,course,opponents} as gameState) state =
     gustsEffects = L.map (gustEffect state wind) gustsOnPlayer
 
     windShadow =
-      L.filter (isShadowedBy state course.windShadowLength) opponents
+      L.filter (isShadowedBy state) opponents
       |> L.map (\_ -> shadowImpact)
       |> L.sum
 
@@ -64,9 +64,9 @@ gustEffect state wind gust =
     }
 
 
-isShadowedBy : PlayerState -> Float -> Opponent -> Bool
-isShadowedBy state shadowLength opponent =
-  (distance opponent.state.position state.position) <= shadowLength &&
+isShadowedBy : PlayerState -> Opponent -> Bool
+isShadowedBy state opponent =
+  (distance opponent.state.position state.position) <= windShadowLength &&
     let
       angle = angleBetween opponent.state.position state.position
       (min, max) = windShadowSector opponent.state

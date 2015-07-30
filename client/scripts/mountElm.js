@@ -10,7 +10,7 @@ function mountGame() {
     messagesStore: readData("messages")
   });
 
-  var ws, wsUrl;
+  var ws, wsUrl, currentRaceCourseId;
 
   game.ports.activeRaceCourse.subscribe(function(id) {
     if (ws) {
@@ -30,7 +30,6 @@ function mountGame() {
       };
 
       ws.onopen = function() {
-        console.log("WebSocket open:", wsUrl);
         game.ports.playerOutput.subscribe(outputProxy);
       };
 
@@ -38,6 +37,7 @@ function mountGame() {
         game.ports.playerOutput.unsubscribe(outputProxy);
       };
     }
+    currentRaceCourseId = id;
   });
 
 }

@@ -42,8 +42,8 @@ arrowLineStyle : LineStyle
 arrowLineStyle = { defaultLine | width <- 2, color <- white, cap <- Round, join <- Smooth }
 
 
-renderAroundArrow : Int -> Bool -> Float -> Float -> Form
-renderAroundArrow headAngle clockwise markRadius timer =
+renderAroundArrow : Int -> Bool -> Float -> Form
+renderAroundArrow headAngle clockwise timer =
   let
     r = markRadius * 4
     slidingAngle = 135
@@ -70,10 +70,10 @@ aroundLeftDownwind = renderAroundArrow 225 True
 aroundRightDownwind = renderAroundArrow 135 False
 
 
-renderStraightArrow : Float -> Bool -> Float -> Form
-renderStraightArrow markRadius bottomUp timer =
+renderStraightArrow : Bool -> Float -> Form
+renderStraightArrow bottomUp timer =
   let
-    lineLength = toFloat (markRadius * 4)
+    lineLength = markRadius * 4
     l = markRadius
     way = if bottomUp then 1 else -1
     bodyShape = if bottomUp
@@ -97,21 +97,21 @@ gateLineOpacity : Float -> Float
 gateLineOpacity timer = 0.7 + 0.3 * cos (timer * 0.005)
 
 
-renderGateMark : Float -> Point -> Form
-renderGateMark radius position =
+renderGateMark : Point -> Form
+renderGateMark position =
   let
-    inner = circle radius |> filled colors.orange
-    outer = circle radius |> outlined (solid white)
+    inner = circle markRadius |> filled colors.orange
+    outer = circle markRadius |> outlined (solid white)
   in
     group [inner, outer] |> move position
 
 
-renderGateMarks : Gate -> Float -> Form
-renderGateMarks gate markRadius =
+renderGateMarks : Gate -> Form
+renderGateMarks gate =
   let
     (left,right) = getGateMarks gate
   in
-    group <| map (renderGateMark markRadius) [left, right]
+    group <| map renderGateMark [left, right]
 
 
 renderGateLine : Gate -> LineStyle -> Form
@@ -120,47 +120,47 @@ renderGateLine gate lineStyle =
   in  segment left right |> traced lineStyle
 
 
-renderGateHelpers : Gate -> Float -> GateLocation -> Float -> Form
-renderGateHelpers gate markRadius gateLoc timer =
+renderGateHelpers : Gate -> GateLocation -> Float -> Form
+renderGateHelpers gate gateLoc timer =
   let (left,right) = getGateMarks gate
       (leftHelper,rightHelper) = case gateLoc of
-        Upwind   -> (aroundLeftUpwind markRadius timer, aroundRightUpwind markRadius timer)
-        Downwind -> (aroundLeftDownwind markRadius timer, aroundRightDownwind markRadius timer)
+        Upwind   -> (aroundLeftUpwind timer, aroundRightUpwind timer)
+        Downwind -> (aroundLeftDownwind timer, aroundRightDownwind timer)
   in  group [move left leftHelper, move right rightHelper]
 
 
-renderStartLine : Gate -> Float -> Bool -> Time -> Form
-renderStartLine gate markRadius started timer =
+renderStartLine : Gate -> Bool -> Time -> Form
+renderStartLine gate started timer =
   let lineStyle = if started
         then nextLineStyle
         else { defaultLine | width <- 2, color <- colors.orange }
       a = if started then gateLineOpacity timer else 1
       line = renderGateLine gate lineStyle |> alpha a
-      marks = renderGateMarks gate markRadius
+      marks = renderGateMarks gate
       helper = if started
-        then renderStraightArrow markRadius True timer |> move (0, gate.y - markRadius * 3)
+        then renderStraightArrow True timer |> move (0, gate.y - markRadius * 3)
         else emptyForm
   in  group [helper, line, marks]
 
 
-renderGate : Gate -> Float -> Float -> Bool -> GateLocation -> Form
-renderGate gate markRadius timer isNext gateType =
+renderGate : Gate -> Float -> Bool -> GateLocation -> Form
+renderGate gate timer isNext gateType =
   let
     a = gateLineOpacity timer
     line = if isNext then renderGateLine gate nextLineStyle |> alpha a else emptyForm
-    marks = renderGateMarks gate markRadius
-    helpers = if isNext then renderGateHelpers gate markRadius gateType timer else emptyForm
+    marks = renderGateMarks gate
+    helpers = if isNext then renderGateHelpers gate gateType timer else emptyForm
   in
     group [line, marks, helpers]
 
 
-renderFinishLine : Gate -> Float -> Time -> Form
-renderFinishLine gate markRadius timer =
+renderFinishLine : Gate -> Time -> Form
+renderFinishLine gate timer =
   let
     a = gateLineOpacity timer
     line = renderGateLine gate nextLineStyle |> alpha a
-    marks = renderGateMarks gate markRadius
-    helper = renderStraightArrow markRadius False timer
+    marks = renderGateMarks gate
+    helper = renderStraightArrow False timer
       |> move (0, gate.y + markRadius * 3)
       |> alpha (a * 0.5)
   in

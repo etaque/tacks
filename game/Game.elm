@@ -8,6 +8,16 @@ import Time exposing (..)
 import List exposing (..)
 
 
+markRadius : Float
+markRadius = 5
+
+boatWidth : Float
+boatWidth = 3
+
+windShadowLength : Float
+windShadowLength = 120
+
+
 type alias GameState =
   { wind:        Wind
   , playerState: PlayerState
@@ -21,7 +31,7 @@ type alias GameState =
   , serverNow:   Time
   , countdown:   Float
   , startTime:   Maybe Time
-  , creationTime: Time
+  -- , creationTime: Time
   , isMaster:    Bool
   , live:        Bool
   , localTime:   Time
@@ -130,13 +140,13 @@ type alias Course =
   { upwind:           Gate
   , downwind:         Gate
   , laps:             Int
-  , markRadius:       Float
+  -- , markRadius:       Float
   , islands:          List Island
   , area:             RaceArea
   , windGenerator:    WindGenerator
   -- , gustGenerator:    GustGenerator
-  , windShadowLength: Float
-  , boatWidth:        Float
+  -- , windShadowLength: Float
+  -- , boatWidth:        Float
   }
 
 type GateLocation = DownwindGate | UpwindGate | StartLine
@@ -148,11 +158,11 @@ type alias WindGenerator =
   , amplitude2: Float
   }
 
-type alias GustDef =
-  { angle: Float
-  , speed: Float
-  , radius: Float
-  }
+-- type alias GustDef =
+--   { angle: Float
+--   , speed: Float
+--   , radius: Float
+--   }
 
 -- type alias GustGenerator =
 --   { interval: Int
@@ -219,13 +229,13 @@ asOpponentState {time,position,heading,velocity,windAngle,windOrigin,shadowDirec
   , crossedGates = crossedGates
   }
 
-type alias GameSetup =
-  { now: Time
-  , creationTime: Time
-  , countdown: Float
-  , course: Course
-  , player: Player
-  }
+-- type alias GameSetup =
+--   { now: Time
+--   , creationTime: Time
+--   , countdown: Float
+--   , course: Course
+--   , player: Player
+--   }
 
 defaultVmg : Vmg
 defaultVmg = { angle = 0, speed = 0, value = 0}
@@ -280,17 +290,17 @@ defaultGate = { y = 0, width = 0 }
 --  , boatWidth        = 0
 --  }
 
-defaultWind : Float -> Wind
-defaultWind now =
+defaultWind : Wind
+defaultWind =
   { origin = 0
   , speed  = 0
   , gusts  = []
   , gustCounter = 0
   }
 
-defaultGame : GameSetup -> GameState
-defaultGame {now,creationTime,course,player,countdown} =
-  { wind        = defaultWind now
+defaultGame : Time -> Course -> Player -> GameState
+defaultGame now course player =
+  { wind        = defaultWind
   , playerState = defaultPlayerState player now
   , center      = (0,0)
   , wake        = []
@@ -300,9 +310,9 @@ defaultGame {now,creationTime,course,player,countdown} =
   , leaderboard = []
   , now         = now
   , serverNow   = now
-  , countdown   = countdown
+  , countdown   = 0
   , startTime   = Nothing
-  , creationTime = creationTime
+  -- , creationTime = creationTime
   , isMaster    = False
   , live        = False
   , localTime   = 0

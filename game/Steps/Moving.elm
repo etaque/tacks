@@ -56,9 +56,9 @@ isGrounded p course =
     (dl, dr) = getGateMarks course.downwind
     (ul, ur) = getGateMarks course.upwind
     marks = [dl, dr, ul, ur]
-    halfBoatWidth = course.boatWidth / 2
+    halfBoatWidth = boatWidth / 2
 
-    stuckOnMark = exists (\m -> (distance p m) <= course.markRadius + halfBoatWidth) marks
+    stuckOnMark = exists (\m -> (distance p m) <= markRadius + halfBoatWidth) marks
     outOfBounds = not (inBox p (areaBox course.area))
     onIsland = exists (\i -> (distance i.location p) <= i.radius + halfBoatWidth) course.islands
   in
