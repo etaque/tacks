@@ -11,11 +11,10 @@ import Inputs exposing (..)
 import Outputs exposing (..)
 import State exposing (AppState, initialAppState)
 import Steps exposing (mainStep)
-import Render.All exposing (renderApp)
+import Views.Main exposing (mainView)
 import Core exposing (isJust)
 import Messages
 
-import Debug
 
 -- Inputs
 
@@ -32,7 +31,7 @@ port messagesStore : Json.Value
 
 main : Signal Element
 main =
-  Signal.map2 (renderApp translator) Window.dimensions appState
+  Signal.map2 (mainView translator) Window.dimensions appState
 
 translator : Messages.Translator
 translator =

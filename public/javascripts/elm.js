@@ -334,396 +334,6 @@ Elm.Char.make = function (_elm) {
                       ,fromCode: fromCode};
    return _elm.Char.values;
 };
-Elm.Chat = Elm.Chat || {};
-Elm.Chat.Model = Elm.Chat.Model || {};
-Elm.Chat.Model.make = function (_elm) {
-   "use strict";
-   _elm.Chat = _elm.Chat || {};
-   _elm.Chat.Model = _elm.Chat.Model || {};
-   if (_elm.Chat.Model.values)
-   return _elm.Chat.Model.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Chat.Model",
-   $Basics = Elm.Basics.make(_elm),
-   $Game = Elm.Game.make(_elm),
-   $Inputs = Elm.Inputs.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $Json$Encode = Elm.Json.Encode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var actionEncoder = function (action) {
-      return function () {
-         switch (action.ctor)
-         {case "Ping":
-            return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
-                                                     ,_0: "tag"
-                                                     ,_1: $Json$Encode.string("Ping")}]));
-            case "SubmitMessage":
-            return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
-                                                     ,_0: "tag"
-                                                     ,_1: $Json$Encode.string("SubmitMessage")}
-                                                    ,{ctor: "_Tuple2"
-                                                     ,_0: "content"
-                                                     ,_1: $Json$Encode.string(action._0)}]));
-            case "SubmitStatus":
-            return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
-                                                     ,_0: "tag"
-                                                     ,_1: $Json$Encode.string("SubmitStatus")}
-                                                    ,{ctor: "_Tuple2"
-                                                     ,_0: "content"
-                                                     ,_1: $Json$Encode.string(action._0)}]));}
-         return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
-                                                  ,_0: "tag"
-                                                  ,_1: $Json$Encode.string("NoOp")}]));
-      }();
-   };
-   var SubmitStatus = function (a) {
-      return {ctor: "SubmitStatus"
-             ,_0: a};
-   };
-   var SubmitMessage = function (a) {
-      return {ctor: "SubmitMessage"
-             ,_0: a};
-   };
-   var NewMessage = F2(function (a,
-   b) {
-      return {ctor: "NewMessage"
-             ,_0: a
-             ,_1: b};
-   });
-   var UpdatePlayers = function (a) {
-      return {ctor: "UpdatePlayers"
-             ,_0: a};
-   };
-   var UpdateStatusField = function (a) {
-      return {ctor: "UpdateStatusField"
-             ,_0: a};
-   };
-   var UpdateMessageField = function (a) {
-      return {ctor: "UpdateMessageField"
-             ,_0: a};
-   };
-   var SetPlayer = function (a) {
-      return {ctor: "SetPlayer"
-             ,_0: a};
-   };
-   var Ping = {ctor: "Ping"};
-   var NoOp = {ctor: "NoOp"};
-   var specificActionDecoder = function (tag) {
-      return function () {
-         switch (tag)
-         {case "NewMessage":
-            return A3($Json$Decode.object2,
-              NewMessage,
-              A2($Json$Decode._op[":="],
-              "player",
-              $Inputs.playerDecoder),
-              A2($Json$Decode._op[":="],
-              "content",
-              $Json$Decode.string));
-            case "NoOp":
-            return $Json$Decode.succeed(NoOp);
-            case "Ping":
-            return $Json$Decode.succeed(Ping);
-            case "SetPlayer":
-            return A2($Json$Decode.object1,
-              SetPlayer,
-              A2($Json$Decode._op[":="],
-              "player",
-              $Inputs.playerDecoder));
-            case "UpdateMessageField":
-            return A2($Json$Decode.object1,
-              UpdateMessageField,
-              A2($Json$Decode._op[":="],
-              "content",
-              $Json$Decode.string));
-            case "UpdatePlayers":
-            return A2($Json$Decode.object1,
-              UpdatePlayers,
-              A2($Json$Decode._op[":="],
-              "players",
-              $Json$Decode.list($Inputs.playerDecoder)));
-            case "UpdateStatusField":
-            return A2($Json$Decode.object1,
-              UpdateStatusField,
-              A2($Json$Decode._op[":="],
-              "content",
-              $Json$Decode.string));}
-         return $Json$Decode.fail(A2($Basics._op["++"],
-         tag,
-         " is not a recognized tag for actions"));
-      }();
-   };
-   var actionDecoder = A2($Json$Decode.andThen,
-   A2($Json$Decode._op[":="],
-   "tag",
-   $Json$Decode.string),
-   specificActionDecoder);
-   var emptyModel = {_: {}
-                    ,currentPlayer: $Game.defaultPlayer
-                    ,messageField: ""
-                    ,messages: _L.fromArray([])
-                    ,players: _L.fromArray([])
-                    ,statusField: ""};
-   var Message = F2(function (a,
-   b) {
-      return {_: {}
-             ,content: a
-             ,player: b};
-   });
-   var Model = F5(function (a,
-   b,
-   c,
-   d,
-   e) {
-      return {_: {}
-             ,currentPlayer: c
-             ,messageField: d
-             ,messages: a
-             ,players: b
-             ,statusField: e};
-   });
-   _elm.Chat.Model.values = {_op: _op
-                            ,Model: Model
-                            ,Message: Message
-                            ,emptyModel: emptyModel
-                            ,NoOp: NoOp
-                            ,Ping: Ping
-                            ,SetPlayer: SetPlayer
-                            ,UpdateMessageField: UpdateMessageField
-                            ,UpdateStatusField: UpdateStatusField
-                            ,UpdatePlayers: UpdatePlayers
-                            ,NewMessage: NewMessage
-                            ,SubmitMessage: SubmitMessage
-                            ,SubmitStatus: SubmitStatus
-                            ,actionDecoder: actionDecoder
-                            ,specificActionDecoder: specificActionDecoder
-                            ,actionEncoder: actionEncoder};
-   return _elm.Chat.Model.values;
-};
-Elm.Chat = Elm.Chat || {};
-Elm.Chat.Views = Elm.Chat.Views || {};
-Elm.Chat.Views.make = function (_elm) {
-   "use strict";
-   _elm.Chat = _elm.Chat || {};
-   _elm.Chat.Views = _elm.Chat.Views || {};
-   if (_elm.Chat.Views.values)
-   return _elm.Chat.Views.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Chat.Views",
-   $Basics = Elm.Basics.make(_elm),
-   $Chat$Model = Elm.Chat.Model.make(_elm),
-   $Game = Elm.Game.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Messages = Elm.Messages.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var is13 = function (code) {
-      return _U.eq(code,
-      13) ? $Result.Ok({ctor: "_Tuple0"}) : $Result.Err("not the right key code");
-   };
-   var onEnter = F2(function (address,
-   value) {
-      return A3($Html$Events.on,
-      "keydown",
-      A2($Json$Decode.customDecoder,
-      $Html$Events.keyCode,
-      is13),
-      function (_v0) {
-         return function () {
-            return A2($Signal.message,
-            address,
-            value);
-         }();
-      });
-   });
-   var playerWithAvatar = function (player) {
-      return function () {
-         var handle = A2($Maybe.withDefault,
-         "",
-         player.handle);
-         var handleSpan = A2($Html.span,
-         _L.fromArray([$Html$Attributes.$class("handle")]),
-         _L.fromArray([$Html.text(A2($Maybe.withDefault,
-         "Anonymous",
-         player.handle))]));
-         var avatarUrl = function () {
-            var _v2 = player.avatarId;
-            switch (_v2.ctor)
-            {case "Just":
-               return A2($Basics._op["++"],
-                 "/avatars/",
-                 _v2._0);
-               case "Nothing":
-               return player.user ? "/assets/images/avatar-user.png" : "/assets/images/avatar-guest.png";}
-            _U.badCase($moduleName,
-            "between lines 85 and 88");
-         }();
-         var avatarImg = A2($Html.img,
-         _L.fromArray([$Html$Attributes.src(avatarUrl)
-                      ,$Html$Attributes.$class("avatar")
-                      ,$Html$Attributes.width(19)
-                      ,$Html$Attributes.height(19)]),
-         _L.fromArray([]));
-         return player.guest ? A2($Html.span,
-         _L.fromArray([$Html$Attributes.$class("player-avatar")]),
-         _L.fromArray([avatarImg
-                      ,$Html.text(" ")
-                      ,handleSpan])) : A2($Html.a,
-         _L.fromArray([$Html$Attributes.href(A2($Basics._op["++"],
-                      "/players/",
-                      handle))
-                      ,$Html$Attributes.target("_blank")
-                      ,$Html$Attributes.$class("player-avatar")]),
-         _L.fromArray([avatarImg
-                      ,$Html.text(" ")
-                      ,handleSpan]));
-      }();
-   };
-   var playerItem = function (player) {
-      return function () {
-         var status = function () {
-            var _v4 = player.status;
-            switch (_v4.ctor)
-            {case "Just":
-               return A2($Html.span,
-                 _L.fromArray([$Html$Attributes.$class("status")]),
-                 _L.fromArray([$Html.text(_v4._0)]));
-               case "Nothing":
-               return $Html.text("");}
-            _U.badCase($moduleName,
-            "between lines 75 and 78");
-         }();
-         return A2($Html.li,
-         _L.fromArray([]),
-         _L.fromArray([playerWithAvatar(player)
-                      ,status]));
-      }();
-   };
-   var playersList = function (players) {
-      return A2($Html.ul,
-      _L.fromArray([$Html$Attributes.$class("list-unstyled chat-players")]),
-      A2($List.map,
-      playerItem,
-      players));
-   };
-   var messageItem = function (message) {
-      return A2($Html.li,
-      _L.fromArray([]),
-      _L.fromArray([A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("player-avatar")]),
-                   _L.fromArray([$Html.text(A2($Maybe.withDefault,
-                   "Anonymous",
-                   message.player.handle))]))
-                   ,A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("content")]),
-                   _L.fromArray([$Html.text(message.content)]))]));
-   };
-   var messagesList = function (messages) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("chat-box")]),
-      _L.fromArray([A2($Html.ul,
-      _L.fromArray([$Html$Attributes.$class("list-unstyled chat-messages")]),
-      A2($List.map,
-      messageItem,
-      messages))]));
-   };
-   var localUpdates = $Signal.mailbox($Chat$Model.NoOp);
-   var statusForm = F2(function (t,
-   field) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("chat-status-form")]),
-      _L.fromArray([A2($Html.input,
-      _L.fromArray([$Html$Attributes.type$("text")
-                   ,$Html$Attributes.$class("form-control")
-                   ,$Html$Attributes.value(field)
-                   ,$Html$Attributes.placeholder(t("chat.statusPlaceholder"))
-                   ,A3($Html$Events.on,
-                   "input",
-                   $Html$Events.targetValue,
-                   function (s) {
-                      return A2($Signal.message,
-                      localUpdates.address,
-                      $Chat$Model.UpdateStatusField(s));
-                   })
-                   ,A2(onEnter,
-                   localUpdates.address,
-                   $Chat$Model.SubmitStatus(field))]),
-      _L.fromArray([]))]));
-   });
-   var messageForm = F2(function (t,
-   field) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("chat-message-form")]),
-      _L.fromArray([A2($Html.input,
-      _L.fromArray([$Html$Attributes.type$("text")
-                   ,$Html$Attributes.$class("form-control")
-                   ,$Html$Attributes.value(field)
-                   ,$Html$Attributes.placeholder(t("chat.messagePlaceholder"))
-                   ,A3($Html$Events.on,
-                   "input",
-                   $Html$Events.targetValue,
-                   function (msg) {
-                      return A2($Signal.message,
-                      localUpdates.address,
-                      $Chat$Model.UpdateMessageField(msg));
-                   })
-                   ,A2(onEnter,
-                   localUpdates.address,
-                   $Chat$Model.SubmitMessage(field))]),
-      _L.fromArray([]))]));
-   });
-   var view = F2(function (t,
-   model) {
-      return function () {
-         var rightElements = model.currentPlayer.user ? _L.fromArray([A2(statusForm,
-                                                                     t,
-                                                                     model.statusField)
-                                                                     ,playersList(model.players)]) : _L.fromArray([playersList(model.players)]);
-         var leftElements = _L.fromArray([A2($Html.div,
-                                         _L.fromArray([$Html$Attributes.$class("chat-top")]),
-                                         _L.fromArray([$Html.text(t("chat.title"))]))
-                                         ,messagesList(model.messages)
-                                         ,A2(messageForm,
-                                         t,
-                                         model.messageField)]);
-         return A2($Html.div,
-         _L.fromArray([$Html$Attributes.$class("chat-wrapper")]),
-         _L.fromArray([A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("chat-left")]),
-                      leftElements)
-                      ,A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("chat-right")]),
-                      rightElements)]));
-      }();
-   });
-   _elm.Chat.Views.values = {_op: _op
-                            ,localUpdates: localUpdates
-                            ,view: view
-                            ,messagesList: messagesList
-                            ,messageItem: messageItem
-                            ,statusForm: statusForm
-                            ,playersList: playersList
-                            ,playerItem: playerItem
-                            ,playerWithAvatar: playerWithAvatar
-                            ,onEnter: onEnter
-                            ,is13: is13
-                            ,messageForm: messageForm};
-   return _elm.Chat.Views.values;
-};
 Elm.Color = Elm.Color || {};
 Elm.Color.make = function (_elm) {
    "use strict";
@@ -3990,969 +3600,6 @@ Elm.Graphics.Input.make = function (_elm) {
                                 ,clickable: clickable};
    return _elm.Graphics.Input.values;
 };
-Elm.Html = Elm.Html || {};
-Elm.Html.make = function (_elm) {
-   "use strict";
-   _elm.Html = _elm.Html || {};
-   if (_elm.Html.values)
-   return _elm.Html.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Html",
-   $Basics = Elm.Basics.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $VirtualDom = Elm.VirtualDom.make(_elm);
-   var fromElement = $VirtualDom.fromElement;
-   var toElement = $VirtualDom.toElement;
-   var text = $VirtualDom.text;
-   var node = $VirtualDom.node;
-   var body = node("body");
-   var section = node("section");
-   var nav = node("nav");
-   var article = node("article");
-   var aside = node("aside");
-   var h1 = node("h1");
-   var h2 = node("h2");
-   var h3 = node("h3");
-   var h4 = node("h4");
-   var h5 = node("h5");
-   var h6 = node("h6");
-   var header = node("header");
-   var footer = node("footer");
-   var address = node("address");
-   var main$ = node("main");
-   var p = node("p");
-   var hr = node("hr");
-   var pre = node("pre");
-   var blockquote = node("blockquote");
-   var ol = node("ol");
-   var ul = node("ul");
-   var li = node("li");
-   var dl = node("dl");
-   var dt = node("dt");
-   var dd = node("dd");
-   var figure = node("figure");
-   var figcaption = node("figcaption");
-   var div = node("div");
-   var a = node("a");
-   var em = node("em");
-   var strong = node("strong");
-   var small = node("small");
-   var s = node("s");
-   var cite = node("cite");
-   var q = node("q");
-   var dfn = node("dfn");
-   var abbr = node("abbr");
-   var time = node("time");
-   var code = node("code");
-   var $var = node("var");
-   var samp = node("samp");
-   var kbd = node("kbd");
-   var sub = node("sub");
-   var sup = node("sup");
-   var i = node("i");
-   var b = node("b");
-   var u = node("u");
-   var mark = node("mark");
-   var ruby = node("ruby");
-   var rt = node("rt");
-   var rp = node("rp");
-   var bdi = node("bdi");
-   var bdo = node("bdo");
-   var span = node("span");
-   var br = node("br");
-   var wbr = node("wbr");
-   var ins = node("ins");
-   var del = node("del");
-   var img = node("img");
-   var iframe = node("iframe");
-   var embed = node("embed");
-   var object = node("object");
-   var param = node("param");
-   var video = node("video");
-   var audio = node("audio");
-   var source = node("source");
-   var track = node("track");
-   var canvas = node("canvas");
-   var svg = node("svg");
-   var math = node("math");
-   var table = node("table");
-   var caption = node("caption");
-   var colgroup = node("colgroup");
-   var col = node("col");
-   var tbody = node("tbody");
-   var thead = node("thead");
-   var tfoot = node("tfoot");
-   var tr = node("tr");
-   var td = node("td");
-   var th = node("th");
-   var form = node("form");
-   var fieldset = node("fieldset");
-   var legend = node("legend");
-   var label = node("label");
-   var input = node("input");
-   var button = node("button");
-   var select = node("select");
-   var datalist = node("datalist");
-   var optgroup = node("optgroup");
-   var option = node("option");
-   var textarea = node("textarea");
-   var keygen = node("keygen");
-   var output = node("output");
-   var progress = node("progress");
-   var meter = node("meter");
-   var details = node("details");
-   var summary = node("summary");
-   var menuitem = node("menuitem");
-   var menu = node("menu");
-   _elm.Html.values = {_op: _op
-                      ,node: node
-                      ,text: text
-                      ,toElement: toElement
-                      ,fromElement: fromElement
-                      ,body: body
-                      ,section: section
-                      ,nav: nav
-                      ,article: article
-                      ,aside: aside
-                      ,h1: h1
-                      ,h2: h2
-                      ,h3: h3
-                      ,h4: h4
-                      ,h5: h5
-                      ,h6: h6
-                      ,header: header
-                      ,footer: footer
-                      ,address: address
-                      ,main$: main$
-                      ,p: p
-                      ,hr: hr
-                      ,pre: pre
-                      ,blockquote: blockquote
-                      ,ol: ol
-                      ,ul: ul
-                      ,li: li
-                      ,dl: dl
-                      ,dt: dt
-                      ,dd: dd
-                      ,figure: figure
-                      ,figcaption: figcaption
-                      ,div: div
-                      ,a: a
-                      ,em: em
-                      ,strong: strong
-                      ,small: small
-                      ,s: s
-                      ,cite: cite
-                      ,q: q
-                      ,dfn: dfn
-                      ,abbr: abbr
-                      ,time: time
-                      ,code: code
-                      ,$var: $var
-                      ,samp: samp
-                      ,kbd: kbd
-                      ,sub: sub
-                      ,sup: sup
-                      ,i: i
-                      ,b: b
-                      ,u: u
-                      ,mark: mark
-                      ,ruby: ruby
-                      ,rt: rt
-                      ,rp: rp
-                      ,bdi: bdi
-                      ,bdo: bdo
-                      ,span: span
-                      ,br: br
-                      ,wbr: wbr
-                      ,ins: ins
-                      ,del: del
-                      ,img: img
-                      ,iframe: iframe
-                      ,embed: embed
-                      ,object: object
-                      ,param: param
-                      ,video: video
-                      ,audio: audio
-                      ,source: source
-                      ,track: track
-                      ,canvas: canvas
-                      ,svg: svg
-                      ,math: math
-                      ,table: table
-                      ,caption: caption
-                      ,colgroup: colgroup
-                      ,col: col
-                      ,tbody: tbody
-                      ,thead: thead
-                      ,tfoot: tfoot
-                      ,tr: tr
-                      ,td: td
-                      ,th: th
-                      ,form: form
-                      ,fieldset: fieldset
-                      ,legend: legend
-                      ,label: label
-                      ,input: input
-                      ,button: button
-                      ,select: select
-                      ,datalist: datalist
-                      ,optgroup: optgroup
-                      ,option: option
-                      ,textarea: textarea
-                      ,keygen: keygen
-                      ,output: output
-                      ,progress: progress
-                      ,meter: meter
-                      ,details: details
-                      ,summary: summary
-                      ,menuitem: menuitem
-                      ,menu: menu};
-   return _elm.Html.values;
-};
-Elm.Html = Elm.Html || {};
-Elm.Html.Attributes = Elm.Html.Attributes || {};
-Elm.Html.Attributes.make = function (_elm) {
-   "use strict";
-   _elm.Html = _elm.Html || {};
-   _elm.Html.Attributes = _elm.Html.Attributes || {};
-   if (_elm.Html.Attributes.values)
-   return _elm.Html.Attributes.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Html.Attributes",
-   $Basics = Elm.Basics.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Json$Encode = Elm.Json.Encode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $VirtualDom = Elm.VirtualDom.make(_elm);
-   var attribute = $VirtualDom.attribute;
-   var property = $VirtualDom.property;
-   var stringProperty = F2(function (name,
-   string) {
-      return A2(property,
-      name,
-      $Json$Encode.string(string));
-   });
-   var $class = function (name) {
-      return A2(stringProperty,
-      "className",
-      name);
-   };
-   var id = function (name) {
-      return A2(stringProperty,
-      "id",
-      name);
-   };
-   var title = function (name) {
-      return A2(stringProperty,
-      "title",
-      name);
-   };
-   var accesskey = function ($char) {
-      return A2(stringProperty,
-      "accesskey",
-      $String.fromList(_L.fromArray([$char])));
-   };
-   var contextmenu = function (value) {
-      return A2(stringProperty,
-      "contextmenu",
-      value);
-   };
-   var dir = function (value) {
-      return A2(stringProperty,
-      "dir",
-      value);
-   };
-   var draggable = function (value) {
-      return A2(stringProperty,
-      "draggable",
-      value);
-   };
-   var dropzone = function (value) {
-      return A2(stringProperty,
-      "dropzone",
-      value);
-   };
-   var itemprop = function (value) {
-      return A2(stringProperty,
-      "itemprop",
-      value);
-   };
-   var lang = function (value) {
-      return A2(stringProperty,
-      "lang",
-      value);
-   };
-   var tabindex = function (n) {
-      return A2(stringProperty,
-      "tabIndex",
-      $Basics.toString(n));
-   };
-   var charset = function (value) {
-      return A2(stringProperty,
-      "charset",
-      value);
-   };
-   var content = function (value) {
-      return A2(stringProperty,
-      "content",
-      value);
-   };
-   var httpEquiv = function (value) {
-      return A2(stringProperty,
-      "httpEquiv",
-      value);
-   };
-   var language = function (value) {
-      return A2(stringProperty,
-      "language",
-      value);
-   };
-   var src = function (value) {
-      return A2(stringProperty,
-      "src",
-      value);
-   };
-   var height = function (value) {
-      return A2(stringProperty,
-      "height",
-      $Basics.toString(value));
-   };
-   var width = function (value) {
-      return A2(stringProperty,
-      "width",
-      $Basics.toString(value));
-   };
-   var alt = function (value) {
-      return A2(stringProperty,
-      "alt",
-      value);
-   };
-   var preload = function (value) {
-      return A2(stringProperty,
-      "preload",
-      value);
-   };
-   var poster = function (value) {
-      return A2(stringProperty,
-      "poster",
-      value);
-   };
-   var kind = function (value) {
-      return A2(stringProperty,
-      "kind",
-      value);
-   };
-   var srclang = function (value) {
-      return A2(stringProperty,
-      "srclang",
-      value);
-   };
-   var sandbox = function (value) {
-      return A2(stringProperty,
-      "sandbox",
-      value);
-   };
-   var srcdoc = function (value) {
-      return A2(stringProperty,
-      "srcdoc",
-      value);
-   };
-   var type$ = function (value) {
-      return A2(stringProperty,
-      "type",
-      value);
-   };
-   var value = function (value) {
-      return A2(stringProperty,
-      "value",
-      value);
-   };
-   var placeholder = function (value) {
-      return A2(stringProperty,
-      "placeholder",
-      value);
-   };
-   var accept = function (value) {
-      return A2(stringProperty,
-      "accept",
-      value);
-   };
-   var acceptCharset = function (value) {
-      return A2(stringProperty,
-      "acceptCharset",
-      value);
-   };
-   var action = function (value) {
-      return A2(stringProperty,
-      "action",
-      value);
-   };
-   var autocomplete = function (bool) {
-      return A2(stringProperty,
-      "autocomplete",
-      bool ? "on" : "off");
-   };
-   var autosave = function (value) {
-      return A2(stringProperty,
-      "autosave",
-      value);
-   };
-   var enctype = function (value) {
-      return A2(stringProperty,
-      "enctype",
-      value);
-   };
-   var formaction = function (value) {
-      return A2(stringProperty,
-      "formaction",
-      value);
-   };
-   var list = function (value) {
-      return A2(stringProperty,
-      "list",
-      value);
-   };
-   var minlength = function (n) {
-      return A2(stringProperty,
-      "minLength",
-      $Basics.toString(n));
-   };
-   var maxlength = function (n) {
-      return A2(stringProperty,
-      "maxLength",
-      $Basics.toString(n));
-   };
-   var method = function (value) {
-      return A2(stringProperty,
-      "method",
-      value);
-   };
-   var name = function (value) {
-      return A2(stringProperty,
-      "name",
-      value);
-   };
-   var pattern = function (value) {
-      return A2(stringProperty,
-      "pattern",
-      value);
-   };
-   var size = function (n) {
-      return A2(stringProperty,
-      "size",
-      $Basics.toString(n));
-   };
-   var $for = function (value) {
-      return A2(stringProperty,
-      "htmlFor",
-      value);
-   };
-   var form = function (value) {
-      return A2(stringProperty,
-      "form",
-      value);
-   };
-   var max = function (value) {
-      return A2(stringProperty,
-      "max",
-      value);
-   };
-   var min = function (value) {
-      return A2(stringProperty,
-      "min",
-      value);
-   };
-   var step = function (n) {
-      return A2(stringProperty,
-      "step",
-      n);
-   };
-   var cols = function (n) {
-      return A2(stringProperty,
-      "cols",
-      $Basics.toString(n));
-   };
-   var rows = function (n) {
-      return A2(stringProperty,
-      "rows",
-      $Basics.toString(n));
-   };
-   var wrap = function (value) {
-      return A2(stringProperty,
-      "wrap",
-      value);
-   };
-   var usemap = function (value) {
-      return A2(stringProperty,
-      "useMap",
-      value);
-   };
-   var shape = function (value) {
-      return A2(stringProperty,
-      "shape",
-      value);
-   };
-   var coords = function (value) {
-      return A2(stringProperty,
-      "coords",
-      value);
-   };
-   var challenge = function (value) {
-      return A2(stringProperty,
-      "challenge",
-      value);
-   };
-   var keytype = function (value) {
-      return A2(stringProperty,
-      "keytype",
-      value);
-   };
-   var align = function (value) {
-      return A2(stringProperty,
-      "align",
-      value);
-   };
-   var cite = function (value) {
-      return A2(stringProperty,
-      "cite",
-      value);
-   };
-   var href = function (value) {
-      return A2(stringProperty,
-      "href",
-      value);
-   };
-   var target = function (value) {
-      return A2(stringProperty,
-      "target",
-      value);
-   };
-   var downloadAs = function (value) {
-      return A2(stringProperty,
-      "download",
-      value);
-   };
-   var hreflang = function (value) {
-      return A2(stringProperty,
-      "hreflang",
-      value);
-   };
-   var media = function (value) {
-      return A2(stringProperty,
-      "media",
-      value);
-   };
-   var ping = function (value) {
-      return A2(stringProperty,
-      "ping",
-      value);
-   };
-   var rel = function (value) {
-      return A2(stringProperty,
-      "rel",
-      value);
-   };
-   var datetime = function (value) {
-      return A2(stringProperty,
-      "datetime",
-      value);
-   };
-   var pubdate = function (value) {
-      return A2(stringProperty,
-      "pubdate",
-      value);
-   };
-   var start = function (n) {
-      return A2(stringProperty,
-      "start",
-      $Basics.toString(n));
-   };
-   var colspan = function (n) {
-      return A2(stringProperty,
-      "colSpan",
-      $Basics.toString(n));
-   };
-   var headers = function (value) {
-      return A2(stringProperty,
-      "headers",
-      value);
-   };
-   var rowspan = function (n) {
-      return A2(stringProperty,
-      "rowSpan",
-      $Basics.toString(n));
-   };
-   var scope = function (value) {
-      return A2(stringProperty,
-      "scope",
-      value);
-   };
-   var manifest = function (value) {
-      return A2(stringProperty,
-      "manifest",
-      value);
-   };
-   var boolProperty = F2(function (name,
-   bool) {
-      return A2(property,
-      name,
-      $Json$Encode.bool(bool));
-   });
-   var hidden = function (bool) {
-      return A2(boolProperty,
-      "hidden",
-      bool);
-   };
-   var contenteditable = function (bool) {
-      return A2(boolProperty,
-      "contentEditable",
-      bool);
-   };
-   var spellcheck = function (bool) {
-      return A2(boolProperty,
-      "spellcheck",
-      bool);
-   };
-   var async = function (bool) {
-      return A2(boolProperty,
-      "async",
-      bool);
-   };
-   var defer = function (bool) {
-      return A2(boolProperty,
-      "defer",
-      bool);
-   };
-   var scoped = function (bool) {
-      return A2(boolProperty,
-      "scoped",
-      bool);
-   };
-   var autoplay = function (bool) {
-      return A2(boolProperty,
-      "autoplay",
-      bool);
-   };
-   var controls = function (bool) {
-      return A2(boolProperty,
-      "controls",
-      bool);
-   };
-   var loop = function (bool) {
-      return A2(boolProperty,
-      "loop",
-      bool);
-   };
-   var $default = function (bool) {
-      return A2(boolProperty,
-      "default",
-      bool);
-   };
-   var seamless = function (bool) {
-      return A2(boolProperty,
-      "seamless",
-      bool);
-   };
-   var checked = function (bool) {
-      return A2(boolProperty,
-      "checked",
-      bool);
-   };
-   var selected = function (bool) {
-      return A2(boolProperty,
-      "selected",
-      bool);
-   };
-   var autofocus = function (bool) {
-      return A2(boolProperty,
-      "autofocus",
-      bool);
-   };
-   var disabled = function (bool) {
-      return A2(boolProperty,
-      "disabled",
-      bool);
-   };
-   var multiple = function (bool) {
-      return A2(boolProperty,
-      "multiple",
-      bool);
-   };
-   var novalidate = function (bool) {
-      return A2(boolProperty,
-      "noValidate",
-      bool);
-   };
-   var readonly = function (bool) {
-      return A2(boolProperty,
-      "readOnly",
-      bool);
-   };
-   var required = function (bool) {
-      return A2(boolProperty,
-      "required",
-      bool);
-   };
-   var ismap = function (value) {
-      return A2(boolProperty,
-      "isMap",
-      value);
-   };
-   var download = function (bool) {
-      return A2(boolProperty,
-      "download",
-      bool);
-   };
-   var reversed = function (bool) {
-      return A2(boolProperty,
-      "reversed",
-      bool);
-   };
-   var classList = function (list) {
-      return $class($String.join(" ")($List.map($Basics.fst)($List.filter($Basics.snd)(list))));
-   };
-   var style = function (props) {
-      return property("style")($Json$Encode.object($List.map(function (_v0) {
-         return function () {
-            switch (_v0.ctor)
-            {case "_Tuple2":
-               return {ctor: "_Tuple2"
-                      ,_0: _v0._0
-                      ,_1: $Json$Encode.string(_v0._1)};}
-            _U.badCase($moduleName,
-            "on line 156, column 35 to 57");
-         }();
-      })(props)));
-   };
-   var key = function (k) {
-      return A2(stringProperty,
-      "key",
-      k);
-   };
-   _elm.Html.Attributes.values = {_op: _op
-                                 ,key: key
-                                 ,style: style
-                                 ,$class: $class
-                                 ,classList: classList
-                                 ,id: id
-                                 ,title: title
-                                 ,hidden: hidden
-                                 ,type$: type$
-                                 ,value: value
-                                 ,checked: checked
-                                 ,placeholder: placeholder
-                                 ,selected: selected
-                                 ,accept: accept
-                                 ,acceptCharset: acceptCharset
-                                 ,action: action
-                                 ,autocomplete: autocomplete
-                                 ,autofocus: autofocus
-                                 ,autosave: autosave
-                                 ,disabled: disabled
-                                 ,enctype: enctype
-                                 ,formaction: formaction
-                                 ,list: list
-                                 ,maxlength: maxlength
-                                 ,minlength: minlength
-                                 ,method: method
-                                 ,multiple: multiple
-                                 ,name: name
-                                 ,novalidate: novalidate
-                                 ,pattern: pattern
-                                 ,readonly: readonly
-                                 ,required: required
-                                 ,size: size
-                                 ,$for: $for
-                                 ,form: form
-                                 ,max: max
-                                 ,min: min
-                                 ,step: step
-                                 ,cols: cols
-                                 ,rows: rows
-                                 ,wrap: wrap
-                                 ,href: href
-                                 ,target: target
-                                 ,download: download
-                                 ,downloadAs: downloadAs
-                                 ,hreflang: hreflang
-                                 ,media: media
-                                 ,ping: ping
-                                 ,rel: rel
-                                 ,ismap: ismap
-                                 ,usemap: usemap
-                                 ,shape: shape
-                                 ,coords: coords
-                                 ,src: src
-                                 ,height: height
-                                 ,width: width
-                                 ,alt: alt
-                                 ,autoplay: autoplay
-                                 ,controls: controls
-                                 ,loop: loop
-                                 ,preload: preload
-                                 ,poster: poster
-                                 ,$default: $default
-                                 ,kind: kind
-                                 ,srclang: srclang
-                                 ,sandbox: sandbox
-                                 ,seamless: seamless
-                                 ,srcdoc: srcdoc
-                                 ,reversed: reversed
-                                 ,start: start
-                                 ,align: align
-                                 ,colspan: colspan
-                                 ,rowspan: rowspan
-                                 ,headers: headers
-                                 ,scope: scope
-                                 ,async: async
-                                 ,charset: charset
-                                 ,content: content
-                                 ,defer: defer
-                                 ,httpEquiv: httpEquiv
-                                 ,language: language
-                                 ,scoped: scoped
-                                 ,accesskey: accesskey
-                                 ,contenteditable: contenteditable
-                                 ,contextmenu: contextmenu
-                                 ,dir: dir
-                                 ,draggable: draggable
-                                 ,dropzone: dropzone
-                                 ,itemprop: itemprop
-                                 ,lang: lang
-                                 ,spellcheck: spellcheck
-                                 ,tabindex: tabindex
-                                 ,challenge: challenge
-                                 ,keytype: keytype
-                                 ,cite: cite
-                                 ,datetime: datetime
-                                 ,pubdate: pubdate
-                                 ,manifest: manifest
-                                 ,property: property
-                                 ,attribute: attribute};
-   return _elm.Html.Attributes.values;
-};
-Elm.Html = Elm.Html || {};
-Elm.Html.Events = Elm.Html.Events || {};
-Elm.Html.Events.make = function (_elm) {
-   "use strict";
-   _elm.Html = _elm.Html || {};
-   _elm.Html.Events = _elm.Html.Events || {};
-   if (_elm.Html.Events.values)
-   return _elm.Html.Events.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Html.Events",
-   $Basics = Elm.Basics.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $VirtualDom = Elm.VirtualDom.make(_elm);
-   var keyCode = A2($Json$Decode._op[":="],
-   "keyCode",
-   $Json$Decode.$int);
-   var targetChecked = A2($Json$Decode.at,
-   _L.fromArray(["target"
-                ,"checked"]),
-   $Json$Decode.bool);
-   var targetValue = A2($Json$Decode.at,
-   _L.fromArray(["target"
-                ,"value"]),
-   $Json$Decode.string);
-   var defaultOptions = $VirtualDom.defaultOptions;
-   var Options = F2(function (a,
-   b) {
-      return {_: {}
-             ,preventDefault: b
-             ,stopPropagation: a};
-   });
-   var onWithOptions = $VirtualDom.onWithOptions;
-   var on = $VirtualDom.on;
-   var messageOn = F3(function (name,
-   addr,
-   msg) {
-      return A3(on,
-      name,
-      $Json$Decode.value,
-      function (_v0) {
-         return function () {
-            return A2($Signal.message,
-            addr,
-            msg);
-         }();
-      });
-   });
-   var onClick = messageOn("click");
-   var onDoubleClick = messageOn("dblclick");
-   var onMouseMove = messageOn("mousemove");
-   var onMouseDown = messageOn("mousedown");
-   var onMouseUp = messageOn("mouseup");
-   var onMouseEnter = messageOn("mouseenter");
-   var onMouseLeave = messageOn("mouseleave");
-   var onMouseOver = messageOn("mouseover");
-   var onMouseOut = messageOn("mouseout");
-   var onBlur = messageOn("blur");
-   var onFocus = messageOn("focus");
-   var onSubmit = messageOn("submit");
-   var onKey = F3(function (name,
-   addr,
-   handler) {
-      return A3(on,
-      name,
-      keyCode,
-      function (code) {
-         return A2($Signal.message,
-         addr,
-         handler(code));
-      });
-   });
-   var onKeyUp = onKey("keyup");
-   var onKeyDown = onKey("keydown");
-   var onKeyPress = onKey("keypress");
-   _elm.Html.Events.values = {_op: _op
-                             ,onBlur: onBlur
-                             ,onFocus: onFocus
-                             ,onSubmit: onSubmit
-                             ,onKeyUp: onKeyUp
-                             ,onKeyDown: onKeyDown
-                             ,onKeyPress: onKeyPress
-                             ,onClick: onClick
-                             ,onDoubleClick: onDoubleClick
-                             ,onMouseMove: onMouseMove
-                             ,onMouseDown: onMouseDown
-                             ,onMouseUp: onMouseUp
-                             ,onMouseEnter: onMouseEnter
-                             ,onMouseLeave: onMouseLeave
-                             ,onMouseOver: onMouseOver
-                             ,onMouseOut: onMouseOut
-                             ,on: on
-                             ,onWithOptions: onWithOptions
-                             ,defaultOptions: defaultOptions
-                             ,targetValue: targetValue
-                             ,targetChecked: targetChecked
-                             ,keyCode: keyCode
-                             ,Options: Options};
-   return _elm.Html.Events.values;
-};
 Elm.Http = Elm.Http || {};
 Elm.Http.make = function (_elm) {
    "use strict";
@@ -5555,6 +4202,11 @@ Elm.Inputs.make = function (_elm) {
    "/api/liveStatus");
    var NoOp = {ctor: "NoOp"};
    var actionsMailbox = $Signal.mailbox(NoOp);
+   var navigate = function (screen) {
+      return A2($Signal.message,
+      actionsMailbox.address,
+      Navigate(screen));
+   };
    var runServerUpdate = A2($Task.andThen,
    fetchServerUpdate,
    $Signal.send(actionsMailbox.address));
@@ -5572,6 +4224,7 @@ Elm.Inputs.make = function (_elm) {
                         ,LiveCenterUpdate: LiveCenterUpdate
                         ,Navigate: Navigate
                         ,actionsMailbox: actionsMailbox
+                        ,navigate: navigate
                         ,fetchServerUpdate: fetchServerUpdate
                         ,runServerUpdate: runServerUpdate
                         ,LiveCenterInput: LiveCenterInput
@@ -6406,80 +5059,6 @@ Elm.List.make = function (_elm) {
                       ,sortWith: sortWith};
    return _elm.List.values;
 };
-Elm.LiveCenter = Elm.LiveCenter || {};
-Elm.LiveCenter.Views = Elm.LiveCenter.Views || {};
-Elm.LiveCenter.Views.make = function (_elm) {
-   "use strict";
-   _elm.LiveCenter = _elm.LiveCenter || {};
-   _elm.LiveCenter.Views = _elm.LiveCenter.Views || {};
-   if (_elm.LiveCenter.Views.values)
-   return _elm.LiveCenter.Views.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "LiveCenter.Views",
-   $Basics = Elm.Basics.make(_elm),
-   $Chat$Views = Elm.Chat.Views.make(_elm),
-   $Game = Elm.Game.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $Inputs = Elm.Inputs.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Messages = Elm.Messages.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $State = Elm.State.make(_elm);
-   var opponentView = function (_v0) {
-      return function () {
-         return A2($Html.li,
-         _L.fromArray([$Html$Attributes.$class("opponent")]),
-         _L.fromArray([$Chat$Views.playerWithAvatar(_v0.player)]));
-      }();
-   };
-   var opponentsList = function (opponents) {
-      return A2($Html.ul,
-      _L.fromArray([$Html$Attributes.$class("race-course-opponents")]),
-      A2($List.map,
-      opponentView,
-      opponents));
-   };
-   var raceCourseStatusView = F2(function (t,
-   _v2) {
-      return function () {
-         return A2($Html.div,
-         _L.fromArray([$Html$Attributes.$class("col-md-4")]),
-         _L.fromArray([A2($Html.div,
-         _L.fromArray([$Html$Attributes.$class("race-course-status")]),
-         _L.fromArray([A2($Html.a,
-                      _L.fromArray([A2($Html$Events.onClick,
-                      $Inputs.actionsMailbox.address,
-                      $Inputs.Navigate($State.Play(_v2.raceCourse)))]),
-                      _L.fromArray([$Html.text(t(A2($Basics._op["++"],
-                      "generators.",
-                      A2($Basics._op["++"],
-                      _v2.raceCourse.slug,
-                      ".name"))))]))
-                      ,opponentsList(_v2.opponents)]))]));
-      }();
-   });
-   var indexView = F2(function (t,
-   state) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("row")]),
-      A2($List.map,
-      raceCourseStatusView(t),
-      state.courses));
-   });
-   _elm.LiveCenter.Views.values = {_op: _op
-                                  ,indexView: indexView
-                                  ,raceCourseStatusView: raceCourseStatusView
-                                  ,opponentsList: opponentsList
-                                  ,opponentView: opponentView};
-   return _elm.LiveCenter.Views.values;
-};
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
    "use strict";
@@ -6501,13 +5080,13 @@ Elm.Main.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Messages = Elm.Messages.make(_elm),
    $Outputs = Elm.Outputs.make(_elm),
-   $Render$All = Elm.Render.All.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $State = Elm.State.make(_elm),
    $Steps = Elm.Steps.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm),
+   $Views$Main = Elm.Views.Main.make(_elm),
    $Window = Elm.Window.make(_elm);
    var clock = A2($Signal.map,
    function (_v0) {
@@ -6517,7 +5096,7 @@ Elm.Main.make = function (_elm) {
                                  ,delta: _v0._1
                                  ,time: _v0._0};}
          _U.badCase($moduleName,
-         "on line 43, column 32 to 62");
+         "on line 42, column 32 to 62");
       }();
    },
    $Time.timestamp($Time.fps(30)));
@@ -6668,7 +5247,7 @@ Elm.Main.make = function (_elm) {
    $State.initialAppState,
    appInput);
    var main = A3($Signal.map2,
-   $Render$All.renderApp(translator),
+   $Views$Main.mainView(translator),
    $Window.dimensions,
    appState);
    var activeRaceCourse = Elm.Native.Port.make(_elm).outboundSignal("activeRaceCourse",
@@ -13758,1526 +12337,6 @@ Elm.Native.Utils.make = function(localRuntime) {
 	};
 };
 
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var createElement = require("./vdom/create-element.js")
-
-module.exports = createElement
-
-},{"./vdom/create-element.js":6}],2:[function(require,module,exports){
-(function (global){
-var topLevel = typeof global !== 'undefined' ? global :
-    typeof window !== 'undefined' ? window : {}
-var minDoc = require('min-document');
-
-if (typeof document !== 'undefined') {
-    module.exports = document;
-} else {
-    var doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'];
-
-    if (!doccy) {
-        doccy = topLevel['__GLOBAL_DOCUMENT_CACHE@4'] = minDoc;
-    }
-
-    module.exports = doccy;
-}
-
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":24}],3:[function(require,module,exports){
-"use strict";
-
-module.exports = function isObject(x) {
-	return typeof x === "object" && x !== null;
-};
-
-},{}],4:[function(require,module,exports){
-var nativeIsArray = Array.isArray
-var toString = Object.prototype.toString
-
-module.exports = nativeIsArray || isArray
-
-function isArray(obj) {
-    return toString.call(obj) === "[object Array]"
-}
-
-},{}],5:[function(require,module,exports){
-var isObject = require("is-object")
-var isHook = require("../vnode/is-vhook.js")
-
-module.exports = applyProperties
-
-function applyProperties(node, props, previous) {
-    for (var propName in props) {
-        var propValue = props[propName]
-
-        if (propValue === undefined) {
-            removeProperty(node, propName, propValue, previous);
-        } else if (isHook(propValue)) {
-            removeProperty(node, propName, propValue, previous)
-            if (propValue.hook) {
-                propValue.hook(node,
-                    propName,
-                    previous ? previous[propName] : undefined)
-            }
-        } else {
-            if (isObject(propValue)) {
-                patchObject(node, props, previous, propName, propValue);
-            } else {
-                node[propName] = propValue
-            }
-        }
-    }
-}
-
-function removeProperty(node, propName, propValue, previous) {
-    if (previous) {
-        var previousValue = previous[propName]
-
-        if (!isHook(previousValue)) {
-            if (propName === "attributes") {
-                for (var attrName in previousValue) {
-                    node.removeAttribute(attrName)
-                }
-            } else if (propName === "style") {
-                for (var i in previousValue) {
-                    node.style[i] = ""
-                }
-            } else if (typeof previousValue === "string") {
-                node[propName] = ""
-            } else {
-                node[propName] = null
-            }
-        } else if (previousValue.unhook) {
-            previousValue.unhook(node, propName, propValue)
-        }
-    }
-}
-
-function patchObject(node, props, previous, propName, propValue) {
-    var previousValue = previous ? previous[propName] : undefined
-
-    // Set attributes
-    if (propName === "attributes") {
-        for (var attrName in propValue) {
-            var attrValue = propValue[attrName]
-
-            if (attrValue === undefined) {
-                node.removeAttribute(attrName)
-            } else {
-                node.setAttribute(attrName, attrValue)
-            }
-        }
-
-        return
-    }
-
-    if(previousValue && isObject(previousValue) &&
-        getPrototype(previousValue) !== getPrototype(propValue)) {
-        node[propName] = propValue
-        return
-    }
-
-    if (!isObject(node[propName])) {
-        node[propName] = {}
-    }
-
-    var replacer = propName === "style" ? "" : undefined
-
-    for (var k in propValue) {
-        var value = propValue[k]
-        node[propName][k] = (value === undefined) ? replacer : value
-    }
-}
-
-function getPrototype(value) {
-    if (Object.getPrototypeOf) {
-        return Object.getPrototypeOf(value)
-    } else if (value.__proto__) {
-        return value.__proto__
-    } else if (value.constructor) {
-        return value.constructor.prototype
-    }
-}
-
-},{"../vnode/is-vhook.js":13,"is-object":3}],6:[function(require,module,exports){
-var document = require("global/document")
-
-var applyProperties = require("./apply-properties")
-
-var isVNode = require("../vnode/is-vnode.js")
-var isVText = require("../vnode/is-vtext.js")
-var isWidget = require("../vnode/is-widget.js")
-var handleThunk = require("../vnode/handle-thunk.js")
-
-module.exports = createElement
-
-function createElement(vnode, opts) {
-    var doc = opts ? opts.document || document : document
-    var warn = opts ? opts.warn : null
-
-    vnode = handleThunk(vnode).a
-
-    if (isWidget(vnode)) {
-        return vnode.init()
-    } else if (isVText(vnode)) {
-        return doc.createTextNode(vnode.text)
-    } else if (!isVNode(vnode)) {
-        if (warn) {
-            warn("Item is not a valid virtual dom node", vnode)
-        }
-        return null
-    }
-
-    var node = (vnode.namespace === null) ?
-        doc.createElement(vnode.tagName) :
-        doc.createElementNS(vnode.namespace, vnode.tagName)
-
-    var props = vnode.properties
-    applyProperties(node, props)
-
-    var children = vnode.children
-
-    for (var i = 0; i < children.length; i++) {
-        var childNode = createElement(children[i], opts)
-        if (childNode) {
-            node.appendChild(childNode)
-        }
-    }
-
-    return node
-}
-
-},{"../vnode/handle-thunk.js":11,"../vnode/is-vnode.js":14,"../vnode/is-vtext.js":15,"../vnode/is-widget.js":16,"./apply-properties":5,"global/document":2}],7:[function(require,module,exports){
-// Maps a virtual DOM tree onto a real DOM tree in an efficient manner.
-// We don't want to read all of the DOM nodes in the tree so we use
-// the in-order tree indexing to eliminate recursion down certain branches.
-// We only recurse into a DOM node if we know that it contains a child of
-// interest.
-
-var noChild = {}
-
-module.exports = domIndex
-
-function domIndex(rootNode, tree, indices, nodes) {
-    if (!indices || indices.length === 0) {
-        return {}
-    } else {
-        indices.sort(ascending)
-        return recurse(rootNode, tree, indices, nodes, 0)
-    }
-}
-
-function recurse(rootNode, tree, indices, nodes, rootIndex) {
-    nodes = nodes || {}
-
-
-    if (rootNode) {
-        if (indexInRange(indices, rootIndex, rootIndex)) {
-            nodes[rootIndex] = rootNode
-        }
-
-        var vChildren = tree.children
-
-        if (vChildren) {
-
-            var childNodes = rootNode.childNodes
-
-            for (var i = 0; i < tree.children.length; i++) {
-                rootIndex += 1
-
-                var vChild = vChildren[i] || noChild
-                var nextIndex = rootIndex + (vChild.count || 0)
-
-                // skip recursion down the tree if there are no nodes down here
-                if (indexInRange(indices, rootIndex, nextIndex)) {
-                    recurse(childNodes[i], vChild, indices, nodes, rootIndex)
-                }
-
-                rootIndex = nextIndex
-            }
-        }
-    }
-
-    return nodes
-}
-
-// Binary search for an index in the interval [left, right]
-function indexInRange(indices, left, right) {
-    if (indices.length === 0) {
-        return false
-    }
-
-    var minIndex = 0
-    var maxIndex = indices.length - 1
-    var currentIndex
-    var currentItem
-
-    while (minIndex <= maxIndex) {
-        currentIndex = ((maxIndex + minIndex) / 2) >> 0
-        currentItem = indices[currentIndex]
-
-        if (minIndex === maxIndex) {
-            return currentItem >= left && currentItem <= right
-        } else if (currentItem < left) {
-            minIndex = currentIndex + 1
-        } else  if (currentItem > right) {
-            maxIndex = currentIndex - 1
-        } else {
-            return true
-        }
-    }
-
-    return false;
-}
-
-function ascending(a, b) {
-    return a > b ? 1 : -1
-}
-
-},{}],8:[function(require,module,exports){
-var applyProperties = require("./apply-properties")
-
-var isWidget = require("../vnode/is-widget.js")
-var VPatch = require("../vnode/vpatch.js")
-
-var render = require("./create-element")
-var updateWidget = require("./update-widget")
-
-module.exports = applyPatch
-
-function applyPatch(vpatch, domNode, renderOptions) {
-    var type = vpatch.type
-    var vNode = vpatch.vNode
-    var patch = vpatch.patch
-
-    switch (type) {
-        case VPatch.REMOVE:
-            return removeNode(domNode, vNode)
-        case VPatch.INSERT:
-            return insertNode(domNode, patch, renderOptions)
-        case VPatch.VTEXT:
-            return stringPatch(domNode, vNode, patch, renderOptions)
-        case VPatch.WIDGET:
-            return widgetPatch(domNode, vNode, patch, renderOptions)
-        case VPatch.VNODE:
-            return vNodePatch(domNode, vNode, patch, renderOptions)
-        case VPatch.ORDER:
-            reorderChildren(domNode, patch)
-            return domNode
-        case VPatch.PROPS:
-            applyProperties(domNode, patch, vNode.properties)
-            return domNode
-        case VPatch.THUNK:
-            return replaceRoot(domNode,
-                renderOptions.patch(domNode, patch, renderOptions))
-        default:
-            return domNode
-    }
-}
-
-function removeNode(domNode, vNode) {
-    var parentNode = domNode.parentNode
-
-    if (parentNode) {
-        parentNode.removeChild(domNode)
-    }
-
-    destroyWidget(domNode, vNode);
-
-    return null
-}
-
-function insertNode(parentNode, vNode, renderOptions) {
-    var newNode = render(vNode, renderOptions)
-
-    if (parentNode) {
-        parentNode.appendChild(newNode)
-    }
-
-    return parentNode
-}
-
-function stringPatch(domNode, leftVNode, vText, renderOptions) {
-    var newNode
-
-    if (domNode.nodeType === 3) {
-        domNode.replaceData(0, domNode.length, vText.text)
-        newNode = domNode
-    } else {
-        var parentNode = domNode.parentNode
-        newNode = render(vText, renderOptions)
-
-        if (parentNode && newNode !== domNode) {
-            parentNode.replaceChild(newNode, domNode)
-        }
-    }
-
-    return newNode
-}
-
-function widgetPatch(domNode, leftVNode, widget, renderOptions) {
-    var updating = updateWidget(leftVNode, widget)
-    var newNode
-
-    if (updating) {
-        newNode = widget.update(leftVNode, domNode) || domNode
-    } else {
-        newNode = render(widget, renderOptions)
-    }
-
-    var parentNode = domNode.parentNode
-
-    if (parentNode && newNode !== domNode) {
-        parentNode.replaceChild(newNode, domNode)
-    }
-
-    if (!updating) {
-        destroyWidget(domNode, leftVNode)
-    }
-
-    return newNode
-}
-
-function vNodePatch(domNode, leftVNode, vNode, renderOptions) {
-    var parentNode = domNode.parentNode
-    var newNode = render(vNode, renderOptions)
-
-    if (parentNode && newNode !== domNode) {
-        parentNode.replaceChild(newNode, domNode)
-    }
-
-    return newNode
-}
-
-function destroyWidget(domNode, w) {
-    if (typeof w.destroy === "function" && isWidget(w)) {
-        w.destroy(domNode)
-    }
-}
-
-function reorderChildren(domNode, moves) {
-    var childNodes = domNode.childNodes
-    var keyMap = {}
-    var node
-    var remove
-    var insert
-
-    for (var i = 0; i < moves.removes.length; i++) {
-        remove = moves.removes[i]
-        node = childNodes[remove.from]
-        if (remove.key) {
-            keyMap[remove.key] = node
-        }
-        domNode.removeChild(node)
-    }
-
-    var length = childNodes.length
-    for (var j = 0; j < moves.inserts.length; j++) {
-        insert = moves.inserts[j]
-        node = keyMap[insert.key]
-        // this is the weirdest bug i've ever seen in webkit
-        domNode.insertBefore(node, insert.to >= length++ ? null : childNodes[insert.to])
-    }
-}
-
-function replaceRoot(oldRoot, newRoot) {
-    if (oldRoot && newRoot && oldRoot !== newRoot && oldRoot.parentNode) {
-        oldRoot.parentNode.replaceChild(newRoot, oldRoot)
-    }
-
-    return newRoot;
-}
-
-},{"../vnode/is-widget.js":16,"../vnode/vpatch.js":19,"./apply-properties":5,"./create-element":6,"./update-widget":10}],9:[function(require,module,exports){
-var document = require("global/document")
-var isArray = require("x-is-array")
-
-var domIndex = require("./dom-index")
-var patchOp = require("./patch-op")
-module.exports = patch
-
-function patch(rootNode, patches) {
-    return patchRecursive(rootNode, patches)
-}
-
-function patchRecursive(rootNode, patches, renderOptions) {
-    var indices = patchIndices(patches)
-
-    if (indices.length === 0) {
-        return rootNode
-    }
-
-    var index = domIndex(rootNode, patches.a, indices)
-    var ownerDocument = rootNode.ownerDocument
-
-    if (!renderOptions) {
-        renderOptions = { patch: patchRecursive }
-        if (ownerDocument !== document) {
-            renderOptions.document = ownerDocument
-        }
-    }
-
-    for (var i = 0; i < indices.length; i++) {
-        var nodeIndex = indices[i]
-        rootNode = applyPatch(rootNode,
-            index[nodeIndex],
-            patches[nodeIndex],
-            renderOptions)
-    }
-
-    return rootNode
-}
-
-function applyPatch(rootNode, domNode, patchList, renderOptions) {
-    if (!domNode) {
-        return rootNode
-    }
-
-    var newNode
-
-    if (isArray(patchList)) {
-        for (var i = 0; i < patchList.length; i++) {
-            newNode = patchOp(patchList[i], domNode, renderOptions)
-
-            if (domNode === rootNode) {
-                rootNode = newNode
-            }
-        }
-    } else {
-        newNode = patchOp(patchList, domNode, renderOptions)
-
-        if (domNode === rootNode) {
-            rootNode = newNode
-        }
-    }
-
-    return rootNode
-}
-
-function patchIndices(patches) {
-    var indices = []
-
-    for (var key in patches) {
-        if (key !== "a") {
-            indices.push(Number(key))
-        }
-    }
-
-    return indices
-}
-
-},{"./dom-index":7,"./patch-op":8,"global/document":2,"x-is-array":4}],10:[function(require,module,exports){
-var isWidget = require("../vnode/is-widget.js")
-
-module.exports = updateWidget
-
-function updateWidget(a, b) {
-    if (isWidget(a) && isWidget(b)) {
-        if ("name" in a && "name" in b) {
-            return a.id === b.id
-        } else {
-            return a.init === b.init
-        }
-    }
-
-    return false
-}
-
-},{"../vnode/is-widget.js":16}],11:[function(require,module,exports){
-var isVNode = require("./is-vnode")
-var isVText = require("./is-vtext")
-var isWidget = require("./is-widget")
-var isThunk = require("./is-thunk")
-
-module.exports = handleThunk
-
-function handleThunk(a, b) {
-    var renderedA = a
-    var renderedB = b
-
-    if (isThunk(b)) {
-        renderedB = renderThunk(b, a)
-    }
-
-    if (isThunk(a)) {
-        renderedA = renderThunk(a, null)
-    }
-
-    return {
-        a: renderedA,
-        b: renderedB
-    }
-}
-
-function renderThunk(thunk, previous) {
-    var renderedThunk = thunk.vnode
-
-    if (!renderedThunk) {
-        renderedThunk = thunk.vnode = thunk.render(previous)
-    }
-
-    if (!(isVNode(renderedThunk) ||
-            isVText(renderedThunk) ||
-            isWidget(renderedThunk))) {
-        throw new Error("thunk did not return a valid node");
-    }
-
-    return renderedThunk
-}
-
-},{"./is-thunk":12,"./is-vnode":14,"./is-vtext":15,"./is-widget":16}],12:[function(require,module,exports){
-module.exports = isThunk
-
-function isThunk(t) {
-    return t && t.type === "Thunk"
-}
-
-},{}],13:[function(require,module,exports){
-module.exports = isHook
-
-function isHook(hook) {
-    return hook &&
-      (typeof hook.hook === "function" && !hook.hasOwnProperty("hook") ||
-       typeof hook.unhook === "function" && !hook.hasOwnProperty("unhook"))
-}
-
-},{}],14:[function(require,module,exports){
-var version = require("./version")
-
-module.exports = isVirtualNode
-
-function isVirtualNode(x) {
-    return x && x.type === "VirtualNode" && x.version === version
-}
-
-},{"./version":17}],15:[function(require,module,exports){
-var version = require("./version")
-
-module.exports = isVirtualText
-
-function isVirtualText(x) {
-    return x && x.type === "VirtualText" && x.version === version
-}
-
-},{"./version":17}],16:[function(require,module,exports){
-module.exports = isWidget
-
-function isWidget(w) {
-    return w && w.type === "Widget"
-}
-
-},{}],17:[function(require,module,exports){
-module.exports = "2"
-
-},{}],18:[function(require,module,exports){
-var version = require("./version")
-var isVNode = require("./is-vnode")
-var isWidget = require("./is-widget")
-var isThunk = require("./is-thunk")
-var isVHook = require("./is-vhook")
-
-module.exports = VirtualNode
-
-var noProperties = {}
-var noChildren = []
-
-function VirtualNode(tagName, properties, children, key, namespace) {
-    this.tagName = tagName
-    this.properties = properties || noProperties
-    this.children = children || noChildren
-    this.key = key != null ? String(key) : undefined
-    this.namespace = (typeof namespace === "string") ? namespace : null
-
-    var count = (children && children.length) || 0
-    var descendants = 0
-    var hasWidgets = false
-    var hasThunks = false
-    var descendantHooks = false
-    var hooks
-
-    for (var propName in properties) {
-        if (properties.hasOwnProperty(propName)) {
-            var property = properties[propName]
-            if (isVHook(property) && property.unhook) {
-                if (!hooks) {
-                    hooks = {}
-                }
-
-                hooks[propName] = property
-            }
-        }
-    }
-
-    for (var i = 0; i < count; i++) {
-        var child = children[i]
-        if (isVNode(child)) {
-            descendants += child.count || 0
-
-            if (!hasWidgets && child.hasWidgets) {
-                hasWidgets = true
-            }
-
-            if (!hasThunks && child.hasThunks) {
-                hasThunks = true
-            }
-
-            if (!descendantHooks && (child.hooks || child.descendantHooks)) {
-                descendantHooks = true
-            }
-        } else if (!hasWidgets && isWidget(child)) {
-            if (typeof child.destroy === "function") {
-                hasWidgets = true
-            }
-        } else if (!hasThunks && isThunk(child)) {
-            hasThunks = true;
-        }
-    }
-
-    this.count = count + descendants
-    this.hasWidgets = hasWidgets
-    this.hasThunks = hasThunks
-    this.hooks = hooks
-    this.descendantHooks = descendantHooks
-}
-
-VirtualNode.prototype.version = version
-VirtualNode.prototype.type = "VirtualNode"
-
-},{"./is-thunk":12,"./is-vhook":13,"./is-vnode":14,"./is-widget":16,"./version":17}],19:[function(require,module,exports){
-var version = require("./version")
-
-VirtualPatch.NONE = 0
-VirtualPatch.VTEXT = 1
-VirtualPatch.VNODE = 2
-VirtualPatch.WIDGET = 3
-VirtualPatch.PROPS = 4
-VirtualPatch.ORDER = 5
-VirtualPatch.INSERT = 6
-VirtualPatch.REMOVE = 7
-VirtualPatch.THUNK = 8
-
-module.exports = VirtualPatch
-
-function VirtualPatch(type, vNode, patch) {
-    this.type = Number(type)
-    this.vNode = vNode
-    this.patch = patch
-}
-
-VirtualPatch.prototype.version = version
-VirtualPatch.prototype.type = "VirtualPatch"
-
-},{"./version":17}],20:[function(require,module,exports){
-var version = require("./version")
-
-module.exports = VirtualText
-
-function VirtualText(text) {
-    this.text = String(text)
-}
-
-VirtualText.prototype.version = version
-VirtualText.prototype.type = "VirtualText"
-
-},{"./version":17}],21:[function(require,module,exports){
-var isObject = require("is-object")
-var isHook = require("../vnode/is-vhook")
-
-module.exports = diffProps
-
-function diffProps(a, b) {
-    var diff
-
-    for (var aKey in a) {
-        if (!(aKey in b)) {
-            diff = diff || {}
-            diff[aKey] = undefined
-        }
-
-        var aValue = a[aKey]
-        var bValue = b[aKey]
-
-        if (aValue === bValue) {
-            continue
-        } else if (isObject(aValue) && isObject(bValue)) {
-            if (getPrototype(bValue) !== getPrototype(aValue)) {
-                diff = diff || {}
-                diff[aKey] = bValue
-            } else if (isHook(bValue)) {
-                 diff = diff || {}
-                 diff[aKey] = bValue
-            } else {
-                var objectDiff = diffProps(aValue, bValue)
-                if (objectDiff) {
-                    diff = diff || {}
-                    diff[aKey] = objectDiff
-                }
-            }
-        } else {
-            diff = diff || {}
-            diff[aKey] = bValue
-        }
-    }
-
-    for (var bKey in b) {
-        if (!(bKey in a)) {
-            diff = diff || {}
-            diff[bKey] = b[bKey]
-        }
-    }
-
-    return diff
-}
-
-function getPrototype(value) {
-  if (Object.getPrototypeOf) {
-    return Object.getPrototypeOf(value)
-  } else if (value.__proto__) {
-    return value.__proto__
-  } else if (value.constructor) {
-    return value.constructor.prototype
-  }
-}
-
-},{"../vnode/is-vhook":13,"is-object":3}],22:[function(require,module,exports){
-var isArray = require("x-is-array")
-
-var VPatch = require("../vnode/vpatch")
-var isVNode = require("../vnode/is-vnode")
-var isVText = require("../vnode/is-vtext")
-var isWidget = require("../vnode/is-widget")
-var isThunk = require("../vnode/is-thunk")
-var handleThunk = require("../vnode/handle-thunk")
-
-var diffProps = require("./diff-props")
-
-module.exports = diff
-
-function diff(a, b) {
-    var patch = { a: a }
-    walk(a, b, patch, 0)
-    return patch
-}
-
-function walk(a, b, patch, index) {
-    if (a === b) {
-        return
-    }
-
-    var apply = patch[index]
-    var applyClear = false
-
-    if (isThunk(a) || isThunk(b)) {
-        thunks(a, b, patch, index)
-    } else if (b == null) {
-
-        // If a is a widget we will add a remove patch for it
-        // Otherwise any child widgets/hooks must be destroyed.
-        // This prevents adding two remove patches for a widget.
-        if (!isWidget(a)) {
-            clearState(a, patch, index)
-            apply = patch[index]
-        }
-
-        apply = appendPatch(apply, new VPatch(VPatch.REMOVE, a, b))
-    } else if (isVNode(b)) {
-        if (isVNode(a)) {
-            if (a.tagName === b.tagName &&
-                a.namespace === b.namespace &&
-                a.key === b.key) {
-                var propsPatch = diffProps(a.properties, b.properties)
-                if (propsPatch) {
-                    apply = appendPatch(apply,
-                        new VPatch(VPatch.PROPS, a, propsPatch))
-                }
-                apply = diffChildren(a, b, patch, apply, index)
-            } else {
-                apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
-                applyClear = true
-            }
-        } else {
-            apply = appendPatch(apply, new VPatch(VPatch.VNODE, a, b))
-            applyClear = true
-        }
-    } else if (isVText(b)) {
-        if (!isVText(a)) {
-            apply = appendPatch(apply, new VPatch(VPatch.VTEXT, a, b))
-            applyClear = true
-        } else if (a.text !== b.text) {
-            apply = appendPatch(apply, new VPatch(VPatch.VTEXT, a, b))
-        }
-    } else if (isWidget(b)) {
-        if (!isWidget(a)) {
-            applyClear = true
-        }
-
-        apply = appendPatch(apply, new VPatch(VPatch.WIDGET, a, b))
-    }
-
-    if (apply) {
-        patch[index] = apply
-    }
-
-    if (applyClear) {
-        clearState(a, patch, index)
-    }
-}
-
-function diffChildren(a, b, patch, apply, index) {
-    var aChildren = a.children
-    var orderedSet = reorder(aChildren, b.children)
-    var bChildren = orderedSet.children
-
-    var aLen = aChildren.length
-    var bLen = bChildren.length
-    var len = aLen > bLen ? aLen : bLen
-
-    for (var i = 0; i < len; i++) {
-        var leftNode = aChildren[i]
-        var rightNode = bChildren[i]
-        index += 1
-
-        if (!leftNode) {
-            if (rightNode) {
-                // Excess nodes in b need to be added
-                apply = appendPatch(apply,
-                    new VPatch(VPatch.INSERT, null, rightNode))
-            }
-        } else {
-            walk(leftNode, rightNode, patch, index)
-        }
-
-        if (isVNode(leftNode) && leftNode.count) {
-            index += leftNode.count
-        }
-    }
-
-    if (orderedSet.moves) {
-        // Reorder nodes last
-        apply = appendPatch(apply, new VPatch(
-            VPatch.ORDER,
-            a,
-            orderedSet.moves
-        ))
-    }
-
-    return apply
-}
-
-function clearState(vNode, patch, index) {
-    // TODO: Make this a single walk, not two
-    unhook(vNode, patch, index)
-    destroyWidgets(vNode, patch, index)
-}
-
-// Patch records for all destroyed widgets must be added because we need
-// a DOM node reference for the destroy function
-function destroyWidgets(vNode, patch, index) {
-    if (isWidget(vNode)) {
-        if (typeof vNode.destroy === "function") {
-            patch[index] = appendPatch(
-                patch[index],
-                new VPatch(VPatch.REMOVE, vNode, null)
-            )
-        }
-    } else if (isVNode(vNode) && (vNode.hasWidgets || vNode.hasThunks)) {
-        var children = vNode.children
-        var len = children.length
-        for (var i = 0; i < len; i++) {
-            var child = children[i]
-            index += 1
-
-            destroyWidgets(child, patch, index)
-
-            if (isVNode(child) && child.count) {
-                index += child.count
-            }
-        }
-    } else if (isThunk(vNode)) {
-        thunks(vNode, null, patch, index)
-    }
-}
-
-// Create a sub-patch for thunks
-function thunks(a, b, patch, index) {
-    var nodes = handleThunk(a, b)
-    var thunkPatch = diff(nodes.a, nodes.b)
-    if (hasPatches(thunkPatch)) {
-        patch[index] = new VPatch(VPatch.THUNK, null, thunkPatch)
-    }
-}
-
-function hasPatches(patch) {
-    for (var index in patch) {
-        if (index !== "a") {
-            return true
-        }
-    }
-
-    return false
-}
-
-// Execute hooks when two nodes are identical
-function unhook(vNode, patch, index) {
-    if (isVNode(vNode)) {
-        if (vNode.hooks) {
-            patch[index] = appendPatch(
-                patch[index],
-                new VPatch(
-                    VPatch.PROPS,
-                    vNode,
-                    undefinedKeys(vNode.hooks)
-                )
-            )
-        }
-
-        if (vNode.descendantHooks || vNode.hasThunks) {
-            var children = vNode.children
-            var len = children.length
-            for (var i = 0; i < len; i++) {
-                var child = children[i]
-                index += 1
-
-                unhook(child, patch, index)
-
-                if (isVNode(child) && child.count) {
-                    index += child.count
-                }
-            }
-        }
-    } else if (isThunk(vNode)) {
-        thunks(vNode, null, patch, index)
-    }
-}
-
-function undefinedKeys(obj) {
-    var result = {}
-
-    for (var key in obj) {
-        result[key] = undefined
-    }
-
-    return result
-}
-
-// List diff, naive left to right reordering
-function reorder(aChildren, bChildren) {
-    // O(M) time, O(M) memory
-    var bChildIndex = keyIndex(bChildren)
-    var bKeys = bChildIndex.keys
-    var bFree = bChildIndex.free
-
-    if (bFree.length === bChildren.length) {
-        return {
-            children: bChildren,
-            moves: null
-        }
-    }
-
-    // O(N) time, O(N) memory
-    var aChildIndex = keyIndex(aChildren)
-    var aKeys = aChildIndex.keys
-    var aFree = aChildIndex.free
-
-    if (aFree.length === aChildren.length) {
-        return {
-            children: bChildren,
-            moves: null
-        }
-    }
-
-    // O(MAX(N, M)) memory
-    var newChildren = []
-
-    var freeIndex = 0
-    var freeCount = bFree.length
-    var deletedItems = 0
-
-    // Iterate through a and match a node in b
-    // O(N) time,
-    for (var i = 0 ; i < aChildren.length; i++) {
-        var aItem = aChildren[i]
-        var itemIndex
-
-        if (aItem.key) {
-            if (bKeys.hasOwnProperty(aItem.key)) {
-                // Match up the old keys
-                itemIndex = bKeys[aItem.key]
-                newChildren.push(bChildren[itemIndex])
-
-            } else {
-                // Remove old keyed items
-                itemIndex = i - deletedItems++
-                newChildren.push(null)
-            }
-        } else {
-            // Match the item in a with the next free item in b
-            if (freeIndex < freeCount) {
-                itemIndex = bFree[freeIndex++]
-                newChildren.push(bChildren[itemIndex])
-            } else {
-                // There are no free items in b to match with
-                // the free items in a, so the extra free nodes
-                // are deleted.
-                itemIndex = i - deletedItems++
-                newChildren.push(null)
-            }
-        }
-    }
-
-    var lastFreeIndex = freeIndex >= bFree.length ?
-        bChildren.length :
-        bFree[freeIndex]
-
-    // Iterate through b and append any new keys
-    // O(M) time
-    for (var j = 0; j < bChildren.length; j++) {
-        var newItem = bChildren[j]
-
-        if (newItem.key) {
-            if (!aKeys.hasOwnProperty(newItem.key)) {
-                // Add any new keyed items
-                // We are adding new items to the end and then sorting them
-                // in place. In future we should insert new items in place.
-                newChildren.push(newItem)
-            }
-        } else if (j >= lastFreeIndex) {
-            // Add any leftover non-keyed items
-            newChildren.push(newItem)
-        }
-    }
-
-    var simulate = newChildren.slice()
-    var simulateIndex = 0
-    var removes = []
-    var inserts = []
-    var simulateItem
-
-    for (var k = 0; k < bChildren.length;) {
-        var wantedItem = bChildren[k]
-        simulateItem = simulate[simulateIndex]
-
-        // remove items
-        while (simulateItem === null && simulate.length) {
-            removes.push(remove(simulate, simulateIndex, null))
-            simulateItem = simulate[simulateIndex]
-        }
-
-        if (!simulateItem || simulateItem.key !== wantedItem.key) {
-            // if we need a key in this position...
-            if (wantedItem.key) {
-                if (simulateItem && simulateItem.key) {
-                    // if an insert doesn't put this key in place, it needs to move
-                    if (bKeys[simulateItem.key] !== k + 1) {
-                        removes.push(remove(simulate, simulateIndex, simulateItem.key))
-                        simulateItem = simulate[simulateIndex]
-                        // if the remove didn't put the wanted item in place, we need to insert it
-                        if (!simulateItem || simulateItem.key !== wantedItem.key) {
-                            inserts.push({key: wantedItem.key, to: k})
-                        }
-                        // items are matching, so skip ahead
-                        else {
-                            simulateIndex++
-                        }
-                    }
-                    else {
-                        inserts.push({key: wantedItem.key, to: k})
-                    }
-                }
-                else {
-                    inserts.push({key: wantedItem.key, to: k})
-                }
-                k++
-            }
-            // a key in simulate has no matching wanted key, remove it
-            else if (simulateItem && simulateItem.key) {
-                removes.push(remove(simulate, simulateIndex, simulateItem.key))
-            }
-        }
-        else {
-            simulateIndex++
-            k++
-        }
-    }
-
-    // remove all the remaining nodes from simulate
-    while(simulateIndex < simulate.length) {
-        simulateItem = simulate[simulateIndex]
-        removes.push(remove(simulate, simulateIndex, simulateItem && simulateItem.key))
-    }
-
-    // If the only moves we have are deletes then we can just
-    // let the delete patch remove these items.
-    if (removes.length === deletedItems && !inserts.length) {
-        return {
-            children: newChildren,
-            moves: null
-        }
-    }
-
-    return {
-        children: newChildren,
-        moves: {
-            removes: removes,
-            inserts: inserts
-        }
-    }
-}
-
-function remove(arr, index, key) {
-    arr.splice(index, 1)
-
-    return {
-        from: index,
-        key: key
-    }
-}
-
-function keyIndex(children) {
-    var keys = {}
-    var free = []
-    var length = children.length
-
-    for (var i = 0; i < length; i++) {
-        var child = children[i]
-
-        if (child.key) {
-            keys[child.key] = i
-        } else {
-            free.push(i)
-        }
-    }
-
-    return {
-        keys: keys,     // A hash of key name to index
-        free: free,     // An array of unkeyed item indices
-    }
-}
-
-function appendPatch(apply, patch) {
-    if (apply) {
-        if (isArray(apply)) {
-            apply.push(patch)
-        } else {
-            apply = [apply, patch]
-        }
-
-        return apply
-    } else {
-        return patch
-    }
-}
-
-},{"../vnode/handle-thunk":11,"../vnode/is-thunk":12,"../vnode/is-vnode":14,"../vnode/is-vtext":15,"../vnode/is-widget":16,"../vnode/vpatch":19,"./diff-props":21,"x-is-array":4}],23:[function(require,module,exports){
-var VNode = require('virtual-dom/vnode/vnode');
-var VText = require('virtual-dom/vnode/vtext');
-var diff = require('virtual-dom/vtree/diff');
-var patch = require('virtual-dom/vdom/patch');
-var createElement = require('virtual-dom/create-element');
-var isHook = require("virtual-dom/vnode/is-vhook");
-
-
-Elm.Native.VirtualDom = {};
-Elm.Native.VirtualDom.make = function(elm)
-{
-	elm.Native = elm.Native || {};
-	elm.Native.VirtualDom = elm.Native.VirtualDom || {};
-	if (elm.Native.VirtualDom.values)
-	{
-		return elm.Native.VirtualDom.values;
-	}
-
-	var Element = Elm.Native.Graphics.Element.make(elm);
-	var Json = Elm.Native.Json.make(elm);
-	var List = Elm.Native.List.make(elm);
-	var Signal = Elm.Native.Signal.make(elm);
-	var Utils = Elm.Native.Utils.make(elm);
-
-	var ATTRIBUTE_KEY = 'UniqueNameThatOthersAreVeryUnlikelyToUse';
-
-	function listToProperties(list)
-	{
-		var object = {};
-		while (list.ctor !== '[]')
-		{
-			var entry = list._0;
-			if (entry.key === ATTRIBUTE_KEY)
-			{
-				object.attributes = object.attributes || {};
-				object.attributes[entry.value.attrKey] = entry.value.attrValue;
-			}
-			else
-			{
-				object[entry.key] = entry.value;
-			}
-			list = list._1;
-		}
-		return object;
-	}
-
-	function node(name)
-	{
-		return F2(function(propertyList, contents) {
-			return makeNode(name, propertyList, contents);
-		});
-	}
-
-	function makeNode(name, propertyList, contents)
-	{
-		var props = listToProperties(propertyList);
-
-		var key, namespace;
-		// support keys
-		if (props.key !== undefined)
-		{
-			key = props.key;
-			props.key = undefined;
-		}
-
-		// support namespace
-		if (props.namespace !== undefined)
-		{
-			namespace = props.namespace;
-			props.namespace = undefined;
-		}
-
-		// ensure that setting text of an input does not move the cursor
-		var useSoftSet =
-			name === 'input'
-			&& props.value !== undefined
-			&& !isHook(props.value);
-
-		if (useSoftSet)
-		{
-			props.value = SoftSetHook(props.value);
-		}
-
-		return new VNode(name, props, List.toArray(contents), key, namespace);
-	}
-
-	function property(key, value)
-	{
-		return {
-			key: key,
-			value: value
-		};
-	}
-
-	function attribute(key, value)
-	{
-		return {
-			key: ATTRIBUTE_KEY,
-			value: {
-				attrKey: key,
-				attrValue: value
-			}
-		};
-	}
-
-	function on(name, options, decoder, createMessage)
-	{
-		function eventHandler(event)
-		{
-			var value = A2(Json.runDecoderValue, decoder, event);
-			if (value.ctor === 'Ok')
-			{
-				if (options.stopPropagation)
-				{
-					event.stopPropagation();
-				}
-				if (options.preventDefault)
-				{
-					event.preventDefault();
-				}
-				Signal.sendMessage(createMessage(value._0));
-			}
-		}
-		return property('on' + name, eventHandler);
-	}
-
-	function SoftSetHook(value)
-	{
-		if (!(this instanceof SoftSetHook))
-		{
-			return new SoftSetHook(value);
-		}
-
-		this.value = value;
-	}
-
-	SoftSetHook.prototype.hook = function (node, propertyName)
-	{
-		if (node[propertyName] !== this.value)
-		{
-			node[propertyName] = this.value;
-		}
-	};
-
-	function text(string)
-	{
-		return new VText(string);
-	}
-
-	function ElementWidget(element)
-	{
-		this.element = element;
-	}
-
-	ElementWidget.prototype.type = "Widget";
-
-	ElementWidget.prototype.init = function init()
-	{
-		return Element.render(this.element);
-	};
-
-	ElementWidget.prototype.update = function update(previous, node)
-	{
-		return Element.update(node, previous.element, this.element);
-	};
-
-	function fromElement(element)
-	{
-		return new ElementWidget(element);
-	}
-
-	function toElement(width, height, html)
-	{
-		return A3(Element.newElement, width, height, {
-			ctor: 'Custom',
-			type: 'evancz/elm-html',
-			render: render,
-			update: update,
-			model: html
-		});
-	}
-
-	function render(model)
-	{
-		var element = Element.createNode('div');
-		element.appendChild(createElement(model));
-		return element;
-	}
-
-	function update(node, oldModel, newModel)
-	{
-		updateAndReplace(node.firstChild, oldModel, newModel);
-		return node;
-	}
-
-	function updateAndReplace(node, oldModel, newModel)
-	{
-		var patches = diff(oldModel, newModel);
-		var newNode = patch(node, patches);
-		return newNode;
-	}
-
-	function lazyRef(fn, a)
-	{
-		function thunk()
-		{
-			return fn(a);
-		}
-		return new Thunk(fn, [a], thunk);
-	}
-
-	function lazyRef2(fn, a, b)
-	{
-		function thunk()
-		{
-			return A2(fn, a, b);
-		}
-		return new Thunk(fn, [a,b], thunk);
-	}
-
-	function lazyRef3(fn, a, b, c)
-	{
-		function thunk()
-		{
-			return A3(fn, a, b, c);
-		}
-		return new Thunk(fn, [a,b,c], thunk);
-	}
-
-	function Thunk(fn, args, thunk)
-	{
-		this.fn = fn;
-		this.args = args;
-		this.vnode = null;
-		this.key = undefined;
-		this.thunk = thunk;
-	}
-
-	Thunk.prototype.type = "Thunk";
-	Thunk.prototype.update = updateThunk;
-	Thunk.prototype.render = renderThunk;
-
-	function shouldUpdate(current, previous)
-	{
-		if (current.fn !== previous.fn)
-		{
-			return true;
-		}
-
-		// if it's the same function, we know the number of args must match
-		var cargs = current.args;
-		var pargs = previous.args;
-
-		for (var i = cargs.length; i--; )
-		{
-			if (cargs[i] !== pargs[i])
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	function updateThunk(previous, domNode)
-	{
-		if (!shouldUpdate(this, previous))
-		{
-			this.vnode = previous.vnode;
-			return;
-		}
-
-		if (!this.vnode)
-		{
-			this.vnode = this.thunk();
-		}
-
-		var patches = diff(previous.vnode, this.vnode);
-		patch(domNode, patches);
-	}
-
-	function renderThunk()
-	{
-		return this.thunk();
-	}
-
-	return Elm.Native.VirtualDom.values = {
-		node: node,
-		text: text,
-		on: F4(on),
-
-		property: F2(property),
-		attribute: F2(attribute),
-
-		lazy: F2(lazyRef),
-		lazy2: F3(lazyRef2),
-		lazy3: F4(lazyRef3),
-
-		toElement: F3(toElement),
-		fromElement: fromElement,
-
-		render: createElement,
-		updateAndReplace: updateAndReplace
-	};
-};
-
-},{"virtual-dom/create-element":1,"virtual-dom/vdom/patch":9,"virtual-dom/vnode/is-vhook":13,"virtual-dom/vnode/vnode":18,"virtual-dom/vnode/vtext":20,"virtual-dom/vtree/diff":22}],24:[function(require,module,exports){
-
-},{}]},{},[23]);
-
 Elm.Native = Elm.Native || {};
 Elm.Native.Window = {};
 Elm.Native.Window.make = function(localRuntime) {
@@ -15425,19 +12484,15 @@ Elm.Render.All.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $Html = Elm.Html.make(_elm),
    $Layout = Elm.Layout.make(_elm),
    $List = Elm.List.make(_elm),
-   $LiveCenter$Views = Elm.LiveCenter.Views.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Messages = Elm.Messages.make(_elm),
    $Render$Controls = Elm.Render.Controls.make(_elm),
    $Render$Course = Elm.Render.Course.make(_elm),
    $Render$Dashboard = Elm.Render.Dashboard.make(_elm),
    $Render$Players = Elm.Render.Players.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $State = Elm.State.make(_elm);
+   $Signal = Elm.Signal.make(_elm);
    var renderGame = F2(function (_v0,
    gameState) {
       return function () {
@@ -15468,66 +12523,10 @@ Elm.Render.All.make = function (_elm) {
                  layout);
               }();}
          _U.badCase($moduleName,
-         "between lines 47 and 58");
-      }();
-   });
-   var renderLeaderboard = F3(function (t,
-   appState,
-   raceCourse) {
-      return $Graphics$Element.empty;
-   });
-   var renderIndex = F3(function (t,
-   appState,
-   _v4) {
-      return function () {
-         switch (_v4.ctor)
-         {case "_Tuple2":
-            return A2($Html.toElement,
-              _v4._0,
-              _v4._1)(A2($LiveCenter$Views.indexView,
-              t,
-              appState.liveCenterState));}
-         _U.badCase($moduleName,
-         "between lines 38 and 39");
-      }();
-   });
-   var renderApp = F3(function (t,
-   dims,
-   appState) {
-      return function () {
-         var _v8 = appState.screen;
-         switch (_v8.ctor)
-         {case "Index":
-            return A3(renderIndex,
-              t,
-              appState,
-              dims);
-            case "Play":
-            return function () {
-                 var _v11 = appState.gameState;
-                 switch (_v11.ctor)
-                 {case "Just":
-                    return A2(renderGame,
-                      dims,
-                      _v11._0);
-                    case "Nothing":
-                    return $Graphics$Element.empty;}
-                 _U.badCase($moduleName,
-                 "between lines 30 and 34");
-              }();
-            case "ShowLeaderboard":
-            return A3(renderLeaderboard,
-              t,
-              appState,
-              _v8._0);}
-         _U.badCase($moduleName,
-         "between lines 21 and 34");
+         "between lines 28 and 39");
       }();
    });
    _elm.Render.All.values = {_op: _op
-                            ,renderApp: renderApp
-                            ,renderIndex: renderIndex
-                            ,renderLeaderboard: renderLeaderboard
                             ,renderGame: renderGame};
    return _elm.Render.All.values;
 };
@@ -17591,20 +14590,19 @@ Elm.State.make = function (_elm) {
    var Play = function (a) {
       return {ctor: "Play",_0: a};
    };
-   var ShowLeaderboard = function (a) {
-      return {ctor: "ShowLeaderboard"
-             ,_0: a};
+   var Show = function (a) {
+      return {ctor: "Show",_0: a};
    };
-   var Index = {ctor: "Index"};
+   var Home = {ctor: "Home"};
    var initialAppState = {_: {}
                          ,gameState: $Maybe.Nothing
                          ,liveCenterState: {_: {}
                                            ,courses: _L.fromArray([])
                                            ,player: $Game.defaultPlayer}
-                         ,screen: Index};
+                         ,screen: Home};
    _elm.State.values = {_op: _op
-                       ,Index: Index
-                       ,ShowLeaderboard: ShowLeaderboard
+                       ,Home: Home
+                       ,Show: Show
                        ,Play: Play
                        ,AppState: AppState
                        ,initialAppState: initialAppState
@@ -19104,70 +16102,280 @@ Elm.Transform2D.make = function (_elm) {
                              ,scaleY: scaleY};
    return _elm.Transform2D.values;
 };
-Elm.VirtualDom = Elm.VirtualDom || {};
-Elm.VirtualDom.make = function (_elm) {
+Elm.Views = Elm.Views || {};
+Elm.Views.Home = Elm.Views.Home || {};
+Elm.Views.Home.make = function (_elm) {
    "use strict";
-   _elm.VirtualDom = _elm.VirtualDom || {};
-   if (_elm.VirtualDom.values)
-   return _elm.VirtualDom.values;
+   _elm.Views = _elm.Views || {};
+   _elm.Views.Home = _elm.Views.Home || {};
+   if (_elm.Views.Home.values)
+   return _elm.Views.Home.values;
    var _op = {},
    _N = Elm.Native,
    _U = _N.Utils.make(_elm),
    _L = _N.List.make(_elm),
-   $moduleName = "VirtualDom",
+   $moduleName = "Views.Home",
    $Basics = Elm.Basics.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $Inputs = Elm.Inputs.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Native$VirtualDom = Elm.Native.VirtualDom.make(_elm),
+   $Messages = Elm.Messages.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var lazy3 = $Native$VirtualDom.lazy3;
-   var lazy2 = $Native$VirtualDom.lazy2;
-   var lazy = $Native$VirtualDom.lazy;
-   var defaultOptions = {_: {}
-                        ,preventDefault: false
-                        ,stopPropagation: false};
-   var Options = F2(function (a,
-   b) {
-      return {_: {}
-             ,preventDefault: b
-             ,stopPropagation: a};
+   $Signal = Elm.Signal.make(_elm),
+   $State = Elm.State.make(_elm),
+   $Views$Utils = Elm.Views.Utils.make(_elm);
+   var raceCourseBlock = F2(function (t,
+   _v0) {
+      return function () {
+         return $Graphics$Input.clickable($Inputs.navigate($State.Show(_v0)))($Graphics$Element.centered(A2($Views$Utils.raceCourseName,
+         t,
+         _v0.raceCourse)));
+      }();
    });
-   var onWithOptions = $Native$VirtualDom.on;
-   var on = F3(function (eventName,
-   decoder,
-   toMessage) {
-      return A4($Native$VirtualDom.on,
-      eventName,
-      defaultOptions,
-      decoder,
-      toMessage);
+   var view = F3(function (t,
+   width,
+   _v2) {
+      return function () {
+         return A2($Graphics$Element.flow,
+         $Graphics$Element.right,
+         A2($List.map,
+         raceCourseBlock(t),
+         _v2.liveCenterState.courses));
+      }();
    });
-   var attribute = $Native$VirtualDom.attribute;
-   var property = $Native$VirtualDom.property;
-   var Property = {ctor: "Property"};
-   var fromElement = $Native$VirtualDom.fromElement;
-   var toElement = $Native$VirtualDom.toElement;
-   var text = $Native$VirtualDom.text;
-   var node = $Native$VirtualDom.node;
-   var Node = {ctor: "Node"};
-   _elm.VirtualDom.values = {_op: _op
-                            ,text: text
-                            ,node: node
-                            ,toElement: toElement
-                            ,fromElement: fromElement
-                            ,property: property
-                            ,attribute: attribute
-                            ,on: on
-                            ,onWithOptions: onWithOptions
-                            ,defaultOptions: defaultOptions
-                            ,lazy: lazy
-                            ,lazy2: lazy2
-                            ,lazy3: lazy3
-                            ,Options: Options};
-   return _elm.VirtualDom.values;
+   _elm.Views.Home.values = {_op: _op
+                            ,view: view
+                            ,raceCourseBlock: raceCourseBlock};
+   return _elm.Views.Home.values;
+};
+Elm.Views = Elm.Views || {};
+Elm.Views.Main = Elm.Views.Main || {};
+Elm.Views.Main.make = function (_elm) {
+   "use strict";
+   _elm.Views = _elm.Views || {};
+   _elm.Views.Main = _elm.Views.Main || {};
+   if (_elm.Views.Main.values)
+   return _elm.Views.Main.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Views.Main",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Messages = Elm.Messages.make(_elm),
+   $Render$All = Elm.Render.All.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $State = Elm.State.make(_elm),
+   $Views$Home = Elm.Views.Home.make(_elm),
+   $Views$ShowRaceCourse = Elm.Views.ShowRaceCourse.make(_elm),
+   $Views$TopBar = Elm.Views.TopBar.make(_elm);
+   var mainView = F3(function (t,
+   _v0,
+   appState) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var _v4 = appState.screen;
+                 switch (_v4.ctor)
+                 {case "Home":
+                    return A2($Graphics$Element.flow,
+                      $Graphics$Element.down,
+                      _L.fromArray([A3($Views$TopBar.view,
+                                   t,
+                                   _v0._0,
+                                   appState)
+                                   ,A3($Views$Home.view,
+                                   t,
+                                   _v0._0,
+                                   appState)]));
+                    case "Play":
+                    return function () {
+                         var gameView = function () {
+                            var _v7 = appState.gameState;
+                            switch (_v7.ctor)
+                            {case "Just":
+                               return A2($Render$All.renderGame,
+                                 {ctor: "_Tuple2"
+                                 ,_0: _v0._0
+                                 ,_1: _v0._1 - $Views$TopBar.height},
+                                 _v7._0);
+                               case "Nothing":
+                               return $Graphics$Element.empty;}
+                            _U.badCase($moduleName,
+                            "between lines 33 and 39");
+                         }();
+                         return A2($Graphics$Element.flow,
+                         $Graphics$Element.down,
+                         _L.fromArray([A3($Views$TopBar.view,
+                                      t,
+                                      _v0._0,
+                                      appState)
+                                      ,gameView]));
+                      }();
+                    case "Show":
+                    return A2($Graphics$Element.flow,
+                      $Graphics$Element.down,
+                      _L.fromArray([A3($Views$TopBar.view,
+                                   t,
+                                   _v0._0,
+                                   appState)
+                                   ,A4($Views$ShowRaceCourse.view,
+                                   t,
+                                   _v0._0,
+                                   appState,
+                                   _v4._0)]));}
+                 _U.badCase($moduleName,
+                 "between lines 17 and 43");
+              }();}
+         _U.badCase($moduleName,
+         "between lines 17 and 43");
+      }();
+   });
+   _elm.Views.Main.values = {_op: _op
+                            ,mainView: mainView};
+   return _elm.Views.Main.values;
+};
+Elm.Views = Elm.Views || {};
+Elm.Views.ShowRaceCourse = Elm.Views.ShowRaceCourse || {};
+Elm.Views.ShowRaceCourse.make = function (_elm) {
+   "use strict";
+   _elm.Views = _elm.Views || {};
+   _elm.Views.ShowRaceCourse = _elm.Views.ShowRaceCourse || {};
+   if (_elm.Views.ShowRaceCourse.values)
+   return _elm.Views.ShowRaceCourse.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Views.ShowRaceCourse",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $Inputs = Elm.Inputs.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Messages = Elm.Messages.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $State = Elm.State.make(_elm),
+   $Text = Elm.Text.make(_elm),
+   $Views$Utils = Elm.Views.Utils.make(_elm);
+   var joinButton = F2(function (raceCourse,
+   t) {
+      return $Graphics$Input.clickable($Inputs.navigate($State.Play(raceCourse)))($Graphics$Element.centered($Text.fromString(t("join"))));
+   });
+   var view = F4(function (t,
+   width,
+   appState,
+   _v0) {
+      return function () {
+         return A2($Graphics$Element.flow,
+         $Graphics$Element.down,
+         _L.fromArray([$Graphics$Element.centered(A2($Views$Utils.raceCourseName,
+                      t,
+                      _v0.raceCourse))
+                      ,A2(joinButton,
+                      _v0.raceCourse,
+                      t)]));
+      }();
+   });
+   _elm.Views.ShowRaceCourse.values = {_op: _op
+                                      ,view: view
+                                      ,joinButton: joinButton};
+   return _elm.Views.ShowRaceCourse.values;
+};
+Elm.Views = Elm.Views || {};
+Elm.Views.TopBar = Elm.Views.TopBar || {};
+Elm.Views.TopBar.make = function (_elm) {
+   "use strict";
+   _elm.Views = _elm.Views || {};
+   _elm.Views.TopBar = _elm.Views.TopBar || {};
+   if (_elm.Views.TopBar.values)
+   return _elm.Views.TopBar.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Views.TopBar",
+   $Basics = Elm.Basics.make(_elm),
+   $Graphics$Element = Elm.Graphics.Element.make(_elm),
+   $Graphics$Input = Elm.Graphics.Input.make(_elm),
+   $Inputs = Elm.Inputs.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Messages = Elm.Messages.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $State = Elm.State.make(_elm);
+   var logoWidth = 160;
+   var height = 80;
+   var logo = function () {
+      var img = A3($Graphics$Element.image,
+      logoWidth,
+      height,
+      "/assets/images/logo-header-2.png");
+      var msg = $Inputs.navigate($State.Home);
+      return A4($Graphics$Input.customButton,
+      msg,
+      img,
+      img,
+      img);
+   }();
+   var view = F3(function (t,
+   width,
+   appState) {
+      return A2($Graphics$Element.flow,
+      $Graphics$Element.right,
+      _L.fromArray([logo]));
+   });
+   _elm.Views.TopBar.values = {_op: _op
+                              ,height: height
+                              ,logoWidth: logoWidth
+                              ,view: view
+                              ,logo: logo};
+   return _elm.Views.TopBar.values;
+};
+Elm.Views = Elm.Views || {};
+Elm.Views.Utils = Elm.Views.Utils || {};
+Elm.Views.Utils.make = function (_elm) {
+   "use strict";
+   _elm.Views = _elm.Views || {};
+   _elm.Views.Utils = _elm.Views.Utils || {};
+   if (_elm.Views.Utils.values)
+   return _elm.Views.Utils.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Views.Utils",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Messages = Elm.Messages.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $State = Elm.State.make(_elm),
+   $Text = Elm.Text.make(_elm);
+   var raceCourseName = F2(function (t,
+   _v0) {
+      return function () {
+         return $Text.fromString(t(A2($Basics._op["++"],
+         "generators.",
+         A2($Basics._op["++"],
+         _v0.slug,
+         ".name"))));
+      }();
+   });
+   _elm.Views.Utils.values = {_op: _op
+                             ,raceCourseName: raceCourseName};
+   return _elm.Views.Utils.values;
 };
 Elm.Window = Elm.Window || {};
 Elm.Window.make = function (_elm) {

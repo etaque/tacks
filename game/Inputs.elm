@@ -28,12 +28,15 @@ type alias AppInput =
 type Action
   = NoOp
   | LiveCenterUpdate LiveCenterInput
-  | Navigate State.Screen
+  | Navigate Screen
 
 actionsMailbox : Signal.Mailbox Action
 actionsMailbox =
   Signal.mailbox NoOp
 
+navigate : Screen -> Message
+navigate screen =
+  Signal.message actionsMailbox.address (Navigate screen)
 
 -- LiveCenter
 
@@ -46,8 +49,8 @@ runServerUpdate =
   fetchServerUpdate `Task.andThen` (Signal.send actionsMailbox.address)
 
 type alias LiveCenterInput =
-  { raceCourses: List State.RaceCourseStatus
-  , currentPlayer: Game.Player
+  { raceCourses: List RaceCourseStatus
+  , currentPlayer: Player
   }
 
 

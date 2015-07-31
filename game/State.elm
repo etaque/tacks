@@ -4,8 +4,8 @@ import Game exposing (..)
 
 
 type Screen
-  = Index
-  | ShowLeaderboard RaceCourse
+  = Home
+  | Show RaceCourseStatus
   | Play RaceCourse
 
 type alias AppState =
@@ -16,7 +16,7 @@ type alias AppState =
 
 initialAppState : AppState
 initialAppState =
-  { screen = Index
+  { screen = Home
   , liveCenterState =
     { player = defaultPlayer
     , courses = []
