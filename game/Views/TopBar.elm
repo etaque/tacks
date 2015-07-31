@@ -1,26 +1,28 @@
 module Views.TopBar where
 
-import Graphics.Element exposing (..)
-import Graphics.Input exposing (..)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (..)
+import Views.Utils exposing (..)
 
 import State exposing (..)
 import Messages exposing (Translator)
-import Inputs exposing (navigate)
 
 
 height = 80
 logoWidth = 160
 
-view : Translator -> Int -> AppState -> Element
-view t width appState =
-  flow right
-    [ logo
+view : Translator -> AppState -> Html
+view t appState =
+  nav [ class "navbar" ]
+    [ div [ class "container" ]
+        [ logo ]
     ]
 
-logo : Element
+logo : Html
 logo =
-  let
-    msg = navigate Home
-    img = image logoWidth height "/assets/images/logo-header-2.png"
-  in
-    customButton msg img img img
+  div [ class "navbar-header" ]
+    [ a [ class "navbar-brand", clickTo Home ]
+      [ img [ src "/assets/images/logo-header-2.png", class "logo" ] [] ]
+    ]
+

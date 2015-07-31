@@ -2,7 +2,7 @@ module Main where
 
 import Window
 import Time exposing (timestamp, fps, every, second)
-import Graphics.Element exposing (Element)
+import Html exposing (Html)
 import Task exposing (Task)
 import Http
 import Json.Decode as Json
@@ -29,7 +29,7 @@ port messagesStore : Json.Value
 
 -- Signals
 
-main : Signal Element
+main : Signal Html
 main =
   Signal.map2 (mainView translator) Window.dimensions appState
 

@@ -1,7 +1,8 @@
 module Views.Main where
 
-import Graphics.Element exposing (..)
-import Graphics.Input exposing (..)
+import Graphics.Element exposing (empty)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 
 import State exposing (..)
 import Messages exposing (Translator)
@@ -12,21 +13,15 @@ import Views.ShowRaceCourse as ShowRaceCourse
 
 import Render.All exposing (renderGame)
 
-mainView : Translator -> (Int,Int) -> AppState -> Element
+mainView : Translator -> (Int,Int) -> AppState -> Html
 mainView t (w,h) appState =
   case appState.screen of
 
     Home ->
-      flow down
-        [ TopBar.view t w appState
-        , Home.view t w appState
-        ]
+      layout t appState (Home.view t appState.liveCenterState)
 
     Show raceCourseStatus ->
-      flow down
-        [ TopBar.view t w appState
-        , ShowRaceCourse.view t w appState raceCourseStatus
-        ]
+      layout t appState (ShowRaceCourse.view t appState.liveCenterState raceCourseStatus)
 
     Play raceCourse ->
       let
@@ -37,16 +32,13 @@ mainView t (w,h) appState =
             -- TODO loading
             empty
       in
-        flow down
-          [ TopBar.view t w appState
-          , gameView
-          ]
+        layout t appState (fromElement gameView)
 
 
--- withTopBar : Translator -> (Int,Int) -> AppState -> Element -> Element
--- withTopBar t (w,h) appState element =
---   flow down
---     [ TopBar.view t w appState
---     , element
--- ]
+layout : Translator -> AppState -> Html -> Html
+layout t appState content =
+  div [ class "global-wrapper" ]
+    [ TopBar.view t appState
+    , content
+    ]
 
