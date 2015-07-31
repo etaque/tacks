@@ -12,6 +12,10 @@ function mountGame() {
 
   var ws, wsUrl, currentRaceCourseId;
 
+  function outputProxy(output) {
+    ws.send(JSON.stringify(output));
+  }
+
   game.ports.activeRaceCourse.subscribe(function(id) {
     if (ws) {
       ws.close();
@@ -20,10 +24,6 @@ function mountGame() {
     if (id) {
       wsUrl = routes.WebSockets.raceCoursePlayer(id).webSocketURL();
       ws = new WebSocket(wsUrl);
-
-      function outputProxy(output) {
-        ws.send(JSON.stringify(output));
-      }
 
       ws.onmessage = function(event) {
         game.ports.raceInput.send(JSON.parse(event.data));
