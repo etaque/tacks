@@ -46,7 +46,7 @@ gameInput : Signal (Maybe GameInput)
 gameInput =
   Signal.map4 extractGameInput clock keyboardInput Window.dimensions raceInput
     |> Signal.sampleOn clock
-    -- |> Signal.dropRepeats
+    |> Signal.dropRepeats
 
 appInput : Signal AppInput
 appInput =

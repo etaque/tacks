@@ -125,7 +125,7 @@ getTimer {startTime, now, playerState} =
 -- Sub status (normal font size)
 
 getSubStatus : GameState -> Element
-getSubStatus ({startTime,now,isMaster,playerState,course} as gameState) =
+getSubStatus ({startTime,now,playerState,course} as gameState) =
   let
     s = case startTime of
       Just t ->
@@ -133,9 +133,7 @@ getSubStatus ({startTime,now,isMaster,playerState,course} as gameState) =
           then "be ready"
           else getFinishingStatus gameState
       Nothing ->
-        if isMaster
-          then startCountdownMessage
-          else "" -- start pending
+        startCountdownMessage
   in
     baseText s |> centered
 

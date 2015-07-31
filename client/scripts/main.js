@@ -21,7 +21,7 @@ $(function() {
 
   $("#liveCenter").each(function() {
     // React.render(LiveCenter(), this);
-    mountElm.mountLiveCenter(this);
+    // mountElm.mountLiveCenter(this);
   });
 
   $(".elm-game").each(function() {

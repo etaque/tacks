@@ -101,7 +101,7 @@ updateOpponents previousOpponents delta newOpponents =
 raceInputStep : RaceInput -> Clock -> GameState -> GameState
 raceInputStep raceInput {delta,time} ({playerState} as gameState) =
   let
-    { serverNow, startTime, opponents, ghosts, leaderboard, isMaster, initial, clientTime } = raceInput
+    { serverNow, startTime, opponents, ghosts, leaderboard, initial, clientTime } = raceInput
 
     stalled = serverNow == gameState.serverNow
 
@@ -131,7 +131,6 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
       , now <- now
       , playerState <- newPlayerState
       , startTime <- startTime
-      , isMaster <- isMaster
       , live <- not initial
       , localTime <- time
       , roundTripDelay <- roundTripDelay
@@ -161,4 +160,3 @@ playerStep keyboardInput elapsed gameState =
         |> runEscapeStep keyboardInput.escapeRun
   in
     { gameState | playerState <- playerState }
-

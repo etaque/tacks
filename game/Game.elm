@@ -31,8 +31,6 @@ type alias GameState =
   , serverNow:   Time
   , countdown:   Float
   , startTime:   Maybe Time
-  -- , creationTime: Time
-  , isMaster:    Bool
   , live:        Bool
   , localTime:   Time
   , roundTripDelay: Float
@@ -312,8 +310,6 @@ defaultGame now course player =
   , serverNow   = now
   , countdown   = 0
   , startTime   = Nothing
-  -- , creationTime = creationTime
-  , isMaster    = False
   , live        = False
   , localTime   = 0
   , roundTripDelay = 0

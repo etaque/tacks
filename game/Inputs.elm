@@ -93,7 +93,6 @@ type alias RaceInput =
   , opponents:   List Game.Opponent
   , ghosts:      List Game.GhostState
   , leaderboard: List Game.PlayerTally
-  , isMaster:    Bool
   , initial:     Bool
   , clientTime:  Time
   }
@@ -106,7 +105,6 @@ initialRaceInput =
   , opponents = []
   , ghosts = []
   , leaderboard = []
-  , isMaster = False
   , initial = True
   , clientTime = 0
   }
