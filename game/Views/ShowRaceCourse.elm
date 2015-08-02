@@ -23,4 +23,4 @@ view {raceCourse,opponents} t appState =
 
 joinButton : RaceCourse -> Translator -> Html
 joinButton raceCourse t =
-  a [ class "join-race-course", clickTo (Play raceCourse) ] [ text "Join"]
+  a [ class "join-race-course", onClickGoTo (Play raceCourse) ] [ text "Join"]

@@ -31,17 +31,17 @@ type alias RaceCourse =
   }
 
 
-initialAppState : AppState
-initialAppState =
+initialAppState : Player -> AppState
+initialAppState player =
   { screen = Home
-  , player = defaultPlayer
+  , player = player
   , courses = []
-  , forms = initialForms defaultPlayer
+  , forms = initialForms player
   , gameState = Nothing
   }
 
 initialForms : Player -> Forms
 initialForms player =
   { setHandle = { handle = Maybe.withDefault "" player.handle }
-  , login = { email = "", password = ""}
+  , login = { email = "", password = "", error = False }
   }

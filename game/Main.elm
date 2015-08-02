@@ -10,6 +10,7 @@ import Json.Decode as Json
 import Inputs exposing (..)
 import Outputs exposing (..)
 import State exposing (AppState, initialAppState)
+import Game exposing (Player)
 import Steps exposing (mainStep)
 import Views.Main exposing (mainView)
 import Core exposing (isJust)
@@ -21,6 +22,8 @@ import Forms.Update as FormsUpdate exposing (submitMailbox)
 
 port messagesStore : Json.Value
 
+port currentPlayer : Player
+
 port raceInput : Signal (Maybe RaceInput)
 
 
@@ -28,7 +31,7 @@ port raceInput : Signal (Maybe RaceInput)
 
 port serverUpdateRunner : Signal (Task Http.Error ())
 port serverUpdateRunner =
-  Signal.map (\_ -> runServerUpdate) (every second)
+  Signal.map (\_ -> runServerUpdate) (every (5 * second))
 
 port formSubmitsRunner : Signal (Task Http.Error ())
 port formSubmitsRunner =
@@ -61,7 +64,7 @@ appInput =
 
 appState : Signal AppState
 appState =
-  Signal.foldp mainStep initialAppState appInput
+  Signal.foldp mainStep (initialAppState currentPlayer) appInput
 
 
 -- Outputs

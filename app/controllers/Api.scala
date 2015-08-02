@@ -40,13 +40,23 @@ object Api extends Controller with Security {
             user <- User.findByEmail(email).flattenOpt
           }
           yield {
-            Ok.withSession("playerId" -> user.idToStr)
+            Ok(playerFormat.writes(user)).withSession("playerId" -> user.idToStr)
           }) recover {
-            case _ => BadRequest
+            case _ => BadRequest("Wrong user or password")
           }
         }
       }
     )
+  }
+
+  def logout = Action.async(parse.json) { request =>
+    val newPlayer = Guest(BSONObjectID.generate)
+    Future.successful(Ok(
+      playerFormat.writes(newPlayer)).withSession("playerId" -> newPlayer.id.stringify))
+  }
+
+  def currentPlayer = PlayerAction.async() { request =>
+    Future.successful(Ok(playerFormat.writes(request.player)))
   }
 
   def liveStatus = PlayerAction.async() { implicit request =>
@@ -98,7 +108,7 @@ object Api extends Controller with Security {
 
   def setHandle = PlayerAction(parse.json) { implicit request =>
     (request.body \ "handle").asOpt[String] match {
-      case Some(handle) => Ok(Json.obj()).addingToSession("playerHandle" -> handle)
+      case Some(handle) => Ok(playerFormat.writes(Guest(request.player.id, Some(handle)))).addingToSession("playerHandle" -> handle)
       case None => BadRequest
     }
   }

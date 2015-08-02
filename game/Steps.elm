@@ -49,14 +49,14 @@ actionStep action appState =
     Navigate newScreen ->
       { appState | screen <- newScreen }
 
-    LiveCenterUpdate input ->
-      { appState | courses <- input.raceCourses
-                 , player <- input.currentPlayer
-      }
+    LiveUpdate input ->
+      { appState | courses <- input.raceCourses }
+
+    PlayerUpdate player ->
+      { appState | player <- player }
 
     FormAction updateForm ->
       { appState | forms <- FormsUpdate.updateForms updateForm appState.forms }
-
 
     _ ->
       appState

@@ -919,6 +919,188 @@ Elm.Debug.make = function (_elm) {
                        ,trace: trace};
    return _elm.Debug.values;
 };
+Elm.Decoders = Elm.Decoders || {};
+Elm.Decoders.make = function (_elm) {
+   "use strict";
+   _elm.Decoders = _elm.Decoders || {};
+   if (_elm.Decoders.values)
+   return _elm.Decoders.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Decoders",
+   $Basics = Elm.Basics.make(_elm),
+   $Game = Elm.Game.make(_elm),
+   $Geo = Elm.Geo.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $State = Elm.State.make(_elm);
+   var windGeneratorDecoder = A5($Json$Decode.object4,
+   $Game.WindGenerator,
+   A2($Json$Decode._op[":="],
+   "wavelength1",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "amplitude1",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "wavelength2",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "amplitude2",
+   $Json$Decode.$float));
+   var gateDecoder = A3($Json$Decode.object2,
+   $Game.Gate,
+   A2($Json$Decode._op[":="],
+   "y",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "width",
+   $Json$Decode.$float));
+   var pointDecoder = A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   }),
+   $Json$Decode.$float,
+   $Json$Decode.$float);
+   var islandDecoder = A3($Json$Decode.object2,
+   $Game.Island,
+   A2($Json$Decode._op[":="],
+   "location",
+   pointDecoder),
+   A2($Json$Decode._op[":="],
+   "radius",
+   $Json$Decode.$float));
+   var raceAreaDecoder = A3($Json$Decode.object2,
+   $Game.RaceArea,
+   A2($Json$Decode._op[":="],
+   "rightTop",
+   pointDecoder),
+   A2($Json$Decode._op[":="],
+   "leftBottom",
+   pointDecoder));
+   var courseDecoder = A7($Json$Decode.object6,
+   $Game.Course,
+   A2($Json$Decode._op[":="],
+   "upwind",
+   gateDecoder),
+   A2($Json$Decode._op[":="],
+   "downwind",
+   gateDecoder),
+   A2($Json$Decode._op[":="],
+   "laps",
+   $Json$Decode.$int),
+   A2($Json$Decode._op[":="],
+   "islands",
+   $Json$Decode.list(islandDecoder)),
+   A2($Json$Decode._op[":="],
+   "area",
+   raceAreaDecoder),
+   A2($Json$Decode._op[":="],
+   "windGenerator",
+   windGeneratorDecoder));
+   var opponentStateDecoder = A9($Json$Decode.object8,
+   $Game.OpponentState,
+   A2($Json$Decode._op[":="],
+   "time",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "position",
+   pointDecoder),
+   A2($Json$Decode._op[":="],
+   "heading",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "velocity",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "windAngle",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "windOrigin",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "shadowDirection",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "crossedGates",
+   $Json$Decode.list($Json$Decode.$float)));
+   var playerDecoder = A8($Json$Decode.object7,
+   $Game.Player,
+   A2($Json$Decode._op[":="],
+   "id",
+   $Json$Decode.string),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "handle",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "status",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "avatarId",
+   $Json$Decode.string)),
+   A2($Json$Decode._op[":="],
+   "vmgMagnet",
+   $Json$Decode.$int),
+   A2($Json$Decode._op[":="],
+   "guest",
+   $Json$Decode.bool),
+   A2($Json$Decode._op[":="],
+   "user",
+   $Json$Decode.bool));
+   var opponentDecoder = A3($Json$Decode.object2,
+   $Game.Opponent,
+   A2($Json$Decode._op[":="],
+   "player",
+   playerDecoder),
+   A2($Json$Decode._op[":="],
+   "state",
+   opponentStateDecoder));
+   var raceCourseDecoder = A6($Json$Decode.object5,
+   $State.RaceCourse,
+   A2($Json$Decode._op[":="],
+   "_id",
+   $Json$Decode.string),
+   A2($Json$Decode._op[":="],
+   "slug",
+   $Json$Decode.string),
+   A2($Json$Decode._op[":="],
+   "course",
+   courseDecoder),
+   A2($Json$Decode._op[":="],
+   "countdown",
+   $Json$Decode.$int),
+   A2($Json$Decode._op[":="],
+   "startCycle",
+   $Json$Decode.$int));
+   var raceCourseStatusDecoder = A3($Json$Decode.object2,
+   $State.RaceCourseStatus,
+   A2($Json$Decode._op[":="],
+   "raceCourse",
+   raceCourseDecoder),
+   A2($Json$Decode._op[":="],
+   "opponents",
+   $Json$Decode.list(opponentDecoder)));
+   _elm.Decoders.values = {_op: _op
+                          ,raceCourseStatusDecoder: raceCourseStatusDecoder
+                          ,raceCourseDecoder: raceCourseDecoder
+                          ,opponentDecoder: opponentDecoder
+                          ,playerDecoder: playerDecoder
+                          ,opponentStateDecoder: opponentStateDecoder
+                          ,pointDecoder: pointDecoder
+                          ,courseDecoder: courseDecoder
+                          ,gateDecoder: gateDecoder
+                          ,islandDecoder: islandDecoder
+                          ,raceAreaDecoder: raceAreaDecoder
+                          ,windGeneratorDecoder: windGeneratorDecoder};
+   return _elm.Decoders.values;
+};
 Elm.Dict = Elm.Dict || {};
 Elm.Dict.make = function (_elm) {
    "use strict";
@@ -1926,6 +2108,7 @@ Elm.Forms.Model.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var SubmitLogout = {ctor: "SubmitLogout"};
    var SubmitLogin = function (a) {
       return {ctor: "SubmitLogin"
              ,_0: a};
@@ -1943,10 +2126,12 @@ Elm.Forms.Model.make = function (_elm) {
       return {ctor: "UpdateSetHandleForm"
              ,_0: a};
    };
-   var LoginForm = F2(function (a,
-   b) {
+   var LoginForm = F3(function (a,
+   b,
+   c) {
       return {_: {}
              ,email: a
+             ,error: c
              ,password: b};
    });
    var SetHandleForm = function (a) {
@@ -1965,7 +2150,8 @@ Elm.Forms.Model.make = function (_elm) {
                              ,UpdateLoginForm: UpdateLoginForm
                              ,NoSubmit: NoSubmit
                              ,SubmitSetHandle: SubmitSetHandle
-                             ,SubmitLogin: SubmitLogin};
+                             ,SubmitLogin: SubmitLogin
+                             ,SubmitLogout: SubmitLogout};
    return _elm.Forms.Model.values;
 };
 Elm.Forms = Elm.Forms || {};
@@ -1982,6 +2168,7 @@ Elm.Forms.Update.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Forms.Update",
    $Basics = Elm.Basics.make(_elm),
+   $Decoders = Elm.Decoders.make(_elm),
    $Forms$Model = Elm.Forms.Model.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -2010,9 +2197,29 @@ Elm.Forms.Update.make = function (_elm) {
       ,url: url
       ,verb: "POST"}));
    });
+   var postLogout = A3(postJson,
+   A2($Json$Decode.map,
+   $Inputs.PlayerUpdate,
+   $Decoders.playerDecoder),
+   "/api/logout",
+   $Json$Encode.$null);
+   var postLogin = function (f) {
+      return A2(postJson,
+      A2($Json$Decode.map,
+      $Inputs.PlayerUpdate,
+      $Decoders.playerDecoder),
+      "/api/login")($Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
+                                                      ,_0: "email"
+                                                      ,_1: $Json$Encode.string(f.email)}
+                                                     ,{ctor: "_Tuple2"
+                                                      ,_0: "password"
+                                                      ,_1: $Json$Encode.string(f.password)}])));
+   };
    var postHandle = function (f) {
       return A2(postJson,
-      $Json$Decode.succeed($Inputs.NoOp),
+      A2($Json$Decode.map,
+      $Inputs.PlayerUpdate,
+      $Decoders.playerDecoder),
       "/api/setHandle")($Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
                                                           ,_0: "handle"
                                                           ,_1: $Json$Encode.string(f.handle)}])));
@@ -2021,7 +2228,11 @@ Elm.Forms.Update.make = function (_elm) {
       return function () {
          var t = function () {
             switch (sf.ctor)
-            {case "SubmitSetHandle":
+            {case "SubmitLogin":
+               return postLogin(sf._0);
+               case "SubmitLogout":
+               return postLogout;
+               case "SubmitSetHandle":
                return postHandle(sf._0);}
             return $Task.succeed($Inputs.NoOp);
          }();
@@ -2043,7 +2254,7 @@ Elm.Forms.Update.make = function (_elm) {
                                ,u._0(forms.setHandle)]],
               forms);}
          _U.badCase($moduleName,
-         "between lines 19 and 23");
+         "between lines 20 and 24");
       }();
    });
    var submitMailbox = $Signal.mailbox($Forms$Model.NoSubmit);
@@ -2052,6 +2263,8 @@ Elm.Forms.Update.make = function (_elm) {
                               ,updateForms: updateForms
                               ,submitFormTask: submitFormTask
                               ,postHandle: postHandle
+                              ,postLogin: postLogin
+                              ,postLogout: postLogout
                               ,jsonToBody: jsonToBody
                               ,postJson: postJson};
    return _elm.Forms.Update.values;
@@ -2136,14 +2349,6 @@ Elm.Game.make = function (_elm) {
    var defaultGate = {_: {}
                      ,width: 0
                      ,y: 0};
-   var defaultPlayer = {_: {}
-                       ,avatarId: $Maybe.Nothing
-                       ,guest: false
-                       ,handle: $Maybe.Nothing
-                       ,id: ""
-                       ,status: $Maybe.Nothing
-                       ,user: false
-                       ,vmgMagnet: 0};
    var defaultVmg = {_: {}
                     ,angle: 0
                     ,speed: 0
@@ -2578,7 +2783,6 @@ Elm.Game.make = function (_elm) {
                       ,deltaToVmg: deltaToVmg
                       ,asOpponentState: asOpponentState
                       ,defaultVmg: defaultVmg
-                      ,defaultPlayer: defaultPlayer
                       ,defaultPlayerState: defaultPlayerState
                       ,defaultGate: defaultGate
                       ,defaultWind: defaultWind
@@ -5012,9 +5216,9 @@ Elm.Inputs.make = function (_elm) {
    $moduleName = "Inputs",
    $Basics = Elm.Basics.make(_elm),
    $Char = Elm.Char.make(_elm),
+   $Decoders = Elm.Decoders.make(_elm),
    $Forms$Model = Elm.Forms.Model.make(_elm),
    $Game = Elm.Game.make(_elm),
-   $Geo = Elm.Geo.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
@@ -5026,154 +5230,6 @@ Elm.Inputs.make = function (_elm) {
    $State = Elm.State.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm);
-   var windGeneratorDecoder = A5($Json$Decode.object4,
-   $Game.WindGenerator,
-   A2($Json$Decode._op[":="],
-   "wavelength1",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "amplitude1",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "wavelength2",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "amplitude2",
-   $Json$Decode.$float));
-   var gateDecoder = A3($Json$Decode.object2,
-   $Game.Gate,
-   A2($Json$Decode._op[":="],
-   "y",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "width",
-   $Json$Decode.$float));
-   var pointDecoder = A3($Json$Decode.tuple2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2"
-             ,_0: v0
-             ,_1: v1};
-   }),
-   $Json$Decode.$float,
-   $Json$Decode.$float);
-   var islandDecoder = A3($Json$Decode.object2,
-   $Game.Island,
-   A2($Json$Decode._op[":="],
-   "location",
-   pointDecoder),
-   A2($Json$Decode._op[":="],
-   "radius",
-   $Json$Decode.$float));
-   var raceAreaDecoder = A3($Json$Decode.object2,
-   $Game.RaceArea,
-   A2($Json$Decode._op[":="],
-   "rightTop",
-   pointDecoder),
-   A2($Json$Decode._op[":="],
-   "leftBottom",
-   pointDecoder));
-   var courseDecoder = A7($Json$Decode.object6,
-   $Game.Course,
-   A2($Json$Decode._op[":="],
-   "upwind",
-   gateDecoder),
-   A2($Json$Decode._op[":="],
-   "downwind",
-   gateDecoder),
-   A2($Json$Decode._op[":="],
-   "laps",
-   $Json$Decode.$int),
-   A2($Json$Decode._op[":="],
-   "islands",
-   $Json$Decode.list(islandDecoder)),
-   A2($Json$Decode._op[":="],
-   "area",
-   raceAreaDecoder),
-   A2($Json$Decode._op[":="],
-   "windGenerator",
-   windGeneratorDecoder));
-   var opponentStateDecoder = A9($Json$Decode.object8,
-   $Game.OpponentState,
-   A2($Json$Decode._op[":="],
-   "time",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "position",
-   pointDecoder),
-   A2($Json$Decode._op[":="],
-   "heading",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "velocity",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "windAngle",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "windOrigin",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "shadowDirection",
-   $Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "crossedGates",
-   $Json$Decode.list($Json$Decode.$float)));
-   var playerDecoder = A8($Json$Decode.object7,
-   $Game.Player,
-   A2($Json$Decode._op[":="],
-   "id",
-   $Json$Decode.string),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "handle",
-   $Json$Decode.string)),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "status",
-   $Json$Decode.string)),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "avatarId",
-   $Json$Decode.string)),
-   A2($Json$Decode._op[":="],
-   "vmgMagnet",
-   $Json$Decode.$int),
-   A2($Json$Decode._op[":="],
-   "guest",
-   $Json$Decode.bool),
-   A2($Json$Decode._op[":="],
-   "user",
-   $Json$Decode.bool));
-   var opponentDecoder = A3($Json$Decode.object2,
-   $Game.Opponent,
-   A2($Json$Decode._op[":="],
-   "player",
-   playerDecoder),
-   A2($Json$Decode._op[":="],
-   "state",
-   opponentStateDecoder));
-   var raceCourseDecoder = A6($Json$Decode.object5,
-   $State.RaceCourse,
-   A2($Json$Decode._op[":="],
-   "_id",
-   $Json$Decode.string),
-   A2($Json$Decode._op[":="],
-   "slug",
-   $Json$Decode.string),
-   A2($Json$Decode._op[":="],
-   "course",
-   courseDecoder),
-   A2($Json$Decode._op[":="],
-   "countdown",
-   $Json$Decode.$int),
-   A2($Json$Decode._op[":="],
-   "startCycle",
-   $Json$Decode.$int));
-   var raceCourseStatusDecoder = A3($Json$Decode.object2,
-   $State.RaceCourseStatus,
-   A2($Json$Decode._op[":="],
-   "raceCourse",
-   raceCourseDecoder),
-   A2($Json$Decode._op[":="],
-   "opponents",
-   $Json$Decode.list(opponentDecoder)));
    var toKeyboardInput = F2(function (arrows,
    keys) {
       return {_: {}
@@ -5285,20 +5341,20 @@ Elm.Inputs.make = function (_elm) {
       dims),
       maybeRaceInput);
    });
-   var LiveCenterInput = F2(function (a,
+   var LiveInput = F2(function (a,
    b) {
       return {_: {}
-             ,currentPlayer: b
+             ,onlinePlayers: b
              ,raceCourses: a};
    });
-   var liveCenterInputDecoder = A3($Json$Decode.object2,
-   LiveCenterInput,
+   var liveInputDecoder = A3($Json$Decode.object2,
+   LiveInput,
    A2($Json$Decode._op[":="],
    "raceCourses",
-   $Json$Decode.list(raceCourseStatusDecoder)),
+   $Json$Decode.list($Decoders.raceCourseStatusDecoder)),
    A2($Json$Decode._op[":="],
-   "currentPlayer",
-   playerDecoder));
+   "onlinePlayers",
+   $Json$Decode.list($Decoders.playerDecoder)));
    var FormAction = function (a) {
       return {ctor: "FormAction"
              ,_0: a};
@@ -5307,14 +5363,18 @@ Elm.Inputs.make = function (_elm) {
       return {ctor: "Navigate"
              ,_0: a};
    };
-   var LiveCenterUpdate = function (a) {
-      return {ctor: "LiveCenterUpdate"
+   var PlayerUpdate = function (a) {
+      return {ctor: "PlayerUpdate"
+             ,_0: a};
+   };
+   var LiveUpdate = function (a) {
+      return {ctor: "LiveUpdate"
              ,_0: a};
    };
    var fetchServerUpdate = A2($Http.get,
    A2($Json$Decode.map,
-   LiveCenterUpdate,
-   liveCenterInputDecoder),
+   LiveUpdate,
+   liveInputDecoder),
    "/api/liveStatus");
    var NoOp = {ctor: "NoOp"};
    var actionsMailbox = $Signal.mailbox(NoOp);
@@ -5337,14 +5397,15 @@ Elm.Inputs.make = function (_elm) {
    _elm.Inputs.values = {_op: _op
                         ,AppInput: AppInput
                         ,NoOp: NoOp
-                        ,LiveCenterUpdate: LiveCenterUpdate
+                        ,LiveUpdate: LiveUpdate
+                        ,PlayerUpdate: PlayerUpdate
                         ,Navigate: Navigate
                         ,FormAction: FormAction
+                        ,LiveInput: LiveInput
                         ,actionsMailbox: actionsMailbox
                         ,navigate: navigate
                         ,fetchServerUpdate: fetchServerUpdate
                         ,runServerUpdate: runServerUpdate
-                        ,LiveCenterInput: LiveCenterInput
                         ,GameInput: GameInput
                         ,Clock: Clock
                         ,KeyboardInput: KeyboardInput
@@ -5359,18 +5420,7 @@ Elm.Inputs.make = function (_elm) {
                         ,isLocking: isLocking
                         ,toKeyboardInput: toKeyboardInput
                         ,keyboardInput: keyboardInput
-                        ,liveCenterInputDecoder: liveCenterInputDecoder
-                        ,raceCourseStatusDecoder: raceCourseStatusDecoder
-                        ,raceCourseDecoder: raceCourseDecoder
-                        ,opponentDecoder: opponentDecoder
-                        ,playerDecoder: playerDecoder
-                        ,opponentStateDecoder: opponentStateDecoder
-                        ,pointDecoder: pointDecoder
-                        ,courseDecoder: courseDecoder
-                        ,gateDecoder: gateDecoder
-                        ,islandDecoder: islandDecoder
-                        ,raceAreaDecoder: raceAreaDecoder
-                        ,windGeneratorDecoder: windGeneratorDecoder};
+                        ,liveInputDecoder: liveInputDecoder};
    return _elm.Inputs.values;
 };
 Elm.Json = Elm.Json || {};
@@ -6190,6 +6240,7 @@ Elm.Main.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
    $Forms$Update = Elm.Forms.Update.make(_elm),
+   $Game = Elm.Game.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -6214,7 +6265,7 @@ Elm.Main.make = function (_elm) {
                                  ,delta: _v0._1
                                  ,time: _v0._0};}
          _U.badCase($moduleName,
-         "on line 50, column 32 to 62");
+         "on line 53, column 32 to 62");
       }();
    },
    $Time.timestamp($Time.fps(30)));
@@ -6229,7 +6280,7 @@ Elm.Main.make = function (_elm) {
          return $Inputs.runServerUpdate;
       }();
    },
-   $Time.every($Time.second)));
+   $Time.every(5 * $Time.second)));
    var raceInput = Elm.Native.Port.make(_elm).inboundSignal("raceInput",
    "Maybe.Maybe Inputs.RaceInput",
    function (v) {
@@ -6366,17 +6417,30 @@ Elm.Main.make = function (_elm) {
    $Inputs.actionsMailbox.signal,
    gameInput,
    clock);
+   var currentPlayer = Elm.Native.Port.make(_elm).inbound("currentPlayer",
+   "Game.Player",
+   function (v) {
+      return typeof v === "object" && "id" in v && "handle" in v && "status" in v && "avatarId" in v && "vmgMagnet" in v && "guest" in v && "user" in v ? {_: {}
+                                                                                                                                                          ,id: typeof v.id === "string" || typeof v.id === "object" && v.id instanceof String ? v.id : _U.badPort("a string",
+                                                                                                                                                          v.id)
+                                                                                                                                                          ,handle: v.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.handle === "string" || typeof v.handle === "object" && v.handle instanceof String ? v.handle : _U.badPort("a string",
+                                                                                                                                                          v.handle))
+                                                                                                                                                          ,status: v.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.status === "string" || typeof v.status === "object" && v.status instanceof String ? v.status : _U.badPort("a string",
+                                                                                                                                                          v.status))
+                                                                                                                                                          ,avatarId: v.avatarId === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.avatarId === "string" || typeof v.avatarId === "object" && v.avatarId instanceof String ? v.avatarId : _U.badPort("a string",
+                                                                                                                                                          v.avatarId))
+                                                                                                                                                          ,vmgMagnet: typeof v.vmgMagnet === "number" ? v.vmgMagnet : _U.badPort("a number",
+                                                                                                                                                          v.vmgMagnet)
+                                                                                                                                                          ,guest: typeof v.guest === "boolean" ? v.guest : _U.badPort("a boolean (true or false)",
+                                                                                                                                                          v.guest)
+                                                                                                                                                          ,user: typeof v.user === "boolean" ? v.user : _U.badPort("a boolean (true or false)",
+                                                                                                                                                          v.user)} : _U.badPort("an object with fields `id`, `handle`, `status`, `avatarId`, `vmgMagnet`, `guest`, `user`",
+      v);
+   });
    var appState = A3($Signal.foldp,
    $Steps.mainStep,
-   $State.initialAppState,
+   $State.initialAppState(currentPlayer),
    appInput);
-   var activeRaceCourse = Elm.Native.Port.make(_elm).outboundSignal("activeRaceCourse",
-   function (v) {
-      return v.ctor === "Nothing" ? null : v._0;
-   },
-   $Signal.dropRepeats(A2($Signal.map,
-   $Outputs.getActiveRaceCourse,
-   appState)));
    var playerOutput = Elm.Native.Port.make(_elm).outboundSignal("playerOutput",
    function (v) {
       return v.ctor === "Nothing" ? null : {state: {time: v._0.state.time
@@ -6405,6 +6469,13 @@ Elm.Main.make = function (_elm) {
    $Outputs.extractPlayerOutput,
    appState,
    appInput)));
+   var activeRaceCourse = Elm.Native.Port.make(_elm).outboundSignal("activeRaceCourse",
+   function (v) {
+      return v.ctor === "Nothing" ? null : v._0;
+   },
+   $Signal.dropRepeats(A2($Signal.map,
+   $Outputs.getActiveRaceCourse,
+   appState)));
    var messagesStore = Elm.Native.Port.make(_elm).inbound("messagesStore",
    "Json.Decode.Value",
    function (v) {
@@ -17202,6 +17273,7 @@ Elm.State.make = function (_elm) {
       return {_: {}
              ,login: {_: {}
                      ,email: ""
+                     ,error: false
                      ,password: ""}
              ,setHandle: {_: {}
                          ,handle: A2($Maybe.withDefault,
@@ -17245,12 +17317,14 @@ Elm.State.make = function (_elm) {
       return {ctor: "Show",_0: a};
    };
    var Home = {ctor: "Home"};
-   var initialAppState = {_: {}
-                         ,courses: _L.fromArray([])
-                         ,forms: initialForms($Game.defaultPlayer)
-                         ,gameState: $Maybe.Nothing
-                         ,player: $Game.defaultPlayer
-                         ,screen: Home};
+   var initialAppState = function (player) {
+      return {_: {}
+             ,courses: _L.fromArray([])
+             ,forms: initialForms(player)
+             ,gameState: $Maybe.Nothing
+             ,player: player
+             ,screen: Home};
+   };
    _elm.State.values = {_op: _op
                        ,Home: Home
                        ,Show: Show
@@ -17447,14 +17521,16 @@ Elm.Steps.make = function (_elm) {
                                action._0,
                                appState.forms)]],
               appState);
-            case "LiveCenterUpdate":
+            case "LiveUpdate":
             return _U.replace([["courses"
-                               ,action._0.raceCourses]
-                              ,["player"
-                               ,action._0.currentPlayer]],
+                               ,action._0.raceCourses]],
               appState);
             case "Navigate":
             return _U.replace([["screen"
+                               ,action._0]],
+              appState);
+            case "PlayerUpdate":
+            return _U.replace([["player"
                                ,action._0]],
               appState);}
          return appState;
@@ -17475,22 +17551,22 @@ Elm.Steps.make = function (_elm) {
          appInput.action,
          appState);
          var newGameState = function () {
-            var _v12 = newAppState.screen;
-            switch (_v12.ctor)
+            var _v13 = newAppState.screen;
+            switch (_v13.ctor)
             {case "Play":
                return function () {
                     var gameState = A2($Maybe.withDefault,
                     A3(initGameState,
                     appInput.clock,
                     newAppState,
-                    _v12._0),
+                    _v13._0),
                     appState.gameState);
                     return function () {
-                       var _v14 = appInput.gameInput;
-                       switch (_v14.ctor)
+                       var _v15 = appInput.gameInput;
+                       switch (_v15.ctor)
                        {case "Just":
                           return $Maybe.Just(A2(gameStep,
-                            _v14._0,
+                            _v15._0,
                             gameState));
                           case "Nothing":
                           return $Maybe.Just(_U.replace([["now"
@@ -18771,7 +18847,6 @@ Elm.Views.Home.make = function (_elm) {
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
-   $Inputs = Elm.Inputs.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Messages = Elm.Messages.make(_elm),
@@ -18801,7 +18876,7 @@ Elm.Views.Home.make = function (_elm) {
          _L.fromArray([A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("race-course-status")]),
          _L.fromArray([A2($Html.a,
-                      _L.fromArray([$Views$Utils.clickTo($State.Show(_v2))]),
+                      _L.fromArray([$Views$Utils.onClickGoTo($State.Show(_v2))]),
                       _L.fromArray([$Html.text(A2($Views$Utils.raceCourseName,
                       t,
                       _v2.raceCourse))]))
@@ -18816,21 +18891,53 @@ Elm.Views.Home.make = function (_elm) {
       raceCourseStatusBlock(t),
       state.courses))]));
    });
-   var updateHandleField = function (s) {
-      return $Inputs.FormAction($Forms$Model.UpdateSetHandleForm(function (f) {
-         return _U.replace([["handle"
-                            ,s]],
-         f);
-      }));
+   var loginBlock = function (form) {
+      return $Views$Utils.row(_L.fromArray([$Views$Utils.col4(_L.fromArray([A2($Html.div,
+                                                                           _L.fromArray([$Html$Attributes.$class("form-group")]),
+                                                                           _L.fromArray([$Views$Utils.textInput(_L.fromArray([$Html$Attributes.placeholder("Email")
+                                                                                                                             ,$Html$Attributes.value(form.email)
+                                                                                                                             ,$Views$Utils.onInputFormUpdate(function (s) {
+                                                                                                                                return $Forms$Model.UpdateLoginForm(function (f) {
+                                                                                                                                   return _U.replace([["email"
+                                                                                                                                                      ,s]],
+                                                                                                                                   f);
+                                                                                                                                });
+                                                                                                                             })]))]))
+                                                                           ,A2($Html.div,
+                                                                           _L.fromArray([$Html$Attributes.$class("form-group")]),
+                                                                           _L.fromArray([$Views$Utils.passwordInput(_L.fromArray([$Html$Attributes.placeholder("Password")
+                                                                                                                                 ,$Html$Attributes.value(form.password)
+                                                                                                                                 ,$Views$Utils.onInputFormUpdate(function (s) {
+                                                                                                                                    return $Forms$Model.UpdateLoginForm(function (f) {
+                                                                                                                                       return _U.replace([["password"
+                                                                                                                                                          ,s]],
+                                                                                                                                       f);
+                                                                                                                                    });
+                                                                                                                                 })]))]))
+                                                                           ,A2($Html.div,
+                                                                           _L.fromArray([]),
+                                                                           _L.fromArray([A2($Html.button,
+                                                                           _L.fromArray([$Html$Attributes.$class("btn btn-primary")
+                                                                                        ,A2($Html$Events.onClick,
+                                                                                        $Forms$Update.submitMailbox.address,
+                                                                                        $Forms$Model.SubmitLogin(form))]),
+                                                                           _L.fromArray([$Html.text("Submit")]))]))]))]));
    };
    var setHandleBlock = function (form) {
       return $Views$Utils.row(_L.fromArray([$Views$Utils.col4(_L.fromArray([A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("input-group")]),
       _L.fromArray([$Views$Utils.textInput(_L.fromArray([$Html$Attributes.placeholder("Nickname?")
                                                         ,$Html$Attributes.value(form.handle)
-                                                        ,A2($Views$Utils.onInput,
-                                                        $Inputs.actionsMailbox.address,
-                                                        updateHandleField)]))
+                                                        ,$Views$Utils.onInputFormUpdate(function (s) {
+                                                           return $Forms$Model.UpdateSetHandleForm(function (f) {
+                                                              return _U.replace([["handle"
+                                                                                 ,s]],
+                                                              f);
+                                                           });
+                                                        })
+                                                        ,A2($Views$Utils.onEnter,
+                                                        $Forms$Update.submitMailbox.address,
+                                                        $Forms$Model.SubmitSetHandle(form))]))
                    ,A2($Html.span,
                    _L.fromArray([$Html$Attributes.$class("input-group-btn")]),
                    _L.fromArray([A2($Html.button,
@@ -18840,17 +18947,25 @@ Elm.Views.Home.make = function (_elm) {
                                 $Forms$Model.SubmitSetHandle(form))]),
                    _L.fromArray([$Html.text("submit")]))]))]))]))]));
    };
+   var welcomeForms = F2(function (player,
+   forms) {
+      return player.guest ? _L.fromArray([setHandleBlock(forms.setHandle)
+                                         ,loginBlock(forms.login)]) : _L.fromArray([]);
+   });
    var welcome = F2(function (t,
    _v4) {
       return function () {
-         return $Views$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
-                                                       _L.fromArray([]),
-                                                       _L.fromArray([$Html.text(A2($Basics._op["++"],
-                                                       "Welcome, ",
-                                                       A2($Maybe.withDefault,
-                                                       "Anonymous",
-                                                       _v4.player.handle)))]))
-                                                       ,setHandleBlock(_v4.forms.setHandle)]));
+         return $Views$Utils.titleWrapper(A2($List.append,
+         _L.fromArray([A2($Html.h1,
+         _L.fromArray([]),
+         _L.fromArray([$Html.text(A2($Basics._op["++"],
+         "Welcome, ",
+         A2($Maybe.withDefault,
+         "Anonymous",
+         _v4.player.handle)))]))]),
+         A2(welcomeForms,
+         _v4.player,
+         _v4.forms)));
       }();
    });
    var view = F2(function (t,
@@ -18865,8 +18980,9 @@ Elm.Views.Home.make = function (_elm) {
    _elm.Views.Home.values = {_op: _op
                             ,view: view
                             ,welcome: welcome
+                            ,welcomeForms: welcomeForms
                             ,setHandleBlock: setHandleBlock
-                            ,updateHandleField: updateHandleField
+                            ,loginBlock: loginBlock
                             ,raceCourses: raceCourses
                             ,raceCourseStatusBlock: raceCourseStatusBlock
                             ,opponentsList: opponentsList
@@ -18997,7 +19113,7 @@ Elm.Views.ShowRaceCourse.make = function (_elm) {
    t) {
       return A2($Html.a,
       _L.fromArray([$Html$Attributes.$class("join-race-course")
-                   ,$Views$Utils.clickTo($State.Play(raceCourse))]),
+                   ,$Views$Utils.onClickGoTo($State.Play(raceCourse))]),
       _L.fromArray([$Html.text("Join")]));
    });
    var view = F3(function (_v0,
@@ -19035,8 +19151,12 @@ Elm.Views.TopBar.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Views.TopBar",
    $Basics = Elm.Basics.make(_elm),
+   $Forms$Model = Elm.Forms.Model.make(_elm),
+   $Forms$Update = Elm.Forms.Update.make(_elm),
+   $Game = Elm.Game.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Messages = Elm.Messages.make(_elm),
@@ -19044,11 +19164,46 @@ Elm.Views.TopBar.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $State = Elm.State.make(_elm),
    $Views$Utils = Elm.Views.Utils.make(_elm);
+   var userMenu = function (player) {
+      return A2($Html.ul,
+      _L.fromArray([$Html$Attributes.$class("nav navbar-nav navbar-right nav-user")]),
+      _L.fromArray([A2($Html.li,
+                   _L.fromArray([]),
+                   _L.fromArray([A2($Html.a,
+                   _L.fromArray([]),
+                   _L.fromArray([A2($Html.img,
+                                _L.fromArray([$Html$Attributes.src($Views$Utils.avatarUrl(player))
+                                             ,$Html$Attributes.$class("avatar avatar-user")]),
+                                _L.fromArray([]))
+                                ,$Html.text("Profile")]))]))
+                   ,A2($Html.li,
+                   _L.fromArray([]),
+                   _L.fromArray([A2($Html.a,
+                   _L.fromArray([A2($Html$Events.onClick,
+                   $Forms$Update.submitMailbox.address,
+                   $Forms$Model.SubmitLogout)]),
+                   _L.fromArray([$Html.text("Logout")]))]))]));
+   };
+   var guestMenu = A2($Html.ul,
+   _L.fromArray([$Html$Attributes.$class("nav navbar-nav navbar-right nav-user")]),
+   _L.fromArray([A2($Html.li,
+                _L.fromArray([]),
+                _L.fromArray([A2($Html.a,
+                _L.fromArray([]),
+                _L.fromArray([$Html.text("Login")]))]))
+                ,A2($Html.li,
+                _L.fromArray([]),
+                _L.fromArray([A2($Html.a,
+                _L.fromArray([]),
+                _L.fromArray([$Html.text("Register")]))]))]));
+   var playerMenu = function (player) {
+      return player.guest ? guestMenu : userMenu(player);
+   };
    var logo = A2($Html.div,
    _L.fromArray([$Html$Attributes.$class("navbar-header")]),
    _L.fromArray([A2($Html.a,
    _L.fromArray([$Html$Attributes.$class("navbar-brand")
-                ,$Views$Utils.clickTo($State.Home)]),
+                ,$Views$Utils.onClickGoTo($State.Home)]),
    _L.fromArray([A2($Html.img,
    _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")
                 ,$Html$Attributes.$class("logo")]),
@@ -19059,7 +19214,8 @@ Elm.Views.TopBar.make = function (_elm) {
       _L.fromArray([$Html$Attributes.$class("navbar")]),
       _L.fromArray([A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("container")]),
-      _L.fromArray([logo]))]));
+      _L.fromArray([logo
+                   ,playerMenu(appState.player)]))]));
    });
    var logoWidth = 160;
    var height = 80;
@@ -19067,7 +19223,10 @@ Elm.Views.TopBar.make = function (_elm) {
                               ,height: height
                               ,logoWidth: logoWidth
                               ,view: view
-                              ,logo: logo};
+                              ,logo: logo
+                              ,playerMenu: playerMenu
+                              ,guestMenu: guestMenu
+                              ,userMenu: userMenu};
    return _elm.Views.TopBar.values;
 };
 Elm.Views = Elm.Views || {};
@@ -19084,11 +19243,13 @@ Elm.Views.Utils.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Views.Utils",
    $Basics = Elm.Basics.make(_elm),
+   $Forms$Model = Elm.Forms.Model.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Messages = Elm.Messages.make(_elm),
@@ -19105,6 +19266,20 @@ Elm.Views.Utils.make = function (_elm) {
          ".name")));
       }();
    });
+   var avatarUrl = function (p) {
+      return function () {
+         var _v2 = p.avatarId;
+         switch (_v2.ctor)
+         {case "Just":
+            return A2($Basics._op["++"],
+              "/avatars/",
+              _v2._0);
+            case "Nothing":
+            return p.user ? "/assets/images/avatar-user.png" : "/assets/images/avatar-guest.png";}
+         _U.badCase($moduleName,
+         "between lines 84 and 86");
+      }();
+   };
    var playerWithAvatar = function (player) {
       return function () {
          var handle = A2($Maybe.withDefault,
@@ -19115,20 +19290,8 @@ Elm.Views.Utils.make = function (_elm) {
          _L.fromArray([$Html.text(A2($Maybe.withDefault,
          "Anonymous",
          player.handle))]));
-         var avatarUrl = function () {
-            var _v2 = player.avatarId;
-            switch (_v2.ctor)
-            {case "Just":
-               return A2($Basics._op["++"],
-                 "/avatars/",
-                 _v2._0);
-               case "Nothing":
-               return player.user ? "/assets/images/avatar-user.png" : "/assets/images/avatar-guest.png";}
-            _U.badCase($moduleName,
-            "between lines 53 and 56");
-         }();
          var avatarImg = A2($Html.img,
-         _L.fromArray([$Html$Attributes.src(avatarUrl)
+         _L.fromArray([$Html$Attributes.src(avatarUrl(player))
                       ,$Html$Attributes.$class("avatar")
                       ,$Html$Attributes.width(19)
                       ,$Html$Attributes.height(19)]),
@@ -19166,6 +19329,14 @@ Elm.Views.Utils.make = function (_elm) {
       "title-wrapper",
       content);
    };
+   var passwordInput = function (attributes) {
+      return A2($Html.input,
+      A2($List.append,
+      _L.fromArray([$Html$Attributes.type$("password")
+                   ,$Html$Attributes.$class("form-control")]),
+      attributes),
+      _L.fromArray([]));
+   };
    var textInput = function (attributes) {
       return A2($Html.input,
       A2($List.append,
@@ -19195,6 +19366,25 @@ Elm.Views.Utils.make = function (_elm) {
       _L.fromArray([$Html$Attributes.$class("row")]),
       content);
    };
+   var is13 = function (code) {
+      return _U.eq(code,
+      13) ? $Result.Ok({ctor: "_Tuple0"}) : $Result.Err("not the right key code");
+   };
+   var onEnter = F2(function (address,
+   value) {
+      return A3($Html$Events.on,
+      "keydown",
+      A2($Json$Decode.customDecoder,
+      $Html$Events.keyCode,
+      is13),
+      function (_v4) {
+         return function () {
+            return A2($Signal.message,
+            address,
+            value);
+         }();
+      });
+   });
    var onInput = F2(function (address,
    contentToValue) {
       return A3($Html$Events.on,
@@ -19206,22 +19396,34 @@ Elm.Views.Utils.make = function (_elm) {
          contentToValue(str));
       });
    });
-   var clickTo = function (screen) {
+   var onInputFormUpdate = function (updater) {
+      return A2(onInput,
+      $Inputs.actionsMailbox.address,
+      function ($) {
+         return $Inputs.FormAction(updater($));
+      });
+   };
+   var onClickGoTo = function (screen) {
       return A2($Html$Events.onClick,
       $Inputs.actionsMailbox.address,
       $Inputs.Navigate(screen));
    };
    _elm.Views.Utils.values = {_op: _op
-                             ,clickTo: clickTo
+                             ,onClickGoTo: onClickGoTo
+                             ,onInputFormUpdate: onInputFormUpdate
                              ,onInput: onInput
+                             ,onEnter: onEnter
+                             ,is13: is13
                              ,row: row
                              ,col4: col4
                              ,col: col
                              ,textInput: textInput
+                             ,passwordInput: passwordInput
                              ,titleWrapper: titleWrapper
                              ,lightWrapper: lightWrapper
                              ,blockWrapper: blockWrapper
                              ,playerWithAvatar: playerWithAvatar
+                             ,avatarUrl: avatarUrl
                              ,raceCourseName: raceCourseName};
    return _elm.Views.Utils.values;
 };

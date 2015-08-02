@@ -40,6 +40,8 @@ POST        /login                                             controllers.Auth.
 GET         /logout                                            controllers.Auth.logout
 
 POST        /api/login                                         controllers.Api.login
+POST        /api/logout                                        controllers.Api.logout
+GET         /api/currentPlayer                                 controllers.Api.currentPlayer
 GET         /api/liveStatus                                    controllers.Api.liveStatus
 POST        /api/createRace/:generator                         controllers.Api.createRace(generator)
 POST        /api/setHandle                                     controllers.Api.setHandle

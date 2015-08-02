@@ -7,6 +7,7 @@ import Json.Encode as JsEncode
 
 import Forms.Model exposing (..)
 import Inputs exposing (..)
+import Decoders exposing (playerDecoder)
 
 
 submitMailbox : Signal.Mailbox SubmitForm
@@ -29,6 +30,10 @@ submitFormTask sf =
     t = case sf of
       SubmitSetHandle f ->
         postHandle f
+      SubmitLogin f ->
+        postLogin f
+      SubmitLogout ->
+        postLogout
       _ ->
         Task.succeed NoOp
   in
@@ -37,9 +42,22 @@ submitFormTask sf =
 
 postHandle : SetHandleForm -> Task Http.Error Action
 postHandle f =
-  postJson (Json.succeed NoOp) "/api/setHandle" <|
-    JsEncode.object
-      [ ("handle", JsEncode.string f.handle) ]
+  JsEncode.object
+    [ ("handle", JsEncode.string f.handle)
+    ]
+    |> postJson (Json.map PlayerUpdate playerDecoder) "/api/setHandle"
+
+postLogin : LoginForm -> Task Http.Error Action
+postLogin f =
+  JsEncode.object
+    [ ("email", JsEncode.string f.email)
+    , ("password", JsEncode.string f.password)
+    ]
+    |> postJson (Json.map PlayerUpdate playerDecoder) "/api/login"
+
+postLogout : Task Http.Error Action
+postLogout =
+  postJson (Json.map PlayerUpdate playerDecoder) "/api/logout" JsEncode.null
 
 
 -- Tooling

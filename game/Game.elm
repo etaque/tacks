@@ -238,16 +238,16 @@ asOpponentState {time,position,heading,velocity,windAngle,windOrigin,shadowDirec
 defaultVmg : Vmg
 defaultVmg = { angle = 0, speed = 0, value = 0}
 
-defaultPlayer : Player
-defaultPlayer =
-  { id = ""
-  , handle = Nothing
-  , user = False
-  , guest = False
-  , status = Nothing
-  , avatarId = Nothing
-  , vmgMagnet = 0
-  }
+-- defaultPlayer : Player
+-- defaultPlayer =
+--   { id = ""
+--   , handle = Nothing
+--   , user = False
+--   , guest = False
+--   , status = Nothing
+--   , avatarId = Nothing
+--   , vmgMagnet = 0
+--   }
 
 defaultPlayerState : Player -> Float -> PlayerState
 defaultPlayerState player now =

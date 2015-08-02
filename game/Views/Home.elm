@@ -23,10 +23,18 @@ view t state =
 
 welcome : Translator -> AppState -> Html
 welcome t {player,forms} =
-  titleWrapper
-    [ h1 [] [ text ("Welcome, " ++ (Maybe.withDefault "Anonymous" player.handle)) ]
-    , setHandleBlock forms.setHandle
+  titleWrapper <| List.append
+    [ h1 [] [ text ("Welcome, " ++ (Maybe.withDefault "Anonymous" player.handle)) ] ]
+    (welcomeForms player forms)
+
+welcomeForms : Player -> Forms -> List Html
+welcomeForms player forms =
+  if player.guest then
+    [ setHandleBlock forms.setHandle
+    , loginBlock forms.login
     ]
+  else
+    []
 
 setHandleBlock : SetHandleForm -> Html
 setHandleBlock form =
@@ -36,7 +44,8 @@ setHandleBlock form =
         [ textInput
           [ placeholder "Nickname?"
           , value form.handle
-          , onInput actionsMailbox.address updateHandleField
+          , onInputFormUpdate (\s -> UpdateSetHandleForm (\f -> { f | handle <- s } ))
+          , onEnter submitMailbox.address (SubmitSetHandle form)
           ]
         , span [ class "input-group-btn" ]
           [ button
@@ -49,9 +58,35 @@ setHandleBlock form =
       ]
     ]
 
-updateHandleField : String -> Inputs.Action
-updateHandleField s =
-  Inputs.FormAction (UpdateSetHandleForm (\f -> { f | handle <- s } ))
+
+loginBlock : LoginForm -> Html
+loginBlock form =
+  row
+    [ col4
+      [ div [ class "form-group" ]
+        [ textInput
+          [ placeholder "Email"
+          , value form.email
+          , onInputFormUpdate (\s -> UpdateLoginForm (\f -> { f | email <- s } ))
+          ]
+        ]
+      , div [ class "form-group" ]
+        [ passwordInput
+          [ placeholder "Password"
+          , value form.password
+          , onInputFormUpdate (\s -> UpdateLoginForm (\f -> { f | password <- s } ))
+          ]
+        ]
+      , div []
+        [ button
+          [ class "btn btn-primary"
+          , onClick submitMailbox.address (SubmitLogin form)
+          ]
+          [ text "Submit" ]
+        ]
+      ]
+    ]
+
 
 raceCourses : Translator -> AppState -> Html
 raceCourses t state =
@@ -64,7 +99,7 @@ raceCourseStatusBlock t ({raceCourse,opponents} as rcs) =
   div [ class "col-md-4" ]
     [ div [ class "race-course-status" ]
       [ a
-        [ clickTo (Show rcs) ]
+        [ onClickGoTo (Show rcs) ]
         [ text (raceCourseName t raceCourse) ]
       , opponentsList opponents
       ]

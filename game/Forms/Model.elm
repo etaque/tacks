@@ -17,6 +17,7 @@ type alias SetHandleForm =
 type alias LoginForm =
   { email : String
   , password : String
+  , error : Bool
   }
 
 type UpdateForm
@@ -27,3 +28,4 @@ type SubmitForm
   = NoSubmit
   | SubmitSetHandle SetHandleForm
   | SubmitLogin LoginForm
+  | SubmitLogout
