@@ -7,6 +7,7 @@ import Forms.Model exposing (Forms)
 type Screen
   = Home
   | Show RaceCourseStatus
+  | ShowProfile Playe
   | Play RaceCourse
 
 type alias AppState =
@@ -29,7 +30,6 @@ type alias RaceCourse =
   , countdown: Int
   , startCycle: Int
   }
-
 
 initialAppState : Player -> AppState
 initialAppState player =

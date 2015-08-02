@@ -1,7 +1,4 @@
-game/build/
-game/cache/
-game/elm_dependencies/
-game/elm-stuff/
+client/elm-stuff/
 public/javascripts/liveCenter.js
 public/javascripts/main.js
 logs

@@ -14,7 +14,7 @@ var buildDir   = '../public/';
 
 function handleError(task) {
   return function(err) {
-    $.util.log($.util.colors.red(err));
+    $.util.log($.util.colors.white(err));
     $.notify.onError(task + " failed")(err);
   };
 }
@@ -45,6 +45,14 @@ gulp.task('jsx', function() { return jsx(false); });
 gulp.task('jsx:watch', function() { return jsx(true); });
 
 
+gulp.task('elm', function() {
+  return gulp.src('src/Main.elm')
+    .pipe($.elm())
+    .on('error', handleError("elm")) //function(error) { console.log(error.message); })
+    .pipe(gulp.dest(buildDir + 'javascripts'));
+});
+
+
 gulp.task('compress', function() {
   gulp.src(buildDir + 'javascripts/main.js')
     .pipe($.uglify())
@@ -59,14 +67,15 @@ gulp.task('scss', function () {
       precision: 10,
       loadPath: ['styles']
     }))
-    .on('error', console.error.bind(console))
+    .on('error', handleError("scss"))
     .pipe(gulp.dest(buildDir + 'stylesheets'))
     .pipe($.size({title: 'scss'}));
 });
 
 // Watch Files For Changes & Reload
-gulp.task('default', ['jsx:watch', 'scss'], function () {
+gulp.task('default', ['jsx:watch', 'scss', 'elm'], function () {
   gulp.watch(['styles/**/*.scss'], ['scss']);
+  gulp.watch(['src/**/*.elm'], ['elm']);
 });
 
 // Build Production Files, the Default Task

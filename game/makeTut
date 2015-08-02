@@ -1,1 +1,0 @@
-elm-make Tut/Main.elm --output ../public/javascripts/tut.js
