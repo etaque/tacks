@@ -16,7 +16,7 @@ import Views.Utils exposing (..)
 
 view : Translator -> AppState -> Html
 view t state =
-  div [ class "content"]
+  div [ class "home"]
     [ welcome t state
     , raceCourses t state
     ]
@@ -90,7 +90,7 @@ loginBlock form =
 
 raceCourses : Translator -> AppState -> Html
 raceCourses t state =
-  lightWrapper
+  div [ class "container" ]
     [ div [ class "row" ] (List.map (raceCourseStatusBlock t) state.courses)
     ]
 
@@ -99,8 +99,13 @@ raceCourseStatusBlock t ({raceCourse,opponents} as rcs) =
   div [ class "col-md-4" ]
     [ div [ class "race-course-status" ]
       [ a
-        [ onClickGoTo (Show rcs) ]
-        [ text (raceCourseName t raceCourse) ]
+        [ class "show"
+        , style [ ("background-image", "url(/assets/images/trials-" ++ raceCourse.slug ++ ".png)") ]
+        , onClickGoTo (Show rcs)
+        ]
+        [ span [ class "name" ] [ text (raceCourseName t raceCourse) ]
+        , div [ class "description"] [ text (t ("generators." ++ raceCourse.slug ++ ".description"))]
+        ]
       , opponentsList opponents
       ]
     ]

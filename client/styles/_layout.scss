@@ -1,5 +1,6 @@
 @import 'colors';
 
+$navbarHeight: 50px;
 
 html,
 body {
@@ -64,7 +65,15 @@ nav {
     }
 
     .navbar-brand {
-      height: 80px;
+      height: $navbarHeight;
+    }
+
+    .navbar-nav > li > a {
+      line-height: $navbarHeight;
     }
   }
+}
+
+.navbar {
+  min-height: $navbarHeight;
 }

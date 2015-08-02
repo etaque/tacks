@@ -5,10 +5,10 @@
 
 
 body {
-  color: $darkGray;
+  color: white;
   font-family: $fontFamily;
   font-size: 15px;
-  background-color: $seaBlue;
+  background-color: $lightSeaBlue;
 }
 
 hr {
@@ -41,12 +41,13 @@ h2, h3, h4, h5, h6 {
 }
 
 a {
-  color: $navBlue;
+  color: white;
   transition: all .1s ease-in;
   text-decoration: none;
+  cursor: pointer;
 
   &:hover {
-    color: $mainBlue;
+    color: white;
     text-decoration: none;
   }
 }
@@ -112,7 +113,6 @@ a {
     }
 
     .navbar-nav > li > a {
-      line-height: 80px;
       padding: 0 20px;
       font-size: 14px;
     }

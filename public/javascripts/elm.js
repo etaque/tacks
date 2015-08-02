@@ -18876,16 +18876,35 @@ Elm.Views.Home.make = function (_elm) {
          _L.fromArray([A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("race-course-status")]),
          _L.fromArray([A2($Html.a,
-                      _L.fromArray([$Views$Utils.onClickGoTo($State.Show(_v2))]),
-                      _L.fromArray([$Html.text(A2($Views$Utils.raceCourseName,
-                      t,
-                      _v2.raceCourse))]))
+                      _L.fromArray([$Html$Attributes.$class("show")
+                                   ,$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                                         ,_0: "background-image"
+                                                                         ,_1: A2($Basics._op["++"],
+                                                                         "url(/assets/images/trials-",
+                                                                         A2($Basics._op["++"],
+                                                                         _v2.raceCourse.slug,
+                                                                         ".png)"))}]))
+                                   ,$Views$Utils.onClickGoTo($State.Show(_v2))]),
+                      _L.fromArray([A2($Html.span,
+                                   _L.fromArray([$Html$Attributes.$class("name")]),
+                                   _L.fromArray([$Html.text(A2($Views$Utils.raceCourseName,
+                                   t,
+                                   _v2.raceCourse))]))
+                                   ,A2($Html.div,
+                                   _L.fromArray([$Html$Attributes.$class("description")]),
+                                   _L.fromArray([$Html.text(t(A2($Basics._op["++"],
+                                   "generators.",
+                                   A2($Basics._op["++"],
+                                   _v2.raceCourse.slug,
+                                   ".description"))))]))]))
                       ,opponentsList(_v2.opponents)]))]));
       }();
    });
    var raceCourses = F2(function (t,
    state) {
-      return $Views$Utils.lightWrapper(_L.fromArray([A2($Html.div,
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("container")]),
+      _L.fromArray([A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("row")]),
       A2($List.map,
       raceCourseStatusBlock(t),
@@ -18971,7 +18990,7 @@ Elm.Views.Home.make = function (_elm) {
    var view = F2(function (t,
    state) {
       return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("content")]),
+      _L.fromArray([$Html$Attributes.$class("home")]),
       _L.fromArray([A2(welcome,
                    t,
                    state)
@@ -19112,7 +19131,7 @@ Elm.Views.ShowRaceCourse.make = function (_elm) {
    var joinButton = F2(function (raceCourse,
    t) {
       return A2($Html.a,
-      _L.fromArray([$Html$Attributes.$class("join-race-course")
+      _L.fromArray([$Html$Attributes.$class("btn btn-warning btn-warning join-race-course")
                    ,$Views$Utils.onClickGoTo($State.Play(raceCourse))]),
       _L.fromArray([$Html.text("Join")]));
    });
@@ -19122,14 +19141,14 @@ Elm.Views.ShowRaceCourse.make = function (_elm) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("show-race-course")]),
-         _L.fromArray([A2($Html.h1,
-                      _L.fromArray([]),
-                      _L.fromArray([$Html.text(A2($Views$Utils.raceCourseName,
-                      t,
-                      _v0.raceCourse))]))
-                      ,A2(joinButton,
-                      _v0.raceCourse,
-                      t)]));
+         _L.fromArray([$Views$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
+                                                              _L.fromArray([]),
+                                                              _L.fromArray([$Html.text(A2($Views$Utils.raceCourseName,
+                                                              t,
+                                                              _v0.raceCourse))]))
+                                                              ,A2(joinButton,
+                                                              _v0.raceCourse,
+                                                              t)]))]));
       }();
    });
    _elm.Views.ShowRaceCourse.values = {_op: _op
@@ -19218,7 +19237,7 @@ Elm.Views.TopBar.make = function (_elm) {
                    ,playerMenu(appState.player)]))]));
    });
    var logoWidth = 160;
-   var height = 80;
+   var height = 50;
    _elm.Views.TopBar.values = {_op: _op
                               ,height: height
                               ,logoWidth: logoWidth

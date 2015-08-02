@@ -17,10 +17,15 @@ import Views.Utils exposing (..)
 view : RaceCourseStatus -> Translator -> AppState -> Html
 view {raceCourse,opponents} t appState =
   div [ class "show-race-course" ]
-    [ h1 [] [ text <| raceCourseName t raceCourse ]
-    , joinButton raceCourse t
+    [ titleWrapper
+      [ h1 [] [ text <| raceCourseName t raceCourse ]
+      , joinButton raceCourse t
+      ]
     ]
 
 joinButton : RaceCourse -> Translator -> Html
 joinButton raceCourse t =
-  a [ class "join-race-course", onClickGoTo (Play raceCourse) ] [ text "Join"]
+  a
+    [ class "btn btn-warning btn-warning join-race-course"
+    , onClickGoTo (Play raceCourse)
+    ] [ text "Join"]

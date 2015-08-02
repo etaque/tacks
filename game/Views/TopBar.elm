@@ -12,7 +12,7 @@ import Forms.Model as Forms
 import Forms.Update exposing (submitMailbox)
 
 
-height = 80
+height = 50
 logoWidth = 160
 
 view : Translator -> AppState -> Html

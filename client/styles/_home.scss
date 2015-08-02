@@ -19,6 +19,7 @@
   margin-top: 30px;
 }
 
+/*
 .chat-wrapper {
 
   $totalHeight: 300px;
@@ -155,6 +156,7 @@
   }
 
 }
+*/
 
 .live-center {
   margin-top: 30px;
@@ -294,11 +296,11 @@
 }
 
 
-.home-time-trial {
+.race-course-status {
   $br: 3px;
   margin-top: 30px;
 
-  a.run, a.run:visited {
+  a.show, a.show:visited {
     display: block;
     height: 200px;
     margin-bottom: 10px;

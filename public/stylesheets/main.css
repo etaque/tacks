@@ -4852,8 +4852,13 @@ nav .nav-user img {
     text-align: center;
     margin-bottom: 20px; }
   nav .navbar-brand {
-    height: 80px; }
+    height: 50px; }
+  nav .navbar-nav > li > a {
+    line-height: 50px; }
  }
+
+.navbar {
+  min-height: 50px; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -4872,10 +4877,10 @@ nav .nav-user img {
   src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
 body {
-  color: #51585E;
+  color: white;
   font-family: "Proxima Nova Regular";
   font-size: 15px;
-  background-color: #23395C; }
+  background-color: #2b4772; }
 
 hr {
   border: 0 solid #B1C0D8; }
@@ -4899,11 +4904,12 @@ h2, h3, h4, h5, h6 {
       background-color: #b0b3b8; }
 
 a {
-  color: #387ac4;
+  color: white;
   transition: all 0.1s ease-in;
-  text-decoration: none; }
+  text-decoration: none;
+  cursor: pointer; }
   a:hover {
-    color: #5899E2;
+    color: white;
     text-decoration: none; }
 
 .navbar {
@@ -4935,7 +4941,6 @@ a {
   nav .nav-main {
     margin-left: 20px; }
   nav .navbar-nav > li > a {
-    line-height: 80px;
     padding: 0 20px;
     font-size: 14px; }
  }
@@ -5253,135 +5258,144 @@ a.player-avatar {
 .update-name {
   margin-top: 30px; }
 
+/*
 .chat-wrapper {
+
+  $totalHeight: 300px;
+  $topHeight: 32px;
+  $messageInputHeight: 35px;
+  $statusInputHeight: $topHeight;
+  $boxHeight: $totalHeight - $topHeight - $messageInputHeight - 6px;
+
   margin-top: 30px;
   position: relative;
-  height: 300px; }
-  .chat-wrapper .chat-top {
-    line-height: 32px;
+  height: $totalHeight;
+
+
+  .chat-top {
+    line-height: ($topHeight);
     text-align: center;
-    background-color: #2b4772;
-    color: #B1C0D8;
+    background-color: $lightSeaBlue;
+    color: $whiteBlue;
     text-transform: uppercase;
-    font-family: "Proxima Nova Thin";
+    font-family: $lightFontFamily;
     letter-spacing: 1px;
-    box-shadow: 0px 2px 2px #1f3251 inset; }
-  .chat-wrapper .chat-left {
+    box-shadow: 0px 2px 2px $darkSeaBlue inset;
+  }
+
+  .chat-left {
     position: absolute;
     top: 0;
     left: 0;
     right: 215px;
     bottom: 0;
-    box-shadow: 0 2px 2px #E6E6E6;
+    box-shadow: 0 2px 2px $lightGray;
     border: 3px solid white;
-    background-color: white;
-    /* Fallback Color */
-    background-image: -webkit-gradient(linear, left top, left bottom, from(#f8f9fb), to(white));
-    /* Saf4+, Chrome */
-    background-image: -webkit-linear-gradient(top, #f8f9fb, white);
-    /* Chrome 10+, Saf5.1+, iOS 5+ */
-    background-image: -moz-linear-gradient(top, #f8f9fb, white);
-    /* FF3.6 */
-    background-image: -ms-linear-gradient(top, #f8f9fb, white);
-    /* IE10 */
-    background-image: -o-linear-gradient(top, #f8f9fb, white);
-    /* Opera 11.10+ */
-    background-image: linear-gradient(top, #f8f9fb, white);
-    filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#f8f9fb', EndColorStr='white'); }
-  .chat-wrapper .chat-right {
+    @include linear-gradient($smokeWhite, white);
+}
+
+  .chat-right {
     position: absolute;
     top: 0;
     width: 200px;
     right: 0;
     bottom: 0;
-    box-shadow: 0 2px 2px #E6E6E6;
-    background-color: white; }
-  .chat-wrapper .chat-box {
+    box-shadow: 0 2px 2px $lightGray;
+    background-color: white;
+  }
+
+
+  .chat-box {
     position: relative;
     overflow: hidden;
     width: 100%;
-    height: 227px; }
-    .chat-wrapper .chat-box .chat-messages {
+    height: $boxHeight;
+
+    .chat-messages {
       overflow: auto;
       position: absolute;
       width: 100%;
       bottom: 0;
-      max-height: 227px;
+      max-height: $boxHeight;
       margin-bottom: 0;
-      padding-bottom: 3px; }
-      .chat-wrapper .chat-box .chat-messages li {
-        margin: 0 6px; }
-        .chat-wrapper .chat-box .chat-messages li .player-avatar {
+      padding-bottom: 3px;
+
+      li {
+        margin: 0 6px;
+
+        .player-avatar {
           display: inline-block;
-          margin-right: 5px; }
-        .chat-wrapper .chat-box .chat-messages li .player-avatar:after {
-          content: ":"; }
-        .chat-wrapper .chat-box .chat-messages li .content {
-          font-size: 14px; }
-  .chat-wrapper .chat-message-form input[type="text"] {
-    border-radius: 0;
-    border: 1px solid #E6E6E6;
-    background-color: #f8f9fb;
-    height: 35px;
-    padding: 4px 8px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; }
-    .chat-wrapper .chat-message-form input[type="text"]::-webkit-input-placeholder {
-      /* WebKit browsers */
-      color: #b0b3b8; }
-    .chat-wrapper .chat-message-form input[type="text"]:-moz-placeholder {
-      /* Mozilla Firefox 4 to 18 */
-      color: #b0b3b8;
-      opacity: 1; }
-    .chat-wrapper .chat-message-form input[type="text"]::-moz-placeholder {
-      /* Mozilla Firefox 19+ */
-      color: #b0b3b8;
-      opacity: 1; }
-    .chat-wrapper .chat-message-form input[type="text"]:-ms-input-placeholder {
-      /* Internet Explorer 10+ */
-      color: #b0b3b8; }
-  .chat-wrapper .chat-status-form {
-    padding: 3px;
-    padding-bottom: 0; }
-    .chat-wrapper .chat-status-form input[type="text"] {
+          margin-right: 5px;
+        }
+
+        .player-avatar:after {
+          content: ":";
+        }
+
+        .content {
+          font-size: 14px;
+        }
+      }
+    }
+
+  }
+
+  .chat-message-form {
+
+    input[type="text"] {
       border-radius: 0;
-      height: 32px;
+      border: 1px solid $lightGray;
+      background-color: $smokeWhite;
+      height: $messageInputHeight;
       padding: 4px 8px;
-      background-color: #f8f9fb;
-      border: 1px solid #E6E6E6;
-      box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset; }
-      .chat-wrapper .chat-status-form input[type="text"]::-webkit-input-placeholder {
-        /* WebKit browsers */
-        color: #b0b3b8; }
-      .chat-wrapper .chat-status-form input[type="text"]:-moz-placeholder {
-        /* Mozilla Firefox 4 to 18 */
-        color: #b0b3b8;
-        opacity: 1; }
-      .chat-wrapper .chat-status-form input[type="text"]::-moz-placeholder {
-        /* Mozilla Firefox 19+ */
-        color: #b0b3b8;
-        opacity: 1; }
-      .chat-wrapper .chat-status-form input[type="text"]:-ms-input-placeholder {
-        /* Internet Explorer 10+ */
-        color: #b0b3b8; }
-  .chat-wrapper .chat-players {
+      box-shadow: 0 1px 1px $shadow inset;
+      @include placeholder-color($mediumGray);
+    }
+  }
+
+  .chat-status-form {
+    padding: 3px;
+    padding-bottom: 0;
+
+    input[type="text"] {
+      border-radius: 0;
+      height: $statusInputHeight;
+      padding: 4px 8px;
+      background-color: $smokeWhite;
+      border: 1px solid $lightGray;
+      box-shadow: 0 1px 1px $shadow inset;
+      @include placeholder-color($mediumGray);
+    }
+  }
+
+  .chat-players {
     background-color: white;
     padding: 0;
     margin: 3px;
-    height: 294px;
-    overflow-y: auto; }
-    .chat-wrapper .chat-players li {
+    height: $totalHeight - 6px;
+    overflow-y: auto;
+
+    li {
       background-color: white;
       margin: 0;
       padding: 3px;
-      color: #7b8087; }
-      .chat-wrapper .chat-players li .status {
-        display: block;
-        color: #51585E;
-        font-size: 12px;
-        margin-top: 2px; }
-  .chat-wrapper .chat-status-form + .chat-players {
-    height: 259px; }
+      color: $gray;
 
+      .status {
+        display: block;
+        color: $darkGray;
+        font-size: 12px;
+        margin-top: 2px;
+      }
+    }
+  }
+
+  .chat-status-form + .chat-players {
+    height: $totalHeight - $statusInputHeight - 9px;
+  }
+
+}
+*/
 .live-center {
   margin-top: 30px; }
   .live-center .race-course {
@@ -5468,9 +5482,9 @@ a.player-avatar {
     font-size: 14px;
     color: #7b8087; }
 
-.home-time-trial {
+.race-course-status {
   margin-top: 30px; }
-  .home-time-trial a.run, .home-time-trial a.run:visited {
+  .race-course-status a.show, .race-course-status a.show:visited {
     display: block;
     height: 200px;
     margin-bottom: 10px;
@@ -5481,16 +5495,16 @@ a.player-avatar {
     position: relative;
     text-align: center;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2); }
-    .home-time-trial a.run:hover .name, .home-time-trial a.run:visited:hover .name {
+    .race-course-status a.show:hover .name, .race-course-status a.show:visited:hover .name {
       background-color: #5899E2; }
-    .home-time-trial a.run .name, .home-time-trial a.run:visited .name {
+    .race-course-status a.show .name, .race-course-status a.show:visited .name {
       display: block;
       padding: 10px;
       background-color: #387ac4;
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
       letter-spacing: 1px; }
-    .home-time-trial a.run .description, .home-time-trial a.run:visited .description {
+    .race-course-status a.show .description, .race-course-status a.show:visited .description {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -5503,9 +5517,9 @@ a.player-avatar {
       font-family: "Proxima Nova Thin"; }
 
 .fullscreen {
-  overflow: hidden;
-  color: white;
-  background-color: #1C2E48; }
+  /* overflow: hidden; */
+  /* color: white; */
+  /* background-color: #1C2E48; */ }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -5701,10 +5715,10 @@ a.period {
   src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
 body {
-  color: #51585E;
+  color: white;
   font-family: "Proxima Nova Regular";
   font-size: 15px;
-  background-color: #23395C; }
+  background-color: #2b4772; }
 
 hr {
   border: 0 solid #B1C0D8; }
@@ -5728,11 +5742,12 @@ h2, h3, h4, h5, h6 {
       background-color: #b0b3b8; }
 
 a {
-  color: #387ac4;
+  color: white;
   transition: all 0.1s ease-in;
-  text-decoration: none; }
+  text-decoration: none;
+  cursor: pointer; }
   a:hover {
-    color: #5899E2;
+    color: white;
     text-decoration: none; }
 
 .navbar {
@@ -5764,7 +5779,6 @@ a {
   nav .nav-main {
     margin-left: 20px; }
   nav .navbar-nav > li > a {
-    line-height: 80px;
     padding: 0 20px;
     font-size: 14px; }
  }
