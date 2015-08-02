@@ -14,8 +14,8 @@ import Inputs exposing (navigate)
 import Views.Utils exposing (..)
 
 
-view : Translator -> LiveCenterState -> RaceCourseStatus -> Html
-view t liveCenterState {raceCourse,opponents} =
+view : RaceCourseStatus -> Translator -> AppState -> Html
+view {raceCourse,opponents} t appState =
   div [ class "show-race-course" ]
     [ h1 [] [ text <| raceCourseName t raceCourse ]
     , joinButton raceCourse t

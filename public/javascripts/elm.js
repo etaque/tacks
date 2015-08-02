@@ -1908,6 +1908,154 @@ Elm.Dict.make = function (_elm) {
                       ,fromList: fromList};
    return _elm.Dict.values;
 };
+Elm.Forms = Elm.Forms || {};
+Elm.Forms.Model = Elm.Forms.Model || {};
+Elm.Forms.Model.make = function (_elm) {
+   "use strict";
+   _elm.Forms = _elm.Forms || {};
+   _elm.Forms.Model = _elm.Forms.Model || {};
+   if (_elm.Forms.Model.values)
+   return _elm.Forms.Model.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Forms.Model",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var SubmitLogin = function (a) {
+      return {ctor: "SubmitLogin"
+             ,_0: a};
+   };
+   var SubmitSetHandle = function (a) {
+      return {ctor: "SubmitSetHandle"
+             ,_0: a};
+   };
+   var NoSubmit = {ctor: "NoSubmit"};
+   var UpdateLoginForm = function (a) {
+      return {ctor: "UpdateLoginForm"
+             ,_0: a};
+   };
+   var UpdateSetHandleForm = function (a) {
+      return {ctor: "UpdateSetHandleForm"
+             ,_0: a};
+   };
+   var LoginForm = F2(function (a,
+   b) {
+      return {_: {}
+             ,email: a
+             ,password: b};
+   });
+   var SetHandleForm = function (a) {
+      return {_: {},handle: a};
+   };
+   var Forms = F2(function (a,b) {
+      return {_: {}
+             ,login: b
+             ,setHandle: a};
+   });
+   _elm.Forms.Model.values = {_op: _op
+                             ,Forms: Forms
+                             ,SetHandleForm: SetHandleForm
+                             ,LoginForm: LoginForm
+                             ,UpdateSetHandleForm: UpdateSetHandleForm
+                             ,UpdateLoginForm: UpdateLoginForm
+                             ,NoSubmit: NoSubmit
+                             ,SubmitSetHandle: SubmitSetHandle
+                             ,SubmitLogin: SubmitLogin};
+   return _elm.Forms.Model.values;
+};
+Elm.Forms = Elm.Forms || {};
+Elm.Forms.Update = Elm.Forms.Update || {};
+Elm.Forms.Update.make = function (_elm) {
+   "use strict";
+   _elm.Forms = _elm.Forms || {};
+   _elm.Forms.Update = _elm.Forms.Update || {};
+   if (_elm.Forms.Update.values)
+   return _elm.Forms.Update.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Forms.Update",
+   $Basics = Elm.Basics.make(_elm),
+   $Forms$Model = Elm.Forms.Model.make(_elm),
+   $Http = Elm.Http.make(_elm),
+   $Inputs = Elm.Inputs.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var jsonToBody = function (jsValue) {
+      return $Http.string(A2($Json$Encode.encode,
+      0,
+      jsValue));
+   };
+   var postJson = F3(function (decoder,
+   url,
+   jsonBody) {
+      return $Http.fromJson(decoder)(A2($Http.send,
+      $Http.defaultSettings,
+      {_: {}
+      ,body: jsonToBody(jsonBody)
+      ,headers: _L.fromArray([{ctor: "_Tuple2"
+                              ,_0: "Content-Type"
+                              ,_1: "application/json"}])
+      ,url: url
+      ,verb: "POST"}));
+   });
+   var postHandle = function (f) {
+      return A2(postJson,
+      $Json$Decode.succeed($Inputs.NoOp),
+      "/api/setHandle")($Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
+                                                          ,_0: "handle"
+                                                          ,_1: $Json$Encode.string(f.handle)}])));
+   };
+   var submitFormTask = function (sf) {
+      return function () {
+         var t = function () {
+            switch (sf.ctor)
+            {case "SubmitSetHandle":
+               return postHandle(sf._0);}
+            return $Task.succeed($Inputs.NoOp);
+         }();
+         return A2($Task.andThen,
+         t,
+         $Signal.send($Inputs.actionsMailbox.address));
+      }();
+   };
+   var updateForms = F2(function (u,
+   forms) {
+      return function () {
+         switch (u.ctor)
+         {case "UpdateLoginForm":
+            return _U.replace([["login"
+                               ,u._0(forms.login)]],
+              forms);
+            case "UpdateSetHandleForm":
+            return _U.replace([["setHandle"
+                               ,u._0(forms.setHandle)]],
+              forms);}
+         _U.badCase($moduleName,
+         "between lines 19 and 23");
+      }();
+   });
+   var submitMailbox = $Signal.mailbox($Forms$Model.NoSubmit);
+   _elm.Forms.Update.values = {_op: _op
+                              ,submitMailbox: submitMailbox
+                              ,updateForms: updateForms
+                              ,submitFormTask: submitFormTask
+                              ,postHandle: postHandle
+                              ,jsonToBody: jsonToBody
+                              ,postJson: postJson};
+   return _elm.Forms.Update.values;
+};
 Elm.Game = Elm.Game || {};
 Elm.Game.make = function (_elm) {
    "use strict";
@@ -4864,6 +5012,7 @@ Elm.Inputs.make = function (_elm) {
    $moduleName = "Inputs",
    $Basics = Elm.Basics.make(_elm),
    $Char = Elm.Char.make(_elm),
+   $Forms$Model = Elm.Forms.Model.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $Http = Elm.Http.make(_elm),
@@ -5150,6 +5299,10 @@ Elm.Inputs.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "currentPlayer",
    playerDecoder));
+   var FormAction = function (a) {
+      return {ctor: "FormAction"
+             ,_0: a};
+   };
    var Navigate = function (a) {
       return {ctor: "Navigate"
              ,_0: a};
@@ -5186,6 +5339,7 @@ Elm.Inputs.make = function (_elm) {
                         ,NoOp: NoOp
                         ,LiveCenterUpdate: LiveCenterUpdate
                         ,Navigate: Navigate
+                        ,FormAction: FormAction
                         ,actionsMailbox: actionsMailbox
                         ,navigate: navigate
                         ,fetchServerUpdate: fetchServerUpdate
@@ -6035,6 +6189,7 @@ Elm.Main.make = function (_elm) {
    $moduleName = "Main",
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
+   $Forms$Update = Elm.Forms.Update.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -6059,16 +6214,22 @@ Elm.Main.make = function (_elm) {
                                  ,delta: _v0._1
                                  ,time: _v0._0};}
          _U.badCase($moduleName,
-         "on line 42, column 32 to 62");
+         "on line 50, column 32 to 62");
       }();
    },
    $Time.timestamp($Time.fps(30)));
-   var messagesStore = Elm.Native.Port.make(_elm).inbound("messagesStore",
-   "Json.Decode.Value",
-   function (v) {
-      return v;
-   });
-   var translator = $Messages.translator($Messages.fromJson(messagesStore));
+   var formSubmitsRunner = Elm.Native.Task.make(_elm).performSignal("formSubmitsRunner",
+   A2($Signal.map,
+   $Forms$Update.submitFormTask,
+   $Forms$Update.submitMailbox.signal));
+   var serverUpdateRunner = Elm.Native.Task.make(_elm).performSignal("serverUpdateRunner",
+   A2($Signal.map,
+   function (_v4) {
+      return function () {
+         return $Inputs.runServerUpdate;
+      }();
+   },
+   $Time.every($Time.second)));
    var raceInput = Elm.Native.Port.make(_elm).inboundSignal("raceInput",
    "Maybe.Maybe Inputs.RaceInput",
    function (v) {
@@ -6209,10 +6370,6 @@ Elm.Main.make = function (_elm) {
    $Steps.mainStep,
    $State.initialAppState,
    appInput);
-   var main = A3($Signal.map2,
-   $Views$Main.mainView(translator),
-   $Window.dimensions,
-   appState);
    var activeRaceCourse = Elm.Native.Port.make(_elm).outboundSignal("activeRaceCourse",
    function (v) {
       return v.ctor === "Nothing" ? null : v._0;
@@ -6248,14 +6405,16 @@ Elm.Main.make = function (_elm) {
    $Outputs.extractPlayerOutput,
    appState,
    appInput)));
-   var liveCenterRunner = Elm.Native.Task.make(_elm).performSignal("liveCenterRunner",
-   A2($Signal.map,
-   function (_v4) {
-      return function () {
-         return $Inputs.runServerUpdate;
-      }();
-   },
-   $Time.every($Time.second)));
+   var messagesStore = Elm.Native.Port.make(_elm).inbound("messagesStore",
+   "Json.Decode.Value",
+   function (v) {
+      return v;
+   });
+   var translator = $Messages.translator($Messages.fromJson(messagesStore));
+   var main = A3($Signal.map2,
+   $Views$Main.mainView(translator),
+   $Window.dimensions,
+   appState);
    _elm.Main.values = {_op: _op
                       ,main: main
                       ,translator: translator
@@ -17033,11 +17192,22 @@ Elm.State.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "State",
    $Basics = Elm.Basics.make(_elm),
+   $Forms$Model = Elm.Forms.Model.make(_elm),
    $Game = Elm.Game.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var initialForms = function (player) {
+      return {_: {}
+             ,login: {_: {}
+                     ,email: ""
+                     ,password: ""}
+             ,setHandle: {_: {}
+                         ,handle: A2($Maybe.withDefault,
+                         "",
+                         player.handle)}};
+   };
    var RaceCourse = F5(function (a,
    b,
    c,
@@ -17056,18 +17226,16 @@ Elm.State.make = function (_elm) {
              ,opponents: b
              ,raceCourse: a};
    });
-   var LiveCenterState = F2(function (a,
-   b) {
-      return {_: {}
-             ,courses: b
-             ,player: a};
-   });
-   var AppState = F3(function (a,
+   var AppState = F5(function (a,
    b,
-   c) {
+   c,
+   d,
+   e) {
       return {_: {}
-             ,gameState: c
-             ,liveCenterState: b
+             ,courses: c
+             ,forms: d
+             ,gameState: e
+             ,player: b
              ,screen: a};
    });
    var Play = function (a) {
@@ -17078,20 +17246,20 @@ Elm.State.make = function (_elm) {
    };
    var Home = {ctor: "Home"};
    var initialAppState = {_: {}
+                         ,courses: _L.fromArray([])
+                         ,forms: initialForms($Game.defaultPlayer)
                          ,gameState: $Maybe.Nothing
-                         ,liveCenterState: {_: {}
-                                           ,courses: _L.fromArray([])
-                                           ,player: $Game.defaultPlayer}
+                         ,player: $Game.defaultPlayer
                          ,screen: Home};
    _elm.State.values = {_op: _op
                        ,Home: Home
                        ,Show: Show
                        ,Play: Play
                        ,AppState: AppState
-                       ,initialAppState: initialAppState
-                       ,LiveCenterState: LiveCenterState
                        ,RaceCourseStatus: RaceCourseStatus
-                       ,RaceCourse: RaceCourse};
+                       ,RaceCourse: RaceCourse
+                       ,initialAppState: initialAppState
+                       ,initialForms: initialForms};
    return _elm.State.values;
 };
 Elm.Steps = Elm.Steps || {};
@@ -17107,6 +17275,7 @@ Elm.Steps.make = function (_elm) {
    $moduleName = "Steps",
    $Basics = Elm.Basics.make(_elm),
    $Core = Elm.Core.make(_elm),
+   $Forms$Update = Elm.Forms.Update.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Geo = Elm.Geo.make(_elm),
    $Inputs = Elm.Inputs.make(_elm),
@@ -17180,7 +17349,7 @@ Elm.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 85 and 92");
+         "between lines 91 and 98");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -17268,23 +17437,21 @@ Elm.Steps.make = function (_elm) {
          gameState)));
       }();
    });
-   var liveCenterStep = F2(function (input,
-   state) {
-      return _U.replace([["courses"
-                         ,input.raceCourses]
-                        ,["player"
-                         ,input.currentPlayer]],
-      state);
-   });
    var actionStep = F2(function (action,
    appState) {
       return function () {
          switch (action.ctor)
-         {case "LiveCenterUpdate":
-            return _U.replace([["liveCenterState"
-                               ,A2(liveCenterStep,
+         {case "FormAction":
+            return _U.replace([["forms"
+                               ,A2($Forms$Update.updateForms,
                                action._0,
-                               appState.liveCenterState)]],
+                               appState.forms)]],
+              appState);
+            case "LiveCenterUpdate":
+            return _U.replace([["courses"
+                               ,action._0.raceCourses]
+                              ,["player"
+                               ,action._0.currentPlayer]],
               appState);
             case "Navigate":
             return _U.replace([["screen"
@@ -17299,7 +17466,7 @@ Elm.Steps.make = function (_elm) {
       return A3($Game.defaultGame,
       clock.time,
       raceCourse.course,
-      appState.liveCenterState.player);
+      appState.player);
    });
    var mainStep = F2(function (appInput,
    appState) {
@@ -17308,29 +17475,29 @@ Elm.Steps.make = function (_elm) {
          appInput.action,
          appState);
          var newGameState = function () {
-            var _v11 = newAppState.screen;
-            switch (_v11.ctor)
+            var _v12 = newAppState.screen;
+            switch (_v12.ctor)
             {case "Play":
                return function () {
                     var gameState = A2($Maybe.withDefault,
                     A3(initGameState,
                     appInput.clock,
                     newAppState,
-                    _v11._0),
+                    _v12._0),
                     appState.gameState);
                     return function () {
-                       var _v13 = appInput.gameInput;
-                       switch (_v13.ctor)
+                       var _v14 = appInput.gameInput;
+                       switch (_v14.ctor)
                        {case "Just":
                           return $Maybe.Just(A2(gameStep,
-                            _v13._0,
+                            _v14._0,
                             gameState));
                           case "Nothing":
                           return $Maybe.Just(_U.replace([["now"
                                                          ,appInput.clock.time]],
                             gameState));}
                        _U.badCase($moduleName,
-                       "between lines 29 and 34");
+                       "between lines 31 and 36");
                     }();
                  }();}
             return $Maybe.Nothing;
@@ -17344,7 +17511,6 @@ Elm.Steps.make = function (_elm) {
                        ,mainStep: mainStep
                        ,initGameState: initGameState
                        ,actionStep: actionStep
-                       ,liveCenterStep: liveCenterStep
                        ,gameStep: gameStep
                        ,centerStep: centerStep
                        ,moveOpponentState: moveOpponentState
@@ -18599,9 +18765,13 @@ Elm.Views.Home.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Views.Home",
    $Basics = Elm.Basics.make(_elm),
+   $Forms$Model = Elm.Forms.Model.make(_elm),
+   $Forms$Update = Elm.Forms.Update.make(_elm),
    $Game = Elm.Game.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $Inputs = Elm.Inputs.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Messages = Elm.Messages.make(_elm),
@@ -18646,15 +18816,42 @@ Elm.Views.Home.make = function (_elm) {
       raceCourseStatusBlock(t),
       state.courses))]));
    });
+   var updateHandleField = function (s) {
+      return $Inputs.FormAction($Forms$Model.UpdateSetHandleForm(function (f) {
+         return _U.replace([["handle"
+                            ,s]],
+         f);
+      }));
+   };
+   var setHandleBlock = function (form) {
+      return $Views$Utils.row(_L.fromArray([$Views$Utils.col4(_L.fromArray([A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("input-group")]),
+      _L.fromArray([$Views$Utils.textInput(_L.fromArray([$Html$Attributes.placeholder("Nickname?")
+                                                        ,$Html$Attributes.value(form.handle)
+                                                        ,A2($Views$Utils.onInput,
+                                                        $Inputs.actionsMailbox.address,
+                                                        updateHandleField)]))
+                   ,A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("input-group-btn")]),
+                   _L.fromArray([A2($Html.button,
+                   _L.fromArray([$Html$Attributes.$class("btn btn-primary")
+                                ,A2($Html$Events.onClick,
+                                $Forms$Update.submitMailbox.address,
+                                $Forms$Model.SubmitSetHandle(form))]),
+                   _L.fromArray([$Html.text("submit")]))]))]))]))]));
+   };
    var welcome = F2(function (t,
-   player) {
-      return $Views$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
-      _L.fromArray([]),
-      _L.fromArray([$Html.text(A2($Basics._op["++"],
-      "Welcome, ",
-      A2($Maybe.withDefault,
-      "Anonymous",
-      player.handle)))]))]));
+   _v4) {
+      return function () {
+         return $Views$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
+                                                       _L.fromArray([]),
+                                                       _L.fromArray([$Html.text(A2($Basics._op["++"],
+                                                       "Welcome, ",
+                                                       A2($Maybe.withDefault,
+                                                       "Anonymous",
+                                                       _v4.player.handle)))]))
+                                                       ,setHandleBlock(_v4.forms.setHandle)]));
+      }();
    });
    var view = F2(function (t,
    state) {
@@ -18662,12 +18859,14 @@ Elm.Views.Home.make = function (_elm) {
       _L.fromArray([$Html$Attributes.$class("content")]),
       _L.fromArray([A2(welcome,
                    t,
-                   state.player)
+                   state)
                    ,A2(raceCourses,t,state)]));
    });
    _elm.Views.Home.values = {_op: _op
                             ,view: view
                             ,welcome: welcome
+                            ,setHandleBlock: setHandleBlock
+                            ,updateHandleField: updateHandleField
                             ,raceCourses: raceCourses
                             ,raceCourseStatusBlock: raceCourseStatusBlock
                             ,opponentsList: opponentsList
@@ -18701,69 +18900,74 @@ Elm.Views.Main.make = function (_elm) {
    $Views$Home = Elm.Views.Home.make(_elm),
    $Views$ShowRaceCourse = Elm.Views.ShowRaceCourse.make(_elm),
    $Views$TopBar = Elm.Views.TopBar.make(_elm);
+   var gameView = F3(function (_v0,
+   t,
+   appState) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return $Html.fromElement(function () {
+                 var _v4 = appState.gameState;
+                 switch (_v4.ctor)
+                 {case "Just":
+                    return A2($Render$All.renderGame,
+                      {ctor: "_Tuple2"
+                      ,_0: _v0._0
+                      ,_1: _v0._1 - $Views$TopBar.height},
+                      _v4._0);
+                    case "Nothing":
+                    return $Graphics$Element.empty;}
+                 _U.badCase($moduleName,
+                 "between lines 43 and 48");
+              }());}
+         _U.badCase($moduleName,
+         "between lines 43 and 48");
+      }();
+   });
    var layout = F3(function (t,
    appState,
-   content) {
+   view) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("global-wrapper")]),
       _L.fromArray([A2($Views$TopBar.view,
                    t,
                    appState)
-                   ,content]));
+                   ,A2(view,t,appState)]));
    });
    var mainView = F3(function (t,
-   _v0,
+   _v6,
    appState) {
       return function () {
-         switch (_v0.ctor)
+         switch (_v6.ctor)
          {case "_Tuple2":
             return function () {
-                 var _v4 = appState.screen;
-                 switch (_v4.ctor)
+                 var _v10 = appState.screen;
+                 switch (_v10.ctor)
                  {case "Home": return A3(layout,
                       t,
                       appState,
-                      A2($Views$Home.view,
+                      $Views$Home.view);
+                    case "Play": return A3(layout,
                       t,
-                      appState.liveCenterState));
-                    case "Play":
-                    return function () {
-                         var gameView = function () {
-                            var _v7 = appState.gameState;
-                            switch (_v7.ctor)
-                            {case "Just":
-                               return A2($Render$All.renderGame,
-                                 {ctor: "_Tuple2"
-                                 ,_0: _v0._0
-                                 ,_1: _v0._1 - $Views$TopBar.height},
-                                 _v7._0);
-                               case "Nothing":
-                               return $Graphics$Element.empty;}
-                            _U.badCase($moduleName,
-                            "between lines 29 and 35");
-                         }();
-                         return A3(layout,
-                         t,
-                         appState,
-                         $Html.fromElement(gameView));
-                      }();
+                      appState,
+                      gameView({ctor: "_Tuple2"
+                               ,_0: _v6._0
+                               ,_1: _v6._1}));
                     case "Show": return A3(layout,
                       t,
                       appState,
-                      A3($Views$ShowRaceCourse.view,
-                      t,
-                      appState.liveCenterState,
-                      _v4._0));}
+                      $Views$ShowRaceCourse.view(_v10._0));}
                  _U.badCase($moduleName,
-                 "between lines 19 and 36");
+                 "between lines 22 and 31");
               }();}
          _U.badCase($moduleName,
-         "between lines 19 and 36");
+         "between lines 22 and 31");
       }();
    });
    _elm.Views.Main.values = {_op: _op
                             ,mainView: mainView
-                            ,layout: layout};
+                            ,layout: layout
+                            ,gameView: gameView};
    return _elm.Views.Main.values;
 };
 Elm.Views = Elm.Views || {};
@@ -18796,9 +19000,9 @@ Elm.Views.ShowRaceCourse.make = function (_elm) {
                    ,$Views$Utils.clickTo($State.Play(raceCourse))]),
       _L.fromArray([$Html.text("Join")]));
    });
-   var view = F3(function (t,
-   liveCenterState,
-   _v0) {
+   var view = F3(function (_v0,
+   t,
+   appState) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("show-race-course")]),
@@ -18921,7 +19125,7 @@ Elm.Views.Utils.make = function (_elm) {
                case "Nothing":
                return player.user ? "/assets/images/avatar-user.png" : "/assets/images/avatar-guest.png";}
             _U.badCase($moduleName,
-            "between lines 32 and 35");
+            "between lines 53 and 56");
          }();
          var avatarImg = A2($Html.img,
          _L.fromArray([$Html$Attributes.src(avatarUrl)
@@ -18962,6 +19166,46 @@ Elm.Views.Utils.make = function (_elm) {
       "title-wrapper",
       content);
    };
+   var textInput = function (attributes) {
+      return A2($Html.input,
+      A2($List.append,
+      _L.fromArray([$Html$Attributes.type$("text")
+                   ,$Html$Attributes.$class("form-control")]),
+      attributes),
+      _L.fromArray([]));
+   };
+   var col = F2(function (w,
+   content) {
+      return function () {
+         var ws = $Basics.toString(w);
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class(A2($Basics._op["++"],
+         "col-lg-",
+         A2($Basics._op["++"],
+         ws,
+         A2($Basics._op["++"],
+         " col-lg-offset-",
+         ws))))]),
+         content);
+      }();
+   });
+   var col4 = col(4);
+   var row = function (content) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("row")]),
+      content);
+   };
+   var onInput = F2(function (address,
+   contentToValue) {
+      return A3($Html$Events.on,
+      "input",
+      $Html$Events.targetValue,
+      function (str) {
+         return A2($Signal.message,
+         address,
+         contentToValue(str));
+      });
+   });
    var clickTo = function (screen) {
       return A2($Html$Events.onClick,
       $Inputs.actionsMailbox.address,
@@ -18969,6 +19213,11 @@ Elm.Views.Utils.make = function (_elm) {
    };
    _elm.Views.Utils.values = {_op: _op
                              ,clickTo: clickTo
+                             ,onInput: onInput
+                             ,row: row
+                             ,col4: col4
+                             ,col: col
+                             ,textInput: textInput
                              ,titleWrapper: titleWrapper
                              ,lightWrapper: lightWrapper
                              ,blockWrapper: blockWrapper

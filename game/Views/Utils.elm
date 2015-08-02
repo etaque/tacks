@@ -13,6 +13,27 @@ clickTo : Screen -> Attribute
 clickTo screen =
   onClick actionsMailbox.address (Inputs.Navigate screen)
 
+onInput : Signal.Address a -> (String -> a) -> Attribute
+onInput address contentToValue =
+    on "input" targetValue (\str -> Signal.message address (contentToValue str))
+
+row : List Html -> Html
+row content =
+  div [ class "row" ] content
+
+col4 = col 4
+
+col : Int -> List Html -> Html
+col w content =
+  let
+    ws = toString w
+  in
+    div [ class ("col-lg-" ++ ws ++ " col-lg-offset-" ++ ws) ] content
+
+textInput : List Attribute -> Html
+textInput attributes =
+  input (List.append [ type' "text", class "form-control"] attributes) []
+
 titleWrapper : List Html -> Html
 titleWrapper content =
   blockWrapper "title-wrapper" content

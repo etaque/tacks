@@ -14,6 +14,7 @@ import Http
 import Game exposing (..)
 import State exposing (..)
 import Geo exposing (Point)
+import Forms.Model as Forms
 
 
 type alias AppInput =
@@ -29,6 +30,7 @@ type Action
   = NoOp
   | LiveCenterUpdate LiveCenterInput
   | Navigate Screen
+  | FormAction Forms.UpdateForm
 
 actionsMailbox : Signal.Mailbox Action
 actionsMailbox =

@@ -14,17 +14,25 @@ import Steps exposing (mainStep)
 import Views.Main exposing (mainView)
 import Core exposing (isJust)
 import Messages
+import Forms.Update as FormsUpdate exposing (submitMailbox)
 
 
 -- Inputs
 
-port liveCenterRunner : Signal (Task Http.Error ())
-port liveCenterRunner =
-  Signal.map (\_ -> runServerUpdate) (every second)
+port messagesStore : Json.Value
 
 port raceInput : Signal (Maybe RaceInput)
 
-port messagesStore : Json.Value
+
+-- Tasks
+
+port serverUpdateRunner : Signal (Task Http.Error ())
+port serverUpdateRunner =
+  Signal.map (\_ -> runServerUpdate) (every second)
+
+port formSubmitsRunner : Signal (Task Http.Error ())
+port formSubmitsRunner =
+  Signal.map FormsUpdate.submitFormTask submitMailbox.signal
 
 
 -- Signals

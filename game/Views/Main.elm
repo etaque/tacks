@@ -13,32 +13,36 @@ import Views.ShowRaceCourse as ShowRaceCourse
 
 import Render.All exposing (renderGame)
 
+
+type alias View = Translator -> AppState -> Html
+
+
 mainView : Translator -> (Int,Int) -> AppState -> Html
 mainView t (w,h) appState =
   case appState.screen of
 
     Home ->
-      layout t appState (Home.view t appState.liveCenterState)
+      layout t appState Home.view
 
     Show raceCourseStatus ->
-      layout t appState (ShowRaceCourse.view t appState.liveCenterState raceCourseStatus)
+      layout t appState (ShowRaceCourse.view raceCourseStatus)
 
     Play raceCourse ->
-      let
-        gameView = case appState.gameState of
-          Just gameState ->
-            renderGame (w, h - TopBar.height) gameState
-          Nothing ->
-            -- TODO loading
-            empty
-      in
-        layout t appState (fromElement gameView)
+      layout t appState (gameView (w, h))
 
 
-layout : Translator -> AppState -> Html -> Html
-layout t appState content =
+layout : Translator -> AppState -> View -> Html
+layout t appState view =
   div [ class "global-wrapper" ]
     [ TopBar.view t appState
-    , content
+    , view t appState
     ]
 
+gameView : (Int, Int) -> Translator -> AppState -> Html
+gameView (w,h) t appState =
+  fromElement <| case appState.gameState of
+    Just gameState ->
+      renderGame (w, h - TopBar.height) gameState
+    Nothing ->
+      -- TODO loading
+      empty

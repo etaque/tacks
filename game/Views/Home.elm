@@ -7,25 +7,53 @@ import Html.Events exposing (..)
 import State exposing (..)
 import Game exposing (..)
 import Messages exposing (Translator)
-import Inputs exposing (navigate)
+import Inputs exposing (actionsMailbox)
+import Forms.Model exposing (..)
+import Forms.Update exposing (..)
 
 import Views.Utils exposing (..)
 
 
-view : Translator -> LiveCenterState -> Html
+view : Translator -> AppState -> Html
 view t state =
   div [ class "content"]
-    [ welcome t state.player
+    [ welcome t state
     , raceCourses t state
     ]
 
-welcome : Translator -> Player -> Html
-welcome t player =
+welcome : Translator -> AppState -> Html
+welcome t {player,forms} =
   titleWrapper
     [ h1 [] [ text ("Welcome, " ++ (Maybe.withDefault "Anonymous" player.handle)) ]
+    , setHandleBlock forms.setHandle
     ]
 
-raceCourses : Translator -> LiveCenterState -> Html
+setHandleBlock : SetHandleForm -> Html
+setHandleBlock form =
+  row
+    [ col4
+      [ div [ class "input-group" ]
+        [ textInput
+          [ placeholder "Nickname?"
+          , value form.handle
+          , onInput actionsMailbox.address updateHandleField
+          ]
+        , span [ class "input-group-btn" ]
+          [ button
+            [ class "btn btn-primary"
+            , onClick submitMailbox.address (SubmitSetHandle form)
+            ]
+            [ text "submit" ]
+          ]
+        ]
+      ]
+    ]
+
+updateHandleField : String -> Inputs.Action
+updateHandleField s =
+  Inputs.FormAction (UpdateSetHandleForm (\f -> { f | handle <- s } ))
+
+raceCourses : Translator -> AppState -> Html
 raceCourses t state =
   lightWrapper
     [ div [ class "row" ] (List.map (raceCourseStatusBlock t) state.courses)
@@ -49,14 +77,4 @@ opponentsList opponents =
 opponentItem : Opponent -> Html
 opponentItem {player,state} =
   li [ class "opponent" ] [ playerWithAvatar player ]
-
--- view : Translator -> Int -> AppState -> Html
--- view t width {liveCenterState} =
---   flow right (List.map (raceCourseBlock t) liveCenterState.courses)
-
--- raceCourseBlock : Translator -> RaceCourseStatus -> Element
--- raceCourseBlock t ({raceCourse,opponents} as status) =
---   centered (raceCourseName t raceCourse)
---     |> clickable (navigate (Show status))
---     |> container 200 150 middle
 

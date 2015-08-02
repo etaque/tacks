@@ -1,6 +1,7 @@
 module State where
 
 import Game exposing (..)
+import Forms.Model exposing (Forms)
 
 
 type Screen
@@ -10,23 +11,10 @@ type Screen
 
 type alias AppState =
   { screen : Screen
-  , liveCenterState: LiveCenterState
-  , gameState : Maybe GameState
-  }
-
-initialAppState : AppState
-initialAppState =
-  { screen = Home
-  , liveCenterState =
-    { player = defaultPlayer
-    , courses = []
-    }
-  , gameState = Nothing
-  }
-
-type alias LiveCenterState =
-  { player : Player
+  , player : Player
   , courses : List RaceCourseStatus
+  , forms : Forms
+  , gameState : Maybe GameState
   }
 
 type alias RaceCourseStatus =
@@ -40,4 +28,20 @@ type alias RaceCourse =
   , course: Course
   , countdown: Int
   , startCycle: Int
+  }
+
+
+initialAppState : AppState
+initialAppState =
+  { screen = Home
+  , player = defaultPlayer
+  , courses = []
+  , forms = initialForms defaultPlayer
+  , gameState = Nothing
+  }
+
+initialForms : Player -> Forms
+initialForms player =
+  { setHandle = { handle = Maybe.withDefault "" player.handle }
+  , login = { email = "", password = ""}
   }

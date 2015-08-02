@@ -12,6 +12,8 @@ import Steps.Turning exposing (turningStep)
 import Steps.Vmg exposing (vmgStep)
 import Steps.Wind exposing (windStep)
 
+import Forms.Update as FormsUpdate
+
 import Maybe as M
 import List as L
 
@@ -38,23 +40,27 @@ mainStep appInput appState =
 
 initGameState : Inputs.Clock -> AppState -> RaceCourse -> GameState
 initGameState clock appState raceCourse =
-  defaultGame clock.time raceCourse.course appState.liveCenterState.player
+  defaultGame clock.time raceCourse.course appState.player
 
 actionStep : Action -> AppState -> AppState
 actionStep action appState =
   case action of
+
     Navigate newScreen ->
       { appState | screen <- newScreen }
-    LiveCenterUpdate liveCenterInput ->
-      { appState | liveCenterState <- liveCenterStep liveCenterInput appState.liveCenterState }
+
+    LiveCenterUpdate input ->
+      { appState | courses <- input.raceCourses
+                 , player <- input.currentPlayer
+      }
+
+    FormAction updateForm ->
+      { appState | forms <- FormsUpdate.updateForms updateForm appState.forms }
+
+
     _ ->
       appState
 
-liveCenterStep : LiveCenterInput -> LiveCenterState -> LiveCenterState
-liveCenterStep input state =
-  { state | courses <- input.raceCourses
-          , player <- input.currentPlayer
-  }
 
 gameStep : GameInput -> GameState -> GameState
 gameStep {raceInput, clock, windowInput, keyboardInput} gameState =
