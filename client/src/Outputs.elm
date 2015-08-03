@@ -13,9 +13,15 @@ type alias PlayerOutput =
 
 extractPlayerOutput : State.AppState -> AppInput -> Maybe PlayerOutput
 extractPlayerOutput appState appInput =
-  Maybe.map
-    (makePlayerOutput (Maybe.map .keyboardInput appInput.gameInput))
-    appState.gameState
+  let
+    keyboardInput =
+      case appInput.action of
+        GameUpdate gameInput ->
+          Just gameInput.keyboardInput
+        _ ->
+          Nothing
+  in
+    Maybe.map (makePlayerOutput keyboardInput) appState.gameState
 
 makePlayerOutput : Maybe KeyboardInput -> Game.GameState -> PlayerOutput
 makePlayerOutput keyboardInput gameState =

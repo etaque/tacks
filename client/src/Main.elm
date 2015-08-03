@@ -52,15 +52,20 @@ clock : Signal Clock
 clock =
   Signal.map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
 
-gameInput : Signal (Maybe GameInput)
-gameInput =
-  Signal.map4 extractGameInput clock keyboardInput Window.dimensions raceInput
+gameUpdate : Signal Action
+gameUpdate =
+  Signal.map4 extractGameUpdate clock keyboardInput Window.dimensions raceInput
+    |> Signal.filterMap identity NoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 
+actions : Signal Action
+actions =
+  Signal.merge actionsMailbox.signal gameUpdate
+
 appInput : Signal AppInput
 appInput =
-  Signal.map3 AppInput actionsMailbox.signal gameInput clock
+  Signal.map2 AppInput actions clock
 
 appState : Signal AppState
 appState =

@@ -7,7 +7,7 @@ import Forms.Model exposing (Forms)
 type Screen
   = Home
   | Show RaceCourseStatus
-  | ShowProfile Playe
+  | ShowProfile Player
   | Play RaceCourse
 
 type alias AppState =

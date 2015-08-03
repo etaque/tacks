@@ -19,7 +19,6 @@ import Decoders exposing (raceCourseStatusDecoder, playerDecoder)
 
 type alias AppInput =
   { action : Action
-  , gameInput : Maybe GameInput
   , clock: Clock
   }
 
@@ -28,6 +27,7 @@ type alias AppInput =
 
 type Action
   = NoOp
+  | GameUpdate GameInput
   | LiveUpdate LiveInput
   | PlayerUpdate Player
   | Navigate Screen
@@ -116,9 +116,10 @@ initialRaceInput =
   }
 
 
-extractGameInput : Clock -> KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe GameInput
-extractGameInput clock keyboardInput dims maybeRaceInput =
+extractGameUpdate : Clock -> KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe Action
+extractGameUpdate clock keyboardInput dims maybeRaceInput =
   Maybe.map (GameInput clock keyboardInput dims) maybeRaceInput
+    |> Maybe.map GameUpdate
 
 
 manualTurn ki = ki.arrows.x /= 0

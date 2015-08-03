@@ -28,11 +28,11 @@ mainStep appInput appState =
         let
           gameState = M.withDefault (initGameState appInput.clock newAppState raceCourse) appState.gameState
         in
-          case appInput.gameInput of
-            Just gameInput ->
+          case appInput.action of
+            GameUpdate gameInput ->
               Just (gameStep gameInput gameState)
-            Nothing ->
-              Just { gameState | now <- appInput.clock.time }
+            _ ->
+              Just gameState
       _ ->
         Nothing
   in
@@ -65,7 +65,6 @@ actionStep action appState =
 gameStep : GameInput -> GameState -> GameState
 gameStep {raceInput, clock, windowInput, keyboardInput} gameState =
   raceInputStep raceInput clock gameState
-    -- |> updateWindStep clock.delta
     |> playerStep keyboardInput clock.delta
     |> centerStep
 
