@@ -37,6 +37,8 @@ function mountGame() {
       ws.onclose = function() {
         game.ports.playerOutput.unsubscribe(outputProxy);
       };
+    } else {
+      game.ports.raceInput.send(null);
     }
     currentRaceCourseId = id;
   });
