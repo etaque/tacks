@@ -38,6 +38,8 @@ mainView t (w,h) appState =
     Play raceCourse ->
       layout t appState (gameView (w, h))
 
+    _ ->
+      layout t appState notFound
 
 layout : Translator -> AppState -> View -> Html
 layout t appState view =
@@ -54,3 +56,7 @@ gameView (w,h) t appState =
     Nothing ->
       -- TODO loading
       empty
+
+notFound : Translator -> AppState -> Html
+notFound t appState =
+  text "TODO not found"

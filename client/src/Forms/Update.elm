@@ -4,9 +4,11 @@ import Http
 import Task exposing (Task, andThen)
 import Json.Decode as Json
 import Json.Encode as JsEncode
+import History
 
 import Forms.Model exposing (..)
 import Inputs exposing (..)
+import State
 import Decoders exposing (playerDecoder)
 import ServerApi exposing (..)
 
@@ -31,7 +33,7 @@ submitFormTask sf =
       SubmitSetHandle f ->
         postHandle f |> Task.map PlayerUpdate
       SubmitLogin f ->
-        postLogin f |> Task.map PlayerUpdate
+        postLogin f |> Task.map PlayerUpdate |> withNewPath "/"
       SubmitLogout ->
         postLogout |> Task.map PlayerUpdate
       _ ->
@@ -39,3 +41,6 @@ submitFormTask sf =
   in
     t `andThen` (Signal.send actionsMailbox.address)
 
+withNewPath : String -> Task Http.Error Action -> Task Http.Error Action
+withNewPath path task =
+  task `andThen` (\action -> Task.map (\_ -> action) (History.setPath path))

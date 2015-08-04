@@ -27,5 +27,5 @@ joinButton : RaceCourse -> Translator -> Html
 joinButton raceCourse t =
   a
     [ class "btn btn-warning btn-warning join-race-course"
-    , onClickGoTo (Play raceCourse)
+    , path ("/play/" ++ raceCourse.slug)
     ] [ text "Join"]

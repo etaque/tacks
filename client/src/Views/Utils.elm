@@ -4,16 +4,20 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
+import History exposing (setPath)
 
 import State exposing (..)
 import Game exposing (..)
 import Messages exposing (Translator)
 import Inputs exposing (actionsMailbox)
 import Forms.Model exposing (UpdateForm)
+import Routes exposing (pathChangeMailbox)
 
-onClickGoTo : Screen -> Attribute
-onClickGoTo screen =
-  onClick actionsMailbox.address (Inputs.Navigate screen)
+
+path : String -> Attribute
+path p =
+  onClick pathChangeMailbox.address (setPath p)
+
 
 onInputFormUpdate : (String -> UpdateForm) -> Attribute
 onInputFormUpdate updater =

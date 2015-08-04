@@ -10,6 +10,7 @@ type Screen
   | Show RaceCourseStatus
   | ShowProfile Player
   | Play RaceCourse
+  | NotFound
 
 type alias AppState =
   { screen : Screen

@@ -1,10 +1,14 @@
 module Steps where
 
+import Task
+
 import Inputs exposing (..)
 import Game exposing (..)
 import State exposing (..)
 import Geo exposing (..)
 import Core exposing (..)
+
+import Routes
 
 import Steps.GateCrossing exposing (gateCrossingStep)
 import Steps.Moving exposing (movingStep)
@@ -13,9 +17,6 @@ import Steps.Vmg exposing (vmgStep)
 import Steps.Wind exposing (windStep)
 
 import Forms.Update as FormsUpdate
-
-import Maybe as M
-import List as L
 
 
 mainStep : AppInput -> AppState -> AppState
@@ -26,7 +27,7 @@ mainStep appInput appState =
     newGameState = case newAppState.screen of
       Play raceCourse ->
         let
-          gameState = M.withDefault (initGameState appInput.clock newAppState raceCourse) appState.gameState
+          gameState = Maybe.withDefault (initGameState appInput.clock newAppState raceCourse) appState.gameState
         in
           case appInput.action of
             GameUpdate gameInput ->
@@ -101,7 +102,7 @@ updateOpponents previousOpponents delta newOpponents =
   let
     findPrevious o = find (\po -> po.player.id == o.player.id) previousOpponents
   in
-    L.map (\o -> updateOpponent (findPrevious o) delta o) newOpponents
+    List.map (\o -> updateOpponent (findPrevious o) delta o) newOpponents
 
 raceInputStep : RaceInput -> Clock -> GameState -> GameState
 raceInputStep raceInput {delta,time} ({playerState} as gameState) =

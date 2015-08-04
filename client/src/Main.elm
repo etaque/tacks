@@ -6,6 +6,7 @@ import Html exposing (Html)
 import Task exposing (Task)
 import Http
 import Json.Decode as Json
+import History
 
 import Inputs exposing (..)
 import Outputs exposing (..)
@@ -16,6 +17,7 @@ import Views.Main exposing (mainView)
 import Core exposing (isJust)
 import Messages
 import Forms.Update as FormsUpdate exposing (submitMailbox)
+import Routes exposing (pathChangeMailbox)
 
 
 -- Inputs
@@ -36,6 +38,16 @@ port serverUpdateRunner =
 port formSubmitsRunner : Signal (Task Http.Error ())
 port formSubmitsRunner =
   Signal.map FormsUpdate.submitFormTask submitMailbox.signal
+
+port pathChangeRunner : Signal (Task error ())
+port pathChangeRunner =
+  pathChangeMailbox.signal
+
+port pathToScreenRunner : Signal (Task Http.Error ())
+port pathToScreenRunner =
+  Signal.map2 Routes.pathToScreenTask
+    (Signal.sampleOn History.path appState)
+    History.path
 
 
 -- Signals
@@ -61,7 +73,10 @@ gameUpdate =
 
 actions : Signal Action
 actions =
-  Signal.merge actionsMailbox.signal gameUpdate
+  Signal.mergeMany
+    [ actionsMailbox.signal
+    , gameUpdate
+    ]
 
 appInput : Signal AppInput
 appInput =

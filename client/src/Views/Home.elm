@@ -53,7 +53,7 @@ setHandleBlock form =
             [ text "submit" ]
           ]
         ]
-      , p [ class "align-center" ] [ a [ onClickGoTo Login ] [ text "or go to login"] ]
+      , p [ class "align-center" ] [ a [ path "/login" ] [ text "or go to login"] ]
       ]
     ]
 
@@ -72,7 +72,7 @@ raceCourseStatusBlock t ({raceCourse,opponents} as rcs) =
       [ a
         [ class "show"
         , style [ ("background-image", "url(/assets/images/trials-" ++ raceCourse.slug ++ ".png)") ]
-        , onClickGoTo (Show rcs)
+        , path ("/show-course/" ++ raceCourse.slug)
         ]
         [ span [ class "name" ] [ text (raceCourseName t raceCourse) ]
         , div [ class "description"] [ text (t ("generators." ++ raceCourse.slug ++ ".description"))]

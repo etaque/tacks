@@ -18,6 +18,11 @@ getPlayer id =
   Http.get playerDecoder ("/api/players/" ++ id)
 
 
+getRaceCourse : String -> Task Http.Error Player
+getRaceCourse id =
+  Http.get playerDecoder ("/api/players/" ++ id)
+
+
 -- POST
 
 postHandle : SetHandleForm -> Task Http.Error Player

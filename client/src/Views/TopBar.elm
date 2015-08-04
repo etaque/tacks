@@ -27,7 +27,7 @@ view t appState =
 logo : Html
 logo =
   div [ class "navbar-header" ]
-    [ a [ class "navbar-brand", onClickGoTo Home ]
+    [ a [ class "navbar-brand", path "/" ]
       [ img [ src "/assets/images/logo-header-2.png", class "logo" ] [] ]
     ]
 
@@ -42,7 +42,7 @@ guestMenu : Html
 guestMenu =
   ul [ class "nav navbar-nav navbar-right nav-user" ]
     [ li [ ]
-      [ a [ onClickGoTo Login ] [ text "Login" ] ]
+      [ a [ path "/login" ] [ text "Login" ] ]
     , li [ ]
       [ a [ ] [ text "Register"] ]
     ]
@@ -53,7 +53,7 @@ userMenu player =
     [ li [ ]
       [ a [ ]
         [ img [ src (avatarUrl player), class "avatar avatar-user" ] [ ]
-        , a [ onClickGoTo (ShowProfile player) ] [ text "Profile" ]
+        , a [ path "/me" ] [ text "Profile" ]
         ]
       ]
     , li [ ]
