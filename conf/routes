@@ -1,7 +1,7 @@
 
 GET         /                                                  controllers.Application.index(path="")
 
-# GET         /avatars/:id                                       controllers.Users.showAvatar(id)
+GET         /avatars/:id                                       controllers.Application.showAvatar(id)
 
 POST        /api/login                                         controllers.Api.login
 POST        /api/logout                                        controllers.Api.logout

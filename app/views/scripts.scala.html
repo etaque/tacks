@@ -6,6 +6,11 @@
 @Html(jsmessages.api.JsMessages.default.apply(Some("window.jsMessages")).body)
 </script>
 
+@helper.javascriptRouter("jsRoutes")(
+  routes.javascript.WebSockets.notifications,
+  routes.javascript.WebSockets.raceCoursePlayer
+)
+
 <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
 <script type="text/javascript">
 window.Elm = Elm
