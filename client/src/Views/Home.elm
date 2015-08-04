@@ -30,19 +30,17 @@ welcome t {player,forms} =
 welcomeForms : Player -> Forms -> List Html
 welcomeForms player forms =
   if player.guest then
-    [ setHandleBlock forms.setHandle
-    , loginBlock forms.login
-    ]
+    [ setHandleBlock forms.setHandle ]
   else
     []
 
 setHandleBlock : SetHandleForm -> Html
 setHandleBlock form =
-  row
+  div [ class "row form-set-handle" ]
     [ col4
       [ div [ class "input-group" ]
         [ textInput
-          [ placeholder "Nickname?"
+          [ placeholder "Got a nickname?"
           , value form.handle
           , onInputFormUpdate (\s -> UpdateSetHandleForm (\f -> { f | handle <- s } ))
           , onEnter submitMailbox.address (SubmitSetHandle form)
@@ -59,39 +57,11 @@ setHandleBlock form =
     ]
 
 
-loginBlock : LoginForm -> Html
-loginBlock form =
-  row
-    [ col4
-      [ div [ class "form-group" ]
-        [ textInput
-          [ placeholder "Email"
-          , value form.email
-          , onInputFormUpdate (\s -> UpdateLoginForm (\f -> { f | email <- s } ))
-          ]
-        ]
-      , div [ class "form-group" ]
-        [ passwordInput
-          [ placeholder "Password"
-          , value form.password
-          , onInputFormUpdate (\s -> UpdateLoginForm (\f -> { f | password <- s } ))
-          ]
-        ]
-      , div []
-        [ button
-          [ class "btn btn-primary"
-          , onClick submitMailbox.address (SubmitLogin form)
-          ]
-          [ text "Submit" ]
-        ]
-      ]
-    ]
-
-
 raceCourses : Translator -> AppState -> Html
 raceCourses t state =
   div [ class "container" ]
-    [ div [ class "row" ] (List.map (raceCourseStatusBlock t) state.courses)
+    [ div [ class "row" ] [ p [ class "align-center upclassic" ] [ text "Choose your track" ] ]
+    , div [ class "row" ] (List.map (raceCourseStatusBlock t) state.courses)
     ]
 
 raceCourseStatusBlock : Translator -> RaceCourseStatus -> Html

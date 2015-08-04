@@ -53,7 +53,7 @@ actionStep action appState =
       { appState | courses <- input.raceCourses }
 
     PlayerUpdate player ->
-      { appState | player <- player }
+      { appState | player <- player, screen <- Home }
 
     FormAction updateForm ->
       { appState | forms <- FormsUpdate.updateForms updateForm appState.forms }

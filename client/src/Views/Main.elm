@@ -10,6 +10,7 @@ import Messages exposing (Translator)
 import Views.TopBar as TopBar
 import Views.Home as Home
 import Views.ShowRaceCourse as ShowRaceCourse
+import Views.Login as VLogin
 
 import Render.All exposing (renderGame)
 
@@ -23,6 +24,9 @@ mainView t (w,h) appState =
 
     Home ->
       layout t appState Home.view
+
+    Login ->
+      layout t appState VLogin.view
 
     Show raceCourseStatus ->
       layout t appState (ShowRaceCourse.view raceCourseStatus)

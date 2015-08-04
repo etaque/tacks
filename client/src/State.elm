@@ -6,6 +6,7 @@ import Forms.Model exposing (Forms)
 
 type Screen
   = Home
+  | Login
   | Show RaceCourseStatus
   | ShowProfile Player
   | Play RaceCourse

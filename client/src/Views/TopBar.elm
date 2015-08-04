@@ -42,7 +42,7 @@ guestMenu : Html
 guestMenu =
   ul [ class "nav navbar-nav navbar-right nav-user" ]
     [ li [ ]
-      [ a [ ] [ text "Login" ] ]
+      [ a [ onClickGoTo Login ] [ text "Login" ] ]
     , li [ ]
       [ a [ ] [ text "Register"] ]
     ]

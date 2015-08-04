@@ -22,7 +22,7 @@ function handleError(task) {
 // see https://gist.github.com/mitchelkuijpers/11281981
 function jsx(watch) {
   var doify = watch ? watchify : browserify;
-  var bundler = doify('./scripts/main.js', { extensions: ['.jsx'] });
+  var bundler = doify('./scripts/setup.js', { extensions: ['.jsx'] });
 
   bundler.transform(reactify);
   bundler.transform(shim);
@@ -33,7 +33,7 @@ function jsx(watch) {
     stream.on('error', handleError('browserify'));
 
     return stream
-      .pipe(source('main.js'))
+      .pipe(source('setup.js'))
       .pipe(gulp.dest(buildDir + 'javascripts'));
   };
 
@@ -54,7 +54,7 @@ gulp.task('elm', function() {
 
 
 gulp.task('compress', function() {
-  gulp.src(buildDir + 'javascripts/main.js')
+  gulp.src(buildDir + 'javascripts/setup.js')
     .pipe($.uglify())
     .pipe(gulp.dest(buildDir + 'javascripts/dist'));
 });

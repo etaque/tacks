@@ -42,7 +42,6 @@ function mountGame() {
     }
     currentRaceCourseId = id;
   });
-
 }
 
 

@@ -5330,17 +5330,6 @@ Elm.Inputs.make = function (_elm) {
              ,raceInput: d
              ,windowInput: c};
    });
-   var extractGameInput = F4(function (clock,
-   keyboardInput,
-   dims,
-   maybeRaceInput) {
-      return A2($Maybe.map,
-      A3(GameInput,
-      clock,
-      keyboardInput,
-      dims),
-      maybeRaceInput);
-   });
    var LiveInput = F2(function (a,
    b) {
       return {_: {}
@@ -5376,6 +5365,21 @@ Elm.Inputs.make = function (_elm) {
    LiveUpdate,
    liveInputDecoder),
    "/api/liveStatus");
+   var GameUpdate = function (a) {
+      return {ctor: "GameUpdate"
+             ,_0: a};
+   };
+   var extractGameUpdate = F4(function (clock,
+   keyboardInput,
+   dims,
+   maybeRaceInput) {
+      return $Maybe.map(GameUpdate)(A2($Maybe.map,
+      A3(GameInput,
+      clock,
+      keyboardInput,
+      dims),
+      maybeRaceInput));
+   });
    var NoOp = {ctor: "NoOp"};
    var actionsMailbox = $Signal.mailbox(NoOp);
    var navigate = function (screen) {
@@ -5386,17 +5390,16 @@ Elm.Inputs.make = function (_elm) {
    var runServerUpdate = A2($Task.andThen,
    fetchServerUpdate,
    $Signal.send(actionsMailbox.address));
-   var AppInput = F3(function (a,
-   b,
-   c) {
+   var AppInput = F2(function (a,
+   b) {
       return {_: {}
              ,action: a
-             ,clock: c
-             ,gameInput: b};
+             ,clock: b};
    });
    _elm.Inputs.values = {_op: _op
                         ,AppInput: AppInput
                         ,NoOp: NoOp
+                        ,GameUpdate: GameUpdate
                         ,LiveUpdate: LiveUpdate
                         ,PlayerUpdate: PlayerUpdate
                         ,Navigate: Navigate
@@ -5413,7 +5416,7 @@ Elm.Inputs.make = function (_elm) {
                         ,UserArrows: UserArrows
                         ,RaceInput: RaceInput
                         ,initialRaceInput: initialRaceInput
-                        ,extractGameInput: extractGameInput
+                        ,extractGameUpdate: extractGameUpdate
                         ,manualTurn: manualTurn
                         ,isTurning: isTurning
                         ,isSubtleTurning: isSubtleTurning
@@ -6406,16 +6409,20 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                                                                                                     v.clientTime)} : _U.badPort("an object with fields `serverNow`, `startTime`, `wind`, `opponents`, `ghosts`, `leaderboard`, `initial`, `clientTime`",
       v));
    });
-   var gameInput = $Signal.dropRepeats($Signal.sampleOn(clock)(A5($Signal.map4,
-   $Inputs.extractGameInput,
+   var gameUpdate = $Signal.dropRepeats($Signal.sampleOn(clock)(A2($Signal.filterMap,
+   $Basics.identity,
+   $Inputs.NoOp)(A5($Signal.map4,
+   $Inputs.extractGameUpdate,
    clock,
    $Inputs.keyboardInput,
    $Window.dimensions,
-   raceInput)));
-   var appInput = A4($Signal.map3,
-   $Inputs.AppInput,
+   raceInput))));
+   var actions = A2($Signal.merge,
    $Inputs.actionsMailbox.signal,
-   gameInput,
+   gameUpdate);
+   var appInput = A3($Signal.map2,
+   $Inputs.AppInput,
+   actions,
    clock);
    var currentPlayer = Elm.Native.Port.make(_elm).inbound("currentPlayer",
    "Game.Player",
@@ -6490,7 +6497,8 @@ Elm.Main.make = function (_elm) {
                       ,main: main
                       ,translator: translator
                       ,clock: clock
-                      ,gameInput: gameInput
+                      ,gameUpdate: gameUpdate
+                      ,actions: actions
                       ,appInput: appInput
                       ,appState: appState};
    return _elm.Main.values;
@@ -15158,13 +15166,18 @@ Elm.Outputs.make = function (_elm) {
    });
    var extractPlayerOutput = F2(function (appState,
    appInput) {
-      return A2($Maybe.map,
-      makePlayerOutput(A2($Maybe.map,
-      function (_) {
-         return _.keyboardInput;
-      },
-      appInput.gameInput)),
-      appState.gameState);
+      return function () {
+         var keyboardInput = function () {
+            var _v2 = appInput.action;
+            switch (_v2.ctor)
+            {case "GameUpdate":
+               return $Maybe.Just(_v2._0.keyboardInput);}
+            return $Maybe.Nothing;
+         }();
+         return A2($Maybe.map,
+         makePlayerOutput(keyboardInput),
+         appState.gameState);
+      }();
    });
    var PlayerOutput = F3(function (a,
    b,
@@ -17313,6 +17326,10 @@ Elm.State.make = function (_elm) {
    var Play = function (a) {
       return {ctor: "Play",_0: a};
    };
+   var ShowProfile = function (a) {
+      return {ctor: "ShowProfile"
+             ,_0: a};
+   };
    var Show = function (a) {
       return {ctor: "Show",_0: a};
    };
@@ -17328,6 +17345,7 @@ Elm.State.make = function (_elm) {
    _elm.State.values = {_op: _op
                        ,Home: Home
                        ,Show: Show
+                       ,ShowProfile: ShowProfile
                        ,Play: Play
                        ,AppState: AppState
                        ,RaceCourseStatus: RaceCourseStatus
@@ -17423,7 +17441,7 @@ Elm.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 91 and 98");
+         "between lines 90 and 97");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -17562,18 +17580,13 @@ Elm.Steps.make = function (_elm) {
                     _v13._0),
                     appState.gameState);
                     return function () {
-                       var _v15 = appInput.gameInput;
+                       var _v15 = appInput.action;
                        switch (_v15.ctor)
-                       {case "Just":
+                       {case "GameUpdate":
                           return $Maybe.Just(A2(gameStep,
                             _v15._0,
-                            gameState));
-                          case "Nothing":
-                          return $Maybe.Just(_U.replace([["now"
-                                                         ,appInput.clock.time]],
                             gameState));}
-                       _U.badCase($moduleName,
-                       "between lines 31 and 36");
+                       return $Maybe.Just(gameState);
                     }();
                  }();}
             return $Maybe.Nothing;
@@ -18911,39 +18924,43 @@ Elm.Views.Home.make = function (_elm) {
       state.courses))]));
    });
    var loginBlock = function (form) {
-      return $Views$Utils.row(_L.fromArray([$Views$Utils.col4(_L.fromArray([A2($Html.div,
-                                                                           _L.fromArray([$Html$Attributes.$class("form-group")]),
-                                                                           _L.fromArray([$Views$Utils.textInput(_L.fromArray([$Html$Attributes.placeholder("Email")
-                                                                                                                             ,$Html$Attributes.value(form.email)
-                                                                                                                             ,$Views$Utils.onInputFormUpdate(function (s) {
-                                                                                                                                return $Forms$Model.UpdateLoginForm(function (f) {
-                                                                                                                                   return _U.replace([["email"
-                                                                                                                                                      ,s]],
-                                                                                                                                   f);
-                                                                                                                                });
-                                                                                                                             })]))]))
-                                                                           ,A2($Html.div,
-                                                                           _L.fromArray([$Html$Attributes.$class("form-group")]),
-                                                                           _L.fromArray([$Views$Utils.passwordInput(_L.fromArray([$Html$Attributes.placeholder("Password")
-                                                                                                                                 ,$Html$Attributes.value(form.password)
-                                                                                                                                 ,$Views$Utils.onInputFormUpdate(function (s) {
-                                                                                                                                    return $Forms$Model.UpdateLoginForm(function (f) {
-                                                                                                                                       return _U.replace([["password"
-                                                                                                                                                          ,s]],
-                                                                                                                                       f);
-                                                                                                                                    });
-                                                                                                                                 })]))]))
-                                                                           ,A2($Html.div,
-                                                                           _L.fromArray([]),
-                                                                           _L.fromArray([A2($Html.button,
-                                                                           _L.fromArray([$Html$Attributes.$class("btn btn-primary")
-                                                                                        ,A2($Html$Events.onClick,
-                                                                                        $Forms$Update.submitMailbox.address,
-                                                                                        $Forms$Model.SubmitLogin(form))]),
-                                                                           _L.fromArray([$Html.text("Submit")]))]))]))]));
+      return A2($Html.form,
+      _L.fromArray([$Html$Attributes.$class("row form-login")]),
+      _L.fromArray([$Views$Utils.col4(_L.fromArray([A2($Html.div,
+                                                   _L.fromArray([$Html$Attributes.$class("form-group")]),
+                                                   _L.fromArray([$Views$Utils.textInput(_L.fromArray([$Html$Attributes.placeholder("Email")
+                                                                                                     ,$Html$Attributes.value(form.email)
+                                                                                                     ,$Views$Utils.onInputFormUpdate(function (s) {
+                                                                                                        return $Forms$Model.UpdateLoginForm(function (f) {
+                                                                                                           return _U.replace([["email"
+                                                                                                                              ,s]],
+                                                                                                           f);
+                                                                                                        });
+                                                                                                     })]))]))
+                                                   ,A2($Html.div,
+                                                   _L.fromArray([$Html$Attributes.$class("form-group")]),
+                                                   _L.fromArray([$Views$Utils.passwordInput(_L.fromArray([$Html$Attributes.placeholder("Password")
+                                                                                                         ,$Html$Attributes.value(form.password)
+                                                                                                         ,$Views$Utils.onInputFormUpdate(function (s) {
+                                                                                                            return $Forms$Model.UpdateLoginForm(function (f) {
+                                                                                                               return _U.replace([["password"
+                                                                                                                                  ,s]],
+                                                                                                               f);
+                                                                                                            });
+                                                                                                         })]))]))
+                                                   ,A2($Html.div,
+                                                   _L.fromArray([]),
+                                                   _L.fromArray([A2($Html.button,
+                                                   _L.fromArray([$Html$Attributes.$class("btn btn-primary")
+                                                                ,A2($Html$Events.onClick,
+                                                                $Forms$Update.submitMailbox.address,
+                                                                $Forms$Model.SubmitLogin(form))]),
+                                                   _L.fromArray([$Html.text("Submit")]))]))]))]));
    };
    var setHandleBlock = function (form) {
-      return $Views$Utils.row(_L.fromArray([$Views$Utils.col4(_L.fromArray([A2($Html.div,
+      return A2($Html.form,
+      _L.fromArray([$Html$Attributes.$class("row form-set-handle")]),
+      _L.fromArray([$Views$Utils.col4(_L.fromArray([A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("input-group")]),
       _L.fromArray([$Views$Utils.textInput(_L.fromArray([$Html$Attributes.placeholder("Nickname?")
                                                         ,$Html$Attributes.value(form.handle)
