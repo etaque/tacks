@@ -53,7 +53,7 @@ userMenu player =
     [ li [ ]
       [ a [ ]
         [ img [ src (avatarUrl player), class "avatar avatar-user" ] [ ]
-        , text "Profile"
+        , a [ onClickGoTo (ShowProfile player) ] [ text "Profile" ]
         ]
       ]
     , li [ ]

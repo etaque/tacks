@@ -53,6 +53,7 @@ setHandleBlock form =
             [ text "submit" ]
           ]
         ]
+      , p [ class "align-center" ] [ a [ onClickGoTo Login ] [ text "or go to login"] ]
       ]
     ]
 

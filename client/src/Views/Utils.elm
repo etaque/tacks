@@ -32,6 +32,11 @@ onEnter address value =
 is13 : Int -> Result String ()
 is13 code =
   if code == 13 then Ok () else Err "not the right key code"
+
+container : List Html -> Html
+container content =
+  div [ class "container" ] content
+
 row : List Html -> Html
 row content =
   div [ class "row" ] content
@@ -85,6 +90,9 @@ avatarUrl p =
     Just id -> "/avatars/" ++ id
     Nothing -> if p.user then "/assets/images/avatar-user.png" else "/assets/images/avatar-guest.png"
 
+playerHandle : Player -> String
+playerHandle p =
+  Maybe.withDefault "Anonymous" p.handle
 
 raceCourseName : Translator -> RaceCourse -> String
 raceCourseName t {slug} =
