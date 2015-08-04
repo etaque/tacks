@@ -1,9 +1,0 @@
-@(form: Form[TournamentData])(implicit req: PlayerRequest[_], lang: Lang)
-
-@import views.html.bootstrap3._
-
-@textGroup(form("name"), Messages("tournaments.name"))
-
-@textGroup(form("meetTime"), Messages("tournaments.meetTime"), inputType = "datetime-local")
-
-@textareaGroup(form("description"), Messages("tournaments.description"))

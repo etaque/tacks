@@ -1,49 +1,12 @@
 
-GET         /                                                  controllers.Application.game
-POST        /setHandle                                         controllers.Application.setHandle
+GET         /                                                  controllers.Application.index(path="")
 
-GET         /old                                               controllers.Application.index
-
-GET         /run/:timeTrialId                                  controllers.Application.playTimeTrial(timeTrialId: String)
-GET         /play/:raceId                                      controllers.Application.playRace(raceId: String)
-GET         /course/:raceCourseId                              controllers.Application.playRaceCourse(raceCourseId: String)
-
-GET         /tournaments                                       controllers.Tournaments.index
-GET         /tournaments/new                                   controllers.Tournaments.creation
-POST        /tournaments                                       controllers.Tournaments.create
-GET         /tournaments/:id                                   controllers.Tournaments.show(id)
-GET         /tournaments/:id/edit                              controllers.Tournaments.edit(id)
-POST        /tournaments/:id                                   controllers.Tournaments.update(id)
-GET         /tournaments/:id/races/new                         controllers.Tournaments.raceCreation(id)
-POST        /tournaments/:id/races                             controllers.Tournaments.createRace(id)
-POST        /tournaments/:id/mountRace/:raceId                 controllers.Tournaments.mountRace(id, raceId)
-POST        /tournaments/:id/unmountRace/:raceId               controllers.Tournaments.unmountRace(id, raceId)
-
-GET         /time-trials/leaderboard                           controllers.TimeTrials.currentLeaderboard
-GET         /time-trials/leaderboard/:period                   controllers.TimeTrials.leaderboard(period)
-GET         /time-trials/:id                                   controllers.TimeTrials.show(id)
-
-GET         /tutorial                                          controllers.Application.tutorial
-
-GET         /register                                          controllers.Users.creation
-POST        /register                                          controllers.Users.create
-
-POST        /users/updateStatus                                controllers.Users.updateStatus
-GET         /me/edit                                           controllers.Users.edit
-POST        /me/updateSettings                                 controllers.Users.update
-POST        /me/uploadAvatar                                   controllers.Users.uploadAvatar
-POST        /me/removeAvatar                                   controllers.Users.removeAvatar
-GET         /avatars/:id                                       controllers.Users.showAvatar(id)
-
-GET         /login                                             controllers.Auth.askLogin
-POST        /login                                             controllers.Auth.submitLogin
-GET         /logout                                            controllers.Auth.logout
+# GET         /avatars/:id                                       controllers.Users.showAvatar(id)
 
 POST        /api/login                                         controllers.Api.login
 POST        /api/logout                                        controllers.Api.logout
 GET         /api/currentPlayer                                 controllers.Api.currentPlayer
 GET         /api/liveStatus                                    controllers.Api.liveStatus
-POST        /api/createRace/:generator                         controllers.Api.createRace(generator)
 POST        /api/setHandle                                     controllers.Api.setHandle
 
 GET         /ws/racePlayer/:raceId                             controllers.WebSockets.racePlayer(raceId)
@@ -53,14 +16,13 @@ GET         /ws/tutorial                                       controllers.WebSo
 GET         /ws/notifications                                  controllers.WebSockets.notifications
 GET         /ws/chatRoom                                       controllers.WebSockets.chatRoom
 
-GET         /blog                                              controllers.Prismic.blog
-GET         /blog/:id/:slug                                    controllers.Prismic.post(id, slug)
+#GET         /blog                                              controllers.Prismic.blog
+#GET         /blog/:id/:slug                                    controllers.Prismic.post(id, slug)
 
-GET         /about                                             controllers.Prismic.about
+#GET         /about                                             controllers.Prismic.about
 
-GET         /players/:handle                                   controllers.Users.show(handle)
 
 # Map static resources from the /public folder to the /assets URL path
 GET         /assets/*file                                      controllers.Assets.at(path="/public", file)
 
-GET         /*path                                             controllers.Application.notFound(path)
+GET         /*path                                             controllers.Application.index(path)

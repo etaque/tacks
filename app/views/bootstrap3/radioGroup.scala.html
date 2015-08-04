@@ -1,9 +1,0 @@
-@(field: Field, label: String, options: Seq[(String, String)], help: String = "")
-
-@import views.bootstrap3.Helpers._
-
-@formGroup(label, field.hasErrors, required = isRequired(field)) {
-  @radioTagsInline(field, options)
-  <span class="help-block">@help</span>
-  <span class="help-block">@errorMessage(field)</span>
-}

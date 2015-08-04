@@ -17,7 +17,7 @@ trait Security { this: Controller =>
   def asUser[A](f: User => Future[Result])(implicit req: PlayerRequest[A]): Future[Result] = {
     req.player match {
       case u: User => f(u)
-      case _ => Future.successful(Redirect(routes.Auth.askLogin()))
+      case _ => Future.successful(Redirect(routes.Application.index("")))
     }
   }
 
@@ -53,7 +53,7 @@ trait Security { this: Controller =>
               case _ => result
             }
           }.recover {
-            case e: FutureFlattenOptException => NotFound(views.html.notFound())
+            case e: FutureFlattenOptException => NotFound
           }
         }
       }

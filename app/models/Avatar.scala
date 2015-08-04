@@ -23,7 +23,7 @@ object Avatar {
   def removeOpt(idOpt: Option[BSONObjectID]): Future[Unit] = {
     idOpt match {
       case Some(id) => remove(id).map(_ => Unit)
-      case None => Future.successful()
+      case None => Future.successful(())
     }
   }
 

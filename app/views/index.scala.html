@@ -1,61 +1,13 @@
-@(trials: Seq[TimeTrial],
-  trialsUsers: Seq[User],
-  trialLeaderboard: core.TimeTrialLeaderboard.Leaderboard,
-  finishedRaces: Seq[Race],
-  users: Seq[User],
-  userForm: Form[CreateUser]
-)(implicit request: PlayerRequest[_], lang: Lang)
+@()(implicit request: PlayerRequest[_], lang: Lang)
 
-@import tools.DateFormats._
 @import play.api.Play.current
+@import JsonFormats.playerFormat
 
-@main {
-
-  <div class="title-wrapper">
-    <div class="container">
-
-      @request.player match {
-
-        case u: User => {
-          <h1>@Messages("home.welcome", u.handle)</h1>
-        }
-
-        case g: Guest => {
-
-          <h1>@Messages("home.title")</h1>
-          <p class="align-center">@Html(Messages("home.intro"))</p>
-
-          <form action="@routes.Application.setHandle" method="post" class="form-set-handle row">
-            <div class="col-lg-4 col-lg-offset-4">
-              <div class="input-group">
-                <input type="text" name="handle" class="form-control" value="@g.handle.getOrElse("")" placeholder="@Messages("home.handlePlaceholder")"/>
-                <span class="input-group-btn">
-                  <input type="submit" value="@Messages("home.setHandle")" class="btn btn-primary" />
-                </span>
-              </div>
-            </div>
-          </form>
-
-        }
-      }
-
-
-      <script id="messages" type="custom-data">
-        @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.default.messages).toString())
-      </script>
-
-      <div id="liveCenter"></div>
-
-      <!-- <div id="chat"></div> -->
-
-    </div>
-  </div>
-
-  <div class="light-wrapper hall-of-fame">
-    <div class="container">
-
-      <h2>@Messages("home.hallOfFame")</h2>
-
-    </div>
-  </div>
+@fullscreen() {
+  <script id="messages" type="custom-data">
+    @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.default.messages).toString())
+  </script>
+  <script id="currentPlayer" type="custom-data">
+    @Html(play.api.libs.json.Json.toJson(request.player).toString())
+  </script>
 }
