@@ -6,9 +6,9 @@ import Json.Decode as Json
 import Json.Encode as JsEncode
 
 import Forms.Model exposing (..)
-import Inputs exposing (..)
+import State exposing (..)
 import Game exposing (Player)
-import Decoders exposing (playerDecoder)
+import Decoders exposing (..)
 
 
 -- GET
@@ -17,10 +17,17 @@ getPlayer : String -> Task Http.Error Player
 getPlayer id =
   Http.get playerDecoder ("/api/players/" ++ id)
 
+getLiveStatus : Task Http.Error LiveStatus
+getLiveStatus =
+  Http.get liveStatusDecoder "/api/liveStatus"
 
-getRaceCourse : String -> Task Http.Error Player
-getRaceCourse id =
-  Http.get playerDecoder ("/api/players/" ++ id)
+getRaceCourse : String -> Task Http.Error RaceCourse
+getRaceCourse slug =
+  Http.get raceCourseDecoder ("/api/raceCourse/" ++ slug)
+
+getRaceCourseStatus : String -> Task Http.Error RaceCourseStatus
+getRaceCourseStatus slug =
+  Http.get raceCourseStatusDecoder ("/api/raceCourseStatus/" ++ slug)
 
 
 -- POST

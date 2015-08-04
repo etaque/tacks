@@ -81,30 +81,29 @@ object Api extends Controller with Security {
     ))
   }
 
+  def raceCourse(slug: String) = PlayerAction.async() { implicit request =>
+    RaceCourse.findBySlug(slug).map {
+      case Some(raceCourse) => Ok(Json.toJson(raceCourse))
+      case None => NotFound
+    }
+  }
+
+  def raceCourseStatus(slug: String) = PlayerAction.async() { implicit request =>
+    (RacesSupervisor.actorRef ? GetRaceCourses).mapTo[Seq[RaceCourseStatus]].map { raceCourseStatuses =>
+      raceCourseStatuses.find(_.raceCourse.slug == slug) match {
+        case Some(rcs) => Ok(Json.toJson(rcs))
+        case None => NotFound
+      }
+    }
+
+  }
+
   // def onlinePlayers = PlayerAction.async() { implicit request =>
   //   (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]].map { players =>
   //     Ok(Json.toJson(players))
   //   }
   // }
 
-  def createRace(generatorSlug: String) = PlayerAction.async(parse.json) { implicit request =>
-    val generator = CourseGenerator.findBySlug(generatorSlug).getOrElse(WarmUp)
-
-    val countdown = request.getQueryString("countdown")
-      .flatMap(c => Try(c.toInt).toOption)
-      .getOrElse(30)
-
-    val race = Race(
-      playerId = Some(getPlayerId),
-      course = generator.generateCourse(),
-      generator = generator.slug,
-      countdownSeconds = countdown
-    )
-
-    (RacesSupervisor.actorRef ? MountRace(race, request.player)).map { _ =>
-      Ok(Json.toJson(race))
-    }
-  }
 
   def setHandle = PlayerAction(parse.json) { implicit request =>
     (request.body \ "handle").asOpt[String] match {

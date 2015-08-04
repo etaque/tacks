@@ -9,7 +9,7 @@ import State exposing (..)
 import Core exposing (find)
 import ServerApi
 import Inputs exposing (actionsMailbox)
-
+import Debug
 
 type alias ScreenLoader = Task Http.Error Screen
 
@@ -40,15 +40,13 @@ showProfile id =
 
 showCourse : List RaceCourseStatus -> String -> ScreenLoader
 showCourse courses slug =
-  case find (\{raceCourse} -> raceCourse.slug == slug) courses of
-    Just raceCourseStatus -> go (Show raceCourseStatus)
-    Nothing -> go NotFound
+  ServerApi.getRaceCourseStatus slug
+    |> Task.map Show
 
 playCourse : List RaceCourseStatus -> String -> ScreenLoader
 playCourse courses slug =
-  case find (\{raceCourse} -> raceCourse.slug == slug) courses of
-    Just raceCourseStatus -> go (Play raceCourseStatus.raceCourse)
-    Nothing -> go NotFound
+  ServerApi.getRaceCourse slug
+    |> Task.map Play
 
 
 -- Tooling

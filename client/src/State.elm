@@ -33,6 +33,11 @@ type alias RaceCourse =
   , startCycle: Int
   }
 
+type alias LiveStatus =
+  { raceCourses : List RaceCourseStatus
+  , onlinePlayers : List Player
+  }
+
 initialAppState : Player -> AppState
 initialAppState player =
   { screen = Home

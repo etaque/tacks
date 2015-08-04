@@ -7,6 +7,11 @@ import State exposing (..)
 import Geo exposing (Point)
 
 
+liveStatusDecoder : Json.Decoder LiveStatus
+liveStatusDecoder =
+  object2 LiveStatus
+    ("raceCourses" := (Json.list raceCourseStatusDecoder))
+    ("onlinePlayers" := (Json.list playerDecoder))
 
 raceCourseStatusDecoder : Decoder RaceCourseStatus
 raceCourseStatusDecoder =

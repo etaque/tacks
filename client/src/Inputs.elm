@@ -15,6 +15,7 @@ import State exposing (..)
 import Geo exposing (Point)
 import Forms.Model as Forms
 import Decoders exposing (raceCourseStatusDecoder, playerDecoder)
+import ServerApi
 
 
 type alias AppInput =
@@ -28,15 +29,10 @@ type alias AppInput =
 type Action
   = NoOp
   | GameUpdate GameInput
-  | LiveUpdate LiveInput
+  | LiveUpdate LiveStatus
   | PlayerUpdate Player
   | Navigate Screen
   | FormAction Forms.UpdateForm
-
-type alias LiveInput =
-  { raceCourses : List RaceCourseStatus
-  , onlinePlayers : List Player
-  }
 
 actionsMailbox : Signal.Mailbox Action
 actionsMailbox =
@@ -50,7 +46,7 @@ navigate screen =
 
 fetchServerUpdate : Task Http.Error Action
 fetchServerUpdate =
-  Http.get (Json.map LiveUpdate liveInputDecoder) "/api/liveStatus"
+  Task.map LiveUpdate ServerApi.getLiveStatus
 
 runServerUpdate : Task Http.Error ()
 runServerUpdate =
@@ -142,12 +138,4 @@ keyboardInput = Signal.map2 toKeyboardInput
   Keyboard.arrows
   Keyboard.keysDown
 
-
--- Decoders
-
-liveInputDecoder : Json.Decoder LiveInput
-liveInputDecoder =
-  object2 LiveInput
-    ("raceCourses" := (Json.list raceCourseStatusDecoder))
-    ("onlinePlayers" := (Json.list playerDecoder))
 

@@ -7,6 +7,8 @@ POST        /api/login                                         controllers.Api.l
 POST        /api/logout                                        controllers.Api.logout
 GET         /api/currentPlayer                                 controllers.Api.currentPlayer
 GET         /api/liveStatus                                    controllers.Api.liveStatus
+GET         /api/raceCourse/:slug                              controllers.Api.raceCourse(slug: String)
+GET         /api/raceCourseStatus/:slug                        controllers.Api.raceCourseStatus(slug: String)
 POST        /api/setHandle                                     controllers.Api.setHandle
 
 GET         /ws/racePlayer/:raceId                             controllers.WebSockets.racePlayer(raceId)
