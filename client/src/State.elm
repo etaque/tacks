@@ -7,6 +7,7 @@ import Forms.Model exposing (Forms)
 type Screen
   = Home
   | Login
+  | Register
   | Show RaceCourseStatus
   | ShowProfile Player
   | Play RaceCourse
@@ -50,5 +51,6 @@ initialAppState player =
 initialForms : Player -> Forms
 initialForms player =
   { setHandle = { handle = Maybe.withDefault "" player.handle }
-  , login = { email = "", password = "", error = False }
+  , login = { email = "", password = "" }
+  , register = { email = "", handle = "", password = "" }
   }

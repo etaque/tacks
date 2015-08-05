@@ -202,6 +202,15 @@ a {
   font-family: $lightFontFamily;
 }
 
+.white-panel {
+  background-color: $smokeWhite;
+  padding: 10px;
+  color: $darkGray;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px $darkerSeaBlue;
+}
+
+
 .btn {
   font-weight: bold;
   text-transform: uppercase;

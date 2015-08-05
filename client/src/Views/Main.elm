@@ -11,6 +11,7 @@ import Views.TopBar as TopBar
 import Views.Home as Home
 import Views.ShowRaceCourse as ShowRaceCourse
 import Views.Login as VLogin
+import Views.Register as Register
 import Views.ShowProfile as ShowProfile
 
 import Render.All exposing (renderGame)
@@ -28,6 +29,9 @@ mainView t (w,h) appState =
 
     Login ->
       layout t appState VLogin.view
+
+    Register ->
+      layout t appState Register.view
 
     ShowProfile p ->
       layout t appState (ShowProfile.view p)

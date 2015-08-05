@@ -26,6 +26,7 @@ route {player,courses} =
   match
     [ "/" :-> to Home
     , "/login" :-> to Login
+    , "/register" :-> to Register
     , "/me" :-> to (ShowProfile player)
     , "/profile/" :-> showProfile
     , "/show-course/" :-> showCourse courses

@@ -44,13 +44,10 @@ navigate screen =
 
 -- LiveCenter
 
-fetchServerUpdate : Task Http.Error Action
-fetchServerUpdate =
-  Task.map LiveUpdate ServerApi.getLiveStatus
-
 runServerUpdate : Task Http.Error ()
 runServerUpdate =
-  fetchServerUpdate `Task.andThen` (Signal.send actionsMailbox.address)
+  (Task.map LiveUpdate ServerApi.getLiveStatus)
+    `Task.andThen` (Signal.send actionsMailbox.address)
 
 
 -- Game

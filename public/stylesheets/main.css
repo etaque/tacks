@@ -5031,6 +5031,13 @@ a {
   .footer-wrapper a {
     color: white; }
 
+.white-panel {
+  background-color: #f8f9fb;
+  padding: 10px;
+  color: #51585E;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px #1b2b46; }
+
 .btn {
   font-weight: bold;
   text-transform: uppercase;
@@ -5868,6 +5875,13 @@ a {
   font-family: "Proxima Nova Thin"; }
   .footer-wrapper a {
     color: white; }
+
+.white-panel {
+  background-color: #f8f9fb;
+  padding: 10px;
+  color: #51585E;
+  border-radius: 5px;
+  box-shadow: 0 2px 3px #1b2b46; }
 
 .btn {
   font-weight: bold;

@@ -24,7 +24,7 @@ view t state =
 loginForm : Translator -> LoginForm -> Html
 loginForm t form =
   div [ class "row form-login" ]
-    [ col4
+    [ whitePanel
       [ div [ class "form-group" ]
         [ textInput
           [ placeholder "Email"

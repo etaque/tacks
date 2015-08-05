@@ -14,6 +14,9 @@ import Forms.Model exposing (UpdateForm)
 import Routes exposing (pathChangeMailbox)
 
 
+type alias Wrapper = List Html -> Html
+
+
 path : String -> Attribute
 path p =
   onClick pathChangeMailbox.address (setPath p)
@@ -37,22 +40,21 @@ is13 : Int -> Result String ()
 is13 code =
   if code == 13 then Ok () else Err "not the right key code"
 
-container : List Html -> Html
+container : Wrapper
 container content =
   div [ class "container" ] content
 
-row : List Html -> Html
+row : Wrapper
 row content =
   div [ class "row" ] content
 
-col4 = col 4
+col4 : Wrapper
+col4 content =
+  div [ class "col-lg-4 col-lg-offset-4" ] content
 
-col : Int -> List Html -> Html
-col w content =
-  let
-    ws = toString w
-  in
-    div [ class ("col-lg-" ++ ws ++ " col-lg-offset-" ++ ws) ] content
+whitePanel : Wrapper
+whitePanel content =
+  col4 [ div [ class "white-panel" ] content ]
 
 textInput : List Attribute -> Html
 textInput attributes =
@@ -62,15 +64,15 @@ passwordInput : List Attribute -> Html
 passwordInput attributes =
   input (List.append [ type' "password", class "form-control"] attributes) []
 
-titleWrapper : List Html -> Html
+titleWrapper : Wrapper
 titleWrapper content =
   blockWrapper "title-wrapper" content
 
-lightWrapper : List Html -> Html
+lightWrapper : Wrapper
 lightWrapper content =
   blockWrapper "light-wrapper" content
 
-blockWrapper : String -> List Html -> Html
+blockWrapper : String -> Wrapper
 blockWrapper wrapperClass content =
   div [ class wrapperClass ] [ div [ class "container" ] content ]
 

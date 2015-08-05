@@ -38,6 +38,15 @@ postHandle f =
     [ ("handle", JsEncode.string f.handle) ]
     |> postJson playerDecoder "/api/setHandle"
 
+postRegister : RegisterForm -> Task Http.Error Player
+postRegister f =
+  JsEncode.object
+    [ ("email", JsEncode.string f.email)
+    , ("handle", JsEncode.string f.handle)
+    , ("password", JsEncode.string f.password)
+    ]
+    |> postJson playerDecoder "/api/register"
+
 postLogin : LoginForm -> Task Http.Error Player
 postLogin f =
   JsEncode.object

@@ -5,6 +5,7 @@ GET         /avatars/:id                                       controllers.Appli
 
 POST        /api/login                                         controllers.Api.login
 POST        /api/logout                                        controllers.Api.logout
+POST        /api/register                                      controllers.Api.register
 GET         /api/currentPlayer                                 controllers.Api.currentPlayer
 GET         /api/liveStatus                                    controllers.Api.liveStatus
 GET         /api/raceCourse/:slug                              controllers.Api.raceCourse(slug: String)

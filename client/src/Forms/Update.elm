@@ -24,6 +24,8 @@ updateForms u forms =
       { forms | setHandle <- (t forms.setHandle) }
     UpdateLoginForm t ->
       { forms | login <- (t forms.login) }
+    UpdateRegisterForm t ->
+      { forms | register <- (t forms.register) }
 
 
 submitFormTask : SubmitForm -> Task Http.Error ()
@@ -32,6 +34,8 @@ submitFormTask sf =
     t = case sf of
       SubmitSetHandle f ->
         postHandle f |> Task.map PlayerUpdate
+      SubmitRegister f ->
+        postRegister f |> Task.map PlayerUpdate |> withNewPath "/"
       SubmitLogin f ->
         postLogin f |> Task.map PlayerUpdate |> withNewPath "/"
       SubmitLogout ->

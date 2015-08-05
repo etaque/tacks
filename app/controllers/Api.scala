@@ -7,6 +7,7 @@ import scala.concurrent.duration._
 import play.api.mvc._
 import play.api.libs.json._
 import play.api.libs.functional.syntax._
+import play.api.libs.json.Reads._
 import play.api.Play.current
 import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
@@ -58,6 +59,49 @@ object Api extends Controller with Security {
   def currentPlayer = PlayerAction.async() { request =>
     Future.successful(Ok(playerFormat.writes(request.player)))
   }
+
+
+  case class RegisterForm(
+    handle: String,
+    email: String,
+    password: String
+  )
+
+  implicit val registerReads = (
+    (__ \ "handle").read[String](minLength[String](3)) and
+      (__ \ "email").read[String](email) and
+      (__ \ "password").read[String](minLength[String](3))
+  )(RegisterForm.apply _)
+
+  def register = Action.async(parse.json) { implicit request =>
+    request.body.validate(registerReads).fold(
+      errors => Future.successful(BadRequest), // TODO
+      {
+        case form @ RegisterForm(handle, email, password) => {
+          for {
+            emailTaken <- User.findByEmail(email).map(_.nonEmpty)
+            handleTaken <- User.findByHandleOpt(handle).map(_.nonEmpty)
+            result <- handleRegisterForm(form, emailTaken, handleTaken)
+          }
+          yield result
+        }
+      }
+    )
+  }
+
+  def handleRegisterForm(form: RegisterForm, emailTaken: Boolean, handleTaken: Boolean): Future[Result] = {
+    if (emailTaken || handleTaken) {
+      Future.successful(BadRequest) // TODO
+    } else {
+      val user = User(email = form.email, handle = form.handle, status = None, avatarId = None, vmgMagnet = Player.defaultVmgMagnet)
+      User.create(user, form.password).map { _ =>
+        Ok(Json.toJson(user)(playerFormat)).withSession("playerId" -> user.idToStr)
+      }
+
+    }
+
+  }
+
 
   def liveStatus = PlayerAction.async() { implicit request =>
     val racesFu = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]

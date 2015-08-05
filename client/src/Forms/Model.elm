@@ -9,6 +9,7 @@ import Json.Encode as JsEncode
 type alias Forms =
   { setHandle : SetHandleForm
   , login : LoginForm
+  , register : RegisterForm
   }
 
 type alias SetHandleForm =
@@ -17,15 +18,22 @@ type alias SetHandleForm =
 type alias LoginForm =
   { email : String
   , password : String
-  , error : Bool
+  }
+
+type alias RegisterForm =
+  { email : String
+  , handle : String
+  , password : String
   }
 
 type UpdateForm
   = UpdateSetHandleForm (SetHandleForm -> SetHandleForm)
   | UpdateLoginForm (LoginForm -> LoginForm)
+  | UpdateRegisterForm (RegisterForm -> RegisterForm)
 
 type SubmitForm
   = NoSubmit
   | SubmitSetHandle SetHandleForm
   | SubmitLogin LoginForm
+  | SubmitRegister RegisterForm
   | SubmitLogout

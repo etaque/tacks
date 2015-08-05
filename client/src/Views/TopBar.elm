@@ -44,7 +44,7 @@ guestMenu =
     [ li [ ]
       [ a [ path "/login" ] [ text "Login" ] ]
     , li [ ]
-      [ a [ ] [ text "Register"] ]
+      [ a [ path "/register" ] [ text "Register"] ]
     ]
 
 userMenu : Player -> Html
