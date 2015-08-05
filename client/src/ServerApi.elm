@@ -14,8 +14,8 @@ import Decoders exposing (..)
 -- GET
 
 getPlayer : String -> Task Http.Error Player
-getPlayer id =
-  Http.get playerDecoder ("/api/players/" ++ id)
+getPlayer handle =
+  Http.get playerDecoder ("/api/players/" ++ handle)
 
 getLiveStatus : Task Http.Error LiveStatus
 getLiveStatus =
@@ -62,16 +62,12 @@ postLogout =
 
 -- Tooling
 
-jsonToBody : JsEncode.Value -> Http.Body
-jsonToBody jsValue =
-  Http.string (JsEncode.encode 0 jsValue)
-
 postJson : Json.Decoder a -> String -> JsEncode.Value -> Task Http.Error a
 postJson decoder url jsonBody =
   Http.send Http.defaultSettings
     { verb = "POST"
     , headers = [ ("Content-Type", "application/json") ]
     , url = url
-    , body = jsonToBody jsonBody
+    , body = Http.string (JsEncode.encode 0 jsonBody)
     }
     |> Http.fromJson decoder

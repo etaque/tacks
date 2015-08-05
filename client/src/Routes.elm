@@ -1,6 +1,6 @@
 module Routes where
 
-import Task exposing (Task,andThen)
+import Task exposing (Task, andThen, map)
 
 import Router exposing (..)
 import Http
@@ -22,39 +22,35 @@ pathToScreenTask appState path =
     `andThen` (\screen -> Signal.send actionsMailbox.address (Inputs.Navigate screen))
 
 route : AppState -> Route ScreenLoader
-route {player,courses} =
+route {player} =
   match
     [ "/" :-> to Home
     , "/login" :-> to Login
     , "/register" :-> to Register
     , "/me" :-> to (ShowProfile player)
     , "/profile/" :-> showProfile
-    , "/show-course/" :-> showCourse courses
-    , "/play/" :-> playCourse courses
+    , "/show-course/" :-> showCourse
+    , "/play/" :-> playCourse
     ] (to NotFound)
 
 showProfile : String -> ScreenLoader
-showProfile id =
-  ServerApi.getPlayer id
-    |> Task.map ShowProfile
+showProfile handle =
+  ServerApi.getPlayer handle
+    |> map ShowProfile
 
 
-showCourse : List RaceCourseStatus -> String -> ScreenLoader
-showCourse courses slug =
+showCourse : String -> ScreenLoader
+showCourse slug =
   ServerApi.getRaceCourseStatus slug
-    |> Task.map Show
+    |> map Show
 
-playCourse : List RaceCourseStatus -> String -> ScreenLoader
-playCourse courses slug =
+playCourse : String -> ScreenLoader
+playCourse slug =
   ServerApi.getRaceCourse slug
-    |> Task.map Play
+    |> map Play
 
 
 -- Tooling
-
-go : Screen -> ScreenLoader
-go screen =
-  Task.succeed screen
 
 to : Screen -> String -> ScreenLoader
 to screen _ =
