@@ -1,6 +1,7 @@
 module Game where
 
 import Geo exposing (..)
+import Models exposing (..)
 import Core
 
 import Maybe as M
@@ -54,11 +55,6 @@ type alias Gust =
   , spawnedAt: Float
   }
 
-type alias Gate = { y: Float, width: Float }
-
-type alias Island = { location : Point, radius : Float }
-
-type alias RaceArea = { rightTop: Point, leftBottom: Point }
 
 -- Player
 
@@ -85,16 +81,6 @@ type alias PlayerState =
   }
 
 type ControlMode = FixedAngle | FixedHeading
-
-type alias Player =
-  { id:     String
-  , handle: Maybe String
-  , status: Maybe String
-  , avatarId: Maybe String
-  , vmgMagnet: Int
-  , guest: Bool
-  , user: Bool
-  }
 
 type alias Vmg =
   { angle: Float
@@ -131,41 +117,6 @@ type alias GhostState =
   , handle:   Maybe String
   , gates:    List Time
   }
-
--- Course
-
-type alias Course =
-  { upwind:           Gate
-  , downwind:         Gate
-  , laps:             Int
-  -- , markRadius:       Float
-  , islands:          List Island
-  , area:             RaceArea
-  , windGenerator:    WindGenerator
-  -- , gustGenerator:    GustGenerator
-  -- , windShadowLength: Float
-  -- , boatWidth:        Float
-  }
-
-type GateLocation = DownwindGate | UpwindGate | StartLine
-
-type alias WindGenerator =
-  { wavelength1: Float
-  , amplitude1: Float
-  , wavelength2: Float
-  , amplitude2: Float
-  }
-
--- type alias GustDef =
---   { angle: Float
---   , speed: Float
---   , radius: Float
---   }
-
--- type alias GustGenerator =
---   { interval: Int
---   , defs: List GustDef
---   }
 
 areaBox : RaceArea -> (Point,Point)
 areaBox {rightTop,leftBottom} =

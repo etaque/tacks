@@ -11,43 +11,41 @@ import Task exposing (Task, andThen)
 import Http
 
 import Game exposing (..)
-import State exposing (..)
+import Models exposing (..)
 import Geo exposing (Point)
-import Forms.Model as Forms
-import Decoders exposing (raceCourseStatusDecoder, playerDecoder)
+import Decoders exposing (..)
 import ServerApi
 
 
-type alias AppInput =
-  { action : Action
-  , clock: Clock
-  }
+-- type alias AppInput =
+--   { action : Action
+--   , clock: Clock
+--   }
 
 
 -- Actions
 
-type Action
-  = NoOp
-  | GameUpdate GameInput
-  | LiveUpdate LiveStatus
-  | PlayerUpdate Player
-  | Navigate Screen
-  | FormAction Forms.UpdateForm
+-- type Action
+--   = NoOp
+--   | GameUpdate GameInput
+--   | LiveUpdate LiveStatus
+--   | PlayerUpdate Player
+--   | Navigate Screen
 
-actionsMailbox : Signal.Mailbox Action
-actionsMailbox =
-  Signal.mailbox NoOp
+-- actionsMailbox : Signal.Mailbox Action
+-- actionsMailbox =
+--   Signal.mailbox NoOp
 
-navigate : Screen -> Message
-navigate screen =
-  Signal.message actionsMailbox.address (Navigate screen)
+-- navigate : Screen -> Message
+-- navigate screen =
+--   Signal.message actionsMailbox.address (Navigate screen)
 
--- LiveCenter
+-- -- LiveCenter
 
-runServerUpdate : Task Http.Error ()
-runServerUpdate =
-  (Task.map LiveUpdate ServerApi.getLiveStatus)
-    `Task.andThen` (Signal.send actionsMailbox.address)
+-- runServerUpdate : Task Http.Error ()
+-- runServerUpdate =
+--   (Task.map LiveUpdate ServerApi.getLiveStatus)
+--     `Task.andThen` (Signal.send actionsMailbox.address)
 
 
 -- Game
@@ -109,10 +107,10 @@ initialRaceInput =
   }
 
 
-extractGameUpdate : Clock -> KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe Action
-extractGameUpdate clock keyboardInput dims maybeRaceInput =
-  Maybe.map (GameInput clock keyboardInput dims) maybeRaceInput
-    |> Maybe.map GameUpdate
+-- extractGameUpdate : Clock -> KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe Action
+-- extractGameUpdate clock keyboardInput dims maybeRaceInput =
+--   Maybe.map (GameInput clock keyboardInput dims) maybeRaceInput
+--     |> Maybe.map GameUpdate
 
 
 manualTurn ki = ki.arrows.x /= 0

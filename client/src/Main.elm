@@ -1,104 +1,47 @@
 module Main where
 
-import Window
-import Time exposing (timestamp, fps, every, second)
-import Html exposing (Html)
 import Task exposing (Task)
+import Html exposing (Html)
 import Http
-import Json.Decode as Json
-import History
+import Window
 
-import Inputs exposing (..)
-import Outputs exposing (..)
-import State exposing (AppState, initialAppState)
-import Game exposing (Player)
-import Steps exposing (mainStep)
-import Views.Main exposing (mainView)
-import Core exposing (isJust)
-import Messages
-import Forms.Update as FormsUpdate exposing (submitMailbox)
-import Routes exposing (pathChangeMailbox)
+import Models exposing (Player)
+import AppUpdates exposing (..)
+import AppTypes exposing (..)
+import AppView
 
-
--- Inputs
-
-port messagesStore : Json.Value
 
 port currentPlayer : Player
 
-port raceInput : Signal (Maybe RaceInput)
+port reactionsRunner : Signal (Task Http.Error ())
+port reactionsRunner =
+  Signal.map (Task.map (Signal.send actionsMailbox.address)) reactions
 
-
--- Tasks
-
-port serverUpdateRunner : Signal (Task Http.Error ())
-port serverUpdateRunner =
-  Signal.map (\_ -> runServerUpdate) (every (5 * second))
-
-port formSubmitsRunner : Signal (Task Http.Error ())
-port formSubmitsRunner =
-  Signal.map FormsUpdate.submitFormTask submitMailbox.signal
-
-port pathChangeRunner : Signal (Task error ())
-port pathChangeRunner =
-  pathChangeMailbox.signal
-
-port pathToScreenRunner : Signal (Task Http.Error ())
-port pathToScreenRunner =
-  Signal.map2 Routes.pathToScreenTask
-    (Signal.sampleOn History.path appState)
-    History.path
-
-
--- Signals
 
 main : Signal Html
 main =
-  Signal.map2 (mainView translator) Window.dimensions appState
+  Signal.map2 AppView.view Window.dimensions appState
 
-translator : Messages.Translator
-translator =
-  Messages.translator (Messages.fromJson messagesStore)
-
-clock : Signal Clock
-clock =
-  Signal.map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
-
-gameUpdate : Signal Action
-gameUpdate =
-  Signal.map4 extractGameUpdate clock keyboardInput Window.dimensions raceInput
-    |> Signal.filterMap identity NoOp
-    |> Signal.sampleOn clock
-    |> Signal.dropRepeats
-
-actions : Signal Action
-actions =
-  Signal.mergeMany
-    [ actionsMailbox.signal
-    , gameUpdate
-    ]
-
-appInput : Signal AppInput
-appInput =
-  Signal.map2 AppInput actions clock
 
 appState : Signal AppState
 appState =
-  Signal.foldp mainStep (initialAppState currentPlayer) appInput
+  Signal.map .appState appUpdates
 
 
--- Outputs
+appUpdates : Signal AppUpdate
+appUpdates =
+  Signal.foldp AppUpdates.update (initialAppUpdate currentPlayer) allActions
 
-port playerOutput : Signal (Maybe PlayerOutput)
-port playerOutput =
-  Signal.map2 extractPlayerOutput appState appInput
-    |> Signal.filter isJust Nothing
 
--- port title : Signal String
--- port title = Render.Utils.gameTitle <~ gameState
+allActions : Signal AppAction
+allActions =
+  Signal.mergeMany
+    [ screenActions
+    , actionsMailbox.signal
+    ]
 
-port activeRaceCourse : Signal (Maybe String)
-port activeRaceCourse =
-  Signal.map getActiveRaceCourse appState
-    |> Signal.dropRepeats
 
+reactions : Signal (Task Http.Error AppAction)
+reactions =
+  Signal.map .reaction appUpdates
+    |> Signal.filterMap identity NoOp

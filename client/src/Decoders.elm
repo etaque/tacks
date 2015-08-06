@@ -2,37 +2,30 @@ module Decoders where
 
 import Json.Decode as Json exposing (..)
 
-import Game exposing (..)
-import State exposing (..)
+import Models exposing (..)
 import Geo exposing (Point)
 
 
-liveStatusDecoder : Json.Decoder LiveStatus
+liveStatusDecoder : Decoder LiveStatus
 liveStatusDecoder =
   object2 LiveStatus
-    ("raceCourses" := (Json.list raceCourseStatusDecoder))
-    ("onlinePlayers" := (Json.list playerDecoder))
+    ("liveTracks" := list liveTrackDecoder)
+    ("onlinePlayers" := list playerDecoder)
 
-raceCourseStatusDecoder : Decoder RaceCourseStatus
-raceCourseStatusDecoder =
-  object2 RaceCourseStatus
-    ("raceCourse" := raceCourseDecoder)
-    ("opponents" := (list <| opponentDecoder))
+liveTrackDecoder : Decoder LiveTrack
+liveTrackDecoder =
+  object2 LiveTrack
+    ("track" := trackDecoder)
+    ("players" := list playerDecoder)
 
-raceCourseDecoder : Decoder RaceCourse
-raceCourseDecoder =
-  object5 RaceCourse
+trackDecoder : Decoder Track
+trackDecoder =
+  object5 Track
     ("_id" := string)
     ("slug" := string)
     ("course" := courseDecoder)
     ("countdown" := int)
     ("startCycle" := int)
-
-opponentDecoder : Decoder Opponent
-opponentDecoder =
-  object2 Opponent
-    ("player" := playerDecoder)
-    ("state" := opponentStateDecoder)
 
 playerDecoder : Decoder Player
 playerDecoder =
@@ -45,17 +38,23 @@ playerDecoder =
     ("guest" := bool)
     ("user" := bool)
 
-opponentStateDecoder : Decoder OpponentState
-opponentStateDecoder =
-  object8 OpponentState
-    ("time" := float)
-    ("position" := pointDecoder)
-    ("heading" := float)
-    ("velocity" := float)
-    ("windAngle" := float)
-    ("windOrigin" := float)
-    ("shadowDirection" := float)
-    ("crossedGates" := list float)
+-- opponentDecoder : Decoder Opponent
+-- opponentDecoder =
+--   object2 Opponent
+--     ("player" := playerDecoder)
+--     ("state" := opponentStateDecoder)
+
+-- opponentStateDecoder : Decoder OpponentState
+-- opponentStateDecoder =
+--   object8 OpponentState
+--     ("time" := float)
+--     ("position" := pointDecoder)
+--     ("heading" := float)
+--     ("velocity" := float)
+--     ("windAngle" := float)
+--     ("windOrigin" := float)
+--     ("shadowDirection" := float)
+--     ("crossedGates" := list float)
 
 pointDecoder : Decoder Point
 pointDecoder =

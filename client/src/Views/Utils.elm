@@ -6,11 +6,10 @@ import Html.Events exposing (..)
 import Json.Decode as Json
 import History exposing (setPath)
 
-import State exposing (..)
+import Models exposing (..)
 import Game exposing (..)
 import Messages exposing (Translator)
-import Inputs exposing (actionsMailbox)
-import Forms.Model exposing (UpdateForm)
+-- import Inputs exposing (actionsMailbox)
 import Routes exposing (pathChangeMailbox)
 
 
@@ -21,10 +20,6 @@ path : String -> Attribute
 path p =
   onClick pathChangeMailbox.address (setPath p)
 
-
-onInputFormUpdate : (String -> UpdateForm) -> Attribute
-onInputFormUpdate updater =
-  onInput actionsMailbox.address (updater >> Inputs.FormAction)
 
 onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =
@@ -100,6 +95,6 @@ playerHandle : Player -> String
 playerHandle p =
   Maybe.withDefault "Anonymous" p.handle
 
-raceCourseName : Translator -> RaceCourse -> String
-raceCourseName t {slug} =
+trackName : Translator -> Track -> String
+trackName t {slug} =
   t <| "generators." ++ slug ++ ".name"

@@ -6,8 +6,7 @@ import Json.Decode as Json
 import Json.Encode as JsEncode
 
 import Forms.Model exposing (..)
-import State exposing (..)
-import Game exposing (Player)
+import Models exposing (..)
 import Decoders exposing (..)
 
 
@@ -21,37 +20,37 @@ getLiveStatus : Task Http.Error LiveStatus
 getLiveStatus =
   Http.get liveStatusDecoder "/api/liveStatus"
 
-getRaceCourse : String -> Task Http.Error RaceCourse
-getRaceCourse slug =
-  Http.get raceCourseDecoder ("/api/raceCourse/" ++ slug)
+getTrack : String -> Task Http.Error Track
+getTrack slug =
+  Http.get trackDecoder ("/api/track/" ++ slug)
 
-getRaceCourseStatus : String -> Task Http.Error RaceCourseStatus
-getRaceCourseStatus slug =
-  Http.get raceCourseStatusDecoder ("/api/raceCourseStatus/" ++ slug)
+getLiveTrack : String -> Task Http.Error LiveTrack
+getLiveTrack slug =
+  Http.get liveTrackDecoder ("/api/liveTrack/" ++ slug)
 
 
 -- POST
 
-postHandle : SetHandleForm -> Task Http.Error Player
-postHandle f =
+postHandle : String -> Task Http.Error Player
+postHandle handle =
   JsEncode.object
-    [ ("handle", JsEncode.string f.handle) ]
+    [ ("handle", JsEncode.string handle) ]
     |> postJson playerDecoder "/api/setHandle"
 
-postRegister : RegisterForm -> Task Http.Error Player
-postRegister f =
+postRegister : String -> String -> String -> Task Http.Error Player
+postRegister email handle password =
   JsEncode.object
-    [ ("email", JsEncode.string f.email)
-    , ("handle", JsEncode.string f.handle)
-    , ("password", JsEncode.string f.password)
+    [ ("email", JsEncode.string email)
+    , ("handle", JsEncode.string handle)
+    , ("password", JsEncode.string password)
     ]
     |> postJson playerDecoder "/api/register"
 
-postLogin : LoginForm -> Task Http.Error Player
-postLogin f =
+postLogin : String -> String -> Task Http.Error Player
+postLogin email password =
   JsEncode.object
-    [ ("email", JsEncode.string f.email)
-    , ("password", JsEncode.string f.password)
+    [ ("email", JsEncode.string email)
+    , ("password", JsEncode.string password)
     ]
     |> postJson playerDecoder "/api/login"
 
