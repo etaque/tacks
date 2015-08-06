@@ -10,6 +10,8 @@ import Screens.Home.HomeUpdates as Home
 import Screens.Register.RegisterUpdates as Register
 import Screens.Login.LoginUpdates as Login
 
+import Routes exposing (route)
+
 
 screenActions : Signal AppAction
 screenActions =
@@ -27,65 +29,30 @@ actionsMailbox =
 
 update : AppAction -> AppUpdate -> AppUpdate
 update action {appState} =
-  case action of
+  case (action, appState.screen) of
 
-    SetPlayer p ->
-      basic { appState | player <- p }
+    (SetPlayer p, _) ->
+      noUpdate { appState | player <- p }
 
-    SetPath path ->
-      -- TODO routes
-      basic appState
+    (SetPath path, _) ->
+      route appState path
 
-    HomeAction a ->
-      case appState.screen of
-        HomeScreen screen ->
-          Home.update a screen
-            |> toScreenUpdate appState HomeScreen HomeAction
-        _ ->
-          basic appState
+    (HomeAction a, HomeScreen screen) ->
+      Home.update a screen
+        |> screenToAppUpdate appState HomeScreen HomeAction
 
-    LoginAction a ->
-      case appState.screen of
-        LoginScreen screen ->
-          Login.update a screen
-            |> toScreenUpdate appState LoginScreen LoginAction
-        _ ->
-          basic appState
+    (LoginAction a, LoginScreen screen) ->
+      Login.update a screen
+        |> screenToAppUpdate appState LoginScreen LoginAction
 
-    RegisterAction a ->
-      case appState.screen of
-        RegisterScreen screen ->
-          Register.update a screen
-            |> toScreenUpdate appState RegisterScreen RegisterAction
-        _ ->
-          basic appState
+    (RegisterAction a, RegisterScreen screen) ->
+      Register.update a screen
+        |> screenToAppUpdate appState RegisterScreen RegisterAction
 
-    NoOp ->
-      basic appState
+    _ ->
+      noUpdate appState
 
 
-basic : AppState -> AppUpdate
-basic appState = AppUpdate appState Nothing Nothing
+noUpdate : AppState -> AppUpdate
+noUpdate appState = AppUpdate appState Nothing Nothing
 
-
-toScreenUpdate : AppState -> (screen -> AppScreen) -> (screenAction -> AppAction) -> ScreenUpdate screen screenAction -> AppUpdate
-toScreenUpdate appState toAppScreen toAppAction {screen, reaction, request} =
-  AppUpdate
-    { appState | screen <- toAppScreen screen }
-    (Maybe.map (Task.map toAppAction) reaction)
-    request
-
-
-initialAppUpdate : Player -> AppUpdate
-initialAppUpdate player =
-  AppUpdate
-    (initialAppState player)
-    Nothing
-    Nothing
-
-
-initialAppState : Player -> AppState
-initialAppState player =
-  { player = player
-  , screen = NoScreen
-  }

@@ -10,7 +10,8 @@ type alias Screen =
 
 
 type Action
-  = SetLiveStatus LiveStatus
+  = Load
+  | SetLiveStatus LiveStatus
   | SetHandle String
   | SubmitHandle
   | SubmitHandleSuccess Player

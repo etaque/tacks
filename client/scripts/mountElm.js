@@ -7,8 +7,7 @@ var routes = require('./routes');
 function mountElm() {
   var game = window.Elm.fullscreen(window.Elm.Main, {
     raceInput: null,
-    messagesStore: readData("messages"),
-    currentPlayer: readData("currentPlayer")
+    appSetup: readData("appSetup")
   });
 
   var ws, wsUrl, currentRaceCourseId;

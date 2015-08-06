@@ -2,12 +2,13 @@
 
 @import play.api.Play.current
 @import JsonFormats.playerFormat
+@import play.api.libs.json.Json
 
 @fullscreen() {
   <script id="messages" type="custom-data">
     @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.default.messages).toString())
   </script>
-  <script id="currentPlayer" type="custom-data">
-    @Html(play.api.libs.json.Json.toJson(request.player).toString())
+  <script id="appSetup" type="custom-data">
+    @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path)).toString())
   </script>
 }

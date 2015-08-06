@@ -28,4 +28,4 @@ view (w,h) appState =
 
 emptyView : Html
 emptyView =
-  div [ ] [ ]
+  div [ ] [ text "emptyView" ]

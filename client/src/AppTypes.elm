@@ -10,6 +10,12 @@ import Screens.Login.LoginTypes as Login
 import Screens.Register.RegisterTypes as Register
 
 
+type alias AppSetup =
+  { player : Player
+  , path : String
+  }
+
+
 type AppAction
   = SetPlayer Player
   | SetPath String
@@ -36,6 +42,7 @@ type AppScreen
   = HomeScreen Home.Screen
   | LoginScreen Login.Screen
   | RegisterScreen Register.Screen
+  | NotFoundScreen String
   | NoScreen
 
 
@@ -67,4 +74,27 @@ request screen appAction =
   { screen = screen
   , reaction = Nothing
   , request = Just appAction
+  }
+
+
+screenToAppUpdate : AppState -> (screen -> AppScreen) -> (screenAction -> AppAction) -> ScreenUpdate screen screenAction -> AppUpdate
+screenToAppUpdate appState toAppScreen toAppAction {screen, reaction, request} =
+  AppUpdate
+    { appState | screen <- toAppScreen screen }
+    (Maybe.map (Task.map toAppAction) reaction)
+    request
+
+
+initialAppUpdate : Player -> AppUpdate
+initialAppUpdate player =
+  AppUpdate
+    (initialAppState player)
+    Nothing
+    Nothing
+
+
+initialAppState : Player -> AppState
+initialAppState player =
+  { player = player
+  , screen = NoScreen
   }
