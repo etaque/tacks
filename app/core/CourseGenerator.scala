@@ -173,7 +173,7 @@ object Minefield extends CourseGenerator {
 
 object CourseGenerator {
 
-  val all = Seq(Classic, WarmUp, Archipel, Inlands, OysterPark, Minefield)
+  val all = Seq(Classic, WarmUp, Inlands)
 
   def findBySlug(slug: String): Option[CourseGenerator] = all.find(_.slug == slug)
 

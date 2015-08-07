@@ -1,6 +1,5 @@
 package models
 
-import actors.RaceState
 import reactivemongo.core.commands.LastError
 
 import scala.concurrent.Future
@@ -43,13 +42,6 @@ case class Race (
 
 object Race extends MongoDAO[Race] {
   val collectionName = "races"
-
-  def updateFromState(state: RaceState): Future[LastError] = {
-    update(state.race.id, BSONDocument(
-      "tally" -> state.leaderboard.map(playerTallyHandler.write),
-      "rankings" -> state.rankings.map(raceRankingHandler.write)
-    ))
-  }
 
   def updateMounted(raceId: BSONObjectID, mounted: Boolean): Future[LastError] = {
     update(raceId, BSONDocument("mounted" -> mounted))

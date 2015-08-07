@@ -24,25 +24,6 @@ object WebSockets extends Controller with Security {
   implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
   implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
 
-  def timeTrial(timeTrialId: String, time: Long) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
-    for {
-      player <- PlayerAction.getPlayer(request)
-      timeTrial <- TimeTrial.findById(timeTrialId)
-      run = TimeTrialRun(
-        timeTrialId = timeTrial.id,
-        playerId = player.id,
-        playerHandle = player.handleOpt,
-        time = new DateTime(time)
-      )
-      ghostRuns <- TimeTrialRun.findGhosts(timeTrial, run)
-      timeTrialActor <- (RacesSupervisor.actorRef ? MountTimeTrialRun(timeTrial, player, run)).mapTo[ActorRef]
-    }
-    yield {
-      timeTrialActor ! SetGhostRuns(ghostRuns)
-      Right(PlayerActor.props(timeTrialActor, player)(_))
-    }
-  }
-
   def trackPlayer(trackId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
@@ -50,15 +31,6 @@ object WebSockets extends Controller with Security {
       ref <- (RacesSupervisor.actorRef ? GetTrackActorRef(track)).mapTo[ActorRef]
     }
     yield Right(PlayerActor.props(ref, player)(_))
-  }
-
-  def racePlayer(raceId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
-    PlayerAction.getPlayer(request).flatMap { player =>
-      (RacesSupervisor.actorRef ? GetRaceActorRef(BSONObjectID(raceId))).mapTo[Option[ActorRef]].map {
-        case Some(raceActor) => Right(PlayerActor.props(raceActor, player)(_))
-        case None => Left(NotFound)
-      }
-    }
   }
 
   implicit val notifEventFormat: Format[NotificationEvent] = Json.format[NotificationEvent]
@@ -81,17 +53,6 @@ object WebSockets extends Controller with Security {
     }
     yield Right(ChatPlayerActor.props(player)(_))
   }
-
-
-  // import LiveTrack.format
-  // implicit val trackStatusFrameFormatter = FrameFormatter.jsonFrame[LiveTrack]
-
-  // def liveCenter = WebSocket.tryAcceptWithActor[PlayerInput, LiveTrack] { implicit request =>
-  //   for {
-  //     player <- PlayerAction.getPlayer(request)
-  //   }
-  //   yield Right(LiveCenterActor.props(player)(_))
-  // }
 
 
   implicit val tutorialInputFrameFormatter = FrameFormatter.jsonFrame[TutorialInput]
