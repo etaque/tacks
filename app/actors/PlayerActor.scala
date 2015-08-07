@@ -25,7 +25,7 @@ class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Ac
 
     case input: PlayerInput => raceActor ! PlayerUpdate(player, input)
 
-    case input: TutorialInput => raceActor forward input
+    // case input: TutorialInput => raceActor forward input
 
 //    case RunStep(previousState, input, now, wind, course, started, opponents) => {
 //      val elapsed = now - previousState.time
@@ -46,7 +46,7 @@ class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Ac
 
     case raceUpdate: RaceUpdate => out ! raceUpdate
 
-    case tutUpdate: TutorialUpdate => out ! tutUpdate
+    // case tutUpdate: TutorialUpdate => out ! tutUpdate
   }
 
   override def postStop() = {

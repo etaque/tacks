@@ -3,6 +3,8 @@ package models
 import io.prismic.{Document, Fragment}
 import org.joda.time.LocalDate
 
+import dao.PrismicDAO
+
 case class BlogPost(
   id: String,
   slug: String,

@@ -1,4 +1,4 @@
-package models
+package dao
 
 import org.joda.time.{LocalTime, DateTime}
 

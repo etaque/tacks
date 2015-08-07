@@ -1,4 +1,4 @@
-package models
+package dao
 
 import reactivemongo.api.collections.default.BSONCollection
 
@@ -14,6 +14,7 @@ import play.api.libs.concurrent.Execution.Implicits._
 import tools.future.Implicits.RichFutureOfOpt
 import org.joda.time.DateTime
 
+import models._
 
 trait MongoDAO[T] {
   val collectionName: String
@@ -96,12 +97,4 @@ trait MongoDAO[T] {
   }
 
   def list: Future[Seq[T]] = list()
-}
-
-trait HasId {
-  def _id: BSONObjectID
-  val id: BSONObjectID = _id
-  def idToStr = id.stringify
-
-  def idTime = new DateTime(id.time)
 }

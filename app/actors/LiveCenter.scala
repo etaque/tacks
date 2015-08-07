@@ -11,11 +11,13 @@ import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
 import org.joda.time.DateTime
+
 import models._
+import dao._
+
 
 case class Subscribe(player: Player, ref: ActorRef)
 case class Unsubscribe(player: Player, ref: ActorRef)
-case class NotifyNewRace(raceActor: ActorRef, race: Race, master: User)
 case object GetOnlinePlayers
 case class NotificationEvent(key: String, params: Seq[String])
 
@@ -23,7 +25,6 @@ case class LiveCenterState(
   subscribers: Seq[(Player, ActorRef)] = Nil,
   chatRoom: Seq[(Player, ActorRef)] = Nil
 )
-
 
 class LiveCenter extends Actor {
 
@@ -65,14 +66,10 @@ class LiveCenter extends Actor {
       state = LiveCenter.updateStatus(state, user.id, content)
       Logger.debug("Player submitted new status: " + user.toString)
       LiveCenter.sendPlayersUpdate(state)
-      User.updateStatus(user.id, Some(content))
+      UserDAO.updateStatus(user.id, Some(content))
     }
 
     case GetOnlinePlayers => sender ! state.subscribers.map(_._1).distinct
-
-    case NotifyNewRace(ref, race, master) => {
-      LiveCenter.notifyNewRace(state, ref, race, master)
-    }
 
   }
 
@@ -87,17 +84,6 @@ object LiveCenter {
     val distinctPlayers = (state.subscribers.map(_._1) ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
     Logger.debug(s"Sending players update to ${state.chatRoom.size} refs: " + distinctPlayers.toString)
     state.chatRoom.foreach(_._2 ! Chat.UpdatePlayers(distinctPlayers))
-  }
-
-  def notifyNewRace(state: LiveCenterState, raceActor: ActorRef, race: Race, master: User) = {
-    (raceActor ? GetStatus).mapTo[(Option[DateTime], Seq[PlayerState])].map { case (startTime, playerStates) =>
-      state.subscribers.collect {
-        // notify only users, excluding master & those who already joined
-        case (u: User, ref: ActorRef) if u.id != master.id && !playerStates.map(_.player.id).contains(u.id) => (u, ref)
-      }.foreach { case (_, ref) =>
-        ref ! NotificationEvent("newRace", Seq(race.generator, master.handle))
-      }
-    }
   }
 
   def updateStatus(state: LiveCenterState, playerId: BSONObjectID, status: String): LiveCenterState = {

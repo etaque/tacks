@@ -1,12 +1,14 @@
 package controllers
 
-import tools.future.FutureFlattenOptException
-
 import scala.concurrent.Future
 import models.{Guest, Player, User}
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import reactivemongo.bson.BSONObjectID
+
+import tools.future.FutureFlattenOptException
+import dao._
+
 
 case class PlayerRequest[A](player: Player, request: Request[A]) extends WrappedRequest(request)
 
@@ -32,7 +34,7 @@ trait Security { this: Controller =>
 
     def getPlayer(implicit request: RequestHeader): Future[Player] = {
       request.session.get("playerId") match {
-        case Some(id) => User.findByIdOpt(id).map {
+        case Some(id) => UserDAO.findByIdOpt(id).map {
           case Some(user) => user
           case None => Guest(BSONObjectID(id), request.session.get("playerHandle"))
         }

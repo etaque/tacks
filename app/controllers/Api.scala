@@ -16,6 +16,7 @@ import reactivemongo.bson.BSONObjectID
 
 import actors._
 import models._
+import dao._
 import models.JsonFormats._
 import tools.future.Implicits._
 
@@ -36,9 +37,9 @@ object Api extends Controller with Security {
       {
         case (email, password) => {
           (for {
-            credentials <- User.getHashedPassword(email).map(User.checkPassword(password))
+            credentials <- UserDAO.getHashedPassword(email).map(UserDAO.checkPassword(password))
             if credentials
-            user <- User.findByEmail(email).flattenOpt
+            user <- UserDAO.findByEmail(email).flattenOpt
           }
           yield {
             Ok(playerFormat.writes(user)).withSession("playerId" -> user.idToStr)
@@ -79,8 +80,8 @@ object Api extends Controller with Security {
       {
         case form @ RegisterForm(handle, email, password) => {
           for {
-            emailTaken <- User.findByEmail(email).map(_.nonEmpty)
-            handleTaken <- User.findByHandleOpt(handle).map(_.nonEmpty)
+            emailTaken <- UserDAO.findByEmail(email).map(_.nonEmpty)
+            handleTaken <- UserDAO.findByHandleOpt(handle).map(_.nonEmpty)
             result <- handleRegisterForm(form, emailTaken, handleTaken)
           }
           yield result
@@ -94,7 +95,7 @@ object Api extends Controller with Security {
       Future.successful(BadRequest) // TODO
     } else {
       val user = User(email = form.email, handle = form.handle, status = None, avatarId = None, vmgMagnet = Player.defaultVmgMagnet)
-      User.create(user, form.password).map { _ =>
+      UserDAO.create(user, form.password).map { _ =>
         Ok(Json.toJson(user)(playerFormat)).withSession("playerId" -> user.idToStr)
       }
 
@@ -117,7 +118,7 @@ object Api extends Controller with Security {
   }
 
   def track(slug: String) = PlayerAction.async() { implicit request =>
-    Track.findBySlug(slug).map {
+    TrackDAO.findBySlug(slug).map {
       case Some(track) => Ok(Json.toJson(track))
       case None => NotFound
     }
@@ -132,13 +133,6 @@ object Api extends Controller with Security {
     }
 
   }
-
-  // def onlinePlayers = PlayerAction.async() { implicit request =>
-  //   (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]].map { players =>
-  //     Ok(Json.toJson(players))
-  //   }
-  // }
-
 
   def setHandle = PlayerAction(parse.json) { implicit request =>
     (request.body \ "handle").asOpt[String] match {

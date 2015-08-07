@@ -2,6 +2,8 @@ package models
 
 import io.prismic.{Document, Fragment}
 
+import dao.PrismicDAO
+
 case class Article(title: String, body: Fragment.StructuredText)
 
 object Article extends PrismicDAO[Article] {

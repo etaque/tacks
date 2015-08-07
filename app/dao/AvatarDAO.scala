@@ -1,4 +1,4 @@
-package models
+package dao
 
 import scala.concurrent.Future
 import play.api.Play.current
@@ -10,7 +10,7 @@ import reactivemongo.bson.{BSONDocument, BSONObjectID, BSONValue}
 import reactivemongo.core.commands.LastError
 import reactivemongo.api.gridfs.Implicits._
 
-object Avatar {
+object AvatarDAO {
   def db: DefaultDB = ReactiveMongoPlugin.db
   val store = new reactivemongo.api.gridfs.GridFS(db, "avatars")
 

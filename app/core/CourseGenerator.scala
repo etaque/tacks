@@ -177,31 +177,4 @@ object CourseGenerator {
 
   def findBySlug(slug: String): Option[CourseGenerator] = all.find(_.slug == slug)
 
-  def ensureTimeTrials() = {
-    val period = TimeTrial.currentPeriod
-    all.foreach { t =>
-      Track.findBySlug(t.slug).map {
-        case Some(_) =>
-        case None => {
-          val track = Track(
-            _id = reactivemongo.bson.BSONObjectID.generate,
-            slug = t.slug,
-            course = t.generateCourse(),
-            countdown = 30,
-            startCycle = 60
-          )
-          Track.save(track)
-        }
-      }
-      TimeTrial.findBySlugAndPeriod(t.slug, period).map {
-        case Some(_) =>
-        case None => {
-          play.Logger.info(s"time trial '${t.slug}' not found for period $period, creating...")
-          val trial = TimeTrial(slug = t.slug, course = t.generateCourse(), period = period)
-          TimeTrial.save(trial)
-        }
-      }
-    }
-  }
-
 }

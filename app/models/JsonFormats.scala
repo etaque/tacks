@@ -13,15 +13,6 @@ object JsonFormats {
   def readsValueError(expectedClass: String, value: String) =
     JsError(Seq(JsPath() -> Seq(ValidationError(s"Expected $expectedClass value, got: " + value.toString))))
 
-  implicit val tutorialStepFormat: Format[Tutorial.Step] = new Format[Tutorial.Step] {
-    override def reads(json: JsValue): JsResult[Tutorial.Step] = json match {
-      case JsString(s) => Tutorial.steps.find(_.toString == s).map(JsSuccess(_))
-        .getOrElse(readsValueError("Tutorial.Step", s))
-      case _ @ v => readsValueError("Tutorial.Step", v.toString())
-    }
-    override def writes(o: Tutorial.Step): JsValue = JsString(o.toString)
-  }
-
   implicit val gateLocationFormat: Format[GateLocation] = new Format[GateLocation] {
     override def reads(json: JsValue): JsResult[GateLocation] = json match {
       case JsString("StartLine") => JsSuccess(StartLine)
@@ -104,15 +95,13 @@ object JsonFormats {
   implicit val keyboardInputFormat: Format[KeyboardInput] = Json.format[KeyboardInput]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
 
-  implicit val tutorialInputFormat: Format[TutorialInput] = Json.format[TutorialInput]
-
-  implicit val raceRankingFormat: Format[RaceRanking] = (
-    (__ \ 'rank).format[Int] and
-      (__ \ 'playerId).format[BSONObjectID] and
-      (__ \ 'playerHandle).format[Option[String]] and
-      (__ \ 'finishTime).format[Long] and
-      (__ \ 'points).format[Int]
-    )(RaceRanking.apply, unlift(RaceRanking.unapply))
+  // implicit val raceRankingFormat: Format[RaceRanking] = (
+  //   (__ \ 'rank).format[Int] and
+  //     (__ \ 'playerId).format[BSONObjectID] and
+  //     (__ \ 'playerHandle).format[Option[String]] and
+  //     (__ \ 'finishTime).format[Long] and
+  //     (__ \ 'points).format[Int]
+  //   )(RaceRanking.apply, unlift(RaceRanking.unapply))
 
   implicit val playerTallyFormat: Format[PlayerTally] = (
     (__ \ 'playerId).format[BSONObjectID] and
@@ -164,24 +153,10 @@ object JsonFormats {
       (__ \ 'clientTime).format[Long]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
 
-  implicit val tutorialUpdateFormat: Format[TutorialUpdate] = (
-    (__ \ 'now).format[Long] and
-      (__ \ 'playerState).format[PlayerState] and
-      (__ \ 'course).format[Option[Course]] and
-      (__ \ 'step).format[Tutorial.Step] and
-      (__ \ 'messages).format[Option[Seq[(String,String)]]]
-    )(TutorialUpdate.apply, unlift(TutorialUpdate.unapply))
-
   implicit val raceFormat: Format[Race] = Json.format[Race]
-
-  implicit val raceStatusFormat: Format[RaceStatus] = Json.format[RaceStatus]
-
   implicit val trackFormat: Format[Track] = Json.format[Track]
-  implicit val trackRunFormat: Format[TrackRun] = Json.format[TrackRun]
+  implicit val runFormat: Format[Run] = Json.format[Run]
   implicit val trackStatusFormat: Format[LiveTrack] = Json.format[LiveTrack]
 
-  implicit val runFormat: Format[TimeTrialRun] = Json.format[TimeTrialRun]
-  implicit val timeTrialFormat: Format[TimeTrial] = Json.format[TimeTrial]
-  implicit val richRunFormat: Format[RichRun] = Json.format[RichRun]
 }
 

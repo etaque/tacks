@@ -12,13 +12,12 @@ import akka.pattern.{ask,pipe}
 import akka.util.Timeout
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
+
 import models._
-import core.Classic
+import dao._
 
 
-case class MountTutorial(player: Player)
 case class GetTrackActorRef(track: Track)
-case object GetLiveRuns
 case object GetTracks
 
 case class RaceActorNotFound(raceId: BSONObjectID)
@@ -33,13 +32,7 @@ class RacesSupervisor extends Actor {
     case GetTrackActorRef(track) => sender ! getTrackActorRef(track)
 
     case GetTracks => {
-      Track.list.flatMap { tracks => Future.sequence(tracks.map(getLiveTrack)) } pipeTo sender
-    }
-
-    case MountTutorial(player) => {
-      val ref = context.actorOf(TutorialActor.props(player))
-      context.watch(ref)
-      sender ! ref
+      TrackDAO.list.flatMap { tracks => Future.sequence(tracks.map(getLiveTrack)) } pipeTo sender
     }
 
   }
@@ -47,8 +40,8 @@ class RacesSupervisor extends Actor {
   def getLiveTrack(track: Track): Future[LiveTrack] = {
     mountedTracks.find(_._1.slug == track.slug) match {
       case Some((track, ref)) => {
-        (ref ? GetStatus).mapTo[(Option[TrackRun], Seq[Opponent])].map { case (nextRun, opponents) =>
-          LiveTrack(track, nextRun, opponents.map(_.player))
+        (ref ? GetStatus).mapTo[(Option[Race], Seq[Opponent])].map { case (nextRace, opponents) =>
+          LiveTrack(track, nextRace, opponents.map(_.player))
         }
       }
       case None => {
@@ -72,9 +65,7 @@ object RacesSupervisor {
 
   implicit val timeout = Timeout(5.seconds)
 
-  def start() = {
-    // Akka.system.scheduler.schedule(0.microsecond, Conf.serverRacesCountdownSeconds.seconds, actorRef, CreateRace)
-  }
+  def start() = {}
 
 
 }

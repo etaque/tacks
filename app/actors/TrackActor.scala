@@ -13,34 +13,34 @@ import tools.Conf
 
 case class TrackState(
   track: Track,
-  nextRun: Option[TrackRun],
-  liveRuns: Seq[TrackRun]
+  nextRace: Option[Race],
+  liveRaces: Seq[Race]
 ) {
-  def runLeaderboard(runId: BSONObjectID): Seq[PlayerTally] = {
-    liveRuns.find(_.id == runId).map(_.leaderboard).getOrElse(Nil)
+  def raceLeaderboard(raceId: BSONObjectID): Seq[PlayerTally] = {
+    liveRaces.find(_.id == raceId).map(_.leaderboard).getOrElse(Nil)
   }
 
-  def playerRun(playerId: BSONObjectID): Option[TrackRun] = {
-    liveRuns.find(_.playerIds.contains(playerId)).orElse(nextRun)
+  def playerRace(playerId: BSONObjectID): Option[Race] = {
+    liveRaces.find(_.playerIds.contains(playerId)).orElse(nextRace)
   }
 
-  def withUpdatedRun(run: TrackRun): TrackState = {
-    if (nextRun.map(_.id).contains(run.id)) copy(nextRun = Some(run))
-    else liveRuns.indexWhere(_.id == run.id) match {
+  def withUpdatedRace(race: Race): TrackState = {
+    if (nextRace.map(_.id).contains(race.id)) copy(nextRace = Some(race))
+    else liveRaces.indexWhere(_.id == race.id) match {
       case -1 => this
-      case i => copy(liveRuns = liveRuns.updated(i, run))
+      case i => copy(liveRaces = liveRaces.updated(i, race))
     }
   }
 
   def escapePlayer(playerId: BSONObjectID): TrackState = {
     copy(
-      nextRun = nextRun.map(_.removePlayerId(playerId)),
-      liveRuns = liveRuns.map(_.removePlayerId(playerId))
+      nextRace = nextRace.map(_.removePlayerId(playerId)),
+      liveRaces = liveRaces.map(_.removePlayerId(playerId))
     )
   }
 }
 
-case object RotateNextRun
+case object RotateNextRace
 
 class TrackActor(track: Track) extends Actor with ManageWind {
 
@@ -49,8 +49,8 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 
   var state = TrackState(
     track = track,
-    nextRun = None,
-    liveRuns = Nil
+    nextRace = None,
+    liveRaces = Nil
   )
 
   val players = scala.collection.mutable.Map[String, PlayerContext]()
@@ -58,7 +58,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
   def clock: Long = DateTime.now.getMillis
 
   val ticks = Seq(
-    Akka.system.scheduler.schedule(1.second, 1.second, self, RotateNextRun),
+    Akka.system.scheduler.schedule(1.second, 1.second, self, RotateNextRace),
     Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
     Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
   )
@@ -102,7 +102,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
           state = TrackActor.startCountdown(state, byPlayerId = player.id)
         }
 
-        if (input.escapeRun) {
+        if (input.escapeRace) {
           state = state.escapePlayer(player.id)
         }
 
@@ -119,12 +119,12 @@ class TrackActor(track: Track) extends Actor with ManageWind {
      */
     case SpawnGust => generateGust()
 
-    case RotateNextRun => {
-      state = TrackActor.rotateNextRun(state)
+    case RotateNextRace => {
+      state = TrackActor.rotateNextRace(state)
     }
 
     case GetStatus => {
-      sender ! (state.nextRun, players.values.map(_.asOpponent))
+      sender ! (state.nextRace, players.values.map(_.asOpponent))
     }
   }
 
@@ -133,7 +133,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
   }
 
   def playerLeaderboard(playerId: String): Seq[PlayerTally] = {
-    state.playerRun(BSONObjectID(playerId)).map(_.id).map(state.runLeaderboard).getOrElse(Nil)
+    state.playerRace(BSONObjectID(playerId)).map(_.id).map(state.raceLeaderboard).getOrElse(Nil)
   }
 
   def raceUpdateForPlayer(player: Player, clientTime: Long) = {
@@ -155,25 +155,25 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 object TrackActor {
   def props(track: Track) = Props(new TrackActor(track))
 
-  def rotateNextRun(state: TrackState): TrackState = {
-    state.nextRun match {
-      case Some(nextRun) if nextRun.startTime.plusSeconds(state.track.countdown).isBeforeNow => {
-        state.copy(nextRun = None, liveRuns = state.liveRuns :+ nextRun)
+  def rotateNextRace(state: TrackState): TrackState = {
+    state.nextRace match {
+      case Some(nextRace) if nextRace.startTime.plusSeconds(state.track.countdown).isBeforeNow => {
+        state.copy(nextRace = None, liveRaces = state.liveRaces :+ nextRace)
       }
       case _ => state
     }
   }
 
   def playerStartTime(state: TrackState, player: Player): Option[DateTime] = {
-    state.playerRun(player.id).map(_.startTime)
+    state.playerRace(player.id).map(_.startTime)
   }
 
   def gateCrossedUpdate(state: TrackState, context: PlayerContext, players: Map[String,PlayerContext]): TrackState = {
-    state.playerRun(context.player.id).map { run =>
+    state.playerRace(context.player.id).map { race =>
 
       val playerIds =
-        if (context.state.crossedGates.length == 1) run.playerIds :+ context.player.id
-        else run.playerIds
+        if (context.state.crossedGates.length == 1) race.playerIds :+ context.player.id
+        else race.playerIds
 
       val leaderboard = playerIds.map(_.stringify).flatMap(players.get).map { context =>
         PlayerTally(context.player.id, context.player.handleOpt, context.state.crossedGates)
@@ -181,26 +181,24 @@ object TrackActor {
         (-pt.gates.length, pt.gates.headOption)
       }
 
-      val updatedRun = run.copy(playerIds = playerIds, leaderboard = leaderboard)
+      val updatedRace = race.copy(playerIds = playerIds, leaderboard = leaderboard)
 
-      TrackRun.upsert(updatedRun)
-
-      state.withUpdatedRun(updatedRun)
+      state.withUpdatedRace(updatedRace)
 
     }.getOrElse(state)
   }
 
   def startCountdown(state: TrackState, byPlayerId: BSONObjectID): TrackState = {
-    state.nextRun match {
+    state.nextRace match {
       case None => {
-        val run = TrackRun(
+        val race = Race(
           _id = BSONObjectID.generate,
           trackId = state.track.id,
           startTime = DateTime.now.plusSeconds(state.track.countdown),
           playerIds = Nil,
           leaderboard = Nil
         )
-        state.copy(nextRun = Some(run))
+        state.copy(nextRace = Some(race))
       }
       case Some(_) => state
     }

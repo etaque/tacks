@@ -16,6 +16,7 @@ import models._
 import models.JsonFormats._
 import tools.JsonFormats.idFormat
 import actors._
+import dao._
 
 object WebSockets extends Controller with Security {
 
@@ -27,7 +28,7 @@ object WebSockets extends Controller with Security {
   def trackPlayer(trackId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
-      track <- Track.findById(trackId)
+      track <- TrackDAO.findById(trackId)
       ref <- (RacesSupervisor.actorRef ? GetTrackActorRef(track)).mapTo[ActorRef]
     }
     yield Right(PlayerActor.props(ref, player)(_))
@@ -52,20 +53,6 @@ object WebSockets extends Controller with Security {
       player <- PlayerAction.getPlayer(request)
     }
     yield Right(ChatPlayerActor.props(player)(_))
-  }
-
-
-  implicit val tutorialInputFrameFormatter = FrameFormatter.jsonFrame[TutorialInput]
-  implicit val tutorialUpdateFormatter = FrameFormatter.jsonFrame[TutorialUpdate]
-
-  def tutorial = WebSocket.tryAcceptWithActor[TutorialInput, TutorialUpdate] { implicit request =>
-    for {
-      player <- PlayerAction.getPlayer(request)
-      ref <- (RacesSupervisor.actorRef ? MountTutorial(player)).mapTo[ActorRef]
-    }
-    yield {
-      Right(PlayerActor.props(ref, player)(_))
-    }
   }
 
 }

@@ -30,7 +30,7 @@ type alias KeyboardInput =
   , tack : Bool
   , subtleTurn : Bool
   , startCountdown : Bool
-  , escapeRun : Bool
+  , escapeRace : Bool
   }
 
 emptyKeyboardInput : KeyboardInput
@@ -40,7 +40,7 @@ emptyKeyboardInput =
   , tack = False
   , subtleTurn = False
   , startCountdown = False
-  , escapeRun = False
+  , escapeRace = False
   }
 
 type alias UserArrows = { x : Int, y : Int }
@@ -81,7 +81,7 @@ toKeyboardInput arrows keys =
   , tack = S.member 32 keys
   , subtleTurn = S.member 16 keys
   , startCountdown = S.member (Char.toCode 'C') keys
-  , escapeRun = S.member 27 keys
+  , escapeRace = S.member 27 keys
   }
 
 keyboardInput : Signal KeyboardInput

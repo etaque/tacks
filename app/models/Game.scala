@@ -13,7 +13,7 @@ case class KeyboardInput(
   subtleTurn: Boolean,
   lock: Boolean,
   startCountdown: Boolean,
-  escapeRun: Boolean
+  escapeRace: Boolean
 ) {
   def manualTurn = arrows.x != 0
   def isTurning = manualTurn && !subtleTurn
@@ -28,7 +28,7 @@ object KeyboardInput {
     subtleTurn = false,
     lock = false,
     startCountdown = false,
-    escapeRun = false
+    escapeRace = false
   )
 }
 
@@ -110,12 +110,12 @@ case class Opponent(
 case class PlayerInput(state: OpponentState, input: KeyboardInput, localTime: Long)
 case class PlayerUpdate(player: Player, playerInput: PlayerInput)
 
-case class GhostRun(
-  run: TimeTrialRun,
-  tracks: Seq[RunTrack],
-  playerId: BSONObjectID,
-  playerHandle: Option[String]
-)
+// case class GhostRun(
+//   run: TimeTrialRun,
+//   tracks: Seq[RunTrack],
+//   playerId: BSONObjectID,
+//   playerHandle: Option[String]
+// )
 
 case class GhostState(
   position: Point,
@@ -160,15 +160,15 @@ object RaceUpdate {
     )
 }
 
-case class RaceStatus(
-  race: Race,
-  master: Option[Player],
-  startTime: Option[DateTime],
-  opponents: Seq[Opponent]
-)
+// case class RaceStatus(
+//   race: Race,
+//   master: Option[Player],
+//   startTime: Option[DateTime],
+//   opponents: Seq[Opponent]
+// )
 
 case class LiveTrack(
   track: Track,
-  nextRun: Option[TrackRun],
+  nextRace: Option[Race],
   players: Seq[Player]
 )
