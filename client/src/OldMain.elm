@@ -8,13 +8,13 @@ import Http
 import Json.Decode as Json
 import History
 
-import Inputs exposing (..)
+import Game.Inputs exposing (..)
 import Outputs exposing (..)
 import State exposing (AppState, initialAppState)
-import Game exposing (Player)
-import Steps exposing (mainStep)
+import Game.Models exposing (Player)
+import Game.Steps exposing (mainStep)
 import Views.Main exposing (mainView)
-import Core exposing (isJust)
+import Game.Core exposing (isJust)
 import Messages
 import Forms.Update as FormsUpdate exposing (submitMailbox)
 import Routes exposing (pathChangeMailbox)

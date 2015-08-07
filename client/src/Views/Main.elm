@@ -14,7 +14,7 @@ import Views.Login as VLogin
 import Views.Register as Register
 import Views.ShowProfile as ShowProfile
 
-import Render.All exposing (renderGame)
+import Game.Render.All exposing (renderGame)
 
 
 type alias View = Translator -> AppState -> Html

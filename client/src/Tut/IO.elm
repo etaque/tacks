@@ -1,6 +1,6 @@
 module Tut.IO where
 
-import Inputs (..)
+import Game.Inputs (..)
 import Game
 import Messages (Messages)
 import Tut.State (..)

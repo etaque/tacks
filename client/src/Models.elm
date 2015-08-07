@@ -1,7 +1,5 @@
 module Models where
 
-import Geo exposing (..)
-
 
 type alias Player =
   { id:     String
@@ -71,3 +69,7 @@ type alias WindGenerator =
   , wavelength2: Float
   , amplitude2: Float
   }
+
+type alias Point = (Float, Float)
+
+type alias Segment = (Point, Point)

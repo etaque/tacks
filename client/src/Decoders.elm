@@ -3,7 +3,6 @@ module Decoders where
 import Json.Decode as Json exposing (..)
 
 import Models exposing (..)
-import Geo exposing (Point)
 
 
 liveStatusDecoder : Decoder LiveStatus

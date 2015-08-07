@@ -9,7 +9,7 @@ import Html.Events exposing (..)
 
 import State exposing (..)
 import Messages exposing (Translator)
-import Inputs exposing (navigate)
+import Game.Inputs exposing (navigate)
 
 import Views.Utils exposing (..)
 

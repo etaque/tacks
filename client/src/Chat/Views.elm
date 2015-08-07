@@ -9,7 +9,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import Game exposing (Player)
+import Game.Models exposing (Player)
 import Chat.Model exposing (..)
 import Messages exposing (Translator)
 

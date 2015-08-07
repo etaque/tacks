@@ -1,21 +1,21 @@
 module Main where
 
+import Time exposing (timestamp, fps, every, second)
 import Task exposing (Task, andThen)
 import Html exposing (Html)
 import Http
 import Window
 import History
-import Signal.Extra exposing (foldp')
+import Signal.Extra exposing (foldp', passiveMap2)
 
 import Models exposing (Player)
 import AppUpdates exposing (..)
 import AppTypes exposing (..)
-import Inputs exposing (RaceInput)
-import Outputs exposing (PlayerOutput)
+import Game.Inputs exposing (RaceInput)
+import Game.Outputs exposing (PlayerOutput)
+import Screens.Game.Updates exposing (mapGameUpdate)
 import AppView
 import Routes
-
-import Debug
 
 
 -- Inputs
@@ -40,7 +40,11 @@ appUpdates =
   let
     initialUpdate = (flip AppUpdates.update) (initialAppUpdate appSetup.player)
   in
-    foldp' AppUpdates.update initialUpdate allActions
+    foldp' AppUpdates.update initialUpdate appInputs
+
+appInputs : Signal AppInput
+appInputs =
+  passiveMap2 AppInput allActions clock
 
 allActions : Signal AppAction
 allActions =
@@ -48,11 +52,19 @@ allActions =
     [ Signal.constant (SetPath appSetup.path)
     , screenActions
     , actionsMailbox.signal
-    , pathUpdates
+    , pathActions
+    , gameActions
     ]
 
-pathUpdates : Signal AppAction
-pathUpdates =
+gameActions : Signal AppAction
+gameActions =
+  Signal.map3 mapGameUpdate Game.Inputs.keyboardInput Window.dimensions raceInput
+    |> Signal.filterMap (Maybe.map GameAction) NoOp
+    |> Signal.sampleOn clock
+    |> Signal.dropRepeats
+
+pathActions : Signal AppAction
+pathActions =
   Signal.map SetPath History.path
 
 reactions : Signal (Task Http.Error ())
@@ -65,6 +77,10 @@ requests =
   Signal.map .request appUpdates
     |> Signal.filterMap identity NoOp
     |> Signal.map Task.succeed
+
+clock : Signal Clock
+clock =
+  Signal.map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
 
 
 -- Runners
@@ -86,15 +102,13 @@ port pathChangeRunner =
 
 port playerOutput : Signal (Maybe PlayerOutput)
 port playerOutput =
-  Signal.constant Nothing
-  -- Signal.map2 extractPlayerOutput appState appInput
-  --   |> Signal.filter isJust Nothing
+  Signal.map2 Game.Outputs.extractPlayerOutput appState gameActions
+    |> Signal.dropRepeats
 
 -- port title : Signal String
 -- port title = Render.Utils.gameTitle <~ gameState
 
 port activeTrack : Signal (Maybe String)
 port activeTrack =
-  Signal.constant Nothing
-  -- Signal.map getActiveTrack appState
-  --   |> Signal.dropRepeats
+  Signal.map Game.Outputs.getActiveTrack appState
+    |> Signal.dropRepeats

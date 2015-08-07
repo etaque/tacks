@@ -5,7 +5,7 @@ import Signal (..)
 import Time (..)
 import Graphics.Element (Element)
 
-import Inputs (..)
+import Game.Inputs (..)
 import Tut.IO (..)
 import Tut.State (..)
 import Tut.Steps (..)

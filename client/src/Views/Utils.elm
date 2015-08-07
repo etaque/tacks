@@ -7,7 +7,7 @@ import Json.Decode as Json
 import History
 
 import Models exposing (..)
-import Game exposing (..)
+import Game.Models exposing (..)
 import Messages exposing (Translator)
 import Routes exposing (pathChangeMailbox)
 

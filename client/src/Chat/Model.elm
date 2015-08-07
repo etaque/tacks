@@ -5,8 +5,8 @@ import List
 import Json.Decode exposing (..)
 import Json.Encode as E
 
-import Game exposing (Player, defaultPlayer)
-import Inputs exposing (playerDecoder)
+import Game.Models exposing (Player, defaultPlayer)
+import Game.Inputs exposing (playerDecoder)
 
 type alias Model =
   { messages: List Message

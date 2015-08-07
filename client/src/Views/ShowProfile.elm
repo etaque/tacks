@@ -5,9 +5,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import State exposing (..)
-import Game exposing (..)
+import Game.Models exposing (..)
 import Messages exposing (Translator)
-import Inputs exposing (actionsMailbox)
+import Game.Inputs exposing (actionsMailbox)
 import Forms.Model exposing (..)
 import Forms.Update exposing (..)
 

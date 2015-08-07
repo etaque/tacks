@@ -2,7 +2,7 @@ module Tut.State where
 
 import Game (..)
 import Messages (..)
-import Core (find)
+import Game.Core as Core (find)
 
 import Maybe as M
 import List (..)

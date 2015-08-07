@@ -5,13 +5,13 @@ import Graphics.Element (..)
 import Color (white,black)
 import List (..)
 
-import Render.Utils (..)
-import Render.Players (..)
-import Render.Course (..)
-import Render.Gates (..)
+import Game.Render.Utils (..)
+import Game.Render.Players (..)
+import Game.Render.Course (..)
+import Game.Render.Gates (..)
 
 import Game (..)
-import Layout (assembleLayout)
+import Game.Layout (assembleLayout)
 import Tut.State (..)
 import Tut.Dashboard (buildDashboard)
 

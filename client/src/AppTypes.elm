@@ -5,10 +5,11 @@ import Http
 
 import Models exposing (..)
 
-import Screens.Home.HomeTypes as Home
-import Screens.Login.LoginTypes as Login
-import Screens.Register.RegisterTypes as Register
-import Screens.ShowTrack.ShowTrackTypes as ShowTrack
+import Screens.Home.Types as Home
+import Screens.Login.Types as Login
+import Screens.Register.Types as Register
+import Screens.ShowTrack.Types as ShowTrack
+import Screens.Game.Types as Game
 
 
 type alias AppSetup =
@@ -17,6 +18,11 @@ type alias AppSetup =
   }
 
 
+type alias AppInput =
+  { action : AppAction
+  , clock : Clock
+  }
+
 type AppAction
   = SetPlayer Player
   | SetPath String
@@ -24,9 +30,15 @@ type AppAction
   | LoginAction Login.Action
   | RegisterAction Register.Action
   | ShowTrackAction ShowTrack.Action
+  | GameAction Game.Action
   | Logout
   | NoOp
 
+
+type alias Clock =
+  { delta : Float
+  , time : Float
+  }
 
 type alias AppUpdate =
   { appState : AppState
@@ -46,6 +58,7 @@ type AppScreen
   | LoginScreen Login.Screen
   | RegisterScreen Register.Screen
   | ShowTrackScreen ShowTrack.Screen
+  | GameScreen Game.Screen
   | NotFoundScreen String
   | NoScreen
 

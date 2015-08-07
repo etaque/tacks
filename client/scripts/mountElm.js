@@ -13,10 +13,15 @@ function mountElm() {
   var ws, wsUrl, currentTrackId;
 
   function outputProxy(output) {
-    ws.send(JSON.stringify(output));
+    if (ws.readyState == WebSocket.OPEN) {
+      ws.send(JSON.stringify(output));
+    }
   }
 
+  game.ports.playerOutput.subscribe(outputProxy);
+
   game.ports.activeTrack.subscribe(function(id) {
+
     if (ws) {
       ws.close();
     }
@@ -29,13 +34,13 @@ function mountElm() {
         game.ports.raceInput.send(JSON.parse(event.data));
       };
 
-      ws.onopen = function() {
-        game.ports.playerOutput.subscribe(outputProxy);
-      };
+      // ws.onopen = function() {
+      //   game.ports.playerOutput.subscribe(outputProxy);
+      // };
 
-      ws.onclose = function() {
-        game.ports.playerOutput.unsubscribe(outputProxy);
-      };
+      // ws.onclose = function() {
+      //   game.ports.playerOutput.unsubscribe(outputProxy);
+      // };
     } else {
       game.ports.raceInput.send(null);
     }

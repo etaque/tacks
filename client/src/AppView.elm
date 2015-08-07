@@ -6,16 +6,17 @@ import Html.Attributes exposing (..)
 import Models exposing (..)
 import AppTypes exposing (..)
 
-import Screens.Home.HomeView as Home
-import Screens.Login.LoginView as Login
-import Screens.Register.RegisterView as Register
-import Screens.ShowTrack.ShowTrackView as ShowTrack
+import Screens.Home.View as Home
+import Screens.Login.View as Login
+import Screens.Register.View as Register
+import Screens.ShowTrack.View as ShowTrack
+import Screens.Game.View as Game
 
 import Views.TopBar as TopBar
 
 
 view : (Int, Int) -> AppState -> Html
-view (w,h) appState =
+view dims appState =
   let
     content = case appState.screen of
 
@@ -30,6 +31,9 @@ view (w,h) appState =
 
       ShowTrackScreen screen ->
         ShowTrack.view screen
+
+      GameScreen screen ->
+        Game.view dims screen
 
       _ ->
         emptyView

@@ -5,7 +5,6 @@ import Task exposing (Task, andThen)
 import Json.Decode as Json
 import Json.Encode as JsEncode
 
-import Forms.Model exposing (..)
 import Models exposing (..)
 import Decoders exposing (..)
 

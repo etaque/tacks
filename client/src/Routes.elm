@@ -6,21 +6,13 @@ import Router exposing (..)
 import Http
 import History
 
-import Screens.Home.HomeUpdates as Home
-import Screens.Register.RegisterUpdates as Register
-import Screens.Login.LoginUpdates as Login
-import Screens.ShowTrack.ShowTrackUpdates as ShowTrack
+import Screens.Home.Updates as Home
+import Screens.Register.Updates as Register
+import Screens.Login.Updates as Login
+import Screens.ShowTrack.Updates as ShowTrack
+import Screens.Game.Updates as Game
 
 import AppTypes exposing (..)
-
-
-pathChangeMailbox : Signal.Mailbox (Task error ())
-pathChangeMailbox = Signal.mailbox (Task.succeed ())
-
-
-changePath : String -> Task error ()
-changePath path =
-  Signal.send pathChangeMailbox.address (History.setPath path)
 
 
 route : AppState -> Route AppUpdate
@@ -32,7 +24,7 @@ route appState =
     -- , "/me" :-> to (ShowProfile player)
     -- , "/profile/" :-> showProfile
     , "/track/" :-> showTrack appState
-    -- , "/play/" :-> playCourse
+    , "/play/" :-> playTrack appState
     ] (notFound appState)
 
 
@@ -56,25 +48,24 @@ showTrack appState slug =
   screenToAppUpdate appState ShowTrackScreen (ShowTrack.mount slug)
 
 
+playTrack : AppState -> String -> AppUpdate
+playTrack appState slug =
+  screenToAppUpdate appState GameScreen (Game.mount slug)
+
+
 notFound : AppState -> String -> AppUpdate
 notFound appState path =
   AppUpdate { appState | screen <- NotFoundScreen path } Nothing Nothing
 
 
--- showProfile : String -> ScreenLoader
--- showProfile handle =
---   ServerApi.getPlayer handle
---     |> map ShowProfile
+
+-- path changes
+
+pathChangeMailbox : Signal.Mailbox (Task error ())
+pathChangeMailbox = Signal.mailbox (Task.succeed ())
 
 
--- playCourse : String -> ScreenLoader
--- playCourse slug =
---   ServerApi.getRaceCourse slug
---     |> map Play
+changePath : String -> Task error ()
+changePath path =
+  Signal.send pathChangeMailbox.address (History.setPath path)
 
-
--- -- Tooling
-
--- to : Screen -> String -> ScreenLoader
--- to screen _ =
---   Task.succeed screen

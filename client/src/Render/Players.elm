@@ -1,4 +1,4 @@
-module Render.Players where
+odule Render.Players where
 
 import Render.Utils exposing (..)
 import Core exposing (..)

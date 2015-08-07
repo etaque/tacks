@@ -5,8 +5,8 @@ import Graphics.Element (..)
 import Text (centered,leftAligned)
 import List (..)
 
-import Render.Utils (..)
-import Layout (..)
+import Game.Render.Utils (..)
+import Game.Layout (..)
 import Tut.State (..)
 import Messages (..)
 

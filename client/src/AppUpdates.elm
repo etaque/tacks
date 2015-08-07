@@ -6,10 +6,11 @@ import Http
 import Models exposing (..)
 import AppTypes exposing (..)
 
-import Screens.Home.HomeUpdates as Home
-import Screens.Register.RegisterUpdates as Register
-import Screens.Login.LoginUpdates as Login
-import Screens.ShowTrack.ShowTrackUpdates as ShowTrack
+import Screens.Home.Updates as Home
+import Screens.Register.Updates as Register
+import Screens.Login.Updates as Login
+import Screens.ShowTrack.Updates as ShowTrack
+import Screens.Game.Updates as Game
 
 import ServerApi
 import Routes exposing (route)
@@ -22,6 +23,7 @@ screenActions =
     , .signal Register.actions |> Signal.map RegisterAction
     , .signal Login.actions |> Signal.map LoginAction
     , .signal ShowTrack.actions |> Signal.map ShowTrackAction
+    , .signal Game.actions |> Signal.map GameAction
     ]
 
 
@@ -30,8 +32,8 @@ actionsMailbox =
   Signal.mailbox NoOp
 
 
-update : AppAction -> AppUpdate -> AppUpdate
-update action {appState} =
+update : AppInput -> AppUpdate -> AppUpdate
+update {action, clock} {appState} =
   case (action, appState.screen) of
 
     (SetPlayer p, _) ->
@@ -56,6 +58,10 @@ update action {appState} =
       ShowTrack.update a screen
         |> screenToAppUpdate appState ShowTrackScreen
 
+    (GameAction a, GameScreen screen) ->
+      Game.update appState.player clock a screen
+        |> screenToAppUpdate appState GameScreen
+
     (Logout, _) ->
       AppUpdate appState (Just logoutTask) Nothing
 
@@ -70,3 +76,4 @@ logoutTask : Task Http.Error ()
 logoutTask =
   ServerApi.postLogout `andThen`
     (\p -> Signal.send actionsMailbox.address (SetPlayer p))
+
