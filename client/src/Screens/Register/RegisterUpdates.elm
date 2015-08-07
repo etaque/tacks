@@ -1,6 +1,6 @@
 module Screens.Register.RegisterUpdates where
 
-import Task exposing (Task, succeed, map)
+import Task exposing (Task, succeed, map, andThen)
 import Http
 
 import AppTypes exposing (local, react, request)
@@ -13,7 +13,7 @@ actions =
   Signal.mailbox NoOp
 
 
-type alias Update = AppTypes.ScreenUpdate Screen Action
+type alias Update = AppTypes.ScreenUpdate Screen
 
 
 mount : Update
@@ -43,8 +43,8 @@ update action screen =
       local { screen | password <- p }
 
     Submit ->
-      react screen
-        (map Success (ServerApi.postRegister screen.handle screen.email screen.password))
+      react screen <| (ServerApi.postRegister screen.handle screen.email screen.password)
+        `andThen` (\p -> Signal.send actions.address (Success p))
 
     Success player ->
       request { screen | error <- False }

@@ -167,8 +167,8 @@ case class RaceStatus(
   opponents: Seq[Opponent]
 )
 
-case class RaceCourseStatus(
-  raceCourse: RaceCourse,
-  nextRun: Option[RaceCourseRun],
-  opponents: Seq[Opponent]
+case class LiveTrack(
+  track: Track,
+  nextRun: Option[TrackRun],
+  players: Seq[Player]
 )

@@ -4,33 +4,24 @@ import Task exposing (Task, andThen, map)
 
 import Router exposing (..)
 import Http
-
+import History
 
 import Screens.Home.HomeUpdates as Home
 import Screens.Register.RegisterUpdates as Register
 import Screens.Login.LoginUpdates as Login
+import Screens.ShowTrack.ShowTrackUpdates as ShowTrack
 
 import AppTypes exposing (..)
 
 
-
-
-
--- import Models exposing (..)
--- import Core exposing (find)
--- import ServerApi
--- import Inputs exposing (actionsMailbox)
--- import Debug
-
--- type alias ScreenLoader = Task Http.Error Screen
-
 pathChangeMailbox : Signal.Mailbox (Task error ())
 pathChangeMailbox = Signal.mailbox (Task.succeed ())
 
--- pathToScreenTask : AppState -> String -> Task Http.Error ()
--- pathToScreenTask appState path =
---   (route appState path)
---     `andThen` (\screen -> Signal.send actionsMailbox.address (Inputs.Navigate screen))
+
+changePath : String -> Task error ()
+changePath path =
+  Signal.send pathChangeMailbox.address (History.setPath path)
+
 
 route : AppState -> Route AppUpdate
 route appState =
@@ -40,24 +31,29 @@ route appState =
     , "/register" :-> register appState
     -- , "/me" :-> to (ShowProfile player)
     -- , "/profile/" :-> showProfile
-    -- , "/show-course/" :-> showCourse
+    , "/track/" :-> showTrack appState
     -- , "/play/" :-> playCourse
     ] (notFound appState)
 
 
 home : AppState -> String -> AppUpdate
 home appState _ =
-  screenToAppUpdate appState HomeScreen HomeAction (Home.mount appState.player)
+  screenToAppUpdate appState HomeScreen (Home.mount appState.player)
 
 
 register : AppState -> String -> AppUpdate
 register appState _ =
-  screenToAppUpdate appState RegisterScreen RegisterAction Register.mount
+  screenToAppUpdate appState RegisterScreen Register.mount
 
 
 login : AppState -> String -> AppUpdate
 login appState _ =
-  screenToAppUpdate appState LoginScreen LoginAction Login.mount
+  screenToAppUpdate appState LoginScreen Login.mount
+
+
+showTrack : AppState -> String -> AppUpdate
+showTrack appState slug =
+  screenToAppUpdate appState ShowTrackScreen (ShowTrack.mount slug)
 
 
 notFound : AppState -> String -> AppUpdate
@@ -70,11 +66,6 @@ notFound appState path =
 --   ServerApi.getPlayer handle
 --     |> map ShowProfile
 
-
--- showCourse : String -> ScreenLoader
--- showCourse slug =
---   ServerApi.getRaceCourseStatus slug
---     |> map Show
 
 -- playCourse : String -> ScreenLoader
 -- playCourse slug =

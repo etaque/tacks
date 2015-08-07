@@ -43,11 +43,11 @@ object WebSockets extends Controller with Security {
     }
   }
 
-  def raceCoursePlayer(raceCourseId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+  def trackPlayer(trackId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
-      raceCourse <- RaceCourse.findById(raceCourseId)
-      ref <- (RacesSupervisor.actorRef ? GetRaceCourseActorRef(raceCourse)).mapTo[ActorRef]
+      track <- Track.findById(trackId)
+      ref <- (RacesSupervisor.actorRef ? GetTrackActorRef(track)).mapTo[ActorRef]
     }
     yield Right(PlayerActor.props(ref, player)(_))
   }
@@ -83,10 +83,10 @@ object WebSockets extends Controller with Security {
   }
 
 
-  // import RaceCourseStatus.format
-  // implicit val raceCourseStatusFrameFormatter = FrameFormatter.jsonFrame[RaceCourseStatus]
+  // import LiveTrack.format
+  // implicit val trackStatusFrameFormatter = FrameFormatter.jsonFrame[LiveTrack]
 
-  // def liveCenter = WebSocket.tryAcceptWithActor[PlayerInput, RaceCourseStatus] { implicit request =>
+  // def liveCenter = WebSocket.tryAcceptWithActor[PlayerInput, LiveTrack] { implicit request =>
   //   for {
   //     player <- PlayerAction.getPlayer(request)
   //   }

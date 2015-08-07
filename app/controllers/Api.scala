@@ -106,18 +106,18 @@ object Api extends Controller with Security {
   def liveStatus = PlayerAction.async() { implicit request =>
     val racesFu = (RacesSupervisor.actorRef ? GetOpenRaces).mapTo[Seq[RaceStatus]]
     val runsFu = (RacesSupervisor.actorRef ? GetLiveRuns).mapTo[Seq[RichRun]]
-    val raceCoursesFu = (RacesSupervisor.actorRef ? GetRaceCourses).mapTo[Seq[RaceCourseStatus]]
+    val tracksFu = (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]]
     val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     for {
       races <- racesFu
-      raceCourses <- raceCoursesFu
+      tracks <- tracksFu
       liveRuns <- runsFu
       onlinePlayers <- onlinePlayersFu
     }
     yield Ok(Json.obj(
       "currentPlayer" -> request.player,
       "now" -> DateTime.now,
-      "raceCourses" -> Json.toJson(raceCourses),
+      "liveTracks" -> Json.toJson(tracks),
       "openRaces" -> Json.toJson(races),
       "liveRuns" -> Json.toJson(liveRuns),
       "onlinePlayers" -> Json.toJson(onlinePlayers),
@@ -125,16 +125,16 @@ object Api extends Controller with Security {
     ))
   }
 
-  def raceCourse(slug: String) = PlayerAction.async() { implicit request =>
-    RaceCourse.findBySlug(slug).map {
-      case Some(raceCourse) => Ok(Json.toJson(raceCourse))
+  def track(slug: String) = PlayerAction.async() { implicit request =>
+    Track.findBySlug(slug).map {
+      case Some(track) => Ok(Json.toJson(track))
       case None => NotFound
     }
   }
 
-  def raceCourseStatus(slug: String) = PlayerAction.async() { implicit request =>
-    (RacesSupervisor.actorRef ? GetRaceCourses).mapTo[Seq[RaceCourseStatus]].map { raceCourseStatuses =>
-      raceCourseStatuses.find(_.raceCourse.slug == slug) match {
+  def liveTrack(slug: String) = PlayerAction.async() { implicit request =>
+    (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]].map { liveTracks =>
+      liveTracks.find(_.track.slug == slug) match {
         case Some(rcs) => Ok(Json.toJson(rcs))
         case None => NotFound
       }

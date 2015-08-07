@@ -8,6 +8,7 @@ import Models exposing (..)
 import Screens.Home.HomeTypes as Home
 import Screens.Login.LoginTypes as Login
 import Screens.Register.RegisterTypes as Register
+import Screens.ShowTrack.ShowTrackTypes as ShowTrack
 
 
 type alias AppSetup =
@@ -22,12 +23,14 @@ type AppAction
   | HomeAction Home.Action
   | LoginAction Login.Action
   | RegisterAction Register.Action
+  | ShowTrackAction ShowTrack.Action
+  | Logout
   | NoOp
 
 
 type alias AppUpdate =
   { appState : AppState
-  , reaction : Maybe (Task Http.Error AppAction)
+  , reaction : Maybe (Task Http.Error ())
   , request : Maybe AppAction
   }
 
@@ -42,18 +45,19 @@ type AppScreen
   = HomeScreen Home.Screen
   | LoginScreen Login.Screen
   | RegisterScreen Register.Screen
+  | ShowTrackScreen ShowTrack.Screen
   | NotFoundScreen String
   | NoScreen
 
 
-type alias ScreenUpdate screen action =
+type alias ScreenUpdate screen =
   { screen : screen
-  , reaction : Maybe (Task Http.Error action)
+  , reaction : Maybe (Task Http.Error ())
   , request : Maybe AppAction
   }
 
 
-local : screen -> ScreenUpdate screen action
+local : screen -> ScreenUpdate screen
 local screen =
   { screen = screen
   , reaction = Nothing
@@ -61,7 +65,7 @@ local screen =
   }
 
 
-react : screen -> Task Http.Error action -> ScreenUpdate screen action
+react : screen -> Task Http.Error () -> ScreenUpdate screen
 react screen task =
   { screen = screen
   , reaction = Just task
@@ -69,7 +73,7 @@ react screen task =
   }
 
 
-request : screen -> AppAction -> ScreenUpdate screen action
+request : screen -> AppAction -> ScreenUpdate screen
 request screen appAction =
   { screen = screen
   , reaction = Nothing
@@ -77,11 +81,11 @@ request screen appAction =
   }
 
 
-screenToAppUpdate : AppState -> (screen -> AppScreen) -> (screenAction -> AppAction) -> ScreenUpdate screen screenAction -> AppUpdate
-screenToAppUpdate appState toAppScreen toAppAction {screen, reaction, request} =
+screenToAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
+screenToAppUpdate appState toAppScreen {screen, reaction, request} =
   AppUpdate
     { appState | screen <- toAppScreen screen }
-    (Maybe.map (Task.map toAppAction) reaction)
+    reaction
     request
 
 

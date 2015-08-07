@@ -1,6 +1,6 @@
 module Screens.Login.LoginUpdates where
 
-import Task exposing (Task, succeed, map)
+import Task exposing (Task, succeed, map, andThen)
 import Http
 
 import AppTypes exposing (local, react, request)
@@ -13,7 +13,7 @@ actions =
   Signal.mailbox NoOp
 
 
-type alias Update = AppTypes.ScreenUpdate Screen Action
+type alias Update = AppTypes.ScreenUpdate Screen
 
 
 mount : Update
@@ -39,8 +39,9 @@ update action screen =
       local { screen | password <- p }
 
     Submit ->
-      react screen
-        (map Success (ServerApi.postLogin screen.email screen.password))
+      react screen <| (ServerApi.postLogin screen.email screen.password)
+        `andThen` (\player -> Signal.send actions.address (Success player))
+
 
     Success player ->
       request { screen | error <- False }

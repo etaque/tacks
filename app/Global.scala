@@ -14,11 +14,11 @@ object Global extends GlobalSettings {
 
     User.ensureIndexes()
     TimeTrial.ensureIndexes()
-    RaceCourse.ensureIndexes()
+    Track.ensureIndexes()
 
     RacesSupervisor.start()
 
-    ensureRaceCourses()
+    ensureTracks()
 
     val trialsFreq = if (play.Play.isDev) 5.seconds else 1.hour
     Akka.system.scheduler.schedule(10.seconds, trialsFreq)(CourseGenerator.ensureTimeTrials())
@@ -26,14 +26,14 @@ object Global extends GlobalSettings {
     genData()
   }
 
-  def ensureRaceCourses() = {
+  def ensureTracks() = {
 
     CourseGenerator.all.foreach { gen =>
-      RaceCourse.findBySlug(gen.slug).map {
+      Track.findBySlug(gen.slug).map {
         case Some(_) => // do nothing
         case None => {
-          val rc = RaceCourse(BSONObjectID.generate, gen.slug, gen.generateCourse(), 30, 60)
-          RaceCourse.save(rc)
+          val rc = Track(BSONObjectID.generate, gen.slug, gen.generateCourse(), 30, 60)
+          Track.save(rc)
         }
       }
     }

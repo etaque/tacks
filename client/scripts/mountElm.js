@@ -10,19 +10,19 @@ function mountElm() {
     appSetup: readData("appSetup")
   });
 
-  var ws, wsUrl, currentRaceCourseId;
+  var ws, wsUrl, currentTrackId;
 
   function outputProxy(output) {
     ws.send(JSON.stringify(output));
   }
 
-  game.ports.activeRaceCourse.subscribe(function(id) {
+  game.ports.activeTrack.subscribe(function(id) {
     if (ws) {
       ws.close();
     }
 
     if (id) {
-      wsUrl = routes.WebSockets.raceCoursePlayer(id).webSocketURL();
+      wsUrl = routes.WebSockets.trackPlayer(id).webSocketURL();
       ws = new WebSocket(wsUrl);
 
       ws.onmessage = function(event) {
@@ -39,7 +39,7 @@ function mountElm() {
     } else {
       game.ports.raceInput.send(null);
     }
-    currentRaceCourseId = id;
+    currentTrackId = id;
   });
 }
 

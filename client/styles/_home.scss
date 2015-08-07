@@ -161,11 +161,11 @@
 .live-center {
   margin-top: 30px;
 
-  .race-course {
+  .track {
     background-color: white;
     box-shadow: 0 1px 1px $shadow inset;
     margin-bottom: 30px;
-    
+
     .name {
       color: white;
       display: block;
@@ -191,58 +191,6 @@
     }
   }
 
-  .table-open-races {
-    width: 100%;
-    background-color: white;
-    box-shadow: 0 2px 2px $lightGray;
-
-    th {
-      padding: 4px 12px;
-      border-bottom-width: 2px;
-      background-color: $lighterSeaBlue;
-      color: $whiteBlue;
-      font-size: 13px;
-
-      &.generator {
-        text-align: center;
-      }
-    }
-
-    td {
-      padding: 8px 12px;
-      border-bottom: 1px solid $whiteBlue;
-      background-color: white;
-
-      &.generator {
-        background-color: $mainBlue;
-        text-align: center;
-        font-family: $lightFontFamily;
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: white;
-        border-color: desat-dark($mainBlue);
-      }
-
-      &.countdown {
-        font-family: $mono;
-      }
-
-      &.players {
-        .player-avatar {
-          display: block;
-          margin-bottom: 2px;
-
-          &:last-child {
-            margin-bottom: 0;
-          }
-        }
-      }
-    }
-
-    tr:last-child td {
-      border-bottom: none;
-    }
-  }
 
   .empty-board {
     background-color: white;
@@ -296,7 +244,7 @@
 }
 
 
-.race-course-status {
+.live-track {
   $br: 3px;
   margin-top: 30px;
 
@@ -341,6 +289,3 @@
     }
   }
 }
-
-
-

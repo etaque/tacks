@@ -14,7 +14,7 @@ actions : Signal.Mailbox Action
 actions = Signal.mailbox NoOp
 
 
-type alias Update = AppTypes.ScreenUpdate Screen Action
+type alias Update = AppTypes.ScreenUpdate Screen
 
 
 mount : Player -> Update
@@ -40,13 +40,17 @@ update action screen =
       local { screen | handle <- handle }
 
     SubmitHandle ->
-      react screen (map SubmitHandleSuccess (ServerApi.postHandle screen.handle))
+      react screen <| (ServerApi.postHandle screen.handle) `andThen`
+        (\p -> Signal.send actions.address (SubmitHandleSuccess p))
 
     SubmitHandleSuccess player ->
       request screen (AppTypes.SetPlayer player)
 
+    _ ->
+      local screen
 
-refreshLiveStatus : Task Http.Error Action
+refreshLiveStatus : Task Http.Error ()
 refreshLiveStatus =
-  map SetLiveStatus ServerApi.getLiveStatus
+  ServerApi.getLiveStatus `andThen`
+    (\liveStatus -> Signal.send actions.address (SetLiveStatus liveStatus))
 

@@ -22,17 +22,17 @@ case class MountTimeTrialRun(timeTrial: TimeTrial, player: Player, run: TimeTria
 case class MountTutorial(player: Player)
 case class GetRace(raceId: BSONObjectID)
 case class GetRaceActorRef(raceId: BSONObjectID)
-case class GetRaceCourseActorRef(raceCourse: RaceCourse)
+case class GetTrackActorRef(track: Track)
 case object CreateRace
 case object GetOpenRaces
 case object GetLiveRuns
-case object GetRaceCourses
+case object GetTracks
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
   var mountedRaces = Seq.empty[(Race, Option[Player], ActorRef)]
-  var mountedRaceCourses = Seq.empty[(RaceCourse, ActorRef)]
+  var mountedTracks = Seq.empty[(Track, ActorRef)]
   var mountedRuns = Seq.empty[(RichRun, ActorRef)]
 
   implicit val timeout = Timeout(5.seconds)
@@ -77,14 +77,14 @@ class RacesSupervisor extends Actor {
 
     case GetRaceActorRef(raceId) => sender ! getRaceActorRef(raceId)
 
-    case GetRaceCourseActorRef(raceCourse) => sender ! getRaceCourseActorRef(raceCourse)
+    case GetTrackActorRef(track) => sender ! getTrackActorRef(track)
 
     case GetLiveRuns => {
       sender ! mountedRuns.map(_._1)
     }
 
-    case GetRaceCourses => {
-      RaceCourse.list.flatMap { raceCourses => Future.sequence(raceCourses.map(getRaceCourseStatus)) } pipeTo sender
+    case GetTracks => {
+      Track.list.flatMap { tracks => Future.sequence(tracks.map(getLiveTrack)) } pipeTo sender
     }
 
     case UnmountRace(race) => {
@@ -118,15 +118,15 @@ class RacesSupervisor extends Actor {
 
   }
 
-  def getRaceCourseStatus(raceCourse: RaceCourse): Future[RaceCourseStatus] = {
-    mountedRaceCourses.find(_._1.slug == raceCourse.slug) match {
-      case Some((raceCourse, ref)) => {
-        (ref ? GetStatus).mapTo[(Option[RaceCourseRun], Seq[Opponent])].map { case (nextRun, opponents) =>
-          RaceCourseStatus(raceCourse, nextRun, opponents)
+  def getLiveTrack(track: Track): Future[LiveTrack] = {
+    mountedTracks.find(_._1.slug == track.slug) match {
+      case Some((track, ref)) => {
+        (ref ? GetStatus).mapTo[(Option[TrackRun], Seq[Opponent])].map { case (nextRun, opponents) =>
+          LiveTrack(track, nextRun, opponents.map(_.player))
         }
       }
       case None => {
-        Future.successful(RaceCourseStatus(raceCourse, None, Nil))
+        Future.successful(LiveTrack(track, None, Nil))
       }
     }
   }
@@ -135,10 +135,10 @@ class RacesSupervisor extends Actor {
 
   def getRaceActorRef(raceId: BSONObjectID): Option[ActorRef] = mountedRaces.find(_._1.id == raceId).map(_._3)
 
-  def getRaceCourseActorRef(raceCourse: RaceCourse): ActorRef = {
-    mountedRaceCourses.find(_._1.id == raceCourse.id).map(_._2).getOrElse {
-      val ref = context.actorOf(RaceCourseActor.props(raceCourse))
-      mountedRaceCourses = mountedRaceCourses :+ (raceCourse, ref)
+  def getTrackActorRef(track: Track): ActorRef = {
+    mountedTracks.find(_._1.id == track.id).map(_._2).getOrElse {
+      val ref = context.actorOf(TrackActor.props(track))
+      mountedTracks = mountedTracks :+ (track, ref)
       ref
     }
   }

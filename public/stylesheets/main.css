@@ -5405,11 +5405,11 @@ a.player-avatar {
 */
 .live-center {
   margin-top: 30px; }
-  .live-center .race-course {
+  .live-center .track {
     background-color: white;
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
     margin-bottom: 30px; }
-    .live-center .race-course .name {
+    .live-center .track .name {
       color: white;
       display: block;
       text-align: center;
@@ -5418,46 +5418,13 @@ a.player-avatar {
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
       letter-spacing: 1px; }
-    .live-center .race-course .players {
+    .live-center .track .players {
       padding: 10px; }
-      .live-center .race-course .players .player-avatar {
+      .live-center .track .players .player-avatar {
         display: block; }
-      .live-center .race-course .players .empty {
+      .live-center .track .players .empty {
         color: #7b8087;
         font-size: 13px; }
-  .live-center .table-open-races {
-    width: 100%;
-    background-color: white;
-    box-shadow: 0 2px 2px #E6E6E6; }
-    .live-center .table-open-races th {
-      padding: 4px 12px;
-      border-bottom-width: 2px;
-      background-color: #345488;
-      color: #B1C0D8;
-      font-size: 13px; }
-      .live-center .table-open-races th.generator {
-        text-align: center; }
-    .live-center .table-open-races td {
-      padding: 8px 12px;
-      border-bottom: 1px solid #B1C0D8;
-      background-color: white; }
-      .live-center .table-open-races td.generator {
-        background-color: #5899E2;
-        text-align: center;
-        font-family: "Proxima Nova Thin";
-        letter-spacing: 1px;
-        text-transform: uppercase;
-        color: white;
-        border-color: #3b73b3; }
-      .live-center .table-open-races td.countdown {
-        font-family: "Inconsolata"; }
-      .live-center .table-open-races td.players .player-avatar {
-        display: block;
-        margin-bottom: 2px; }
-        .live-center .table-open-races td.players .player-avatar:last-child {
-          margin-bottom: 0; }
-    .live-center .table-open-races tr:last-child td {
-      border-bottom: none; }
   .live-center .empty-board {
     background-color: white;
     box-shadow: 0 2px 2px #E6E6E6;
@@ -5489,9 +5456,9 @@ a.player-avatar {
     font-size: 14px;
     color: #7b8087; }
 
-.race-course-status {
+.live-track {
   margin-top: 30px; }
-  .race-course-status a.show, .race-course-status a.show:visited {
+  .live-track a.show, .live-track a.show:visited {
     display: block;
     height: 200px;
     margin-bottom: 10px;
@@ -5502,16 +5469,16 @@ a.player-avatar {
     position: relative;
     text-align: center;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2); }
-    .race-course-status a.show:hover .name, .race-course-status a.show:visited:hover .name {
+    .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
       background-color: #5899E2; }
-    .race-course-status a.show .name, .race-course-status a.show:visited .name {
+    .live-track a.show .name, .live-track a.show:visited .name {
       display: block;
       padding: 10px;
       background-color: #387ac4;
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
       letter-spacing: 1px; }
-    .race-course-status a.show .description, .race-course-status a.show:visited .description {
+    .live-track a.show .description, .live-track a.show:visited .description {
       position: absolute;
       bottom: 0;
       left: 0;

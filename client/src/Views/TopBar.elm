@@ -5,18 +5,16 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import Views.Utils exposing (..)
-import State exposing (..)
-import Game exposing (Player)
-import Messages exposing (Translator)
-import Forms.Model as Forms
-import Forms.Update exposing (submitMailbox)
+import Models exposing (..)
+import AppTypes exposing (..)
+import AppUpdates exposing (actionsMailbox)
 
 
 height = 50
 logoWidth = 160
 
-view : Translator -> AppState -> Html
-view t appState =
+view : AppState -> Html
+view appState =
   nav [ class "navbar" ]
     [ div [ class "container" ]
         [ logo
@@ -57,6 +55,6 @@ userMenu player =
         ]
       ]
     , li [ ]
-      [ a [ onClick submitMailbox.address Forms.SubmitLogout ] [ text "Logout"] ]
+      [ a [ onClick actionsMailbox.address Logout ] [ text "Logout"] ]
     ]
 

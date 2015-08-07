@@ -9,7 +9,7 @@ import reactivemongo.core.commands._
 import tools.BSONHandlers.BSONDateTimeHandler
 
 
-case class RaceCourse(
+case class Track(
   _id: BSONObjectID,
   slug: String,
   course: Course,
@@ -17,11 +17,11 @@ case class RaceCourse(
   startCycle: Int
 ) extends HasId
 
-object RaceCourse extends MongoDAO[RaceCourse] {
-  val collectionName = "raceCourses"
+object Track extends MongoDAO[Track] {
+  val collectionName = "tracks"
 
-  def findBySlug(slug: String): Future[Option[RaceCourse]] = {
-    collection.find(BSONDocument("slug" -> slug)).one[RaceCourse]
+  def findBySlug(slug: String): Future[Option[Track]] = {
+    collection.find(BSONDocument("slug" -> slug)).one[Track]
   }
 
   def ensureIndexes(): Unit = {
@@ -33,34 +33,34 @@ object RaceCourse extends MongoDAO[RaceCourse] {
       unique = true))
   }
 
-  implicit val bsonReader: BSONDocumentReader[RaceCourse] = Macros.reader[RaceCourse]
-  implicit val bsonWriter: BSONDocumentWriter[RaceCourse] = Macros.writer[RaceCourse]
+  implicit val bsonReader: BSONDocumentReader[Track] = Macros.reader[Track]
+  implicit val bsonWriter: BSONDocumentWriter[Track] = Macros.writer[Track]
 }
 
 
-case class RaceCourseRun(
+case class TrackRun(
   _id: BSONObjectID,
-  raceCourseId: BSONObjectID,
+  trackId: BSONObjectID,
   startTime: DateTime,
   playerIds: Seq[BSONObjectID],
   leaderboard: Seq[PlayerTally]
 ) extends HasId {
-  def removePlayerId(id: BSONObjectID): RaceCourseRun = {
+  def removePlayerId(id: BSONObjectID): TrackRun = {
     copy(playerIds = playerIds.filterNot(_ == id))
   }
 }
 
-object RaceCourseRun extends MongoDAO[RaceCourseRun] {
-  val collectionName = "raceCourseRuns"
+object TrackRun extends MongoDAO[TrackRun] {
+  val collectionName = "trackRuns"
 
-  def upsert(run: RaceCourseRun): Future[Option[BSONDocument]] = {
+  def upsert(run: TrackRun): Future[Option[BSONDocument]] = {
     val q = BSONDocument("_id" -> run.id)
     val u = Update(bsonWriter.write(run), fetchNewObject = true)
     db.command(FindAndModify(collectionName, q, u, upsert = true))
   }
 
-  def listByRaceCourse(raceCourseId: BSONObjectID): Future[Seq[RaceCourseRun]] = {
-    list(BSONDocument("raceCourseId" -> raceCourseId), BSONDocument("startTime" -> -1))
+  def listByTrack(trackId: BSONObjectID): Future[Seq[TrackRun]] = {
+    list(BSONDocument("trackId" -> trackId), BSONDocument("startTime" -> -1))
   }
 
   def ensureIndexes(): Unit = {
@@ -72,11 +72,11 @@ object RaceCourseRun extends MongoDAO[RaceCourseRun] {
       unique = true))
 
     collection.indexesManager.ensure(Index(
-      key = List("raceCourseId" -> Ascending)))
+      key = List("trackId" -> Ascending)))
   }
 
   implicit val playerTallyHandler = Macros.handler[PlayerTally]
 
-  implicit val bsonReader: BSONDocumentReader[RaceCourseRun] = Macros.reader[RaceCourseRun]
-  implicit val bsonWriter: BSONDocumentWriter[RaceCourseRun] = Macros.writer[RaceCourseRun]
+  implicit val bsonReader: BSONDocumentReader[TrackRun] = Macros.reader[TrackRun]
+  implicit val bsonWriter: BSONDocumentWriter[TrackRun] = Macros.writer[TrackRun]
 }

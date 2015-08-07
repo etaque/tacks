@@ -55,17 +55,27 @@ pathUpdates : Signal AppAction
 pathUpdates =
   Signal.map SetPath History.path
 
-reactions : Signal (Task Http.Error AppAction)
+reactions : Signal (Task Http.Error ())
 reactions =
   Signal.map .reaction appUpdates
-    |> Signal.filterMap identity (Task.succeed NoOp)
+    |> Signal.filterMap identity (Task.succeed ())
+
+requests : Signal (Task error AppAction)
+requests =
+  Signal.map .request appUpdates
+    |> Signal.filterMap identity NoOp
+    |> Signal.map Task.succeed
 
 
 -- Runners
 
-port reactionsRunner : Signal (Task Http.Error ())
+port reactionsRunner : Signal (Task Http.Error Task.ThreadID)
 port reactionsRunner =
-  Signal.map (\t -> t `andThen` (Signal.send actionsMailbox.address)) reactions
+  Signal.map Task.spawn reactions
+
+port requestsRunner : Signal (Task error Task.ThreadID)
+port requestsRunner =
+  Signal.map (\t -> Task.spawn (t `andThen` (Signal.send actionsMailbox.address))) requests
 
 port pathChangeRunner : Signal (Task error ())
 port pathChangeRunner =
@@ -83,9 +93,8 @@ port playerOutput =
 -- port title : Signal String
 -- port title = Render.Utils.gameTitle <~ gameState
 
-port activeRaceCourse : Signal (Maybe String)
-port activeRaceCourse =
+port activeTrack : Signal (Maybe String)
+port activeTrack =
   Signal.constant Nothing
-  -- Signal.map getActiveRaceCourse appState
+  -- Signal.map getActiveTrack appState
   --   |> Signal.dropRepeats
-

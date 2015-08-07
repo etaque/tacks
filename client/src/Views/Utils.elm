@@ -4,12 +4,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
-import History exposing (setPath)
+import History
 
 import Models exposing (..)
 import Game exposing (..)
 import Messages exposing (Translator)
--- import Inputs exposing (actionsMailbox)
 import Routes exposing (pathChangeMailbox)
 
 
@@ -18,7 +17,7 @@ type alias Wrapper = List Html -> Html
 
 path : String -> Attribute
 path p =
-  onClick pathChangeMailbox.address (setPath p)
+  onClick pathChangeMailbox.address (History.setPath p)
 
 
 onInput : Signal.Address a -> (String -> a) -> Attribute

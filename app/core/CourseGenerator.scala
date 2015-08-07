@@ -180,17 +180,17 @@ object CourseGenerator {
   def ensureTimeTrials() = {
     val period = TimeTrial.currentPeriod
     all.foreach { t =>
-      RaceCourse.findBySlug(t.slug).map {
+      Track.findBySlug(t.slug).map {
         case Some(_) =>
         case None => {
-          val raceCourse = RaceCourse(
+          val track = Track(
             _id = reactivemongo.bson.BSONObjectID.generate,
             slug = t.slug,
             course = t.generateCourse(),
             countdown = 30,
             startCycle = 60
           )
-          RaceCourse.save(raceCourse)
+          Track.save(track)
         }
       }
       TimeTrial.findBySlugAndPeriod(t.slug, period).map {
