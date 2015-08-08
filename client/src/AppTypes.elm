@@ -9,6 +9,7 @@ import Screens.Home.Types as Home
 import Screens.Login.Types as Login
 import Screens.Register.Types as Register
 import Screens.ShowTrack.Types as ShowTrack
+import Screens.ShowProfile.Types as ShowProfile
 import Screens.Game.Types as Game
 
 
@@ -30,6 +31,7 @@ type AppAction
   | LoginAction Login.Action
   | RegisterAction Register.Action
   | ShowTrackAction ShowTrack.Action
+  | ShowProfileAction ShowProfile.Action
   | GameAction Game.Action
   | Logout
   | NoOp
@@ -58,6 +60,7 @@ type AppScreen
   | LoginScreen Login.Screen
   | RegisterScreen Register.Screen
   | ShowTrackScreen ShowTrack.Screen
+  | ShowProfileScreen ShowProfile.Screen
   | GameScreen Game.Screen
   | NotFoundScreen String
   | NoScreen

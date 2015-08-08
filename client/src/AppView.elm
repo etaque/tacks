@@ -10,6 +10,7 @@ import Screens.Home.View as Home
 import Screens.Login.View as Login
 import Screens.Register.View as Register
 import Screens.ShowTrack.View as ShowTrack
+import Screens.ShowProfile.View as ShowProfile
 import Screens.Game.View as Game
 
 import Screens.TopBar as TopBar
@@ -31,6 +32,9 @@ view dims appState =
 
       ShowTrackScreen screen ->
         ShowTrack.view screen
+
+      ShowProfileScreen screen ->
+        ShowProfile.view screen
 
       GameScreen screen ->
         Game.view dims screen

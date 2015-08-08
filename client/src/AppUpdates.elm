@@ -10,6 +10,7 @@ import Screens.Home.Updates as Home
 import Screens.Register.Updates as Register
 import Screens.Login.Updates as Login
 import Screens.ShowTrack.Updates as ShowTrack
+import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 
 import ServerApi
@@ -57,6 +58,10 @@ update {action, clock} {appState} =
     (ShowTrackAction a, ShowTrackScreen screen) ->
       ShowTrack.update a screen
         |> mapAppUpdate appState ShowTrackScreen
+
+    (ShowProfileAction a, ShowProfileScreen screen) ->
+      ShowProfile.update a screen
+        |> mapAppUpdate appState ShowProfileScreen
 
     (GameAction a, GameScreen screen) ->
       Game.update appState.player clock a screen

@@ -10,6 +10,7 @@ import Screens.Home.Updates as Home
 import Screens.Register.Updates as Register
 import Screens.Login.Updates as Login
 import Screens.ShowTrack.Updates as ShowTrack
+import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 
 import AppTypes exposing (..)
@@ -21,7 +22,7 @@ route appState =
     [ "/" :-> home appState
     , "/login" :-> login appState
     , "/register" :-> register appState
-    -- , "/me" :-> to (ShowProfile player)
+    , "/me" :-> showProfile appState
     -- , "/profile/" :-> showProfile
     , "/track/" :-> showTrack appState
     , "/play/" :-> playTrack appState
@@ -46,6 +47,11 @@ login appState _ =
 showTrack : AppState -> String -> AppUpdate
 showTrack appState slug =
   mapAppUpdate appState ShowTrackScreen (ShowTrack.mount slug)
+
+showProfile : AppState -> String -> AppUpdate
+showProfile appState _ =
+  mapAppUpdate appState ShowProfileScreen (ShowProfile.mount appState.player)
+
 
 
 playTrack : AppState -> String -> AppUpdate
