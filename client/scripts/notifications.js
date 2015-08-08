@@ -1,16 +1,15 @@
 var routes = require('./routes');
-var Messages = require('./messages');
 
 function notifications() {
 
   function notifyEvent(event) {
-    var title = Messages("notifications.events." + event.key + ".title");
-    var body = Messages.apply(null, ["notifications.events." + event.key + ".body"].concat(event.params));
-
-    new Notification(title, {
-      body: body,
-      icon: "/assets/favicon-32x32.png"
-    });
+    // var title = Messages("notifications.events." + event.key + ".title");
+    // var body = Messages.apply(null, ["notifications.events." + event.key + ".body"].concat(event.params));
+    //
+    // new Notification(title, {
+    //   body: body,
+    //   icon: "/assets/favicon-32x32.png"
+    // });
   }
 
   if ('Notification' in window) {

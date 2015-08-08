@@ -1,16 +1,15 @@
 
 'use strict';
 
-var gulp        = require('gulp');
-var $           = require('gulp-load-plugins')();
-var browserify  = require('browserify');
-var watchify    = require('watchify');
-var reactify    = require('reactify');
-var source      = require('vinyl-source-stream');
-var shim        = require('browserify-shim');
+var gulp = require('gulp');
+var $ = require('gulp-load-plugins')();
+var browserify = require('browserify');
 var runSequence = require('run-sequence');
+var source = require('vinyl-source-stream');
+var buffer = require('vinyl-buffer');
 
-var buildDir   = '../public/';
+
+var buildDir = '../public/';
 
 function handleError(task) {
   return function(err) {
@@ -19,39 +18,19 @@ function handleError(task) {
   };
 }
 
-// see https://gist.github.com/mitchelkuijpers/11281981
-function jsx(watch) {
-  var doify = watch ? watchify : browserify;
-  var bundler = doify('./scripts/setup.js', { extensions: ['.jsx'] });
 
-  bundler.transform(reactify);
-  bundler.transform(shim);
+gulp.task('js', function() {
+  var b = browserify({
+    entries: './scripts/setup.js',
+    debug: true
+  });
 
-  var rebundle = function() {
-    var stream = bundler.bundle({debug: true});
-
-    stream.on('error', handleError('browserify'));
-
-    return stream
-      .pipe(source('setup.js'))
-      .pipe(gulp.dest(buildDir + 'javascripts'));
-  };
-
-  bundler.on('update', rebundle);
-  return rebundle();
-}
-
-gulp.task('jsx', function() { return jsx(false); });
-gulp.task('jsx:watch', function() { return jsx(true); });
-
-
-gulp.task('elm', function() {
-  return gulp.src('src/Main.elm')
-    .pipe($.elm())
-    .on('error', handleError("elm")) //function(error) { console.log(error.message); })
+  return b.bundle()
+    .pipe(source('setup.js'))
+    .pipe(buffer())
+    .on('error', handleError("js"))
     .pipe(gulp.dest(buildDir + 'javascripts'));
 });
-
 
 gulp.task('compress', function() {
   gulp.src(buildDir + 'javascripts/setup.js')
@@ -59,7 +38,16 @@ gulp.task('compress', function() {
     .pipe(gulp.dest(buildDir + 'javascripts/dist'));
 });
 
-// Compile Any Other Sass Files You Added (app/styles)
+
+gulp.task('elm', function() {
+  return gulp.src('src/Main.elm')
+    .pipe($.elm())
+    .on('error', handleError("elm"))
+    .pipe(gulp.dest(buildDir + 'javascripts'))
+    .pipe($.size({title: 'elm'}));
+});
+
+
 gulp.task('scss', function () {
   return gulp.src('styles/**/*.scss')
     .pipe($.sass({
@@ -72,14 +60,14 @@ gulp.task('scss', function () {
     .pipe($.size({title: 'scss'}));
 });
 
-// Watch Files For Changes & Reload
-gulp.task('default', ['jsx:watch', 'scss', 'elm'], function () {
+
+gulp.task('default', ['js', 'scss', 'elm'], function () {
+  gulp.watch(['scripts/**/*.js'], ['js']);
   gulp.watch(['styles/**/*.scss'], ['scss']);
   gulp.watch(['src/**/*.elm'], ['elm']);
 });
 
-// Build Production Files, the Default Task
 gulp.task('dist', function (cb) {
-  runSequence('scss', ['jsx', 'compress'], cb);
+  runSequence('scss', ['js', 'compress'], cb);
 });
 

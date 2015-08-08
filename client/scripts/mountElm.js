@@ -1,24 +1,26 @@
 "use strict";
 
 var $ = require('jquery');
-var readData = require('./util').readData;
 var routes = require('./routes');
 
+function readData(id, el) {
+  var value = $.trim($(('#' + id), el).html());
+  return value && JSON.parse(value);
+}
+
 function mountElm() {
+  var ws, wsUrl, currentTrackId;
+
   var game = window.Elm.fullscreen(window.Elm.Main, {
     raceInput: null,
     appSetup: readData("appSetup")
   });
 
-  var ws, wsUrl, currentTrackId;
-
-  function outputProxy(output) {
+  game.ports.playerOutput.subscribe(function(output) {
     if (ws.readyState == WebSocket.OPEN) {
       ws.send(JSON.stringify(output));
     }
-  }
-
-  game.ports.playerOutput.subscribe(outputProxy);
+  });
 
   game.ports.activeTrack.subscribe(function(id) {
 
@@ -34,13 +36,6 @@ function mountElm() {
         game.ports.raceInput.send(JSON.parse(event.data));
       };
 
-      // ws.onopen = function() {
-      //   game.ports.playerOutput.subscribe(outputProxy);
-      // };
-
-      // ws.onclose = function() {
-      //   game.ports.playerOutput.unsubscribe(outputProxy);
-      // };
     } else {
       game.ports.raceInput.send(null);
     }
