@@ -1,4 +1,4 @@
-module Views.Utils where
+module Screens.Utils where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -8,7 +8,6 @@ import History
 
 import Models exposing (..)
 import Game.Models exposing (..)
-import Messages exposing (Translator)
 import Routes exposing (pathChangeMailbox)
 
 
@@ -18,7 +17,6 @@ type alias Wrapper = List Html -> Html
 path : String -> Attribute
 path p =
   onClick pathChangeMailbox.address (History.setPath p)
-
 
 onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =
@@ -70,7 +68,6 @@ blockWrapper : String -> Wrapper
 blockWrapper wrapperClass content =
   div [ class wrapperClass ] [ div [ class "container" ] content ]
 
-
 playerWithAvatar : Player -> Html
 playerWithAvatar player =
   let
@@ -93,7 +90,3 @@ avatarUrl p =
 playerHandle : Player -> String
 playerHandle p =
   Maybe.withDefault "Anonymous" p.handle
-
-trackName : Translator -> Track -> String
-trackName t {slug} =
-  t <| "generators." ++ slug ++ ".name"

@@ -12,7 +12,7 @@ import Screens.Register.View as Register
 import Screens.ShowTrack.View as ShowTrack
 import Screens.Game.View as Game
 
-import Views.TopBar as TopBar
+import Screens.TopBar as TopBar
 
 
 view : (Int, Int) -> AppState -> Html

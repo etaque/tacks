@@ -9,7 +9,7 @@ import AppTypes exposing (..)
 import Screens.Register.Types exposing (..)
 import Screens.Register.Updates exposing (actions)
 
-import Views.Utils exposing (..)
+import Screens.Utils exposing (..)
 
 
 view : Screen -> Html

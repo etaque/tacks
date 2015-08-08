@@ -16,21 +16,6 @@ import Game.Steps.Vmg exposing (vmgStep)
 import Game.Steps.Wind exposing (windStep)
 
 
--- mainStep : AppInput -> AppState -> AppState
---   let
---     gameState = Maybe.withDefault (initGameState appInput.clock newAppState raceCourse) appState.gameState
---   in
---     case appInput.action of
---       GameUpdate gameInput ->
---         Just (gameStep gameInput gameState)
---       _ ->
---         Just gameState
-
--- initGameState : Inputs.Clock -> AppState -> RaceCourse -> GameState
--- initGameState clock appState raceCourse =
---   defaultGame clock.time raceCourse.course appState.player
-
-
 gameStep : Clock -> GameInput -> GameState -> GameState
 gameStep clock {raceInput, windowInput, keyboardInput} gameState =
   raceInputStep raceInput clock gameState

@@ -94,8 +94,8 @@ request screen appAction =
   }
 
 
-screenToAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
-screenToAppUpdate appState toAppScreen {screen, reaction, request} =
+mapAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
+mapAppUpdate appState toAppScreen {screen, reaction, request} =
   AppUpdate
     { appState | screen <- toAppScreen screen }
     reaction

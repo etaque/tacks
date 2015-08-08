@@ -177,27 +177,8 @@ asOpponentState {time,position,heading,velocity,windAngle,windOrigin,shadowDirec
   , crossedGates = crossedGates
   }
 
--- type alias GameSetup =
---   { now: Time
---   , creationTime: Time
---   , countdown: Float
---   , course: Course
---   , player: Player
---   }
-
 defaultVmg : Vmg
 defaultVmg = { angle = 0, speed = 0, value = 0}
-
--- defaultPlayer : Player
--- defaultPlayer =
---   { id = ""
---   , handle = Nothing
---   , user = False
---   , guest = False
---   , status = Nothing
---   , avatarId = Nothing
---   , vmgMagnet = 0
---   }
 
 defaultPlayerState : Player -> Float -> PlayerState
 defaultPlayerState player now =
@@ -222,21 +203,8 @@ defaultPlayerState player now =
   , nextGate        = Just StartLine
   }
 
-
 defaultGate : Gate
 defaultGate = { y = 0, width = 0 }
-
---defaultCourse : Course
---defaultCourse =
---  { upwind           = defaultGate
---  , downwind         = defaultGate
---  , laps             = 0
---  , markRadius       = 0
---  , islands          = []
---  , area             = { rightTop = (0,0), leftBottom = (0,0) }
---  , windShadowLength = 0
---  , boatWidth        = 0
---  }
 
 defaultWind : Wind
 defaultWind =
@@ -287,6 +255,3 @@ isStarted {now,startTime} =
   case startTime of
     Just t -> now >= t
     Nothing -> False
-
---isStarted : Maybe Time -> Bool
---isStarted maybeCountdown = M.map (\n -> n <= 0) maybeCountdown |> M.withDefault False

@@ -10,7 +10,7 @@ import Models exposing (..)
 import Screens.Home.Types exposing (..)
 import Screens.Home.Updates exposing (actions)
 
-import Views.Utils exposing (..)
+import Screens.Utils exposing (..)
 
 
 view : Player -> Screen -> Html

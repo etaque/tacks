@@ -53,10 +53,6 @@ exists : (a -> Bool) -> List a -> Bool
 exists f list =
   isJust (find f list)
 
--- headMaybe : List a -> Maybe a
--- headMaybe list =
---   if isEmpty list then Nothing else Just (head list)
-
 floatRange : Int -> Int -> List Float
 floatRange from to =
   map toFloat [ from .. to ]

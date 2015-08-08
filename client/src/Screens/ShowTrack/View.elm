@@ -10,7 +10,7 @@ import Models exposing (..)
 import Screens.ShowTrack.Types exposing (..)
 import Screens.ShowTrack.Updates exposing (actions)
 
-import Views.Utils exposing (..)
+import Screens.Utils exposing (..)
 
 
 view : Screen -> Html

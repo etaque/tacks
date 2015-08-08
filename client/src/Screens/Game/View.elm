@@ -11,8 +11,8 @@ import Game.Models exposing (GameState)
 import Screens.Game.Types exposing (..)
 import Screens.Game.Updates exposing (actions)
 
-import Views.TopBar as TopBar
-import Views.Utils exposing (..)
+import Screens.TopBar as TopBar
+import Screens.Utils exposing (..)
 import Game.Render.All exposing (renderGame)
 
 

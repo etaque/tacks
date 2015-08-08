@@ -1,10 +1,10 @@
-module Views.TopBar where
+module Screens.TopBar where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import Views.Utils exposing (..)
+import Screens.Utils exposing (..)
 import Models exposing (..)
 import AppTypes exposing (..)
 import AppUpdates exposing (actionsMailbox)
@@ -57,4 +57,3 @@ userMenu player =
     , li [ ]
       [ a [ onClick actionsMailbox.address Logout ] [ text "Logout"] ]
     ]
-

@@ -44,23 +44,23 @@ update {action, clock} {appState} =
 
     (HomeAction a, HomeScreen screen) ->
       Home.update a screen
-        |> screenToAppUpdate appState HomeScreen
+        |> mapAppUpdate appState HomeScreen
 
     (LoginAction a, LoginScreen screen) ->
       Login.update a screen
-        |> screenToAppUpdate appState LoginScreen
+        |> mapAppUpdate appState LoginScreen
 
     (RegisterAction a, RegisterScreen screen) ->
       Register.update a screen
-        |> screenToAppUpdate appState RegisterScreen
+        |> mapAppUpdate appState RegisterScreen
 
     (ShowTrackAction a, ShowTrackScreen screen) ->
       ShowTrack.update a screen
-        |> screenToAppUpdate appState ShowTrackScreen
+        |> mapAppUpdate appState ShowTrackScreen
 
     (GameAction a, GameScreen screen) ->
       Game.update appState.player clock a screen
-        |> screenToAppUpdate appState GameScreen
+        |> mapAppUpdate appState GameScreen
 
     (Logout, _) ->
       AppUpdate appState (Just logoutTask) Nothing
@@ -76,4 +76,3 @@ logoutTask : Task Http.Error ()
 logoutTask =
   ServerApi.postLogout `andThen`
     (\p -> Signal.send actionsMailbox.address (SetPlayer p))
-

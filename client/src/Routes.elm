@@ -30,33 +30,32 @@ route appState =
 
 home : AppState -> String -> AppUpdate
 home appState _ =
-  screenToAppUpdate appState HomeScreen (Home.mount appState.player)
+  mapAppUpdate appState HomeScreen (Home.mount appState.player)
 
 
 register : AppState -> String -> AppUpdate
 register appState _ =
-  screenToAppUpdate appState RegisterScreen Register.mount
+  mapAppUpdate appState RegisterScreen Register.mount
 
 
 login : AppState -> String -> AppUpdate
 login appState _ =
-  screenToAppUpdate appState LoginScreen Login.mount
+  mapAppUpdate appState LoginScreen Login.mount
 
 
 showTrack : AppState -> String -> AppUpdate
 showTrack appState slug =
-  screenToAppUpdate appState ShowTrackScreen (ShowTrack.mount slug)
+  mapAppUpdate appState ShowTrackScreen (ShowTrack.mount slug)
 
 
 playTrack : AppState -> String -> AppUpdate
 playTrack appState slug =
-  screenToAppUpdate appState GameScreen (Game.mount slug)
+  mapAppUpdate appState GameScreen (Game.mount slug)
 
 
 notFound : AppState -> String -> AppUpdate
 notFound appState path =
   AppUpdate { appState | screen <- NotFoundScreen path } Nothing Nothing
-
 
 
 -- path changes
@@ -68,4 +67,3 @@ pathChangeMailbox = Signal.mailbox (Task.succeed ())
 changePath : String -> Task error ()
 changePath path =
   Signal.send pathChangeMailbox.address (History.setPath path)
-
