@@ -49,9 +49,9 @@ userMenu : Player -> Html
 userMenu player =
   ul [ class "nav navbar-nav navbar-right nav-user" ]
     [ li [ ]
-      [ a [ ]
+      [ a [ path "/me"]
         [ img [ src (avatarUrl player), class "avatar avatar-user" ] [ ]
-        , a [ path "/me" ] [ text "Profile" ]
+        , text "Profile"
         ]
       ]
     , li [ ]

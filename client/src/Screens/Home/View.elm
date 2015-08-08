@@ -11,6 +11,7 @@ import Screens.Home.Types exposing (..)
 import Screens.Home.Updates exposing (actions)
 
 import Screens.Utils exposing (..)
+import Screens.Messages exposing (..)
 
 
 view : Player -> Screen -> Html
@@ -72,18 +73,21 @@ liveTrackBlock ({track, players} as lt) =
       [ a
         [ class "show"
         , style [ ("background-image", "url(/assets/images/trials-" ++ track.slug ++ ".png)") ]
-        , path ("/track/" ++ track.slug)
+        , path ("/play/" ++ track.slug)
         ]
-        [ span [ class "name" ] [ text track.slug ]
-        , div [ class "description"] [ text track.slug ]
+        [ div
+          [ class <| "player-count player-count-" ++ (toString (List.length players)) ]
+          [ text << toString <| List.length players ]
+        , span [ class "name" ] [ text <| trackName track.slug ]
+        , div [ class "description"] [ text <| trackDesc track.slug ]
+        , playersList players
         ]
-      , playersList players
       ]
     ]
 
 playersList : List Player -> Html
 playersList players =
-  ul [ class "track-players" ] (List.map playerItem players)
+  ul [ class "list-unstyled track-players" ] (List.map playerItem players)
 
 playerItem : Player -> Html
 playerItem player =

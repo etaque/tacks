@@ -5465,19 +5465,53 @@ a.player-avatar {
     background-color: #23395C;
     background-repeat: no-repeat;
     background-position: center;
-    border-radius: 3px;
+    /* border-radius: $br; */
     position: relative;
     text-align: center;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2); }
-    .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
-      background-color: #5899E2; }
+    .live-track a.show:hover, .live-track a.show:visited:hover {
+      background-color: #B1C0D8;
+      background-image: none; }
+      .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
+        background-color: #5899E2; }
+      .live-track a.show:hover .track-players, .live-track a.show:visited:hover .track-players {
+        display: block; }
+      .live-track a.show:hover .description, .live-track a.show:visited:hover .description {
+        display: none; }
     .live-track a.show .name, .live-track a.show:visited .name {
       display: block;
-      padding: 10px;
       background-color: #387ac4;
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
-      letter-spacing: 1px; }
+      letter-spacing: 1px;
+      line-height: 40px; }
+    .live-track a.show .player-count, .live-track a.show:visited .player-count {
+      position: absolute;
+      top: -10px;
+      right: 10px;
+      display: block;
+      border-color: #a67936;
+      border-radius: 15px;
+      line-height: 23px;
+      width: 23px;
+      background-color: #E0A349;
+      color: white;
+      text-align: center;
+      font-size: 14px; }
+      .live-track a.show .player-count.player-count-0, .live-track a.show:visited .player-count.player-count-0 {
+        display: none; }
+    .live-track a.show .track-players, .live-track a.show:visited .track-players {
+      display: none;
+      height: 160px;
+      overflow: scroll;
+      background-color: #1f3251;
+      color: white;
+      text-align: left;
+      padding: 10px 15px; }
+      .live-track a.show .track-players li + li, .live-track a.show:visited .track-players li + li {
+        margin-top: 5px; }
+      .live-track a.show .track-players .player-avatar, .live-track a.show .track-players a.player-avatar, .live-track a.show:visited .track-players .player-avatar, .live-track a.show:visited .track-players a.player-avatar {
+        color: white; }
     .live-track a.show .description, .live-track a.show:visited .description {
       position: absolute;
       bottom: 0;

@@ -79,7 +79,7 @@ playerWithAvatar player =
       then
         span [ class "player-avatar" ] [avatarImg, text " ", handleSpan]
       else
-        a [ href ("/players/" ++ handle), target "_blank", class "player-avatar" ] [avatarImg, text " ", handleSpan]
+        span [ class "player-avatar" ] [avatarImg, text " ", handleSpan]
 
 avatarUrl : Player -> String
 avatarUrl p =

@@ -255,24 +255,73 @@
     background-color: $seaBlue;
     background-repeat: no-repeat;
     background-position: center;
-    border-radius: $br;
+    /* border-radius: $br; */
     position: relative;
     text-align: center;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 
     &:hover {
+      background-color: $whiteBlue;
+      background-image: none;
+
       .name {
         background-color: $mainBlue;
       }
+
+      .track-players {
+        display: block;
+      }
+
+      .description {
+        display: none;
+      }
+
     }
 
     .name {
       display: block;
-      padding: 10px;
       background-color: $navBlue;
       text-transform: uppercase;
       font-family: $lightFontFamily;
       letter-spacing: 1px;
+      line-height: 40px;
+    }
+
+    .player-count {
+      &.player-count-0 {
+        display: none;
+      }
+
+      position: absolute;
+      top: -10px;
+      right: 10px;
+      display: block;
+      border-color: desat-dark($orange);
+      border-radius: 15px;
+      line-height: 23px;
+      width: 23px;
+      background-color: $orange;
+      color: white;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .track-players {
+      display: none;
+      height: 160px; 
+      overflow: scroll;
+      background-color: $darkSeaBlue;
+      color: white;
+      text-align: left;
+      padding: 10px 15px;
+
+      li + li {
+        margin-top: 5px;
+      }
+
+      .player-avatar, a.player-avatar {
+        color: white;
+      }
     }
 
     .description {
