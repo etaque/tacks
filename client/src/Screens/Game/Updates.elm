@@ -1,6 +1,7 @@
 module Screens.Game.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
+import Task.Extra exposing (delay)
 import Time exposing (millisecond)
 import Http
 
@@ -70,8 +71,7 @@ loadTrack slug =
 
 pingServer : Task Http.Error ()
 pingServer =
-  Task.sleep (30 * millisecond) `andThen`
-    \_ -> Signal.send actions.address PingServer
+  delay (30 * millisecond) (Signal.send actions.address PingServer)
 
 updateTime : Clock -> Maybe GameState -> Maybe GameState
 updateTime clock = Maybe.map (\gs -> { gs | localTime <- clock.time })

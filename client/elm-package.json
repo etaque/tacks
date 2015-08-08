@@ -13,6 +13,7 @@
     "evancz/elm-http": "1.0.0 <= v < 2.0.0",
     "TheSeamau5/elm-router": "1.0.0 <= v < 1.1.0",
     "TheSeamau5/elm-history": "1.0.0 <= v < 1.1.0",
+    "TheSeamau5/elm-task-extra": "2.0.0 <= v < 2.1.0",
     "Apanatshka/elm-signal-extra": "5.3.0 <= v < 5.4.0"
   },
   "elm-version": "0.15.0 <= v < 0.16.0"

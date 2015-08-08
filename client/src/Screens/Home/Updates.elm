@@ -1,6 +1,7 @@
 module Screens.Home.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
+import Task.Extra exposing (delay)
 import Time exposing (second)
 import Http
 
@@ -34,7 +35,7 @@ update action screen =
 
     SetLiveStatus liveStatus ->
       react { screen | liveStatus <- liveStatus }
-        (Task.sleep (5 * second) `andThen` \_ -> refreshLiveStatus)
+        (delay (5 * second) refreshLiveStatus)
 
     SetHandle handle ->
       local { screen | handle <- handle }
