@@ -1,9 +1,11 @@
 module Screens.Game.Updates where
 
+import List exposing (take, (::))
 import Task exposing (Task, succeed, map, andThen)
 import Task.Extra exposing (delay)
 import Time exposing (millisecond)
 import Http
+import String
 
 import AppTypes exposing (local, react, request, Clock)
 import Models exposing (..)
@@ -18,6 +20,10 @@ actions : Signal.Mailbox Action
 actions = Signal.mailbox NoOp
 
 
+chat : Signal.Mailbox String
+chat = Signal.mailbox ""
+
+
 type alias Update = AppTypes.ScreenUpdate Screen
 
 
@@ -28,6 +34,8 @@ mount slug =
       { track = Nothing
       , gameState = Nothing
       , live = False
+      , messages = []
+      , messageField = ""
       , notFound = False
       }
   in
@@ -60,6 +68,21 @@ update player clock action screen =
       in
         local { screen | gameState <- newGameState, live <- True }
 
+    UpdateMessageField s ->
+      local { screen | messageField <- s }
+
+    SubmitMessage ->
+      if screen.live then
+        let
+          msgTask = sendMessage screen.messageField
+        in
+          react { screen | messageField <- "" } msgTask
+      else
+        local screen
+
+    NewMessage msg ->
+      local { screen | messages <- take 30 (msg :: screen.messages) }
+
     _ ->
       local screen
 
@@ -73,8 +96,18 @@ pingServer : Task Http.Error ()
 pingServer =
   delay (30 * millisecond) (Signal.send actions.address PingServer)
 
+
+sendMessage : String -> Task error ()
+sendMessage content =
+  if String.isEmpty content then
+    Task.succeed ()
+  else
+    Signal.send chat.address content
+
+
 updateTime : Clock -> Maybe GameState -> Maybe GameState
 updateTime clock = Maybe.map (\gs -> { gs | localTime <- clock.time })
+
 
 mapGameUpdate : KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe Action
 mapGameUpdate keyboardInput dims maybeRaceInput =

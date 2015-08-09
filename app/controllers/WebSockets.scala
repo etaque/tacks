@@ -22,10 +22,11 @@ object WebSockets extends Controller with Security {
 
   implicit val timeout = Timeout(5.seconds)
 
-  implicit val playerInputFrameFormatter = FrameFormatter.jsonFrame[PlayerInput]
-  implicit val raceUpdateFrameFormatter = FrameFormatter.jsonFrame[RaceUpdate]
+  import Frames._
+  implicit val inputFrameFormatter = FrameFormatter.jsonFrame[InputFrame]
+  implicit val outputFrameFormatter = FrameFormatter.jsonFrame[OutputFrame]
 
-  def trackPlayer(trackId: String) = WebSocket.tryAcceptWithActor[PlayerInput, RaceUpdate] { implicit request =>
+  def trackPlayer(trackId: String) = WebSocket.tryAcceptWithActor[InputFrame, OutputFrame] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
       track <- TrackDAO.findById(trackId)
@@ -45,14 +46,15 @@ object WebSockets extends Controller with Security {
   }
 
 
-  import Chat.actionFormat
-  implicit val chatActionFrameFormatter = FrameFormatter.jsonFrame[Chat.Action]
+  // import Chat.actionFormat
+  // implicit val messageFrameFormatter = FrameFormatter.jsonFrame[Message]
+  // implicit val newMessageFrameFormatter = FrameFormatter.jsonFrame[NewMessage]
 
-  def chatRoom = WebSocket.tryAcceptWithActor[Chat.Action, Chat.Action] { implicit request =>
-    for {
-      player <- PlayerAction.getPlayer(request)
-    }
-    yield Right(ChatPlayerActor.props(player)(_))
-  }
+  // def chat = WebSocket.tryAcceptWithActor[NewMessage, Message] { implicit request =>
+  //   for {
+  //     player <- PlayerAction.getPlayer(request)
+  //   }
+  //   yield Right(ChatPlayerActor.props(player)(_))
+  // }
 
 }

@@ -37,6 +37,14 @@ playerDecoder =
     ("guest" := bool)
     ("user" := bool)
 
+messageDecoder : Decoder Message
+messageDecoder =
+  object3 Message
+    ("content" := string)
+    ("player" := playerDecoder)
+    ("time" := float)
+
+
 -- opponentDecoder : Decoder Opponent
 -- opponentDecoder =
 --   object2 Opponent

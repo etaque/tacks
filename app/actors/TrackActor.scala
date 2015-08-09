@@ -114,6 +114,12 @@ class TrackActor(track: Track) extends Actor with ManageWind {
       }
     }
 
+    case msg: Message => {
+      players.foreach { case (_, ctx) =>
+        ctx.ref ! msg
+      }
+    }
+
     /**
      * new gust
      */

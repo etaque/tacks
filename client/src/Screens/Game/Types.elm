@@ -8,14 +8,18 @@ type alias Screen =
   { track : Maybe Track
   , gameState : Maybe GameState
   , live : Bool
+  , messages : List Message
+  , messageField : String
   , notFound : Bool
   }
-
 
 type Action
   = SetTrack Track
   | TrackNotFound
   | PingServer
   | GameUpdate GameInput
+  | UpdateMessageField String
+  | SubmitMessage
+  | NewMessage Message
   | NoOp
 

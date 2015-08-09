@@ -14,12 +14,12 @@ POST        /api/setHandle                                     controllers.Api.s
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)
 GET         /ws/notifications                                  controllers.WebSockets.notifications
-GET         /ws/chatRoom                                       controllers.WebSockets.chatRoom
+# GET         /ws/chat                                           controllers.WebSockets.chat
 
-#GET         /blog                                              controllers.Prismic.blog
-#GET         /blog/:id/:slug                                    controllers.Prismic.post(id, slug)
+#GET         /blog                                             controllers.Prismic.blog
+#GET         /blog/:id/:slug                                   controllers.Prismic.post(id, slug)
 
-#GET         /about                                             controllers.Prismic.about
+#GET         /about                                            controllers.Prismic.about
 
 
 # Map static resources from the /public folder to the /assets URL path

@@ -57,17 +57,17 @@ class LiveCenter extends Actor {
       LiveCenter.sendPlayersUpdate(state)
     }
 
-    case m: Chat.NewMessage => {
-      state.chatRoom.foreach(_._2 ! m)
-      Logger.debug("Player sent new message: " + m.toString)
-    }
+    // case m: Chat.NewMessage => {
+    //   state.chatRoom.foreach(_._2 ! m)
+    //   Logger.debug("Player sent new message: " + m.toString)
+    // }
 
-    case Chat.NewStatus(user, content) => {
-      state = LiveCenter.updateStatus(state, user.id, content)
-      Logger.debug("Player submitted new status: " + user.toString)
-      LiveCenter.sendPlayersUpdate(state)
-      UserDAO.updateStatus(user.id, Some(content))
-    }
+    // case Chat.NewStatus(user, content) => {
+    //   state = LiveCenter.updateStatus(state, user.id, content)
+    //   Logger.debug("Player submitted new status: " + user.toString)
+    //   LiveCenter.sendPlayersUpdate(state)
+    //   UserDAO.updateStatus(user.id, Some(content))
+    // }
 
     case GetOnlinePlayers => sender ! state.subscribers.map(_._1).distinct
 
@@ -82,8 +82,8 @@ object LiveCenter {
 
   def sendPlayersUpdate(state: LiveCenterState) = {
     val distinctPlayers = (state.subscribers.map(_._1) ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
-    Logger.debug(s"Sending players update to ${state.chatRoom.size} refs: " + distinctPlayers.toString)
-    state.chatRoom.foreach(_._2 ! Chat.UpdatePlayers(distinctPlayers))
+    // Logger.debug(s"Sending players update to ${state.chatRoom.size} refs: " + distinctPlayers.toString)
+    // state.chatRoom.foreach(_._2 ! Chat.UpdatePlayers(distinctPlayers))
   }
 
   def updateStatus(state: LiveCenterState, playerId: BSONObjectID, status: String): LiveCenterState = {

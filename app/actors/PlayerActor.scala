@@ -1,59 +1,36 @@
 package actors
 
-//import core.steps._
-
 import akka.actor.{Props, Actor, ActorRef}
+import org.joda.time.DateTime
 import models._
 
-//case class RunStep(
-//  previousState: PlayerState,
-//  input: KeyboardInput,
-//  now: Long,
-//  wind: Wind,
-//  course: Course,
-//  started: Boolean,
-//  opponents: Seq[PlayerState]
-//)
+import Frames._
 
-case class StepResult(prevState: PlayerState, newState: PlayerState)
+class PlayerActor(player: Player, trackActor: ActorRef, out: ActorRef) extends Actor {
 
-class PlayerActor(player: Player, raceActor: ActorRef, out: ActorRef) extends Actor {
-
-  raceActor ! PlayerJoin(player)
+  trackActor ! PlayerJoin(player)
 
   def receive = {
 
-    case input: PlayerInput => raceActor ! PlayerUpdate(player, input)
+    case PlayerInputFrame(input) =>
+      trackActor ! PlayerUpdate(player, input)
 
-    // case input: TutorialInput => raceActor forward input
+    case NewMessageFrame(content) =>
+      trackActor ! Message(player, content, DateTime.now)
 
-//    case RunStep(previousState, input, now, wind, course, started, opponents) => {
-//      val elapsed = now - previousState.time
-//
-//      val runner = if (elapsed > 0) {
-//        BoatTurningStep.run(previousState, input, elapsed) _ andThen
-//          WindStep.run(wind, course.windShadowLength, opponents) andThen
-//          VmgStep.run andThen
-//          BoatMovingStep.run(elapsed, course) andThen
-//          GateCrossingStep.run(previousState, course, started, now)
-//      } else {
-//        identity[PlayerState] _
-//      }
-//
-//      val newState = runner(previousState).copy(time = now)
-//      sender ! StepResult(previousState, newState)
-//    }
+    case raceUpdate: RaceUpdate =>
+      out ! RaceUpdateFrame(raceUpdate)
 
-    case raceUpdate: RaceUpdate => out ! raceUpdate
+    case message: Message =>
+      out ! BroadcastMessageFrame(message)
 
-    // case tutUpdate: TutorialUpdate => out ! tutUpdate
   }
 
   override def postStop() = {
-    raceActor ! PlayerQuit(player)
+    trackActor ! PlayerQuit(player)
   }
 }
 
 object PlayerActor {
-  def props(raceActor: ActorRef, player: Player)(out: ActorRef) = Props(new PlayerActor(player, raceActor, out))
+  def props(trackActor: ActorRef, player: Player)(out: ActorRef) = Props(new PlayerActor(player, trackActor, out))
 }

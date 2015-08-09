@@ -158,5 +158,6 @@ object JsonFormats {
   implicit val runFormat: Format[Run] = Json.format[Run]
   implicit val trackStatusFormat: Format[LiveTrack] = Json.format[LiveTrack]
 
+  implicit val messageFormat: Format[Message] = Json.format[Message]
 }
 

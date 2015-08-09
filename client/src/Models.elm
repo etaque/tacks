@@ -32,6 +32,13 @@ type alias Track =
   }
 
 
+type alias Message =
+  { content : String
+  , player : Player
+  , time : Float
+  }
+
+
 -- Course
 
 type alias Course =

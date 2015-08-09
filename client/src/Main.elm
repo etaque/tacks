@@ -13,7 +13,8 @@ import AppUpdates exposing (..)
 import AppTypes exposing (..)
 import Game.Inputs exposing (RaceInput)
 import Game.Outputs exposing (PlayerOutput)
-import Screens.Game.Updates exposing (mapGameUpdate)
+import Screens.Game.Updates exposing (mapGameUpdate,chat)
+import Screens.Game.Types exposing (Action(NewMessage))
 import AppView
 import Routes
 
@@ -24,6 +25,7 @@ port appSetup : AppSetup
 
 port raceInput : Signal (Maybe RaceInput)
 
+port chatInput : Signal (Maybe Models.Message)
 
 -- Signals
 
@@ -54,6 +56,7 @@ allActions =
     , actionsMailbox.signal
     , pathActions
     , gameActions
+    , chatActions
     ]
 
 gameActions : Signal AppAction
@@ -62,6 +65,10 @@ gameActions =
     |> Signal.filterMap (Maybe.map GameAction) NoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
+
+chatActions : Signal AppAction
+chatActions =
+  Signal.filterMap (Maybe.map (GameAction << NewMessage)) NoOp chatInput
 
 pathActions : Signal AppAction
 pathActions =
@@ -112,3 +119,7 @@ port activeTrack : Signal (Maybe String)
 port activeTrack =
   Signal.map Game.Outputs.getActiveTrack appState
     |> Signal.dropRepeats
+
+port chatOutput : Signal String
+port chatOutput =
+  chat.signal

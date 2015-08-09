@@ -160,15 +160,10 @@ object RaceUpdate {
     )
 }
 
-// case class RaceStatus(
-//   race: Race,
-//   master: Option[Player],
-//   startTime: Option[DateTime],
-//   opponents: Seq[Opponent]
-// )
-
 case class LiveTrack(
   track: Track,
   nextRace: Option[Race],
   players: Seq[Player]
 )
+
+case class Message(player: Player, content: String, time: DateTime)
