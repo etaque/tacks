@@ -18,6 +18,8 @@ type Action
   | TrackNotFound
   | PingServer
   | GameUpdate GameInput
+  | EnterChat
+  | LeaveChat
   | UpdateMessageField String
   | SubmitMessage
   | NewMessage Message

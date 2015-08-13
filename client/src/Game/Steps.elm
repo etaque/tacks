@@ -18,9 +18,15 @@ import Game.Steps.Wind exposing (windStep)
 
 gameStep : Clock -> GameInput -> GameState -> GameState
 gameStep clock {raceInput, windowInput, keyboardInput} gameState =
-  raceInputStep raceInput clock gameState
-    |> playerStep keyboardInput clock.delta
-    |> centerStep
+  let
+    keyboardInputWithFocus =
+      if gameState.chatting
+        then emptyKeyboardInput
+        else keyboardInput
+  in
+    raceInputStep raceInput clock gameState
+      |> playerStep keyboardInputWithFocus clock.delta
+      |> centerStep
 
 
 --

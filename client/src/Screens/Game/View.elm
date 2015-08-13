@@ -89,4 +89,6 @@ chatField field =
     [ value field
     , onInput actions.address UpdateMessageField
     , onEnter actions.address SubmitMessage
+    , onFocus actions.address EnterChat
+    , onBlur actions.address LeaveChat
     ]

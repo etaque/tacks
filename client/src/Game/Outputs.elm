@@ -23,21 +23,27 @@ extractPlayerOutput appState action =
           Just gameInput.keyboardInput
         _ ->
           Nothing
-    gameState = 
+    gameState =
       case appState.screen of
         GameScreen screen ->
           screen.gameState
         _ ->
           Nothing
   in
-    Maybe.map (makePlayerOutput keyboardInput) gameState 
+    Maybe.map (makePlayerOutput keyboardInput) gameState
 
 makePlayerOutput : Maybe KeyboardInput -> GameState -> PlayerOutput
 makePlayerOutput keyboardInput gameState =
-  { state = asOpponentState gameState.playerState
-  , input = Maybe.withDefault emptyKeyboardInput keyboardInput
-  , localTime = gameState.localTime
-  }
+  let
+    realKeyboardInput =
+      if gameState.chatting
+        then emptyKeyboardInput
+        else Maybe.withDefault emptyKeyboardInput keyboardInput
+  in
+    { state = asOpponentState gameState.playerState
+    , input = realKeyboardInput
+    , localTime = gameState.localTime
+    }
 
 getActiveTrack : AppState -> Maybe String
 getActiveTrack appState =

@@ -68,6 +68,18 @@ update player clock action screen =
       in
         local { screen | gameState <- newGameState, live <- True }
 
+    EnterChat ->
+      let
+        newGameState = Maybe.map (\gs -> { gs | chatting <- True }) screen.gameState
+      in
+        local { screen | gameState <- newGameState }
+
+    LeaveChat ->
+      let
+        newGameState = Maybe.map (\gs -> { gs | chatting <- False }) screen.gameState
+      in
+        local { screen | gameState <- newGameState }
+
     UpdateMessageField s ->
       local { screen | messageField <- s }
 

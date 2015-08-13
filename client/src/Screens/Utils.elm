@@ -18,9 +18,15 @@ path : String -> Attribute
 path p =
   onClick pathChangeMailbox.address (History.setPath p)
 
+eventOptions : Options
+eventOptions =
+  { stopPropagation = False
+  , preventDefault = False
+  }
+
 onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =
-    on "input" targetValue (\str -> Signal.message address (contentToValue str))
+  onWithOptions "input" eventOptions targetValue (\str -> Signal.message address (contentToValue str))
 
 onEnter : Signal.Address a -> a -> Attribute
 onEnter address value =

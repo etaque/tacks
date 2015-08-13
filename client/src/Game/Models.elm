@@ -34,6 +34,7 @@ type alias GameState =
   , live:        Bool
   , localTime:   Time
   , roundTripDelay: Float
+  , chatting:    Bool
   }
 
 -- Wind
@@ -231,6 +232,7 @@ defaultGame now course player =
   , live        = False
   , localTime   = now
   , roundTripDelay = 0
+  , chatting    = False
   }
 
 getGateMarks : Gate -> (Point,Point)
