@@ -29,6 +29,15 @@ function mountElm() {
     }
   });
 
+  game.ports.chatScrollDown.subscribe(function() {
+    var el = document.getElementsByClassName("messages")[0];
+    if (el) {
+      setTimeout(function() {
+        el.scrollTop = el.scrollHeight;
+      }, 30);
+    }
+  });
+
   game.ports.activeTrack.subscribe(function(id) {
 
     if (ws) {

@@ -123,3 +123,7 @@ port activeTrack =
 port chatOutput : Signal String
 port chatOutput =
   chat.signal
+
+port chatScrollDown : Signal ()
+port chatScrollDown =
+  Signal.filterMap Game.Outputs.needChatScrollDown () chatActions

@@ -52,3 +52,11 @@ getActiveTrack appState =
       Maybe.map .id screen.track
     _ ->
       Nothing
+
+needChatScrollDown : AppAction -> Maybe ()
+needChatScrollDown action =
+  case action of
+    GameAction (NewMessage _) ->
+      Just ()
+    _ ->
+      Nothing
