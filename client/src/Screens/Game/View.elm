@@ -21,55 +21,41 @@ import Game.Render.All exposing (renderGame)
 
 view : (Int, Int) -> Screen -> Html
 view dims ({track, gameState} as screen) =
-  div [ class "show-track" ]
-    [ Maybe.withDefault loading (Maybe.map (gameView dims screen) gameState) ]
+  div [ class "content" ] <|
+    Maybe.withDefault loading (Maybe.map (gameView dims screen) gameState)
 
-loading : Html
+loading : List Html
 loading =
-  titleWrapper [ h1 [] [ text "loading..." ]]
+  [ titleWrapper [ h1 [] [ text "loading..." ]] ]
 
 leftWidth = 200
 rightWidth = 200
 
-gameView : (Int, Int) -> Screen -> GameState -> Html
+gameView : (Int, Int) -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
-  let
-    elements =
-      [ leftBar (leftWidth, h) gameState
-      , renderGame (w - leftWidth - rightWidth, h - TopBar.height) gameState
-      , rightBar (rightWidth, h) screen
-      ]
-  in
-    flow right elements |> fromElement
+  [ leftBar (h - TopBar.height) gameState
+  , fromElement <| renderGame (w - leftWidth - rightWidth, h - TopBar.height) gameState
+  , rightBar (h - TopBar.height) screen
+  ]
 
-leftBar : (Int, Int) -> GameState -> Element
-leftBar (w, h) gameState =
-  let
-    blocks =
-      [ playersBlock (w, 300) <| List.append [ gameState.playerState.player ] (List.map .player gameState.opponents) ]
-  in
-    flow down blocks
-      |> E.container w h topLeft
-      |> color black
-
-rightBar : (Int, Int) -> Screen -> Element
-rightBar (w, h) screen =
-  let
-    blocks =
-      [ chatBlock (w, h) screen
-      ]
-  in
-    flow down blocks
-      |> E.container w h topLeft
-      |> color black
-
-playersBlock : (Int, Int) -> List Player -> Element
-playersBlock (w, h) players =
-  div [ class "side-module" ]
-    [ h3 [ ] [ text "Players" ]
-    , ul [ class "list-unstyled players" ] (List.map playerItem players)
+leftBar : Int -> GameState -> Html
+leftBar h gameState =
+  aside [ style [("height", toString h ++ "px")] ]
+    [ playersBlock <| List.append [ gameState.playerState.player ] (List.map .player gameState.opponents)
     ]
-    |> toElement w h
+
+rightBar : Int -> Screen -> Html
+rightBar h screen =
+  aside [ style [("height", toString h ++ "px")] ]
+    [ chatBlock screen
+    ]
+
+playersBlock : List Player -> Html
+playersBlock players =
+  div [ class "aside-module" ]
+    [ h3 [ ] [ text "Players" ]
+    , ul [ class "list-unstyled list-players" ] (List.map playerItem players)
+    ]
 
 
 playerItem : Player -> Html
@@ -78,19 +64,18 @@ playerItem player =
 
 
 
-chatBlock : (Int, Int) -> Screen -> Element
-chatBlock (w, h) {messages, messageField} =
-  div [ class "side-module"]
+chatBlock : Screen -> Html
+chatBlock {messages, messageField} =
+  div [ class "aside-module chat"]
     [ h3 [ ] [ text "Chat" ]
     , messagesList messages
     , chatField messageField
     ]
-    |> toElement w h
 
 
 messagesList : List Message -> Html
 messagesList messages =
-  ul [ class "messages" ] (List.map messageItem messages)
+  ul [ class "list-unstyled messages" ] (List.map messageItem (List.reverse messages))
 
 
 messageItem : Message -> Html

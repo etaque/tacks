@@ -166,4 +166,8 @@ case class LiveTrack(
   players: Seq[Player]
 )
 
-case class Message(player: Player, content: String, time: DateTime)
+case class Message(
+  player: Player,
+  content: String,
+  time: DateTime
+)

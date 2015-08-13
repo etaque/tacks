@@ -1,0 +1,29 @@
+@import 'colors';
+
+
+aside {
+  .list-players {
+    margin: 10px;
+
+    li {
+      margin-bottom: 5px;
+    }
+  }
+
+  .chat {
+    display: flex;
+    flex-direction: column;
+    height: 200px;
+
+    .messages {
+      overflow: scroll;
+      flex: 1;
+    }
+
+    input[type="text"] {
+      background-color: $lightSeaBlue;
+      border: none;
+      color: white;
+    }
+  }
+}

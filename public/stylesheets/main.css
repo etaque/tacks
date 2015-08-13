@@ -4809,56 +4809,83 @@ button.close {
     display: none !important; }
  }
 
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url('/assets/fonts/Proxima Nova Regular.otf'); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url('/assets/fonts/Museo Slab.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url('/assets/fonts/Proxima Nova Alt Thin.otf'); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
+
 html, body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0; }
 
-body {
-  margin: 0;
-  overflow: scroll; }
+.global-wrapper {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column; }
 
-.footer {
-  margin-top: 100px;
-  text-align: center;
-  width: 66%;
-  margin-left: auto;
-  margin-right: auto; }
-  .footer a {
-    color: #B1C0D8; }
-  .footer hr {
-    margin-bottom: 20px;
-    border-top-width: 2px;
-    border-color: #345488; }
+.content {
+  flex: 1;
+  display: flex;
+  flex-direction: row; }
 
-.align-center {
-  text-align: center; }
+aside {
+  width: 200px;
+  background-color: #1b2b46; }
 
-nav .nav-user img {
-  width: 19px;
-  height: 19px;
-  display: inline-block;
-  margin-right: 5px;
-  border-radius: 2px;
-  vertical-align: text-bottom; }
+.main {
+  flex: 1; }
 
-.navbar-brand img {
-  max-height: 100%;
-  width: auto; }
+nav {
+  background-color: #387ac4;
+  height: 50px;
+  display: flex;
+  flex-direction: row; }
 
-@media screen and (min-width: 768px) {
-  nav .nav {
-    text-align: center;
-    margin-bottom: 20px; }
-  nav .navbar-brand {
-    height: 50px; }
-  nav .navbar-nav > li > a {
-    line-height: 50px; }
- }
+.logo {
+  width: 200px;
+  /* background-color: $darkerSeaBlue; */ }
+  .logo img {
+    height: 50px;
+    max-height: 100%;
+    width: auto; }
 
-.navbar {
-  min-height: 50px; }
+.user-menu {
+  flex: 1;
+  text-align: right;
+  margin-bottom: 20px;
+  list-style: none; }
+  .user-menu li {
+    display: inline-block; }
+    .user-menu li a {
+      display: block;
+      line-height: 50px;
+      padding: 0 20px;
+      text-transform: uppercase;
+      font-family: "Proxima Nova Thin";
+      letter-spacing: 1px; }
+      .user-menu li a:hover, .user-menu li a:active {
+        background-color: #5899E2; }
+  .user-menu img {
+    width: 19px;
+    height: 19px;
+    display: inline-block;
+    margin-right: 5px;
+    border-radius: 2px;
+    vertical-align: text-bottom; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -4912,38 +4939,18 @@ a {
     color: white;
     text-decoration: none; }
 
-.navbar {
-  margin-bottom: 0;
-  background-color: #387ac4;
-  border: none;
-  border-radius: 0; }
-  .navbar .navbar-brand {
-    margin: 0;
-    padding: 0; }
-  .navbar .navbar-toggle {
-    border-color: #B1C0D8; }
-    .navbar .navbar-toggle .icon-bar {
-      background-color: #B1C0D8; }
-  .navbar .nav {
-    margin-bottom: 0; }
-  .navbar .navbar-nav > li > a {
-    text-transform: uppercase;
-    color: white;
-    font-family: "Proxima Nova Thin";
-    letter-spacing: 1px; }
-    .navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:active {
-      background-color: #5899E2; }
+.align-center {
+  text-align: center; }
 
-@media screen and (min-width: 768px) {
-  nav .nav {
-    text-align: center;
-    margin-bottom: 20px; }
-  nav .nav-main {
-    margin-left: 20px; }
-  nav .navbar-nav > li > a {
-    padding: 0 20px;
-    font-size: 14px; }
- }
+.aside-module h3 {
+  background-color: #1f3251;
+  border-bottom: 2px solid #387ac4;
+  margin: 0 0 10px 0;
+  padding: 10px;
+  text-align: center;
+  font-family: "Proxima Nova Thin";
+  text-transform: uppercase;
+  font-size: 15px; }
 
 .title-wrapper {
   background-color: #23395C;
@@ -5524,11 +5531,6 @@ a.player-avatar {
       font-size: 14px;
       font-family: "Proxima Nova Thin"; }
 
-.fullscreen {
-  /* overflow: hidden; */
-  /* color: white; */
-  /* background-color: #1C2E48; */ }
-
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url('/assets/fonts/Proxima Nova Regular.otf'); }
@@ -5690,394 +5692,6 @@ a.period {
     .show-time-trial .nav li.active a {
       background-color: #23395C; }
 
-@font-face {
-  font-family: "Proxima Nova Regular";
-  src: url('/assets/fonts/Proxima Nova Regular.otf'); }
-
-@font-face {
-  font-family: "Museo Slab";
-  src: url('/assets/fonts/Museo Slab.otf'); }
-
-@font-face {
-  font-family: "Proxima Nova Thin";
-  src: url('/assets/fonts/Proxima Nova Alt Thin.otf'); }
-
-@font-face {
-  font-family: "Proxima Nova Light";
-  src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
-
-@font-face {
-  font-family: "Proxima Nova Regular";
-  src: url('/assets/fonts/Proxima Nova Regular.otf'); }
-
-@font-face {
-  font-family: "Museo Slab";
-  src: url('/assets/fonts/Museo Slab.otf'); }
-
-@font-face {
-  font-family: "Proxima Nova Thin";
-  src: url('/assets/fonts/Proxima Nova Alt Thin.otf'); }
-
-@font-face {
-  font-family: "Proxima Nova Light";
-  src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
-
-body {
-  color: white;
-  font-family: "Proxima Nova Regular";
-  font-size: 15px;
-  background-color: #2b4772; }
-
-hr {
-  border: 0 solid #B1C0D8; }
-
-h1 {
-  margin-bottom: 30px;
-  text-align: center; }
-
-h2, h3, h4, h5, h6 {
-  font-family: "Museo Slab";
-  font-size: 21px;
-  margin-bottom: 15px; }
-  h2.block-title, h3.block-title, h4.block-title, h5.block-title, h6.block-title {
-    text-align: center;
-    background-color: #387ac4;
-    color: white;
-    font-size: 15px;
-    padding: 10px;
-    margin-bottom: 0; }
-    h2.block-title.secondary, h3.block-title.secondary, h4.block-title.secondary, h5.block-title.secondary, h6.block-title.secondary {
-      background-color: #b0b3b8; }
-
-a {
-  color: white;
-  transition: all 0.1s ease-in;
-  text-decoration: none;
-  cursor: pointer; }
-  a:hover {
-    color: white;
-    text-decoration: none; }
-
-.navbar {
-  margin-bottom: 0;
-  background-color: #387ac4;
-  border: none;
-  border-radius: 0; }
-  .navbar .navbar-brand {
-    margin: 0;
-    padding: 0; }
-  .navbar .navbar-toggle {
-    border-color: #B1C0D8; }
-    .navbar .navbar-toggle .icon-bar {
-      background-color: #B1C0D8; }
-  .navbar .nav {
-    margin-bottom: 0; }
-  .navbar .navbar-nav > li > a {
-    text-transform: uppercase;
-    color: white;
-    font-family: "Proxima Nova Thin";
-    letter-spacing: 1px; }
-    .navbar .navbar-nav > li > a:hover, .navbar .navbar-nav > li > a:active {
-      background-color: #5899E2; }
-
-@media screen and (min-width: 768px) {
-  nav .nav {
-    text-align: center;
-    margin-bottom: 20px; }
-  nav .nav-main {
-    margin-left: 20px; }
-  nav .navbar-nav > li > a {
-    padding: 0 20px;
-    font-size: 14px; }
- }
-
-.title-wrapper {
-  background-color: #23395C;
-  background-color: #2b4772;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #23395C, #2b4772);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #23395C, #2b4772);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #23395C, #2b4772);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, #23395C, #2b4772);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772');
-  box-shadow: 0 2px 3px #1b2b46 inset;
-  color: #B1C0D8;
-  padding: 40px;
-  text-align: center; }
-  .title-wrapper a {
-    color: white; }
-  .title-wrapper h1 {
-    color: white;
-    font-family: "Proxima Nova Thin";
-    font-size: 40px;
-    font-weight: 300;
-    margin: 0; }
-    .title-wrapper h1 a {
-      color: white; }
-      .title-wrapper h1 a:hover {
-        color: #5899E2; }
-  .title-wrapper p {
-    font-family: "Proxima Nova Thin";
-    margin-top: 10px; }
-  .title-wrapper strong {
-    font-family: "Proxima Nova Regular";
-    color: white; }
-
-.light-wrapper .container, .dark-wrapper .container {
-  padding-top: 30px;
-  padding-bottom: 50px; }
-.light-wrapper h2, .light-wrapper p.subtitle, .dark-wrapper h2, .dark-wrapper p.subtitle {
-  font-family: "Proxima Nova Thin";
-  text-align: center; }
-.light-wrapper h2, .dark-wrapper h2 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 32px;
-  color: white; }
-
-.light-wrapper {
-  background-color: #f8f9fb; }
-  .light-wrapper h2 {
-    color: #51585E; }
-
-.dark-wrapper {
-  background-color: #23395C;
-  background-color: #2b4772;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #23395C, #2b4772);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #23395C, #2b4772);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #23395C, #2b4772);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, #23395C, #2b4772);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772');
-  color: #B1C0D8;
-  box-shadow: 0px 2px 3px #1b2b46 inset; }
-  .dark-wrapper a {
-    color: white; }
-
-.footer-wrapper {
-  box-shadow: 0px 2px 3px #1b2b46 inset;
-  text-align: center;
-  color: #B1C0D8;
-  padding: 20px;
-  font-family: "Proxima Nova Thin"; }
-  .footer-wrapper a {
-    color: white; }
-
-.white-panel {
-  background-color: #f8f9fb;
-  padding: 10px;
-  color: #51585E;
-  border-radius: 5px;
-  box-shadow: 0 2px 3px #1b2b46; }
-
-.btn {
-  font-weight: bold;
-  text-transform: uppercase;
-  background-color: white;
-  border: none;
-  border-bottom: 3px solid #f5f5f5;
-  padding: 7px 12px 5px 12px;
-  transition: all 0.1s ease-in; }
-
-.btn-xs, .btn-group-xs > .btn {
-  border-bottom-width: 2px;
-  padding: 3px 5px 1px 5px; }
-
-.btn-default {
-  background-color: #E6E6E6;
-  border-color: #d9d9d9;
-  color: #7b8087; }
-  .btn-default:hover {
-    background-color: #d9d9d9;
-    border-color: #cdcdcd;
-    color: #51585E; }
-
-.btn-primary {
-  background-color: #5899E2;
-  border-color: #3b73b3; }
-  .btn-primary:hover {
-    background-color: #428cde;
-    border-color: #35679f; }
-
-.btn-warning {
-  background-color: #E0A349;
-  border-color: #a67936; }
-  .btn-warning:hover {
-    background-color: #dc9833;
-    border-color: #936b30; }
-
-.alert {
-  border-radius: 0;
-  border-width: 3px; }
-
-.alert-danger a {
-  color: #a94442; }
-
-input[type="text"], input[type="password"], input[type="datetime-local"], textarea {
-  border-radius: 0; }
-
-.has-error .error-message {
-  margin-top: 0;
-  padding: 6px 12px;
-  background-color: #f2dede;
-  color: #a94442;
-  font-size: 13px; }
-
-.form-actions {
-  margin-top: 30px; }
-
-.uppercase {
-  text-transform: uppercase; }
-
-.upclassic {
-  text-transform: uppercase;
-  font-family: "Proxima Nova Thin";
-  letter-spacing: 1px; }
-
-.player-avatar {
-  font-family: "Inconsolata";
-  display: inline-block;
-  color: #b0b3b8; }
-  .player-avatar .avatar {
-    border-radius: 2px;
-    display: inline-block; }
-
-a.player-avatar {
-  color: #7b8087; }
-  a.player-avatar:hover .handle {
-    text-decoration: underline; }
-
-.open-tournaments {
-  margin-top: 30px;
-  margin-bottom: 15px; }
-  .open-tournaments .left {
-    text-align: right; }
-    .open-tournaments .left h3 {
-      font-size: 16px;
-      margin: 0; }
-  .open-tournaments .right {
-    text-align: left;
-    border-left: 1px solid #345488; }
-  .open-tournaments .left h3 {
-    margin-top: 8px;
-    margin-right: 10px;
-    color: #B1C0D8; }
-  .open-tournaments ul {
-    margin-bottom: 0; }
-    .open-tournaments ul li a {
-      display: block;
-      padding: 5px 10px; }
-      .open-tournaments ul li a:hover {
-        background-color: #23395C; }
-    .open-tournaments ul li .tournament-name {
-      text-transform: uppercase;
-      font-family: "Proxima Nova Thin";
-      letter-spacing: 1px;
-      color: #5899E2; }
-    .open-tournaments ul li .tournament-time {
-      font-family: "Proxima Nova Thin";
-      display: block;
-      font-size: 14px;
-      color: white; }
-    .open-tournaments ul li + li {
-      margin-top: 10px; }
-
-.finished-tournaments {
-  margin-top: 30px;
-  margin-bottom: 15px; }
-  .finished-tournaments .left {
-    text-align: right; }
-    .finished-tournaments .left h3 {
-      font-size: 16px;
-      margin: 0; }
-  .finished-tournaments .right {
-    text-align: left;
-    border-left: 1px solid #345488; }
-  .finished-tournaments .left a {
-    display: block;
-    padding: 5px 10px; }
-    .finished-tournaments .left a:hover {
-      background-color: #23395C; }
-  .finished-tournaments .left .tournament-name {
-    text-transform: uppercase;
-    font-family: "Proxima Nova Thin";
-    letter-spacing: 1px;
-    color: #5899E2; }
-  .finished-tournaments .left .tournament-time {
-    font-family: "Proxima Nova Thin";
-    display: block;
-    font-size: 14px;
-    color: white; }
-
-.tournament-program {
-  margin-top: 30px;
-  margin-bottom: 15px; }
-  .tournament-program .left {
-    text-align: right; }
-    .tournament-program .left h3 {
-      font-size: 16px;
-      margin: 0; }
-  .tournament-program .right {
-    text-align: left;
-    border-left: 1px solid #345488; }
-  .tournament-program ul li + li {
-    margin-top: 10px; }
-  .tournament-program .race-generator {
-    text-transform: uppercase;
-    font-family: "Proxima Nova Thin";
-    letter-spacing: 1px;
-    color: white; }
-  .tournament-program .race-time {
-    font-family: "Proxima Nova Thin";
-    font-size: 14px;
-    color: #B1C0D8; }
-
-.tournament-leaderboard {
-  margin-bottom: 20px; }
-  .tournament-leaderboard .race-number {
-    display: inline-block;
-    width: 18px;
-    line-height: 16px;
-    color: #B1C0D8;
-    border-radius: 10px;
-    margin-bottom: 2px; }
-    .tournament-leaderboard .race-number::after {
-      content: "."; }
-  .tournament-leaderboard .race-rank {
-    display: inline-block;
-    border-radius: 10px;
-    width: 20px; }
-  .tournament-leaderboard .race-rank-1 {
-    background-color: #E0A349;
-    color: white; }
-  .tournament-leaderboard .race-rank-dnc {
-    color: #E6E6E6; }
-
-.finished-race {
-  margin-top: 20px;
-  margin-bottom: 0; }
-  .finished-race .generator-name {
-    padding: 5px;
-    font-family: "Proxima Nova Thin";
-    text-align: center;
-    text-transform: uppercase;
-    text-decoration: none;
-    letter-spacing: 1px; }
-
 .post .block-img, .article .block-img {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -6147,3 +5761,19 @@ a.player-avatar {
     font-size: 13px; }
   .show-user .badge-rank:hover {
     background-color: #e4ae5f; }
+
+aside .list-players {
+  margin: 10px; }
+  aside .list-players li {
+    margin-bottom: 5px; }
+aside .chat {
+  display: flex;
+  flex-direction: column;
+  height: 200px; }
+  aside .chat .messages {
+    overflow: scroll;
+    flex: 1; }
+  aside .chat input[type="text"] {
+    background-color: #2b4772;
+    border: none;
+    color: white; }

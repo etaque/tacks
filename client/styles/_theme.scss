@@ -64,60 +64,23 @@ a {
   }
 }
 
+.align-center {
+  text-align: center;
+}
 
-.navbar {
-  margin-bottom: 0;
-  background-color: $navBlue;
-  border: none;
-  border-radius: 0;
-
-  .navbar-brand {
-    margin: 0;
-    padding: 0;
-  }
-
-  .navbar-toggle {
-    border-color: $whiteBlue;
-
-    .icon-bar {
-      background-color: $whiteBlue;
-    }
-  }
-
-  .nav {
-    margin-bottom: 0;
-  }
-
-  .navbar-nav > li > a {
-    text-transform: uppercase;
-    color: white;
+.aside-module {
+  h3 {
+    background-color: $darkSeaBlue;
+    border-bottom: 2px solid $navBlue;
+    margin: 0 0 10px 0;
+    padding: 10px;
+    text-align: center;
     font-family: $lightFontFamily;
-    letter-spacing: 1px;
-
-    &:hover, &:active {
-      background-color: $mainBlue;
-    }
+    text-transform: uppercase;
+    font-size: 15px;
   }
 }
 
-@media screen and (min-width: $screen-sm-min) {
-
-  nav {
-    .nav {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    .nav-main {
-      margin-left: 20px;
-    }
-
-    .navbar-nav > li > a {
-      padding: 0 20px;
-      font-size: 14px;
-    }
-  }
-}
 
 .title-wrapper {
   background-color: $seaBlue;

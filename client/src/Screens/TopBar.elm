@@ -15,18 +15,16 @@ logoWidth = 160
 
 view : AppState -> Html
 view appState =
-  nav [ class "navbar" ]
-    [ div [ class "container" ]
-        [ logo
-        , (playerMenu appState.player)
-        ]
+  nav [ ]
+    [ logo
+    , (playerMenu appState.player)
     ]
 
 logo : Html
 logo =
-  div [ class "navbar-header" ]
-    [ a [ class "navbar-brand", path "/" ]
-      [ img [ src "/assets/images/logo-header-2.png", class "logo" ] [] ]
+  div [ class "logo" ]
+    [ a [ path "/" ]
+      [ img [ src "/assets/images/logo-header-2.png" ] [] ]
     ]
 
 playerMenu : Player -> Html
@@ -38,7 +36,7 @@ playerMenu player =
 
 guestMenu : Html
 guestMenu =
-  ul [ class "nav navbar-nav navbar-right nav-user" ]
+  ul [ class "user-menu" ]
     [ li [ ]
       [ a [ path "/login" ] [ text "Login" ] ]
     , li [ ]
@@ -47,7 +45,7 @@ guestMenu =
 
 userMenu : Player -> Html
 userMenu player =
-  ul [ class "nav navbar-nav navbar-right nav-user" ]
+  ul [ class "user-menu" ]
     [ li [ ]
       [ a [ path "/me"]
         [ img [ src (avatarUrl player), class "avatar avatar-user" ] [ ]

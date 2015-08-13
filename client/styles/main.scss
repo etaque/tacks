@@ -3,6 +3,7 @@
 $grid-gutter-width: 30px;
 $container-large-desktop: (940px + $grid-gutter-width);
 $icon-font-path: "/assets/fonts/bootstrap/";
+
 @import '../node_modules/bootstrap-sass/assets/stylesheets/bootstrap/bootstrap';
 
 @import 'mixins';
@@ -12,8 +13,7 @@ $icon-font-path: "/assets/fonts/bootstrap/";
 @import 'core';
 
 @import 'home';
-@import 'fullscreen';
 @import 'trials';
-@import 'tournaments';
 @import 'blog';
 @import 'users';
+@import 'game';
