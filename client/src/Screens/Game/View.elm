@@ -28,33 +28,60 @@ loading : List Html
 loading =
   [ titleWrapper [ h1 [] [ text "loading..." ]] ]
 
-leftWidth = 200
+leftWidth = 240
 rightWidth = 200
 
 gameView : (Int, Int) -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
-  [ leftBar (h - TopBar.height) gameState
-  , fromElement <| renderGame (w - leftWidth - rightWidth, h - TopBar.height) gameState
-  , rightBar (h - TopBar.height) screen
+  [ leftBar (h - TopBar.height) screen gameState
+  , fromElement <| renderGame (w - leftWidth, h - TopBar.height) gameState
+  -- , rightBar (h - TopBar.height) screen gameState
   ]
 
-leftBar : Int -> GameState -> Html
-leftBar h gameState =
+leftBar : Int -> Screen -> GameState -> Html
+leftBar h screen gameState =
   aside [ style [("height", toString h ++ "px")] ]
     [ playersBlock <| List.append [ gameState.playerState.player ] (List.map .player gameState.opponents)
+    , chatBlock screen
+    -- [ bestTimesBlock
+    , helpBlock
     ]
 
-rightBar : Int -> Screen -> Html
-rightBar h screen =
+rightBar : Int -> Screen -> GameState -> Html
+rightBar h screen gameState =
   aside [ style [("height", toString h ++ "px")] ]
-    [ chatBlock screen
+    [ playersBlock <| List.append [ gameState.playerState.player ] (List.map .player gameState.opponents)
+    , chatBlock screen
     ]
+
+bestTimesBlock : Html
+bestTimesBlock =
+  div [ class "aside-module module-best-times" ]
+    [ h3 [ ] [ text "Best times" ]
+    ]
+
+helpBlock : Html
+helpBlock =
+  div [ class "aside-module module-help" ]
+    [ h3 [ ] [ text "Help" ]
+    , dl [ ] helpItems
+    ]
+
+helpItems : List Html
+helpItems =
+  List.concatMap (\(dt', dd') -> [ dt [ ] [ text dt' ], dd [ ] [ text dd'] ]) <|
+    [ ("ARROWS", "turn left/right")
+    , ("ARROWS + ⇧", "adjust left/right")
+    , ("⏎", "lock angle to wind")
+    , ("SPACE", "tack or jibe")
+    , ("ESC", "quit race")
+    ]
+
 
 playersBlock : List Player -> Html
 playersBlock players =
-  div [ class "aside-module" ]
-    [ h3 [ ] [ text "Players" ]
-    , ul [ class "list-unstyled list-players" ] (List.map playerItem players)
+  div [ class "aside-module module-players" ]
+    [ ul [ class "list-unstyled list-players" ] (List.map playerItem players)
     ]
 
 
@@ -66,21 +93,23 @@ playerItem player =
 
 chatBlock : Screen -> Html
 chatBlock {messages, messageField} =
-  div [ class "aside-module chat"]
-    [ h3 [ ] [ text "Chat" ]
-    , messagesList messages
+  div [ class "aside-module module-chat"]
+    [ div [ class "messages" ] [ messagesList messages ]
     , chatField messageField
     ]
 
 
 messagesList : List Message -> Html
 messagesList messages =
-  ul [ class "list-unstyled messages" ] (List.map messageItem (List.reverse messages))
+  ul [ class "list-unstyled" ] (List.map messageItem (List.reverse messages))
 
 
 messageItem : Message -> Html
 messageItem {player, content, time} =
-  li [ ] [ text content ]
+  li [ ]
+    [ span [ class "message-handle" ] [ text <| playerHandle player ]
+    , span [ class "message-content" ] [ text content ]
+    ]
 
 
 chatField : String -> Html

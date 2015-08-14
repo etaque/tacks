@@ -1,6 +1,7 @@
 $seaBlue: #23395C; //rgb(10, 105, 148);
 $mainBlue: #5899E2;
 $navBlue: little-desat-dark($mainBlue);
+$darkNavBlue: little-desat-dark($navBlue);
 $whiteBlue: #B1C0D8;
 $orange: #E0A349;
 $lightOrange: lighten($orange, 12%);

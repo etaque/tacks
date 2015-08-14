@@ -1,28 +1,89 @@
 @import 'colors';
+@import 'fonts';
 
 
 aside {
-  .list-players {
-    margin: 10px;
+  color: $whiteBlue;
+  font-family: $mono;
 
-    li {
-      margin-bottom: 5px;
+  .module-best-times {
+    flex: 1;
+  }
+
+  .module-help {
+    /* flex: 1; */
+    font-size: 12px;
+
+    dl {
+      /* padding: 10px; */
+    }
+
+    dt {
+      font-weight: bold;
+      clear: both;
+      float: left;
+    }
+
+    dd {
+      float: right;
     }
   }
 
-  .chat {
+  .module-players {
+    /* flex: 1; */
+
+    .list-players {
+      /* margin: 10px; */
+      background-color: $darkNavBlue;
+      /* box-shadow: 0 2px 2px $lightGray; */
+
+
+      li {
+        /* margin-top: 5px; */
+        padding: 5px 8px;
+        border-bottom: 1px solid $whiteBlue;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        .player-avatar {
+          color: white;
+        }
+      }
+    }
+  }
+
+  .module-chat {
+    flex: 3;
+
     display: flex;
     flex-direction: column;
-    height: 200px;
 
     .messages {
       overflow: scroll;
       flex: 1;
+      font-size: 13px;
+      position: relative;
+      /* margin: 10px; */
+
+      ul {
+        position: absolute;
+        bottom: 0;
+      }
+
+      .message-handle {
+        font-weight: bold;
+        color: $lightGray;
+        &:after {
+          content: ": ";
+        }
+      }
     }
 
     input[type="text"] {
-      background-color: $lightSeaBlue;
-      border: none;
+      background-color: $navBlue;
+      border: 2px solid $mainBlue;
       color: white;
     }
   }

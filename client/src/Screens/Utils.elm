@@ -78,8 +78,7 @@ playerWithAvatar : Player -> Html
 playerWithAvatar player =
   let
     avatarImg = img [ src (avatarUrl player), class "avatar", width 19, height 19 ] []
-    handleSpan = span [ class "handle" ] [ text (Maybe.withDefault "Anonymous" player.handle) ]
-    handle = Maybe.withDefault "" player.handle
+    handleSpan = span [ class "handle" ] [ text (playerHandle player) ]
   in
     if player.guest
       then

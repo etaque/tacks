@@ -69,13 +69,15 @@ a {
 }
 
 .aside-module {
+  margin: 10px;
+
   h3 {
-    background-color: $darkSeaBlue;
-    border-bottom: 2px solid $navBlue;
+    /* background-color: $darkSeaBlue; */
+    border-bottom: 1px solid $navBlue;
     margin: 0 0 10px 0;
-    padding: 10px;
-    text-align: center;
-    font-family: $lightFontFamily;
+    padding-bottom: 5px;
+    /* text-align: center; */
+    /* font-family: $lightFontFamily; */
     text-transform: uppercase;
     font-size: 15px;
   }
@@ -271,7 +273,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
 .player-avatar {
   font-family: $mono;
   display: inline-block;
-  color: $mediumGray;
+  color: $darkGray;
 
   .avatar {
     border-radius: 2px;

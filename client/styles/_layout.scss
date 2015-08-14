@@ -26,11 +26,6 @@ body {
   flex-direction: row;
 }
 
-aside {
-  width: 200px;
-  background-color: $darkerSeaBlue;
-}
-
 .main {
   flex: 1;
 }
@@ -41,6 +36,7 @@ nav {
   height: $navbarHeight;
   display: flex;
   flex-direction: row;
+  border-bottom: 2px solid $whiteBlue;
 }
 
 .logo {
@@ -50,6 +46,7 @@ nav {
   img {
     height: $navbarHeight;
     max-height: 100%;
+    max-height: 48px;
     width: auto;
   }
 }
@@ -65,7 +62,7 @@ nav {
 
     a {
       display: block;
-      line-height: $navbarHeight;
+      line-height: $navbarHeight - 2px;
       padding: 0 20px;
       text-transform: uppercase;
       font-family: $lightFontFamily;
@@ -86,4 +83,12 @@ nav {
     border-radius: 2px;
     vertical-align: text-bottom;
   }
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  width: 240px;
+  background-color: $darkerSeaBlue;
+  border-right: 2px solid $darkNavBlue;
 }

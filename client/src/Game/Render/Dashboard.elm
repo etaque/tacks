@@ -92,10 +92,6 @@ getBoard gameState =
   if | isEmpty gameState.leaderboard -> getPlayerEntries gameState
      | otherwise -> getLeaderboard gameState
 
-getHelp : GameState -> Element
-getHelp gameState =
-  helpMessage |> baseText |> leftAligned |> opacity 0.8
-
 
 -- Main status (big font size)
 
@@ -218,9 +214,8 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
 
 
 topLeftElements : GameState -> List Element
-topLeftElements gameState =
-  [ getBoard gameState
-  , getHelp gameState
+topLeftElements {wind, playerState} =
+  [ getVmgBar playerState
   ]
 
 topCenterElements : GameState -> List Element
@@ -232,7 +227,6 @@ topCenterElements gameState =
 topRightElements : GameState -> List Element
 topRightElements {wind,playerState} =
   [ getWindWheel wind
-  , getVmgBar playerState
   ]
 
 buildDashboard : GameState -> (Int,Int) -> DashboardLayout
