@@ -15,6 +15,14 @@ import models._
 object RunPathDAO extends MongoDAO[RunPath] {
   val collectionName = "runPaths"
 
+  def findByRunId(runId: BSONObjectID): Future[Option[RunPath]] = {
+    collection.find(BSONDocument("runId" -> runId)).one[RunPath]
+  }
+
+  def deleteByRunId(runId: BSONObjectID): Future[LastError] = {
+    collection.remove(BSONDocument("runId" -> runId))
+  }
+
   import Geo._
   implicit val pathPointHandler: BSONHandler[BSONDocument, PathPoint] = Macros.handler[PathPoint]
 

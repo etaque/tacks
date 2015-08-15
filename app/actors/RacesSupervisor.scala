@@ -40,12 +40,16 @@ class RacesSupervisor extends Actor {
   def getLiveTrack(track: Track): Future[LiveTrack] = {
     mountedTracks.find(_._1.slug == track.slug) match {
       case Some((track, ref)) => {
-        (ref ? GetStatus).mapTo[(Option[Race], Seq[Opponent])].map { case (nextRace, opponents) =>
-          LiveTrack(track, nextRace, opponents.map(_.player))
+        for {
+          (nextRace, opponents) <- (ref ? GetStatus).mapTo[(Option[Race], Seq[Opponent])]
+          rankings <- RunDAO.extractRankings(track.id)
         }
+        yield LiveTrack(track, nextRace, opponents.map(_.player), rankings)
       }
       case None => {
-        Future.successful(LiveTrack(track, None, Nil))
+        RunDAO.extractRankings(track.id).map { rankings =>
+          LiveTrack(track, None, Nil, rankings)
+        }
       }
     }
   }

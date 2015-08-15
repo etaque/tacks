@@ -44,3 +44,13 @@ case class PathPoint(
   h: Double
 )
 
+case class RunRanking(
+  rank: Int,
+  playerId: BSONObjectID,
+  playerHandle: Option[String],
+  runId: BSONObjectID,
+  finishTime: Long
+) extends WithPlayer {
+  def creationTime = new DateTime(runId.time)
+  def isRecent = creationTime.plusDays(1).isAfterNow
+}

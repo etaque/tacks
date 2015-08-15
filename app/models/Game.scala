@@ -163,7 +163,8 @@ object RaceUpdate {
 case class LiveTrack(
   track: Track,
   nextRace: Option[Race],
-  players: Seq[Player]
+  players: Seq[Player],
+  rankings: Seq[RunRanking]
 )
 
 case class Message(

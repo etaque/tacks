@@ -14,7 +14,6 @@ POST        /api/setHandle                                     controllers.Api.s
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)
 GET         /ws/notifications                                  controllers.WebSockets.notifications
-# GET         /ws/chat                                           controllers.WebSockets.chat
 
 #GET         /blog                                             controllers.Prismic.blog
 #GET         /blog/:id/:slug                                   controllers.Prismic.post(id, slug)

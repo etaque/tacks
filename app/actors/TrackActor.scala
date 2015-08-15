@@ -1,6 +1,7 @@
 package actors
 
 import scala.concurrent.duration._
+import scala.concurrent.Future
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
@@ -117,11 +118,11 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 
         if (context.state.crossedGates != newContext.state.crossedGates) {
           state = TrackActor.gateCrossedUpdate(state, newContext, players.toMap)
+          state.playerRace(player.id).foreach { race =>
+            TrackActor.saveIfFinished(track, race, newContext, paths.lift(newContext.player.id))
+          }
         }
 
-        state.playerRace(player.id).foreach { race =>
-          TrackActor.saveIfFinished(track, race, newContext, paths.lift(newContext.player.id))
-        }
 
         context.ref ! raceUpdateForPlayer(player, clientTime)
       }
@@ -251,12 +252,22 @@ object TrackActor {
         playerHandle = ctx.player.handleOpt,
         startTime = race.startTime,
         tally = ctx.state.crossedGates,
-        finishTime = ctx.state.crossedGates.last
+        finishTime = ctx.state.crossedGates.head
       )
-      RunDAO.save(run)
-      pathMaybe.foreach { path =>
-        RunPathDAO.save(path)
+      for {
+        _ <- pathMaybe.map(saveIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
+        _ <- RunDAO.save(run)
       }
+      yield ()
     }
+  }
+
+  def saveIfBest(trackId: BSONObjectID, playerId: BSONObjectID)(path: RunPath): Future[Unit] = {
+    for {
+      bestMaybe <- RunDAO.findBestOnTrackForPlayer(trackId, playerId)
+      _ <- bestMaybe.map(_.id).map(RunPathDAO.deleteByRunId).getOrElse(Future.successful(()))
+      _ <- RunPathDAO.save(path)
+    }
+    yield ()
   }
 }
