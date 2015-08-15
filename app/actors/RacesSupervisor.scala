@@ -41,14 +41,14 @@ class RacesSupervisor extends Actor {
     mountedTracks.find(_._1.slug == track.slug) match {
       case Some((track, ref)) => {
         for {
-          (nextRace, opponents) <- (ref ? GetStatus).mapTo[(Option[Race], Seq[Opponent])]
+          (races, opponents) <- (ref ? GetStatus).mapTo[(Seq[Race], Seq[Opponent])]
           rankings <- RunDAO.extractRankings(track.id)
         }
-        yield LiveTrack(track, nextRace, opponents.map(_.player), rankings)
+        yield LiveTrack(track, races, opponents.map(_.player), rankings)
       }
       case None => {
         RunDAO.extractRankings(track.id).map { rankings =>
-          LiveTrack(track, None, Nil, rankings)
+          LiveTrack(track, Nil, Nil, rankings)
         }
       }
     }

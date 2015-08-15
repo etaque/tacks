@@ -15,29 +15,26 @@ import tools.Conf
 
 case class TrackState(
   track: Track,
-  nextRace: Option[Race],
-  liveRaces: Seq[Race]
+  races: Seq[Race]
 ) {
   def raceLeaderboard(raceId: BSONObjectID): Seq[PlayerTally] = {
-    liveRaces.find(_.id == raceId).map(_.leaderboard).getOrElse(Nil)
+    races.find(_.id == raceId).map(_.leaderboard).getOrElse(Nil)
   }
 
   def playerRace(playerId: BSONObjectID): Option[Race] = {
-    liveRaces.find(_.playerIds.contains(playerId)).orElse(nextRace)
+    races.find(_.playerIds.contains(playerId)).orElse(races.headOption)
   }
 
   def withUpdatedRace(race: Race): TrackState = {
-    if (nextRace.map(_.id).contains(race.id)) copy(nextRace = Some(race))
-    else liveRaces.indexWhere(_.id == race.id) match {
+    races.indexWhere(_.id == race.id) match {
       case -1 => this
-      case i => copy(liveRaces = liveRaces.updated(i, race))
+      case i => copy(races = races.updated(i, race))
     }
   }
 
   def escapePlayer(playerId: BSONObjectID): TrackState = {
     copy(
-      nextRace = nextRace.map(_.removePlayerId(playerId)),
-      liveRaces = liveRaces.map(_.removePlayerId(playerId))
+      races = races.map(_.removePlayerId(playerId))
     )
   }
 }
@@ -51,8 +48,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 
   var state = TrackState(
     track = track,
-    nextRace = None,
-    liveRaces = Nil
+    races = Nil
   )
 
   val players = scala.collection.mutable.Map[BSONObjectID, PlayerContext]()
@@ -140,11 +136,11 @@ class TrackActor(track: Track) extends Actor with ManageWind {
     case SpawnGust => generateGust()
 
     case RotateNextRace => {
-      state = TrackActor.rotateNextRace(state)
+      state = TrackActor.cleanStaleRaces(state)
     }
 
     case GetStatus => {
-      sender ! (state.nextRace, players.values.map(_.asOpponent))
+      sender ! (state.races, players.values.map(_.asOpponent))
     }
   }
 
@@ -192,13 +188,12 @@ object TrackActor {
     }
   }
 
-  def rotateNextRace(state: TrackState): TrackState = {
-    state.nextRace match {
-      case Some(nextRace) if nextRace.startTime.plusSeconds(state.track.countdown).isBeforeNow => {
-        state.copy(nextRace = None, liveRaces = state.liveRaces :+ nextRace)
+  def cleanStaleRaces(state: TrackState): TrackState = {
+    state.copy(
+      races = state.races.filterNot { r =>
+        raceIsClosed(r, state.track) && r.playerIds.isEmpty
       }
-      case _ => state
-    }
+    )
   }
 
   def playerStartTime(state: TrackState, player: Player): Option[DateTime] = {
@@ -226,20 +221,26 @@ object TrackActor {
   }
 
   def startCountdown(state: TrackState, byPlayerId: BSONObjectID): TrackState = {
-    state.nextRace match {
-      case None => {
-        val race = Race(
+    state.races.headOption match {
+      case Some(race) if !raceIsClosed(race, state.track) => {
+        state
+      }
+      case _ => {
+        val newRace = Race(
           _id = BSONObjectID.generate,
           trackId = state.track.id,
           startTime = DateTime.now.plusSeconds(state.track.countdown),
           playerIds = Nil,
           leaderboard = Nil
         )
-        state.copy(nextRace = Some(race))
+        state.copy(races = newRace +: state.races)
       }
-      case Some(_) => state
     }
   }
+
+  def raceIsClosed(race: Race, track: Track): Boolean =
+    race.startTime.plusSeconds(track.countdown).isBeforeNow
+
 
   def saveIfFinished(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
     if (ctx.state.crossedGates.length == track.course.laps * 2 + 1) {
@@ -255,14 +256,14 @@ object TrackActor {
         finishTime = ctx.state.crossedGates.head
       )
       for {
-        _ <- pathMaybe.map(saveIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
+        _ <- pathMaybe.map(savePathIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
         _ <- RunDAO.save(run)
       }
       yield ()
     }
   }
 
-  def saveIfBest(trackId: BSONObjectID, playerId: BSONObjectID)(path: RunPath): Future[Unit] = {
+  def savePathIfBest(trackId: BSONObjectID, playerId: BSONObjectID)(path: RunPath): Future[Unit] = {
     for {
       bestMaybe <- RunDAO.findBestOnTrackForPlayer(trackId, playerId)
       _ <- bestMaybe.map(_.id).map(RunPathDAO.deleteByRunId).getOrElse(Future.successful(()))
