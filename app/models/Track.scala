@@ -29,19 +29,6 @@ case class PlayerTally(
   gates: Seq[Long]
 ) extends WithPlayer
 
-case class Run(
-  _id: BSONObjectID = BSONObjectID.generate,
-  trackId: BSONObjectID,
-  raceId: BSONObjectID,
-  playerId: BSONObjectID,
-  playerHandle: Option[String] = None,
-  startTime: DateTime,
-  tally: Seq[Long] = Nil,
-  finishTime: Option[Long] = None
-) extends HasId with WithPlayer {
-  def creationTime = idTime
-}
-
 // case class RunRanking(
 //   rank: Int,
 //   playerId: BSONObjectID,

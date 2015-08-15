@@ -9,6 +9,7 @@ import reactivemongo.bson.BSONObjectID
 import org.joda.time.DateTime
 
 import models._
+import dao._
 import tools.Conf
 
 case class TrackState(
@@ -53,7 +54,8 @@ class TrackActor(track: Track) extends Actor with ManageWind {
     liveRaces = Nil
   )
 
-  val players = scala.collection.mutable.Map[String, PlayerContext]()
+  val players = scala.collection.mutable.Map[BSONObjectID, PlayerContext]()
+  val paths = scala.collection.mutable.Map[BSONObjectID, RunPath]()
 
   def clock: Long = DateTime.now.getMillis
 
@@ -69,14 +71,15 @@ class TrackActor(track: Track) extends Actor with ManageWind {
      * player join => added to context Map
      */
     case PlayerJoin(player) => {
-      players += player.id.stringify -> PlayerContext(player, KeyboardInput.initial, OpponentState.initial, sender())
+      players += player.id -> PlayerContext(player, KeyboardInput.initial, OpponentState.initial, sender())
     }
 
     /**
      * player quit => removed from context Map
      */
     case PlayerQuit(player) => {
-      players -= player.id.stringify
+      players -= player.id
+      paths -= player.id
     }
 
     /**
@@ -92,11 +95,16 @@ class TrackActor(track: Track) extends Actor with ManageWind {
      * context is updated, race started if requested
      */
     case PlayerUpdate(player, PlayerInput(opState, input, clientTime)) => {
-      val id = player.id.stringify
 
-      players.get(id).foreach { context =>
+      players.get(player.id).foreach { context =>
         val newContext = context.copy(input = input, state = opState)
-        players += (id -> newContext)
+        players += (player.id -> newContext)
+
+        state.playerRace(player.id).foreach { race =>
+          if (race.startTime.plusMinutes(10).isAfterNow) { // max 10min de trace
+            paths += player.id -> TrackActor.tracePlayer(newContext, race, paths.toMap, clock)
+          }
+        }
 
         if (input.startCountdown) {
           state = TrackActor.startCountdown(state, byPlayerId = player.id)
@@ -104,10 +112,15 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 
         if (input.escapeRace) {
           state = state.escapePlayer(player.id)
+          paths -= player.id
         }
 
         if (context.state.crossedGates != newContext.state.crossedGates) {
           state = TrackActor.gateCrossedUpdate(state, newContext, players.toMap)
+        }
+
+        state.playerRace(player.id).foreach { race =>
+          TrackActor.saveIfFinished(track, race, newContext, paths.lift(newContext.player.id))
         }
 
         context.ref ! raceUpdateForPlayer(player, clientTime)
@@ -134,12 +147,12 @@ class TrackActor(track: Track) extends Actor with ManageWind {
     }
   }
 
-  def playerOpponents(playerId: String): Seq[Opponent] = {
+  def playerOpponents(playerId: BSONObjectID): Seq[Opponent] = {
     players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
   }
 
-  def playerLeaderboard(playerId: String): Seq[PlayerTally] = {
-    state.playerRace(BSONObjectID(playerId)).map(_.id).map(state.raceLeaderboard).getOrElse(Nil)
+  def playerLeaderboard(playerId: BSONObjectID): Seq[PlayerTally] = {
+    state.playerRace(playerId).map(_.id).map(state.raceLeaderboard).getOrElse(Nil)
   }
 
   def raceUpdateForPlayer(player: Player, clientTime: Long) = {
@@ -147,8 +160,8 @@ class TrackActor(track: Track) extends Actor with ManageWind {
       serverNow = DateTime.now,
       startTime = TrackActor.playerStartTime(state, player),
       wind = wind,
-      opponents = playerOpponents(player.id.stringify),
-      leaderboard = playerLeaderboard(player.id.stringify),
+      opponents = playerOpponents(player.id),
+      leaderboard = playerLeaderboard(player.id),
       clientTime = clientTime
     )
   }
@@ -160,6 +173,23 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 
 object TrackActor {
   def props(track: Track) = Props(new TrackActor(track))
+
+  def tracePlayer(ctx: PlayerContext, race: Race, paths: Map[BSONObjectID, RunPath], clock: Long): RunPath = {
+    val playerId = ctx.player.id
+    val elapsedMillis = clock - race.startTime.getMillis
+    val currentSecond = elapsedMillis / 1000
+
+    val p = PathPoint((elapsedMillis % 1000).toInt, ctx.state.position, ctx.state.heading)
+
+    paths.lift(playerId) match {
+      case Some(path) => {
+        path.addPoint(currentSecond, p)
+      }
+      case None => {
+        RunPath.init(currentSecond, p)
+      }
+    }
+  }
 
   def rotateNextRace(state: TrackState): TrackState = {
     state.nextRace match {
@@ -174,14 +204,14 @@ object TrackActor {
     state.playerRace(player.id).map(_.startTime)
   }
 
-  def gateCrossedUpdate(state: TrackState, context: PlayerContext, players: Map[String,PlayerContext]): TrackState = {
+  def gateCrossedUpdate(state: TrackState, context: PlayerContext, players: Map[BSONObjectID, PlayerContext]): TrackState = {
     state.playerRace(context.player.id).map { race =>
 
       val playerIds =
         if (context.state.crossedGates.length == 1) race.playerIds :+ context.player.id
         else race.playerIds
 
-      val leaderboard = playerIds.map(_.stringify).flatMap(players.get).map { context =>
+      val leaderboard = playerIds.flatMap(players.get).map { context =>
         PlayerTally(context.player.id, context.player.handleOpt, context.state.crossedGates)
       }.sortBy { pt =>
         (-pt.gates.length, pt.gates.headOption)
@@ -207,6 +237,26 @@ object TrackActor {
         state.copy(nextRace = Some(race))
       }
       case Some(_) => state
+    }
+  }
+
+  def saveIfFinished(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
+    if (ctx.state.crossedGates.length == track.course.laps * 2 + 1) {
+      val runId = pathMaybe.map(_.runId).getOrElse(BSONObjectID.generate)
+      val run = Run(
+        _id = runId,
+        trackId = track.id,
+        raceId = race.id,
+        playerId = ctx.player.id,
+        playerHandle = ctx.player.handleOpt,
+        startTime = race.startTime,
+        tally = ctx.state.crossedGates,
+        finishTime = ctx.state.crossedGates.last
+      )
+      RunDAO.save(run)
+      pathMaybe.foreach { path =>
+        RunPathDAO.save(path)
+      }
     }
   }
 }
