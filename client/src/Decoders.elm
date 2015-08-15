@@ -13,9 +13,26 @@ liveStatusDecoder =
 
 liveTrackDecoder : Decoder LiveTrack
 liveTrackDecoder =
-  object2 LiveTrack
+  object3 LiveTrack
     ("track" := trackDecoder)
     ("players" := list playerDecoder)
+    ("races" := list raceDecoder)
+
+raceDecoder : Decoder Race
+raceDecoder =
+  object5 Race
+    ("_id" := string)
+    ("trackId" := string)
+    ("startTime" := float)
+    ("playerIds" := list string)
+    ("leaderboard" := list playerTallyDecoder)
+
+playerTallyDecoder : Decoder PlayerTally
+playerTallyDecoder =
+  object3 PlayerTally
+    ("playerId" := string)
+    (maybe ("playerHandle" := string))
+    ("gates" := list float)
 
 trackDecoder : Decoder Track
 trackDecoder =

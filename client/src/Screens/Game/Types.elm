@@ -5,7 +5,7 @@ import Game.Models exposing (GameState)
 import Game.Inputs exposing (GameInput)
 
 type alias Screen =
-  { track : Maybe Track
+  { liveTrack : Maybe LiveTrack
   , gameState : Maybe GameState
   , live : Bool
   , messages : List Message
@@ -14,7 +14,8 @@ type alias Screen =
   }
 
 type Action
-  = SetTrack Track
+  = SetLiveTrack LiveTrack
+  | UpdateLiveTrack LiveTrack
   | TrackNotFound
   | PingServer
   | GameUpdate GameInput

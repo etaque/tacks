@@ -49,7 +49,7 @@ getActiveTrack : AppState -> Maybe String
 getActiveTrack appState =
   case appState.screen of
     GameScreen screen ->
-      Maybe.map .id screen.track
+      Maybe.map (.track >> .id) screen.liveTrack
     _ ->
       Nothing
 

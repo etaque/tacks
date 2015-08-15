@@ -104,11 +104,6 @@ type alias OpponentState =
   , crossedGates: List Time
   }
 
-type alias PlayerTally =
-  { playerId: String
-  , playerHandle: Maybe String
-  , gates: List Time
-  }
 
 type alias GhostState =
   { position: Point

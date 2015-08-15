@@ -3,7 +3,7 @@ module Screens.Game.Updates where
 import List exposing (take, (::))
 import Task exposing (Task, succeed, map, andThen)
 import Task.Extra exposing (delay)
-import Time exposing (millisecond)
+import Time exposing (millisecond, second)
 import Http
 import String
 
@@ -31,7 +31,7 @@ mount : String -> Update
 mount slug =
   let
     initial =
-      { track = Nothing
+      { liveTrack = Nothing
       , gameState = Nothing
       , live = False
       , messages = []
@@ -39,19 +39,25 @@ mount slug =
       , notFound = False
       }
   in
-    react initial (loadTrack slug)
+    react initial (loadLiveTrack slug)
 
 
 update : Player -> Clock -> Action -> Screen -> Update
 update player clock action screen =
   case action of
 
-    SetTrack track ->
+    SetLiveTrack liveTrack ->
       let
-        gameState = defaultGame clock.time track.course player
-        newScreen = { screen | track <- Just track, gameState <- Just gameState }
+        gameState = defaultGame clock.time liveTrack.track.course player
+        newScreen = { screen | liveTrack <- Just liveTrack, gameState <- Just gameState }
       in
-        react newScreen pingServer
+        react newScreen (pingServer `andThen` \_ -> (updateLiveTrack liveTrack.track.slug))
+
+    UpdateLiveTrack liveTrack ->
+      let
+        newScreen = { screen | liveTrack <- Just liveTrack }
+      in
+        react newScreen (updateLiveTrack liveTrack.track.slug)
 
     PingServer ->
       if screen.live then
@@ -98,10 +104,17 @@ update player clock action screen =
     _ ->
       local screen
 
-loadTrack : String -> Task Http.Error ()
-loadTrack slug =
-  ServerApi.getTrack slug `andThen`
-    \track -> Signal.send actions.address (SetTrack track)
+
+loadLiveTrack : String -> Task Http.Error ()
+loadLiveTrack slug =
+  ServerApi.getLiveTrack slug `andThen`
+    \liveTrack -> Signal.send actions.address (SetLiveTrack liveTrack)
+
+
+updateLiveTrack : String -> Task Http.Error ()
+updateLiveTrack slug =
+  delay (2 * second) (ServerApi.getLiveTrack slug) `andThen`
+    \liveTrack -> Signal.send actions.address (UpdateLiveTrack liveTrack)
 
 
 pingServer : Task Http.Error ()

@@ -1,5 +1,6 @@
 module Models where
 
+import Time exposing (Time)
 
 type alias Player =
   { id:     String
@@ -21,6 +22,7 @@ type alias LiveStatus =
 type alias LiveTrack =
   { track: Track
   , players: List Player
+  , races: List Race
   }
 
 type alias Track =
@@ -31,6 +33,19 @@ type alias Track =
   , startCycle: Int
   }
 
+type alias Race =
+  { id : String
+  , trackId : String
+  , startTime : Time
+  , playerIds : List String
+  , leaderboard : List PlayerTally
+  }
+
+type alias PlayerTally =
+  { playerId : String
+  , playerHandle : Maybe String
+  , gates : List Time
+  }
 
 type alias Message =
   { content : String

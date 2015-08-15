@@ -20,7 +20,7 @@ import Game.Render.All exposing (renderGame)
 
 
 view : (Int, Int) -> Screen -> Html
-view dims ({track, gameState} as screen) =
+view dims ({liveTrack, gameState} as screen) =
   div [ class "content" ] <|
     Maybe.withDefault loading (Maybe.map (gameView dims screen) gameState)
 
