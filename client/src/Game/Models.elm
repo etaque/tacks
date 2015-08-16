@@ -17,6 +17,11 @@ boatWidth = 3
 windShadowLength : Float
 windShadowLength = 120
 
+windHistorySampling : Int
+windHistorySampling = 30
+
+windHistoryLength : Int
+windHistoryLength = 50
 
 type alias GameState =
   { wind:        Wind

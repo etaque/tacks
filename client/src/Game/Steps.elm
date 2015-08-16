@@ -74,8 +74,11 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
 
 updateWindHistory : Wind -> WindHistory -> WindHistory
 updateWindHistory {origin, speed} h =
-  if h.sampleCounter >= 5 then
-    WindHistory (origin :: h.origins) (speed :: h.speeds) 0
+  if h.sampleCounter > windHistorySampling then
+    WindHistory
+      (List.take windHistoryLength (origin :: h.origins))
+      (List.take windHistoryLength (speed :: h.speeds))
+      0
   else
     { h | sampleCounter <- h.sampleCounter + 1 }
 

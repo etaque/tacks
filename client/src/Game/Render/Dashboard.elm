@@ -14,83 +14,31 @@ import Graphics.Collage exposing (..)
 import Color exposing (white)
 import Time exposing (Time)
 
-s : Element
-s = spacer 20 20
 
-xs : Element
-xs = spacer 5 5
+buildDashboard : GameState -> (Int,Int) -> DashboardLayout
+buildDashboard gameState (w,h) =
+    { topLeft = topLeftElements gameState
+    , topRight = topRightElements gameState
+    , topCenter = topCenterElements gameState
+    , bottomCenter = []
+    }
 
-type alias BoardLine =
-  { id:       String
-  , handle:   Maybe String
-  , position: Maybe Int
-  , delta:    Maybe Time
-  }
+topLeftElements : GameState -> List Element
+topLeftElements {wind, windHistory, playerState} =
+  [ getVmgBar playerState
+  ]
 
-buildBoardLine : BoardLine -> Element
-buildBoardLine {id,handle,position,delta} =
-  let
-    positionText = M.map (\p -> toString p ++ ".") position |> M.withDefault "  "
-    handleText   = M.withDefault "Anonymous" handle |> fixedLength 12
-    deltaText    = M.map (\d -> "+" ++ toString (d / 1000)) delta |> M.withDefault "-"
-  in
-    String.join " " [positionText, handleText, deltaText]
-      |> baseText
-      |> leftAligned
+topCenterElements : GameState -> List Element
+topCenterElements gameState =
+  [ getMainStatus gameState
+  , getSubStatus gameState
+  ]
 
-getPlayerEntry : Player -> Element
-getPlayerEntry player =
-  let
-    line =
-      { id       = player.id
-      , handle   = player.handle
-      , position = Nothing
-      , delta    = Nothing
-      }
-  in
-    buildBoardLine line
-
-getPlayerEntries : GameState -> Element
-getPlayerEntries {opponents,playerState} =
-  let
-    players = playerState.player :: (map .player opponents)
-  in
-    map getPlayerEntry players |> flow down
-
-
--- getLeaderboardLine : PlayerTally -> Int -> PlayerTally -> Element
--- getLeaderboardLine leaderTally position tally =
---   let
---     delta = if length tally.gates == length leaderTally.gates
---       then
---         case (head tally.gates, head leaderTally.gates) of
---           (Just g1, Just g2) ->
---             Just (g1 - g2)
---           _ ->
---             Nothing
---       else
---         Nothing
---     line =
---       { id       = tally.playerId
---       , handle   = tally.playerHandle
---       , position = Just (position + 1)
---       , delta    = delta
---       }
---   in
---     buildBoardLine line
-
--- getLeaderboard : GameState -> Element
--- getLeaderboard {leaderboard,playerState} =
---   let
---     showLeader leader =
---       indexedMap (getLeaderboardLine leader) leaderboard |> flow down
---   in
---     M.map showLeader (head leaderboard) |> M.withDefault empty
-
--- getBoard : GameState -> Element
--- getBoard gameState =
---   if | isEmpty gameState.leaderboard -> getPlayerEntries gameState
---      | otherwise -> getLeaderboard gameState
+topRightElements : GameState -> List Element
+topRightElements {wind, windHistory, playerState} =
+  [ getWindWheel wind
+  , getWindSpeedGraph wind windHistory
+  ]
 
 
 -- Main status (big font size)
@@ -145,31 +93,11 @@ getFinishingStatus ({course,playerState} as gameState) =
     _ ->
       getGatesCount course playerState
 
+
 getGatesCount : Course -> PlayerState -> String
 getGatesCount course player =
   "gate " ++ toString (length player.crossedGates) ++ "/" ++ (toString (1 + course.laps * 2))
 
-getTimeTrialFinishingStatus : GameState -> PlayerState -> String
-getTimeTrialFinishingStatus {playerState,ghosts} {player,crossedGates} =
-  case findPlayerGhost playerState.player.id ghosts of
-    Just playerGhost ->
-      let
-        previousTimeMaybe = head playerGhost.gates
-        newTimeMaybe = head crossedGates
-      in
-        case (previousTimeMaybe, newTimeMaybe) of
-          (Just previousTime, Just newTime) ->
-            if newTime < previousTime
-              then toString (newTime - previousTime) ++ "ms\nnew best time!"
-              else "+" ++ toString (newTime - previousTime) ++ "ms\ntry again?"
-          _ ->
-            ""
-    Nothing ->
-      case player.handle of
-        Just _ -> "you did it!"
-        Nothing -> "please create an account to save your run"
-
---
 
 getWindWheel : Wind -> Element
 getWindWheel wind =
@@ -213,26 +141,33 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
       collage 80 (barHeight + 40) [bar, legend]
 
 
-topLeftElements : GameState -> List Element
-topLeftElements {wind, playerState} =
-  [ getVmgBar playerState
-  ]
+getWindSpeedGraph : Wind -> WindHistory -> Element
+getWindSpeedGraph wind windHistory =
+  let
+    stepWidth = 4
+    windCoef = 4
+    windSpeeds = (windHistory.speeds)
 
-topCenterElements : GameState -> List Element
-topCenterElements gameState =
-  [ getMainStatus gameState
-  , getSubStatus gameState
-  ]
+    samplingInterpol = (toFloat windHistory.sampleCounter) * stepWidth / (toFloat windHistorySampling)
+    historyPath = windSpeeds
+      |> indexedMap (,)
+      |> map (\(t, s) -> (toFloat t * -stepWidth, s * windCoef))
+      |> path
+      |> traced (solid white)
+      |> move ( stepWidth * (toFloat windHistoryLength) - samplingInterpol, 0)
 
-topRightElements : GameState -> List Element
-topRightElements {wind,playerState} =
-  [ getWindWheel wind
-  ]
+    currentPoint = circle 2
+      |> filled white
+      |> move ((toFloat windHistoryLength) * stepWidth, wind.speed * windCoef)
 
-buildDashboard : GameState -> (Int,Int) -> DashboardLayout
-buildDashboard gameState (w,h) =
-    { topLeft = topLeftElements gameState
-    , topRight = topRightElements gameState
-    , topCenter = topCenterElements gameState
-    , bottomCenter = []
-    }
+    graph = group [ historyPath, currentPoint ]
+      |> move (-100, 0)
+  in
+    collage 250 200 [ graph ]
+
+
+s : Element
+s = spacer 20 20
+
+xs : Element
+xs = spacer 5 5
