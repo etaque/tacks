@@ -54,13 +54,14 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
 
     newPlayerState = { playerState | time <- now }
 
-    wind = raceInput.wind
+    windHistory = updateWindHistory raceInput.wind gameState.windHistory
 
   in
     { gameState
       | opponents <- updatedOpponents
       , ghosts <- ghosts
-      , wind <- wind
+      , wind <- raceInput.wind
+      , windHistory <- windHistory
       , tallies <- tallies
       , serverNow <- Just serverNow
       , now <- now
@@ -70,6 +71,14 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
       , localTime <- time
       , rtd <- Just rtd
     }
+
+updateWindHistory : Wind -> WindHistory -> WindHistory
+updateWindHistory {origin, speed} h =
+  if h.sampleCounter >= 5 then
+    WindHistory (origin :: h.origins) (speed :: h.speeds) 0
+  else
+    { h | sampleCounter <- h.sampleCounter + 1 }
+
 
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState

@@ -20,6 +20,7 @@ windShadowLength = 120
 
 type alias GameState =
   { wind:        Wind
+  , windHistory: WindHistory
   , playerState: PlayerState
   , wake:        List Point
   , center:      Point
@@ -44,6 +45,12 @@ type alias Wind =
   , speed : Float
   , gusts : List Gust
   , gustCounter : Int
+  }
+
+type alias WindHistory =
+  { origins : List Float
+  , speeds : List Float
+  , sampleCounter : Int
   }
 
 type alias Gust =
@@ -210,9 +217,18 @@ defaultWind =
   , gustCounter = 0
   }
 
+emptyWindHistory : WindHistory
+emptyWindHistory =
+  { origins = []
+  , speeds = []
+  , sampleCounter = 0
+  }
+
+
 defaultGame : Time -> Course -> Player -> GameState
 defaultGame now course player =
   { wind        = defaultWind
+  , windHistory = emptyWindHistory
   , playerState = defaultPlayerState player now
   , center      = (0,0)
   , wake        = []
