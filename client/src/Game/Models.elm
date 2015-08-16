@@ -28,12 +28,12 @@ type alias GameState =
   , course:      Course
   , tallies: List PlayerTally
   , now:         Time
-  , serverNow:   Time
+  , serverNow:   Maybe Time
+  , rtd:         Maybe Time
   , countdown:   Float
   , startTime:   Maybe Time
   , live:        Bool
   , localTime:   Time
-  , roundTripDelay: Float
   , chatting:    Bool
   }
 
@@ -221,12 +221,12 @@ defaultGame now course player =
   , course      = course
   , tallies = []
   , now         = now
-  , serverNow   = now
+  , serverNow   = Nothing
+  , rtd         = Nothing
   , countdown   = 0
   , startTime   = Nothing
   , live        = False
   , localTime   = now
-  , roundTripDelay = 0
   , chatting    = False
   }
 

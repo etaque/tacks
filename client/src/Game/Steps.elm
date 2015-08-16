@@ -36,17 +36,19 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
   let
     { serverNow, startTime, opponents, ghosts, tallies, initial, clientTime } = raceInput
 
-    stalled = serverNow == gameState.serverNow
+    rtd = case gameState.rtd of
+      Just previousRtd ->
+        min previousRtd (time - clientTime)
+      Nothing ->
+        time - clientTime
 
-    roundTripDelay = if stalled then
-      gameState.roundTripDelay
-    else
-      time - clientTime
+    compensedServerNow = serverNow - (rtd / 2)
 
-    now = if gameState.live then
-      gameState.now + delta
-    else
-      serverNow
+    now = case gameState.serverNow of
+      Just previousServerNow ->
+        min (previousServerNow + delta) compensedServerNow
+      Nothing ->
+        compensedServerNow
 
     updatedOpponents = updateOpponents gameState.opponents delta opponents
 
@@ -60,13 +62,13 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
       , ghosts <- ghosts
       , wind <- wind
       , tallies <- tallies
-      , serverNow <- serverNow
+      , serverNow <- Just serverNow
       , now <- now
       , playerState <- newPlayerState
       , startTime <- startTime
       , live <- not initial
       , localTime <- time
-      , roundTripDelay <- roundTripDelay
+      , rtd <- Just rtd
     }
 
 
