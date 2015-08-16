@@ -34,10 +34,13 @@ rightWidth = 200
 
 gameView : (Int, Int) -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
-  [ leftBar (h - TopBar.height) screen gameState
-  , fromElement <| renderGame (w - leftWidth, h - TopBar.height) gameState
-  -- , rightBar (h - TopBar.height) screen gameState
-  ]
+  let
+    gameElement = renderGame (w - leftWidth, h - TopBar.height) gameState
+  in
+    [ leftBar (h - TopBar.height) screen gameState
+    , div [ class "game" ] [ fromElement gameElement ]
+    -- , rightBar (h - TopBar.height) screen gameState
+    ]
 
 leftBar : Int -> Screen -> GameState -> Html
 leftBar h screen gameState =

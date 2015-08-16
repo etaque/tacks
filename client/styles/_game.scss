@@ -1,6 +1,9 @@
 @import 'colors';
 @import 'fonts';
 
+.game {
+  background-color: $sand;
+}
 
 aside {
   color: $whiteBlue;
@@ -30,17 +33,22 @@ aside {
   }
 
   .module-players {
-    /* flex: 1; */
 
-    .list-players {
-      /* margin: 10px; */
+    h4 {
+      font-size: 13px;
+      text-transform: uppercase;
+      margin: 0;
+      margin-bottom: 5px;
+      padding: 0;
+      font-family: $mono;
+    }
+
+    .list-players, .list-tallies {
       background-color: $darkNavBlue;
-      /* box-shadow: 0 2px 2px $lightGray; */
-
+      margin-bottom: 15px;
 
       li {
-        /* margin-top: 5px; */
-        padding: 5px 8px;
+        padding: 4px 6px;
         border-bottom: 1px solid $whiteBlue;
 
         &:last-child {
@@ -49,6 +57,24 @@ aside {
 
         .player-avatar {
           color: white;
+        }
+
+        .position {
+          float: right;
+          background-color: $darkSeaBlue;
+          color: $whiteBlue;
+          display: inline-block;
+          width: 15px;
+          text-align: center;
+          /* border-radius: 10px; */
+          line-height: 15px;
+          font-size: 12px;
+          margin-right: 5px;
+          margin-top: 3px;
+        }
+
+        .time {
+          float: right;
         }
       }
     }

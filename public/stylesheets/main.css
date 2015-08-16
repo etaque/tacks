@@ -5785,6 +5785,9 @@ a.period {
   font-family: "Proxima Nova Light";
   src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
+.game {
+  background-color: #efd279; }
+
 aside {
   color: #B1C0D8;
   font-family: "Inconsolata"; }
@@ -5801,20 +5804,37 @@ aside {
       float: left; }
     aside .module-help dd {
       float: right; }
-  aside .module-players {
-    /* flex: 1; */ }
-    aside .module-players .list-players {
-      /* margin: 10px; */
-      background-color: #395e87;
-      /* box-shadow: 0 2px 2px $lightGray; */ }
-      aside .module-players .list-players li {
-        /* margin-top: 5px; */
-        padding: 5px 8px;
-        border-bottom: 1px solid #B1C0D8; }
-        aside .module-players .list-players li:last-child {
-          border-bottom: none; }
-        aside .module-players .list-players li .player-avatar {
-          color: white; }
+  aside .module-players h4 {
+    font-size: 13px;
+    text-transform: uppercase;
+    margin: 0;
+    margin-bottom: 5px;
+    padding: 0;
+    font-family: "Inconsolata"; }
+  aside .module-players .list-players, aside .module-players .list-tallies {
+    background-color: #395e87;
+    margin-bottom: 15px; }
+    aside .module-players .list-players li, aside .module-players .list-tallies li {
+      padding: 4px 6px;
+      border-bottom: 1px solid #B1C0D8; }
+      aside .module-players .list-players li:last-child, aside .module-players .list-tallies li:last-child {
+        border-bottom: none; }
+      aside .module-players .list-players li .player-avatar, aside .module-players .list-tallies li .player-avatar {
+        color: white; }
+      aside .module-players .list-players li .position, aside .module-players .list-tallies li .position {
+        float: right;
+        background-color: #1f3251;
+        color: #B1C0D8;
+        display: inline-block;
+        width: 15px;
+        text-align: center;
+        /* border-radius: 10px; */
+        line-height: 15px;
+        font-size: 12px;
+        margin-right: 5px;
+        margin-top: 3px; }
+      aside .module-players .list-players li .time, aside .module-players .list-tallies li .time {
+        float: right; }
   aside .module-chat {
     flex: 3;
     display: flex;

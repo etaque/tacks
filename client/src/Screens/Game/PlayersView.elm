@@ -4,6 +4,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
+import Date exposing (..)
+import Date.Format exposing (format)
+
 import AppTypes exposing (..)
 import Models exposing (..)
 import Game.Models exposing (GameState)
@@ -18,7 +21,7 @@ playersBlock : Screen -> Html
 playersBlock {races, freePlayers} =
   div [ class "aside-module module-players" ]
     [ racesBlock races
-    , ul [ class "list-unstyled list-players" ] (List.map playerItem freePlayers)
+    , if (List.isEmpty freePlayers) then div [] [] else freePlayersBlock freePlayers
     ]
 
 racesBlock : List Race -> Html
@@ -31,15 +34,36 @@ racesBlock races =
 
 raceItem : Race -> Html
 raceItem {startTime, tallies} =
-  div [ class "race" ]
-    [ text (toString startTime)
-    , ul [ class "list-unstyled list-tallies" ] (List.map tallyItem tallies)
-    ]
+  let
+    formatted = fromTime startTime
+      |> format "%H:%M"
+  in
+    div [ class "race" ]
+      [ h4 [ ] [ text ("Started at " ++ formatted) ]
+      , ul [ class "list-unstyled list-tallies" ] (List.map tallyItem tallies)
+      ]
 
 
 tallyItem : PlayerTally -> Html
-tallyItem {player, gates} =
-  playerItem player
+tallyItem {player, gates, finished} =
+  let
+    pos = if finished then "F" else toString (List.length gates)
+    time = Maybe.map (formatTimer True) (List.head gates)
+      |> Maybe.withDefault "?"
+  in
+    li [ class "player" ]
+      [ span [ class "time" ] [ text time ]
+      , span [ class "position"] [ text pos ]
+      , playerWithAvatar player
+      ]
+
+
+freePlayersBlock : List Player -> Html
+freePlayersBlock players =
+  div [ class "free-players" ]
+    [ h4 [ ] [ text "Free players" ]
+    , ul [ class "list-unstyled list-players" ] (List.map playerItem players)
+    ]
 
 
 playerItem : Player -> Html

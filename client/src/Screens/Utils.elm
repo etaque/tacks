@@ -5,6 +5,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
 import History
+import String
 
 import Models exposing (..)
 import Game.Models exposing (..)
@@ -95,3 +96,17 @@ avatarUrl p =
 playerHandle : Player -> String
 playerHandle p =
   Maybe.withDefault "Anonymous" p.handle
+
+formatTimer : Bool -> Float -> String
+formatTimer showMs t =
+  let
+    t' = t |> ceiling |> abs
+    totalSeconds = t' // 1000
+    minutes = totalSeconds // 60
+    seconds = if showMs || t <= 0 then totalSeconds `rem` 60 else (totalSeconds `rem` 60) + 1
+    millis = t' `rem` 1000
+    sMinutes = toString minutes
+    sSeconds = String.padLeft 2 '0' (toString seconds)
+    sMillis = if showMs then "." ++ (String.padLeft 3 '0' (toString millis)) else ""
+  in
+    sMinutes ++ ":" ++ sSeconds ++ sMillis
