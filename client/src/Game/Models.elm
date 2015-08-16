@@ -26,7 +26,7 @@ type alias GameState =
   , opponents:   List Opponent
   , ghosts:      List GhostState
   , course:      Course
-  , leaderboard: List PlayerTally
+  , tallies: List PlayerTally
   , now:         Time
   , serverNow:   Time
   , countdown:   Float
@@ -219,7 +219,7 @@ defaultGame now course player =
   , opponents   = []
   , ghosts      = []
   , course      = course
-  , leaderboard = []
+  , tallies = []
   , now         = now
   , serverNow   = now
   , countdown   = 0

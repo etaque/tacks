@@ -51,7 +51,7 @@ type alias RaceInput =
   , wind:        Wind
   , opponents:   List Opponent
   , ghosts:      List GhostState
-  , leaderboard: List PlayerTally
+  , tallies: List PlayerTally
   , initial:     Bool
   , clientTime:  Time
   }
@@ -63,7 +63,7 @@ initialRaceInput =
   , wind = defaultWind
   , opponents = []
   , ghosts = []
-  , leaderboard = []
+  , tallies = []
   , initial = True
   , clientTime = 0
   }

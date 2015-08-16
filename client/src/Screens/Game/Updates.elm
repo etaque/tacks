@@ -33,6 +33,8 @@ mount slug =
     initial =
       { liveTrack = Nothing
       , gameState = Nothing
+      , races = []
+      , freePlayers = []
       , live = False
       , messages = []
       , messageField = ""
@@ -49,13 +51,14 @@ update player clock action screen =
     SetLiveTrack liveTrack ->
       let
         gameState = defaultGame clock.time liveTrack.track.course player
-        newScreen = { screen | liveTrack <- Just liveTrack, gameState <- Just gameState }
+        newScreen = { screen | gameState <- Just gameState }
+          |> applyLiveTrack liveTrack
       in
         react newScreen (pingServer `andThen` \_ -> (updateLiveTrack liveTrack.track.slug))
 
     UpdateLiveTrack liveTrack ->
       let
-        newScreen = { screen | liveTrack <- Just liveTrack }
+        newScreen = applyLiveTrack liveTrack screen
       in
         react newScreen (updateLiveTrack liveTrack.track.slug)
 
@@ -104,6 +107,15 @@ update player clock action screen =
     _ ->
       local screen
 
+
+applyLiveTrack : LiveTrack -> Screen -> Screen
+applyLiveTrack ({track, players, races} as liveTrack) screen =
+  let
+    racePlayers = List.concatMap .players races
+    inRace p = List.member p racePlayers
+    freePlayers = List.filter (not << inRace) players
+  in
+    { screen | liveTrack <- Just liveTrack, races <- races, freePlayers <- freePlayers }
 
 loadLiveTrack : String -> Task Http.Error ()
 loadLiveTrack slug =

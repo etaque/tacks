@@ -58,39 +58,39 @@ getPlayerEntries {opponents,playerState} =
     map getPlayerEntry players |> flow down
 
 
-getLeaderboardLine : PlayerTally -> Int -> PlayerTally -> Element
-getLeaderboardLine leaderTally position tally =
-  let
-    delta = if length tally.gates == length leaderTally.gates
-      then
-        case (head tally.gates, head leaderTally.gates) of
-          (Just g1, Just g2) ->
-            Just (g1 - g2)
-          _ ->
-            Nothing
-      else
-        Nothing
-    line =
-      { id       = tally.playerId
-      , handle   = tally.playerHandle
-      , position = Just (position + 1)
-      , delta    = delta
-      }
-  in
-    buildBoardLine line
+-- getLeaderboardLine : PlayerTally -> Int -> PlayerTally -> Element
+-- getLeaderboardLine leaderTally position tally =
+--   let
+--     delta = if length tally.gates == length leaderTally.gates
+--       then
+--         case (head tally.gates, head leaderTally.gates) of
+--           (Just g1, Just g2) ->
+--             Just (g1 - g2)
+--           _ ->
+--             Nothing
+--       else
+--         Nothing
+--     line =
+--       { id       = tally.playerId
+--       , handle   = tally.playerHandle
+--       , position = Just (position + 1)
+--       , delta    = delta
+--       }
+--   in
+--     buildBoardLine line
 
-getLeaderboard : GameState -> Element
-getLeaderboard {leaderboard,playerState} =
-  let
-    showLeader leader =
-      indexedMap (getLeaderboardLine leader) leaderboard |> flow down
-  in
-    M.map showLeader (head leaderboard) |> M.withDefault empty
+-- getLeaderboard : GameState -> Element
+-- getLeaderboard {leaderboard,playerState} =
+--   let
+--     showLeader leader =
+--       indexedMap (getLeaderboardLine leader) leaderboard |> flow down
+--   in
+--     M.map showLeader (head leaderboard) |> M.withDefault empty
 
-getBoard : GameState -> Element
-getBoard gameState =
-  if | isEmpty gameState.leaderboard -> getPlayerEntries gameState
-     | otherwise -> getLeaderboard gameState
+-- getBoard : GameState -> Element
+-- getBoard gameState =
+--   if | isEmpty gameState.leaderboard -> getPlayerEntries gameState
+--      | otherwise -> getLeaderboard gameState
 
 
 -- Main status (big font size)

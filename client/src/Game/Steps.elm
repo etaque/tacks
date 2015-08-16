@@ -34,7 +34,7 @@ gameStep clock {raceInput, windowInput, keyboardInput} gameState =
 raceInputStep : RaceInput -> Clock -> GameState -> GameState
 raceInputStep raceInput {delta,time} ({playerState} as gameState) =
   let
-    { serverNow, startTime, opponents, ghosts, leaderboard, initial, clientTime } = raceInput
+    { serverNow, startTime, opponents, ghosts, tallies, initial, clientTime } = raceInput
 
     stalled = serverNow == gameState.serverNow
 
@@ -59,7 +59,7 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
       | opponents <- updatedOpponents
       , ghosts <- ghosts
       , wind <- wind
-      , leaderboard <- leaderboard
+      , tallies <- tallies
       , serverNow <- serverNow
       , now <- now
       , playerState <- newPlayerState

@@ -15,27 +15,22 @@ case class Race(
   _id: BSONObjectID,
   trackId: BSONObjectID,
   startTime: DateTime,
-  playerIds: Seq[BSONObjectID],
-  leaderboard: Seq[PlayerTally]
+  players: Set[Player],
+  tallies: Seq[PlayerTally]
 ) extends HasId {
-  def removePlayerId(id: BSONObjectID): Race = {
-    copy(playerIds = playerIds.filterNot(_ == id))
-  }
+
+  def hasPlayer(playerId: BSONObjectID): Boolean =
+    players.exists(_.id == playerId)
+
+  def removePlayerId(id: BSONObjectID): Race =
+    copy(
+      players = players.filterNot(_.id == id),
+      tallies = tallies.filterNot(t => t.player.id == id && !t.finished)
+    )
 }
 
 case class PlayerTally(
-  playerId: BSONObjectID,
-  playerHandle: Option[String],
-  gates: Seq[Long]
-) extends WithPlayer
-
-// case class RunRanking(
-//   rank: Int,
-//   playerId: BSONObjectID,
-//   playerHandle: Option[String],
-//   runId: BSONObjectID,
-//   finishTime: Long
-// ) extends WithPlayer {
-//   def creationTime = new DateTime(runId.time)
-//   def isRecent = creationTime.plusDays(1).isAfterNow
-// }
+  player: Player,
+  gates: Seq[Long],
+  finished: Boolean
+)

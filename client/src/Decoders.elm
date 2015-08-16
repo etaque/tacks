@@ -24,15 +24,15 @@ raceDecoder =
     ("_id" := string)
     ("trackId" := string)
     ("startTime" := float)
-    ("playerIds" := list string)
-    ("leaderboard" := list playerTallyDecoder)
+    ("players" := list playerDecoder)
+    ("tallies" := list playerTallyDecoder)
 
 playerTallyDecoder : Decoder PlayerTally
 playerTallyDecoder =
   object3 PlayerTally
-    ("playerId" := string)
-    (maybe ("playerHandle" := string))
+    ("player" := playerDecoder)
     ("gates" := list float)
+    ("finished" := bool)
 
 trackDecoder : Decoder Track
 trackDecoder =

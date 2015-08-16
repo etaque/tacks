@@ -17,12 +17,12 @@ case class TrackState(
   track: Track,
   races: Seq[Race]
 ) {
-  def raceLeaderboard(raceId: BSONObjectID): Seq[PlayerTally] = {
-    races.find(_.id == raceId).map(_.leaderboard).getOrElse(Nil)
+  def raceTallies(raceId: BSONObjectID): Seq[PlayerTally] = {
+    races.find(_.id == raceId).map(_.tallies).getOrElse(Nil)
   }
 
   def playerRace(playerId: BSONObjectID): Option[Race] = {
-    races.find(_.playerIds.contains(playerId)).orElse(races.headOption)
+    races.find(_.hasPlayer(playerId)).orElse(races.headOption)
   }
 
   def withUpdatedRace(race: Race): TrackState = {
@@ -148,8 +148,8 @@ class TrackActor(track: Track) extends Actor with ManageWind {
     players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
   }
 
-  def playerLeaderboard(playerId: BSONObjectID): Seq[PlayerTally] = {
-    state.playerRace(playerId).map(_.id).map(state.raceLeaderboard).getOrElse(Nil)
+  def playerTallies(playerId: BSONObjectID): Seq[PlayerTally] = {
+    state.playerRace(playerId).map(_.id).map(state.raceTallies).getOrElse(Nil)
   }
 
   def raceUpdateForPlayer(player: Player, clientTime: Long) = {
@@ -158,7 +158,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
       startTime = TrackActor.playerStartTime(state, player),
       wind = wind,
       opponents = playerOpponents(player.id),
-      leaderboard = playerLeaderboard(player.id),
+      tallies = playerTallies(player.id),
       clientTime = clientTime
     )
   }
@@ -191,7 +191,7 @@ object TrackActor {
   def cleanStaleRaces(state: TrackState): TrackState = {
     state.copy(
       races = state.races.filterNot { r =>
-        raceIsClosed(r, state.track) && r.playerIds.isEmpty
+        raceIsClosed(r, state.track) && r.players.isEmpty
       }
     )
   }
@@ -200,20 +200,22 @@ object TrackActor {
     state.playerRace(player.id).map(_.startTime)
   }
 
-  def gateCrossedUpdate(state: TrackState, context: PlayerContext, players: Map[BSONObjectID, PlayerContext]): TrackState = {
+  def gateCrossedUpdate(state: TrackState, context: PlayerContext, playerContexts: Map[BSONObjectID, PlayerContext]): TrackState = {
     state.playerRace(context.player.id).map { race =>
 
-      val playerIds =
-        if (context.state.crossedGates.length == 1) race.playerIds :+ context.player.id
-        else race.playerIds
+      val players = race.players + context.player
 
-      val leaderboard = playerIds.flatMap(players.get).map { context =>
-        PlayerTally(context.player.id, context.player.handleOpt, context.state.crossedGates)
-      }.sortBy { pt =>
-        (-pt.gates.length, pt.gates.headOption)
+      val finished = context.state.hasFinished(state.track.course)
+      val newTally = PlayerTally(context.player, context.state.crossedGates, finished)
+
+      val tallies = race.tallies
+        .filter(_.player.id != context.player.id) :+ newTally
+
+      val sortedTallies = tallies.sortBy { t =>
+        (-t.gates.length, t.gates.headOption)
       }
 
-      val updatedRace = race.copy(playerIds = playerIds, leaderboard = leaderboard)
+      val updatedRace = race.copy(players = players, tallies = tallies)
 
       state.withUpdatedRace(updatedRace)
 
@@ -230,8 +232,8 @@ object TrackActor {
           _id = BSONObjectID.generate,
           trackId = state.track.id,
           startTime = DateTime.now.plusSeconds(state.track.countdown),
-          playerIds = Nil,
-          leaderboard = Nil
+          players = Set.empty,
+          tallies = Nil
         )
         state.copy(races = newRace +: state.races)
       }
@@ -243,7 +245,7 @@ object TrackActor {
 
 
   def saveIfFinished(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
-    if (ctx.state.crossedGates.length == track.course.laps * 2 + 1) {
+    if (ctx.state.hasFinished(track.course)) {
       val runId = pathMaybe.map(_.runId).getOrElse(BSONObjectID.generate)
       val run = Run(
         _id = runId,

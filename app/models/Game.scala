@@ -87,7 +87,12 @@ case class OpponentState(
   windOrigin: Double,
   shadowDirection: Double,
   crossedGates: Seq[Long]
-)
+) {
+
+  def hasFinished(course: Course): Boolean =
+    crossedGates.length == course.laps * 2 + 1
+
+}
 
 object OpponentState {
   def initial = OpponentState(
@@ -144,7 +149,7 @@ case class RaceUpdate(
   wind: Wind,
   opponents: Seq[Opponent] = Nil,
   ghosts: Seq[GhostState] = Nil,
-  leaderboard: Seq[PlayerTally] = Nil,
+  tallies: Seq[PlayerTally] = Nil,
   isMaster: Boolean = false,
   initial: Boolean = false,
   clientTime: Long = 0

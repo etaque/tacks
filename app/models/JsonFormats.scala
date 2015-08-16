@@ -95,19 +95,7 @@ object JsonFormats {
   implicit val keyboardInputFormat: Format[KeyboardInput] = Json.format[KeyboardInput]
   implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
 
-  // implicit val raceRankingFormat: Format[RaceRanking] = (
-  //   (__ \ 'rank).format[Int] and
-  //     (__ \ 'playerId).format[BSONObjectID] and
-  //     (__ \ 'playerHandle).format[Option[String]] and
-  //     (__ \ 'finishTime).format[Long] and
-  //     (__ \ 'points).format[Int]
-  //   )(RaceRanking.apply, unlift(RaceRanking.unapply))
-
-  implicit val playerTallyFormat: Format[PlayerTally] = (
-    (__ \ 'playerId).format[BSONObjectID] and
-      (__ \ 'playerHandle).format[Option[String]] and
-      (__ \ 'gates).format[Seq[Long]]
-    )(PlayerTally.apply, unlift(PlayerTally.unapply))
+  implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
 
   implicit val ghostStateFormat: Format[GhostState] = (
     (__ \ 'position).format[Point] and
@@ -147,7 +135,7 @@ object JsonFormats {
       (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[Opponent]] and
       (__ \ 'ghosts).format[Seq[GhostState]] and
-      (__ \ 'leaderboard).format[Seq[PlayerTally]] and
+      (__ \ 'tallies).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean] and
       (__ \ 'initial).format[Boolean] and
       (__ \ 'clientTime).format[Long]

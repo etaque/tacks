@@ -37,14 +37,14 @@ type alias Race =
   { id : String
   , trackId : String
   , startTime : Time
-  , playerIds : List String
-  , leaderboard : List PlayerTally
+  , players : List Player
+  , tallies : List PlayerTally
   }
 
 type alias PlayerTally =
-  { playerId : String
-  , playerHandle : Maybe String
+  { player : Player
   , gates : List Time
+  , finished : Bool
   }
 
 type alias Message =

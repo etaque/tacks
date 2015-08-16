@@ -7,6 +7,8 @@ import Game.Inputs exposing (GameInput)
 type alias Screen =
   { liveTrack : Maybe LiveTrack
   , gameState : Maybe GameState
+  , races : List Race
+  , freePlayers : List Player
   , live : Bool
   , messages : List Message
   , messageField : String
