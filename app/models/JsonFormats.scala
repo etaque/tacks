@@ -127,8 +127,6 @@ object JsonFormats {
       (__ \ 'nextGate).format[Option[GateLocation]]
     )(PlayerState.apply, unlift(PlayerState.unapply))
 
-  implicit val gameSetupFormat: Format[GameSetup] = Json.format[GameSetup]
-
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
       (__ \ 'serverNow).format[DateTime] and
       (__ \ 'startTime).format[Option[DateTime]] and

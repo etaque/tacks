@@ -6,6 +6,7 @@ import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import akka.actor._
+import akka.pattern.pipe
 import reactivemongo.bson.BSONObjectID
 import org.joda.time.DateTime
 
@@ -57,7 +58,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
   def clock: Long = DateTime.now.getMillis
 
   val ticks = Seq(
-    Akka.system.scheduler.schedule(1.second, 1.second, self, RotateNextRace),
+    Akka.system.scheduler.schedule(1.second, 5.second, self, RotateNextRace),
     Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
     Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
   )
@@ -69,6 +70,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
      */
     case PlayerJoin(player) => {
       players += player.id -> PlayerContext(player, KeyboardInput.initial, OpponentState.initial, sender())
+      broadcastLiveTrackUpdate()
     }
 
     /**
@@ -77,6 +79,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
     case PlayerQuit(player) => {
       players -= player.id
       paths -= player.id
+      broadcastLiveTrackUpdate()
     }
 
     /**
@@ -117,10 +120,17 @@ class TrackActor(track: Track) extends Actor with ManageWind {
           state.playerRace(player.id).foreach { race =>
             TrackActor.saveIfFinished(track, race, newContext, paths.lift(newContext.player.id))
           }
+
+          broadcastLiveTrackUpdate()
         }
 
-
         context.ref ! raceUpdateForPlayer(player, clientTime)
+      }
+    }
+
+    case LiveTrackUpdate(liveTrack) => {
+      players.foreach { case (_, ctx) =>
+        ctx.ref ! liveTrack
       }
     }
 
@@ -137,11 +147,18 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 
     case RotateNextRace => {
       state = TrackActor.cleanStaleRaces(state)
+      broadcastLiveTrackUpdate()
     }
 
     case GetStatus => {
       sender ! (state.races, players.values.map(_.asOpponent))
     }
+  }
+
+  def broadcastLiveTrackUpdate(): Future[LiveTrackUpdate] = {
+    RunDAO.extractRankings(track.id).map { rankings =>
+      LiveTrackUpdate(LiveTrack(track, state.races, players.values.map(_.player).toSeq, rankings))
+    } pipeTo self
   }
 
   def playerOpponents(playerId: BSONObjectID): Seq[Opponent] = {

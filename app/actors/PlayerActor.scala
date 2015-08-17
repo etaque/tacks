@@ -24,6 +24,9 @@ class PlayerActor(player: Player, trackActor: ActorRef, out: ActorRef) extends A
     case message: Message =>
       out ! BroadcastMessageFrame(message)
 
+    case liveTrack: LiveTrack =>
+      out ! BroadcastLiveTrackFrame(liveTrack)
+
   }
 
   override def postStop() = {

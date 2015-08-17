@@ -6,6 +6,7 @@ import Html exposing (Html)
 import Http
 import Window
 import History
+import Json.Decode as Json
 import Signal.Extra exposing (foldp', passiveMap2)
 
 import Models exposing (Player)
@@ -13,8 +14,10 @@ import AppUpdates exposing (..)
 import AppTypes exposing (..)
 import Game.Inputs exposing (RaceInput)
 import Game.Outputs exposing (PlayerOutput)
+import Game.Outputs exposing (PlayerOutput)
 import Screens.Game.Updates exposing (mapGameUpdate,chat)
 import Screens.Game.Types exposing (Action(NewMessage))
+import Screens.Game.Decoders as GameDecoders
 import AppView
 import Routes
 
@@ -25,7 +28,7 @@ port appSetup : AppSetup
 
 port raceInput : Signal (Maybe RaceInput)
 
-port chatInput : Signal (Maybe Models.Message)
+port gameActionsInput : Signal Json.Value
 
 -- Signals
 
@@ -55,20 +58,20 @@ allActions =
     , screenActions
     , actionsMailbox.signal
     , pathActions
+    , raceUpdateActions
     , gameActions
-    , chatActions
     ]
 
-gameActions : Signal AppAction
-gameActions =
+raceUpdateActions : Signal AppAction
+raceUpdateActions =
   Signal.map3 mapGameUpdate Game.Inputs.keyboardInput Window.dimensions raceInput
     |> Signal.filterMap (Maybe.map GameAction) NoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 
-chatActions : Signal AppAction
-chatActions =
-  Signal.filterMap (Maybe.map (GameAction << NewMessage)) NoOp chatInput
+gameActions : Signal AppAction
+gameActions =
+  Signal.map (GameDecoders.decodeAction >> GameAction) gameActionsInput
 
 pathActions : Signal AppAction
 pathActions =
@@ -109,7 +112,7 @@ port pathChangeRunner =
 
 port playerOutput : Signal (Maybe PlayerOutput)
 port playerOutput =
-  Signal.map2 Game.Outputs.extractPlayerOutput appState gameActions
+  Signal.map2 Game.Outputs.extractPlayerOutput appState raceUpdateActions
     |> Signal.dropRepeats
 
 -- port title : Signal String
@@ -126,4 +129,4 @@ port chatOutput =
 
 port chatScrollDown : Signal ()
 port chatScrollDown =
-  Signal.filterMap Game.Outputs.needChatScrollDown () chatActions
+  Signal.filterMap Game.Outputs.needChatScrollDown () gameActions

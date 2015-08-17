@@ -54,13 +54,13 @@ update player clock action screen =
         newScreen = { screen | gameState <- Just gameState }
           |> applyLiveTrack liveTrack
       in
-        react newScreen (pingServer `andThen` \_ -> (updateLiveTrack liveTrack.track.slug))
+        react newScreen pingServer
 
-    UpdateLiveTrack liveTrack ->
-      let
-        newScreen = applyLiveTrack liveTrack screen
-      in
-        react newScreen (updateLiveTrack liveTrack.track.slug)
+    -- UpdateLiveTrack liveTrack ->
+    --   let
+    --     newScreen = applyLiveTrack liveTrack screen
+    --   in
+    --     react newScreen (updateLiveTrack liveTrack.track.slug)
 
     PingServer ->
       if screen.live then
@@ -104,6 +104,9 @@ update player clock action screen =
     NewMessage msg ->
       local { screen | messages <- take 30 (msg :: screen.messages) }
 
+    UpdateLiveTrack liveTrack ->
+      local (applyLiveTrack liveTrack screen)
+
     _ ->
       local screen
 
@@ -123,10 +126,10 @@ loadLiveTrack slug =
     \liveTrack -> Signal.send actions.address (SetLiveTrack liveTrack)
 
 
-updateLiveTrack : String -> Task Http.Error ()
-updateLiveTrack slug =
-  delay (2 * second) (ServerApi.getLiveTrack slug) `andThen`
-    \liveTrack -> Signal.send actions.address (UpdateLiveTrack liveTrack)
+-- updateLiveTrack : String -> Task Http.Error ()
+-- updateLiveTrack slug =
+--   delay (2 * second) (ServerApi.getLiveTrack slug) `andThen`
+--     \liveTrack -> Signal.send actions.address (UpdateLiveTrack liveTrack)
 
 
 pingServer : Task Http.Error ()

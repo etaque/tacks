@@ -27,4 +27,3 @@ type Action
   | SubmitMessage
   | NewMessage Message
   | NoOp
-

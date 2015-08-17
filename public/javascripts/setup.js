@@ -9226,7 +9226,7 @@ function mountElm() {
 
   var game = window.Elm.fullscreen(window.Elm.Main, {
     raceInput: null,
-    chatInput: null,
+    gameActionsInput: { tag: "NoOp" },
     appSetup: readData("appSetup")
   });
 
@@ -9263,13 +9263,10 @@ function mountElm() {
 
       ws.onmessage = function(event) {
         var frame = JSON.parse(event.data);
-        switch (frame.tag) {
-          case "RaceUpdate":
-            game.ports.raceInput.send(frame.raceUpdate);
-          break;
-          case "BroadcastMessage":
-            game.ports.chatInput.send(frame.message);
-          break;
+        if (frame.tag == "RaceUpdate") {
+          game.ports.raceInput.send(frame.raceUpdate);
+        } else {
+          game.ports.gameActionsInput.send(frame);
         }
       };
 

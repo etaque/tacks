@@ -33,18 +33,23 @@ object Frames {
   sealed trait OutputFrame
   case class RaceUpdateFrame(raceUpdate: RaceUpdate) extends OutputFrame
   case class BroadcastMessageFrame(message: Message) extends OutputFrame
+  case class BroadcastLiveTrackFrame(liveTrack: LiveTrack) extends OutputFrame
 
   implicit val outputFrameFormat: Format[OutputFrame] = new Format[OutputFrame] {
 
     def tag(t: String) = Json.obj("tag" -> JsString(t))
 
     override def writes(f: OutputFrame): JsValue = f match {
-      case RaceUpdateFrame(update) => tag("RaceUpdate") ++ Json.obj("raceUpdate" -> Json.toJson(update))
-      case BroadcastMessageFrame(message) => tag("BroadcastMessage") ++ Json.obj("message" -> Json.toJson(message))
-      case _ => Json.obj()
+      case RaceUpdateFrame(update) =>
+        tag("RaceUpdate") ++ Json.obj("raceUpdate" -> Json.toJson(update))
+      case BroadcastMessageFrame(message) =>
+        tag("Message") ++ Json.obj("message" -> Json.toJson(message))
+      case BroadcastLiveTrackFrame(liveTrack) =>
+        tag("LiveTrack") ++ Json.obj("liveTrack" -> Json.toJson(liveTrack))
     }
 
-    override def reads(json: JsValue): JsResult[OutputFrame] = JsError("Not implemented")
+    override def reads(json: JsValue): JsResult[OutputFrame] =
+      JsError("Not implemented")
   }
 
 }

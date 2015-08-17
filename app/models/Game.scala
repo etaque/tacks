@@ -88,10 +88,8 @@ case class OpponentState(
   shadowDirection: Double,
   crossedGates: Seq[Long]
 ) {
-
   def hasFinished(course: Course): Boolean =
     crossedGates.length == course.laps * 2 + 1
-
 }
 
 object OpponentState {
@@ -134,15 +132,6 @@ object GhostState {
   def initial(id: BSONObjectID, handle: Option[String], gates: Seq[Long]) = GhostState((0,0), 0, id, handle, gates)
 }
 
-case class GameSetup(
-  now: DateTime,
-  creationTime: DateTime,
-  countdown: Int,
-  player: Player,
-  course: Course,
-  gameMode: String
-)
-
 case class RaceUpdate(
   serverNow: DateTime,
   startTime: Option[DateTime],
@@ -164,6 +153,8 @@ object RaceUpdate {
       initial = true
     )
 }
+
+case class LiveTrackUpdate(liveTrack: LiveTrack)
 
 case class LiveTrack(
   track: Track,
