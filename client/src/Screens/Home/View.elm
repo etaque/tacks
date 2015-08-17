@@ -54,7 +54,7 @@ setHandleBlock handle =
             [ text "submit" ]
           ]
         ]
-      , p [ class "align-center" ] [ a [ path "/login" ] [ text "or log in"] ]
+      , p [ class "align-center" ] [ linkTo "/login" [ ] [ text "or log in"] ]
       ]
     ]
 
@@ -70,10 +70,9 @@ liveTrackBlock : LiveTrack -> Html
 liveTrackBlock ({track, players} as lt) =
   div [ class "col-md-4" ]
     [ div [ class "live-track" ]
-      [ a
+      [ linkTo ("/play/" ++ track.slug)
         [ class "show"
         , style [ ("background-image", "url(/assets/images/trials-" ++ track.slug ++ ".png)") ]
-        , path ("/play/" ++ track.slug)
         ]
         [ div
           [ class <| "player-count player-count-" ++ (toString (List.length players)) ]

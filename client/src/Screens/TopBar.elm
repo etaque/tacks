@@ -23,7 +23,7 @@ view appState =
 logo : Html
 logo =
   div [ class "logo" ]
-    [ a [ path "/" ]
+    [ linkTo "/" [ ]
       [ img [ src "/assets/images/logo-header-2.png" ] [] ]
     ]
 
@@ -38,16 +38,16 @@ guestMenu : Html
 guestMenu =
   ul [ class "user-menu" ]
     [ li [ ]
-      [ a [ path "/login" ] [ text "Login" ] ]
+      [ linkTo "/login" [ ] [ text "Login" ] ]
     , li [ ]
-      [ a [ path "/register" ] [ text "Register"] ]
+      [ linkTo "/register" [ ] [ text "Register"] ]
     ]
 
 userMenu : Player -> Html
 userMenu player =
   ul [ class "user-menu" ]
     [ li [ ]
-      [ a [ path "/me"]
+      [ linkTo "/me" [ ]
         [ img [ src (avatarUrl player), class "avatar avatar-user" ] [ ]
         , text "Profile"
         ]

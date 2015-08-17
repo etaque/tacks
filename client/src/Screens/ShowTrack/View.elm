@@ -32,7 +32,6 @@ withTrack track =
 
 joinButton : Track -> Html
 joinButton track =
-  a
-    [ class "btn btn-warning join-track"
-    , path ("/play/" ++ track.slug)
-    ] [ text "Join"]
+  linkTo ("/play/" ++ track.slug)
+    [ class "btn btn-warning join-track"]
+    [ text "Join"]

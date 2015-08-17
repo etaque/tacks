@@ -15,15 +15,19 @@ import Routes exposing (pathChangeMailbox)
 type alias Wrapper = List Html -> Html
 
 
-path : String -> Attribute
-path p =
-  onClick pathChangeMailbox.address (History.setPath p)
+linkTo : String -> List Attribute -> List Html -> Html
+linkTo path attrs content =
+  let
+    linkAttrs =
+      [ href path
+      , onPathClick pathChangeMailbox.address (History.setPath path)
+      ]
+  in
+    a (linkAttrs ++ attrs) content
 
-eventOptions : Options
-eventOptions =
-  { stopPropagation = False
-  , preventDefault = False
-  }
+onPathClick : Signal.Address a -> a -> Attribute
+onPathClick address msg =
+  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message address msg)
 
 onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =
@@ -34,6 +38,12 @@ onEnter address value =
     on "keydown"
       (Json.customDecoder keyCode is13)
       (\_ -> Signal.message address value)
+
+eventOptions : Options
+eventOptions =
+  { stopPropagation = True
+  , preventDefault = True
+  }
 
 is13 : Int -> Result String ()
 is13 code =
