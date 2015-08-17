@@ -20,7 +20,7 @@ view screen =
     ]
 
 loginForm : Screen -> Html
-loginForm {email, password} =
+loginForm {email, password, loading, error} =
   div [ class "row form-login" ]
     [ whitePanel
       [ div [ class "form-group" ]
@@ -39,12 +39,21 @@ loginForm {email, password} =
           , onEnter actions.address Submit
           ]
         ]
+      , errorLine error
       , div []
         [ button
           [ class "btn btn-primary btn-block"
+          , disabled loading
           , onClick actions.address Submit
           ]
           [ text "Submit" ]
         ]
       ]
     ]
+
+errorLine : Bool -> Html
+errorLine error =
+  if error then
+    p [ class "form-errors alert alert-danger" ] [ text "Login failure. Wrong credentials?" ]
+  else
+    div [ ] [ ]

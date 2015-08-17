@@ -6,6 +6,7 @@ import Models exposing (..)
 type alias Screen =
   { email : String
   , password : String
+  , loading : Bool
   , error : Bool
   }
 

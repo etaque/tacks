@@ -2,6 +2,7 @@ module Screens.Login.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
 import Http
+import Result exposing (Result(Ok, Err))
 
 import AppTypes exposing (local, react, request)
 import Screens.Login.Types exposing (..)
@@ -22,6 +23,7 @@ mount =
     initial =
       { email = ""
       , password = ""
+      , loading = False
       , error = False
       }
   in
@@ -39,16 +41,24 @@ update action screen =
       local { screen | password <- p }
 
     Submit ->
-      react screen <| (ServerApi.postLogin screen.email screen.password)
-        `andThen` (\player -> Signal.send actions.address (Success player))
-
+      react { screen | loading <- True } (serverTask screen)
 
     Success player ->
-      request { screen | error <- False }
+      request { screen | loading <- False, error <- False }
         (AppTypes.SetPlayer player)
 
     Error ->
-      local { screen | error <- True }
+      local { screen | loading <- False, error <- True }
 
+
+serverTask : Screen -> Task a ()
+serverTask screen =
+  Task.toResult (ServerApi.postLogin screen.email screen.password)
+    `andThen` \result ->
+      case result of
+        Ok player ->
+          Signal.send actions.address (Success player)
+        Err _ ->
+          Signal.send actions.address Error
 
 
