@@ -13,7 +13,6 @@ import Http
 import Game.Models exposing (..)
 import Models exposing (..)
 import Decoders exposing (..)
-import ServerApi
 
 
 -- Game

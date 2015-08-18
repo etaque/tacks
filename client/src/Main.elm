@@ -77,7 +77,7 @@ pathActions : Signal AppAction
 pathActions =
   Signal.map SetPath History.path
 
-reactions : Signal (Task Http.Error ())
+reactions : Signal (Task Never ())
 reactions =
   Signal.map .reaction appUpdates
     |> Signal.filterMap identity (Task.succeed ())
@@ -95,7 +95,7 @@ clock =
 
 -- Runners
 
-port reactionsRunner : Signal (Task Http.Error Task.ThreadID)
+port reactionsRunner : Signal (Task error Task.ThreadID)
 port reactionsRunner =
   Signal.map Task.spawn reactions
 

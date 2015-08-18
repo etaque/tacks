@@ -4,7 +4,7 @@ import Task exposing (Task, succeed, map, andThen)
 import Http
 import Result exposing (Result(Ok, Err))
 
-import AppTypes exposing (local, react, request)
+import AppTypes exposing (local, react, request, Never)
 import Screens.Login.Types exposing (..)
 import ServerApi
 
@@ -41,7 +41,7 @@ update action screen =
       local { screen | password <- p }
 
     Submit ->
-      react { screen | loading <- True } (serverTask screen)
+      react { screen | loading <- True } (submitTask screen)
 
     Success player ->
       request { screen | loading <- False, error <- False }
@@ -51,9 +51,9 @@ update action screen =
       local { screen | loading <- False, error <- True }
 
 
-serverTask : Screen -> Task a ()
-serverTask screen =
-  Task.toResult (ServerApi.postLogin screen.email screen.password)
+submitTask : Screen -> Task Never ()
+submitTask screen =
+  ServerApi.postLogin screen.email screen.password
     `andThen` \result ->
       case result of
         Ok player ->

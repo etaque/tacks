@@ -1,5 +1,7 @@
 module Screens.Register.Types where
 
+import Dict exposing (Dict)
+
 import Models exposing (..)
 
 
@@ -7,7 +9,8 @@ type alias Screen =
   { handle : String
   , email : String
   , password : String
-  , error : Bool
+  , loading : Bool
+  , errors : Dict String (List String)
   }
 
 
@@ -16,6 +19,6 @@ type Action
   | SetEmail String
   | SetPassword String
   | Submit
-  | Success Player
-  | Error
+  | FormSuccess Player
+  | FormFailure (Dict String (List String))
   | NoOp

@@ -4,7 +4,7 @@ import Task exposing (Task, succeed, map, andThen)
 import Time exposing (second)
 import Http
 
-import AppTypes exposing (local, react, request)
+import AppTypes exposing (local, react, request, Never)
 import Models exposing (..)
 import Screens.ShowTrack.Types exposing (..)
 import ServerApi
@@ -41,7 +41,12 @@ update action screen =
     _ ->
       local screen
 
-loadTrack : String -> Task Http.Error ()
+loadTrack : String -> Task Never ()
 loadTrack slug =
   ServerApi.getTrack slug `andThen`
-    (\track -> Signal.send actions.address (SetTrack track))
+    \result ->
+      case result of
+        Ok track ->
+          Signal.send actions.address (SetTrack track)
+        Err _ ->
+          Task.succeed ()

@@ -7,7 +7,7 @@ import Time exposing (millisecond, second)
 import Http
 import String
 
-import AppTypes exposing (local, react, request, Clock)
+import AppTypes exposing (local, react, request, Clock, Never)
 import Models exposing (..)
 import Screens.Game.Types exposing (..)
 import ServerApi
@@ -55,12 +55,6 @@ update player clock action screen =
           |> applyLiveTrack liveTrack
       in
         react newScreen pingServer
-
-    -- UpdateLiveTrack liveTrack ->
-    --   let
-    --     newScreen = applyLiveTrack liveTrack screen
-    --   in
-    --     react newScreen (updateLiveTrack liveTrack.track.slug)
 
     PingServer ->
       if screen.live then
@@ -120,10 +114,16 @@ applyLiveTrack ({track, players, races} as liveTrack) screen =
   in
     { screen | liveTrack <- Just liveTrack, races <- races, freePlayers <- freePlayers }
 
-loadLiveTrack : String -> Task Http.Error ()
+loadLiveTrack : String -> Task Never ()
 loadLiveTrack slug =
   ServerApi.getLiveTrack slug `andThen`
-    \liveTrack -> Signal.send actions.address (SetLiveTrack liveTrack)
+    \result ->
+      case result of
+        Ok liveTrack ->
+          Signal.send actions.address (SetLiveTrack liveTrack)
+        Err _ ->
+          -- TODO handle failure
+          Task.succeed ()
 
 
 -- updateLiveTrack : String -> Task Http.Error ()
@@ -132,7 +132,7 @@ loadLiveTrack slug =
 --     \liveTrack -> Signal.send actions.address (UpdateLiveTrack liveTrack)
 
 
-pingServer : Task Http.Error ()
+pingServer : Task Never ()
 pingServer =
   delay (30 * millisecond) (Signal.send actions.address PingServer)
 

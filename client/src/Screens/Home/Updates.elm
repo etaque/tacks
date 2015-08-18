@@ -5,7 +5,7 @@ import Task.Extra exposing (delay)
 import Time exposing (second)
 import Http
 
-import AppTypes exposing (local, react, request)
+import AppTypes exposing (local, react, request, Never)
 import Models exposing (..)
 import Screens.Home.Types exposing (..)
 import ServerApi
@@ -42,7 +42,13 @@ update action screen =
 
     SubmitHandle ->
       react screen <| (ServerApi.postHandle screen.handle) `andThen`
-        (\p -> Signal.send actions.address (SubmitHandleSuccess p))
+        \result ->
+          case result of
+            Ok player ->
+              Signal.send actions.address (SubmitHandleSuccess player)
+            Err errors ->
+              -- TODO
+              Task.succeed ()
 
     SubmitHandleSuccess player ->
       request screen (AppTypes.SetPlayer player)
@@ -50,8 +56,14 @@ update action screen =
     _ ->
       local screen
 
-refreshLiveStatus : Task Http.Error ()
+refreshLiveStatus : Task Never ()
 refreshLiveStatus =
   ServerApi.getLiveStatus `andThen`
-    (\liveStatus -> Signal.send actions.address (SetLiveStatus liveStatus))
+    \result ->
+      case result of
+        Ok liveStatus ->
+          Signal.send actions.address (SetLiveStatus liveStatus)
+        Err _ ->
+          Task.succeed ()
+
 

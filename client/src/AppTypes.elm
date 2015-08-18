@@ -2,6 +2,7 @@ module AppTypes where
 
 import Task exposing (Task)
 import Http
+import Dict exposing (Dict)
 
 import Models exposing (..)
 
@@ -44,7 +45,7 @@ type alias Clock =
 
 type alias AppUpdate =
   { appState : AppState
-  , reaction : Maybe (Task Http.Error ())
+  , reaction : Maybe (Task Never ())
   , request : Maybe AppAction
   }
 
@@ -68,10 +69,15 @@ type AppScreen
 
 type alias ScreenUpdate screen =
   { screen : screen
-  , reaction : Maybe (Task Http.Error ())
+  , reaction : Maybe (Task Never ())
   , request : Maybe AppAction
   }
 
+type alias FormResult a = Result FormErrors a
+
+type alias FormErrors = Dict String (List String)
+
+type Never = Never Never
 
 local : screen -> ScreenUpdate screen
 local screen =
@@ -81,7 +87,7 @@ local screen =
   }
 
 
-react : screen -> Task Http.Error () -> ScreenUpdate screen
+react : screen -> Task Never () -> ScreenUpdate screen
 react screen task =
   { screen = screen
   , reaction = Just task

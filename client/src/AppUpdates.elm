@@ -77,7 +77,13 @@ update {action, clock} {appState} =
 noUpdate : AppState -> AppUpdate
 noUpdate appState = AppUpdate appState Nothing Nothing
 
-logoutTask : Task Http.Error ()
+logoutTask : Task Never ()
 logoutTask =
   ServerApi.postLogout `andThen`
-    (\p -> Signal.send actionsMailbox.address (SetPlayer p))
+    \result ->
+      case result of
+        Ok p ->
+          Signal.send actionsMailbox.address (SetPlayer p)
+        Err _ ->
+          -- TODO handle error
+          Task.succeed ()

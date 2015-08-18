@@ -2,8 +2,9 @@ module Screens.Register.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
 import Http
+import Dict exposing (Dict)
 
-import AppTypes exposing (local, react, request)
+import AppTypes exposing (local, react, request, Never)
 import Screens.Register.Types exposing (..)
 import ServerApi
 
@@ -23,7 +24,8 @@ mount =
       { handle = ""
       , email = ""
       , password = ""
-      , error = False
+      , loading = False
+      , errors = Dict.empty
       }
   in
     local initial
@@ -43,16 +45,23 @@ update action screen =
       local { screen | password <- p }
 
     Submit ->
-      react screen <| (ServerApi.postRegister screen.handle screen.email screen.password)
-        `andThen` (\p -> Signal.send actions.address (Success p))
+      react { screen | loading <- True, errors <- Dict.empty } (submitTask screen)
 
-    Success player ->
-      request { screen | error <- False }
+    FormSuccess player ->
+      request { screen | loading <- False, errors <- Dict.empty }
         (AppTypes.SetPlayer player)
 
-    Error ->
-      local { screen | error <- True }
+    FormFailure errors ->
+      local { screen | loading <- False, errors <- errors }
 
 
-
+submitTask : Screen -> Task Never ()
+submitTask screen =
+  ServerApi.postRegister screen.email screen.handle screen.password
+    `andThen` \result ->
+      case result of
+        Ok player ->
+          Signal.send actions.address (FormSuccess player)
+        Err errors ->
+          Signal.send actions.address (FormFailure errors)
 

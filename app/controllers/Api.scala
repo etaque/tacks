@@ -19,6 +19,7 @@ import models._
 import dao._
 import models.JsonFormats._
 import tools.future.Implicits._
+import tools.JsonErrors
 
 import scala.util.Try
 
@@ -76,7 +77,7 @@ object Api extends Controller with Security {
 
   def register = Action.async(parse.json) { implicit request =>
     request.body.validate(registerReads).fold(
-      errors => Future.successful(BadRequest), // TODO
+      errors => Future.successful(BadRequest(JsonErrors.format(errors))), // TODO
       {
         case form @ RegisterForm(handle, email, password) => {
           for {
@@ -92,7 +93,9 @@ object Api extends Controller with Security {
 
   def handleRegisterForm(form: RegisterForm, emailTaken: Boolean, handleTaken: Boolean): Future[Result] = {
     if (emailTaken || handleTaken) {
-      Future.successful(BadRequest) // TODO
+      val emailError = if (emailTaken) Json.obj("email" -> "taken") else Json.obj()
+      val handleError = if (handleTaken) Json.obj("handle" -> "taken") else Json.obj()
+      Future.successful(BadRequest(emailError ++ handleError))
     } else {
       val user = User(email = form.email, handle = form.handle, status = None, avatarId = None, vmgMagnet = Player.defaultVmgMagnet)
       UserDAO.create(user, form.password).map { _ =>
