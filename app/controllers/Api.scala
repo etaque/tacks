@@ -93,8 +93,8 @@ object Api extends Controller with Security {
 
   def handleRegisterForm(form: RegisterForm, emailTaken: Boolean, handleTaken: Boolean): Future[Result] = {
     if (emailTaken || handleTaken) {
-      val emailError = if (emailTaken) JsonErrors.one("email", "taken") else Json.obj()
-      val handleError = if (handleTaken) JsonErrors.one("handle", "taken") else Json.obj()
+      val emailError = if (emailTaken) JsonErrors.one("email", "error.emailTaken") else Json.obj()
+      val handleError = if (handleTaken) JsonErrors.one("handle", "error.handleTaken") else Json.obj()
       Future.successful(BadRequest(emailError ++ handleError))
     } else {
       val user = User(email = form.email, handle = form.handle, status = None, avatarId = None, vmgMagnet = Player.defaultVmgMagnet)

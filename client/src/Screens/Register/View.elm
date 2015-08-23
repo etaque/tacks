@@ -7,6 +7,7 @@ import Dict exposing (Dict)
 import String
 
 import AppTypes exposing (..)
+import CoreExtra exposing (..)
 
 import Screens.Register.Types exposing (..)
 import Screens.Register.Updates exposing (actions)
@@ -25,7 +26,7 @@ registerForm : Screen -> Html
 registerForm {handle, email, password, loading, errors} =
   div [ class "row form-login" ]
     [ whitePanel
-      [ div [ class "form-group" ]
+      [ formGroup (hasError errors "handle")
         [ label [] [ text "Handle" ]
         , textInput
           [ value handle
@@ -34,7 +35,7 @@ registerForm {handle, email, password, loading, errors} =
           ]
         , fieldError errors "handle"
         ]
-      , div [ class "form-group" ]
+      , formGroup (hasError errors "email")
         [ label [] [ text "Email" ]
         , textInput
           [ value email
@@ -43,7 +44,7 @@ registerForm {handle, email, password, loading, errors} =
           ]
         , fieldError errors "email"
         ]
-      , div [ class "form-group" ]
+      , formGroup (hasError errors "password")
         [ label [] [ text "Password" ]
         , passwordInput
           [ value password
@@ -63,10 +64,21 @@ registerForm {handle, email, password, loading, errors} =
       ]
     ]
 
+formGroup : Bool -> List Html -> Html
+formGroup hasErr content =
+  div
+    [ classList [ ("form-group", True), ("has-error", hasErr) ] ]
+    content
+
+hasError : FormErrors -> String -> Bool
+hasError formErrors field =
+  isJust (Dict.get field formErrors)
+
+
 fieldError : FormErrors -> String -> Html
 fieldError formErrors field =
   case Dict.get field formErrors of
     Just fieldErrors ->
-      span [ class "error" ] [ text (String.join ", " fieldErrors) ]
+      div [ class "error-message" ] [ text (String.join ", " fieldErrors) ]
     Nothing ->
       span [ ] [ ]

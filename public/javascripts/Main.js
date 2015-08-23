@@ -1223,6 +1223,37 @@ Elm.Color.make = function (_elm) {
                        ,darkGray: darkGray};
    return _elm.Color.values;
 };
+Elm.CoreExtra = Elm.CoreExtra || {};
+Elm.CoreExtra.make = function (_elm) {
+   "use strict";
+   _elm.CoreExtra = _elm.CoreExtra || {};
+   if (_elm.CoreExtra.values)
+   return _elm.CoreExtra.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "CoreExtra",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var isNothing = function (m) {
+      return function () {
+         switch (m.ctor)
+         {case "Nothing": return true;}
+         return false;
+      }();
+   };
+   var isJust = function (m) {
+      return $Basics.not(isNothing(m));
+   };
+   _elm.CoreExtra.values = {_op: _op
+                           ,isNothing: isNothing
+                           ,isJust: isJust};
+   return _elm.CoreExtra.values;
+};
 Elm.Date = Elm.Date || {};
 Elm.Date.make = function (_elm) {
    "use strict";
@@ -20460,6 +20491,7 @@ Elm.Screens.Register.View.make = function (_elm) {
    $moduleName = "Screens.Register.View",
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $CoreExtra = Elm.CoreExtra.make(_elm),
    $Dict = Elm.Dict.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
@@ -20480,8 +20512,8 @@ Elm.Screens.Register.View.make = function (_elm) {
          formErrors);
          switch (_v0.ctor)
          {case "Just":
-            return A2($Html.span,
-              _L.fromArray([$Html$Attributes.$class("error")]),
+            return A2($Html.div,
+              _L.fromArray([$Html$Attributes.$class("error-message")]),
               _L.fromArray([$Html.text(A2($String.join,
               ", ",
               _v0._0))]));
@@ -20490,15 +20522,34 @@ Elm.Screens.Register.View.make = function (_elm) {
               _L.fromArray([]),
               _L.fromArray([]));}
          _U.badCase($moduleName,
-         "between lines 68 and 72");
+         "between lines 80 and 84");
       }();
+   });
+   var hasError = F2(function (formErrors,
+   field) {
+      return $CoreExtra.isJust(A2($Dict.get,
+      field,
+      formErrors));
+   });
+   var formGroup = F2(function (hasErr,
+   content) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.classList(_L.fromArray([{ctor: "_Tuple2"
+                                                             ,_0: "form-group"
+                                                             ,_1: true}
+                                                            ,{ctor: "_Tuple2"
+                                                             ,_0: "has-error"
+                                                             ,_1: hasErr}]))]),
+      content);
    });
    var registerForm = function (_v2) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("row form-login")]),
-         _L.fromArray([$Screens$Utils.whitePanel(_L.fromArray([A2($Html.div,
-                                                              _L.fromArray([$Html$Attributes.$class("form-group")]),
+         _L.fromArray([$Screens$Utils.whitePanel(_L.fromArray([A2(formGroup,
+                                                              A2(hasError,
+                                                              _v2.errors,
+                                                              "handle"),
                                                               _L.fromArray([A2($Html.label,
                                                                            _L.fromArray([]),
                                                                            _L.fromArray([$Html.text("Handle")]))
@@ -20512,8 +20563,10 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                                            ,A2(fieldError,
                                                                            _v2.errors,
                                                                            "handle")]))
-                                                              ,A2($Html.div,
-                                                              _L.fromArray([$Html$Attributes.$class("form-group")]),
+                                                              ,A2(formGroup,
+                                                              A2(hasError,
+                                                              _v2.errors,
+                                                              "email"),
                                                               _L.fromArray([A2($Html.label,
                                                                            _L.fromArray([]),
                                                                            _L.fromArray([$Html.text("Email")]))
@@ -20527,8 +20580,10 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                                            ,A2(fieldError,
                                                                            _v2.errors,
                                                                            "email")]))
-                                                              ,A2($Html.div,
-                                                              _L.fromArray([$Html$Attributes.$class("form-group")]),
+                                                              ,A2(formGroup,
+                                                              A2(hasError,
+                                                              _v2.errors,
+                                                              "password"),
                                                               _L.fromArray([A2($Html.label,
                                                                            _L.fromArray([]),
                                                                            _L.fromArray([$Html.text("Password")]))
@@ -20566,6 +20621,8 @@ Elm.Screens.Register.View.make = function (_elm) {
    _elm.Screens.Register.View.values = {_op: _op
                                        ,view: view
                                        ,registerForm: registerForm
+                                       ,formGroup: formGroup
+                                       ,hasError: hasError
                                        ,fieldError: fieldError};
    return _elm.Screens.Register.View.values;
 };
