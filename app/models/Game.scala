@@ -160,7 +160,13 @@ case class LiveTrack(
   track: Track,
   races: Seq[Race],
   players: Seq[Player],
-  rankings: Seq[RunRanking]
+  rankings: Seq[PlayerRanking]
+)
+
+case class PlayerRanking(
+  rank: Int,
+  player: Player,
+  finishTime: Long
 )
 
 case class Message(

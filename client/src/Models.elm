@@ -23,6 +23,7 @@ type alias LiveTrack =
   { track: Track
   , players: List Player
   , races: List Race
+  , rankings : List Ranking
   }
 
 type alias Track =
@@ -45,6 +46,12 @@ type alias PlayerTally =
   { player : Player
   , gates : List Time
   , finished : Bool
+  }
+
+type alias Ranking =
+  { rank : Int
+  , player : Player
+  , finishTime : Time
   }
 
 type alias Message =

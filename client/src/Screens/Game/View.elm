@@ -35,11 +35,11 @@ rightWidth = 200
 gameView : (Int, Int) -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
   let
-    gameElement = renderGame (w - leftWidth, h - TopBar.height) gameState
+    gameElement = renderGame (w - leftWidth - rightWidth, h - TopBar.height) gameState
   in
     [ leftBar (h - TopBar.height) screen gameState
     , div [ class "game" ] [ fromElement gameElement ]
-    -- , rightBar (h - TopBar.height) screen gameState
+    , rightBar (h - TopBar.height) screen gameState
     ]
 
 leftBar : Int -> Screen -> GameState -> Html
@@ -47,21 +47,28 @@ leftBar h screen gameState =
   aside [ style [("height", toString h ++ "px")] ]
     [ playersBlock screen
     , chatBlock screen
-    -- [ bestTimesBlock
     , helpBlock
     ]
 
 rightBar : Int -> Screen -> GameState -> Html
 rightBar h screen gameState =
   aside [ style [("height", toString h ++ "px")] ]
-    [ playersBlock screen
-    , chatBlock screen
+    [ Maybe.map rankingsBlock screen.liveTrack |> Maybe.withDefault (div [ ] [ ])
     ]
 
-bestTimesBlock : Html
-bestTimesBlock =
-  div [ class "aside-module module-best-times" ]
-    [ h3 [ ] [ text "Best times" ]
+rankingsBlock : LiveTrack -> Html
+rankingsBlock {rankings} =
+  div [ class "aside-module module-rankings" ]
+    [ h4 [ ] [ text "Best times" ]
+    , ul [ class "list-unstyled list-rankings" ] (List.map rankingItem rankings)
+    ]
+
+rankingItem : Ranking -> Html
+rankingItem ranking =
+  li [ class "ranking" ]
+    [ span [ class "time" ] [ text (formatTimer True ranking.finishTime) ]
+    , span [ class "position" ] [ text (toString ranking.rank)]
+    , playerWithAvatar ranking.player
     ]
 
 helpBlock : Html

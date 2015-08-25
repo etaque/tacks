@@ -5484,8 +5484,8 @@ a.player-avatar {
     text-align: center;
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2); }
     .live-track a.show:hover, .live-track a.show:visited:hover {
-      background-color: #B1C0D8;
-      background-image: none; }
+      /* background-color: $whiteBlue; */
+      /* background-image: none; */ }
       .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
         background-color: #5899E2; }
       .live-track a.show:hover .track-players, .live-track a.show:visited:hover .track-players {
@@ -5517,8 +5517,10 @@ a.player-avatar {
     .live-track a.show .track-players, .live-track a.show:visited .track-players {
       display: none;
       height: 160px;
-      overflow: scroll;
-      background-color: #1f3251;
+      overflow-y: auto;
+      /* background-color: $darkSeaBlue; */
+      background-color: #395e87;
+      background-color: #387ac4;
       color: white;
       text-align: left;
       padding: 10px 15px; }

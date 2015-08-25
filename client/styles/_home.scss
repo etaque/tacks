@@ -261,8 +261,8 @@
     box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
 
     &:hover {
-      background-color: $whiteBlue;
-      background-image: none;
+      /* background-color: $whiteBlue; */
+      /* background-image: none; */
 
       .name {
         background-color: $mainBlue;
@@ -309,8 +309,10 @@
     .track-players {
       display: none;
       height: 160px; 
-      overflow: scroll;
-      background-color: $darkSeaBlue;
+      overflow-y: auto;
+      /* background-color: $darkSeaBlue; */
+      background-color: $darkNavBlue;
+      background-color: $navBlue;
       color: white;
       text-align: left;
       padding: 10px 15px;

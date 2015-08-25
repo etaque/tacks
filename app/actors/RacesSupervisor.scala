@@ -42,12 +42,12 @@ class RacesSupervisor extends Actor {
       case Some((track, ref)) => {
         for {
           (races, opponents) <- (ref ? GetStatus).mapTo[(Seq[Race], Seq[Opponent])]
-          rankings <- RunDAO.extractRankings(track.id)
+          rankings <- RacesSupervisor.playerRankings(track.id)
         }
         yield LiveTrack(track, races, opponents.map(_.player), rankings)
       }
       case None => {
-        RunDAO.extractRankings(track.id).map { rankings =>
+        RacesSupervisor.playerRankings(track.id).map { rankings =>
           LiveTrack(track, Nil, Nil, rankings)
         }
       }
@@ -70,6 +70,15 @@ object RacesSupervisor {
   implicit val timeout = Timeout(5.seconds)
 
   def start() = {}
+
+  def playerRankings(trackId: BSONObjectID): Future[Seq[PlayerRanking]] = {
+    for {
+      runRankings <- RunDAO.extractRankings(trackId)
+      players <- UserDAO.listByIds(runRankings.map(_.playerId))
+      playerRankings = runRankings.flatMap(r => players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.finishTime)))
+    }
+    yield playerRankings
+  }
 
 
 }

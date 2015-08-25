@@ -13,10 +13,11 @@ liveStatusDecoder =
 
 liveTrackDecoder : Decoder LiveTrack
 liveTrackDecoder =
-  object3 LiveTrack
+  object4 LiveTrack
     ("track" := trackDecoder)
     ("players" := list playerDecoder)
     ("races" := list raceDecoder)
+    ("rankings" := list rankingDecoder)
 
 raceDecoder : Decoder Race
 raceDecoder =
@@ -26,6 +27,13 @@ raceDecoder =
     ("startTime" := float)
     ("players" := list playerDecoder)
     ("tallies" := list playerTallyDecoder)
+
+rankingDecoder : Decoder Ranking
+rankingDecoder =
+  object3 Ranking
+    ("rank" := int)
+    ("player" := playerDecoder)
+    ("finishTime" := float)
 
 playerTallyDecoder : Decoder PlayerTally
 playerTallyDecoder =

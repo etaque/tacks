@@ -1657,6 +1657,17 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "finished",
    $Json$Decode.bool));
+   var rankingDecoder = A4($Json$Decode.object3,
+   $Models.Ranking,
+   A2($Json$Decode._op[":="],
+   "rank",
+   $Json$Decode.$int),
+   A2($Json$Decode._op[":="],
+   "player",
+   playerDecoder),
+   A2($Json$Decode._op[":="],
+   "finishTime",
+   $Json$Decode.$float));
    var raceDecoder = A6($Json$Decode.object5,
    $Models.Race,
    A2($Json$Decode._op[":="],
@@ -1674,7 +1685,7 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "tallies",
    $Json$Decode.list(playerTallyDecoder)));
-   var liveTrackDecoder = A4($Json$Decode.object3,
+   var liveTrackDecoder = A5($Json$Decode.object4,
    $Models.LiveTrack,
    A2($Json$Decode._op[":="],
    "track",
@@ -1684,7 +1695,10 @@ Elm.Decoders.make = function (_elm) {
    $Json$Decode.list(playerDecoder)),
    A2($Json$Decode._op[":="],
    "races",
-   $Json$Decode.list(raceDecoder)));
+   $Json$Decode.list(raceDecoder)),
+   A2($Json$Decode._op[":="],
+   "rankings",
+   $Json$Decode.list(rankingDecoder)));
    var liveStatusDecoder = A3($Json$Decode.object2,
    $Models.LiveStatus,
    A2($Json$Decode._op[":="],
@@ -1697,6 +1711,7 @@ Elm.Decoders.make = function (_elm) {
                           ,liveStatusDecoder: liveStatusDecoder
                           ,liveTrackDecoder: liveTrackDecoder
                           ,raceDecoder: raceDecoder
+                          ,rankingDecoder: rankingDecoder
                           ,playerTallyDecoder: playerTallyDecoder
                           ,trackDecoder: trackDecoder
                           ,playerDecoder: playerDecoder
@@ -9632,6 +9647,14 @@ Elm.Models.make = function (_elm) {
              ,player: b
              ,time: c};
    });
+   var Ranking = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,finishTime: c
+             ,player: b
+             ,rank: a};
+   });
    var PlayerTally = F3(function (a,
    b,
    c) {
@@ -9664,12 +9687,14 @@ Elm.Models.make = function (_elm) {
              ,slug: b
              ,startCycle: e};
    });
-   var LiveTrack = F3(function (a,
+   var LiveTrack = F4(function (a,
    b,
-   c) {
+   c,
+   d) {
       return {_: {}
              ,players: b
              ,races: c
+             ,rankings: d
              ,track: a};
    });
    var LiveStatus = F2(function (a,
@@ -9701,6 +9726,7 @@ Elm.Models.make = function (_elm) {
                         ,Track: Track
                         ,Race: Race
                         ,PlayerTally: PlayerTally
+                        ,Ranking: Ranking
                         ,Message: Message
                         ,Course: Course
                         ,Gate: Gate
@@ -19592,6 +19618,7 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
    $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
@@ -19610,7 +19637,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 76, column 34 to 77");
+         "on line 83, column 34 to 77");
       }();
    })(_L.fromArray([{ctor: "_Tuple2"
                     ,_0: "ARROWS"
@@ -19635,11 +19662,33 @@ Elm.Screens.Game.View.make = function (_elm) {
                 ,A2($Html.dl,
                 _L.fromArray([]),
                 helpItems)]));
-   var bestTimesBlock = A2($Html.div,
-   _L.fromArray([$Html$Attributes.$class("aside-module module-best-times")]),
-   _L.fromArray([A2($Html.h3,
-   _L.fromArray([]),
-   _L.fromArray([$Html.text("Best times")]))]));
+   var rankingItem = function (ranking) {
+      return A2($Html.li,
+      _L.fromArray([$Html$Attributes.$class("ranking")]),
+      _L.fromArray([A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("time")]),
+                   _L.fromArray([$Html.text(A2($Screens$Utils.formatTimer,
+                   true,
+                   ranking.finishTime))]))
+                   ,A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("position")]),
+                   _L.fromArray([$Html.text($Basics.toString(ranking.rank))]))
+                   ,$Screens$Utils.playerWithAvatar(ranking.player)]));
+   };
+   var rankingsBlock = function (_v4) {
+      return function () {
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("aside-module module-rankings")]),
+         _L.fromArray([A2($Html.h4,
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text("Best times")]))
+                      ,A2($Html.ul,
+                      _L.fromArray([$Html$Attributes.$class("list-unstyled list-rankings")]),
+                      A2($List.map,
+                      rankingItem,
+                      _v4.rankings))]));
+      }();
+   };
    var rightBar = F3(function (h,
    screen,
    gameState) {
@@ -19649,8 +19698,11 @@ Elm.Screens.Game.View.make = function (_elm) {
                                                          ,_1: A2($Basics._op["++"],
                                                          $Basics.toString(h),
                                                          "px")}]))]),
-      _L.fromArray([$Screens$Game$PlayersView.playersBlock(screen)
-                   ,$Screens$Game$ChatView.chatBlock(screen)]));
+      _L.fromArray([$Maybe.withDefault(A2($Html.div,
+      _L.fromArray([]),
+      _L.fromArray([])))(A2($Maybe.map,
+      rankingsBlock,
+      screen.liveTrack))]));
    });
    var leftBar = F3(function (h,
    screen,
@@ -19667,25 +19719,29 @@ Elm.Screens.Game.View.make = function (_elm) {
    });
    var rightWidth = 200;
    var leftWidth = 240;
-   var gameView = F3(function (_v4,
+   var gameView = F3(function (_v6,
    screen,
    gameState) {
       return function () {
-         switch (_v4.ctor)
+         switch (_v6.ctor)
          {case "_Tuple2":
             return function () {
                  var gameElement = A2($Game$Render$All.renderGame,
                  {ctor: "_Tuple2"
-                 ,_0: _v4._0 - leftWidth
-                 ,_1: _v4._1 - $Screens$TopBar.height},
+                 ,_0: _v6._0 - leftWidth - rightWidth
+                 ,_1: _v6._1 - $Screens$TopBar.height},
                  gameState);
                  return _L.fromArray([A3(leftBar,
-                                     _v4._1 - $Screens$TopBar.height,
+                                     _v6._1 - $Screens$TopBar.height,
                                      screen,
                                      gameState)
                                      ,A2($Html.div,
                                      _L.fromArray([$Html$Attributes.$class("game")]),
-                                     _L.fromArray([$Html.fromElement(gameElement)]))]);
+                                     _L.fromArray([$Html.fromElement(gameElement)]))
+                                     ,A3(rightBar,
+                                     _v6._1 - $Screens$TopBar.height,
+                                     screen,
+                                     gameState)]);
               }();}
          _U.badCase($moduleName,
          "between lines 37 and 43");
@@ -19695,13 +19751,13 @@ Elm.Screens.Game.View.make = function (_elm) {
    _L.fromArray([]),
    _L.fromArray([$Html.text("loading...")]))]))]);
    var view = F2(function (dims,
-   _v8) {
+   _v10) {
       return function () {
          return $Html.div(_L.fromArray([$Html$Attributes.$class("content")]))(A2($Maybe.withDefault,
          loading,
          A2($Maybe.map,
-         A2(gameView,dims,_v8),
-         _v8.gameState)));
+         A2(gameView,dims,_v10),
+         _v10.gameState)));
       }();
    });
    _elm.Screens.Game.View.values = {_op: _op
@@ -19712,7 +19768,8 @@ Elm.Screens.Game.View.make = function (_elm) {
                                    ,gameView: gameView
                                    ,leftBar: leftBar
                                    ,rightBar: rightBar
-                                   ,bestTimesBlock: bestTimesBlock
+                                   ,rankingsBlock: rankingsBlock
+                                   ,rankingItem: rankingItem
                                    ,helpBlock: helpBlock
                                    ,helpItems: helpItems};
    return _elm.Screens.Game.View.values;

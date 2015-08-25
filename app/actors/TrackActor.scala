@@ -156,7 +156,7 @@ class TrackActor(track: Track) extends Actor with ManageWind {
   }
 
   def broadcastLiveTrackUpdate(): Future[LiveTrackUpdate] = {
-    RunDAO.extractRankings(track.id).map { rankings =>
+    RacesSupervisor.playerRankings(track.id).map { rankings =>
       LiveTrackUpdate(LiveTrack(track, state.races, players.values.map(_.player).toSeq, rankings))
     } pipeTo self
   }

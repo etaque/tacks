@@ -101,9 +101,7 @@ object Api extends Controller with Security {
       UserDAO.create(user, form.password).map { _ =>
         Ok(Json.toJson(user)(playerFormat)).withSession("playerId" -> user.idToStr)
       }
-
     }
-
   }
 
 
