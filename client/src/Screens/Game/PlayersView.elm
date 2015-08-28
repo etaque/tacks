@@ -40,21 +40,23 @@ raceItem {startTime, tallies} =
   in
     div [ class "race" ]
       [ h4 [ ] [ text ("Started at " ++ formatted) ]
-      , ul [ class "list-unstyled list-tallies" ] (List.map tallyItem tallies)
+      , ul [ class "list-unstyled list-tallies" ] (List.indexedMap tallyItem tallies)
       ]
 
 
-tallyItem : PlayerTally -> Html
-tallyItem {player, gates, finished} =
+tallyItem : Int -> PlayerTally -> Html
+tallyItem i {player, gates, finished} =
   let
-    pos = if finished then "F" else toString (List.length gates)
+    rank = toString (i + 1)
+    lap = if finished then "F" else "G" ++ toString (List.length gates)
     time = Maybe.map (formatTimer True) (List.head gates)
       |> Maybe.withDefault "?"
   in
     li [ class "player" ]
-      [ span [ class "time" ] [ text time ]
-      , span [ class "position"] [ text pos ]
-      , playerWithAvatar player
+      [ span [ class "rank" ] [ text rank ]
+      , span [ class "time" ] [ text time ]
+      , span [ class "lap"] [ text lap ]
+      , span [ class "handle" ] [ text (playerHandle player) ]
       ]
 
 
@@ -62,11 +64,13 @@ freePlayersBlock : List Player -> Html
 freePlayersBlock players =
   div [ class "free-players" ]
     [ h4 [ ] [ text "Free players" ]
-    , ul [ class "list-unstyled list-players" ] (List.map playerItem players)
+    , ul [ class "list-unstyled list-players" ] (List.map freePlayerItem players)
     ]
 
 
-playerItem : Player -> Html
-playerItem player =
-  li [ class "player" ] [ playerWithAvatar player ]
+freePlayerItem : Player -> Html
+freePlayerItem player =
+  li [ class "player" ]
+    [ span [ class "handle" ] [ text (playerHandle player) ]
+    ]
 

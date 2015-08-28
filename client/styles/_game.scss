@@ -44,29 +44,27 @@ aside {
     }
 
     .list-players, .list-tallies {
-      background-color: $darkNavBlue;
       margin-bottom: 15px;
 
       li {
-        padding: 4px 6px;
-        border-bottom: 1px solid $whiteBlue;
 
-        &:last-child {
-          border-bottom: none;
+        .rank {
+          &:after {
+            content: ". ";
+          }
         }
 
-        .player-avatar {
+        .handle {
           color: white;
         }
 
-        .position {
+        .lap {
           float: right;
           background-color: $darkSeaBlue;
           color: $whiteBlue;
           display: inline-block;
           width: 15px;
           text-align: center;
-          /* border-radius: 10px; */
           line-height: 15px;
           font-size: 12px;
           margin-right: 5px;
@@ -112,5 +110,31 @@ aside {
       border: 2px solid $mainBlue;
       color: white;
     }
+  }
+
+  .module-rankings {
+    .list-rankings {
+      /* background-color: $darkNavBlue; */
+      margin-bottom: 15px;
+
+      li {
+        /* padding: 4px 6px; */
+
+        .handle {
+          color: white;
+        }
+
+        .position {
+          &:after {
+            content: ". ";
+          }
+        }
+
+        .time {
+          float: right;
+        }
+      }
+    }
+    
   }
 }

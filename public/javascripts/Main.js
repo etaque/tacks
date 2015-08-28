@@ -19196,10 +19196,12 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var playerItem = function (player) {
+   var freePlayerItem = function (player) {
       return A2($Html.li,
       _L.fromArray([$Html$Attributes.$class("player")]),
-      _L.fromArray([$Screens$Utils.playerWithAvatar(player)]));
+      _L.fromArray([A2($Html.span,
+      _L.fromArray([$Html$Attributes.$class("handle")]),
+      _L.fromArray([$Html.text($Screens$Utils.playerHandle(player))]))]));
    };
    var freePlayersBlock = function (players) {
       return A2($Html.div,
@@ -19210,28 +19212,37 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
                    ,A2($Html.ul,
                    _L.fromArray([$Html$Attributes.$class("list-unstyled list-players")]),
                    A2($List.map,
-                   playerItem,
+                   freePlayerItem,
                    players))]));
    };
-   var tallyItem = function (_v0) {
+   var tallyItem = F2(function (i,
+   _v0) {
       return function () {
          return function () {
             var time = $Maybe.withDefault("?")(A2($Maybe.map,
             $Screens$Utils.formatTimer(true),
             $List.head(_v0.gates)));
-            var pos = _v0.finished ? "F" : $Basics.toString($List.length(_v0.gates));
+            var lap = _v0.finished ? "F" : A2($Basics._op["++"],
+            "G",
+            $Basics.toString($List.length(_v0.gates)));
+            var rank = $Basics.toString(i + 1);
             return A2($Html.li,
             _L.fromArray([$Html$Attributes.$class("player")]),
             _L.fromArray([A2($Html.span,
+                         _L.fromArray([$Html$Attributes.$class("rank")]),
+                         _L.fromArray([$Html.text(rank)]))
+                         ,A2($Html.span,
                          _L.fromArray([$Html$Attributes.$class("time")]),
                          _L.fromArray([$Html.text(time)]))
                          ,A2($Html.span,
-                         _L.fromArray([$Html$Attributes.$class("position")]),
-                         _L.fromArray([$Html.text(pos)]))
-                         ,$Screens$Utils.playerWithAvatar(_v0.player)]));
+                         _L.fromArray([$Html$Attributes.$class("lap")]),
+                         _L.fromArray([$Html.text(lap)]))
+                         ,A2($Html.span,
+                         _L.fromArray([$Html$Attributes.$class("handle")]),
+                         _L.fromArray([$Html.text($Screens$Utils.playerHandle(_v0.player))]))]));
          }();
       }();
-   };
+   });
    var raceItem = function (_v2) {
       return function () {
          return function () {
@@ -19245,7 +19256,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
                          formatted))]))
                          ,A2($Html.ul,
                          _L.fromArray([$Html$Attributes.$class("list-unstyled list-tallies")]),
-                         A2($List.map,
+                         A2($List.indexedMap,
                          tallyItem,
                          _v2.tallies))]));
          }();
@@ -19282,7 +19293,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
                                           ,raceItem: raceItem
                                           ,tallyItem: tallyItem
                                           ,freePlayersBlock: freePlayersBlock
-                                          ,playerItem: playerItem};
+                                          ,freePlayerItem: freePlayerItem};
    return _elm.Screens.Game.PlayersView.values;
 };
 Elm.Screens = Elm.Screens || {};
@@ -19637,7 +19648,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 83, column 34 to 77");
+         "on line 84, column 34 to 77");
       }();
    })(_L.fromArray([{ctor: "_Tuple2"
                     ,_0: "ARROWS"
@@ -19666,14 +19677,16 @@ Elm.Screens.Game.View.make = function (_elm) {
       return A2($Html.li,
       _L.fromArray([$Html$Attributes.$class("ranking")]),
       _L.fromArray([A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("position")]),
+                   _L.fromArray([$Html.text($Basics.toString(ranking.rank))]))
+                   ,A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("handle")]),
+                   _L.fromArray([$Html.text($Screens$Utils.playerHandle(ranking.player))]))
+                   ,A2($Html.span,
                    _L.fromArray([$Html$Attributes.$class("time")]),
                    _L.fromArray([$Html.text(A2($Screens$Utils.formatTimer,
                    true,
-                   ranking.finishTime))]))
-                   ,A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("position")]),
-                   _L.fromArray([$Html.text($Basics.toString(ranking.rank))]))
-                   ,$Screens$Utils.playerWithAvatar(ranking.player)]));
+                   ranking.finishTime))]))]));
    };
    var rankingsBlock = function (_v4) {
       return function () {

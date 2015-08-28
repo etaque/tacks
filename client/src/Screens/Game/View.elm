@@ -66,9 +66,10 @@ rankingsBlock {rankings} =
 rankingItem : Ranking -> Html
 rankingItem ranking =
   li [ class "ranking" ]
-    [ span [ class "time" ] [ text (formatTimer True ranking.finishTime) ]
-    , span [ class "position" ] [ text (toString ranking.rank)]
-    , playerWithAvatar ranking.player
+    [ span [ class "position" ] [ text (toString ranking.rank)]
+    , span [ class "handle" ] [ text (playerHandle ranking.player) ]
+    , span [ class "time" ] [ text (formatTimer True ranking.finishTime) ]
+    -- , playerWithAvatar ranking.player
     ]
 
 helpBlock : Html

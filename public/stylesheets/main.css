@@ -5814,29 +5814,24 @@ aside {
     padding: 0;
     font-family: "Inconsolata"; }
   aside .module-players .list-players, aside .module-players .list-tallies {
-    background-color: #395e87;
     margin-bottom: 15px; }
-    aside .module-players .list-players li, aside .module-players .list-tallies li {
-      padding: 4px 6px;
-      border-bottom: 1px solid #B1C0D8; }
-      aside .module-players .list-players li:last-child, aside .module-players .list-tallies li:last-child {
-        border-bottom: none; }
-      aside .module-players .list-players li .player-avatar, aside .module-players .list-tallies li .player-avatar {
-        color: white; }
-      aside .module-players .list-players li .position, aside .module-players .list-tallies li .position {
-        float: right;
-        background-color: #1f3251;
-        color: #B1C0D8;
-        display: inline-block;
-        width: 15px;
-        text-align: center;
-        /* border-radius: 10px; */
-        line-height: 15px;
-        font-size: 12px;
-        margin-right: 5px;
-        margin-top: 3px; }
-      aside .module-players .list-players li .time, aside .module-players .list-tallies li .time {
-        float: right; }
+    aside .module-players .list-players li .rank:after, aside .module-players .list-tallies li .rank:after {
+      content: ". "; }
+    aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
+      color: white; }
+    aside .module-players .list-players li .lap, aside .module-players .list-tallies li .lap {
+      float: right;
+      background-color: #1f3251;
+      color: #B1C0D8;
+      display: inline-block;
+      width: 15px;
+      text-align: center;
+      line-height: 15px;
+      font-size: 12px;
+      margin-right: 5px;
+      margin-top: 3px; }
+    aside .module-players .list-players li .time, aside .module-players .list-tallies li .time {
+      float: right; }
   aside .module-chat {
     flex: 3;
     display: flex;
@@ -5859,3 +5854,14 @@ aside {
       background-color: #387ac4;
       border: 2px solid #5899E2;
       color: white; }
+  aside .module-rankings .list-rankings {
+    /* background-color: $darkNavBlue; */
+    margin-bottom: 15px; }
+    aside .module-rankings .list-rankings li {
+      /* padding: 4px 6px; */ }
+      aside .module-rankings .list-rankings li .handle {
+        color: white; }
+      aside .module-rankings .list-rankings li .position:after {
+        content: ". "; }
+      aside .module-rankings .list-rankings li .time {
+        float: right; }
