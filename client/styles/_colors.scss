@@ -1,4 +1,18 @@
-$seaBlue: #23395C; //rgb(10, 105, 148);
+$seaBlue: #93CADF; //#23395C; //rgb(10, 105, 148);
+
+$lightSeaBlue: lighten($seaBlue, 6%);
+$lighterSeaBlue: lighten($seaBlue, 12%);
+$whiteSeaBlue: lighten($seaBlue, 22%);
+
+$darkSeaBlue: darken($seaBlue, 20%);
+$darkerSeaBlue: darken($seaBlue, 30%);
+$blackSeaBlue: desaturate(darken($seaBlue, 50%), 20%);
+
+$sand: rgb(242, 243, 196);
+
+
+
+
 $mainBlue: #5899E2;
 $navBlue: little-desat-dark($mainBlue);
 $darkNavBlue: little-desat-dark($navBlue);
@@ -19,11 +33,5 @@ $whiteRed: #f2dede;
 $lightRed: #ebccd1;
 $red: #a94442;
 
-
-$lightSeaBlue: lighten($seaBlue, 6%);
-$lighterSeaBlue: lighten($seaBlue, 12%);
-$darkSeaBlue: darken($seaBlue, 3%);
-$darkerSeaBlue: darken($seaBlue, 6%);
-$sand: rgb(239, 210, 121);
 
 $currentPlayerColor: $mainBlue;

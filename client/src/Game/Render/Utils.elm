@@ -16,11 +16,11 @@ startCountdownMessage = "press C to start countdown (30s)"
 emptyForm = C.toForm E.empty
 
 colors =
-  { seaBlue = rgb 35 57 92
-  , sand = rgb 224 163 73
+  { seaBlue = rgb 147 202 223
+  , sand = rgb 242 243 196
   , gateMark = white
-  , gateLine = rgb 234 99 68
-  , orange = rgb 234 99 68
+  , gateLine = rgb 200 130 170
+  , orange = rgb 200 130 170
   , green = rgb 100 180 106
   }
 

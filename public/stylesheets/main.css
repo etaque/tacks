@@ -4829,7 +4829,8 @@ html, body {
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  background-color: #333; }
 
 .global-wrapper {
   width: 100%;
@@ -4846,11 +4847,11 @@ html, body {
   flex: 1; }
 
 nav {
-  background-color: #387ac4;
+  background-color: #eaf4f9;
+  /* border-bottom: 2px solid $lightSeaBlue; */
   height: 50px;
   display: flex;
-  flex-direction: row;
-  border-bottom: 2px solid #B1C0D8; }
+  flex-direction: row; }
 
 .logo {
   width: 200px;
@@ -4858,7 +4859,7 @@ nav {
   .logo img {
     height: 50px;
     max-height: 100%;
-    max-height: 48px;
+    /* max-height: 48px; */
     width: auto; }
 
 .user-menu {
@@ -4870,13 +4871,15 @@ nav {
     display: inline-block; }
     .user-menu li a {
       display: block;
-      line-height: 48px;
+      line-height: 50px;
       padding: 0 20px;
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
-      letter-spacing: 1px; }
+      letter-spacing: 1px;
+      color: #26424d; }
       .user-menu li a:hover, .user-menu li a:active {
-        background-color: #5899E2; }
+        text-decoration: underline;
+        /* background-color: $lighterSeaBlue; */ }
   .user-menu img {
     width: 19px;
     height: 19px;
@@ -4889,8 +4892,7 @@ aside {
   display: flex;
   flex-direction: column;
   width: 240px;
-  background-color: #1b2b46;
-  border-right: 2px solid #395e87; }
+  background-color: #3287a7; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -4912,7 +4914,7 @@ body {
   color: white;
   font-family: "Proxima Nova Regular";
   font-size: 15px;
-  background-color: #2b4772; }
+  background-color: #abd6e6; }
 
 hr {
   border: 0 solid #B1C0D8; }
@@ -4960,22 +4962,22 @@ a {
     font-size: 15px; }
 
 .title-wrapper {
-  background-color: #23395C;
-  background-color: #2b4772;
+  background-color: #93CADF;
+  background-color: #abd6e6;
   /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#93CADF), to(#abd6e6));
   /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
+  background-image: -webkit-linear-gradient(top, #93CADF, #abd6e6);
   /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #23395C, #2b4772);
+  background-image: -moz-linear-gradient(top, #93CADF, #abd6e6);
   /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #23395C, #2b4772);
+  background-image: -ms-linear-gradient(top, #93CADF, #abd6e6);
   /* IE10 */
-  background-image: -o-linear-gradient(top, #23395C, #2b4772);
+  background-image: -o-linear-gradient(top, #93CADF, #abd6e6);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #23395C, #2b4772);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772');
-  box-shadow: 0 2px 3px #1b2b46 inset;
+  background-image: linear-gradient(top, #93CADF, #abd6e6);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#93CADF', EndColorStr='#abd6e6');
+  box-shadow: 0 2px 3px #3287a7 inset;
   color: #B1C0D8;
   padding: 40px;
   text-align: center; }
@@ -5016,28 +5018,28 @@ a {
     color: #51585E; }
 
 .dark-wrapper {
-  background-color: #23395C;
-  background-color: #2b4772;
+  background-color: #93CADF;
+  background-color: #abd6e6;
   /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#23395C), to(#2b4772));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#93CADF), to(#abd6e6));
   /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #23395C, #2b4772);
+  background-image: -webkit-linear-gradient(top, #93CADF, #abd6e6);
   /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #23395C, #2b4772);
+  background-image: -moz-linear-gradient(top, #93CADF, #abd6e6);
   /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #23395C, #2b4772);
+  background-image: -ms-linear-gradient(top, #93CADF, #abd6e6);
   /* IE10 */
-  background-image: -o-linear-gradient(top, #23395C, #2b4772);
+  background-image: -o-linear-gradient(top, #93CADF, #abd6e6);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #23395C, #2b4772);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#23395C', EndColorStr='#2b4772');
+  background-image: linear-gradient(top, #93CADF, #abd6e6);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#93CADF', EndColorStr='#abd6e6');
   color: #B1C0D8;
-  box-shadow: 0px 2px 3px #1b2b46 inset; }
+  box-shadow: 0px 2px 3px #3287a7 inset; }
   .dark-wrapper a {
     color: white; }
 
 .footer-wrapper {
-  box-shadow: 0px 2px 3px #1b2b46 inset;
+  box-shadow: 0px 2px 3px #3287a7 inset;
   text-align: center;
   color: #B1C0D8;
   padding: 20px;
@@ -5050,7 +5052,7 @@ a {
   padding: 10px;
   color: #51585E;
   border-radius: 5px;
-  box-shadow: 0 2px 3px #1b2b46; }
+  box-shadow: 0 2px 3px #3287a7; }
 
 .btn {
   font-weight: bold;
@@ -5270,7 +5272,7 @@ a.player-avatar {
   padding-top: 15px;
   background-color: #f8f9fb;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #1f3251; }
+  box-shadow: 0 2px 2px #44a3c8; }
 
 .form-set-handle {
   margin-top: 20px;
@@ -5476,7 +5478,7 @@ a.player-avatar {
     display: block;
     height: 200px;
     margin-bottom: 10px;
-    background-color: #23395C;
+    background-color: #93CADF;
     background-repeat: no-repeat;
     background-position: center;
     /* border-radius: $br; */
@@ -5571,10 +5573,10 @@ a.player-avatar {
       letter-spacing: 1px;
       color: white; }
     .nav-trials li.active a {
-      background-color: #23395C;
+      background-color: #93CADF;
       color: #5899E2; }
     .nav-trials li:hover a {
-      background-color: #23395C; }
+      background-color: #93CADF; }
   .nav-trials li + li {
     margin-left: 10px; }
 
@@ -5596,9 +5598,9 @@ a.player-avatar {
 a.period {
   color: #5899E2;
   border-color: #5899E2;
-  background-color: #23395C; }
+  background-color: #93CADF; }
   a.period:hover {
-    background-color: #1f3251; }
+    background-color: #44a3c8; }
 
 .row-show-ranking {
   margin-top: 30px; }
@@ -5683,7 +5685,7 @@ a.period {
 .show-time-trial .trial-picture {
   margin-bottom: 20px;
   height: 200px;
-  background-color: #23395C;
+  background-color: #93CADF;
   background-repeat: no-repeat;
   background-position: center; }
 .show-time-trial .nav {
@@ -5699,7 +5701,7 @@ a.period {
       .show-time-trial .nav li a:hover {
         background-color: #5899E2; }
     .show-time-trial .nav li.active a {
-      background-color: #23395C; }
+      background-color: #93CADF; }
 
 .post .block-img, .article .block-img {
   margin-top: 30px;
@@ -5752,7 +5754,7 @@ a.period {
 .show-user .title-wrapper .avatar {
   margin-bottom: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #1f3251; }
+  box-shadow: 0 2px 2px #44a3c8; }
 .show-user .badge-rank {
   display: block;
   margin-left: auto;
@@ -5788,11 +5790,13 @@ a.period {
   src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
 .game {
-  background-color: #efd279; }
+  /* background-color: $sand; */
+  background-color: #44a3c8; }
 
 aside {
   color: #B1C0D8;
-  font-family: "Inconsolata"; }
+  font-family: "Inconsolata";
+  background-color: #26424d; }
   aside .module-best-times {
     flex: 1; }
   aside .module-help {
@@ -5821,7 +5825,7 @@ aside {
       color: white; }
     aside .module-players .list-players li .lap, aside .module-players .list-tallies li .lap {
       float: right;
-      background-color: #1f3251;
+      background-color: #44a3c8;
       color: #B1C0D8;
       display: inline-block;
       width: 15px;
@@ -5851,8 +5855,8 @@ aside {
         aside .module-chat .messages .message-handle:after {
           content: ": "; }
     aside .module-chat input[type="text"] {
-      background-color: #387ac4;
-      border: 2px solid #5899E2;
+      background-color: #222;
+      border: 2px solid #666;
       color: white; }
   aside .module-rankings .list-rankings {
     /* background-color: $darkNavBlue; */

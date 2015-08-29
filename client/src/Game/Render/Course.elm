@@ -12,6 +12,46 @@ import Color exposing (white,black)
 import Time exposing (Time)
 
 
+renderCourse : GameState -> Form
+renderCourse ({playerState,course,now,wind} as gameState) =
+  let
+    forms =
+      [ renderBounds course.area
+      , renderLaylines wind course playerState
+      , renderIslands course
+      , renderDownwind playerState course now (isStarted gameState)
+      , renderUpwind playerState course now
+      , renderGusts wind
+      ]
+  in
+    group forms
+
+renderBounds : RaceArea -> Form
+renderBounds area =
+  let
+    (w,h) = areaDims area
+    (cw,ch) = areaCenters area
+    fill = rect w h
+      |> filled colors.seaBlue
+    stroke = rect w h
+      |> outlined { defaultLine | width <- 2, color <- white, cap <- Round, join <- Smooth }
+      |> alpha 0.8
+  in
+    group [fill, stroke] |> move (cw, ch)
+
+
+renderLaylines : Wind -> Course -> PlayerState -> Form
+renderLaylines wind course playerState =
+  case playerState.nextGate of
+    Just UpwindGate   -> renderGateLaylines playerState.upwindVmg wind.origin course.area course.upwind
+    Just DownwindGate -> renderGateLaylines playerState.downwindVmg wind.origin course.area course.downwind
+    _                 -> emptyForm
+
+renderIslands : Course -> Form
+renderIslands course =
+  let renderIsland {location,radius} = circle radius |> filled colors.sand |> move location
+  in  group <| map renderIsland course.islands
+
 renderDownwind : PlayerState -> Course -> Float -> Bool -> Form
 renderDownwind playerState course now started =
   let
@@ -32,28 +72,6 @@ renderUpwind playerState course now =
     renderGate course.upwind now isNext Upwind
 
 
-renderLaylines : Wind -> Course -> PlayerState -> Form
-renderLaylines wind course playerState =
-  case playerState.nextGate of
-    Just UpwindGate   -> renderGateLaylines playerState.upwindVmg wind.origin course.area course.upwind
-    Just DownwindGate -> renderGateLaylines playerState.downwindVmg wind.origin course.area course.downwind
-    _                 -> emptyForm
-
-
-renderBounds : RaceArea -> Form
-renderBounds area =
-  let
-    (w,h) = areaDims area
-    (cw,ch) = areaCenters area
-    fill = rect w h
-      |> filled colors.seaBlue
-    stroke = rect w h
-      |> outlined { defaultLine | width <- 1, color <- white, cap <- Round, join <- Smooth }
-      |> alpha 0.8
-  in
-    group [fill, stroke] |> move (cw, ch)
-
-
 renderGust : Wind -> Gust -> Form
 renderGust wind gust =
   let a = 0.3 * (abs gust.speed) / 10
@@ -66,22 +84,3 @@ renderGusts wind =
   group <| map (renderGust wind) wind.gusts
 
 
-renderIslands : Course -> Form
-renderIslands course =
-  let renderIsland {location,radius} = circle radius |> filled colors.sand |> move location
-  in  group <| map renderIsland course.islands
-
-
-renderCourse : GameState -> Form
-renderCourse ({playerState,course,now,wind} as gameState) =
-  let
-    forms =
-      [ renderBounds course.area
-      , renderLaylines wind course playerState
-      , renderIslands course
-      , renderDownwind playerState course now (isStarted gameState)
-      , renderUpwind playerState course now
-      , renderGusts wind
-      ]
-  in
-    group forms

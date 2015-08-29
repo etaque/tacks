@@ -4155,18 +4155,6 @@ Elm.Game.Render.Course.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var renderIslands = function (course) {
-      return function () {
-         var renderIsland = function (_v0) {
-            return function () {
-               return $Graphics$Collage.move(_v0.location)($Graphics$Collage.filled($Game$Render$Utils.colors.sand)($Graphics$Collage.circle(_v0.radius)));
-            }();
-         };
-         return $Graphics$Collage.group(A2($List.map,
-         renderIsland,
-         course.islands));
-      }();
-   };
    var renderGust = F2(function (wind,
    gust) {
       return function () {
@@ -4181,58 +4169,6 @@ Elm.Game.Render.Course.make = function (_elm) {
       renderGust(wind),
       wind.gusts));
    };
-   var renderBounds = function (area) {
-      return function () {
-         var $ = $Game$Models.areaCenters(area),
-         cw = $._0,
-         ch = $._1;
-         var $ = $Game$Models.areaDims(area),
-         w = $._0,
-         h = $._1;
-         var fill = $Graphics$Collage.filled($Game$Render$Utils.colors.seaBlue)(A2($Graphics$Collage.rect,
-         w,
-         h));
-         var stroke = $Graphics$Collage.alpha(0.8)($Graphics$Collage.outlined(_U.replace([["width"
-                                                                                          ,1]
-                                                                                         ,["color"
-                                                                                          ,$Color.white]
-                                                                                         ,["cap"
-                                                                                          ,$Graphics$Collage.Round]
-                                                                                         ,["join"
-                                                                                          ,$Graphics$Collage.Smooth]],
-         $Graphics$Collage.defaultLine))(A2($Graphics$Collage.rect,
-         w,
-         h)));
-         return $Graphics$Collage.move({ctor: "_Tuple2"
-                                       ,_0: cw
-                                       ,_1: ch})($Graphics$Collage.group(_L.fromArray([fill
-                                                                                      ,stroke])));
-      }();
-   };
-   var renderLaylines = F3(function (wind,
-   course,
-   playerState) {
-      return function () {
-         var _v2 = playerState.nextGate;
-         switch (_v2.ctor)
-         {case "Just":
-            switch (_v2._0.ctor)
-              {case "DownwindGate":
-                 return A4($Game$Render$Gates.renderGateLaylines,
-                   playerState.downwindVmg,
-                   wind.origin,
-                   course.area,
-                   course.downwind);
-                 case "UpwindGate":
-                 return A4($Game$Render$Gates.renderGateLaylines,
-                   playerState.upwindVmg,
-                   wind.origin,
-                   course.area,
-                   course.upwind);}
-              break;}
-         return $Game$Render$Utils.emptyForm;
-      }();
-   });
    var renderUpwind = F3(function (playerState,
    course,
    now) {
@@ -4268,6 +4204,70 @@ Elm.Game.Render.Course.make = function (_elm) {
          $Game$Render$Gates.Downwind);
       }();
    });
+   var renderIslands = function (course) {
+      return function () {
+         var renderIsland = function (_v0) {
+            return function () {
+               return $Graphics$Collage.move(_v0.location)($Graphics$Collage.filled($Game$Render$Utils.colors.sand)($Graphics$Collage.circle(_v0.radius)));
+            }();
+         };
+         return $Graphics$Collage.group(A2($List.map,
+         renderIsland,
+         course.islands));
+      }();
+   };
+   var renderLaylines = F3(function (wind,
+   course,
+   playerState) {
+      return function () {
+         var _v2 = playerState.nextGate;
+         switch (_v2.ctor)
+         {case "Just":
+            switch (_v2._0.ctor)
+              {case "DownwindGate":
+                 return A4($Game$Render$Gates.renderGateLaylines,
+                   playerState.downwindVmg,
+                   wind.origin,
+                   course.area,
+                   course.downwind);
+                 case "UpwindGate":
+                 return A4($Game$Render$Gates.renderGateLaylines,
+                   playerState.upwindVmg,
+                   wind.origin,
+                   course.area,
+                   course.upwind);}
+              break;}
+         return $Game$Render$Utils.emptyForm;
+      }();
+   });
+   var renderBounds = function (area) {
+      return function () {
+         var $ = $Game$Models.areaCenters(area),
+         cw = $._0,
+         ch = $._1;
+         var $ = $Game$Models.areaDims(area),
+         w = $._0,
+         h = $._1;
+         var fill = $Graphics$Collage.filled($Game$Render$Utils.colors.seaBlue)(A2($Graphics$Collage.rect,
+         w,
+         h));
+         var stroke = $Graphics$Collage.alpha(0.8)($Graphics$Collage.outlined(_U.replace([["width"
+                                                                                          ,2]
+                                                                                         ,["color"
+                                                                                          ,$Color.white]
+                                                                                         ,["cap"
+                                                                                          ,$Graphics$Collage.Round]
+                                                                                         ,["join"
+                                                                                          ,$Graphics$Collage.Smooth]],
+         $Graphics$Collage.defaultLine))(A2($Graphics$Collage.rect,
+         w,
+         h)));
+         return $Graphics$Collage.move({ctor: "_Tuple2"
+                                       ,_0: cw
+                                       ,_1: ch})($Graphics$Collage.group(_L.fromArray([fill
+                                                                                      ,stroke])));
+      }();
+   };
    var renderCourse = function (_v4) {
       return function () {
          return function () {
@@ -4292,14 +4292,14 @@ Elm.Game.Render.Course.make = function (_elm) {
       }();
    };
    _elm.Game.Render.Course.values = {_op: _op
+                                    ,renderCourse: renderCourse
+                                    ,renderBounds: renderBounds
+                                    ,renderLaylines: renderLaylines
+                                    ,renderIslands: renderIslands
                                     ,renderDownwind: renderDownwind
                                     ,renderUpwind: renderUpwind
-                                    ,renderLaylines: renderLaylines
-                                    ,renderBounds: renderBounds
                                     ,renderGust: renderGust
-                                    ,renderGusts: renderGusts
-                                    ,renderIslands: renderIslands
-                                    ,renderCourse: renderCourse};
+                                    ,renderGusts: renderGusts};
    return _elm.Game.Render.Course.values;
 };
 Elm.Game = Elm.Game || {};
@@ -5337,23 +5337,26 @@ Elm.Game.Render.Utils.make = function (_elm) {
    };
    var colors = {_: {}
                 ,gateLine: A3($Color.rgb,
-                234,
-                99,
-                68)
+                200,
+                130,
+                170)
                 ,gateMark: $Color.white
                 ,green: A3($Color.rgb,
                 100,
                 180,
                 106)
                 ,orange: A3($Color.rgb,
-                234,
-                99,
-                68)
-                ,sand: A3($Color.rgb,224,163,73)
+                200,
+                130,
+                170)
+                ,sand: A3($Color.rgb,
+                242,
+                243,
+                196)
                 ,seaBlue: A3($Color.rgb,
-                35,
-                57,
-                92)};
+                147,
+                202,
+                223)};
    var emptyForm = $Graphics$Collage.toForm($Graphics$Element.empty);
    var startCountdownMessage = "press C to start countdown (30s)";
    _elm.Game.Render.Utils.values = {_op: _op

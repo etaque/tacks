@@ -2,12 +2,14 @@
 @import 'fonts';
 
 .game {
-  background-color: $sand;
+  /* background-color: $sand; */
+  background-color: $darkSeaBlue;
 }
 
 aside {
   color: $whiteBlue;
   font-family: $mono;
+  background-color: $blackSeaBlue;
 
   .module-best-times {
     flex: 1;
@@ -106,8 +108,8 @@ aside {
     }
 
     input[type="text"] {
-      background-color: $navBlue;
-      border: 2px solid $mainBlue;
+      background-color: #222;
+      border: 2px solid #666;
       color: white;
     }
   }
