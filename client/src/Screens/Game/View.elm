@@ -18,6 +18,7 @@ import Screens.Game.PlayersView exposing (playersBlock)
 import Screens.TopBar as TopBar
 import Screens.Utils exposing (..)
 import Game.Render.All exposing (renderGame)
+import Game.Render.All2 exposing (renderSvg)
 
 
 view : (Int, Int) -> Screen -> Html
@@ -35,10 +36,12 @@ rightWidth = 200
 gameView : (Int, Int) -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
   let
-    gameElement = renderGame (w - leftWidth - rightWidth, h - TopBar.height) gameState
+    -- gameElement = renderGame (w - leftWidth - rightWidth, h - TopBar.height) gameState
+    gameSvg = renderSvg (w - leftWidth - rightWidth, h - TopBar.height) gameState
   in
     [ leftBar (h - TopBar.height) screen gameState
-    , div [ class "game" ] [ fromElement gameElement ]
+    -- , div [ class "game" ] [ fromElement gameElement ]
+    , div [ class "game" ] [ gameSvg ]
     , rightBar (h - TopBar.height) screen gameState
     ]
 
