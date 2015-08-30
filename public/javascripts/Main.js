@@ -3366,7 +3366,7 @@ Elm.Game.Models.make = function (_elm) {
                  _v2._0) > -1;
                case "Nothing": return false;}
             _U.badCase($moduleName,
-            "between lines 273 and 275");
+            "between lines 275 and 277");
          }();
       }();
    };
@@ -3379,7 +3379,7 @@ Elm.Game.Models.make = function (_elm) {
                return _v4.now - _v6._0;
                case "Nothing": return 0;}
             _U.badCase($moduleName,
-            "between lines 267 and 269");
+            "between lines 269 and 271");
          }();
       }();
    };
@@ -3506,7 +3506,7 @@ Elm.Game.Models.make = function (_elm) {
             switch (_.ctor)
             {case "_Tuple2": return _._0;}
             _U.badCase($moduleName,
-            "on line 166, column 14 to 30");
+            "on line 168, column 14 to 30");
          }();
          var effectiveWidth = areaWidth(area) - margin * 2;
          return A2($Game$Core.floatMod,
@@ -3974,159 +3974,6 @@ Elm.Game.Render.All.make = function (_elm) {
    _elm.Game.Render.All.values = {_op: _op
                                  ,renderGame: renderGame};
    return _elm.Game.Render.All.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.All2 = Elm.Game.Render.All2 || {};
-Elm.Game.Render.All2.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.All2 = _elm.Game.Render.All2 || {};
-   if (_elm.Game.Render.All2.values)
-   return _elm.Game.Render.All2.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.All2",
-   $Basics = Elm.Basics.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
-   $Svg$Lazy = Elm.Svg.Lazy.make(_elm);
-   var hull = A2($Svg.rect,
-   _L.fromArray([$Svg$Attributes.width("12")
-                ,$Svg$Attributes.height("20")
-                ,$Svg$Attributes.x("-6")
-                ,$Svg$Attributes.y("-10")
-                ,$Svg$Attributes.fill("white")]),
-   _L.fromArray([]));
-   var hullRotation = function (heading) {
-      return function () {
-         var r = 0 - heading;
-         return A2($Basics._op["++"],
-         "rotate(",
-         A2($Basics._op["++"],
-         $Basics.toString(r),
-         ")"));
-      }();
-   };
-   var renderPlayerHull = function (heading) {
-      return A2($Svg.g,
-      _L.fromArray([$Svg$Attributes.transform(hullRotation(heading))]),
-      _L.fromArray([hull]));
-   };
-   var renderGust = function (gust) {
-      return function () {
-         var color = _U.cmp(gust.speed,
-         0) > 0 ? "black" : "white";
-         var a = 0.3 * $Basics.abs(gust.speed) / 10;
-         return A2($Svg.circle,
-         _L.fromArray([$Svg$Attributes.r($Basics.toString(gust.radius))
-                      ,$Svg$Attributes.fill(color)
-                      ,$Svg$Attributes.fillOpacity($Basics.toString(a))
-                      ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(gust.position))]),
-         _L.fromArray([]));
-      }();
-   };
-   var renderGusts = function (wind) {
-      return A2($Svg.g,
-      _L.fromArray([]),
-      A2($List.map,
-      renderGust,
-      wind.gusts));
-   };
-   var renderIslands = function (course) {
-      return function () {
-         var renderIsland = function (_v0) {
-            return function () {
-               return A2($Svg.circle,
-               _L.fromArray([$Svg$Attributes.r($Basics.toString(_v0.radius))
-                            ,$Svg$Attributes.fill($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.sand))
-                            ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v0.location))]),
-               _L.fromArray([]));
-            }();
-         };
-         return A2($Svg.g,
-         _L.fromArray([]),
-         A2($List.map,
-         renderIsland,
-         course.islands));
-      }();
-   };
-   var renderBounds = function (area) {
-      return function () {
-         var top = $Game$Models.areaTop(area);
-         var $ = $Game$Models.areaCenters(area),
-         cw = $._0,
-         ch = $._1;
-         var $ = $Game$Models.areaDims(area),
-         w = $._0,
-         h = $._1;
-         return A2($Svg.rect,
-         _L.fromArray([$Svg$Attributes.width($Basics.toString(w))
-                      ,$Svg$Attributes.height($Basics.toString(h))
-                      ,$Svg$Attributes.stroke("white")
-                      ,$Svg$Attributes.fill($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.seaBlue))
-                      ,$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-                      0 - w / 2,
-                      top - h))]),
-         _L.fromArray([]));
-      }();
-   };
-   var renderSvg = F2(function (_v2,
-   gameState) {
-      return function () {
-         switch (_v2.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var cy = $Basics.toFloat(_v2._1) / 2 - $Basics.toFloat(_v2._1) - $Basics.snd(gameState.center);
-                 var cx = $Basics.toFloat(_v2._0) / 2 - $Basics.fst(gameState.center);
-                 return A2($Svg.svg,
-                 _L.fromArray([$Svg$Attributes.width($Basics.toString(_v2._0))
-                              ,$Svg$Attributes.height($Basics.toString(_v2._1))
-                              ,$Svg$Attributes.version("1.1")]),
-                 _L.fromArray([A2($Svg.g,
-                 _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
-                 "scale(1,-1)",
-                 A2($Game$Render$SvgUtils.translate,
-                 cx,
-                 cy)))]),
-                 _L.fromArray([renderBounds(gameState.course.area)
-                              ,renderGusts(gameState.wind)
-                              ,renderIslands(gameState.course)
-                              ,A2($Svg.g,
-                              _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(gameState.playerState.position))]),
-                              _L.fromArray([A2($Svg$Lazy.lazy,
-                              renderPlayerHull,
-                              gameState.playerState.heading)]))
-                              ,A2($Svg.circle,
-                              _L.fromArray([$Svg$Attributes.r("10")]),
-                              _L.fromArray([]))]))]));
-              }();}
-         _U.badCase($moduleName,
-         "between lines 22 and 39");
-      }();
-   });
-   _elm.Game.Render.All2.values = {_op: _op
-                                  ,renderSvg: renderSvg
-                                  ,renderBounds: renderBounds
-                                  ,renderIslands: renderIslands
-                                  ,renderGusts: renderGusts
-                                  ,renderGust: renderGust
-                                  ,renderPlayerHull: renderPlayerHull
-                                  ,hullRotation: hullRotation
-                                  ,hull: hull};
-   return _elm.Game.Render.All2.values;
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};
@@ -5409,7 +5256,38 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm);
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var lineCoords = F2(function (p1,
+   p2) {
+      return function () {
+         var y = function ($) {
+            return $Basics.toString($Basics.snd($));
+         };
+         var x = function ($) {
+            return $Basics.toString($Basics.fst($));
+         };
+         return _L.fromArray([$Svg$Attributes.x1(x(p1))
+                             ,$Svg$Attributes.y1(y(p1))
+                             ,$Svg$Attributes.x2(x(p2))
+                             ,$Svg$Attributes.y2(y(p2))]);
+      }();
+   });
+   var segment = F2(function (attrs,
+   _v0) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return A2($Svg.line,
+              A2($Basics._op["++"],
+              attrs,
+              A2(lineCoords,_v0._0,_v0._1)),
+              _L.fromArray([]));}
+         _U.badCase($moduleName,
+         "on line 32, column 3 to 41");
+      }();
+   });
    var colorToSvg = function (color) {
       return function () {
          var $ = $Color.toRgb(color),
@@ -5439,21 +5317,23 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
       $Basics.toString(y),
       ")"))));
    });
-   var translatePoint = function (_v0) {
+   var translatePoint = function (_v4) {
       return function () {
-         switch (_v0.ctor)
+         switch (_v4.ctor)
          {case "_Tuple2":
             return A2(translate,
-              _v0._0,
-              _v0._1);}
+              _v4._0,
+              _v4._1);}
          _U.badCase($moduleName,
-         "on line 15, column 3 to 16");
+         "on line 19, column 3 to 16");
       }();
    };
    _elm.Game.Render.SvgUtils.values = {_op: _op
                                       ,translate: translate
                                       ,translatePoint: translatePoint
-                                      ,colorToSvg: colorToSvg};
+                                      ,colorToSvg: colorToSvg
+                                      ,segment: segment
+                                      ,lineCoords: lineCoords};
    return _elm.Game.Render.SvgUtils.values;
 };
 Elm.Game = Elm.Game || {};
@@ -5591,6 +5471,357 @@ Elm.Game.Render.Utils.make = function (_elm) {
                                    ,formatTimer: formatTimer
                                    ,gameTitle: gameTitle};
    return _elm.Game.Render.Utils.values;
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.RenderSvg = Elm.Game.RenderSvg || {};
+Elm.Game.RenderSvg.All = Elm.Game.RenderSvg.All || {};
+Elm.Game.RenderSvg.All.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.RenderSvg = _elm.Game.RenderSvg || {};
+   _elm.Game.RenderSvg.All = _elm.Game.RenderSvg.All || {};
+   if (_elm.Game.RenderSvg.All.values)
+   return _elm.Game.RenderSvg.All.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.RenderSvg.All",
+   $Basics = Elm.Basics.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $Game$RenderSvg$Course = Elm.Game.RenderSvg.Course.make(_elm),
+   $Game$RenderSvg$Gates = Elm.Game.RenderSvg.Gates.make(_elm),
+   $Game$RenderSvg$Players = Elm.Game.RenderSvg.Players.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $Svg$Lazy = Elm.Svg.Lazy.make(_elm);
+   var render = F2(function (_v0,
+   _v1) {
+      return function () {
+         return function () {
+            switch (_v0.ctor)
+            {case "_Tuple2":
+               return function () {
+                    var cy = $Basics.toFloat(_v0._1) / 2 - $Basics.toFloat(_v0._1) - $Basics.snd(_v1.center);
+                    var cx = $Basics.toFloat(_v0._0) / 2 - $Basics.fst(_v1.center);
+                    return A2($Svg.svg,
+                    _L.fromArray([$Svg$Attributes.width($Basics.toString(_v0._0))
+                                 ,$Svg$Attributes.height($Basics.toString(_v0._1))
+                                 ,$Svg$Attributes.version("1.1")]),
+                    _L.fromArray([A2($Svg.g,
+                    _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
+                    "scale(1,-1)",
+                    A2($Game$Render$SvgUtils.translate,
+                    cx,
+                    cy)))]),
+                    _L.fromArray([$Game$RenderSvg$Course.renderBounds(_v1.course.area)
+                                 ,$Game$RenderSvg$Course.renderGusts(_v1.wind)
+                                 ,$Game$RenderSvg$Course.renderIslands(_v1.course)
+                                 ,A4($Game$RenderSvg$Gates.renderDownwind,
+                                 _v1.playerState,
+                                 _v1.course,
+                                 _v1.now,
+                                 $Game$Models.isStarted(_v1))
+                                 ,A3($Game$RenderSvg$Gates.renderUpwind,
+                                 _v1.playerState,
+                                 _v1.course,
+                                 _v1.now)
+                                 ,A2($Svg.g,
+                                 _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v1.playerState.position))]),
+                                 _L.fromArray([A2($Svg$Lazy.lazy,
+                                 $Game$RenderSvg$Players.renderPlayerHull,
+                                 _v1.playerState.heading)]))]))]));
+                 }();}
+            _U.badCase($moduleName,
+            "between lines 22 and 42");
+         }();
+      }();
+   });
+   _elm.Game.RenderSvg.All.values = {_op: _op
+                                    ,render: render};
+   return _elm.Game.RenderSvg.All.values;
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.RenderSvg = Elm.Game.RenderSvg || {};
+Elm.Game.RenderSvg.Course = Elm.Game.RenderSvg.Course || {};
+Elm.Game.RenderSvg.Course.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.RenderSvg = _elm.Game.RenderSvg || {};
+   _elm.Game.RenderSvg.Course = _elm.Game.RenderSvg.Course || {};
+   if (_elm.Game.RenderSvg.Course.values)
+   return _elm.Game.RenderSvg.Course.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.RenderSvg.Course",
+   $Basics = Elm.Basics.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var renderGust = function (gust) {
+      return function () {
+         var color = _U.cmp(gust.speed,
+         0) > 0 ? "black" : "white";
+         var a = 0.3 * $Basics.abs(gust.speed) / 10;
+         return A2($Svg.circle,
+         _L.fromArray([$Svg$Attributes.r($Basics.toString(gust.radius))
+                      ,$Svg$Attributes.fill(color)
+                      ,$Svg$Attributes.fillOpacity($Basics.toString(a))
+                      ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(gust.position))]),
+         _L.fromArray([]));
+      }();
+   };
+   var renderGusts = function (wind) {
+      return A2($Svg.g,
+      _L.fromArray([]),
+      A2($List.map,
+      renderGust,
+      wind.gusts));
+   };
+   var renderIsland = function (_v0) {
+      return function () {
+         return A2($Svg.circle,
+         _L.fromArray([$Svg$Attributes.r($Basics.toString(_v0.radius))
+                      ,$Svg$Attributes.fill($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.sand))
+                      ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v0.location))]),
+         _L.fromArray([]));
+      }();
+   };
+   var renderIslands = function (course) {
+      return A2($Svg.g,
+      _L.fromArray([]),
+      A2($List.map,
+      renderIsland,
+      course.islands));
+   };
+   var renderBounds = function (area) {
+      return function () {
+         var top = $Game$Models.areaTop(area);
+         var $ = $Game$Models.areaCenters(area),
+         cw = $._0,
+         ch = $._1;
+         var $ = $Game$Models.areaDims(area),
+         w = $._0,
+         h = $._1;
+         return A2($Svg.rect,
+         _L.fromArray([$Svg$Attributes.width($Basics.toString(w))
+                      ,$Svg$Attributes.height($Basics.toString(h))
+                      ,$Svg$Attributes.stroke("white")
+                      ,$Svg$Attributes.strokeDasharray("5,5")
+                      ,$Svg$Attributes.fill($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.seaBlue))
+                      ,$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+                      0 - w / 2,
+                      top - h))]),
+         _L.fromArray([]));
+      }();
+   };
+   _elm.Game.RenderSvg.Course.values = {_op: _op
+                                       ,renderBounds: renderBounds
+                                       ,renderIslands: renderIslands
+                                       ,renderIsland: renderIsland
+                                       ,renderGusts: renderGusts
+                                       ,renderGust: renderGust};
+   return _elm.Game.RenderSvg.Course.values;
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.RenderSvg = Elm.Game.RenderSvg || {};
+Elm.Game.RenderSvg.Gates = Elm.Game.RenderSvg.Gates || {};
+Elm.Game.RenderSvg.Gates.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.RenderSvg = _elm.Game.RenderSvg || {};
+   _elm.Game.RenderSvg.Gates = _elm.Game.RenderSvg.Gates || {};
+   if (_elm.Game.RenderSvg.Gates.values)
+   return _elm.Game.RenderSvg.Gates.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.RenderSvg.Gates",
+   $Basics = Elm.Basics.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var gateLineOpacity = function (timer) {
+      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
+   };
+   var renderGateMark = function (p) {
+      return A2($Svg.circle,
+      _L.fromArray([$Svg$Attributes.r($Basics.toString($Game$Models.markRadius))
+                   ,$Svg$Attributes.stroke($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.orange))
+                   ,$Svg$Attributes.strokeWidth("2")
+                   ,$Svg$Attributes.fill("white")
+                   ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(p))]),
+      _L.fromArray([]));
+   };
+   var renderGateMarks = function (gate) {
+      return function () {
+         var $ = $Game$Models.getGateMarks(gate),
+         left = $._0,
+         right = $._1;
+         return A2($Svg.g,
+         _L.fromArray([]),
+         A2($List.map,
+         renderGateMark,
+         _L.fromArray([left,right])));
+      }();
+   };
+   var renderGate = F4(function (gate,
+   timer,
+   isNext,
+   gateLoc) {
+      return function () {
+         var marks = renderGateMarks(gate);
+         return A2($Svg.g,
+         _L.fromArray([]),
+         _L.fromArray([marks]));
+      }();
+   });
+   var renderFinishLine = F2(function (gate,
+   timer) {
+      return function () {
+         var marks = renderGateMarks(gate);
+         return A2($Svg.g,
+         _L.fromArray([]),
+         _L.fromArray([marks]));
+      }();
+   });
+   var renderStartLine = F3(function (gate,
+   started,
+   timer) {
+      return function () {
+         var $ = $Game$Models.getGateMarks(gate),
+         left = $._0,
+         right = $._1;
+         var a = started ? gateLineOpacity(timer) : 1;
+         var lineStyle = started ? _L.fromArray([$Svg$Attributes.stroke($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.green))
+                                                ,$Svg$Attributes.strokeWidth("2")]) : _L.fromArray([$Svg$Attributes.stroke($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.orange))
+                                                                                                   ,$Svg$Attributes.strokeWidth("2")]);
+         var l = A2($Game$Render$SvgUtils.segment,
+         A2($List._op["::"],
+         $Svg$Attributes.opacity($Basics.toString(a)),
+         lineStyle),
+         $Game$Models.getGateMarks(gate));
+         var marks = renderGateMarks(gate);
+         return A2($Svg.g,
+         _L.fromArray([]),
+         _L.fromArray([l,marks]));
+      }();
+   });
+   var renderUpwind = F3(function (playerState,
+   course,
+   now) {
+      return function () {
+         var isNext = _U.eq(playerState.nextGate,
+         $Maybe.Just($Models.UpwindGate));
+         return A4(renderGate,
+         course.upwind,
+         now,
+         isNext,
+         $Models.UpwindGate);
+      }();
+   });
+   var renderDownwind = F4(function (playerState,
+   course,
+   now,
+   started) {
+      return function () {
+         var isNext = _U.eq(playerState.nextGate,
+         $Maybe.Just($Models.DownwindGate));
+         var isLastGate = _U.eq($List.length(playerState.crossedGates),
+         course.laps * 2);
+         var isFirstGate = $List.isEmpty(playerState.crossedGates);
+         return isFirstGate ? A3(renderStartLine,
+         course.downwind,
+         started,
+         now) : isLastGate ? A2(renderFinishLine,
+         course.downwind,
+         now) : A4(renderGate,
+         course.downwind,
+         now,
+         isNext,
+         $Models.DownwindGate);
+      }();
+   });
+   _elm.Game.RenderSvg.Gates.values = {_op: _op
+                                      ,renderDownwind: renderDownwind
+                                      ,renderUpwind: renderUpwind
+                                      ,renderStartLine: renderStartLine
+                                      ,renderFinishLine: renderFinishLine
+                                      ,renderGate: renderGate
+                                      ,renderGateMarks: renderGateMarks
+                                      ,renderGateMark: renderGateMark
+                                      ,gateLineOpacity: gateLineOpacity};
+   return _elm.Game.RenderSvg.Gates.values;
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.RenderSvg = Elm.Game.RenderSvg || {};
+Elm.Game.RenderSvg.Players = Elm.Game.RenderSvg.Players || {};
+Elm.Game.RenderSvg.Players.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.RenderSvg = _elm.Game.RenderSvg || {};
+   _elm.Game.RenderSvg.Players = _elm.Game.RenderSvg.Players || {};
+   if (_elm.Game.RenderSvg.Players.values)
+   return _elm.Game.RenderSvg.Players.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.RenderSvg.Players",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var hull = A2($Svg.path,
+   _L.fromArray([$Svg$Attributes.d("m -3.6481527,10 c 0,0 -0.3441944,-4.017 -0.3441944,-7.0051 0,-3.9677 2.1760648,-9.5098 3.1453492,-11.8415 0.62518992,-1.5042 0.8739859,-1.4975 1.50907569,0 0.96588441,2.2813 3.33024631,7.8678 3.33024631,11.8388 l -0.3743939,7.0202 z")
+                ,$Svg$Attributes.fill("white")]),
+   _L.fromArray([]));
+   var hullRotation = function (heading) {
+      return function () {
+         var r = 180 - heading;
+         return A2($Basics._op["++"],
+         "rotate(",
+         A2($Basics._op["++"],
+         $Basics.toString(r),
+         ")"));
+      }();
+   };
+   var renderPlayerHull = function (heading) {
+      return A2($Svg.g,
+      _L.fromArray([$Svg$Attributes.transform(hullRotation(heading))]),
+      _L.fromArray([hull]));
+   };
+   _elm.Game.RenderSvg.Players.values = {_op: _op
+                                        ,renderPlayerHull: renderPlayerHull
+                                        ,hullRotation: hullRotation
+                                        ,hull: hull};
+   return _elm.Game.RenderSvg.Players.values;
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
@@ -19849,7 +20080,7 @@ Elm.Screens.Game.View.make = function (_elm) {
    $moduleName = "Screens.Game.View",
    $Basics = Elm.Basics.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$All2 = Elm.Game.Render.All2.make(_elm),
+   $Game$RenderSvg$All = Elm.Game.RenderSvg.All.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
@@ -19964,7 +20195,7 @@ Elm.Screens.Game.View.make = function (_elm) {
          switch (_v6.ctor)
          {case "_Tuple2":
             return function () {
-                 var gameSvg = A2($Game$Render$All2.renderSvg,
+                 var gameSvg = A2($Game$RenderSvg$All.render,
                  {ctor: "_Tuple2"
                  ,_0: _v6._0 - leftWidth - rightWidth
                  ,_1: _v6._1 - $Screens$TopBar.height},

@@ -125,6 +125,8 @@ type alias GhostState =
   , gates:    List Time
   }
 
+-- type GateLocation = Upwind | Downwind
+
 areaBox : RaceArea -> (Point,Point)
 areaBox {rightTop,leftBottom} =
   (rightTop, leftBottom)

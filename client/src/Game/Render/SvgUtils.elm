@@ -2,6 +2,10 @@ module Game.Render.SvgUtils where
 
 import Models exposing (..)
 
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
+import Svg.Lazy exposing (..)
+
 import String
 import Color exposing (Color)
 
@@ -22,3 +26,19 @@ colorToSvg color =
       |> String.join ","
   in
     "rgba(" ++ s ++ ")"
+
+segment : List Attribute -> (Point, Point) -> Svg
+segment attrs (p1, p2) =
+  line (attrs ++ (lineCoords p1 p2)) [ ]
+
+lineCoords : Point -> Point -> List Attribute
+lineCoords p1 p2 =
+  let
+    x = fst >> toString
+    y = snd >> toString
+  in
+    [ x1 (x p1)
+    , y1 (y p1)
+    , x2 (x p2)
+    , y2 (y p2)
+    ]
