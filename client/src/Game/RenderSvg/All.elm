@@ -8,7 +8,7 @@ import Game.Render.Utils exposing (..)
 
 import Game.RenderSvg.Course exposing (..)
 import Game.RenderSvg.Players exposing (..)
-import Game.RenderSvg.Gates exposing (..)
+import Game.RenderSvg.Dashboard exposing (..)
 
 import Html exposing (Html)
 import Svg exposing (..)
@@ -28,17 +28,28 @@ render (w, h) ({playerState,course,now,wind} as gameState) =
       , height (toString h)
       , version "1.1"
       ]
-      [ g
-        [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
-        [ renderBounds course.area
-        , renderGusts wind
-        , renderIslands course
-        , renderDownwind playerState course now (isStarted gameState)
-        , renderUpwind playerState course now
-        , g
-          [ transform (translatePoint playerState.position) ]
-          [ lazy renderPlayerHull playerState.heading ]
+      [ defs [ ]
+        [ pattern [ id "seaPattern", x "0", y "0", width "50", height "120", patternUnits "userSpaceOnUse" ]
+          [ rect [ x "0", y "0", width "50", height "30", fill "grey", opacity "0.05" ] [ ]
+          , rect [ x "0", y "30", width "50", height "30", fill "grey", opacity "0.1" ] [ ]
+          , rect [ x "0", y "60", width "50", height "30", fill "grey", opacity "0.05" ] [ ]
+          ]
         ]
+      -- , Svg.filter [ id "noise" ]
+      --   [ feTurbulence
+      --     [ type' "fractalNoise"
+      --     , baseFrequency "0.7"
+      --     , numOctaves "10"
+      --     , stitchTiles "stitch"
+      --     ]
+      --     [ ]
+      --   ]
+      , g
+        [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
+        [ renderCourse gameState
+        , renderPlayers gameState
+        ]
+      , renderDashboard (w,h) gameState
       ]
 
 

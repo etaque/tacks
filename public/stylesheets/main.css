@@ -5791,7 +5791,8 @@ a.period {
 
 .game {
   /* background-color: $sand; */
-  background-color: #93CADF; }
+  background-color: #93CADF;
+  /* font-family: $mono; */ }
 
 aside {
   color: #B1C0D8;

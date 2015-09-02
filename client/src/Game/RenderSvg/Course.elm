@@ -5,6 +5,7 @@ import Models exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
+import Game.RenderSvg.Gates exposing (..)
 
 import String
 import Svg exposing (..)
@@ -12,6 +13,16 @@ import Svg.Attributes exposing (..)
 import Svg.Lazy exposing (..)
 
 
+renderCourse : GameState -> Svg
+renderCourse ({playerState,course,now,wind} as gameState) =
+    g [ ]
+      [ renderBounds course.area
+      -- , renderLaylines wind course playerState
+      , renderIslands course
+      , renderDownwind playerState course now (isStarted gameState)
+      , renderUpwind playerState course now
+      , renderGusts wind
+      ]
 
 renderBounds : RaceArea -> Svg
 renderBounds area =
@@ -25,7 +36,9 @@ renderBounds area =
       , height (toString h)
       , stroke "white"
       , strokeDasharray "5,5"
-      , fill (colorToSvg colors.seaBlue)
+      , fill "url(#seaPattern)" -- (colorToSvg colors.seaBlue)
+      -- , Svg.Attributes.filter "url(#noise)"
+      -- , opacity "0.3"
       , transform (translate -(w/2) (top - h))
       ] [ ]
 

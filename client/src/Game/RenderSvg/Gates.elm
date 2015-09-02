@@ -37,7 +37,7 @@ renderStartLine gate started timer =
     marks = renderGateMarks gate
     lineStyle = if started
       then [ stroke (colorToSvg colors.green), strokeWidth "2" ]
-      else [ stroke (colorToSvg colors.orange), strokeWidth "2" ]
+      else [ stroke "black", strokeWidth "2", strokeDasharray "5,3", opacity "0.9" ]
     a = if started then gateLineOpacity timer else 1
     (left,right) = getGateMarks gate
     l = segment (opacity (toString a) :: lineStyle ) (getGateMarks gate)
@@ -88,9 +88,9 @@ renderGateMark : Point -> Svg
 renderGateMark p =
   circle
     [ r (toString markRadius)
-    , stroke (colorToSvg colors.orange)
+    , stroke "white"
     , strokeWidth "2"
-    , fill "white"
+    , fill "black"
     , transform (translatePoint p)
     ]
     [ ]

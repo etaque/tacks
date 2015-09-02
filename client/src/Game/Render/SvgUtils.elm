@@ -31,6 +31,13 @@ segment : List Attribute -> (Point, Point) -> Svg
 segment attrs (p1, p2) =
   line (attrs ++ (lineCoords p1 p2)) [ ]
 
+
+polygonPoints : List Point -> Attribute
+polygonPoints pointsList =
+  List.map (\(x, y) -> (toString x) ++ "," ++ (toString y)) pointsList
+    |> String.join " "
+    |> points
+
 lineCoords : Point -> Point -> List Attribute
 lineCoords p1 p2 =
   let
@@ -42,3 +49,7 @@ lineCoords p1 p2 =
     , x2 (x p2)
     , y2 (y p2)
     ]
+
+empty : Svg
+empty =
+  g [ ] [ ]
