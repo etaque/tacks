@@ -26,7 +26,7 @@ gameStep clock {raceInput, windowInput, keyboardInput} gameState =
   in
     raceInputStep raceInput clock gameState
       |> playerStep keyboardInputWithFocus clock.delta
-      |> centerStep
+      |> centerStep gameState.playerState.position windowInput
 
 
 --
@@ -99,11 +99,26 @@ playerStep keyboardInput elapsed gameState =
     { gameState | playerState <- playerState }
 
 
-centerStep : GameState -> GameState
-centerStep gameState =
-  let newCenter = gameState.playerState.position
-  in  { gameState | center <- newCenter }
+centerStep : Point -> (Int, Int) -> GameState -> GameState
+centerStep (px, py) dims ({center, playerState} as gameState) =
+  let
+    (cx, cy) = center
+    (px', py') = playerState.position
+    (w, h) = floatify dims
+    newCenter = (axisFocus px px' cx w, axisFocus py py' cy h)
+  in
+    { gameState | center <- newCenter }
 
+axisFocus : Float -> Float -> Float -> Float -> Float
+axisFocus p p' c window =
+  let
+    pad = window * 0.45
+    offset = (window / 2) - pad
+    delta = p' - p
+  in
+    if | p' < c - offset -> c + delta
+       | p' > c + offset -> c + delta
+       | otherwise       -> c
 
 moveOpponentState : OpponentState -> Float -> OpponentState
 moveOpponentState state delta =

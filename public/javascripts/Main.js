@@ -6249,6 +6249,7 @@ Elm.Game.Steps.make = function (_elm) {
    $Game$Steps$Wind = Elm.Game.Steps.Wind.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var raceEscapeStep = F2(function (doEscape,
@@ -6294,7 +6295,7 @@ Elm.Game.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 118 and 125");
+         "between lines 133 and 140");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -6319,14 +6320,56 @@ Elm.Game.Steps.make = function (_elm) {
          newOpponents);
       }();
    });
-   var centerStep = function (gameState) {
+   var axisFocus = F4(function (p,
+   p$,
+   c,
+   window) {
       return function () {
-         var newCenter = gameState.playerState.position;
-         return _U.replace([["center"
-                            ,newCenter]],
-         gameState);
+         var delta = p$ - p;
+         var pad = window * 0.45;
+         var offset = window / 2 - pad;
+         return _U.cmp(p$,
+         c - offset) < 0 ? c + delta : _U.cmp(p$,
+         c + offset) > 0 ? c + delta : c;
       }();
-   };
+   });
+   var centerStep = F3(function (_v2,
+   dims,
+   _v3) {
+      return function () {
+         return function () {
+            switch (_v2.ctor)
+            {case "_Tuple2":
+               return function () {
+                    var $ = $Game$Geo.floatify(dims),
+                    w = $._0,
+                    h = $._1;
+                    var $ = _v3.playerState.position,
+                    px$ = $._0,
+                    py$ = $._1;
+                    var $ = _v3.center,
+                    cx = $._0,
+                    cy = $._1;
+                    var newCenter = {ctor: "_Tuple2"
+                                    ,_0: A4(axisFocus,
+                                    _v2._0,
+                                    px$,
+                                    cx,
+                                    w)
+                                    ,_1: A4(axisFocus,
+                                    _v2._1,
+                                    py$,
+                                    cy,
+                                    h)};
+                    return _U.replace([["center"
+                                       ,newCenter]],
+                    _v3);
+                 }();}
+            _U.badCase($moduleName,
+            "between lines 104 and 110");
+         }();
+      }();
+   });
    var playerStep = F3(function (keyboardInput,
    elapsed,
    gameState) {
@@ -6344,7 +6387,7 @@ Elm.Game.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var updateWindHistory = F2(function (_v2,
+   var updateWindHistory = F2(function (_v8,
    h) {
       return function () {
          return _U.cmp(h.sampleCounter,
@@ -6352,12 +6395,12 @@ Elm.Game.Steps.make = function (_elm) {
          A2($List.take,
          $Game$Models.windHistoryLength,
          A2($List._op["::"],
-         _v2.origin,
+         _v8.origin,
          h.origins)),
          A2($List.take,
          $Game$Models.windHistoryLength,
          A2($List._op["::"],
-         _v2.speed,
+         _v8.speed,
          h.speeds)),
          0) : _U.replace([["sampleCounter"
                           ,h.sampleCounter + 1]],
@@ -6365,14 +6408,14 @@ Elm.Game.Steps.make = function (_elm) {
       }();
    });
    var raceInputStep = F3(function (raceInput,
-   _v4,
-   _v5) {
+   _v10,
+   _v11) {
       return function () {
          return function () {
             return function () {
                var windHistory = A2(updateWindHistory,
                raceInput.wind,
-               _v5.windHistory);
+               _v11.windHistory);
                var $ = raceInput,
                serverNow = $.serverNow,
                startTime = $.startTime,
@@ -6382,24 +6425,24 @@ Elm.Game.Steps.make = function (_elm) {
                initial = $.initial,
                clientTime = $.clientTime;
                var rtd = function () {
-                  var _v8 = _v5.rtd;
-                  switch (_v8.ctor)
+                  var _v14 = _v11.rtd;
+                  switch (_v14.ctor)
                   {case "Just":
                      return A2($Basics.min,
-                       _v8._0,
-                       _v4.time - clientTime);
+                       _v14._0,
+                       _v10.time - clientTime);
                      case "Nothing":
-                     return _v4.time - clientTime;}
+                     return _v10.time - clientTime;}
                   _U.badCase($moduleName,
                   "between lines 39 and 45");
                }();
                var compensedServerNow = serverNow - rtd / 2;
                var now = function () {
-                  var _v10 = _v5.serverNow;
-                  switch (_v10.ctor)
+                  var _v16 = _v11.serverNow;
+                  switch (_v16.ctor)
                   {case "Just":
                      return A2($Basics.min,
-                       _v10._0 + _v4.delta,
+                       _v16._0 + _v10.delta,
                        compensedServerNow);
                      case "Nothing":
                      return compensedServerNow;}
@@ -6408,10 +6451,10 @@ Elm.Game.Steps.make = function (_elm) {
                }();
                var newPlayerState = _U.replace([["time"
                                                 ,now]],
-               _v5.playerState);
+               _v11.playerState);
                var updatedOpponents = A3(updateOpponents,
-               _v5.opponents,
-               _v4.delta,
+               _v11.opponents,
+               _v10.delta,
                opponents);
                return _U.replace([["opponents"
                                   ,updatedOpponents]
@@ -6425,23 +6468,25 @@ Elm.Game.Steps.make = function (_elm) {
                                  ,["playerState",newPlayerState]
                                  ,["startTime",startTime]
                                  ,["live",$Basics.not(initial)]
-                                 ,["localTime",_v4.time]
+                                 ,["localTime",_v10.time]
                                  ,["rtd",$Maybe.Just(rtd)]],
-               _v5);
+               _v11);
             }();
          }();
       }();
    });
    var gameStep = F3(function (clock,
-   _v12,
+   _v18,
    gameState) {
       return function () {
          return function () {
-            var keyboardInputWithFocus = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : _v12.keyboardInput;
-            return centerStep(A2(playerStep,
+            var keyboardInputWithFocus = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : _v18.keyboardInput;
+            return A2(centerStep,
+            gameState.playerState.position,
+            _v18.windowInput)(A2(playerStep,
             keyboardInputWithFocus,
             clock.delta)(A3(raceInputStep,
-            _v12.raceInput,
+            _v18.raceInput,
             clock,
             gameState)));
          }();
@@ -6453,6 +6498,7 @@ Elm.Game.Steps.make = function (_elm) {
                             ,updateWindHistory: updateWindHistory
                             ,playerStep: playerStep
                             ,centerStep: centerStep
+                            ,axisFocus: axisFocus
                             ,moveOpponentState: moveOpponentState
                             ,updateOpponent: updateOpponent
                             ,updateOpponents: updateOpponents

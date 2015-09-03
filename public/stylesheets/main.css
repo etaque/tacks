@@ -4847,7 +4847,7 @@ html, body {
   flex: 1; }
 
 nav {
-  background-color: #eaf4f9;
+  background-color: #a1d5e3;
   /* border-bottom: 2px solid $lightSeaBlue; */
   height: 50px;
   display: flex;
@@ -4876,7 +4876,7 @@ nav {
       text-transform: uppercase;
       font-family: "Proxima Nova Thin";
       letter-spacing: 1px;
-      color: #26424d; }
+      color: #070d0e; }
       .user-menu li a:hover, .user-menu li a:active {
         text-decoration: underline;
         /* background-color: $lighterSeaBlue; */ }
@@ -4892,7 +4892,7 @@ aside {
   display: flex;
   flex-direction: column;
   width: 240px;
-  background-color: #3287a7; }
+  background-color: #1c515f; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -4914,7 +4914,7 @@ body {
   color: white;
   font-family: "Proxima Nova Regular";
   font-size: 15px;
-  background-color: #abd6e6; }
+  background-color: #63b9d0; }
 
 hr {
   border: 0 solid #B1C0D8; }
@@ -4962,22 +4962,22 @@ a {
     font-size: 15px; }
 
 .title-wrapper {
-  background-color: #93CADF;
-  background-color: #abd6e6;
+  background-color: #4bafc9;
+  background-color: #63b9d0;
   /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#93CADF), to(#abd6e6));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#4bafc9), to(#63b9d0));
   /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -webkit-linear-gradient(top, #4bafc9, #63b9d0);
   /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -moz-linear-gradient(top, #4bafc9, #63b9d0);
   /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -ms-linear-gradient(top, #4bafc9, #63b9d0);
   /* IE10 */
-  background-image: -o-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -o-linear-gradient(top, #4bafc9, #63b9d0);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #93CADF, #abd6e6);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#93CADF', EndColorStr='#abd6e6');
-  box-shadow: 0 2px 3px #3287a7 inset;
+  background-image: linear-gradient(top, #4bafc9, #63b9d0);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#4bafc9', EndColorStr='#63b9d0');
+  box-shadow: 0 2px 3px #1c515f inset;
   color: #B1C0D8;
   padding: 40px;
   text-align: center; }
@@ -5018,28 +5018,28 @@ a {
     color: #51585E; }
 
 .dark-wrapper {
-  background-color: #93CADF;
-  background-color: #abd6e6;
+  background-color: #4bafc9;
+  background-color: #63b9d0;
   /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#93CADF), to(#abd6e6));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#4bafc9), to(#63b9d0));
   /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -webkit-linear-gradient(top, #4bafc9, #63b9d0);
   /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -moz-linear-gradient(top, #4bafc9, #63b9d0);
   /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -ms-linear-gradient(top, #4bafc9, #63b9d0);
   /* IE10 */
-  background-image: -o-linear-gradient(top, #93CADF, #abd6e6);
+  background-image: -o-linear-gradient(top, #4bafc9, #63b9d0);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #93CADF, #abd6e6);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#93CADF', EndColorStr='#abd6e6');
+  background-image: linear-gradient(top, #4bafc9, #63b9d0);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#4bafc9', EndColorStr='#63b9d0');
   color: #B1C0D8;
-  box-shadow: 0px 2px 3px #3287a7 inset; }
+  box-shadow: 0px 2px 3px #1c515f inset; }
   .dark-wrapper a {
     color: white; }
 
 .footer-wrapper {
-  box-shadow: 0px 2px 3px #3287a7 inset;
+  box-shadow: 0px 2px 3px #1c515f inset;
   text-align: center;
   color: #B1C0D8;
   padding: 20px;
@@ -5052,7 +5052,7 @@ a {
   padding: 10px;
   color: #51585E;
   border-radius: 5px;
-  box-shadow: 0 2px 3px #3287a7; }
+  box-shadow: 0 2px 3px #1c515f; }
 
 .btn {
   font-weight: bold;
@@ -5272,7 +5272,7 @@ a.player-avatar {
   padding-top: 15px;
   background-color: #f8f9fb;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #44a3c8; }
+  box-shadow: 0 2px 2px #287386; }
 
 .form-set-handle {
   margin-top: 20px;
@@ -5478,7 +5478,7 @@ a.player-avatar {
     display: block;
     height: 200px;
     margin-bottom: 10px;
-    background-color: #93CADF;
+    background-color: #4bafc9;
     background-repeat: no-repeat;
     background-position: center;
     /* border-radius: $br; */
@@ -5573,10 +5573,10 @@ a.player-avatar {
       letter-spacing: 1px;
       color: white; }
     .nav-trials li.active a {
-      background-color: #93CADF;
+      background-color: #4bafc9;
       color: #5899E2; }
     .nav-trials li:hover a {
-      background-color: #93CADF; }
+      background-color: #4bafc9; }
   .nav-trials li + li {
     margin-left: 10px; }
 
@@ -5598,9 +5598,9 @@ a.player-avatar {
 a.period {
   color: #5899E2;
   border-color: #5899E2;
-  background-color: #93CADF; }
+  background-color: #4bafc9; }
   a.period:hover {
-    background-color: #44a3c8; }
+    background-color: #287386; }
 
 .row-show-ranking {
   margin-top: 30px; }
@@ -5685,7 +5685,7 @@ a.period {
 .show-time-trial .trial-picture {
   margin-bottom: 20px;
   height: 200px;
-  background-color: #93CADF;
+  background-color: #4bafc9;
   background-repeat: no-repeat;
   background-position: center; }
 .show-time-trial .nav {
@@ -5701,7 +5701,7 @@ a.period {
       .show-time-trial .nav li a:hover {
         background-color: #5899E2; }
     .show-time-trial .nav li.active a {
-      background-color: #93CADF; }
+      background-color: #4bafc9; }
 
 .post .block-img, .article .block-img {
   margin-top: 30px;
@@ -5754,7 +5754,7 @@ a.period {
 .show-user .title-wrapper .avatar {
   margin-bottom: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #44a3c8; }
+  box-shadow: 0 2px 2px #287386; }
 .show-user .badge-rank {
   display: block;
   margin-left: auto;
@@ -5791,13 +5791,13 @@ a.period {
 
 .game {
   /* background-color: $sand; */
-  background-color: #93CADF;
+  background-color: #4bafc9;
   /* font-family: $mono; */ }
 
 aside {
   color: #B1C0D8;
   font-family: "Inconsolata";
-  background-color: #26424d; }
+  background-color: #070d0e; }
   aside .module-best-times {
     flex: 1; }
   aside .module-help {
@@ -5826,7 +5826,7 @@ aside {
       color: white; }
     aside .module-players .list-players li .lap, aside .module-players .list-tallies li .lap {
       float: right;
-      background-color: #44a3c8;
+      background-color: #287386;
       color: #B1C0D8;
       display: inline-block;
       width: 15px;
