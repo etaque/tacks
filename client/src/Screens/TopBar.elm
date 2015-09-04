@@ -10,7 +10,6 @@ import AppTypes exposing (..)
 import AppUpdates exposing (actionsMailbox)
 
 
-height = 50
 logoWidth = 160
 
 view : AppState -> Html

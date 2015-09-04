@@ -35,10 +35,8 @@ renderBounds area =
       [ width (toString w)
       , height (toString h)
       , stroke "white"
-      , strokeDasharray "5,5"
+      , strokeWidth "2"
       , fill "url(#seaPattern)" -- (colorToSvg colors.seaBlue)
-      -- , Svg.Attributes.filter "url(#noise)"
-      -- , opacity "0.3"
       , transform (translate -(w/2) (top - h))
       ] [ ]
 

@@ -2714,6 +2714,33 @@ Elm.Dict.make = function (_elm) {
    return _elm.Dict.values;
 };
 Elm.Game = Elm.Game || {};
+Elm.Game.Constants = Elm.Game.Constants || {};
+Elm.Game.Constants.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Constants = _elm.Game.Constants || {};
+   if (_elm.Game.Constants.values)
+   return _elm.Game.Constants.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.Constants",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var topbarHeight = 50;
+   var rightSidebarWidth = 220;
+   var leftSidebarWidth = 220;
+   _elm.Game.Constants.values = {_op: _op
+                                ,leftSidebarWidth: leftSidebarWidth
+                                ,rightSidebarWidth: rightSidebarWidth
+                                ,topbarHeight: topbarHeight};
+   return _elm.Game.Constants.values;
+};
+Elm.Game = Elm.Game || {};
 Elm.Game.Core = Elm.Game.Core || {};
 Elm.Game.Core.make = function (_elm) {
    "use strict";
@@ -5667,7 +5694,7 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
          _L.fromArray([$Svg$Attributes.width($Basics.toString(w))
                       ,$Svg$Attributes.height($Basics.toString(h))
                       ,$Svg$Attributes.stroke("white")
-                      ,$Svg$Attributes.strokeDasharray("5,5")
+                      ,$Svg$Attributes.strokeWidth("2")
                       ,$Svg$Attributes.fill("url(#seaPattern)")
                       ,$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
                       0 - w / 2,
@@ -6238,6 +6265,7 @@ Elm.Game.Steps.make = function (_elm) {
    $moduleName = "Game.Steps",
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Game$Constants = Elm.Game.Constants.make(_elm),
    $Game$Core = Elm.Game.Core.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
    $Game$Inputs = Elm.Game.Inputs.make(_elm),
@@ -6295,7 +6323,7 @@ Elm.Game.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 133 and 140");
+         "between lines 147 and 154");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -6320,17 +6348,25 @@ Elm.Game.Steps.make = function (_elm) {
          newOpponents);
       }();
    });
-   var axisFocus = F4(function (p,
+   var axisCenter = F6(function (p,
    p$,
    c,
-   window) {
+   window,
+   areaMin,
+   areaMax) {
       return function () {
          var delta = p$ - p;
-         var pad = window * 0.45;
-         var offset = window / 2 - pad;
-         return _U.cmp(p$,
-         c - offset) < 0 ? c + delta : _U.cmp(p$,
-         c + offset) > 0 ? c + delta : c;
+         var outOffset = window / 2 - window * 2.0e-2;
+         var offset = window / 2 - window * 0.48;
+         var minExit = _U.cmp(delta,
+         0) < 0 && _U.cmp(p$,
+         c - offset) < 0;
+         var maxExit = _U.cmp(delta,
+         0) > 0 && _U.cmp(p$,
+         c + offset) > 0;
+         return minExit ? _U.cmp(areaMin,
+         c - outOffset) > 0 ? c : c + delta : maxExit ? _U.cmp(areaMax,
+         c + outOffset) < 0 ? c : c + delta : c;
       }();
    });
    var centerStep = F3(function (_v2,
@@ -6341,6 +6377,59 @@ Elm.Game.Steps.make = function (_elm) {
             switch (_v2.ctor)
             {case "_Tuple2":
                return function () {
+                    var _ = $Game$Models.areaBox(_v3.course.area);
+                    var xMax = function () {
+                       switch (_.ctor)
+                       {case "_Tuple2":
+                          switch (_._0.ctor)
+                            {case "_Tuple2":
+                               switch (_._1.ctor)
+                                 {case "_Tuple2":
+                                    return _._0._0;}
+                                 break;}
+                            break;}
+                       _U.badCase($moduleName,
+                       "on line 116, column 36 to 55");
+                    }();
+                    var xMin = function () {
+                       switch (_.ctor)
+                       {case "_Tuple2":
+                          switch (_._0.ctor)
+                            {case "_Tuple2":
+                               switch (_._1.ctor)
+                                 {case "_Tuple2":
+                                    return _._1._0;}
+                                 break;}
+                            break;}
+                       _U.badCase($moduleName,
+                       "on line 116, column 36 to 55");
+                    }();
+                    var yMax = function () {
+                       switch (_.ctor)
+                       {case "_Tuple2":
+                          switch (_._0.ctor)
+                            {case "_Tuple2":
+                               switch (_._1.ctor)
+                                 {case "_Tuple2":
+                                    return _._0._1;}
+                                 break;}
+                            break;}
+                       _U.badCase($moduleName,
+                       "on line 116, column 36 to 55");
+                    }();
+                    var yMin = function () {
+                       switch (_.ctor)
+                       {case "_Tuple2":
+                          switch (_._0.ctor)
+                            {case "_Tuple2":
+                               switch (_._1.ctor)
+                                 {case "_Tuple2":
+                                    return _._1._1;}
+                                 break;}
+                            break;}
+                       _U.badCase($moduleName,
+                       "on line 116, column 36 to 55");
+                    }();
                     var $ = $Game$Geo.floatify(dims),
                     w = $._0,
                     h = $._1;
@@ -6351,22 +6440,26 @@ Elm.Game.Steps.make = function (_elm) {
                     cx = $._0,
                     cy = $._1;
                     var newCenter = {ctor: "_Tuple2"
-                                    ,_0: A4(axisFocus,
+                                    ,_0: A6(axisCenter,
                                     _v2._0,
                                     px$,
                                     cx,
-                                    w)
-                                    ,_1: A4(axisFocus,
+                                    w,
+                                    xMin,
+                                    xMax)
+                                    ,_1: A6(axisCenter,
                                     _v2._1,
                                     py$,
                                     cy,
-                                    h)};
+                                    h,
+                                    yMin,
+                                    yMax)};
                     return _U.replace([["center"
                                        ,newCenter]],
                     _v3);
                  }();}
             _U.badCase($moduleName,
-            "between lines 104 and 110");
+            "between lines 112 and 122");
          }();
       }();
    });
@@ -6387,7 +6480,7 @@ Elm.Game.Steps.make = function (_elm) {
          gameState);
       }();
    });
-   var updateWindHistory = F2(function (_v8,
+   var updateWindHistory = F2(function (_v36,
    h) {
       return function () {
          return _U.cmp(h.sampleCounter,
@@ -6395,12 +6488,12 @@ Elm.Game.Steps.make = function (_elm) {
          A2($List.take,
          $Game$Models.windHistoryLength,
          A2($List._op["::"],
-         _v8.origin,
+         _v36.origin,
          h.origins)),
          A2($List.take,
          $Game$Models.windHistoryLength,
          A2($List._op["::"],
-         _v8.speed,
+         _v36.speed,
          h.speeds)),
          0) : _U.replace([["sampleCounter"
                           ,h.sampleCounter + 1]],
@@ -6408,14 +6501,14 @@ Elm.Game.Steps.make = function (_elm) {
       }();
    });
    var raceInputStep = F3(function (raceInput,
-   _v10,
-   _v11) {
+   _v38,
+   _v39) {
       return function () {
          return function () {
             return function () {
                var windHistory = A2(updateWindHistory,
                raceInput.wind,
-               _v11.windHistory);
+               _v39.windHistory);
                var $ = raceInput,
                serverNow = $.serverNow,
                startTime = $.startTime,
@@ -6425,36 +6518,36 @@ Elm.Game.Steps.make = function (_elm) {
                initial = $.initial,
                clientTime = $.clientTime;
                var rtd = function () {
-                  var _v14 = _v11.rtd;
-                  switch (_v14.ctor)
+                  var _v42 = _v39.rtd;
+                  switch (_v42.ctor)
                   {case "Just":
                      return A2($Basics.min,
-                       _v14._0,
-                       _v10.time - clientTime);
+                       _v42._0,
+                       _v38.time - clientTime);
                      case "Nothing":
-                     return _v10.time - clientTime;}
+                     return _v38.time - clientTime;}
                   _U.badCase($moduleName,
-                  "between lines 39 and 45");
+                  "between lines 47 and 53");
                }();
                var compensedServerNow = serverNow - rtd / 2;
                var now = function () {
-                  var _v16 = _v11.serverNow;
-                  switch (_v16.ctor)
+                  var _v44 = _v39.serverNow;
+                  switch (_v44.ctor)
                   {case "Just":
                      return A2($Basics.min,
-                       _v16._0 + _v10.delta,
+                       _v44._0 + _v38.delta,
                        compensedServerNow);
                      case "Nothing":
                      return compensedServerNow;}
                   _U.badCase($moduleName,
-                  "between lines 47 and 53");
+                  "between lines 55 and 61");
                }();
                var newPlayerState = _U.replace([["time"
                                                 ,now]],
-               _v11.playerState);
+               _v39.playerState);
                var updatedOpponents = A3(updateOpponents,
-               _v11.opponents,
-               _v10.delta,
+               _v39.opponents,
+               _v38.delta,
                opponents);
                return _U.replace([["opponents"
                                   ,updatedOpponents]
@@ -6468,25 +6561,28 @@ Elm.Game.Steps.make = function (_elm) {
                                  ,["playerState",newPlayerState]
                                  ,["startTime",startTime]
                                  ,["live",$Basics.not(initial)]
-                                 ,["localTime",_v10.time]
+                                 ,["localTime",_v38.time]
                                  ,["rtd",$Maybe.Just(rtd)]],
-               _v11);
+               _v39);
             }();
          }();
       }();
    });
    var gameStep = F3(function (clock,
-   _v18,
+   _v46,
    gameState) {
       return function () {
          return function () {
-            var keyboardInputWithFocus = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : _v18.keyboardInput;
+            var gameDims = {ctor: "_Tuple2"
+                           ,_0: $Basics.fst(_v46.windowInput) - $Game$Constants.leftSidebarWidth - $Game$Constants.rightSidebarWidth
+                           ,_1: $Basics.snd(_v46.windowInput) - $Game$Constants.topbarHeight};
+            var keyboardInputWithFocus = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : _v46.keyboardInput;
             return A2(centerStep,
             gameState.playerState.position,
-            _v18.windowInput)(A2(playerStep,
+            gameDims)(A2(playerStep,
             keyboardInputWithFocus,
             clock.delta)(A3(raceInputStep,
-            _v18.raceInput,
+            _v46.raceInput,
             clock,
             gameState)));
          }();
@@ -6498,7 +6594,7 @@ Elm.Game.Steps.make = function (_elm) {
                             ,updateWindHistory: updateWindHistory
                             ,playerStep: playerStep
                             ,centerStep: centerStep
-                            ,axisFocus: axisFocus
+                            ,axisCenter: axisCenter
                             ,moveOpponentState: moveOpponentState
                             ,updateOpponent: updateOpponent
                             ,updateOpponents: updateOpponents
@@ -20525,6 +20621,7 @@ Elm.Screens.Game.View.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Screens.Game.View",
    $Basics = Elm.Basics.make(_elm),
+   $Game$Constants = Elm.Game.Constants.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$RenderSvg$All = Elm.Game.RenderSvg.All.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -20536,7 +20633,6 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
    $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
-   $Screens$TopBar = Elm.Screens.TopBar.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var helpItems = $List.concatMap(function (_v0) {
@@ -20550,7 +20646,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 87, column 34 to 77");
+         "on line 85, column 34 to 77");
       }();
    })(_L.fromArray([{ctor: "_Tuple2"
                     ,_0: "ARROWS"
@@ -20632,8 +20728,6 @@ Elm.Screens.Game.View.make = function (_elm) {
                    ,$Screens$Game$ChatView.chatBlock(screen)
                    ,helpBlock]));
    });
-   var rightWidth = 200;
-   var leftWidth = 240;
    var gameView = F3(function (_v6,
    screen,
    gameState) {
@@ -20643,23 +20737,23 @@ Elm.Screens.Game.View.make = function (_elm) {
             return function () {
                  var gameSvg = A2($Game$RenderSvg$All.render,
                  {ctor: "_Tuple2"
-                 ,_0: _v6._0 - leftWidth - rightWidth
-                 ,_1: _v6._1 - $Screens$TopBar.height},
+                 ,_0: _v6._0 - $Game$Constants.leftSidebarWidth - $Game$Constants.rightSidebarWidth
+                 ,_1: _v6._1 - $Game$Constants.topbarHeight},
                  gameState);
                  return _L.fromArray([A3(leftBar,
-                                     _v6._1 - $Screens$TopBar.height,
+                                     _v6._1 - $Game$Constants.topbarHeight,
                                      screen,
                                      gameState)
                                      ,A2($Html.div,
                                      _L.fromArray([$Html$Attributes.$class("game")]),
                                      _L.fromArray([gameSvg]))
                                      ,A3(rightBar,
-                                     _v6._1 - $Screens$TopBar.height,
+                                     _v6._1 - $Game$Constants.topbarHeight,
                                      screen,
                                      gameState)]);
               }();}
          _U.badCase($moduleName,
-         "between lines 38 and 46");
+         "between lines 36 and 44");
       }();
    });
    var loading = _L.fromArray([$Screens$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
@@ -20678,8 +20772,6 @@ Elm.Screens.Game.View.make = function (_elm) {
    _elm.Screens.Game.View.values = {_op: _op
                                    ,view: view
                                    ,loading: loading
-                                   ,leftWidth: leftWidth
-                                   ,rightWidth: rightWidth
                                    ,gameView: gameView
                                    ,leftBar: leftBar
                                    ,rightBar: rightBar
@@ -21965,9 +22057,7 @@ Elm.Screens.TopBar.make = function (_elm) {
                    ,playerMenu(appState.player)]));
    };
    var logoWidth = 160;
-   var height = 50;
    _elm.Screens.TopBar.values = {_op: _op
-                                ,height: height
                                 ,logoWidth: logoWidth
                                 ,view: view
                                 ,logo: logo

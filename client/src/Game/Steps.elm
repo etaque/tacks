@@ -8,12 +8,16 @@ import Game.Inputs exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Core exposing (..)
+import Game.Constants exposing (..)
 
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving exposing (movingStep)
 import Game.Steps.Turning exposing (turningStep)
 import Game.Steps.Vmg exposing (vmgStep)
 import Game.Steps.Wind exposing (windStep)
+
+
+import Debug
 
 
 gameStep : Clock -> GameInput -> GameState -> GameState
@@ -23,10 +27,14 @@ gameStep clock {raceInput, windowInput, keyboardInput} gameState =
       if gameState.chatting
         then emptyKeyboardInput
         else keyboardInput
+    gameDims =
+      ( fst windowInput - leftSidebarWidth - rightSidebarWidth
+      , snd windowInput - topbarHeight
+      )
   in
     raceInputStep raceInput clock gameState
       |> playerStep keyboardInputWithFocus clock.delta
-      |> centerStep gameState.playerState.position windowInput
+      |> centerStep gameState.playerState.position gameDims
 
 
 --
@@ -100,25 +108,31 @@ playerStep keyboardInput elapsed gameState =
 
 
 centerStep : Point -> (Int, Int) -> GameState -> GameState
-centerStep (px, py) dims ({center, playerState} as gameState) =
+centerStep (px, py) dims ({center, playerState, course} as gameState) =
   let
     (cx, cy) = center
     (px', py') = playerState.position
     (w, h) = floatify dims
-    newCenter = (axisFocus px px' cx w, axisFocus py py' cy h)
+    ((xMax, yMax), (xMin, yMin)) = areaBox course.area
+    newCenter =
+      ( axisCenter px px' cx w xMin xMax
+      , axisCenter py py' cy h yMin yMax
+      )
   in
     { gameState | center <- newCenter }
 
-axisFocus : Float -> Float -> Float -> Float -> Float
-axisFocus p p' c window =
+axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
+axisCenter p p' c window areaMin areaMax =
   let
-    pad = window * 0.45
-    offset = (window / 2) - pad
+    offset = (window / 2) - (window * 0.48)
+    outOffset = (window / 2) - (window * 0.02)
     delta = p' - p
+    minExit = delta < 0 && p' < c - offset
+    maxExit = delta > 0 && p' > c + offset
   in
-    if | p' < c - offset -> c + delta
-       | p' > c + offset -> c + delta
-       | otherwise       -> c
+    if | minExit -> if areaMin > c - outOffset then c else c + delta
+       | maxExit -> if areaMax < c + outOffset then c else c + delta
+       | otherwise -> c
 
 moveOpponentState : OpponentState -> Float -> OpponentState
 moveOpponentState state delta =

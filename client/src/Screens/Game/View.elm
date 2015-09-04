@@ -19,6 +19,7 @@ import Screens.TopBar as TopBar
 import Screens.Utils exposing (..)
 import Game.Render.All exposing (renderGame)
 import Game.RenderSvg.All exposing (render)
+import Game.Constants exposing (..)
 
 
 view : (Int, Int) -> Screen -> Html
@@ -30,19 +31,16 @@ loading : List Html
 loading =
   [ titleWrapper [ h1 [] [ text "loading..." ]] ]
 
-leftWidth = 240
-rightWidth = 200
-
 gameView : (Int, Int) -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
   let
     -- gameElement = renderGame (w - leftWidth - rightWidth, h - TopBar.height) gameState
-    gameSvg = render (w - leftWidth - rightWidth, h - TopBar.height) gameState
+    gameSvg = render (w - leftSidebarWidth - rightSidebarWidth, h - topbarHeight) gameState
   in
-    [ leftBar (h - TopBar.height) screen gameState
+    [ leftBar (h - topbarHeight) screen gameState
     -- , div [ class "game" ] [ fromElement gameElement ]
     , div [ class "game" ] [ gameSvg ]
-    , rightBar (h - TopBar.height) screen gameState
+    , rightBar (h - topbarHeight) screen gameState
     ]
 
 leftBar : Int -> Screen -> GameState -> Html
