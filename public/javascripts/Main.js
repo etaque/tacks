@@ -6066,7 +6066,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                  ,_1: rightSide});
               }();}
          _U.badCase($moduleName,
-         "between lines 115 and 125");
+         "between lines 138 and 148");
       }();
    });
    var renderWindShadow = function (_v4) {
@@ -6115,7 +6115,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                     _L.fromArray([$Svg$Attributes.opacity(opacityForIndex(_v6._0))])),
                     _v6._1);}
                _U.badCase($moduleName,
-               "on line 96, column 7 to 60");
+               "on line 119, column 7 to 60");
             }();
          };
          var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
@@ -6139,8 +6139,22 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
       }();
    };
    var hull = A2($Svg.path,
-   _L.fromArray([$Svg$Attributes.d("M 5.4664546,8.7755604 C 5.3839679,9.061254 5.2356538,8.8746683 5.1159814,8.3346565 5.0007476,7.8146188 4.9763159,7.7643552 4.7527731,7.5873708 4.4676225,7.3616086 3.541733,7.051912 2.9195012,6.9741688 L 2.7225237,6.9495942 2.3866714,7.4474958 2.0508286,7.9453878 1.1631154,7.9553891 0.27540222,7.9653904 0.20253578,8.0579736 c -0.0926785,0.1177674 -0.19146251,0.1177674 -0.28409337,0 L -0.15442399,7.9653906 -1.0421373,7.9553896 -1.9298505,7.9453886 -2.2657029,7.4474966 -2.6015457,6.949595 -2.7985232,6.97417 c -0.6222317,0.077724 -1.5481212,0.3874398 -1.8332719,0.613202 -0.2236761,0.1770892 -0.2479364,0.2270861 -0.3637607,0.749686 -0.1244158,0.5613764 -0.3065629,0.7527437 -0.3671896,0.3857826 -0.046387,-0.2806644 -0.027908,-8.29461975 0.019431,-8.45277326 0.078486,-0.26201436 0.5078457,-0.37736241 1.6640027,-0.44706653 0.6810011,-0.0410529 0.7200061,-0.0474346 0.7347889,-0.12089161 0.00857,-0.0426721 0.093345,-0.4805184 0.1882717,-0.9730479 0.5755019,-2.9850283 1.84813092,-7.6669491 2.3453944,-8.6285389 0.1651544,-0.3193744 0.77738486,-0.3193744 0.94253925,0 0.49725385,0.9615898 1.76989225,5.6435106 2.34539425,8.6285389 0.094965,0.4925295 0.17968,0.93040437 0.1882621,0.9730479 0.014764,0.0734379 0.053816,0.0798197 0.7347889,0.12089161 1.156157,0.0697232 1.585507,0.18505217 1.6640027,0.44706653 0.055055,0.18363295 0.05715,8.31528906 0.0019,8.50549426 z")
+   _L.fromArray([$Svg$Attributes.d("m 2.7225237,6.9495942 -0.3358523,0.4979016 -0.3358428,0.497892 -0.8877132,0.010001 -0.88771318,0.010001 -0.0728664,0.092583 c -0.0926785,0.1177674 -0.19146251,0.1177674 -0.28409337,0 L -0.15442399,7.9653906 -1.0421373,7.9553896 -1.9298505,7.9453886 -2.2657029,7.4474966 -2.6015457,6.949595 c -1.2875317,0 -2.7611997,-0.024876 -2.7611997,-0.2267544 0,-0.3138177 -0.027908,-6.29461975 0.019431,-6.45277326 0.078486,-0.26201436 0.5078457,-0.37736241 1.6640027,-0.44706653 0.6810011,-0.0410529 0.7200061,-0.0474346 0.7347889,-0.12089161 0.00857,-0.0426721 0.093345,-0.4805184 0.1882717,-0.9730479 0.5755019,-2.9850283 1.84813092,-7.6669491 2.3453944,-8.6285389 0.1651544,-0.3193744 0.77738486,-0.3193744 0.94253925,0 0.49725385,0.9615898 1.76989225,5.6435106 2.34539425,8.6285389 0.094965,0.4925295 0.17968,0.93040437 0.1882621,0.9730479 0.014764,0.0734379 0.053816,0.0798197 0.7347889,0.12089161 1.156157,0.0697232 1.585507,0.18505217 1.6640027,0.44706653 0.055055,0.18363295 0.0019,6.11500536 0.0019,6.50549426 0,0.1725651 -1.4358401,0.1740326 -2.7435068,0.1740326 z")
                 ,$Svg$Attributes.fill("white")
+                ,$Svg$Attributes.fillOpacity("0.9")
+                ,$Svg$Attributes.stroke("black")
+                ,$Svg$Attributes.strokeWidth("1")
+                ,$Svg$Attributes.strokeOpacity("0.9")]),
+   _L.fromArray([]));
+   var mainSail = A2($Svg.path,
+   _L.fromArray([$Svg$Attributes.d("M 0.0441942,-1.5917173 C -1.0614896,0.82852063 -0.8611396,3.8386594 -1.0385631,5.822069")
+                ,$Svg$Attributes.stroke("black")
+                ,$Svg$Attributes.strokeWidth("1")
+                ,$Svg$Attributes.strokeOpacity("0.9")]),
+   _L.fromArray([]));
+   var kite = A2($Svg.path,
+   _L.fromArray([$Svg$Attributes.d("m 0.10669417,-16.214054 c -6.38323627,2.777619 -8.55435517,11.509426 -7.26189907,14.9672275 0.5646828,1.51073708 4.2485734,2.932296 7.19890196,2.20273303 0,-5.20417853 0.06299711,-13.36391553 0.06299711,-17.16996053 z")
+                ,$Svg$Attributes.fill("red")
                 ,$Svg$Attributes.fillOpacity("0.9")
                 ,$Svg$Attributes.stroke("black")
                 ,$Svg$Attributes.strokeWidth("1")
@@ -6156,11 +6170,26 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          ")"));
       }();
    };
-   var renderPlayerHull = function (heading) {
-      return A2($Svg.g,
-      _L.fromArray([$Svg$Attributes.transform(hullRotation(heading))]),
-      _L.fromArray([hull]));
-   };
+   var renderPlayerHull = F2(function (heading,
+   windAngle) {
+      return function () {
+         var flip = A2($Basics._op["++"],
+         "scale(",
+         A2($Basics._op["++"],
+         $Basics.toString($Basics.abs(windAngle) / windAngle),
+         ", 1)"));
+         var sails = _U.cmp($Basics.abs(windAngle),
+         120) > 0 ? _L.fromArray([mainSail
+                                 ,kite]) : _L.fromArray([mainSail]);
+         var adjustedSails = A2($Svg.g,
+         _L.fromArray([$Svg$Attributes.transform(flip)]),
+         sails);
+         return A2($Svg.g,
+         _L.fromArray([$Svg$Attributes.transform(hullRotation(heading))]),
+         _L.fromArray([hull
+                      ,adjustedSails]));
+      }();
+   });
    var renderPlayer = function (state) {
       return function () {
          var wake = renderWake(state.trail);
@@ -6170,7 +6199,9 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          var vmgSign = renderVmgSign(state);
          var angles = renderPlayerAngles(state);
          var windShadow = renderWindShadow($Game$Models.asOpponentState(state));
-         var playerHull = renderPlayerHull(state.heading);
+         var playerHull = A2(renderPlayerHull,
+         state.heading,
+         state.windAngle);
          var movingPart = A2($Svg.g,
          _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(state.position))]),
          _L.fromArray([eqLine
@@ -6204,7 +6235,9 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
             var hull = A2($Svg.g,
             _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v10.state.position))
                          ,$Svg$Attributes.opacity("0.5")]),
-            _L.fromArray([renderPlayerHull(_v10.state.heading)]));
+            _L.fromArray([A2(renderPlayerHull,
+            _v10.state.heading,
+            _v10.state.windAngle)]));
             return A2($Svg.g,
             _L.fromArray([]),
             _L.fromArray([shadow
@@ -6238,6 +6271,8 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                                         ,renderPlayer: renderPlayer
                                         ,renderPlayerHull: renderPlayerHull
                                         ,hullRotation: hullRotation
+                                        ,kite: kite
+                                        ,mainSail: mainSail
                                         ,hull: hull
                                         ,renderWake: renderWake
                                         ,renderWindShadow: renderWindShadow

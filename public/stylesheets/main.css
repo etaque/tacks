@@ -5793,6 +5793,8 @@ a.period {
   /* background-color: $sand; */
   background-color: #4bafc9;
   /* font-family: $mono; */ }
+  .game svg {
+    display: block; }
 
 aside {
   color: #B1C0D8;
