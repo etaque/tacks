@@ -6066,7 +6066,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                  ,_1: rightSide});
               }();}
          _U.badCase($moduleName,
-         "between lines 138 and 148");
+         "between lines 139 and 149");
       }();
    });
    var renderWindShadow = function (_v4) {
@@ -6115,7 +6115,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                     _L.fromArray([$Svg$Attributes.opacity(opacityForIndex(_v6._0))])),
                     _v6._1);}
                _U.badCase($moduleName,
-               "on line 119, column 7 to 60");
+               "on line 120, column 7 to 60");
             }();
          };
          var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
@@ -6150,6 +6150,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
    _L.fromArray([$Svg$Attributes.d("M 0.0441942,-1.5917173 C -1.0614896,0.82852063 -0.8611396,3.8386594 -1.0385631,5.822069")
                 ,$Svg$Attributes.stroke("black")
                 ,$Svg$Attributes.strokeWidth("1")
+                ,$Svg$Attributes.strokeLinecap("round")
                 ,$Svg$Attributes.strokeOpacity("0.9")]),
    _L.fromArray([]));
    var kite = A2($Svg.path,
@@ -6179,7 +6180,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          $Basics.toString($Basics.abs(windAngle) / windAngle),
          ", 1)"));
          var sails = _U.cmp($Basics.abs(windAngle),
-         120) > 0 ? _L.fromArray([mainSail
+         130) > 0 ? _L.fromArray([mainSail
                                  ,kite]) : _L.fromArray([mainSail]);
          var adjustedSails = A2($Svg.g,
          _L.fromArray([$Svg$Attributes.transform(flip)]),

@@ -62,7 +62,7 @@ renderPlayer state =
 renderPlayerHull : Float -> Float -> Svg
 renderPlayerHull heading windAngle =
   let
-    sails = if (abs windAngle) > 120 then [ mainSail, kite ] else [ mainSail ]
+    sails = if (abs windAngle) > 130 then [ mainSail, kite ] else [ mainSail ]
     flip = "scale(" ++ toString (abs windAngle / windAngle) ++ ", 1)"
     adjustedSails = g [ transform flip ] sails
   in
@@ -71,7 +71,7 @@ renderPlayerHull heading windAngle =
 hullRotation : Float -> String
 hullRotation heading =
   let
-    r = (180-heading)
+    r = (180 - heading)
   in
     "rotate(" ++ toString r ++ ")"
 
@@ -92,6 +92,7 @@ mainSail =
     [ d "M 0.0441942,-1.5917173 C -1.0614896,0.82852063 -0.8611396,3.8386594 -1.0385631,5.822069"
     , stroke "black"
     , strokeWidth "1"
+    , strokeLinecap "round"
     , strokeOpacity "0.9"
     ] []
 
