@@ -20,7 +20,7 @@ renderPlayers ({playerState,opponents,ghosts,course,center} as gameState) =
   g [ ]
     [ renderOpponents course opponents
     -- , renderGhosts ghosts
-    , renderPlayer playerState
+    , renderPlayer course playerState
     ]
 
 renderOpponents : Course -> List Opponent -> Svg
@@ -42,12 +42,13 @@ renderOpponent {state,player} =
   in
     g [ ] [ shadow, hull, name ]
 
-renderPlayer : PlayerState -> Svg
-renderPlayer state =
+renderPlayer : Course -> PlayerState -> Svg
+renderPlayer course state =
   let
     playerHull = renderPlayerHull state.heading state.windAngle
     windShadow = renderWindShadow (asOpponentState state)
     angles = renderPlayerAngles state
+    nextGateLine = renderNextGateLine course state
     vmgSign = renderVmgSign state
     movingPart =
       g [ transform (translatePoint state.position) ]
@@ -56,7 +57,7 @@ renderPlayer state =
   in
     g
       [ ]
-      [ wake, windShadow, movingPart ]
+      [ wake, windShadow, nextGateLine, movingPart ]
 
 renderPlayerHull : Float -> Float -> Svg
 renderPlayerHull heading windAngle =
@@ -130,6 +131,38 @@ renderWindShadow {windAngle, windOrigin, position, shadowDirection} =
       ]
       [ ]
 
+renderNextGateLine : Course -> PlayerState -> Svg
+renderNextGateLine course state =
+  let
+    length = 100
+    maybeGatePos = case state.nextGate of
+      Just StartLine ->
+        Nothing
+      Just UpwindGate ->
+        Just (0, course.upwind.y)
+      Just DownwindGate ->
+        Just (0, course.downwind.y)
+      _ ->
+        Nothing
+    ifFarEnough gatePos =
+      if (Geo.distance state.position gatePos) > length * 3 then Just gatePos else Nothing
+    renderLine gatePos =
+      let
+        a = Geo.angleBetween state.position gatePos
+        p1 = Geo.add state.position (Geo.rotateDeg a 50)
+        p2 = Geo.add state.position (Geo.rotateDeg a 150)
+      in
+        segment
+          [ stroke "white"
+          , strokeDasharray "4,4"
+          , opacity "0.5"
+          , markerEnd "url(#whiteFullArrow)"
+          ]
+          (p1, p2)
+  in
+    Maybe.map renderLine (maybeGatePos `Maybe.andThen` ifFarEnough)
+      |> Maybe.withDefault empty
+
 renderPlayerAngles : PlayerState -> Svg
 renderPlayerAngles player =
   let
@@ -191,7 +224,7 @@ renderWindArrow =
 renderVmgLine : Float -> Svg
 renderVmgLine a =
   segment
-    [ stroke "white", opacity "0.5" ]
+    [ stroke "white", opacity "0.8" ]
     ((0, 0), (Geo.rotateDeg a 30))
 
 

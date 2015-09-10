@@ -5656,35 +5656,46 @@ Elm.Game.RenderSvg.All.make = function (_elm) {
                     _L.fromArray([A2($Svg.defs,
                                  _L.fromArray([]),
                                  _L.fromArray([A2($Svg.pattern,
-                                 _L.fromArray([$Svg$Attributes.id("seaPattern")
-                                              ,$Svg$Attributes.x("0")
-                                              ,$Svg$Attributes.y("0")
-                                              ,$Svg$Attributes.width("50")
-                                              ,$Svg$Attributes.height("120")
-                                              ,$Svg$Attributes.patternUnits("userSpaceOnUse")]),
-                                 _L.fromArray([A2($Svg.rect,
-                                              _L.fromArray([$Svg$Attributes.x("0")
+                                              _L.fromArray([$Svg$Attributes.id("seaPattern")
+                                                           ,$Svg$Attributes.x("0")
                                                            ,$Svg$Attributes.y("0")
                                                            ,$Svg$Attributes.width("50")
-                                                           ,$Svg$Attributes.height("30")
-                                                           ,$Svg$Attributes.fill("grey")
-                                                           ,$Svg$Attributes.opacity("0.05")]),
-                                              _L.fromArray([]))
-                                              ,A2($Svg.rect,
-                                              _L.fromArray([$Svg$Attributes.x("0")
-                                                           ,$Svg$Attributes.y("30")
-                                                           ,$Svg$Attributes.width("50")
-                                                           ,$Svg$Attributes.height("30")
-                                                           ,$Svg$Attributes.fill("grey")
-                                                           ,$Svg$Attributes.opacity("0.1")]),
-                                              _L.fromArray([]))
-                                              ,A2($Svg.rect,
-                                              _L.fromArray([$Svg$Attributes.x("0")
-                                                           ,$Svg$Attributes.y("60")
-                                                           ,$Svg$Attributes.width("50")
-                                                           ,$Svg$Attributes.height("30")
-                                                           ,$Svg$Attributes.fill("grey")
-                                                           ,$Svg$Attributes.opacity("0.05")]),
+                                                           ,$Svg$Attributes.height("120")
+                                                           ,$Svg$Attributes.patternUnits("userSpaceOnUse")]),
+                                              _L.fromArray([A2($Svg.rect,
+                                                           _L.fromArray([$Svg$Attributes.x("0")
+                                                                        ,$Svg$Attributes.y("0")
+                                                                        ,$Svg$Attributes.width("50")
+                                                                        ,$Svg$Attributes.height("30")
+                                                                        ,$Svg$Attributes.fill("grey")
+                                                                        ,$Svg$Attributes.opacity("0.05")]),
+                                                           _L.fromArray([]))
+                                                           ,A2($Svg.rect,
+                                                           _L.fromArray([$Svg$Attributes.x("0")
+                                                                        ,$Svg$Attributes.y("30")
+                                                                        ,$Svg$Attributes.width("50")
+                                                                        ,$Svg$Attributes.height("30")
+                                                                        ,$Svg$Attributes.fill("grey")
+                                                                        ,$Svg$Attributes.opacity("0.1")]),
+                                                           _L.fromArray([]))
+                                                           ,A2($Svg.rect,
+                                                           _L.fromArray([$Svg$Attributes.x("0")
+                                                                        ,$Svg$Attributes.y("60")
+                                                                        ,$Svg$Attributes.width("50")
+                                                                        ,$Svg$Attributes.height("30")
+                                                                        ,$Svg$Attributes.fill("grey")
+                                                                        ,$Svg$Attributes.opacity("0.05")]),
+                                                           _L.fromArray([]))]))
+                                              ,A2($Svg.marker,
+                                              _L.fromArray([$Svg$Attributes.id("whiteFullArrow")
+                                                           ,$Svg$Attributes.markerWidth("6")
+                                                           ,$Svg$Attributes.markerHeight("6")
+                                                           ,$Svg$Attributes.refX("0")
+                                                           ,$Svg$Attributes.refY("3")
+                                                           ,$Svg$Attributes.orient("auto")]),
+                                              _L.fromArray([A2($Svg.path,
+                                              _L.fromArray([$Svg$Attributes.d("M0,0 L0,6 L6,3 L0,0")
+                                                           ,$Svg$Attributes.fill("white")]),
                                               _L.fromArray([]))]))]))
                                  ,A2($Svg.g,
                                  _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
@@ -5701,7 +5712,7 @@ Elm.Game.RenderSvg.All.make = function (_elm) {
                                  _v1)]));
                  }();}
             _U.badCase($moduleName,
-            "between lines 22 and 53");
+            "between lines 22 and 56");
          }();
       }();
    });
@@ -6193,7 +6204,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
    var renderVmgLine = function (a) {
       return A2($Game$Render$SvgUtils.segment,
       _L.fromArray([$Svg$Attributes.stroke("white")
-                   ,$Svg$Attributes.opacity("0.5")]),
+                   ,$Svg$Attributes.opacity("0.8")]),
       {ctor: "_Tuple2"
       ,_0: {ctor: "_Tuple2"
            ,_0: 0
@@ -6273,7 +6284,63 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                       ,windAngleText]));
       }();
    };
-   var renderWindShadow = function (_v0) {
+   var renderNextGateLine = F2(function (course,
+   state) {
+      return function () {
+         var renderLine = function (gatePos) {
+            return function () {
+               var a = A2($Game$Geo.angleBetween,
+               state.position,
+               gatePos);
+               var p1 = A2($Game$Geo.add,
+               state.position,
+               A2($Game$Geo.rotateDeg,a,50));
+               var p2 = A2($Game$Geo.add,
+               state.position,
+               A2($Game$Geo.rotateDeg,a,150));
+               return A2($Game$Render$SvgUtils.segment,
+               _L.fromArray([$Svg$Attributes.stroke("white")
+                            ,$Svg$Attributes.strokeDasharray("4,4")
+                            ,$Svg$Attributes.opacity("0.5")
+                            ,$Svg$Attributes.markerEnd("url(#whiteFullArrow)")]),
+               {ctor: "_Tuple2"
+               ,_0: p1
+               ,_1: p2});
+            }();
+         };
+         var maybeGatePos = function () {
+            var _v0 = state.nextGate;
+            switch (_v0.ctor)
+            {case "Just":
+               switch (_v0._0.ctor)
+                 {case "DownwindGate":
+                    return $Maybe.Just({ctor: "_Tuple2"
+                                       ,_0: 0
+                                       ,_1: course.downwind.y});
+                    case "StartLine":
+                    return $Maybe.Nothing;
+                    case "UpwindGate":
+                    return $Maybe.Just({ctor: "_Tuple2"
+                                       ,_0: 0
+                                       ,_1: course.upwind.y});}
+                 break;}
+            return $Maybe.Nothing;
+         }();
+         var length = 100;
+         var ifFarEnough = function (gatePos) {
+            return _U.cmp(A2($Game$Geo.distance,
+            state.position,
+            gatePos),
+            length * 3) > 0 ? $Maybe.Just(gatePos) : $Maybe.Nothing;
+         };
+         return $Maybe.withDefault($Game$Render$SvgUtils.empty)(A2($Maybe.map,
+         renderLine,
+         A2($Maybe.andThen,
+         maybeGatePos,
+         ifFarEnough)));
+      }();
+   });
+   var renderWindShadow = function (_v2) {
       return function () {
          return function () {
             var arcAngles = _L.fromArray([-15
@@ -6286,15 +6353,15 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
             var endPoints = A2($List.map,
             function (a) {
                return A2($Game$Geo.add,
-               _v0.position,
+               _v2.position,
                $Basics.fromPolar({ctor: "_Tuple2"
                                  ,_0: $Game$Models.windShadowLength
-                                 ,_1: $Game$Core.toRadians(_v0.shadowDirection + a)}));
+                                 ,_1: $Game$Core.toRadians(_v2.shadowDirection + a)}));
             },
             arcAngles);
             return A2($Svg.polygon,
             _L.fromArray([$Game$Render$SvgUtils.polygonPoints(A2($List._op["::"],
-                         _v0.position,
+                         _v2.position,
                          endPoints))
                          ,$Svg$Attributes.fill("white")
                          ,$Svg$Attributes.opacity("0.2")]),
@@ -6309,17 +6376,17 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          };
          var style = _L.fromArray([$Svg$Attributes.stroke("white")
                                   ,$Svg$Attributes.strokeWidth("3")]);
-         var renderSegment = function (_v2) {
+         var renderSegment = function (_v4) {
             return function () {
-               switch (_v2.ctor)
+               switch (_v4.ctor)
                {case "_Tuple2":
                   return A2($Game$Render$SvgUtils.segment,
                     A2($Basics._op["++"],
                     style,
-                    _L.fromArray([$Svg$Attributes.opacity(opacityForIndex(_v2._0))])),
-                    _v2._1);}
+                    _L.fromArray([$Svg$Attributes.opacity(opacityForIndex(_v4._0))])),
+                    _v4._1);}
                _U.badCase($moduleName,
-               "on line 116, column 7 to 60");
+               "on line 117, column 7 to 60");
             }();
          };
          var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
@@ -6391,10 +6458,14 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                       ,adjustedSails]));
       }();
    });
-   var renderPlayer = function (state) {
+   var renderPlayer = F2(function (course,
+   state) {
       return function () {
          var wake = renderWake(state.trail);
          var vmgSign = renderVmgSign(state);
+         var nextGateLine = A2(renderNextGateLine,
+         course,
+         state);
          var angles = renderPlayerAngles(state);
          var windShadow = renderWindShadow($Game$Models.asOpponentState(state));
          var playerHull = A2(renderPlayerHull,
@@ -6408,17 +6479,18 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          _L.fromArray([]),
          _L.fromArray([wake
                       ,windShadow
+                      ,nextGateLine
                       ,movingPart]));
       }();
-   };
-   var renderOpponent = function (_v6) {
+   });
+   var renderOpponent = function (_v8) {
       return function () {
          return function () {
             var name = A2($Svg.text$,
             _L.fromArray([$Svg$Attributes.textAnchor("middle")
                          ,$Svg$Attributes.transform(A2($Basics._op["++"],
                          $Game$Render$SvgUtils.translatePoint(A2($Game$Geo.add,
-                         _v6.state.position,
+                         _v8.state.position,
                          {ctor: "_Tuple2"
                          ,_0: 0
                          ,_1: -25})),
@@ -6426,14 +6498,14 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                          ,$Svg$Attributes.opacity("0.3")]),
             _L.fromArray([$Svg.text(A2($Maybe.withDefault,
             "Anonymous",
-            _v6.player.handle))]));
-            var shadow = renderWindShadow(_v6.state);
+            _v8.player.handle))]));
+            var shadow = renderWindShadow(_v8.state);
             var hull = A2($Svg.g,
-            _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v6.state.position))
+            _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v8.state.position))
                          ,$Svg$Attributes.opacity("0.5")]),
             _L.fromArray([A2(renderPlayerHull,
-            _v6.state.heading,
-            _v6.state.windAngle)]));
+            _v8.state.heading,
+            _v8.state.windAngle)]));
             return A2($Svg.g,
             _L.fromArray([]),
             _L.fromArray([shadow
@@ -6450,14 +6522,16 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
       renderOpponent,
       opponents));
    });
-   var renderPlayers = function (_v8) {
+   var renderPlayers = function (_v10) {
       return function () {
          return A2($Svg.g,
          _L.fromArray([]),
          _L.fromArray([A2(renderOpponents,
-                      _v8.course,
-                      _v8.opponents)
-                      ,renderPlayer(_v8.playerState)]));
+                      _v10.course,
+                      _v10.opponents)
+                      ,A2(renderPlayer,
+                      _v10.course,
+                      _v10.playerState)]));
       }();
    };
    _elm.Game.RenderSvg.Players.values = {_op: _op
@@ -6472,6 +6546,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                                         ,hull: hull
                                         ,renderWake: renderWake
                                         ,renderWindShadow: renderWindShadow
+                                        ,renderNextGateLine: renderNextGateLine
                                         ,renderPlayerAngles: renderPlayerAngles
                                         ,renderWindArrow: renderWindArrow
                                         ,renderVmgLine: renderVmgLine
