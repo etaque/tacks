@@ -69,10 +69,7 @@ renderPlayerHull heading windAngle =
 
 hullRotation : Float -> String
 hullRotation heading =
-  let
-    r = (180 - heading)
-  in
-    "rotate(" ++ toString r ++ ")"
+  rotate_ (180 - heading) 0 0
 
 kite : Svg
 kite =

@@ -39,6 +39,13 @@ movePoint (x,y) delta velocity direction =
       y' = y + delta * 0.001 * velocity * sin angle
   in (x',y')
 
+rotateDeg : Float -> Float -> Point
+rotateDeg deg radius =
+  let
+    a = Core.toRadians deg
+  in
+    (radius * cos a, radius * sin a)
+
 ensure360 : Float -> Float
 ensure360 val =
   let rounded = round val
