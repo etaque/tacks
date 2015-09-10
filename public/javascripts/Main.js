@@ -5955,7 +5955,7 @@ Elm.Game.RenderSvg.Dashboard.make = function (_elm) {
                            ,A2($Svg.g,
                            _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint({ctor: "_Tuple2"
                                                                                                         ,_0: $Basics.toFloat(_v4._0) / 2
-                                                                                                        ,_1: 50}))]),
+                                                                                                        ,_1: 30}))]),
                            _L.fromArray([A2(renderWindGauge,
                            _v4._1,
                            gameState.wind)]))]));}
@@ -6190,9 +6190,31 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          _L.fromArray([icon]));
       }();
    };
+   var renderVmgLine = function (a) {
+      return A2($Game$Render$SvgUtils.segment,
+      _L.fromArray([$Svg$Attributes.stroke("white")
+                   ,$Svg$Attributes.opacity("0.5")]),
+      {ctor: "_Tuple2"
+      ,_0: {ctor: "_Tuple2"
+           ,_0: 0
+           ,_1: 0}
+      ,_1: A2($Game$Geo.rotateDeg,
+      a,
+      30)});
+   };
+   var renderWindArrow = A2($Svg.path,
+   _L.fromArray([$Svg$Attributes.d("M 0,0 3,-12 0,-10 -3,-12 Z")
+                ,$Svg$Attributes.fill("white")]),
+   _L.fromArray([]));
    var renderPlayerAngles = function (player) {
       return function () {
          var absWindAngle = $Basics.abs($Basics.round(player.windAngle));
+         var vmgLines = A2($Svg.g,
+         _L.fromArray([$Svg$Attributes.opacity("0.5")]),
+         _L.fromArray([renderVmgLine(0 - player.upwindVmg.angle)
+                      ,renderVmgLine(player.upwindVmg.angle)
+                      ,renderVmgLine(0 - player.downwindVmg.angle)
+                      ,renderVmgLine(player.downwindVmg.angle)]));
          var rightSide = $Basics.fromPolar({ctor: "_Tuple2"
                                            ,_0: 60
                                            ,_1: $Game$Core.toRadians(player.windOrigin + 90)});
@@ -6206,7 +6228,18 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          {ctor: "_Tuple2"
          ,_0: leftSide
          ,_1: rightSide});
-         var windOriginRadians = $Game$Core.toRadians(player.heading - player.windAngle);
+         var windOrigin = player.heading - player.windAngle;
+         var windMarker = A2($Svg.g,
+         _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
+                      A2($Game$Render$SvgUtils.translate,
+                      0,
+                      -40),
+                      A3($Game$Render$SvgUtils.rotate_,
+                      180 - windOrigin,
+                      0,
+                      40)))
+                      ,$Svg$Attributes.opacity("0.9")]),
+         _L.fromArray([renderWindArrow]));
          var windLine = A2($Game$Render$SvgUtils.segment,
          _L.fromArray([$Svg$Attributes.stroke("white")
                       ,$Svg$Attributes.opacity("0.5")]),
@@ -6214,14 +6247,14 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          ,_0: {ctor: "_Tuple2"
               ,_0: 0
               ,_1: 0}
-         ,_1: $Basics.fromPolar({ctor: "_Tuple2"
-                                ,_0: 60
-                                ,_1: windOriginRadians})});
+         ,_1: A2($Game$Geo.rotateDeg,
+         windOrigin,
+         35)});
          var windAngleText = A2($Svg.text$,
          _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
-                      $Game$Render$SvgUtils.translatePoint($Basics.fromPolar({ctor: "_Tuple2"
-                                                                             ,_0: 30
-                                                                             ,_1: windOriginRadians + $Basics.pi})),
+                      $Game$Render$SvgUtils.translatePoint(A2($Game$Geo.rotateDeg,
+                      windOrigin + 180,
+                      30)),
                       "scale(1,-1)"))
                       ,$Svg$Attributes.opacity("0.5")
                       ,$Svg$Attributes.fill("black")
@@ -6235,6 +6268,8 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          _L.fromArray([]),
          _L.fromArray([eqLine
                       ,windLine
+                      ,windMarker
+                      ,vmgLines
                       ,windAngleText]));
       }();
    };
@@ -6317,7 +6352,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
    _L.fromArray([]));
    var mainSail = A2($Svg.path,
    _L.fromArray([$Svg$Attributes.d("M 0.0441942,-1.5917173 C -1.0614896,0.82852063 -0.8611396,3.8386594 -1.0385631,5.822069")
-                ,$Svg$Attributes.stroke("black")
+                ,$Svg$Attributes.stroke("grey")
                 ,$Svg$Attributes.strokeWidth("1")
                 ,$Svg$Attributes.strokeLinecap("round")
                 ,$Svg$Attributes.strokeOpacity("0.9")]),
@@ -6438,6 +6473,8 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                                         ,renderWake: renderWake
                                         ,renderWindShadow: renderWindShadow
                                         ,renderPlayerAngles: renderPlayerAngles
+                                        ,renderWindArrow: renderWindArrow
+                                        ,renderVmgLine: renderVmgLine
                                         ,renderVmgSign: renderVmgSign
                                         ,vmgIcon: vmgIcon
                                         ,badVmg: badVmg

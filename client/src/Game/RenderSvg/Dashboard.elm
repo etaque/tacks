@@ -28,7 +28,7 @@ renderDashboard (w,h) gameState =
         , opacity "0.8"
         ]
         [ text (getTimer gameState) ]
-    , g [ transform (translatePoint (toFloat w / 2, 50)) ]
+    , g [ transform (translatePoint (toFloat w / 2, 30)) ]
         [ renderWindGauge h gameState.wind ]
     ]
 

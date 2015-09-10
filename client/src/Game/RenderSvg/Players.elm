@@ -86,7 +86,7 @@ mainSail : Svg
 mainSail =
   Svg.path
     [ d "M 0.0441942,-1.5917173 C -1.0614896,0.82852063 -0.8611396,3.8386594 -1.0385631,5.822069"
-    , stroke "black"
+    , stroke "grey"
     , strokeWidth "1"
     , strokeLinecap "round"
     , strokeOpacity "0.9"
@@ -133,15 +133,13 @@ renderWindShadow {windAngle, windOrigin, position, shadowDirection} =
 renderPlayerAngles : PlayerState -> Svg
 renderPlayerAngles player =
   let
-    windOriginRadians = toRadians (player.heading - player.windAngle)
-    -- windMarker = polygon
-    --   [ polygonPoints [(0,4),(-3,-5),(3,-5)]
-    --   , fill "white"
-    --   , opacity "0.5"
-    --   , transform <| (translatePoint (fromPolar (30, windOriginRadians))) ++ "rotate(" ++ (toString (player.heading - player.windAngle - 180)) ++ ")"
-    --     -- |> rotate (windOriginRadians + pi/2)
-    --   ]
-    --   [ ]
+    windOrigin = player.heading - player.windAngle
+
+    windMarker = g
+      [ transform <| translate 0 -40 ++ rotate_ ( 180 - windOrigin ) 0 40
+      , opacity "0.9"
+      ]
+      [ renderWindArrow ]
 
     leftSide = (fromPolar (60, toRadians (player.windOrigin - 90)))
     rightSide = (fromPolar (60, toRadians (player.windOrigin + 90)))
@@ -152,14 +150,22 @@ renderPlayerAngles player =
       ]
       (leftSide, rightSide)
 
+    vmgLines = g
+      [ opacity "0.5" ]
+      [ renderVmgLine -player.upwindVmg.angle
+      , renderVmgLine player.upwindVmg.angle
+      , renderVmgLine -player.downwindVmg.angle
+      , renderVmgLine player.downwindVmg.angle
+      ]
+
     windLine = segment
       [ stroke "white", opacity "0.5" ]
-      ((0,0), (fromPolar (60, windOriginRadians)))
+      ((0,0), Geo.rotateDeg windOrigin 35)
 
     absWindAngle = abs (round player.windAngle)
 
     windAngleText = text'
-      [ transform <| (translatePoint (fromPolar (30, windOriginRadians + pi))) ++ "scale(1,-1)"
+      [ transform <| (translatePoint (Geo.rotateDeg (windOrigin + 180) 30)) ++ "scale(1,-1)"
       , opacity "0.5"
       , fill "black"
       , textAnchor "middle"
@@ -167,7 +173,26 @@ renderPlayerAngles player =
       ]
       [ text (toString absWindAngle ++ "°") ]
   in
-    g [ ] [ eqLine, windLine, windAngleText ]
+    g [ ]
+      [ eqLine
+      , windLine
+      , windMarker
+      , vmgLines
+      , windAngleText
+      ]
+
+renderWindArrow : Svg
+renderWindArrow =
+  Svg.path
+    [ d "M 0,0 3,-12 0,-10 -3,-12 Z"
+    , fill "white"
+    ] []
+
+renderVmgLine : Float -> Svg
+renderVmgLine a =
+  segment
+    [ stroke "white", opacity "0.5" ]
+    ((0, 0), (Geo.rotateDeg a 30))
 
 
 renderVmgSign : PlayerState -> Svg
