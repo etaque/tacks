@@ -4847,8 +4847,7 @@ html, body {
   flex: 1; }
 
 nav {
-  background-color: #a1d5e3;
-  /* border-bottom: 2px solid $lightSeaBlue; */
+  background-color: whitesmoke;
   height: 50px;
   display: flex;
   flex-direction: row; }
@@ -4892,7 +4891,9 @@ aside {
   display: flex;
   flex-direction: column;
   width: 240px;
-  background-color: #1c515f; }
+  background-color: #287386;
+  color: #B1C0D8;
+  font-family: "Inconsolata"; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -5790,16 +5791,14 @@ a.period {
   src: url('/assets/fonts/Proxima Nova Alt Light.otf'); }
 
 .game {
-  /* background-color: $sand; */
-  background-color: #4bafc9;
+  background-color: #f2f3c4;
+  /* background-color: $seaBlue; */
   /* font-family: $mono; */ }
   .game svg {
     display: block; }
 
 aside {
-  color: #B1C0D8;
-  font-family: "Inconsolata";
-  background-color: #070d0e; }
+  /* background-color: $blackSeaBlue; */ }
   aside .module-best-times {
     flex: 1; }
   aside .module-help {

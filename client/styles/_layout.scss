@@ -33,8 +33,7 @@ body {
 
 
 nav {
-  background-color: $whiteSeaBlue;
-  /* border-bottom: 2px solid $lightSeaBlue; */
+  background-color: whitesmoke;
   height: $navbarHeight;
   display: flex;
   flex-direction: row;
@@ -92,5 +91,7 @@ aside {
   display: flex;
   flex-direction: column;
   width: 240px;
-  background-color: $darkerSeaBlue;
+  background-color: $darkSeaBlue;
+  color: $whiteBlue;
+  font-family: $mono;
 }

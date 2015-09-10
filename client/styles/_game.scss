@@ -2,8 +2,8 @@
 @import 'fonts';
 
 .game {
-  /* background-color: $sand; */
-  background-color: $seaBlue;
+  background-color: $sand;
+  /* background-color: $seaBlue; */
   /* font-family: $mono; */
 
   svg {
@@ -12,9 +12,7 @@
 }
 
 aside {
-  color: $whiteBlue;
-  font-family: $mono;
-  background-color: $blackSeaBlue;
+  /* background-color: $blackSeaBlue; */
 
   .module-best-times {
     flex: 1;

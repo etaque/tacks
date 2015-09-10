@@ -19,9 +19,9 @@ renderCourse ({playerState,course,now,wind} as gameState) =
       [ renderBounds course.area
       -- , renderLaylines wind course playerState
       , renderIslands course
+      , renderGusts wind
       , renderDownwind playerState course now (isStarted gameState)
       , renderUpwind playerState course now
-      , renderGusts wind
       ]
 
 renderBounds : RaceArea -> Svg
@@ -34,9 +34,10 @@ renderBounds area =
     rect
       [ width (toString w)
       , height (toString h)
-      , stroke "white"
-      , strokeWidth "2"
-      , fill "url(#seaPattern)" -- (colorToSvg colors.seaBlue)
+      -- , stroke "white"
+      -- , strokeWidth "2"
+      -- , fill "url(#seaPattern)" -- (colorToSvg colors.seaBlue)
+      , fill (colorToSvg colors.seaBlue)
       , transform (translate -(w/2) (top - h))
       ] [ ]
 

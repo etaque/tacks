@@ -49,10 +49,9 @@ renderPlayer state =
     windShadow = renderWindShadow (asOpponentState state)
     angles = renderPlayerAngles state
     vmgSign = renderVmgSign state
-    eqLine = renderEqualityLine state.position state.windOrigin
     movingPart =
       g [ transform (translatePoint state.position) ]
-        [ eqLine, angles, vmgSign, playerHull ]
+        [ angles, playerHull ]
     wake = renderWake state.trail
   in
     g
@@ -134,21 +133,6 @@ renderWindShadow {windAngle, windOrigin, position, shadowDirection} =
       ]
       [ ]
 
-renderEqualityLine : Point -> Float -> Svg
-renderEqualityLine (x,y) windOrigin =
-  let
-    leftSide = (fromPolar (60, toRadians (windOrigin - 90)))
-    rightSide = (fromPolar (60, toRadians (windOrigin + 90)))
-  in
-    segment
-      [ stroke "white"
-      , strokeWidth "1"
-      , strokeDasharray "2,2"
-      , opacity "0.5"
-      ]
-      (leftSide, rightSide)
-
-
 renderPlayerAngles : PlayerState -> Svg
 renderPlayerAngles player =
   let
@@ -162,8 +146,17 @@ renderPlayerAngles player =
     --   ]
     --   [ ]
 
+    leftSide = (fromPolar (60, toRadians (player.windOrigin - 90)))
+    rightSide = (fromPolar (60, toRadians (player.windOrigin + 90)))
+    eqLine = segment
+      [ stroke "white"
+      , strokeWidth "1"
+      , opacity "0.5"
+      ]
+      (leftSide, rightSide)
+
     windLine = segment
-      [ stroke "white", opacity "0.5", strokeDasharray "2,2" ]
+      [ stroke "white", opacity "0.5" ]
       ((0,0), (fromPolar (60, windOriginRadians)))
 
     absWindAngle = abs (round player.windAngle)
@@ -177,7 +170,7 @@ renderPlayerAngles player =
       ]
       [ text (toString absWindAngle ++ "°") ]
   in
-    g [ ] [ windLine, windAngleText ]
+    g [ ] [ eqLine, windLine, windAngleText ]
 
 
 renderVmgSign : PlayerState -> Svg

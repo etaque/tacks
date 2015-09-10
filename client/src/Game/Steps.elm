@@ -125,7 +125,7 @@ axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
 axisCenter p p' c window areaMin areaMax =
   let
     offset = (window / 2) - (window * 0.48)
-    outOffset = (window / 2) - (window * 0.02)
+    outOffset = (window / 2) - 10
     delta = p' - p
     minExit = delta < 0 && p' < c - offset
     maxExit = delta > 0 && p' > c + offset

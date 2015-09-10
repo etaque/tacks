@@ -5693,9 +5693,7 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
          return A2($Svg.rect,
          _L.fromArray([$Svg$Attributes.width($Basics.toString(w))
                       ,$Svg$Attributes.height($Basics.toString(h))
-                      ,$Svg$Attributes.stroke("white")
-                      ,$Svg$Attributes.strokeWidth("2")
-                      ,$Svg$Attributes.fill("url(#seaPattern)")
+                      ,$Svg$Attributes.fill($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.seaBlue))
                       ,$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
                       0 - w / 2,
                       top - h))]),
@@ -5708,6 +5706,7 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
          _L.fromArray([]),
          _L.fromArray([renderBounds(_v2.course.area)
                       ,renderIslands(_v2.course)
+                      ,renderGusts(_v2.wind)
                       ,A4($Game$RenderSvg$Gates.renderDownwind,
                       _v2.playerState,
                       _v2.course,
@@ -5716,8 +5715,7 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
                       ,A3($Game$RenderSvg$Gates.renderUpwind,
                       _v2.playerState,
                       _v2.course,
-                      _v2.now)
-                      ,renderGusts(_v2.wind)]));
+                      _v2.now)]));
       }();
    };
    _elm.Game.RenderSvg.Course.values = {_op: _op
@@ -5827,16 +5825,18 @@ Elm.Game.RenderSvg.Gates.make = function (_elm) {
    var gateLineOpacity = function (timer) {
       return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
    };
-   var renderGateMark = function (p) {
+   var renderGateMark = F2(function (color,
+   p) {
       return A2($Svg.circle,
       _L.fromArray([$Svg$Attributes.r($Basics.toString($Game$Models.markRadius))
                    ,$Svg$Attributes.stroke("white")
                    ,$Svg$Attributes.strokeWidth("2")
-                   ,$Svg$Attributes.fill("black")
+                   ,$Svg$Attributes.fill(color)
                    ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(p))]),
       _L.fromArray([]));
-   };
-   var renderGateMarks = function (gate) {
+   });
+   var renderGateMarks = F2(function (color,
+   gate) {
       return function () {
          var $ = $Game$Models.getGateMarks(gate),
          left = $._0,
@@ -5844,65 +5844,65 @@ Elm.Game.RenderSvg.Gates.make = function (_elm) {
          return A2($Svg.g,
          _L.fromArray([]),
          A2($List.map,
-         renderGateMark,
+         renderGateMark(color),
          _L.fromArray([left,right])));
       }();
-   };
-   var renderGate = F4(function (gate,
-   timer,
-   isNext,
-   gateLoc) {
-      return function () {
-         var marks = renderGateMarks(gate);
-         return A2($Svg.g,
-         _L.fromArray([]),
-         _L.fromArray([marks]));
-      }();
    });
-   var renderFinishLine = F2(function (gate,
-   timer) {
+   var renderGate = F3(function (gate,
+   lineStyle,
+   color) {
       return function () {
-         var marks = renderGateMarks(gate);
-         return A2($Svg.g,
-         _L.fromArray([]),
-         _L.fromArray([marks]));
-      }();
-   });
-   var renderStartLine = F3(function (gate,
-   started,
-   timer) {
-      return function () {
-         var $ = $Game$Models.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         var a = started ? gateLineOpacity(timer) : 1;
-         var lineStyle = started ? _L.fromArray([$Svg$Attributes.stroke($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.green))
-                                                ,$Svg$Attributes.strokeWidth("2")]) : _L.fromArray([$Svg$Attributes.stroke("black")
-                                                                                                   ,$Svg$Attributes.strokeWidth("2")
-                                                                                                   ,$Svg$Attributes.strokeDasharray("5,3")
-                                                                                                   ,$Svg$Attributes.opacity("0.9")]);
+         var marks = A2(renderGateMarks,
+         color,
+         gate);
          var l = A2($Game$Render$SvgUtils.segment,
-         A2($List._op["::"],
-         $Svg$Attributes.opacity($Basics.toString(a)),
-         lineStyle),
+         lineStyle,
          $Game$Models.getGateMarks(gate));
-         var marks = renderGateMarks(gate);
          return A2($Svg.g,
          _L.fromArray([]),
          _L.fromArray([l,marks]));
+      }();
+   });
+   var renderClosedGate = F2(function (gate,
+   timer) {
+      return function () {
+         var lineStyle = _L.fromArray([$Svg$Attributes.stroke("white")
+                                      ,$Svg$Attributes.strokeWidth("2")]);
+         return A3(renderGate,
+         gate,
+         lineStyle,
+         "black");
+      }();
+   });
+   var renderOpenGate = F2(function (gate,
+   timer) {
+      return function () {
+         var lineStyle = _L.fromArray([$Svg$Attributes.stroke("white")
+                                      ,$Svg$Attributes.strokeWidth("2")
+                                      ,$Svg$Attributes.strokeDasharray("5,3")
+                                      ,$Svg$Attributes.opacity($Basics.toString(gateLineOpacity(timer)))]);
+         return A3(renderGate,
+         gate,
+         lineStyle,
+         $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.green));
       }();
    });
    var renderUpwind = F3(function (playerState,
    course,
    now) {
       return function () {
-         var isNext = _U.eq(playerState.nextGate,
-         $Maybe.Just($Models.UpwindGate));
-         return A4(renderGate,
+         var _v0 = playerState.nextGate;
+         switch (_v0.ctor)
+         {case "Just":
+            switch (_v0._0.ctor)
+              {case "UpwindGate":
+                 return A2(renderOpenGate,
+                   course.upwind,
+                   now);}
+              break;}
+         return A2(renderClosedGate,
          course.upwind,
-         now,
-         isNext,
-         $Models.UpwindGate);
+         now);
       }();
    });
    var renderDownwind = F4(function (playerState,
@@ -5910,28 +5910,31 @@ Elm.Game.RenderSvg.Gates.make = function (_elm) {
    now,
    started) {
       return function () {
-         var isNext = _U.eq(playerState.nextGate,
-         $Maybe.Just($Models.DownwindGate));
-         var isLastGate = _U.eq($List.length(playerState.crossedGates),
-         course.laps * 2);
-         var isFirstGate = $List.isEmpty(playerState.crossedGates);
-         return isFirstGate ? A3(renderStartLine,
+         var _v2 = playerState.nextGate;
+         switch (_v2.ctor)
+         {case "Just":
+            switch (_v2._0.ctor)
+              {case "DownwindGate":
+                 return A2(renderOpenGate,
+                   course.downwind,
+                   now);
+                 case "StartLine":
+                 return started ? A2(renderOpenGate,
+                   course.downwind,
+                   now) : A2(renderClosedGate,
+                   course.downwind,
+                   now);}
+              break;}
+         return A2(renderClosedGate,
          course.downwind,
-         started,
-         now) : isLastGate ? A2(renderFinishLine,
-         course.downwind,
-         now) : A4(renderGate,
-         course.downwind,
-         now,
-         isNext,
-         $Models.DownwindGate);
+         now);
       }();
    });
    _elm.Game.RenderSvg.Gates.values = {_op: _op
                                       ,renderDownwind: renderDownwind
                                       ,renderUpwind: renderUpwind
-                                      ,renderStartLine: renderStartLine
-                                      ,renderFinishLine: renderFinishLine
+                                      ,renderOpenGate: renderOpenGate
+                                      ,renderClosedGate: renderClosedGate
                                       ,renderGate: renderGate
                                       ,renderGateMarks: renderGateMarks
                                       ,renderGateMark: renderGateMark
@@ -6012,11 +6015,23 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
    var renderPlayerAngles = function (player) {
       return function () {
          var absWindAngle = $Basics.abs($Basics.round(player.windAngle));
+         var rightSide = $Basics.fromPolar({ctor: "_Tuple2"
+                                           ,_0: 60
+                                           ,_1: $Game$Core.toRadians(player.windOrigin + 90)});
+         var leftSide = $Basics.fromPolar({ctor: "_Tuple2"
+                                          ,_0: 60
+                                          ,_1: $Game$Core.toRadians(player.windOrigin - 90)});
+         var eqLine = A2($Game$Render$SvgUtils.segment,
+         _L.fromArray([$Svg$Attributes.stroke("white")
+                      ,$Svg$Attributes.strokeWidth("1")
+                      ,$Svg$Attributes.opacity("0.5")]),
+         {ctor: "_Tuple2"
+         ,_0: leftSide
+         ,_1: rightSide});
          var windOriginRadians = $Game$Core.toRadians(player.heading - player.windAngle);
          var windLine = A2($Game$Render$SvgUtils.segment,
          _L.fromArray([$Svg$Attributes.stroke("white")
-                      ,$Svg$Attributes.opacity("0.5")
-                      ,$Svg$Attributes.strokeDasharray("2,2")]),
+                      ,$Svg$Attributes.opacity("0.5")]),
          {ctor: "_Tuple2"
          ,_0: {ctor: "_Tuple2"
               ,_0: 0
@@ -6040,36 +6055,12 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          "°"))]));
          return A2($Svg.g,
          _L.fromArray([]),
-         _L.fromArray([windLine
+         _L.fromArray([eqLine
+                      ,windLine
                       ,windAngleText]));
       }();
    };
-   var renderEqualityLine = F2(function (_v0,
-   windOrigin) {
-      return function () {
-         switch (_v0.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var rightSide = $Basics.fromPolar({ctor: "_Tuple2"
-                                                   ,_0: 60
-                                                   ,_1: $Game$Core.toRadians(windOrigin + 90)});
-                 var leftSide = $Basics.fromPolar({ctor: "_Tuple2"
-                                                  ,_0: 60
-                                                  ,_1: $Game$Core.toRadians(windOrigin - 90)});
-                 return A2($Game$Render$SvgUtils.segment,
-                 _L.fromArray([$Svg$Attributes.stroke("white")
-                              ,$Svg$Attributes.strokeWidth("1")
-                              ,$Svg$Attributes.strokeDasharray("2,2")
-                              ,$Svg$Attributes.opacity("0.5")]),
-                 {ctor: "_Tuple2"
-                 ,_0: leftSide
-                 ,_1: rightSide});
-              }();}
-         _U.badCase($moduleName,
-         "between lines 139 and 149");
-      }();
-   });
-   var renderWindShadow = function (_v4) {
+   var renderWindShadow = function (_v0) {
       return function () {
          return function () {
             var arcAngles = _L.fromArray([-15
@@ -6082,15 +6073,15 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
             var endPoints = A2($List.map,
             function (a) {
                return A2($Game$Geo.add,
-               _v4.position,
+               _v0.position,
                $Basics.fromPolar({ctor: "_Tuple2"
                                  ,_0: $Game$Models.windShadowLength
-                                 ,_1: $Game$Core.toRadians(_v4.shadowDirection + a)}));
+                                 ,_1: $Game$Core.toRadians(_v0.shadowDirection + a)}));
             },
             arcAngles);
             return A2($Svg.polygon,
             _L.fromArray([$Game$Render$SvgUtils.polygonPoints(A2($List._op["::"],
-                         _v4.position,
+                         _v0.position,
                          endPoints))
                          ,$Svg$Attributes.fill("white")
                          ,$Svg$Attributes.opacity("0.2")]),
@@ -6105,17 +6096,17 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          };
          var style = _L.fromArray([$Svg$Attributes.stroke("white")
                                   ,$Svg$Attributes.strokeWidth("3")]);
-         var renderSegment = function (_v6) {
+         var renderSegment = function (_v2) {
             return function () {
-               switch (_v6.ctor)
+               switch (_v2.ctor)
                {case "_Tuple2":
                   return A2($Game$Render$SvgUtils.segment,
                     A2($Basics._op["++"],
                     style,
-                    _L.fromArray([$Svg$Attributes.opacity(opacityForIndex(_v6._0))])),
-                    _v6._1);}
+                    _L.fromArray([$Svg$Attributes.opacity(opacityForIndex(_v2._0))])),
+                    _v2._1);}
                _U.badCase($moduleName,
-               "on line 120, column 7 to 60");
+               "on line 119, column 7 to 60");
             }();
          };
          var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
@@ -6194,9 +6185,6 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
    var renderPlayer = function (state) {
       return function () {
          var wake = renderWake(state.trail);
-         var eqLine = A2(renderEqualityLine,
-         state.position,
-         state.windOrigin);
          var vmgSign = renderVmgSign(state);
          var angles = renderPlayerAngles(state);
          var windShadow = renderWindShadow($Game$Models.asOpponentState(state));
@@ -6205,9 +6193,7 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
          state.windAngle);
          var movingPart = A2($Svg.g,
          _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(state.position))]),
-         _L.fromArray([eqLine
-                      ,angles
-                      ,vmgSign
+         _L.fromArray([angles
                       ,playerHull]));
          return A2($Svg.g,
          _L.fromArray([]),
@@ -6216,14 +6202,14 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                       ,movingPart]));
       }();
    };
-   var renderOpponent = function (_v10) {
+   var renderOpponent = function (_v6) {
       return function () {
          return function () {
             var name = A2($Svg.text$,
             _L.fromArray([$Svg$Attributes.textAnchor("middle")
                          ,$Svg$Attributes.transform(A2($Basics._op["++"],
                          $Game$Render$SvgUtils.translatePoint(A2($Game$Geo.add,
-                         _v10.state.position,
+                         _v6.state.position,
                          {ctor: "_Tuple2"
                          ,_0: 0
                          ,_1: -25})),
@@ -6231,14 +6217,14 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                          ,$Svg$Attributes.opacity("0.3")]),
             _L.fromArray([$Svg.text(A2($Maybe.withDefault,
             "Anonymous",
-            _v10.player.handle))]));
-            var shadow = renderWindShadow(_v10.state);
+            _v6.player.handle))]));
+            var shadow = renderWindShadow(_v6.state);
             var hull = A2($Svg.g,
-            _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v10.state.position))
+            _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v6.state.position))
                          ,$Svg$Attributes.opacity("0.5")]),
             _L.fromArray([A2(renderPlayerHull,
-            _v10.state.heading,
-            _v10.state.windAngle)]));
+            _v6.state.heading,
+            _v6.state.windAngle)]));
             return A2($Svg.g,
             _L.fromArray([]),
             _L.fromArray([shadow
@@ -6255,14 +6241,14 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
       renderOpponent,
       opponents));
    });
-   var renderPlayers = function (_v12) {
+   var renderPlayers = function (_v8) {
       return function () {
          return A2($Svg.g,
          _L.fromArray([]),
          _L.fromArray([A2(renderOpponents,
-                      _v12.course,
-                      _v12.opponents)
-                      ,renderPlayer(_v12.playerState)]));
+                      _v8.course,
+                      _v8.opponents)
+                      ,renderPlayer(_v8.playerState)]));
       }();
    };
    _elm.Game.RenderSvg.Players.values = {_op: _op
@@ -6277,7 +6263,6 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
                                         ,hull: hull
                                         ,renderWake: renderWake
                                         ,renderWindShadow: renderWindShadow
-                                        ,renderEqualityLine: renderEqualityLine
                                         ,renderPlayerAngles: renderPlayerAngles
                                         ,renderVmgSign: renderVmgSign
                                         ,vmgIcon: vmgIcon
@@ -6392,7 +6377,7 @@ Elm.Game.Steps.make = function (_elm) {
    areaMax) {
       return function () {
          var delta = p$ - p;
-         var outOffset = window / 2 - window * 2.0e-2;
+         var outOffset = window / 2 - 10;
          var offset = window / 2 - window * 0.48;
          var minExit = _U.cmp(delta,
          0) < 0 && _U.cmp(p$,

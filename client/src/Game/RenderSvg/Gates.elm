@@ -14,83 +14,70 @@ import Svg.Lazy exposing (..)
 
 renderDownwind : PlayerState -> Course -> Float -> Bool -> Svg
 renderDownwind playerState course now started =
-  let
-    isFirstGate = List.isEmpty playerState.crossedGates
-    isLastGate = List.length playerState.crossedGates == course.laps * 2
-    isNext = playerState.nextGate == Just DownwindGate
-  in
-    if | isFirstGate -> renderStartLine course.downwind started now
-       | isLastGate  -> renderFinishLine course.downwind now
-       | otherwise   -> renderGate course.downwind now isNext DownwindGate
+  case playerState.nextGate of
+    Just StartLine ->
+      if started then
+        renderOpenGate course.downwind now
+      else
+        renderClosedGate course.downwind now
+    Just DownwindGate ->
+      renderOpenGate course.downwind now
+    _ ->
+      renderClosedGate course.downwind now
 
 
 renderUpwind : PlayerState -> Course -> Float -> Svg
 renderUpwind playerState course now =
-  let
-    isNext = playerState.nextGate == Just UpwindGate
-  in
-    renderGate course.upwind now isNext UpwindGate
+  case playerState.nextGate of
+    Just UpwindGate ->
+      renderOpenGate course.upwind now
+    _ ->
+      renderClosedGate course.upwind now
 
-renderStartLine : Gate -> Bool -> Float -> Svg
-renderStartLine gate started timer =
+renderOpenGate : Gate -> Float -> Svg
+renderOpenGate gate timer =
   let
-    marks = renderGateMarks gate
-    lineStyle = if started
-      then [ stroke (colorToSvg colors.green), strokeWidth "2" ]
-      else [ stroke "black", strokeWidth "2", strokeDasharray "5,3", opacity "0.9" ]
-    a = if started then gateLineOpacity timer else 1
-    (left,right) = getGateMarks gate
-    l = segment (opacity (toString a) :: lineStyle ) (getGateMarks gate)
+    lineStyle =
+      [ stroke "white"
+      , strokeWidth "2"
+      , strokeDasharray "5,3"
+      , opacity (toString (gateLineOpacity timer))
+      ]
+  in
+    renderGate gate lineStyle (colorToSvg colors.green)
+
+renderClosedGate : Gate -> Float -> Svg
+renderClosedGate gate timer =
+  let
+    lineStyle =
+      [ stroke "white"
+      , strokeWidth "2"
+      ]
+  in
+    renderGate gate lineStyle "black"
+
+renderGate : Gate -> List Attribute -> String -> Svg
+renderGate gate lineStyle color =
+  let
+    l = segment lineStyle (getGateMarks gate)
+    marks = renderGateMarks color gate
   in
     g [ ] [ l, marks ]
-  -- let lineStyle = if started
-  --       then nextLineStyle
-  --       else { defaultLine | width <- 2, color <- colors.orange }
-  --     a = if started then gateLineOpacity timer else 1
-  --     line = renderGateLine gate lineStyle |> alpha a
-  --     marks = renderGateMarks gate
-  --     helper = if started
-  --       then renderStraightArrow True timer |> move (0, gate.y - markRadius * 3)
-  --       else emptyForm
-  -- in  group [helper, line, marks]
 
-renderFinishLine : Gate -> Float -> Svg
-renderFinishLine gate timer =
-  let
-    marks = renderGateMarks gate
-  in
-    g [ ] [ marks ]
-  -- let
-  --   a = gateLineOpacity timer
-  --   line = renderGateLine gate nextLineStyle |> alpha a
-  --   marks = renderGateMarks gate
-  --   helper = renderStraightArrow False timer
-  --     |> move (0, gate.y + markRadius * 3)
-  --     |> alpha (a * 0.5)
-  -- in
-  --   group [helper, line, marks]
-
-renderGate : Gate -> Float -> Bool -> GateLocation -> Svg
-renderGate gate timer isNext gateLoc =
-  let
-    marks = renderGateMarks gate
-  in
-    g [ ] [ marks ]
-
-renderGateMarks : Gate -> Svg
-renderGateMarks gate =
+renderGateMarks : String -> Gate -> Svg
+renderGateMarks color gate =
   let
     (left, right) = getGateMarks gate
   in
-    g [ ] (List.map renderGateMark [ left, right ])
+    g [ ] (List.map (renderGateMark color) [ left, right ])
 
-renderGateMark : Point -> Svg
-renderGateMark p =
+renderGateMark : String -> Point -> Svg
+renderGateMark color p =
   circle
     [ r (toString markRadius)
     , stroke "white"
     , strokeWidth "2"
-    , fill "black"
+    , fill color
     , transform (translatePoint p)
     ]
     [ ]
