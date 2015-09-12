@@ -5861,7 +5861,7 @@ Elm.Game.RenderSvg.Dashboard.make = function (_elm) {
                            ,A2($Svg.g,
                            _L.fromArray([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
                            $Basics.toFloat(_v4._0) - $Game$RenderSvg$Dashboard$VmgBar.barWidth - 40,
-                           30))]),
+                           40))]),
                            _L.fromArray([$Game$RenderSvg$Dashboard$VmgBar.render(gameState.playerState)]))]));}
          _U.badCase($moduleName,
          "between lines 26 and 44");
@@ -6122,11 +6122,12 @@ Elm.Game.RenderSvg.Dashboard.WindSpeedGraph.make = function (_elm) {
    };
    var graphWidth = 200;
    var timeScale = graphWidth / $Game$Models.windHistoryLength;
-   var renderMark = function (speed) {
+   var renderMark = F2(function (solid,
+   speed) {
       return A2($Game$Render$SvgUtils.segment,
       _L.fromArray([$Svg$Attributes.stroke("black")
                    ,$Svg$Attributes.strokeWidth("1")
-                   ,$Svg$Attributes.strokeDasharray("3,3")]),
+                   ,$Svg$Attributes.strokeDasharray(solid ? "" : "3,3")]),
       {ctor: "_Tuple2"
       ,_0: {ctor: "_Tuple2"
            ,_0: 0
@@ -6134,13 +6135,15 @@ Elm.Game.RenderSvg.Dashboard.WindSpeedGraph.make = function (_elm) {
       ,_1: {ctor: "_Tuple2"
            ,_0: $Game$Models.windHistoryLength * timeScale
            ,_1: speedY(speed)}});
-   };
+   });
    var yMarks = A2($Svg.g,
    _L.fromArray([$Svg$Attributes.opacity("0.2")]),
-   _L.fromArray([renderMark(10)
-                ,renderMark(15)
-                ,renderMark(20)
-                ,renderMark(25)]));
+   _L.fromArray([A2(renderMark,
+                true,
+                10)
+                ,A2(renderMark,false,15)
+                ,A2(renderMark,true,20)
+                ,A2(renderMark,false,25)]));
    var timeX = F3(function (init,
    now,
    t) {
@@ -6180,7 +6183,7 @@ Elm.Game.RenderSvg.Dashboard.WindSpeedGraph.make = function (_elm) {
             "kn"))]));
             var xMark = A2($Game$Render$SvgUtils.segment,
             _L.fromArray([$Svg$Attributes.stroke("black")
-                         ,$Svg$Attributes.opacity("0.4")]),
+                         ,$Svg$Attributes.opacity("0.5")]),
             {ctor: "_Tuple2"
             ,_0: {ctor: "_Tuple2"
                  ,_0: currentX

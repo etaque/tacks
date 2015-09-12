@@ -56,7 +56,7 @@ render now wind {lastSample, samples, init} =
 
     xMark = segment
       [ stroke "black"
-      , opacity "0.4"
+      , opacity "0.5"
       ]
       ((currentX, speedY 8), (currentX, speedY 27))
   in
@@ -72,18 +72,18 @@ render now wind {lastSample, samples, init} =
 yMarks : Svg
 yMarks = g
   [ opacity "0.2" ]
-  [ renderMark 10
-  , renderMark 15
-  , renderMark 20
-  , renderMark 25
+  [ renderMark True 10
+  , renderMark False 15
+  , renderMark True 20
+  , renderMark False 25
   ]
 
-renderMark : Float -> Svg
-renderMark speed =
+renderMark : Bool -> Float -> Svg
+renderMark solid speed =
   segment
     [ stroke "black"
     , strokeWidth "1"
-    , strokeDasharray "3,3"
+    , strokeDasharray (if solid then "" else "3,3")
     ]
     ((0, speedY speed), (windHistoryLength * timeScale, speedY speed))
 

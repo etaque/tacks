@@ -39,7 +39,7 @@ renderDashboard (w,h) gameState =
     , g [ transform (translate 30 30)]
         [ WindSpeedGraph.render gameState.now gameState.wind gameState.windHistory ]
 
-    , g [ transform (translate (toFloat w - VmgBar.barWidth - 40) 30)]
+    , g [ transform (translate (toFloat w - VmgBar.barWidth - 40) 40)]
         [ VmgBar.render gameState.playerState ]
     ]
 
