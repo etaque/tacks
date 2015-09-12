@@ -37,7 +37,7 @@ topCenterElements gameState =
 topRightElements : GameState -> List Element
 topRightElements {wind, windHistory, playerState} =
   [ getWindWheel wind
-  , getWindSpeedGraph wind windHistory
+  -- , getWindSpeedGraph wind windHistory
   ]
 
 
@@ -141,29 +141,29 @@ getVmgBar {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
       collage 80 (barHeight + 40) [bar, legend]
 
 
-getWindSpeedGraph : Wind -> WindHistory -> Element
-getWindSpeedGraph wind windHistory =
-  let
-    stepWidth = 4
-    windCoef = 4
-    windSpeeds = (windHistory.speeds)
+-- getWindSpeedGraph : Wind -> WindHistory -> Element
+-- getWindSpeedGraph wind windHistory =
+--   let
+--     stepWidth = 4
+--     windCoef = 4
+--     windSpeeds = (windHistory.speeds)
 
-    samplingInterpol = (toFloat windHistory.sampleCounter) * stepWidth / (toFloat windHistorySampling)
-    historyPath = windSpeeds
-      |> indexedMap (,)
-      |> map (\(t, s) -> (toFloat t * -stepWidth, s * windCoef))
-      |> path
-      |> traced (solid white)
-      |> move ( stepWidth * (toFloat windHistoryLength) - samplingInterpol, 0)
+--     samplingInterpol = (toFloat windHistory.sampleCounter) * stepWidth / (toFloat windHistorySampling)
+--     historyPath = windSpeeds
+--       |> indexedMap (,)
+--       |> map (\(t, s) -> (toFloat t * -stepWidth, s * windCoef))
+--       |> path
+--       |> traced (solid white)
+--       |> move ( stepWidth * (toFloat windHistoryLength) - samplingInterpol, 0)
 
-    currentPoint = circle 2
-      |> filled white
-      |> move ((toFloat windHistoryLength) * stepWidth, wind.speed * windCoef)
+--     currentPoint = circle 2
+--       |> filled white
+--       |> move ((toFloat windHistoryLength) * stepWidth, wind.speed * windCoef)
 
-    graph = group [ historyPath, currentPoint ]
-      |> move (-100, 0)
-  in
-    collage 250 200 [ graph ]
+--     graph = group [ historyPath, currentPoint ]
+--       |> move (-100, 0)
+--   in
+--     collage 250 200 [ graph ]
 
 
 s : Element

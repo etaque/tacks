@@ -44,6 +44,15 @@ polygonPoints pointsList =
     |> String.join " "
     |> points
 
+pathPoints : List Point -> Attribute
+pathPoints pointsList =
+  let
+    coords = List.map (\(x, y) -> toString x ++ "," ++ toString y) pointsList
+      |> String.join " "
+  in
+    d ("M " ++ coords)
+
+
 lineCoords : Point -> Point -> List Attribute
 lineCoords p1 p2 =
   let

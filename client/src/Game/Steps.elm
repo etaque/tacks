@@ -1,6 +1,7 @@
 module Game.Steps where
 
 import Task
+import Time exposing (Time)
 
 import AppTypes exposing (..)
 import Models exposing (..)
@@ -15,6 +16,7 @@ import Game.Steps.Moving exposing (movingStep)
 import Game.Steps.Turning exposing (turningStep)
 import Game.Steps.Vmg exposing (vmgStep)
 import Game.Steps.Wind exposing (windStep)
+import Game.Steps.WindHistory exposing (updateWindHistory)
 
 
 import Debug
@@ -62,7 +64,7 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
 
     newPlayerState = { playerState | time <- now }
 
-    windHistory = updateWindHistory raceInput.wind gameState.windHistory
+    windHistory = updateWindHistory now raceInput.wind gameState.windHistory
 
   in
     { gameState
@@ -79,18 +81,6 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
       , localTime <- time
       , rtd <- Just rtd
     }
-
-updateWindHistory : Wind -> WindHistory -> WindHistory
-updateWindHistory {origin, speed} h =
-  if h.sampleCounter > windHistorySampling then
-    WindHistory
-      (List.take windHistoryLength (origin :: h.origins))
-      (List.take windHistoryLength (speed :: h.speeds))
-      0
-  else
-    { h | sampleCounter <- h.sampleCounter + 1 }
-
-
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState
 playerStep keyboardInput elapsed gameState =

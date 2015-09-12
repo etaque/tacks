@@ -17,11 +17,11 @@ boatWidth = 3
 windShadowLength : Float
 windShadowLength = 120
 
-windHistorySampling : Int
-windHistorySampling = 30
+windHistorySampling : Float
+windHistorySampling = 2000
 
-windHistoryLength : Int
-windHistoryLength = 50
+windHistoryLength : Float
+windHistoryLength = windHistorySampling * 30
 
 type alias GameState =
   { wind:        Wind
@@ -53,9 +53,15 @@ type alias Wind =
   }
 
 type alias WindHistory =
-  { origins : List Float
-  , speeds : List Float
-  , sampleCounter : Int
+  { samples : List WindSample
+  , lastSample : Time
+  , init : Time
+  }
+
+type alias WindSample =
+  { origin : Float
+  , speed : Float
+  , time : Time
   }
 
 type alias Gust =
@@ -224,18 +230,18 @@ defaultWind =
   , gustCounter = 0
   }
 
-emptyWindHistory : WindHistory
-emptyWindHistory =
-  { origins = []
-  , speeds = []
-  , sampleCounter = 0
+emptyWindHistory : Time -> WindHistory
+emptyWindHistory now =
+  { samples = []
+  , lastSample = 0
+  , init = now
   }
 
 
 defaultGame : Time -> Course -> Player -> GameState
 defaultGame now course player =
   { wind        = defaultWind
-  , windHistory = emptyWindHistory
+  , windHistory = emptyWindHistory now
   , playerState = defaultPlayerState player now
   , center      = (0,0)
   , wake        = []

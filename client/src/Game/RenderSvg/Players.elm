@@ -145,7 +145,7 @@ renderNextGateLine course state =
       _ ->
         Nothing
     ifFarEnough gatePos =
-      if (Geo.distance state.position gatePos) > length * 3 then Just gatePos else Nothing
+      if (Geo.distance state.position gatePos) > length * 2.5 then Just gatePos else Nothing
     renderLine gatePos =
       let
         a = Geo.angleBetween state.position gatePos
