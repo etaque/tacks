@@ -7,13 +7,14 @@ import org.joda.time.DateTime
 import reactivemongo.bson._
 
 import models.Geo._
+import tools.BSONHandlers._
 
 case class Course(
   upwind: Gate,
   downwind: Gate,
   laps: Int,
   markRadius: Double = 5,
-  grid: Course.Grid = Map.empty,
+  grid: Course.Grid = Nil,
   islands: Seq[Island],
   area: RaceArea,
   windGenerator: WindGenerator,
@@ -41,40 +42,19 @@ object Course {
       downwind = Gate(0, 200),
       laps = 2,
       islands = Seq.fill[Island](8)(Island.spawn(area)),
-      grid = Map.empty,
       area = area,
       windGenerator = WindGenerator.spawn(),
       gustGenerator = GustGenerator.spawn
     )
   }
 
-  type GridRow = Map[Int, String]
-  type Grid = Map[Int, GridRow]
+  type Grid = Seq[(Int, GridRow)]
+  type GridRow = Seq[(Int, String)]
 
-  implicit object BSONMapHandler extends BSONHandler[BSONDocument, Grid] {
-    override def read(bson: BSONDocument): Grid = {
-      bson.elements.map {
-        case (i, rowDoc) => {
-          val row = rowDoc.asInstanceOf[BSONDocument].elements.map {
-            case (j, kind) => j.toInt -> kind.asInstanceOf[BSONString].value
-          }.toMap
-          i.toInt -> row
-        }
-      }.toMap
-    }
-
-    override def write(t: Grid): BSONDocument = {
-      val stream: Stream[Try[(String, BSONDocument)]] = t.map {
-        case (i, row) => {
-          val rowStream = row.map {
-            case (j, kind) => Try((j.toString, BSONString(kind)))
-          }.toStream
-          Try((i.toString, BSONDocument(rowStream)))
-        }
-      }.toStream
-      BSONDocument(stream)
-    }
-  }
+  implicit val gridRowTupleHandler = tupleHandler[Int, BSONInteger, String, BSONString]
+  implicit val gridRowHandler = seqHandler[(Int, String), BSONArray]
+  implicit val gridTupleHandler = tupleHandler[Int, BSONInteger, GridRow, BSONArray]
+  implicit val gridHandler = seqHandler[(Int, GridRow), BSONArray]
 
   implicit val raceAreaHandler = Macros.handler[RaceArea]
   implicit val gustSpecHandler = Macros.handler[GustDef]

@@ -1,6 +1,7 @@
 module Decoders where
 
 import Json.Decode as Json exposing (..)
+import Dict
 
 import Models exposing (..)
 
@@ -94,9 +95,10 @@ pointDecoder =
 
 courseDecoder : Decoder Course
 courseDecoder =
-  object6 Course
+  object7 Course
     ("upwind" := gateDecoder)
     ("downwind" := gateDecoder)
+    ("grid" := gridDecoder)
     ("laps" := int)
     ("islands" := list islandDecoder)
     ("area" := raceAreaDecoder)
@@ -107,6 +109,25 @@ gateDecoder =
   object2 Gate
     ("y" := float)
     ("width" := float)
+
+
+gridDecoder : Decoder Grid
+gridDecoder =
+  list (tuple2 (,) int gridRowDecoder)
+    |> map Dict.fromList
+
+gridRowDecoder : Decoder GridRow
+gridRowDecoder =
+  list (tuple2 (,) int (string `andThen` tileKindDecoder))
+    |> map Dict.fromList
+
+tileKindDecoder : String -> Decoder TileKind
+tileKindDecoder s =
+  case s of
+    "Water" -> succeed Water
+    "Sand" -> succeed Sand
+    "Rock" -> succeed Rock
+    _ -> fail (s ++ " is not a TileKind")
 
 islandDecoder : Decoder Island
 islandDecoder =

@@ -1,6 +1,7 @@
 module Models where
 
 import Time exposing (Time)
+import Dict exposing (Dict)
 
 type alias Player =
   { id:     String
@@ -66,6 +67,7 @@ type alias Message =
 type alias Course =
   { upwind : Gate
   , downwind : Gate
+  , grid : Grid
   , laps : Int
   , islands : List Island
   , area : RaceArea
@@ -102,3 +104,21 @@ type alias WindGenerator =
 type alias Point = (Float, Float)
 
 type alias Segment = (Point, Point)
+
+type alias Coords = (Int, Int)
+
+type alias Cube number = (number, number, number)
+
+-- Grid
+
+type alias Grid = Dict Int GridRow
+type alias GridRow = Dict Int TileKind
+
+type alias Tile =
+  { kind : TileKind
+  , coords : Coords
+  }
+
+type TileKind = Water | Sand | Rock
+
+

@@ -1523,6 +1523,7 @@ Elm.Decoders.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Decoders",
    $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -1543,6 +1544,38 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "amplitude2",
    $Json$Decode.$float));
+   var tileKindDecoder = function (s) {
+      return function () {
+         switch (s)
+         {case "Rock":
+            return $Json$Decode.succeed($Models.Rock);
+            case "Sand":
+            return $Json$Decode.succeed($Models.Sand);
+            case "Water":
+            return $Json$Decode.succeed($Models.Water);}
+         return $Json$Decode.fail(A2($Basics._op["++"],
+         s,
+         " is not a TileKind"));
+      }();
+   };
+   var gridRowDecoder = $Json$Decode.map($Dict.fromList)($Json$Decode.list(A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   }),
+   $Json$Decode.$int,
+   A2($Json$Decode.andThen,
+   $Json$Decode.string,
+   tileKindDecoder))));
+   var gridDecoder = $Json$Decode.map($Dict.fromList)($Json$Decode.list(A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   }),
+   $Json$Decode.$int,
+   gridRowDecoder)));
    var gateDecoder = A3($Json$Decode.object2,
    $Models.Gate,
    A2($Json$Decode._op[":="],
@@ -1575,7 +1608,7 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "leftBottom",
    pointDecoder));
-   var courseDecoder = A7($Json$Decode.object6,
+   var courseDecoder = A8($Json$Decode.object7,
    $Models.Course,
    A2($Json$Decode._op[":="],
    "upwind",
@@ -1583,6 +1616,9 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "downwind",
    gateDecoder),
+   A2($Json$Decode._op[":="],
+   "grid",
+   gridDecoder),
    A2($Json$Decode._op[":="],
    "laps",
    $Json$Decode.$int),
@@ -1719,6 +1755,9 @@ Elm.Decoders.make = function (_elm) {
                           ,pointDecoder: pointDecoder
                           ,courseDecoder: courseDecoder
                           ,gateDecoder: gateDecoder
+                          ,gridDecoder: gridDecoder
+                          ,gridRowDecoder: gridRowDecoder
+                          ,tileKindDecoder: tileKindDecoder
                           ,islandDecoder: islandDecoder
                           ,raceAreaDecoder: raceAreaDecoder
                           ,windGeneratorDecoder: windGeneratorDecoder};
@@ -11294,11 +11333,20 @@ Elm.Models.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Models",
    $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var Rock = {ctor: "Rock"};
+   var Sand = {ctor: "Sand"};
+   var Water = {ctor: "Water"};
+   var Tile = F2(function (a,b) {
+      return {_: {}
+             ,coords: b
+             ,kind: a};
+   });
    var WindGenerator = F4(function (a,
    b,
    c,
@@ -11326,19 +11374,21 @@ Elm.Models.make = function (_elm) {
    var Gate = F2(function (a,b) {
       return {_: {},width: b,y: a};
    });
-   var Course = F6(function (a,
+   var Course = F7(function (a,
    b,
    c,
    d,
    e,
-   f) {
+   f,
+   g) {
       return {_: {}
-             ,area: e
+             ,area: f
              ,downwind: b
-             ,islands: d
-             ,laps: c
+             ,grid: c
+             ,islands: e
+             ,laps: d
              ,upwind: a
-             ,windGenerator: f};
+             ,windGenerator: g};
    });
    var Message = F3(function (a,
    b,
@@ -11436,7 +11486,11 @@ Elm.Models.make = function (_elm) {
                         ,DownwindGate: DownwindGate
                         ,UpwindGate: UpwindGate
                         ,StartLine: StartLine
-                        ,WindGenerator: WindGenerator};
+                        ,WindGenerator: WindGenerator
+                        ,Tile: Tile
+                        ,Water: Water
+                        ,Sand: Sand
+                        ,Rock: Rock};
    return _elm.Models.values;
 };
 Elm.Native.Array = {};
