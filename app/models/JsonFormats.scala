@@ -39,6 +39,9 @@ object JsonFormats {
     })
   }
 
+  implicit val gridRowFormat: Format[Course.GridRow] = mapFormat[Int, String]
+  implicit val gridFormat: Format[Course.Grid] = mapFormat[Int, Course.GridRow]
+
   implicit val raceAreaFormat: Format[RaceArea] = Json.format[RaceArea]
   implicit val gustSpecFormat: Format[GustDef] = Json.format[GustDef]
   implicit val gustGeneratorFormat: Format[GustGenerator] = Json.format[GustGenerator]

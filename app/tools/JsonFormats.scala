@@ -1,8 +1,11 @@
 package tools
 
+import scala.util.Try
+
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
 import play.api.libs.concurrent.Execution.Implicits._
+
 import reactivemongo.bson.BSONObjectID
 import org.joda.time.DateTime
 
@@ -49,6 +52,27 @@ object JsonFormats {
     Format[(A,B)](tuple2Reads[A,B], tuple2Writes[A,B])
 
   // Scala Enumeration
+
+  implicit def mapReads[K, V](implicit valueReads: Reads[V]): Reads[Map[K, V]] = Reads[Map[K, V]] {
+    case JsObject(fields) => {
+      val res = fields.flatMap {
+        case (key, value) => for {
+          k <- Try(key.asInstanceOf[K]).toOption
+          v <- valueReads.reads(value).asOpt
+        } yield k -> v
+      }.toMap
+      JsSuccess(res)
+    }
+    case _ => JsSuccess(Map.empty)
+  }
+
+  implicit def mapWrites[K, V](implicit valueWrites: Writes[V]): Writes[Map[K, V]] =
+    new Writes[Map[K, V]] {
+      def writes(kv: Map[K, V]) = JsObject(kv.map { case (k, v) => k.toString -> valueWrites.writes(v) }.toSeq)
+    }
+
+  implicit def mapFormat[K, V](implicit vFormat: Format[V]): Format[Map[K, V]] =
+    Format[Map[K, V]](mapReads[K, V], mapWrites[K, V])
 
   def enumReads[E <: Enumeration](enum: E): Reads[E#Value] = new Reads[E#Value] {
     def reads(json: JsValue): JsResult[E#Value] = json match {

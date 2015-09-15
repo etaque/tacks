@@ -1,12 +1,90 @@
 package models
 
 import scala.util.Random._
+import scala.util.Try
 import java.lang.Math._
 import org.joda.time.DateTime
-import reactivemongo.bson.Macros
+import reactivemongo.bson._
 
 import models.Geo._
 
+case class Course(
+  upwind: Gate,
+  downwind: Gate,
+  laps: Int,
+  markRadius: Double = 5,
+  grid: Course.Grid = Map.empty,
+  islands: Seq[Island],
+  area: RaceArea,
+  windGenerator: WindGenerator,
+  gustGenerator: GustGenerator,
+  windShadowLength: Double = 120,
+  boatWidth: Double = 3 // for collision detection, should be consistent with icon
+) {
+  val gatesToCross = laps * 2 + 1
+
+  def nextGate(crossedGates: Int): Option[GateLocation] = {
+    if (crossedGates == gatesToCross) None // finished
+    else if (crossedGates == 0) Some(StartLine)
+    else if (crossedGates % 2 == 0) Some(DownwindGate)
+    else Some(UpwindGate)
+  }
+}
+
+object Course {
+  def spawn = {
+    val width = 1400 + nextInt(400)
+    val height = 2000 + nextInt(2000)
+    val area = RaceArea((width/2, height + 200), (-width/2,-300))
+    Course(
+      upwind = Gate(height, 200),
+      downwind = Gate(0, 200),
+      laps = 2,
+      islands = Seq.fill[Island](8)(Island.spawn(area)),
+      grid = Map.empty,
+      area = area,
+      windGenerator = WindGenerator.spawn(),
+      gustGenerator = GustGenerator.spawn
+    )
+  }
+
+  type GridRow = Map[Int, String]
+  type Grid = Map[Int, GridRow]
+
+  implicit object BSONMapHandler extends BSONHandler[BSONDocument, Grid] {
+    override def read(bson: BSONDocument): Grid = {
+      bson.elements.map {
+        case (i, rowDoc) => {
+          val row = rowDoc.asInstanceOf[BSONDocument].elements.map {
+            case (j, kind) => j.toInt -> kind.asInstanceOf[BSONString].value
+          }.toMap
+          i.toInt -> row
+        }
+      }.toMap
+    }
+
+    override def write(t: Grid): BSONDocument = {
+      val stream: Stream[Try[(String, BSONDocument)]] = t.map {
+        case (i, row) => {
+          val rowStream = row.map {
+            case (j, kind) => Try((j.toString, BSONString(kind)))
+          }.toStream
+          Try((i.toString, BSONDocument(rowStream)))
+        }
+      }.toStream
+      BSONDocument(stream)
+    }
+  }
+
+  implicit val raceAreaHandler = Macros.handler[RaceArea]
+  implicit val gustSpecHandler = Macros.handler[GustDef]
+  implicit val gustGeneratorHandler = Macros.handler[GustGenerator]
+  implicit val windGeneratorHandler = Macros.handler[WindGenerator]
+  implicit val gateHandler = Macros.handler[Gate]
+  implicit val islandHandler = Macros.handler[Island]
+  implicit val courseHandler = Macros.handler[Course]
+
+}
 sealed trait GateLocation
 case object StartLine extends GateLocation
 case object UpwindGate extends GateLocation
@@ -125,50 +203,3 @@ object GustGenerator {
   val empty = GustGenerator(0, Nil)
 }
 
-case class Course(
-  upwind: Gate,
-  downwind: Gate,
-  laps: Int,
-  markRadius: Double = 5,
-  islands: Seq[Island],
-  area: RaceArea,
-  windGenerator: WindGenerator,
-  gustGenerator: GustGenerator,
-  windShadowLength: Double = 120,
-  boatWidth: Double = 3 // for collision detection, should be consistent with icon
-) {
-  val gatesToCross = laps * 2 + 1
-
-  def nextGate(crossedGates: Int): Option[GateLocation] = {
-    if (crossedGates == gatesToCross) None // finished
-    else if (crossedGates == 0) Some(StartLine)
-    else if (crossedGates % 2 == 0) Some(DownwindGate)
-    else Some(UpwindGate)
-  }
-}
-
-object Course {
-  def spawn = {
-    val width = 1400 + nextInt(400)
-    val height = 2000 + nextInt(2000)
-    val area = RaceArea((width/2, height + 200), (-width/2,-300))
-    Course(
-      upwind = Gate(height, 200),
-      downwind = Gate(0, 200),
-      laps = 2,
-      islands = Seq.fill[Island](8)(Island.spawn(area)),
-      area = area,
-      windGenerator = WindGenerator.spawn(),
-      gustGenerator = GustGenerator.spawn
-    )
-  }
-
-  implicit val raceAreaHandler = Macros.handler[RaceArea]
-  implicit val gustSpecHandler = Macros.handler[GustDef]
-  implicit val gustGeneratorHandler = Macros.handler[GustGenerator]
-  implicit val windGeneratorHandler = Macros.handler[WindGenerator]
-  implicit val gateHandler = Macros.handler[Gate]
-  implicit val islandHandler = Macros.handler[Island]
-  implicit val courseHandler = Macros.handler[Course]
-
-}
