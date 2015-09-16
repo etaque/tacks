@@ -17,7 +17,10 @@ emptyForm = C.toForm E.empty
 
 colors =
   { seaBlue = rgb 147 202 223
+  , water = rgb 147 202 223
   , sand = rgb 242 243 196
+  , grass = rgb 200 230 180
+  , rock = rgb 160 146 159
   , gateMark = white
   , gateLine = rgb 200 130 170
   , orange = rgb 200 130 170

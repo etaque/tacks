@@ -69,7 +69,6 @@ type alias Course =
   , downwind : Gate
   , grid : Grid
   , laps : Int
-  , islands : List Island
   , area : RaceArea
   , windGenerator : WindGenerator
   }
@@ -77,11 +76,6 @@ type alias Course =
 type alias Gate =
   { y : Float
   , width : Float
-  }
-
-type alias Island =
-  { location : Point
-  , radius : Float
   }
 
 type alias RaceArea =

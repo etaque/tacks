@@ -5,6 +5,7 @@ import List as L
 import Models exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
+import Game.Grid exposing (currentTile)
 import Game.Core exposing (..)
 import Game.Steps.Util exposing (..)
 
@@ -61,6 +62,6 @@ isGrounded p course =
 
     stuckOnMark = exists (\m -> (distance p m) <= markRadius + halfBoatWidth) marks
     outOfBounds = not (inBox p (areaBox course.area))
-    onIsland = exists (\i -> (distance i.location p) <= i.radius + halfBoatWidth) course.islands
+    onGround = (currentTile course.grid p) /= Just Water
   in
-    stuckOnMark || outOfBounds || onIsland
+    stuckOnMark || outOfBounds || onGround

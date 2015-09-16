@@ -5,6 +5,17 @@ import Models exposing (..)
 
 import Dict exposing (Dict)
 
+hexRadius = 30
+hexHeight = hexRadius * 2
+hexWidth = (sqrt 3) / 2 * hexHeight
+hexDims = (hexWidth, hexHeight)
+
+currentTile : Grid -> Point -> Maybe TileKind
+currentTile grid p =
+  let
+    (i, j) = pointToHexCoords p
+  in
+    (Dict.get i grid) `Maybe.andThen` (Dict.get j)
 
 createTile : TileKind -> Coords -> Grid -> Grid
 createTile kind (i,j) grid =
@@ -75,7 +86,6 @@ hexToCube : (number, number) -> Cube number
 hexToCube (i, j) =
   (i, j, -i-j)
 
-
 getTilesList : Grid -> List Tile
 getTilesList grid =
   let
@@ -91,5 +101,5 @@ getTilesList grid =
     mapTile i (j, kind) =
       Tile kind (i, j)
   in
-    List.map mapRow rows
+    List.concatMap mapRow rows
 

@@ -95,12 +95,11 @@ pointDecoder =
 
 courseDecoder : Decoder Course
 courseDecoder =
-  object7 Course
+  object6 Course
     ("upwind" := gateDecoder)
     ("downwind" := gateDecoder)
     ("grid" := gridDecoder)
     ("laps" := int)
-    ("islands" := list islandDecoder)
     ("area" := raceAreaDecoder)
     ("windGenerator" := windGeneratorDecoder)
 
@@ -128,12 +127,6 @@ tileKindDecoder s =
     "Sand" -> succeed Sand
     "Rock" -> succeed Rock
     _ -> fail (s ++ " is not a TileKind")
-
-islandDecoder : Decoder Island
-islandDecoder =
-  object2 Island
-    ("location" := pointDecoder)
-    ("radius" := float)
 
 raceAreaDecoder : Decoder RaceArea
 raceAreaDecoder =

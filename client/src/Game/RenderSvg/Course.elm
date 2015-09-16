@@ -6,6 +6,7 @@ import Models exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
 import Game.RenderSvg.Gates exposing (..)
+import Game.RenderSvg.Tiles exposing (..)
 
 import String
 import Svg exposing (..)
@@ -16,42 +17,11 @@ import Svg.Lazy exposing (..)
 renderCourse : GameState -> Svg
 renderCourse ({playerState,course,now,wind} as gameState) =
     g [ ]
-      [ renderBounds course.area
-      -- , renderLaylines wind course playerState
-      , renderIslands course
+      [ lazyRenderTiles course.grid
       , renderGusts wind
       , renderDownwind playerState course now (isStarted gameState)
       , renderUpwind playerState course now
       ]
-
-renderBounds : RaceArea -> Svg
-renderBounds area =
-  let
-    (w,h) = areaDims area
-    (cw,ch) = areaCenters area
-    top = areaTop area
-  in
-    rect
-      [ width (toString w)
-      , height (toString h)
-      -- , stroke "white"
-      -- , strokeWidth "2"
-      -- , fill "url(#seaPattern)" -- (colorToSvg colors.seaBlue)
-      , fill (colorToSvg colors.seaBlue)
-      , transform (translate -(w/2) (top - h))
-      ] [ ]
-
-renderIslands : Course -> Svg
-renderIslands course =
-  g [] (List.map renderIsland course.islands)
-
-renderIsland : Island -> Svg
-renderIsland {location,radius} =
-  circle
-    [ r (toString radius)
-    , fill (colorToSvg colors.sand)
-    , transform (translatePoint location)
-    ] []
 
 renderGusts : Wind -> Svg
 renderGusts wind =

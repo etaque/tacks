@@ -1592,14 +1592,6 @@ Elm.Decoders.make = function (_elm) {
    }),
    $Json$Decode.$float,
    $Json$Decode.$float);
-   var islandDecoder = A3($Json$Decode.object2,
-   $Models.Island,
-   A2($Json$Decode._op[":="],
-   "location",
-   pointDecoder),
-   A2($Json$Decode._op[":="],
-   "radius",
-   $Json$Decode.$float));
    var raceAreaDecoder = A3($Json$Decode.object2,
    $Models.RaceArea,
    A2($Json$Decode._op[":="],
@@ -1608,7 +1600,7 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "leftBottom",
    pointDecoder));
-   var courseDecoder = A8($Json$Decode.object7,
+   var courseDecoder = A7($Json$Decode.object6,
    $Models.Course,
    A2($Json$Decode._op[":="],
    "upwind",
@@ -1622,9 +1614,6 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "laps",
    $Json$Decode.$int),
-   A2($Json$Decode._op[":="],
-   "islands",
-   $Json$Decode.list(islandDecoder)),
    A2($Json$Decode._op[":="],
    "area",
    raceAreaDecoder),
@@ -1758,7 +1747,6 @@ Elm.Decoders.make = function (_elm) {
                           ,gridDecoder: gridDecoder
                           ,gridRowDecoder: gridRowDecoder
                           ,tileKindDecoder: tileKindDecoder
-                          ,islandDecoder: islandDecoder
                           ,raceAreaDecoder: raceAreaDecoder
                           ,windGeneratorDecoder: windGeneratorDecoder};
    return _elm.Decoders.values;
@@ -3142,6 +3130,242 @@ Elm.Game.Geo.make = function (_elm) {
    return _elm.Game.Geo.values;
 };
 Elm.Game = Elm.Game || {};
+Elm.Game.Grid = Elm.Game.Grid || {};
+Elm.Game.Grid.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Grid = _elm.Game.Grid || {};
+   if (_elm.Game.Grid.values)
+   return _elm.Game.Grid.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.Grid",
+   $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var getTilesList = function (grid) {
+      return function () {
+         var mapTile = F2(function (i,
+         _v0) {
+            return function () {
+               switch (_v0.ctor)
+               {case "_Tuple2":
+                  return A2($Models.Tile,
+                    _v0._1,
+                    {ctor: "_Tuple2"
+                    ,_0: i
+                    ,_1: _v0._0});}
+               _U.badCase($moduleName,
+               "on line 102, column 7 to 22");
+            }();
+         });
+         var mapRow = function (_v4) {
+            return function () {
+               switch (_v4.ctor)
+               {case "_Tuple2":
+                  return A2($List.map,
+                    mapTile(_v4._0),
+                    $Dict.toList(_v4._1));}
+               _U.badCase($moduleName,
+               "on line 98, column 7 to 44");
+            }();
+         };
+         var rows = $Dict.toList(grid);
+         return A2($List.concatMap,
+         mapRow,
+         rows);
+      }();
+   };
+   var hexToCube = function (_v8) {
+      return function () {
+         switch (_v8.ctor)
+         {case "_Tuple2":
+            return {ctor: "_Tuple3"
+                   ,_0: _v8._0
+                   ,_1: _v8._1
+                   ,_2: 0 - _v8._0 - _v8._1};}
+         _U.badCase($moduleName,
+         "on line 87, column 4 to 14");
+      }();
+   };
+   var cubeToHex = function (_v12) {
+      return function () {
+         switch (_v12.ctor)
+         {case "_Tuple3":
+            return {ctor: "_Tuple2"
+                   ,_0: _v12._0
+                   ,_1: _v12._1};}
+         _U.badCase($moduleName,
+         "on line 83, column 4 to 8");
+      }();
+   };
+   var cubeRound = function (_v17) {
+      return function () {
+         switch (_v17.ctor)
+         {case "_Tuple3":
+            return function () {
+                 var rz = $Basics.round(_v17._2);
+                 var zDiff = $Basics.abs($Basics.toFloat(rz) - _v17._2);
+                 var ry = $Basics.round(_v17._1);
+                 var yDiff = $Basics.abs($Basics.toFloat(ry) - _v17._1);
+                 var rx = $Basics.round(_v17._0);
+                 var xDiff = $Basics.abs($Basics.toFloat(rx) - _v17._0);
+                 return _U.cmp(xDiff,
+                 yDiff) > 0 && _U.cmp(xDiff,
+                 zDiff) > 0 ? {ctor: "_Tuple3"
+                              ,_0: 0 - ry - rz
+                              ,_1: ry
+                              ,_2: rz} : _U.cmp(yDiff,
+                 zDiff) > 0 ? {ctor: "_Tuple3"
+                              ,_0: rx
+                              ,_1: 0 - rx - rz
+                              ,_2: rz} : {ctor: "_Tuple3"
+                                         ,_0: rx
+                                         ,_1: ry
+                                         ,_2: 0 - rx - ry};
+              }();}
+         _U.badCase($moduleName,
+         "between lines 68 and 79");
+      }();
+   };
+   var hexRound = function ($) {
+      return cubeToHex(cubeRound(hexToCube($)));
+   };
+   var deleteTile = F2(function (_v22,
+   grid) {
+      return function () {
+         switch (_v22.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var deleteInRow = function (maybeRow) {
+                    return function () {
+                       switch (maybeRow.ctor)
+                       {case "Just":
+                          return A2($Dict.remove,
+                            _v22._1,
+                            maybeRow._0);
+                          case "Nothing":
+                          return $Dict.empty;}
+                       _U.badCase($moduleName,
+                       "between lines 37 and 42");
+                    }();
+                 };
+                 return A3($Dict.insert,
+                 _v22._0,
+                 deleteInRow(A2($Dict.get,
+                 _v22._0,
+                 grid)),
+                 grid);
+              }();}
+         _U.badCase($moduleName,
+         "between lines 35 and 43");
+      }();
+   });
+   var createTile = F3(function (kind,
+   _v28,
+   grid) {
+      return function () {
+         switch (_v28.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var updateRow = function (maybeRow) {
+                    return function () {
+                       switch (maybeRow.ctor)
+                       {case "Just":
+                          return A3($Dict.insert,
+                            _v28._1,
+                            kind,
+                            maybeRow._0);
+                          case "Nothing":
+                          return A2($Dict.singleton,
+                            _v28._1,
+                            kind);}
+                       _U.badCase($moduleName,
+                       "between lines 25 and 30");
+                    }();
+                 };
+                 return A3($Dict.insert,
+                 _v28._0,
+                 updateRow(A2($Dict.get,
+                 _v28._0,
+                 grid)),
+                 grid);
+              }();}
+         _U.badCase($moduleName,
+         "between lines 22 and 31");
+      }();
+   });
+   var hexRadius = 30;
+   var hexHeight = hexRadius * 2;
+   var hexWidth = $Basics.sqrt(3) / 2 * hexHeight;
+   var hexDims = {ctor: "_Tuple2"
+                 ,_0: hexWidth
+                 ,_1: hexHeight};
+   var hexCoordsToPoint = function (_v34) {
+      return function () {
+         switch (_v34.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var y = hexRadius * 3 / 2 * $Basics.toFloat(_v34._1);
+                 var x = hexRadius * $Basics.sqrt(3) * ($Basics.toFloat(_v34._0) + $Basics.toFloat(_v34._1) / 2);
+                 return {ctor: "_Tuple2"
+                        ,_0: x
+                        ,_1: y};
+              }();}
+         _U.badCase($moduleName,
+         "between lines 48 and 52");
+      }();
+   };
+   var pointToHexCoords = function (_v38) {
+      return function () {
+         switch (_v38.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var j = _v38._1 * (2 / 3) / hexRadius;
+                 var i = (_v38._0 * $Basics.sqrt(3) / 3 - _v38._1 / 3) / hexRadius;
+                 return hexRound({ctor: "_Tuple2"
+                                 ,_0: i
+                                 ,_1: j});
+              }();}
+         _U.badCase($moduleName,
+         "between lines 56 and 60");
+      }();
+   };
+   var currentTile = F2(function (grid,
+   p) {
+      return function () {
+         var $ = pointToHexCoords(p),
+         i = $._0,
+         j = $._1;
+         return A2($Maybe.andThen,
+         A2($Dict.get,i,grid),
+         $Dict.get(j));
+      }();
+   });
+   _elm.Game.Grid.values = {_op: _op
+                           ,hexRadius: hexRadius
+                           ,hexHeight: hexHeight
+                           ,hexWidth: hexWidth
+                           ,hexDims: hexDims
+                           ,currentTile: currentTile
+                           ,createTile: createTile
+                           ,deleteTile: deleteTile
+                           ,hexCoordsToPoint: hexCoordsToPoint
+                           ,pointToHexCoords: pointToHexCoords
+                           ,hexRound: hexRound
+                           ,cubeRound: cubeRound
+                           ,cubeToHex: cubeToHex
+                           ,hexToCube: hexToCube
+                           ,getTilesList: getTilesList};
+   return _elm.Game.Grid.values;
+};
+Elm.Game = Elm.Game || {};
 Elm.Game.Inputs = Elm.Game.Inputs || {};
 Elm.Game.Inputs.make = function (_elm) {
    "use strict";
@@ -4291,26 +4515,14 @@ Elm.Game.Render.Course.make = function (_elm) {
          $Game$Render$Gates.Downwind);
       }();
    });
-   var renderIslands = function (course) {
-      return function () {
-         var renderIsland = function (_v0) {
-            return function () {
-               return $Graphics$Collage.move(_v0.location)($Graphics$Collage.filled($Game$Render$Utils.colors.sand)($Graphics$Collage.circle(_v0.radius)));
-            }();
-         };
-         return $Graphics$Collage.group(A2($List.map,
-         renderIsland,
-         course.islands));
-      }();
-   };
    var renderLaylines = F3(function (wind,
    course,
    playerState) {
       return function () {
-         var _v2 = playerState.nextGate;
-         switch (_v2.ctor)
+         var _v0 = playerState.nextGate;
+         switch (_v0.ctor)
          {case "Just":
-            switch (_v2._0.ctor)
+            switch (_v0._0.ctor)
               {case "DownwindGate":
                  return A4($Game$Render$Gates.renderGateLaylines,
                    playerState.downwindVmg,
@@ -4355,25 +4567,24 @@ Elm.Game.Render.Course.make = function (_elm) {
                                                                                       ,stroke])));
       }();
    };
-   var renderCourse = function (_v4) {
+   var renderCourse = function (_v2) {
       return function () {
          return function () {
-            var forms = _L.fromArray([renderBounds(_v4.course.area)
+            var forms = _L.fromArray([renderBounds(_v2.course.area)
                                      ,A3(renderLaylines,
-                                     _v4.wind,
-                                     _v4.course,
-                                     _v4.playerState)
-                                     ,renderIslands(_v4.course)
+                                     _v2.wind,
+                                     _v2.course,
+                                     _v2.playerState)
                                      ,A4(renderDownwind,
-                                     _v4.playerState,
-                                     _v4.course,
-                                     _v4.now,
-                                     $Game$Models.isStarted(_v4))
+                                     _v2.playerState,
+                                     _v2.course,
+                                     _v2.now,
+                                     $Game$Models.isStarted(_v2))
                                      ,A3(renderUpwind,
-                                     _v4.playerState,
-                                     _v4.course,
-                                     _v4.now)
-                                     ,renderGusts(_v4.wind)]);
+                                     _v2.playerState,
+                                     _v2.course,
+                                     _v2.now)
+                                     ,renderGusts(_v2.wind)]);
             return $Graphics$Collage.group(forms);
          }();
       }();
@@ -4382,7 +4593,6 @@ Elm.Game.Render.Course.make = function (_elm) {
                                     ,renderCourse: renderCourse
                                     ,renderBounds: renderBounds
                                     ,renderLaylines: renderLaylines
-                                    ,renderIslands: renderIslands
                                     ,renderDownwind: renderDownwind
                                     ,renderUpwind: renderUpwind
                                     ,renderGust: renderGust
@@ -5586,7 +5796,7 @@ Elm.Game.Render.Utils.make = function (_elm) {
                  $Basics.toString(1 + $List.length(_v0.opponents)),
                  ") Waiting..."));}
             _U.badCase($moduleName,
-            "between lines 64 and 71");
+            "between lines 67 and 74");
          }();
       }();
    };
@@ -5614,6 +5824,10 @@ Elm.Game.Render.Utils.make = function (_elm) {
                 130,
                 170)
                 ,gateMark: $Color.white
+                ,grass: A3($Color.rgb,
+                200,
+                230,
+                180)
                 ,green: A3($Color.rgb,
                 100,
                 180,
@@ -5622,11 +5836,19 @@ Elm.Game.Render.Utils.make = function (_elm) {
                 200,
                 130,
                 170)
+                ,rock: A3($Color.rgb,
+                160,
+                146,
+                159)
                 ,sand: A3($Color.rgb,
                 242,
                 243,
                 196)
                 ,seaBlue: A3($Color.rgb,
+                147,
+                202,
+                223)
+                ,water: A3($Color.rgb,
                 147,
                 202,
                 223)};
@@ -5727,11 +5949,10 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
    $Game$RenderSvg$Gates = Elm.Game.RenderSvg.Gates.make(_elm),
+   $Game$RenderSvg$Tiles = Elm.Game.RenderSvg.Tiles.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
@@ -5756,64 +5977,25 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
       renderGust,
       wind.gusts));
    };
-   var renderIsland = function (_v0) {
-      return function () {
-         return A2($Svg.circle,
-         _L.fromArray([$Svg$Attributes.r($Basics.toString(_v0.radius))
-                      ,$Svg$Attributes.fill($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.sand))
-                      ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_v0.location))]),
-         _L.fromArray([]));
-      }();
-   };
-   var renderIslands = function (course) {
-      return A2($Svg.g,
-      _L.fromArray([]),
-      A2($List.map,
-      renderIsland,
-      course.islands));
-   };
-   var renderBounds = function (area) {
-      return function () {
-         var top = $Game$Models.areaTop(area);
-         var $ = $Game$Models.areaCenters(area),
-         cw = $._0,
-         ch = $._1;
-         var $ = $Game$Models.areaDims(area),
-         w = $._0,
-         h = $._1;
-         return A2($Svg.rect,
-         _L.fromArray([$Svg$Attributes.width($Basics.toString(w))
-                      ,$Svg$Attributes.height($Basics.toString(h))
-                      ,$Svg$Attributes.fill($Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.seaBlue))
-                      ,$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-                      0 - w / 2,
-                      top - h))]),
-         _L.fromArray([]));
-      }();
-   };
-   var renderCourse = function (_v2) {
+   var renderCourse = function (_v0) {
       return function () {
          return A2($Svg.g,
          _L.fromArray([]),
-         _L.fromArray([renderBounds(_v2.course.area)
-                      ,renderIslands(_v2.course)
-                      ,renderGusts(_v2.wind)
+         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v0.course.grid)
+                      ,renderGusts(_v0.wind)
                       ,A4($Game$RenderSvg$Gates.renderDownwind,
-                      _v2.playerState,
-                      _v2.course,
-                      _v2.now,
-                      $Game$Models.isStarted(_v2))
+                      _v0.playerState,
+                      _v0.course,
+                      _v0.now,
+                      $Game$Models.isStarted(_v0))
                       ,A3($Game$RenderSvg$Gates.renderUpwind,
-                      _v2.playerState,
-                      _v2.course,
-                      _v2.now)]));
+                      _v0.playerState,
+                      _v0.course,
+                      _v0.now)]));
       }();
    };
    _elm.Game.RenderSvg.Course.values = {_op: _op
                                        ,renderCourse: renderCourse
-                                       ,renderBounds: renderBounds
-                                       ,renderIslands: renderIslands
-                                       ,renderIsland: renderIsland
                                        ,renderGusts: renderGusts
                                        ,renderGust: renderGust};
    return _elm.Game.RenderSvg.Course.values;
@@ -6942,6 +7124,142 @@ Elm.Game.RenderSvg.Players.make = function (_elm) {
    return _elm.Game.RenderSvg.Players.values;
 };
 Elm.Game = Elm.Game || {};
+Elm.Game.RenderSvg = Elm.Game.RenderSvg || {};
+Elm.Game.RenderSvg.Tiles = Elm.Game.RenderSvg.Tiles || {};
+Elm.Game.RenderSvg.Tiles.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.RenderSvg = _elm.Game.RenderSvg || {};
+   _elm.Game.RenderSvg.Tiles = _elm.Game.RenderSvg.Tiles || {};
+   if (_elm.Game.RenderSvg.Tiles.values)
+   return _elm.Game.RenderSvg.Tiles.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.RenderSvg.Tiles",
+   $Basics = Elm.Basics.make(_elm),
+   $Game$Grid = Elm.Game.Grid.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $Svg$Lazy = Elm.Svg.Lazy.make(_elm);
+   var toSvgPoints = function (points) {
+      return $String.join(" ")($List.map(function (_v0) {
+         return function () {
+            switch (_v0.ctor)
+            {case "_Tuple2":
+               return A2($Basics._op["++"],
+                 $Basics.toString(_v0._0),
+                 A2($Basics._op["++"],
+                 ",",
+                 $Basics.toString(_v0._1)));}
+            _U.badCase($moduleName,
+            "on line 80, column 29 to 60");
+         }();
+      })(points));
+   };
+   var vertices = function () {
+      var $ = $Game$Grid.hexDims,
+      w = $._0,
+      h = $._1;
+      var w2 = w / 2;
+      var h2 = h / 2;
+      var h4 = h / 4;
+      return _L.fromArray([{ctor: "_Tuple2"
+                           ,_0: 0 - w2
+                           ,_1: 0 - h4}
+                          ,{ctor: "_Tuple2"
+                           ,_0: 0
+                           ,_1: 0 - h2}
+                          ,{ctor: "_Tuple2"
+                           ,_0: w2
+                           ,_1: 0 - h4}
+                          ,{ctor: "_Tuple2",_0: w2,_1: h4}
+                          ,{ctor: "_Tuple2",_0: 0,_1: h2}
+                          ,{ctor: "_Tuple2"
+                           ,_0: 0 - w2
+                           ,_1: h4}]);
+   }();
+   var verticesPoints = toSvgPoints(vertices);
+   var tileKindColor = function (kind) {
+      return function () {
+         switch (kind.ctor)
+         {case "Rock":
+            return $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.rock);
+            case "Sand":
+            return $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.sand);
+            case "Water":
+            return $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.water);}
+         _U.badCase($moduleName,
+         "between lines 52 and 55");
+      }();
+   };
+   var renderTile = function (_v5) {
+      return function () {
+         return function () {
+            var label = A2($Svg.text$,
+            _L.fromArray([$Svg$Attributes.fill("black")
+                         ,$Svg$Attributes.textAnchor("middle")
+                         ,$Svg$Attributes.fontSize("10px")]),
+            _L.fromArray([$Svg.text($Basics.toString(_v5.coords))]));
+            var color = tileKindColor(_v5.kind);
+            var hex = A2($Svg.polygon,
+            _L.fromArray([$Svg$Attributes.points(verticesPoints)
+                         ,$Svg$Attributes.fill(color)
+                         ,$Svg$Attributes.stroke(color)
+                         ,$Svg$Attributes.strokeWidth("1")]),
+            _L.fromArray([]));
+            var $ = $Game$Grid.hexCoordsToPoint(_v5.coords),
+            x = $._0,
+            y = $._1;
+            return A2($Svg.g,
+            _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
+            "translate(",
+            A2($Basics._op["++"],
+            $Basics.toString(x),
+            A2($Basics._op["++"],
+            ", ",
+            A2($Basics._op["++"],
+            $Basics.toString(y),
+            ")")))))]),
+            _L.fromArray([hex]));
+         }();
+      }();
+   };
+   var renderTiles = function (grid) {
+      return function () {
+         var tiles = A2($List.map,
+         renderTile,
+         $Game$Grid.getTilesList(grid));
+         return A2($Svg.g,
+         _L.fromArray([]),
+         tiles);
+      }();
+   };
+   var lazyRenderTiles = function (grid) {
+      return A2($Svg$Lazy.lazy,
+      renderTiles,
+      grid);
+   };
+   _elm.Game.RenderSvg.Tiles.values = {_op: _op
+                                      ,lazyRenderTiles: lazyRenderTiles
+                                      ,renderTiles: renderTiles
+                                      ,renderTile: renderTile
+                                      ,tileKindColor: tileKindColor
+                                      ,verticesPoints: verticesPoints
+                                      ,vertices: vertices
+                                      ,toSvgPoints: toSvgPoints};
+   return _elm.Game.RenderSvg.Tiles.values;
+};
+Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
 Elm.Game.Steps.make = function (_elm) {
    "use strict";
@@ -7442,6 +7760,7 @@ Elm.Game.Steps.Moving.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Game$Core = Elm.Game.Core.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
+   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Steps$Util = Elm.Game.Steps.Util.make(_elm),
    $List = Elm.List.make(_elm),
@@ -7452,18 +7771,14 @@ Elm.Game.Steps.Moving.make = function (_elm) {
    var isGrounded = F2(function (p,
    course) {
       return function () {
+         var onGround = !_U.eq(A2($Game$Grid.currentTile,
+         course.grid,
+         p),
+         $Maybe.Just($Models.Water));
          var outOfBounds = $Basics.not(A2($Game$Geo.inBox,
          p,
          $Game$Models.areaBox(course.area)));
          var halfBoatWidth = $Game$Models.boatWidth / 2;
-         var onIsland = A2($Game$Core.exists,
-         function (i) {
-            return _U.cmp(A2($Game$Geo.distance,
-            i.location,
-            p),
-            i.radius + halfBoatWidth) < 1;
-         },
-         course.islands);
          var $ = $Game$Models.getGateMarks(course.upwind),
          ul = $._0,
          ur = $._1;
@@ -7482,7 +7797,7 @@ Elm.Game.Steps.Moving.make = function (_elm) {
             $Game$Models.markRadius + halfBoatWidth) < 1;
          },
          marks);
-         return stuckOnMark || (outOfBounds || onIsland);
+         return stuckOnMark || (outOfBounds || onGround);
       }();
    });
    var maxAccel = 3.0e-2;
@@ -11366,29 +11681,22 @@ Elm.Models.make = function (_elm) {
              ,leftBottom: b
              ,rightTop: a};
    });
-   var Island = F2(function (a,b) {
-      return {_: {}
-             ,location: a
-             ,radius: b};
-   });
    var Gate = F2(function (a,b) {
       return {_: {},width: b,y: a};
    });
-   var Course = F7(function (a,
+   var Course = F6(function (a,
    b,
    c,
    d,
    e,
-   f,
-   g) {
+   f) {
       return {_: {}
-             ,area: f
+             ,area: e
              ,downwind: b
              ,grid: c
-             ,islands: e
              ,laps: d
              ,upwind: a
-             ,windGenerator: g};
+             ,windGenerator: f};
    });
    var Message = F3(function (a,
    b,
@@ -11481,7 +11789,6 @@ Elm.Models.make = function (_elm) {
                         ,Message: Message
                         ,Course: Course
                         ,Gate: Gate
-                        ,Island: Island
                         ,RaceArea: RaceArea
                         ,DownwindGate: DownwindGate
                         ,UpwindGate: UpwindGate

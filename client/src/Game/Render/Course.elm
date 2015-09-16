@@ -18,7 +18,7 @@ renderCourse ({playerState,course,now,wind} as gameState) =
     forms =
       [ renderBounds course.area
       , renderLaylines wind course playerState
-      , renderIslands course
+      -- , renderIslands course
       , renderDownwind playerState course now (isStarted gameState)
       , renderUpwind playerState course now
       , renderGusts wind
@@ -47,10 +47,10 @@ renderLaylines wind course playerState =
     Just DownwindGate -> renderGateLaylines playerState.downwindVmg wind.origin course.area course.downwind
     _                 -> emptyForm
 
-renderIslands : Course -> Form
-renderIslands course =
-  let renderIsland {location,radius} = circle radius |> filled colors.sand |> move location
-  in  group <| map renderIsland course.islands
+-- renderIslands : Course -> Form
+-- renderIslands course =
+--   let renderIsland {location,radius} = circle radius |> filled colors.sand |> move location
+--   in  group <| map renderIsland course.islands
 
 renderDownwind : PlayerState -> Course -> Float -> Bool -> Form
 renderDownwind playerState course now started =
