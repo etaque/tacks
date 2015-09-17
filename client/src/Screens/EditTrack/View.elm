@@ -1,12 +1,14 @@
 module Screens.EditTrack.View where
 
 import Html exposing (Html)
+import Html.Attributes as HtmlAttr
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
+import Constants exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
 import Screens.EditTrack.Updates exposing (actions)
@@ -19,13 +21,14 @@ import Game.Render.Utils exposing (..)
 import Game.Render.SvgUtils exposing (..)
 
 import Game.RenderSvg.Tiles exposing (lazyRenderTiles, tileKindColor)
+import Game.RenderSvg.Gates exposing (renderOpenGate)
 
 
 view : Screen -> Html
 view screen =
   case screen.editor of
     Just editor ->
-      renderEditor screen.dims editor
+      editorView editor
     Nothing ->
       wrapper screen.dims
         [ text'
@@ -35,8 +38,21 @@ view screen =
           [ text "loading" ]
         ]
 
-renderEditor : (Int, Int) -> Editor -> Html
-renderEditor dims ({dims, center} as editor) =
+
+editorView : Editor -> Html
+editorView ({dims, center} as editor) =
+  Html.div [ class "content" ]
+    [ sidebar editor
+    , renderCourse editor
+    ]
+
+sidebar : Editor -> Html
+sidebar ({dims} as editor) =
+  Html.aside [ HtmlAttr.style [("height", toString (snd dims) ++ "px")] ]
+    [ ]
+
+renderCourse : Editor -> Html
+renderCourse ({dims, center} as editor) =
   let
     (w, h) = floatify dims
     cx = w / 2 + fst center
@@ -44,7 +60,10 @@ renderEditor dims ({dims, center} as editor) =
   in
     wrapper dims
     [ g [ transform ("translate(" ++ toString cx ++ ", " ++ toString cy ++ ")")]
-        [ (lazyRenderTiles editor.grid) ]
+        [ (lazyRenderTiles editor.grid)
+        , renderOpenGate editor.upwind 0
+        , renderOpenGate editor.downwind 0
+        ]
     , renderMode editor.mode
     ]
 
@@ -65,7 +84,7 @@ renderMode mode =
         CreateTile kind ->
           tileKindColor kind
         Erase ->
-          colorToSvg colors.sand
+          colors.sand
         Watch ->
           "white"
   in

@@ -7,6 +7,7 @@ import Http
 import Keyboard
 import DragAndDrop exposing (mouseEvents, MouseEvent(..))
 
+import Constants exposing (sidebarWidth)
 import AppTypes exposing (local, react, request, Never)
 import Models exposing (..)
 import Screens.EditTrack.Types exposing (..)
@@ -49,6 +50,8 @@ update action screen =
       let
         editor =
           { grid = track.course.grid
+          , upwind = track.course.upwind
+          , downwind = track.course.downwind
           , center = (0, 0)
           , dims = screen.dims
           , mode = CreateTile Water
@@ -95,9 +98,10 @@ loadTrack slug =
 
 
 updateDims : (Int, Int) -> Screen -> Screen
-updateDims dims screen =
+updateDims (w, h) screen =
   let
-    newEditor = Maybe.map (\e -> { e | dims <- dims} ) screen.editor
+    dims = (w - sidebarWidth, h)
+    newEditor = Maybe.map (\e -> { e | dims <- dims } ) screen.editor
   in
     { screen | editor <- newEditor, dims <- dims }
 
@@ -105,15 +109,15 @@ mouseAction : MouseEvent -> Editor -> Editor
 mouseAction event editor =
   case editor.mode of
     CreateTile kind ->
-      updateTileEvent kind event editor
+      updateTileAction kind event editor
     Erase ->
-      deleteTileEvent event editor
+      deleteTileAction event editor
     Watch ->
       updateCenter event editor
 
 
-deleteTileEvent : MouseEvent -> Editor -> Editor
-deleteTileEvent event editor =
+deleteTileAction : MouseEvent -> Editor -> Editor
+deleteTileAction event editor =
   let
     coordsMaybe = getMouseEventTile editor event
     newGrid = Maybe.map (\c -> deleteTile c editor.grid) coordsMaybe
@@ -121,8 +125,8 @@ deleteTileEvent event editor =
   in
     { editor | grid <- newGrid }
 
-updateTileEvent : TileKind -> MouseEvent -> Editor -> Editor
-updateTileEvent kind event editor =
+updateTileAction : TileKind -> MouseEvent -> Editor -> Editor
+updateTileAction kind event editor =
   let
     coordsMaybe = getMouseEventTile editor event
     newGrid = Maybe.map (\c -> createTile kind c editor.grid) coordsMaybe
@@ -146,10 +150,10 @@ clickPoint {dims, center} (x, y) =
   let
     (w, h) = dims
     (cx, cy) = center
+    x' = toFloat (x - sidebarWidth) - cx - toFloat w / 2
+    y' = toFloat y - cy - toFloat h / 2
   in
-    ( toFloat x - cx - toFloat w / 2
-    , toFloat y - cy - toFloat h / 2
-    )
+    (x', y')
 
 updateCenter : MouseEvent -> Editor -> Editor
 updateCenter event ({center} as editor) =

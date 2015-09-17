@@ -3,6 +3,8 @@ module Game.RenderSvg.Gates where
 import Game.Models exposing (..)
 import Models exposing (..)
 
+import Constants exposing (colors)
+
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
 
@@ -44,7 +46,7 @@ renderOpenGate gate timer =
       , opacity (toString (gateLineOpacity timer))
       ]
   in
-    renderGate gate lineStyle (colorToSvg colors.green)
+    renderGate gate lineStyle colors.green
 
 renderClosedGate : Gate -> Float -> Svg
 renderClosedGate gate timer =

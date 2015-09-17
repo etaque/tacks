@@ -1,5 +1,7 @@
 module Game.RenderSvg.Tiles where
 
+import Constants exposing (colors)
+
 import Game.Models exposing (..)
 import Models exposing (..)
 
@@ -50,9 +52,9 @@ renderTile {kind, coords} =
 tileKindColor : TileKind -> String
 tileKindColor kind =
   case kind of
-    Water -> colorToSvg colors.water
-    Grass -> colorToSvg colors.grass
-    Rock -> colorToSvg colors.rock
+    Water -> colors.water
+    Grass -> colors.grass
+    Rock -> colors.rock
 
 verticesPoints : String
 verticesPoints =

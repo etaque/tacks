@@ -24,19 +24,9 @@ rotate_ : number -> number -> number -> String
 rotate_ a cx cy =
   "rotate(" ++ toString a ++ ", " ++ toString cx ++ ", " ++ toString cy ++ ")"
 
-colorToSvg : Color -> String
-colorToSvg color =
-  let
-    {red, green, blue, alpha} = Color.toRgb color
-    s = (List.map toString [red, green, blue]) ++ [toString alpha]
-      |> String.join ","
-  in
-    "rgba(" ++ s ++ ")"
-
 segment : List Attribute -> (Point, Point) -> Svg
 segment attrs (p1, p2) =
   line (attrs ++ (lineCoords p1 p2)) [ ]
-
 
 polygonPoints : List Point -> Attribute
 polygonPoints pointsList =
@@ -51,7 +41,6 @@ pathPoints pointsList =
       |> String.join " "
   in
     d ("M " ++ coords)
-
 
 lineCoords : Point -> Point -> List Attribute
 lineCoords p1 p2 =

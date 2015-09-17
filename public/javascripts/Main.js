@@ -1680,6 +1680,34 @@ Elm.Color.make = function (_elm) {
                        ,darkGray: darkGray};
    return _elm.Color.values;
 };
+Elm.Constants = Elm.Constants || {};
+Elm.Constants.make = function (_elm) {
+   "use strict";
+   _elm.Constants = _elm.Constants || {};
+   if (_elm.Constants.values)
+   return _elm.Constants.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Constants",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var colors = {_: {}
+                ,grass: "rgb(200, 230, 180)"
+                ,green: "rgb(100, 180, 106)"
+                ,rock: "rgb(160, 146, 159)"
+                ,sand: "rgb(242, 243, 196)"
+                ,water: "rgb(147, 202, 223)"};
+   var sidebarWidth = 220;
+   _elm.Constants.values = {_op: _op
+                           ,sidebarWidth: sidebarWidth
+                           ,colors: colors};
+   return _elm.Constants.values;
+};
 Elm.CoreExtra = Elm.CoreExtra || {};
 Elm.CoreExtra.make = function (_elm) {
    "use strict";
@@ -4218,144 +4246,6 @@ Elm.Game.Inputs.make = function (_elm) {
    return _elm.Game.Inputs.values;
 };
 Elm.Game = Elm.Game || {};
-Elm.Game.Layout = Elm.Game.Layout || {};
-Elm.Game.Layout.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Layout = _elm.Game.Layout || {};
-   if (_elm.Game.Layout.values)
-   return _elm.Game.Layout.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Layout",
-   $Basics = Elm.Basics.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var centerElements = function (elements) {
-      return function () {
-         var maxWidth = $Maybe.withDefault(0)($List.maximum(A2($List.map,
-         $Graphics$Element.widthOf,
-         elements)));
-         return A2($List.map,
-         function (e) {
-            return A4($Graphics$Element.container,
-            maxWidth,
-            $Graphics$Element.heightOf(e),
-            $Graphics$Element.midTop,
-            e);
-         },
-         elements);
-      }();
-   };
-   var assembleDashboardLayout = F2(function (_v0,
-   _v1) {
-      return function () {
-         return function () {
-            switch (_v0.ctor)
-            {case "_Tuple2":
-               return _L.fromArray([A3($Graphics$Element.container,
-                                   _v0._0,
-                                   _v0._1,
-                                   A2($Graphics$Element.topLeftAt,
-                                   $Graphics$Element.absolute(20),
-                                   $Graphics$Element.absolute(20)))(A2($Graphics$Element.flow,
-                                   $Graphics$Element.down,
-                                   _v1.topLeft))
-                                   ,A3($Graphics$Element.container,
-                                   _v0._0,
-                                   _v0._1,
-                                   A2($Graphics$Element.midTopAt,
-                                   $Graphics$Element.relative(0.5),
-                                   $Graphics$Element.absolute(20)))(A2($Graphics$Element.flow,
-                                   $Graphics$Element.down,
-                                   centerElements(_v1.topCenter)))
-                                   ,A3($Graphics$Element.container,
-                                   _v0._0,
-                                   _v0._1,
-                                   A2($Graphics$Element.topRightAt,
-                                   $Graphics$Element.absolute(20),
-                                   $Graphics$Element.absolute(20)))(A2($Graphics$Element.flow,
-                                   $Graphics$Element.down,
-                                   _v1.topRight))]);}
-            _U.badCase($moduleName,
-            "between lines 29 and 32");
-         }();
-      }();
-   });
-   var assembleLayout = F3(function (_v6,
-   _v7,
-   _v8) {
-      return function () {
-         return function () {
-            switch (_v7.ctor)
-            {case "_Tuple2":
-               return function () {
-                    switch (_v6.ctor)
-                    {case "_Tuple2":
-                       return function () {
-                            var dashboardElements = A2(assembleDashboardLayout,
-                            {ctor: "_Tuple2"
-                            ,_0: _v6._0
-                            ,_1: _v6._1},
-                            _v8.dashboard);
-                            var absStackElements = A3($Graphics$Collage.collage,
-                            _v6._0,
-                            _v6._1,
-                            _v8.absStack);
-                            var relStackElements = A3($Graphics$Collage.collage,
-                            _v6._0,
-                            _v6._1,
-                            A2($List.map,
-                            $Graphics$Collage.move({ctor: "_Tuple2"
-                                                   ,_0: 0 - _v7._0
-                                                   ,_1: 0 - _v7._1}),
-                            _v8.relStack));
-                            return $Graphics$Element.layers(A2($List.append,
-                            _L.fromArray([relStackElements
-                                         ,absStackElements]),
-                            dashboardElements));
-                         }();}
-                    _U.badCase($moduleName,
-                    "between lines 36 and 41");
-                 }();}
-            _U.badCase($moduleName,
-            "between lines 36 and 41");
-         }();
-      }();
-   });
-   var Layout = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,absStack: c
-             ,dashboard: a
-             ,relStack: b};
-   });
-   var DashboardLayout = F4(function (a,
-   b,
-   c,
-   d) {
-      return {_: {}
-             ,bottomCenter: d
-             ,topCenter: c
-             ,topLeft: a
-             ,topRight: b};
-   });
-   _elm.Game.Layout.values = {_op: _op
-                             ,DashboardLayout: DashboardLayout
-                             ,Layout: Layout
-                             ,centerElements: centerElements
-                             ,assembleDashboardLayout: assembleDashboardLayout
-                             ,assembleLayout: assembleLayout};
-   return _elm.Game.Layout.values;
-};
-Elm.Game = Elm.Game || {};
 Elm.Game.Models = Elm.Game.Models || {};
 Elm.Game.Models.make = function (_elm) {
    "use strict";
@@ -4944,1273 +4834,6 @@ Elm.Game.Outputs.make = function (_elm) {
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.All = Elm.Game.Render.All || {};
-Elm.Game.Render.All.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.All = _elm.Game.Render.All || {};
-   if (_elm.Game.Render.All.values)
-   return _elm.Game.Render.All.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.All",
-   $Basics = Elm.Basics.make(_elm),
-   $Game$Layout = Elm.Game.Layout.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Controls = Elm.Game.Render.Controls.make(_elm),
-   $Game$Render$Course = Elm.Game.Render.Course.make(_elm),
-   $Game$Render$Dashboard = Elm.Game.Render.Dashboard.make(_elm),
-   $Game$Render$Players = Elm.Game.Render.Players.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var renderGame = F2(function (_v0,
-   gameState) {
-      return function () {
-         switch (_v0.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var controlsForm = A2($Game$Render$Controls.renderControls,
-                 gameState,
-                 {ctor: "_Tuple2"
-                 ,_0: _v0._0
-                 ,_1: _v0._1});
-                 var playersForm = $Game$Render$Players.renderPlayers(gameState);
-                 var courseForm = $Game$Render$Course.renderCourse(gameState);
-                 var layout = {_: {}
-                              ,absStack: _L.fromArray([controlsForm])
-                              ,dashboard: A2($Game$Render$Dashboard.buildDashboard,
-                              gameState,
-                              {ctor: "_Tuple2"
-                              ,_0: _v0._0
-                              ,_1: _v0._1})
-                              ,relStack: _L.fromArray([courseForm
-                                                      ,playersForm])};
-                 return A3($Game$Layout.assembleLayout,
-                 {ctor: "_Tuple2"
-                 ,_0: _v0._0
-                 ,_1: _v0._1},
-                 gameState.center,
-                 layout);
-              }();}
-         _U.badCase($moduleName,
-         "between lines 15 and 26");
-      }();
-   });
-   _elm.Game.Render.All.values = {_op: _op
-                                 ,renderGame: renderGame};
-   return _elm.Game.Render.All.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Controls = Elm.Game.Render.Controls || {};
-Elm.Game.Render.Controls.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Controls = _elm.Game.Render.Controls || {};
-   if (_elm.Game.Render.Controls.values)
-   return _elm.Game.Render.Controls.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.Controls",
-   $Basics = Elm.Basics.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var gateHintTriangle = F2(function (s,
-   isUpward) {
-      return isUpward ? $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                ,_0: 0
-                                                                ,_1: 0}
-                                                               ,{ctor: "_Tuple2"
-                                                                ,_0: 0 - s
-                                                                ,_1: (0 - s) * 1.5}
-                                                               ,{ctor: "_Tuple2"
-                                                                ,_0: s
-                                                                ,_1: (0 - s) * 1.5}])) : $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                 ,_0: 0
-                                                                                                                                 ,_1: 0}
-                                                                                                                                ,{ctor: "_Tuple2"
-                                                                                                                                 ,_0: 0 - s
-                                                                                                                                 ,_1: s * 1.5}
-                                                                                                                                ,{ctor: "_Tuple2"
-                                                                                                                                 ,_0: s
-                                                                                                                                 ,_1: s * 1.5}]));
-   });
-   var topHint = A2(gateHintTriangle,
-   5,
-   true);
-   var bottomHint = A2(gateHintTriangle,
-   5,
-   false);
-   var gateHintLabel = function (d) {
-      return $Graphics$Collage.toForm($Graphics$Element.centered($Game$Render$Utils.baseText(A2($Basics._op["++"],
-      $Basics.toString(d),
-      "m"))));
-   };
-   var renderGateHint = F4(function (gate,
-   _v0,
-   _v1,
-   timer) {
-      return function () {
-         switch (_v1.ctor)
-         {case "_Tuple2":
-            return function () {
-                 switch (_v0.ctor)
-                 {case "_Tuple2":
-                    return function () {
-                         var distance = function (isOver) {
-                            return $Basics.round($Basics.abs(gate.y + (isOver ? 0 - _v0._1 : _v0._1) / 2 - _v1._1) / 2);
-                         };
-                         var a = 1 + 0.5 * $Basics.cos(timer * 5.0e-3);
-                         var lineStyle = _U.replace([["width"
-                                                     ,2]
-                                                    ,["color"
-                                                     ,$Game$Render$Utils.colors.green]
-                                                    ,["dashing"
-                                                     ,_L.fromArray([3,3])]],
-                         $Graphics$Collage.defaultLine);
-                         var markStyle = $Graphics$Collage.filled($Game$Render$Utils.colors.orange);
-                         var c = 3;
-                         var isOver = _U.cmp(_v1._1 + _v0._1 / 2 + c,
-                         gate.y) < 0;
-                         var isUnder = _U.cmp(_v1._1 - _v0._1 / 2 - c,
-                         gate.y) > 0;
-                         var side = isOver ? _v0._1 / 2 : isUnder ? (0 - _v0._1) / 2 : 0;
-                         var $ = $Game$Models.getGateMarks(gate),
-                         left = $._0,
-                         right = $._1;
-                         return isOver || isUnder ? function () {
-                            var textY = _U.cmp(side,
-                            0) > 0 ? 0 - c : c;
-                            var d = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                                        ,_0: 0 - _v1._0
-                                                                                        ,_1: side + textY * 4})(gateHintLabel(distance(_U.cmp(side,
-                            0) > 0))));
-                            var triangle = $Graphics$Collage.alpha(a)($Graphics$Collage.filled($Game$Render$Utils.colors.orange)(_U.cmp(side,
-                            0) > 0 ? topHint : bottomHint));
-                            var right = {ctor: "_Tuple2"
-                                        ,_0: 0 - _v1._0 + gate.width / 2
-                                        ,_1: side};
-                            var rightMark = $Graphics$Collage.move(right)(triangle);
-                            var left = {ctor: "_Tuple2"
-                                       ,_0: 0 - _v1._0 - gate.width / 2
-                                       ,_1: side};
-                            var leftMark = $Graphics$Collage.move(left)(triangle);
-                            var line = $Graphics$Collage.alpha(a)($Graphics$Collage.traced(lineStyle)(A2($Graphics$Collage.segment,
-                            left,
-                            right)));
-                            return $Maybe.Just($Graphics$Collage.group(_L.fromArray([line
-                                                                                    ,leftMark
-                                                                                    ,rightMark
-                                                                                    ,d])));
-                         }() : $Maybe.Nothing;
-                      }();}
-                 _U.badCase($moduleName,
-                 "between lines 33 and 59");
-              }();}
-         _U.badCase($moduleName,
-         "between lines 33 and 59");
-      }();
-   });
-   var renderControls = F2(function (_v8,
-   intDims) {
-      return function () {
-         return function () {
-            var dims = $Game$Geo.floatify(intDims);
-            var downwindHint = _U.eq(_v8.playerState.nextGate,
-            $Maybe.Just($Models.DownwindGate)) ? A4(renderGateHint,
-            _v8.course.downwind,
-            dims,
-            _v8.center,
-            _v8.now) : $Maybe.Nothing;
-            var upwindHint = _U.eq(_v8.playerState.nextGate,
-            $Maybe.Just($Models.UpwindGate)) ? A4(renderGateHint,
-            _v8.course.upwind,
-            dims,
-            _v8.center,
-            _v8.now) : $Maybe.Nothing;
-            return $Graphics$Collage.group($Game$Core.compact(_L.fromArray([downwindHint
-                                                                           ,upwindHint])));
-         }();
-      }();
-   });
-   _elm.Game.Render.Controls.values = {_op: _op
-                                      ,gateHintLabel: gateHintLabel
-                                      ,gateHintTriangle: gateHintTriangle
-                                      ,topHint: topHint
-                                      ,bottomHint: bottomHint
-                                      ,renderGateHint: renderGateHint
-                                      ,renderControls: renderControls};
-   return _elm.Game.Render.Controls.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Course = Elm.Game.Render.Course || {};
-Elm.Game.Render.Course.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Course = _elm.Game.Render.Course || {};
-   if (_elm.Game.Render.Course.values)
-   return _elm.Game.Render.Course.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.Course",
-   $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var renderGust = F2(function (wind,
-   gust) {
-      return function () {
-         var color = _U.cmp(gust.speed,
-         0) > 0 ? $Color.black : $Color.white;
-         var a = 0.3 * $Basics.abs(gust.speed) / 10;
-         return $Graphics$Collage.move(gust.position)($Graphics$Collage.alpha(a)($Graphics$Collage.filled(color)($Graphics$Collage.circle(gust.radius))));
-      }();
-   });
-   var renderGusts = function (wind) {
-      return $Graphics$Collage.group(A2($List.map,
-      renderGust(wind),
-      wind.gusts));
-   };
-   var renderUpwind = F3(function (playerState,
-   course,
-   now) {
-      return function () {
-         var isNext = _U.eq(playerState.nextGate,
-         $Maybe.Just($Models.UpwindGate));
-         return A4($Game$Render$Gates.renderGate,
-         course.upwind,
-         now,
-         isNext,
-         $Game$Render$Gates.Upwind);
-      }();
-   });
-   var renderDownwind = F4(function (playerState,
-   course,
-   now,
-   started) {
-      return function () {
-         var isNext = _U.eq(playerState.nextGate,
-         $Maybe.Just($Models.DownwindGate));
-         var isLastGate = _U.eq($List.length(playerState.crossedGates),
-         course.laps * 2);
-         var isFirstGate = $List.isEmpty(playerState.crossedGates);
-         return isFirstGate ? A3($Game$Render$Gates.renderStartLine,
-         course.downwind,
-         started,
-         now) : isLastGate ? A2($Game$Render$Gates.renderFinishLine,
-         course.downwind,
-         now) : A4($Game$Render$Gates.renderGate,
-         course.downwind,
-         now,
-         isNext,
-         $Game$Render$Gates.Downwind);
-      }();
-   });
-   var renderLaylines = F3(function (wind,
-   course,
-   playerState) {
-      return function () {
-         var _v0 = playerState.nextGate;
-         switch (_v0.ctor)
-         {case "Just":
-            switch (_v0._0.ctor)
-              {case "DownwindGate":
-                 return A4($Game$Render$Gates.renderGateLaylines,
-                   playerState.downwindVmg,
-                   wind.origin,
-                   course.area,
-                   course.downwind);
-                 case "UpwindGate":
-                 return A4($Game$Render$Gates.renderGateLaylines,
-                   playerState.upwindVmg,
-                   wind.origin,
-                   course.area,
-                   course.upwind);}
-              break;}
-         return $Game$Render$Utils.emptyForm;
-      }();
-   });
-   var renderBounds = function (area) {
-      return function () {
-         var $ = $Game$Models.areaCenters(area),
-         cw = $._0,
-         ch = $._1;
-         var $ = $Game$Models.areaDims(area),
-         w = $._0,
-         h = $._1;
-         var fill = $Graphics$Collage.filled($Game$Render$Utils.colors.seaBlue)(A2($Graphics$Collage.rect,
-         w,
-         h));
-         var stroke = $Graphics$Collage.alpha(0.8)($Graphics$Collage.outlined(_U.replace([["width"
-                                                                                          ,2]
-                                                                                         ,["color"
-                                                                                          ,$Color.white]
-                                                                                         ,["cap"
-                                                                                          ,$Graphics$Collage.Round]
-                                                                                         ,["join"
-                                                                                          ,$Graphics$Collage.Smooth]],
-         $Graphics$Collage.defaultLine))(A2($Graphics$Collage.rect,
-         w,
-         h)));
-         return $Graphics$Collage.move({ctor: "_Tuple2"
-                                       ,_0: cw
-                                       ,_1: ch})($Graphics$Collage.group(_L.fromArray([fill
-                                                                                      ,stroke])));
-      }();
-   };
-   var renderCourse = function (_v2) {
-      return function () {
-         return function () {
-            var forms = _L.fromArray([renderBounds(_v2.course.area)
-                                     ,A3(renderLaylines,
-                                     _v2.wind,
-                                     _v2.course,
-                                     _v2.playerState)
-                                     ,A4(renderDownwind,
-                                     _v2.playerState,
-                                     _v2.course,
-                                     _v2.now,
-                                     $Game$Models.isStarted(_v2))
-                                     ,A3(renderUpwind,
-                                     _v2.playerState,
-                                     _v2.course,
-                                     _v2.now)
-                                     ,renderGusts(_v2.wind)]);
-            return $Graphics$Collage.group(forms);
-         }();
-      }();
-   };
-   _elm.Game.Render.Course.values = {_op: _op
-                                    ,renderCourse: renderCourse
-                                    ,renderBounds: renderBounds
-                                    ,renderLaylines: renderLaylines
-                                    ,renderDownwind: renderDownwind
-                                    ,renderUpwind: renderUpwind
-                                    ,renderGust: renderGust
-                                    ,renderGusts: renderGusts};
-   return _elm.Game.Render.Course.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
-Elm.Game.Render.Dashboard.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
-   if (_elm.Game.Render.Dashboard.values)
-   return _elm.Game.Render.Dashboard.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.Dashboard",
-   $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $Game$Layout = Elm.Game.Layout.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var xs = A2($Graphics$Element.spacer,
-   5,
-   5);
-   var s = A2($Graphics$Element.spacer,
-   20,
-   20);
-   var getVmgBar = function (_v0) {
-      return function () {
-         return function () {
-            var theoricVmgValue = _U.cmp($Basics.abs(_v0.windAngle),
-            90) < 0 ? _v0.upwindVmg.value : _v0.downwindVmg.value;
-            var boundedVmgValue = _U.cmp(_v0.vmgValue,
-            theoricVmgValue) > 0 ? theoricVmgValue : _U.cmp(_v0.vmgValue,
-            0) < 0 ? 0 : _v0.vmgValue;
-            var barWidth = 8;
-            var barHeight = 120;
-            var contour = $Graphics$Collage.alpha(0.5)($Graphics$Collage.outlined(_U.replace([["width"
-                                                                                              ,2]
-                                                                                             ,["color"
-                                                                                              ,$Color.white]
-                                                                                             ,["cap"
-                                                                                              ,$Graphics$Collage.Round]
-                                                                                             ,["join"
-                                                                                              ,$Graphics$Collage.Smooth]],
-            $Graphics$Collage.defaultLine))(A2($Graphics$Collage.rect,
-            barWidth + 6,
-            barHeight + 6)));
-            var height = barHeight * boundedVmgValue / theoricVmgValue;
-            var level = $Graphics$Collage.alpha(0.8)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                            ,_0: 0
-                                                                            ,_1: (height - barHeight) / 2})($Graphics$Collage.filled($Color.white)(A2($Graphics$Collage.rect,
-            barWidth,
-            height))));
-            var bar = $Graphics$Collage.move({ctor: "_Tuple2"
-                                             ,_0: 0
-                                             ,_1: 10})($Graphics$Collage.group(_L.fromArray([level
-                                                                                            ,contour])));
-            var legend = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                ,_0: 0
-                                                ,_1: 0 - barHeight / 2 - 10})($Graphics$Collage.toForm($Graphics$Element.centered($Game$Render$Utils.baseText("VMG"))));
-            return A3($Graphics$Collage.collage,
-            80,
-            barHeight + 40,
-            _L.fromArray([bar,legend]));
-         }();
-      }();
-   };
-   var getWindWheel = function (wind) {
-      return function () {
-         var legend = $Graphics$Collage.move({ctor: "_Tuple2"
-                                             ,_0: 0
-                                             ,_1: -50})($Graphics$Collage.toForm($Graphics$Element.centered($Game$Render$Utils.baseText("WIND"))));
-         var windSpeedText = $Graphics$Collage.toForm($Graphics$Element.centered($Game$Render$Utils.baseText(A2($Basics._op["++"],
-         $Basics.toString($Basics.round(wind.speed)),
-         "kn"))));
-         var windOriginRadians = $Game$Core.toRadians(wind.origin);
-         var r = 30;
-         var c = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle(r));
-         var windMarker = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                                   ,_0: r + 4
-                                                                   ,_1: windOriginRadians}))($Graphics$Collage.rotate(windOriginRadians + $Basics.pi / 2)($Graphics$Collage.filled($Color.white)($Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                                                                                                                         ,_0: 0
-                                                                                                                                                                                                                                         ,_1: 4}
-                                                                                                                                                                                                                                        ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                         ,_0: -4
-                                                                                                                                                                                                                                         ,_1: -4}
-                                                                                                                                                                                                                                        ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                         ,_0: 4
-                                                                                                                                                                                                                                         ,_1: -4}])))));
-         var windOriginText = $Graphics$Collage.move({ctor: "_Tuple2"
-                                                     ,_0: 0
-                                                     ,_1: r + 25})($Graphics$Collage.toForm($Graphics$Element.centered($Game$Render$Utils.baseText(A2($Basics._op["++"],
-         $Basics.toString($Basics.round(wind.origin)),
-         "&deg;")))));
-         return A3($Graphics$Collage.collage,
-         80,
-         120,
-         _L.fromArray([c
-                      ,windMarker
-                      ,windOriginText
-                      ,windSpeedText
-                      ,legend]));
-      }();
-   };
-   var getGatesCount = F2(function (course,
-   player) {
-      return A2($Basics._op["++"],
-      "gate ",
-      A2($Basics._op["++"],
-      $Basics.toString($List.length(player.crossedGates)),
-      A2($Basics._op["++"],
-      "/",
-      $Basics.toString(1 + course.laps * 2))));
-   });
-   var getFinishingStatus = function (_v2) {
-      return function () {
-         return function () {
-            var _v4 = _v2.playerState.nextGate;
-            switch (_v4.ctor)
-            {case "Just":
-               switch (_v4._0.ctor)
-                 {case "StartLine":
-                    return "go!";}
-                 break;
-               case "Nothing":
-               return "finished";}
-            return A2(getGatesCount,
-            _v2.course,
-            _v2.playerState);
-         }();
-      }();
-   };
-   var getSubStatus = function (_v6) {
-      return function () {
-         return function () {
-            var s = function () {
-               var _v8 = _v6.startTime;
-               switch (_v8.ctor)
-               {case "Just":
-                  return _U.cmp(_v8._0,
-                    _v6.now) > 0 ? "be ready" : getFinishingStatus(_v6);
-                  case "Nothing":
-                  return $Game$Render$Utils.startCountdownMessage;}
-               _U.badCase($moduleName,
-               "between lines 75 and 82");
-            }();
-            return $Graphics$Element.centered($Game$Render$Utils.baseText(s));
-         }();
-      }();
-   };
-   var getTimer = function (_v10) {
-      return function () {
-         return function () {
-            var _v12 = _v10.startTime;
-            switch (_v12.ctor)
-            {case "Just":
-               return function () {
-                    var timer = $Game$Core.isNothing(_v10.playerState.nextGate) ? A2($Maybe.withDefault,
-                    0,
-                    $List.head(_v10.playerState.crossedGates)) : _v12._0 - _v10.now;
-                    return A2($Game$Render$Utils.formatTimer,
-                    timer,
-                    $Game$Core.isNothing(_v10.playerState.nextGate));
-                 }();
-               case "Nothing":
-               return "start pending";}
-            _U.badCase($moduleName,
-            "between lines 57 and 67");
-         }();
-      }();
-   };
-   var getMainStatus = function (_v14) {
-      return function () {
-         return function () {
-            var s = getTimer(_v14);
-            var op = $Game$Models.isStarted(_v14) ? 0.5 : 1;
-            return $Graphics$Element.opacity(op)($Graphics$Element.centered($Game$Render$Utils.bigText(s)));
-         }();
-      }();
-   };
-   var topRightElements = function (_v16) {
-      return function () {
-         return _L.fromArray([getWindWheel(_v16.wind)]);
-      }();
-   };
-   var topCenterElements = function (gameState) {
-      return _L.fromArray([getMainStatus(gameState)
-                          ,getSubStatus(gameState)]);
-   };
-   var topLeftElements = function (_v18) {
-      return function () {
-         return _L.fromArray([getVmgBar(_v18.playerState)]);
-      }();
-   };
-   var buildDashboard = F2(function (gameState,
-   _v20) {
-      return function () {
-         switch (_v20.ctor)
-         {case "_Tuple2": return {_: {}
-                                 ,bottomCenter: _L.fromArray([])
-                                 ,topCenter: topCenterElements(gameState)
-                                 ,topLeft: topLeftElements(gameState)
-                                 ,topRight: topRightElements(gameState)};}
-         _U.badCase($moduleName,
-         "between lines 20 and 24");
-      }();
-   });
-   _elm.Game.Render.Dashboard.values = {_op: _op
-                                       ,buildDashboard: buildDashboard
-                                       ,topLeftElements: topLeftElements
-                                       ,topCenterElements: topCenterElements
-                                       ,topRightElements: topRightElements
-                                       ,getMainStatus: getMainStatus
-                                       ,getTimer: getTimer
-                                       ,getSubStatus: getSubStatus
-                                       ,getFinishingStatus: getFinishingStatus
-                                       ,getGatesCount: getGatesCount
-                                       ,getWindWheel: getWindWheel
-                                       ,getVmgBar: getVmgBar
-                                       ,s: s
-                                       ,xs: xs};
-   return _elm.Game.Render.Dashboard.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Gates = Elm.Game.Render.Gates || {};
-Elm.Game.Render.Gates.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Gates = _elm.Game.Render.Gates || {};
-   if (_elm.Game.Render.Gates.values)
-   return _elm.Game.Render.Gates.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.Gates",
-   $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var renderGateLaylines = F4(function (vmg,
-   windOrigin,
-   area,
-   gate) {
-      return function () {
-         var drawLine = function (_v0) {
-            return function () {
-               switch (_v0.ctor)
-               {case "_Tuple2":
-                  return $Graphics$Collage.traced($Graphics$Collage.dotted($Color.white))(A2($Graphics$Collage.segment,
-                    _v0._0,
-                    _v0._1));}
-               _U.badCase($moduleName,
-               "on line 181, column 24 to 61");
-            }();
-         };
-         var windAngleRad = $Game$Core.toRadians(windOrigin);
-         var $ = $Game$Models.getGateMarks(gate),
-         leftMark = $._0,
-         rightMark = $._1;
-         var vmgRad = $Game$Core.toRadians(vmg.angle);
-         var $ = $Game$Models.areaDims(area),
-         w = $._0,
-         h = $._1;
-         var lineLength = w / 2;
-         var leftLineEnd = A2($Game$Geo.add,
-         leftMark,
-         $Basics.fromPolar({ctor: "_Tuple2"
-                           ,_0: lineLength
-                           ,_1: windAngleRad + vmgRad + $Basics.pi / 2}));
-         var rightLineEnd = A2($Game$Geo.add,
-         rightMark,
-         $Basics.fromPolar({ctor: "_Tuple2"
-                           ,_0: lineLength
-                           ,_1: windAngleRad - vmgRad - $Basics.pi / 2}));
-         return $Graphics$Collage.alpha(0.3)($Graphics$Collage.group(A2($List.map,
-         drawLine,
-         _L.fromArray([{ctor: "_Tuple2"
-                       ,_0: leftMark
-                       ,_1: leftLineEnd}
-                      ,{ctor: "_Tuple2"
-                       ,_0: rightMark
-                       ,_1: rightLineEnd}]))));
-      }();
-   });
-   var renderGateLine = F2(function (gate,
-   lineStyle) {
-      return function () {
-         var $ = $Game$Models.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         return $Graphics$Collage.traced(lineStyle)(A2($Graphics$Collage.segment,
-         left,
-         right));
-      }();
-   });
-   var renderGateMark = function (position) {
-      return function () {
-         var outer = $Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))($Graphics$Collage.circle($Game$Models.markRadius));
-         var inner = $Graphics$Collage.filled($Game$Render$Utils.colors.orange)($Graphics$Collage.circle($Game$Models.markRadius));
-         return $Graphics$Collage.move(position)($Graphics$Collage.group(_L.fromArray([inner
-                                                                                      ,outer])));
-      }();
-   };
-   var renderGateMarks = function (gate) {
-      return function () {
-         var $ = $Game$Models.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         return $Graphics$Collage.group(A2($List.map,
-         renderGateMark,
-         _L.fromArray([left,right])));
-      }();
-   };
-   var gateLineOpacity = function (timer) {
-      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
-   };
-   var arrowLineStyle = _U.replace([["width"
-                                    ,2]
-                                   ,["color",$Color.white]
-                                   ,["cap",$Graphics$Collage.Round]
-                                   ,["join"
-                                    ,$Graphics$Collage.Smooth]],
-   $Graphics$Collage.defaultLine);
-   var renderStraightArrow = F2(function (bottomUp,
-   timer) {
-      return function () {
-         var arrowY = A2($Game$Core.floatMod,
-         timer * 2.0e-2,
-         30);
-         var way = bottomUp ? 1 : -1;
-         var l = $Game$Models.markRadius;
-         var tipShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
-                                                 ,_0: 0 - l
-                                                 ,_1: 0 - l}
-                                                ,{ctor: "_Tuple2",_0: 0,_1: 0}
-                                                ,{ctor: "_Tuple2"
-                                                 ,_0: l
-                                                 ,_1: 0 - l}]) : _L.fromArray([{ctor: "_Tuple2"
-                                                                               ,_0: 0 - l
-                                                                               ,_1: l}
-                                                                              ,{ctor: "_Tuple2"
-                                                                               ,_0: 0
-                                                                               ,_1: 0}
-                                                                              ,{ctor: "_Tuple2"
-                                                                               ,_0: l
-                                                                               ,_1: l}]);
-         var tip = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(tipShape));
-         var lineLength = $Game$Models.markRadius * 4;
-         var bodyShape = bottomUp ? _L.fromArray([{ctor: "_Tuple2"
-                                                  ,_0: 0
-                                                  ,_1: 0 - lineLength}
-                                                 ,{ctor: "_Tuple2"
-                                                  ,_0: 0
-                                                  ,_1: 0}]) : _L.fromArray([{ctor: "_Tuple2"
-                                                                            ,_0: 0
-                                                                            ,_1: 0}
-                                                                           ,{ctor: "_Tuple2"
-                                                                            ,_0: 0
-                                                                            ,_1: lineLength}]);
-         var body = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(bodyShape));
-         return $Graphics$Collage.alpha(arrowY * way / 30 * 0.2)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                                        ,_0: 0
-                                                                                        ,_1: arrowY * way})($Graphics$Collage.group(_L.fromArray([body
-                                                                                                                                                 ,tip]))));
-      }();
-   });
-   var nextLineStyle = _U.replace([["width"
-                                   ,2]
-                                  ,["color"
-                                   ,$Game$Render$Utils.colors.green]
-                                  ,["dashing"
-                                   ,_L.fromArray([3,3])]],
-   $Graphics$Collage.defaultLine);
-   var renderStartLine = F3(function (gate,
-   started,
-   timer) {
-      return function () {
-         var helper = started ? $Graphics$Collage.move({ctor: "_Tuple2"
-                                                       ,_0: 0
-                                                       ,_1: gate.y - $Game$Models.markRadius * 3})(A2(renderStraightArrow,
-         true,
-         timer)) : $Game$Render$Utils.emptyForm;
-         var marks = renderGateMarks(gate);
-         var a = started ? gateLineOpacity(timer) : 1;
-         var lineStyle = started ? nextLineStyle : _U.replace([["width"
-                                                               ,2]
-                                                              ,["color"
-                                                               ,$Game$Render$Utils.colors.orange]],
-         $Graphics$Collage.defaultLine);
-         var line = $Graphics$Collage.alpha(a)(A2(renderGateLine,
-         gate,
-         lineStyle));
-         return $Graphics$Collage.group(_L.fromArray([helper
-                                                     ,line
-                                                     ,marks]));
-      }();
-   });
-   var renderFinishLine = F2(function (gate,
-   timer) {
-      return function () {
-         var marks = renderGateMarks(gate);
-         var a = gateLineOpacity(timer);
-         var line = $Graphics$Collage.alpha(a)(A2(renderGateLine,
-         gate,
-         nextLineStyle));
-         var helper = $Graphics$Collage.alpha(a * 0.5)($Graphics$Collage.move({ctor: "_Tuple2"
-                                                                              ,_0: 0
-                                                                              ,_1: gate.y + $Game$Models.markRadius * 3})(A2(renderStraightArrow,
-         false,
-         timer)));
-         return $Graphics$Collage.group(_L.fromArray([helper
-                                                     ,line
-                                                     ,marks]));
-      }();
-   });
-   var counterClockwiseArrowTip = function (l) {
-      return _L.fromArray([{ctor: "_Tuple2"
-                           ,_0: l
-                           ,_1: l}
-                          ,{ctor: "_Tuple2",_0: 0,_1: 0}
-                          ,{ctor: "_Tuple2"
-                           ,_0: l
-                           ,_1: 0 - l}]);
-   };
-   var clockwiseArrowTip = function (l) {
-      return _L.fromArray([{ctor: "_Tuple2"
-                           ,_0: 0 - l
-                           ,_1: l}
-                          ,{ctor: "_Tuple2",_0: 0,_1: 0}
-                          ,{ctor: "_Tuple2"
-                           ,_0: 0 - l
-                           ,_1: 0 - l}]);
-   };
-   var arcShape = F4(function (r,
-   start,
-   length,
-   way) {
-      return function () {
-         var steps = _L.range(0,
-         length / 10 | 0);
-         var realSteps = A2($List.map,
-         function (s) {
-            return $Basics.toFloat(start + s * 10 * (0 - way));
-         },
-         steps);
-         var radSteps = A2($List.map,
-         $Game$Core.toRadians,
-         realSteps);
-         return A2($List.map,
-         function (t) {
-            return $Basics.fromPolar({ctor: "_Tuple2"
-                                     ,_0: r
-                                     ,_1: t});
-         },
-         radSteps);
-      }();
-   });
-   var renderAroundArrow = F3(function (headAngle,
-   clockwise,
-   timer) {
-      return function () {
-         var arrowTip = clockwise ? clockwiseArrowTip : counterClockwiseArrowTip;
-         var way = clockwise ? 1 : -1;
-         var arcAngle = 60;
-         var slidingAngle = 135;
-         var timedAngle = A2($Game$Core.floatMod,
-         timer / 15,
-         slidingAngle);
-         var currentSlidingAngle = ($Basics.round(timedAngle) - slidingAngle) * way;
-         var arrowRad = $Game$Core.toRadians($Basics.toFloat(currentSlidingAngle + headAngle));
-         var r = $Game$Models.markRadius * 4;
-         var arc = $Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(A4(arcShape,
-         r,
-         headAngle + currentSlidingAngle,
-         arcAngle,
-         way)));
-         var arrow = $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                              ,_0: r
-                                                              ,_1: arrowRad}))($Graphics$Collage.rotate(arrowRad - $Basics.pi / 2)($Graphics$Collage.traced(arrowLineStyle)($Graphics$Collage.path(arrowTip($Game$Models.markRadius)))));
-         return $Graphics$Collage.alpha(timedAngle / $Basics.toFloat(slidingAngle) * 0.2)($Graphics$Collage.group(_L.fromArray([arc
-                                                                                                                               ,arrow])));
-      }();
-   });
-   var aroundLeftUpwind = A2(renderAroundArrow,
-   -45,
-   false);
-   var aroundRightUpwind = A2(renderAroundArrow,
-   45,
-   true);
-   var aroundLeftDownwind = A2(renderAroundArrow,
-   225,
-   true);
-   var aroundRightDownwind = A2(renderAroundArrow,
-   135,
-   false);
-   var renderGateHelpers = F3(function (gate,
-   gateLoc,
-   timer) {
-      return function () {
-         var $ = function () {
-            switch (gateLoc.ctor)
-            {case "Downwind":
-               return {ctor: "_Tuple2"
-                      ,_0: aroundLeftDownwind(timer)
-                      ,_1: aroundRightDownwind(timer)};
-               case "Upwind":
-               return {ctor: "_Tuple2"
-                      ,_0: aroundLeftUpwind(timer)
-                      ,_1: aroundRightUpwind(timer)};}
-            _U.badCase($moduleName,
-            "between lines 127 and 130");
-         }(),
-         leftHelper = $._0,
-         rightHelper = $._1;
-         var $ = $Game$Models.getGateMarks(gate),
-         left = $._0,
-         right = $._1;
-         return $Graphics$Collage.group(_L.fromArray([A2($Graphics$Collage.move,
-                                                     left,
-                                                     leftHelper)
-                                                     ,A2($Graphics$Collage.move,
-                                                     right,
-                                                     rightHelper)]));
-      }();
-   });
-   var renderGate = F4(function (gate,
-   timer,
-   isNext,
-   gateType) {
-      return function () {
-         var helpers = isNext ? A3(renderGateHelpers,
-         gate,
-         gateType,
-         timer) : $Game$Render$Utils.emptyForm;
-         var marks = renderGateMarks(gate);
-         var a = gateLineOpacity(timer);
-         var line = isNext ? $Graphics$Collage.alpha(a)(A2(renderGateLine,
-         gate,
-         nextLineStyle)) : $Game$Render$Utils.emptyForm;
-         return $Graphics$Collage.group(_L.fromArray([line
-                                                     ,marks
-                                                     ,helpers]));
-      }();
-   });
-   var Downwind = {ctor: "Downwind"};
-   var Upwind = {ctor: "Upwind"};
-   _elm.Game.Render.Gates.values = {_op: _op
-                                   ,Upwind: Upwind
-                                   ,Downwind: Downwind
-                                   ,arcShape: arcShape
-                                   ,clockwiseArrowTip: clockwiseArrowTip
-                                   ,counterClockwiseArrowTip: counterClockwiseArrowTip
-                                   ,nextLineStyle: nextLineStyle
-                                   ,arrowLineStyle: arrowLineStyle
-                                   ,renderAroundArrow: renderAroundArrow
-                                   ,aroundLeftUpwind: aroundLeftUpwind
-                                   ,aroundRightUpwind: aroundRightUpwind
-                                   ,aroundLeftDownwind: aroundLeftDownwind
-                                   ,aroundRightDownwind: aroundRightDownwind
-                                   ,renderStraightArrow: renderStraightArrow
-                                   ,gateLineOpacity: gateLineOpacity
-                                   ,renderGateMark: renderGateMark
-                                   ,renderGateMarks: renderGateMarks
-                                   ,renderGateLine: renderGateLine
-                                   ,renderGateHelpers: renderGateHelpers
-                                   ,renderStartLine: renderStartLine
-                                   ,renderGate: renderGate
-                                   ,renderFinishLine: renderFinishLine
-                                   ,renderGateLaylines: renderGateLaylines};
-   return _elm.Game.Render.Gates.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Players = Elm.Game.Render.Players || {};
-Elm.Game.Render.Players.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Players = _elm.Game.Render.Players || {};
-   if (_elm.Game.Render.Players.values)
-   return _elm.Game.Render.Players.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.Players",
-   $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Text = Elm.Text.make(_elm);
-   var rotateHull = function (heading) {
-      return $Graphics$Collage.rotate($Game$Core.toRadians(heading + 90));
-   };
-   var baseHull = $Graphics$Collage.toForm(A3($Graphics$Element.image,
-   12,
-   20,
-   "/assets/images/49er.png"));
-   var renderGhost = function (_v0) {
-      return function () {
-         return function () {
-            var name = $Graphics$Collage.alpha(0.3)($Graphics$Collage.move(A2($Game$Geo.add,
-            _v0.position,
-            {ctor: "_Tuple2"
-            ,_0: 0
-            ,_1: -25}))($Graphics$Collage.toForm($Graphics$Element.centered($Game$Render$Utils.baseText(A2($Maybe.withDefault,
-            "Anonymous",
-            _v0.handle))))));
-            var hull = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move(_v0.position)(A2(rotateHull,
-            _v0.heading,
-            baseHull)));
-            return $Graphics$Collage.group(_L.fromArray([hull
-                                                        ,name]));
-         }();
-      }();
-   };
-   var renderGhosts = function (ghosts) {
-      return $Graphics$Collage.group(A2($List.map,
-      renderGhost,
-      ghosts));
-   };
-   var renderWindShadow = function (_v2) {
-      return function () {
-         return function () {
-            var arcAngles = _L.fromArray([-15
-                                         ,-10
-                                         ,-5
-                                         ,0
-                                         ,5
-                                         ,10
-                                         ,15]);
-            var endPoints = A2($List.map,
-            function (a) {
-               return A2($Game$Geo.add,
-               _v2.position,
-               $Basics.fromPolar({ctor: "_Tuple2"
-                                 ,_0: $Game$Models.windShadowLength
-                                 ,_1: $Game$Core.toRadians(_v2.shadowDirection + a)}));
-            },
-            arcAngles);
-            return $Graphics$Collage.alpha(0.1)($Graphics$Collage.filled($Color.white)($Graphics$Collage.path(A2($List._op["::"],
-            _v2.position,
-            endPoints))));
-         }();
-      }();
-   };
-   var renderOpponent = function (_v4) {
-      return function () {
-         return function () {
-            var name = $Graphics$Collage.alpha(0.3)($Graphics$Collage.move(A2($Game$Geo.add,
-            _v4.state.position,
-            {ctor: "_Tuple2"
-            ,_0: 0
-            ,_1: -25}))($Graphics$Collage.toForm($Graphics$Element.centered($Game$Render$Utils.baseText(A2($Maybe.withDefault,
-            "Anonymous",
-            _v4.player.handle))))));
-            var shadow = renderWindShadow(_v4.state);
-            var hull = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move(_v4.state.position)(A2(rotateHull,
-            _v4.state.heading,
-            baseHull)));
-            return $Graphics$Collage.group(_L.fromArray([shadow
-                                                        ,hull
-                                                        ,name]));
-         }();
-      }();
-   };
-   var renderOpponents = F2(function (course,
-   opponents) {
-      return $Graphics$Collage.group(A2($List.map,
-      renderOpponent,
-      opponents));
-   });
-   var renderWake = function (wake) {
-      return function () {
-         var opacityForIndex = function (i) {
-            return 0.3 - 0.3 * $Basics.toFloat(i) / $Basics.toFloat($List.length(wake));
-         };
-         var style = _U.replace([["color"
-                                 ,$Color.white]
-                                ,["width",3]],
-         $Graphics$Collage.defaultLine);
-         var renderSegment = function (_v6) {
-            return function () {
-               switch (_v6.ctor)
-               {case "_Tuple2":
-                  switch (_v6._1.ctor)
-                    {case "_Tuple2":
-                       return $Graphics$Collage.alpha(opacityForIndex(_v6._0))($Graphics$Collage.traced(style)(A2($Graphics$Collage.segment,
-                         _v6._1._0,
-                         _v6._1._1)));}
-                    break;}
-               _U.badCase($moduleName,
-               "on line 81, column 31 to 86");
-            }();
-         };
-         var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
-         v1) {
-            return {ctor: "_Tuple2"
-                   ,_0: v0
-                   ,_1: v1};
-         }))(A3($List.map2,
-         F2(function (v0,v1) {
-            return {ctor: "_Tuple2"
-                   ,_0: v0
-                   ,_1: v1};
-         }),
-         wake,
-         $Maybe.withDefault(_L.fromArray([]))($List.tail(wake))));
-         return $Graphics$Collage.group(A2($List.map,
-         renderSegment,
-         pairs));
-      }();
-   };
-   var renderEqualityLine = F2(function (_v12,
-   windOrigin) {
-      return function () {
-         switch (_v12.ctor)
-         {case "_Tuple2":
-            return function () {
-                 var right = $Basics.fromPolar({ctor: "_Tuple2"
-                                               ,_0: 100
-                                               ,_1: $Game$Core.toRadians(windOrigin + 90)});
-                 var left = $Basics.fromPolar({ctor: "_Tuple2"
-                                              ,_0: 100
-                                              ,_1: $Game$Core.toRadians(windOrigin - 90)});
-                 return $Graphics$Collage.alpha(0.1)($Graphics$Collage.traced($Graphics$Collage.dotted($Color.white))(A2($Graphics$Collage.segment,
-                 left,
-                 right)));
-              }();}
-         _U.badCase($moduleName,
-         "between lines 67 and 71");
-      }();
-   });
-   var renderPlayerAngles = function (player) {
-      return function () {
-         var windOriginRadians = $Game$Core.toRadians(player.heading - player.windAngle);
-         var windMarker = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                                                                ,_0: 30
-                                                                                                ,_1: windOriginRadians}))($Graphics$Collage.rotate(windOriginRadians + $Basics.pi / 2)($Graphics$Collage.filled($Color.white)($Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                      ,_0: 0
-                                                                                                                                                                                                                                                                      ,_1: 4}
-                                                                                                                                                                                                                                                                     ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                      ,_0: -3
-                                                                                                                                                                                                                                                                      ,_1: -5}
-                                                                                                                                                                                                                                                                     ,{ctor: "_Tuple2"
-                                                                                                                                                                                                                                                                      ,_0: 3
-                                                                                                                                                                                                                                                                      ,_1: -5}]))))));
-         var windLine = $Graphics$Collage.alpha(0.1)($Graphics$Collage.traced($Graphics$Collage.solid($Color.white))(A2($Graphics$Collage.segment,
-         {ctor: "_Tuple2",_0: 0,_1: 0},
-         $Basics.fromPolar({ctor: "_Tuple2"
-                           ,_0: 60
-                           ,_1: windOriginRadians}))));
-         var windAngleText = $Graphics$Collage.alpha(0.5)($Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                                                                   ,_0: 30
-                                                                                                   ,_1: windOriginRadians + $Basics.pi}))($Graphics$Collage.toForm($Graphics$Element.centered((_U.eq(player.controlMode,
-         $Game$Models.FixedAngle) ? $Text.line($Text.Under) : $Basics.identity)($Game$Render$Utils.baseText(A2($Basics._op["++"],
-         $Basics.toString($Basics.abs($Basics.round(player.windAngle))),
-         "&deg;")))))));
-         return $Graphics$Collage.group(_L.fromArray([windLine
-                                                     ,windMarker
-                                                     ,windAngleText]));
-      }();
-   };
-   var vmgColorAndShape = function (player) {
-      return function () {
-         var s = 4;
-         var bad = {ctor: "_Tuple2"
-                   ,_0: $Color.red
-                   ,_1: A2($Graphics$Collage.rect,
-                   s * 2,
-                   s * 2)};
-         var good = {ctor: "_Tuple2"
-                    ,_0: $Game$Render$Utils.colors.green
-                    ,_1: $Graphics$Collage.circle(s)};
-         var warn = {ctor: "_Tuple2"
-                    ,_0: $Color.orange
-                    ,_1: $Graphics$Collage.polygon(_L.fromArray([{ctor: "_Tuple2"
-                                                                 ,_0: 0 - s
-                                                                 ,_1: 0 - s}
-                                                                ,{ctor: "_Tuple2"
-                                                                 ,_0: s
-                                                                 ,_1: 0 - s}
-                                                                ,{ctor: "_Tuple2"
-                                                                 ,_0: 0
-                                                                 ,_1: s}]))};
-         var margin = 3;
-         var a = $Basics.abs(player.windAngle);
-         return _U.cmp(a,
-         90) < 0 ? _U.cmp(a,
-         player.upwindVmg.angle - margin) < 0 ? bad : _U.cmp(a,
-         player.upwindVmg.angle + margin) > 0 ? warn : good : _U.cmp(a,
-         player.downwindVmg.angle + margin) > 0 ? bad : _U.cmp(a,
-         player.downwindVmg.angle - margin) < 0 ? warn : good;
-      }();
-   };
-   var renderVmgSign = function (player) {
-      return function () {
-         var $ = vmgColorAndShape(player),
-         vmgColor = $._0,
-         vmgShape = $._1;
-         var windOriginRadians = $Game$Core.toRadians(player.heading - player.windAngle);
-         return $Graphics$Collage.move($Basics.fromPolar({ctor: "_Tuple2"
-                                                         ,_0: 30
-                                                         ,_1: windOriginRadians + $Basics.pi / 2}))($Graphics$Collage.group(_L.fromArray([$Graphics$Collage.filled(vmgColor)(vmgShape)
-                                                                                                                                         ,$Graphics$Collage.outlined($Graphics$Collage.solid($Color.white))(vmgShape)])));
-      }();
-   };
-   var renderPlayer = F2(function (displayWindShadow,
-   state) {
-      return function () {
-         var wake = renderWake(state.trail);
-         var eqLine = A2(renderEqualityLine,
-         state.position,
-         state.windOrigin);
-         var vmgSign = renderVmgSign(state);
-         var angles = renderPlayerAngles(state);
-         var windShadow = displayWindShadow ? renderWindShadow($Game$Models.asOpponentState(state)) : $Game$Render$Utils.emptyForm;
-         var hull = A2(rotateHull,
-         state.heading,
-         baseHull);
-         var movingPart = $Graphics$Collage.move(state.position)($Graphics$Collage.group(_L.fromArray([angles
-                                                                                                      ,vmgSign
-                                                                                                      ,eqLine
-                                                                                                      ,hull])));
-         return $Graphics$Collage.group(_L.fromArray([wake
-                                                     ,windShadow
-                                                     ,movingPart]));
-      }();
-   });
-   var renderPlayers = function (_v16) {
-      return function () {
-         return function () {
-            var mainPlayer = A2(renderPlayer,
-            true,
-            _v16.playerState);
-            var forms = _L.fromArray([A2(renderOpponents,
-                                     _v16.course,
-                                     _v16.opponents)
-                                     ,renderGhosts(_v16.ghosts)
-                                     ,mainPlayer]);
-            return $Graphics$Collage.group(forms);
-         }();
-      }();
-   };
-   _elm.Game.Render.Players.values = {_op: _op
-                                     ,vmgColorAndShape: vmgColorAndShape
-                                     ,renderVmgSign: renderVmgSign
-                                     ,renderPlayerAngles: renderPlayerAngles
-                                     ,renderEqualityLine: renderEqualityLine
-                                     ,renderWake: renderWake
-                                     ,renderWindShadow: renderWindShadow
-                                     ,baseHull: baseHull
-                                     ,rotateHull: rotateHull
-                                     ,renderPlayer: renderPlayer
-                                     ,renderOpponent: renderOpponent
-                                     ,renderOpponents: renderOpponents
-                                     ,renderGhost: renderGhost
-                                     ,renderGhosts: renderGhosts
-                                     ,renderPlayers: renderPlayers};
-   return _elm.Game.Render.Players.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
 Elm.Game.Render.SvgUtils = Elm.Game.Render.SvgUtils || {};
 Elm.Game.Render.SvgUtils.make = function (_elm) {
    "use strict";
@@ -6225,7 +4848,6 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.Render.SvgUtils",
    $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -6325,7 +4947,7 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
                     ",",
                     $Basics.toString(_v2._1)));}
                _U.badCase($moduleName,
-               "on line 50, column 35 to 66");
+               "on line 40, column 35 to 66");
             }();
          },
          pointsList));
@@ -6346,7 +4968,7 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
                  ",",
                  $Basics.toString(_v6._1)));}
             _U.badCase($moduleName,
-            "on line 43, column 24 to 55");
+            "on line 33, column 24 to 55");
          }();
       },
       pointsList)));
@@ -6362,26 +4984,9 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
               A2(lineCoords,_v10._0,_v10._1)),
               _L.fromArray([]));}
          _U.badCase($moduleName,
-         "on line 38, column 3 to 41");
+         "on line 29, column 3 to 41");
       }();
    });
-   var colorToSvg = function (color) {
-      return function () {
-         var $ = $Color.toRgb(color),
-         red = $.red,
-         green = $.green,
-         blue = $.blue,
-         alpha = $.alpha;
-         var s = $String.join(",")(A2($Basics._op["++"],
-         A2($List.map,
-         $Basics.toString,
-         _L.fromArray([red,green,blue])),
-         _L.fromArray([$Basics.toString(alpha)])));
-         return A2($Basics._op["++"],
-         "rgba(",
-         A2($Basics._op["++"],s,")"));
-      }();
-   };
    var rotate_ = F3(function (a,
    cx,
    cy) {
@@ -6426,7 +5031,6 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
                                       ,translate: translate
                                       ,translatePoint: translatePoint
                                       ,rotate_: rotate_
-                                      ,colorToSvg: colorToSvg
                                       ,segment: segment
                                       ,polygonPoints: polygonPoints
                                       ,pathPoints: pathPoints
@@ -6453,7 +5057,6 @@ Elm.Game.Render.Utils.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.Render.Utils",
    $Basics = Elm.Basics.make(_elm),
-   $Color = Elm.Color.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
    $Graphics$Element = Elm.Graphics.Element.make(_elm),
@@ -6538,46 +5141,11 @@ Elm.Game.Render.Utils.make = function (_elm) {
       return $Text.typeface(_L.fromArray(["Inconsolata"
                                          ,"monospace"]))($Text.height(15)($Text.fromString(s)));
    };
-   var colors = {_: {}
-                ,gateLine: A3($Color.rgb,
-                200,
-                130,
-                170)
-                ,gateMark: $Color.white
-                ,grass: A3($Color.rgb,
-                200,
-                230,
-                180)
-                ,green: A3($Color.rgb,
-                100,
-                180,
-                106)
-                ,orange: A3($Color.rgb,
-                200,
-                130,
-                170)
-                ,rock: A3($Color.rgb,
-                160,
-                146,
-                159)
-                ,sand: A3($Color.rgb,
-                242,
-                243,
-                196)
-                ,seaBlue: A3($Color.rgb,
-                147,
-                202,
-                223)
-                ,water: A3($Color.rgb,
-                147,
-                202,
-                223)};
    var emptyForm = $Graphics$Collage.toForm($Graphics$Element.empty);
    var startCountdownMessage = "press C to start countdown (30s)";
    _elm.Game.Render.Utils.values = {_op: _op
                                    ,startCountdownMessage: startCountdownMessage
                                    ,emptyForm: emptyForm
-                                   ,colors: colors
                                    ,baseText: baseText
                                    ,bigText: bigText
                                    ,fixedLength: fixedLength
@@ -7287,9 +5855,9 @@ Elm.Game.RenderSvg.Gates.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.RenderSvg.Gates",
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -7359,7 +5927,7 @@ Elm.Game.RenderSvg.Gates.make = function (_elm) {
          return A3(renderGate,
          gate,
          lineStyle,
-         $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.green));
+         $Constants.colors.green);
       }();
    });
    var renderUpwind = F3(function (playerState,
@@ -7859,9 +6427,8 @@ Elm.Game.RenderSvg.Tiles.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.RenderSvg.Tiles",
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -7882,7 +6449,7 @@ Elm.Game.RenderSvg.Tiles.make = function (_elm) {
                  ",",
                  $Basics.toString(_v0._1)));}
             _U.badCase($moduleName,
-            "on line 80, column 29 to 60");
+            "on line 82, column 29 to 60");
          }();
       })(points));
    };
@@ -7913,13 +6480,13 @@ Elm.Game.RenderSvg.Tiles.make = function (_elm) {
       return function () {
          switch (kind.ctor)
          {case "Grass":
-            return $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.grass);
+            return $Constants.colors.grass;
             case "Rock":
-            return $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.rock);
+            return $Constants.colors.rock;
             case "Water":
-            return $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.water);}
+            return $Constants.colors.water;}
          _U.badCase($moduleName,
-         "between lines 52 and 55");
+         "between lines 54 and 57");
       }();
    };
    var renderTile = function (_v5) {
@@ -9952,37 +8519,6 @@ Elm.Graphics.Element.make = function (_elm) {
                                   ,Element: Element
                                   ,Position: Position};
    return _elm.Graphics.Element.values;
-};
-Elm.Graphics = Elm.Graphics || {};
-Elm.Graphics.Input = Elm.Graphics.Input || {};
-Elm.Graphics.Input.make = function (_elm) {
-   "use strict";
-   _elm.Graphics = _elm.Graphics || {};
-   _elm.Graphics.Input = _elm.Graphics.Input || {};
-   if (_elm.Graphics.Input.values)
-   return _elm.Graphics.Input.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Graphics.Input",
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $Native$Graphics$Input = Elm.Native.Graphics.Input.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var clickable = $Native$Graphics$Input.clickable;
-   var hoverable = $Native$Graphics$Input.hoverable;
-   var dropDown = $Native$Graphics$Input.dropDown;
-   var checkbox = $Native$Graphics$Input.checkbox;
-   var customButton = $Native$Graphics$Input.customButton;
-   var button = $Native$Graphics$Input.button;
-   _elm.Graphics.Input.values = {_op: _op
-                                ,button: button
-                                ,customButton: customButton
-                                ,checkbox: checkbox
-                                ,dropDown: dropDown
-                                ,hoverable: hoverable
-                                ,clickable: clickable};
-   return _elm.Graphics.Input.values;
 };
 Elm.History = Elm.History || {};
 Elm.History.make = function (_elm) {
@@ -15243,479 +13779,6 @@ Elm.Native.Graphics.Element.make = function(localRuntime) {
 
 		block: block,
 		markdown: markdown
-	};
-
-};
-
-// setup
-Elm.Native = Elm.Native || {};
-Elm.Native.Graphics = Elm.Native.Graphics || {};
-Elm.Native.Graphics.Input = Elm.Native.Graphics.Input || {};
-
-// definition
-Elm.Native.Graphics.Input.make = function(localRuntime) {
-	'use strict';
-
-	// attempt to short-circuit
-	if ('values' in Elm.Native.Graphics.Input) {
-		return Elm.Native.Graphics.Input.values;
-	}
-
-	var Color = Elm.Native.Color.make(localRuntime);
-	var List = Elm.Native.List.make(localRuntime);
-	var Signal = Elm.Native.Signal.make(localRuntime);
-	var Text = Elm.Native.Text.make(localRuntime);
-	var Utils = Elm.Native.Utils.make(localRuntime);
-
-	var Element = Elm.Native.Graphics.Element.make(localRuntime);
-
-
-	function renderDropDown(model)
-	{
-		var drop = Element.createNode('select');
-		drop.style.border = '0 solid';
-		drop.style.pointerEvents = 'auto';
-		drop.style.display = 'block';
-
-		drop.elm_values = List.toArray(model.values);
-		drop.elm_handler = model.handler;
-		var values = drop.elm_values;
-
-		for (var i = 0; i < values.length; ++i)
-		{
-			var option = Element.createNode('option');
-			var name = values[i]._0;
-			option.value = name;
-			option.innerHTML = name;
-			drop.appendChild(option);
-		}
-		drop.addEventListener('change', function() {
-			Signal.sendMessage(drop.elm_handler(drop.elm_values[drop.selectedIndex]._1));
-		});
-
-		return drop;
-	}
-
-	function updateDropDown(node, oldModel, newModel)
-	{
-		node.elm_values = List.toArray(newModel.values);
-		node.elm_handler = newModel.handler;
-
-		var values = node.elm_values;
-		var kids = node.childNodes;
-		var kidsLength = kids.length;
-
-		var i = 0;
-		for (; i < kidsLength && i < values.length; ++i)
-		{
-			var option = kids[i];
-			var name = values[i]._0;
-			option.value = name;
-			option.innerHTML = name;
-		}
-		for (; i < kidsLength; ++i)
-		{
-			node.removeChild(node.lastChild);
-		}
-		for (; i < values.length; ++i)
-		{
-			var option = Element.createNode('option');
-			var name = values[i]._0;
-			option.value = name;
-			option.innerHTML = name;
-			node.appendChild(option);
-		}
-		return node;
-	}
-
-	function dropDown(handler, values)
-	{
-		return A3(Element.newElement, 100, 24, {
-			ctor: 'Custom',
-			type: 'DropDown',
-			render: renderDropDown,
-			update: updateDropDown,
-			model: {
-				values: values,
-				handler: handler
-			}
-		});
-	}
-
-	function renderButton(model)
-	{
-		var node = Element.createNode('button');
-		node.style.display = 'block';
-		node.style.pointerEvents = 'auto';
-		node.elm_message = model.message;
-		function click()
-		{
-			Signal.sendMessage(node.elm_message);
-		}
-		node.addEventListener('click', click);
-		node.innerHTML = model.text;
-		return node;
-	}
-
-	function updateButton(node, oldModel, newModel)
-	{
-		node.elm_message = newModel.message;
-		var txt = newModel.text;
-		if (oldModel.text !== txt)
-		{
-			node.innerHTML = txt;
-		}
-		return node;
-	}
-
-	function button(message, text)
-	{
-		return A3(Element.newElement, 100, 40, {
-			ctor: 'Custom',
-			type: 'Button',
-			render: renderButton,
-			update: updateButton,
-			model: {
-				message: message,
-				text:text
-			}
-		});
-	}
-
-	function renderCustomButton(model)
-	{
-		var btn = Element.createNode('div');
-		btn.style.pointerEvents = 'auto';
-		btn.elm_message = model.message;
-
-		btn.elm_up    = Element.render(model.up);
-		btn.elm_hover = Element.render(model.hover);
-		btn.elm_down  = Element.render(model.down);
-
-		btn.elm_up.style.display = 'block';
-		btn.elm_hover.style.display = 'none';
-		btn.elm_down.style.display = 'none';
-
-		btn.appendChild(btn.elm_up);
-		btn.appendChild(btn.elm_hover);
-		btn.appendChild(btn.elm_down);
-
-		function swap(visibleNode, hiddenNode1, hiddenNode2)
-		{
-			visibleNode.style.display = 'block';
-			hiddenNode1.style.display = 'none';
-			hiddenNode2.style.display = 'none';
-		}
-
-		var overCount = 0;
-		function over(e)
-		{
-			if (overCount++ > 0) return;
-			swap(btn.elm_hover, btn.elm_down, btn.elm_up);
-		}
-		function out(e)
-		{
-			if (btn.contains(e.toElement || e.relatedTarget)) return;
-			overCount = 0;
-			swap(btn.elm_up, btn.elm_down, btn.elm_hover);
-		}
-		function up()
-		{
-			swap(btn.elm_hover, btn.elm_down, btn.elm_up);
-			Signal.sendMessage(btn.elm_message);
-		}
-		function down()
-		{
-			swap(btn.elm_down, btn.elm_hover, btn.elm_up);
-		}
-
-		btn.addEventListener('mouseover', over);
-		btn.addEventListener('mouseout' , out);
-		btn.addEventListener('mousedown', down);
-		btn.addEventListener('mouseup'  , up);
-
-		return btn;
-	}
-
-	function updateCustomButton(node, oldModel, newModel)
-	{
-		node.elm_message = newModel.message;
-
-		var kids = node.childNodes;
-		var styleUp    = kids[0].style.display;
-		var styleHover = kids[1].style.display;
-		var styleDown  = kids[2].style.display;
-
-		Element.updateAndReplace(kids[0], oldModel.up, newModel.up);
-		Element.updateAndReplace(kids[1], oldModel.hover, newModel.hover);
-		Element.updateAndReplace(kids[2], oldModel.down, newModel.down);
-
-		var kids = node.childNodes;
-		kids[0].style.display = styleUp;
-		kids[1].style.display = styleHover;
-		kids[2].style.display = styleDown;
-
-		return node;
-	}
-
-	function max3(a,b,c)
-	{
-		var ab = a > b ? a : b;
-		return ab > c ? ab : c;
-	}
-
-	function customButton(message, up, hover, down)
-	{
-		return A3(Element.newElement,
-				  max3(up.props.width, hover.props.width, down.props.width),
-				  max3(up.props.height, hover.props.height, down.props.height),
-				  { ctor: 'Custom',
-					type: 'CustomButton',
-					render: renderCustomButton,
-					update: updateCustomButton,
-					model: {
-						message: message,
-						up: up,
-						hover: hover,
-						down: down
-					}
-				  });
-	}
-
-	function renderCheckbox(model)
-	{
-		var node = Element.createNode('input');
-		node.type = 'checkbox';
-		node.checked = model.checked;
-		node.style.display = 'block';
-		node.style.pointerEvents = 'auto';
-		node.elm_handler = model.handler;
-		function change()
-		{
-			Signal.sendMessage(node.elm_handler(node.checked));
-		}
-		node.addEventListener('change', change);
-		return node;
-	}
-
-	function updateCheckbox(node, oldModel, newModel)
-	{
-		node.elm_handler = newModel.handler;
-		node.checked = newModel.checked;
-		return node;
-	}
-
-	function checkbox(handler, checked)
-	{
-		return A3(Element.newElement, 13, 13, {
-			ctor: 'Custom',
-			type: 'CheckBox',
-			render: renderCheckbox,
-			update: updateCheckbox,
-			model: { handler:handler, checked:checked }
-		});
-	}
-
-	function setRange(node, start, end, dir)
-	{
-		if (node.parentNode)
-		{
-			node.setSelectionRange(start, end, dir);
-		}
-		else
-		{
-			setTimeout(function(){node.setSelectionRange(start, end, dir);}, 0);
-		}
-	}
-
-	function updateIfNeeded(css, attribute, latestAttribute)
-	{
-		if (css[attribute] !== latestAttribute)
-		{
-			css[attribute] = latestAttribute;
-		}
-	}
-	function cssDimensions(dimensions)
-	{
-		return dimensions.top    + 'px ' +
-			   dimensions.right  + 'px ' +
-			   dimensions.bottom + 'px ' +
-			   dimensions.left   + 'px';
-	}
-	function updateFieldStyle(css, style)
-	{
-		updateIfNeeded(css, 'padding', cssDimensions(style.padding));
-
-		var outline = style.outline;
-		updateIfNeeded(css, 'border-width', cssDimensions(outline.width));
-		updateIfNeeded(css, 'border-color', Color.toCss(outline.color));
-		updateIfNeeded(css, 'border-radius', outline.radius + 'px');
-
-		var highlight = style.highlight;
-		if (highlight.width === 0)
-		{
-			css.outline = 'none';
-		}
-		else
-		{
-			updateIfNeeded(css, 'outline-width', highlight.width + 'px');
-			updateIfNeeded(css, 'outline-color', Color.toCss(highlight.color));
-		}
-
-		var textStyle = style.style;
-		updateIfNeeded(css, 'color', Color.toCss(textStyle.color));
-		if (textStyle.typeface.ctor !== '[]')
-		{
-			updateIfNeeded(css, 'font-family', Text.toTypefaces(textStyle.typeface));
-		}
-		if (textStyle.height.ctor !== "Nothing")
-		{
-			updateIfNeeded(css, 'font-size', textStyle.height._0 + 'px');
-		}
-		updateIfNeeded(css, 'font-weight', textStyle.bold ? 'bold' : 'normal');
-		updateIfNeeded(css, 'font-style', textStyle.italic ? 'italic' : 'normal');
-		if (textStyle.line.ctor !== 'Nothing')
-		{
-			updateIfNeeded(css, 'text-decoration', Text.toLine(textStyle.line._0));
-		}
-	}
-
-	function renderField(model)
-	{
-		var field = Element.createNode('input');
-		updateFieldStyle(field.style, model.style);
-		field.style.borderStyle = 'solid';
-		field.style.pointerEvents = 'auto';
-
-		field.type = model.type;
-		field.placeholder = model.placeHolder;
-		field.value = model.content.string;
-
-		field.elm_handler = model.handler;
-		field.elm_old_value = field.value;
-
-		function inputUpdate(event)
-		{
-			var curr = field.elm_old_value;
-			var next = field.value;
-			if (curr === next)
-			{
-				return;
-			}
-
-			var direction = field.selectionDirection === 'forward' ? 'Forward' : 'Backward';
-			var start = field.selectionStart;
-			var end = field.selectionEnd;
-			field.value = field.elm_old_value;
-
-			Signal.sendMessage(field.elm_handler({
-				_:{},
-				string: next,
-				selection: {
-					_:{},
-					start: start,
-					end: end,
-					direction: { ctor: direction }
-				}
-			}));
-		}
-
-		field.addEventListener('input', inputUpdate);
-		field.addEventListener('focus', function() {
-			field.elm_hasFocus = true;
-		});
-		field.addEventListener('blur', function() {
-			field.elm_hasFocus = false;
-		});
-
-		return field;
-	}
-
-	function updateField(field, oldModel, newModel)
-	{
-		if (oldModel.style !== newModel.style)
-		{
-			updateFieldStyle(field.style, newModel.style);
-		}
-		field.elm_handler = newModel.handler;
-
-		field.type = newModel.type;
-		field.placeholder = newModel.placeHolder;
-		var value = newModel.content.string;
-		field.value = value;
-		field.elm_old_value = value;
-		if (field.elm_hasFocus)
-		{
-			var selection = newModel.content.selection;
-			var direction = selection.direction.ctor === 'Forward' ? 'forward' : 'backward';
-			setRange(field, selection.start, selection.end, direction);
-		}
-		return field;
-	}
-
-	function mkField(type)
-	{
-		function field(style, handler, placeHolder, content)
-		{
-			var padding = style.padding;
-			var outline = style.outline.width;
-			var adjustWidth = padding.left + padding.right + outline.left + outline.right;
-			var adjustHeight = padding.top + padding.bottom + outline.top + outline.bottom;
-			return A3(Element.newElement, 200, 30, {
-				ctor: 'Custom',
-				type: type + 'Field',
-				adjustWidth: adjustWidth,
-				adjustHeight: adjustHeight,
-				render: renderField,
-				update: updateField,
-				model: {
-					handler:handler,
-					placeHolder:placeHolder,
-					content:content,
-					style:style,
-					type:type
-				}
-			});
-		}
-		return F4(field);
-	}
-
-	function hoverable(handler, elem)
-	{
-		function onHover(bool)
-		{
-			Signal.sendMessage(handler(bool));
-		}
-		var props = Utils.replace([['hover',onHover]], elem.props);
-		return {
-			props: props,
-			element: elem.element
-		};
-	}
-
-	function clickable(message, elem)
-	{
-		function onClick()
-		{
-			Signal.sendMessage(message);
-		}
-		var props = Utils.replace([['click',onClick]], elem.props);
-		return {
-			props: props,
-			element: elem.element
-		};
-	}
-
-	return Elm.Native.Graphics.Input.values = {
-		button: F2(button),
-		customButton: F4(customButton),
-		checkbox: F2(checkbox),
-		dropDown: F2(dropDown),
-		field: mkField('text'),
-		email: mkField('email'),
-		password: mkField('password'),
-		hoverable: F2(hoverable),
-		clickable: F2(clickable)
 	};
 
 };
@@ -21954,15 +20017,19 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
       return {ctor: "CreateTile"
              ,_0: a};
    };
-   var Editor = F4(function (a,
+   var Editor = F6(function (a,
    b,
    c,
-   d) {
+   d,
+   e,
+   f) {
       return {_: {}
-             ,center: b
-             ,dims: c
+             ,center: d
+             ,dims: e
+             ,downwind: c
              ,grid: a
-             ,mode: d};
+             ,mode: f
+             ,upwind: b};
    });
    var Screen = F4(function (a,
    b,
@@ -22005,6 +20072,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $moduleName = "Screens.EditTrack.Updates",
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
@@ -22056,7 +20124,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                          ,_0: 0
                          ,_1: 0};}
                _U.badCase($moduleName,
-               "between lines 158 and 165");
+               "between lines 162 and 169");
             }(),
             dx = $._0,
             dy = $._1;
@@ -22082,13 +20150,15 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     var $ = _v13.dims,
                     w = $._0,
                     h = $._1;
+                    var x$ = $Basics.toFloat(_v14._0 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
+                    var y$ = $Basics.toFloat(_v14._1) - cy - $Basics.toFloat(h) / 2;
                     return {ctor: "_Tuple2"
-                           ,_0: $Basics.toFloat(_v14._0) - cx - $Basics.toFloat(w) / 2
-                           ,_1: $Basics.toFloat(_v14._1) - cy - $Basics.toFloat(h) / 2};
+                           ,_0: x$
+                           ,_1: y$};
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 146 and 152");
+         "between lines 150 and 156");
       }();
    });
    var getMouseEventTile = F2(function (editor,
@@ -22103,7 +20173,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                case "StartAt":
                return $Maybe.Just(event._0);}
             _U.badCase($moduleName,
-            "between lines 137 and 141");
+            "between lines 141 and 145");
          }();
          return A2($Maybe.map,
          function ($) {
@@ -22112,7 +20182,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          pointMaybe);
       }();
    });
-   var updateTileEvent = F3(function (kind,
+   var updateTileAction = F3(function (kind,
    event,
    editor) {
       return function () {
@@ -22132,7 +20202,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          editor);
       }();
    });
-   var deleteTileEvent = F2(function (event,
+   var deleteTileAction = F2(function (event,
    editor) {
       return function () {
          var coordsMaybe = A2(getMouseEventTile,
@@ -22156,12 +20226,12 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          var _v24 = editor.mode;
          switch (_v24.ctor)
          {case "CreateTile":
-            return A3(updateTileEvent,
+            return A3(updateTileAction,
               _v24._0,
               event,
               editor);
             case "Erase":
-            return A2(deleteTileEvent,
+            return A2(deleteTileAction,
               event,
               editor);
             case "Watch":
@@ -22169,23 +20239,32 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
               event,
               editor);}
          _U.badCase($moduleName,
-         "between lines 106 and 112");
+         "between lines 110 and 116");
       }();
    });
-   var updateDims = F2(function (dims,
+   var updateDims = F2(function (_v26,
    screen) {
       return function () {
-         var newEditor = A2($Maybe.map,
-         function (e) {
-            return _U.replace([["dims"
-                               ,dims]],
-            e);
-         },
-         screen.editor);
-         return _U.replace([["editor"
-                            ,newEditor]
-                           ,["dims",dims]],
-         screen);
+         switch (_v26.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var dims = {ctor: "_Tuple2"
+                            ,_0: _v26._0 - $Constants.sidebarWidth
+                            ,_1: _v26._1};
+                 var newEditor = A2($Maybe.map,
+                 function (e) {
+                    return _U.replace([["dims"
+                                       ,dims]],
+                    e);
+                 },
+                 screen.editor);
+                 return _U.replace([["editor"
+                                    ,newEditor]
+                                   ,["dims",dims]],
+                 screen);
+              }();}
+         _U.badCase($moduleName,
+         "between lines 102 and 106");
       }();
    });
    var updateEditor = F2(function (update,
@@ -22230,8 +20309,10 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                        ,_0: 0
                                        ,_1: 0}
                               ,dims: screen.dims
+                              ,downwind: action._0.course.downwind
                               ,grid: action._0.course.grid
-                              ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)};
+                              ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)
+                              ,upwind: action._0.course.upwind};
                  return $AppTypes.local(_U.replace([["track"
                                                     ,$Maybe.Just(action._0)]
                                                    ,["editor"
@@ -22272,7 +20353,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  actions.address,
                  $Screens$EditTrack$Types.SetTrack(result._0));}
             _U.badCase($moduleName,
-            "between lines 90 and 94");
+            "between lines 93 and 97");
          }();
       });
    };
@@ -22298,8 +20379,8 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                            ,loadTrack: loadTrack
                                            ,updateDims: updateDims
                                            ,mouseAction: mouseAction
-                                           ,deleteTileEvent: deleteTileEvent
-                                           ,updateTileEvent: updateTileEvent
+                                           ,deleteTileAction: deleteTileAction
+                                           ,updateTileAction: updateTileAction
                                            ,getMouseEventTile: getMouseEventTile
                                            ,clickPoint: clickPoint
                                            ,updateCenter: updateCenter
@@ -22322,11 +20403,12 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Screens.EditTrack.View",
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
+   $Game$RenderSvg$Gates = Elm.Game.RenderSvg.Gates.make(_elm),
    $Game$RenderSvg$Tiles = Elm.Game.RenderSvg.Tiles.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22341,10 +20423,10 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
             {case "CreateTile":
                return $Game$RenderSvg$Tiles.tileKindColor(mode._0);
                case "Erase":
-               return $Game$Render$SvgUtils.colorToSvg($Game$Render$Utils.colors.sand);
+               return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 64 and 71");
+            "between lines 83 and 90");
          }();
          return A2($Svg.circle,
          _L.fromArray([$Svg$Attributes.r("20")
@@ -22367,11 +20449,10 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                            ,$Svg$Attributes.fill("black")]),
               items);}
          _U.badCase($moduleName,
-         "between lines 53 and 58");
+         "between lines 72 and 77");
       }();
    });
-   var renderEditor = F2(function (dims,
-   _v6) {
+   var renderCourse = function (_v6) {
       return function () {
          return function () {
             var $ = $Game$Geo.floatify(_v6.dims),
@@ -22391,19 +20472,42 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                          A2($Basics._op["++"],
                          $Basics.toString(cy),
                          ")")))))]),
-                         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v6.grid)]))
+                         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v6.grid)
+                                      ,A2($Game$RenderSvg$Gates.renderOpenGate,
+                                      _v6.upwind,
+                                      0)
+                                      ,A2($Game$RenderSvg$Gates.renderOpenGate,
+                                      _v6.downwind,
+                                      0)]))
                          ,renderMode(_v6.mode)]));
          }();
       }();
-   });
+   };
+   var sidebar = function (_v8) {
+      return function () {
+         return A2($Html.aside,
+         _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                            ,_0: "height"
+                                                            ,_1: A2($Basics._op["++"],
+                                                            $Basics.toString($Basics.snd(_v8.dims)),
+                                                            "px")}]))]),
+         _L.fromArray([]));
+      }();
+   };
+   var editorView = function (_v10) {
+      return function () {
+         return A2($Html.div,
+         _L.fromArray([$Svg$Attributes.$class("content")]),
+         _L.fromArray([sidebar(_v10)
+                      ,renderCourse(_v10)]));
+      }();
+   };
    var view = function (screen) {
       return function () {
-         var _v8 = screen.editor;
-         switch (_v8.ctor)
+         var _v12 = screen.editor;
+         switch (_v12.ctor)
          {case "Just":
-            return A2(renderEditor,
-              screen.dims,
-              _v8._0);
+            return editorView(_v12._0);
             case "Nothing":
             return A2(wrapper,
               screen.dims,
@@ -22412,12 +20516,14 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                            ,$Svg$Attributes.y($Basics.toString($Basics.snd(screen.dims) / 2 | 0))]),
               _L.fromArray([$Svg.text("loading")]))]));}
          _U.badCase($moduleName,
-         "between lines 26 and 36");
+         "between lines 29 and 39");
       }();
    };
    _elm.Screens.EditTrack.View.values = {_op: _op
                                         ,view: view
-                                        ,renderEditor: renderEditor
+                                        ,editorView: editorView
+                                        ,sidebar: sidebar
+                                        ,renderCourse: renderCourse
                                         ,wrapper: wrapper
                                         ,renderMode: renderMode};
    return _elm.Screens.EditTrack.View.values;
@@ -23026,7 +21132,7 @@ Elm.Screens.Game.View.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Screens.Game.View",
    $Basics = Elm.Basics.make(_elm),
-   $Game$Constants = Elm.Game.Constants.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$RenderSvg$All = Elm.Game.RenderSvg.All.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -23051,7 +21157,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 85, column 34 to 77");
+         "on line 82, column 34 to 77");
       }();
    })(_L.fromArray([{ctor: "_Tuple2"
                     ,_0: "ARROWS"
@@ -23142,23 +21248,19 @@ Elm.Screens.Game.View.make = function (_elm) {
             return function () {
                  var gameSvg = A2($Game$RenderSvg$All.render,
                  {ctor: "_Tuple2"
-                 ,_0: _v6._0 - $Game$Constants.leftSidebarWidth - $Game$Constants.rightSidebarWidth
-                 ,_1: _v6._1 - $Game$Constants.topbarHeight},
+                 ,_0: _v6._0 - $Constants.sidebarWidth
+                 ,_1: _v6._1},
                  gameState);
                  return _L.fromArray([A3(leftBar,
-                                     _v6._1 - $Game$Constants.topbarHeight,
+                                     _v6._1,
                                      screen,
                                      gameState)
                                      ,A2($Html.div,
                                      _L.fromArray([$Html$Attributes.$class("game")]),
-                                     _L.fromArray([gameSvg]))
-                                     ,A3(rightBar,
-                                     _v6._1 - $Game$Constants.topbarHeight,
-                                     screen,
-                                     gameState)]);
+                                     _L.fromArray([gameSvg]))]);
               }();}
          _U.badCase($moduleName,
-         "between lines 36 and 44");
+         "between lines 35 and 41");
       }();
    });
    var loading = _L.fromArray([$Screens$Utils.titleWrapper(_L.fromArray([A2($Html.h1,

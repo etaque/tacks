@@ -14,6 +14,8 @@ type alias Screen =
 
 type alias Editor =
   { grid : Grid
+  , upwind : Gate
+  , downwind : Gate
   , center : Point
   , dims : (Int, Int)
   , mode : Mode
