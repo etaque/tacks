@@ -51,7 +51,7 @@ tileKindColor : TileKind -> String
 tileKindColor kind =
   case kind of
     Water -> colorToSvg colors.water
-    Sand -> colorToSvg colors.sand
+    Grass -> colorToSvg colors.grass
     Rock -> colorToSvg colors.rock
 
 verticesPoints : String

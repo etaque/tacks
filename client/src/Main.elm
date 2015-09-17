@@ -17,6 +17,7 @@ import Game.Outputs exposing (PlayerOutput)
 import Game.Outputs exposing (PlayerOutput)
 import Screens.Game.Updates exposing (mapGameUpdate,chat)
 import Screens.Game.Types exposing (Action(NewMessage))
+import Screens.EditTrack.Updates as EditTrack
 import Screens.Game.Decoders as GameDecoders
 import AppView
 import Routes
@@ -26,6 +27,8 @@ import Routes
 
 port appSetup : AppSetup
 
+port initialDims : (Int, Int)
+
 port raceInput : Signal (Maybe RaceInput)
 
 port gameActionsInput : Signal Json.Value
@@ -34,7 +37,7 @@ port gameActionsInput : Signal Json.Value
 
 main : Signal Html
 main =
-  Signal.map2 AppView.view Window.dimensions appState
+  Signal.map AppView.view appState
 
 appState : Signal AppState
 appState =
@@ -43,7 +46,7 @@ appState =
 appUpdates : Signal AppUpdate
 appUpdates =
   let
-    initialUpdate = (flip AppUpdates.update) (initialAppUpdate appSetup.player)
+    initialUpdate = (flip AppUpdates.update) (initialAppUpdate initialDims appSetup.player)
   in
     foldp' AppUpdates.update initialUpdate appInputs
 
@@ -54,13 +57,27 @@ appInputs =
 allActions : Signal AppAction
 allActions =
   Signal.mergeMany
-    [ Signal.constant (SetPath appSetup.path)
+    [ initPathAction
+    , pathActions
+    , dimsActions
     , screenActions
     , actionsMailbox.signal
-    , pathActions
     , raceUpdateActions
     , gameActions
+    , editorInputActions
     ]
+
+initPathAction : Signal AppAction
+initPathAction =
+  Signal.constant (SetPath appSetup.path)
+
+pathActions : Signal AppAction
+pathActions =
+  Signal.map SetPath History.path
+
+dimsActions : Signal AppAction
+dimsActions =
+  Signal.map UpdateDims Window.dimensions
 
 raceUpdateActions : Signal AppAction
 raceUpdateActions =
@@ -73,9 +90,9 @@ gameActions : Signal AppAction
 gameActions =
   Signal.map (GameDecoders.decodeAction >> GameAction) gameActionsInput
 
-pathActions : Signal AppAction
-pathActions =
-  Signal.map SetPath History.path
+editorInputActions : Signal AppAction
+editorInputActions =
+  Signal.map EditTrackAction EditTrack.inputs
 
 reactions : Signal (Task Never ())
 reactions =

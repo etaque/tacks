@@ -10,7 +10,6 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  background-color: #333;
 }
 
 .global-wrapper {
@@ -91,7 +90,7 @@ aside {
   display: flex;
   flex-direction: column;
   width: 240px;
-  background-color: $darkSeaBlue;
+  background-color: $darkSand;
   color: $whiteBlue;
   font-family: $mono;
 }

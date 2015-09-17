@@ -16,12 +16,12 @@ import Svg.Lazy exposing (..)
 
 renderCourse : GameState -> Svg
 renderCourse ({playerState,course,now,wind} as gameState) =
-    g [ ]
-      [ lazyRenderTiles course.grid
-      , renderGusts wind
-      , renderDownwind playerState course now (isStarted gameState)
-      , renderUpwind playerState course now
-      ]
+  g [ ]
+    [ lazyRenderTiles course.grid
+    , renderGusts wind
+    , renderDownwind playerState course now (isStarted gameState)
+    , renderUpwind playerState course now
+    ]
 
 renderGusts : Wind -> Svg
 renderGusts wind =

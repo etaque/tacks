@@ -9,7 +9,9 @@ $darkerSeaBlue: darken($seaBlue, 30%);
 $blackSeaBlue: desaturate(darken($seaBlue, 50%), 20%);
 
 $sand: rgb(242, 243, 196);
-$darkSand: #ab410d;
+$darkSand: darken(desaturate($sand, 50%), 30%);
+
+$grass: rgb(200, 230, 180);
 
 
 

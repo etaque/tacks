@@ -10,6 +10,7 @@ import Screens.Home.Types as Home
 import Screens.Login.Types as Login
 import Screens.Register.Types as Register
 import Screens.ShowTrack.Types as ShowTrack
+import Screens.EditTrack.Types as EditTrack
 import Screens.ShowProfile.Types as ShowProfile
 import Screens.Game.Types as Game
 
@@ -28,10 +29,12 @@ type alias AppInput =
 type AppAction
   = SetPlayer Player
   | SetPath String
+  | UpdateDims (Int, Int)
   | HomeAction Home.Action
   | LoginAction Login.Action
   | RegisterAction Register.Action
   | ShowTrackAction ShowTrack.Action
+  | EditTrackAction EditTrack.Action
   | ShowProfileAction ShowProfile.Action
   | GameAction Game.Action
   | Logout
@@ -52,6 +55,7 @@ type alias AppUpdate =
 
 type alias AppState =
   { player : Player
+  , dims : (Int, Int)
   , screen : AppScreen
   }
 
@@ -61,6 +65,7 @@ type AppScreen
   | LoginScreen Login.Screen
   | RegisterScreen Register.Screen
   | ShowTrackScreen ShowTrack.Screen
+  | EditTrackScreen EditTrack.Screen
   | ShowProfileScreen ShowProfile.Screen
   | GameScreen Game.Screen
   | NotFoundScreen String
@@ -111,16 +116,17 @@ mapAppUpdate appState toAppScreen {screen, reaction, request} =
     request
 
 
-initialAppUpdate : Player -> AppUpdate
-initialAppUpdate player =
+initialAppUpdate : (Int, Int) -> Player -> AppUpdate
+initialAppUpdate dims player =
   AppUpdate
-    (initialAppState player)
+    (initialAppState dims player)
     Nothing
     Nothing
 
 
-initialAppState : Player -> AppState
-initialAppState player =
+initialAppState : (Int, Int) -> Player -> AppState
+initialAppState dims player =
   { player = player
   , screen = NoScreen
+  , dims = dims
   }

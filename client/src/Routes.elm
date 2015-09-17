@@ -12,6 +12,7 @@ import Screens.Login.Updates as Login
 import Screens.ShowTrack.Updates as ShowTrack
 import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
+import Screens.EditTrack.Updates as EditTrack
 
 import AppTypes exposing (..)
 
@@ -25,6 +26,7 @@ route appState =
     , "/me" :-> showProfile appState
     -- , "/profile/" :-> showProfile
     , "/track/" :-> showTrack appState
+    , "/editor/" :-> editTrack appState
     , "/play/" :-> playTrack appState
     ] (notFound appState)
 
@@ -47,6 +49,12 @@ login appState _ =
 showTrack : AppState -> String -> AppUpdate
 showTrack appState slug =
   mapAppUpdate appState ShowTrackScreen (ShowTrack.mount slug)
+
+
+editTrack : AppState -> String -> AppUpdate
+editTrack appState slug =
+  mapAppUpdate appState EditTrackScreen (EditTrack.mount appState.dims slug)
+
 
 showProfile : AppState -> String -> AppUpdate
 showProfile appState _ =

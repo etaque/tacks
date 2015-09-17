@@ -10,6 +10,7 @@ import Screens.Home.Updates as Home
 import Screens.Register.Updates as Register
 import Screens.Login.Updates as Login
 import Screens.ShowTrack.Updates as ShowTrack
+import Screens.EditTrack.Updates as EditTrack
 import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 
@@ -24,6 +25,7 @@ screenActions =
     , .signal Register.actions |> Signal.map RegisterAction
     , .signal Login.actions |> Signal.map LoginAction
     , .signal ShowTrack.actions |> Signal.map ShowTrackAction
+    , .signal EditTrack.actions |> Signal.map EditTrackAction
     , .signal Game.actions |> Signal.map GameAction
     ]
 
@@ -43,6 +45,12 @@ update {action, clock} {appState} =
     (SetPath path, _) ->
       route appState path
 
+    (UpdateDims dims, _) ->
+      let
+        newScreen = updateScreenDims dims appState.screen
+      in
+        AppUpdate { appState | dims <- dims, screen <- newScreen } Nothing Nothing
+
     (HomeAction a, HomeScreen screen) ->
       Home.update a screen
         |> mapAppUpdate appState HomeScreen
@@ -59,6 +67,10 @@ update {action, clock} {appState} =
       ShowTrack.update a screen
         |> mapAppUpdate appState ShowTrackScreen
 
+    (EditTrackAction a, EditTrackScreen screen) ->
+      EditTrack.update a screen
+        |> mapAppUpdate appState EditTrackScreen
+
     (ShowProfileAction a, ShowProfileScreen screen) ->
       ShowProfile.update a screen
         |> mapAppUpdate appState ShowProfileScreen
@@ -73,6 +85,13 @@ update {action, clock} {appState} =
     _ ->
       noUpdate appState
 
+updateScreenDims : (Int, Int) -> AppScreen -> AppScreen
+updateScreenDims dims appScreen =
+  case appScreen of
+    EditTrackScreen screen ->
+      EditTrackScreen (EditTrack.updateDims dims screen)
+    _ ->
+      appScreen
 
 noUpdate : AppState -> AppUpdate
 noUpdate appState = AppUpdate appState Nothing Nothing

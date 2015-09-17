@@ -8,13 +8,21 @@ function readData(id, el) {
   return value && JSON.parse(value);
 }
 
+function dims() {
+  return [
+    window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+    window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  ];
+}
+
 function mountElm() {
   var ws, wsUrl, currentTrackId;
 
   var game = window.Elm.fullscreen(window.Elm.Main, {
     raceInput: null,
     gameActionsInput: { tag: "NoOp" },
-    appSetup: readData("appSetup")
+    appSetup: readData("appSetup"),
+    initialDims: dims()
   });
 
   game.ports.playerOutput.subscribe(function(output) {

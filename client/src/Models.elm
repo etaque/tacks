@@ -113,6 +113,6 @@ type alias Tile =
   , coords : Coords
   }
 
-type TileKind = Water | Sand | Rock
+type TileKind = Water | Grass | Rock
 
 

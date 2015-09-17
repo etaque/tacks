@@ -10,14 +10,16 @@ import Screens.Home.View as Home
 import Screens.Login.View as Login
 import Screens.Register.View as Register
 import Screens.ShowTrack.View as ShowTrack
+import Screens.EditTrack.View as EditTrack
 import Screens.ShowProfile.View as ShowProfile
 import Screens.Game.View as Game
 
 import Screens.TopBar as TopBar
 
+import Game.Constants exposing (..)
 
-view : (Int, Int) -> AppState -> Html
-view dims appState =
+view : AppState -> Html
+view appState =
   let
     content = case appState.screen of
 
@@ -33,11 +35,14 @@ view dims appState =
       ShowTrackScreen screen ->
         ShowTrack.view screen
 
+      EditTrackScreen screen ->
+        EditTrack.view screen
+
       ShowProfileScreen screen ->
         ShowProfile.view screen
 
       GameScreen screen ->
-        Game.view dims screen
+        Game.view appState.dims screen
 
       _ ->
         emptyView
@@ -54,6 +59,6 @@ emptyView =
 layout : AppState -> Html -> Html
 layout appState content =
   div [ class "global-wrapper" ]
-    [ TopBar.view appState
-    , content
+    -- [ TopBar.view appState
+    [ content
     ]

@@ -2,5 +2,5 @@ module Game.Constants where
 
 leftSidebarWidth = 220
 rightSidebarWidth = 220
-topbarHeight = 50
+topbarHeight = 0 -- 50
 
