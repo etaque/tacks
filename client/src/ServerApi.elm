@@ -9,7 +9,10 @@ import Result exposing (Result(Ok,Err))
 
 import Models exposing (..)
 import Decoders exposing (..)
+import Encoders exposing (..)
 import AppTypes exposing (..)
+
+import Screens.EditTrack.Types exposing (Editor)
 
 import Debug
 
@@ -68,6 +71,14 @@ postLogout : Task Never (FormResult Player)
 postLogout =
   postJson playerDecoder "/api/logout" JsEncode.null
 
+saveTrack : String -> Editor -> Task Never (FormResult Bool)
+saveTrack slug editor =
+  JsEncode.object
+    [ ("upwind", gateEncoder editor.upwind)
+    , ("downwind", gateEncoder editor.downwind)
+    , ("grid", gridEncoder editor.grid)
+    ]
+    |> postJson Json.bool ("/api/track/" ++ slug)
 
 -- Tooling
 

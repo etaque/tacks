@@ -45,12 +45,13 @@ case object RotateNextRace
 class TrackActor(track: Track) extends Actor with ManageWind {
 
   val id = BSONObjectID.generate
-  val course = track.course
 
   var state = TrackState(
     track = track,
     races = Nil
   )
+
+  def course = state.track.course
 
   val players = scala.collection.mutable.Map[BSONObjectID, PlayerContext]()
   val paths = scala.collection.mutable.Map[BSONObjectID, RunPath]()

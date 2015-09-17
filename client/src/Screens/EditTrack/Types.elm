@@ -32,5 +32,6 @@ type Action
   | MouseAction MouseEvent
   | NextTileKind
   | EscapeMode
+  | Save
   | NoOp
 

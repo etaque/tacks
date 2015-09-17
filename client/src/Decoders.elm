@@ -123,9 +123,9 @@ gridRowDecoder =
 tileKindDecoder : String -> Decoder TileKind
 tileKindDecoder s =
   case s of
-    "Water" -> succeed Water
-    "Sand" -> succeed Sand
-    "Rock" -> succeed Rock
+    "W" -> succeed Water
+    "G" -> succeed Grass
+    "R" -> succeed Rock
     _ -> fail (s ++ " is not a TileKind")
 
 raceAreaDecoder : Decoder RaceArea

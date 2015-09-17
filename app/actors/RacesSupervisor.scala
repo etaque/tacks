@@ -19,6 +19,7 @@ import dao._
 
 case class GetTrackActorRef(track: Track)
 case object GetTracks
+case class KillTrack(track: Track)
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
@@ -35,6 +36,10 @@ class RacesSupervisor extends Actor {
       TrackDAO.list.flatMap { tracks => Future.sequence(tracks.map(getLiveTrack)) } pipeTo sender
     }
 
+    case KillTrack(track: Track) => {
+      mountedTracks.find(_._1.slug == track.slug).foreach(_._2 ! PoisonPill)
+      mountedTracks = mountedTracks.filter(_._1.slug != track.slug)
+    }
   }
 
   def getLiveTrack(track: Track): Future[LiveTrack] = {

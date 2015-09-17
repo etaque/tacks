@@ -132,7 +132,40 @@ object Api extends Controller with Security {
         case None => NotFound
       }
     }
+  }
 
+  case class TrackUpdate(
+    upwind: Gate,
+    downwind: Gate,
+    grid: Course.Grid
+  )
+
+  implicit val trackUpdateReads = (
+    (__ \ "upwind").read[Gate] and
+      (__ \ "downwind").read[Gate] and
+      (__ \ "grid").read[Course.Grid]
+  )(TrackUpdate.apply _)
+
+  def updateTrack(slug: String) = PlayerAction.async(parse.json) { implicit request =>
+    TrackDAO.findBySlug(slug).flatMap {
+      case Some(track) => {
+        request.body.validate(trackUpdateReads).fold(
+          errors => Future.successful(BadRequest(JsonErrors.format(errors))),
+          {
+            case form @ TrackUpdate(upwind, downwind, grid) => {
+              val newCourse = track.course.copy(upwind = upwind, downwind = downwind, grid = grid)
+              for {
+                _ <- TrackDAO.updateCourse(track.id, newCourse)
+              } yield {
+                RacesSupervisor.actorRef ! KillTrack(track)
+                Ok
+              }
+            }
+          }
+        )
+      }
+      case None => Future.successful(NotFound)
+    }
   }
 
   def setHandle = PlayerAction(parse.json) { implicit request =>

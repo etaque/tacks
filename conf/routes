@@ -11,6 +11,7 @@ GET         /api/liveStatus                                    controllers.Api.l
 GET         /api/track/:slug                                   controllers.Api.track(slug: String)
 GET         /api/liveTrack/:slug                               controllers.Api.liveTrack(slug: String)
 POST        /api/setHandle                                     controllers.Api.setHandle
+POST        /api/track/:slug                                   controllers.Api.updateTrack(slug: String)
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)
 GET         /ws/notifications                                  controllers.WebSockets.notifications

@@ -12,6 +12,7 @@ import Constants exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
 import Screens.EditTrack.Updates exposing (actions)
+import Screens.EditTrack.SideView exposing (sideView)
 
 import Screens.Utils exposing (..)
 import Screens.Messages exposing (..)
@@ -36,14 +37,10 @@ view screen =
 editorView : Editor -> Html
 editorView ({dims, center} as editor) =
   Html.div [ class "content" ]
-    [ sidebar editor
+    [ sideView editor
     , renderCourse editor
     ]
 
-sidebar : Editor -> Html
-sidebar ({dims} as editor) =
-  Html.aside [ HtmlAttr.style [("height", toString (snd dims) ++ "px")] ]
-    [ ]
 
 renderCourse : Editor -> Html
 renderCourse ({dims, center} as editor) =

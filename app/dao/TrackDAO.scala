@@ -17,6 +17,10 @@ object TrackDAO extends MongoDAO[Track] {
     collection.find(BSONDocument("slug" -> slug)).one[Track]
   }
 
+  def updateCourse(id: BSONObjectID, course: Course): Future[_] = {
+    update(id, BSONDocument("course" -> course))
+  }
+
   def ensureIndexes(): Unit = {
     import reactivemongo.api.indexes.Index
     import reactivemongo.api.indexes.IndexType._

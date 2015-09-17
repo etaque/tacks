@@ -10,7 +10,9 @@ import DragAndDrop exposing (mouseEvents, MouseEvent(..))
 import Constants exposing (sidebarWidth)
 import AppTypes exposing (local, react, request, Never)
 import Models exposing (..)
+
 import Screens.EditTrack.Types exposing (..)
+
 import Game.Grid exposing (..)
 import ServerApi
 
@@ -73,6 +75,13 @@ update action screen =
     EscapeMode ->
       updateEditor (\e -> { e | mode <- Watch }) screen
         |> local
+
+    Save ->
+      case (screen.track, screen.editor) of
+        (Just track, Just editor) ->
+          react screen (save track.slug editor)
+        _ ->
+          local screen
 
     _ ->
       local screen
@@ -185,4 +194,8 @@ getNextMode mode =
     _ ->
       CreateTile Water
 
+save : String -> Editor -> Task Never ()
+save slug editor =
+  ServerApi.saveTrack slug editor `andThen`
+    \result -> Task.succeed ()
 

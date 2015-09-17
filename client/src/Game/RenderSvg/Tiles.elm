@@ -16,6 +16,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Lazy exposing (..)
 
+
 lazyRenderTiles : Grid -> Svg
 lazyRenderTiles grid =
   lazy renderTiles grid
@@ -32,22 +33,15 @@ renderTile {kind, coords} =
   let
     (x,y) = Grid.hexCoordsToPoint coords
     color = tileKindColor kind
-    hex = polygon
+  in
+    polygon
       [ points verticesPoints
       , fill color
       , stroke color
       , strokeWidth "1"
+      , transform ("translate(" ++ toString x ++ ", " ++ toString y ++ ")")
       ]
       []
-    label = text'
-      [ fill "black"
-      , textAnchor "middle"
-      , fontSize "10px"
-      ]
-      [ text (toString coords) ]
-  in
-    g [ transform ("translate(" ++ toString x ++ ", " ++ toString y ++ ")") ]
-      [ hex ]
 
 tileKindColor : TileKind -> String
 tileKindColor kind =
