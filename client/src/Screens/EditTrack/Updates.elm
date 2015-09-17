@@ -53,7 +53,7 @@ update action screen =
           , upwind = track.course.upwind
           , downwind = track.course.downwind
           , center = (0, 0)
-          , dims = screen.dims
+          , dims = courseDims screen.dims
           , mode = CreateTile Water
           }
       in
@@ -98,12 +98,15 @@ loadTrack slug =
 
 
 updateDims : (Int, Int) -> Screen -> Screen
-updateDims (w, h) screen =
+updateDims dims screen =
   let
-    dims = (w - sidebarWidth, h)
-    newEditor = Maybe.map (\e -> { e | dims <- dims } ) screen.editor
+    newEditor = Maybe.map (\e -> { e | dims <- courseDims dims } ) screen.editor
   in
     { screen | editor <- newEditor, dims <- dims }
+
+courseDims : (Int, Int) -> (Int, Int)
+courseDims (w, h) =
+  (w - sidebarWidth, h)
 
 mouseAction : MouseEvent -> Editor -> Editor
 mouseAction event editor =
@@ -151,7 +154,7 @@ clickPoint {dims, center} (x, y) =
     (w, h) = dims
     (cx, cy) = center
     x' = toFloat (x - sidebarWidth) - cx - toFloat w / 2
-    y' = toFloat y - cy - toFloat h / 2
+    y' = toFloat -y - cy + toFloat h / 2
   in
     (x', y')
 
@@ -163,7 +166,7 @@ updateCenter event ({center} as editor) =
         StartAt _ ->
           (0, 0)
         MoveFromTo (xa, ya) (xb, yb) ->
-          (xb - xa, yb - ya)
+          (xb - xa, ya - yb)
         EndAt _ ->
           (0, 0)
     newCenter = (fst center + toFloat dx, snd center + toFloat dy)

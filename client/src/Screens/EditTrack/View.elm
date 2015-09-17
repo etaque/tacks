@@ -30,13 +30,7 @@ view screen =
     Just editor ->
       editorView editor
     Nothing ->
-      wrapper screen.dims
-        [ text'
-          [ x <| toString (fst screen.dims // 2)
-          , y <| toString (snd screen.dims // 2)
-          ]
-          [ text "loading" ]
-        ]
+      Html.text "loading"
 
 
 editorView : Editor -> Html
@@ -56,25 +50,19 @@ renderCourse ({dims, center} as editor) =
   let
     (w, h) = floatify dims
     cx = w / 2 + fst center
-    cy = h / 2 + snd center
+    cy = -h / 2 + snd center
   in
-    wrapper dims
-    [ g [ transform ("translate(" ++ toString cx ++ ", " ++ toString cy ++ ")")]
+    Svg.svg
+      [ width (toString w)
+      , height (toString h)
+      ]
+      [ g [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
         [ (lazyRenderTiles editor.grid)
         , renderOpenGate editor.upwind 0
         , renderOpenGate editor.downwind 0
         ]
-    , renderMode editor.mode
-    ]
-
-wrapper : (Int, Int) -> List Svg -> Html
-wrapper (w, h) items =
-  Svg.svg
-    [ width (toString w)
-    , height (toString h)
-    , fill "black"
-    ]
-    items
+      , renderMode editor.mode
+      ]
 
 renderMode : Mode -> Svg
 renderMode mode =

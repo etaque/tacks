@@ -20116,7 +20116,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                          {case "_Tuple2":
                             return {ctor: "_Tuple2"
                                    ,_0: event._1._0 - event._0._0
-                                   ,_1: event._1._1 - event._0._1};}
+                                   ,_1: event._0._1 - event._1._1};}
                          break;}
                     break;
                   case "StartAt":
@@ -20124,7 +20124,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                          ,_0: 0
                          ,_1: 0};}
                _U.badCase($moduleName,
-               "between lines 162 and 169");
+               "between lines 165 and 172");
             }(),
             dx = $._0,
             dy = $._1;
@@ -20151,14 +20151,14 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     w = $._0,
                     h = $._1;
                     var x$ = $Basics.toFloat(_v14._0 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
-                    var y$ = $Basics.toFloat(_v14._1) - cy - $Basics.toFloat(h) / 2;
+                    var y$ = $Basics.toFloat(0 - _v14._1) - cy + $Basics.toFloat(h) / 2;
                     return {ctor: "_Tuple2"
                            ,_0: x$
                            ,_1: y$};
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 150 and 156");
+         "between lines 153 and 159");
       }();
    });
    var getMouseEventTile = F2(function (editor,
@@ -20173,7 +20173,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                case "StartAt":
                return $Maybe.Just(event._0);}
             _U.badCase($moduleName,
-            "between lines 141 and 145");
+            "between lines 144 and 148");
          }();
          return A2($Maybe.map,
          function ($) {
@@ -20239,32 +20239,34 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
               event,
               editor);}
          _U.badCase($moduleName,
-         "between lines 110 and 116");
+         "between lines 113 and 119");
       }();
    });
-   var updateDims = F2(function (_v26,
-   screen) {
+   var courseDims = function (_v26) {
       return function () {
          switch (_v26.ctor)
          {case "_Tuple2":
-            return function () {
-                 var dims = {ctor: "_Tuple2"
-                            ,_0: _v26._0 - $Constants.sidebarWidth
-                            ,_1: _v26._1};
-                 var newEditor = A2($Maybe.map,
-                 function (e) {
-                    return _U.replace([["dims"
-                                       ,dims]],
-                    e);
-                 },
-                 screen.editor);
-                 return _U.replace([["editor"
-                                    ,newEditor]
-                                   ,["dims",dims]],
-                 screen);
-              }();}
+            return {ctor: "_Tuple2"
+                   ,_0: _v26._0 - $Constants.sidebarWidth
+                   ,_1: _v26._1};}
          _U.badCase($moduleName,
-         "between lines 102 and 106");
+         "on line 109, column 4 to 23");
+      }();
+   };
+   var updateDims = F2(function (dims,
+   screen) {
+      return function () {
+         var newEditor = A2($Maybe.map,
+         function (e) {
+            return _U.replace([["dims"
+                               ,courseDims(dims)]],
+            e);
+         },
+         screen.editor);
+         return _U.replace([["editor"
+                            ,newEditor]
+                           ,["dims",dims]],
+         screen);
       }();
    });
    var updateEditor = F2(function (update,
@@ -20308,7 +20310,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                               ,center: {ctor: "_Tuple2"
                                        ,_0: 0
                                        ,_1: 0}
-                              ,dims: screen.dims
+                              ,dims: courseDims(screen.dims)
                               ,downwind: action._0.course.downwind
                               ,grid: action._0.course.grid
                               ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)
@@ -20378,6 +20380,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                            ,updateEditor: updateEditor
                                            ,loadTrack: loadTrack
                                            ,updateDims: updateDims
+                                           ,courseDims: courseDims
                                            ,mouseAction: mouseAction
                                            ,deleteTileAction: deleteTileAction
                                            ,updateTileAction: updateTileAction
@@ -20405,6 +20408,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
    $Game$RenderSvg$Gates = Elm.Game.RenderSvg.Gates.make(_elm),
    $Game$RenderSvg$Tiles = Elm.Game.RenderSvg.Tiles.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -20426,7 +20430,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 83 and 90");
+            "between lines 71 and 78");
          }();
          return A2($Svg.circle,
          _L.fromArray([$Svg$Attributes.r("20")
@@ -20438,85 +20442,63 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
          _L.fromArray([]));
       }();
    };
-   var wrapper = F2(function (_v2,
-   items) {
-      return function () {
-         switch (_v2.ctor)
-         {case "_Tuple2":
-            return A2($Svg.svg,
-              _L.fromArray([$Svg$Attributes.width($Basics.toString(_v2._0))
-                           ,$Svg$Attributes.height($Basics.toString(_v2._1))
-                           ,$Svg$Attributes.fill("black")]),
-              items);}
-         _U.badCase($moduleName,
-         "between lines 72 and 77");
-      }();
-   });
-   var renderCourse = function (_v6) {
+   var renderCourse = function (_v2) {
       return function () {
          return function () {
-            var $ = $Game$Geo.floatify(_v6.dims),
+            var $ = $Game$Geo.floatify(_v2.dims),
             w = $._0,
             h = $._1;
-            var cx = w / 2 + $Basics.fst(_v6.center);
-            var cy = h / 2 + $Basics.snd(_v6.center);
-            return A2(wrapper,
-            _v6.dims,
+            var cx = w / 2 + $Basics.fst(_v2.center);
+            var cy = (0 - h) / 2 + $Basics.snd(_v2.center);
+            return A2($Svg.svg,
+            _L.fromArray([$Svg$Attributes.width($Basics.toString(w))
+                         ,$Svg$Attributes.height($Basics.toString(h))]),
             _L.fromArray([A2($Svg.g,
                          _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
-                         "translate(",
-                         A2($Basics._op["++"],
-                         $Basics.toString(cx),
-                         A2($Basics._op["++"],
-                         ", ",
-                         A2($Basics._op["++"],
-                         $Basics.toString(cy),
-                         ")")))))]),
-                         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v6.grid)
+                         "scale(1,-1)",
+                         A2($Game$Render$SvgUtils.translate,
+                         cx,
+                         cy)))]),
+                         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v2.grid)
                                       ,A2($Game$RenderSvg$Gates.renderOpenGate,
-                                      _v6.upwind,
+                                      _v2.upwind,
                                       0)
                                       ,A2($Game$RenderSvg$Gates.renderOpenGate,
-                                      _v6.downwind,
+                                      _v2.downwind,
                                       0)]))
-                         ,renderMode(_v6.mode)]));
+                         ,renderMode(_v2.mode)]));
          }();
       }();
    };
-   var sidebar = function (_v8) {
+   var sidebar = function (_v4) {
       return function () {
          return A2($Html.aside,
          _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
                                                             ,_0: "height"
                                                             ,_1: A2($Basics._op["++"],
-                                                            $Basics.toString($Basics.snd(_v8.dims)),
+                                                            $Basics.toString($Basics.snd(_v4.dims)),
                                                             "px")}]))]),
          _L.fromArray([]));
       }();
    };
-   var editorView = function (_v10) {
+   var editorView = function (_v6) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Svg$Attributes.$class("content")]),
-         _L.fromArray([sidebar(_v10)
-                      ,renderCourse(_v10)]));
+         _L.fromArray([sidebar(_v6)
+                      ,renderCourse(_v6)]));
       }();
    };
    var view = function (screen) {
       return function () {
-         var _v12 = screen.editor;
-         switch (_v12.ctor)
+         var _v8 = screen.editor;
+         switch (_v8.ctor)
          {case "Just":
-            return editorView(_v12._0);
+            return editorView(_v8._0);
             case "Nothing":
-            return A2(wrapper,
-              screen.dims,
-              _L.fromArray([A2($Svg.text$,
-              _L.fromArray([$Svg$Attributes.x($Basics.toString($Basics.fst(screen.dims) / 2 | 0))
-                           ,$Svg$Attributes.y($Basics.toString($Basics.snd(screen.dims) / 2 | 0))]),
-              _L.fromArray([$Svg.text("loading")]))]));}
+            return $Html.text("loading");}
          _U.badCase($moduleName,
-         "between lines 29 and 39");
+         "between lines 29 and 33");
       }();
    };
    _elm.Screens.EditTrack.View.values = {_op: _op
@@ -20524,7 +20506,6 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                                         ,editorView: editorView
                                         ,sidebar: sidebar
                                         ,renderCourse: renderCourse
-                                        ,wrapper: wrapper
                                         ,renderMode: renderMode};
    return _elm.Screens.EditTrack.View.values;
 };
