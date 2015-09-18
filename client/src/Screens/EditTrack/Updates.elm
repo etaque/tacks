@@ -131,31 +131,35 @@ mouseAction event editor =
 deleteTileAction : MouseEvent -> Editor -> Editor
 deleteTileAction event editor =
   let
-    coordsMaybe = getMouseEventTile editor event
-    newGrid = Maybe.map (\c -> deleteTile c editor.grid) coordsMaybe
-      |> Maybe.withDefault editor.grid
+    coordsList = getMouseEventTiles editor event
+    newGrid = List.foldl deleteTile editor.grid coordsList
   in
     { editor | grid <- newGrid }
 
 updateTileAction : TileKind -> MouseEvent -> Editor -> Editor
 updateTileAction kind event editor =
   let
-    coordsMaybe = getMouseEventTile editor event
-    newGrid = Maybe.map (\c -> createTile kind c editor.grid) coordsMaybe
-      |> Maybe.withDefault editor.grid
+    coordsList = getMouseEventTiles editor event
+    newGrid = List.foldl (createTile kind) editor.grid coordsList
   in
     { editor | grid <- newGrid }
 
-getMouseEventTile : Editor -> MouseEvent -> Maybe Coords
-getMouseEventTile editor event =
+getMouseEventTiles : Editor -> MouseEvent -> List Coords
+getMouseEventTiles editor event =
   let
-    pointMaybe =
-      case event of
-        StartAt p -> Just p
-        MoveFromTo p _ -> Just p
-        EndAt _ -> Nothing
+    tileCoords = (clickPoint editor) >> pointToHexCoords
   in
-    Maybe.map ((clickPoint editor) >> pointToHexCoords) pointMaybe
+    case event of
+      StartAt p ->
+        [ tileCoords p ]
+      MoveFromTo p1 p2 ->
+        let
+          c1 = tileCoords p1
+          c2 = tileCoords p2
+        in
+          if c1 == c2 then [ c1 ] else hexLine c1 c2
+      EndAt _ ->
+        [ ]
 
 clickPoint : Editor -> (Int, Int) -> Point
 clickPoint {dims, center} (x, y) =

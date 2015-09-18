@@ -5,6 +5,7 @@ import Models exposing (..)
 
 import Dict exposing (Dict)
 
+
 hexRadius = 30
 hexHeight = hexRadius * 2
 hexWidth = (sqrt 3) / 2 * hexHeight
@@ -85,6 +86,38 @@ cubeToHex (x, y, z) =
 hexToCube : (number, number) -> Cube number
 hexToCube (i, j) =
   (i, j, -i-j)
+
+cubeDistance : Cube Int -> Cube Int -> Int
+cubeDistance (ax, ay, az) (bx, by, bz) =
+  (abs (ax - bx) + abs (ay - by) + abs (az - bz)) // 2
+
+cubeLinearInterpol : Cube Int -> Cube Int -> Float -> Cube Float
+cubeLinearInterpol a b t =
+  let
+    (ax, ay, az) = floatCube a
+    (bx, by, bz) = floatCube b
+    i = ax + (bx - ax) * t
+    j = ay + (by - ay) * t
+    k = az + (bz - az) * t
+  in
+    (i, j, k)
+
+floatCube : Cube Int -> Cube Float
+floatCube (x, y, z) =
+  (toFloat x, toFloat y, toFloat z)
+
+cubeLine : Cube Int -> Cube Int -> List (Cube Int)
+cubeLine a b =
+  let
+    n = cubeDistance a b
+    offsetMapper i = cubeRound (cubeLinearInterpol a b (1 / (toFloat n) * (toFloat i)))
+  in
+    List.map offsetMapper [ 0..n ]
+
+
+hexLine : Coords -> Coords -> List Coords
+hexLine a b =
+  List.map cubeToHex (cubeLine (hexToCube a) (hexToCube b))
 
 getTilesList : Grid -> List Tile
 getTilesList grid =
