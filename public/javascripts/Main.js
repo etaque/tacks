@@ -20556,6 +20556,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Game$Geo = Elm.Game.Geo.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
    $Game$RenderSvg$Gates = Elm.Game.RenderSvg.Gates.make(_elm),
+   $Game$RenderSvg$Players = Elm.Game.RenderSvg.Players.make(_elm),
    $Game$RenderSvg$Tiles = Elm.Game.RenderSvg.Tiles.make(_elm),
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
@@ -20576,7 +20577,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 68 and 75");
+            "between lines 69 and 76");
          }();
          return A2($Svg.circle,
          _L.fromArray([$Svg$Attributes.r("20")
@@ -20611,6 +20612,9 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                                       0)
                                       ,A2($Game$RenderSvg$Gates.renderOpenGate,
                                       _v2.downwind,
+                                      0)
+                                      ,A2($Game$RenderSvg$Players.renderPlayerHull,
+                                      0,
                                       0)]))
                          ,renderMode(_v2.mode)]));
          }();

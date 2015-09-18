@@ -23,7 +23,7 @@ import Game.Render.SvgUtils exposing (..)
 
 import Game.RenderSvg.Tiles exposing (lazyRenderTiles, tileKindColor)
 import Game.RenderSvg.Gates exposing (renderOpenGate)
-
+import Game.RenderSvg.Players exposing (renderPlayerHull)
 
 view : Screen -> Html
 view screen =
@@ -57,6 +57,7 @@ renderCourse ({dims, center} as editor) =
         [ (lazyRenderTiles editor.grid)
         , renderOpenGate editor.upwind 0
         , renderOpenGate editor.downwind 0
+        , renderPlayerHull 0 0
         ]
       , renderMode editor.mode
       ]
