@@ -19,12 +19,12 @@ import dao._
 
 case class GetTrackActorRef(track: Track)
 case object GetTracks
-case class KillTrack(track: Track)
+case class ReloadTrack(track: Track)
 
 case class RaceActorNotFound(raceId: BSONObjectID)
 
 class RacesSupervisor extends Actor {
-  var mountedTracks = Seq.empty[(Track, ActorRef)]
+  var mountedTracks = Map.empty[BSONObjectID, (Track, ActorRef)]
 
   implicit val timeout = Timeout(5.seconds)
 
@@ -36,14 +36,16 @@ class RacesSupervisor extends Actor {
       TrackDAO.list.flatMap { tracks => Future.sequence(tracks.map(getLiveTrack)) } pipeTo sender
     }
 
-    case KillTrack(track: Track) => {
-      mountedTracks.find(_._1.slug == track.slug).foreach(_._2 ! PoisonPill)
-      mountedTracks = mountedTracks.filter(_._1.slug != track.slug)
+    case ReloadTrack(track: Track) => {
+      mountedTracks.get(track.id).map { case (_, ref) =>
+        mountedTracks = mountedTracks + (track.id -> (track, ref))
+        ref ! ReloadTrack(track)
+      }
     }
   }
 
   def getLiveTrack(track: Track): Future[LiveTrack] = {
-    mountedTracks.find(_._1.slug == track.slug) match {
+    mountedTracks.values.find(_._1.slug == track.slug) match {
       case Some((track, ref)) => {
         for {
           (races, opponents) <- (ref ? GetStatus).mapTo[(Seq[Race], Seq[Opponent])]
@@ -60,9 +62,9 @@ class RacesSupervisor extends Actor {
   }
 
   def getTrackActorRef(track: Track): ActorRef = {
-    mountedTracks.find(_._1.id == track.id).map(_._2).getOrElse {
+    mountedTracks.get(track.id).map(_._2).getOrElse {
       val ref = context.actorOf(TrackActor.props(track))
-      mountedTracks = mountedTracks :+ (track, ref)
+      mountedTracks = mountedTracks + (track.id -> (track, ref))
       ref
     }
   }

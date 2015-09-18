@@ -42,16 +42,17 @@ case class TrackState(
 
 case object RotateNextRace
 
-class TrackActor(track: Track) extends Actor with ManageWind {
+class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
   val id = BSONObjectID.generate
 
   var state = TrackState(
-    track = track,
+    track = trackInit,
     races = Nil
   )
 
-  def course = state.track.course
+  def track = state.track
+  def course = track.course
 
   val players = scala.collection.mutable.Map[BSONObjectID, PlayerContext]()
   val paths = scala.collection.mutable.Map[BSONObjectID, RunPath]()
@@ -153,6 +154,10 @@ class TrackActor(track: Track) extends Actor with ManageWind {
 
     case GetStatus => {
       sender ! (state.races, players.values.map(_.asOpponent))
+    }
+
+    case ReloadTrack(newTrack) => {
+      state = state.copy(track = newTrack)
     }
   }
 

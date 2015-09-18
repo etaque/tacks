@@ -157,7 +157,7 @@ object Api extends Controller with Security {
               for {
                 _ <- TrackDAO.updateCourse(track.id, newCourse)
               } yield {
-                RacesSupervisor.actorRef ! KillTrack(track)
+                RacesSupervisor.actorRef ! ReloadTrack(track)
                 Ok
               }
             }
