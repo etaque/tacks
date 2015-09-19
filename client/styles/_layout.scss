@@ -89,8 +89,7 @@ nav {
 aside {
   display: flex;
   flex-direction: column;
-  width: 240px;
   background-color: $darkSand;
-  color: $whiteBlue;
-  font-family: $mono;
+  color: $darkGray;
+  /* font-family: $mono; */
 }

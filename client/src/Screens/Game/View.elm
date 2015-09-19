@@ -21,7 +21,7 @@ import Game.RenderSvg.All exposing (render)
 import Constants exposing (..)
 
 
-view : (Int, Int) -> Screen -> Html
+view : Dims -> Screen -> Html
 view dims ({liveTrack, gameState} as screen) =
   div [ class "content" ] <|
     Maybe.withDefault loading (Maybe.map (gameView dims screen) gameState)
@@ -30,7 +30,7 @@ loading : List Html
 loading =
   [ titleWrapper [ h1 [] [ text "loading..." ]] ]
 
-gameView : (Int, Int) -> Screen -> GameState -> List Html
+gameView : Dims -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
   let
     gameSvg = render (w - sidebarWidth, h) gameState
@@ -42,7 +42,7 @@ gameView (w, h) screen gameState =
 
 leftBar : Int -> Screen -> GameState -> Html
 leftBar h screen gameState =
-  aside [ style [("height", toString h ++ "px")] ]
+  sidebar (sidebarWidth, h)
     [ playersBlock screen
     , chatBlock screen
     , helpBlock

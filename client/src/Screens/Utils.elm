@@ -85,6 +85,17 @@ blockWrapper : String -> Wrapper
 blockWrapper wrapperClass content =
   div [ class wrapperClass ] [ div [ class "container" ] content ]
 
+sidebar : Dims -> Wrapper
+sidebar (w, h) content =
+  aside
+    [ style
+      [ ("height", toString h ++ "px")
+      , ("width", toString w ++ "px")
+      ]
+    ]
+    content
+
+
 playerWithAvatar : Player -> Html
 playerWithAvatar player =
   let

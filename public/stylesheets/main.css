@@ -4889,10 +4889,9 @@ nav {
 aside {
   display: flex;
   flex-direction: column;
-  width: 240px;
   background-color: #a0a17d;
-  color: #B1C0D8;
-  font-family: "Inconsolata"; }
+  color: #51585E;
+  /* font-family: $mono; */ }
 
 @font-face {
   font-family: "Proxima Nova Regular";

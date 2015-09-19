@@ -31,7 +31,7 @@ inputs =
 type alias Update = AppTypes.ScreenUpdate Screen
 
 
-mount : (Int, Int) -> String -> Update
+mount : Dims -> String -> Update
 mount dims slug =
   let
     initial =
@@ -106,14 +106,14 @@ loadTrack slug =
           Task.succeed ()
 
 
-updateDims : (Int, Int) -> Screen -> Screen
+updateDims : Dims -> Screen -> Screen
 updateDims dims screen =
   let
     newEditor = Maybe.map (\e -> { e | dims <- courseDims dims } ) screen.editor
   in
     { screen | editor <- newEditor, dims <- dims }
 
-courseDims : (Int, Int) -> (Int, Int)
+courseDims : Dims -> Dims
 courseDims (w, h) =
   (w - sidebarWidth, h)
 

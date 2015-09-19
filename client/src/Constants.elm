@@ -1,6 +1,6 @@
 module Constants where
 
-sidebarWidth = 220
+sidebarWidth = 240
 
 colors =
   { water = "rgb(147, 202, 223)"

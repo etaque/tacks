@@ -9,7 +9,7 @@ type alias Screen =
   { track : Maybe Track
   , editor : Maybe Editor
   , notFound : Bool
-  , dims : (Int, Int)
+  , dims : Dims
   }
 
 type alias Editor =
@@ -17,7 +17,7 @@ type alias Editor =
   , upwind : Gate
   , downwind : Gate
   , center : Point
-  , dims : (Int, Int)
+  , dims : Dims
   , mode : Mode
   }
 

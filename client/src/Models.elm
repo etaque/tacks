@@ -97,6 +97,8 @@ type alias WindGenerator =
 
 type alias Point = (Float, Float)
 
+type alias Dims = (Int, Int)
+
 type alias Segment = (Point, Point)
 
 type alias Coords = (Int, Int)

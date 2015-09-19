@@ -1702,7 +1702,7 @@ Elm.Constants.make = function (_elm) {
                 ,rock: "rgb(160, 146, 159)"
                 ,sand: "rgb(242, 243, 196)"
                 ,water: "rgb(147, 202, 223)"};
-   var sidebarWidth = 220;
+   var sidebarWidth = 240;
    _elm.Constants.values = {_op: _op
                            ,sidebarWidth: sidebarWidth
                            ,colors: colors};
@@ -20139,6 +20139,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Screens.EditTrack.SideView",
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
@@ -20147,20 +20148,22 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
    $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
+   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var sideView = function (_v0) {
       return function () {
-         return A2($Html.aside,
-         _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
-                                                            ,_0: "height"
-                                                            ,_1: A2($Basics._op["++"],
-                                                            $Basics.toString($Basics.snd(_v0.dims)),
-                                                            "px")}]))]),
+         return A2($Screens$Utils.sidebar,
+         {ctor: "_Tuple2"
+         ,_0: $Constants.sidebarWidth
+         ,_1: $Basics.snd(_v0.dims)},
+         _L.fromArray([A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("aside-module")]),
          _L.fromArray([A2($Html.button,
          _L.fromArray([A2($Html$Events.onClick,
-         $Screens$EditTrack$Updates.actions.address,
-         $Screens$EditTrack$Types.Save)]),
-         _L.fromArray([$Html.text("Save")]))]));
+                      $Screens$EditTrack$Updates.actions.address,
+                      $Screens$EditTrack$Types.Save)
+                      ,$Html$Attributes.$class("btn btn-primary btn-block")]),
+         _L.fromArray([$Html.text("Save")]))]))]));
       }();
    };
    _elm.Screens.EditTrack.SideView.values = {_op: _op
@@ -21423,12 +21426,10 @@ Elm.Screens.Game.View.make = function (_elm) {
    var leftBar = F3(function (h,
    screen,
    gameState) {
-      return A2($Html.aside,
-      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
-                                                         ,_0: "height"
-                                                         ,_1: A2($Basics._op["++"],
-                                                         $Basics.toString(h),
-                                                         "px")}]))]),
+      return A2($Screens$Utils.sidebar,
+      {ctor: "_Tuple2"
+      ,_0: $Constants.sidebarWidth
+      ,_1: h},
       _L.fromArray([$Screens$Game$PlayersView.playersBlock(screen)
                    ,$Screens$Game$ChatView.chatBlock(screen)
                    ,helpBlock]));
@@ -22844,7 +22845,7 @@ Elm.Screens.Utils.make = function (_elm) {
             case "Nothing":
             return p.user ? "/assets/images/avatar-user.png" : "/assets/images/avatar-guest.png";}
          _U.badCase($moduleName,
-         "between lines 102 and 104");
+         "between lines 113 and 115");
       }();
    };
    var playerWithAvatar = function (player) {
@@ -22869,6 +22870,27 @@ Elm.Screens.Utils.make = function (_elm) {
                       ,handleSpan]));
       }();
    };
+   var sidebar = F2(function (_v2,
+   content) {
+      return function () {
+         switch (_v2.ctor)
+         {case "_Tuple2":
+            return A2($Html.aside,
+              _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                                 ,_0: "height"
+                                                                 ,_1: A2($Basics._op["++"],
+                                                                 $Basics.toString(_v2._1),
+                                                                 "px")}
+                                                                ,{ctor: "_Tuple2"
+                                                                 ,_0: "width"
+                                                                 ,_1: A2($Basics._op["++"],
+                                                                 $Basics.toString(_v2._0),
+                                                                 "px")}]))]),
+              content);}
+         _U.badCase($moduleName,
+         "between lines 90 and 96");
+      }();
+   });
    var blockWrapper = F2(function (wrapperClass,
    content) {
       return A2($Html.div,
@@ -22937,7 +22959,7 @@ Elm.Screens.Utils.make = function (_elm) {
       A2($Json$Decode.customDecoder,
       $Html$Events.keyCode,
       is13),
-      function (_v2) {
+      function (_v6) {
          return function () {
             return A2($Signal.message,
             address,
@@ -22963,7 +22985,7 @@ Elm.Screens.Utils.make = function (_elm) {
       "click",
       eventOptions,
       $Json$Decode.value,
-      function (_v4) {
+      function (_v8) {
          return function () {
             return A2($Signal.message,
             address,
@@ -23002,6 +23024,7 @@ Elm.Screens.Utils.make = function (_elm) {
                                ,titleWrapper: titleWrapper
                                ,lightWrapper: lightWrapper
                                ,blockWrapper: blockWrapper
+                               ,sidebar: sidebar
                                ,playerWithAvatar: playerWithAvatar
                                ,avatarUrl: avatarUrl
                                ,playerHandle: playerHandle
