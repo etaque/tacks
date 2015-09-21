@@ -146,7 +146,11 @@ sendMessage content =
 
 
 updateTime : Clock -> Maybe GameState -> Maybe GameState
-updateTime clock = Maybe.map (\gs -> { gs | localTime <- clock.time })
+updateTime clock =
+  let
+    updateTime timers t = { timers | localTime <- clock.time }
+  in
+    Maybe.map (\gs -> { gs | timers <- updateTime gs.timers clock.time })
 
 
 mapGameUpdate : KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe Action

@@ -37,22 +37,22 @@ renderDashboard (w,h) gameState =
         [ WindOriginGauge.render h gameState.wind ]
 
     , g [ transform (translate 30 30)]
-        [ WindSpeedGraph.render gameState.now gameState.wind gameState.windHistory ]
+        [ WindSpeedGraph.render gameState.timers.now gameState.wind gameState.windHistory ]
 
     , g [ transform (translate (toFloat w - VmgBar.barWidth - 40) 40)]
         [ VmgBar.render gameState.playerState ]
     ]
 
 getTimer : GameState -> String
-getTimer {startTime, now, playerState} =
-  case startTime of
+getTimer {timers, playerState} =
+  case timers.startTime of
     Just t ->
       let
         timer =
           if isNothing playerState.nextGate then
             M.withDefault 0 (head playerState.crossedGates)
           else
-            t - now
+            t - timers.now
       in
         formatTimer timer (isNothing playerState.nextGate)
     Nothing -> "start pending"

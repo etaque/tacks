@@ -32,15 +32,20 @@ type alias GameState =
   , opponents:   List Opponent
   , ghosts:      List GhostState
   , course:      Course
-  , tallies: List PlayerTally
-  , now:         Time
-  , serverNow:   Maybe Time
-  , rtd:         Maybe Time
-  , countdown:   Float
-  , startTime:   Maybe Time
+  , tallies:     List PlayerTally
+  , timers:      Timers
   , live:        Bool
-  , localTime:   Time
   , chatting:    Bool
+  }
+
+
+type alias Timers =
+  { now: Time
+  , serverNow: Maybe Time
+  , rtd: Maybe Time
+  , countdown: Float
+  , startTime: Maybe Time
+  , localTime: Time
   }
 
 -- Wind
@@ -66,11 +71,12 @@ type alias WindSample =
 
 type alias Gust =
   { position : Point
-  , angle: Float
-  , speed: Float
-  , radius: Float
-  , maxRadius: Float
-  , spawnedAt: Float
+  , angle : Float
+  , speed : Float
+  , radius : Float
+  , maxRadius : Float
+  , spawnedAt : Float
+  -- , tiles : List GustTile
   }
 
 
@@ -249,13 +255,15 @@ defaultGame now course player =
   , ghosts      = []
   , course      = course
   , tallies = []
-  , now         = now
-  , serverNow   = Nothing
-  , rtd         = Nothing
-  , countdown   = 0
-  , startTime   = Nothing
+  , timers =
+    { now         = now
+    , serverNow   = Nothing
+    , rtd         = Nothing
+    , countdown   = 0
+    , startTime   = Nothing
+    , localTime   = now
+    }
   , live        = False
-  , localTime   = now
   , chatting    = False
   }
 
@@ -271,13 +279,15 @@ findOpponent opponents id =
   Core.find (\ps -> ps.player.id == id) opponents
 
 raceTime : GameState -> Float
-raceTime {now,startTime} =
-  case startTime of
-    Just t -> now - t
+raceTime {timers} =
+  case timers.startTime of
+    Just t -> timers.now - t
     Nothing -> 0
 
 isStarted : GameState -> Bool
-isStarted {now,startTime} =
-  case startTime of
-    Just t -> now >= t
-    Nothing -> False
+isStarted {timers} =
+  case timers.startTime of
+    Just t ->
+      timers.now >= t
+    Nothing ->
+      False

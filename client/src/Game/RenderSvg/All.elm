@@ -19,7 +19,7 @@ import Svg.Lazy exposing (..)
 
 
 render : (Int, Int) -> GameState -> Html
-render (w, h) ({playerState,course,now,wind} as gameState) =
+render (w, h) ({playerState,course,wind} as gameState) =
   let
     cx = (toFloat w) / 2 - (fst gameState.center)
     cy = (toFloat h) / 2 - (toFloat h) - (snd gameState.center)

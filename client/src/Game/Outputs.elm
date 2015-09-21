@@ -42,7 +42,7 @@ makePlayerOutput keyboardInput gameState =
   in
     { state = asOpponentState gameState.playerState
     , input = realKeyboardInput
-    , localTime = gameState.localTime
+    , localTime = gameState.timers.localTime
     }
 
 getActiveTrack : AppState -> Maybe String

@@ -17,11 +17,12 @@ import Screens.EditTrack.SideView exposing (sideView)
 import Screens.Utils exposing (..)
 import Screens.Messages exposing (..)
 
+import Game.Grid as Grid
 import Game.Geo exposing (floatify)
 import Game.Render.Utils exposing (..)
 import Game.Render.SvgUtils exposing (..)
 
-import Game.RenderSvg.Tiles exposing (lazyRenderTiles, tileKindColor)
+import Game.RenderSvg.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor)
 import Game.RenderSvg.Gates exposing (renderOpenGate)
 import Game.RenderSvg.Players exposing (renderPlayerHull)
 
@@ -61,6 +62,7 @@ renderCourse ({dims, center} as editor) =
         ]
       , renderMode editor.mode
       ]
+
 
 renderMode : Mode -> Svg
 renderMode mode =

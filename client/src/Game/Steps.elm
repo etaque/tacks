@@ -42,11 +42,11 @@ gameStep clock {raceInput, windowInput, keyboardInput} gameState =
 --
 
 raceInputStep : RaceInput -> Clock -> GameState -> GameState
-raceInputStep raceInput {delta,time} ({playerState} as gameState) =
+raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
   let
     { serverNow, startTime, opponents, ghosts, tallies, initial, clientTime } = raceInput
 
-    rtd = case gameState.rtd of
+    rtd = case timers.rtd of
       Just previousRtd ->
         min previousRtd (time - clientTime)
       Nothing ->
@@ -54,7 +54,7 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
 
     compensedServerNow = serverNow - (rtd / 2)
 
-    now = case gameState.serverNow of
+    now = case timers.serverNow of
       Just previousServerNow ->
         min (previousServerNow + delta) compensedServerNow
       Nothing ->
@@ -66,6 +66,15 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
 
     windHistory = updateWindHistory now raceInput.wind gameState.windHistory
 
+    newTimers =
+      { timers
+        | serverNow <- Just serverNow
+        , now <- now
+        , startTime <- startTime
+        , localTime <- time
+        , rtd <- Just rtd
+      }
+
   in
     { gameState
       | opponents <- updatedOpponents
@@ -73,13 +82,9 @@ raceInputStep raceInput {delta,time} ({playerState} as gameState) =
       , wind <- raceInput.wind
       , windHistory <- windHistory
       , tallies <- tallies
-      , serverNow <- Just serverNow
-      , now <- now
       , playerState <- newPlayerState
-      , startTime <- startTime
       , live <- not initial
-      , localTime <- time
-      , rtd <- Just rtd
+      , timers <- timers
     }
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState
