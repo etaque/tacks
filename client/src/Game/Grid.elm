@@ -114,6 +114,27 @@ cubeLine a b =
   in
     List.map offsetMapper [ 0..n ]
 
+-- See http://www.redblobgames.com/grids/hexagons/#range
+hexRange : Coords -> Int -> List Coords
+hexRange center n =
+  let
+    mapX dx =
+      let
+        fromY = max -n (-dx - n)
+        toY = min n (-dx + n)
+        mapY dy = hexAdd center (dx, dy)
+      in
+        List.map mapY [ fromY .. toY ]
+  in
+    List.concatMap mapX [ -n .. n ]
+
+hexAdd : Coords -> Coords -> Coords
+hexAdd (x, y) (x', y') =
+  (x + x', y + y')
+
+cubeAdd : Cube Int -> Cube Int -> Cube Int
+cubeAdd (x, y, z) (i, j, k) =
+  (x + i, y + j, z + k)
 
 hexLine : Coords -> Coords -> List Coords
 hexLine a b =
