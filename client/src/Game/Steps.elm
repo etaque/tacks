@@ -15,11 +15,10 @@ import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving exposing (movingStep)
 import Game.Steps.Turning exposing (turningStep)
 import Game.Steps.Vmg exposing (vmgStep)
-import Game.Steps.Wind exposing (windStep)
+import Game.Steps.PlayerWind exposing (playerWindStep)
 import Game.Steps.WindHistory exposing (updateWindHistory)
+import Game.Steps.Gusts exposing (gustsStep)
 
-
-import Debug
 
 
 gameStep : Clock -> GameInput -> GameState -> GameState
@@ -35,6 +34,7 @@ gameStep clock {raceInput, windowInput, keyboardInput} gameState =
       )
   in
     raceInputStep raceInput clock gameState
+      |> gustsStep
       |> playerStep keyboardInputWithFocus clock.delta
       |> centerStep gameState.playerState.position gameDims
 
@@ -84,7 +84,7 @@ raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
       , tallies <- tallies
       , playerState <- newPlayerState
       , live <- not initial
-      , timers <- timers
+      , timers <- newTimers
     }
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState
@@ -92,7 +92,7 @@ playerStep keyboardInput elapsed gameState =
   let
     playerState =
       turningStep elapsed keyboardInput gameState.playerState
-        |> windStep gameState
+        |> playerWindStep gameState
         |> vmgStep
         |> movingStep elapsed gameState.course
         |> gateCrossingStep gameState.playerState gameState

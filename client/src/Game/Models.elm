@@ -6,6 +6,7 @@ import Game.Core as Core
 import Maybe as M
 import Time exposing (..)
 import List exposing (..)
+import Dict exposing (Dict)
 
 
 markRadius : Float
@@ -26,6 +27,7 @@ windHistoryLength = windHistorySampling * 30
 type alias GameState =
   { wind:        Wind
   , windHistory: WindHistory
+  , gusts:       TiledGusts
   , playerState: PlayerState
   , wake:        List Point
   , center:      Point
@@ -40,12 +42,12 @@ type alias GameState =
 
 
 type alias Timers =
-  { now: Time
-  , serverNow: Maybe Time
-  , rtd: Maybe Time
-  , countdown: Float
-  , startTime: Maybe Time
-  , localTime: Time
+  { now : Time
+  , serverNow : Maybe Time
+  , rtd : Maybe Time
+  , countdown : Float
+  , startTime : Maybe Time
+  , localTime : Time
   }
 
 -- Wind
@@ -76,7 +78,22 @@ type alias Gust =
   , radius : Float
   , maxRadius : Float
   , spawnedAt : Float
-  -- , tiles : List GustTile
+  }
+
+type alias TiledGusts =
+  { genTime : Time
+  , gusts : List TiledGust
+  }
+
+type alias TiledGust =
+  { position : Point
+  , radius : Float
+  , tiles : Dict Coords GustTile
+  }
+
+type alias GustTile =
+  { angle : Float
+  , speed : Float
   }
 
 
@@ -248,6 +265,7 @@ defaultGame : Time -> Course -> Player -> GameState
 defaultGame now course player =
   { wind        = defaultWind
   , windHistory = emptyWindHistory now
+  , gusts       = TiledGusts now []
   , playerState = defaultPlayerState player now
   , center      = (0,0)
   , wake        = []

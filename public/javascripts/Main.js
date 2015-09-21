@@ -3986,7 +3986,7 @@ Elm.Game.Grid.make = function (_elm) {
                     ,_0: i
                     ,_1: _v0._0});}
                _U.badCase($moduleName,
-               "on line 135, column 7 to 22");
+               "on line 160, column 7 to 22");
             }();
          });
          var mapRow = function (_v4) {
@@ -3997,7 +3997,7 @@ Elm.Game.Grid.make = function (_elm) {
                     mapTile(_v4._0),
                     $Dict.toList(_v4._1));}
                _U.badCase($moduleName,
-               "on line 131, column 7 to 44");
+               "on line 156, column 7 to 44");
             }();
          };
          var rows = $Dict.toList(grid);
@@ -4006,16 +4006,81 @@ Elm.Game.Grid.make = function (_elm) {
          rows);
       }();
    };
-   var floatCube = function (_v8) {
+   var cubeAdd = F2(function (_v8,
+   _v9) {
       return function () {
-         switch (_v8.ctor)
+         switch (_v9.ctor)
+         {case "_Tuple3":
+            return function () {
+                 switch (_v8.ctor)
+                 {case "_Tuple3":
+                    return {ctor: "_Tuple3"
+                           ,_0: _v8._0 + _v9._0
+                           ,_1: _v8._1 + _v9._1
+                           ,_2: _v8._2 + _v9._2};}
+                 _U.badCase($moduleName,
+                 "on line 141, column 4 to 23");
+              }();}
+         _U.badCase($moduleName,
+         "on line 141, column 4 to 23");
+      }();
+   });
+   var hexAdd = F2(function (_v18,
+   _v19) {
+      return function () {
+         switch (_v19.ctor)
+         {case "_Tuple2":
+            return function () {
+                 switch (_v18.ctor)
+                 {case "_Tuple2":
+                    return {ctor: "_Tuple2"
+                           ,_0: _v18._0 + _v19._0
+                           ,_1: _v18._1 + _v19._1};}
+                 _U.badCase($moduleName,
+                 "on line 137, column 4 to 18");
+              }();}
+         _U.badCase($moduleName,
+         "on line 137, column 4 to 18");
+      }();
+   });
+   var hexRange = F2(function (center,
+   n) {
+      return function () {
+         var mapX = function (dx) {
+            return function () {
+               var mapY = function (dy) {
+                  return A2(hexAdd,
+                  center,
+                  {ctor: "_Tuple2"
+                  ,_0: dx
+                  ,_1: dy});
+               };
+               var toY = A2($Basics.min,
+               n,
+               0 - dx + n);
+               var fromY = A2($Basics.max,
+               0 - n,
+               0 - dx - n);
+               return A2($List.map,
+               mapY,
+               _L.range(fromY,toY));
+            }();
+         };
+         return A2($List.concatMap,
+         mapX,
+         _L.range(0 - n,n));
+      }();
+   });
+   var floatCube = function (_v26) {
+      return function () {
+         switch (_v26.ctor)
          {case "_Tuple3":
             return {ctor: "_Tuple3"
-                   ,_0: $Basics.toFloat(_v8._0)
-                   ,_1: $Basics.toFloat(_v8._1)
-                   ,_2: $Basics.toFloat(_v8._2)};}
+                   ,_0: $Basics.toFloat(_v26._0)
+                   ,_1: $Basics.toFloat(_v26._1)
+                   ,_2: $Basics.toFloat(_v26._2)};}
          _U.badCase($moduleName,
-         "on line 107, column 4 to 35");
+         "on line 111, column 4 to 35");
       }();
    };
    var cubeLinearInterpol = F3(function (a,
@@ -4039,15 +4104,15 @@ Elm.Game.Grid.make = function (_elm) {
                 ,_2: k};
       }();
    });
-   var cubeDistance = F2(function (_v13,
-   _v14) {
+   var cubeDistance = F2(function (_v31,
+   _v32) {
       return function () {
-         switch (_v14.ctor)
+         switch (_v32.ctor)
          {case "_Tuple3":
             return function () {
-                 switch (_v13.ctor)
+                 switch (_v31.ctor)
                  {case "_Tuple3":
-                    return ($Basics.abs(_v13._0 - _v14._0) + $Basics.abs(_v13._1 - _v14._1) + $Basics.abs(_v13._2 - _v14._2)) / 2 | 0;}
+                    return ($Basics.abs(_v31._0 - _v32._0) + $Basics.abs(_v31._1 - _v32._1) + $Basics.abs(_v31._2 - _v32._2)) / 2 | 0;}
                  _U.badCase($moduleName,
                  "on line 92, column 4 to 55");
               }();}
@@ -4055,40 +4120,46 @@ Elm.Game.Grid.make = function (_elm) {
          "on line 92, column 4 to 55");
       }();
    });
-   var hexToCube = function (_v23) {
+   var hexToCube = function (_v41) {
       return function () {
-         switch (_v23.ctor)
+         switch (_v41.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple3"
-                   ,_0: _v23._0
-                   ,_1: _v23._1
-                   ,_2: 0 - _v23._0 - _v23._1};}
+                   ,_0: _v41._0
+                   ,_1: _v41._1
+                   ,_2: 0 - _v41._0 - _v41._1};}
          _U.badCase($moduleName,
          "on line 88, column 4 to 14");
       }();
    };
-   var cubeToHex = function (_v27) {
+   var hexDistance = F2(function (a,
+   b) {
+      return A2(cubeDistance,
+      hexToCube(a),
+      hexToCube(b));
+   });
+   var cubeToHex = function (_v45) {
       return function () {
-         switch (_v27.ctor)
+         switch (_v45.ctor)
          {case "_Tuple3":
             return {ctor: "_Tuple2"
-                   ,_0: _v27._0
-                   ,_1: _v27._1};}
+                   ,_0: _v45._0
+                   ,_1: _v45._1};}
          _U.badCase($moduleName,
          "on line 84, column 4 to 8");
       }();
    };
-   var cubeRound = function (_v32) {
+   var cubeRound = function (_v50) {
       return function () {
-         switch (_v32.ctor)
+         switch (_v50.ctor)
          {case "_Tuple3":
             return function () {
-                 var rz = $Basics.round(_v32._2);
-                 var zDiff = $Basics.abs($Basics.toFloat(rz) - _v32._2);
-                 var ry = $Basics.round(_v32._1);
-                 var yDiff = $Basics.abs($Basics.toFloat(ry) - _v32._1);
-                 var rx = $Basics.round(_v32._0);
-                 var xDiff = $Basics.abs($Basics.toFloat(rx) - _v32._0);
+                 var rz = $Basics.round(_v50._2);
+                 var zDiff = $Basics.abs($Basics.toFloat(rz) - _v50._2);
+                 var ry = $Basics.round(_v50._1);
+                 var yDiff = $Basics.abs($Basics.toFloat(ry) - _v50._1);
+                 var rx = $Basics.round(_v50._0);
+                 var xDiff = $Basics.abs($Basics.toFloat(rx) - _v50._0);
                  return _U.cmp(xDiff,
                  yDiff) > 0 && _U.cmp(xDiff,
                  zDiff) > 0 ? {ctor: "_Tuple3"
@@ -4133,10 +4204,10 @@ Elm.Game.Grid.make = function (_elm) {
    var hexRound = function ($) {
       return cubeToHex(cubeRound(hexToCube($)));
    };
-   var deleteTile = F2(function (_v37,
+   var deleteTile = F2(function (_v55,
    grid) {
       return function () {
-         switch (_v37.ctor)
+         switch (_v55.ctor)
          {case "_Tuple2":
             return function () {
                  var deleteInRow = function (maybeRow) {
@@ -4144,7 +4215,7 @@ Elm.Game.Grid.make = function (_elm) {
                        switch (maybeRow.ctor)
                        {case "Just":
                           return A2($Dict.remove,
-                            _v37._1,
+                            _v55._1,
                             maybeRow._0);
                           case "Nothing":
                           return $Dict.empty;}
@@ -4153,9 +4224,9 @@ Elm.Game.Grid.make = function (_elm) {
                     }();
                  };
                  return A3($Dict.insert,
-                 _v37._0,
+                 _v55._0,
                  deleteInRow(A2($Dict.get,
-                 _v37._0,
+                 _v55._0,
                  grid)),
                  grid);
               }();}
@@ -4164,10 +4235,10 @@ Elm.Game.Grid.make = function (_elm) {
       }();
    });
    var createTile = F3(function (kind,
-   _v43,
+   _v61,
    grid) {
       return function () {
-         switch (_v43.ctor)
+         switch (_v61.ctor)
          {case "_Tuple2":
             return function () {
                  var updateRow = function (maybeRow) {
@@ -4175,21 +4246,21 @@ Elm.Game.Grid.make = function (_elm) {
                        switch (maybeRow.ctor)
                        {case "Just":
                           return A3($Dict.insert,
-                            _v43._1,
+                            _v61._1,
                             kind,
                             maybeRow._0);
                           case "Nothing":
                           return A2($Dict.singleton,
-                            _v43._1,
+                            _v61._1,
                             kind);}
                        _U.badCase($moduleName,
                        "between lines 26 and 31");
                     }();
                  };
                  return A3($Dict.insert,
-                 _v43._0,
+                 _v61._0,
                  updateRow(A2($Dict.get,
-                 _v43._0,
+                 _v61._0,
                  grid)),
                  grid);
               }();}
@@ -4197,19 +4268,19 @@ Elm.Game.Grid.make = function (_elm) {
          "between lines 23 and 32");
       }();
    });
-   var hexRadius = 30;
+   var hexRadius = 40;
    var hexHeight = hexRadius * 2;
    var hexWidth = $Basics.sqrt(3) / 2 * hexHeight;
    var hexDims = {ctor: "_Tuple2"
                  ,_0: hexWidth
                  ,_1: hexHeight};
-   var hexCoordsToPoint = function (_v49) {
+   var hexCoordsToPoint = function (_v67) {
       return function () {
-         switch (_v49.ctor)
+         switch (_v67.ctor)
          {case "_Tuple2":
             return function () {
-                 var y = hexRadius * 3 / 2 * $Basics.toFloat(_v49._1);
-                 var x = hexRadius * $Basics.sqrt(3) * ($Basics.toFloat(_v49._0) + $Basics.toFloat(_v49._1) / 2);
+                 var y = hexRadius * 3 / 2 * $Basics.toFloat(_v67._1);
+                 var x = hexRadius * $Basics.sqrt(3) * ($Basics.toFloat(_v67._0) + $Basics.toFloat(_v67._1) / 2);
                  return {ctor: "_Tuple2"
                         ,_0: x
                         ,_1: y};
@@ -4218,13 +4289,13 @@ Elm.Game.Grid.make = function (_elm) {
          "between lines 49 and 53");
       }();
    };
-   var pointToHexCoords = function (_v53) {
+   var pointToHexCoords = function (_v71) {
       return function () {
-         switch (_v53.ctor)
+         switch (_v71.ctor)
          {case "_Tuple2":
             return function () {
-                 var j = _v53._1 * (2 / 3) / hexRadius;
-                 var i = (_v53._0 * $Basics.sqrt(3) / 3 - _v53._1 / 3) / hexRadius;
+                 var j = _v71._1 * (2 / 3) / hexRadius;
+                 var i = (_v71._0 * $Basics.sqrt(3) / 3 - _v71._1 / 3) / hexRadius;
                  return hexRound({ctor: "_Tuple2"
                                  ,_0: i
                                  ,_1: j});
@@ -4259,9 +4330,13 @@ Elm.Game.Grid.make = function (_elm) {
                            ,cubeToHex: cubeToHex
                            ,hexToCube: hexToCube
                            ,cubeDistance: cubeDistance
+                           ,hexDistance: hexDistance
                            ,cubeLinearInterpol: cubeLinearInterpol
                            ,floatCube: floatCube
                            ,cubeLine: cubeLine
+                           ,hexRange: hexRange
+                           ,hexAdd: hexAdd
+                           ,cubeAdd: cubeAdd
                            ,hexLine: hexLine
                            ,getTilesList: getTilesList};
    return _elm.Game.Grid.values;
@@ -4412,6 +4487,7 @@ Elm.Game.Models.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.Models",
    $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
    $Game$Core = Elm.Game.Core.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -4422,27 +4498,27 @@ Elm.Game.Models.make = function (_elm) {
    var isStarted = function (_v0) {
       return function () {
          return function () {
-            var _v2 = _v0.startTime;
+            var _v2 = _v0.timers.startTime;
             switch (_v2.ctor)
             {case "Just":
-               return _U.cmp(_v0.now,
+               return _U.cmp(_v0.timers.now,
                  _v2._0) > -1;
                case "Nothing": return false;}
             _U.badCase($moduleName,
-            "between lines 281 and 283");
+            "between lines 307 and 311");
          }();
       }();
    };
    var raceTime = function (_v4) {
       return function () {
          return function () {
-            var _v6 = _v4.startTime;
+            var _v6 = _v4.timers.startTime;
             switch (_v6.ctor)
             {case "Just":
-               return _v4.now - _v6._0;
+               return _v4.timers.now - _v6._0;
                case "Nothing": return 0;}
             _U.badCase($moduleName,
-            "between lines 275 and 277");
+            "between lines 301 and 303");
          }();
       }();
    };
@@ -4571,7 +4647,7 @@ Elm.Game.Models.make = function (_elm) {
             switch (_.ctor)
             {case "_Tuple2": return _._0;}
             _U.badCase($moduleName,
-            "on line 174, column 14 to 30");
+            "on line 197, column 14 to 30");
          }();
          var effectiveWidth = areaWidth(area) - margin * 2;
          return A2($Game$Core.floatMod,
@@ -4657,32 +4733,6 @@ Elm.Game.Models.make = function (_elm) {
              ,windOrigin: 0
              ,windSpeed: 0};
    });
-   var defaultGame = F3(function (now,
-   course,
-   player) {
-      return {_: {}
-             ,center: {ctor: "_Tuple2"
-                      ,_0: 0
-                      ,_1: 0}
-             ,chatting: false
-             ,countdown: 0
-             ,course: course
-             ,ghosts: _L.fromArray([])
-             ,live: false
-             ,localTime: now
-             ,now: now
-             ,opponents: _L.fromArray([])
-             ,playerState: A2(defaultPlayerState,
-             player,
-             now)
-             ,rtd: $Maybe.Nothing
-             ,serverNow: $Maybe.Nothing
-             ,startTime: $Maybe.Nothing
-             ,tallies: _L.fromArray([])
-             ,wake: _L.fromArray([])
-             ,wind: defaultWind
-             ,windHistory: emptyWindHistory(now)};
-   });
    var FixedAngle = {ctor: "FixedAngle"};
    var PlayerState = function (a) {
       return function (b) {
@@ -4742,6 +4792,56 @@ Elm.Game.Models.make = function (_elm) {
          };
       };
    };
+   var GustTile = F2(function (a,
+   b) {
+      return {_: {}
+             ,angle: a
+             ,speed: b};
+   });
+   var TiledGust = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,position: a
+             ,radius: b
+             ,tiles: c};
+   });
+   var TiledGusts = F2(function (a,
+   b) {
+      return {_: {}
+             ,genTime: a
+             ,gusts: b};
+   });
+   var defaultGame = F3(function (now,
+   course,
+   player) {
+      return {_: {}
+             ,center: {ctor: "_Tuple2"
+                      ,_0: 0
+                      ,_1: 0}
+             ,chatting: false
+             ,course: course
+             ,ghosts: _L.fromArray([])
+             ,gusts: A2(TiledGusts,
+             now,
+             _L.fromArray([]))
+             ,live: false
+             ,opponents: _L.fromArray([])
+             ,playerState: A2(defaultPlayerState,
+             player,
+             now)
+             ,tallies: _L.fromArray([])
+             ,timers: {_: {}
+                      ,countdown: 0
+                      ,localTime: now
+                      ,now: now
+                      ,rtd: $Maybe.Nothing
+                      ,serverNow: $Maybe.Nothing
+                      ,startTime: $Maybe.Nothing}
+             ,wake: _L.fromArray([])
+             ,wind: defaultWind
+             ,windHistory: emptyWindHistory(now)};
+   });
    var Gust = F6(function (a,
    b,
    c,
@@ -4782,6 +4882,20 @@ Elm.Game.Models.make = function (_elm) {
              ,origin: a
              ,speed: b};
    });
+   var Timers = F6(function (a,
+   b,
+   c,
+   d,
+   e,
+   f) {
+      return {_: {}
+             ,countdown: d
+             ,localTime: f
+             ,now: a
+             ,rtd: c
+             ,serverNow: b
+             ,startTime: e};
+   });
    var GameState = function (a) {
       return function (b) {
          return function (c) {
@@ -4795,32 +4909,20 @@ Elm.Game.Models.make = function (_elm) {
                                  return function (k) {
                                     return function (l) {
                                        return function (m) {
-                                          return function (n) {
-                                             return function (o) {
-                                                return function (p) {
-                                                   return function (q) {
-                                                      return {_: {}
-                                                             ,center: e
-                                                             ,chatting: q
-                                                             ,countdown: m
-                                                             ,course: h
-                                                             ,ghosts: g
-                                                             ,live: o
-                                                             ,localTime: p
-                                                             ,now: j
-                                                             ,opponents: f
-                                                             ,playerState: c
-                                                             ,rtd: l
-                                                             ,serverNow: k
-                                                             ,startTime: n
-                                                             ,tallies: i
-                                                             ,wake: d
-                                                             ,wind: a
-                                                             ,windHistory: b};
-                                                   };
-                                                };
-                                             };
-                                          };
+                                          return {_: {}
+                                                 ,center: f
+                                                 ,chatting: m
+                                                 ,course: i
+                                                 ,ghosts: h
+                                                 ,gusts: c
+                                                 ,live: l
+                                                 ,opponents: g
+                                                 ,playerState: d
+                                                 ,tallies: j
+                                                 ,timers: k
+                                                 ,wake: e
+                                                 ,wind: a
+                                                 ,windHistory: b};
                                        };
                                     };
                                  };
@@ -4846,10 +4948,14 @@ Elm.Game.Models.make = function (_elm) {
                              ,windHistorySampling: windHistorySampling
                              ,windHistoryLength: windHistoryLength
                              ,GameState: GameState
+                             ,Timers: Timers
                              ,Wind: Wind
                              ,WindHistory: WindHistory
                              ,WindSample: WindSample
                              ,Gust: Gust
+                             ,TiledGusts: TiledGusts
+                             ,TiledGust: TiledGust
+                             ,GustTile: GustTile
                              ,PlayerState: PlayerState
                              ,FixedAngle: FixedAngle
                              ,FixedHeading: FixedHeading
@@ -4941,7 +5047,7 @@ Elm.Game.Outputs.make = function (_elm) {
          keyboardInput);
          return {_: {}
                 ,input: realKeyboardInput
-                ,localTime: gameState.localTime
+                ,localTime: gameState.timers.localTime
                 ,state: $Game$Models.asOpponentState(gameState.playerState)};
       }();
    });
@@ -5258,12 +5364,12 @@ Elm.Game.Render.Utils.make = function (_elm) {
    var gameTitle = function (_v0) {
       return function () {
          return function () {
-            var _v2 = _v0.startTime;
+            var _v2 = _v0.timers.startTime;
             switch (_v2.ctor)
             {case "Just":
-               return _U.cmp(_v0.now,
+               return _U.cmp(_v0.timers.now,
                  _v2._0) < 0 ? A2(formatTimer,
-                 _v2._0 - _v0.now,
+                 _v2._0 - _v0.timers.now,
                  false) : "Started";
                case "Nothing":
                return A2($Basics._op["++"],
@@ -5388,12 +5494,15 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.RenderSvg.Course",
    $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
    $Game$RenderSvg$Gates = Elm.Game.RenderSvg.Gates.make(_elm),
    $Game$RenderSvg$Tiles = Elm.Game.RenderSvg.Tiles.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
@@ -5418,25 +5527,72 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
       renderGust,
       wind.gusts));
    };
-   var renderCourse = function (_v0) {
+   var renderGustTile = function (_v0) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return function () {
+                 var color = _U.cmp(_v0._1.speed,
+                 0) > 0 ? "black" : "white";
+                 var a = 0.3 * $Basics.abs(_v0._1.speed) / 10;
+                 var $ = $Game$Grid.hexCoordsToPoint(_v0._0),
+                 x = $._0,
+                 y = $._1;
+                 return A2($Svg.polygon,
+                 _L.fromArray([$Svg$Attributes.points($Game$RenderSvg$Tiles.verticesPoints)
+                              ,$Svg$Attributes.fill(color)
+                              ,$Svg$Attributes.opacity($Basics.toString(a))
+                              ,$Svg$Attributes.transform(A2($Basics._op["++"],
+                              "translate(",
+                              A2($Basics._op["++"],
+                              $Basics.toString(x),
+                              A2($Basics._op["++"],
+                              ", ",
+                              A2($Basics._op["++"],
+                              $Basics.toString(y),
+                              ")")))))]),
+                 _L.fromArray([]));
+              }();}
+         _U.badCase($moduleName,
+         "between lines 46 and 57");
+      }();
+   };
+   var renderTiledGust = function (_v4) {
+      return function () {
+         return $Svg.g(_L.fromArray([]))($List.map(renderGustTile)($Dict.toList(_v4.tiles)));
+      }();
+   };
+   var renderTiledGusts = function (_v6) {
       return function () {
          return A2($Svg.g,
          _L.fromArray([]),
-         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v0.course.grid)
-                      ,renderGusts(_v0.wind)
+         A2($List.map,
+         renderTiledGust,
+         _v6.gusts));
+      }();
+   };
+   var renderCourse = function (_v8) {
+      return function () {
+         return A2($Svg.g,
+         _L.fromArray([]),
+         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v8.course.grid)
+                      ,renderTiledGusts(_v8.gusts)
                       ,A4($Game$RenderSvg$Gates.renderDownwind,
-                      _v0.playerState,
-                      _v0.course,
-                      _v0.now,
-                      $Game$Models.isStarted(_v0))
+                      _v8.playerState,
+                      _v8.course,
+                      _v8.timers.now,
+                      $Game$Models.isStarted(_v8))
                       ,A3($Game$RenderSvg$Gates.renderUpwind,
-                      _v0.playerState,
-                      _v0.course,
-                      _v0.now)]));
+                      _v8.playerState,
+                      _v8.course,
+                      _v8.timers.now)]));
       }();
    };
    _elm.Game.RenderSvg.Course.values = {_op: _op
                                        ,renderCourse: renderCourse
+                                       ,renderTiledGusts: renderTiledGusts
+                                       ,renderTiledGust: renderTiledGust
+                                       ,renderGustTile: renderGustTile
                                        ,renderGusts: renderGusts
                                        ,renderGust: renderGust};
    return _elm.Game.RenderSvg.Course.values;
@@ -5473,13 +5629,13 @@ Elm.Game.RenderSvg.Dashboard.make = function (_elm) {
    var getTimer = function (_v0) {
       return function () {
          return function () {
-            var _v2 = _v0.startTime;
+            var _v2 = _v0.timers.startTime;
             switch (_v2.ctor)
             {case "Just":
                return function () {
                     var timer = $Game$Core.isNothing(_v0.playerState.nextGate) ? A2($Maybe.withDefault,
                     0,
-                    $List.head(_v0.playerState.crossedGates)) : _v2._0 - _v0.now;
+                    $List.head(_v0.playerState.crossedGates)) : _v2._0 - _v0.timers.now;
                     return A2($Game$Render$Utils.formatTimer,
                     timer,
                     $Game$Core.isNothing(_v0.playerState.nextGate));
@@ -5517,7 +5673,7 @@ Elm.Game.RenderSvg.Dashboard.make = function (_elm) {
                            30,
                            30))]),
                            _L.fromArray([A3($Game$RenderSvg$Dashboard$WindSpeedGraph.render,
-                           gameState.now,
+                           gameState.timers.now,
                            gameState.wind,
                            gameState.windHistory)]))
                            ,A2($Svg.g,
@@ -6713,10 +6869,11 @@ Elm.Game.Steps.make = function (_elm) {
    $Game$Inputs = Elm.Game.Inputs.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Steps$GateCrossing = Elm.Game.Steps.GateCrossing.make(_elm),
+   $Game$Steps$Gusts = Elm.Game.Steps.Gusts.make(_elm),
    $Game$Steps$Moving = Elm.Game.Steps.Moving.make(_elm),
+   $Game$Steps$PlayerWind = Elm.Game.Steps.PlayerWind.make(_elm),
    $Game$Steps$Turning = Elm.Game.Steps.Turning.make(_elm),
    $Game$Steps$Vmg = Elm.Game.Steps.Vmg.make(_elm),
-   $Game$Steps$Wind = Elm.Game.Steps.Wind.make(_elm),
    $Game$Steps$WindHistory = Elm.Game.Steps.WindHistory.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -6766,7 +6923,7 @@ Elm.Game.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 137 and 144");
+         "between lines 142 and 149");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -6832,7 +6989,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 106, column 36 to 55");
+                       "on line 111, column 36 to 55");
                     }();
                     var xMin = function () {
                        switch (_.ctor)
@@ -6845,7 +7002,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 106, column 36 to 55");
+                       "on line 111, column 36 to 55");
                     }();
                     var yMax = function () {
                        switch (_.ctor)
@@ -6858,7 +7015,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 106, column 36 to 55");
+                       "on line 111, column 36 to 55");
                     }();
                     var yMin = function () {
                        switch (_.ctor)
@@ -6871,7 +7028,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 106, column 36 to 55");
+                       "on line 111, column 36 to 55");
                     }();
                     var $ = $Game$Geo.floatify(dims),
                     w = $._0,
@@ -6902,7 +7059,7 @@ Elm.Game.Steps.make = function (_elm) {
                     _v3);
                  }();}
             _U.badCase($moduleName,
-            "between lines 102 and 112");
+            "between lines 107 and 117");
          }();
       }();
    });
@@ -6914,7 +7071,7 @@ Elm.Game.Steps.make = function (_elm) {
          gameState.playerState,
          gameState)(A2($Game$Steps$Moving.movingStep,
          elapsed,
-         gameState.course)($Game$Steps$Vmg.vmgStep($Game$Steps$Wind.windStep(gameState)(A3($Game$Steps$Turning.turningStep,
+         gameState.course)($Game$Steps$Vmg.vmgStep($Game$Steps$PlayerWind.playerWindStep(gameState)(A3($Game$Steps$Turning.turningStep,
          elapsed,
          keyboardInput,
          gameState.playerState)))))));
@@ -6938,7 +7095,7 @@ Elm.Game.Steps.make = function (_elm) {
                initial = $.initial,
                clientTime = $.clientTime;
                var rtd = function () {
-                  var _v40 = _v37.rtd;
+                  var _v40 = _v37.timers.rtd;
                   switch (_v40.ctor)
                   {case "Just":
                      return A2($Basics.min,
@@ -6951,7 +7108,7 @@ Elm.Game.Steps.make = function (_elm) {
                }();
                var compensedServerNow = serverNow - rtd / 2;
                var now = function () {
-                  var _v42 = _v37.serverNow;
+                  var _v42 = _v37.timers.serverNow;
                   switch (_v42.ctor)
                   {case "Just":
                      return A2($Basics.min,
@@ -6973,20 +7130,22 @@ Elm.Game.Steps.make = function (_elm) {
                _v37.opponents,
                _v36.delta,
                opponents);
+               var newTimers = _U.replace([["serverNow"
+                                           ,$Maybe.Just(serverNow)]
+                                          ,["now",now]
+                                          ,["startTime",startTime]
+                                          ,["localTime",_v36.time]
+                                          ,["rtd",$Maybe.Just(rtd)]],
+               _v37.timers);
                return _U.replace([["opponents"
                                   ,updatedOpponents]
                                  ,["ghosts",ghosts]
                                  ,["wind",raceInput.wind]
                                  ,["windHistory",windHistory]
                                  ,["tallies",tallies]
-                                 ,["serverNow"
-                                  ,$Maybe.Just(serverNow)]
-                                 ,["now",now]
                                  ,["playerState",newPlayerState]
-                                 ,["startTime",startTime]
                                  ,["live",$Basics.not(initial)]
-                                 ,["localTime",_v36.time]
-                                 ,["rtd",$Maybe.Just(rtd)]],
+                                 ,["timers",newTimers]],
                _v37);
             }();
          }();
@@ -7005,10 +7164,10 @@ Elm.Game.Steps.make = function (_elm) {
             gameState.playerState.position,
             gameDims)(A2(playerStep,
             keyboardInputWithFocus,
-            clock.delta)(A3(raceInputStep,
+            clock.delta)($Game$Steps$Gusts.gustsStep(A3(raceInputStep,
             _v44.raceInput,
             clock,
-            gameState)));
+            gameState))));
          }();
       }();
    });
@@ -7177,6 +7336,92 @@ Elm.Game.Steps.GateCrossing.make = function (_elm) {
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
+Elm.Game.Steps.Gusts = Elm.Game.Steps.Gusts || {};
+Elm.Game.Steps.Gusts.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Steps = _elm.Game.Steps || {};
+   _elm.Game.Steps.Gusts = _elm.Game.Steps.Gusts || {};
+   if (_elm.Game.Steps.Gusts.values)
+   return _elm.Game.Steps.Gusts.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.Steps.Gusts",
+   $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Game$Geo = Elm.Game.Geo.make(_elm),
+   $Game$Grid = Elm.Game.Grid.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var genTiledGust = function (_v0) {
+      return function () {
+         return function () {
+            var southTile = $Game$Grid.pointToHexCoords(A2($Game$Geo.add,
+            _v0.position,
+            {ctor: "_Tuple2"
+            ,_0: 0
+            ,_1: 0 - _v0.radius}));
+            var centerTile = $Game$Grid.pointToHexCoords(_v0.position);
+            var distance = A2($Game$Grid.hexDistance,
+            centerTile,
+            southTile);
+            var coordsList = A2($Game$Grid.hexRange,
+            centerTile,
+            distance);
+            var tiles = $Dict.fromList($List.map(function (c) {
+               return {ctor: "_Tuple2"
+                      ,_0: c
+                      ,_1: A2($Game$Models.GustTile,
+                      _v0.angle,
+                      _v0.speed)};
+            })($List.filter(function (c) {
+               return _U.cmp(A2($Game$Geo.distance,
+               _v0.position,
+               $Game$Grid.hexCoordsToPoint(c)),
+               _v0.radius) < 1;
+            })(coordsList)));
+            return A3($Game$Models.TiledGust,
+            _v0.position,
+            _v0.radius,
+            tiles);
+         }();
+      }();
+   };
+   var genTiledGusts = F2(function (now,
+   _v2) {
+      return function () {
+         return {_: {}
+                ,genTime: now
+                ,gusts: A2($List.map,
+                genTiledGust,
+                _v2.gusts)};
+      }();
+   });
+   var interval = 500;
+   var gustsStep = function (_v4) {
+      return function () {
+         return _U.cmp(_v4.gusts.genTime + interval,
+         _v4.timers.now) < 0 ? _U.replace([["gusts"
+                                           ,A2(genTiledGusts,
+                                           _v4.timers.now,
+                                           _v4.wind)]],
+         _v4) : _v4;
+      }();
+   };
+   _elm.Game.Steps.Gusts.values = {_op: _op
+                                  ,interval: interval
+                                  ,gustsStep: gustsStep
+                                  ,genTiledGusts: genTiledGusts
+                                  ,genTiledGust: genTiledGust};
+   return _elm.Game.Steps.Gusts.values;
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Steps = Elm.Game.Steps || {};
 Elm.Game.Steps.Moving = Elm.Game.Steps.Moving || {};
 Elm.Game.Steps.Moving.make = function (_elm) {
    "use strict";
@@ -7290,6 +7535,139 @@ Elm.Game.Steps.Moving.make = function (_elm) {
                                    ,withInertia: withInertia
                                    ,isGrounded: isGrounded};
    return _elm.Game.Steps.Moving.values;
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Steps = Elm.Game.Steps || {};
+Elm.Game.Steps.PlayerWind = Elm.Game.Steps.PlayerWind || {};
+Elm.Game.Steps.PlayerWind.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Steps = _elm.Game.Steps || {};
+   _elm.Game.Steps.PlayerWind = _elm.Game.Steps.PlayerWind || {};
+   if (_elm.Game.Steps.PlayerWind.values)
+   return _elm.Game.Steps.PlayerWind.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.Steps.PlayerWind",
+   $Basics = Elm.Basics.make(_elm),
+   $Game$Geo = Elm.Game.Geo.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var gustEffect = F3(function (state,
+   wind,
+   gust) {
+      return function () {
+         var speedEffect = gust.speed;
+         var originEffect = A2($Game$Geo.angleDelta,
+         gust.angle,
+         wind.origin);
+         var d = A2($Game$Geo.distance,
+         state.position,
+         gust.position);
+         var fromEdge = gust.radius - d;
+         var factor = A2($Basics.min,
+         fromEdge / (gust.radius * 0.2),
+         1);
+         return {_: {}
+                ,factor: factor
+                ,origin: originEffect
+                ,speed: speedEffect};
+      }();
+   });
+   var shadowArc = 30;
+   var windShadowSector = function (_v0) {
+      return function () {
+         return {ctor: "_Tuple2"
+                ,_0: $Game$Geo.ensure360(_v0.shadowDirection - shadowArc / 2)
+                ,_1: $Game$Geo.ensure360(_v0.shadowDirection + shadowArc / 2)};
+      }();
+   };
+   var isShadowedBy = F2(function (state,
+   opponent) {
+      return _U.cmp(A2($Game$Geo.distance,
+      opponent.state.position,
+      state.position),
+      $Game$Models.windShadowLength) < 1 && function () {
+         var $ = windShadowSector(opponent.state),
+         min = $._0,
+         max = $._1;
+         var angle = A2($Game$Geo.angleBetween,
+         opponent.state.position,
+         state.position);
+         return A3($Game$Geo.inSector,
+         min,
+         max,
+         angle);
+      }();
+   });
+   var shadowImpact = -5;
+   var playerWindStep = F2(function (_v2,
+   state) {
+      return function () {
+         return function () {
+            var windShadow = $List.sum($List.map(function (_v4) {
+               return function () {
+                  return shadowImpact;
+               }();
+            })(A2($List.filter,
+            isShadowedBy(state),
+            _v2.opponents)));
+            var gustsOnPlayer = A2($List.filter,
+            function (g) {
+               return _U.cmp(A2($Game$Geo.distance,
+               state.position,
+               g.position),
+               g.radius) < 0;
+            },
+            _v2.wind.gusts);
+            var gustsEffects = A2($List.map,
+            A2(gustEffect,state,_v2.wind),
+            gustsOnPlayer);
+            var origin = $List.isEmpty(gustsEffects) ? _v2.wind.origin : function () {
+               var totalEffect = $List.sum(A2($List.map,
+               function (g) {
+                  return g.origin * g.factor;
+               },
+               gustsEffects));
+               return $Game$Geo.ensure360(_v2.wind.origin + totalEffect);
+            }();
+            var speed = _v2.wind.speed + $List.sum(A2($List.map,
+            function (g) {
+               return g.speed * g.factor;
+            },
+            gustsEffects)) + windShadow;
+            var shadowDirection = $Game$Geo.ensure360(state.windOrigin + 180 + state.windAngle / 3);
+            return _U.replace([["windOrigin"
+                               ,origin]
+                              ,["windSpeed",speed]
+                              ,["shadowDirection"
+                               ,shadowDirection]],
+            state);
+         }();
+      }();
+   });
+   var GustEffect = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,factor: c
+             ,origin: a
+             ,speed: b};
+   });
+   _elm.Game.Steps.PlayerWind.values = {_op: _op
+                                       ,GustEffect: GustEffect
+                                       ,shadowImpact: shadowImpact
+                                       ,shadowArc: shadowArc
+                                       ,playerWindStep: playerWindStep
+                                       ,gustEffect: gustEffect
+                                       ,isShadowedBy: isShadowedBy
+                                       ,windShadowSector: windShadowSector};
+   return _elm.Game.Steps.PlayerWind.values;
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
@@ -7574,139 +7952,6 @@ Elm.Game.Steps.Vmg.make = function (_elm) {
                                 ,getDownwindVmg: getDownwindVmg
                                 ,findVmgInInterval: findVmgInInterval};
    return _elm.Game.Steps.Vmg.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Steps = Elm.Game.Steps || {};
-Elm.Game.Steps.Wind = Elm.Game.Steps.Wind || {};
-Elm.Game.Steps.Wind.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Steps = _elm.Game.Steps || {};
-   _elm.Game.Steps.Wind = _elm.Game.Steps.Wind || {};
-   if (_elm.Game.Steps.Wind.values)
-   return _elm.Game.Steps.Wind.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Steps.Wind",
-   $Basics = Elm.Basics.make(_elm),
-   $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var gustEffect = F3(function (state,
-   wind,
-   gust) {
-      return function () {
-         var speedEffect = gust.speed;
-         var originEffect = A2($Game$Geo.angleDelta,
-         gust.angle,
-         wind.origin);
-         var d = A2($Game$Geo.distance,
-         state.position,
-         gust.position);
-         var fromEdge = gust.radius - d;
-         var factor = A2($Basics.min,
-         fromEdge / (gust.radius * 0.2),
-         1);
-         return {_: {}
-                ,factor: factor
-                ,origin: originEffect
-                ,speed: speedEffect};
-      }();
-   });
-   var shadowArc = 30;
-   var windShadowSector = function (_v0) {
-      return function () {
-         return {ctor: "_Tuple2"
-                ,_0: $Game$Geo.ensure360(_v0.shadowDirection - shadowArc / 2)
-                ,_1: $Game$Geo.ensure360(_v0.shadowDirection + shadowArc / 2)};
-      }();
-   };
-   var isShadowedBy = F2(function (state,
-   opponent) {
-      return _U.cmp(A2($Game$Geo.distance,
-      opponent.state.position,
-      state.position),
-      $Game$Models.windShadowLength) < 1 && function () {
-         var $ = windShadowSector(opponent.state),
-         min = $._0,
-         max = $._1;
-         var angle = A2($Game$Geo.angleBetween,
-         opponent.state.position,
-         state.position);
-         return A3($Game$Geo.inSector,
-         min,
-         max,
-         angle);
-      }();
-   });
-   var shadowImpact = -5;
-   var windStep = F2(function (_v2,
-   state) {
-      return function () {
-         return function () {
-            var windShadow = $List.sum($List.map(function (_v4) {
-               return function () {
-                  return shadowImpact;
-               }();
-            })(A2($List.filter,
-            isShadowedBy(state),
-            _v2.opponents)));
-            var gustsOnPlayer = A2($List.filter,
-            function (g) {
-               return _U.cmp(A2($Game$Geo.distance,
-               state.position,
-               g.position),
-               g.radius) < 0;
-            },
-            _v2.wind.gusts);
-            var gustsEffects = A2($List.map,
-            A2(gustEffect,state,_v2.wind),
-            gustsOnPlayer);
-            var origin = $List.isEmpty(gustsEffects) ? _v2.wind.origin : function () {
-               var totalEffect = $List.sum(A2($List.map,
-               function (g) {
-                  return g.origin * g.factor;
-               },
-               gustsEffects));
-               return $Game$Geo.ensure360(_v2.wind.origin + totalEffect);
-            }();
-            var speed = _v2.wind.speed + $List.sum(A2($List.map,
-            function (g) {
-               return g.speed * g.factor;
-            },
-            gustsEffects)) + windShadow;
-            var shadowDirection = $Game$Geo.ensure360(state.windOrigin + 180 + state.windAngle / 3);
-            return _U.replace([["windOrigin"
-                               ,origin]
-                              ,["windSpeed",speed]
-                              ,["shadowDirection"
-                               ,shadowDirection]],
-            state);
-         }();
-      }();
-   });
-   var GustEffect = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,factor: c
-             ,origin: a
-             ,speed: b};
-   });
-   _elm.Game.Steps.Wind.values = {_op: _op
-                                 ,GustEffect: GustEffect
-                                 ,shadowImpact: shadowImpact
-                                 ,shadowArc: shadowArc
-                                 ,windStep: windStep
-                                 ,gustEffect: gustEffect
-                                 ,isShadowedBy: isShadowedBy
-                                 ,windShadowSector: windShadowSector};
-   return _elm.Game.Steps.Wind.values;
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
@@ -20655,7 +20900,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 69 and 76");
+            "between lines 71 and 78");
          }();
          return A2($Svg.circle,
          _L.fromArray([$Svg$Attributes.r("20")
@@ -20715,7 +20960,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
             case "Nothing":
             return $Html.text("loading");}
          _U.badCase($moduleName,
-         "between lines 30 and 34");
+         "between lines 31 and 35");
       }();
    };
    _elm.Screens.EditTrack.View.values = {_op: _op
@@ -21125,11 +21370,21 @@ Elm.Screens.Game.Updates.make = function (_elm) {
       maybeRaceInput));
    });
    var updateTime = function (clock) {
-      return $Maybe.map(function (gs) {
-         return _U.replace([["localTime"
-                            ,clock.time]],
-         gs);
-      });
+      return function () {
+         var updateTime = F2(function (timers,
+         t) {
+            return _U.replace([["localTime"
+                               ,clock.time]],
+            timers);
+         });
+         return $Maybe.map(function (gs) {
+            return _U.replace([["timers"
+                               ,A2(updateTime,
+                               gs.timers,
+                               clock.time)]],
+            gs);
+         });
+      }();
    };
    var applyLiveTrack = F2(function (_v0,
    screen) {

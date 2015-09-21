@@ -6,7 +6,7 @@ import Models exposing (..)
 import Dict exposing (Dict)
 
 
-hexRadius = 30
+hexRadius = 40
 hexHeight = hexRadius * 2
 hexWidth = (sqrt 3) / 2 * hexHeight
 hexDims = (hexWidth, hexHeight)
@@ -90,6 +90,10 @@ hexToCube (i, j) =
 cubeDistance : Cube Int -> Cube Int -> Int
 cubeDistance (ax, ay, az) (bx, by, bz) =
   (abs (ax - bx) + abs (ay - by) + abs (az - bz)) // 2
+
+hexDistance : Coords -> Coords -> Int
+hexDistance a b =
+  cubeDistance (hexToCube a) (hexToCube b)
 
 cubeLinearInterpol : Cube Int -> Cube Int -> Float -> Cube Float
 cubeLinearInterpol a b t =

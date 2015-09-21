@@ -1,4 +1,4 @@
-module Game.Steps.Wind where
+module Game.Steps.PlayerWind where
 
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
@@ -19,8 +19,8 @@ shadowArc : Float
 shadowArc = 30 -- degrees
 
 
-windStep : GameState -> PlayerState -> PlayerState
-windStep ({wind,course,opponents} as gameState) state =
+playerWindStep : GameState -> PlayerState -> PlayerState
+playerWindStep ({wind,course,opponents} as gameState) state =
   let
     shadowDirection = ensure360 (state.windOrigin + 180 + (state.windAngle / 3))
 
