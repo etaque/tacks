@@ -24,9 +24,8 @@ route appState =
     , "/login" :-> login appState
     , "/register" :-> register appState
     , "/me" :-> showProfile appState
-    -- , "/profile/" :-> showProfile
     , "/track/" :-> showTrack appState
-    , "/editor/" :-> editTrack appState
+    , "/edit/" :-> editTrack appState
     , "/play/" :-> playTrack appState
     ] (notFound appState)
 

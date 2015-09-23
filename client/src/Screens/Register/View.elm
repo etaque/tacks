@@ -64,12 +64,6 @@ registerForm {handle, email, password, loading, errors} =
       ]
     ]
 
-formGroup : Bool -> List Html -> Html
-formGroup hasErr content =
-  div
-    [ classList [ ("form-group", True), ("has-error", hasErr) ] ]
-    content
-
 hasError : FormErrors -> String -> Bool
 hasError formErrors field =
   isJust (Dict.get field formErrors)

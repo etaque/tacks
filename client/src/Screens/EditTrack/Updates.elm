@@ -5,6 +5,10 @@ import Task.Extra exposing (delay)
 import Time exposing (second)
 import Http
 import Keyboard
+import Array
+import Result
+import String
+
 import DragAndDrop exposing (mouseEvents, MouseEvent(..))
 
 import Constants exposing (sidebarWidth)
@@ -16,6 +20,7 @@ import Screens.EditTrack.Types exposing (..)
 import Game.Grid exposing (..)
 import ServerApi
 
+import Debug
 
 actions : Signal.Mailbox Action
 actions = Signal.mailbox NoOp
@@ -51,11 +56,9 @@ update action screen =
     SetTrack track ->
       let
         editor =
-          { grid = track.course.grid
-          , upwind = track.course.upwind
-          , downwind = track.course.downwind
+          { course = track.course
           , center = (0, 0)
-          , dims = courseDims screen.dims
+          , courseDims = getCourseDims screen.dims
           , mode = CreateTile Water
           }
       in
@@ -65,15 +68,39 @@ update action screen =
       local { screen | notFound <- True }
 
     MouseAction event ->
-      updateEditor (mouseAction event) screen
+      screen
+        |> updateEditor (mouseAction event)
         |> local
 
     NextTileKind ->
-      updateEditor (\e -> { e | mode <- getNextMode e.mode }) screen
+      screen
+        |> updateEditor (\e -> { e | mode <- getNextMode e.mode })
         |> local
 
     EscapeMode ->
-      updateEditor (\e -> { e | mode <- Watch }) screen
+      screen
+        |> updateEditor (\e -> { e | mode <- Watch })
+        |> local
+
+    SetUpwindY y ->
+      screen
+        |> (updateUpwindY >> updateCourse >> updateEditor ) y
+        |> Debug.log "upwindy"
+        |> local
+
+    SetDownwindY y ->
+      screen
+        |> (updateDownwindY >> updateCourse >> updateEditor ) y
+        |> local
+
+    SetGateWidth w ->
+      screen
+        |> (updateGateWidth >> updateCourse >> updateEditor) w
+        |> local
+
+    SetLaps laps ->
+      screen
+        |> (updateLaps >> updateCourse >> updateEditor ) laps
         |> local
 
     Save ->
@@ -94,6 +121,9 @@ updateEditor update screen =
   in
     { screen | editor <- newEditor }
 
+updateCourse : (Course -> Course) -> Editor -> Editor
+updateCourse update editor =
+  { editor | course <- update editor.course }
 
 loadTrack : String -> Task Never ()
 loadTrack slug =
@@ -109,12 +139,12 @@ loadTrack slug =
 updateDims : Dims -> Screen -> Screen
 updateDims dims screen =
   let
-    newEditor = Maybe.map (\e -> { e | dims <- courseDims dims } ) screen.editor
+    newEditor = Maybe.map (\e -> { e | courseDims <- getCourseDims dims } ) screen.editor
   in
     { screen | editor <- newEditor, dims <- dims }
 
-courseDims : Dims -> Dims
-courseDims (w, h) =
+getCourseDims : Dims -> Dims
+getCourseDims (w, h) =
   (w - sidebarWidth, h)
 
 mouseAction : MouseEvent -> Editor -> Editor
@@ -132,17 +162,24 @@ deleteTileAction : MouseEvent -> Editor -> Editor
 deleteTileAction event editor =
   let
     coordsList = getMouseEventTiles editor event
-    newGrid = List.foldl deleteTile editor.grid coordsList
+    newGrid = List.foldl deleteTile editor.course.grid coordsList
   in
-    { editor | grid <- newGrid }
+    withGrid newGrid editor
 
 updateTileAction : TileKind -> MouseEvent -> Editor -> Editor
 updateTileAction kind event editor =
   let
     coordsList = getMouseEventTiles editor event
-    newGrid = List.foldl (createTile kind) editor.grid coordsList
+    newGrid = List.foldl (createTile kind) editor.course.grid coordsList
   in
-    { editor | grid <- newGrid }
+    withGrid newGrid editor
+
+withGrid : Grid -> Editor -> Editor
+withGrid grid ({course} as editor) =
+  let
+    newCourse = { course | grid <- grid }
+  in
+    { editor | course <- newCourse }
 
 getMouseEventTiles : Editor -> MouseEvent -> List Coords
 getMouseEventTiles editor event =
@@ -162,9 +199,9 @@ getMouseEventTiles editor event =
         [ ]
 
 clickPoint : Editor -> (Int, Int) -> Point
-clickPoint {dims, center} (x, y) =
+clickPoint {courseDims, center} (x, y) =
   let
-    (w, h) = dims
+    (w, h) = courseDims
     (cx, cy) = center
     x' = toFloat (x - sidebarWidth) - cx - toFloat w / 2
     y' = toFloat -y - cy + toFloat h / 2
@@ -198,8 +235,66 @@ getNextMode mode =
     _ ->
       CreateTile Water
 
-save : String -> Editor -> Task Never ()
-save slug editor =
-  ServerApi.saveTrack slug editor `andThen`
-    \result -> Task.succeed ()
+updateUpwindY : Int -> Course -> Course
+updateUpwindY y ({upwind} as course) =
+  let
+    newUpwind = { upwind | y <- toFloat y }
+  in
+    { course | upwind <- newUpwind }
 
+updateDownwindY : Int -> Course -> Course
+updateDownwindY y ({downwind} as course) =
+  let
+    newDownwind = { downwind | y <- toFloat y }
+  in
+    { course | downwind <- newDownwind }
+
+updateGateWidth : Int -> Course -> Course
+updateGateWidth w ({upwind, downwind} as course) =
+  let
+    newDownwind = { downwind | width <- toFloat w }
+    newUpwind = { upwind | width <- toFloat w }
+  in
+    { course | downwind <- newDownwind, upwind <- newUpwind }
+
+
+updateLaps : Int -> Course -> Course
+updateLaps laps course =
+  { course | laps <- laps }
+
+save : String -> Editor -> Task Never ()
+save slug ({course} as editor) =
+  let
+    area = getRaceArea course.grid
+    withArea = { course | area <- area }
+  in
+    ServerApi.saveTrack slug withArea `andThen`
+      \result -> Task.succeed ()
+
+getRaceArea : Grid -> RaceArea
+getRaceArea grid =
+  let
+    waterPoints = getTilesList grid
+      |> List.filter (\t -> t.kind == Water)
+      |> List.map (\t -> hexCoordsToPoint t.coords)
+
+    xVals = waterPoints
+      |> List.map fst
+      |> List.sort
+      |> Array.fromList
+
+    yVals = waterPoints
+      |> List.map snd
+      |> List.sort
+      |> Array.fromList
+
+    getFirst arr = Maybe.withDefault 0 (Array.get 0 arr)
+    getLast arr = Maybe.withDefault 0 (Array.get (Array.length arr - 1) arr)
+
+    right = getLast xVals
+    left = getFirst xVals
+
+    top = getLast yVals
+    bottom = getFirst yVals
+  in
+    RaceArea (right, top) (left, bottom)

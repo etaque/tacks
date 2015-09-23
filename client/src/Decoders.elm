@@ -95,13 +95,14 @@ pointDecoder =
 
 courseDecoder : Decoder Course
 courseDecoder =
-  object6 Course
+  object7 Course
     ("upwind" := gateDecoder)
     ("downwind" := gateDecoder)
     ("grid" := gridDecoder)
     ("laps" := int)
     ("area" := raceAreaDecoder)
     ("windGenerator" := windGeneratorDecoder)
+    ("gustGenerator" := gustGeneratorDecoder)
 
 gateDecoder : Decoder Gate
 gateDecoder =
@@ -141,3 +142,16 @@ windGeneratorDecoder =
     ("amplitude1" := float)
     ("wavelength2" := float)
     ("amplitude2" := float)
+
+gustGeneratorDecoder : Decoder GustGenerator
+gustGeneratorDecoder =
+  object2 GustGenerator
+    ("interval" := int)
+    ("defs" := list gustDefGenerator)
+
+gustDefGenerator : Decoder GustDef
+gustDefGenerator =
+  object3 GustDef
+    ("angle" := float)
+    ("speed" := float)
+    ("radius" := float)

@@ -33,6 +33,14 @@ onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =
   onWithOptions "input" eventOptions targetValue (\str -> Signal.message address (contentToValue str))
 
+onIntInput : Signal.Address a -> (Int -> a) -> Attribute
+onIntInput address contentToValue =
+  onWithOptions "input" eventOptions intTargetValue (\str -> Signal.message address (contentToValue str))
+
+intTargetValue : Json.Decoder Int
+intTargetValue =
+  Json.at ["target", "value"] (Json.customDecoder Json.string String.toInt)
+
 onEnter : Signal.Address a -> a -> Attribute
 onEnter address value =
     on "keydown"
@@ -64,6 +72,12 @@ col4 content =
 whitePanel : Wrapper
 whitePanel content =
   col4 [ div [ class "white-panel" ] content ]
+
+formGroup : Bool -> List Html -> Html
+formGroup hasErr content =
+  div
+    [ classList [ ("form-group", True), ("has-error", hasErr) ] ]
+    content
 
 textInput : List Attribute -> Html
 textInput attributes =

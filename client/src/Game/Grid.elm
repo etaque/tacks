@@ -6,7 +6,7 @@ import Models exposing (..)
 import Dict exposing (Dict)
 
 
-hexRadius = 40
+hexRadius = 50
 hexHeight = hexRadius * 2
 hexWidth = (sqrt 3) / 2 * hexHeight
 hexDims = (hexWidth, hexHeight)

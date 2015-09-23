@@ -36,7 +36,7 @@ view screen =
 
 
 editorView : Editor -> Html
-editorView ({dims, center} as editor) =
+editorView editor =
   Html.div [ class "content" ]
     [ sideView editor
     , renderCourse editor
@@ -44,9 +44,9 @@ editorView ({dims, center} as editor) =
 
 
 renderCourse : Editor -> Html
-renderCourse ({dims, center} as editor) =
+renderCourse ({courseDims, center, course} as editor) =
   let
-    (w, h) = floatify dims
+    (w, h) = floatify courseDims
     cx = w / 2 + fst center
     cy = -h / 2 + snd center
   in
@@ -55,9 +55,9 @@ renderCourse ({dims, center} as editor) =
       , height (toString h)
       ]
       [ g [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
-        [ (lazyRenderTiles editor.grid)
-        , renderOpenGate editor.upwind 0
-        , renderOpenGate editor.downwind 0
+        [ (lazyRenderTiles course.grid)
+        , renderOpenGate course.upwind 0
+        , renderOpenGate course.downwind 0
         , renderPlayerHull 0 0
         ]
       , renderMode editor.mode

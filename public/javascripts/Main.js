@@ -2015,6 +2015,25 @@ Elm.Decoders.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var gustDefGenerator = A4($Json$Decode.object3,
+   $Models.GustDef,
+   A2($Json$Decode._op[":="],
+   "angle",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "speed",
+   $Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "radius",
+   $Json$Decode.$float));
+   var gustGeneratorDecoder = A3($Json$Decode.object2,
+   $Models.GustGenerator,
+   A2($Json$Decode._op[":="],
+   "interval",
+   $Json$Decode.$int),
+   A2($Json$Decode._op[":="],
+   "defs",
+   $Json$Decode.list(gustDefGenerator)));
    var windGeneratorDecoder = A5($Json$Decode.object4,
    $Models.WindGenerator,
    A2($Json$Decode._op[":="],
@@ -2085,7 +2104,7 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "leftBottom",
    pointDecoder));
-   var courseDecoder = A7($Json$Decode.object6,
+   var courseDecoder = A8($Json$Decode.object7,
    $Models.Course,
    A2($Json$Decode._op[":="],
    "upwind",
@@ -2104,7 +2123,10 @@ Elm.Decoders.make = function (_elm) {
    raceAreaDecoder),
    A2($Json$Decode._op[":="],
    "windGenerator",
-   windGeneratorDecoder));
+   windGeneratorDecoder),
+   A2($Json$Decode._op[":="],
+   "gustGenerator",
+   gustGeneratorDecoder));
    var playerDecoder = A8($Json$Decode.object7,
    $Models.Player,
    A2($Json$Decode._op[":="],
@@ -2233,7 +2255,9 @@ Elm.Decoders.make = function (_elm) {
                           ,gridRowDecoder: gridRowDecoder
                           ,tileKindDecoder: tileKindDecoder
                           ,raceAreaDecoder: raceAreaDecoder
-                          ,windGeneratorDecoder: windGeneratorDecoder};
+                          ,windGeneratorDecoder: windGeneratorDecoder
+                          ,gustGeneratorDecoder: gustGeneratorDecoder
+                          ,gustDefGenerator: gustDefGenerator};
    return _elm.Decoders.values;
 };
 Elm.Dict = Elm.Dict || {};
@@ -3519,13 +3543,25 @@ Elm.Encoders.make = function (_elm) {
                   return $Json$Encode.list(_L.fromArray([encodeKey(_v0._0)
                                                         ,encodeValue(_v0._1)]));}
                _U.badCase($moduleName,
-               "on line 32, column 26 to 64");
+               "on line 84, column 26 to 64");
             }();
          };
          var fields = $List.map(encodeField)($Dict.toList(dict));
          return $Json$Encode.list(fields);
       }();
    });
+   var pointEncoder = function (_v4) {
+      return function () {
+         switch (_v4.ctor)
+         {case "_Tuple2":
+            return $Json$Encode.list(A2($List.map,
+              $Json$Encode.$float,
+              _L.fromArray([_v4._0
+                           ,_v4._1])));}
+         _U.badCase($moduleName,
+         "on line 55, column 3 to 40");
+      }();
+   };
    var tileKindEncoder = function (kind) {
       return $Json$Encode.string(function () {
          switch (kind.ctor)
@@ -3533,7 +3569,7 @@ Elm.Encoders.make = function (_elm) {
             case "Rock": return "R";
             case "Water": return "W";}
          _U.badCase($moduleName,
-         "between lines 24 and 27");
+         "between lines 41 and 44");
       }());
    };
    var gridRowEncoder = function (row) {
@@ -3548,19 +3584,97 @@ Elm.Encoders.make = function (_elm) {
       gridRowEncoder,
       grid);
    };
+   _op["=>"] = F2(function (v0,
+   v1) {
+      return {ctor: "_Tuple2"
+             ,_0: v0
+             ,_1: v1};
+   });
    var gateEncoder = function (gate) {
-      return $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
-                                               ,_0: "y"
-                                               ,_1: $Json$Encode.$float(gate.y)}
-                                              ,{ctor: "_Tuple2"
-                                               ,_0: "width"
-                                               ,_1: $Json$Encode.$float(gate.width)}]));
+      return $Json$Encode.object(_L.fromArray([A2(_op["=>"],
+                                              "y",
+                                              $Json$Encode.$float(gate.y))
+                                              ,A2(_op["=>"],
+                                              "width",
+                                              $Json$Encode.$float(gate.width))]));
+   };
+   var areaEncoder = function (a) {
+      return $Json$Encode.object(_L.fromArray([A2(_op["=>"],
+                                              "rightTop",
+                                              pointEncoder(a.rightTop))
+                                              ,A2(_op["=>"],
+                                              "leftBottom",
+                                              pointEncoder(a.leftBottom))]));
+   };
+   var windGeneratorEncoder = function (g) {
+      return $Json$Encode.object(_L.fromArray([A2(_op["=>"],
+                                              "wavelength1",
+                                              $Json$Encode.$float(g.wavelength1))
+                                              ,A2(_op["=>"],
+                                              "amplitude1",
+                                              $Json$Encode.$float(g.amplitude1))
+                                              ,A2(_op["=>"],
+                                              "wavelength2",
+                                              $Json$Encode.$float(g.wavelength2))
+                                              ,A2(_op["=>"],
+                                              "amplitude2",
+                                              $Json$Encode.$float(g.amplitude2))]));
+   };
+   var gustDefEncoder = function (d) {
+      return $Json$Encode.object(_L.fromArray([A2(_op["=>"],
+                                              "angle",
+                                              $Json$Encode.$float(d.angle))
+                                              ,A2(_op["=>"],
+                                              "speed",
+                                              $Json$Encode.$float(d.speed))
+                                              ,A2(_op["=>"],
+                                              "radius",
+                                              $Json$Encode.$float(d.radius))]));
+   };
+   var gustGeneratorEncoder = function (g) {
+      return $Json$Encode.object(_L.fromArray([A2(_op["=>"],
+                                              "interval",
+                                              $Json$Encode.$int(g.interval))
+                                              ,A2(_op["=>"],
+                                              "defs",
+                                              $Json$Encode.list(A2($List.map,
+                                              gustDefEncoder,
+                                              g.defs)))]));
+   };
+   var courseEncoder = function (course) {
+      return $Json$Encode.object(_L.fromArray([A2(_op["=>"],
+                                              "upwind",
+                                              gateEncoder(course.upwind))
+                                              ,A2(_op["=>"],
+                                              "downwind",
+                                              gateEncoder(course.downwind))
+                                              ,A2(_op["=>"],
+                                              "grid",
+                                              gridEncoder(course.grid))
+                                              ,A2(_op["=>"],
+                                              "laps",
+                                              $Json$Encode.$int(course.laps))
+                                              ,A2(_op["=>"],
+                                              "area",
+                                              areaEncoder(course.area))
+                                              ,A2(_op["=>"],
+                                              "windGenerator",
+                                              windGeneratorEncoder(course.windGenerator))
+                                              ,A2(_op["=>"],
+                                              "gustGenerator",
+                                              gustGeneratorEncoder(course.gustGenerator))]));
    };
    _elm.Encoders.values = {_op: _op
+                          ,courseEncoder: courseEncoder
                           ,gateEncoder: gateEncoder
                           ,gridEncoder: gridEncoder
                           ,gridRowEncoder: gridRowEncoder
                           ,tileKindEncoder: tileKindEncoder
+                          ,areaEncoder: areaEncoder
+                          ,pointEncoder: pointEncoder
+                          ,windGeneratorEncoder: windGeneratorEncoder
+                          ,gustGeneratorEncoder: gustGeneratorEncoder
+                          ,gustDefEncoder: gustDefEncoder
                           ,dictEncoder: dictEncoder};
    return _elm.Encoders.values;
 };
@@ -4268,7 +4382,7 @@ Elm.Game.Grid.make = function (_elm) {
          "between lines 23 and 32");
       }();
    });
-   var hexRadius = 40;
+   var hexRadius = 50;
    var hexHeight = hexRadius * 2;
    var hexWidth = $Basics.sqrt(3) / 2 * hexHeight;
    var hexDims = {ctor: "_Tuple2"
@@ -5554,7 +5668,7 @@ Elm.Game.RenderSvg.Course.make = function (_elm) {
                  _L.fromArray([]));
               }();}
          _U.badCase($moduleName,
-         "between lines 46 and 57");
+         "between lines 46 and 59");
       }();
    };
    var renderTiledGust = function (_v4) {
@@ -7453,9 +7567,6 @@ Elm.Game.Steps.Moving.make = function (_elm) {
          course.grid,
          p),
          $Maybe.Just($Models.Water));
-         var outOfBounds = $Basics.not(A2($Game$Geo.inBox,
-         p,
-         $Game$Models.areaBox(course.area)));
          var halfBoatWidth = $Game$Models.boatWidth / 2;
          var $ = $Game$Models.getGateMarks(course.upwind),
          ul = $._0,
@@ -7475,7 +7586,7 @@ Elm.Game.Steps.Moving.make = function (_elm) {
             $Game$Models.markRadius + halfBoatWidth) < 1;
          },
          marks);
-         return stuckOnMark || (outOfBounds || onGround);
+         return stuckOnMark || onGround;
       }();
    });
    var maxAccel = 3.0e-2;
@@ -11333,6 +11444,20 @@ Elm.Models.make = function (_elm) {
              ,coords: b
              ,kind: a};
    });
+   var GustDef = F3(function (a,
+   b,
+   c) {
+      return {_: {}
+             ,angle: a
+             ,radius: c
+             ,speed: b};
+   });
+   var GustGenerator = F2(function (a,
+   b) {
+      return {_: {}
+             ,defs: b
+             ,interval: a};
+   });
    var WindGenerator = F4(function (a,
    b,
    c,
@@ -11355,16 +11480,18 @@ Elm.Models.make = function (_elm) {
    var Gate = F2(function (a,b) {
       return {_: {},width: b,y: a};
    });
-   var Course = F6(function (a,
+   var Course = F7(function (a,
    b,
    c,
    d,
    e,
-   f) {
+   f,
+   g) {
       return {_: {}
              ,area: e
              ,downwind: b
              ,grid: c
+             ,gustGenerator: g
              ,laps: d
              ,upwind: a
              ,windGenerator: f};
@@ -11465,6 +11592,8 @@ Elm.Models.make = function (_elm) {
                         ,UpwindGate: UpwindGate
                         ,StartLine: StartLine
                         ,WindGenerator: WindGenerator
+                        ,GustGenerator: GustGenerator
+                        ,GustDef: GustDef
                         ,Tile: Tile
                         ,Water: Water
                         ,Grass: Grass
@@ -20347,7 +20476,7 @@ Elm.Routes.make = function (_elm) {
                    "/track/",
                    showTrack(appState))
                    ,A2($Router._op[":->"],
-                   "/editor/",
+                   "/edit/",
                    editTrack(appState))
                    ,A2($Router._op[":->"],
                    "/play/",
@@ -20400,15 +20529,57 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
          return A2($Screens$Utils.sidebar,
          {ctor: "_Tuple2"
          ,_0: $Constants.sidebarWidth
-         ,_1: $Basics.snd(_v0.dims)},
+         ,_1: $Basics.snd(_v0.courseDims)},
          _L.fromArray([A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("aside-module")]),
-         _L.fromArray([A2($Html.button,
-         _L.fromArray([A2($Html$Events.onClick,
-                      $Screens$EditTrack$Updates.actions.address,
-                      $Screens$EditTrack$Types.Save)
-                      ,$Html$Attributes.$class("btn btn-primary btn-block")]),
-         _L.fromArray([$Html.text("Save")]))]))]));
+         _L.fromArray([A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("input-group")]),
+                      _L.fromArray([A2($Html.span,
+                                   _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
+                                   _L.fromArray([$Html.text("Downwind")]))
+                                   ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.downwind.y))
+                                                                          ,A2($Screens$Utils.onIntInput,
+                                                                          $Screens$EditTrack$Updates.actions.address,
+                                                                          $Screens$EditTrack$Types.SetDownwindY)
+                                                                          ,$Html$Attributes.type$("number")
+                                                                          ,$Html$Attributes.step("10")]))]))
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("input-group")]),
+                      _L.fromArray([A2($Html.span,
+                                   _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
+                                   _L.fromArray([$Html.text("Upwind")]))
+                                   ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.upwind.y))
+                                                                          ,A2($Screens$Utils.onIntInput,
+                                                                          $Screens$EditTrack$Updates.actions.address,
+                                                                          $Screens$EditTrack$Types.SetUpwindY)
+                                                                          ,$Html$Attributes.type$("number")
+                                                                          ,$Html$Attributes.step("10")]))]))
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("input-group")]),
+                      _L.fromArray([A2($Html.span,
+                                   _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
+                                   _L.fromArray([$Html.text("Gates width")]))
+                                   ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.downwind.width))
+                                                                          ,A2($Screens$Utils.onIntInput,
+                                                                          $Screens$EditTrack$Updates.actions.address,
+                                                                          $Screens$EditTrack$Types.SetGateWidth)
+                                                                          ,$Html$Attributes.type$("number")
+                                                                          ,$Html$Attributes.step("10")]))]))
+                      ,A2($Html.br,
+                      _L.fromArray([]),
+                      _L.fromArray([]))
+                      ,A2($Html.button,
+                      _L.fromArray([A2($Html$Events.onClick,
+                                   $Screens$EditTrack$Updates.actions.address,
+                                   $Screens$EditTrack$Types.Save)
+                                   ,$Html$Attributes.$class("btn btn-primary btn-block")]),
+                      _L.fromArray([$Html.text("Save")]))]))]));
       }();
    };
    _elm.Screens.EditTrack.SideView.values = {_op: _op
@@ -20439,6 +20610,22 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var NoOp = {ctor: "NoOp"};
    var Save = {ctor: "Save"};
+   var SetLaps = function (a) {
+      return {ctor: "SetLaps"
+             ,_0: a};
+   };
+   var SetGateWidth = function (a) {
+      return {ctor: "SetGateWidth"
+             ,_0: a};
+   };
+   var SetUpwindY = function (a) {
+      return {ctor: "SetUpwindY"
+             ,_0: a};
+   };
+   var SetDownwindY = function (a) {
+      return {ctor: "SetDownwindY"
+             ,_0: a};
+   };
    var EscapeMode = {ctor: "EscapeMode"};
    var NextTileKind = {ctor: "NextTileKind"};
    var MouseAction = function (a) {
@@ -20456,19 +20643,15 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
       return {ctor: "CreateTile"
              ,_0: a};
    };
-   var Editor = F6(function (a,
+   var Editor = F4(function (a,
    b,
    c,
-   d,
-   e,
-   f) {
+   d) {
       return {_: {}
-             ,center: d
-             ,dims: e
-             ,downwind: c
-             ,grid: a
-             ,mode: f
-             ,upwind: b};
+             ,center: b
+             ,course: a
+             ,courseDims: c
+             ,mode: d};
    });
    var Screen = F4(function (a,
    b,
@@ -20491,6 +20674,10 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                          ,MouseAction: MouseAction
                                          ,NextTileKind: NextTileKind
                                          ,EscapeMode: EscapeMode
+                                         ,SetDownwindY: SetDownwindY
+                                         ,SetUpwindY: SetUpwindY
+                                         ,SetGateWidth: SetGateWidth
+                                         ,SetLaps: SetLaps
                                          ,Save: Save
                                          ,NoOp: NoOp};
    return _elm.Screens.EditTrack.Types.values;
@@ -20511,8 +20698,10 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Screens.EditTrack.Updates",
    $AppTypes = Elm.AppTypes.make(_elm),
+   $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
@@ -20524,15 +20713,107 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
+   var getRaceArea = function (grid) {
+      return function () {
+         var getLast = function (arr) {
+            return A2($Maybe.withDefault,
+            0,
+            A2($Array.get,
+            $Array.length(arr) - 1,
+            arr));
+         };
+         var getFirst = function (arr) {
+            return A2($Maybe.withDefault,
+            0,
+            A2($Array.get,0,arr));
+         };
+         var waterPoints = $List.map(function (t) {
+            return $Game$Grid.hexCoordsToPoint(t.coords);
+         })($List.filter(function (t) {
+            return _U.eq(t.kind,
+            $Models.Water);
+         })($Game$Grid.getTilesList(grid)));
+         var xVals = $Array.fromList($List.sort($List.map($Basics.fst)(waterPoints)));
+         var right = getLast(xVals);
+         var left = getFirst(xVals);
+         var yVals = $Array.fromList($List.sort($List.map($Basics.snd)(waterPoints)));
+         var top = getLast(yVals);
+         var bottom = getFirst(yVals);
+         return A2($Models.RaceArea,
+         {ctor: "_Tuple2"
+         ,_0: right
+         ,_1: top},
+         {ctor: "_Tuple2"
+         ,_0: left
+         ,_1: bottom});
+      }();
+   };
    var save = F2(function (slug,
-   editor) {
-      return A2($Task.andThen,
-      A2($ServerApi.saveTrack,
-      slug,
-      editor),
-      function (result) {
-         return $Task.succeed({ctor: "_Tuple0"});
-      });
+   _v0) {
+      return function () {
+         return function () {
+            var area = getRaceArea(_v0.course.grid);
+            var withArea = _U.replace([["area"
+                                       ,area]],
+            _v0.course);
+            return A2($Task.andThen,
+            A2($ServerApi.saveTrack,
+            slug,
+            withArea),
+            function (result) {
+               return $Task.succeed({ctor: "_Tuple0"});
+            });
+         }();
+      }();
+   });
+   var updateLaps = F2(function (laps,
+   course) {
+      return _U.replace([["laps"
+                         ,laps]],
+      course);
+   });
+   var updateGateWidth = F2(function (w,
+   _v2) {
+      return function () {
+         return function () {
+            var newUpwind = _U.replace([["width"
+                                        ,$Basics.toFloat(w)]],
+            _v2.upwind);
+            var newDownwind = _U.replace([["width"
+                                          ,$Basics.toFloat(w)]],
+            _v2.downwind);
+            return _U.replace([["downwind"
+                               ,newDownwind]
+                              ,["upwind",newUpwind]],
+            _v2);
+         }();
+      }();
+   });
+   var updateDownwindY = F2(function (y,
+   _v4) {
+      return function () {
+         return function () {
+            var newDownwind = _U.replace([["y"
+                                          ,$Basics.toFloat(y)]],
+            _v4.downwind);
+            return _U.replace([["downwind"
+                               ,newDownwind]],
+            _v4);
+         }();
+      }();
+   });
+   var updateUpwindY = F2(function (y,
+   _v6) {
+      return function () {
+         return function () {
+            var newUpwind = _U.replace([["y"
+                                        ,$Basics.toFloat(y)]],
+            _v6.upwind);
+            return _U.replace([["upwind"
+                               ,newUpwind]],
+            _v6);
+         }();
+      }();
    });
    var getNextMode = function (mode) {
       return function () {
@@ -20550,7 +20831,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       }();
    };
    var updateCenter = F2(function (event,
-   _v2) {
+   _v10) {
       return function () {
          return function () {
             var $ = function () {
@@ -20574,41 +20855,41 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                          ,_0: 0
                          ,_1: 0};}
                _U.badCase($moduleName,
-               "between lines 178 and 185");
+               "between lines 215 and 222");
             }(),
             dx = $._0,
             dy = $._1;
             var newCenter = {ctor: "_Tuple2"
-                            ,_0: $Basics.fst(_v2.center) + $Basics.toFloat(dx)
-                            ,_1: $Basics.snd(_v2.center) + $Basics.toFloat(dy)};
+                            ,_0: $Basics.fst(_v10.center) + $Basics.toFloat(dx)
+                            ,_1: $Basics.snd(_v10.center) + $Basics.toFloat(dy)};
             return _U.replace([["center"
                                ,newCenter]],
-            _v2);
+            _v10);
          }();
       }();
    });
-   var clickPoint = F2(function (_v13,
-   _v14) {
+   var clickPoint = F2(function (_v21,
+   _v22) {
       return function () {
-         switch (_v14.ctor)
+         switch (_v22.ctor)
          {case "_Tuple2":
             return function () {
                  return function () {
-                    var $ = _v13.center,
+                    var $ = _v21.center,
                     cx = $._0,
                     cy = $._1;
-                    var $ = _v13.dims,
+                    var $ = _v21.courseDims,
                     w = $._0,
                     h = $._1;
-                    var x$ = $Basics.toFloat(_v14._0 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
-                    var y$ = $Basics.toFloat(0 - _v14._1) - cy + $Basics.toFloat(h) / 2;
+                    var x$ = $Basics.toFloat(_v22._0 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
+                    var y$ = $Basics.toFloat(0 - _v22._1) - cy + $Basics.toFloat(h) / 2;
                     return {ctor: "_Tuple2"
                            ,_0: x$
                            ,_1: y$};
                  }();
               }();}
          _U.badCase($moduleName,
-         "between lines 166 and 172");
+         "between lines 203 and 209");
       }();
    });
    var getMouseEventTiles = F2(function (editor,
@@ -20633,7 +20914,20 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                case "StartAt":
                return _L.fromArray([tileCoords(event._0)]);}
             _U.badCase($moduleName,
-            "between lines 152 and 162");
+            "between lines 189 and 199");
+         }();
+      }();
+   });
+   var withGrid = F2(function (grid,
+   _v32) {
+      return function () {
+         return function () {
+            var newCourse = _U.replace([["grid"
+                                        ,grid]],
+            _v32.course);
+            return _U.replace([["course"
+                               ,newCourse]],
+            _v32);
          }();
       }();
    });
@@ -20646,10 +20940,10 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          event);
          var newGrid = A3($List.foldl,
          $Game$Grid.createTile(kind),
-         editor.grid,
+         editor.course.grid,
          coordsList);
-         return _U.replace([["grid"
-                            ,newGrid]],
+         return A2(withGrid,
+         newGrid,
          editor);
       }();
    });
@@ -20661,21 +20955,21 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          event);
          var newGrid = A3($List.foldl,
          $Game$Grid.deleteTile,
-         editor.grid,
+         editor.course.grid,
          coordsList);
-         return _U.replace([["grid"
-                            ,newGrid]],
+         return A2(withGrid,
+         newGrid,
          editor);
       }();
    });
    var mouseAction = F2(function (event,
    editor) {
       return function () {
-         var _v24 = editor.mode;
-         switch (_v24.ctor)
+         var _v34 = editor.mode;
+         switch (_v34.ctor)
          {case "CreateTile":
             return A3(updateTileAction,
-              _v24._0,
+              _v34._0,
               event,
               editor);
             case "Erase":
@@ -20687,18 +20981,18 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
               event,
               editor);}
          _U.badCase($moduleName,
-         "between lines 122 and 128");
+         "between lines 152 and 158");
       }();
    });
-   var courseDims = function (_v26) {
+   var getCourseDims = function (_v36) {
       return function () {
-         switch (_v26.ctor)
+         switch (_v36.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple2"
-                   ,_0: _v26._0 - $Constants.sidebarWidth
-                   ,_1: _v26._1};}
+                   ,_0: _v36._0 - $Constants.sidebarWidth
+                   ,_1: _v36._1};}
          _U.badCase($moduleName,
-         "on line 118, column 4 to 23");
+         "on line 148, column 4 to 23");
       }();
    };
    var updateDims = F2(function (dims,
@@ -20706,8 +21000,8 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       return function () {
          var newEditor = A2($Maybe.map,
          function (e) {
-            return _U.replace([["dims"
-                               ,courseDims(dims)]],
+            return _U.replace([["courseDims"
+                               ,getCourseDims(dims)]],
             e);
          },
          screen.editor);
@@ -20716,6 +21010,12 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                            ,["dims",dims]],
          screen);
       }();
+   });
+   var updateCourse = F2(function (update,
+   editor) {
+      return _U.replace([["course"
+                         ,update(editor.course)]],
+      editor);
    });
    var updateEditor = F2(function (update,
    screen) {
@@ -20733,62 +21033,70 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       return function () {
          switch (action.ctor)
          {case "EscapeMode":
-            return $AppTypes.local(A2(updateEditor,
-              function (e) {
+            return $AppTypes.local(updateEditor(function (e) {
                  return _U.replace([["mode"
                                     ,$Screens$EditTrack$Types.Watch]],
                  e);
-              },
-              screen));
+              })(screen));
             case "MouseAction":
-            return $AppTypes.local(A2(updateEditor,
-              mouseAction(action._0),
-              screen));
+            return $AppTypes.local(updateEditor(mouseAction(action._0))(screen));
             case "NextTileKind":
-            return $AppTypes.local(A2(updateEditor,
-              function (e) {
+            return $AppTypes.local(updateEditor(function (e) {
                  return _U.replace([["mode"
                                     ,getNextMode(e.mode)]],
                  e);
-              },
-              screen));
+              })(screen));
             case "Save":
             return function () {
-                 var _v33 = {ctor: "_Tuple2"
+                 var _v47 = {ctor: "_Tuple2"
                             ,_0: screen.track
                             ,_1: screen.editor};
-                 switch (_v33.ctor)
+                 switch (_v47.ctor)
                  {case "_Tuple2":
-                    switch (_v33._0.ctor)
+                    switch (_v47._0.ctor)
                       {case "Just":
-                         switch (_v33._1.ctor)
+                         switch (_v47._1.ctor)
                            {case "Just":
                               return A2($AppTypes.react,
                                 screen,
                                 A2(save,
-                                _v33._0._0.slug,
-                                _v33._1._0));}
+                                _v47._0._0.slug,
+                                _v47._1._0));}
                            break;}
                       break;}
                  return $AppTypes.local(screen);
               }();
+            case "SetDownwindY":
+            return $AppTypes.local(function ($) {
+                 return updateEditor(updateCourse(updateDownwindY($)));
+              }(action._0)(screen));
+            case "SetGateWidth":
+            return $AppTypes.local(function ($) {
+                 return updateEditor(updateCourse(updateGateWidth($)));
+              }(action._0)(screen));
+            case "SetLaps":
+            return $AppTypes.local(function ($) {
+                 return updateEditor(updateCourse(updateLaps($)));
+              }(action._0)(screen));
             case "SetTrack":
             return function () {
                  var editor = {_: {}
                               ,center: {ctor: "_Tuple2"
                                        ,_0: 0
                                        ,_1: 0}
-                              ,dims: courseDims(screen.dims)
-                              ,downwind: action._0.course.downwind
-                              ,grid: action._0.course.grid
-                              ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)
-                              ,upwind: action._0.course.upwind};
+                              ,course: action._0.course
+                              ,courseDims: getCourseDims(screen.dims)
+                              ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)};
                  return $AppTypes.local(_U.replace([["track"
                                                     ,$Maybe.Just(action._0)]
                                                    ,["editor"
                                                     ,$Maybe.Just(editor)]],
                  screen));
               }();
+            case "SetUpwindY":
+            return $AppTypes.local($Debug.log("upwindy")(function ($) {
+                 return updateEditor(updateCourse(updateUpwindY($)));
+              }(action._0)(screen)));
             case "TrackNotFound":
             return $AppTypes.local(_U.replace([["notFound"
                                                ,true]],
@@ -20823,7 +21131,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  actions.address,
                  $Screens$EditTrack$Types.SetTrack(result._0));}
             _U.badCase($moduleName,
-            "between lines 102 and 106");
+            "between lines 132 and 136");
          }();
       });
    };
@@ -20846,17 +21154,24 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                            ,mount: mount
                                            ,update: update
                                            ,updateEditor: updateEditor
+                                           ,updateCourse: updateCourse
                                            ,loadTrack: loadTrack
                                            ,updateDims: updateDims
-                                           ,courseDims: courseDims
+                                           ,getCourseDims: getCourseDims
                                            ,mouseAction: mouseAction
                                            ,deleteTileAction: deleteTileAction
                                            ,updateTileAction: updateTileAction
+                                           ,withGrid: withGrid
                                            ,getMouseEventTiles: getMouseEventTiles
                                            ,clickPoint: clickPoint
                                            ,updateCenter: updateCenter
                                            ,getNextMode: getNextMode
-                                           ,save: save};
+                                           ,updateUpwindY: updateUpwindY
+                                           ,updateDownwindY: updateDownwindY
+                                           ,updateGateWidth: updateGateWidth
+                                           ,updateLaps: updateLaps
+                                           ,save: save
+                                           ,getRaceArea: getRaceArea};
    return _elm.Screens.EditTrack.Updates.values;
 };
 Elm.Screens = Elm.Screens || {};
@@ -20915,7 +21230,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    var renderCourse = function (_v2) {
       return function () {
          return function () {
-            var $ = $Game$Geo.floatify(_v2.dims),
+            var $ = $Game$Geo.floatify(_v2.courseDims),
             w = $._0,
             h = $._1;
             var cx = w / 2 + $Basics.fst(_v2.center);
@@ -20929,12 +21244,12 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                          A2($Game$Render$SvgUtils.translate,
                          cx,
                          cy)))]),
-                         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v2.grid)
+                         _L.fromArray([$Game$RenderSvg$Tiles.lazyRenderTiles(_v2.course.grid)
                                       ,A2($Game$RenderSvg$Gates.renderOpenGate,
-                                      _v2.upwind,
+                                      _v2.course.upwind,
                                       0)
                                       ,A2($Game$RenderSvg$Gates.renderOpenGate,
-                                      _v2.downwind,
+                                      _v2.course.downwind,
                                       0)
                                       ,A2($Game$RenderSvg$Players.renderPlayerHull,
                                       0,
@@ -20943,20 +21258,18 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
          }();
       }();
    };
-   var editorView = function (_v4) {
-      return function () {
-         return A2($Html.div,
-         _L.fromArray([$Svg$Attributes.$class("content")]),
-         _L.fromArray([$Screens$EditTrack$SideView.sideView(_v4)
-                      ,renderCourse(_v4)]));
-      }();
+   var editorView = function (editor) {
+      return A2($Html.div,
+      _L.fromArray([$Svg$Attributes.$class("content")]),
+      _L.fromArray([$Screens$EditTrack$SideView.sideView(editor)
+                   ,renderCourse(editor)]));
    };
    var view = function (screen) {
       return function () {
-         var _v6 = screen.editor;
-         switch (_v6.ctor)
+         var _v4 = screen.editor;
+         switch (_v4.ctor)
          {case "Just":
-            return editorView(_v6._0);
+            return editorView(_v4._0);
             case "Nothing":
             return $Html.text("loading");}
          _U.badCase($moduleName,
@@ -22543,7 +22856,7 @@ Elm.Screens.Register.View.make = function (_elm) {
               _L.fromArray([]),
               _L.fromArray([]));}
          _U.badCase($moduleName,
-         "between lines 80 and 84");
+         "between lines 74 and 78");
       }();
    });
    var hasError = F2(function (formErrors,
@@ -22552,22 +22865,11 @@ Elm.Screens.Register.View.make = function (_elm) {
       field,
       formErrors));
    });
-   var formGroup = F2(function (hasErr,
-   content) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.classList(_L.fromArray([{ctor: "_Tuple2"
-                                                             ,_0: "form-group"
-                                                             ,_1: true}
-                                                            ,{ctor: "_Tuple2"
-                                                             ,_0: "has-error"
-                                                             ,_1: hasErr}]))]),
-      content);
-   });
    var registerForm = function (_v2) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("row form-login")]),
-         _L.fromArray([$Screens$Utils.whitePanel(_L.fromArray([A2(formGroup,
+         _L.fromArray([$Screens$Utils.whitePanel(_L.fromArray([A2($Screens$Utils.formGroup,
                                                               A2(hasError,
                                                               _v2.errors,
                                                               "handle"),
@@ -22584,7 +22886,7 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                                            ,A2(fieldError,
                                                                            _v2.errors,
                                                                            "handle")]))
-                                                              ,A2(formGroup,
+                                                              ,A2($Screens$Utils.formGroup,
                                                               A2(hasError,
                                                               _v2.errors,
                                                               "email"),
@@ -22601,7 +22903,7 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                                            ,A2(fieldError,
                                                                            _v2.errors,
                                                                            "email")]))
-                                                              ,A2(formGroup,
+                                                              ,A2($Screens$Utils.formGroup,
                                                               A2(hasError,
                                                               _v2.errors,
                                                               "password"),
@@ -22642,7 +22944,6 @@ Elm.Screens.Register.View.make = function (_elm) {
    _elm.Screens.Register.View.values = {_op: _op
                                        ,view: view
                                        ,registerForm: registerForm
-                                       ,formGroup: formGroup
                                        ,hasError: hasError
                                        ,fieldError: fieldError};
    return _elm.Screens.Register.View.values;
@@ -23100,7 +23401,7 @@ Elm.Screens.Utils.make = function (_elm) {
             case "Nothing":
             return p.user ? "/assets/images/avatar-user.png" : "/assets/images/avatar-guest.png";}
          _U.badCase($moduleName,
-         "between lines 113 and 115");
+         "between lines 127 and 129");
       }();
    };
    var playerWithAvatar = function (player) {
@@ -23143,7 +23444,7 @@ Elm.Screens.Utils.make = function (_elm) {
                                                                  "px")}]))]),
               content);}
          _U.badCase($moduleName,
-         "between lines 90 and 96");
+         "between lines 104 and 110");
       }();
    });
    var blockWrapper = F2(function (wrapperClass,
@@ -23180,6 +23481,17 @@ Elm.Screens.Utils.make = function (_elm) {
       attributes),
       _L.fromArray([]));
    };
+   var formGroup = F2(function (hasErr,
+   content) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.classList(_L.fromArray([{ctor: "_Tuple2"
+                                                             ,_0: "form-group"
+                                                             ,_1: true}
+                                                            ,{ctor: "_Tuple2"
+                                                             ,_0: "has-error"
+                                                             ,_1: hasErr}]))]),
+      content);
+   });
    var col4 = function (content) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("col-lg-4 col-lg-offset-4")]),
@@ -23220,6 +23532,24 @@ Elm.Screens.Utils.make = function (_elm) {
             address,
             value);
          }();
+      });
+   });
+   var intTargetValue = A2($Json$Decode.at,
+   _L.fromArray(["target"
+                ,"value"]),
+   A2($Json$Decode.customDecoder,
+   $Json$Decode.string,
+   $String.toInt));
+   var onIntInput = F2(function (address,
+   contentToValue) {
+      return A4($Html$Events.onWithOptions,
+      "input",
+      eventOptions,
+      intTargetValue,
+      function (str) {
+         return A2($Signal.message,
+         address,
+         contentToValue(str));
       });
    });
    var onInput = F2(function (address,
@@ -23267,6 +23597,8 @@ Elm.Screens.Utils.make = function (_elm) {
                                ,linkTo: linkTo
                                ,onPathClick: onPathClick
                                ,onInput: onInput
+                               ,onIntInput: onIntInput
+                               ,intTargetValue: intTargetValue
                                ,onEnter: onEnter
                                ,eventOptions: eventOptions
                                ,is13: is13
@@ -23274,6 +23606,7 @@ Elm.Screens.Utils.make = function (_elm) {
                                ,row: row
                                ,col4: col4
                                ,whitePanel: whitePanel
+                               ,formGroup: formGroup
                                ,textInput: textInput
                                ,passwordInput: passwordInput
                                ,titleWrapper: titleWrapper
@@ -23309,7 +23642,6 @@ Elm.ServerApi.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var serverError = A2($Dict.singleton,
@@ -23342,7 +23674,7 @@ Elm.ServerApi.make = function (_elm) {
                                       case "Ok":
                                       return $Result.Err(_v5._0);}
                                    _U.badCase($moduleName,
-                                   "between lines 116 and 121");
+                                   "between lines 112 and 117");
                                 }();}
                            break;}
                       break;}
@@ -23362,7 +23694,7 @@ Elm.ServerApi.make = function (_elm) {
                  return $Result.Err(serverError);
               }();}
          _U.badCase($moduleName,
-         "between lines 112 and 130");
+         "between lines 108 and 126");
       }();
    });
    var handleResult = F2(function (decoder,
@@ -23376,7 +23708,7 @@ Elm.ServerApi.make = function (_elm) {
               decoder,
               result._0);}
          _U.badCase($moduleName,
-         "between lines 103 and 107");
+         "between lines 99 and 103");
       }();
    });
    var jsonRequest = F2(function (url,
@@ -23399,20 +23731,13 @@ Elm.ServerApi.make = function (_elm) {
       A2(jsonRequest,url,jsonBody))));
    });
    var saveTrack = F2(function (slug,
-   editor) {
-      return A2(postJson,
+   course) {
+      return A3(postJson,
       $Json$Decode.bool,
       A2($Basics._op["++"],
       "/api/track/",
-      slug))($Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
-                                               ,_0: "upwind"
-                                               ,_1: $Encoders.gateEncoder(editor.upwind)}
-                                              ,{ctor: "_Tuple2"
-                                               ,_0: "downwind"
-                                               ,_1: $Encoders.gateEncoder(editor.downwind)}
-                                              ,{ctor: "_Tuple2"
-                                               ,_0: "grid"
-                                               ,_1: $Encoders.gridEncoder(editor.grid)}])));
+      slug),
+      $Encoders.courseEncoder(course));
    });
    var postLogout = A3(postJson,
    $Decoders.playerDecoder,

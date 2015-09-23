@@ -51,6 +51,8 @@ renderGustTile (coords, {angle, speed}) =
     polygon
       [ points verticesPoints
       , fill color
+      -- , stroke color
+      -- , strokeWidth "0.5"
       , opacity (toString a)
       , transform ("translate(" ++ toString x ++ ", " ++ toString y ++ ")")
       ]

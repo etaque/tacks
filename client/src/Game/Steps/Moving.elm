@@ -61,7 +61,6 @@ isGrounded p course =
     halfBoatWidth = boatWidth / 2
 
     stuckOnMark = exists (\m -> (distance p m) <= markRadius + halfBoatWidth) marks
-    outOfBounds = not (inBox p (areaBox course.area))
     onGround = (currentTile course.grid p) /= Just Water
   in
-    stuckOnMark || outOfBounds || onGround
+    stuckOnMark || onGround

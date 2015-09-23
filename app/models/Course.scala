@@ -13,14 +13,10 @@ case class Course(
   upwind: Gate,
   downwind: Gate,
   laps: Int,
-  markRadius: Double = 5,
   grid: Course.Grid = Nil,
-  islands: Seq[Island],
   area: RaceArea,
   windGenerator: WindGenerator,
-  gustGenerator: GustGenerator,
-  windShadowLength: Double = 120,
-  boatWidth: Double = 3 // for collision detection, should be consistent with icon
+  gustGenerator: GustGenerator
 ) {
   val gatesToCross = laps * 2 + 1
 
@@ -41,7 +37,6 @@ object Course {
       upwind = Gate(height, 200),
       downwind = Gate(0, 200),
       laps = 2,
-      islands = Seq.fill[Island](8)(Island.spawn(area)),
       area = area,
       windGenerator = WindGenerator.spawn(),
       gustGenerator = GustGenerator.spawn

@@ -134,28 +134,28 @@ object Api extends Controller with Security {
     }
   }
 
-  case class TrackUpdate(
-    upwind: Gate,
-    downwind: Gate,
-    grid: Course.Grid
-  )
+  // case class TrackUpdate(
+  //   upwind: Gate,
+  //   downwind: Gate,
+  //   grid: Course.Grid,
+  //   area: 
+  // )
 
-  implicit val trackUpdateReads = (
-    (__ \ "upwind").read[Gate] and
-      (__ \ "downwind").read[Gate] and
-      (__ \ "grid").read[Course.Grid]
-  )(TrackUpdate.apply _)
+  // implicit val trackUpdateReads = (
+  //   (__ \ "upwind").read[Gate] and
+  //     (__ \ "downwind").read[Gate] and
+  //     (__ \ "grid").read[Course.Grid]
+  // )(TrackUpdate.apply _)
 
   def updateTrack(slug: String) = PlayerAction.async(parse.json) { implicit request =>
     TrackDAO.findBySlug(slug).flatMap {
       case Some(track) => {
-        request.body.validate(trackUpdateReads).fold(
+        request.body.validate(courseFormat).fold(
           errors => Future.successful(BadRequest(JsonErrors.format(errors))),
           {
-            case form @ TrackUpdate(upwind, downwind, grid) => {
-              val newCourse = track.course.copy(upwind = upwind, downwind = downwind, grid = grid)
+            course => {
               for {
-                _ <- TrackDAO.updateCourse(track.id, newCourse)
+                _ <- TrackDAO.updateCourse(track.id, course)
               } yield {
                 RacesSupervisor.actorRef ! ReloadTrack(track)
                 Ok

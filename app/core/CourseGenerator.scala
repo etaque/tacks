@@ -21,7 +21,6 @@ object WarmUp extends CourseGenerator {
       upwind = Gate(600, 100),
       downwind = Gate(100, 100),
       laps = 3,
-      islands = Nil,
       area = area,
       windGenerator = WindGenerator.spawn(3, 3, 2, 2),
       gustGenerator = GustGenerator(30, Seq.fill[GustDef](10)(GustDef.spawn))
@@ -40,7 +39,6 @@ object Classic extends CourseGenerator {
       upwind = Gate(height, 200),
       downwind = Gate(100, 200),
       laps = 2,
-      islands = Seq.fill[Island](5)(Island.spawn(area)),
       area = area,
       windGenerator = WindGenerator.spawn(),
       gustGenerator = GustGenerator.spawn()
@@ -55,7 +53,6 @@ object Inlands extends CourseGenerator {
     upwind = Gate(2500, 200),
     downwind = Gate(100, 200),
     laps = 2,
-    islands = Nil,
     area = RaceArea((500, 2700), (-500, -200)),
     windGenerator = WindGenerator.spawn(6, 4, 6, 4),
     gustGenerator = GustGenerator(interval = 10, Seq.fill[GustDef](30)(GustDef.spawn))
@@ -71,7 +68,6 @@ object Archipel extends CourseGenerator {
       upwind = Gate(5000, 200),
       downwind = Gate(100, 200),
       laps = 1,
-      islands = Seq.fill(100)(Island((area.randomX(600), area.randomY(600)), Random.nextInt(50) + 50)),
       area = area,
       windGenerator = WindGenerator.spawn(4, 4, 6, 6),
       gustGenerator = GustGenerator(interval = 30, Seq.fill[GustDef](10)(GustDef.spawn))
@@ -102,7 +98,6 @@ object Grid extends CourseGenerator {
       upwind = upwind,
       downwind = downwind,
       laps = 2,
-      islands = islands,
       area = area,
       windGenerator = WindGenerator.spawn(4, 3, 2, 1),
       gustGenerator = GustGenerator(interval = 30, Seq.fill[GustDef](10)(GustDef.spawn))
@@ -131,7 +126,6 @@ object OysterPark extends CourseGenerator {
       upwind = upwind,
       downwind = downwind,
       laps = 2,
-      islands = islands.flatten,
       area = area,
       windGenerator = WindGenerator.spawn(3, 3, 2, 2),
       gustGenerator = GustGenerator(interval = 20, Seq.fill[GustDef](15)(GustDef.spawn))
@@ -162,7 +156,6 @@ object Minefield extends CourseGenerator {
       upwind = upwind,
       downwind = downwind,
       laps = 1,
-      islands = islands,
       area = area,
       windGenerator = WindGenerator.spawn(5, 5, 3, 3),
       gustGenerator = GustGenerator(interval = 15, Seq.fill[GustDef](10)(GustDef.spawn))

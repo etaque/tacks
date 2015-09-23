@@ -71,6 +71,7 @@ type alias Course =
   , laps : Int
   , area : RaceArea
   , windGenerator : WindGenerator
+  , gustGenerator : GustGenerator
   }
 
 type alias Gate =
@@ -93,6 +94,17 @@ type alias WindGenerator =
   , amplitude1: Float
   , wavelength2: Float
   , amplitude2: Float
+  }
+
+type alias GustGenerator =
+  { interval : Int
+  , defs: List GustDef
+  }
+
+type alias GustDef =
+  { angle : Float
+  , speed : Float
+  , radius : Float
   }
 
 type alias Point = (Float, Float)

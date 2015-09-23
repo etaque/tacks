@@ -13,11 +13,9 @@ type alias Screen =
   }
 
 type alias Editor =
-  { grid : Grid
-  , upwind : Gate
-  , downwind : Gate
+  { course : Course
   , center : Point
-  , dims : Dims
+  , courseDims : Dims
   , mode : Mode
   }
 
@@ -32,6 +30,10 @@ type Action
   | MouseAction MouseEvent
   | NextTileKind
   | EscapeMode
+  | SetDownwindY Int
+  | SetUpwindY Int
+  | SetGateWidth Int
+  | SetLaps Int
   | Save
   | NoOp
 

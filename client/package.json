@@ -15,7 +15,7 @@
     "build": "npm run build-elm && npm run build-js && npm run build-sass",
 
     "build-js": "browserify scripts/setup.js -o ../public/javascripts/setup.js -g uglifyify",
-    "build-elm": "elm make src/Main.elm --output ../public/javascripts/main.js",
+    "build-elm": "elm make src/Main.elm --output ../public/javascripts/Main.js",
     "build-sass": "node-sass -o ../public/stylesheets styles/main.scss",
 
     "watch": "npm run watch-js && npm run watch-elm && npm run watch-sass",
