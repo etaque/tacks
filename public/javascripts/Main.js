@@ -7395,68 +7395,82 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
    $Game$Models = Elm.Game.Models.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var genTiledGust = function (_v0) {
+   var genGustTile = F2(function (_v0,
+   coords) {
+      return function () {
+         return function () {
+            var distance = A2($Game$Geo.distance,
+            _v0.position,
+            $Game$Grid.hexCoordsToPoint(coords));
+            return _U.cmp(distance,
+            _v0.radius) < 1 ? function () {
+               var fromEdge = _v0.radius - distance;
+               var factor = A2($Basics.min,
+               fromEdge / (_v0.radius * 0.2),
+               1);
+               var gustTile = A2($Game$Models.GustTile,
+               _v0.angle * factor,
+               _v0.speed * factor);
+               return $Maybe.Just({ctor: "_Tuple2"
+                                  ,_0: coords
+                                  ,_1: gustTile});
+            }() : $Maybe.Nothing;
+         }();
+      }();
+   });
+   var genTiledGust = function (_v2) {
       return function () {
          return function () {
             var southTile = $Game$Grid.pointToHexCoords(A2($Game$Geo.add,
-            _v0.position,
+            _v2.position,
             {ctor: "_Tuple2"
             ,_0: 0
-            ,_1: 0 - _v0.radius}));
-            var centerTile = $Game$Grid.pointToHexCoords(_v0.position);
+            ,_1: 0 - _v2.radius}));
+            var centerTile = $Game$Grid.pointToHexCoords(_v2.position);
             var distance = A2($Game$Grid.hexDistance,
             centerTile,
             southTile);
             var coordsList = A2($Game$Grid.hexRange,
             centerTile,
             distance);
-            var tiles = $Dict.fromList($List.map(function (c) {
-               return {ctor: "_Tuple2"
-                      ,_0: c
-                      ,_1: A2($Game$Models.GustTile,
-                      _v0.angle,
-                      _v0.speed)};
-            })($List.filter(function (c) {
-               return _U.cmp(A2($Game$Geo.distance,
-               _v0.position,
-               $Game$Grid.hexCoordsToPoint(c)),
-               _v0.radius) < 1;
-            })(coordsList)));
+            var tiles = $Dict.fromList($List.filterMap(genGustTile(_v2))(coordsList));
             return A3($Game$Models.TiledGust,
-            _v0.position,
-            _v0.radius,
+            _v2.position,
+            _v2.radius,
             tiles);
          }();
       }();
    };
    var genTiledGusts = F2(function (now,
-   _v2) {
+   _v4) {
       return function () {
          return {_: {}
                 ,genTime: now
                 ,gusts: A2($List.map,
                 genTiledGust,
-                _v2.gusts)};
+                _v4.gusts)};
       }();
    });
    var interval = 500;
-   var gustsStep = function (_v4) {
+   var gustsStep = function (_v6) {
       return function () {
-         return _U.cmp(_v4.gusts.genTime + interval,
-         _v4.timers.now) < 0 ? _U.replace([["gusts"
+         return _U.cmp(_v6.gusts.genTime + interval,
+         _v6.timers.now) < 0 ? _U.replace([["gusts"
                                            ,A2(genTiledGusts,
-                                           _v4.timers.now,
-                                           _v4.wind)]],
-         _v4) : _v4;
+                                           _v6.timers.now,
+                                           _v6.wind)]],
+         _v6) : _v6;
       }();
    };
    _elm.Game.Steps.Gusts.values = {_op: _op
                                   ,interval: interval
                                   ,gustsStep: gustsStep
                                   ,genTiledGusts: genTiledGusts
-                                  ,genTiledGust: genTiledGust};
+                                  ,genTiledGust: genTiledGust
+                                  ,genGustTile: genGustTile};
    return _elm.Game.Steps.Gusts.values;
 };
 Elm.Game = Elm.Game || {};
@@ -7588,32 +7602,27 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.Steps.PlayerWind",
    $Basics = Elm.Basics.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
+   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var gustEffect = F3(function (state,
-   wind,
-   gust) {
-      return function () {
-         var speedEffect = gust.speed;
-         var originEffect = A2($Game$Geo.angleDelta,
-         gust.angle,
-         wind.origin);
-         var d = A2($Game$Geo.distance,
-         state.position,
-         gust.position);
-         var fromEdge = gust.radius - d;
-         var factor = A2($Basics.min,
-         fromEdge / (gust.radius * 0.2),
-         1);
-         return {_: {}
-                ,factor: factor
-                ,origin: originEffect
-                ,speed: speedEffect};
-      }();
+   var findGustTile = F2(function (p,
+   gustGrid) {
+      return A2($Dict.get,
+      $Game$Grid.pointToHexCoords(p),
+      gustGrid);
+   });
+   var isGustOnPlayer = F2(function (s,
+   g) {
+      return _U.cmp(A2($Game$Geo.distance,
+      s.position,
+      g.position),
+      g.radius + $Game$Grid.hexRadius) < 0;
    });
    var shadowArc = 30;
    var windShadowSector = function (_v0) {
@@ -7623,7 +7632,7 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
                 ,_1: $Game$Geo.ensure360(_v0.shadowDirection + shadowArc / 2)};
       }();
    };
-   var isShadowedBy = F2(function (state,
+   var inShadow = F2(function (state,
    opponent) {
       return _U.cmp(A2($Game$Geo.distance,
       opponent.state.position,
@@ -7641,42 +7650,31 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
          angle);
       }();
    });
-   var shadowImpact = -5;
+   var shadowSpeedImpact = -5;
    var playerWindStep = F2(function (_v2,
    state) {
       return function () {
          return function () {
             var windShadow = $List.sum($List.map(function (_v4) {
                return function () {
-                  return shadowImpact;
+                  return shadowSpeedImpact;
                }();
-            })(A2($List.filter,
-            isShadowedBy(state),
-            _v2.opponents)));
-            var gustsOnPlayer = A2($List.filter,
-            function (g) {
-               return _U.cmp(A2($Game$Geo.distance,
-               state.position,
-               g.position),
-               g.radius) < 0;
+            })($List.filter(inShadow(state))(_v2.opponents)));
+            var gustTiles = $List.filterMap(findGustTile(state.position))($List.map(function (_) {
+               return _.tiles;
+            })($List.filter(isGustOnPlayer(state))(_v2.gusts.gusts)));
+            var gustOrigin = $List.sum(A2($List.map,
+            function (_) {
+               return _.angle;
             },
-            _v2.wind.gusts);
-            var gustsEffects = A2($List.map,
-            A2(gustEffect,state,_v2.wind),
-            gustsOnPlayer);
-            var origin = $List.isEmpty(gustsEffects) ? _v2.wind.origin : function () {
-               var totalEffect = $List.sum(A2($List.map,
-               function (g) {
-                  return g.origin * g.factor;
-               },
-               gustsEffects));
-               return $Game$Geo.ensure360(_v2.wind.origin + totalEffect);
-            }();
-            var speed = _v2.wind.speed + $List.sum(A2($List.map,
-            function (g) {
-               return g.speed * g.factor;
+            gustTiles));
+            var origin = $Game$Geo.ensure360(_v2.wind.origin + gustOrigin);
+            var gustSpeed = $List.sum(A2($List.map,
+            function (_) {
+               return _.speed;
             },
-            gustsEffects)) + windShadow;
+            gustTiles));
+            var speed = _v2.wind.speed + gustSpeed + windShadow;
             var shadowDirection = $Game$Geo.ensure360(state.windOrigin + 180 + state.windAngle / 3);
             return _U.replace([["windOrigin"
                                ,origin]
@@ -7687,21 +7685,13 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
          }();
       }();
    });
-   var GustEffect = F3(function (a,
-   b,
-   c) {
-      return {_: {}
-             ,factor: c
-             ,origin: a
-             ,speed: b};
-   });
    _elm.Game.Steps.PlayerWind.values = {_op: _op
-                                       ,GustEffect: GustEffect
-                                       ,shadowImpact: shadowImpact
+                                       ,shadowSpeedImpact: shadowSpeedImpact
                                        ,shadowArc: shadowArc
                                        ,playerWindStep: playerWindStep
-                                       ,gustEffect: gustEffect
-                                       ,isShadowedBy: isShadowedBy
+                                       ,isGustOnPlayer: isGustOnPlayer
+                                       ,findGustTile: findGustTile
+                                       ,inShadow: inShadow
                                        ,windShadowSector: windShadowSector};
    return _elm.Game.Steps.PlayerWind.values;
 };
