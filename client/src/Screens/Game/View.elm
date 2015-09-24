@@ -17,7 +17,7 @@ import Screens.Game.PlayersView exposing (playersBlock)
 
 import Screens.TopBar as TopBar
 import Screens.Utils exposing (..)
-import Game.RenderSvg.All exposing (render)
+import Game.Render.All exposing (render)
 import Constants exposing (..)
 
 

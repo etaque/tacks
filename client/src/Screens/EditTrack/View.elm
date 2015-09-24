@@ -22,9 +22,9 @@ import Game.Geo exposing (floatify)
 import Game.Render.Utils exposing (..)
 import Game.Render.SvgUtils exposing (..)
 
-import Game.RenderSvg.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor)
-import Game.RenderSvg.Gates exposing (renderOpenGate)
-import Game.RenderSvg.Players exposing (renderPlayerHull)
+import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor)
+import Game.Render.Gates exposing (renderOpenGate)
+import Game.Render.Players exposing (renderPlayerHull)
 
 view : Screen -> Html
 view screen =

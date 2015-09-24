@@ -1,4 +1,4 @@
-module Game.RenderSvg.All where
+module Game.Render.All where
 
 import Game.Models exposing (..)
 import Models exposing (..)
@@ -6,10 +6,10 @@ import Models exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
 
-import Game.RenderSvg.Defs exposing (..)
-import Game.RenderSvg.Course exposing (..)
-import Game.RenderSvg.Players exposing (..)
-import Game.RenderSvg.Dashboard exposing (..)
+import Game.Render.Defs exposing (..)
+import Game.Render.Course exposing (..)
+import Game.Render.Players exposing (..)
+import Game.Render.Dashboard exposing (..)
 
 import Html exposing (Html)
 import Svg exposing (..)

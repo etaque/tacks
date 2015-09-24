@@ -1,4 +1,4 @@
-module Game.RenderSvg.Dashboard where
+module Game.Render.Dashboard where
 
 import Game.Models exposing (..)
 import Game.Core exposing (..)
@@ -6,11 +6,11 @@ import Models exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
-import Game.RenderSvg.Gates exposing (..)
+import Game.Render.Gates exposing (..)
 
-import Game.RenderSvg.Dashboard.WindSpeedGraph as WindSpeedGraph
-import Game.RenderSvg.Dashboard.WindOriginGauge as WindOriginGauge
-import Game.RenderSvg.Dashboard.VmgBar as VmgBar
+import Game.Render.Dashboard.WindSpeedGraph as WindSpeedGraph
+import Game.Render.Dashboard.WindOriginGauge as WindOriginGauge
+import Game.Render.Dashboard.VmgBar as VmgBar
 
 import String
 import List exposing (..)

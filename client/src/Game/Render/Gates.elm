@@ -1,4 +1,4 @@
-module Game.RenderSvg.Gates where
+module Game.Render.Gates where
 
 import Game.Models exposing (..)
 import Models exposing (..)

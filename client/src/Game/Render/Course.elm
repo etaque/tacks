@@ -1,4 +1,4 @@
-module Game.RenderSvg.Course where
+module Game.Render.Course where
 
 import Game.Models exposing (..)
 import Models exposing (..)
@@ -6,8 +6,8 @@ import Game.Grid as Grid
 
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
-import Game.RenderSvg.Gates exposing (..)
-import Game.RenderSvg.Tiles exposing (..)
+import Game.Render.Gates exposing (..)
+import Game.Render.Tiles exposing (..)
 
 import String
 import Dict

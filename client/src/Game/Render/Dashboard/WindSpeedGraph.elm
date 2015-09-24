@@ -1,4 +1,4 @@
-module Game.RenderSvg.Dashboard.WindSpeedGraph where
+module Game.Render.Dashboard.WindSpeedGraph where
 
 import Game.Models exposing (..)
 import Game.Core exposing (..)
@@ -6,7 +6,7 @@ import Models exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
-import Game.RenderSvg.Gates exposing (..)
+import Game.Render.Gates exposing (..)
 
 import String
 import List exposing (..)

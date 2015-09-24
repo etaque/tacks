@@ -1,4 +1,4 @@
-module Game.RenderSvg.Players where
+module Game.Render.Players where
 
 import Game.Core exposing (..)
 import Game.Geo as Geo

@@ -1,4 +1,4 @@
-module Game.RenderSvg.Tiles where
+module Game.Render.Tiles where
 
 import Constants exposing (colors)
 
@@ -9,7 +9,7 @@ import Game.Grid as Grid exposing (getTilesList)
 
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Utils exposing (..)
-import Game.RenderSvg.Gates exposing (..)
+import Game.Render.Gates exposing (..)
 
 import String
 import Svg exposing (..)

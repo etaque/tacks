@@ -1,4 +1,4 @@
-module Game.RenderSvg.Defs where
+module Game.Render.Defs where
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
