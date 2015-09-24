@@ -37,7 +37,7 @@ view screen =
 
 editorView : Editor -> Html
 editorView editor =
-  Html.div [ class "content" ]
+  Html.div [ class "content editor" ]
     [ sideView editor
     , renderCourse editor
     ]

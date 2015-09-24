@@ -7132,3 +7132,7 @@ aside {
         content: ". "; }
       aside .module-rankings .list-rankings li .time {
         float: right; }
+
+.editor aside .input-group-addon {
+  min-width: 100px;
+  text-align: right; }

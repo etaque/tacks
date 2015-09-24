@@ -82,7 +82,7 @@ dimsActions =
 raceUpdateActions : Signal AppAction
 raceUpdateActions =
   Signal.map3 mapGameUpdate Game.Inputs.keyboardInput Window.dimensions raceInput
-    |> Signal.filterMap (Maybe.map GameAction) NoOp
+    |> Signal.filterMap (Maybe.map GameAction) AppTypes.NoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 
@@ -102,7 +102,7 @@ reactions =
 requests : Signal (Task error AppAction)
 requests =
   Signal.map .request appUpdates
-    |> Signal.filterMap identity NoOp
+    |> Signal.filterMap identity AppTypes.NoOp
     |> Signal.map Task.succeed
 
 clock : Signal Clock

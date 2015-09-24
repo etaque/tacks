@@ -14,7 +14,8 @@ sideView : Editor -> Html
 sideView ({courseDims, course} as editor) =
   sidebar (sidebarWidth, snd courseDims)
     [ div [ class "aside-module" ]
-      [ div [ class "input-group"]
+      [ h3 [] [ text "Gates" ]
+      , div [ class "input-group"]
         [ span [ class "input-group-addon" ] [ text "Downwind" ]
         , textInput
           [ value <| toString course.downwind.y
@@ -35,7 +36,7 @@ sideView ({courseDims, course} as editor) =
         ]
       , br [] []
       , div [ class "input-group"]
-        [ span [ class "input-group-addon" ] [ text "Gates width" ]
+        [ span [ class "input-group-addon" ] [ text "Width" ]
         , textInput
           [ value <| toString course.downwind.width
           , onIntInput actions.address SetGateWidth

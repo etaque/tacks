@@ -20532,7 +20532,10 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
          ,_1: $Basics.snd(_v0.courseDims)},
          _L.fromArray([A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("aside-module")]),
-         _L.fromArray([A2($Html.div,
+         _L.fromArray([A2($Html.h3,
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text("Gates")]))
+                      ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("input-group")]),
                       _L.fromArray([A2($Html.span,
                                    _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
@@ -20564,7 +20567,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                       _L.fromArray([$Html$Attributes.$class("input-group")]),
                       _L.fromArray([A2($Html.span,
                                    _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
-                                   _L.fromArray([$Html.text("Gates width")]))
+                                   _L.fromArray([$Html.text("Width")]))
                                    ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.downwind.width))
                                                                           ,A2($Screens$Utils.onIntInput,
                                                                           $Screens$EditTrack$Updates.actions.address,
@@ -21260,7 +21263,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    };
    var editorView = function (editor) {
       return A2($Html.div,
-      _L.fromArray([$Svg$Attributes.$class("content")]),
+      _L.fromArray([$Svg$Attributes.$class("content editor")]),
       _L.fromArray([$Screens$EditTrack$SideView.sideView(editor)
                    ,renderCourse(editor)]));
    };
