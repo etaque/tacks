@@ -5406,12 +5406,78 @@ Elm.Game.Render.Dashboard.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Game.Render.Dashboard",
    $Basics = Elm.Basics.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$Dashboard$Status = Elm.Game.Render.Dashboard.Status.make(_elm),
    $Game$Render$Dashboard$VmgBar = Elm.Game.Render.Dashboard.VmgBar.make(_elm),
    $Game$Render$Dashboard$WindOriginGauge = Elm.Game.Render.Dashboard.WindOriginGauge.make(_elm),
    $Game$Render$Dashboard$WindSpeedGraph = Elm.Game.Render.Dashboard.WindSpeedGraph.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var renderDashboard = F2(function (_v0,
+   gameState) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return A2($Svg.g,
+              _L.fromArray([]),
+              _L.fromArray([A2($Svg.g,
+                           _L.fromArray([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+                           _v0._0 / 2 | 0,
+                           120))]),
+                           _L.fromArray([$Game$Render$Dashboard$Status.render(gameState)]))
+                           ,A2($Svg.g,
+                           _L.fromArray([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+                           $Basics.toFloat(_v0._0) / 2,
+                           30))]),
+                           _L.fromArray([A2($Game$Render$Dashboard$WindOriginGauge.render,
+                           _v0._1,
+                           gameState.wind)]))
+                           ,A2($Svg.g,
+                           _L.fromArray([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+                           30,
+                           30))]),
+                           _L.fromArray([A3($Game$Render$Dashboard$WindSpeedGraph.render,
+                           gameState.timers.now,
+                           gameState.wind,
+                           gameState.windHistory)]))
+                           ,A2($Svg.g,
+                           _L.fromArray([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+                           $Basics.toFloat(_v0._0) - $Game$Render$Dashboard$VmgBar.barWidth - 40,
+                           40))]),
+                           _L.fromArray([$Game$Render$Dashboard$VmgBar.render(gameState.playerState)]))]));}
+         _U.badCase($moduleName,
+         "between lines 27 and 39");
+      }();
+   });
+   _elm.Game.Render.Dashboard.values = {_op: _op
+                                       ,renderDashboard: renderDashboard};
+   return _elm.Game.Render.Dashboard.values;
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
+Elm.Game.Render.Dashboard.Status = Elm.Game.Render.Dashboard.Status || {};
+Elm.Game.Render.Dashboard.Status.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
+   _elm.Game.Render.Dashboard.Status = _elm.Game.Render.Dashboard.Status || {};
+   if (_elm.Game.Render.Dashboard.Status.values)
+   return _elm.Game.Render.Dashboard.Status.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Game.Render.Dashboard.Status",
+   $Basics = Elm.Basics.make(_elm),
+   $Game$Core = Elm.Game.Core.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -5472,53 +5538,32 @@ Elm.Game.Render.Dashboard.make = function (_elm) {
                case "Nothing":
                return "start pending";}
             _U.badCase($moduleName,
-            "between lines 48 and 58");
+            "between lines 41 and 51");
          }();
       }();
    };
-   var renderDashboard = F2(function (_v4,
-   gameState) {
-      return function () {
-         switch (_v4.ctor)
-         {case "_Tuple2":
-            return A2($Svg.g,
-              _L.fromArray([]),
-              _L.fromArray([A2($Svg.text$,
-                           _L.fromArray([$Svg$Attributes.textAnchor("middle")
-                                        ,$Svg$Attributes.x($Basics.toString(_v4._0 / 2 | 0))
-                                        ,$Svg$Attributes.y($Basics.toString(_v4._1 - 50))
-                                        ,$Svg$Attributes.fontSize("32px")
-                                        ,$Svg$Attributes.opacity("0.8")]),
-                           _L.fromArray([$Svg.text(getTimer(gameState))]))
-                           ,A2($Svg.g,
-                           _L.fromArray([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint({ctor: "_Tuple2"
-                                                                                                        ,_0: $Basics.toFloat(_v4._0) / 2
-                                                                                                        ,_1: 30}))]),
-                           _L.fromArray([A2($Game$Render$Dashboard$WindOriginGauge.render,
-                           _v4._1,
-                           gameState.wind)]))
-                           ,A2($Svg.g,
-                           _L.fromArray([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-                           30,
-                           30))]),
-                           _L.fromArray([A3($Game$Render$Dashboard$WindSpeedGraph.render,
-                           gameState.timers.now,
-                           gameState.wind,
-                           gameState.windHistory)]))
-                           ,A2($Svg.g,
-                           _L.fromArray([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-                           $Basics.toFloat(_v4._0) - $Game$Render$Dashboard$VmgBar.barWidth - 40,
-                           40))]),
-                           _L.fromArray([$Game$Render$Dashboard$VmgBar.render(gameState.playerState)]))]));}
-         _U.badCase($moduleName,
-         "between lines 26 and 44");
+   var timerOpacity = function (gameState) {
+      return $Game$Models.isStarted(gameState) ? 0.2 : function () {
+         var ms = A2($Basics._op["%"],
+         $Basics.floor($Game$Models.raceTime(gameState)),
+         1000);
+         return _U.cmp(ms,
+         500) < 0 ? 1 : (1000 - $Basics.toFloat(ms)) / 500;
       }();
-   });
-   _elm.Game.Render.Dashboard.values = {_op: _op
-                                       ,renderDashboard: renderDashboard
-                                       ,getTimer: getTimer
-                                       ,formatTimer: formatTimer};
-   return _elm.Game.Render.Dashboard.values;
+   };
+   var render = function (gameState) {
+      return A2($Svg.text$,
+      _L.fromArray([$Svg$Attributes.textAnchor("middle")
+                   ,$Svg$Attributes.fontSize("42px")
+                   ,$Svg$Attributes.opacity($Basics.toString(timerOpacity(gameState)))]),
+      _L.fromArray([$Svg.text(getTimer(gameState))]));
+   };
+   _elm.Game.Render.Dashboard.Status.values = {_op: _op
+                                              ,render: render
+                                              ,timerOpacity: timerOpacity
+                                              ,getTimer: getTimer
+                                              ,formatTimer: formatTimer};
+   return _elm.Game.Render.Dashboard.Status.values;
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};

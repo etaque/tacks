@@ -7054,7 +7054,7 @@ a.period {
 .game {
   background-color: #f2f3c4;
   /* background-color: $seaBlue; */
-  /* font-family: $mono; */ }
+  font-family: "Inconsolata"; }
   .game svg {
     display: block; }
 
@@ -7134,5 +7134,5 @@ aside {
         float: right; }
 
 .editor aside .input-group-addon {
-  min-width: 100px;
+  min-width: 130px;
   text-align: right; }
