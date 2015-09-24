@@ -5,7 +5,6 @@ import Game.Core exposing (..)
 import Models exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Utils exposing (..)
 import Game.Render.Gates exposing (..)
 
 import Game.Render.Dashboard.WindSpeedGraph as WindSpeedGraph
@@ -15,6 +14,7 @@ import Game.Render.Dashboard.VmgBar as VmgBar
 import String
 import List exposing (..)
 import Maybe as M
+import Time exposing (Time)
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -56,5 +56,20 @@ getTimer {timers, playerState} =
       in
         formatTimer timer (isNothing playerState.nextGate)
     Nothing -> "start pending"
+
+
+formatTimer : Time -> Bool -> String
+formatTimer t showMs =
+  let
+    t' = t |> ceiling |> abs
+    totalSeconds = t' // 1000
+    minutes = totalSeconds // 60
+    seconds = if showMs || t <= 0 then totalSeconds `rem` 60 else (totalSeconds `rem` 60) + 1
+    millis = t' `rem` 1000
+    sMinutes = toString minutes
+    sSeconds = String.padLeft 2 '0' (toString seconds)
+    sMillis = if showMs then "." ++ (String.padLeft 3 '0' (toString millis)) else ""
+  in
+    sMinutes ++ ":" ++ sSeconds ++ sMillis
 
 

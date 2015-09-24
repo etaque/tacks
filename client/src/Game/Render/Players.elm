@@ -6,7 +6,6 @@ import Game.Models exposing (..)
 import Models exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Utils exposing (..)
 
 import String
 import Svg exposing (..)

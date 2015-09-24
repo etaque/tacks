@@ -5,7 +5,6 @@ import Game.Core exposing (..)
 import Models exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Utils exposing (..)
 import Game.Render.Gates exposing (..)
 
 import String

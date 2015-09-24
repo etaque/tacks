@@ -19,7 +19,6 @@ import Screens.Messages exposing (..)
 
 import Game.Grid as Grid
 import Game.Geo exposing (floatify)
-import Game.Render.Utils exposing (..)
 import Game.Render.SvgUtils exposing (..)
 
 import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor)

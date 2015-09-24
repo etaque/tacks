@@ -5,7 +5,6 @@ import Models exposing (..)
 import Game.Grid as Grid
 
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Utils exposing (..)
 import Game.Render.Gates exposing (..)
 import Game.Render.Tiles exposing (..)
 

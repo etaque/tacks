@@ -5263,7 +5263,7 @@ Elm.Game.Render.All.make = function (_elm) {
                                  _v1)]));
                  }();}
             _U.badCase($moduleName,
-            "between lines 23 and 39");
+            "between lines 22 and 38");
          }();
       }();
    });
@@ -5347,7 +5347,7 @@ Elm.Game.Render.Course.make = function (_elm) {
                  _L.fromArray([]));
               }();}
          _U.badCase($moduleName,
-         "between lines 46 and 59");
+         "between lines 45 and 58");
       }();
    };
    var renderTiledGust = function (_v4) {
@@ -5412,13 +5412,49 @@ Elm.Game.Render.Dashboard.make = function (_elm) {
    $Game$Render$Dashboard$WindOriginGauge = Elm.Game.Render.Dashboard.WindOriginGauge.make(_elm),
    $Game$Render$Dashboard$WindSpeedGraph = Elm.Game.Render.Dashboard.WindSpeedGraph.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Game$Render$Utils = Elm.Game.Render.Utils.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
    $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var formatTimer = F2(function (t,
+   showMs) {
+      return function () {
+         var t$ = $Basics.abs($Basics.ceiling(t));
+         var totalSeconds = t$ / 1000 | 0;
+         var minutes = totalSeconds / 60 | 0;
+         var sMinutes = $Basics.toString(minutes);
+         var seconds = showMs || _U.cmp(t,
+         0) < 1 ? A2($Basics.rem,
+         totalSeconds,
+         60) : A2($Basics.rem,
+         totalSeconds,
+         60) + 1;
+         var sSeconds = A3($String.padLeft,
+         2,
+         _U.chr("0"),
+         $Basics.toString(seconds));
+         var millis = A2($Basics.rem,
+         t$,
+         1000);
+         var sMillis = showMs ? A2($Basics._op["++"],
+         ".",
+         A3($String.padLeft,
+         3,
+         _U.chr("0"),
+         $Basics.toString(millis))) : "";
+         return A2($Basics._op["++"],
+         sMinutes,
+         A2($Basics._op["++"],
+         ":",
+         A2($Basics._op["++"],
+         sSeconds,
+         sMillis)));
+      }();
+   });
    var getTimer = function (_v0) {
       return function () {
          return function () {
@@ -5429,7 +5465,7 @@ Elm.Game.Render.Dashboard.make = function (_elm) {
                     var timer = $Game$Core.isNothing(_v0.playerState.nextGate) ? A2($Maybe.withDefault,
                     0,
                     $List.head(_v0.playerState.crossedGates)) : _v2._0 - _v0.timers.now;
-                    return A2($Game$Render$Utils.formatTimer,
+                    return A2(formatTimer,
                     timer,
                     $Game$Core.isNothing(_v0.playerState.nextGate));
                  }();
@@ -5480,7 +5516,8 @@ Elm.Game.Render.Dashboard.make = function (_elm) {
    });
    _elm.Game.Render.Dashboard.values = {_op: _op
                                        ,renderDashboard: renderDashboard
-                                       ,getTimer: getTimer};
+                                       ,getTimer: getTimer
+                                       ,formatTimer: formatTimer};
    return _elm.Game.Render.Dashboard.values;
 };
 Elm.Game = Elm.Game || {};
@@ -6342,7 +6379,7 @@ Elm.Game.Render.Players.make = function (_elm) {
                     _L.fromArray([$Svg$Attributes.opacity(opacityForIndex(_v4._0))])),
                     _v4._1);}
                _U.badCase($moduleName,
-               "on line 117, column 7 to 60");
+               "on line 116, column 7 to 60");
             }();
          };
          var pairs = $List.isEmpty(wake) ? _L.fromArray([]) : $List.indexedMap(F2(function (v0,
@@ -6760,7 +6797,7 @@ Elm.Game.Render.Tiles.make = function (_elm) {
                  ",",
                  $Basics.toString(_v0._1)));}
             _U.badCase($moduleName,
-            "on line 76, column 29 to 60");
+            "on line 75, column 29 to 60");
          }();
       })(points));
    };
@@ -6797,7 +6834,7 @@ Elm.Game.Render.Tiles.make = function (_elm) {
             case "Water":
             return $Constants.colors.water;}
          _U.badCase($moduleName,
-         "between lines 48 and 51");
+         "between lines 47 and 50");
       }();
    };
    var renderTile = function (_v5) {
@@ -6849,118 +6886,6 @@ Elm.Game.Render.Tiles.make = function (_elm) {
                                    ,vertices: vertices
                                    ,toSvgPoints: toSvgPoints};
    return _elm.Game.Render.Tiles.values;
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Utils = Elm.Game.Render.Utils || {};
-Elm.Game.Render.Utils.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Utils = _elm.Game.Render.Utils || {};
-   if (_elm.Game.Render.Utils.values)
-   return _elm.Game.Render.Utils.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Render.Utils",
-   $Basics = Elm.Basics.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Graphics$Collage = Elm.Graphics.Collage.make(_elm),
-   $Graphics$Element = Elm.Graphics.Element.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Text = Elm.Text.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var formatTimer = F2(function (t,
-   showMs) {
-      return function () {
-         var t$ = $Basics.abs($Basics.ceiling(t));
-         var totalSeconds = t$ / 1000 | 0;
-         var minutes = totalSeconds / 60 | 0;
-         var sMinutes = $Basics.toString(minutes);
-         var seconds = showMs || _U.cmp(t,
-         0) < 1 ? A2($Basics.rem,
-         totalSeconds,
-         60) : A2($Basics.rem,
-         totalSeconds,
-         60) + 1;
-         var sSeconds = A3($String.padLeft,
-         2,
-         _U.chr("0"),
-         $Basics.toString(seconds));
-         var millis = A2($Basics.rem,
-         t$,
-         1000);
-         var sMillis = showMs ? A2($Basics._op["++"],
-         ".",
-         A3($String.padLeft,
-         3,
-         _U.chr("0"),
-         $Basics.toString(millis))) : "";
-         return A2($Basics._op["++"],
-         sMinutes,
-         A2($Basics._op["++"],
-         ":",
-         A2($Basics._op["++"],
-         sSeconds,
-         sMillis)));
-      }();
-   });
-   var gameTitle = function (_v0) {
-      return function () {
-         return function () {
-            var _v2 = _v0.timers.startTime;
-            switch (_v2.ctor)
-            {case "Just":
-               return _U.cmp(_v0.timers.now,
-                 _v2._0) < 0 ? A2(formatTimer,
-                 _v2._0 - _v0.timers.now,
-                 false) : "Started";
-               case "Nothing":
-               return A2($Basics._op["++"],
-                 "(",
-                 A2($Basics._op["++"],
-                 $Basics.toString(1 + $List.length(_v0.opponents)),
-                 ") Waiting..."));}
-            _U.badCase($moduleName,
-            "between lines 67 and 74");
-         }();
-      }();
-   };
-   var fixedLength = F2(function (l,
-   txt) {
-      return _U.cmp($String.length(txt),
-      l) < 0 ? A3($String.padRight,
-      l,
-      _U.chr(" "),
-      txt) : A2($Basics._op["++"],
-      A2($String.left,l - 3,txt),
-      "...");
-   });
-   var bigText = function (s) {
-      return $Text.typeface(_L.fromArray(["Inconsolata"
-                                         ,"monospace"]))($Text.height(32)($Text.fromString(s)));
-   };
-   var baseText = function (s) {
-      return $Text.typeface(_L.fromArray(["Inconsolata"
-                                         ,"monospace"]))($Text.height(15)($Text.fromString(s)));
-   };
-   var emptyForm = $Graphics$Collage.toForm($Graphics$Element.empty);
-   var startCountdownMessage = "press C to start countdown (30s)";
-   _elm.Game.Render.Utils.values = {_op: _op
-                                   ,startCountdownMessage: startCountdownMessage
-                                   ,emptyForm: emptyForm
-                                   ,baseText: baseText
-                                   ,bigText: bigText
-                                   ,fixedLength: fixedLength
-                                   ,formatTimer: formatTimer
-                                   ,gameTitle: gameTitle};
-   return _elm.Game.Render.Utils.values;
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
@@ -21218,7 +21143,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 71 and 78");
+            "between lines 70 and 77");
          }();
          return A2($Svg.circle,
          _L.fromArray([$Svg$Attributes.r("20")
@@ -21276,7 +21201,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
             case "Nothing":
             return $Html.text("loading");}
          _U.badCase($moduleName,
-         "between lines 31 and 35");
+         "between lines 30 and 34");
       }();
    };
    _elm.Screens.EditTrack.View.values = {_op: _op

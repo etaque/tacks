@@ -8,7 +8,6 @@ import Models exposing (..)
 import Game.Grid as Grid exposing (getTilesList)
 
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Utils exposing (..)
 import Game.Render.Gates exposing (..)
 
 import String

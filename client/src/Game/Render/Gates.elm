@@ -6,7 +6,6 @@ import Models exposing (..)
 import Constants exposing (colors)
 
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Utils exposing (..)
 
 import String
 import Svg exposing (..)

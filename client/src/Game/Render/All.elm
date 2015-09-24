@@ -4,7 +4,6 @@ import Game.Models exposing (..)
 import Models exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Utils exposing (..)
 
 import Game.Render.Defs exposing (..)
 import Game.Render.Course exposing (..)
