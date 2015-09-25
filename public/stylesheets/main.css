@@ -7136,3 +7136,7 @@ aside {
 .editor aside .input-group-addon {
   min-width: 130px;
   text-align: right; }
+
+.editor svg {
+  user-select: none;
+  -moz-user-select: none; }
