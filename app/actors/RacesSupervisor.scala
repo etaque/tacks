@@ -36,7 +36,7 @@ class RacesSupervisor extends Actor {
       TrackDAO.list.flatMap { tracks => Future.sequence(tracks.map(getLiveTrack)) } pipeTo sender
     }
 
-    case ReloadTrack(track: Track) => {
+    case ReloadTrack(track) => {
       mountedTracks.get(track.id).map { case (_, ref) =>
         mountedTracks = mountedTracks + (track.id -> (track, ref))
         ref ! ReloadTrack(track)
@@ -45,7 +45,7 @@ class RacesSupervisor extends Actor {
   }
 
   def getLiveTrack(track: Track): Future[LiveTrack] = {
-    mountedTracks.values.find(_._1.slug == track.slug) match {
+    mountedTracks.get(track.id) match {
       case Some((track, ref)) => {
         for {
           (races, opponents) <- (ref ? GetStatus).mapTo[(Seq[Race], Seq[Opponent])]
