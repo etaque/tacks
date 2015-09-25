@@ -4100,7 +4100,7 @@ Elm.Game.Grid.make = function (_elm) {
                     ,_0: i
                     ,_1: _v0._0});}
                _U.badCase($moduleName,
-               "on line 160, column 7 to 22");
+               "on line 162, column 7 to 22");
             }();
          });
          var mapRow = function (_v4) {
@@ -4111,7 +4111,7 @@ Elm.Game.Grid.make = function (_elm) {
                     mapTile(_v4._0),
                     $Dict.toList(_v4._1));}
                _U.badCase($moduleName,
-               "on line 156, column 7 to 44");
+               "on line 158, column 7 to 44");
             }();
          };
          var rows = $Dict.toList(grid);
@@ -4133,10 +4133,10 @@ Elm.Game.Grid.make = function (_elm) {
                            ,_1: _v8._1 + _v9._1
                            ,_2: _v8._2 + _v9._2};}
                  _U.badCase($moduleName,
-                 "on line 141, column 4 to 23");
+                 "on line 143, column 4 to 23");
               }();}
          _U.badCase($moduleName,
-         "on line 141, column 4 to 23");
+         "on line 143, column 4 to 23");
       }();
    });
    var hexAdd = F2(function (_v18,
@@ -4151,10 +4151,10 @@ Elm.Game.Grid.make = function (_elm) {
                            ,_0: _v18._0 + _v19._0
                            ,_1: _v18._1 + _v19._1};}
                  _U.badCase($moduleName,
-                 "on line 137, column 4 to 18");
+                 "on line 139, column 4 to 18");
               }();}
          _U.badCase($moduleName,
-         "on line 137, column 4 to 18");
+         "on line 139, column 4 to 18");
       }();
    });
    var hexRange = F2(function (center,
@@ -4194,7 +4194,7 @@ Elm.Game.Grid.make = function (_elm) {
                    ,_1: $Basics.toFloat(_v26._1)
                    ,_2: $Basics.toFloat(_v26._2)};}
          _U.badCase($moduleName,
-         "on line 111, column 4 to 35");
+         "on line 113, column 4 to 35");
       }();
    };
    var cubeLinearInterpol = F3(function (a,
@@ -4228,10 +4228,10 @@ Elm.Game.Grid.make = function (_elm) {
                  {case "_Tuple3":
                     return ($Basics.abs(_v31._0 - _v32._0) + $Basics.abs(_v31._1 - _v32._1) + $Basics.abs(_v31._2 - _v32._2)) / 2 | 0;}
                  _U.badCase($moduleName,
-                 "on line 92, column 4 to 55");
+                 "on line 94, column 4 to 55");
               }();}
          _U.badCase($moduleName,
-         "on line 92, column 4 to 55");
+         "on line 94, column 4 to 55");
       }();
    });
    var hexToCube = function (_v41) {
@@ -4243,7 +4243,7 @@ Elm.Game.Grid.make = function (_elm) {
                    ,_1: _v41._1
                    ,_2: 0 - _v41._0 - _v41._1};}
          _U.badCase($moduleName,
-         "on line 88, column 4 to 14");
+         "on line 90, column 4 to 14");
       }();
    };
    var hexDistance = F2(function (a,
@@ -4260,7 +4260,7 @@ Elm.Game.Grid.make = function (_elm) {
                    ,_0: _v45._0
                    ,_1: _v45._1};}
          _U.badCase($moduleName,
-         "on line 84, column 4 to 8");
+         "on line 86, column 4 to 8");
       }();
    };
    var cubeRound = function (_v50) {
@@ -4289,7 +4289,7 @@ Elm.Game.Grid.make = function (_elm) {
                                          ,_2: 0 - rx - ry};
               }();}
          _U.badCase($moduleName,
-         "between lines 69 and 80");
+         "between lines 71 and 82");
       }();
    };
    var cubeLine = F2(function (a,
@@ -4334,7 +4334,7 @@ Elm.Game.Grid.make = function (_elm) {
                           case "Nothing":
                           return $Dict.empty;}
                        _U.badCase($moduleName,
-                       "between lines 38 and 43");
+                       "between lines 40 and 45");
                     }();
                  };
                  return A3($Dict.insert,
@@ -4345,7 +4345,7 @@ Elm.Game.Grid.make = function (_elm) {
                  grid);
               }();}
          _U.badCase($moduleName,
-         "between lines 36 and 44");
+         "between lines 38 and 46");
       }();
    });
    var createTile = F3(function (kind,
@@ -4368,7 +4368,7 @@ Elm.Game.Grid.make = function (_elm) {
                             _v61._1,
                             kind);}
                        _U.badCase($moduleName,
-                       "between lines 26 and 31");
+                       "between lines 28 and 33");
                     }();
                  };
                  return A3($Dict.insert,
@@ -4379,7 +4379,19 @@ Elm.Game.Grid.make = function (_elm) {
                  grid);
               }();}
          _U.badCase($moduleName,
-         "between lines 23 and 32");
+         "between lines 25 and 34");
+      }();
+   });
+   var getTile = F2(function (grid,
+   _v67) {
+      return function () {
+         switch (_v67.ctor)
+         {case "_Tuple2":
+            return A2($Maybe.andThen,
+              A2($Dict.get,_v67._0,grid),
+              $Dict.get(_v67._1));}
+         _U.badCase($moduleName,
+         "on line 21, column 4 to 48");
       }();
    });
    var hexRadius = 50;
@@ -4388,46 +4400,39 @@ Elm.Game.Grid.make = function (_elm) {
    var hexDims = {ctor: "_Tuple2"
                  ,_0: hexWidth
                  ,_1: hexHeight};
-   var hexCoordsToPoint = function (_v67) {
+   var hexCoordsToPoint = function (_v71) {
       return function () {
-         switch (_v67.ctor)
+         switch (_v71.ctor)
          {case "_Tuple2":
             return function () {
-                 var y = hexRadius * 3 / 2 * $Basics.toFloat(_v67._1);
-                 var x = hexRadius * $Basics.sqrt(3) * ($Basics.toFloat(_v67._0) + $Basics.toFloat(_v67._1) / 2);
+                 var y = hexRadius * 3 / 2 * $Basics.toFloat(_v71._1);
+                 var x = hexRadius * $Basics.sqrt(3) * ($Basics.toFloat(_v71._0) + $Basics.toFloat(_v71._1) / 2);
                  return {ctor: "_Tuple2"
                         ,_0: x
                         ,_1: y};
               }();}
          _U.badCase($moduleName,
-         "between lines 49 and 53");
+         "between lines 51 and 55");
       }();
    };
-   var pointToHexCoords = function (_v71) {
+   var pointToHexCoords = function (_v75) {
       return function () {
-         switch (_v71.ctor)
+         switch (_v75.ctor)
          {case "_Tuple2":
             return function () {
-                 var j = _v71._1 * (2 / 3) / hexRadius;
-                 var i = (_v71._0 * $Basics.sqrt(3) / 3 - _v71._1 / 3) / hexRadius;
+                 var j = _v75._1 * (2 / 3) / hexRadius;
+                 var i = (_v75._0 * $Basics.sqrt(3) / 3 - _v75._1 / 3) / hexRadius;
                  return hexRound({ctor: "_Tuple2"
                                  ,_0: i
                                  ,_1: j});
               }();}
          _U.badCase($moduleName,
-         "between lines 57 and 61");
+         "between lines 59 and 63");
       }();
    };
    var currentTile = F2(function (grid,
    p) {
-      return function () {
-         var $ = pointToHexCoords(p),
-         i = $._0,
-         j = $._1;
-         return A2($Maybe.andThen,
-         A2($Dict.get,i,grid),
-         $Dict.get(j));
-      }();
+      return getTile(grid)(pointToHexCoords(p));
    });
    _elm.Game.Grid.values = {_op: _op
                            ,hexRadius: hexRadius
@@ -4435,6 +4440,7 @@ Elm.Game.Grid.make = function (_elm) {
                            ,hexWidth: hexWidth
                            ,hexDims: hexDims
                            ,currentTile: currentTile
+                           ,getTile: getTile
                            ,createTile: createTile
                            ,deleteTile: deleteTile
                            ,hexCoordsToPoint: hexCoordsToPoint
@@ -5492,7 +5498,7 @@ Elm.Game.Render.Dashboard.Status.make = function (_elm) {
          var counter = $List.length(gameState.playerState.crossedGates);
          return _U.eq(counter,
          total) ? "FINISHED" : A2($Basics._op["++"],
-         "Gate ",
+         "gate ",
          A2($Basics._op["++"],
          $Basics.toString(counter),
          A2($Basics._op["++"],
@@ -5503,7 +5509,7 @@ Elm.Game.Render.Dashboard.Status.make = function (_elm) {
          switch (_v0.ctor)
          {case "Just": return "";
             case "Nothing":
-            return "Press C to start countdown";}
+            return "press C to start countdown";}
          _U.badCase($moduleName,
          "between lines 100 and 104");
       }();
@@ -7482,7 +7488,8 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var genGustTile = F2(function (_v0,
+   var genGustTile = F3(function (grid,
+   _v0,
    coords) {
       return function () {
          return function () {
@@ -7498,14 +7505,18 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
                var gustTile = A2($Game$Models.GustTile,
                _v0.angle * factor,
                _v0.speed * factor);
-               return $Maybe.Just({ctor: "_Tuple2"
-                                  ,_0: coords
-                                  ,_1: gustTile});
+               return _U.eq(A2($Game$Grid.getTile,
+               grid,
+               coords),
+               $Maybe.Just($Models.Water)) ? $Maybe.Just({ctor: "_Tuple2"
+                                                         ,_0: coords
+                                                         ,_1: gustTile}) : $Maybe.Nothing;
             }() : $Maybe.Nothing;
          }();
       }();
    });
-   var genTiledGust = function (_v2) {
+   var genTiledGust = F2(function (grid,
+   _v2) {
       return function () {
          return function () {
             var southTile = $Game$Grid.pointToHexCoords(A2($Game$Geo.add,
@@ -7520,21 +7531,24 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
             var coordsList = A2($Game$Grid.hexRange,
             centerTile,
             distance);
-            var tiles = $Dict.fromList($List.filterMap(genGustTile(_v2))(coordsList));
+            var tiles = $Dict.fromList($List.filterMap(A2(genGustTile,
+            grid,
+            _v2))(coordsList));
             return A3($Game$Models.TiledGust,
             _v2.position,
             _v2.radius,
             tiles);
          }();
       }();
-   };
-   var genTiledGusts = F2(function (now,
+   });
+   var genTiledGusts = F3(function (grid,
+   now,
    _v4) {
       return function () {
          return {_: {}
                 ,genTime: now
                 ,gusts: A2($List.map,
-                genTiledGust,
+                genTiledGust(grid),
                 _v4.gusts)};
       }();
    });
@@ -7543,7 +7557,8 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
       return function () {
          return _U.cmp(_v6.gusts.genTime + interval,
          _v6.timers.now) < 0 ? _U.replace([["gusts"
-                                           ,A2(genTiledGusts,
+                                           ,A3(genTiledGusts,
+                                           _v6.course.grid,
                                            _v6.timers.now,
                                            _v6.wind)]],
          _v6) : _v6;

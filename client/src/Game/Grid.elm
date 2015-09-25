@@ -13,10 +13,12 @@ hexDims = (hexWidth, hexHeight)
 
 currentTile : Grid -> Point -> Maybe TileKind
 currentTile grid p =
-  let
-    (i, j) = pointToHexCoords p
-  in
-    (Dict.get i grid) `Maybe.andThen` (Dict.get j)
+    pointToHexCoords p
+      |> getTile grid
+
+getTile : Grid -> Coords -> Maybe TileKind
+getTile grid (i, j) =
+  (Dict.get i grid) `Maybe.andThen` (Dict.get j)
 
 createTile : TileKind -> Coords -> Grid -> Grid
 createTile kind (i,j) grid =
