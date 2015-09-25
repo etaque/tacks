@@ -291,10 +291,10 @@ getRaceArea grid =
     getFirst arr = Maybe.withDefault 0 (Array.get 0 arr)
     getLast arr = Maybe.withDefault 0 (Array.get (Array.length arr - 1) arr)
 
-    right = getLast xVals
-    left = getFirst xVals
+    right = getLast xVals + hexRadius
+    left = getFirst xVals - hexRadius
 
-    top = getLast yVals
-    bottom = getFirst yVals
+    top = getLast yVals + hexRadius
+    bottom = getFirst yVals - hexRadius
   in
     RaceArea (right, top) (left, bottom)

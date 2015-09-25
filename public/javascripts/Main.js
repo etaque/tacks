@@ -3679,33 +3679,6 @@ Elm.Encoders.make = function (_elm) {
    return _elm.Encoders.values;
 };
 Elm.Game = Elm.Game || {};
-Elm.Game.Constants = Elm.Game.Constants || {};
-Elm.Game.Constants.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Constants = _elm.Game.Constants || {};
-   if (_elm.Game.Constants.values)
-   return _elm.Game.Constants.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Game.Constants",
-   $Basics = Elm.Basics.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var topbarHeight = 0;
-   var rightSidebarWidth = 220;
-   var leftSidebarWidth = 220;
-   _elm.Game.Constants.values = {_op: _op
-                                ,leftSidebarWidth: leftSidebarWidth
-                                ,rightSidebarWidth: rightSidebarWidth
-                                ,topbarHeight: topbarHeight};
-   return _elm.Game.Constants.values;
-};
-Elm.Game = Elm.Game || {};
 Elm.Game.Core = Elm.Game.Core || {};
 Elm.Game.Core.make = function (_elm) {
    "use strict";
@@ -6992,9 +6965,10 @@ Elm.Game.Steps.make = function (_elm) {
    $moduleName = "Game.Steps",
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
-   $Game$Constants = Elm.Game.Constants.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Game$Core = Elm.Game.Core.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
+   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Inputs = Elm.Game.Inputs.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Steps$GateCrossing = Elm.Game.Steps.GateCrossing.make(_elm),
@@ -7052,7 +7026,7 @@ Elm.Game.Steps.make = function (_elm) {
             case "Nothing":
             return opponent;}
          _U.badCase($moduleName,
-         "between lines 142 and 149");
+         "between lines 143 and 150");
       }();
    });
    var updateOpponents = F3(function (previousOpponents,
@@ -7085,7 +7059,7 @@ Elm.Game.Steps.make = function (_elm) {
    areaMax) {
       return function () {
          var delta = p$ - p;
-         var outOffset = window / 2 - 10;
+         var outOffset = window / 2 - $Game$Grid.hexRadius;
          var offset = window / 2 - window * 0.48;
          var minExit = _U.cmp(delta,
          0) < 0 && _U.cmp(p$,
@@ -7118,7 +7092,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 111, column 36 to 55");
+                       "on line 112, column 36 to 55");
                     }();
                     var xMin = function () {
                        switch (_.ctor)
@@ -7131,7 +7105,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 111, column 36 to 55");
+                       "on line 112, column 36 to 55");
                     }();
                     var yMax = function () {
                        switch (_.ctor)
@@ -7144,7 +7118,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 111, column 36 to 55");
+                       "on line 112, column 36 to 55");
                     }();
                     var yMin = function () {
                        switch (_.ctor)
@@ -7157,7 +7131,7 @@ Elm.Game.Steps.make = function (_elm) {
                                  break;}
                             break;}
                        _U.badCase($moduleName,
-                       "on line 111, column 36 to 55");
+                       "on line 112, column 36 to 55");
                     }();
                     var $ = $Game$Geo.floatify(dims),
                     w = $._0,
@@ -7188,7 +7162,7 @@ Elm.Game.Steps.make = function (_elm) {
                     _v3);
                  }();}
             _U.badCase($moduleName,
-            "between lines 107 and 117");
+            "between lines 108 and 118");
          }();
       }();
    });
@@ -7233,7 +7207,7 @@ Elm.Game.Steps.make = function (_elm) {
                      case "Nothing":
                      return _v36.time - clientTime;}
                   _U.badCase($moduleName,
-                  "between lines 49 and 55");
+                  "between lines 50 and 56");
                }();
                var compensedServerNow = serverNow - rtd / 2;
                var now = function () {
@@ -7246,7 +7220,7 @@ Elm.Game.Steps.make = function (_elm) {
                      case "Nothing":
                      return compensedServerNow;}
                   _U.badCase($moduleName,
-                  "between lines 57 and 63");
+                  "between lines 58 and 64");
                }();
                var newPlayerState = _U.replace([["time"
                                                 ,now]],
@@ -7286,8 +7260,8 @@ Elm.Game.Steps.make = function (_elm) {
       return function () {
          return function () {
             var gameDims = {ctor: "_Tuple2"
-                           ,_0: $Basics.fst(_v44.windowInput) - $Game$Constants.leftSidebarWidth - $Game$Constants.rightSidebarWidth
-                           ,_1: $Basics.snd(_v44.windowInput) - $Game$Constants.topbarHeight};
+                           ,_0: $Basics.fst(_v44.windowInput) - $Constants.sidebarWidth
+                           ,_1: $Basics.snd(_v44.windowInput)};
             var keyboardInputWithFocus = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : _v44.keyboardInput;
             return A2(centerStep,
             gameState.playerState.position,
@@ -20751,11 +20725,11 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
             $Models.Water);
          })($Game$Grid.getTilesList(grid)));
          var xVals = $Array.fromList($List.sort($List.map($Basics.fst)(waterPoints)));
-         var right = getLast(xVals);
-         var left = getFirst(xVals);
+         var right = getLast(xVals) + $Game$Grid.hexRadius;
+         var left = getFirst(xVals) - $Game$Grid.hexRadius;
          var yVals = $Array.fromList($List.sort($List.map($Basics.snd)(waterPoints)));
-         var top = getLast(yVals);
-         var bottom = getFirst(yVals);
+         var top = getLast(yVals) + $Game$Grid.hexRadius;
+         var bottom = getFirst(yVals) - $Game$Grid.hexRadius;
          return A2($Models.RaceArea,
          {ctor: "_Tuple2"
          ,_0: right

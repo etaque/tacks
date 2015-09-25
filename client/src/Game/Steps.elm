@@ -9,7 +9,8 @@ import Game.Inputs exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Core exposing (..)
-import Game.Constants exposing (..)
+import Constants exposing (..)
+import Game.Grid as Grid
 
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving exposing (movingStep)
@@ -29,8 +30,8 @@ gameStep clock {raceInput, windowInput, keyboardInput} gameState =
         then emptyKeyboardInput
         else keyboardInput
     gameDims =
-      ( fst windowInput - leftSidebarWidth - rightSidebarWidth
-      , snd windowInput - topbarHeight
+      ( fst windowInput - sidebarWidth
+      , snd windowInput
       )
   in
     raceInputStep raceInput clock gameState
@@ -120,7 +121,7 @@ axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
 axisCenter p p' c window areaMin areaMax =
   let
     offset = (window / 2) - (window * 0.48)
-    outOffset = (window / 2) - 10
+    outOffset = (window / 2) - Grid.hexRadius
     delta = p' - p
     minExit = delta < 0 && p' < c - offset
     maxExit = delta > 0 && p' > c + offset

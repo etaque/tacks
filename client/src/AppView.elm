@@ -16,7 +16,7 @@ import Screens.Game.View as Game
 
 import Screens.TopBar as TopBar
 
-import Game.Constants exposing (..)
+import Constants exposing (..)
 
 view : AppState -> Html
 view appState =
