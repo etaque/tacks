@@ -20,7 +20,8 @@ import Screens.Utils exposing (..)
 playersBlock : Screen -> Html
 playersBlock {races, freePlayers} =
   div [ class "aside-module module-players" ]
-    [ racesBlock races
+    [ h3 [] [ text "Online players" ]
+    , racesBlock races
     , if (List.isEmpty freePlayers) then div [] [] else freePlayersBlock freePlayers
     ]
 
@@ -39,7 +40,7 @@ raceItem {startTime, tallies} =
       |> format "%H:%M"
   in
     div [ class "race" ]
-      [ h4 [ ] [ text ("Started at " ++ formatted) ]
+      [ h4 [ ] [ text ("race started at " ++ formatted) ]
       , ul [ class "list-unstyled list-tallies" ] (List.indexedMap tallyItem tallies)
       ]
 
@@ -48,22 +49,25 @@ tallyItem : Int -> PlayerTally -> Html
 tallyItem i {player, gates, finished} =
   let
     rank = toString (i + 1)
-    lap = if finished then "F" else "G" ++ toString (List.length gates)
     time = Maybe.map (formatTimer True) (List.head gates)
       |> Maybe.withDefault "?"
+    status =
+      if finished then
+        time
+      else
+        "gate " ++ toString (List.length gates)
   in
     li [ class "player" ]
       [ span [ class "rank" ] [ text rank ]
-      , span [ class "time" ] [ text time ]
-      , span [ class "lap"] [ text lap ]
-      , span [ class "handle" ] [ text (playerHandle player) ]
+      , span [ class "status" ] [ text status ]
+      , playerWithAvatar player
       ]
 
 
 freePlayersBlock : List Player -> Html
 freePlayersBlock players =
   div [ class "free-players" ]
-    [ h4 [ ] [ text "Free players" ]
+    [ h4 [] [ text "free players"]
     , ul [ class "list-unstyled list-players" ] (List.map freePlayerItem players)
     ]
 
@@ -71,6 +75,6 @@ freePlayersBlock players =
 freePlayerItem : Player -> Html
 freePlayerItem player =
   li [ class "player" ]
-    [ span [ class "handle" ] [ text (playerHandle player) ]
+    [ playerWithAvatar player
     ]
 

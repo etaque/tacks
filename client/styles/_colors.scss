@@ -1,4 +1,4 @@
-$seaBlue: #4bafc9; //#93CADF; //#23395C; //rgb(10, 105, 148);
+$seaBlue: rgb(147, 202, 223); // #4bafc9; //#93CADF; //#23395C; //rgb(10, 105, 148);
 
 $lightSeaBlue: lighten($seaBlue, 6%);
 $lighterSeaBlue: lighten($seaBlue, 12%);
@@ -31,6 +31,7 @@ $lightGray: #E6E6E6;
 $smokeWhite: #f8f9fb;
 
 $shadow: rgba(0, 0, 0, 0.075);
+$dark: rgba(0, 0, 0, 0.5);
 
 $whiteRed: #f2dede;
 $lightRed: #ebccd1;

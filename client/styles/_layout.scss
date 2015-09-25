@@ -30,14 +30,6 @@ body {
   flex: 1;
 }
 
-
-nav {
-  background-color: whitesmoke;
-  height: $navbarHeight;
-  display: flex;
-  flex-direction: row;
-}
-
 .logo {
   width: 200px;
   /* background-color: $darkerSeaBlue; */
@@ -50,46 +42,9 @@ nav {
   }
 }
 
-.user-menu {
-  flex: 1;
-  text-align: right;
-  margin-bottom: 20px;
-  list-style: none;
-
-  li {
-    display: inline-block;
-
-    a {
-      display: block;
-      line-height: $navbarHeight;
-      padding: 0 20px;
-      text-transform: uppercase;
-      font-family: $lightFontFamily;
-      letter-spacing: 1px;
-      color: $blackSeaBlue;
-
-      &:hover,
-      &:active {
-        text-decoration: underline;
-        /* background-color: $lighterSeaBlue; */
-      }
-    }
-  }
-
-  img {
-    width: 19px;
-    height: 19px;
-    display: inline-block;
-    margin-right: 5px;
-    border-radius: 2px;
-    vertical-align: text-bottom;
-  }
-}
-
 aside {
   display: flex;
   flex-direction: column;
   background-color: $darkSand;
   color: $darkGray;
-  /* font-family: $mono; */
 }

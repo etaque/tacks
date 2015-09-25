@@ -21,7 +21,7 @@
 
 
 // $fontFamily: "Source Sans Pro";
-$fontFamily: "Proxima Nova Regular";
 $lightFontFamily: "Proxima Nova Thin";
 $headerFontFamily: "Museo Slab";
 $mono: "Inconsolata";
+$fontFamily: $mono; // "Proxima Nova Regular";

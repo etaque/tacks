@@ -438,7 +438,6 @@ Elm.AppView.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -452,9 +451,7 @@ Elm.AppView.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var layout = F2(function (appState,
    content) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("global-wrapper")]),
-      _L.fromArray([content]));
+      return content;
    });
    var emptyView = A2($Html.div,
    _L.fromArray([]),
@@ -21454,16 +21451,14 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
    var freePlayerItem = function (player) {
       return A2($Html.li,
       _L.fromArray([$Html$Attributes.$class("player")]),
-      _L.fromArray([A2($Html.span,
-      _L.fromArray([$Html$Attributes.$class("handle")]),
-      _L.fromArray([$Html.text($Screens$Utils.playerHandle(player))]))]));
+      _L.fromArray([$Screens$Utils.playerWithAvatar(player)]));
    };
    var freePlayersBlock = function (players) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("free-players")]),
       _L.fromArray([A2($Html.h4,
                    _L.fromArray([]),
-                   _L.fromArray([$Html.text("Free players")]))
+                   _L.fromArray([$Html.text("free players")]))
                    ,A2($Html.ul,
                    _L.fromArray([$Html$Attributes.$class("list-unstyled list-players")]),
                    A2($List.map,
@@ -21477,8 +21472,8 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
             var time = $Maybe.withDefault("?")(A2($Maybe.map,
             $Screens$Utils.formatTimer(true),
             $List.head(_v0.gates)));
-            var lap = _v0.finished ? "F" : A2($Basics._op["++"],
-            "G",
+            var status = _v0.finished ? time : A2($Basics._op["++"],
+            "gate ",
             $Basics.toString($List.length(_v0.gates)));
             var rank = $Basics.toString(i + 1);
             return A2($Html.li,
@@ -21487,14 +21482,9 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
                          _L.fromArray([$Html$Attributes.$class("rank")]),
                          _L.fromArray([$Html.text(rank)]))
                          ,A2($Html.span,
-                         _L.fromArray([$Html$Attributes.$class("time")]),
-                         _L.fromArray([$Html.text(time)]))
-                         ,A2($Html.span,
-                         _L.fromArray([$Html$Attributes.$class("lap")]),
-                         _L.fromArray([$Html.text(lap)]))
-                         ,A2($Html.span,
-                         _L.fromArray([$Html$Attributes.$class("handle")]),
-                         _L.fromArray([$Html.text($Screens$Utils.playerHandle(_v0.player))]))]));
+                         _L.fromArray([$Html$Attributes.$class("status")]),
+                         _L.fromArray([$Html.text(status)]))
+                         ,$Screens$Utils.playerWithAvatar(_v0.player)]));
          }();
       }();
    });
@@ -21507,7 +21497,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
             _L.fromArray([A2($Html.h4,
                          _L.fromArray([]),
                          _L.fromArray([$Html.text(A2($Basics._op["++"],
-                         "Started at ",
+                         "race started at ",
                          formatted))]))
                          ,A2($Html.ul,
                          _L.fromArray([$Html$Attributes.$class("list-unstyled list-tallies")]),
@@ -21536,7 +21526,10 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("aside-module module-players")]),
-         _L.fromArray([racesBlock(_v4.races)
+         _L.fromArray([A2($Html.h3,
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text("Online players")]))
+                      ,racesBlock(_v4.races)
                       ,$List.isEmpty(_v4.freePlayers) ? A2($Html.div,
                       _L.fromArray([]),
                       _L.fromArray([])) : freePlayersBlock(_v4.freePlayers)]));
@@ -21897,7 +21890,6 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
    $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
@@ -21916,13 +21908,13 @@ Elm.Screens.Game.View.make = function (_elm) {
          "on line 82, column 34 to 77");
       }();
    })(_L.fromArray([{ctor: "_Tuple2"
-                    ,_0: "ARROWS"
-                    ,_1: "turn left/right"}
+                    ,_0: "LEFT/RIGHT"
+                    ,_1: "turn"}
                    ,{ctor: "_Tuple2"
-                    ,_0: "ARROWS + ⇧"
-                    ,_1: "adjust left/right"}
+                    ,_0: "LEFT/RIGHT + SHIFT"
+                    ,_1: "adjust"}
                    ,{ctor: "_Tuple2"
-                    ,_0: "⏎"
+                    ,_0: "ENTER"
                     ,_1: "lock angle to wind"}
                    ,{ctor: "_Tuple2"
                     ,_0: "SPACE"
@@ -21942,22 +21934,20 @@ Elm.Screens.Game.View.make = function (_elm) {
       return A2($Html.li,
       _L.fromArray([$Html$Attributes.$class("ranking")]),
       _L.fromArray([A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("position")]),
+                   _L.fromArray([$Html$Attributes.$class("rank")]),
                    _L.fromArray([$Html.text($Basics.toString(ranking.rank))]))
                    ,A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("handle")]),
-                   _L.fromArray([$Html.text($Screens$Utils.playerHandle(ranking.player))]))
-                   ,A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("time")]),
+                   _L.fromArray([$Html$Attributes.$class("status")]),
                    _L.fromArray([$Html.text(A2($Screens$Utils.formatTimer,
                    true,
-                   ranking.finishTime))]))]));
+                   ranking.finishTime))]))
+                   ,$Screens$Utils.playerWithAvatar(ranking.player)]));
    };
    var rankingsBlock = function (_v4) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("aside-module module-rankings")]),
-         _L.fromArray([A2($Html.h4,
+         _L.fromArray([A2($Html.h3,
                       _L.fromArray([]),
                       _L.fromArray([$Html.text("Best times")]))
                       ,A2($Html.ul,
@@ -21990,7 +21980,11 @@ Elm.Screens.Game.View.make = function (_elm) {
       ,_0: $Constants.sidebarWidth
       ,_1: h},
       _L.fromArray([$Screens$Game$PlayersView.playersBlock(screen)
-                   ,$Screens$Game$ChatView.chatBlock(screen)
+                   ,$Maybe.withDefault(A2($Html.div,
+                   _L.fromArray([]),
+                   _L.fromArray([])))(A2($Maybe.map,
+                   rankingsBlock,
+                   screen.liveTrack))
                    ,helpBlock]));
    });
    var gameView = F3(function (_v6,
@@ -23378,7 +23372,7 @@ Elm.Screens.Utils.make = function (_elm) {
    });
    var playerHandle = function (p) {
       return A2($Maybe.withDefault,
-      "Anonymous",
+      "anonymous",
       p.handle);
    };
    var avatarUrl = function (p) {
@@ -23402,9 +23396,7 @@ Elm.Screens.Utils.make = function (_elm) {
          _L.fromArray([$Html.text(playerHandle(player))]));
          var avatarImg = A2($Html.img,
          _L.fromArray([$Html$Attributes.src(avatarUrl(player))
-                      ,$Html$Attributes.$class("avatar")
-                      ,$Html$Attributes.width(19)
-                      ,$Html$Attributes.height(19)]),
+                      ,$Html$Attributes.$class("avatar")]),
          _L.fromArray([]));
          return player.guest ? A2($Html.span,
          _L.fromArray([$Html$Attributes.$class("player-avatar")]),

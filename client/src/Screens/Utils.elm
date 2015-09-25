@@ -113,7 +113,7 @@ sidebar (w, h) content =
 playerWithAvatar : Player -> Html
 playerWithAvatar player =
   let
-    avatarImg = img [ src (avatarUrl player), class "avatar", width 19, height 19 ] []
+    avatarImg = img [ src (avatarUrl player), class "avatar" ] []
     handleSpan = span [ class "handle" ] [ text (playerHandle player) ]
   in
     if player.guest
@@ -130,7 +130,7 @@ avatarUrl p =
 
 playerHandle : Player -> String
 playerHandle p =
-  Maybe.withDefault "Anonymous" p.handle
+  Maybe.withDefault "anonymous" p.handle
 
 formatTimer : Bool -> Float -> String
 formatTimer showMs t =

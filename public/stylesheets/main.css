@@ -6097,12 +6097,6 @@ body {
 .main {
   flex: 1; }
 
-nav {
-  background-color: whitesmoke;
-  height: 50px;
-  display: flex;
-  flex-direction: row; }
-
 .logo {
   width: 200px;
   /* background-color: $darkerSeaBlue; */ }
@@ -6112,39 +6106,11 @@ nav {
     /* max-height: 48px; */
     width: auto; }
 
-.user-menu {
-  flex: 1;
-  text-align: right;
-  margin-bottom: 20px;
-  list-style: none; }
-  .user-menu li {
-    display: inline-block; }
-    .user-menu li a {
-      display: block;
-      line-height: 50px;
-      padding: 0 20px;
-      text-transform: uppercase;
-      font-family: "Proxima Nova Thin";
-      letter-spacing: 1px;
-      color: #070d0e; }
-      .user-menu li a:hover,
-      .user-menu li a:active {
-        text-decoration: underline;
-        /* background-color: $lighterSeaBlue; */ }
-  .user-menu img {
-    width: 19px;
-    height: 19px;
-    display: inline-block;
-    margin-right: 5px;
-    border-radius: 2px;
-    vertical-align: text-bottom; }
-
 aside {
   display: flex;
   flex-direction: column;
   background-color: #a0a17d;
-  color: #51585E;
-  /* font-family: $mono; */ }
+  color: #51585E; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -6163,8 +6129,8 @@ aside {
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
 body {
-  color: white;
-  font-family: "Proxima Nova Regular";
+  color: #666;
+  font-family: "Inconsolata";
   font-size: 15px;
   background-color: #f2f3c4; }
 
@@ -6179,23 +6145,14 @@ h2, h3, h4, h5, h6 {
   font-family: "Museo Slab";
   font-size: 21px;
   margin-bottom: 15px; }
-  h2.block-title, h3.block-title, h4.block-title, h5.block-title, h6.block-title {
-    text-align: center;
-    background-color: #387ac4;
-    color: white;
-    font-size: 15px;
-    padding: 10px;
-    margin-bottom: 0; }
-    h2.block-title.secondary, h3.block-title.secondary, h4.block-title.secondary, h5.block-title.secondary, h6.block-title.secondary {
-      background-color: #b0b3b8; }
 
 a {
-  color: white;
+  /* color: white; */
   transition: all 0.1s ease-in;
-  text-decoration: none;
+  text-decoration: underline;
   cursor: pointer; }
   a:hover {
-    color: white;
+    /* color: white; */
     text-decoration: none; }
 
 .align-center {
@@ -6204,37 +6161,19 @@ a {
 .aside-module {
   margin: 10px; }
   .aside-module h3 {
-    /* background-color: $darkSeaBlue; */
-    border-bottom: 1px solid #387ac4;
-    margin: 0 0 10px 0;
-    padding-bottom: 5px;
-    /* text-align: center; */
-    /* font-family: $lightFontFamily; */
+    background-color: #f2f3c4;
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.075);
+    margin: 0 0 5px 0;
+    padding: 5px;
+    text-align: center;
     text-transform: uppercase;
-    font-size: 15px; }
+    font-size: 13px; }
 
 .title-wrapper {
-  background-color: #4bafc9;
-  background-color: #63b9d0;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#4bafc9), to(#63b9d0));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #4bafc9, #63b9d0);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #4bafc9, #63b9d0);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #4bafc9, #63b9d0);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #4bafc9, #63b9d0);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, #4bafc9, #63b9d0);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#4bafc9', EndColorStr='#63b9d0');
-  box-shadow: 0 2px 3px #1c515f inset;
-  color: #B1C0D8;
   padding: 40px;
   text-align: center; }
   .title-wrapper a {
-    color: white; }
+    /* color: white; */ }
   .title-wrapper h1 {
     color: white;
     font-family: "Proxima Nova Thin";
@@ -6249,64 +6188,8 @@ a {
     font-family: "Proxima Nova Thin";
     margin-top: 10px; }
   .title-wrapper strong {
-    font-family: "Proxima Nova Regular";
+    font-family: "Inconsolata";
     color: white; }
-
-.light-wrapper .container, .dark-wrapper .container {
-  padding-top: 30px;
-  padding-bottom: 50px; }
-
-.light-wrapper h2, .light-wrapper p.subtitle, .dark-wrapper h2, .dark-wrapper p.subtitle {
-  font-family: "Proxima Nova Thin";
-  text-align: center; }
-
-.light-wrapper h2, .dark-wrapper h2 {
-  margin-top: 0;
-  margin-bottom: 10px;
-  font-size: 32px;
-  color: white; }
-
-.light-wrapper {
-  background-color: #f8f9fb; }
-  .light-wrapper h2 {
-    color: #51585E; }
-
-.dark-wrapper {
-  background-color: #4bafc9;
-  background-color: #63b9d0;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#4bafc9), to(#63b9d0));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #4bafc9, #63b9d0);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #4bafc9, #63b9d0);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #4bafc9, #63b9d0);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #4bafc9, #63b9d0);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, #4bafc9, #63b9d0);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#4bafc9', EndColorStr='#63b9d0');
-  color: #B1C0D8;
-  box-shadow: 0px 2px 3px #1c515f inset; }
-  .dark-wrapper a {
-    color: white; }
-
-.footer-wrapper {
-  box-shadow: 0px 2px 3px #1c515f inset;
-  text-align: center;
-  color: #B1C0D8;
-  padding: 20px;
-  font-family: "Proxima Nova Thin"; }
-  .footer-wrapper a {
-    color: white; }
-
-.white-panel {
-  background-color: #f8f9fb;
-  padding: 10px;
-  color: #51585E;
-  border-radius: 5px;
-  box-shadow: 0 2px 3px #1c515f; }
 
 .btn {
   font-weight: bold;
@@ -6373,18 +6256,23 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   letter-spacing: 1px; }
 
 .player-avatar {
-  font-family: "Inconsolata";
-  display: inline-block;
-  color: #51585E; }
+  display: inline-block; }
   .player-avatar .avatar {
-    border-radius: 2px;
-    display: inline-block; }
+    display: inline-block;
+    vertical-align: none;
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+    margin-right: -2px; }
+  .player-avatar .handle {
+    font-weight: bold; }
 
-a.player-avatar {
-  color: #7b8087; }
-  a.player-avatar:hover .handle {
-    text-decoration: underline; }
-
+/* a.player-avatar { */
+/*   color: $gray; */
+/*   &:hover .handle { */
+/*     text-decoration: underline; */
+/*   } */
+/* } */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6526,7 +6414,7 @@ a.player-avatar {
   padding-top: 15px;
   background-color: #f8f9fb;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #287386; }
+  box-shadow: 0 2px 2px #44a3c8; }
 
 .form-set-handle {
   margin-top: 20px;
@@ -6732,7 +6620,7 @@ a.player-avatar {
     display: block;
     height: 200px;
     margin-bottom: 10px;
-    background-color: #4bafc9;
+    background-color: #93cadf;
     background-repeat: no-repeat;
     background-position: center;
     /* border-radius: $br; */
@@ -6827,10 +6715,10 @@ a.player-avatar {
       letter-spacing: 1px;
       color: white; }
     .nav-trials li.active a {
-      background-color: #4bafc9;
+      background-color: #93cadf;
       color: #5899E2; }
     .nav-trials li:hover a {
-      background-color: #4bafc9; }
+      background-color: #93cadf; }
   .nav-trials li + li {
     margin-left: 10px; }
 
@@ -6852,9 +6740,9 @@ a.player-avatar {
 a.period {
   color: #5899E2;
   border-color: #5899E2;
-  background-color: #4bafc9; }
+  background-color: #93cadf; }
   a.period:hover {
-    background-color: #287386; }
+    background-color: #44a3c8; }
 
 .row-show-ranking {
   margin-top: 30px; }
@@ -6940,7 +6828,7 @@ a.period {
 .show-time-trial .trial-picture {
   margin-bottom: 20px;
   height: 200px;
-  background-color: #4bafc9;
+  background-color: #93cadf;
   background-repeat: no-repeat;
   background-position: center; }
 
@@ -6957,7 +6845,7 @@ a.period {
       .show-time-trial .nav li a:hover {
         background-color: #5899E2; }
     .show-time-trial .nav li.active a {
-      background-color: #4bafc9; }
+      background-color: #93cadf; }
 
 .post .block-img, .article .block-img {
   margin-top: 30px;
@@ -7015,7 +6903,7 @@ a.period {
 .show-user .title-wrapper .avatar {
   margin-bottom: 20px;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #287386; }
+  box-shadow: 0 2px 2px #44a3c8; }
 
 .show-user .badge-rank {
   display: block;
@@ -7052,86 +6940,87 @@ a.period {
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
 .game {
-  background-color: #f2f3c4;
-  /* background-color: $seaBlue; */
-  font-family: "Inconsolata"; }
+  background-color: #f2f3c4; }
   .game svg {
     display: block; }
 
-aside {
-  /* background-color: $blackSeaBlue; */ }
-  aside .module-best-times {
-    flex: 1; }
-  aside .module-help {
-    /* flex: 1; */
-    font-size: 12px; }
-    aside .module-help dl {
-      /* padding: 10px; */ }
-    aside .module-help dt {
-      font-weight: bold;
-      clear: both;
-      float: left; }
-    aside .module-help dd {
-      float: right; }
+aside .module-players {
+  flex: 0.5; }
   aside .module-players h4 {
     font-size: 13px;
-    text-transform: uppercase;
     margin: 0;
-    margin-bottom: 5px;
-    padding: 0;
-    font-family: "Inconsolata"; }
+    padding: 5px;
+    color: #f2f3c4; }
   aside .module-players .list-players, aside .module-players .list-tallies {
-    margin-bottom: 15px; }
-    aside .module-players .list-players li .rank:after, aside .module-players .list-tallies li .rank:after {
-      content: ". "; }
-    aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
-      color: white; }
-    aside .module-players .list-players li .lap, aside .module-players .list-tallies li .lap {
-      float: right;
-      background-color: #287386;
-      color: #B1C0D8;
-      display: inline-block;
-      width: 15px;
-      text-align: center;
-      line-height: 15px;
-      font-size: 12px;
-      margin-right: 5px;
-      margin-top: 3px; }
-    aside .module-players .list-players li .time, aside .module-players .list-tallies li .time {
-      float: right; }
-  aside .module-chat {
-    flex: 3;
-    display: flex;
-    flex-direction: column; }
-    aside .module-chat .messages {
-      overflow: scroll;
-      flex: 1;
-      font-size: 13px;
-      position: relative;
-      /* margin: 10px; */ }
-      aside .module-chat .messages ul {
-        position: absolute;
-        bottom: 0; }
-      aside .module-chat .messages .message-handle {
-        font-weight: bold;
-        color: #E6E6E6; }
-        aside .module-chat .messages .message-handle:after {
-          content: ": "; }
-    aside .module-chat input[type="text"] {
-      background-color: #222;
-      border: 2px solid #666;
-      color: white; }
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 14px; }
+    aside .module-players .list-players li, aside .module-players .list-tallies li {
+      margin-bottom: 3px; }
+      aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
+        color: white; }
+      aside .module-players .list-players li .rank, aside .module-players .list-tallies li .rank {
+        margin-right: 10px;
+        font-weight: bold; }
+        aside .module-players .list-players li .rank:before, aside .module-players .list-tallies li .rank:before {
+          content: "#"; }
+      aside .module-players .list-players li .status, aside .module-players .list-tallies li .status {
+        float: right;
+        color: #f2f3c4; }
+
+aside .module-rankings {
+  flex: 0.5; }
   aside .module-rankings .list-rankings {
-    /* background-color: $darkNavBlue; */
-    margin-bottom: 15px; }
+    padding: 5px;
+    margin-bottom: 10px;
+    font-size: 14px; }
     aside .module-rankings .list-rankings li {
-      /* padding: 4px 6px; */ }
+      margin-bottom: 3px; }
       aside .module-rankings .list-rankings li .handle {
         color: white; }
-      aside .module-rankings .list-rankings li .position:after {
-        content: ". "; }
-      aside .module-rankings .list-rankings li .time {
-        float: right; }
+      aside .module-rankings .list-rankings li .rank {
+        margin-right: 10px;
+        font-weight: bold; }
+        aside .module-rankings .list-rankings li .rank:before {
+          content: "#"; }
+      aside .module-rankings .list-rankings li .status {
+        float: right;
+        color: #f2f3c4; }
+
+aside .module-help {
+  font-size: 12px; }
+  aside .module-help dl {
+    padding: 5px; }
+  aside .module-help dt {
+    font-weight: bold;
+    clear: both;
+    float: left;
+    opacity: 0.8; }
+  aside .module-help dd {
+    float: right; }
+
+aside .module-chat {
+  flex: 3;
+  display: flex;
+  flex-direction: column; }
+  aside .module-chat .messages {
+    overflow: scroll;
+    flex: 1;
+    font-size: 13px;
+    position: relative;
+    /* margin: 10px; */ }
+    aside .module-chat .messages ul {
+      position: absolute;
+      bottom: 0; }
+    aside .module-chat .messages .message-handle {
+      font-weight: bold;
+      color: #E6E6E6; }
+      aside .module-chat .messages .message-handle:after {
+        content: ": "; }
+  aside .module-chat input[type="text"] {
+    background-color: #222;
+    border: 2px solid #666;
+    color: white; }
 
 .editor aside .input-group-addon {
   min-width: 130px;

@@ -58,7 +58,8 @@ emptyView =
 
 layout : AppState -> Html -> Html
 layout appState content =
-  div [ class "global-wrapper" ]
-    -- [ TopBar.view appState
-    [ content
-    ]
+  content
+  -- div [ class "global-wrapper" ]
+  --   -- [ TopBar.view appState
+  --   [ content
+  --   ]

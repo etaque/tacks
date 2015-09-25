@@ -5,7 +5,7 @@
 
 
 body {
-  color: white;
+  color: #666;
   font-family: $fontFamily;
   font-size: 15px;
   background-color: $sand;
@@ -24,37 +24,23 @@ h2, h3, h4, h5, h6 {
   font-family: $headerFontFamily;
   font-size: 21px;
   margin-bottom: 15px;
-
-  &.block-title {
-    text-align: center;
-    background-color: $navBlue;
-    color: white;
-    font-size: 15px;
-    padding: 10px;
-    margin-bottom: 0;
-
-    &.secondary {
-      background-color: $mediumGray;
-    }
-  }
-
 }
 
 a {
-  color: white;
+  /* color: white; */
   transition: all .1s ease-in;
-  text-decoration: none;
+  text-decoration: underline;
   cursor: pointer;
 
   &:hover {
-    color: white;
+    /* color: white; */
     text-decoration: none;
   }
 }
 
 @mixin white-links {
   a {
-    color: white;
+    /* color: white; */
 
     &:hover {
     }
@@ -72,23 +58,19 @@ a {
   margin: 10px;
 
   h3 {
-    /* background-color: $darkSeaBlue; */
-    border-bottom: 1px solid $navBlue;
-    margin: 0 0 10px 0;
-    padding-bottom: 5px;
-    /* text-align: center; */
-    /* font-family: $lightFontFamily; */
+    background-color: $sand;
+    box-shadow: 1px 1px 0px $shadow;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    text-align: center;
     text-transform: uppercase;
-    font-size: 15px;
+    font-size: 13px;
   }
+
 }
 
 
 .title-wrapper {
-  background-color: $seaBlue;
-  @include linear-gradient($seaBlue, $lightSeaBlue);
-  box-shadow: 0 2px 3px $darkerSeaBlue inset;
-  color: $whiteBlue;
   padding: 40px;
   text-align: center;
 
@@ -120,61 +102,6 @@ a {
     color: white;
   }
 }
-
-.light-wrapper, .dark-wrapper {
-
-  .container {
-    padding-top: 30px;
-    padding-bottom: 50px;
-  }
-
-  h2, p.subtitle {
-    font-family: $lightFontFamily;
-    text-align: center;
-  }
-
-  h2 {
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 32px;
-    color: white;
-  }
-}
-
-.light-wrapper {
-  background-color: $smokeWhite;
-
-  h2 {
-    color: $darkGray;
-  }
-}
-
-.dark-wrapper {
-  background-color: $seaBlue;
-  @include linear-gradient($seaBlue, $lightSeaBlue);
-  @include white-links;
-  color: $whiteBlue;
-
-  box-shadow: 0px 2px 3px $darkerSeaBlue inset;
-}
-
-.footer-wrapper {
-  @include white-links;
-  box-shadow: 0px 2px 3px $darkerSeaBlue inset;
-  text-align: center;
-  color: $whiteBlue;
-  padding: 20px;
-  font-family: $lightFontFamily;
-}
-
-.white-panel {
-  background-color: $smokeWhite;
-  padding: 10px;
-  color: $darkGray;
-  border-radius: 5px;
-  box-shadow: 0 2px 3px $darkerSeaBlue;
-}
-
 
 .btn {
   font-weight: bold;
@@ -271,39 +198,53 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
 }
 
 .player-avatar {
-  font-family: $mono;
   display: inline-block;
-  color: $darkGray;
 
   .avatar {
-    border-radius: 2px;
     display: inline-block;
+    vertical-align: none;
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+    margin-right: -2px;
+  }
+
+  .handle {
+    font-weight: bold;
   }
 }
 
-a.player-avatar {
-  color: $gray;
+/* a.player-avatar { */
+/*   color: $gray; */
 
-  &:hover .handle {
-    text-decoration: underline;
-  }
-}
+/*   &:hover .handle { */
+/*     text-decoration: underline; */
+/*   } */
+/* } */
 
-@mixin fold-panels {
-  margin-top: 30px;
-  margin-bottom: 15px;
+@mixin players-list {
+  padding: 5px;
+  margin-bottom: 10px;
+  font-size: 14px;
 
-  .left {
-    text-align: right;
+  li {
+    margin-bottom: 3px;
 
-    h3 {
-      font-size: 16px;
-      margin: 0;
+    .handle {
+      color: white;
     }
-  }
 
-  .right {
-    text-align: left;
-    border-left: 1px solid $lighterSeaBlue;
+    .rank {
+      margin-right: 10px;
+      font-weight: bold;
+      &:before {
+        content: "#";
+      }
+    }
+
+    .status {
+      float: right;
+      color: $sand;
+    }
   }
 }
