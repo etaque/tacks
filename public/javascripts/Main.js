@@ -5486,6 +5486,36 @@ Elm.Game.Render.Dashboard.Status.make = function (_elm) {
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
    $Time = Elm.Time.make(_elm);
+   var getSubStatus = function (gameState) {
+      return $Game$Models.isStarted(gameState) ? function () {
+         var total = gameState.course.laps * 2 + 1;
+         var counter = $List.length(gameState.playerState.crossedGates);
+         return _U.eq(counter,
+         total) ? "FINISHED" : A2($Basics._op["++"],
+         "Gate ",
+         A2($Basics._op["++"],
+         $Basics.toString(counter),
+         A2($Basics._op["++"],
+         " on ",
+         $Basics.toString(total))));
+      }() : function () {
+         var _v0 = gameState.timers.startTime;
+         switch (_v0.ctor)
+         {case "Just": return "";
+            case "Nothing":
+            return "Press C to start countdown";}
+         _U.badCase($moduleName,
+         "between lines 100 and 104");
+      }();
+   };
+   var renderSubStatus = function (gameState) {
+      return A2($Svg.text$,
+      _L.fromArray([$Svg$Attributes.textAnchor("middle")
+                   ,$Svg$Attributes.fontSize("18px")
+                   ,$Svg$Attributes.opacity("0.5")
+                   ,$Svg$Attributes.y("24")]),
+      _L.fromArray([$Svg.text(getSubStatus(gameState))]));
+   };
    var formatTimer = F2(function (t,
    showMs) {
       return function () {
@@ -5521,24 +5551,24 @@ Elm.Game.Render.Dashboard.Status.make = function (_elm) {
          sMillis)));
       }();
    });
-   var getTimer = function (_v0) {
+   var getTimer = function (_v2) {
       return function () {
          return function () {
-            var _v2 = _v0.timers.startTime;
-            switch (_v2.ctor)
+            var _v4 = _v2.timers.startTime;
+            switch (_v4.ctor)
             {case "Just":
                return function () {
-                    var timer = $Game$Core.isNothing(_v0.playerState.nextGate) ? A2($Maybe.withDefault,
+                    var timer = $Game$Core.isNothing(_v2.playerState.nextGate) ? A2($Maybe.withDefault,
                     0,
-                    $List.head(_v0.playerState.crossedGates)) : _v2._0 - _v0.timers.now;
+                    $List.head(_v2.playerState.crossedGates)) : _v4._0 - _v2.timers.now;
                     return A2(formatTimer,
                     timer,
-                    $Game$Core.isNothing(_v0.playerState.nextGate));
+                    $Game$Core.isNothing(_v2.playerState.nextGate));
                  }();
                case "Nothing":
-               return "start pending";}
+               return "START PENDING";}
             _U.badCase($moduleName,
-            "between lines 41 and 51");
+            "between lines 50 and 60");
          }();
       }();
    };
@@ -5548,21 +5578,30 @@ Elm.Game.Render.Dashboard.Status.make = function (_elm) {
          $Basics.floor($Game$Models.raceTime(gameState)),
          1000);
          return _U.cmp(ms,
-         500) < 0 ? 1 : (1000 - $Basics.toFloat(ms)) / 500;
+         500) < 0 ? 0.5 : (1000 - $Basics.toFloat(ms)) / 500 * 0.5;
       }();
    };
-   var render = function (gameState) {
+   var renderTimer = function (gameState) {
       return A2($Svg.text$,
       _L.fromArray([$Svg$Attributes.textAnchor("middle")
                    ,$Svg$Attributes.fontSize("42px")
                    ,$Svg$Attributes.opacity($Basics.toString(timerOpacity(gameState)))]),
       _L.fromArray([$Svg.text(getTimer(gameState))]));
    };
+   var render = function (gameState) {
+      return A2($Svg.g,
+      _L.fromArray([]),
+      _L.fromArray([renderTimer(gameState)
+                   ,renderSubStatus(gameState)]));
+   };
    _elm.Game.Render.Dashboard.Status.values = {_op: _op
                                               ,render: render
+                                              ,renderTimer: renderTimer
                                               ,timerOpacity: timerOpacity
                                               ,getTimer: getTimer
-                                              ,formatTimer: formatTimer};
+                                              ,formatTimer: formatTimer
+                                              ,renderSubStatus: renderSubStatus
+                                              ,getSubStatus: getSubStatus};
    return _elm.Game.Render.Dashboard.Status.values;
 };
 Elm.Game = Elm.Game || {};
