@@ -21308,6 +21308,7 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var chatField = function (field) {
       return $Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value(field)
+                                                   ,$Html$Attributes.placeholder("type in there...")
                                                    ,A2($Screens$Utils.onInput,
                                                    $Screens$Game$Updates.actions.address,
                                                    $Screens$Game$Types.UpdateMessageField)
@@ -21340,16 +21341,30 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
       messageItem,
       $List.reverse(messages)));
    };
-   var chatBlock = function (_v2) {
+   var chatBlock = F2(function (h,
+   _v2) {
       return function () {
-         return A2($Html.div,
-         _L.fromArray([$Html$Attributes.$class("aside-module module-chat")]),
-         _L.fromArray([A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("messages")]),
-                      _L.fromArray([messagesList(_v2.messages)]))
-                      ,chatField(_v2.messageField)]));
+         return function () {
+            var messagesDiv = $List.isEmpty(_v2.messages) ? A2($Html.div,
+            _L.fromArray([]),
+            _L.fromArray([])) : A2($Html.div,
+            _L.fromArray([$Html$Attributes.$class("messages")
+                         ,$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                               ,_0: "maxHeight"
+                                                               ,_1: A2($Basics._op["++"],
+                                                               $Basics.toString((h / 3 | 0) * 2),
+                                                               "px")}]))]),
+            _L.fromArray([messagesList(_v2.messages)]));
+            return A2($Html.div,
+            _L.fromArray([$Html$Attributes.$class("module-chat")]),
+            _L.fromArray([A2($Html.h3,
+                         _L.fromArray([]),
+                         _L.fromArray([$Html.text("Chat")]))
+                         ,messagesDiv
+                         ,chatField(_v2.messageField)]));
+         }();
       }();
-   };
+   });
    _elm.Screens.Game.ChatView.values = {_op: _op
                                        ,chatBlock: chatBlock
                                        ,messagesList: messagesList
@@ -21898,6 +21913,7 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
    $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
@@ -21913,7 +21929,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 90, column 34 to 77");
+         "on line 84, column 34 to 77");
       }();
    })(_L.fromArray([{ctor: "_Tuple2"
                     ,_0: "LEFT/RIGHT"
@@ -22007,7 +22023,10 @@ Elm.Screens.Game.View.make = function (_elm) {
                                      gameState)
                                      ,A2($Html.div,
                                      _L.fromArray([$Html$Attributes.$class("game")]),
-                                     _L.fromArray([gameSvg]))]);
+                                     _L.fromArray([gameSvg]))
+                                     ,A2($Screens$Game$ChatView.chatBlock,
+                                     _v6._1,
+                                     screen)]);
               }();}
          _U.badCase($moduleName,
          "between lines 35 and 41");

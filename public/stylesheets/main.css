@@ -6943,83 +6943,97 @@ a.period {
   .game svg {
     display: block; }
 
-aside .module-players {
-  flex: 0.5; }
-  aside .module-players h4 {
+aside {
+  overflow-y: auto; }
+  aside .module-players {
+    flex: 0.5; }
+    aside .module-players h4 {
+      font-size: 13px;
+      margin: 0;
+      padding: 5px;
+      color: #f2f3c4; }
+    aside .module-players .list-players, aside .module-players .list-tallies {
+      padding: 5px;
+      margin-bottom: 10px;
+      font-size: 14px; }
+      aside .module-players .list-players li, aside .module-players .list-tallies li {
+        margin-bottom: 3px; }
+        aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
+          color: white; }
+        aside .module-players .list-players li .rank, aside .module-players .list-tallies li .rank {
+          margin-right: 10px;
+          font-weight: bold; }
+          aside .module-players .list-players li .rank:before, aside .module-players .list-tallies li .rank:before {
+            content: "#"; }
+        aside .module-players .list-players li .status, aside .module-players .list-tallies li .status {
+          float: right;
+          color: #f2f3c4; }
+  aside .module-rankings {
+    flex: 0.5; }
+    aside .module-rankings .list-rankings {
+      padding: 5px;
+      margin-bottom: 10px;
+      font-size: 14px; }
+      aside .module-rankings .list-rankings li {
+        margin-bottom: 3px; }
+        aside .module-rankings .list-rankings li .handle {
+          color: white; }
+        aside .module-rankings .list-rankings li .rank {
+          margin-right: 10px;
+          font-weight: bold; }
+          aside .module-rankings .list-rankings li .rank:before {
+            content: "#"; }
+        aside .module-rankings .list-rankings li .status {
+          float: right;
+          color: #f2f3c4; }
+  aside .module-help {
+    font-size: 12px; }
+    aside .module-help dl {
+      padding: 5px; }
+    aside .module-help dt {
+      font-weight: bold;
+      clear: both;
+      float: left;
+      opacity: 0.8; }
+    aside .module-help dd {
+      float: right; }
+
+.module-chat {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  opacity: 0.4;
+  width: 220px; }
+  .module-chat h3 {
+    background-color: #333;
+    color: #f2f3c4;
+    margin: 0 0 5px 0;
+    padding: 5px;
+    text-align: center;
+    text-transform: uppercase;
+    font-size: 13px; }
+  .module-chat .messages {
+    background-color: black;
+    overflow-y: hidden;
     font-size: 13px;
-    margin: 0;
-    padding: 5px;
-    color: #f2f3c4; }
-  aside .module-players .list-players, aside .module-players .list-tallies {
-    padding: 5px;
-    margin-bottom: 10px;
-    font-size: 14px; }
-    aside .module-players .list-players li, aside .module-players .list-tallies li {
-      margin-bottom: 3px; }
-      aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
-        color: white; }
-      aside .module-players .list-players li .rank, aside .module-players .list-tallies li .rank {
-        margin-right: 10px;
-        font-weight: bold; }
-        aside .module-players .list-players li .rank:before, aside .module-players .list-tallies li .rank:before {
-          content: "#"; }
-      aside .module-players .list-players li .status, aside .module-players .list-tallies li .status {
-        float: right;
-        color: #f2f3c4; }
-
-aside .module-rankings {
-  flex: 0.5; }
-  aside .module-rankings .list-rankings {
-    padding: 5px;
-    margin-bottom: 10px;
-    font-size: 14px; }
-    aside .module-rankings .list-rankings li {
-      margin-bottom: 3px; }
-      aside .module-rankings .list-rankings li .handle {
-        color: white; }
-      aside .module-rankings .list-rankings li .rank {
-        margin-right: 10px;
-        font-weight: bold; }
-        aside .module-rankings .list-rankings li .rank:before {
-          content: "#"; }
-      aside .module-rankings .list-rankings li .status {
-        float: right;
-        color: #f2f3c4; }
-
-aside .module-help {
-  font-size: 12px; }
-  aside .module-help dl {
-    padding: 5px; }
-  aside .module-help dt {
-    font-weight: bold;
-    clear: both;
-    float: left;
-    opacity: 0.8; }
-  aside .module-help dd {
-    float: right; }
-
-aside .module-chat {
-  flex: 3;
-  display: flex;
-  flex-direction: column; }
-  aside .module-chat .messages {
-    overflow: scroll;
-    flex: 1;
-    font-size: 13px;
-    position: relative;
-    /* margin: 10px; */ }
-    aside .module-chat .messages ul {
-      position: absolute;
-      bottom: 0; }
-    aside .module-chat .messages .message-handle {
+    border-top: 5px solid black;
+    border-bottom: 5px solid black;
+    padding: 0 10px;
+    color: white; }
+    .module-chat .messages ul {
+      padding: 0;
+      margin: 0; }
+    .module-chat .messages .message-handle {
       font-weight: bold;
       color: #E6E6E6; }
-      aside .module-chat .messages .message-handle:after {
+      .module-chat .messages .message-handle:after {
         content: ": "; }
-  aside .module-chat input[type="text"] {
-    background-color: #222;
-    border: 2px solid #666;
-    color: white; }
+  .module-chat input[type="text"] {
+    margin-top: 5px;
+    background-color: #333;
+    border: 2px solid black;
+    color: white;
+    font-size: 13px; }
 
 .editor aside .input-group-addon {
   min-width: 130px;

@@ -37,7 +37,7 @@ gameView (w, h) screen gameState =
   in
     [ leftBar h screen gameState
     , div [ class "game" ] [ gameSvg ]
-    -- , rightBar (h - topbarHeight) screen gameState
+    , chatBlock h screen
     ]
 
 leftBar : Int -> Screen -> GameState -> Html
@@ -56,12 +56,6 @@ logo =
     [ linkTo "/" [ ]
       [ img [ src "/assets/images/logo-header-2.png" ] [] ]
     ]
-
--- rightBar : Int -> Screen -> GameState -> Html
--- rightBar h screen gameState =
---   aside [ style [("height", toString h ++ "px")] ]
---     [ Maybe.map rankingsBlock screen.liveTrack |> Maybe.withDefault (div [ ] [ ])
---     ]
 
 rankingsBlock : LiveTrack -> Html
 rankingsBlock {rankings} =
