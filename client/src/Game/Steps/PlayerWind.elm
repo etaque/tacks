@@ -17,6 +17,9 @@ shadowArc : Float
 shadowArc = 30 -- degrees
 
 
+maxWindShift = 0.5
+
+
 playerWindStep : GameState -> PlayerState -> PlayerState
 playerWindStep ({wind, gusts, course, opponents} as gameState) state =
   let
@@ -33,13 +36,21 @@ playerWindStep ({wind, gusts, course, opponents} as gameState) state =
       |> sum
 
     gustOrigin = sum (map .angle gustTiles)
-    origin = ensure360 (wind.origin + gustOrigin)
+    newOrigin = ensure360 (wind.origin + gustOrigin)
 
     gustSpeed = sum (map .speed gustTiles)
     speed = wind.speed + gustSpeed + windShadow
+
+    originDelta = angleDelta state.windOrigin newOrigin
+    easedOrigin =
+      if abs originDelta > maxWindShift then
+        ensure360 <| state.windOrigin + (maxWindShift * (if originDelta > 0 then -1 else 1))
+      else
+        newOrigin
+
   in
     { state
-      | windOrigin <- origin
+      | windOrigin <- easedOrigin
       , windSpeed <- speed
       , shadowDirection <- shadowDirection
     }

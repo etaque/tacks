@@ -7694,6 +7694,7 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
       g.position),
       g.radius + $Game$Grid.hexRadius) < 0;
    });
+   var maxWindShift = 0.5;
    var shadowArc = 30;
    var windShadowSector = function (_v0) {
       return function () {
@@ -7738,7 +7739,13 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
                return _.angle;
             },
             gustTiles));
-            var origin = $Game$Geo.ensure360(_v2.wind.origin + gustOrigin);
+            var newOrigin = $Game$Geo.ensure360(_v2.wind.origin + gustOrigin);
+            var originDelta = A2($Game$Geo.angleDelta,
+            state.windOrigin,
+            newOrigin);
+            var easedOrigin = _U.cmp($Basics.abs(originDelta),
+            maxWindShift) > 0 ? $Game$Geo.ensure360(state.windOrigin + maxWindShift * (_U.cmp(originDelta,
+            0) > 0 ? -1 : 1)) : newOrigin;
             var gustSpeed = $List.sum(A2($List.map,
             function (_) {
                return _.speed;
@@ -7747,7 +7754,7 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
             var speed = _v2.wind.speed + gustSpeed + windShadow;
             var shadowDirection = $Game$Geo.ensure360(state.windOrigin + 180 + state.windAngle / 3);
             return _U.replace([["windOrigin"
-                               ,origin]
+                               ,easedOrigin]
                               ,["windSpeed",speed]
                               ,["shadowDirection"
                                ,shadowDirection]],
@@ -7758,6 +7765,7 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
    _elm.Game.Steps.PlayerWind.values = {_op: _op
                                        ,shadowSpeedImpact: shadowSpeedImpact
                                        ,shadowArc: shadowArc
+                                       ,maxWindShift: maxWindShift
                                        ,playerWindStep: playerWindStep
                                        ,isGustOnPlayer: isGustOnPlayer
                                        ,findGustTile: findGustTile
