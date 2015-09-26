@@ -43,11 +43,18 @@ gameView (w, h) screen gameState =
 leftBar : Int -> Screen -> GameState -> Html
 leftBar h screen gameState =
   sidebar (sidebarWidth, h)
-    [ logo
+    [ withLiveTrack trackNav screen.liveTrack
     , playersBlock screen
     -- , chatBlock screen
-    , Maybe.map rankingsBlock screen.liveTrack |> Maybe.withDefault (div [ ] [ ])
+    , withLiveTrack rankingsBlock screen.liveTrack
     , helpBlock
+    ]
+
+trackNav : LiveTrack -> Html
+trackNav liveTrack =
+  div [ class "track-menu" ]
+    [ h2 [ ] [ text liveTrack.track.slug ]
+    , linkTo "/" [ class "btn btn-xs btn-default" ] [ text "Exit" ]
     ]
 
 logo : Html
@@ -81,7 +88,7 @@ helpBlock =
 
 helpItems : List Html
 helpItems =
-  List.concatMap (\(dt', dd') -> [ dt [ ] [ text dt' ], dd [ ] [ text dd'] ]) <|
+  List.concatMap helpItem <|
     [ ("LEFT/RIGHT", "turn")
     , ("LEFT/RIGHT + SHIFT", "adjust")
     , ("ENTER", "lock angle to wind")
@@ -89,3 +96,15 @@ helpItems =
     , ("ESC", "quit race")
     ]
 
+helpItem : (String, String) -> List Html
+helpItem (keys, role) =
+  [ dt [ ] [ text keys ], dd [ ] [ text role ] ]
+
+withLiveTrack : (LiveTrack -> Html) -> Maybe LiveTrack -> Html
+withLiveTrack f maybeLiveTrack =
+  Maybe.map f maybeLiveTrack |> orEmptyDiv
+
+orEmptyDiv =
+  Maybe.withDefault emptyDiv
+
+emptyDiv = div [ ] [ ]

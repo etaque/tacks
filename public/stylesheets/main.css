@@ -6102,6 +6102,14 @@ aside {
   flex-direction: column;
   background-color: #a0a17d;
   color: #51585E; }
+  aside .track-menu {
+    margin: 10px; }
+    aside .track-menu h2 {
+      color: #f2f3c4;
+      margin: 0;
+      float: left; }
+    aside .track-menu .btn {
+      float: right; }
   aside .logo a {
     display: block;
     text-align: center;
@@ -6148,7 +6156,7 @@ h2, h3, h4, h5, h6 {
 a {
   /* color: white; */
   transition: all 0.1s ease-in;
-  text-decoration: underline;
+  /* text-decoration: underline; */
   cursor: pointer; }
   a:hover {
     /* color: white; */

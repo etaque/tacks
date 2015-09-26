@@ -21918,7 +21918,17 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var helpItems = $List.concatMap(function (_v0) {
+   var emptyDiv = A2($Html.div,
+   _L.fromArray([]),
+   _L.fromArray([]));
+   var orEmptyDiv = $Maybe.withDefault(emptyDiv);
+   var withLiveTrack = F2(function (f,
+   maybeLiveTrack) {
+      return orEmptyDiv(A2($Maybe.map,
+      f,
+      maybeLiveTrack));
+   });
+   var helpItem = function (_v0) {
       return function () {
          switch (_v0.ctor)
          {case "_Tuple2":
@@ -21929,23 +21939,24 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 84, column 34 to 77");
+         "on line 101, column 3 to 49");
       }();
-   })(_L.fromArray([{ctor: "_Tuple2"
-                    ,_0: "LEFT/RIGHT"
-                    ,_1: "turn"}
-                   ,{ctor: "_Tuple2"
-                    ,_0: "LEFT/RIGHT + SHIFT"
-                    ,_1: "adjust"}
-                   ,{ctor: "_Tuple2"
-                    ,_0: "ENTER"
-                    ,_1: "lock angle to wind"}
-                   ,{ctor: "_Tuple2"
-                    ,_0: "SPACE"
-                    ,_1: "tack or jibe"}
-                   ,{ctor: "_Tuple2"
-                    ,_0: "ESC"
-                    ,_1: "quit race"}]));
+   };
+   var helpItems = $List.concatMap(helpItem)(_L.fromArray([{ctor: "_Tuple2"
+                                                           ,_0: "LEFT/RIGHT"
+                                                           ,_1: "turn"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "LEFT/RIGHT + SHIFT"
+                                                           ,_1: "adjust"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "ENTER"
+                                                           ,_1: "lock angle to wind"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "SPACE"
+                                                           ,_1: "tack or jibe"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "ESC"
+                                                           ,_1: "quit race"}]));
    var helpBlock = A2($Html.div,
    _L.fromArray([$Html$Attributes.$class("aside-module module-help")]),
    _L.fromArray([A2($Html.h3,
@@ -21989,6 +22000,17 @@ Elm.Screens.Game.View.make = function (_elm) {
    _L.fromArray([A2($Html.img,
    _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
    _L.fromArray([]))]))]));
+   var trackNav = function (liveTrack) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("track-menu")]),
+      _L.fromArray([A2($Html.h2,
+                   _L.fromArray([]),
+                   _L.fromArray([$Html.text(liveTrack.track.slug)]))
+                   ,A3($Screens$Utils.linkTo,
+                   "/",
+                   _L.fromArray([$Html$Attributes.$class("btn btn-xs btn-default")]),
+                   _L.fromArray([$Html.text("Exit")]))]));
+   };
    var leftBar = F3(function (h,
    screen,
    gameState) {
@@ -21996,13 +22018,13 @@ Elm.Screens.Game.View.make = function (_elm) {
       {ctor: "_Tuple2"
       ,_0: $Constants.sidebarWidth
       ,_1: h},
-      _L.fromArray([logo
+      _L.fromArray([A2(withLiveTrack,
+                   trackNav,
+                   screen.liveTrack)
                    ,$Screens$Game$PlayersView.playersBlock(screen)
-                   ,$Maybe.withDefault(A2($Html.div,
-                   _L.fromArray([]),
-                   _L.fromArray([])))(A2($Maybe.map,
+                   ,A2(withLiveTrack,
                    rankingsBlock,
-                   screen.liveTrack))
+                   screen.liveTrack)
                    ,helpBlock]));
    });
    var gameView = F3(function (_v6,
@@ -22048,11 +22070,16 @@ Elm.Screens.Game.View.make = function (_elm) {
                                    ,loading: loading
                                    ,gameView: gameView
                                    ,leftBar: leftBar
+                                   ,trackNav: trackNav
                                    ,logo: logo
                                    ,rankingsBlock: rankingsBlock
                                    ,rankingItem: rankingItem
                                    ,helpBlock: helpBlock
-                                   ,helpItems: helpItems};
+                                   ,helpItems: helpItems
+                                   ,helpItem: helpItem
+                                   ,withLiveTrack: withLiveTrack
+                                   ,orEmptyDiv: orEmptyDiv
+                                   ,emptyDiv: emptyDiv};
    return _elm.Screens.Game.View.values;
 };
 Elm.Screens = Elm.Screens || {};
