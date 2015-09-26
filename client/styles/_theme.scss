@@ -16,6 +16,7 @@ hr {
 }
 
 h1 {
+  font-family: $headerFontFamily;
   margin-bottom: 30px;
   text-align: center;
 }
@@ -38,24 +39,11 @@ a {
   }
 }
 
-@mixin white-links {
-  a {
-    /* color: white; */
-
-    &:hover {
-    }
-
-    &.btn:hover {
-    }
-  }
-}
-
 .align-center {
   text-align: center;
 }
 
 .aside-module {
-  margin: 10px;
 
   h3 {
     background-color: $sand;
@@ -67,40 +55,6 @@ a {
     font-size: 13px;
   }
 
-}
-
-
-.title-wrapper {
-  padding: 40px;
-  text-align: center;
-
-  @include white-links;
-
-  h1 {
-    color: white;
-    font-family: $lightFontFamily;
-    font-size: 40px;
-    font-weight: 300;
-    margin: 0;
-
-    a {
-      color: white;
-
-      &:hover {
-        color: $mainBlue;
-      }
-    }
-  }
-
-  p {
-    font-family: $lightFontFamily;
-    margin-top: 10px;
-  }
-
-  strong {
-    font-family: $fontFamily;
-    color: white;
-  }
 }
 
 .btn {

@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
+import Constants exposing (..)
 
 import Screens.Home.Types exposing (..)
 import Screens.Home.Updates exposing (actions)
@@ -16,7 +17,8 @@ import Screens.Messages exposing (..)
 
 view : Player -> Screen -> Html
 view player screen =
-  div [ class "home"]
+  div
+    [ class "home" ]
     [ welcome player screen.handle
     , liveTracks screen.liveStatus
     ]

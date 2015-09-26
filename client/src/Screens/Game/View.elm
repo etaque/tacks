@@ -4,8 +4,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import Graphics.Element as E exposing (..)
-
 import AppTypes exposing (..)
 import Models exposing (..)
 import Game.Models exposing (GameState)
@@ -15,7 +13,6 @@ import Screens.Game.Updates exposing (actions)
 import Screens.Game.ChatView exposing (chatBlock)
 import Screens.Game.PlayersView exposing (playersBlock)
 
-import Screens.TopBar as TopBar
 import Screens.Utils exposing (..)
 import Game.Render.All exposing (render)
 import Constants exposing (..)
@@ -55,13 +52,6 @@ trackNav liveTrack =
   div [ class "track-menu" ]
     [ h2 [ ] [ text liveTrack.track.slug ]
     , linkTo "/" [ class "btn btn-xs btn-default" ] [ text "Exit" ]
-    ]
-
-logo : Html
-logo =
-  div [ class "logo" ]
-    [ linkTo "/" [ ]
-      [ img [ src "/assets/images/logo-header-2.png" ] [] ]
     ]
 
 rankingsBlock : LiveTrack -> Html

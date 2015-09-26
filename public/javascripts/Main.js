@@ -438,6 +438,7 @@ Elm.AppView.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -448,10 +449,26 @@ Elm.AppView.make = function (_elm) {
    $Screens$Register$View = Elm.Screens.Register.View.make(_elm),
    $Screens$ShowProfile$View = Elm.Screens.ShowProfile.View.make(_elm),
    $Screens$ShowTrack$View = Elm.Screens.ShowTrack.View.make(_elm),
+   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var layout = F2(function (appState,
    content) {
-      return content;
+      return function () {
+         var noNav = function () {
+            var _v0 = appState.screen;
+            switch (_v0.ctor)
+            {case "EditTrackScreen":
+               return true;
+               case "GameScreen": return true;}
+            return false;
+         }();
+         return noNav ? content : A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("content")]),
+         _L.fromArray([$Screens$Sidebar.render(appState.player)
+                      ,A2($Html.main$,
+                      _L.fromArray([]),
+                      _L.fromArray([content]))]));
+      }();
    });
    var emptyView = A2($Html.div,
    _L.fromArray([]),
@@ -459,26 +476,26 @@ Elm.AppView.make = function (_elm) {
    var view = function (appState) {
       return function () {
          var content = function () {
-            var _v0 = appState.screen;
-            switch (_v0.ctor)
+            var _v3 = appState.screen;
+            switch (_v3.ctor)
             {case "EditTrackScreen":
-               return $Screens$EditTrack$View.view(_v0._0);
+               return $Screens$EditTrack$View.view(_v3._0);
                case "GameScreen":
                return A2($Screens$Game$View.view,
                  appState.dims,
-                 _v0._0);
+                 _v3._0);
                case "HomeScreen":
                return A2($Screens$Home$View.view,
                  appState.player,
-                 _v0._0);
+                 _v3._0);
                case "LoginScreen":
-               return $Screens$Login$View.view(_v0._0);
+               return $Screens$Login$View.view(_v3._0);
                case "RegisterScreen":
-               return $Screens$Register$View.view(_v0._0);
+               return $Screens$Register$View.view(_v3._0);
                case "ShowProfileScreen":
-               return $Screens$ShowProfile$View.view(_v0._0);
+               return $Screens$ShowProfile$View.view(_v3._0);
                case "ShowTrackScreen":
-               return $Screens$ShowTrack$View.view(_v0._0);}
+               return $Screens$ShowTrack$View.view(_v3._0);}
             return emptyView;
          }();
          return A2(layout,
@@ -21939,7 +21956,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 101, column 3 to 49");
+         "on line 91, column 3 to 49");
       }();
    };
    var helpItems = $List.concatMap(helpItem)(_L.fromArray([{ctor: "_Tuple2"
@@ -21992,14 +22009,6 @@ Elm.Screens.Game.View.make = function (_elm) {
                       _v4.rankings))]));
       }();
    };
-   var logo = A2($Html.div,
-   _L.fromArray([$Html$Attributes.$class("logo")]),
-   _L.fromArray([A3($Screens$Utils.linkTo,
-   "/",
-   _L.fromArray([]),
-   _L.fromArray([A2($Html.img,
-   _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
-   _L.fromArray([]))]))]));
    var trackNav = function (liveTrack) {
       return A2($Html.div,
       _L.fromArray([$Html$Attributes.$class("track-menu")]),
@@ -22051,7 +22060,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                      screen)]);
               }();}
          _U.badCase($moduleName,
-         "between lines 35 and 41");
+         "between lines 32 and 38");
       }();
    });
    var loading = _L.fromArray([$Html.text("loading...")]);
@@ -22071,7 +22080,6 @@ Elm.Screens.Game.View.make = function (_elm) {
                                    ,gameView: gameView
                                    ,leftBar: leftBar
                                    ,trackNav: trackNav
-                                   ,logo: logo
                                    ,rankingsBlock: rankingsBlock
                                    ,rankingItem: rankingItem
                                    ,helpBlock: helpBlock
@@ -23267,6 +23275,101 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
                                         ,withTrack: withTrack
                                         ,joinButton: joinButton};
    return _elm.Screens.ShowTrack.View.values;
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Sidebar = Elm.Screens.Sidebar || {};
+Elm.Screens.Sidebar.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Sidebar = _elm.Screens.Sidebar || {};
+   if (_elm.Screens.Sidebar.values)
+   return _elm.Screens.Sidebar.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Screens.Sidebar",
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $AppUpdates = Elm.AppUpdates.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var userItems = function (player) {
+      return _L.fromArray([A2($Html.li,
+                          _L.fromArray([]),
+                          _L.fromArray([A3($Screens$Utils.linkTo,
+                          "/me",
+                          _L.fromArray([]),
+                          _L.fromArray([$Html.text("Profile")]))]))
+                          ,A2($Html.li,
+                          _L.fromArray([]),
+                          _L.fromArray([A2($Html.a,
+                          _L.fromArray([A2($Html$Events.onClick,
+                          $AppUpdates.actionsMailbox.address,
+                          $AppTypes.Logout)]),
+                          _L.fromArray([$Html.text("Logout")]))]))]);
+   };
+   var guestItems = _L.fromArray([A2($Html.li,
+                                 _L.fromArray([]),
+                                 _L.fromArray([A3($Screens$Utils.linkTo,
+                                 "/login",
+                                 _L.fromArray([]),
+                                 _L.fromArray([$Html.text("Login")]))]))
+                                 ,A2($Html.li,
+                                 _L.fromArray([]),
+                                 _L.fromArray([A3($Screens$Utils.linkTo,
+                                 "/register",
+                                 _L.fromArray([]),
+                                 _L.fromArray([$Html.text("Register")]))]))]);
+   var mainMenu = function (player) {
+      return function () {
+         var playerItems = player.guest ? guestItems : userItems(player);
+         var allItems = A2($Basics._op["++"],
+         _L.fromArray([A2($Html.li,
+         _L.fromArray([]),
+         _L.fromArray([A3($Screens$Utils.linkTo,
+         "/",
+         _L.fromArray([]),
+         _L.fromArray([$Html.text("Home")]))]))]),
+         playerItems);
+         return A2($Html.ul,
+         _L.fromArray([$Html$Attributes.$class("user-menu")]),
+         allItems);
+      }();
+   };
+   var logo = A2($Html.div,
+   _L.fromArray([$Html$Attributes.$class("logo")]),
+   _L.fromArray([A3($Screens$Utils.linkTo,
+   "/",
+   _L.fromArray([]),
+   _L.fromArray([A2($Html.img,
+   _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
+   _L.fromArray([]))]))]));
+   var render = function (player) {
+      return A2($Html.aside,
+      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                         ,_0: "width"
+                                                         ,_1: A2($Basics._op["++"],
+                                                         $Basics.toString($Constants.sidebarWidth),
+                                                         "px")}]))]),
+      _L.fromArray([logo
+                   ,mainMenu(player)]));
+   };
+   _elm.Screens.Sidebar.values = {_op: _op
+                                 ,render: render
+                                 ,logo: logo
+                                 ,mainMenu: mainMenu
+                                 ,guestItems: guestItems
+                                 ,userItems: userItems};
+   return _elm.Screens.Sidebar.values;
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.TopBar = Elm.Screens.TopBar || {};

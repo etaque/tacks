@@ -106,6 +106,12 @@ aside {
     border: 2px solid black;
     color: white;
     font-size: 13px;
+
+    &:focus {
+      background-color: white;
+      color: black;
+    }
+      
   }
 }
 

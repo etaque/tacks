@@ -14,9 +14,11 @@ import Screens.EditTrack.View as EditTrack
 import Screens.ShowProfile.View as ShowProfile
 import Screens.Game.View as Game
 
+import Screens.Sidebar as Sidebar
 import Screens.TopBar as TopBar
 
 import Constants exposing (..)
+
 
 view : AppState -> Html
 view appState =
@@ -58,8 +60,17 @@ emptyView =
 
 layout : AppState -> Html -> Html
 layout appState content =
-  content
-  -- div [ class "global-wrapper" ]
-  --   -- [ TopBar.view appState
-  --   [ content
-  --   ]
+  let
+    noNav = case appState.screen of
+      EditTrackScreen _ -> True
+      GameScreen _ -> True
+      _ -> False
+  in
+    if noNav then
+      content
+    else
+      div
+        [ class "content" ]
+        [ Sidebar.render appState.player
+        , main' [ ] [ content ]
+        ]

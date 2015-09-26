@@ -6083,27 +6083,28 @@ body {
   margin: 0;
   padding: 0; }
 
-.global-wrapper {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column; }
+body > div {
+  height: 100%; }
 
 .content {
+  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: row; }
 
-.main {
-  flex: 1; }
+.main, main {
+  flex: 1;
+  background-color: #f2f3c4; }
 
 aside {
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   background-color: #a0a17d;
-  color: #51585E; }
+  color: #51585E;
+  padding: 10px; }
   aside .track-menu {
-    margin: 10px; }
+    margin-bottom: 20px; }
     aside .track-menu h2 {
       color: #f2f3c4;
       margin: 0;
@@ -6113,11 +6114,25 @@ aside {
   aside .logo a {
     display: block;
     text-align: center;
-    background-color: #3a78c9; }
+    background-color: #3a78c9;
+    /* border: 2px solid white; */ }
     aside .logo a img {
-      height: 40px;
+      height: 50px;
       /* max-height: 100%; */
       width: auto; }
+  aside .user-menu {
+    list-style: none;
+    margin: 0;
+    margin-top: 20px;
+    padding: 0;
+    font-family: "Museo Slab";
+    text-transform: lowercase; }
+    aside .user-menu a {
+      display: block;
+      color: white;
+      padding: 5px 10px; }
+      aside .user-menu a:before {
+        /* content: "# "; */ }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -6145,6 +6160,7 @@ hr {
   border: 0 solid #B1C0D8; }
 
 h1 {
+  font-family: "Museo Slab";
   margin-bottom: 30px;
   text-align: center; }
 
@@ -6165,38 +6181,14 @@ a {
 .align-center {
   text-align: center; }
 
-.aside-module {
-  margin: 10px; }
-  .aside-module h3 {
-    background-color: #f2f3c4;
-    box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.075);
-    margin: 0 0 5px 0;
-    padding: 5px;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 13px; }
-
-.title-wrapper {
-  padding: 40px;
-  text-align: center; }
-  .title-wrapper a {
-    /* color: white; */ }
-  .title-wrapper h1 {
-    color: white;
-    font-family: "Proxima Nova Thin";
-    font-size: 40px;
-    font-weight: 300;
-    margin: 0; }
-    .title-wrapper h1 a {
-      color: white; }
-      .title-wrapper h1 a:hover {
-        color: #5899E2; }
-  .title-wrapper p {
-    font-family: "Proxima Nova Thin";
-    margin-top: 10px; }
-  .title-wrapper strong {
-    font-family: "Inconsolata", "mono";
-    color: white; }
+.aside-module h3 {
+  background-color: #f2f3c4;
+  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.075);
+  margin: 0 0 5px 0;
+  padding: 5px;
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 13px; }
 
 .btn {
   font-weight: bold;
@@ -7042,6 +7034,9 @@ aside {
     border: 2px solid black;
     color: white;
     font-size: 13px; }
+    .module-chat input[type="text"]:focus {
+      background-color: white;
+      color: black; }
 
 .editor aside .input-group-addon {
   min-width: 130px;

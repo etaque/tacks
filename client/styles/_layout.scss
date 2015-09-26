@@ -10,32 +10,32 @@ body {
   padding: 0;
 }
 
-.global-wrapper {
-  width: 100%;
+body > div {
   height: 100%;
-
-  display: flex;
-  flex-direction: column;
 }
     
 .content {
+  height: 100%;
   flex: 1;
   display: flex;
   flex-direction: row;
 }
 
-.main {
+.main, main {
   flex: 1;
+  background-color: $sand;
 }
 
 aside {
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   background-color: $darkSand;
   color: $darkGray;
+  padding: 10px;
 
   .track-menu {
-    margin: 10px;
+    margin-bottom: 20px;
 
     h2 {
       color: $sand;
@@ -53,11 +53,34 @@ aside {
       display: block;
       text-align: center;
       background-color: rgb(58,120,201);
+      /* border: 2px solid white; */
 
       img {
-        height: 40px;
+        height: 50px;
         /* max-height: 100%; */
         width: auto;
+      }
+    }
+  }
+
+  .user-menu {
+    list-style: none;
+    margin: 0;
+    margin-top: 20px;
+    padding: 0;
+    font-family: $headerFontFamily;
+    text-transform: lowercase;
+
+    li {
+    }
+
+    a {
+      display: block;
+      color: white;
+      padding: 5px 10px;
+
+      &:before {
+        /* content: "# "; */
       }
     }
   }
