@@ -21905,7 +21905,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                 _L.fromArray([]),
                                 _L.fromArray([$Html.text(_v0._1)]))]);}
          _U.badCase($moduleName,
-         "on line 82, column 34 to 77");
+         "on line 90, column 34 to 77");
       }();
    })(_L.fromArray([{ctor: "_Tuple2"
                     ,_0: "LEFT/RIGHT"
@@ -21957,21 +21957,14 @@ Elm.Screens.Game.View.make = function (_elm) {
                       _v4.rankings))]));
       }();
    };
-   var rightBar = F3(function (h,
-   screen,
-   gameState) {
-      return A2($Html.aside,
-      _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
-                                                         ,_0: "height"
-                                                         ,_1: A2($Basics._op["++"],
-                                                         $Basics.toString(h),
-                                                         "px")}]))]),
-      _L.fromArray([$Maybe.withDefault(A2($Html.div,
-      _L.fromArray([]),
-      _L.fromArray([])))(A2($Maybe.map,
-      rankingsBlock,
-      screen.liveTrack))]));
-   });
+   var logo = A2($Html.div,
+   _L.fromArray([$Html$Attributes.$class("logo")]),
+   _L.fromArray([A3($Screens$Utils.linkTo,
+   "/",
+   _L.fromArray([]),
+   _L.fromArray([A2($Html.img,
+   _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
+   _L.fromArray([]))]))]));
    var leftBar = F3(function (h,
    screen,
    gameState) {
@@ -21979,7 +21972,8 @@ Elm.Screens.Game.View.make = function (_elm) {
       {ctor: "_Tuple2"
       ,_0: $Constants.sidebarWidth
       ,_1: h},
-      _L.fromArray([$Screens$Game$PlayersView.playersBlock(screen)
+      _L.fromArray([logo
+                   ,$Screens$Game$PlayersView.playersBlock(screen)
                    ,$Maybe.withDefault(A2($Html.div,
                    _L.fromArray([]),
                    _L.fromArray([])))(A2($Maybe.map,
@@ -22011,9 +22005,7 @@ Elm.Screens.Game.View.make = function (_elm) {
          "between lines 35 and 41");
       }();
    });
-   var loading = _L.fromArray([$Screens$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
-   _L.fromArray([]),
-   _L.fromArray([$Html.text("loading...")]))]))]);
+   var loading = _L.fromArray([$Html.text("loading...")]);
    var view = F2(function (dims,
    _v10) {
       return function () {
@@ -22029,7 +22021,7 @@ Elm.Screens.Game.View.make = function (_elm) {
                                    ,loading: loading
                                    ,gameView: gameView
                                    ,leftBar: leftBar
-                                   ,rightBar: rightBar
+                                   ,logo: logo
                                    ,rankingsBlock: rankingsBlock
                                    ,rankingItem: rankingItem
                                    ,helpBlock: helpBlock

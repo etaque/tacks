@@ -6097,20 +6097,19 @@ body {
 .main {
   flex: 1; }
 
-.logo {
-  width: 200px;
-  /* background-color: $darkerSeaBlue; */ }
-  .logo img {
-    height: 50px;
-    max-height: 100%;
-    /* max-height: 48px; */
-    width: auto; }
-
 aside {
   display: flex;
   flex-direction: column;
   background-color: #a0a17d;
   color: #51585E; }
+  aside .logo a {
+    display: block;
+    text-align: center;
+    background-color: #3a78c9; }
+    aside .logo a img {
+      height: 40px;
+      /* max-height: 100%; */
+      width: auto; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -6130,7 +6129,7 @@ aside {
 
 body {
   color: #666;
-  font-family: "Inconsolata";
+  font-family: "Inconsolata", "mono";
   font-size: 15px;
   background-color: #f2f3c4; }
 
@@ -6188,7 +6187,7 @@ a {
     font-family: "Proxima Nova Thin";
     margin-top: 10px; }
   .title-wrapper strong {
-    font-family: "Inconsolata";
+    font-family: "Inconsolata", "mono";
     color: white; }
 
 .btn {
@@ -6295,7 +6294,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   box-shadow: 0 2px 2px #E6E6E6;
   margin-top: 20px; }
   .table-leaderboard tbody {
-    font-family: "Inconsolata"; }
+    font-family: "Inconsolata", "mono"; }
   .table-leaderboard th {
     text-align: center;
     border-bottom-width: 2px;
@@ -6336,7 +6335,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
     text-align: center; }
 
 .rankings {
-  font-family: "Inconsolata";
+  font-family: "Inconsolata", "mono";
   margin: 0;
   padding: 0;
   background-color: white;
@@ -6367,7 +6366,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
       padding-top: 4px; }
 
 .rankings-dark {
-  font-family: "Inconsolata";
+  font-family: "Inconsolata", "mono";
   margin: 0;
   padding: 0; }
   .rankings-dark li {
@@ -6770,7 +6769,7 @@ a.period {
     margin-top: 10px; }
 
 .list-time-trial-rankings {
-  font-family: "Inconsolata";
+  font-family: "Inconsolata", "mono";
   margin: 0;
   padding: 0;
   background-color: white;
@@ -6817,7 +6816,7 @@ a.period {
       float: right;
       margin-right: 10px; }
     .list-recent-runs li .finish-time {
-      font-family: "Inconsolata";
+      font-family: "Inconsolata", "mono";
       float: right; }
     .list-recent-runs li:last-child {
       border-bottom-color: transparent; }

@@ -28,7 +28,7 @@ view dims ({liveTrack, gameState} as screen) =
 
 loading : List Html
 loading =
-  [ titleWrapper [ h1 [] [ text "loading..." ]] ]
+  [ text "loading..." ]
 
 gameView : Dims -> Screen -> GameState -> List Html
 gameView (w, h) screen gameState =
@@ -43,17 +43,25 @@ gameView (w, h) screen gameState =
 leftBar : Int -> Screen -> GameState -> Html
 leftBar h screen gameState =
   sidebar (sidebarWidth, h)
-    [ playersBlock screen
+    [ logo
+    , playersBlock screen
     -- , chatBlock screen
     , Maybe.map rankingsBlock screen.liveTrack |> Maybe.withDefault (div [ ] [ ])
     , helpBlock
     ]
 
-rightBar : Int -> Screen -> GameState -> Html
-rightBar h screen gameState =
-  aside [ style [("height", toString h ++ "px")] ]
-    [ Maybe.map rankingsBlock screen.liveTrack |> Maybe.withDefault (div [ ] [ ])
+logo : Html
+logo =
+  div [ class "logo" ]
+    [ linkTo "/" [ ]
+      [ img [ src "/assets/images/logo-header-2.png" ] [] ]
     ]
+
+-- rightBar : Int -> Screen -> GameState -> Html
+-- rightBar h screen gameState =
+--   aside [ style [("height", toString h ++ "px")] ]
+--     [ Maybe.map rankingsBlock screen.liveTrack |> Maybe.withDefault (div [ ] [ ])
+--     ]
 
 rankingsBlock : LiveTrack -> Html
 rankingsBlock {rankings} =

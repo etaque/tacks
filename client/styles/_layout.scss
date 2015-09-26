@@ -2,8 +2,6 @@
 @import 'fonts';
 
 
-$navbarHeight: 50px;
-
 html,
 body {
   width: 100%;
@@ -30,21 +28,23 @@ body {
   flex: 1;
 }
 
-.logo {
-  width: 200px;
-  /* background-color: $darkerSeaBlue; */
-
-  img {
-    height: $navbarHeight;
-    max-height: 100%;
-    /* max-height: 48px; */
-    width: auto;
-  }
-}
-
 aside {
   display: flex;
   flex-direction: column;
   background-color: $darkSand;
   color: $darkGray;
+
+  .logo {
+    a {
+      display: block;
+      text-align: center;
+      background-color: rgb(58,120,201);
+
+      img {
+        height: 40px;
+        /* max-height: 100%; */
+        width: auto;
+      }
+    }
+  }
 }
