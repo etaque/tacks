@@ -1,10 +1,46 @@
+@import 'colors';
+
 .editor {
+
   aside {
+
+    .form-group {
+      background-color: $darkRock;
+      margin-bottom: 5px;
+
+      &:after {
+        clear: both;
+        display: table;
+        content: '';
+      }
+    }
+
+    label {
+      float: left;
+      line-height: 30px;
+      padding-left: 6px;
+      margin: 0;
+      text-transform: lowercase;
+      color: $smokeWhite;
+    }
+
+    input {
+      float: right;
+      width: 75px;
+      border: 2px solid $darkRock;
+      border-radius: 0;
+      background-color: $smokeWhite;
+      padding: 2px 4px;
+      text-align: right;
+      height: 30px;
+    }
+
     .input-group-addon {
       min-width: 130px;
       text-align: right;
     }
   }
+
   svg {
     user-select: none;
     -moz-user-select: none;

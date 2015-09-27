@@ -6,21 +6,20 @@ import Time exposing (second)
 import Http
 import Keyboard
 import Array
-import Result
-import String
 
-import DragAndDrop exposing (mouseEvents, MouseEvent(..))
+import DragAndDrop exposing (mouseEvents)
 
 import Constants exposing (sidebarWidth)
 import AppTypes exposing (local, react, request, Never)
 import Models exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
+import Screens.EditTrack.FormUpdates as FormUpdates exposing (update)
+import Screens.EditTrack.GridUpdates as GridUpdates exposing (mouseAction)
 
 import Game.Grid exposing (..)
 import ServerApi
 
-import Debug
 
 actions : Signal.Mailbox Action
 actions = Signal.mailbox NoOp
@@ -69,7 +68,7 @@ update action screen =
 
     MouseAction event ->
       screen
-        |> updateEditor (mouseAction event)
+        |> (GridUpdates.mouseAction >> updateEditor) event
         |> local
 
     NextTileKind ->
@@ -82,25 +81,9 @@ update action screen =
         |> updateEditor (\e -> { e | mode <- Watch })
         |> local
 
-    SetUpwindY y ->
+    FormAction a ->
       screen
-        |> (updateUpwindY >> updateCourse >> updateEditor ) y
-        |> Debug.log "upwindy"
-        |> local
-
-    SetDownwindY y ->
-      screen
-        |> (updateDownwindY >> updateCourse >> updateEditor ) y
-        |> local
-
-    SetGateWidth w ->
-      screen
-        |> (updateGateWidth >> updateCourse >> updateEditor) w
-        |> local
-
-    SetLaps laps ->
-      screen
-        |> (updateLaps >> updateCourse >> updateEditor ) laps
+        |> (FormUpdates.update >> updateCourse >> updateEditor) a
         |> local
 
     Save ->
@@ -147,81 +130,6 @@ getCourseDims : Dims -> Dims
 getCourseDims (w, h) =
   (w - sidebarWidth, h)
 
-mouseAction : MouseEvent -> Editor -> Editor
-mouseAction event editor =
-  case editor.mode of
-    CreateTile kind ->
-      updateTileAction kind event editor
-    Erase ->
-      deleteTileAction event editor
-    Watch ->
-      updateCenter event editor
-
-
-deleteTileAction : MouseEvent -> Editor -> Editor
-deleteTileAction event editor =
-  let
-    coordsList = getMouseEventTiles editor event
-    newGrid = List.foldl deleteTile editor.course.grid coordsList
-  in
-    withGrid newGrid editor
-
-updateTileAction : TileKind -> MouseEvent -> Editor -> Editor
-updateTileAction kind event editor =
-  let
-    coordsList = getMouseEventTiles editor event
-    newGrid = List.foldl (createTile kind) editor.course.grid coordsList
-  in
-    withGrid newGrid editor
-
-withGrid : Grid -> Editor -> Editor
-withGrid grid ({course} as editor) =
-  let
-    newCourse = { course | grid <- grid }
-  in
-    { editor | course <- newCourse }
-
-getMouseEventTiles : Editor -> MouseEvent -> List Coords
-getMouseEventTiles editor event =
-  let
-    tileCoords = (clickPoint editor) >> pointToHexCoords
-  in
-    case event of
-      StartAt p ->
-        [ tileCoords p ]
-      MoveFromTo p1 p2 ->
-        let
-          c1 = tileCoords p1
-          c2 = tileCoords p2
-        in
-          if c1 == c2 then [ c1 ] else hexLine c1 c2
-      EndAt _ ->
-        [ ]
-
-clickPoint : Editor -> (Int, Int) -> Point
-clickPoint {courseDims, center} (x, y) =
-  let
-    (w, h) = courseDims
-    (cx, cy) = center
-    x' = toFloat (x - sidebarWidth) - cx - toFloat w / 2
-    y' = toFloat -y - cy + toFloat h / 2
-  in
-    (x', y')
-
-updateCenter : MouseEvent -> Editor -> Editor
-updateCenter event ({center} as editor) =
-  let
-    (dx, dy) =
-      case event of
-        StartAt _ ->
-          (0, 0)
-        MoveFromTo (xa, ya) (xb, yb) ->
-          (xb - xa, ya - yb)
-        EndAt _ ->
-          (0, 0)
-    newCenter = (fst center + toFloat dx, snd center + toFloat dy)
-  in
-    { editor | center <- newCenter }
 
 getNextMode : Mode -> Mode
 getNextMode mode =
@@ -234,33 +142,6 @@ getNextMode mode =
       Erase
     _ ->
       CreateTile Water
-
-updateUpwindY : Int -> Course -> Course
-updateUpwindY y ({upwind} as course) =
-  let
-    newUpwind = { upwind | y <- toFloat y }
-  in
-    { course | upwind <- newUpwind }
-
-updateDownwindY : Int -> Course -> Course
-updateDownwindY y ({downwind} as course) =
-  let
-    newDownwind = { downwind | y <- toFloat y }
-  in
-    { course | downwind <- newDownwind }
-
-updateGateWidth : Int -> Course -> Course
-updateGateWidth w ({upwind, downwind} as course) =
-  let
-    newDownwind = { downwind | width <- toFloat w }
-    newUpwind = { upwind | width <- toFloat w }
-  in
-    { course | downwind <- newDownwind, upwind <- newUpwind }
-
-
-updateLaps : Int -> Course -> Course
-updateLaps laps course =
-  { course | laps <- laps }
 
 save : String -> Editor -> Task Never ()
 save slug ({course} as editor) =

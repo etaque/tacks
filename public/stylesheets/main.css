@@ -6740,6 +6740,32 @@ aside {
       background-color: white;
       color: black; }
 
+.editor aside .form-group {
+  background-color: #737373;
+  margin-bottom: 5px; }
+  .editor aside .form-group:after {
+    clear: both;
+    display: table;
+    content: ''; }
+
+.editor aside label {
+  float: left;
+  line-height: 30px;
+  padding-left: 6px;
+  margin: 0;
+  text-transform: lowercase;
+  color: #f8f9fb; }
+
+.editor aside input {
+  float: right;
+  width: 75px;
+  border: 2px solid #737373;
+  border-radius: 0;
+  background-color: #f8f9fb;
+  padding: 2px 4px;
+  text-align: right;
+  height: 30px; }
+
 .editor aside .input-group-addon {
   min-width: 130px;
   text-align: right; }

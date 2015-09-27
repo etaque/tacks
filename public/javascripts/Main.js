@@ -20509,6 +20509,291 @@ Elm.Routes.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
+Elm.Screens.EditTrack.FormUpdates = Elm.Screens.EditTrack.FormUpdates || {};
+Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
+   _elm.Screens.EditTrack.FormUpdates = _elm.Screens.EditTrack.FormUpdates || {};
+   if (_elm.Screens.EditTrack.FormUpdates.values)
+   return _elm.Screens.EditTrack.FormUpdates.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Screens.EditTrack.FormUpdates",
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var updateGateWidth = F2(function (w,
+   _v0) {
+      return function () {
+         return function () {
+            var newUpwind = _U.replace([["width"
+                                        ,$Basics.toFloat(w)]],
+            _v0.upwind);
+            var newDownwind = _U.replace([["width"
+                                          ,$Basics.toFloat(w)]],
+            _v0.downwind);
+            return _U.replace([["downwind"
+                               ,newDownwind]
+                              ,["upwind",newUpwind]],
+            _v0);
+         }();
+      }();
+   });
+   var updateDownwindY = F2(function (y,
+   _v2) {
+      return function () {
+         return function () {
+            var newDownwind = _U.replace([["y"
+                                          ,$Basics.toFloat(y)]],
+            _v2.downwind);
+            return _U.replace([["downwind"
+                               ,newDownwind]],
+            _v2);
+         }();
+      }();
+   });
+   var updateUpwindY = F2(function (y,
+   _v4) {
+      return function () {
+         return function () {
+            var newUpwind = _U.replace([["y"
+                                        ,$Basics.toFloat(y)]],
+            _v4.upwind);
+            return _U.replace([["upwind"
+                               ,newUpwind]],
+            _v4);
+         }();
+      }();
+   });
+   var update = F2(function (fu,
+   course) {
+      return function () {
+         switch (fu.ctor)
+         {case "SetDownwindY":
+            return A2(updateDownwindY,
+              fu._0,
+              course);
+            case "SetGateWidth":
+            return A2(updateGateWidth,
+              fu._0,
+              course);
+            case "SetLaps":
+            return _U.replace([["laps"
+                               ,fu._0]],
+              course);
+            case "SetUpwindY":
+            return A2(updateUpwindY,
+              fu._0,
+              course);}
+         _U.badCase($moduleName,
+         "between lines 10 and 22");
+      }();
+   });
+   _elm.Screens.EditTrack.FormUpdates.values = {_op: _op
+                                               ,update: update
+                                               ,updateUpwindY: updateUpwindY
+                                               ,updateDownwindY: updateDownwindY
+                                               ,updateGateWidth: updateGateWidth};
+   return _elm.Screens.EditTrack.FormUpdates.values;
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
+Elm.Screens.EditTrack.GridUpdates = Elm.Screens.EditTrack.GridUpdates || {};
+Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
+   _elm.Screens.EditTrack.GridUpdates = _elm.Screens.EditTrack.GridUpdates || {};
+   if (_elm.Screens.EditTrack.GridUpdates.values)
+   return _elm.Screens.EditTrack.GridUpdates.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Screens.EditTrack.GridUpdates",
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
+   $Game$Grid = Elm.Game.Grid.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var updateCenter = F2(function (event,
+   _v0) {
+      return function () {
+         return function () {
+            var $ = function () {
+               switch (event.ctor)
+               {case "EndAt":
+                  return {ctor: "_Tuple2"
+                         ,_0: 0
+                         ,_1: 0};
+                  case "MoveFromTo":
+                  switch (event._0.ctor)
+                    {case "_Tuple2":
+                       switch (event._1.ctor)
+                         {case "_Tuple2":
+                            return {ctor: "_Tuple2"
+                                   ,_0: event._1._0 - event._0._0
+                                   ,_1: event._0._1 - event._1._1};}
+                         break;}
+                    break;
+                  case "StartAt":
+                  return {ctor: "_Tuple2"
+                         ,_0: 0
+                         ,_1: 0};}
+               _U.badCase($moduleName,
+               "between lines 77 and 84");
+            }(),
+            dx = $._0,
+            dy = $._1;
+            var newCenter = {ctor: "_Tuple2"
+                            ,_0: $Basics.fst(_v0.center) + $Basics.toFloat(dx)
+                            ,_1: $Basics.snd(_v0.center) + $Basics.toFloat(dy)};
+            return _U.replace([["center"
+                               ,newCenter]],
+            _v0);
+         }();
+      }();
+   });
+   var clickPoint = F2(function (_v11,
+   _v12) {
+      return function () {
+         switch (_v12.ctor)
+         {case "_Tuple2":
+            return function () {
+                 return function () {
+                    var $ = _v11.center,
+                    cx = $._0,
+                    cy = $._1;
+                    var $ = _v11.courseDims,
+                    w = $._0,
+                    h = $._1;
+                    var x$ = $Basics.toFloat(_v12._0 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
+                    var y$ = $Basics.toFloat(0 - _v12._1) - cy + $Basics.toFloat(h) / 2;
+                    return {ctor: "_Tuple2"
+                           ,_0: x$
+                           ,_1: y$};
+                 }();
+              }();}
+         _U.badCase($moduleName,
+         "between lines 65 and 71");
+      }();
+   });
+   var getMouseEventTiles = F2(function (editor,
+   event) {
+      return function () {
+         var tileCoords = function ($) {
+            return $Game$Grid.pointToHexCoords(clickPoint(editor)($));
+         };
+         return function () {
+            switch (event.ctor)
+            {case "EndAt":
+               return _L.fromArray([]);
+               case "MoveFromTo":
+               return function () {
+                    var c2 = tileCoords(event._1);
+                    var c1 = tileCoords(event._0);
+                    return _U.eq(c1,
+                    c2) ? _L.fromArray([c1]) : A2($Game$Grid.hexLine,
+                    c1,
+                    c2);
+                 }();
+               case "StartAt":
+               return _L.fromArray([tileCoords(event._0)]);}
+            _U.badCase($moduleName,
+            "between lines 51 and 61");
+         }();
+      }();
+   });
+   var withGrid = F2(function (grid,
+   _v22) {
+      return function () {
+         return function () {
+            var newCourse = _U.replace([["grid"
+                                        ,grid]],
+            _v22.course);
+            return _U.replace([["course"
+                               ,newCourse]],
+            _v22);
+         }();
+      }();
+   });
+   var updateTileAction = F3(function (kind,
+   event,
+   editor) {
+      return function () {
+         var coordsList = A2(getMouseEventTiles,
+         editor,
+         event);
+         var newGrid = A3($List.foldl,
+         $Game$Grid.createTile(kind),
+         editor.course.grid,
+         coordsList);
+         return A2(withGrid,
+         newGrid,
+         editor);
+      }();
+   });
+   var deleteTileAction = F2(function (event,
+   editor) {
+      return function () {
+         var coordsList = A2(getMouseEventTiles,
+         editor,
+         event);
+         var newGrid = A3($List.foldl,
+         $Game$Grid.deleteTile,
+         editor.course.grid,
+         coordsList);
+         return A2(withGrid,
+         newGrid,
+         editor);
+      }();
+   });
+   var mouseAction = F2(function (event,
+   editor) {
+      return function () {
+         var _v24 = editor.mode;
+         switch (_v24.ctor)
+         {case "CreateTile":
+            return A3(updateTileAction,
+              _v24._0,
+              event,
+              editor);
+            case "Erase":
+            return A2(deleteTileAction,
+              event,
+              editor);
+            case "Watch":
+            return A2(updateCenter,
+              event,
+              editor);}
+         _U.badCase($moduleName,
+         "between lines 14 and 20");
+      }();
+   });
+   _elm.Screens.EditTrack.GridUpdates.values = {_op: _op
+                                               ,mouseAction: mouseAction
+                                               ,deleteTileAction: deleteTileAction
+                                               ,updateTileAction: updateTileAction
+                                               ,withGrid: withGrid
+                                               ,getMouseEventTiles: getMouseEventTiles
+                                               ,clickPoint: clickPoint
+                                               ,updateCenter: updateCenter};
+   return _elm.Screens.EditTrack.GridUpdates.values;
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
 Elm.Screens.EditTrack.SideView = Elm.Screens.EditTrack.SideView || {};
 Elm.Screens.EditTrack.SideView.make = function (_elm) {
    "use strict";
@@ -20546,47 +20831,59 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                       _L.fromArray([]),
                       _L.fromArray([$Html.text("Gates")]))
                       ,A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("input-group")]),
-                      _L.fromArray([A2($Html.span,
-                                   _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
+                      _L.fromArray([$Html$Attributes.$class("form-group")]),
+                      _L.fromArray([A2($Html.label,
+                                   _L.fromArray([$Html$Attributes.$class("")]),
                                    _L.fromArray([$Html.text("Downwind")]))
                                    ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.downwind.y))
                                                                           ,A2($Screens$Utils.onIntInput,
                                                                           $Screens$EditTrack$Updates.actions.address,
-                                                                          $Screens$EditTrack$Types.SetDownwindY)
+                                                                          function ($) {
+                                                                             return $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.SetDownwindY($));
+                                                                          })
                                                                           ,$Html$Attributes.type$("number")
                                                                           ,$Html$Attributes.step("10")]))]))
-                      ,A2($Html.br,
-                      _L.fromArray([]),
-                      _L.fromArray([]))
                       ,A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("input-group")]),
-                      _L.fromArray([A2($Html.span,
-                                   _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
+                      _L.fromArray([$Html$Attributes.$class("form-group")]),
+                      _L.fromArray([A2($Html.label,
+                                   _L.fromArray([$Html$Attributes.$class("")]),
                                    _L.fromArray([$Html.text("Upwind")]))
                                    ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.upwind.y))
                                                                           ,A2($Screens$Utils.onIntInput,
                                                                           $Screens$EditTrack$Updates.actions.address,
-                                                                          $Screens$EditTrack$Types.SetUpwindY)
+                                                                          function ($) {
+                                                                             return $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.SetUpwindY($));
+                                                                          })
                                                                           ,$Html$Attributes.type$("number")
                                                                           ,$Html$Attributes.step("10")]))]))
-                      ,A2($Html.br,
-                      _L.fromArray([]),
-                      _L.fromArray([]))
                       ,A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("input-group")]),
-                      _L.fromArray([A2($Html.span,
-                                   _L.fromArray([$Html$Attributes.$class("input-group-addon")]),
+                      _L.fromArray([$Html$Attributes.$class("form-group")]),
+                      _L.fromArray([A2($Html.label,
+                                   _L.fromArray([$Html$Attributes.$class("")]),
                                    _L.fromArray([$Html.text("Width")]))
                                    ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.downwind.width))
                                                                           ,A2($Screens$Utils.onIntInput,
                                                                           $Screens$EditTrack$Updates.actions.address,
-                                                                          $Screens$EditTrack$Types.SetGateWidth)
+                                                                          function ($) {
+                                                                             return $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.SetGateWidth($));
+                                                                          })
                                                                           ,$Html$Attributes.type$("number")
                                                                           ,$Html$Attributes.step("10")]))]))
-                      ,A2($Html.br,
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("form-group")]),
+                      _L.fromArray([A2($Html.label,
+                                   _L.fromArray([$Html$Attributes.$class("")]),
+                                   _L.fromArray([$Html.text("Laps")]))
+                                   ,$Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value($Basics.toString(_v0.course.laps))
+                                                                          ,A2($Screens$Utils.onIntInput,
+                                                                          $Screens$EditTrack$Updates.actions.address,
+                                                                          function ($) {
+                                                                             return $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.SetLaps($));
+                                                                          })
+                                                                          ,$Html$Attributes.type$("number")]))]))
+                      ,A2($Html.h3,
                       _L.fromArray([]),
-                      _L.fromArray([]))
+                      _L.fromArray([$Html.text("Wind")]))
                       ,A2($Html.button,
                       _L.fromArray([A2($Html$Events.onClick,
                                    $Screens$EditTrack$Updates.actions.address,
@@ -20621,8 +20918,6 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var NoOp = {ctor: "NoOp"};
-   var Save = {ctor: "Save"};
    var SetLaps = function (a) {
       return {ctor: "SetLaps"
              ,_0: a};
@@ -20637,6 +20932,12 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    };
    var SetDownwindY = function (a) {
       return {ctor: "SetDownwindY"
+             ,_0: a};
+   };
+   var NoOp = {ctor: "NoOp"};
+   var Save = {ctor: "Save"};
+   var FormAction = function (a) {
+      return {ctor: "FormAction"
              ,_0: a};
    };
    var EscapeMode = {ctor: "EscapeMode"};
@@ -20687,12 +20988,13 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                          ,MouseAction: MouseAction
                                          ,NextTileKind: NextTileKind
                                          ,EscapeMode: EscapeMode
+                                         ,FormAction: FormAction
+                                         ,Save: Save
+                                         ,NoOp: NoOp
                                          ,SetDownwindY: SetDownwindY
                                          ,SetUpwindY: SetUpwindY
                                          ,SetGateWidth: SetGateWidth
-                                         ,SetLaps: SetLaps
-                                         ,Save: Save
-                                         ,NoOp: NoOp};
+                                         ,SetLaps: SetLaps};
    return _elm.Screens.EditTrack.Types.values;
 };
 Elm.Screens = Elm.Screens || {};
@@ -20714,7 +21016,6 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
@@ -20722,6 +21023,8 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Screens$EditTrack$FormUpdates = Elm.Screens.EditTrack.FormUpdates.make(_elm),
+   $Screens$EditTrack$GridUpdates = Elm.Screens.EditTrack.GridUpdates.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -20779,55 +21082,6 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          }();
       }();
    });
-   var updateLaps = F2(function (laps,
-   course) {
-      return _U.replace([["laps"
-                         ,laps]],
-      course);
-   });
-   var updateGateWidth = F2(function (w,
-   _v2) {
-      return function () {
-         return function () {
-            var newUpwind = _U.replace([["width"
-                                        ,$Basics.toFloat(w)]],
-            _v2.upwind);
-            var newDownwind = _U.replace([["width"
-                                          ,$Basics.toFloat(w)]],
-            _v2.downwind);
-            return _U.replace([["downwind"
-                               ,newDownwind]
-                              ,["upwind",newUpwind]],
-            _v2);
-         }();
-      }();
-   });
-   var updateDownwindY = F2(function (y,
-   _v4) {
-      return function () {
-         return function () {
-            var newDownwind = _U.replace([["y"
-                                          ,$Basics.toFloat(y)]],
-            _v4.downwind);
-            return _U.replace([["downwind"
-                               ,newDownwind]],
-            _v4);
-         }();
-      }();
-   });
-   var updateUpwindY = F2(function (y,
-   _v6) {
-      return function () {
-         return function () {
-            var newUpwind = _U.replace([["y"
-                                        ,$Basics.toFloat(y)]],
-            _v6.upwind);
-            return _U.replace([["upwind"
-                               ,newUpwind]],
-            _v6);
-         }();
-      }();
-   });
    var getNextMode = function (mode) {
       return function () {
          switch (mode.ctor)
@@ -20843,169 +21097,15 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          return $Screens$EditTrack$Types.CreateTile($Models.Water);
       }();
    };
-   var updateCenter = F2(function (event,
-   _v10) {
+   var getCourseDims = function (_v4) {
       return function () {
-         return function () {
-            var $ = function () {
-               switch (event.ctor)
-               {case "EndAt":
-                  return {ctor: "_Tuple2"
-                         ,_0: 0
-                         ,_1: 0};
-                  case "MoveFromTo":
-                  switch (event._0.ctor)
-                    {case "_Tuple2":
-                       switch (event._1.ctor)
-                         {case "_Tuple2":
-                            return {ctor: "_Tuple2"
-                                   ,_0: event._1._0 - event._0._0
-                                   ,_1: event._0._1 - event._1._1};}
-                         break;}
-                    break;
-                  case "StartAt":
-                  return {ctor: "_Tuple2"
-                         ,_0: 0
-                         ,_1: 0};}
-               _U.badCase($moduleName,
-               "between lines 215 and 222");
-            }(),
-            dx = $._0,
-            dy = $._1;
-            var newCenter = {ctor: "_Tuple2"
-                            ,_0: $Basics.fst(_v10.center) + $Basics.toFloat(dx)
-                            ,_1: $Basics.snd(_v10.center) + $Basics.toFloat(dy)};
-            return _U.replace([["center"
-                               ,newCenter]],
-            _v10);
-         }();
-      }();
-   });
-   var clickPoint = F2(function (_v21,
-   _v22) {
-      return function () {
-         switch (_v22.ctor)
-         {case "_Tuple2":
-            return function () {
-                 return function () {
-                    var $ = _v21.center,
-                    cx = $._0,
-                    cy = $._1;
-                    var $ = _v21.courseDims,
-                    w = $._0,
-                    h = $._1;
-                    var x$ = $Basics.toFloat(_v22._0 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
-                    var y$ = $Basics.toFloat(0 - _v22._1) - cy + $Basics.toFloat(h) / 2;
-                    return {ctor: "_Tuple2"
-                           ,_0: x$
-                           ,_1: y$};
-                 }();
-              }();}
-         _U.badCase($moduleName,
-         "between lines 203 and 209");
-      }();
-   });
-   var getMouseEventTiles = F2(function (editor,
-   event) {
-      return function () {
-         var tileCoords = function ($) {
-            return $Game$Grid.pointToHexCoords(clickPoint(editor)($));
-         };
-         return function () {
-            switch (event.ctor)
-            {case "EndAt":
-               return _L.fromArray([]);
-               case "MoveFromTo":
-               return function () {
-                    var c2 = tileCoords(event._1);
-                    var c1 = tileCoords(event._0);
-                    return _U.eq(c1,
-                    c2) ? _L.fromArray([c1]) : A2($Game$Grid.hexLine,
-                    c1,
-                    c2);
-                 }();
-               case "StartAt":
-               return _L.fromArray([tileCoords(event._0)]);}
-            _U.badCase($moduleName,
-            "between lines 189 and 199");
-         }();
-      }();
-   });
-   var withGrid = F2(function (grid,
-   _v32) {
-      return function () {
-         return function () {
-            var newCourse = _U.replace([["grid"
-                                        ,grid]],
-            _v32.course);
-            return _U.replace([["course"
-                               ,newCourse]],
-            _v32);
-         }();
-      }();
-   });
-   var updateTileAction = F3(function (kind,
-   event,
-   editor) {
-      return function () {
-         var coordsList = A2(getMouseEventTiles,
-         editor,
-         event);
-         var newGrid = A3($List.foldl,
-         $Game$Grid.createTile(kind),
-         editor.course.grid,
-         coordsList);
-         return A2(withGrid,
-         newGrid,
-         editor);
-      }();
-   });
-   var deleteTileAction = F2(function (event,
-   editor) {
-      return function () {
-         var coordsList = A2(getMouseEventTiles,
-         editor,
-         event);
-         var newGrid = A3($List.foldl,
-         $Game$Grid.deleteTile,
-         editor.course.grid,
-         coordsList);
-         return A2(withGrid,
-         newGrid,
-         editor);
-      }();
-   });
-   var mouseAction = F2(function (event,
-   editor) {
-      return function () {
-         var _v34 = editor.mode;
-         switch (_v34.ctor)
-         {case "CreateTile":
-            return A3(updateTileAction,
-              _v34._0,
-              event,
-              editor);
-            case "Erase":
-            return A2(deleteTileAction,
-              event,
-              editor);
-            case "Watch":
-            return A2(updateCenter,
-              event,
-              editor);}
-         _U.badCase($moduleName,
-         "between lines 152 and 158");
-      }();
-   });
-   var getCourseDims = function (_v36) {
-      return function () {
-         switch (_v36.ctor)
+         switch (_v4.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple2"
-                   ,_0: _v36._0 - $Constants.sidebarWidth
-                   ,_1: _v36._1};}
+                   ,_0: _v4._0 - $Constants.sidebarWidth
+                   ,_1: _v4._1};}
          _U.badCase($moduleName,
-         "on line 148, column 4 to 23");
+         "on line 131, column 4 to 23");
       }();
    };
    var updateDims = F2(function (dims,
@@ -21051,8 +21151,14 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                     ,$Screens$EditTrack$Types.Watch]],
                  e);
               })(screen));
+            case "FormAction":
+            return $AppTypes.local(function ($) {
+                 return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update($)));
+              }(action._0)(screen));
             case "MouseAction":
-            return $AppTypes.local(updateEditor(mouseAction(action._0))(screen));
+            return $AppTypes.local(function ($) {
+                 return updateEditor($Screens$EditTrack$GridUpdates.mouseAction($));
+              }(action._0)(screen));
             case "NextTileKind":
             return $AppTypes.local(updateEditor(function (e) {
                  return _U.replace([["mode"
@@ -21061,36 +21167,24 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
               })(screen));
             case "Save":
             return function () {
-                 var _v47 = {ctor: "_Tuple2"
+                 var _v12 = {ctor: "_Tuple2"
                             ,_0: screen.track
                             ,_1: screen.editor};
-                 switch (_v47.ctor)
+                 switch (_v12.ctor)
                  {case "_Tuple2":
-                    switch (_v47._0.ctor)
+                    switch (_v12._0.ctor)
                       {case "Just":
-                         switch (_v47._1.ctor)
+                         switch (_v12._1.ctor)
                            {case "Just":
                               return A2($AppTypes.react,
                                 screen,
                                 A2(save,
-                                _v47._0._0.slug,
-                                _v47._1._0));}
+                                _v12._0._0.slug,
+                                _v12._1._0));}
                            break;}
                       break;}
                  return $AppTypes.local(screen);
               }();
-            case "SetDownwindY":
-            return $AppTypes.local(function ($) {
-                 return updateEditor(updateCourse(updateDownwindY($)));
-              }(action._0)(screen));
-            case "SetGateWidth":
-            return $AppTypes.local(function ($) {
-                 return updateEditor(updateCourse(updateGateWidth($)));
-              }(action._0)(screen));
-            case "SetLaps":
-            return $AppTypes.local(function ($) {
-                 return updateEditor(updateCourse(updateLaps($)));
-              }(action._0)(screen));
             case "SetTrack":
             return function () {
                  var editor = {_: {}
@@ -21106,10 +21200,6 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                                     ,$Maybe.Just(editor)]],
                  screen));
               }();
-            case "SetUpwindY":
-            return $AppTypes.local($Debug.log("upwindy")(function ($) {
-                 return updateEditor(updateCourse(updateUpwindY($)));
-              }(action._0)(screen)));
             case "TrackNotFound":
             return $AppTypes.local(_U.replace([["notFound"
                                                ,true]],
@@ -21144,7 +21234,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  actions.address,
                  $Screens$EditTrack$Types.SetTrack(result._0));}
             _U.badCase($moduleName,
-            "between lines 132 and 136");
+            "between lines 115 and 119");
          }();
       });
    };
@@ -21171,18 +21261,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                            ,loadTrack: loadTrack
                                            ,updateDims: updateDims
                                            ,getCourseDims: getCourseDims
-                                           ,mouseAction: mouseAction
-                                           ,deleteTileAction: deleteTileAction
-                                           ,updateTileAction: updateTileAction
-                                           ,withGrid: withGrid
-                                           ,getMouseEventTiles: getMouseEventTiles
-                                           ,clickPoint: clickPoint
-                                           ,updateCenter: updateCenter
                                            ,getNextMode: getNextMode
-                                           ,updateUpwindY: updateUpwindY
-                                           ,updateDownwindY: updateDownwindY
-                                           ,updateGateWidth: updateGateWidth
-                                           ,updateLaps: updateLaps
                                            ,save: save
                                            ,getRaceArea: getRaceArea};
    return _elm.Screens.EditTrack.Updates.values;

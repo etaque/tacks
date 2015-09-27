@@ -30,10 +30,12 @@ type Action
   | MouseAction MouseEvent
   | NextTileKind
   | EscapeMode
-  | SetDownwindY Int
-  | SetUpwindY Int
-  | SetGateWidth Int
-  | SetLaps Int
+  | FormAction FormUpdate
   | Save
   | NoOp
 
+type FormUpdate
+  = SetDownwindY Int
+  | SetUpwindY Int
+  | SetGateWidth Int
+  | SetLaps Int

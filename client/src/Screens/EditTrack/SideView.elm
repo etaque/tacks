@@ -15,36 +15,42 @@ sideView ({courseDims, course} as editor) =
   sidebar (sidebarWidth, snd courseDims)
     [ div [ class "aside-module" ]
       [ h3 [] [ text "Gates" ]
-      , div [ class "input-group"]
-        [ span [ class "input-group-addon" ] [ text "Downwind" ]
+      , div [ class "form-group"]
+        [ label [ class "" ] [ text "Downwind" ]
         , textInput
           [ value <| toString course.downwind.y
-          , onIntInput actions.address SetDownwindY
+          , onIntInput actions.address (SetDownwindY >> FormAction)
           , type' "number"
           , step "10"
           ]
         ]
-      , br [] []
-      , div [ class "input-group"]
-        [ span [ class "input-group-addon" ] [ text "Upwind" ]
+      , div [ class "form-group"]
+        [ label [ class "" ] [ text "Upwind" ]
         , textInput
           [ value <| toString course.upwind.y
-          , onIntInput actions.address SetUpwindY
+          , onIntInput actions.address (SetUpwindY >> FormAction)
           , type' "number"
           , step "10"
           ]
         ]
-      , br [] []
-      , div [ class "input-group"]
-        [ span [ class "input-group-addon" ] [ text "Width" ]
+      , div [ class "form-group"]
+        [ label [ class "" ] [ text "Width" ]
         , textInput
           [ value <| toString course.downwind.width
-          , onIntInput actions.address SetGateWidth
+          , onIntInput actions.address (SetGateWidth >> FormAction)
           , type' "number"
           , step "10"
           ]
         ]
-      , br [] []
+      , div [ class "form-group" ]
+        [ label [ class "" ] [ text "Laps" ]
+        , textInput
+          [ value <| toString course.laps
+          , onIntInput actions.address (SetLaps >> FormAction)
+          , type' "number"
+          ]
+        ]
+      , h3 [] [ text "Wind" ]
       , button
         [ onClick actions.address Save
         , class "btn btn-primary btn-block"
