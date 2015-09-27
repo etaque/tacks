@@ -12,8 +12,8 @@ import Screens.Utils exposing (..)
 import Constants exposing (..)
 
 
-render : Player -> Html
-render player =
+view : Player -> Html
+view player =
   aside
     [ style [ ("width", toString sidebarWidth ++ "px") ] ]
     [ logo

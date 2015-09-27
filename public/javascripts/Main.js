@@ -446,10 +446,10 @@ Elm.AppView.make = function (_elm) {
    $Screens$Game$View = Elm.Screens.Game.View.make(_elm),
    $Screens$Home$View = Elm.Screens.Home.View.make(_elm),
    $Screens$Login$View = Elm.Screens.Login.View.make(_elm),
+   $Screens$Nav = Elm.Screens.Nav.make(_elm),
    $Screens$Register$View = Elm.Screens.Register.View.make(_elm),
    $Screens$ShowProfile$View = Elm.Screens.ShowProfile.View.make(_elm),
    $Screens$ShowTrack$View = Elm.Screens.ShowTrack.View.make(_elm),
-   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var layout = F2(function (appState,
    content) {
@@ -463,8 +463,8 @@ Elm.AppView.make = function (_elm) {
             return false;
          }();
          return noNav ? content : A2($Html.div,
-         _L.fromArray([$Html$Attributes.$class("content")]),
-         _L.fromArray([$Screens$Sidebar.render(appState.player)
+         _L.fromArray([$Html$Attributes.$class("content-with-nav")]),
+         _L.fromArray([$Screens$Nav.view(appState)
                       ,A2($Html.main$,
                       _L.fromArray([]),
                       _L.fromArray([content]))]));
@@ -22294,14 +22294,7 @@ Elm.Screens.Home.View.make = function (_elm) {
          A2($Basics._op["++"],
          "/play/",
          _v0.track.slug),
-         _L.fromArray([$Html$Attributes.$class("show")
-                      ,$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
-                                                            ,_0: "background-image"
-                                                            ,_1: A2($Basics._op["++"],
-                                                            "url(/assets/images/trials-",
-                                                            A2($Basics._op["++"],
-                                                            _v0.track.slug,
-                                                            ".png)"))}]))]),
+         _L.fromArray([$Html$Attributes.$class("show")]),
          _L.fromArray([A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class(A2($Basics._op["++"],
                       "player-count player-count-",
@@ -22312,7 +22305,7 @@ Elm.Screens.Home.View.make = function (_elm) {
                       _L.fromArray([$Html.text($Screens$Messages.trackName(_v0.track.slug))]))
                       ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("description")]),
-                      _L.fromArray([$Html.text($Screens$Messages.trackDesc(_v0.track.slug))]))
+                      _L.fromArray([$Html.text("TODO description")]))
                       ,playersList(_v0.players)]))]))]));
       }();
    };
@@ -22370,7 +22363,7 @@ Elm.Screens.Home.View.make = function (_elm) {
       _L.fromArray([A2($Html.h1,
       _L.fromArray([]),
       _L.fromArray([$Html.text(A2($Basics._op["++"],
-      "Welcome, ",
+      "welcome, ",
       A2($Maybe.withDefault,
       "Anonymous",
       player.handle)))]))]),
@@ -22678,6 +22671,98 @@ Elm.Screens.Messages.make = function (_elm) {
                                   ,trackName: trackName
                                   ,trackDesc: trackDesc};
    return _elm.Screens.Messages.values;
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Nav = Elm.Screens.Nav || {};
+Elm.Screens.Nav.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Nav = _elm.Screens.Nav || {};
+   if (_elm.Screens.Nav.values)
+   return _elm.Screens.Nav.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Screens.Nav",
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $AppUpdates = Elm.AppUpdates.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var userMenu = _L.fromArray([A2($Html.li,
+                               _L.fromArray([]),
+                               _L.fromArray([A3($Screens$Utils.linkTo,
+                               "/me",
+                               _L.fromArray([]),
+                               _L.fromArray([$Html.text("Profile")]))]))
+                               ,A2($Html.li,
+                               _L.fromArray([]),
+                               _L.fromArray([A2($Html.a,
+                               _L.fromArray([A2($Html$Events.onClick,
+                               $AppUpdates.actionsMailbox.address,
+                               $AppTypes.Logout)]),
+                               _L.fromArray([$Html.text("Logout")]))]))]);
+   var guestMenu = _L.fromArray([A2($Html.li,
+                                _L.fromArray([]),
+                                _L.fromArray([A3($Screens$Utils.linkTo,
+                                "/login",
+                                _L.fromArray([]),
+                                _L.fromArray([$Html.text("Login")]))]))
+                                ,A2($Html.li,
+                                _L.fromArray([]),
+                                _L.fromArray([A3($Screens$Utils.linkTo,
+                                "/register",
+                                _L.fromArray([]),
+                                _L.fromArray([$Html.text("Register")]))]))]);
+   var playerMenu = function (player) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("col-md-6")]),
+      _L.fromArray([A2($Html.ul,
+      _L.fromArray([$Html$Attributes.$class("player-menu")]),
+      A2($Basics._op["++"],
+      _L.fromArray([A2($Html.li,
+      _L.fromArray([]),
+      _L.fromArray([A3($Screens$Utils.linkTo,
+      "/",
+      _L.fromArray([]),
+      _L.fromArray([$Html.text("Home")]))]))]),
+      player.guest ? guestMenu : userMenu))]));
+   };
+   var logo = A2($Html.div,
+   _L.fromArray([$Html$Attributes.$class("col-md-6 logo")]),
+   _L.fromArray([A3($Screens$Utils.linkTo,
+   "/",
+   _L.fromArray([]),
+   _L.fromArray([A2($Html.img,
+   _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
+   _L.fromArray([]))]))]));
+   var view = function (appState) {
+      return A2($Html.nav,
+      _L.fromArray([]),
+      _L.fromArray([A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("container")]),
+      _L.fromArray([A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("row")]),
+      _L.fromArray([logo
+                   ,playerMenu(appState.player)]))]))]));
+   };
+   var logoWidth = 160;
+   _elm.Screens.Nav.values = {_op: _op
+                             ,logoWidth: logoWidth
+                             ,view: view
+                             ,logo: logo
+                             ,playerMenu: playerMenu
+                             ,guestMenu: guestMenu
+                             ,userMenu: userMenu};
+   return _elm.Screens.Nav.values;
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Register = Elm.Screens.Register || {};
@@ -23353,7 +23438,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
    _L.fromArray([A2($Html.img,
    _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
    _L.fromArray([]))]))]));
-   var render = function (player) {
+   var view = function (player) {
       return A2($Html.aside,
       _L.fromArray([$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
                                                          ,_0: "width"
@@ -23364,99 +23449,12 @@ Elm.Screens.Sidebar.make = function (_elm) {
                    ,mainMenu(player)]));
    };
    _elm.Screens.Sidebar.values = {_op: _op
-                                 ,render: render
+                                 ,view: view
                                  ,logo: logo
                                  ,mainMenu: mainMenu
                                  ,guestItems: guestItems
                                  ,userItems: userItems};
    return _elm.Screens.Sidebar.values;
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.TopBar = Elm.Screens.TopBar || {};
-Elm.Screens.TopBar.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.TopBar = _elm.Screens.TopBar || {};
-   if (_elm.Screens.TopBar.values)
-   return _elm.Screens.TopBar.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Screens.TopBar",
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $AppUpdates = Elm.AppUpdates.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var userMenu = function (player) {
-      return A2($Html.ul,
-      _L.fromArray([$Html$Attributes.$class("user-menu")]),
-      _L.fromArray([A2($Html.li,
-                   _L.fromArray([]),
-                   _L.fromArray([A3($Screens$Utils.linkTo,
-                   "/me",
-                   _L.fromArray([]),
-                   _L.fromArray([A2($Html.img,
-                                _L.fromArray([$Html$Attributes.src($Screens$Utils.avatarUrl(player))
-                                             ,$Html$Attributes.$class("avatar avatar-user")]),
-                                _L.fromArray([]))
-                                ,$Html.text("Profile")]))]))
-                   ,A2($Html.li,
-                   _L.fromArray([]),
-                   _L.fromArray([A2($Html.a,
-                   _L.fromArray([A2($Html$Events.onClick,
-                   $AppUpdates.actionsMailbox.address,
-                   $AppTypes.Logout)]),
-                   _L.fromArray([$Html.text("Logout")]))]))]));
-   };
-   var guestMenu = A2($Html.ul,
-   _L.fromArray([$Html$Attributes.$class("user-menu")]),
-   _L.fromArray([A2($Html.li,
-                _L.fromArray([]),
-                _L.fromArray([A3($Screens$Utils.linkTo,
-                "/login",
-                _L.fromArray([]),
-                _L.fromArray([$Html.text("Login")]))]))
-                ,A2($Html.li,
-                _L.fromArray([]),
-                _L.fromArray([A3($Screens$Utils.linkTo,
-                "/register",
-                _L.fromArray([]),
-                _L.fromArray([$Html.text("Register")]))]))]));
-   var playerMenu = function (player) {
-      return player.guest ? guestMenu : userMenu(player);
-   };
-   var logo = A2($Html.div,
-   _L.fromArray([$Html$Attributes.$class("logo")]),
-   _L.fromArray([A3($Screens$Utils.linkTo,
-   "/",
-   _L.fromArray([]),
-   _L.fromArray([A2($Html.img,
-   _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
-   _L.fromArray([]))]))]));
-   var view = function (appState) {
-      return A2($Html.nav,
-      _L.fromArray([]),
-      _L.fromArray([logo
-                   ,playerMenu(appState.player)]));
-   };
-   var logoWidth = 160;
-   _elm.Screens.TopBar.values = {_op: _op
-                                ,logoWidth: logoWidth
-                                ,view: view
-                                ,logo: logo
-                                ,playerMenu: playerMenu
-                                ,guestMenu: guestMenu
-                                ,userMenu: userMenu};
-   return _elm.Screens.TopBar.values;
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Utils = Elm.Screens.Utils || {};

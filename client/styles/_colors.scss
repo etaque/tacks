@@ -1,20 +1,27 @@
-$seaBlue: rgb(147, 202, 223); // #4bafc9; //#93CADF; //#23395C; //rgb(10, 105, 148);
+$seaBlue: rgb(147, 202, 223);
 
 $lightSeaBlue: lighten($seaBlue, 6%);
 $lighterSeaBlue: lighten($seaBlue, 12%);
 $whiteSeaBlue: lighten($seaBlue, 22%);
 
-$darkSeaBlue: darken($seaBlue, 20%);
-$darkerSeaBlue: darken($seaBlue, 30%);
+$darkSeaBlue: desat-dark($seaBlue);
+$darkerSeaBlue: desat-dark($darkSeaBlue);
 $blackSeaBlue: desaturate(darken($seaBlue, 50%), 20%);
+
+$altSeaBlue: #4bafc9;
 
 $sand: rgb(242, 243, 196);
 $darkSand: darken(desaturate($sand, 50%), 30%);
+$darkerSand: desat-dark($darkSand);
 
 $grass: rgb(200, 230, 180);
+$rock: rgb(160, 146, 159);
+$lightRock: lighten($rock, 12%);
+$darkRock: desat-dark($rock);
+$darkerRock: desat-dark($darkRock);
 
 
-
+// OLD
 
 $mainBlue: #5899E2;
 $navBlue: little-desat-dark($mainBlue);

@@ -6,8 +6,19 @@
 
 body {
   color: #666;
-  font-family: $fontFamily;
+  font-family: $baseFont;
   font-size: 15px;
+  background-color: $smokeWhite;
+}
+
+.content-with-nav {
+  background-color: $seaBlue;
+  color: $darkerSand;
+  font-family: $baseFont;
+  @include linear-gradient($lightGray, $smokeWhite);
+}
+
+.content {
   background-color: $sand;
 }
 
@@ -16,45 +27,30 @@ hr {
 }
 
 h1 {
-  font-family: $headerFontFamily;
+  font-family: $headerFont;
+  color: $darkerSand;
   margin-bottom: 30px;
   text-align: center;
 }
 
 h2, h3, h4, h5, h6 {
-  font-family: $headerFontFamily;
+  font-family: $headerFont;
   font-size: 21px;
   margin-bottom: 15px;
 }
 
 a {
-  /* color: white; */
+  color: $darkerSeaBlue;
   transition: all .1s ease-in;
-  /* text-decoration: underline; */
   cursor: pointer;
 
   &:hover {
-    /* color: white; */
     text-decoration: none;
   }
 }
 
 .align-center {
   text-align: center;
-}
-
-.aside-module {
-
-  h3 {
-    background-color: $sand;
-    box-shadow: 1px 1px 0px $shadow;
-    margin: 0 0 5px 0;
-    padding: 5px;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 13px;
-  }
-
 }
 
 .btn {
@@ -143,7 +139,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
 
 @mixin upclassic {
   text-transform: uppercase;
-  font-family: $lightFontFamily;
+  font-family: $thin;
   letter-spacing: 1px;
 }
 
@@ -168,14 +164,6 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   }
 }
 
-/* a.player-avatar { */
-/*   color: $gray; */
-
-/*   &:hover .handle { */
-/*     text-decoration: underline; */
-/*   } */
-/* } */
-
 @mixin players-list {
   padding: 5px;
   margin-bottom: 10px;
@@ -191,6 +179,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
     .rank {
       margin-right: 10px;
       font-weight: bold;
+
       &:before {
         content: "#";
       }
@@ -198,7 +187,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
 
     .status {
       float: right;
-      color: $sand;
+      color: white;
     }
   }
 }

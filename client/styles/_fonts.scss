@@ -20,8 +20,11 @@
 }
 
 
-// $fontFamily: "Source Sans Pro";
-$lightFontFamily: "Proxima Nova Thin";
-$headerFontFamily: "Museo Slab";
+$thin: "Proxima Nova Thin";
+$regular: "Proxima Nova Regular";
 $mono: "Inconsolata", "mono";
-$fontFamily: $mono; // "Proxima Nova Regular";
+$serif: "Museo Slab";
+
+$navFont: $serif;
+$headerFont: $serif;
+$baseFont: $mono;

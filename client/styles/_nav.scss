@@ -1,0 +1,95 @@
+
+@import 'colors';
+@import 'mixins';
+@import 'fonts';
+
+nav {
+  padding-top: 25px;
+  padding-bottom: 25px;
+
+  background-color: $seaBlue;
+  @include linear-gradient($lightSeaBlue, $seaBlue);
+  border: none;
+
+  .logo {
+    display: inline-block;
+
+    a {
+      img {
+        height: 40px;
+        width: auto;
+      }
+    }
+  }
+
+  .player-menu {
+    float: right;
+    list-style: none;
+    font-family: $navFont;
+    font-size: 16px;
+    margin: 0;
+    padding: 0;
+
+    li {
+      float: left;
+
+      $navColor: $darkerSeaBlue;
+
+      a {
+        display: block;
+        /* padding: 0 15px; */
+        line-height: 25px;
+        text-transform: lowercase;
+        color: $navColor;
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid $navColor;
+
+        &:hover {
+          border-bottom-color: $blackSeaBlue;
+          color: $blackSeaBlue;
+        }
+      }
+    }
+
+    li + li {
+      margin-left: 30px;
+    }
+  }
+}
+
+aside {
+  background-color: $lightRock;
+  color: $darkRock;
+  border-right: 2px solid $smokeWhite;
+  padding: 10px;
+
+  .track-menu {
+    margin-bottom: 20px;
+
+    h2 {
+      color: $darkerRock;
+      margin: 0;
+      float: left;
+    }
+
+    .btn {
+      float: right;
+    }
+  }
+
+  .aside-module {
+
+    h3 {
+      color: $darkRock;
+      background-color: $smokeWhite;
+      box-shadow: 1px 1px 0px $shadow;
+      margin: 0 0 5px 0;
+      padding: 5px;
+      text-align: center;
+      text-transform: uppercase;
+      font-size: 13px;
+    }
+
+  }
+
+}

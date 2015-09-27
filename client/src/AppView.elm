@@ -15,7 +15,7 @@ import Screens.ShowProfile.View as ShowProfile
 import Screens.Game.View as Game
 
 import Screens.Sidebar as Sidebar
-import Screens.TopBar as TopBar
+import Screens.Nav as Nav
 
 import Constants exposing (..)
 
@@ -70,7 +70,7 @@ layout appState content =
       content
     else
       div
-        [ class "content" ]
-        [ Sidebar.render appState.player
+        [ class "content-with-nav" ]
+        [ Nav.view appState
         , main' [ ] [ content ]
         ]

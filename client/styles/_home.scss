@@ -19,272 +19,38 @@
   margin-top: 30px;
 }
 
-/*
-.chat-wrapper {
-
-  $totalHeight: 300px;
-  $topHeight: 32px;
-  $messageInputHeight: 35px;
-  $statusInputHeight: $topHeight;
-  $boxHeight: $totalHeight - $topHeight - $messageInputHeight - 6px;
-
-  margin-top: 30px;
-  position: relative;
-  height: $totalHeight;
-
-
-  .chat-top {
-    line-height: ($topHeight);
-    text-align: center;
-    background-color: $lightSeaBlue;
-    color: $whiteBlue;
-    text-transform: uppercase;
-    font-family: $lightFontFamily;
-    letter-spacing: 1px;
-    box-shadow: 0px 2px 2px $darkSeaBlue inset;
-  }
-
-  .chat-left {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 215px;
-    bottom: 0;
-    box-shadow: 0 2px 2px $lightGray;
-    border: 3px solid white;
-    @include linear-gradient($smokeWhite, white);
-}
-
-  .chat-right {
-    position: absolute;
-    top: 0;
-    width: 200px;
-    right: 0;
-    bottom: 0;
-    box-shadow: 0 2px 2px $lightGray;
-    background-color: white;
-  }
-
-
-  .chat-box {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    height: $boxHeight;
-
-    .chat-messages {
-      overflow: auto;
-      position: absolute;
-      width: 100%;
-      bottom: 0;
-      max-height: $boxHeight;
-      margin-bottom: 0;
-      padding-bottom: 3px;
-
-      li {
-        margin: 0 6px;
-
-        .player-avatar {
-          display: inline-block;
-          margin-right: 5px;
-        }
-
-        .player-avatar:after {
-          content: ":";
-        }
-
-        .content {
-          font-size: 14px;
-        }
-      }
-    }
-
-  }
-
-  .chat-message-form {
-
-    input[type="text"] {
-      border-radius: 0;
-      border: 1px solid $lightGray;
-      background-color: $smokeWhite;
-      height: $messageInputHeight;
-      padding: 4px 8px;
-      box-shadow: 0 1px 1px $shadow inset;
-      @include placeholder-color($mediumGray);
-    }
-  }
-
-  .chat-status-form {
-    padding: 3px;
-    padding-bottom: 0;
-
-    input[type="text"] {
-      border-radius: 0;
-      height: $statusInputHeight;
-      padding: 4px 8px;
-      background-color: $smokeWhite;
-      border: 1px solid $lightGray;
-      box-shadow: 0 1px 1px $shadow inset;
-      @include placeholder-color($mediumGray);
-    }
-  }
-
-  .chat-players {
-    background-color: white;
-    padding: 0;
-    margin: 3px;
-    height: $totalHeight - 6px;
-    overflow-y: auto;
-
-    li {
-      background-color: white;
-      margin: 0;
-      padding: 3px;
-      color: $gray;
-
-      .status {
-        display: block;
-        color: $darkGray;
-        font-size: 12px;
-        margin-top: 2px;
-      }
-    }
-  }
-
-  .chat-status-form + .chat-players {
-    height: $totalHeight - $statusInputHeight - 9px;
-  }
-
-}
-*/
-
-.live-center {
-  margin-top: 30px;
-
-  .track {
-    background-color: white;
-    box-shadow: 0 1px 1px $shadow inset;
-    margin-bottom: 30px;
-
-    .name {
-      color: white;
-      display: block;
-      text-align: center;
-      padding: 10px;
-      background-color: $navBlue;
-      text-transform: uppercase;
-      font-family: $lightFontFamily;
-      letter-spacing: 1px;
-    }
-
-    .players {
-      padding: 10px;
-
-      .player-avatar {
-        display: block;
-      }
-
-      .empty {
-        color: $gray;
-        font-size: 13px;
-      }
-    }
-  }
-
-
-  .empty-board {
-    background-color: white;
-    box-shadow: 0 2px 2px $lightGray;
-    padding: 10px 15px;
-    color: $gray;
-  }
-
-  .row-new-race {
-    margin-top: 20px;
-  }
-
-  .btn-new-race {
-
-    &.loading {
-      opacity: 0.5;
-    }
-  }
-
-  .online-users {
-    background-color: white;
-    box-shadow: 0 2px 2px $lightGray;
-    padding: 0;
-    margin: 0;
-
-    li {
-      background-color: white;
-      padding: 6px 8px;
-      color: $gray;
-      border-bottom: 1px solid $smokeWhite;
-
-      &:last-child {
-        border-bottom: none;
-      }
-
-      .status {
-        display: block;
-        color: $darkGray;
-        font-size: 12px;
-        margin-top: 4px;
-      }
-    }
-  }
-
-  .online-guests {
-    padding: 8px;
-    font-size: 14px;
-    color: $gray;
-  }
-
-}
-
 
 .live-track {
   $br: 3px;
   margin-top: 30px;
 
+  $normalColor: $lightRock;
+  $hoverColor: $seaBlue;
+
+
   a.show, a.show:visited {
     display: block;
+    position: relative;
     height: 200px;
     margin-bottom: 10px;
-    background-color: $seaBlue;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* border-radius: $br; */
-    position: relative;
-    text-align: center;
-    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2);
-
-    &:hover {
-      /* background-color: $whiteBlue; */
-      /* background-image: none; */
-
-      .name {
-        background-color: $mainBlue;
-      }
-
-      .track-players {
-        display: block;
-      }
-
-      .description {
-        display: none;
-      }
-
-    }
+    background-color: white;
+    color: $darkRock;
+    box-shadow: 0 2px 2px $shadow;
+    border: 2px solid $normalColor;
+    transition: none;
 
     .name {
       display: block;
-      background-color: $navBlue;
-      text-transform: uppercase;
-      font-family: $lightFontFamily;
-      letter-spacing: 1px;
+      background-color: $normalColor;
+      color: white;
+      text-transform: lowercase;
+      text-align: center;
+      font-family: $headerFont;
       line-height: 40px;
+    }
+
+    .description {
+      padding: 10px;
     }
 
     .player-count {
@@ -293,27 +59,27 @@
       }
 
       position: absolute;
-      top: -10px;
-      right: 10px;
+      top: -12px;
+      right: 7px;
       display: block;
-      border-color: desat-dark($orange);
       border-radius: 15px;
+      border: 2px solid white;
+      opacity: 0.9;
       line-height: 23px;
-      width: 23px;
-      background-color: $orange;
+      width: 27px;
+      background-color: $rock;
       color: white;
+      font-weight: bold;
       text-align: center;
       font-size: 14px;
+      box-shadow: 1px 1px 0 $shadow;
     }
 
     .track-players {
       display: none;
       height: 160px; 
       overflow-y: auto;
-      /* background-color: $darkSeaBlue; */
-      background-color: $darkNavBlue;
-      background-color: $navBlue;
-      color: white;
+      /* color: white; */
       text-align: left;
       padding: 10px 15px;
 
@@ -322,21 +88,32 @@
       }
 
       .player-avatar, a.player-avatar {
-        color: white;
+        color: $darkSeaBlue;
       }
     }
 
-    .description {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.2);
-      color: $whiteBlue;
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-      font-family: $lightFontFamily;
+    &:hover {
+      border-color: $hoverColor;
+
+      .name {
+        background-color: $hoverColor;
+        /* color: white; */
+      }
+
+      .track-players {
+        display: block;
+      }
+
+      .player-count {
+        background-color: $darkSeaBlue;
+      }
+
+      .description {
+        display: none;
+      }
+
     }
+
+
   }
 }

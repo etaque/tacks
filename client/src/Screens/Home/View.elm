@@ -26,7 +26,7 @@ view player screen =
 welcome : Player -> String -> Html
 welcome player handle =
   titleWrapper <| List.append
-    [ h1 [] [ text ("Welcome, " ++ (Maybe.withDefault "Anonymous" player.handle)) ] ]
+    [ h1 [] [ text ("welcome, " ++ (Maybe.withDefault "Anonymous" player.handle)) ] ]
     (welcomeForms player handle)
 
 welcomeForms : Player -> String -> List Html
@@ -74,13 +74,13 @@ liveTrackBlock ({track, players} as lt) =
     [ div [ class "live-track" ]
       [ linkTo ("/play/" ++ track.slug)
         [ class "show"
-        , style [ ("background-image", "url(/assets/images/trials-" ++ track.slug ++ ".png)") ]
+        -- , style [ ("background-image", "url(/assets/images/trials-" ++ track.slug ++ ".png)") ]
         ]
         [ div
           [ class <| "player-count player-count-" ++ (toString (List.length players)) ]
           [ text << toString <| List.length players ]
         , span [ class "name" ] [ text <| trackName track.slug ]
-        , div [ class "description"] [ text <| trackDesc track.slug ]
+        , div [ class "description"] [ text "TODO description" ]
         , playersList players
         ]
       ]

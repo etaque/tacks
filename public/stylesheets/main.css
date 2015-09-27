@@ -6084,7 +6084,10 @@ body {
   padding: 0; }
 
 body > div {
-  height: 100%; }
+  min-height: 100%; }
+
+.content-with-nav {
+  /* height: 100%; */ }
 
 .content {
   height: 100%;
@@ -6092,47 +6095,130 @@ body > div {
   display: flex;
   flex-direction: row; }
 
-.main, main {
-  flex: 1;
-  background-color: #f2f3c4; }
+main {
+  flex: 1; }
 
 aside {
   min-height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #a0a17d;
-  color: #51585E;
+  /* .logo { */
+  /*   a { */
+  /*     display: block; */
+  /*     text-align: center; */
+  /*     background-color: rgb(58,120,201); */
+  /*     /\* border: 2px solid white; *\/ */
+  /*     img { */
+  /*       height: 50px; */
+  /*       /\* max-height: 100%; *\/ */
+  /*       width: auto; */
+  /*     } */
+  /*   } */
+  /* } */
+  /* .user-menu { */
+  /*   list-style: none; */
+  /*   margin: 0; */
+  /*   margin-top: 20px; */
+  /*   padding: 0; */
+  /*   font-family: $navFont; */
+  /*   text-transform: lowercase; */
+  /*   li { */
+  /*   } */
+  /*   a { */
+  /*     display: block; */
+  /*     color: white; */
+  /*     padding: 5px 10px; */
+  /*     &:before { */
+  /*       /\* content: "# "; *\/ */
+  /*     } */
+  /*   } */
+  /* } */ }
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+nav {
+  padding-top: 25px;
+  padding-bottom: 25px;
+  background-color: #93cadf;
+  background-color: #93cadf;
+  /* Fallback Color */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#abd6e6), to(#93cadf));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #abd6e6, #93cadf);
+  /* Chrome 10+, Saf5.1+, iOS 5+ */
+  background-image: -moz-linear-gradient(top, #abd6e6, #93cadf);
+  /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #abd6e6, #93cadf);
+  /* IE10 */
+  background-image: -o-linear-gradient(top, #abd6e6, #93cadf);
+  /* Opera 11.10+ */
+  background-image: linear-gradient(top, #abd6e6, #93cadf);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#abd6e6', EndColorStr='#93cadf');
+  border: none; }
+  nav .logo {
+    display: inline-block; }
+    nav .logo a img {
+      height: 40px;
+      width: auto; }
+  nav .player-menu {
+    float: right;
+    list-style: none;
+    font-family: "Museo Slab";
+    font-size: 16px;
+    margin: 0;
+    padding: 0; }
+    nav .player-menu li {
+      float: left; }
+      nav .player-menu li a {
+        display: block;
+        /* padding: 0 15px; */
+        line-height: 25px;
+        text-transform: lowercase;
+        color: #5d737c;
+        border-top: 2px solid transparent;
+        border-bottom: 2px solid #5d737c; }
+        nav .player-menu li a:hover {
+          border-bottom-color: #26424d;
+          color: #26424d; }
+    nav .player-menu li + li {
+      margin-left: 30px; }
+
+aside {
+  background-color: #bcb3bc;
+  color: #737373;
+  border-right: 2px solid #f8f9fb;
   padding: 10px; }
   aside .track-menu {
     margin-bottom: 20px; }
     aside .track-menu h2 {
-      color: #f2f3c4;
+      color: #4d4d4d;
       margin: 0;
       float: left; }
     aside .track-menu .btn {
       float: right; }
-  aside .logo a {
-    display: block;
+  aside .aside-module h3 {
+    color: #737373;
+    background-color: #f8f9fb;
+    box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.075);
+    margin: 0 0 5px 0;
+    padding: 5px;
     text-align: center;
-    background-color: #3a78c9;
-    /* border: 2px solid white; */ }
-    aside .logo a img {
-      height: 50px;
-      /* max-height: 100%; */
-      width: auto; }
-  aside .user-menu {
-    list-style: none;
-    margin: 0;
-    margin-top: 20px;
-    padding: 0;
-    font-family: "Museo Slab";
-    text-transform: lowercase; }
-    aside .user-menu a {
-      display: block;
-      color: white;
-      padding: 5px 10px; }
-      aside .user-menu a:before {
-        /* content: "# "; */ }
+    text-transform: uppercase;
+    font-size: 13px; }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -6154,6 +6240,28 @@ body {
   color: #666;
   font-family: "Inconsolata", "mono";
   font-size: 15px;
+  background-color: #f8f9fb; }
+
+.content-with-nav {
+  background-color: #93cadf;
+  color: dimgray;
+  font-family: "Inconsolata", "mono";
+  background-color: #f8f9fb;
+  /* Fallback Color */
+  background-image: -webkit-gradient(linear, left top, left bottom, from(#E6E6E6), to(#f8f9fb));
+  /* Saf4+, Chrome */
+  background-image: -webkit-linear-gradient(top, #E6E6E6, #f8f9fb);
+  /* Chrome 10+, Saf5.1+, iOS 5+ */
+  background-image: -moz-linear-gradient(top, #E6E6E6, #f8f9fb);
+  /* FF3.6 */
+  background-image: -ms-linear-gradient(top, #E6E6E6, #f8f9fb);
+  /* IE10 */
+  background-image: -o-linear-gradient(top, #E6E6E6, #f8f9fb);
+  /* Opera 11.10+ */
+  background-image: linear-gradient(top, #E6E6E6, #f8f9fb);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#E6E6E6', EndColorStr='#f8f9fb'); }
+
+.content {
   background-color: #f2f3c4; }
 
 hr {
@@ -6161,6 +6269,7 @@ hr {
 
 h1 {
   font-family: "Museo Slab";
+  color: dimgray;
   margin-bottom: 30px;
   text-align: center; }
 
@@ -6170,25 +6279,14 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 15px; }
 
 a {
-  /* color: white; */
+  color: #5d737c;
   transition: all 0.1s ease-in;
-  /* text-decoration: underline; */
   cursor: pointer; }
   a:hover {
-    /* color: white; */
     text-decoration: none; }
 
 .align-center {
   text-align: center; }
-
-.aside-module h3 {
-  background-color: #f2f3c4;
-  box-shadow: 1px 1px 0px rgba(0, 0, 0, 0.075);
-  margin: 0 0 5px 0;
-  padding: 5px;
-  text-align: center;
-  text-transform: uppercase;
-  font-size: 13px; }
 
 .btn {
   font-weight: bold;
@@ -6266,12 +6364,6 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   .player-avatar .handle {
     font-weight: bold; }
 
-/* a.player-avatar { */
-/*   color: $gray; */
-/*   &:hover .handle { */
-/*     text-decoration: underline; */
-/*   } */
-/* } */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6413,7 +6505,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   padding-top: 15px;
   background-color: #f8f9fb;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #44a3c8; }
+  box-shadow: 0 2px 2px #6ea3b8; }
 
 .form-set-handle {
   margin-top: 20px;
@@ -6422,430 +6514,70 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
 .update-name {
   margin-top: 30px; }
 
-/*
-.chat-wrapper {
-
-  $totalHeight: 300px;
-  $topHeight: 32px;
-  $messageInputHeight: 35px;
-  $statusInputHeight: $topHeight;
-  $boxHeight: $totalHeight - $topHeight - $messageInputHeight - 6px;
-
-  margin-top: 30px;
-  position: relative;
-  height: $totalHeight;
-
-
-  .chat-top {
-    line-height: ($topHeight);
-    text-align: center;
-    background-color: $lightSeaBlue;
-    color: $whiteBlue;
-    text-transform: uppercase;
-    font-family: $lightFontFamily;
-    letter-spacing: 1px;
-    box-shadow: 0px 2px 2px $darkSeaBlue inset;
-  }
-
-  .chat-left {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 215px;
-    bottom: 0;
-    box-shadow: 0 2px 2px $lightGray;
-    border: 3px solid white;
-    @include linear-gradient($smokeWhite, white);
-}
-
-  .chat-right {
-    position: absolute;
-    top: 0;
-    width: 200px;
-    right: 0;
-    bottom: 0;
-    box-shadow: 0 2px 2px $lightGray;
-    background-color: white;
-  }
-
-
-  .chat-box {
-    position: relative;
-    overflow: hidden;
-    width: 100%;
-    height: $boxHeight;
-
-    .chat-messages {
-      overflow: auto;
-      position: absolute;
-      width: 100%;
-      bottom: 0;
-      max-height: $boxHeight;
-      margin-bottom: 0;
-      padding-bottom: 3px;
-
-      li {
-        margin: 0 6px;
-
-        .player-avatar {
-          display: inline-block;
-          margin-right: 5px;
-        }
-
-        .player-avatar:after {
-          content: ":";
-        }
-
-        .content {
-          font-size: 14px;
-        }
-      }
-    }
-
-  }
-
-  .chat-message-form {
-
-    input[type="text"] {
-      border-radius: 0;
-      border: 1px solid $lightGray;
-      background-color: $smokeWhite;
-      height: $messageInputHeight;
-      padding: 4px 8px;
-      box-shadow: 0 1px 1px $shadow inset;
-      @include placeholder-color($mediumGray);
-    }
-  }
-
-  .chat-status-form {
-    padding: 3px;
-    padding-bottom: 0;
-
-    input[type="text"] {
-      border-radius: 0;
-      height: $statusInputHeight;
-      padding: 4px 8px;
-      background-color: $smokeWhite;
-      border: 1px solid $lightGray;
-      box-shadow: 0 1px 1px $shadow inset;
-      @include placeholder-color($mediumGray);
-    }
-  }
-
-  .chat-players {
-    background-color: white;
-    padding: 0;
-    margin: 3px;
-    height: $totalHeight - 6px;
-    overflow-y: auto;
-
-    li {
-      background-color: white;
-      margin: 0;
-      padding: 3px;
-      color: $gray;
-
-      .status {
-        display: block;
-        color: $darkGray;
-        font-size: 12px;
-        margin-top: 2px;
-      }
-    }
-  }
-
-  .chat-status-form + .chat-players {
-    height: $totalHeight - $statusInputHeight - 9px;
-  }
-
-}
-*/
-.live-center {
-  margin-top: 30px; }
-  .live-center .track {
-    background-color: white;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-    margin-bottom: 30px; }
-    .live-center .track .name {
-      color: white;
-      display: block;
-      text-align: center;
-      padding: 10px;
-      background-color: #387ac4;
-      text-transform: uppercase;
-      font-family: "Proxima Nova Thin";
-      letter-spacing: 1px; }
-    .live-center .track .players {
-      padding: 10px; }
-      .live-center .track .players .player-avatar {
-        display: block; }
-      .live-center .track .players .empty {
-        color: #7b8087;
-        font-size: 13px; }
-  .live-center .empty-board {
-    background-color: white;
-    box-shadow: 0 2px 2px #E6E6E6;
-    padding: 10px 15px;
-    color: #7b8087; }
-  .live-center .row-new-race {
-    margin-top: 20px; }
-  .live-center .btn-new-race.loading {
-    opacity: 0.5; }
-  .live-center .online-users {
-    background-color: white;
-    box-shadow: 0 2px 2px #E6E6E6;
-    padding: 0;
-    margin: 0; }
-    .live-center .online-users li {
-      background-color: white;
-      padding: 6px 8px;
-      color: #7b8087;
-      border-bottom: 1px solid #f8f9fb; }
-      .live-center .online-users li:last-child {
-        border-bottom: none; }
-      .live-center .online-users li .status {
-        display: block;
-        color: #51585E;
-        font-size: 12px;
-        margin-top: 4px; }
-  .live-center .online-guests {
-    padding: 8px;
-    font-size: 14px;
-    color: #7b8087; }
-
 .live-track {
   margin-top: 30px; }
   .live-track a.show, .live-track a.show:visited {
     display: block;
+    position: relative;
     height: 200px;
     margin-bottom: 10px;
-    background-color: #93cadf;
-    background-repeat: no-repeat;
-    background-position: center;
-    /* border-radius: $br; */
-    position: relative;
-    text-align: center;
-    box-shadow: 0 2px 1px rgba(0, 0, 0, 0.2); }
-    .live-track a.show:hover, .live-track a.show:visited:hover {
-      /* background-color: $whiteBlue; */
-      /* background-image: none; */ }
-      .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
-        background-color: #5899E2; }
-      .live-track a.show:hover .track-players, .live-track a.show:visited:hover .track-players {
-        display: block; }
-      .live-track a.show:hover .description, .live-track a.show:visited:hover .description {
-        display: none; }
+    background-color: white;
+    color: #737373;
+    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.075);
+    border: 2px solid #bcb3bc;
+    transition: none; }
     .live-track a.show .name, .live-track a.show:visited .name {
       display: block;
-      background-color: #387ac4;
-      text-transform: uppercase;
-      font-family: "Proxima Nova Thin";
-      letter-spacing: 1px;
+      background-color: #bcb3bc;
+      color: white;
+      text-transform: lowercase;
+      text-align: center;
+      font-family: "Museo Slab";
       line-height: 40px; }
+    .live-track a.show .description, .live-track a.show:visited .description {
+      padding: 10px; }
     .live-track a.show .player-count, .live-track a.show:visited .player-count {
       position: absolute;
-      top: -10px;
-      right: 10px;
+      top: -12px;
+      right: 7px;
       display: block;
-      border-color: #a67936;
       border-radius: 15px;
+      border: 2px solid white;
+      opacity: 0.9;
       line-height: 23px;
-      width: 23px;
-      background-color: #E0A349;
+      width: 27px;
+      background-color: #a0929f;
       color: white;
+      font-weight: bold;
       text-align: center;
-      font-size: 14px; }
+      font-size: 14px;
+      box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.075); }
       .live-track a.show .player-count.player-count-0, .live-track a.show:visited .player-count.player-count-0 {
         display: none; }
     .live-track a.show .track-players, .live-track a.show:visited .track-players {
       display: none;
       height: 160px;
       overflow-y: auto;
-      /* background-color: $darkSeaBlue; */
-      background-color: #395e87;
-      background-color: #387ac4;
-      color: white;
+      /* color: white; */
       text-align: left;
       padding: 10px 15px; }
       .live-track a.show .track-players li + li, .live-track a.show:visited .track-players li + li {
         margin-top: 5px; }
       .live-track a.show .track-players .player-avatar, .live-track a.show .track-players a.player-avatar, .live-track a.show:visited .track-players .player-avatar, .live-track a.show:visited .track-players a.player-avatar {
-        color: white; }
-    .live-track a.show .description, .live-track a.show:visited .description {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.2);
-      color: #B1C0D8;
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
-      font-size: 14px;
-      font-family: "Proxima Nova Thin"; }
+        color: #6ea3b8; }
+    .live-track a.show:hover, .live-track a.show:visited:hover {
+      border-color: #93cadf; }
+      .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
+        background-color: #93cadf;
+        /* color: white; */ }
+      .live-track a.show:hover .track-players, .live-track a.show:visited:hover .track-players {
+        display: block; }
+      .live-track a.show:hover .player-count, .live-track a.show:visited:hover .player-count {
+        background-color: #6ea3b8; }
+      .live-track a.show:hover .description, .live-track a.show:visited:hover .description {
+        display: none; }
 
-@font-face {
-  font-family: "Proxima Nova Regular";
-  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
-
-@font-face {
-  font-family: "Museo Slab";
-  src: url("/assets/fonts/Museo Slab.otf"); }
-
-@font-face {
-  font-family: "Proxima Nova Thin";
-  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
-
-@font-face {
-  font-family: "Proxima Nova Light";
-  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
-
-.nav-trials {
-  text-align: center;
-  margin-top: 50px; }
-  .nav-trials li {
-    display: inline-block;
-    font-size: 13px;
-    margin: 0; }
-    .nav-trials li a {
-      display: inline-block;
-      padding: 10px 20px;
-      text-transform: uppercase;
-      font-family: "Proxima Nova Thin";
-      letter-spacing: 1px;
-      color: white; }
-    .nav-trials li.active a {
-      background-color: #93cadf;
-      color: #5899E2; }
-    .nav-trials li:hover a {
-      background-color: #93cadf; }
-  .nav-trials li + li {
-    margin-left: 10px; }
-
-.previous-period {
-  text-align: left; }
-
-.next-period {
-  text-align: right; }
-
-.period {
-  color: white;
-  font-family: "Proxima Nova Thin";
-  display: inline-block;
-  line-height: 30px;
-  padding: 0 15px;
-  border: 1px solid white;
-  border-radius: 20px; }
-
-a.period {
-  color: #5899E2;
-  border-color: #5899E2;
-  background-color: #93cadf; }
-  a.period:hover {
-    background-color: #44a3c8; }
-
-.row-show-ranking {
-  margin-top: 30px; }
-
-.ranked-time-trial {
-  margin-top: 20px;
-  margin-bottom: 30px; }
-  .ranked-time-trial .trial-name {
-    display: block;
-    padding: 10px;
-    font-family: "Proxima Nova Thin";
-    font-size: 16px;
-    text-align: center;
-    text-transform: uppercase;
-    text-decoration: none;
-    background-color: #387ac4;
-    box-shadow: 0 1px 2px #E6E6E6;
-    letter-spacing: 1px;
-    color: white; }
-    .ranked-time-trial .trial-name:hover {
-      background-color: #5899E2; }
-  .ranked-time-trial .time-trial-rankings {
-    border-radius: 0; }
-  .ranked-time-trial .btn-run-trial {
-    margin-top: 10px; }
-
-.list-time-trial-rankings {
-  font-family: "Inconsolata", "mono";
-  margin: 0;
-  padding: 0;
-  background-color: white;
-  box-shadow: 0 1px 2px #E6E6E6;
-  border: 2px solid white; }
-  .list-time-trial-rankings li {
-    list-style: none;
-    border-bottom: 1px solid #f8f9fb;
-    padding: 5px 8px; }
-    .list-time-trial-rankings li:last-child {
-      border-bottom-color: transparent; }
-    .list-time-trial-rankings li .rank {
-      width: 20px;
-      display: inline-block; }
-    .list-time-trial-rankings li .rank:after {
-      content: "."; }
-    .list-time-trial-rankings li .time {
-      float: right; }
-    .list-time-trial-rankings li.current-player {
-      background-color: #f8f9fb;
-      color: #5899E2; }
-      .list-time-trial-rankings li.current-player .player-avatar .handle {
-        color: #5899E2; }
-    .list-time-trial-rankings li.empty {
-      color: #7b8087; }
-    .list-time-trial-rankings li.out-of-window {
-      border-top: 1px solid #5899E2;
-      padding-top: 4px; }
-
-.list-recent-runs {
-  margin: 0;
-  padding: 0;
-  background-color: white;
-  box-shadow: 0 1px 2px #E6E6E6;
-  border: 2px solid white; }
-  .list-recent-runs li {
-    list-style: none;
-    border-bottom: 1px solid #f8f9fb;
-    padding: 5px 8px; }
-    .list-recent-runs li .time-ago {
-      color: #b0b3b8;
-      font-size: 14px;
-      font-family: "Proxima Nova Thin";
-      float: right;
-      margin-right: 10px; }
-    .list-recent-runs li .finish-time {
-      font-family: "Inconsolata", "mono";
-      float: right; }
-    .list-recent-runs li:last-child {
-      border-bottom-color: transparent; }
-
-.show-time-trial h3 {
-  margin-top: 0; }
-
-.show-time-trial .trial-picture {
-  margin-bottom: 20px;
-  height: 200px;
-  background-color: #93cadf;
-  background-repeat: no-repeat;
-  background-position: center; }
-
-.show-time-trial .nav {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  background-color: #387ac4;
-  box-shadow: 0px 1px 2px #E6E6E6; }
-  .show-time-trial .nav li {
-    margin: 0; }
-    .show-time-trial .nav li a {
-      color: white;
-      text-decoration: none; }
-      .show-time-trial .nav li a:hover {
-        background-color: #5899E2; }
-    .show-time-trial .nav li.active a {
-      background-color: #93cadf; }
-
+/* @import 'trials'; */
 .post .block-img, .article .block-img {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -6863,65 +6595,7 @@ a.period {
 .post + .post {
   margin-top: 50px; }
 
-@font-face {
-  font-family: "Proxima Nova Regular";
-  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
-
-@font-face {
-  font-family: "Museo Slab";
-  src: url("/assets/fonts/Museo Slab.otf"); }
-
-@font-face {
-  font-family: "Proxima Nova Thin";
-  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
-
-@font-face {
-  font-family: "Proxima Nova Light";
-  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
-
-.upload-avatar label {
-  display: block; }
-
-.upload-avatar img {
-  margin-bottom: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 2px #E6E6E6; }
-
-.upload-avatar input[type='file'] {
-  display: inline; }
-
-.upload-avatar .alert {
-  margin-top: 15px; }
-
-.upload-avatar .form-remove-avatar {
-  margin-top: 50px; }
-
-.form-settings .vmg-magnet {
-  width: 80px; }
-
-.show-user .title-wrapper .avatar {
-  margin-bottom: 20px;
-  border-radius: 5px;
-  box-shadow: 0 2px 2px #44a3c8; }
-
-.show-user .badge-rank {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 15px;
-  text-align: center;
-  background-color: #E0A349;
-  color: white;
-  font-family: "Proxima Nova Thin";
-  border-radius: 50px;
-  line-height: 50px;
-  width: 50px;
-  font-size: 21px; }
-  .show-user .badge-rank sup {
-    font-size: 13px; }
-  .show-user .badge-rank:hover {
-    background-color: #e4ae5f; }
-
+/* @import 'users'; */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6951,7 +6625,7 @@ aside {
       font-size: 13px;
       margin: 0;
       padding: 5px;
-      color: #f2f3c4; }
+      color: #737373; }
     aside .module-players .list-players, aside .module-players .list-tallies {
       padding: 5px;
       margin-bottom: 10px;
@@ -6967,7 +6641,7 @@ aside {
             content: "#"; }
         aside .module-players .list-players li .status, aside .module-players .list-tallies li .status {
           float: right;
-          color: #f2f3c4; }
+          color: white; }
   aside .module-rankings {
     flex: 0.5; }
     aside .module-rankings .list-rankings {
@@ -6985,11 +6659,12 @@ aside {
             content: "#"; }
         aside .module-rankings .list-rankings li .status {
           float: right;
-          color: #f2f3c4; }
+          color: white; }
   aside .module-help {
     font-size: 12px; }
     aside .module-help dl {
-      padding: 5px; }
+      padding: 5px;
+      color: white; }
     aside .module-help dt {
       font-weight: bold;
       clear: both;
