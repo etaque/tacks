@@ -4,8 +4,8 @@
 @import 'fonts';
 
 nav {
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 15px;
+  padding-bottom: 15px;
 
   background-color: $seaBlue;
   @include linear-gradient($lightSeaBlue, $seaBlue);
@@ -15,10 +15,10 @@ nav {
     display: inline-block;
 
     a {
-      img {
-        height: 40px;
-        width: auto;
-      }
+      /* img { */
+      /*   height: 40px; */
+      /*   width: auto; */
+      /* } */
     }
   }
 
@@ -28,6 +28,7 @@ nav {
     font-family: $navFont;
     font-size: 16px;
     margin: 0;
+    margin-top: 10px;
     padding: 0;
 
     li {

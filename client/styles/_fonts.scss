@@ -5,6 +5,11 @@
 }
 
 @font-face {
+  font-family: "Bangers";
+  src: url('/assets/fonts/Bangers.ttf');
+}
+
+@font-face {
   font-family: "Museo Slab";
   src: url('/assets/fonts/Museo Slab.otf');
 }
@@ -28,3 +33,4 @@ $serif: "Museo Slab";
 $navFont: $serif;
 $headerFont: $serif;
 $baseFont: $mono;
+$logoFont: "Bangers";

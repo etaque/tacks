@@ -26,7 +26,7 @@ view appState =
 logo : Html
 logo =
   div [ class "col-md-6 logo" ]
-    [ linkTo "/" [ ] [ img [ src "/assets/images/logo-header-2.png" ] [] ] ]
+    [ linkTo "/" [ ] [ img [ src "/assets/images/logo-header-2.svg" ] [] ] ]
 
 playerMenu : Player -> Html
 playerMenu player =

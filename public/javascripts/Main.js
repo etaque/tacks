@@ -22742,7 +22742,7 @@ Elm.Screens.Nav.make = function (_elm) {
    "/",
    _L.fromArray([]),
    _L.fromArray([A2($Html.img,
-   _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
+   _L.fromArray([$Html$Attributes.src("/assets/images/logo-header-2.svg")]),
    _L.fromArray([]))]))]));
    var view = function (appState) {
       return A2($Html.nav,

@@ -23,7 +23,7 @@
 }
 
 @function desat-dark($color) {
-  @return desaturate(darken($color, 15%), 20%);
+  @return desaturate(darken($color, 15%), 30%);
 }
 
 @function little-desat-dark($color) {

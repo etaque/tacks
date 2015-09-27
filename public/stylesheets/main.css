@@ -6065,6 +6065,10 @@ button.close {
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
 
 @font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
   font-family: "Museo Slab";
   src: url("/assets/fonts/Museo Slab.otf"); }
 
@@ -6139,6 +6143,10 @@ aside {
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
 
 @font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
   font-family: "Museo Slab";
   src: url("/assets/fonts/Museo Slab.otf"); }
 
@@ -6151,8 +6159,8 @@ aside {
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
 nav {
-  padding-top: 25px;
-  padding-bottom: 25px;
+  padding-top: 15px;
+  padding-bottom: 15px;
   background-color: #93cadf;
   background-color: #93cadf;
   /* Fallback Color */
@@ -6171,15 +6179,18 @@ nav {
   border: none; }
   nav .logo {
     display: inline-block; }
-    nav .logo a img {
-      height: 40px;
-      width: auto; }
+    nav .logo a {
+      /* img { */
+      /*   height: 40px; */
+      /*   width: auto; */
+      /* } */ }
   nav .player-menu {
     float: right;
     list-style: none;
     font-family: "Museo Slab";
     font-size: 16px;
     margin: 0;
+    margin-top: 10px;
     padding: 0; }
     nav .player-menu li {
       float: left; }
@@ -6188,9 +6199,9 @@ nav {
         /* padding: 0 15px; */
         line-height: 25px;
         text-transform: lowercase;
-        color: #5d737c;
+        color: #486a77;
         border-top: 2px solid transparent;
-        border-bottom: 2px solid #5d737c; }
+        border-bottom: 2px solid #486a77; }
         nav .player-menu li a:hover {
           border-bottom-color: #26424d;
           color: #26424d; }
@@ -6223,6 +6234,10 @@ aside {
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
 
 @font-face {
   font-family: "Museo Slab";
@@ -6279,7 +6294,7 @@ h2, h3, h4, h5, h6 {
   margin-bottom: 15px; }
 
 a {
-  color: #5d737c;
+  color: #486a77;
   transition: all 0.1s ease-in;
   cursor: pointer; }
   a:hover {
@@ -6312,17 +6327,17 @@ a {
 
 .btn-primary {
   background-color: #5899E2;
-  border-color: #3b73b3; }
+  border-color: #4774a7; }
   .btn-primary:hover {
     background-color: #428cde;
-    border-color: #35679f; }
+    border-color: #3f6895; }
 
 .btn-warning {
   background-color: #E0A349;
-  border-color: #a67936; }
+  border-color: #9b7741; }
   .btn-warning:hover {
     background-color: #dc9833;
-    border-color: #936b30; }
+    border-color: #89693a; }
 
 .alert {
   border-radius: 0;
@@ -6367,6 +6382,10 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
 
 @font-face {
   font-family: "Museo Slab";
@@ -6489,6 +6508,10 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
 
 @font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
   font-family: "Museo Slab";
   src: url("/assets/fonts/Museo Slab.otf"); }
 
@@ -6505,7 +6528,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   padding-top: 15px;
   background-color: #f8f9fb;
   border-radius: 5px;
-  box-shadow: 0 2px 2px #6ea3b8; }
+  box-shadow: 0 2px 2px #789fad; }
 
 .form-set-handle {
   margin-top: 20px;
@@ -6564,7 +6587,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
       .live-track a.show .track-players li + li, .live-track a.show:visited .track-players li + li {
         margin-top: 5px; }
       .live-track a.show .track-players .player-avatar, .live-track a.show .track-players a.player-avatar, .live-track a.show:visited .track-players .player-avatar, .live-track a.show:visited .track-players a.player-avatar {
-        color: #6ea3b8; }
+        color: #789fad; }
     .live-track a.show:hover, .live-track a.show:visited:hover {
       border-color: #93cadf; }
       .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
@@ -6573,7 +6596,7 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
       .live-track a.show:hover .track-players, .live-track a.show:visited:hover .track-players {
         display: block; }
       .live-track a.show:hover .player-count, .live-track a.show:visited:hover .player-count {
-        background-color: #6ea3b8; }
+        background-color: #789fad; }
       .live-track a.show:hover .description, .live-track a.show:visited:hover .description {
         display: none; }
 
@@ -6599,6 +6622,10 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
 
 @font-face {
   font-family: "Museo Slab";
