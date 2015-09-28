@@ -90,10 +90,10 @@ type GateLocation
   | StartLine
 
 type alias WindGenerator =
-  { wavelength1: Float
-  , amplitude1: Float
-  , wavelength2: Float
-  , amplitude2: Float
+  { wavelength1: Int
+  , amplitude1: Int
+  , wavelength2: Int
+  , amplitude2: Int
   }
 
 type alias GustGenerator =

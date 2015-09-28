@@ -39,3 +39,14 @@ type FormUpdate
   | SetUpwindY Int
   | SetGateWidth Int
   | SetLaps Int
+  | SetGustInterval Int
+  | CreateGustDef
+  | RemoveGustDef Int
+  | SetGustAngle Int Int
+  | SetGustSpeed Int Int
+  | SetGustRadius Int Int
+  | SetWindW1 Int
+  | SetWindA1 Int
+  | SetWindW2 Int
+  | SetWindA2 Int
+

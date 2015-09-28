@@ -27,17 +27,17 @@ import Game.Render.Players exposing (renderPlayerHull)
 
 view : Screen -> Html
 view screen =
-  case screen.editor of
-    Just editor ->
-      editorView editor
-    Nothing ->
+  case (screen.track, screen.editor) of
+    (Just track, Just editor) ->
+      editorView track editor
+    _ ->
       Html.text "loading"
 
 
-editorView : Editor -> Html
-editorView editor =
+editorView : Track -> Editor -> Html
+editorView track editor =
   Html.div [ class "content editor" ]
-    [ sideView editor
+    [ sideView track editor
     , renderCourse editor
     ]
 

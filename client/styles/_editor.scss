@@ -2,7 +2,27 @@
 
 .editor {
 
+  .track-menu {
+    margin: 10px;
+
+    h2 {
+    }
+  }
+
   aside {
+    display: flex;
+    padding: 0;
+
+    .aside-module {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 10px;
+    }
+
+    .form-actions {
+      margin: 0;
+      padding: 10px;
+    }
 
     .form-group {
       background-color: $darkRock;
@@ -13,15 +33,25 @@
         display: table;
         content: '';
       }
+
+    }
+
+    h3 {
+      margin-bottom: 10px;
+    }
+
+    .form-group + h3 {
+      margin-top: 10px;
     }
 
     label {
       float: left;
-      line-height: 30px;
+      line-height: 23px;
       padding-left: 6px;
       margin: 0;
       text-transform: lowercase;
       color: $smokeWhite;
+      font-size: 13px;
     }
 
     input {
@@ -30,14 +60,37 @@
       border: 2px solid $darkRock;
       border-radius: 0;
       background-color: $smokeWhite;
-      padding: 2px 4px;
-      text-align: right;
-      height: 30px;
+      padding: 2px 2px 2px 6px;
+      height: 25px;
+      font-size: 13px;
     }
 
-    .input-group-addon {
-      min-width: 130px;
-      text-align: right;
+    .table-gust-defs {
+      width: 100%;
+      background-color: $darkRock;
+      border-spacing: 2px;
+      border-collapse: separate;
+
+      a {
+        color: $lightRock;
+      }
+
+      th {
+        color: $smokeWhite;
+        font-size: 13px;
+        padding: 2px 4px;
+      }
+
+      td {
+        &.action {
+          padding: 2px;
+        }
+      }
+
+      input {
+        width: 100%;
+        border: none;
+      }
     }
   }
 

@@ -138,10 +138,10 @@ raceAreaDecoder =
 windGeneratorDecoder : Decoder WindGenerator
 windGeneratorDecoder =
   object4 WindGenerator
-    ("wavelength1" := float)
-    ("amplitude1" := float)
-    ("wavelength2" := float)
-    ("amplitude2" := float)
+    ("wavelength1" := int)
+    ("amplitude1" := int)
+    ("wavelength2" := int)
+    ("amplitude2" := int)
 
 gustGeneratorDecoder : Decoder GustGenerator
 gustGeneratorDecoder =

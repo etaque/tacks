@@ -6740,35 +6740,63 @@ aside {
       background-color: white;
       color: black; }
 
-.editor aside .form-group {
-  background-color: #737373;
-  margin-bottom: 5px; }
-  .editor aside .form-group:after {
-    clear: both;
-    display: table;
-    content: ''; }
+.editor .track-menu {
+  margin: 10px; }
 
-.editor aside label {
-  float: left;
-  line-height: 30px;
-  padding-left: 6px;
-  margin: 0;
-  text-transform: lowercase;
-  color: #f8f9fb; }
-
-.editor aside input {
-  float: right;
-  width: 75px;
-  border: 2px solid #737373;
-  border-radius: 0;
-  background-color: #f8f9fb;
-  padding: 2px 4px;
-  text-align: right;
-  height: 30px; }
-
-.editor aside .input-group-addon {
-  min-width: 130px;
-  text-align: right; }
+.editor aside {
+  display: flex;
+  padding: 0; }
+  .editor aside .aside-module {
+    flex: 1;
+    overflow-y: auto;
+    padding: 0 10px; }
+  .editor aside .form-actions {
+    margin: 0;
+    padding: 10px; }
+  .editor aside .form-group {
+    background-color: #737373;
+    margin-bottom: 5px; }
+    .editor aside .form-group:after {
+      clear: both;
+      display: table;
+      content: ''; }
+  .editor aside h3 {
+    margin-bottom: 10px; }
+  .editor aside .form-group + h3 {
+    margin-top: 10px; }
+  .editor aside label {
+    float: left;
+    line-height: 23px;
+    padding-left: 6px;
+    margin: 0;
+    text-transform: lowercase;
+    color: #f8f9fb;
+    font-size: 13px; }
+  .editor aside input {
+    float: right;
+    width: 75px;
+    border: 2px solid #737373;
+    border-radius: 0;
+    background-color: #f8f9fb;
+    padding: 2px 2px 2px 6px;
+    height: 25px;
+    font-size: 13px; }
+  .editor aside .table-gust-defs {
+    width: 100%;
+    background-color: #737373;
+    border-spacing: 2px;
+    border-collapse: separate; }
+    .editor aside .table-gust-defs a {
+      color: #bcb3bc; }
+    .editor aside .table-gust-defs th {
+      color: #f8f9fb;
+      font-size: 13px;
+      padding: 2px 4px; }
+    .editor aside .table-gust-defs td.action {
+      padding: 2px; }
+    .editor aside .table-gust-defs input {
+      width: 100%;
+      border: none; }
 
 .editor svg {
   user-select: none;

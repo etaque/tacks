@@ -57,10 +57,10 @@ pointEncoder (x, y) =
 windGeneratorEncoder : WindGenerator -> Value
 windGeneratorEncoder g =
   Js.object
-    [ "wavelength1" => Js.float g.wavelength1
-    , "amplitude1" => Js.float g.amplitude1
-    , "wavelength2" => Js.float g.wavelength2
-    , "amplitude2" => Js.float g.amplitude2
+    [ "wavelength1" => Js.int g.wavelength1
+    , "amplitude1" => Js.int g.amplitude1
+    , "wavelength2" => Js.int g.wavelength2
+    , "amplitude2" => Js.int g.amplitude2
     ]
 
 gustGeneratorEncoder : GustGenerator -> Value
