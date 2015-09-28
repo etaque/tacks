@@ -1,6 +1,5 @@
 package controllers
 
-import core.{WarmUp, CourseGenerator}
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -118,40 +117,57 @@ object Api extends Controller with Security {
     ))
   }
 
-  def track(slug: String) = PlayerAction.async() { implicit request =>
-    TrackDAO.findBySlug(slug).map {
+  def track(id: String) = PlayerAction.async() { implicit request =>
+    TrackDAO.findByIdOpt(id).map {
       case Some(track) => Ok(Json.toJson(track))
       case None => NotFound
     }
   }
 
-  def liveTrack(slug: String) = PlayerAction.async() { implicit request =>
+  def liveTrack(id: String) = PlayerAction.async() { implicit request =>
     (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]].map { liveTracks =>
-      liveTracks.find(_.track.slug == slug) match {
+      liveTracks.find(_.track.id == BSONObjectID(id)) match {
         case Some(rcs) => Ok(Json.toJson(rcs))
         case None => NotFound
       }
     }
   }
 
-  def updateTrack(slug: String) = PlayerAction.async(parse.json) { implicit request =>
-    TrackDAO.findBySlug(slug).flatMap {
-      case Some(track) => {
-        request.body.validate(courseFormat).fold(
-          errors => Future.successful(BadRequest(JsonErrors.format(errors))),
-          {
-            course => {
-              for {
-                _ <- TrackDAO.updateCourse(track.id, course)
-              } yield {
-                RacesSupervisor.actorRef ! ReloadTrack(track.copy(course = course))
-                Ok
-              }
+  def createDraftTrack() = PlayerAction.async(parse.json) { implicit request =>
+    val track = Track(
+      _id = BSONObjectID.generate,
+      name = "New track",
+      draft = true,
+      creatorId = request.player.id,
+      course = Course.spawn
+    )
+    TrackDAO.save(track).map { _ =>
+      Ok(Json.toJson(track))
+    }
+  }
+
+  case class UpdateTrack(
+    course: Course,
+    name: String
+  )
+
+  implicit val updateTrackFormat: Format[UpdateTrack] = Json.format[UpdateTrack]
+
+  def updateTrack(id: String) = PlayerAction.async(parse.json) { implicit request =>
+    TrackDAO.findById(id).flatMap { track =>
+      request.body.validate(updateTrackFormat).fold(
+        errors => Future.successful(BadRequest(JsonErrors.format(errors))),
+        {
+          case UpdateTrack(course, name) => {
+            for {
+              _ <- TrackDAO.updateFromEditor(track.id, name, course)
+            } yield {
+              RacesSupervisor.actorRef ! ReloadTrack(track.copy(course = course, name = name))
+              Ok
             }
           }
-        )
-      }
-      case None => Future.successful(NotFound)
+        }
+      )
     }
   }
 

@@ -26,12 +26,12 @@ loading =
 withTrack : Track -> Html
 withTrack track =
   titleWrapper
-    [ h1 [] [ text <| track.slug ]
+    [ h1 [] [ text <| track.id ]
     , joinButton track
     ]
 
 joinButton : Track -> Html
 joinButton track =
-  linkTo ("/play/" ++ track.slug)
+  linkTo ("/play/" ++ track.id)
     [ class "btn btn-warning join-track"]
     [ text "Join"]

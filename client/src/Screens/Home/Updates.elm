@@ -53,6 +53,19 @@ update action screen =
     SubmitHandleSuccess player ->
       request screen (AppTypes.SetPlayer player)
 
+    CreateTrack ->
+      react screen <| (ServerApi.createTrack) `andThen`
+        \result ->
+          case result of
+            Ok track ->
+              Signal.send actions.address (TrackCreated track.id)
+            Err _ ->
+              -- TODO
+              Task.succeed ()
+
+    TrackCreated id ->
+      request screen (AppTypes.SetPath ("/edit/" ++ id))
+
     _ ->
       local screen
 

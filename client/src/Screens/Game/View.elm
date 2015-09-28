@@ -50,7 +50,7 @@ leftBar h screen gameState =
 trackNav : LiveTrack -> Html
 trackNav liveTrack =
   div [ class "track-menu" ]
-    [ h2 [ ] [ text liveTrack.track.slug ]
+    [ h2 [ ] [ text liveTrack.track.name ]
     , linkTo "/" [ class "btn btn-xs btn-default" ] [ text "Exit" ]
     ]
 

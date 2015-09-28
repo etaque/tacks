@@ -15,5 +15,7 @@ type Action
   | SetHandle String
   | SubmitHandle
   | SubmitHandleSuccess Player
+  | CreateTrack
+  | TrackCreated String
   | NoOp
 

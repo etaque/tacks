@@ -29,12 +29,12 @@ getLiveStatus =
   getJson liveStatusDecoder "/api/liveStatus"
 
 getTrack : String -> GetJsonTask Track
-getTrack slug =
-  getJson trackDecoder ("/api/track/" ++ slug)
+getTrack id =
+  getJson trackDecoder ("/api/track/" ++ id)
 
 getLiveTrack : String -> GetJsonTask LiveTrack
-getLiveTrack slug =
-  getJson liveTrackDecoder ("/api/liveTrack/" ++ slug)
+getLiveTrack id =
+  getJson liveTrackDecoder ("/api/liveTrack/" ++ id)
 
 getJson : Json.Decoder a -> String -> GetJsonTask a
 getJson decoder path =
@@ -71,10 +71,16 @@ postLogout : Task Never (FormResult Player)
 postLogout =
   postJson playerDecoder "/api/logout" JsEncode.null
 
+createTrack : Task Never (FormResult Track)
+createTrack =
+  postJson trackDecoder "/api/track" (JsEncode.null)
 
-saveTrack : String -> Course -> Task Never (FormResult Bool)
-saveTrack slug course =
-  postJson Json.bool ("/api/track/" ++ slug) (courseEncoder course)
+saveTrack : String -> String -> Course -> Task Never (FormResult Track)
+saveTrack id name course =
+  let
+    body = JsEncode.object [ ("course", courseEncoder course), ("name", JsEncode.string name) ]
+  in
+    postJson trackDecoder ("/api/track/" ++ id) body
 
 -- Tooling
 

@@ -15,7 +15,6 @@ import Screens.EditTrack.Updates exposing (actions)
 import Screens.EditTrack.SideView exposing (sideView)
 
 import Screens.Utils exposing (..)
-import Screens.Messages exposing (..)
 
 import Game.Grid as Grid
 import Game.Geo exposing (floatify)
@@ -29,15 +28,15 @@ view : Screen -> Html
 view screen =
   case (screen.track, screen.editor) of
     (Just track, Just editor) ->
-      editorView track editor
+      editorView editor
     _ ->
       Html.text "loading"
 
 
-editorView : Track -> Editor -> Html
-editorView track editor =
+editorView : Editor -> Html
+editorView editor =
   Html.div [ class "content editor" ]
-    [ sideView track editor
+    [ sideView editor
     , renderCourse editor
     ]
 

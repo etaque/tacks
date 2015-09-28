@@ -13,12 +13,12 @@ import models._
 object TrackDAO extends MongoDAO[Track] {
   val collectionName = "tracks"
 
-  def findBySlug(slug: String): Future[Option[Track]] = {
-    collection.find(BSONDocument("slug" -> slug)).one[Track]
+  def updateFromEditor(id: BSONObjectID, name: String, course: Course): Future[_] = {
+    update(id, BSONDocument("name" -> name, "course" -> course))
   }
 
-  def updateCourse(id: BSONObjectID, course: Course): Future[_] = {
-    update(id, BSONDocument("course" -> course))
+  def listByCreatorId(id: BSONObjectID): Future[Seq[Track]] = {
+    list(BSONDocument("creatorId" -> id))
   }
 
   def ensureIndexes(): Unit = {
@@ -26,7 +26,7 @@ object TrackDAO extends MongoDAO[Track] {
     import reactivemongo.api.indexes.IndexType._
 
     collection.indexesManager.ensure(Index(
-      key = List("slug" -> Ascending),
+      key = List("name" -> Ascending),
       unique = true))
   }
 

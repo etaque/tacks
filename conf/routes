@@ -8,10 +8,11 @@ POST        /api/logout                                        controllers.Api.l
 POST        /api/register                                      controllers.Api.register
 GET         /api/currentPlayer                                 controllers.Api.currentPlayer
 GET         /api/liveStatus                                    controllers.Api.liveStatus
-GET         /api/track/:slug                                   controllers.Api.track(slug: String)
-GET         /api/liveTrack/:slug                               controllers.Api.liveTrack(slug: String)
+GET         /api/track/:id                                     controllers.Api.track(id: String)
+GET         /api/liveTrack/:id                                 controllers.Api.liveTrack(id: String)
 POST        /api/setHandle                                     controllers.Api.setHandle
-POST        /api/track/:slug                                   controllers.Api.updateTrack(slug: String)
+POST        /api/track                                         controllers.Api.createDraftTrack()
+POST        /api/track/:id                                     controllers.Api.updateTrack(id: String)
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)
 GET         /ws/notifications                                  controllers.WebSockets.notifications

@@ -254,7 +254,7 @@ object TrackActor {
         val newRace = Race(
           _id = BSONObjectID.generate,
           trackId = state.track.id,
-          startTime = DateTime.now.plusSeconds(state.track.countdown),
+          startTime = DateTime.now.plusSeconds(Conf.countdown),
           players = Set.empty,
           tallies = Nil
         )
@@ -264,7 +264,7 @@ object TrackActor {
   }
 
   def raceIsClosed(race: Race, track: Track): Boolean =
-    race.startTime.plusSeconds(track.countdown).isBeforeNow
+    race.startTime.plusSeconds(Conf.countdown).isBeforeNow
 
 
   def saveIfFinished(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {

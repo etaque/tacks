@@ -53,12 +53,15 @@
       color: $smokeWhite;
       font-size: 13px;
     }
-
+   
     input {
-      float: right;
-      width: 75px;
       border: 2px solid $darkRock;
       border-radius: 0;
+    }
+
+    label + input {
+      float: right;
+      width: 75px;
       background-color: $smokeWhite;
       padding: 2px 2px 2px 6px;
       height: 25px;

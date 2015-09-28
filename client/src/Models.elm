@@ -29,10 +29,10 @@ type alias LiveTrack =
 
 type alias Track =
   { id: String
-  , slug: String
+  , name: String
+  , draft : Bool
+  , creatorId: String
   , course: Course
-  , countdown: Int
-  , startCycle: Int
   }
 
 type alias Race =

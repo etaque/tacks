@@ -2181,17 +2181,17 @@ Elm.Decoders.make = function (_elm) {
    "_id",
    $Json$Decode.string),
    A2($Json$Decode._op[":="],
-   "slug",
+   "name",
+   $Json$Decode.string),
+   A2($Json$Decode._op[":="],
+   "draft",
+   $Json$Decode.bool),
+   A2($Json$Decode._op[":="],
+   "creatorId",
    $Json$Decode.string),
    A2($Json$Decode._op[":="],
    "course",
-   courseDecoder),
-   A2($Json$Decode._op[":="],
-   "countdown",
-   $Json$Decode.$int),
-   A2($Json$Decode._op[":="],
-   "startCycle",
-   $Json$Decode.$int));
+   courseDecoder));
    var playerTallyDecoder = A4($Json$Decode.object3,
    $Models.PlayerTally,
    A2($Json$Decode._op[":="],
@@ -11548,11 +11548,11 @@ Elm.Models.make = function (_elm) {
    d,
    e) {
       return {_: {}
-             ,countdown: d
-             ,course: c
+             ,course: e
+             ,creatorId: d
+             ,draft: c
              ,id: a
-             ,slug: b
-             ,startCycle: e};
+             ,name: b};
    });
    var LiveTrack = F4(function (a,
    b,
@@ -20975,6 +20975,13 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                    ,$Html$Attributes.type$("number")]),
       attrs));
    });
+   var nameInput = function (n) {
+      return $Screens$Utils.textInput(_L.fromArray([$Html$Attributes.value(n)
+                                                   ,A2($Screens$Utils.onInput,
+                                                   $Screens$EditTrack$Updates.actions.address,
+                                                   $Screens$EditTrack$Types.SetName)
+                                                   ,$Html$Attributes.type$("text")]));
+   };
    var gustDefRow = F2(function (i,
    def) {
       return A2($Html.tr,
@@ -21036,8 +21043,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
       gustDefRow,
       defs)));
    };
-   var sideView = F2(function (track,
-   _v0) {
+   var sideView = function (_v0) {
       return function () {
          return A2($Screens$Utils.sidebar,
          {ctor: "_Tuple2"
@@ -21046,15 +21052,17 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
          _L.fromArray([A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("track-menu")]),
                       _L.fromArray([A2($Html.h2,
-                                   _L.fromArray([]),
-                                   _L.fromArray([$Html.text(track.slug)]))
-                                   ,A3($Screens$Utils.linkTo,
-                                   "/",
-                                   _L.fromArray([$Html$Attributes.$class("btn btn-xs btn-default")]),
-                                   _L.fromArray([$Html.text("Exit")]))]))
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text("track editor")]))]))
                       ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("aside-module")]),
                       _L.fromArray([A2($Html.h3,
+                                   _L.fromArray([]),
+                                   _L.fromArray([$Html.text("Name")]))
+                                   ,A2($Html.div,
+                                   _L.fromArray([$Html$Attributes.$class("form-group")]),
+                                   _L.fromArray([nameInput(_v0.name)]))
+                                   ,A2($Html.h3,
                                    _L.fromArray([]),
                                    _L.fromArray([$Html.text("Gates")]))
                                    ,A2($Html.div,
@@ -21149,17 +21157,22 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                       ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("form-actions")]),
                       _L.fromArray([A2($Html.button,
-                      _L.fromArray([A2($Html$Events.onClick,
-                                   $Screens$EditTrack$Updates.actions.address,
-                                   $Screens$EditTrack$Types.Save)
-                                   ,$Html$Attributes.$class("btn btn-primary btn-block")]),
-                      _L.fromArray([$Html.text("Save")]))]))]));
+                                   _L.fromArray([A2($Html$Events.onClick,
+                                                $Screens$EditTrack$Updates.actions.address,
+                                                $Screens$EditTrack$Types.Save)
+                                                ,$Html$Attributes.$class("btn btn-primary btn-block")]),
+                                   _L.fromArray([$Html.text("Save")]))
+                                   ,A3($Screens$Utils.linkTo,
+                                   "/",
+                                   _L.fromArray([$Html$Attributes.$class("btn btn-block btn-default")]),
+                                   _L.fromArray([$Html.text("Exit")]))]))]));
       }();
-   });
+   };
    _elm.Screens.EditTrack.SideView.values = {_op: _op
                                             ,sideView: sideView
                                             ,gustDefsTable: gustDefsTable
                                             ,gustDefRow: gustDefRow
+                                            ,nameInput: nameInput
                                             ,intInput: intInput};
    return _elm.Screens.EditTrack.SideView.values;
 };
@@ -21246,6 +21259,10 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    };
    var NoOp = {ctor: "NoOp"};
    var Save = {ctor: "Save"};
+   var SetName = function (a) {
+      return {ctor: "SetName"
+             ,_0: a};
+   };
    var FormAction = function (a) {
       return {ctor: "FormAction"
              ,_0: a};
@@ -21267,15 +21284,17 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
       return {ctor: "CreateTile"
              ,_0: a};
    };
-   var Editor = F4(function (a,
+   var Editor = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
              ,center: b
              ,course: a
              ,courseDims: c
-             ,mode: d};
+             ,mode: d
+             ,name: e};
    });
    var Screen = F4(function (a,
    b,
@@ -21299,6 +21318,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                          ,NextTileKind: NextTileKind
                                          ,EscapeMode: EscapeMode
                                          ,FormAction: FormAction
+                                         ,SetName: SetName
                                          ,Save: Save
                                          ,NoOp: NoOp
                                          ,SetDownwindY: SetDownwindY
@@ -21384,7 +21404,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          ,_1: bottom});
       }();
    };
-   var save = F2(function (slug,
+   var save = F2(function (id,
    _v0) {
       return function () {
          return function () {
@@ -21393,8 +21413,9 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                        ,area]],
             _v0.course);
             return A2($Task.andThen,
-            A2($ServerApi.saveTrack,
-            slug,
+            A3($ServerApi.saveTrack,
+            id,
+            _v0.name,
             withArea),
             function (result) {
                return $Task.succeed({ctor: "_Tuple0"});
@@ -21425,7 +21446,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                    ,_0: _v4._0 - $Constants.sidebarWidth
                    ,_1: _v4._1};}
          _U.badCase($moduleName,
-         "on line 131, column 4 to 23");
+         "on line 137, column 4 to 23");
       }();
    };
    var updateDims = F2(function (dims,
@@ -21487,24 +21508,30 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
               })(screen));
             case "Save":
             return function () {
-                 var _v12 = {ctor: "_Tuple2"
+                 var _v13 = {ctor: "_Tuple2"
                             ,_0: screen.track
                             ,_1: screen.editor};
-                 switch (_v12.ctor)
+                 switch (_v13.ctor)
                  {case "_Tuple2":
-                    switch (_v12._0.ctor)
+                    switch (_v13._0.ctor)
                       {case "Just":
-                         switch (_v12._1.ctor)
+                         switch (_v13._1.ctor)
                            {case "Just":
                               return A2($AppTypes.react,
                                 screen,
                                 A2(save,
-                                _v12._0._0.slug,
-                                _v12._1._0));}
+                                _v13._0._0.id,
+                                _v13._1._0));}
                            break;}
                       break;}
                  return $AppTypes.local(screen);
               }();
+            case "SetName":
+            return $AppTypes.local(updateEditor(function (e) {
+                 return _U.replace([["name"
+                                    ,action._0]],
+                 e);
+              })(screen));
             case "SetTrack":
             return function () {
                  var editor = {_: {}
@@ -21513,7 +21540,8 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                        ,_1: 0}
                               ,course: action._0.course
                               ,courseDims: getCourseDims(screen.dims)
-                              ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)};
+                              ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)
+                              ,name: action._0.name};
                  return $AppTypes.local(_U.replace([["track"
                                                     ,$Maybe.Just(action._0)]
                                                    ,["editor"
@@ -21541,9 +21569,9 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                                $Screens$EditTrack$Types.MouseAction,
                                                $DragAndDrop.mouseEvents)]));
    var actions = $Signal.mailbox($Screens$EditTrack$Types.NoOp);
-   var loadTrack = function (slug) {
+   var loadTrack = function (id) {
       return A2($Task.andThen,
-      $ServerApi.getTrack(slug),
+      $ServerApi.getTrack(id),
       function (result) {
          return function () {
             switch (result.ctor)
@@ -21554,12 +21582,12 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  actions.address,
                  $Screens$EditTrack$Types.SetTrack(result._0));}
             _U.badCase($moduleName,
-            "between lines 115 and 119");
+            "between lines 121 and 125");
          }();
       });
    };
    var mount = F2(function (dims,
-   slug) {
+   id) {
       return function () {
          var initial = {_: {}
                        ,dims: dims
@@ -21568,7 +21596,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                        ,track: $Maybe.Nothing};
          return A2($AppTypes.react,
          initial,
-         loadTrack(slug));
+         loadTrack(id));
       }();
    });
    _elm.Screens.EditTrack.Updates.values = {_op: _op
@@ -21611,7 +21639,6 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$EditTrack$SideView = Elm.Screens.EditTrack.SideView.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
@@ -21628,7 +21655,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 70 and 77");
+            "between lines 69 and 76");
          }();
          return A2($Svg.circle,
          _L.fromArray([$Svg$Attributes.r("20")
@@ -21671,15 +21698,12 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
          }();
       }();
    };
-   var editorView = F2(function (track,
-   editor) {
+   var editorView = function (editor) {
       return A2($Html.div,
       _L.fromArray([$Svg$Attributes.$class("content editor")]),
-      _L.fromArray([A2($Screens$EditTrack$SideView.sideView,
-                   track,
-                   editor)
+      _L.fromArray([$Screens$EditTrack$SideView.sideView(editor)
                    ,renderCourse(editor)]));
-   });
+   };
    var view = function (screen) {
       return function () {
          var _v4 = {ctor: "_Tuple2"
@@ -21691,9 +21715,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
               {case "Just":
                  switch (_v4._1.ctor)
                    {case "Just":
-                      return A2(editorView,
-                        _v4._0._0,
-                        _v4._1._0);}
+                      return editorView(_v4._1._0);}
                    break;}
               break;}
          return $Html.text("loading");
@@ -22424,7 +22446,7 @@ Elm.Screens.Game.View.make = function (_elm) {
       _L.fromArray([$Html$Attributes.$class("track-menu")]),
       _L.fromArray([A2($Html.h2,
                    _L.fromArray([]),
-                   _L.fromArray([$Html.text(liveTrack.track.slug)]))
+                   _L.fromArray([$Html.text(liveTrack.track.name)]))
                    ,A3($Screens$Utils.linkTo,
                    "/",
                    _L.fromArray([$Html$Attributes.$class("btn btn-xs btn-default")]),
@@ -22522,6 +22544,11 @@ Elm.Screens.Home.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var NoOp = {ctor: "NoOp"};
+   var TrackCreated = function (a) {
+      return {ctor: "TrackCreated"
+             ,_0: a};
+   };
+   var CreateTrack = {ctor: "CreateTrack"};
    var SubmitHandleSuccess = function (a) {
       return {ctor: "SubmitHandleSuccess"
              ,_0: a};
@@ -22548,6 +22575,8 @@ Elm.Screens.Home.Types.make = function (_elm) {
                                     ,SetHandle: SetHandle
                                     ,SubmitHandle: SubmitHandle
                                     ,SubmitHandleSuccess: SubmitHandleSuccess
+                                    ,CreateTrack: CreateTrack
+                                    ,TrackCreated: TrackCreated
                                     ,NoOp: NoOp};
    return _elm.Screens.Home.Types.values;
 };
@@ -22591,7 +22620,7 @@ Elm.Screens.Home.Updates.make = function (_elm) {
               actions.address,
               $Screens$Home$Types.SetLiveStatus(result._0));}
          _U.badCase($moduleName,
-         "between lines 63 and 67");
+         "between lines 76 and 80");
       }();
    });
    var mount = function (player) {
@@ -22612,7 +22641,23 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    screen) {
       return function () {
          switch (action.ctor)
-         {case "SetHandle":
+         {case "CreateTrack":
+            return $AppTypes.react(screen)(A2($Task.andThen,
+              $ServerApi.createTrack,
+              function (result) {
+                 return function () {
+                    switch (result.ctor)
+                    {case "Err":
+                       return $Task.succeed({ctor: "_Tuple0"});
+                       case "Ok":
+                       return A2($Signal.send,
+                         actions.address,
+                         $Screens$Home$Types.TrackCreated(result._0.id));}
+                    _U.badCase($moduleName,
+                    "between lines 59 and 66");
+                 }();
+              }));
+            case "SetHandle":
             return $AppTypes.local(_U.replace([["handle"
                                                ,action._0]],
               screen));
@@ -22643,7 +22688,13 @@ Elm.Screens.Home.Updates.make = function (_elm) {
             case "SubmitHandleSuccess":
             return A2($AppTypes.request,
               screen,
-              $AppTypes.SetPlayer(action._0));}
+              $AppTypes.SetPlayer(action._0));
+            case "TrackCreated":
+            return A2($AppTypes.request,
+              screen,
+              $AppTypes.SetPath(A2($Basics._op["++"],
+              "/edit/",
+              action._0)));}
          return $AppTypes.local(screen);
       }();
    });
@@ -22679,7 +22730,6 @@ Elm.Screens.Home.View.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
    $Screens$Home$Updates = Elm.Screens.Home.Updates.make(_elm),
-   $Screens$Messages = Elm.Screens.Messages.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var playerItem = function (player) {
@@ -22703,7 +22753,7 @@ Elm.Screens.Home.View.make = function (_elm) {
          _L.fromArray([A3($Screens$Utils.linkTo,
          A2($Basics._op["++"],
          "/play/",
-         _v0.track.slug),
+         _v0.track.id),
          _L.fromArray([$Html$Attributes.$class("show")]),
          _L.fromArray([A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class(A2($Basics._op["++"],
@@ -22712,7 +22762,7 @@ Elm.Screens.Home.View.make = function (_elm) {
                       _L.fromArray([$Html.text($Basics.toString($List.length(_v0.players)))]))
                       ,A2($Html.span,
                       _L.fromArray([$Html$Attributes.$class("name")]),
-                      _L.fromArray([$Html.text($Screens$Messages.trackName(_v0.track.slug))]))
+                      _L.fromArray([$Html.text(_v0.track.name)]))
                       ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("description")]),
                       _L.fromArray([$Html.text("TODO description")]))
@@ -22726,13 +22776,23 @@ Elm.Screens.Home.View.make = function (_elm) {
          _L.fromArray([A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("row")]),
                       _L.fromArray([A2($Html.p,
-                      _L.fromArray([$Html$Attributes.$class("align-center upclassic")]),
+                      _L.fromArray([$Html$Attributes.$class("align-center")]),
                       _L.fromArray([$Html.text("Choose your track")]))]))
                       ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("row")]),
                       A2($List.map,
                       liveTrackBlock,
-                      _v2.liveTracks))]));
+                      _v2.liveTracks))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("row")]),
+                      _L.fromArray([A2($Html.p,
+                      _L.fromArray([$Html$Attributes.$class("align-center")]),
+                      _L.fromArray([A2($Html.a,
+                      _L.fromArray([A2($Html$Events.onClick,
+                                   $Screens$Home$Updates.actions.address,
+                                   $Screens$Home$Types.CreateTrack)
+                                   ,$Html$Attributes.$class("btn btn-default")]),
+                      _L.fromArray([$Html.text("Create track")]))]))]))]));
       }();
    };
    var setHandleBlock = function (handle) {
@@ -23034,53 +23094,6 @@ Elm.Screens.Login.View.make = function (_elm) {
                                     ,loginForm: loginForm
                                     ,errorLine: errorLine};
    return _elm.Screens.Login.View.values;
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Messages = Elm.Screens.Messages || {};
-Elm.Screens.Messages.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Messages = _elm.Screens.Messages || {};
-   if (_elm.Screens.Messages.values)
-   return _elm.Screens.Messages.values;
-   var _op = {},
-   _N = Elm.Native,
-   _U = _N.Utils.make(_elm),
-   _L = _N.List.make(_elm),
-   $moduleName = "Screens.Messages",
-   $Basics = Elm.Basics.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var trackDesc = function (slug) {
-      return function () {
-         switch (slug)
-         {case "classic":
-            return "back to basics: some islands and gusts on a two laps course";
-            case "inlands":
-            return "a narrow course with many gusts & lulls, your favorite inland spot";
-            case "warmup":
-            return "get your hands warm with the three laps of this short course";}
-         return "?";
-      }();
-   };
-   var trackName = function (slug) {
-      return function () {
-         switch (slug)
-         {case "classic":
-            return "Classic";
-            case "inlands":
-            return "Inlands";
-            case "warmup":
-            return "Short Track";}
-         return "?";
-      }();
-   };
-   _elm.Screens.Messages.values = {_op: _op
-                                  ,trackName: trackName
-                                  ,trackDesc: trackDesc};
-   return _elm.Screens.Messages.values;
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Nav = Elm.Screens.Nav || {};
@@ -23740,14 +23753,14 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       return A3($Screens$Utils.linkTo,
       A2($Basics._op["++"],
       "/play/",
-      track.slug),
+      track.id),
       _L.fromArray([$Html$Attributes.$class("btn btn-warning join-track")]),
       _L.fromArray([$Html.text("Join")]));
    };
    var withTrack = function (track) {
       return $Screens$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
                                                       _L.fromArray([]),
-                                                      _L.fromArray([$Html.text(track.slug)]))
+                                                      _L.fromArray([$Html.text(track.id)]))
                                                       ,joinButton(track)]));
    };
    var loading = $Screens$Utils.titleWrapper(_L.fromArray([A2($Html.h1,
@@ -24214,7 +24227,7 @@ Elm.ServerApi.make = function (_elm) {
                                       case "Ok":
                                       return $Result.Err(_v5._0);}
                                    _U.badCase($moduleName,
-                                   "between lines 112 and 117");
+                                   "between lines 118 and 123");
                                 }();}
                            break;}
                       break;}
@@ -24234,7 +24247,7 @@ Elm.ServerApi.make = function (_elm) {
                  return $Result.Err(serverError);
               }();}
          _U.badCase($moduleName,
-         "between lines 108 and 126");
+         "between lines 114 and 132");
       }();
    });
    var handleResult = F2(function (decoder,
@@ -24248,7 +24261,7 @@ Elm.ServerApi.make = function (_elm) {
               decoder,
               result._0);}
          _U.badCase($moduleName,
-         "between lines 99 and 103");
+         "between lines 105 and 109");
       }();
    });
    var jsonRequest = F2(function (url,
@@ -24270,15 +24283,28 @@ Elm.ServerApi.make = function (_elm) {
       $Http.defaultSettings,
       A2(jsonRequest,url,jsonBody))));
    });
-   var saveTrack = F2(function (slug,
+   var saveTrack = F3(function (id,
+   name,
    course) {
-      return A3(postJson,
-      $Json$Decode.bool,
-      A2($Basics._op["++"],
-      "/api/track/",
-      slug),
-      $Encoders.courseEncoder(course));
+      return function () {
+         var body = $Json$Encode.object(_L.fromArray([{ctor: "_Tuple2"
+                                                      ,_0: "course"
+                                                      ,_1: $Encoders.courseEncoder(course)}
+                                                     ,{ctor: "_Tuple2"
+                                                      ,_0: "name"
+                                                      ,_1: $Json$Encode.string(name)}]));
+         return A3(postJson,
+         $Decoders.trackDecoder,
+         A2($Basics._op["++"],
+         "/api/track/",
+         id),
+         body);
+      }();
    });
+   var createTrack = A3(postJson,
+   $Decoders.trackDecoder,
+   "/api/track",
+   $Json$Encode.$null);
    var postLogout = A3(postJson,
    $Decoders.playerDecoder,
    "/api/logout",
@@ -24326,19 +24352,19 @@ Elm.ServerApi.make = function (_elm) {
       decoder,
       path)));
    });
-   var getLiveTrack = function (slug) {
+   var getLiveTrack = function (id) {
       return A2(getJson,
       $Decoders.liveTrackDecoder,
       A2($Basics._op["++"],
       "/api/liveTrack/",
-      slug));
+      id));
    };
-   var getTrack = function (slug) {
+   var getTrack = function (id) {
       return A2(getJson,
       $Decoders.trackDecoder,
       A2($Basics._op["++"],
       "/api/track/",
-      slug));
+      id));
    };
    var getLiveStatus = A2(getJson,
    $Decoders.liveStatusDecoder,
@@ -24360,6 +24386,7 @@ Elm.ServerApi.make = function (_elm) {
                            ,postRegister: postRegister
                            ,postLogin: postLogin
                            ,postLogout: postLogout
+                           ,createTrack: createTrack
                            ,saveTrack: saveTrack
                            ,postJson: postJson
                            ,jsonRequest: jsonRequest

@@ -11,17 +11,22 @@ import Screens.Utils exposing (..)
 import Screens.EditTrack.Updates exposing (actions)
 import Screens.EditTrack.Types exposing (..)
 
-sideView : Track -> Editor -> Html
-sideView track ({courseDims, course} as editor) =
+
+sideView : Editor -> Html
+sideView ({courseDims, course, name} as editor) =
   sidebar (sidebarWidth, snd courseDims)
     [ div
         [ class "track-menu" ]
-        [ h2 [] [ text track.slug ]
-        , linkTo "/" [ class "btn btn-xs btn-default" ] [ text "Exit" ]
-        ]
+        [ h2 [] [ text "track editor" ] ]
+
     , div [ class "aside-module" ]
 
-      [ h3 [] [ text "Gates" ]
+      [ h3 [] [ text "Name" ]
+
+      , div [ class "form-group"]
+        [ nameInput name ]
+
+      , h3 [] [ text "Gates" ]
 
       , div [ class "form-group"]
         [ label [ class "" ] [ text "Downwind" ]
@@ -75,9 +80,11 @@ sideView track ({courseDims, course} as editor) =
           , class "btn btn-primary btn-block"
           ]
           [ text "Save" ]
+        , linkTo "/" [ class "btn btn-block btn-default" ] [ text "Exit" ]
         ]
     ]
-  
+
+
 gustDefsTable : List GustDef -> Html
 gustDefsTable defs =
   table
@@ -93,6 +100,7 @@ gustDefsTable defs =
         ]
     ] ++ List.indexedMap gustDefRow defs)
 
+
 gustDefRow : Int -> GustDef -> Html
 gustDefRow i def =
   tr []
@@ -105,11 +113,21 @@ gustDefRow i def =
         ]
     ]
 
+
+nameInput : String -> Html
+nameInput n =
+  textInput
+    [ value n
+    , onInput actions.address SetName 
+    , type' "text"
+    ]
+
+
 intInput : number -> (Int -> FormUpdate) -> List Attribute -> Html
 intInput val formUpdate attrs =
   textInput
-  ([ value (toString val)
-  , onIntInput actions.address (formUpdate >> FormAction)
-  , type' "number"
-  ] ++ attrs)
+   ([ value (toString val)
+    , onIntInput actions.address (formUpdate >> FormAction)
+    , type' "number"
+    ] ++ attrs)
 

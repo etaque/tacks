@@ -17,6 +17,7 @@ type alias Editor =
   , center : Point
   , courseDims : Dims
   , mode : Mode
+  , name : String
   }
 
 type Mode
@@ -31,6 +32,7 @@ type Action
   | NextTileKind
   | EscapeMode
   | FormAction FormUpdate
+  | SetName String
   | Save
   | NoOp
 

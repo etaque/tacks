@@ -12,12 +12,7 @@ object Conf {
 
   val fps = 30
   val frameMillis = 1000 / fps
-
-  val maxCourses = 6
-
-  val earliestTimeTrial = new LocalDate(2014,12,1)
-
-  val serverRacesCountdownSeconds = 10 * 60
+  val countdown = 30
 
   val prismicApi = getString("prismic.api")
 

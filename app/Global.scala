@@ -1,5 +1,4 @@
 import actors.RacesSupervisor
-import core.{WarmUp, Classic, CourseGenerator}
 import models._
 import dao._
 import org.joda.time.DateTime
@@ -17,20 +16,5 @@ object Global extends GlobalSettings {
     TrackDAO.ensureIndexes()
 
     RacesSupervisor.start()
-
-    ensureTracks()
   }
-
-  def ensureTracks() = {
-    CourseGenerator.all.foreach { gen =>
-      TrackDAO.findBySlug(gen.slug).map {
-        case Some(_) => // do nothing
-        case None => {
-          val rc = Track(BSONObjectID.generate, gen.slug, gen.generateCourse(), 30, 60)
-          TrackDAO.save(rc)
-        }
-      }
-    }
-  }
-
 }

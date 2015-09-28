@@ -6773,10 +6773,11 @@ aside {
     color: #f8f9fb;
     font-size: 13px; }
   .editor aside input {
+    border: 2px solid #737373;
+    border-radius: 0; }
+  .editor aside label + input {
     float: right;
     width: 75px;
-    border: 2px solid #737373;
-    border-radius: 0;
     background-color: #f8f9fb;
     padding: 2px 2px 2px 6px;
     height: 25px;

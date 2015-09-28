@@ -47,10 +47,10 @@ trackDecoder : Decoder Track
 trackDecoder =
   object5 Track
     ("_id" := string)
-    ("slug" := string)
+    ("name" := string)
+    ("draft" := bool)
+    ("creatorId" := string)
     ("course" := courseDecoder)
-    ("countdown" := int)
-    ("startCycle" := int)
 
 playerDecoder : Decoder Player
 playerDecoder =

@@ -36,7 +36,7 @@ type alias Update = AppTypes.ScreenUpdate Screen
 
 
 mount : Dims -> String -> Update
-mount dims slug =
+mount dims id =
   let
     initial =
       { track = Nothing
@@ -45,7 +45,7 @@ mount dims slug =
       , dims = dims
       }
   in
-    react initial (loadTrack slug)
+    react initial (loadTrack id)
 
 
 update : Action -> Screen -> Update
@@ -59,12 +59,18 @@ update action screen =
           , center = (0, 0)
           , courseDims = getCourseDims screen.dims
           , mode = CreateTile Water
+          , name = track.name
           }
       in
         local { screen | track <- Just track, editor <- Just editor }
 
     TrackNotFound ->
       local { screen | notFound <- True }
+
+    SetName n ->
+      screen
+        |> updateEditor (\e -> { e | name <- n })
+        |> local
 
     MouseAction event ->
       screen
@@ -89,7 +95,7 @@ update action screen =
     Save ->
       case (screen.track, screen.editor) of
         (Just track, Just editor) ->
-          react screen (save track.slug editor)
+          react screen (save track.id editor)
         _ ->
           local screen
 
@@ -109,8 +115,8 @@ updateCourse update editor =
   { editor | course <- update editor.course }
 
 loadTrack : String -> Task Never ()
-loadTrack slug =
-  ServerApi.getTrack slug `andThen`
+loadTrack id =
+  ServerApi.getTrack id `andThen`
     \result ->
       case result of
         Ok track ->
@@ -144,12 +150,12 @@ getNextMode mode =
       CreateTile Water
 
 save : String -> Editor -> Task Never ()
-save slug ({course} as editor) =
+save id ({course, name} as editor) =
   let
     area = getRaceArea course.grid
     withArea = { course | area <- area }
   in
-    ServerApi.saveTrack slug withArea `andThen`
+    ServerApi.saveTrack id name withArea `andThen`
       \result -> Task.succeed ()
 
 getRaceArea : Grid -> RaceArea

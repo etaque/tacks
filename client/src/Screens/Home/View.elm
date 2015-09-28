@@ -10,9 +10,7 @@ import Constants exposing (..)
 
 import Screens.Home.Types exposing (..)
 import Screens.Home.Updates exposing (actions)
-
 import Screens.Utils exposing (..)
-import Screens.Messages exposing (..)
 
 
 view : Player -> Screen -> Html
@@ -64,22 +62,28 @@ setHandleBlock handle =
 liveTracks : LiveStatus -> Html
 liveTracks {liveTracks} =
   div [ class "container" ]
-    [ div [ class "row" ] [ p [ class "align-center upclassic" ] [ text "Choose your track" ] ]
+    [ div [ class "row" ] [ p [ class "align-center" ] [ text "Choose your track" ] ]
     , div [ class "row" ] (List.map liveTrackBlock liveTracks)
+    , div [ class "row" ]
+        [ p [ class "align-center"]
+            [ a [ onClick actions.address CreateTrack
+                , class "btn btn-default" ]
+                [ text "Create track" ]
+            ]
+        ]
     ]
 
 liveTrackBlock : LiveTrack -> Html
 liveTrackBlock ({track, players} as lt) =
   div [ class "col-md-4" ]
     [ div [ class "live-track" ]
-      [ linkTo ("/play/" ++ track.slug)
+      [ linkTo ("/play/" ++ track.id)
         [ class "show"
-        -- , style [ ("background-image", "url(/assets/images/trials-" ++ track.slug ++ ".png)") ]
         ]
         [ div
           [ class <| "player-count player-count-" ++ (toString (List.length players)) ]
           [ text << toString <| List.length players ]
-        , span [ class "name" ] [ text <| trackName track.slug ]
+        , span [ class "name" ] [ text track.name ]
         , div [ class "description"] [ text "TODO description" ]
         , playersList players
         ]

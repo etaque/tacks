@@ -30,14 +30,12 @@ case class Course(
 
 object Course {
   def spawn = {
-    val width = 1400 + nextInt(400)
-    val height = 2000 + nextInt(2000)
-    val area = RaceArea((width/2, height + 200), (-width/2,-300))
     Course(
-      upwind = Gate(height, 200),
+      upwind = Gate(800, 200),
       downwind = Gate(0, 200),
       laps = 2,
-      area = area,
+      grid = Nil,
+      area = RaceArea((0, 0), (0, 0)),
       windGenerator = WindGenerator.spawn(),
       gustGenerator = GustGenerator.spawn
     )
