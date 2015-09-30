@@ -9,3 +9,6 @@ colors =
   , rock = "rgb(160, 146, 159)"
   , green = "rgb(100, 180, 106)"
   }
+
+admins = [ "milox" ]
+

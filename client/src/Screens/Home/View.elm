@@ -18,7 +18,7 @@ view player screen =
   div
     [ class "home" ]
     [ welcome player screen.handle
-    , liveTracks screen.liveStatus
+    , liveTracks player screen.liveStatus
     ]
 
 welcome : Player -> String -> Html
@@ -59,18 +59,11 @@ setHandleBlock handle =
     ]
 
 
-liveTracks : LiveStatus -> Html
-liveTracks {liveTracks} =
+liveTracks : Player -> LiveStatus -> Html
+liveTracks player {liveTracks} =
   div [ class "container" ]
-    [ div [ class "row" ] [ p [ class "align-center" ] [ text "Choose your track" ] ]
-    , div [ class "row" ] (List.map liveTrackBlock liveTracks)
-    , div [ class "row" ]
-        [ p [ class "align-center"]
-            [ a [ onClick actions.address CreateTrack
-                , class "btn btn-default" ]
-                [ text "Create track" ]
-            ]
-        ]
+    [ div [ class "row" ] (List.map liveTrackBlock liveTracks)
+    , if isAdmin player then createTrackBlock else div [] []
     ]
 
 liveTrackBlock : LiveTrack -> Html
@@ -97,4 +90,14 @@ playersList players =
 playerItem : Player -> Html
 playerItem player =
   li [ class "player" ] [ playerWithAvatar player ]
+
+createTrackBlock : Html
+createTrackBlock =
+  div [ class "row" ]
+    [ p [ class "align-center"]
+      [ a [ onClick actions.address CreateTrack
+          , class "btn btn-primary" ]
+        [ text "Create track" ]
+      ]
+    ]
 

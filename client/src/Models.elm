@@ -19,6 +19,11 @@ type alias Player =
   , user: Bool
   }
 
+isAdmin : Player -> Bool
+isAdmin player =
+  case player.handle of
+    Just h -> List.member h admins
+    Nothing -> False
 
 type alias LiveStatus =
   { liveTracks : List LiveTrack
