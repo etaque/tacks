@@ -34,3 +34,7 @@ updateAt i update items =
       Nothing ->
         items
 
+within : (number, number) -> number -> Bool
+within (a, b) c =
+  c >= a && c <= b
+
