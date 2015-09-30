@@ -3,7 +3,7 @@ module Screens.EditTrack.FormUpdates where
 import Models exposing (..)
 import Screens.EditTrack.Types exposing (..)
 
-import Array
+import CoreExtra exposing (..)
 
 
 update : FormUpdate -> Course -> Course
@@ -93,21 +93,4 @@ updateWindGen update course =
   { course | windGenerator <- update course.windGenerator }
 
 
-removeAt : Int -> List a -> List a
-removeAt i items =
-  (List.take i items) ++ (List.drop (i + 1) items)
-
-
-updateAt : Int -> (a -> a) -> List a -> List a
-updateAt i update items =
-  let
-    asArray = Array.fromList items
-  in
-    case Array.get i asArray of
-      Just item ->
-        asArray
-          |> Array.set i (update item)
-          |> Array.toList
-      Nothing ->
-        items
 
