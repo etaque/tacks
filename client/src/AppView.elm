@@ -38,7 +38,7 @@ view appState =
         ShowTrack.view screen
 
       EditTrackScreen screen ->
-        EditTrack.view screen
+        EditTrack.view appState.player screen
 
       ShowProfileScreen screen ->
         ShowProfile.view screen

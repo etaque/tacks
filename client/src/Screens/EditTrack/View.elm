@@ -24,11 +24,14 @@ import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor
 import Game.Render.Gates exposing (renderOpenGate)
 import Game.Render.Players exposing (renderPlayerHull)
 
-view : Screen -> Html
-view screen =
+view : Player -> Screen -> Html
+view player screen =
   case (screen.track, screen.editor) of
     (Just track, Just editor) ->
-      editorView editor
+      if player.id == track.creatorId || isAdmin player then
+        editorView editor
+      else
+        Html.text "Access forbidden."
     _ ->
       Html.text "loading"
 

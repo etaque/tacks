@@ -134,15 +134,19 @@ object Api extends Controller with Security {
   }
 
   def createDraftTrack() = PlayerAction.async(parse.json) { implicit request =>
-    val track = Track(
-      _id = BSONObjectID.generate,
-      name = "New track",
-      draft = true,
-      creatorId = request.player.id,
-      course = Course.spawn
-    )
-    TrackDAO.save(track).map { _ =>
-      Ok(Json.toJson(track))
+    if (request.player.isAdmin) {
+      val track = Track(
+        _id = BSONObjectID.generate,
+        name = "New track",
+        draft = true,
+        creatorId = request.player.id,
+        course = Course.spawn
+      )
+      TrackDAO.save(track).map { _ =>
+        Ok(Json.toJson(track))
+      }
+    } else {
+      Future.successful(Forbidden)
     }
   }
 
@@ -154,21 +158,25 @@ object Api extends Controller with Security {
   implicit val updateTrackFormat: Format[UpdateTrack] = Json.format[UpdateTrack]
 
   def updateTrack(id: String) = PlayerAction.async(parse.json) { implicit request =>
-    TrackDAO.findById(id).flatMap { track =>
-      request.body.validate(updateTrackFormat).fold(
-        errors => Future.successful(BadRequest(JsonErrors.format(errors))),
-        {
-          case UpdateTrack(course, name) => {
-            for {
-              _ <- TrackDAO.updateFromEditor(track.id, name, course)
-            } yield {
-              val newTrack = track.copy(course = course, name = name)
-              RacesSupervisor.actorRef ! ReloadTrack(newTrack)
-              Ok(Json.toJson(newTrack))
+    if (request.player.isAdmin) {
+      TrackDAO.findById(id).flatMap { track =>
+        request.body.validate(updateTrackFormat).fold(
+          errors => Future.successful(BadRequest(JsonErrors.format(errors))),
+          {
+            case UpdateTrack(course, name) => {
+              for {
+                _ <- TrackDAO.updateFromEditor(track.id, name, course)
+              } yield {
+                val newTrack = track.copy(course = course, name = name)
+                RacesSupervisor.actorRef ! ReloadTrack(newTrack)
+                Ok(Json.toJson(newTrack))
+              }
             }
           }
-        }
-      )
+        )
+      }
+    } else {
+      Future.successful(Forbidden)
     }
   }
 

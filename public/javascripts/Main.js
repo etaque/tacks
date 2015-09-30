@@ -478,7 +478,9 @@ Elm.AppView.make = function (_elm) {
             var _v3 = appState.screen;
             switch (_v3.ctor)
             {case "EditTrackScreen":
-               return $Screens$EditTrack$View.view(_v3._0);
+               return A2($Screens$EditTrack$View.view,
+                 appState.player,
+                 _v3._0);
                case "GameScreen":
                return A2($Screens$Game$View.view,
                  appState.dims,
@@ -21756,6 +21758,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$EditTrack$SideView = Elm.Screens.EditTrack.SideView.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
@@ -21772,7 +21775,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 69 and 76");
+            "between lines 72 and 79");
          }();
          return A2($Svg.circle,
          _L.fromArray([$Svg$Attributes.r("20")
@@ -21821,7 +21824,8 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
       _L.fromArray([$Screens$EditTrack$SideView.sideView(editor)
                    ,renderCourse(editor)]));
    };
-   var view = function (screen) {
+   var view = F2(function (player,
+   screen) {
       return function () {
          var _v4 = {ctor: "_Tuple2"
                    ,_0: screen.track
@@ -21832,12 +21836,13 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
               {case "Just":
                  switch (_v4._1.ctor)
                    {case "Just":
-                      return editorView(_v4._1._0);}
+                      return _U.eq(player.id,
+                        _v4._0._0.creatorId) || $Models.isAdmin(player) ? editorView(_v4._1._0) : $Html.text("Access forbidden.");}
                    break;}
               break;}
          return $Html.text("loading");
       }();
-   };
+   });
    _elm.Screens.EditTrack.View.values = {_op: _op
                                         ,view: view
                                         ,editorView: editorView
