@@ -4,11 +4,41 @@
 @import JsonFormats.playerFormat
 @import play.api.libs.json.Json
 
-@fullscreen() {
-  <script id="messages" type="custom-data">
-    @Html(play.api.libs.json.Json.toJson(jsmessages.api.JsMessages.default.messages).toString())
-  </script>
-  <script id="appSetup" type="custom-data">
-    @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path)).toString())
-  </script>
-}
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Tacks</title>
+    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
+
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-192x192.png")" sizes="192x192">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-160x160.png")" sizes="160x160">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-96x96.png")" sizes="96x96">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-16x16.png")" sizes="16x16">
+    <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-32x32.png")" sizes="32x32">
+  </head>
+  <body class="elm-game">
+    <script id="appSetup" type="custom-data">
+     @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path)).toString())
+    </script>
+
+    @ga()
+
+    @helper.javascriptRouter("jsRoutes")(
+      routes.javascript.WebSockets.notifications,
+      routes.javascript.WebSockets.trackPlayer
+    )
+
+    <script src="@routes.Assets.at("javascripts/Main.js")" type="text/javascript"></script>
+    <script type="text/javascript">
+     window.Elm = Elm
+    </script>
+
+    @if(play.api.Play.isProd) {
+      <script src="@routes.Assets.at("javascripts/dist/setup.js")" type="text/javascript"></script>
+    } else {
+      <script src="@routes.Assets.at("javascripts/setup.js")" type="text/javascript"></script>
+    }
+  </body>
+</html>

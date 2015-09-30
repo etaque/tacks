@@ -3,7 +3,6 @@ module Main where
 import Time exposing (timestamp, fps, every, second)
 import Task exposing (Task, andThen)
 import Html exposing (Html)
-import Http
 import Window
 import History
 import Json.Decode as Json

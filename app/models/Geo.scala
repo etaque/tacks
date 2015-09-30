@@ -9,29 +9,7 @@ object Geo {
   type Segment = (Point,Point)
   type Box = (Point,Point) // ((right,top),(left,bottom))
 
-  def distanceBetween(p1: Point, p2: Point): Double = {
-    val (x1,y1) = p1
-    val (x2,y2) = p2
-    sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2))
-  }
-
-  def angleBetween(p1: Point, p2: Point): Double = {
-    val xDelta = p2._1 - p1._1
-    val yDelta = p2._2 - p1._2
-
-    val rad = atan2(yDelta, xDelta)
-
-    ensure360(radiansToAngle(-rad))
-  }
-
-  def inBox(p: Point, b: Box): Boolean = {
-    val (x,y) = p
-    val ((right, top), (left, bottom)) = b
-    x > left && x < right && y > bottom && y < top
-  }
-
   /**
-   * Move on!
    * @param p initial position
    * @param milliseconds time elapsed in ms
    * @param velocity in m/s
@@ -50,28 +28,6 @@ object Geo {
   def radiansToAngle(rad: Double): Double = toDegrees(rad) + 90
 
   def ensure360(d: Double): Double = (d + 360) % 360
-
-  def angleDelta(a1: Double, a2: Double): Double = {
-    val delta = a1 - a2
-    if (delta > 180) delta - 360
-    else if (delta <= -180) delta + 360
-    else delta
-  }
-
-
-  /**
-   * Is angle included in sector?
-   * @param bound1 first sector bound
-   * @param bound2 second sector bound
-   * @param angle to test
-   * @return inclusion
-   */
-  def inSector(bound1: Double, bound2: Double)(angle: Double): Boolean = {
-    val a1 = -angleDelta(bound1, angle)
-    val a2 = -angleDelta(angle, bound2)
-
-    a1 >= 0 && a2 >= 0
-  }
 
   import reactivemongo.bson.{BSONDoubleHandler => dh}
   implicit val pointHandler = new BSONHandler[BSONArray, (Double, Double)] {

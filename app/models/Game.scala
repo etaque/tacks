@@ -14,12 +14,7 @@ case class KeyboardInput(
   lock: Boolean,
   startCountdown: Boolean,
   escapeRace: Boolean
-) {
-  def manualTurn = arrows.x != 0
-  def isTurning = manualTurn && !subtleTurn
-  def isSubtleTurning = manualTurn && subtleTurn
-  def isLocking = arrows.y > 0 || lock
-}
+)
 
 object KeyboardInput {
   val initial = KeyboardInput(
@@ -62,15 +57,7 @@ case class PlayerState(
   tackTarget: Option[Double],
   crossedGates: Seq[Long],
   nextGate: Option[GateLocation]
-) {
-  lazy val upwind = math.abs(windAngle) < 90
-  lazy val closestVmgAngle = if (upwind) upwindVmg.angle else downwindVmg.angle
-  lazy val windAngleOnVmg = if (windAngle < 0) -closestVmgAngle else closestVmgAngle
-  lazy val headingOnVmg = Geo.ensure360(windOrigin + closestVmgAngle)
-  lazy val deltaToVmg = windAngle - windAngleOnVmg
-
-  def toDebug = s"t:$time turning:$isTurning heading:$heading windAngle:$windAngle control:$controlMode tack:$tackTarget"
-}
+)
 
 object PlayerState {
   def initial(player: Player) = PlayerState(

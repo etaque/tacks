@@ -22,30 +22,10 @@ sealed trait Player {
 trait WithPlayer {
   def playerId: BSONObjectID
   def playerHandle: Option[String]
-
-  def playerTuple = (playerId, playerHandle)
-
-  def playerAsGuest = Guest(playerId, playerHandle)
-  def findPlayer(users: Seq[User]): Player = users.find(_.id == playerId) match {
-    case Some(user) => user
-    case None => playerAsGuest
-  }
 }
 
 object Player {
-
   val defaultVmgMagnet = 15
-
-  // implicit val bsonHandler = new BSONHandler[BSONDocument, Player] {
-  //   def read(bson: BSONDocument) = bson.getAs[String]("email") match {
-  //     case Some(_) => User.bsonReader.read(bson)
-  //     case None => Guest.bsonHandler.read(bson)
-  //   }
-  //   def write(player: Player) = player match {
-  //     case u: User => User.bsonWriter.write(u)
-  //     case g: Guest => Guest.bsonHandler.write(g)
-  //   }
-  // }
 }
 
 case class User(
@@ -61,8 +41,6 @@ case class User(
   def isAdmin = Conf.adminHandles.contains(handle)
 }
 
-// case class CreateUser(email: String, password: String, handle: String)
-
 case class Guest(
   _id: BSONObjectID = BSONObjectID.generate,
   handle: Option[String] = None
@@ -72,6 +50,3 @@ case class Guest(
   val isAdmin = false
 }
 
-object Guest {
-  // implicit val bsonHandler = Macros.handler[Guest]
-}

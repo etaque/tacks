@@ -47,7 +47,6 @@ object JsonFormats {
   implicit val gustGeneratorFormat: Format[GustGenerator] = Json.format[GustGenerator]
   implicit val windGeneratorFormat: Format[WindGenerator] = Json.format[WindGenerator]
   implicit val gateFormat: Format[Gate] = Json.format[Gate]
-  implicit val islandFormat: Format[Island] = Json.format[Island]
   implicit val courseFormat: Format[Course] = Json.format[Course]
 
   implicit val userReads: Reads[User] = Json.reads[User]

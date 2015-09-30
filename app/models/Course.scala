@@ -17,16 +17,7 @@ case class Course(
   area: RaceArea,
   windGenerator: WindGenerator,
   gustGenerator: GustGenerator
-) {
-  val gatesToCross = laps * 2 + 1
-
-  def nextGate(crossedGates: Int): Option[GateLocation] = {
-    if (crossedGates == gatesToCross) None // finished
-    else if (crossedGates == 0) Some(StartLine)
-    else if (crossedGates % 2 == 0) Some(DownwindGate)
-    else Some(UpwindGate)
-  }
-}
+)
 
 object Course {
   def spawn = {
@@ -54,10 +45,9 @@ object Course {
   implicit val gustGeneratorHandler = Macros.handler[GustGenerator]
   implicit val windGeneratorHandler = Macros.handler[WindGenerator]
   implicit val gateHandler = Macros.handler[Gate]
-  implicit val islandHandler = Macros.handler[Island]
   implicit val courseHandler = Macros.handler[Course]
-
 }
+
 sealed trait GateLocation
 case object StartLine extends GateLocation
 case object UpwindGate extends GateLocation
@@ -81,52 +71,12 @@ case class RaceArea(rightTop: Point, leftBottom: Point) {
     val effectiveHeight = height - margin * 2
     seed % effectiveHeight - effectiveHeight / 2 + cy
   }
-
-  import scala.util.Random._
-
-  def randomX(margin: Double = 0): Double = genX(nextDouble() * width, margin)
-  def randomY(margin: Double = 0): Double = genY(nextDouble() * height, margin)
-  def randomPoint: Point = (randomX(), randomY())
-
-  def toBox = (rightTop, leftBottom)
 }
 
 case class Gate(
   y: Double,
   width: Double
-) {
-
-  def crossedInX(s: Segment) = {
-    val ((x1,y1),(x2,y2)) = s
-    val a = (y1 - y2) / (x1 - x2)
-    val b = y1 - a * x1
-    val xGate = (y - b) / a
-    abs(xGate) <= width / 2
-  }
-
-  def crossedDownward(s: Segment) = {
-    val ((_,y1),(_,y2)) = s
-    y1 > y && y2 <= y && crossedInX(s)
-  }
-
-  def crossedUpward(s: Segment) = {
-    val ((_,y1),(_,y2)) = s
-    y1 < y && y2 >= y && crossedInX(s)
-  }
-
-  def segment: Segment = ((-width / 2, y), (width / 2, y))
-}
-
-case class Island(
-  location: (Double,Double),
-  radius: Double
 )
-
-object Island {
-  def spawn(area: RaceArea): Island = {
-    Island((area.randomX(200), area.randomY(400)), nextInt(50) + 50)
-  }
-}
 
 case class WindGenerator(
   wavelength1: Int,

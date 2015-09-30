@@ -45,16 +45,4 @@ object WebSockets extends Controller with Security {
     yield Right(NotifiableActor.props(player)(_))
   }
 
-
-  // import Chat.actionFormat
-  // implicit val messageFrameFormatter = FrameFormatter.jsonFrame[Message]
-  // implicit val newMessageFrameFormatter = FrameFormatter.jsonFrame[NewMessage]
-
-  // def chat = WebSocket.tryAcceptWithActor[NewMessage, Message] { implicit request =>
-  //   for {
-  //     player <- PlayerAction.getPlayer(request)
-  //   }
-  //   yield Right(ChatPlayerActor.props(player)(_))
-  // }
-
 }

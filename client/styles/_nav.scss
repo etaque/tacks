@@ -8,8 +8,9 @@ nav {
   padding-bottom: 15px;
 
   background-color: $seaBlue;
-  @include linear-gradient($lightSeaBlue, $seaBlue);
+  @include linear-gradient($seaBlue, $lightSeaBlue);
   border: none;
+  border-bottom: 5px solid $seaBlue;
 
   .logo {
     display: inline-block;
