@@ -162,8 +162,9 @@ object Api extends Controller with Security {
             for {
               _ <- TrackDAO.updateFromEditor(track.id, name, course)
             } yield {
-              RacesSupervisor.actorRef ! ReloadTrack(track.copy(course = course, name = name))
-              Ok
+              val newTrack = track.copy(course = course, name = name)
+              RacesSupervisor.actorRef ! ReloadTrack(newTrack)
+              Ok(Json.toJson(newTrack))
             }
           }
         }
