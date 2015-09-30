@@ -6,6 +6,7 @@ import Html.Events exposing (..)
 import Dict exposing (Dict)
 import String
 
+import Models exposing (..)
 import AppTypes exposing (..)
 import CoreExtra exposing (..)
 

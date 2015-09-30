@@ -14,7 +14,7 @@ import AppTypes exposing (..)
 
 import Screens.EditTrack.Types exposing (Editor)
 
-import Debug
+
 
 -- GET
 
@@ -61,11 +61,13 @@ postRegister email handle password =
 
 postLogin : String -> String -> Task Never (FormResult Player)
 postLogin email password =
-  JsEncode.object
-    [ ("email", JsEncode.string email)
-    , ("password", JsEncode.string password)
-    ]
-    |> postJson playerDecoder "/api/login"
+  let
+    body = JsEncode.object
+      [ ("email", JsEncode.string email)
+      , ("password", JsEncode.string password)
+      ]
+   in
+     postJson playerDecoder "/api/login" body
 
 postLogout : Task Never (FormResult Player)
 postLogout =
@@ -73,14 +75,18 @@ postLogout =
 
 createTrack : Task Never (FormResult Track)
 createTrack =
-  postJson trackDecoder "/api/track" (JsEncode.null)
+  postJson trackDecoder "/api/track" JsEncode.null
 
 saveTrack : String -> String -> Course -> Task Never (FormResult Track)
 saveTrack id name course =
   let
-    body = JsEncode.object [ ("course", courseEncoder course), ("name", JsEncode.string name) ]
+    body = JsEncode.object
+      [ ("course", courseEncoder course)
+      , ("name", JsEncode.string name)
+      ]
   in
     postJson trackDecoder ("/api/track/" ++ id) body
+
 
 -- Tooling
 

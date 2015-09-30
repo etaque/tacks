@@ -3,6 +3,7 @@ module Screens.EditTrack.Types where
 import Models exposing (..)
 import Game.Geo exposing (..)
 
+import Result exposing (Result(..))
 import DragAndDrop exposing (MouseEvent(..))
 
 type alias Screen =
@@ -18,6 +19,7 @@ type alias Editor =
   , courseDims : Dims
   , mode : Mode
   , name : String
+  , saving : Bool
   }
 
 type Mode
@@ -34,6 +36,7 @@ type Action
   | FormAction FormUpdate
   | SetName String
   | Save
+  | SaveResult (FormResult Track)
   | NoOp
 
 type FormUpdate

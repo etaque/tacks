@@ -78,10 +78,6 @@ type alias ScreenUpdate screen =
   , request : Maybe AppAction
   }
 
-type alias FormResult a = Result FormErrors a
-
-type alias FormErrors = Dict String (List String)
-
 type Never = Never Never
 
 local : screen -> ScreenUpdate screen

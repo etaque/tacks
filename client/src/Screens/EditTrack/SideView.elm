@@ -13,7 +13,7 @@ import Screens.EditTrack.Types exposing (..)
 
 
 sideView : Editor -> Html
-sideView ({courseDims, course, name} as editor) =
+sideView ({courseDims, course, name, saving} as editor) =
   sidebar (sidebarWidth, snd courseDims)
     [ div
         [ class "track-menu" ]
@@ -78,8 +78,9 @@ sideView ({courseDims, course, name} as editor) =
         [ button
           [ onClick actions.address Save
           , class "btn btn-primary btn-block"
+          , disabled saving
           ]
-          [ text "Save" ]
+          [ text (if saving then "Saving.." else "Save") ]
         , linkTo "/" [ class "btn btn-block btn-default" ] [ text "Exit" ]
         ]
     ]

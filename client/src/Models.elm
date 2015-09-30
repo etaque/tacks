@@ -3,6 +3,12 @@ module Models where
 import Time exposing (Time)
 import Dict exposing (Dict)
 
+import Constants exposing (..)
+
+type alias FormResult a = Result FormErrors a
+
+type alias FormErrors = Dict String (List String)
+
 type alias Player =
   { id:     String
   , handle: Maybe String

@@ -60,6 +60,7 @@ update action screen =
           , courseDims = getCourseDims screen.dims
           , mode = CreateTile Water
           , name = track.name
+          , saving = False
           }
       in
         local { screen | track <- Just track, editor <- Just editor }
@@ -95,9 +96,14 @@ update action screen =
     Save ->
       case (screen.track, screen.editor) of
         (Just track, Just editor) ->
-          react screen (save track.id editor)
+          react (updateEditor (\e -> { e | saving <- True}) screen) (save track.id editor)
         _ ->
           local screen
+
+    SaveResult _ ->
+      screen
+        |> updateEditor (\e -> { e | saving <- False })
+        |> local
 
     _ ->
       local screen
@@ -155,8 +161,8 @@ save id ({course, name} as editor) =
     area = getRaceArea course.grid
     withArea = { course | area <- area }
   in
-    ServerApi.saveTrack id name withArea `andThen`
-      \result -> Task.succeed ()
+    delay 500 (ServerApi.saveTrack id name withArea)
+      `andThen` (SaveResult >> (Signal.send actions.address))
 
 getRaceArea : Grid -> RaceArea
 getRaceArea grid =
