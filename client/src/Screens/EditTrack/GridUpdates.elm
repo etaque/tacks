@@ -71,6 +71,7 @@ clickPoint : Editor -> (Int, Int) -> Maybe Point
 clickPoint {courseDims, center} (x, y) =
   if withinWindow courseDims (x, y) then
     let
+      (w, h) = courseDims
       (cx, cy) = center
       x' = toFloat (x - sidebarWidth) - cx - toFloat w / 2
       y' = toFloat -y - cy + toFloat h / 2
