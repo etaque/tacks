@@ -16,17 +16,13 @@ $darkerSand: desat-dark($darkSand);
 
 $grass: rgb(200, 230, 180);
 $rock: rgb(160, 146, 159);
-$lightRock: lighten($rock, 12%);
+$lightRock: lighten($rock, 15%);
+$lighterRock: lighten($lightRock, 15%);
 $darkRock: desat-dark($rock);
 $darkerRock: desat-dark($darkRock);
 
+$mainBlue: darken(saturate($seaBlue, 10%), 10%);
 
-// OLD
-
-$mainBlue: #5899E2;
-$navBlue: little-desat-dark($mainBlue);
-$darkNavBlue: little-desat-dark($navBlue);
-$whiteBlue: #B1C0D8;
 $orange: #E0A349;
 $lightOrange: lighten($orange, 12%);
 $lighterOrange: lighten($orange, 25%);
@@ -44,5 +40,3 @@ $whiteRed: #f2dede;
 $lightRed: #ebccd1;
 $red: #a94442;
 
-
-$currentPlayerColor: $mainBlue;

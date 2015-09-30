@@ -6060,6 +6060,11 @@ button.close {
   .hidden-print {
     display: none !important; } }
 
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6138,6 +6143,11 @@ aside {
   /*   } */
   /* } */ }
 
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6179,11 +6189,6 @@ nav {
   border: none; }
   nav .logo {
     display: inline-block; }
-    nav .logo a {
-      /* img { */
-      /*   height: 40px; */
-      /*   width: auto; */
-      /* } */ }
   nav .player-menu {
     float: right;
     list-style: none;
@@ -6209,7 +6214,7 @@ nav {
       margin-left: 30px; }
 
 aside {
-  background-color: #bcb3bc;
+  background-color: #c4bbc3;
   color: #737373;
   border-right: 2px solid #f8f9fb;
   padding: 10px; }
@@ -6231,6 +6236,11 @@ aside {
     text-transform: uppercase;
     font-size: 13px; }
 
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6279,9 +6289,6 @@ body {
 .content {
   background-color: #f2f3c4; }
 
-hr {
-  border: 0 solid #B1C0D8; }
-
 h1 {
   font-family: "Museo Slab";
   color: dimgray;
@@ -6326,11 +6333,11 @@ a {
     color: #51585E; }
 
 .btn-primary {
-  background-color: #5899E2;
-  border-color: #4774a7; }
+  background-color: #62bbdd;
+  border-color: #508ca3; }
   .btn-primary:hover {
-    background-color: #428cde;
-    border-color: #3f6895; }
+    background-color: #4db2d8;
+    border-color: #477d92; }
 
 .btn-warning {
   background-color: #E0A349;
@@ -6379,6 +6386,11 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   .player-avatar .handle {
     font-weight: bold; }
 
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6399,110 +6411,146 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
-.table-leaderboard {
-  width: 100%;
-  background-color: white;
-  box-shadow: 0 2px 2px #E6E6E6;
-  margin-top: 20px; }
-  .table-leaderboard tbody {
-    font-family: "Inconsolata", "mono"; }
-  .table-leaderboard th {
-    text-align: center;
-    border-bottom-width: 2px;
-    background-color: #387ac4;
-    color: white;
-    font-size: 13px;
-    white-space: nowrap;
-    vertical-align: bottom;
-    text-transform: uppercase;
-    font-family: "Proxima Nova Thin";
-    padding: 5px; }
-    .table-leaderboard th .generator-name {
-      display: block;
-      height: 100%;
-      color: white;
-      text-decoration: none;
-      letter-spacing: 1px; }
-    .table-leaderboard th a:hover {
-      background-color: #5899E2; }
-  .table-leaderboard td {
-    padding: 5px 10px;
-    border-bottom: 1px solid #f8f9fb; }
-  .table-leaderboard th:last-child td {
-    border-bottom: none; }
-  .table-leaderboard .rank {
-    width: 10px;
-    padding-right: 0; }
-  .table-leaderboard .user {
-    padding-left: 5px;
-    white-space: nowrap; }
-  .table-leaderboard .current-player td {
-    background-color: #f8f9fb;
-    color: #5899E2; }
-    .table-leaderboard .current-player td .player-avatar .handle {
-      color: #5899E2; }
-  .table-leaderboard .overall-points, .table-leaderboard .points {
-    width: 115px;
-    text-align: center; }
-
-.rankings {
-  font-family: "Inconsolata", "mono";
-  margin: 0;
-  padding: 0;
-  background-color: white;
-  box-shadow: 0 1px 2px #E6E6E6;
-  border: 2px solid white; }
-  .rankings li {
-    list-style: none;
-    border-bottom: 1px solid #f8f9fb;
-    padding: 5px 8px; }
-    .rankings li:last-child {
-      border-bottom-color: transparent; }
-    .rankings li .rank {
-      width: 20px;
-      display: inline-block; }
-    .rankings li .rank:after {
-      content: "."; }
-    .rankings li .time {
-      float: right; }
-    .rankings li.current-player {
-      background-color: #f8f9fb;
-      color: #5899E2; }
-      .rankings li.current-player .player-avatar .handle {
-        color: #5899E2; }
-    .rankings li.empty {
-      color: #7b8087; }
-    .rankings li.out-of-window {
-      border-top: 1px solid #5899E2;
-      padding-top: 4px; }
-
-.rankings-dark {
-  font-family: "Inconsolata", "mono";
-  margin: 0;
-  padding: 0; }
-  .rankings-dark li {
-    list-style: none;
-    margin-bottom: 10px; }
-    .rankings-dark li:last-child {
-      margin-bottom: 0;
-      border-bottom-color: transparent; }
-    .rankings-dark li .rank {
-      width: 20px;
-      display: inline-block; }
-    .rankings-dark li .rank:after {
-      content: "."; }
-    .rankings-dark li .time, .rankings-dark li .points {
-      float: right; }
-    .rankings-dark li .player-avatar {
-      color: #B1C0D8; }
-    .rankings-dark li a.player-avatar {
-      color: white; }
-    .rankings-dark li.current-player {
-      background-color: #f8f9fb;
-      color: #5899E2; }
-      .rankings-dark li.current-player .player-avatar .handle {
-        color: #5899E2; }
-
+/* .table-leaderboard { */
+/*   width: 100%; */
+/*   background-color: white; */
+/*   box-shadow: 0 2px 2px $lightGray; */
+/*   margin-top: 20px; */
+/*   tbody { */
+/*     font-family: $mono; */
+/*   } */
+/*   th { */
+/*     text-align: center; */
+/*     border-bottom-width: 2px; */
+/*     background-color: $navBlue; */
+/*     color: white; */
+/*     font-size: 13px; */
+/*     white-space: nowrap; */
+/*     vertical-align: bottom; */
+/*     text-transform: uppercase; */
+/*     font-family: $thin; */
+/*     padding: 5px; */
+/*     .generator-name { */
+/*       display: block; */
+/*       height: 100%; */
+/*       color: white; */
+/*       text-decoration: none; */
+/*       letter-spacing: 1px; */
+/*     } */
+/*     a:hover { */
+/*       background-color: $mainBlue; */
+/*     } */
+/*   } */
+/*   td { */
+/*     padding: 5px 10px; */
+/*     border-bottom: 1px solid $smokeWhite; */
+/*   } */
+/*   th:last-child { */
+/*     td { */
+/*       border-bottom: none; */
+/*     } */
+/*   } */
+/*   .rank { */
+/*     width: 10px; */
+/*     padding-right: 0; */
+/*   } */
+/*   .user { */
+/*     padding-left: 5px; */
+/*     white-space: nowrap; */
+/*   } */
+/*   .current-player td { */
+/*     background-color: $smokeWhite; */
+/*     color: $currentPlayerColor; */
+/*     .player-avatar .handle { */
+/*       color: $currentPlayerColor; */
+/*     } */
+/*   } */
+/*   .overall-points, .points { */
+/*     width: 115px; */
+/*     text-align: center; */
+/*   } */
+/* } */
+/* .rankings { */
+/*   font-family: $mono; */
+/*   margin: 0; */
+/*   padding: 0; */
+/*   background-color: white; */
+/*   box-shadow: 0 1px 2px $lightGray; */
+/*   border: 2px solid white; */
+/*   li { */
+/*     list-style: none; */
+/*     border-bottom: 1px solid $smokeWhite; */
+/*     padding: 5px 8px; */
+/*     &:last-child { */
+/*       border-bottom-color: transparent; */
+/*     } */
+/*     .rank { */
+/*       width: 20px; */
+/*       display: inline-block; */
+/*     } */
+/*     .rank:after { */
+/*       content: "."; */
+/*     } */
+/*     .time { */
+/*       float: right; */
+/*     } */
+/*     &.current-player { */
+/*       background-color: $smokeWhite; */
+/*       color: $currentPlayerColor; */
+/*       .player-avatar .handle { */
+/*         color: $currentPlayerColor; */
+/*       } */
+/*     } */
+/*     &.empty { */
+/*       color: $gray; */
+/*     } */
+/*     &.out-of-window { */
+/*       border-top: 1px solid $mainBlue; */
+/*       padding-top: 4px; */
+/*     } */
+/*   } */
+/* } */
+/* .rankings-dark { */
+/*   font-family: $mono; */
+/*   margin: 0; */
+/*   padding: 0; */
+/*   li { */
+/*     list-style: none; */
+/*     margin-bottom: 10px; */
+/*     &:last-child { */
+/*       margin-bottom: 0; */
+/*       border-bottom-color: transparent; */
+/*     } */
+/*     .rank { */
+/*       width: 20px; */
+/*       display: inline-block; */
+/*     } */
+/*     .rank:after { */
+/*       content: "."; */
+/*     } */
+/*     .time, .points { */
+/*       float: right; */
+/*     } */
+/*     .player-avatar { */
+/*       color: $whiteBlue; */
+/*     } */
+/*     a.player-avatar { */
+/*       color: white; */
+/*     } */
+/*     &.current-player { */
+/*       background-color: $smokeWhite; */
+/*       color: $currentPlayerColor; */
+/*       .player-avatar .handle { */
+/*         color: $currentPlayerColor; */
+/*       } */
+/*     } */
+/*   } */
+/* } */
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6547,11 +6595,11 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
     background-color: white;
     color: #737373;
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.075);
-    border: 2px solid #bcb3bc;
+    border: 2px solid #c4bbc3;
     transition: none; }
     .live-track a.show .name, .live-track a.show:visited .name {
       display: block;
-      background-color: #bcb3bc;
+      background-color: #c4bbc3;
       color: white;
       text-transform: lowercase;
       text-align: center;
@@ -6589,9 +6637,9 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
       .live-track a.show .track-players .player-avatar, .live-track a.show .track-players a.player-avatar, .live-track a.show:visited .track-players .player-avatar, .live-track a.show:visited .track-players a.player-avatar {
         color: #789fad; }
     .live-track a.show:hover, .live-track a.show:visited:hover {
-      border-color: #93cadf; }
+      border-color: #62bbdd; }
       .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
-        background-color: #93cadf;
+        background-color: #62bbdd;
         /* color: white; */ }
       .live-track a.show:hover .track-players, .live-track a.show:visited:hover .track-players {
         display: block; }
@@ -6601,6 +6649,11 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
         display: none; }
 
 /* @import 'trials'; */
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 .post .block-img, .article .block-img {
   margin-top: 30px;
   margin-bottom: 30px;
@@ -6619,6 +6672,11 @@ input[type="text"], input[type="password"], input[type="datetime-local"], textar
   margin-top: 50px; }
 
 /* @import 'users'; */
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6740,6 +6798,11 @@ aside {
       background-color: white;
       color: black; }
 
+/* $mainBlue: #5899E2; */
+/* $navBlue: little-desat-dark($mainBlue); */
+/* $darkNavBlue: little-desat-dark($navBlue); */
+/* $whiteBlue: #B1C0D8; */
+/* $currentPlayerColor: $mainBlue; */
 .editor .track-menu {
   margin: 10px; }
 
@@ -6773,12 +6836,19 @@ aside {
     color: #f8f9fb;
     font-size: 13px; }
   .editor aside input {
-    border: 2px solid #737373;
-    border-radius: 0; }
+    border: 1px solid #737373;
+    border-radius: 0;
+    background-color: #e7e4e7;
+    font-weight: bold;
+    color: #737373; }
+    .editor aside input:focus {
+      outline: 0;
+      box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.075);
+      border-color: #737373;
+      background-color: white; }
   .editor aside label + input {
     float: right;
     width: 75px;
-    background-color: #f8f9fb;
     padding: 2px 2px 2px 6px;
     height: 25px;
     font-size: 13px; }
@@ -6788,7 +6858,7 @@ aside {
     border-spacing: 2px;
     border-collapse: separate; }
     .editor aside .table-gust-defs a {
-      color: #bcb3bc; }
+      color: #c4bbc3; }
     .editor aside .table-gust-defs th {
       color: #f8f9fb;
       font-size: 13px;

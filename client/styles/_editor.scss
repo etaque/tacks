@@ -55,14 +55,23 @@
     }
    
     input {
-      border: 2px solid $darkRock;
+      border: 1px solid $darkRock;
       border-radius: 0;
+      background-color: $lighterRock;
+      font-weight: bold;
+      color: $darkRock;
+
+      &:focus {
+        outline: 0;
+        box-shadow: inset 2px 2px 1px $shadow;
+        border-color: $darkRock;
+        background-color: white;
+      }
     }
 
     label + input {
       float: right;
       width: 75px;
-      background-color: $smokeWhite;
       padding: 2px 2px 2px 6px;
       height: 25px;
       font-size: 13px;

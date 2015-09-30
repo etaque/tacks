@@ -13,13 +13,6 @@ nav {
 
   .logo {
     display: inline-block;
-
-    a {
-      /* img { */
-      /*   height: 40px; */
-      /*   width: auto; */
-      /* } */
-    }
   }
 
   .player-menu {
@@ -35,6 +28,7 @@ nav {
       float: left;
 
       $navColor: $darkerSeaBlue;
+      $navHoverColor: $blackSeaBlue;
 
       a {
         display: block;
@@ -46,8 +40,8 @@ nav {
         border-bottom: 2px solid $navColor;
 
         &:hover {
-          border-bottom-color: $blackSeaBlue;
-          color: $blackSeaBlue;
+          border-bottom-color: $navHoverColor;
+          color: $navHoverColor;
         }
       }
     }
