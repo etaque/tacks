@@ -12,7 +12,7 @@ import Screens.EditTrack.Types exposing (..)
 
 mouseAction : MouseEvent -> Editor -> Editor
 mouseAction event editor =
-  case editor.mode of
+  case realMode editor of
     CreateTile kind ->
       updateTileAction kind event editor
     Erase ->

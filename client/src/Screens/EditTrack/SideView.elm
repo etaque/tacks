@@ -11,9 +11,11 @@ import Screens.Utils exposing (..)
 import Screens.EditTrack.Updates exposing (actions)
 import Screens.EditTrack.Types exposing (..)
 
+import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
+
 
 sideView : Editor -> Html
-sideView ({courseDims, course, name, saving} as editor) =
+sideView ({courseDims, course, name, saving, mode} as editor) =
   sidebar (sidebarWidth, snd courseDims)
     [ div
         [ class "track-menu" ]
@@ -25,6 +27,10 @@ sideView ({courseDims, course, name, saving} as editor) =
 
       , div [ class "form-group"]
         [ nameInput name ]
+
+      , h3 [] [ text "Surface pencil" ]
+
+      , surfaceBlock editor
 
       , h3 [] [ text "Gates" ]
 
@@ -86,20 +92,54 @@ sideView ({courseDims, course, name, saving} as editor) =
     ]
 
 
+surfaceBlock : Editor -> Html
+surfaceBlock editor =
+  let
+    modes = [ Watch, CreateTile Water, CreateTile Rock, CreateTile Grass, Erase ]
+    currentMode = realMode editor
+  in
+    div [ class "surface-modes" ]
+      (List.map (renderSurfaceMode currentMode) modes)
+
+
+renderSurfaceMode : Mode -> Mode -> Html
+renderSurfaceMode currentMode mode =
+  let
+    color = case mode of
+      CreateTile kind ->
+        tileKindColor kind
+      Erase ->
+        colors.sand
+      Watch ->
+        "white"
+    (abbr, label) = modeName mode
+  in
+    a [ classList  [ ("current", currentMode == mode), (abbr, True) ]
+      , onClick actions.address (SetMode mode)
+      , style [ ("background-color", color) ]
+      , title label
+      ]
+      [ text abbr ]
+
+
 gustDefsTable : List GustDef -> Html
 gustDefsTable defs =
   table
     [ class "table-gust-defs" ]
-    ([ tr []
-        [ th [] [ text "angle" ]
-        , th [] [ text "speed" ]
-        , th [] [ text "radius" ]
-        , th [ class "action" ]
-            [ a [ onClick actions.address (FormAction CreateGustDef) ]
-              [ span [ class "glyphicon glyphicon-plus" ] [ ] ]
-            ]
-        ]
-    ] ++ List.indexedMap gustDefRow defs)
+    (gustDefsHeader :: List.indexedMap gustDefRow defs)
+
+
+gustDefsHeader : Html
+gustDefsHeader =
+  tr []
+    [ th [] [ text "angle" ]
+    , th [] [ text "speed" ]
+    , th [] [ text "radius" ]
+    , th [ class "action" ]
+      [ a [ onClick actions.address (FormAction CreateGustDef) ]
+          [ text "+" ]
+      ]
+    ]
 
 
 gustDefRow : Int -> GustDef -> Html
@@ -110,7 +150,7 @@ gustDefRow i def =
     , td [] [ intInput def.radius (SetGustRadius i) [ HtmlAttr.min "10", step "10" ] ]
     , td [ class "action" ]
         [ a [ onClick actions.address (FormAction (RemoveGustDef i)) ]
-            [ span [ class "glyphicon glyphicon-minus" ] [ ] ]
+            [ text "-" ]
         ]
     ]
 
@@ -119,7 +159,7 @@ nameInput : String -> Html
 nameInput n =
   textInput
     [ value n
-    , onInput actions.address SetName 
+    , onInput actions.address SetName
     , type' "text"
     ]
 

@@ -20999,7 +20999,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
    var mouseAction = F2(function (event,
    editor) {
       return function () {
-         var _v39 = editor.mode;
+         var _v39 = $Screens$EditTrack$Types.realMode(editor);
          switch (_v39.ctor)
          {case "CreateTile":
             return A3(updateTileAction,
@@ -21046,6 +21046,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    $moduleName = "Screens.EditTrack.SideView",
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
+   $Game$Render$Tiles = Elm.Game.Render.Tiles.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
@@ -21106,44 +21107,90 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                    _L.fromArray([A2($Html$Events.onClick,
                    $Screens$EditTrack$Updates.actions.address,
                    $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.RemoveGustDef(i)))]),
-                   _L.fromArray([A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("glyphicon glyphicon-minus")]),
-                   _L.fromArray([]))]))]))]));
+                   _L.fromArray([$Html.text("-")]))]))]));
    });
+   var gustDefsHeader = A2($Html.tr,
+   _L.fromArray([]),
+   _L.fromArray([A2($Html.th,
+                _L.fromArray([]),
+                _L.fromArray([$Html.text("angle")]))
+                ,A2($Html.th,
+                _L.fromArray([]),
+                _L.fromArray([$Html.text("speed")]))
+                ,A2($Html.th,
+                _L.fromArray([]),
+                _L.fromArray([$Html.text("radius")]))
+                ,A2($Html.th,
+                _L.fromArray([$Html$Attributes.$class("action")]),
+                _L.fromArray([A2($Html.a,
+                _L.fromArray([A2($Html$Events.onClick,
+                $Screens$EditTrack$Updates.actions.address,
+                $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.CreateGustDef))]),
+                _L.fromArray([$Html.text("+")]))]))]));
    var gustDefsTable = function (defs) {
       return A2($Html.table,
       _L.fromArray([$Html$Attributes.$class("table-gust-defs")]),
-      A2($Basics._op["++"],
-      _L.fromArray([A2($Html.tr,
-      _L.fromArray([]),
-      _L.fromArray([A2($Html.th,
-                   _L.fromArray([]),
-                   _L.fromArray([$Html.text("angle")]))
-                   ,A2($Html.th,
-                   _L.fromArray([]),
-                   _L.fromArray([$Html.text("speed")]))
-                   ,A2($Html.th,
-                   _L.fromArray([]),
-                   _L.fromArray([$Html.text("radius")]))
-                   ,A2($Html.th,
-                   _L.fromArray([$Html$Attributes.$class("action")]),
-                   _L.fromArray([A2($Html.a,
-                   _L.fromArray([A2($Html$Events.onClick,
-                   $Screens$EditTrack$Updates.actions.address,
-                   $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.CreateGustDef))]),
-                   _L.fromArray([A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("glyphicon glyphicon-plus")]),
-                   _L.fromArray([]))]))]))]))]),
+      A2($List._op["::"],
+      gustDefsHeader,
       A2($List.indexedMap,
       gustDefRow,
       defs)));
    };
-   var sideView = function (_v0) {
+   var renderSurfaceMode = F2(function (currentMode,
+   mode) {
+      return function () {
+         var $ = $Screens$EditTrack$Types.modeName(mode),
+         abbr = $._0,
+         label = $._1;
+         var color = function () {
+            switch (mode.ctor)
+            {case "CreateTile":
+               return $Game$Render$Tiles.tileKindColor(mode._0);
+               case "Erase":
+               return $Constants.colors.sand;
+               case "Watch": return "white";}
+            _U.badCase($moduleName,
+            "between lines 108 and 115");
+         }();
+         return A2($Html.a,
+         _L.fromArray([$Html$Attributes.classList(_L.fromArray([{ctor: "_Tuple2"
+                                                                ,_0: "current"
+                                                                ,_1: _U.eq(currentMode,
+                                                                mode)}
+                                                               ,{ctor: "_Tuple2"
+                                                                ,_0: abbr
+                                                                ,_1: true}]))
+                      ,A2($Html$Events.onClick,
+                      $Screens$EditTrack$Updates.actions.address,
+                      $Screens$EditTrack$Types.SetMode(mode))
+                      ,$Html$Attributes.style(_L.fromArray([{ctor: "_Tuple2"
+                                                            ,_0: "background-color"
+                                                            ,_1: color}]))
+                      ,$Html$Attributes.title(label)]),
+         _L.fromArray([$Html.text(abbr)]));
+      }();
+   });
+   var surfaceBlock = function (editor) {
+      return function () {
+         var currentMode = $Screens$EditTrack$Types.realMode(editor);
+         var modes = _L.fromArray([$Screens$EditTrack$Types.Watch
+                                  ,$Screens$EditTrack$Types.CreateTile($Models.Water)
+                                  ,$Screens$EditTrack$Types.CreateTile($Models.Rock)
+                                  ,$Screens$EditTrack$Types.CreateTile($Models.Grass)
+                                  ,$Screens$EditTrack$Types.Erase]);
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("surface-modes")]),
+         A2($List.map,
+         renderSurfaceMode(currentMode),
+         modes));
+      }();
+   };
+   var sideView = function (_v2) {
       return function () {
          return A2($Screens$Utils.sidebar,
          {ctor: "_Tuple2"
          ,_0: $Constants.sidebarWidth
-         ,_1: $Basics.snd(_v0.courseDims)},
+         ,_1: $Basics.snd(_v2.courseDims)},
          _L.fromArray([A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("track-menu")]),
                       _L.fromArray([A2($Html.h2,
@@ -21156,7 +21203,11 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                    _L.fromArray([$Html.text("Name")]))
                                    ,A2($Html.div,
                                    _L.fromArray([$Html$Attributes.$class("form-group")]),
-                                   _L.fromArray([nameInput(_v0.name)]))
+                                   _L.fromArray([nameInput(_v2.name)]))
+                                   ,A2($Html.h3,
+                                   _L.fromArray([]),
+                                   _L.fromArray([$Html.text("Surface pencil")]))
+                                   ,surfaceBlock(_v2)
                                    ,A2($Html.h3,
                                    _L.fromArray([]),
                                    _L.fromArray([$Html.text("Gates")]))
@@ -21166,7 +21217,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Downwind")]))
                                                 ,A3(intInput,
-                                                _v0.course.downwind.y,
+                                                _v2.course.downwind.y,
                                                 $Screens$EditTrack$Types.SetDownwindY,
                                                 _L.fromArray([$Html$Attributes.step("10")]))]))
                                    ,A2($Html.div,
@@ -21175,7 +21226,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Upwind")]))
                                                 ,A3(intInput,
-                                                _v0.course.upwind.y,
+                                                _v2.course.upwind.y,
                                                 $Screens$EditTrack$Types.SetUpwindY,
                                                 _L.fromArray([$Html$Attributes.step("10")]))]))
                                    ,A2($Html.div,
@@ -21184,7 +21235,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Width")]))
                                                 ,A3(intInput,
-                                                _v0.course.downwind.width,
+                                                _v2.course.downwind.width,
                                                 $Screens$EditTrack$Types.SetGateWidth,
                                                 _L.fromArray([$Html$Attributes.min("50")
                                                              ,$Html$Attributes.step("10")]))]))
@@ -21194,7 +21245,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Laps")]))
                                                 ,A3(intInput,
-                                                _v0.course.laps,
+                                                _v2.course.laps,
                                                 $Screens$EditTrack$Types.SetLaps,
                                                 _L.fromArray([$Html$Attributes.min("1")]))]))
                                    ,A2($Html.h3,
@@ -21206,7 +21257,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Wavelength 1")]))
                                                 ,A3(intInput,
-                                                _v0.course.windGenerator.wavelength1,
+                                                _v2.course.windGenerator.wavelength1,
                                                 $Screens$EditTrack$Types.SetWindW1,
                                                 _L.fromArray([$Html$Attributes.min("1")]))]))
                                    ,A2($Html.div,
@@ -21215,7 +21266,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Amplitude 1")]))
                                                 ,A3(intInput,
-                                                _v0.course.windGenerator.amplitude1,
+                                                _v2.course.windGenerator.amplitude1,
                                                 $Screens$EditTrack$Types.SetWindA1,
                                                 _L.fromArray([$Html$Attributes.min("1")]))]))
                                    ,A2($Html.div,
@@ -21224,7 +21275,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Wavelength 2")]))
                                                 ,A3(intInput,
-                                                _v0.course.windGenerator.wavelength2,
+                                                _v2.course.windGenerator.wavelength2,
                                                 $Screens$EditTrack$Types.SetWindW2,
                                                 _L.fromArray([$Html$Attributes.min("1")]))]))
                                    ,A2($Html.div,
@@ -21233,7 +21284,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Amplitude 2")]))
                                                 ,A3(intInput,
-                                                _v0.course.windGenerator.amplitude2,
+                                                _v2.course.windGenerator.amplitude2,
                                                 $Screens$EditTrack$Types.SetWindA2,
                                                 _L.fromArray([$Html$Attributes.min("1")]))]))
                                    ,A2($Html.h3,
@@ -21245,10 +21296,10 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _L.fromArray([$Html$Attributes.$class("")]),
                                                 _L.fromArray([$Html.text("Interval (s)")]))
                                                 ,A3(intInput,
-                                                _v0.course.gustGenerator.interval,
+                                                _v2.course.gustGenerator.interval,
                                                 $Screens$EditTrack$Types.SetGustInterval,
                                                 _L.fromArray([$Html$Attributes.min("10")]))]))
-                                   ,gustDefsTable(_v0.course.gustGenerator.defs)]))
+                                   ,gustDefsTable(_v2.course.gustGenerator.defs)]))
                       ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("form-actions")]),
                       _L.fromArray([A2($Html.button,
@@ -21256,8 +21307,8 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 $Screens$EditTrack$Updates.actions.address,
                                                 $Screens$EditTrack$Types.Save)
                                                 ,$Html$Attributes.$class("btn btn-primary btn-block")
-                                                ,$Html$Attributes.disabled(_v0.saving)]),
-                                   _L.fromArray([$Html.text(_v0.saving ? "Saving.." : "Save")]))
+                                                ,$Html$Attributes.disabled(_v2.saving)]),
+                                   _L.fromArray([$Html.text(_v2.saving ? "Saving.." : "Save")]))
                                    ,A3($Screens$Utils.linkTo,
                                    "/",
                                    _L.fromArray([$Html$Attributes.$class("btn btn-block btn-default")]),
@@ -21266,7 +21317,10 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    };
    _elm.Screens.EditTrack.SideView.values = {_op: _op
                                             ,sideView: sideView
+                                            ,surfaceBlock: surfaceBlock
+                                            ,renderSurfaceMode: renderSurfaceMode
                                             ,gustDefsTable: gustDefsTable
+                                            ,gustDefsHeader: gustDefsHeader
                                             ,gustDefRow: gustDefRow
                                             ,nameInput: nameInput
                                             ,intInput: intInput};
@@ -21294,6 +21348,36 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
+   var modeName = function (mode) {
+      return function () {
+         switch (mode.ctor)
+         {case "CreateTile":
+            switch (mode._0.ctor)
+              {case "Grass":
+                 return {ctor: "_Tuple2"
+                        ,_0: "g"
+                        ,_1: "Grass"};
+                 case "Rock":
+                 return {ctor: "_Tuple2"
+                        ,_0: "r"
+                        ,_1: "Rock"};
+                 case "Water":
+                 return {ctor: "_Tuple2"
+                        ,_0: "w"
+                        ,_1: "Water"};}
+              break;
+            case "Erase":
+            return {ctor: "_Tuple2"
+                   ,_0: "s"
+                   ,_1: "Sand"};
+            case "Watch":
+            return {ctor: "_Tuple2"
+                   ,_0: "m"
+                   ,_1: "Move (press SHIFT for temporary move mode)"};}
+         _U.badCase($moduleName,
+         "between lines 65 and 70");
+      }();
+   };
    var SetWindA2 = function (a) {
       return {ctor: "SetWindA2"
              ,_0: a};
@@ -21367,8 +21451,14 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
       return {ctor: "FormAction"
              ,_0: a};
    };
-   var EscapeMode = {ctor: "EscapeMode"};
-   var NextTileKind = {ctor: "NextTileKind"};
+   var AltMoveMode = function (a) {
+      return {ctor: "AltMoveMode"
+             ,_0: a};
+   };
+   var SetMode = function (a) {
+      return {ctor: "SetMode"
+             ,_0: a};
+   };
    var MouseAction = function (a) {
       return {ctor: "MouseAction"
              ,_0: a};
@@ -21379,24 +21469,31 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
              ,_0: a};
    };
    var Watch = {ctor: "Watch"};
+   var realMode = function (_v2) {
+      return function () {
+         return _v2.altMove ? Watch : _v2.mode;
+      }();
+   };
    var Erase = {ctor: "Erase"};
    var CreateTile = function (a) {
       return {ctor: "CreateTile"
              ,_0: a};
    };
-   var Editor = F6(function (a,
+   var Editor = F7(function (a,
    b,
    c,
    d,
    e,
-   f) {
+   f,
+   g) {
       return {_: {}
+             ,altMove: e
              ,center: b
              ,course: a
              ,courseDims: c
              ,mode: d
-             ,name: e
-             ,saving: f};
+             ,name: f
+             ,saving: g};
    });
    var Screen = F4(function (a,
    b,
@@ -21414,11 +21511,12 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                          ,CreateTile: CreateTile
                                          ,Erase: Erase
                                          ,Watch: Watch
+                                         ,realMode: realMode
                                          ,SetTrack: SetTrack
                                          ,TrackNotFound: TrackNotFound
                                          ,MouseAction: MouseAction
-                                         ,NextTileKind: NextTileKind
-                                         ,EscapeMode: EscapeMode
+                                         ,SetMode: SetMode
+                                         ,AltMoveMode: AltMoveMode
                                          ,FormAction: FormAction
                                          ,SetName: SetName
                                          ,Save: Save
@@ -21437,7 +21535,8 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                          ,SetWindW1: SetWindW1
                                          ,SetWindA1: SetWindA1
                                          ,SetWindW2: SetWindW2
-                                         ,SetWindA2: SetWindA2};
+                                         ,SetWindA2: SetWindA2
+                                         ,modeName: modeName};
    return _elm.Screens.EditTrack.Types.values;
 };
 Elm.Screens = Elm.Screens || {};
@@ -21508,30 +21607,15 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
          ,_1: bottom});
       }();
    };
-   var getNextMode = function (mode) {
+   var getCourseDims = function (_v0) {
       return function () {
-         switch (mode.ctor)
-         {case "CreateTile":
-            switch (mode._0.ctor)
-              {case "Grass":
-                 return $Screens$EditTrack$Types.CreateTile($Models.Rock);
-                 case "Rock":
-                 return $Screens$EditTrack$Types.Erase;
-                 case "Water":
-                 return $Screens$EditTrack$Types.CreateTile($Models.Grass);}
-              break;}
-         return $Screens$EditTrack$Types.CreateTile($Models.Water);
-      }();
-   };
-   var getCourseDims = function (_v2) {
-      return function () {
-         switch (_v2.ctor)
+         switch (_v0.ctor)
          {case "_Tuple2":
             return {ctor: "_Tuple2"
-                   ,_0: _v2._0 - $Constants.sidebarWidth
-                   ,_1: _v2._1};}
+                   ,_0: _v0._0 - $Constants.sidebarWidth
+                   ,_1: _v0._1};}
          _U.badCase($moduleName,
-         "on line 143, column 4 to 23");
+         "on line 146, column 4 to 23");
       }();
    };
    var updateDims = F2(function (dims,
@@ -21568,15 +21652,8 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       }();
    });
    var inputs = $Signal.mergeMany(_L.fromArray([A2($Signal.map,
-                                               function (b) {
-                                                  return b ? $Screens$EditTrack$Types.NextTileKind : $Screens$EditTrack$Types.NoOp;
-                                               },
-                                               $Keyboard.space)
-                                               ,A2($Signal.map,
-                                               function (b) {
-                                                  return b ? $Screens$EditTrack$Types.EscapeMode : $Screens$EditTrack$Types.NoOp;
-                                               },
-                                               $Keyboard.isDown(27))
+                                               $Screens$EditTrack$Types.AltMoveMode,
+                                               $Keyboard.shift)
                                                ,A2($Signal.map,
                                                $Screens$EditTrack$Types.MouseAction,
                                                $DragAndDrop.mouseEvents)]));
@@ -21594,7 +21671,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  actions.address,
                  $Screens$EditTrack$Types.SetTrack(result._0));}
             _U.badCase($moduleName,
-            "between lines 127 and 131");
+            "between lines 129 and 133");
          }();
       });
    };
@@ -21612,19 +21689,19 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       }();
    });
    var save = F2(function (id,
-   _v9) {
+   _v7) {
       return function () {
          return function () {
-            var area = getRaceArea(_v9.course.grid);
+            var area = getRaceArea(_v7.course.grid);
             var withArea = _U.replace([["area"
                                        ,area]],
-            _v9.course);
+            _v7.course);
             return A2($Task.andThen,
             A2($Task$Extra.delay,
             500,
             A3($ServerApi.saveTrack,
             id,
-            _v9.name,
+            _v7.name,
             withArea)),
             function ($) {
                return $Signal.send(actions.address)($Screens$EditTrack$Types.SaveResult($));
@@ -21636,10 +21713,10 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    screen) {
       return function () {
          switch (action.ctor)
-         {case "EscapeMode":
+         {case "AltMoveMode":
             return $AppTypes.local(updateEditor(function (e) {
-                 return _U.replace([["mode"
-                                    ,$Screens$EditTrack$Types.Watch]],
+                 return _U.replace([["altMove"
+                                    ,action._0]],
                  e);
               })(screen));
             case "FormAction":
@@ -21650,12 +21727,6 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
             return $AppTypes.local(function ($) {
                  return updateEditor($Screens$EditTrack$GridUpdates.mouseAction($));
               }(action._0)(screen));
-            case "NextTileKind":
-            return $AppTypes.local(updateEditor(function (e) {
-                 return _U.replace([["mode"
-                                    ,getNextMode(e.mode)]],
-                 e);
-              })(screen));
             case "Save":
             return function () {
                  var _v17 = {ctor: "_Tuple2"
@@ -21688,6 +21759,12 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                     ,false]],
                  e);
               })(screen));
+            case "SetMode":
+            return $AppTypes.local(updateEditor(function (e) {
+                 return _U.replace([["mode"
+                                    ,action._0]],
+                 e);
+              })(screen));
             case "SetName":
             return $AppTypes.local(updateEditor(function (e) {
                  return _U.replace([["name"
@@ -21697,12 +21774,13 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
             case "SetTrack":
             return function () {
                  var editor = {_: {}
+                              ,altMove: false
                               ,center: {ctor: "_Tuple2"
                                        ,_0: 0
                                        ,_1: 0}
                               ,course: action._0.course
                               ,courseDims: getCourseDims(screen.dims)
-                              ,mode: $Screens$EditTrack$Types.CreateTile($Models.Water)
+                              ,mode: $Screens$EditTrack$Types.Watch
                               ,name: action._0.name
                               ,saving: false};
                  return $AppTypes.local(_U.replace([["track"
@@ -21728,7 +21806,6 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                            ,loadTrack: loadTrack
                                            ,updateDims: updateDims
                                            ,getCourseDims: getCourseDims
-                                           ,getNextMode: getNextMode
                                            ,save: save
                                            ,getRaceArea: getRaceArea};
    return _elm.Screens.EditTrack.Updates.values;
@@ -21749,7 +21826,6 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    _L = _N.List.make(_elm),
    $moduleName = "Screens.EditTrack.View",
    $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
    $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
    $Game$Render$Players = Elm.Game.Render.Players.make(_elm),
@@ -21765,56 +21841,36 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var renderMode = function (mode) {
-      return function () {
-         var color = function () {
-            switch (mode.ctor)
-            {case "CreateTile":
-               return $Game$Render$Tiles.tileKindColor(mode._0);
-               case "Erase":
-               return $Constants.colors.sand;
-               case "Watch": return "white";}
-            _U.badCase($moduleName,
-            "between lines 72 and 79");
-         }();
-         return A2($Svg.circle,
-         _L.fromArray([$Svg$Attributes.r("20")
-                      ,$Svg$Attributes.fill(color)
-                      ,$Svg$Attributes.stroke("black")
-                      ,$Svg$Attributes.strokeWidth("2")
-                      ,$Svg$Attributes.cx("50")
-                      ,$Svg$Attributes.cy("50")]),
-         _L.fromArray([]));
-      }();
-   };
-   var renderCourse = function (_v2) {
+   var renderCourse = function (_v0) {
       return function () {
          return function () {
-            var $ = $Game$Geo.floatify(_v2.courseDims),
+            var $ = $Game$Geo.floatify(_v0.courseDims),
             w = $._0,
             h = $._1;
-            var cx = w / 2 + $Basics.fst(_v2.center);
-            var cy = (0 - h) / 2 + $Basics.snd(_v2.center);
+            var cx = w / 2 + $Basics.fst(_v0.center);
+            var cy = (0 - h) / 2 + $Basics.snd(_v0.center);
             return A2($Svg.svg,
             _L.fromArray([$Svg$Attributes.width($Basics.toString(w))
-                         ,$Svg$Attributes.height($Basics.toString(h))]),
+                         ,$Svg$Attributes.height($Basics.toString(h))
+                         ,$Svg$Attributes.$class(A2($Basics._op["++"],
+                         "mode-",
+                         $Basics.fst($Screens$EditTrack$Types.modeName($Screens$EditTrack$Types.realMode(_v0)))))]),
             _L.fromArray([A2($Svg.g,
-                         _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
-                         "scale(1,-1)",
-                         A2($Game$Render$SvgUtils.translate,
-                         cx,
-                         cy)))]),
-                         _L.fromArray([$Game$Render$Tiles.lazyRenderTiles(_v2.course.grid)
-                                      ,A2($Game$Render$Gates.renderOpenGate,
-                                      _v2.course.upwind,
-                                      0)
-                                      ,A2($Game$Render$Gates.renderOpenGate,
-                                      _v2.course.downwind,
-                                      0)
-                                      ,A2($Game$Render$Players.renderPlayerHull,
-                                      0,
-                                      0)]))
-                         ,renderMode(_v2.mode)]));
+            _L.fromArray([$Svg$Attributes.transform(A2($Basics._op["++"],
+            "scale(1,-1)",
+            A2($Game$Render$SvgUtils.translate,
+            cx,
+            cy)))]),
+            _L.fromArray([$Game$Render$Tiles.lazyRenderTiles(_v0.course.grid)
+                         ,A2($Game$Render$Gates.renderOpenGate,
+                         _v0.course.upwind,
+                         0)
+                         ,A2($Game$Render$Gates.renderOpenGate,
+                         _v0.course.downwind,
+                         0)
+                         ,A2($Game$Render$Players.renderPlayerHull,
+                         0,
+                         0)]))]));
          }();
       }();
    };
@@ -21827,17 +21883,17 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    var view = F2(function (player,
    screen) {
       return function () {
-         var _v4 = {ctor: "_Tuple2"
+         var _v2 = {ctor: "_Tuple2"
                    ,_0: screen.track
                    ,_1: screen.editor};
-         switch (_v4.ctor)
+         switch (_v2.ctor)
          {case "_Tuple2":
-            switch (_v4._0.ctor)
+            switch (_v2._0.ctor)
               {case "Just":
-                 switch (_v4._1.ctor)
+                 switch (_v2._1.ctor)
                    {case "Just":
                       return _U.eq(player.id,
-                        _v4._0._0.creatorId) || $Models.isAdmin(player) ? editorView(_v4._1._0) : $Html.text("Access forbidden.");}
+                        _v2._0._0.creatorId) || $Models.isAdmin(player) ? editorView(_v2._1._0) : $Html.text("Access forbidden.");}
                    break;}
               break;}
          return $Html.text("loading");
@@ -21846,8 +21902,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    _elm.Screens.EditTrack.View.values = {_op: _op
                                         ,view: view
                                         ,editorView: editorView
-                                        ,renderCourse: renderCourse
-                                        ,renderMode: renderMode};
+                                        ,renderCourse: renderCourse};
    return _elm.Screens.EditTrack.View.values;
 };
 Elm.Screens = Elm.Screens || {};

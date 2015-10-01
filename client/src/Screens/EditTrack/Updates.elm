@@ -27,8 +27,7 @@ actions = Signal.mailbox NoOp
 inputs : Signal Action
 inputs =
   Signal.mergeMany
-    [ Signal.map (\b -> if b then NextTileKind else NoOp) Keyboard.space
-    , Signal.map (\b -> if b then EscapeMode else NoOp) (Keyboard.isDown 27)
+    [ Signal.map AltMoveMode Keyboard.shift
     , Signal.map MouseAction mouseEvents
     ]
 
@@ -58,7 +57,8 @@ update action screen =
           { course = track.course
           , center = (0, 0)
           , courseDims = getCourseDims screen.dims
-          , mode = CreateTile Water
+          , mode = Watch
+          , altMove = False
           , name = track.name
           , saving = False
           }
@@ -78,14 +78,14 @@ update action screen =
         |> (GridUpdates.mouseAction >> updateEditor) event
         |> local
 
-    NextTileKind ->
+    SetMode mode ->
       screen
-        |> updateEditor (\e -> { e | mode <- getNextMode e.mode })
+        |> updateEditor (\e -> { e | mode <- mode })
         |> local
 
-    EscapeMode ->
+    AltMoveMode b ->
       screen
-        |> updateEditor (\e -> { e | mode <- Watch })
+        |> updateEditor (\e -> { e | altMove <- b })
         |> local
 
     FormAction a ->
@@ -116,9 +116,11 @@ updateEditor update screen =
   in
     { screen | editor <- newEditor }
 
+
 updateCourse : (Course -> Course) -> Editor -> Editor
 updateCourse update editor =
   { editor | course <- update editor.course }
+
 
 loadTrack : String -> Task Never ()
 loadTrack id =
@@ -138,22 +140,11 @@ updateDims dims screen =
   in
     { screen | editor <- newEditor, dims <- dims }
 
+
 getCourseDims : Dims -> Dims
 getCourseDims (w, h) =
   (w - sidebarWidth, h)
 
-
-getNextMode : Mode -> Mode
-getNextMode mode =
-  case mode of
-    CreateTile Water ->
-      CreateTile Grass
-    CreateTile Grass ->
-      CreateTile Rock
-    CreateTile Rock ->
-      Erase
-    _ ->
-      CreateTile Water
 
 save : String -> Editor -> Task Never ()
 save id ({course, name} as editor) =
@@ -163,6 +154,7 @@ save id ({course, name} as editor) =
   in
     delay 500 (ServerApi.saveTrack id name withArea)
       `andThen` (SaveResult >> (Signal.send actions.address))
+
 
 getRaceArea : Grid -> RaceArea
 getRaceArea grid =

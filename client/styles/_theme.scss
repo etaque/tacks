@@ -110,12 +110,23 @@ a {
   }
 }
 
-input[type="text"], input[type="password"], input[type="datetime-local"], textarea {
+.form-control {
+  border: 2px solid $smokeWhite;
   border-radius: 0;
+  background-color: $lighterRock;
+  font-weight: bold;
+  color: $darkRock;
+  box-shadow: inset 1px 1px 1px $shadow;
+
+  &:focus {
+    outline: 0;
+    box-shadow: inset 1px 1px 1px $shadow;
+    border-color: $rock;
+    background-color: white;
+  }
 }
 
 .has-error {
-
   .error-message {
     margin-top: 0;
     padding: 6px 12px;

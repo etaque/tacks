@@ -45,7 +45,7 @@ editorView editor =
 
 
 renderCourse : Editor -> Html
-renderCourse ({courseDims, center, course} as editor) =
+renderCourse ({courseDims, center, course, mode} as editor) =
   let
     (w, h) = floatify courseDims
     cx = w / 2 + fst center
@@ -54,6 +54,7 @@ renderCourse ({courseDims, center, course} as editor) =
     Svg.svg
       [ width (toString w)
       , height (toString h)
+      , class <| "mode-" ++ (modeName (realMode editor) |> fst)
       ]
       [ g [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
         [ (lazyRenderTiles course.grid)
@@ -61,29 +62,6 @@ renderCourse ({courseDims, center, course} as editor) =
         , renderOpenGate course.downwind 0
         , renderPlayerHull 0 0
         ]
-      , renderMode editor.mode
       ]
 
-
-renderMode : Mode -> Svg
-renderMode mode =
-  let
-    color =
-      case mode of
-        CreateTile kind ->
-          tileKindColor kind
-        Erase ->
-          colors.sand
-        Watch ->
-          "white"
-  in
-    circle
-      [ r "20"
-      , fill color
-      , stroke "black"
-      , strokeWidth "2"
-      , cx "50"
-      , cy "50"
-      ]
-      []
 

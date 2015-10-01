@@ -19,14 +19,54 @@
       padding: 0 10px;
     }
 
+    .surface-modes {
+      margin-bottom: 10px;
+      display: flex;
+
+      a {
+        flex: 1;
+        display: inline-block;
+        margin-right: 10px;
+        line-height: 26px;
+        width: 30px;
+        text-align: center;
+        border: 2px solid white;
+        border-radius: 2px;
+        font-weight: bold;
+        color: $dark;
+        box-shadow: inset 1px 1px 1px $shadow;
+        text-shadow: 1px 1px 1px $shadow;
+        text-transform: uppercase;
+
+        &:last-child {
+          margin-right: 0;
+        }
+
+        /* &.s { */
+        /*   color: $darkerSand; */
+        /* } */
+
+        /* &.r { */
+        /*   color: $darkerRock; */
+        /* } */
+
+        &.current {
+          border-color: black;
+          color: black;
+          box-shadow: none;
+        }
+      }
+    }
+
     .form-actions {
       margin: 0;
       padding: 10px;
     }
 
     .form-group {
-      background-color: $darkRock;
+      background-color: $smokeWhite;
       margin-bottom: 5px;
+      border-radius: 2px;
 
       &:after {
         clear: both;
@@ -50,58 +90,49 @@
       padding-left: 6px;
       margin: 0;
       text-transform: lowercase;
-      color: $smokeWhite;
+      color: $darkRock;
       font-size: 13px;
     }
-   
-    input {
-      border: 1px solid $darkRock;
-      border-radius: 0;
-      background-color: $lighterRock;
-      font-weight: bold;
-      color: $darkRock;
 
-      &:focus {
-        outline: 0;
-        box-shadow: inset 2px 2px 1px $shadow;
-        border-color: $darkRock;
-        background-color: white;
-      }
-    }
-
-    label + input {
+    label + .form-control {
       float: right;
       width: 75px;
       padding: 2px 2px 2px 6px;
       height: 25px;
       font-size: 13px;
+      border-top-right-radius: 2px;
+      border-bottom-right-radius: 2px;
+
     }
 
     .table-gust-defs {
       width: 100%;
-      background-color: $darkRock;
-      border-spacing: 2px;
+      background-color: $smokeWhite;
+      border-spacing: 1px;
       border-collapse: separate;
+      border-radius: 2px;
 
       a {
-        color: $lightRock;
+        color: $rock;
       }
 
       th {
-        color: $smokeWhite;
         font-size: 13px;
         padding: 2px 4px;
+        font-weight: bold;
       }
 
       td {
         &.action {
           padding: 2px;
+          text-align: center;
+          font-weight: bold;
         }
       }
 
-      input {
+      .form-control {
         width: 100%;
-        border: none;
+        /* border: none; */
         padding: 2px 2px 2px 6px;
         height: 25px;
         font-size: 13px;
@@ -112,5 +143,11 @@
   svg {
     user-select: none;
     -moz-user-select: none;
+
+    cursor: cell;
+
+    &.mode-m {
+      cursor: move;
+    }
   }
 }

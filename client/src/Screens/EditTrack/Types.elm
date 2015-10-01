@@ -18,6 +18,7 @@ type alias Editor =
   , center : Point
   , courseDims : Dims
   , mode : Mode
+  , altMove : Bool
   , name : String
   , saving : Bool
   }
@@ -27,12 +28,16 @@ type Mode
   | Erase
   | Watch
 
+realMode : Editor -> Mode
+realMode {mode, altMove} =
+  if altMove then Watch else mode
+
 type Action
   = SetTrack Track
   | TrackNotFound
   | MouseAction MouseEvent
-  | NextTileKind
-  | EscapeMode
+  | SetMode Mode
+  | AltMoveMode Bool
   | FormAction FormUpdate
   | SetName String
   | Save
@@ -55,3 +60,11 @@ type FormUpdate
   | SetWindW2 Int
   | SetWindA2 Int
 
+modeName : Mode -> (String, String)
+modeName mode =
+  case mode of
+    CreateTile Water -> ("w", "Water")
+    CreateTile Grass -> ("g", "Grass")
+    CreateTile Rock -> ("r", "Rock")
+    Erase -> ("s", "Sand")
+    Watch -> ("m", "Move (press SHIFT for temporary move mode)")
