@@ -14,12 +14,24 @@ import Screens.EditTrack.Types exposing (..)
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 
 
-sideView : Editor -> Html
-sideView ({courseDims, course, name, saving, mode} as editor) =
+sideView : Track -> Editor -> Html
+sideView track ({courseDims, course, name, saving, mode} as editor) =
   sidebar (sidebarWidth, snd courseDims)
     [ div
         [ class "track-menu" ]
-        [ h2 [] [ text "track editor" ] ]
+        [ h2 [] [ text "track editor" ]
+        , linkTo "/" [ class "btn btn-xs btn-default" ] [ text "Exit" ]
+        , linkTo ("/play/" ++ track.id) [ class "btn btn-xs btn-default" ] [ text "Try" ]
+        ]
+
+    , div [ class "form-actions" ]
+      [ button
+        [ onClick actions.address Save
+        , class "btn btn-primary btn-block"
+        , disabled saving
+        ]
+        [ text (if saving then "Saving.." else "Save") ]
+      ]
 
     , div [ class "aside-module" ]
 
@@ -78,17 +90,7 @@ sideView ({courseDims, course, name, saving, mode} as editor) =
         ]
 
       , gustDefsTable course.gustGenerator.defs
-
       ]
-    , div [ class "form-actions" ]
-        [ button
-          [ onClick actions.address Save
-          , class "btn btn-primary btn-block"
-          , disabled saving
-          ]
-          [ text (if saving then "Saving.." else "Save") ]
-        , linkTo "/" [ class "btn btn-block btn-default" ] [ text "Exit" ]
-        ]
     ]
 
 

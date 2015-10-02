@@ -14,8 +14,8 @@ import Screens.Game.Updates exposing (actions)
 import Screens.Utils exposing (..)
 
 
-chatBlock : Int -> Screen -> Html
-chatBlock h {messages, messageField} =
+view : Int -> Screen -> Html
+view h {messages, messageField} =
   let
     messagesDiv =
       if List.isEmpty messages then

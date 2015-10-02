@@ -1718,7 +1718,7 @@ Elm.Constants.make = function (_elm) {
                 ,rock: "rgb(160, 146, 159)"
                 ,sand: "rgb(242, 243, 196)"
                 ,water: "rgb(147, 202, 223)"};
-   var sidebarWidth = 260;
+   var sidebarWidth = 280;
    _elm.Constants.values = {_op: _op
                            ,sidebarWidth: sidebarWidth
                            ,colors: colors
@@ -21150,7 +21150,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                return $Constants.colors.sand;
                case "Watch": return "white";}
             _U.badCase($moduleName,
-            "between lines 108 and 115");
+            "between lines 110 and 117");
          }();
          return A2($Html.a,
          _L.fromArray([$Html$Attributes.classList(_L.fromArray([{ctor: "_Tuple2"
@@ -21185,7 +21185,8 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
          modes));
       }();
    };
-   var sideView = function (_v2) {
+   var sideView = F2(function (track,
+   _v2) {
       return function () {
          return A2($Screens$Utils.sidebar,
          {ctor: "_Tuple2"
@@ -21194,8 +21195,27 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
          _L.fromArray([A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("track-menu")]),
                       _L.fromArray([A2($Html.h2,
-                      _L.fromArray([]),
-                      _L.fromArray([$Html.text("track editor")]))]))
+                                   _L.fromArray([]),
+                                   _L.fromArray([$Html.text("track editor")]))
+                                   ,A3($Screens$Utils.linkTo,
+                                   "/",
+                                   _L.fromArray([$Html$Attributes.$class("btn btn-xs btn-default")]),
+                                   _L.fromArray([$Html.text("Exit")]))
+                                   ,A3($Screens$Utils.linkTo,
+                                   A2($Basics._op["++"],
+                                   "/play/",
+                                   track.id),
+                                   _L.fromArray([$Html$Attributes.$class("btn btn-xs btn-default")]),
+                                   _L.fromArray([$Html.text("Try")]))]))
+                      ,A2($Html.div,
+                      _L.fromArray([$Html$Attributes.$class("form-actions")]),
+                      _L.fromArray([A2($Html.button,
+                      _L.fromArray([A2($Html$Events.onClick,
+                                   $Screens$EditTrack$Updates.actions.address,
+                                   $Screens$EditTrack$Types.Save)
+                                   ,$Html$Attributes.$class("btn btn-primary btn-block")
+                                   ,$Html$Attributes.disabled(_v2.saving)]),
+                      _L.fromArray([$Html.text(_v2.saving ? "Saving.." : "Save")]))]))
                       ,A2($Html.div,
                       _L.fromArray([$Html$Attributes.$class("aside-module")]),
                       _L.fromArray([A2($Html.h3,
@@ -21299,22 +21319,9 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                 _v2.course.gustGenerator.interval,
                                                 $Screens$EditTrack$Types.SetGustInterval,
                                                 _L.fromArray([$Html$Attributes.min("10")]))]))
-                                   ,gustDefsTable(_v2.course.gustGenerator.defs)]))
-                      ,A2($Html.div,
-                      _L.fromArray([$Html$Attributes.$class("form-actions")]),
-                      _L.fromArray([A2($Html.button,
-                                   _L.fromArray([A2($Html$Events.onClick,
-                                                $Screens$EditTrack$Updates.actions.address,
-                                                $Screens$EditTrack$Types.Save)
-                                                ,$Html$Attributes.$class("btn btn-primary btn-block")
-                                                ,$Html$Attributes.disabled(_v2.saving)]),
-                                   _L.fromArray([$Html.text(_v2.saving ? "Saving.." : "Save")]))
-                                   ,A3($Screens$Utils.linkTo,
-                                   "/",
-                                   _L.fromArray([$Html$Attributes.$class("btn btn-block btn-default")]),
-                                   _L.fromArray([$Html.text("Exit")]))]))]));
+                                   ,gustDefsTable(_v2.course.gustGenerator.defs)]))]));
       }();
-   };
+   });
    _elm.Screens.EditTrack.SideView.values = {_op: _op
                                             ,sideView: sideView
                                             ,surfaceBlock: surfaceBlock
@@ -21874,12 +21881,15 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
          }();
       }();
    };
-   var editorView = function (editor) {
+   var editorView = F2(function (track,
+   editor) {
       return A2($Html.div,
       _L.fromArray([$Svg$Attributes.$class("content editor")]),
-      _L.fromArray([$Screens$EditTrack$SideView.sideView(editor)
+      _L.fromArray([A2($Screens$EditTrack$SideView.sideView,
+                   track,
+                   editor)
                    ,renderCourse(editor)]));
-   };
+   });
    var view = F2(function (player,
    screen) {
       return function () {
@@ -21893,7 +21903,9 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
                  switch (_v2._1.ctor)
                    {case "Just":
                       return _U.eq(player.id,
-                        _v2._0._0.creatorId) || $Models.isAdmin(player) ? editorView(_v2._1._0) : $Html.text("Access forbidden.");}
+                        _v2._0._0.creatorId) || $Models.isAdmin(player) ? A2(editorView,
+                        _v2._0._0,
+                        _v2._1._0) : $Html.text("Access forbidden.");}
                    break;}
               break;}
          return $Html.text("loading");
@@ -21967,8 +21979,7 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
       messageItem,
       $List.reverse(messages)));
    };
-   var chatBlock = F2(function (h,
-   _v2) {
+   var view = F2(function (h,_v2) {
       return function () {
          return function () {
             var messagesDiv = $List.isEmpty(_v2.messages) ? A2($Html.div,
@@ -21992,7 +22003,7 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
       }();
    });
    _elm.Screens.Game.ChatView.values = {_op: _op
-                                       ,chatBlock: chatBlock
+                                       ,view: view
                                        ,messagesList: messagesList
                                        ,messageItem: messageItem
                                        ,chatField: chatField};
@@ -22171,7 +22182,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
          activeRaces));
       }();
    };
-   var playersBlock = function (_v4) {
+   var block = function (_v4) {
       return function () {
          return A2($Html.div,
          _L.fromArray([$Html$Attributes.$class("aside-module module-players")]),
@@ -22185,13 +22196,168 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
       }();
    };
    _elm.Screens.Game.PlayersView.values = {_op: _op
-                                          ,playersBlock: playersBlock
+                                          ,block: block
                                           ,racesBlock: racesBlock
                                           ,raceItem: raceItem
                                           ,tallyItem: tallyItem
                                           ,freePlayersBlock: freePlayersBlock
                                           ,freePlayerItem: freePlayerItem};
    return _elm.Screens.Game.PlayersView.values;
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Game = Elm.Screens.Game || {};
+Elm.Screens.Game.SideView = Elm.Screens.Game.SideView || {};
+Elm.Screens.Game.SideView.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Game = _elm.Screens.Game || {};
+   _elm.Screens.Game.SideView = _elm.Screens.Game.SideView || {};
+   if (_elm.Screens.Game.SideView.values)
+   return _elm.Screens.Game.SideView.values;
+   var _op = {},
+   _N = Elm.Native,
+   _U = _N.Utils.make(_elm),
+   _L = _N.List.make(_elm),
+   $moduleName = "Screens.Game.SideView",
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
+   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var emptyDiv = A2($Html.div,
+   _L.fromArray([]),
+   _L.fromArray([]));
+   var helpItem = function (_v0) {
+      return function () {
+         switch (_v0.ctor)
+         {case "_Tuple2":
+            return _L.fromArray([A2($Html.dt,
+                                _L.fromArray([]),
+                                _L.fromArray([$Html.text(_v0._0)]))
+                                ,A2($Html.dd,
+                                _L.fromArray([]),
+                                _L.fromArray([$Html.text(_v0._1)]))]);}
+         _U.badCase($moduleName,
+         "on line 94, column 3 to 49");
+      }();
+   };
+   var helpItems = $List.concatMap(helpItem)(_L.fromArray([{ctor: "_Tuple2"
+                                                           ,_0: "LEFT/RIGHT"
+                                                           ,_1: "turn"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "LEFT/RIGHT + SHIFT"
+                                                           ,_1: "adjust"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "ENTER"
+                                                           ,_1: "lock angle to wind"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "SPACE"
+                                                           ,_1: "tack or jibe"}
+                                                          ,{ctor: "_Tuple2"
+                                                           ,_0: "ESC"
+                                                           ,_1: "quit race"}]));
+   var helpBlock = A2($Html.div,
+   _L.fromArray([$Html$Attributes.$class("aside-module module-help")]),
+   _L.fromArray([A2($Html.h3,
+                _L.fromArray([]),
+                _L.fromArray([$Html.text("Help")]))
+                ,A2($Html.dl,
+                _L.fromArray([]),
+                helpItems)]));
+   var rankingItem = function (ranking) {
+      return A2($Html.li,
+      _L.fromArray([$Html$Attributes.$class("ranking")]),
+      _L.fromArray([A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("rank")]),
+                   _L.fromArray([$Html.text($Basics.toString(ranking.rank))]))
+                   ,A2($Html.span,
+                   _L.fromArray([$Html$Attributes.$class("status")]),
+                   _L.fromArray([$Html.text(A2($Screens$Utils.formatTimer,
+                   true,
+                   ranking.finishTime))]))
+                   ,$Screens$Utils.playerWithAvatar(ranking.player)]));
+   };
+   var rankingsBlock = function (_v4) {
+      return function () {
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("aside-module module-rankings")]),
+         _L.fromArray([A2($Html.h3,
+                      _L.fromArray([]),
+                      _L.fromArray([$Html.text("Best times")]))
+                      ,A2($Html.ul,
+                      _L.fromArray([$Html$Attributes.$class("list-unstyled list-rankings")]),
+                      A2($List.map,
+                      rankingItem,
+                      _v4.rankings))]));
+      }();
+   };
+   var liveBlocks = F2(function (screen,
+   liveTrack) {
+      return _L.fromArray([$Screens$Game$PlayersView.block(screen)
+                          ,rankingsBlock(liveTrack)
+                          ,helpBlock]);
+   });
+   var draftBlocks = function (_v6) {
+      return function () {
+         return _L.fromArray([A2($Html.p,
+                             _L.fromArray([$Html$Attributes.$class("draft-warning")]),
+                             _L.fromArray([$Html.text("This is a draft, you\'re the only one seeing this race track.")]))
+                             ,A3($Screens$Utils.linkTo,
+                             A2($Basics._op["++"],
+                             "/edit/",
+                             _v6.track.id),
+                             _L.fromArray([$Html$Attributes.$class("btn btn-block btn-primary")]),
+                             _L.fromArray([$Html.text("Edit race track")]))]);
+      }();
+   };
+   var trackNav = function (liveTrack) {
+      return A2($Html.div,
+      _L.fromArray([$Html$Attributes.$class("track-menu")]),
+      _L.fromArray([A2($Html.h2,
+                   _L.fromArray([]),
+                   _L.fromArray([$Html.text(liveTrack.track.name)]))
+                   ,A3($Screens$Utils.linkTo,
+                   "/",
+                   _L.fromArray([$Html$Attributes.$class("btn btn-xs btn-default")]),
+                   _L.fromArray([$Html.text("Exit")]))]));
+   };
+   var view = F4(function (h,
+   screen,
+   liveTrack,
+   gameState) {
+      return function () {
+         var blocks = liveTrack.track.draft ? draftBlocks(liveTrack) : A2(liveBlocks,
+         screen,
+         liveTrack);
+         return A2($Screens$Utils.sidebar,
+         {ctor: "_Tuple2"
+         ,_0: $Constants.sidebarWidth
+         ,_1: h},
+         A2($List._op["::"],
+         trackNav(liveTrack),
+         blocks));
+      }();
+   });
+   _elm.Screens.Game.SideView.values = {_op: _op
+                                       ,view: view
+                                       ,trackNav: trackNav
+                                       ,draftBlocks: draftBlocks
+                                       ,liveBlocks: liveBlocks
+                                       ,rankingsBlock: rankingsBlock
+                                       ,rankingItem: rankingItem
+                                       ,helpBlock: helpBlock
+                                       ,helpItems: helpItems
+                                       ,helpItem: helpItem
+                                       ,emptyDiv: emptyDiv};
+   return _elm.Screens.Game.SideView.values;
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Game = Elm.Screens.Game || {};
@@ -22540,163 +22706,67 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
-   $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
+   $Screens$Game$SideView = Elm.Screens.Game.SideView.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
-   var emptyDiv = A2($Html.div,
-   _L.fromArray([]),
-   _L.fromArray([]));
-   var orEmptyDiv = $Maybe.withDefault(emptyDiv);
-   var withLiveTrack = F2(function (f,
-   maybeLiveTrack) {
-      return orEmptyDiv(A2($Maybe.map,
-      f,
-      maybeLiveTrack));
-   });
-   var helpItem = function (_v0) {
+   var mainView = F4(function (_v0,
+   screen,
+   liveTrack,
+   gameState) {
       return function () {
          switch (_v0.ctor)
-         {case "_Tuple2":
-            return _L.fromArray([A2($Html.dt,
-                                _L.fromArray([]),
-                                _L.fromArray([$Html.text(_v0._0)]))
-                                ,A2($Html.dd,
-                                _L.fromArray([]),
-                                _L.fromArray([$Html.text(_v0._1)]))]);}
-         _U.badCase($moduleName,
-         "on line 91, column 3 to 49");
-      }();
-   };
-   var helpItems = $List.concatMap(helpItem)(_L.fromArray([{ctor: "_Tuple2"
-                                                           ,_0: "LEFT/RIGHT"
-                                                           ,_1: "turn"}
-                                                          ,{ctor: "_Tuple2"
-                                                           ,_0: "LEFT/RIGHT + SHIFT"
-                                                           ,_1: "adjust"}
-                                                          ,{ctor: "_Tuple2"
-                                                           ,_0: "ENTER"
-                                                           ,_1: "lock angle to wind"}
-                                                          ,{ctor: "_Tuple2"
-                                                           ,_0: "SPACE"
-                                                           ,_1: "tack or jibe"}
-                                                          ,{ctor: "_Tuple2"
-                                                           ,_0: "ESC"
-                                                           ,_1: "quit race"}]));
-   var helpBlock = A2($Html.div,
-   _L.fromArray([$Html$Attributes.$class("aside-module module-help")]),
-   _L.fromArray([A2($Html.h3,
-                _L.fromArray([]),
-                _L.fromArray([$Html.text("Help")]))
-                ,A2($Html.dl,
-                _L.fromArray([]),
-                helpItems)]));
-   var rankingItem = function (ranking) {
-      return A2($Html.li,
-      _L.fromArray([$Html$Attributes.$class("ranking")]),
-      _L.fromArray([A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("rank")]),
-                   _L.fromArray([$Html.text($Basics.toString(ranking.rank))]))
-                   ,A2($Html.span,
-                   _L.fromArray([$Html$Attributes.$class("status")]),
-                   _L.fromArray([$Html.text(A2($Screens$Utils.formatTimer,
-                   true,
-                   ranking.finishTime))]))
-                   ,$Screens$Utils.playerWithAvatar(ranking.player)]));
-   };
-   var rankingsBlock = function (_v4) {
-      return function () {
-         return A2($Html.div,
-         _L.fromArray([$Html$Attributes.$class("aside-module module-rankings")]),
-         _L.fromArray([A2($Html.h3,
-                      _L.fromArray([]),
-                      _L.fromArray([$Html.text("Best times")]))
-                      ,A2($Html.ul,
-                      _L.fromArray([$Html$Attributes.$class("list-unstyled list-rankings")]),
-                      A2($List.map,
-                      rankingItem,
-                      _v4.rankings))]));
-      }();
-   };
-   var trackNav = function (liveTrack) {
-      return A2($Html.div,
-      _L.fromArray([$Html$Attributes.$class("track-menu")]),
-      _L.fromArray([A2($Html.h2,
-                   _L.fromArray([]),
-                   _L.fromArray([$Html.text(liveTrack.track.name)]))
-                   ,A3($Screens$Utils.linkTo,
-                   "/",
-                   _L.fromArray([$Html$Attributes.$class("btn btn-xs btn-default")]),
-                   _L.fromArray([$Html.text("Exit")]))]));
-   };
-   var leftBar = F3(function (h,
-   screen,
-   gameState) {
-      return A2($Screens$Utils.sidebar,
-      {ctor: "_Tuple2"
-      ,_0: $Constants.sidebarWidth
-      ,_1: h},
-      _L.fromArray([A2(withLiveTrack,
-                   trackNav,
-                   screen.liveTrack)
-                   ,$Screens$Game$PlayersView.playersBlock(screen)
-                   ,A2(withLiveTrack,
-                   rankingsBlock,
-                   screen.liveTrack)
-                   ,helpBlock]));
-   });
-   var gameView = F3(function (_v6,
-   screen,
-   gameState) {
-      return function () {
-         switch (_v6.ctor)
          {case "_Tuple2":
             return function () {
                  var gameSvg = A2($Game$Render$All.render,
                  {ctor: "_Tuple2"
-                 ,_0: _v6._0 - $Constants.sidebarWidth
-                 ,_1: _v6._1},
+                 ,_0: _v0._0 - $Constants.sidebarWidth
+                 ,_1: _v0._1},
                  gameState);
-                 return _L.fromArray([A3(leftBar,
-                                     _v6._1,
-                                     screen,
-                                     gameState)
-                                     ,A2($Html.div,
-                                     _L.fromArray([$Html$Attributes.$class("game")]),
-                                     _L.fromArray([gameSvg]))
-                                     ,A2($Screens$Game$ChatView.chatBlock,
-                                     _v6._1,
-                                     screen)]);
+                 return A2($Html.div,
+                 _L.fromArray([$Html$Attributes.$class("content")]),
+                 _L.fromArray([A4($Screens$Game$SideView.view,
+                              _v0._1,
+                              screen,
+                              liveTrack,
+                              gameState)
+                              ,A2($Html.div,
+                              _L.fromArray([$Html$Attributes.$class("game")]),
+                              _L.fromArray([gameSvg]))
+                              ,A2($Screens$Game$ChatView.view,
+                              _v0._1,
+                              screen)]));
               }();}
          _U.badCase($moduleName,
-         "between lines 32 and 38");
+         "between lines 32 and 39");
       }();
    });
-   var loading = _L.fromArray([$Html.text("loading...")]);
    var view = F2(function (dims,
-   _v10) {
+   screen) {
       return function () {
-         return $Html.div(_L.fromArray([$Html$Attributes.$class("content")]))(A2($Maybe.withDefault,
-         loading,
-         A2($Maybe.map,
-         A2(gameView,dims,_v10),
-         _v10.gameState)));
+         var _v4 = {ctor: "_Tuple2"
+                   ,_0: screen.liveTrack
+                   ,_1: screen.gameState};
+         switch (_v4.ctor)
+         {case "_Tuple2":
+            switch (_v4._0.ctor)
+              {case "Just":
+                 switch (_v4._1.ctor)
+                   {case "Just":
+                      return A4(mainView,
+                        dims,
+                        screen,
+                        _v4._0._0,
+                        _v4._1._0);}
+                   break;}
+              break;}
+         return A2($Html.div,
+         _L.fromArray([$Html$Attributes.$class("content")]),
+         _L.fromArray([$Html.text("loading...")]));
       }();
    });
    _elm.Screens.Game.View.values = {_op: _op
                                    ,view: view
-                                   ,loading: loading
-                                   ,gameView: gameView
-                                   ,leftBar: leftBar
-                                   ,trackNav: trackNav
-                                   ,rankingsBlock: rankingsBlock
-                                   ,rankingItem: rankingItem
-                                   ,helpBlock: helpBlock
-                                   ,helpItems: helpItems
-                                   ,helpItem: helpItem
-                                   ,withLiveTrack: withLiveTrack
-                                   ,orEmptyDiv: orEmptyDiv
-                                   ,emptyDiv: emptyDiv};
+                                   ,mainView: mainView};
    return _elm.Screens.Game.View.values;
 };
 Elm.Screens = Elm.Screens || {};

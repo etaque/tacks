@@ -2,21 +2,30 @@
 
 .editor {
 
-  .track-menu {
-    margin: 10px;
+  svg {
+    user-select: none;
+    -moz-user-select: none;
 
-    h2 {
+    cursor: cell;
+
+    &.mode-m {
+      cursor: move;
     }
   }
 
+  .track-menu {
+    margin-bottom: 10px;
+  }
+
+  .form-actions {
+    margin-top: 0;
+    margin-bottom: 20px;
+  }
+
   aside {
-    display: flex;
-    padding: 0;
 
     .aside-module {
-      flex: 1;
-      overflow-y: auto;
-      padding: 0 10px;
+      margin-bottom: 15px;
     }
 
     .surface-modes {
@@ -42,25 +51,12 @@
           margin-right: 0;
         }
 
-        /* &.s { */
-        /*   color: $darkerSand; */
-        /* } */
-
-        /* &.r { */
-        /*   color: $darkerRock; */
-        /* } */
-
         &.current {
           border-color: black;
           color: black;
           box-shadow: none;
         }
       }
-    }
-
-    .form-actions {
-      margin: 0;
-      padding: 10px;
     }
 
     .form-group {
@@ -140,14 +136,4 @@
     }
   }
 
-  svg {
-    user-select: none;
-    -moz-user-select: none;
-
-    cursor: cell;
-
-    &.mode-m {
-      cursor: move;
-    }
-  }
 }

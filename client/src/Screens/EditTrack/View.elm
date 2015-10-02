@@ -29,17 +29,17 @@ view player screen =
   case (screen.track, screen.editor) of
     (Just track, Just editor) ->
       if player.id == track.creatorId || isAdmin player then
-        editorView editor
+        editorView track editor
       else
         Html.text "Access forbidden."
     _ ->
       Html.text "loading"
 
 
-editorView : Editor -> Html
-editorView editor =
+editorView : Track -> Editor -> Html
+editorView track editor =
   Html.div [ class "content editor" ]
-    [ sideView editor
+    [ sideView track editor
     , renderCourse editor
     ]
 

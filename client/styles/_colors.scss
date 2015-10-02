@@ -1,3 +1,12 @@
+
+@function desat-dark($color) {
+  @return desaturate(darken($color, 15%), 30%);
+}
+
+@function little-desat-dark($color) {
+  @return desaturate(darken($color, 12%), 15%);
+}
+
 $seaBlue: rgb(147, 202, 223);
 
 $lightSeaBlue: lighten($seaBlue, 6%);
@@ -28,9 +37,9 @@ $lightOrange: lighten($orange, 12%);
 $lighterOrange: lighten($orange, 25%);
 
 $darkGray: #51585E;
-$gray: #7b8087;
+$gray: desaturate($rock, 50%);
 $mediumGray: lighten($gray, 20%);
-$lightGray: #E6E6E6;
+$lightGray: lighten($gray, 50%);
 $smokeWhite: #f8f9fb;
 
 $shadow: rgba(0, 0, 0, 0.075);

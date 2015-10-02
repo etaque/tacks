@@ -6191,10 +6191,10 @@ nav {
       margin-left: 30px; }
 
 aside {
-  background-color: #c4bbc3;
+  background-color: #cccccc;
   color: #737373;
   border-right: 2px solid #f8f9fb;
-  padding: 10px; }
+  padding: 15px; }
   aside .track-menu {
     margin-bottom: 20px; }
     aside .track-menu h2 {
@@ -6202,7 +6202,8 @@ aside {
       margin: 0;
       float: left; }
     aside .track-menu .btn {
-      float: right; }
+      float: right;
+      margin-left: 5px; }
   aside .aside-module h3 {
     color: #f8f9fb;
     background-color: #737373;
@@ -6244,18 +6245,18 @@ body {
   font-family: "Inconsolata", "mono";
   background-color: #f8f9fb;
   /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#E6E6E6), to(#f8f9fb));
+  background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#f8f9fb));
   /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #E6E6E6, #f8f9fb);
+  background-image: -webkit-linear-gradient(top, white, #f8f9fb);
   /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #E6E6E6, #f8f9fb);
+  background-image: -moz-linear-gradient(top, white, #f8f9fb);
   /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #E6E6E6, #f8f9fb);
+  background-image: -ms-linear-gradient(top, white, #f8f9fb);
   /* IE10 */
-  background-image: -o-linear-gradient(top, #E6E6E6, #f8f9fb);
+  background-image: -o-linear-gradient(top, white, #f8f9fb);
   /* Opera 11.10+ */
-  background-image: linear-gradient(top, #E6E6E6, #f8f9fb);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#E6E6E6', EndColorStr='#f8f9fb'); }
+  background-image: linear-gradient(top, white, #f8f9fb);
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='white', EndColorStr='#f8f9fb'); }
 
 .content {
   background-color: #f2f3c4; }
@@ -6282,25 +6283,27 @@ a {
   text-align: center; }
 
 .btn {
-  font-weight: bold;
-  text-transform: uppercase;
+  text-transform: lowercase;
   background-color: white;
   border: none;
   border-bottom: 3px solid #f5f5f5;
   padding: 7px 12px 5px 12px;
-  transition: all 0.1s ease-in; }
+  transition: all 0.1s ease-in;
+  border-radius: 2px;
+  font-family: "Museo Slab";
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
 
 .btn-xs, .btn-group-xs > .btn {
   border-bottom-width: 2px;
   padding: 3px 5px 1px 5px; }
 
 .btn-default {
-  background-color: #E6E6E6;
-  border-color: #d9d9d9;
-  color: #7b8087; }
+  background-color: white;
+  border-color: #f2f2f2;
+  color: #999999; }
   .btn-default:hover {
-    background-color: #d9d9d9;
-    border-color: #cdcdcd;
+    background-color: #f2f2f2;
+    border-color: #e6e6e6;
     color: #51585E; }
 
 .btn-primary {
@@ -6334,7 +6337,7 @@ a {
   .form-control:focus {
     outline: 0;
     box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.075);
-    border-color: #a0929f;
+    border-color: #4bafc9;
     background-color: white; }
 
 .has-error .error-message {
@@ -6469,7 +6472,7 @@ a {
   margin-bottom: 30px;
   text-align: center; }
   .post .block-img img, .article .block-img img {
-    box-shadow: 0 2px 2px #E6E6E6;
+    box-shadow: 0 2px 2px white;
     border: 2px solid white;
     border-radius: 2px; }
 
@@ -6508,6 +6511,10 @@ a {
 
 aside {
   overflow-y: auto; }
+  aside p {
+    font-family: "Proxima Nova Regular";
+    font-size: 13px;
+    padding: 10px; }
   aside .module-players {
     flex: 0.5; }
     aside .module-players h4 {
@@ -6589,7 +6596,7 @@ aside {
       margin: 0; }
     .module-chat .messages .message-handle {
       font-weight: bold;
-      color: #E6E6E6; }
+      color: white; }
       .module-chat .messages .message-handle:after {
         content: ": "; }
   .module-chat input[type="text"] {
@@ -6602,102 +6609,99 @@ aside {
       background-color: white;
       color: black; }
 
-.editor .track-menu {
-  margin: 10px; }
-
-.editor aside {
-  display: flex;
-  padding: 0; }
-  .editor aside .aside-module {
-    flex: 1;
-    overflow-y: auto;
-    padding: 0 10px; }
-  .editor aside .surface-modes {
-    margin-bottom: 10px;
-    display: flex; }
-    .editor aside .surface-modes a {
-      flex: 1;
-      display: inline-block;
-      margin-right: 10px;
-      line-height: 26px;
-      width: 30px;
-      text-align: center;
-      border: 2px solid white;
-      border-radius: 2px;
-      font-weight: bold;
-      color: rgba(0, 0, 0, 0.5);
-      box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.075);
-      text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075);
-      text-transform: uppercase;
-      /* &.s { */
-      /*   color: $darkerSand; */
-      /* } */
-      /* &.r { */
-      /*   color: $darkerRock; */
-      /* } */ }
-      .editor aside .surface-modes a:last-child {
-        margin-right: 0; }
-      .editor aside .surface-modes a.current {
-        border-color: black;
-        color: black;
-        box-shadow: none; }
-  .editor aside .form-actions {
-    margin: 0;
-    padding: 10px; }
-  .editor aside .form-group {
-    background-color: #f8f9fb;
-    margin-bottom: 5px;
-    border-radius: 2px; }
-    .editor aside .form-group:after {
-      clear: both;
-      display: table;
-      content: ''; }
-  .editor aside h3 {
-    margin-bottom: 10px; }
-  .editor aside .form-group + h3 {
-    margin-top: 10px; }
-  .editor aside label {
-    float: left;
-    line-height: 23px;
-    padding-left: 6px;
-    margin: 0;
-    text-transform: lowercase;
-    color: #737373;
-    font-size: 13px; }
-  .editor aside label + .form-control {
-    float: right;
-    width: 75px;
-    padding: 2px 2px 2px 6px;
-    height: 25px;
-    font-size: 13px;
-    border-top-right-radius: 2px;
-    border-bottom-right-radius: 2px; }
-  .editor aside .table-gust-defs {
-    width: 100%;
-    background-color: #f8f9fb;
-    border-spacing: 1px;
-    border-collapse: separate;
-    border-radius: 2px; }
-    .editor aside .table-gust-defs a {
-      color: #a0929f; }
-    .editor aside .table-gust-defs th {
-      font-size: 13px;
-      padding: 2px 4px;
-      font-weight: bold; }
-    .editor aside .table-gust-defs td.action {
-      padding: 2px;
-      text-align: center;
-      font-weight: bold; }
-    .editor aside .table-gust-defs .form-control {
-      width: 100%;
-      /* border: none; */
-      padding: 2px 2px 2px 6px;
-      height: 25px;
-      font-size: 13px; }
-
 .editor svg {
   user-select: none;
   -moz-user-select: none;
   cursor: cell; }
   .editor svg.mode-m {
     cursor: move; }
+
+.editor .track-menu {
+  margin-bottom: 10px; }
+
+.editor .form-actions {
+  margin-top: 0;
+  margin-bottom: 20px; }
+
+.editor aside .aside-module {
+  margin-bottom: 15px; }
+
+.editor aside .surface-modes {
+  margin-bottom: 10px;
+  display: flex; }
+  .editor aside .surface-modes a {
+    flex: 1;
+    display: inline-block;
+    margin-right: 10px;
+    line-height: 26px;
+    width: 30px;
+    text-align: center;
+    border: 2px solid white;
+    border-radius: 2px;
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.5);
+    box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.075);
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075);
+    text-transform: uppercase; }
+    .editor aside .surface-modes a:last-child {
+      margin-right: 0; }
+    .editor aside .surface-modes a.current {
+      border-color: black;
+      color: black;
+      box-shadow: none; }
+
+.editor aside .form-group {
+  background-color: #f8f9fb;
+  margin-bottom: 5px;
+  border-radius: 2px; }
+  .editor aside .form-group:after {
+    clear: both;
+    display: table;
+    content: ''; }
+
+.editor aside h3 {
+  margin-bottom: 10px; }
+
+.editor aside .form-group + h3 {
+  margin-top: 10px; }
+
+.editor aside label {
+  float: left;
+  line-height: 23px;
+  padding-left: 6px;
+  margin: 0;
+  text-transform: lowercase;
+  color: #737373;
+  font-size: 13px; }
+
+.editor aside label + .form-control {
+  float: right;
+  width: 75px;
+  padding: 2px 2px 2px 6px;
+  height: 25px;
+  font-size: 13px;
+  border-top-right-radius: 2px;
+  border-bottom-right-radius: 2px; }
+
+.editor aside .table-gust-defs {
+  width: 100%;
+  background-color: #f8f9fb;
+  border-spacing: 1px;
+  border-collapse: separate;
+  border-radius: 2px; }
+  .editor aside .table-gust-defs a {
+    color: #a0929f; }
+  .editor aside .table-gust-defs th {
+    font-size: 13px;
+    padding: 2px 4px;
+    font-weight: bold; }
+  .editor aside .table-gust-defs td.action {
+    padding: 2px;
+    text-align: center;
+    font-weight: bold; }
+  .editor aside .table-gust-defs .form-control {
+    width: 100%;
+    /* border: none; */
+    padding: 2px 2px 2px 6px;
+    height: 25px;
+    font-size: 13px; }

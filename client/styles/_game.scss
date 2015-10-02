@@ -12,6 +12,12 @@
 aside {
   overflow-y: auto;
 
+  p {
+    font-family: $regular;
+    font-size: 13px;
+    padding: 10px;
+  }
+
   .module-players {
     flex: 0.5;
 

@@ -17,13 +17,14 @@ import Screens.Game.Updates exposing (actions)
 import Screens.Utils exposing (..)
 
 
-playersBlock : Screen -> Html
-playersBlock {races, freePlayers} =
+block : Screen -> Html
+block {races, freePlayers} =
   div [ class "aside-module module-players" ]
     [ h3 [] [ text "Online players" ]
     , racesBlock races
     , if (List.isEmpty freePlayers) then div [] [] else freePlayersBlock freePlayers
     ]
+
 
 racesBlock : List Race -> Html
 racesBlock races =
@@ -32,6 +33,7 @@ racesBlock races =
     activeRaces = List.filter isActive races
   in
     div [ class "list-races" ] (List.map raceItem activeRaces)
+
 
 raceItem : Race -> Html
 raceItem {startTime, tallies} =
