@@ -9364,6 +9364,11 @@ Elm.Html.Attributes.make = function (_elm) {
    $String = Elm.String.make(_elm),
    $VirtualDom = Elm.VirtualDom.make(_elm);
    var attribute = $VirtualDom.attribute;
+   var contextmenu = function (value) {
+      return A2(attribute,
+      "contextmenu",
+      value);
+   };
    var property = $VirtualDom.property;
    var stringProperty = F2(function (name,
    string) {
@@ -9388,13 +9393,8 @@ Elm.Html.Attributes.make = function (_elm) {
    };
    var accesskey = function ($char) {
       return A2(stringProperty,
-      "accesskey",
-      $String.fromList(_L.fromArray([$char])));
-   };
-   var contextmenu = function (value) {
-      return A2(stringProperty,
-      "contextmenu",
-      value);
+      "accessKey",
+      $String.fromChar($char));
    };
    var dir = function (value) {
       return A2(stringProperty,
@@ -9543,7 +9543,7 @@ Elm.Html.Attributes.make = function (_elm) {
    };
    var formaction = function (value) {
       return A2(stringProperty,
-      "formaction",
+      "formAction",
       value);
    };
    var list = function (value) {
@@ -10112,25 +10112,17 @@ Elm.Http.make = function (_elm) {
    };
    var handleResponse = F2(function (handle,
    response) {
-      return function () {
-         var _v0 = _U.cmp(200,
-         response.status) < 1 && _U.cmp(response.status,
-         300) < 0;
-         switch (_v0)
-         {case false:
-            return $Task.fail(A2(BadResponse,
-              response.status,
-              response.statusText));
-            case true: return function () {
-                 var _v1 = response.value;
-                 switch (_v1.ctor)
-                 {case "Text":
-                    return handle(_v1._0);}
-                 return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
-              }();}
-         _U.badCase($moduleName,
-         "between lines 419 and 426");
-      }();
+      return _U.cmp(200,
+      response.status) < 1 && _U.cmp(response.status,
+      300) < 0 ? function () {
+         var _v0 = response.value;
+         switch (_v0.ctor)
+         {case "Text":
+            return handle(_v0._0);}
+         return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
+      }() : $Task.fail(A2(BadResponse,
+      response.status,
+      response.statusText));
    });
    var NetworkError = {ctor: "NetworkError"};
    var Timeout = {ctor: "Timeout"};
@@ -10142,7 +10134,7 @@ Elm.Http.make = function (_elm) {
             case "RawTimeout":
             return Timeout;}
          _U.badCase($moduleName,
-         "between lines 431 and 433");
+         "between lines 451 and 453");
       }();
    };
    var fromJson = F2(function (decoder,
@@ -10150,16 +10142,16 @@ Elm.Http.make = function (_elm) {
       return function () {
          var decode = function (str) {
             return function () {
-               var _v4 = A2($Json$Decode.decodeString,
+               var _v3 = A2($Json$Decode.decodeString,
                decoder,
                str);
-               switch (_v4.ctor)
+               switch (_v3.ctor)
                {case "Err":
-                  return $Task.fail(UnexpectedPayload(_v4._0));
+                  return $Task.fail(UnexpectedPayload(_v3._0));
                   case "Ok":
-                  return $Task.succeed(_v4._0);}
+                  return $Task.succeed(_v3._0);}
                _U.badCase($moduleName,
-               "between lines 409 and 412");
+               "between lines 424 and 427");
             }();
          };
          return A2($Task.andThen,
@@ -10193,7 +10185,8 @@ Elm.Http.make = function (_elm) {
                          ,desiredResponseType: $Maybe.Nothing
                          ,onProgress: $Maybe.Nothing
                          ,onStart: $Maybe.Nothing
-                         ,timeout: 0};
+                         ,timeout: 0
+                         ,withCredentials: false};
    var post = F3(function (decoder,
    url,
    body) {
@@ -10210,15 +10203,17 @@ Elm.Http.make = function (_elm) {
          request));
       }();
    });
-   var Settings = F4(function (a,
+   var Settings = F5(function (a,
    b,
    c,
-   d) {
+   d,
+   e) {
       return {_: {}
              ,desiredResponseType: d
              ,onProgress: c
              ,onStart: b
-             ,timeout: a};
+             ,timeout: a
+             ,withCredentials: e};
    });
    var multipart = $Native$Http.multipart;
    var FileData = F3(function (a,
@@ -10308,26 +10303,26 @@ Elm.Http.make = function (_elm) {
       "%20",
       uriEncode(string)));
    };
-   var queryPair = function (_v7) {
+   var queryPair = function (_v6) {
       return function () {
-         switch (_v7.ctor)
+         switch (_v6.ctor)
          {case "_Tuple2":
             return A2($Basics._op["++"],
-              queryEscape(_v7._0),
+              queryEscape(_v6._0),
               A2($Basics._op["++"],
               "=",
-              queryEscape(_v7._1)));}
+              queryEscape(_v6._1)));}
          _U.badCase($moduleName,
-         "on line 63, column 3 to 46");
+         "on line 67, column 3 to 46");
       }();
    };
-   var url = F2(function (domain,
+   var url = F2(function (baseUrl,
    args) {
       return function () {
          switch (args.ctor)
-         {case "[]": return domain;}
+         {case "[]": return baseUrl;}
          return A2($Basics._op["++"],
-         domain,
+         baseUrl,
          A2($Basics._op["++"],
          "?",
          A2($String.join,
@@ -10349,7 +10344,6 @@ Elm.Http.make = function (_elm) {
                       ,string: string
                       ,multipart: multipart
                       ,stringData: stringData
-                      ,blobData: blobData
                       ,defaultSettings: defaultSettings
                       ,fromJson: fromJson
                       ,Request: Request
@@ -14553,13 +14547,24 @@ Elm.Native.Http.make = function(localRuntime) {
 			// set the timeout
 			req.timeout = settings.timeout;
 
+			// enable this withCredentials thing
+			req.withCredentials = settings.withCredentials;
+
 			// ask for a specific MIME type for the response
 			if (settings.desiredResponseType.ctor === 'Just')
 			{
 				req.overrideMimeType(settings.desiredResponseType._0);
 			}
 
-			req.send(request.body._0);
+			// actuall send the request
+			if(request.body.ctor === "BodyFormData")
+			{
+				req.send(request.body.formData)
+			}
+			else
+			{
+				req.send(request.body._0);
+			}
 		});
 	}
 
@@ -14568,14 +14573,15 @@ Elm.Native.Http.make = function(localRuntime) {
 
 	function toResponse(req)
 	{
-		var tag = typeof req.response === 'string' ? 'Text' : 'Blob';
+		var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
+		var response = tag === 'Blob' ? req.response : req.responseText;
 		return {
 			_: {},
 			status: req.status,
 			statusText: req.statusText,
 			headers: parseHeaders(req.getAllResponseHeaders()),
 			url: req.responseURL,
-			value: { ctor: tag, _0: req.response }
+			value: { ctor: tag, _0: response }
 		};
 	}
 
@@ -14620,7 +14626,7 @@ Elm.Native.Http.make = function(localRuntime) {
 		while (dataList.ctor !== '[]')
 		{
 			var data = dataList._0;
-			if (type === 'StringData')
+			if (data.ctor === 'StringData')
 			{
 				formData.append(data._0, data._1);
 			}
@@ -14634,7 +14640,7 @@ Elm.Native.Http.make = function(localRuntime) {
 			dataList = dataList._1;
 		}
 
-		return { ctor: 'FormData', formData: formData };
+		return { ctor: 'BodyFormData', formData: formData };
 	}
 
 
@@ -18474,12 +18480,9 @@ Elm.Native.Utils.make = function(localRuntime) {
 	};
 };
 
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-var createElement = require("./vdom/create-element.js")
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
-module.exports = createElement
-
-},{"./vdom/create-element.js":6}],2:[function(require,module,exports){
+},{}],2:[function(require,module,exports){
 (function (global){
 var topLevel = typeof global !== 'undefined' ? global :
     typeof window !== 'undefined' ? window : {}
@@ -18497,8 +18500,8 @@ if (typeof document !== 'undefined') {
     module.exports = doccy;
 }
 
-}).call(this,typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"min-document":24}],3:[function(require,module,exports){
+}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
+},{"min-document":1}],3:[function(require,module,exports){
 "use strict";
 
 module.exports = function isObject(x) {
@@ -19688,7 +19691,7 @@ var VNode = require('virtual-dom/vnode/vnode');
 var VText = require('virtual-dom/vnode/vtext');
 var diff = require('virtual-dom/vtree/diff');
 var patch = require('virtual-dom/vdom/patch');
-var createElement = require('virtual-dom/create-element');
+var createElement = require('virtual-dom/vdom/create-element');
 var isHook = require("virtual-dom/vnode/is-vhook");
 
 
@@ -19710,24 +19713,14 @@ Elm.Native.VirtualDom.make = function(elm)
 
 	var ATTRIBUTE_KEY = 'UniqueNameThatOthersAreVeryUnlikelyToUse';
 
-	function listToProperties(list)
+
+
+	// VIRTUAL DOM NODES
+
+
+	function text(string)
 	{
-		var object = {};
-		while (list.ctor !== '[]')
-		{
-			var entry = list._0;
-			if (entry.key === ATTRIBUTE_KEY)
-			{
-				object.attributes = object.attributes || {};
-				object.attributes[entry.value.attrKey] = entry.value.attrValue;
-			}
-			else
-			{
-				object[entry.key] = entry.value;
-			}
-			list = list._1;
-		}
-		return object;
+		return new VText(string);
 	}
 
 	function node(name)
@@ -19736,6 +19729,10 @@ Elm.Native.VirtualDom.make = function(elm)
 			return makeNode(name, propertyList, contents);
 		});
 	}
+
+
+	// BUILD VIRTUAL DOME NODES
+
 
 	function makeNode(name, propertyList, contents)
 	{
@@ -19758,7 +19755,7 @@ Elm.Native.VirtualDom.make = function(elm)
 
 		// ensure that setting text of an input does not move the cursor
 		var useSoftSet =
-			name === 'input'
+			(name === 'input' || name === 'textarea')
 			&& props.value !== undefined
 			&& !isHook(props.value);
 
@@ -19769,6 +19766,31 @@ Elm.Native.VirtualDom.make = function(elm)
 
 		return new VNode(name, props, List.toArray(contents), key, namespace);
 	}
+
+	function listToProperties(list)
+	{
+		var object = {};
+		while (list.ctor !== '[]')
+		{
+			var entry = list._0;
+			if (entry.key === ATTRIBUTE_KEY)
+			{
+				object.attributes = object.attributes || {};
+				object.attributes[entry.value.attrKey] = entry.value.attrValue;
+			}
+			else
+			{
+				object[entry.key] = entry.value;
+			}
+			list = list._1;
+		}
+		return object;
+	}
+
+
+
+	// PROPERTIES AND ATTRIBUTES
+
 
 	function property(key, value)
 	{
@@ -19788,6 +19810,63 @@ Elm.Native.VirtualDom.make = function(elm)
 			}
 		};
 	}
+
+
+
+	// NAMESPACED ATTRIBUTES
+
+
+	function attributeNS(namespace, key, value)
+	{
+		return {
+			key: key,
+			value: new AttributeHook(namespace, key, value)
+		};
+	}
+
+	function AttributeHook(namespace, key, value)
+	{
+		if (!(this instanceof AttributeHook))
+		{
+			return new AttributeHook(namespace, key, value);
+		}
+
+		this.namespace = namespace;
+		this.key = key;
+		this.value = value;
+	}
+
+	AttributeHook.prototype.hook = function (node, prop, prev)
+	{
+		if (prev
+			&& prev.type === 'AttributeHook'
+			&& prev.value === this.value
+			&& prev.namespace === this.namespace)
+		{
+			return;
+		}
+
+		node.setAttributeNS(this.namespace, prop, this.value);
+	};
+
+	AttributeHook.prototype.unhook = function (node, prop, next)
+	{
+		if (next
+			&& next.type === 'AttributeHook'
+			&& next.namespace === this.namespace)
+		{
+			return;
+		}
+
+		node.removeAttributeNS(this.namespace, this.key);
+	};
+
+	AttributeHook.prototype.type = 'AttributeHook';
+
+
+
+	// EVENTS
+
 
 	function on(name, options, decoder, createMessage)
 	{
@@ -19828,10 +19907,10 @@ Elm.Native.VirtualDom.make = function(elm)
 		}
 	};
 
-	function text(string)
-	{
-		return new VText(string);
-	}
+
+
+	// INTEGRATION WITH ELEMENTS
+
 
 	function ElementWidget(element)
 	{
@@ -19866,6 +19945,11 @@ Elm.Native.VirtualDom.make = function(elm)
 		});
 	}
 
+
+
+	// RENDER AND UPDATE
+
+
 	function render(model)
 	{
 		var element = Element.createNode('div');
@@ -19885,6 +19969,11 @@ Elm.Native.VirtualDom.make = function(elm)
 		var newNode = patch(node, patches);
 		return newNode;
 	}
+
+
+
+	// LAZINESS
+
 
 	function lazyRef(fn, a)
 	{
@@ -19915,15 +20004,17 @@ Elm.Native.VirtualDom.make = function(elm)
 
 	function Thunk(fn, args, thunk)
 	{
-		this.fn = fn;
-		this.args = args;
+		/* public (used by VirtualDom.js) */
 		this.vnode = null;
 		this.key = undefined;
+
+		/* private */
+		this.fn = fn;
+		this.args = args;
 		this.thunk = thunk;
 	}
 
 	Thunk.prototype.type = "Thunk";
-	Thunk.prototype.update = updateThunk;
 	Thunk.prototype.render = renderThunk;
 
 	function shouldUpdate(current, previous)
@@ -19948,35 +20039,27 @@ Elm.Native.VirtualDom.make = function(elm)
 		return false;
 	}
 
-	function updateThunk(previous, domNode)
+	function renderThunk(previous)
 	{
-		if (!shouldUpdate(this, previous))
+		if (previous == null || shouldUpdate(this, previous))
 		{
-			this.vnode = previous.vnode;
-			return;
+			return this.thunk();
 		}
-
-		if (!this.vnode)
+		else
 		{
-			this.vnode = this.thunk();
+			return previous.vnode;
 		}
-
-		var patches = diff(previous.vnode, this.vnode);
-		patch(domNode, patches);
 	}
 
-	function renderThunk()
-	{
-		return this.thunk();
-	}
 
-	return Elm.Native.VirtualDom.values = {
+	return elm.Native.VirtualDom.values = Elm.Native.VirtualDom.values = {
 		node: node,
 		text: text,
 		on: F4(on),
 
 		property: F2(property),
 		attribute: F2(attribute),
+		attributeNS: F3(attributeNS),
 
 		lazy: F2(lazyRef),
 		lazy2: F3(lazyRef2),
@@ -19990,9 +20073,7 @@ Elm.Native.VirtualDom.make = function(elm)
 	};
 };
 
-},{"virtual-dom/create-element":1,"virtual-dom/vdom/patch":9,"virtual-dom/vnode/is-vhook":13,"virtual-dom/vnode/vnode":18,"virtual-dom/vnode/vtext":20,"virtual-dom/vtree/diff":22}],24:[function(require,module,exports){
-
-},{}]},{},[23]);
+},{"virtual-dom/vdom/create-element":6,"virtual-dom/vdom/patch":9,"virtual-dom/vnode/is-vhook":13,"virtual-dom/vnode/vnode":18,"virtual-dom/vnode/vtext":20,"virtual-dom/vtree/diff":22}]},{},[23]);
 
 Elm.Native = Elm.Native || {};
 Elm.Native.Window = {};
@@ -24947,6 +25028,13 @@ Elm.Signal.Extra.make = function (_elm) {
       fs,
       combine(l));
    });
+   var mergeMany = F2(function (original,
+   others) {
+      return A3($List.foldl,
+      $Signal.merge,
+      original,
+      others);
+   });
    var filter = function (initial) {
       return A2($Signal.filterMap,
       $Basics.identity,
@@ -24989,7 +25077,7 @@ Elm.Signal.Extra.make = function (_elm) {
                  a,
                  _v0._1);}
             _U.badCase($moduleName,
-            "on line 149, column 29 to 34");
+            "on line 174, column 29 to 34");
          }();
       }),
       bs,
@@ -25043,7 +25131,7 @@ Elm.Signal.Extra.make = function (_elm) {
                switch (_v4.ctor)
                {case "Just": return _v4._0;}
                _U.badCase($moduleName,
-               "on line 240, column 25 to 26");
+               "on line 285, column 25 to 26");
             }();
          };
          var lAndR = A2($Signal.merge,
@@ -25083,7 +25171,7 @@ Elm.Signal.Extra.make = function (_elm) {
                    switch (_v7.ctor)
                    {case "_Tuple4": return _v7._0;}
                    _U.badCase($moduleName,
-                   "on line 109, column 19 to 20");
+                   "on line 134, column 19 to 20");
                 }();
              },
              pairS)
@@ -25094,7 +25182,7 @@ Elm.Signal.Extra.make = function (_elm) {
                    {case "_Tuple4":
                       return _v13._1;}
                    _U.badCase($moduleName,
-                   "on line 109, column 47 to 48");
+                   "on line 134, column 47 to 48");
                 }();
              },
              pairS)
@@ -25105,7 +25193,7 @@ Elm.Signal.Extra.make = function (_elm) {
                    {case "_Tuple4":
                       return _v19._2;}
                    _U.badCase($moduleName,
-                   "on line 109, column 75 to 76");
+                   "on line 134, column 75 to 76");
                 }();
              },
              pairS)
@@ -25116,7 +25204,7 @@ Elm.Signal.Extra.make = function (_elm) {
                    {case "_Tuple4":
                       return _v25._3;}
                    _U.badCase($moduleName,
-                   "on line 109, column 103 to 104");
+                   "on line 134, column 103 to 104");
                 }();
              },
              pairS)};
@@ -25130,7 +25218,7 @@ Elm.Signal.Extra.make = function (_elm) {
                    {case "_Tuple3":
                       return _v31._0;}
                    _U.badCase($moduleName,
-                   "on line 103, column 17 to 18");
+                   "on line 128, column 17 to 18");
                 }();
              },
              pairS)
@@ -25141,7 +25229,7 @@ Elm.Signal.Extra.make = function (_elm) {
                    {case "_Tuple3":
                       return _v36._1;}
                    _U.badCase($moduleName,
-                   "on line 103, column 43 to 44");
+                   "on line 128, column 43 to 44");
                 }();
              },
              pairS)
@@ -25152,7 +25240,7 @@ Elm.Signal.Extra.make = function (_elm) {
                    {case "_Tuple3":
                       return _v41._2;}
                    _U.badCase($moduleName,
-                   "on line 103, column 69 to 70");
+                   "on line 128, column 69 to 70");
                 }();
              },
              pairS)};
@@ -25235,6 +25323,11 @@ Elm.Signal.Extra.make = function (_elm) {
       choice,
       signal)($Signal.constant(base));
    });
+   var andMap = F2(function (x,y) {
+      return A2($Signal._op["~"],
+      x,
+      y);
+   });
    _op["~>"] = $Basics.flip($Signal.map);
    var foldp$ = F3(function (fun,
    initFun,
@@ -25245,7 +25338,7 @@ Elm.Signal.Extra.make = function (_elm) {
                switch (_v46.ctor)
                {case "Just": return _v46._0;}
                _U.badCase($moduleName,
-               "on line 136, column 25 to 26");
+               "on line 161, column 25 to 26");
             }();
          };
          var fun$ = F2(function (_v49,
@@ -25257,7 +25350,7 @@ Elm.Signal.Extra.make = function (_elm) {
                     _v49._1,
                     mb)));}
                _U.badCase($moduleName,
-               "between lines 133 and 134");
+               "between lines 158 and 159");
             }();
          });
          var initial = A2(_op["~>"],
@@ -25289,12 +25382,31 @@ Elm.Signal.Extra.make = function (_elm) {
                  a,
                  _v53._1);}
             _U.badCase($moduleName,
-            "on line 155, column 46 to 51");
+            "on line 180, column 46 to 51");
          }();
       }),
       iF,
       aS));
    });
+   var deltas = function (signal) {
+      return function () {
+         var initial = function (value) {
+            return {ctor: "_Tuple2"
+                   ,_0: value
+                   ,_1: value};
+         };
+         var step = F2(function (value,
+         delta) {
+            return {ctor: "_Tuple2"
+                   ,_0: $Basics.snd(delta)
+                   ,_1: value};
+         });
+         return A3(foldp$,
+         step,
+         initial,
+         signal);
+      }();
+   };
    var foldpWith = F4(function (unpack,
    step,
    init,
@@ -25309,7 +25421,7 @@ Elm.Signal.Extra.make = function (_elm) {
                     a,
                     _v57._1));}
                _U.badCase($moduleName,
-               "on line 169, column 7 to 25");
+               "on line 194, column 7 to 25");
             }();
          });
          return A2(_op["~>"],
@@ -25328,7 +25440,7 @@ Elm.Signal.Extra.make = function (_elm) {
                switch (_v61.ctor)
                {case "Just": return _v61._0;}
                _U.badCase($moduleName,
-               "on line 286, column 25 to 26");
+               "on line 331, column 25 to 26");
             }();
          };
          return A2(_op["~>"],
@@ -25377,6 +25489,7 @@ Elm.Signal.Extra.make = function (_elm) {
       }();
    });
    _elm.Signal.Extra.values = {_op: _op
+                              ,andMap: andMap
                               ,zip: zip
                               ,zip3: zip3
                               ,zip4: zip4
@@ -25388,6 +25501,7 @@ Elm.Signal.Extra.make = function (_elm) {
                               ,foldps$: foldps$
                               ,runBuffer: runBuffer
                               ,runBuffer$: runBuffer$
+                              ,deltas: deltas
                               ,delayRound: delayRound
                               ,keepIf: keepIf
                               ,keepWhen: keepWhen
@@ -25399,6 +25513,7 @@ Elm.Signal.Extra.make = function (_elm) {
                               ,filter: filter
                               ,filterFold: filterFold
                               ,fairMerge: fairMerge
+                              ,mergeMany: mergeMany
                               ,combine: combine
                               ,mapMany: mapMany
                               ,applyMany: applyMany
@@ -25790,16 +25905,36 @@ Elm.Svg.Attributes.make = function (_elm) {
    var y2 = $VirtualDom.attribute("y2");
    var y1 = $VirtualDom.attribute("y1");
    var y = $VirtualDom.attribute("y");
-   var xmlSpace = $VirtualDom.attribute("xml:space");
-   var xmlLang = $VirtualDom.attribute("xml:lang");
-   var xmlBase = $VirtualDom.attribute("xml:base");
-   var xlinkType = $VirtualDom.attribute("xlink:type");
-   var xlinkTitle = $VirtualDom.attribute("xlink:title");
-   var xlinkShow = $VirtualDom.attribute("xlink:show");
-   var xlinkRole = $VirtualDom.attribute("xlink:role");
-   var xlinkHref = $VirtualDom.attribute("xlink:href");
-   var xlinkArcrole = $VirtualDom.attribute("xlink:arcrole");
-   var xlinkActuate = $VirtualDom.attribute("xlink:actuate");
+   var xmlSpace = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/XML/1998/namespace",
+   "xml:space");
+   var xmlLang = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/XML/1998/namespace",
+   "xml:lang");
+   var xmlBase = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/XML/1998/namespace",
+   "xml:base");
+   var xlinkType = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:type");
+   var xlinkTitle = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:title");
+   var xlinkShow = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:show");
+   var xlinkRole = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:role");
+   var xlinkHref = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:href");
+   var xlinkArcrole = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:arcrole");
+   var xlinkActuate = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:actuate");
    var xChannelSelector = $VirtualDom.attribute("xChannelSelector");
    var x2 = $VirtualDom.attribute("x2");
    var x1 = $VirtualDom.attribute("x1");
@@ -26945,6 +27080,7 @@ Elm.VirtualDom.make = function (_elm) {
       decoder,
       toMessage);
    });
+   var attributeNS = $Native$VirtualDom.attributeNS;
    var attribute = $Native$VirtualDom.attribute;
    var property = $Native$VirtualDom.property;
    var Property = {ctor: "Property"};
@@ -26960,6 +27096,7 @@ Elm.VirtualDom.make = function (_elm) {
                             ,fromElement: fromElement
                             ,property: property
                             ,attribute: attribute
+                            ,attributeNS: attributeNS
                             ,on: on
                             ,onWithOptions: onWithOptions
                             ,defaultOptions: defaultOptions
