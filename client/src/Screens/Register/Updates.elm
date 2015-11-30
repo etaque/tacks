@@ -46,11 +46,12 @@ update action screen =
       local { screen | password = p }
 
     Submit ->
-      react { screen | loading = True, errors = Dict.empty } (submitTask screen)
+      react { screen | loading = True, errors = Dict.empty }
+        (submitTask screen)
 
     FormSuccess player ->
-      request { screen | loading = False, errors = Dict.empty }
-        (AppTypes.SetPlayer player)
+      react { screen | loading = False, errors = Dict.empty }
+        (Signal.send appActionsMailbox.address (AppTypes.SetPlayer player))
 
     FormFailure errors ->
       local { screen | loading = False, errors = errors }

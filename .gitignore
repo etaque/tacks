@@ -18,5 +18,6 @@ dist
 /.settings
 client/.sass-cache
 client/node_modules
+client/index.html
 .ensime
 .ensime_cache

@@ -1,6 +1,8 @@
 module AppUpdates where
 
 import Task exposing (Task, andThen)
+import History
+import RouteParser
 
 import AppTypes exposing (..)
 
@@ -13,29 +15,32 @@ import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 
 import ServerApi
--- import Routes exposing (route)
+import Routes exposing (..)
 
 
 update : AppInput -> AppUpdate -> AppUpdate
 update {action, clock} {appState} =
   case action of
 
-    SetPlayer p ->
-      noUpdate appState
-    --   AppUpdate { appState | player = p } (Just (Routes.changePath "/")) Nothing
-
     SetPath path ->
-      noUpdate appState
-      -- route appState path
+      RouteParser.match routeParsers path
+        |> Maybe.map (mountRoute appState)
+        |> Maybe.withDefault (mountNotFound appState path)
+
+    SetPlayer p ->
+      let
+        reaction = History.setPath (Routes.toPath Routes.Home)
+      in
+        AppUpdate { appState | player = p } (Just reaction)
 
     UpdateDims dims ->
       let
         newScreen = updateScreenDims dims appState.screen
       in
-        AppUpdate { appState | dims = dims, screen = newScreen } Nothing Nothing
+        AppUpdate { appState | dims = dims, screen = newScreen } Nothing
 
     Logout ->
-      AppUpdate appState (Just logoutTask) Nothing
+      AppUpdate appState (Just logoutTask)
 
     ScreenAction screenAction ->
       updateScreen clock screenAction appState
@@ -44,6 +49,31 @@ update {action, clock} {appState} =
       noUpdate appState
 
 
+mountRoute : AppState -> Routes.Route -> AppUpdate
+mountRoute ({player, dims} as appState) route =
+  let
+    mount = toAppUpdate appState
+  in
+    case route of
+      Home ->
+        mount HomeScreen (Home.mount player)
+      Login ->
+        mount LoginScreen Login.mount
+      Register ->
+        mount RegisterScreen Register.mount
+      ShowProfile ->
+        mount ShowProfileScreen (ShowProfile.mount player)
+      ShowTrack id ->
+        mount ShowTrackScreen (ShowTrack.mount id)
+      EditTrack id ->
+        mount EditTrackScreen (EditTrack.mount dims id)
+      PlayTrack id ->
+        mount GameScreen (Game.mount id)
+
+mountNotFound : AppState -> String -> AppUpdate
+mountNotFound appState path =
+  AppUpdate { appState | screen = NotFoundScreen path } Nothing
+
 updateScreen : Clock -> ScreenAction -> AppState -> AppUpdate
 updateScreen clock screenAction ({screen} as appState) =
   case screenAction of
@@ -51,49 +81,49 @@ updateScreen clock screenAction ({screen} as appState) =
     HomeAction a ->
       case screen of
         HomeScreen s ->
-          Home.update a s |> mapAppUpdate appState HomeScreen
+          Home.update a s |> toAppUpdate appState HomeScreen
         _ ->
           noUpdate appState
 
     LoginAction a ->
       case screen of
         LoginScreen s ->
-          Login.update a s |> mapAppUpdate appState LoginScreen
+          Login.update a s |> toAppUpdate appState LoginScreen
         _ ->
           noUpdate appState
 
     RegisterAction a ->
       case screen of
         RegisterScreen s ->
-          Register.update a s |> mapAppUpdate appState RegisterScreen
+          Register.update a s |> toAppUpdate appState RegisterScreen
         _ ->
           noUpdate appState
 
     ShowTrackAction a ->
       case screen of
         ShowTrackScreen s ->
-          ShowTrack.update a s |> mapAppUpdate appState ShowTrackScreen
+          ShowTrack.update a s |> toAppUpdate appState ShowTrackScreen
         _ ->
           noUpdate appState
 
     EditTrackAction a ->
       case screen of
         EditTrackScreen s ->
-          EditTrack.update a s |> mapAppUpdate appState EditTrackScreen
+          EditTrack.update a s |> toAppUpdate appState EditTrackScreen
         _ ->
           noUpdate appState
 
     ShowProfileAction a ->
       case screen of
         ShowProfileScreen s ->
-          ShowProfile.update a s |> mapAppUpdate appState ShowProfileScreen
+          ShowProfile.update a s |> toAppUpdate appState ShowProfileScreen
         _ ->
           noUpdate appState
 
     GameAction a ->
       case screen of
         GameScreen s ->
-          Game.update appState.player clock a s |> mapAppUpdate appState GameScreen
+          Game.update appState.player clock a s |> toAppUpdate appState GameScreen
         _ ->
           noUpdate appState
 
@@ -106,7 +136,14 @@ updateScreenDims dims appScreen =
       appScreen
 
 noUpdate : AppState -> AppUpdate
-noUpdate appState = AppUpdate appState Nothing Nothing
+noUpdate appState =
+  AppUpdate appState Nothing
+
+toAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
+toAppUpdate appState toAppScreen {screen, reaction} =
+  AppUpdate
+    { appState | screen = toAppScreen screen }
+    reaction
 
 logoutTask : Task Never ()
 logoutTask =

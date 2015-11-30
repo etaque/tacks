@@ -8,7 +8,6 @@ import AppTypes exposing (..)
 import Models exposing (..)
 
 import Screens.ShowTrack.Types exposing (..)
-import Screens.ShowTrack.Updates exposing (actions)
 
 import Screens.Utils exposing (..)
 

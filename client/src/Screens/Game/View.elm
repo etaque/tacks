@@ -2,18 +2,14 @@ module Screens.Game.View where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 
-import AppTypes exposing (..)
 import Models exposing (..)
 import Game.Models exposing (GameState)
 
 import Screens.Game.Types exposing (..)
-import Screens.Game.Updates exposing (actions)
 import Screens.Game.ChatView as ChatView
 import Screens.Game.SideView as SideView
 
-import Screens.Utils exposing (..)
 import Game.Render.All exposing (render)
 import Constants exposing (..)
 

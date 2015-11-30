@@ -2,14 +2,11 @@ module Screens.Game.SideView where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 
-import AppTypes exposing (..)
 import Models exposing (..)
 import Game.Models exposing (GameState)
 
 import Screens.Game.Types exposing (..)
-import Screens.Game.Updates exposing (actions)
 import Screens.Game.PlayersView as PlayersView
 
 import Screens.Utils exposing (..)

@@ -1,12 +1,10 @@
 module Game.Outputs where
 
 import AppTypes exposing (..)
-import Models exposing (..)
 import Screens.Game.Types exposing (..)
 import Game.Models exposing (..)
 import Game.Inputs exposing (..)
 
-import Debug
 
 type alias PlayerOutput =
   { state: OpponentState
@@ -19,7 +17,7 @@ extractPlayerOutput appState action =
   let
     keyboardInput =
       case action of
-        GameAction (GameUpdate gameInput) ->
+        ScreenAction (GameAction (GameUpdate gameInput)) ->
           Just gameInput.keyboardInput
         _ ->
           Nothing
@@ -56,7 +54,7 @@ getActiveTrack appState =
 needChatScrollDown : AppAction -> Maybe ()
 needChatScrollDown action =
   case action of
-    GameAction (NewMessage _) ->
+    ScreenAction (GameAction (NewMessage _)) ->
       Just ()
     _ ->
       Nothing

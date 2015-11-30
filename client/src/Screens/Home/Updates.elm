@@ -4,11 +4,13 @@ import Task exposing (Task, succeed, map, andThen)
 import Task.Extra exposing (delay)
 import Time exposing (second)
 import Signal
+import History
 
 import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.Home.Types exposing (..)
 import ServerApi
+import Routes
 
 
 addr : Signal.Address Action
@@ -52,7 +54,9 @@ update action screen =
               Task.succeed ()
 
     SubmitHandleSuccess player ->
-      request screen (AppTypes.SetPlayer player)
+      react
+        screen
+        (Signal.send appActionsMailbox.address (AppTypes.SetPlayer player))
 
     CreateTrack ->
       react screen <| (ServerApi.createTrack) `andThen`
@@ -65,7 +69,7 @@ update action screen =
               Task.succeed ()
 
     TrackCreated id ->
-      request screen (AppTypes.SetPath ("/edit/" ++ id))
+      react screen (History.setPath (Routes.toPath (Routes.EditTrack id)))
 
     _ ->
       local screen

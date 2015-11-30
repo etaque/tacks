@@ -96,12 +96,6 @@ reactions =
   Signal.map .reaction appUpdates
     |> Signal.filterMap identity (Task.succeed ())
 
-requests : Signal (Task error AppAction)
-requests =
-  Signal.map .request appUpdates
-    |> Signal.filterMap identity AppTypes.AppNoOp
-    |> Signal.map Task.succeed
-
 clock : Signal Clock
 clock =
   Signal.map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
@@ -113,13 +107,9 @@ port reactionsRunner : Signal (Task error Task.ThreadID)
 port reactionsRunner =
   Signal.map Task.spawn reactions
 
-port requestsRunner : Signal (Task error Task.ThreadID)
-port requestsRunner =
-  Signal.map (\t -> Task.spawn (t `andThen` (Signal.send appActionsMailbox.address))) requests
-
-port pathChangeRunner : Signal (Task error ())
-port pathChangeRunner =
-  .signal Routes.pathChangeMailbox
+-- port pathChangeRunner : Signal (Task error ())
+-- port pathChangeRunner =
+--   .signal Routes.pathChangeMailbox
 
 
 -- Outputs

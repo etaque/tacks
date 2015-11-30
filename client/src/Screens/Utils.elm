@@ -4,12 +4,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
-import History
 import String
+import Signal
 
 import Models exposing (..)
-import Game.Models exposing (..)
-import Routes exposing (pathChangeMailbox)
+import AppTypes exposing (appActionsMailbox)
 
 
 type alias Wrapper = List Html -> Html
@@ -20,14 +19,14 @@ linkTo path attrs content =
   let
     linkAttrs =
       [ href path
-      , onPathClick pathChangeMailbox.address (History.setPath path)
+      , onPathClick path
       ]
   in
     a (linkAttrs ++ attrs) content
 
-onPathClick : Signal.Address a -> a -> Attribute
-onPathClick address msg =
-  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message address msg)
+onPathClick : String -> Attribute
+onPathClick path =
+  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message appActionsMailbox.address (AppTypes.SetPath path))
 
 onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =

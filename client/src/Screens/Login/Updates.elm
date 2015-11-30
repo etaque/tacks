@@ -45,8 +45,8 @@ update action screen =
       react { screen | loading = True } (submitTask screen)
 
     Success player ->
-      request { screen | loading = False, error = False }
-        (AppTypes.SetPlayer player)
+      react { screen | loading = False, error = False }
+        (Signal.send appActionsMailbox.address (AppTypes.SetPlayer player))
 
     Error ->
       local { screen | loading = False, error = True }

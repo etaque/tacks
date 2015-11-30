@@ -11,7 +11,7 @@ import AppTypes exposing (..)
 import CoreExtra exposing (..)
 
 import Screens.Register.Types exposing (..)
-import Screens.Register.Updates exposing (actions)
+import Screens.Register.Updates exposing (addr)
 
 import Screens.Utils exposing (..)
 
@@ -31,8 +31,8 @@ registerForm {handle, email, password, loading, errors} =
         [ label [] [ text "Handle" ]
         , textInput
           [ value handle
-          , onInput actions.address SetHandle
-          , onEnter actions.address Submit
+          , onInput addr SetHandle
+          , onEnter addr Submit
           ]
         , fieldError errors "handle"
         ]
@@ -40,8 +40,8 @@ registerForm {handle, email, password, loading, errors} =
         [ label [] [ text "Email" ]
         , textInput
           [ value email
-          , onInput actions.address SetEmail
-          , onEnter actions.address Submit
+          , onInput addr SetEmail
+          , onEnter addr Submit
           ]
         , fieldError errors "email"
         ]
@@ -49,15 +49,15 @@ registerForm {handle, email, password, loading, errors} =
         [ label [] [ text "Password" ]
         , passwordInput
           [ value password
-          , onInput actions.address SetPassword
-          , onEnter actions.address Submit
+          , onInput addr SetPassword
+          , onEnter addr Submit
           ]
         , fieldError errors "password"
         ]
       , div []
         [ button
           [ class "btn btn-primary btn-block"
-          , onClick actions.address Submit
+          , onClick addr Submit
           , disabled loading
           ]
           [ text "Submit" ]

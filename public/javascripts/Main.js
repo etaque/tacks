@@ -11337,7 +11337,6 @@ Elm.Screens.ShowTrack.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var NoOp = {ctor: "NoOp"};
    var TrackNotFound = {ctor: "TrackNotFound"};
    var SetTrack = function (a) {
       return {ctor: "SetTrack",_0: a};
@@ -11348,8 +11347,7 @@ Elm.Screens.ShowTrack.Types.make = function (_elm) {
    return _elm.Screens.ShowTrack.Types.values = {_op: _op
                                                 ,Screen: Screen
                                                 ,SetTrack: SetTrack
-                                                ,TrackNotFound: TrackNotFound
-                                                ,NoOp: NoOp};
+                                                ,TrackNotFound: TrackNotFound};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Core = Elm.Game.Core || {};
@@ -12716,24 +12714,15 @@ Elm.AppTypes.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var request = F2(function (screen,appAction) {
-      return {screen: screen
-             ,reaction: $Maybe.Nothing
-             ,request: $Maybe.Just(appAction)};
-   });
    var react = F2(function (screen,task) {
-      return {screen: screen
-             ,reaction: $Maybe.Just(task)
-             ,request: $Maybe.Nothing};
+      return {screen: screen,reaction: $Maybe.Just(task)};
    });
    var local = function (screen) {
-      return {screen: screen
-             ,reaction: $Maybe.Nothing
-             ,request: $Maybe.Nothing};
+      return {screen: screen,reaction: $Maybe.Nothing};
    };
    var Never = function (a) {    return {ctor: "Never",_0: a};};
-   var ScreenUpdate = F3(function (a,b,c) {
-      return {screen: a,reaction: b,request: c};
+   var ScreenUpdate = F2(function (a,b) {
+      return {screen: a,reaction: b};
    });
    var NoScreen = {ctor: "NoScreen"};
    var initialAppState = F2(function (dims,player) {
@@ -12766,20 +12755,12 @@ Elm.AppTypes.make = function (_elm) {
    var AppState = F3(function (a,b,c) {
       return {player: a,dims: b,screen: c};
    });
-   var AppUpdate = F3(function (a,b,c) {
-      return {appState: a,reaction: b,request: c};
-   });
-   var mapAppUpdate = F3(function (appState,toAppScreen,_p0) {
-      var _p1 = _p0;
-      return A3(AppUpdate,
-      _U.update(appState,{screen: toAppScreen(_p1.screen)}),
-      _p1.reaction,
-      _p1.request);
+   var AppUpdate = F2(function (a,b) {
+      return {appState: a,reaction: b};
    });
    var initialAppUpdate = F2(function (dims,player) {
-      return A3(AppUpdate,
+      return A2(AppUpdate,
       A2(initialAppState,dims,player),
-      $Maybe.Nothing,
       $Maybe.Nothing);
    });
    var Clock = F2(function (a,b) {    return {delta: a,time: b};});
@@ -12858,10 +12839,151 @@ Elm.AppTypes.make = function (_elm) {
                                  ,Never: Never
                                  ,local: local
                                  ,react: react
-                                 ,request: request
-                                 ,mapAppUpdate: mapAppUpdate
                                  ,initialAppUpdate: initialAppUpdate
                                  ,initialAppState: initialAppState};
+};
+Elm.Native = Elm.Native || {};
+Elm.Native.History = {};
+Elm.Native.History.make = function(localRuntime){
+
+  localRuntime.Native = localRuntime.Native || {};
+  localRuntime.Native.History = localRuntime.Native.History || {};
+
+  if (localRuntime.Native.History.values){
+    return localRuntime.Native.History.values;
+  }
+
+  var NS = Elm.Native.Signal.make(localRuntime);
+  var Task = Elm.Native.Task.make(localRuntime);
+  var Utils = Elm.Native.Utils.make(localRuntime);
+  var node = window;
+
+  // path : Signal String
+  var path = NS.input('History.path', window.location.pathname);
+
+  // length : Signal Int
+  var length = NS.input('History.length', window.history.length);
+
+  // hash : Signal String
+  var hash = NS.input('History.hash', window.location.hash);
+
+  localRuntime.addListener([path.id, length.id], node, 'popstate', function getPath(event){
+    localRuntime.notify(path.id, window.location.pathname);
+    localRuntime.notify(length.id, window.history.length);
+    localRuntime.notify(hash.id, window.location.hash);
+  });
+
+  localRuntime.addListener([hash.id], node, 'hashchange', function getHash(event){
+    localRuntime.notify(hash.id, window.location.hash);
+  });
+
+  // setPath : String -> Task error ()
+  var setPath = function(urlpath){
+    return Task.asyncFunction(function(callback){
+      setTimeout(function(){
+        localRuntime.notify(path.id, urlpath);
+        window.history.pushState({}, "", urlpath);
+        localRuntime.notify(hash.id, window.location.hash);
+        localRuntime.notify(length.id, window.history.length);
+
+      },0);
+      return callback(Task.succeed(Utils.Tuple0));
+    });
+  };
+
+  // replacePath : String -> Task error ()
+  var replacePath = function(urlpath){
+    return Task.asyncFunction(function(callback){
+      setTimeout(function(){
+        localRuntime.notify(path.id, urlpath);
+        window.history.replaceState({}, "", urlpath);
+        localRuntime.notify(hash.id, window.location.hash);
+        localRuntime.notify(length.id, window.history.length);
+      },0);
+      return callback(Task.succeed(Utils.Tuple0));
+    });
+  };
+
+  // go : Int -> Task error ()
+  var go = function(n){
+    return Task.asyncFunction(function(callback){
+      setTimeout(function(){
+        window.history.go(n);
+        localRuntime.notify(length.id, window.history.length);
+        localRuntime.notify(hash.id, window.location.hash);
+      }, 0);
+      return callback(Task.succeed(Utils.Tuple0));
+    });
+  };
+
+  // back : Task error ()
+  var back = Task.asyncFunction(function(callback){
+    setTimeout(function(){
+      localRuntime.notify(hash.id, window.location.hash);
+      window.history.back();
+      localRuntime.notify(length.id, window.history.length);
+
+    }, 0);
+    return callback(Task.succeed(Utils.Tuple0));
+  });
+
+  // forward : Task error ()
+  var forward = Task.asyncFunction(function(callback){
+    setTimeout(function(){
+      window.history.forward();
+      localRuntime.notify(length.id, window.history.length);
+      localRuntime.notify(hash.id, window.location.hash);
+    }, 0);
+    return callback(Task.succeed(Utils.Tuple0));
+  });
+
+
+
+  return {
+    path        : path,
+    setPath     : setPath,
+    replacePath : replacePath,
+    go          : go,
+    back        : back,
+    forward     : forward,
+    length      : length,
+    hash        : hash
+  };
+
+};
+
+Elm.History = Elm.History || {};
+Elm.History.make = function (_elm) {
+   "use strict";
+   _elm.History = _elm.History || {};
+   if (_elm.History.values) return _elm.History.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$History = Elm.Native.History.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var path = $Native$History.path;
+   var hash = $Native$History.hash;
+   var length = $Native$History.length;
+   var forward = $Native$History.forward;
+   var back = $Native$History.back;
+   var go = $Native$History.go;
+   var replacePath = $Native$History.replacePath;
+   var setPath = $Native$History.setPath;
+   return _elm.History.values = {_op: _op
+                                ,setPath: setPath
+                                ,replacePath: replacePath
+                                ,go: go
+                                ,back: back
+                                ,forward: forward
+                                ,length: length
+                                ,hash: hash
+                                ,path: path};
 };
 Elm.Native.Http = {};
 Elm.Native.Http.make = function(localRuntime) {
@@ -13693,6 +13815,70 @@ Elm.ServerApi.make = function (_elm) {
                                   ,errorsDecoder: errorsDecoder
                                   ,serverError: serverError};
 };
+Elm.Routes = Elm.Routes || {};
+Elm.Routes.make = function (_elm) {
+   "use strict";
+   _elm.Routes = _elm.Routes || {};
+   if (_elm.Routes.values) return _elm.Routes.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var toPath = function (route) {
+      var _p0 = route;
+      switch (_p0.ctor)
+      {case "Home": return "/";
+         case "Login": return "/login";
+         case "Register": return "/register";
+         case "ShowProfile": return "/me";
+         case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
+         case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
+         default: return A2($Basics._op["++"],"/play/",_p0._0);}
+   };
+   var PlayTrack = function (a) {
+      return {ctor: "PlayTrack",_0: a};
+   };
+   var EditTrack = function (a) {
+      return {ctor: "EditTrack",_0: a};
+   };
+   var ShowTrack = function (a) {
+      return {ctor: "ShowTrack",_0: a};
+   };
+   var ShowProfile = {ctor: "ShowProfile"};
+   var Register = {ctor: "Register"};
+   var Login = {ctor: "Login"};
+   var Home = {ctor: "Home"};
+   var routeParsers = _U.list([A2($RouteParser.$static,Home,"/")
+                              ,A2($RouteParser.$static,Login,"/login")
+                              ,A2($RouteParser.$static,Register,"/register")
+                              ,A2($RouteParser.$static,ShowProfile,"/me")
+                              ,A4($RouteParser.dyn1,
+                              ShowTrack,
+                              "/track/",
+                              $RouteParser.string,
+                              "")
+                              ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
+                              ,A4($RouteParser.dyn1,
+                              PlayTrack,
+                              "/play/",
+                              $RouteParser.string,
+                              "")]);
+   return _elm.Routes.values = {_op: _op
+                               ,Home: Home
+                               ,Login: Login
+                               ,Register: Register
+                               ,ShowProfile: ShowProfile
+                               ,ShowTrack: ShowTrack
+                               ,EditTrack: EditTrack
+                               ,PlayTrack: PlayTrack
+                               ,routeParsers: routeParsers
+                               ,toPath: toPath};
+};
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Home = Elm.Screens.Home || {};
 Elm.Screens.Home.Updates = Elm.Screens.Home.Updates || {};
@@ -13707,10 +13893,12 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $History = Elm.History.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -13765,9 +13953,11 @@ Elm.Screens.Home.Updates.make = function (_elm) {
                     return $Task.succeed({ctor: "_Tuple0"});
                  }
            }));
-         case "SubmitHandleSuccess": return A2($AppTypes.request,
+         case "SubmitHandleSuccess": return A2($AppTypes.react,
            screen,
-           $AppTypes.SetPlayer(_p2._0));
+           A2($Signal.send,
+           $AppTypes.appActionsMailbox.address,
+           $AppTypes.SetPlayer(_p2._0)));
          case "CreateTrack": return A2($AppTypes.react,
            screen,
            A2($Task.andThen,
@@ -13782,9 +13972,9 @@ Elm.Screens.Home.Updates.make = function (_elm) {
                     return $Task.succeed({ctor: "_Tuple0"});
                  }
            }));
-         case "TrackCreated": return A2($AppTypes.request,
+         case "TrackCreated": return A2($AppTypes.react,
            screen,
-           $AppTypes.SetPath(A2($Basics._op["++"],"/edit/",_p2._0)));
+           $History.setPath($Routes.toPath($Routes.EditTrack(_p2._0))));
          default: return $AppTypes.local(screen);}
    });
    return _elm.Screens.Home.Updates.values = {_op: _op
@@ -13861,9 +14051,11 @@ Elm.Screens.Register.Updates.make = function (_elm) {
          case "Submit": return A2($AppTypes.react,
            _U.update(screen,{loading: true,errors: $Dict.empty}),
            submitTask(screen));
-         case "FormSuccess": return A2($AppTypes.request,
+         case "FormSuccess": return A2($AppTypes.react,
            _U.update(screen,{loading: false,errors: $Dict.empty}),
-           $AppTypes.SetPlayer(_p2._0));
+           A2($Signal.send,
+           $AppTypes.appActionsMailbox.address,
+           $AppTypes.SetPlayer(_p2._0)));
          default: return $AppTypes.local(_U.update(screen,
            {loading: false,errors: _p2._0}));}
    });
@@ -13932,9 +14124,11 @@ Elm.Screens.Login.Updates.make = function (_elm) {
          case "Submit": return A2($AppTypes.react,
            _U.update(screen,{loading: true}),
            submitTask(screen));
-         case "Success": return A2($AppTypes.request,
+         case "Success": return A2($AppTypes.react,
            _U.update(screen,{loading: false,error: false}),
-           $AppTypes.SetPlayer(_p2._0));
+           A2($Signal.send,
+           $AppTypes.appActionsMailbox.address,
+           $AppTypes.SetPlayer(_p2._0)));
          default: return $AppTypes.local(_U.update(screen,
            {loading: false,error: true}));}
    });
@@ -13968,12 +14162,12 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
    var _op = {};
    var update = F2(function (action,screen) {
       var _p0 = action;
-      switch (_p0.ctor)
-      {case "SetTrack": return $AppTypes.local(_U.update(screen,
-           {track: $Maybe.Just(_p0._0)}));
-         case "TrackNotFound": return $AppTypes.local(_U.update(screen,
-           {notFound: true}));
-         default: return $AppTypes.local(screen);}
+      if (_p0.ctor === "SetTrack") {
+            return $AppTypes.local(_U.update(screen,
+            {track: $Maybe.Just(_p0._0)}));
+         } else {
+            return $AppTypes.local(_U.update(screen,{notFound: true}));
+         }
    });
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
@@ -15839,9 +16033,12 @@ Elm.AppUpdates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $History = Elm.History.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
    $Screens$Game$Updates = Elm.Screens.Game.Updates.make(_elm),
    $Screens$Home$Updates = Elm.Screens.Home.Updates.make(_elm),
@@ -15865,125 +16062,171 @@ Elm.AppUpdates.make = function (_elm) {
             return $Task.succeed({ctor: "_Tuple0"});
          }
    });
+   var toAppUpdate = F3(function (appState,toAppScreen,_p1) {
+      var _p2 = _p1;
+      return A2($AppTypes.AppUpdate,
+      _U.update(appState,{screen: toAppScreen(_p2.screen)}),
+      _p2.reaction);
+   });
    var noUpdate = function (appState) {
-      return A3($AppTypes.AppUpdate,
-      appState,
-      $Maybe.Nothing,
-      $Maybe.Nothing);
+      return A2($AppTypes.AppUpdate,appState,$Maybe.Nothing);
    };
    var updateScreenDims = F2(function (dims,appScreen) {
-      var _p1 = appScreen;
-      if (_p1.ctor === "EditTrackScreen") {
+      var _p3 = appScreen;
+      if (_p3.ctor === "EditTrackScreen") {
             return $AppTypes.EditTrackScreen(A2($Screens$EditTrack$Updates.updateDims,
             dims,
-            _p1._0));
+            _p3._0));
          } else {
             return appScreen;
          }
    });
-   var updateScreen = F3(function (clock,screenAction,_p2) {
-      var _p3 = _p2;
-      var _p13 = _p3.screen;
-      var _p12 = _p3;
-      var _p4 = screenAction;
-      switch (_p4.ctor)
-      {case "HomeAction": var _p5 = _p13;
-           if (_p5.ctor === "HomeScreen") {
-                 return A3($AppTypes.mapAppUpdate,
-                 _p12,
+   var updateScreen = F3(function (clock,screenAction,_p4) {
+      var _p5 = _p4;
+      var _p15 = _p5.screen;
+      var _p14 = _p5;
+      var _p6 = screenAction;
+      switch (_p6.ctor)
+      {case "HomeAction": var _p7 = _p15;
+           if (_p7.ctor === "HomeScreen") {
+                 return A3(toAppUpdate,
+                 _p14,
                  $AppTypes.HomeScreen,
-                 A2($Screens$Home$Updates.update,_p4._0,_p5._0));
+                 A2($Screens$Home$Updates.update,_p6._0,_p7._0));
               } else {
-                 return noUpdate(_p12);
+                 return noUpdate(_p14);
               }
-         case "LoginAction": var _p6 = _p13;
-           if (_p6.ctor === "LoginScreen") {
-                 return A3($AppTypes.mapAppUpdate,
-                 _p12,
+         case "LoginAction": var _p8 = _p15;
+           if (_p8.ctor === "LoginScreen") {
+                 return A3(toAppUpdate,
+                 _p14,
                  $AppTypes.LoginScreen,
-                 A2($Screens$Login$Updates.update,_p4._0,_p6._0));
+                 A2($Screens$Login$Updates.update,_p6._0,_p8._0));
               } else {
-                 return noUpdate(_p12);
+                 return noUpdate(_p14);
               }
-         case "RegisterAction": var _p7 = _p13;
-           if (_p7.ctor === "RegisterScreen") {
-                 return A3($AppTypes.mapAppUpdate,
-                 _p12,
+         case "RegisterAction": var _p9 = _p15;
+           if (_p9.ctor === "RegisterScreen") {
+                 return A3(toAppUpdate,
+                 _p14,
                  $AppTypes.RegisterScreen,
-                 A2($Screens$Register$Updates.update,_p4._0,_p7._0));
+                 A2($Screens$Register$Updates.update,_p6._0,_p9._0));
               } else {
-                 return noUpdate(_p12);
+                 return noUpdate(_p14);
               }
-         case "ShowTrackAction": var _p8 = _p13;
-           if (_p8.ctor === "ShowTrackScreen") {
-                 return A3($AppTypes.mapAppUpdate,
-                 _p12,
+         case "ShowTrackAction": var _p10 = _p15;
+           if (_p10.ctor === "ShowTrackScreen") {
+                 return A3(toAppUpdate,
+                 _p14,
                  $AppTypes.ShowTrackScreen,
-                 A2($Screens$ShowTrack$Updates.update,_p4._0,_p8._0));
+                 A2($Screens$ShowTrack$Updates.update,_p6._0,_p10._0));
               } else {
-                 return noUpdate(_p12);
+                 return noUpdate(_p14);
               }
-         case "EditTrackAction": var _p9 = _p13;
-           if (_p9.ctor === "EditTrackScreen") {
-                 return A3($AppTypes.mapAppUpdate,
-                 _p12,
+         case "EditTrackAction": var _p11 = _p15;
+           if (_p11.ctor === "EditTrackScreen") {
+                 return A3(toAppUpdate,
+                 _p14,
                  $AppTypes.EditTrackScreen,
-                 A2($Screens$EditTrack$Updates.update,_p4._0,_p9._0));
+                 A2($Screens$EditTrack$Updates.update,_p6._0,_p11._0));
               } else {
-                 return noUpdate(_p12);
+                 return noUpdate(_p14);
               }
-         case "ShowProfileAction": var _p10 = _p13;
-           if (_p10.ctor === "ShowProfileScreen") {
-                 return A3($AppTypes.mapAppUpdate,
-                 _p12,
+         case "ShowProfileAction": var _p12 = _p15;
+           if (_p12.ctor === "ShowProfileScreen") {
+                 return A3(toAppUpdate,
+                 _p14,
                  $AppTypes.ShowProfileScreen,
-                 A2($Screens$ShowProfile$Updates.update,_p4._0,_p10._0));
+                 A2($Screens$ShowProfile$Updates.update,_p6._0,_p12._0));
               } else {
-                 return noUpdate(_p12);
+                 return noUpdate(_p14);
               }
-         default: var _p11 = _p13;
-           if (_p11.ctor === "GameScreen") {
-                 return A3($AppTypes.mapAppUpdate,
-                 _p12,
+         default: var _p13 = _p15;
+           if (_p13.ctor === "GameScreen") {
+                 return A3(toAppUpdate,
+                 _p14,
                  $AppTypes.GameScreen,
                  A4($Screens$Game$Updates.update,
-                 _p12.player,
+                 _p14.player,
                  clock,
-                 _p4._0,
-                 _p11._0));
+                 _p6._0,
+                 _p13._0));
               } else {
-                 return noUpdate(_p12);
+                 return noUpdate(_p14);
               }}
    });
-   var update = F2(function (_p15,_p14) {
-      var _p16 = _p15;
-      var _p17 = _p14;
-      var _p20 = _p17.appState;
-      var _p18 = _p16.action;
+   var mountNotFound = F2(function (appState,path) {
+      return A2($AppTypes.AppUpdate,
+      _U.update(appState,{screen: $AppTypes.NotFoundScreen(path)}),
+      $Maybe.Nothing);
+   });
+   var mountRoute = F2(function (_p16,route) {
+      var _p17 = _p16;
+      var _p19 = _p17.player;
+      var mount = toAppUpdate(_p17);
+      var _p18 = route;
       switch (_p18.ctor)
-      {case "SetPlayer": return noUpdate(_p20);
-         case "SetPath": return noUpdate(_p20);
-         case "UpdateDims": var _p19 = _p18._0;
-           var newScreen = A2(updateScreenDims,_p19,_p20.screen);
-           return A3($AppTypes.AppUpdate,
-           _U.update(_p20,{dims: _p19,screen: newScreen}),
-           $Maybe.Nothing,
+      {case "Home": return A2(mount,
+           $AppTypes.HomeScreen,
+           $Screens$Home$Updates.mount(_p19));
+         case "Login": return A2(mount,
+           $AppTypes.LoginScreen,
+           $Screens$Login$Updates.mount);
+         case "Register": return A2(mount,
+           $AppTypes.RegisterScreen,
+           $Screens$Register$Updates.mount);
+         case "ShowProfile": return A2(mount,
+           $AppTypes.ShowProfileScreen,
+           $Screens$ShowProfile$Updates.mount(_p19));
+         case "ShowTrack": return A2(mount,
+           $AppTypes.ShowTrackScreen,
+           $Screens$ShowTrack$Updates.mount(_p18._0));
+         case "EditTrack": return A2(mount,
+           $AppTypes.EditTrackScreen,
+           A2($Screens$EditTrack$Updates.mount,_p17.dims,_p18._0));
+         default: return A2(mount,
+           $AppTypes.GameScreen,
+           $Screens$Game$Updates.mount(_p18._0));}
+   });
+   var update = F2(function (_p21,_p20) {
+      var _p22 = _p21;
+      var _p23 = _p20;
+      var _p27 = _p23.appState;
+      var _p24 = _p22.action;
+      switch (_p24.ctor)
+      {case "SetPath": var _p25 = _p24._0;
+           return A2($Maybe.withDefault,
+           A2(mountNotFound,_p27,_p25),
+           A2($Maybe.map,
+           mountRoute(_p27),
+           A2($RouteParser.match,$Routes.routeParsers,_p25)));
+         case "SetPlayer":
+         var reaction = $History.setPath($Routes.toPath($Routes.Home));
+           return A2($AppTypes.AppUpdate,
+           _U.update(_p27,{player: _p24._0}),
+           $Maybe.Just(reaction));
+         case "UpdateDims": var _p26 = _p24._0;
+           var newScreen = A2(updateScreenDims,_p26,_p27.screen);
+           return A2($AppTypes.AppUpdate,
+           _U.update(_p27,{dims: _p26,screen: newScreen}),
            $Maybe.Nothing);
-         case "Logout": return A3($AppTypes.AppUpdate,
-           _p20,
-           $Maybe.Just(logoutTask),
-           $Maybe.Nothing);
+         case "Logout": return A2($AppTypes.AppUpdate,
+           _p27,
+           $Maybe.Just(logoutTask));
          case "ScreenAction": return A3(updateScreen,
-           _p16.clock,
-           _p18._0,
-           _p20);
-         default: return noUpdate(_p20);}
+           _p22.clock,
+           _p24._0,
+           _p27);
+         default: return noUpdate(_p27);}
    });
    return _elm.AppUpdates.values = {_op: _op
                                    ,update: update
+                                   ,mountRoute: mountRoute
+                                   ,mountNotFound: mountNotFound
                                    ,updateScreen: updateScreen
                                    ,updateScreenDims: updateScreenDims
                                    ,noUpdate: noUpdate
+                                   ,toAppUpdate: toAppUpdate
                                    ,logoutTask: logoutTask};
 };
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
@@ -18380,211 +18623,6 @@ Elm.Html.Events.make = function (_elm) {
                                     ,keyCode: keyCode
                                     ,Options: Options};
 };
-Elm.Native = Elm.Native || {};
-Elm.Native.History = {};
-Elm.Native.History.make = function(localRuntime){
-
-  localRuntime.Native = localRuntime.Native || {};
-  localRuntime.Native.History = localRuntime.Native.History || {};
-
-  if (localRuntime.Native.History.values){
-    return localRuntime.Native.History.values;
-  }
-
-  var NS = Elm.Native.Signal.make(localRuntime);
-  var Task = Elm.Native.Task.make(localRuntime);
-  var Utils = Elm.Native.Utils.make(localRuntime);
-  var node = window;
-
-  // path : Signal String
-  var path = NS.input('History.path', window.location.pathname);
-
-  // length : Signal Int
-  var length = NS.input('History.length', window.history.length);
-
-  // hash : Signal String
-  var hash = NS.input('History.hash', window.location.hash);
-
-  localRuntime.addListener([path.id, length.id], node, 'popstate', function getPath(event){
-    localRuntime.notify(path.id, window.location.pathname);
-    localRuntime.notify(length.id, window.history.length);
-    localRuntime.notify(hash.id, window.location.hash);
-  });
-
-  localRuntime.addListener([hash.id], node, 'hashchange', function getHash(event){
-    localRuntime.notify(hash.id, window.location.hash);
-  });
-
-  // setPath : String -> Task error ()
-  var setPath = function(urlpath){
-    return Task.asyncFunction(function(callback){
-      setTimeout(function(){
-        localRuntime.notify(path.id, urlpath);
-        window.history.pushState({}, "", urlpath);
-        localRuntime.notify(hash.id, window.location.hash);
-        localRuntime.notify(length.id, window.history.length);
-
-      },0);
-      return callback(Task.succeed(Utils.Tuple0));
-    });
-  };
-
-  // replacePath : String -> Task error ()
-  var replacePath = function(urlpath){
-    return Task.asyncFunction(function(callback){
-      setTimeout(function(){
-        localRuntime.notify(path.id, urlpath);
-        window.history.replaceState({}, "", urlpath);
-        localRuntime.notify(hash.id, window.location.hash);
-        localRuntime.notify(length.id, window.history.length);
-      },0);
-      return callback(Task.succeed(Utils.Tuple0));
-    });
-  };
-
-  // go : Int -> Task error ()
-  var go = function(n){
-    return Task.asyncFunction(function(callback){
-      setTimeout(function(){
-        window.history.go(n);
-        localRuntime.notify(length.id, window.history.length);
-        localRuntime.notify(hash.id, window.location.hash);
-      }, 0);
-      return callback(Task.succeed(Utils.Tuple0));
-    });
-  };
-
-  // back : Task error ()
-  var back = Task.asyncFunction(function(callback){
-    setTimeout(function(){
-      localRuntime.notify(hash.id, window.location.hash);
-      window.history.back();
-      localRuntime.notify(length.id, window.history.length);
-
-    }, 0);
-    return callback(Task.succeed(Utils.Tuple0));
-  });
-
-  // forward : Task error ()
-  var forward = Task.asyncFunction(function(callback){
-    setTimeout(function(){
-      window.history.forward();
-      localRuntime.notify(length.id, window.history.length);
-      localRuntime.notify(hash.id, window.location.hash);
-    }, 0);
-    return callback(Task.succeed(Utils.Tuple0));
-  });
-
-
-
-  return {
-    path        : path,
-    setPath     : setPath,
-    replacePath : replacePath,
-    go          : go,
-    back        : back,
-    forward     : forward,
-    length      : length,
-    hash        : hash
-  };
-
-};
-
-Elm.History = Elm.History || {};
-Elm.History.make = function (_elm) {
-   "use strict";
-   _elm.History = _elm.History || {};
-   if (_elm.History.values) return _elm.History.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Native$History = Elm.Native.History.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var path = $Native$History.path;
-   var hash = $Native$History.hash;
-   var length = $Native$History.length;
-   var forward = $Native$History.forward;
-   var back = $Native$History.back;
-   var go = $Native$History.go;
-   var replacePath = $Native$History.replacePath;
-   var setPath = $Native$History.setPath;
-   return _elm.History.values = {_op: _op
-                                ,setPath: setPath
-                                ,replacePath: replacePath
-                                ,go: go
-                                ,back: back
-                                ,forward: forward
-                                ,length: length
-                                ,hash: hash
-                                ,path: path};
-};
-Elm.Routes = Elm.Routes || {};
-Elm.Routes.make = function (_elm) {
-   "use strict";
-   _elm.Routes = _elm.Routes || {};
-   if (_elm.Routes.values) return _elm.Routes.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $History = Elm.History.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $RouteParser = Elm.RouteParser.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var pathChangeMailbox = $Signal.mailbox($Task.succeed({ctor: "_Tuple0"}));
-   var changePath = function (path) {
-      return A2($Signal.send,
-      pathChangeMailbox.address,
-      $History.setPath(path));
-   };
-   var PlayTrack = function (a) {
-      return {ctor: "PlayTrack",_0: a};
-   };
-   var EditTrack = function (a) {
-      return {ctor: "EditTrack",_0: a};
-   };
-   var ShowTrack = function (a) {
-      return {ctor: "ShowTrack",_0: a};
-   };
-   var ShowProfile = {ctor: "ShowProfile"};
-   var Register = {ctor: "Register"};
-   var Login = {ctor: "Login"};
-   var Home = {ctor: "Home"};
-   var routeParsers = _U.list([A2($RouteParser.$static,Home,"/")
-                              ,A2($RouteParser.$static,Login,"/login")
-                              ,A2($RouteParser.$static,Register,"/register")
-                              ,A2($RouteParser.$static,ShowProfile,"/me")
-                              ,A4($RouteParser.dyn1,
-                              ShowTrack,
-                              "/track/",
-                              $RouteParser.string,
-                              "")
-                              ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
-                              ,A4($RouteParser.dyn1,
-                              PlayTrack,
-                              "/play/",
-                              $RouteParser.string,
-                              "")]);
-   return _elm.Routes.values = {_op: _op
-                               ,Home: Home
-                               ,Login: Login
-                               ,Register: Register
-                               ,ShowProfile: ShowProfile
-                               ,ShowTrack: ShowTrack
-                               ,EditTrack: EditTrack
-                               ,PlayTrack: PlayTrack
-                               ,routeParsers: routeParsers
-                               ,pathChangeMailbox: pathChangeMailbox
-                               ,changePath: changePath};
-};
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Utils = Elm.Screens.Utils || {};
 Elm.Screens.Utils.make = function (_elm) {
@@ -18593,9 +18631,9 @@ Elm.Screens.Utils.make = function (_elm) {
    _elm.Screens.Utils = _elm.Screens.Utils || {};
    if (_elm.Screens.Utils.values) return _elm.Screens.Utils.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $History = Elm.History.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $Html$Events = Elm.Html.Events.make(_elm),
@@ -18604,7 +18642,6 @@ Elm.Screens.Utils.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
@@ -18764,20 +18801,20 @@ Elm.Screens.Utils.make = function (_elm) {
          return A2($Signal.message,address,contentToValue(str));
       });
    });
-   var onPathClick = F2(function (address,msg) {
+   var onPathClick = function (path) {
       return A4($Html$Events.onWithOptions,
       "click",
       eventOptions,
       $Json$Decode.value,
       function (_p4) {
-         return A2($Signal.message,address,msg);
+         return A2($Signal.message,
+         $AppTypes.appActionsMailbox.address,
+         $AppTypes.SetPath(path));
       });
-   });
+   };
    var linkTo = F3(function (path,attrs,content) {
       var linkAttrs = _U.list([$Html$Attributes.href(path)
-                              ,A2(onPathClick,
-                              $Routes.pathChangeMailbox.address,
-                              $History.setPath(path))]);
+                              ,onPathClick(path)]);
       return A2($Html.a,
       A2($Basics._op["++"],linkAttrs,attrs),
       content);
@@ -19080,10 +19117,10 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                          _U.list([$Html.text("Handle")]))
                                                          ,$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p2.handle)
                                                                                            ,A2($Screens$Utils.onInput,
-                                                                                           $Screens$Register$Updates.actions.address,
+                                                                                           $Screens$Register$Updates.addr,
                                                                                            $Screens$Register$Types.SetHandle)
                                                                                            ,A2($Screens$Utils.onEnter,
-                                                                                           $Screens$Register$Updates.actions.address,
+                                                                                           $Screens$Register$Updates.addr,
                                                                                            $Screens$Register$Types.Submit)]))
                                                          ,A2(fieldError,_p3,"handle")]))
                                                  ,A2($Screens$Utils.formGroup,
@@ -19093,10 +19130,10 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                          _U.list([$Html.text("Email")]))
                                                          ,$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p2.email)
                                                                                            ,A2($Screens$Utils.onInput,
-                                                                                           $Screens$Register$Updates.actions.address,
+                                                                                           $Screens$Register$Updates.addr,
                                                                                            $Screens$Register$Types.SetEmail)
                                                                                            ,A2($Screens$Utils.onEnter,
-                                                                                           $Screens$Register$Updates.actions.address,
+                                                                                           $Screens$Register$Updates.addr,
                                                                                            $Screens$Register$Types.Submit)]))
                                                          ,A2(fieldError,_p3,"email")]))
                                                  ,A2($Screens$Utils.formGroup,
@@ -19106,10 +19143,10 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                          _U.list([$Html.text("Password")]))
                                                          ,$Screens$Utils.passwordInput(_U.list([$Html$Attributes.value(_p2.password)
                                                                                                ,A2($Screens$Utils.onInput,
-                                                                                               $Screens$Register$Updates.actions.address,
+                                                                                               $Screens$Register$Updates.addr,
                                                                                                $Screens$Register$Types.SetPassword)
                                                                                                ,A2($Screens$Utils.onEnter,
-                                                                                               $Screens$Register$Updates.actions.address,
+                                                                                               $Screens$Register$Updates.addr,
                                                                                                $Screens$Register$Types.Submit)]))
                                                          ,A2(fieldError,_p3,"password")]))
                                                  ,A2($Html.div,
@@ -19117,7 +19154,7 @@ Elm.Screens.Register.View.make = function (_elm) {
                                                  _U.list([A2($Html.button,
                                                  _U.list([$Html$Attributes.$class("btn btn-primary btn-block")
                                                          ,A2($Html$Events.onClick,
-                                                         $Screens$Register$Updates.actions.address,
+                                                         $Screens$Register$Updates.addr,
                                                          $Screens$Register$Types.Submit)
                                                          ,$Html$Attributes.disabled(_p2.loading)]),
                                                  _U.list([$Html.text("Submit")]))]))]))]));
@@ -22462,7 +22499,8 @@ Elm.Game.Outputs.make = function (_elm) {
    var _op = {};
    var needChatScrollDown = function (action) {
       var _p0 = action;
-      if (_p0.ctor === "GameAction" && _p0._0.ctor === "NewMessage") {
+      if (_p0.ctor === "ScreenAction" && _p0._0.ctor === "GameAction" && _p0._0._0.ctor === "NewMessage")
+      {
             return $Maybe.Just({ctor: "_Tuple0"});
          } else {
             return $Maybe.Nothing;
@@ -22501,8 +22539,9 @@ Elm.Game.Outputs.make = function (_elm) {
       }();
       var keyboardInput = function () {
          var _p4 = action;
-         if (_p4.ctor === "GameAction" && _p4._0.ctor === "GameUpdate") {
-               return $Maybe.Just(_p4._0._0.keyboardInput);
+         if (_p4.ctor === "ScreenAction" && _p4._0.ctor === "GameAction" && _p4._0._0.ctor === "GameUpdate")
+         {
+               return $Maybe.Just(_p4._0._0._0.keyboardInput);
             } else {
                return $Maybe.Nothing;
             }
@@ -22592,7 +22631,6 @@ Elm.Main.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
    $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
    $Screens$Game$Decoders = Elm.Screens.Game.Decoders.make(_elm),
    $Screens$Game$Updates = Elm.Screens.Game.Updates.make(_elm),
@@ -22607,10 +22645,6 @@ Elm.Main.make = function (_elm) {
       return v;
    },
    $Screens$Game$Updates.chat.signal);
-   var pathChangeRunner = Elm.Native.Task.make(_elm).performSignal("pathChangeRunner",
-   function (_) {
-      return _.signal;
-   }($Routes.pathChangeMailbox));
    var clock = A2($Signal.map,
    function (_p0) {
       var _p1 = _p0;
@@ -22898,24 +22932,6 @@ Elm.Main.make = function (_elm) {
    appUpdates));
    var reactionsRunner = Elm.Native.Task.make(_elm).performSignal("reactionsRunner",
    A2($Signal.map,$Task.spawn,reactions));
-   var requests = A2($Signal.map,
-   $Task.succeed,
-   A3($Signal.filterMap,
-   $Basics.identity,
-   $AppTypes.AppNoOp,
-   A2($Signal.map,
-   function (_) {
-      return _.request;
-   },
-   appUpdates)));
-   var requestsRunner = Elm.Native.Task.make(_elm).performSignal("requestsRunner",
-   A2($Signal.map,
-   function (t) {
-      return $Task.spawn(A2($Task.andThen,
-      t,
-      $Signal.send($AppTypes.appActionsMailbox.address)));
-   },
-   requests));
    return _elm.Main.values = {_op: _op
                              ,main: main
                              ,appState: appState
@@ -22929,6 +22945,5 @@ Elm.Main.make = function (_elm) {
                              ,gameActions: gameActions
                              ,editorInputActions: editorInputActions
                              ,reactions: reactions
-                             ,requests: requests
                              ,clock: clock};
 };

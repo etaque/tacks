@@ -30,6 +30,7 @@ type alias AppInput =
   , clock : Clock
   }
 
+
 type AppAction
   = SetPlayer Player
   | SetPath String
@@ -56,7 +57,6 @@ type alias Clock =
 type alias AppUpdate =
   { appState : AppState
   , reaction : Maybe (Task Never ())
-  , request : Maybe AppAction
   }
 
 
@@ -82,16 +82,15 @@ type AppScreen
 type alias ScreenUpdate screen =
   { screen : screen
   , reaction : Maybe (Task Never ())
-  , request : Maybe AppAction
   }
 
 type Never = Never Never
+
 
 local : screen -> ScreenUpdate screen
 local screen =
   { screen = screen
   , reaction = Nothing
-  , request = Nothing
   }
 
 
@@ -99,31 +98,13 @@ react : screen -> Task Never () -> ScreenUpdate screen
 react screen task =
   { screen = screen
   , reaction = Just task
-  , request = Nothing
   }
-
-
-request : screen -> AppAction -> ScreenUpdate screen
-request screen appAction =
-  { screen = screen
-  , reaction = Nothing
-  , request = Just appAction
-  }
-
-
-mapAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
-mapAppUpdate appState toAppScreen {screen, reaction, request} =
-  AppUpdate
-    { appState | screen = toAppScreen screen }
-    reaction
-    request
 
 
 initialAppUpdate : (Int, Int) -> Player -> AppUpdate
 initialAppUpdate dims player =
   AppUpdate
     (initialAppState dims player)
-    Nothing
     Nothing
 
 

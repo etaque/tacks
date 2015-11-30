@@ -1,28 +1,22 @@
 module Screens.EditTrack.View where
 
 import Html exposing (Html)
-import Html.Attributes as HtmlAttr
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
-import AppTypes exposing (..)
 import Models exposing (..)
-import Constants exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
-import Screens.EditTrack.Updates exposing (actions)
 import Screens.EditTrack.SideView exposing (sideView)
 
-import Screens.Utils exposing (..)
-
-import Game.Grid as Grid
 import Game.Geo exposing (floatify)
 import Game.Render.SvgUtils exposing (..)
 
 import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor)
 import Game.Render.Gates exposing (renderOpenGate)
 import Game.Render.Players exposing (renderPlayerHull)
+
 
 view : Player -> Screen -> Html
 view player screen =

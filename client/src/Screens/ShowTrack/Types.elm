@@ -12,5 +12,4 @@ type alias Screen =
 type Action
   = SetTrack Track
   | TrackNotFound
-  | NoOp
 

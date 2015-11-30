@@ -36,8 +36,6 @@ update action screen =
     TrackNotFound ->
       local { screen | notFound = True }
 
-    _ ->
-      local screen
 
 loadTrack : String -> Task Never ()
 loadTrack slug =
