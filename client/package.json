@@ -3,8 +3,8 @@
   "devDependencies": {
     "node-sass": "3.3.3",
     "browserify": "10.2.3",
-    "watchify": "3.2.1",
     "uglifyify": "3.0.1",
+    "watchify": "3.2.1",
     "watch": "0.16.0"
   },
   "engines": {
@@ -12,17 +12,17 @@
   },
   "private": true,
   "scripts": {
-    "build": "npm run build-elm && npm run build-js && npm run build-sass",
+    "start": "npm run watch",
 
-    "build-js": "browserify scripts/setup.js -o ../public/javascripts/setup.js -g uglifyify",
-    "build-elm": "elm make src/Main.elm --output ../public/javascripts/Main.js",
-    "build-sass": "node-sass -o ../public/stylesheets styles/main.scss",
-
-    "watch": "npm run watch-js && npm run watch-elm && npm run watch-sass",
-
+    "watch": "npm run watch-elm & npm run watch-js & npm run watch-sass",
+    "watch-elm": "watch 'npm run build-elm --silent' src",
     "watch-js": "dev=true watchify scripts/setup.js -o ../public/javascripts/setup.js -dv",
-    "watch-elm": "watch 'npm run -s build-elm' src",
-    "watch-sass": "node-sass -o ../public/stylesheets -w styles styles/main.scss"
+    "watch-sass": "watch 'npm run build-sass --silent' styles",
+
+    "build": "npm run build-elm & npm run build-js & npm run build-sass",
+    "build-elm": "elm make src/Main.elm --output ../public/javascripts/Main.js",
+    "build-js": "browserify scripts/setup.js -o ../public/javascripts/setup.js -g uglifyify",
+    "build-sass": "node-sass -o ../public/stylesheets styles/main.scss"
   },
   "dependencies": {
     "bootstrap-sass": "~3.3.5",
