@@ -8,7 +8,7 @@ import Screens.ShowProfile.Types exposing (..)
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address ShowProfileAction
+  Signal.forwardTo appActionsMailbox.address (ShowProfileAction >> ScreenAction)
 
 type alias Update = AppTypes.ScreenUpdate Screen
 

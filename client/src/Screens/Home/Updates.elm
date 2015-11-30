@@ -5,7 +5,7 @@ import Task.Extra exposing (delay)
 import Time exposing (second)
 import Signal
 
-import AppTypes exposing (AppAction (..), appActionsMailbox, local, react, request, Never)
+import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.Home.Types exposing (..)
 import ServerApi
@@ -13,7 +13,7 @@ import ServerApi
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address HomeAction
+  Signal.forwardTo appActionsMailbox.address (HomeAction >> ScreenAction)
 
 
 type alias Update = AppTypes.ScreenUpdate Screen

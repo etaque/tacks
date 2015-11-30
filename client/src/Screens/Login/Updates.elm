@@ -10,7 +10,7 @@ import ServerApi
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address LoginAction
+  Signal.forwardTo appActionsMailbox.address (LoginAction >> ScreenAction)
 
 type alias Update = AppTypes.ScreenUpdate Screen
 

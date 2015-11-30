@@ -8,7 +8,6 @@ import History
 import Json.Decode as Json
 import Signal.Extra exposing (foldp', passiveMap2)
 
-import Models exposing (Player)
 import AppUpdates exposing (..)
 import AppTypes exposing (..)
 import Game.Inputs exposing (RaceInput)
@@ -80,17 +79,17 @@ dimsActions =
 raceUpdateActions : Signal AppAction
 raceUpdateActions =
   Signal.map3 mapGameUpdate Game.Inputs.keyboardInput Window.dimensions raceInput
-    |> Signal.filterMap (Maybe.map GameAction) AppTypes.AppNoOp
+    |> Signal.filterMap (Maybe.map (GameAction >> ScreenAction)) AppTypes.AppNoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 
 gameActions : Signal AppAction
 gameActions =
-  Signal.map (GameDecoders.decodeAction >> GameAction) gameActionsInput
+  Signal.map (GameDecoders.decodeAction >> GameAction >> ScreenAction) gameActionsInput
 
 editorInputActions : Signal AppAction
 editorInputActions =
-  Signal.map EditTrackAction EditTrack.inputs
+  Signal.map (EditTrackAction >> ScreenAction) EditTrack.inputs
 
 reactions : Signal (Task Never ())
 reactions =

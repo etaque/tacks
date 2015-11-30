@@ -1,8 +1,6 @@
 module AppTypes where
 
 import Task exposing (Task)
-import Http
-import Dict exposing (Dict)
 
 import Models exposing (..)
 
@@ -36,16 +34,19 @@ type AppAction
   = SetPlayer Player
   | SetPath String
   | UpdateDims (Int, Int)
-  | HomeAction Home.Action
+  | ScreenAction ScreenAction
+  | Logout
+  | AppNoOp
+
+
+type ScreenAction
+  = HomeAction Home.Action
   | LoginAction Login.Action
   | RegisterAction Register.Action
   | ShowTrackAction ShowTrack.Action
   | EditTrackAction EditTrack.Action
   | ShowProfileAction ShowProfile.Action
   | GameAction Game.Action
-  | Logout
-  | AppNoOp
-
 
 type alias Clock =
   { delta : Float

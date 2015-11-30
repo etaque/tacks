@@ -21,7 +21,7 @@ import ServerApi
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address EditTrackAction
+  Signal.forwardTo appActionsMailbox.address (EditTrackAction >> ScreenAction)
 
 
 inputs : Signal Action

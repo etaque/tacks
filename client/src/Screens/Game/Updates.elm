@@ -4,7 +4,6 @@ import List exposing (take, (::))
 import Task exposing (Task, succeed, map, andThen)
 import Task.Extra exposing (delay)
 import Time exposing (millisecond, second)
-import Http
 import String
 import Signal
 
@@ -19,7 +18,7 @@ import Game.Inputs exposing (..)
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address GameAction
+  Signal.forwardTo appActionsMailbox.address (GameAction >> ScreenAction)
 
 
 chat : Signal.Mailbox String

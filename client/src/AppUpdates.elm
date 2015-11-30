@@ -16,56 +16,86 @@ import ServerApi
 -- import Routes exposing (route)
 
 
-
 update : AppInput -> AppUpdate -> AppUpdate
 update {action, clock} {appState} =
-  case (action, appState.screen) of
+  case action of
 
-    -- (SetPlayer p, _) ->
+    SetPlayer p ->
+      noUpdate appState
     --   AppUpdate { appState | player = p } (Just (Routes.changePath "/")) Nothing
 
-    -- (SetPath path, _) ->
-    --   route appState path
+    SetPath path ->
+      noUpdate appState
+      -- route appState path
 
-    (UpdateDims dims, _) ->
+    UpdateDims dims ->
       let
         newScreen = updateScreenDims dims appState.screen
       in
         AppUpdate { appState | dims = dims, screen = newScreen } Nothing Nothing
 
-    (HomeAction a, HomeScreen screen) ->
-      Home.update a screen
-        |> mapAppUpdate appState HomeScreen
-
-    (LoginAction a, LoginScreen screen) ->
-      Login.update a screen
-        |> mapAppUpdate appState LoginScreen
-
-    (RegisterAction a, RegisterScreen screen) ->
-      Register.update a screen
-        |> mapAppUpdate appState RegisterScreen
-
-    (ShowTrackAction a, ShowTrackScreen screen) ->
-      ShowTrack.update a screen
-        |> mapAppUpdate appState ShowTrackScreen
-
-    (EditTrackAction a, EditTrackScreen screen) ->
-      EditTrack.update a screen
-        |> mapAppUpdate appState EditTrackScreen
-
-    (ShowProfileAction a, ShowProfileScreen screen) ->
-      ShowProfile.update a screen
-        |> mapAppUpdate appState ShowProfileScreen
-
-    (GameAction a, GameScreen screen) ->
-      Game.update appState.player clock a screen
-        |> mapAppUpdate appState GameScreen
-
-    (Logout, _) ->
+    Logout ->
       AppUpdate appState (Just logoutTask) Nothing
 
-    _ ->
+    ScreenAction screenAction ->
+      updateScreen clock screenAction appState
+
+    AppNoOp ->
       noUpdate appState
+
+
+updateScreen : Clock -> ScreenAction -> AppState -> AppUpdate
+updateScreen clock screenAction ({screen} as appState) =
+  case screenAction of
+
+    HomeAction a ->
+      case screen of
+        HomeScreen s ->
+          Home.update a s |> mapAppUpdate appState HomeScreen
+        _ ->
+          noUpdate appState
+
+    LoginAction a ->
+      case screen of
+        LoginScreen s ->
+          Login.update a s |> mapAppUpdate appState LoginScreen
+        _ ->
+          noUpdate appState
+
+    RegisterAction a ->
+      case screen of
+        RegisterScreen s ->
+          Register.update a s |> mapAppUpdate appState RegisterScreen
+        _ ->
+          noUpdate appState
+
+    ShowTrackAction a ->
+      case screen of
+        ShowTrackScreen s ->
+          ShowTrack.update a s |> mapAppUpdate appState ShowTrackScreen
+        _ ->
+          noUpdate appState
+
+    EditTrackAction a ->
+      case screen of
+        EditTrackScreen s ->
+          EditTrack.update a s |> mapAppUpdate appState EditTrackScreen
+        _ ->
+          noUpdate appState
+
+    ShowProfileAction a ->
+      case screen of
+        ShowProfileScreen s ->
+          ShowProfile.update a s |> mapAppUpdate appState ShowProfileScreen
+        _ ->
+          noUpdate appState
+
+    GameAction a ->
+      case screen of
+        GameScreen s ->
+          Game.update appState.player clock a s |> mapAppUpdate appState GameScreen
+        _ ->
+          noUpdate appState
 
 updateScreenDims : (Int, Int) -> AppScreen -> AppScreen
 updateScreenDims dims appScreen =

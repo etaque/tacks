@@ -2,17 +2,12 @@ module Game.Inputs where
 
 import Signal exposing (..)
 import Time exposing (..)
-import List as L
 import Set as S exposing (..)
 import Keyboard
 import Char
-import Json.Decode as Json exposing (..)
-import Task exposing (Task, andThen)
-import Http
 
 import Game.Models exposing (..)
 import Models exposing (..)
-import Decoders exposing (..)
 
 
 -- Game

@@ -11041,376 +11041,6 @@ Elm.RouteParser.make = function (_elm) {
                                     ,dyn3: dyn3
                                     ,match: match};
 };
-Elm.Native.Http = {};
-Elm.Native.Http.make = function(localRuntime) {
-
-	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.Http = localRuntime.Native.Http || {};
-	if (localRuntime.Native.Http.values)
-	{
-		return localRuntime.Native.Http.values;
-	}
-
-	var Dict = Elm.Dict.make(localRuntime);
-	var List = Elm.List.make(localRuntime);
-	var Maybe = Elm.Maybe.make(localRuntime);
-	var Task = Elm.Native.Task.make(localRuntime);
-
-
-	function send(settings, request)
-	{
-		return Task.asyncFunction(function(callback) {
-			var req = new XMLHttpRequest();
-
-			// start
-			if (settings.onStart.ctor === 'Just')
-			{
-				req.addEventListener('loadStart', function() {
-					var task = settings.onStart._0;
-					Task.spawn(task);
-				});
-			}
-
-			// progress
-			if (settings.onProgress.ctor === 'Just')
-			{
-				req.addEventListener('progress', function(event) {
-					var progress = !event.lengthComputable
-						? Maybe.Nothing
-						: Maybe.Just({
-							_: {},
-							loaded: event.loaded,
-							total: event.total
-						});
-					var task = settings.onProgress._0(progress);
-					Task.spawn(task);
-				});
-			}
-
-			// end
-			req.addEventListener('error', function() {
-				return callback(Task.fail({ ctor: 'RawNetworkError' }));
-			});
-
-			req.addEventListener('timeout', function() {
-				return callback(Task.fail({ ctor: 'RawTimeout' }));
-			});
-
-			req.addEventListener('load', function() {
-				return callback(Task.succeed(toResponse(req)));
-			});
-
-			req.open(request.verb, request.url, true);
-
-			// set all the headers
-			function setHeader(pair) {
-				req.setRequestHeader(pair._0, pair._1);
-			}
-			A2(List.map, setHeader, request.headers);
-
-			// set the timeout
-			req.timeout = settings.timeout;
-
-			// enable this withCredentials thing
-			req.withCredentials = settings.withCredentials;
-
-			// ask for a specific MIME type for the response
-			if (settings.desiredResponseType.ctor === 'Just')
-			{
-				req.overrideMimeType(settings.desiredResponseType._0);
-			}
-
-			// actuall send the request
-			if(request.body.ctor === "BodyFormData")
-			{
-				req.send(request.body.formData)
-			}
-			else
-			{
-				req.send(request.body._0);
-			}
-		});
-	}
-
-
-	// deal with responses
-
-	function toResponse(req)
-	{
-		var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
-		var response = tag === 'Blob' ? req.response : req.responseText;
-		return {
-			_: {},
-			status: req.status,
-			statusText: req.statusText,
-			headers: parseHeaders(req.getAllResponseHeaders()),
-			url: req.responseURL,
-			value: { ctor: tag, _0: response }
-		};
-	}
-
-
-	function parseHeaders(rawHeaders)
-	{
-		var headers = Dict.empty;
-
-		if (!rawHeaders)
-		{
-			return headers;
-		}
-
-		var headerPairs = rawHeaders.split('\u000d\u000a');
-		for (var i = headerPairs.length; i--; )
-		{
-			var headerPair = headerPairs[i];
-			var index = headerPair.indexOf('\u003a\u0020');
-			if (index > 0)
-			{
-				var key = headerPair.substring(0, index);
-				var value = headerPair.substring(index + 2);
-
-				headers = A3(Dict.update, key, function(oldValue) {
-					if (oldValue.ctor === 'Just')
-					{
-						return Maybe.Just(value + ', ' + oldValue._0);
-					}
-					return Maybe.Just(value);
-				}, headers);
-			}
-		}
-
-		return headers;
-	}
-
-
-	function multipart(dataList)
-	{
-		var formData = new FormData();
-
-		while (dataList.ctor !== '[]')
-		{
-			var data = dataList._0;
-			if (data.ctor === 'StringData')
-			{
-				formData.append(data._0, data._1);
-			}
-			else
-			{
-				var fileName = data._1.ctor === 'Nothing'
-					? undefined
-					: data._1._0;
-				formData.append(data._0, data._2, fileName);
-			}
-			dataList = dataList._1;
-		}
-
-		return { ctor: 'BodyFormData', formData: formData };
-	}
-
-
-	function uriEncode(string)
-	{
-		return encodeURIComponent(string);
-	}
-
-	function uriDecode(string)
-	{
-		return decodeURIComponent(string);
-	}
-
-	return localRuntime.Native.Http.values = {
-		send: F2(send),
-		multipart: multipart,
-		uriEncode: uriEncode,
-		uriDecode: uriDecode
-	};
-};
-
-Elm.Http = Elm.Http || {};
-Elm.Http.make = function (_elm) {
-   "use strict";
-   _elm.Http = _elm.Http || {};
-   if (_elm.Http.values) return _elm.Http.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Native$Http = Elm.Native.Http.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Task = Elm.Task.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var send = $Native$Http.send;
-   var BadResponse = F2(function (a,b) {
-      return {ctor: "BadResponse",_0: a,_1: b};
-   });
-   var UnexpectedPayload = function (a) {
-      return {ctor: "UnexpectedPayload",_0: a};
-   };
-   var handleResponse = F2(function (handle,response) {
-      if (_U.cmp(200,
-      response.status) < 1 && _U.cmp(response.status,300) < 0) {
-            var _p0 = response.value;
-            if (_p0.ctor === "Text") {
-                  return handle(_p0._0);
-               } else {
-                  return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
-               }
-         } else return $Task.fail(A2(BadResponse,
-         response.status,
-         response.statusText));
-   });
-   var NetworkError = {ctor: "NetworkError"};
-   var Timeout = {ctor: "Timeout"};
-   var promoteError = function (rawError) {
-      var _p1 = rawError;
-      if (_p1.ctor === "RawTimeout") {
-            return Timeout;
-         } else {
-            return NetworkError;
-         }
-   };
-   var fromJson = F2(function (decoder,response) {
-      var decode = function (str) {
-         var _p2 = A2($Json$Decode.decodeString,decoder,str);
-         if (_p2.ctor === "Ok") {
-               return $Task.succeed(_p2._0);
-            } else {
-               return $Task.fail(UnexpectedPayload(_p2._0));
-            }
-      };
-      return A2($Task.andThen,
-      A2($Task.mapError,promoteError,response),
-      handleResponse(decode));
-   });
-   var RawNetworkError = {ctor: "RawNetworkError"};
-   var RawTimeout = {ctor: "RawTimeout"};
-   var Blob = function (a) {    return {ctor: "Blob",_0: a};};
-   var Text = function (a) {    return {ctor: "Text",_0: a};};
-   var Response = F5(function (a,b,c,d,e) {
-      return {status: a,statusText: b,headers: c,url: d,value: e};
-   });
-   var defaultSettings = {timeout: 0
-                         ,onStart: $Maybe.Nothing
-                         ,onProgress: $Maybe.Nothing
-                         ,desiredResponseType: $Maybe.Nothing
-                         ,withCredentials: false};
-   var post = F3(function (decoder,url,body) {
-      var request = {verb: "POST"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: body};
-      return A2(fromJson,decoder,A2(send,defaultSettings,request));
-   });
-   var Settings = F5(function (a,b,c,d,e) {
-      return {timeout: a
-             ,onStart: b
-             ,onProgress: c
-             ,desiredResponseType: d
-             ,withCredentials: e};
-   });
-   var multipart = $Native$Http.multipart;
-   var FileData = F3(function (a,b,c) {
-      return {ctor: "FileData",_0: a,_1: b,_2: c};
-   });
-   var BlobData = F3(function (a,b,c) {
-      return {ctor: "BlobData",_0: a,_1: b,_2: c};
-   });
-   var blobData = BlobData;
-   var StringData = F2(function (a,b) {
-      return {ctor: "StringData",_0: a,_1: b};
-   });
-   var stringData = StringData;
-   var BodyBlob = function (a) {
-      return {ctor: "BodyBlob",_0: a};
-   };
-   var BodyFormData = {ctor: "BodyFormData"};
-   var ArrayBuffer = {ctor: "ArrayBuffer"};
-   var BodyString = function (a) {
-      return {ctor: "BodyString",_0: a};
-   };
-   var string = BodyString;
-   var Empty = {ctor: "Empty"};
-   var empty = Empty;
-   var getString = function (url) {
-      var request = {verb: "GET"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: empty};
-      return A2($Task.andThen,
-      A2($Task.mapError,
-      promoteError,
-      A2(send,defaultSettings,request)),
-      handleResponse($Task.succeed));
-   };
-   var get = F2(function (decoder,url) {
-      var request = {verb: "GET"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: empty};
-      return A2(fromJson,decoder,A2(send,defaultSettings,request));
-   });
-   var Request = F4(function (a,b,c,d) {
-      return {verb: a,headers: b,url: c,body: d};
-   });
-   var uriDecode = $Native$Http.uriDecode;
-   var uriEncode = $Native$Http.uriEncode;
-   var queryEscape = function (string) {
-      return A2($String.join,
-      "+",
-      A2($String.split,"%20",uriEncode(string)));
-   };
-   var queryPair = function (_p3) {
-      var _p4 = _p3;
-      return A2($Basics._op["++"],
-      queryEscape(_p4._0),
-      A2($Basics._op["++"],"=",queryEscape(_p4._1)));
-   };
-   var url = F2(function (baseUrl,args) {
-      var _p5 = args;
-      if (_p5.ctor === "[]") {
-            return baseUrl;
-         } else {
-            return A2($Basics._op["++"],
-            baseUrl,
-            A2($Basics._op["++"],
-            "?",
-            A2($String.join,"&",A2($List.map,queryPair,args))));
-         }
-   });
-   var TODO_implement_file_in_another_library = {ctor: "TODO_implement_file_in_another_library"};
-   var TODO_implement_blob_in_another_library = {ctor: "TODO_implement_blob_in_another_library"};
-   return _elm.Http.values = {_op: _op
-                             ,getString: getString
-                             ,get: get
-                             ,post: post
-                             ,send: send
-                             ,url: url
-                             ,uriEncode: uriEncode
-                             ,uriDecode: uriDecode
-                             ,empty: empty
-                             ,string: string
-                             ,multipart: multipart
-                             ,stringData: stringData
-                             ,defaultSettings: defaultSettings
-                             ,fromJson: fromJson
-                             ,Request: Request
-                             ,Settings: Settings
-                             ,Response: Response
-                             ,Text: Text
-                             ,Blob: Blob
-                             ,Timeout: Timeout
-                             ,NetworkError: NetworkError
-                             ,UnexpectedPayload: UnexpectedPayload
-                             ,BadResponse: BadResponse
-                             ,RawTimeout: RawTimeout
-                             ,RawNetworkError: RawNetworkError};
-};
 Elm.Constants = Elm.Constants || {};
 Elm.Constants.make = function (_elm) {
    "use strict";
@@ -12903,180 +12533,6 @@ Elm.Game.Models.make = function (_elm) {
                                     ,raceTime: raceTime
                                     ,isStarted: isStarted};
 };
-Elm.Decoders = Elm.Decoders || {};
-Elm.Decoders.make = function (_elm) {
-   "use strict";
-   _elm.Decoders = _elm.Decoders || {};
-   if (_elm.Decoders.values) return _elm.Decoders.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var gustDefGenerator = A4($Json$Decode.object3,
-   $Models.GustDef,
-   A2($Json$Decode._op[":="],"angle",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],"speed",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],"radius",$Json$Decode.$float));
-   var gustGeneratorDecoder = A3($Json$Decode.object2,
-   $Models.GustGenerator,
-   A2($Json$Decode._op[":="],"interval",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],
-   "defs",
-   $Json$Decode.list(gustDefGenerator)));
-   var windGeneratorDecoder = A5($Json$Decode.object4,
-   $Models.WindGenerator,
-   A2($Json$Decode._op[":="],"wavelength1",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"amplitude1",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"wavelength2",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"amplitude2",$Json$Decode.$int));
-   var tileKindDecoder = function (s) {
-      var _p0 = s;
-      switch (_p0)
-      {case "W": return $Json$Decode.succeed($Models.Water);
-         case "G": return $Json$Decode.succeed($Models.Grass);
-         case "R": return $Json$Decode.succeed($Models.Rock);
-         default: return $Json$Decode.fail(A2($Basics._op["++"],
-           s,
-           " is not a TileKind"));}
-   };
-   var gridRowDecoder = A2($Json$Decode.map,
-   $Dict.fromList,
-   $Json$Decode.list(A3($Json$Decode.tuple2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }),
-   $Json$Decode.$int,
-   A2($Json$Decode.andThen,$Json$Decode.string,tileKindDecoder))));
-   var gridDecoder = A2($Json$Decode.map,
-   $Dict.fromList,
-   $Json$Decode.list(A3($Json$Decode.tuple2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }),
-   $Json$Decode.$int,
-   gridRowDecoder)));
-   var gateDecoder = A3($Json$Decode.object2,
-   $Models.Gate,
-   A2($Json$Decode._op[":="],"y",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],"width",$Json$Decode.$float));
-   var pointDecoder = A3($Json$Decode.tuple2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }),
-   $Json$Decode.$float,
-   $Json$Decode.$float);
-   var raceAreaDecoder = A3($Json$Decode.object2,
-   $Models.RaceArea,
-   A2($Json$Decode._op[":="],"rightTop",pointDecoder),
-   A2($Json$Decode._op[":="],"leftBottom",pointDecoder));
-   var courseDecoder = A8($Json$Decode.object7,
-   $Models.Course,
-   A2($Json$Decode._op[":="],"upwind",gateDecoder),
-   A2($Json$Decode._op[":="],"downwind",gateDecoder),
-   A2($Json$Decode._op[":="],"grid",gridDecoder),
-   A2($Json$Decode._op[":="],"laps",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"area",raceAreaDecoder),
-   A2($Json$Decode._op[":="],"windGenerator",windGeneratorDecoder),
-   A2($Json$Decode._op[":="],
-   "gustGenerator",
-   gustGeneratorDecoder));
-   var playerDecoder = A8($Json$Decode.object7,
-   $Models.Player,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "handle",
-   $Json$Decode.string)),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "status",
-   $Json$Decode.string)),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "avatarId",
-   $Json$Decode.string)),
-   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"guest",$Json$Decode.bool),
-   A2($Json$Decode._op[":="],"user",$Json$Decode.bool));
-   var messageDecoder = A4($Json$Decode.object3,
-   $Models.Message,
-   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],"time",$Json$Decode.$float));
-   var trackDecoder = A6($Json$Decode.object5,
-   $Models.Track,
-   A2($Json$Decode._op[":="],"_id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"name",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"draft",$Json$Decode.bool),
-   A2($Json$Decode._op[":="],"creatorId",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"course",courseDecoder));
-   var playerTallyDecoder = A4($Json$Decode.object3,
-   $Models.PlayerTally,
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],
-   "gates",
-   $Json$Decode.list($Json$Decode.$float)),
-   A2($Json$Decode._op[":="],"finished",$Json$Decode.bool));
-   var rankingDecoder = A4($Json$Decode.object3,
-   $Models.Ranking,
-   A2($Json$Decode._op[":="],"rank",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],"finishTime",$Json$Decode.$float));
-   var raceDecoder = A6($Json$Decode.object5,
-   $Models.Race,
-   A2($Json$Decode._op[":="],"_id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"trackId",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"startTime",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "players",
-   $Json$Decode.list(playerDecoder)),
-   A2($Json$Decode._op[":="],
-   "tallies",
-   $Json$Decode.list(playerTallyDecoder)));
-   var liveTrackDecoder = A5($Json$Decode.object4,
-   $Models.LiveTrack,
-   A2($Json$Decode._op[":="],"track",trackDecoder),
-   A2($Json$Decode._op[":="],
-   "players",
-   $Json$Decode.list(playerDecoder)),
-   A2($Json$Decode._op[":="],
-   "races",
-   $Json$Decode.list(raceDecoder)),
-   A2($Json$Decode._op[":="],
-   "rankings",
-   $Json$Decode.list(rankingDecoder)));
-   var liveStatusDecoder = A3($Json$Decode.object2,
-   $Models.LiveStatus,
-   A2($Json$Decode._op[":="],
-   "liveTracks",
-   $Json$Decode.list(liveTrackDecoder)),
-   A2($Json$Decode._op[":="],
-   "onlinePlayers",
-   $Json$Decode.list(playerDecoder)));
-   return _elm.Decoders.values = {_op: _op
-                                 ,liveStatusDecoder: liveStatusDecoder
-                                 ,liveTrackDecoder: liveTrackDecoder
-                                 ,raceDecoder: raceDecoder
-                                 ,rankingDecoder: rankingDecoder
-                                 ,playerTallyDecoder: playerTallyDecoder
-                                 ,trackDecoder: trackDecoder
-                                 ,playerDecoder: playerDecoder
-                                 ,messageDecoder: messageDecoder
-                                 ,pointDecoder: pointDecoder
-                                 ,courseDecoder: courseDecoder
-                                 ,gateDecoder: gateDecoder
-                                 ,gridDecoder: gridDecoder
-                                 ,gridRowDecoder: gridRowDecoder
-                                 ,tileKindDecoder: tileKindDecoder
-                                 ,raceAreaDecoder: raceAreaDecoder
-                                 ,windGeneratorDecoder: windGeneratorDecoder
-                                 ,gustGeneratorDecoder: gustGeneratorDecoder
-                                 ,gustDefGenerator: gustDefGenerator};
-};
 Elm.Game = Elm.Game || {};
 Elm.Game.Inputs = Elm.Game.Inputs || {};
 Elm.Game.Inputs.make = function (_elm) {
@@ -13327,8 +12783,6 @@ Elm.AppTypes.make = function (_elm) {
       $Maybe.Nothing);
    });
    var Clock = F2(function (a,b) {    return {delta: a,time: b};});
-   var AppNoOp = {ctor: "AppNoOp"};
-   var Logout = {ctor: "Logout"};
    var GameAction = function (a) {
       return {ctor: "GameAction",_0: a};
    };
@@ -13349,6 +12803,11 @@ Elm.AppTypes.make = function (_elm) {
    };
    var HomeAction = function (a) {
       return {ctor: "HomeAction",_0: a};
+   };
+   var AppNoOp = {ctor: "AppNoOp"};
+   var Logout = {ctor: "Logout"};
+   var ScreenAction = function (a) {
+      return {ctor: "ScreenAction",_0: a};
    };
    var UpdateDims = function (a) {
       return {ctor: "UpdateDims",_0: a};
@@ -13373,6 +12832,9 @@ Elm.AppTypes.make = function (_elm) {
                                  ,SetPlayer: SetPlayer
                                  ,SetPath: SetPath
                                  ,UpdateDims: UpdateDims
+                                 ,ScreenAction: ScreenAction
+                                 ,Logout: Logout
+                                 ,AppNoOp: AppNoOp
                                  ,HomeAction: HomeAction
                                  ,LoginAction: LoginAction
                                  ,RegisterAction: RegisterAction
@@ -13380,8 +12842,6 @@ Elm.AppTypes.make = function (_elm) {
                                  ,EditTrackAction: EditTrackAction
                                  ,ShowProfileAction: ShowProfileAction
                                  ,GameAction: GameAction
-                                 ,Logout: Logout
-                                 ,AppNoOp: AppNoOp
                                  ,Clock: Clock
                                  ,AppUpdate: AppUpdate
                                  ,AppState: AppState
@@ -13402,6 +12862,550 @@ Elm.AppTypes.make = function (_elm) {
                                  ,mapAppUpdate: mapAppUpdate
                                  ,initialAppUpdate: initialAppUpdate
                                  ,initialAppState: initialAppState};
+};
+Elm.Native.Http = {};
+Elm.Native.Http.make = function(localRuntime) {
+
+	localRuntime.Native = localRuntime.Native || {};
+	localRuntime.Native.Http = localRuntime.Native.Http || {};
+	if (localRuntime.Native.Http.values)
+	{
+		return localRuntime.Native.Http.values;
+	}
+
+	var Dict = Elm.Dict.make(localRuntime);
+	var List = Elm.List.make(localRuntime);
+	var Maybe = Elm.Maybe.make(localRuntime);
+	var Task = Elm.Native.Task.make(localRuntime);
+
+
+	function send(settings, request)
+	{
+		return Task.asyncFunction(function(callback) {
+			var req = new XMLHttpRequest();
+
+			// start
+			if (settings.onStart.ctor === 'Just')
+			{
+				req.addEventListener('loadStart', function() {
+					var task = settings.onStart._0;
+					Task.spawn(task);
+				});
+			}
+
+			// progress
+			if (settings.onProgress.ctor === 'Just')
+			{
+				req.addEventListener('progress', function(event) {
+					var progress = !event.lengthComputable
+						? Maybe.Nothing
+						: Maybe.Just({
+							_: {},
+							loaded: event.loaded,
+							total: event.total
+						});
+					var task = settings.onProgress._0(progress);
+					Task.spawn(task);
+				});
+			}
+
+			// end
+			req.addEventListener('error', function() {
+				return callback(Task.fail({ ctor: 'RawNetworkError' }));
+			});
+
+			req.addEventListener('timeout', function() {
+				return callback(Task.fail({ ctor: 'RawTimeout' }));
+			});
+
+			req.addEventListener('load', function() {
+				return callback(Task.succeed(toResponse(req)));
+			});
+
+			req.open(request.verb, request.url, true);
+
+			// set all the headers
+			function setHeader(pair) {
+				req.setRequestHeader(pair._0, pair._1);
+			}
+			A2(List.map, setHeader, request.headers);
+
+			// set the timeout
+			req.timeout = settings.timeout;
+
+			// enable this withCredentials thing
+			req.withCredentials = settings.withCredentials;
+
+			// ask for a specific MIME type for the response
+			if (settings.desiredResponseType.ctor === 'Just')
+			{
+				req.overrideMimeType(settings.desiredResponseType._0);
+			}
+
+			// actuall send the request
+			if(request.body.ctor === "BodyFormData")
+			{
+				req.send(request.body.formData)
+			}
+			else
+			{
+				req.send(request.body._0);
+			}
+		});
+	}
+
+
+	// deal with responses
+
+	function toResponse(req)
+	{
+		var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
+		var response = tag === 'Blob' ? req.response : req.responseText;
+		return {
+			_: {},
+			status: req.status,
+			statusText: req.statusText,
+			headers: parseHeaders(req.getAllResponseHeaders()),
+			url: req.responseURL,
+			value: { ctor: tag, _0: response }
+		};
+	}
+
+
+	function parseHeaders(rawHeaders)
+	{
+		var headers = Dict.empty;
+
+		if (!rawHeaders)
+		{
+			return headers;
+		}
+
+		var headerPairs = rawHeaders.split('\u000d\u000a');
+		for (var i = headerPairs.length; i--; )
+		{
+			var headerPair = headerPairs[i];
+			var index = headerPair.indexOf('\u003a\u0020');
+			if (index > 0)
+			{
+				var key = headerPair.substring(0, index);
+				var value = headerPair.substring(index + 2);
+
+				headers = A3(Dict.update, key, function(oldValue) {
+					if (oldValue.ctor === 'Just')
+					{
+						return Maybe.Just(value + ', ' + oldValue._0);
+					}
+					return Maybe.Just(value);
+				}, headers);
+			}
+		}
+
+		return headers;
+	}
+
+
+	function multipart(dataList)
+	{
+		var formData = new FormData();
+
+		while (dataList.ctor !== '[]')
+		{
+			var data = dataList._0;
+			if (data.ctor === 'StringData')
+			{
+				formData.append(data._0, data._1);
+			}
+			else
+			{
+				var fileName = data._1.ctor === 'Nothing'
+					? undefined
+					: data._1._0;
+				formData.append(data._0, data._2, fileName);
+			}
+			dataList = dataList._1;
+		}
+
+		return { ctor: 'BodyFormData', formData: formData };
+	}
+
+
+	function uriEncode(string)
+	{
+		return encodeURIComponent(string);
+	}
+
+	function uriDecode(string)
+	{
+		return decodeURIComponent(string);
+	}
+
+	return localRuntime.Native.Http.values = {
+		send: F2(send),
+		multipart: multipart,
+		uriEncode: uriEncode,
+		uriDecode: uriDecode
+	};
+};
+
+Elm.Http = Elm.Http || {};
+Elm.Http.make = function (_elm) {
+   "use strict";
+   _elm.Http = _elm.Http || {};
+   if (_elm.Http.values) return _elm.Http.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Http = Elm.Native.Http.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var send = $Native$Http.send;
+   var BadResponse = F2(function (a,b) {
+      return {ctor: "BadResponse",_0: a,_1: b};
+   });
+   var UnexpectedPayload = function (a) {
+      return {ctor: "UnexpectedPayload",_0: a};
+   };
+   var handleResponse = F2(function (handle,response) {
+      if (_U.cmp(200,
+      response.status) < 1 && _U.cmp(response.status,300) < 0) {
+            var _p0 = response.value;
+            if (_p0.ctor === "Text") {
+                  return handle(_p0._0);
+               } else {
+                  return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
+               }
+         } else return $Task.fail(A2(BadResponse,
+         response.status,
+         response.statusText));
+   });
+   var NetworkError = {ctor: "NetworkError"};
+   var Timeout = {ctor: "Timeout"};
+   var promoteError = function (rawError) {
+      var _p1 = rawError;
+      if (_p1.ctor === "RawTimeout") {
+            return Timeout;
+         } else {
+            return NetworkError;
+         }
+   };
+   var fromJson = F2(function (decoder,response) {
+      var decode = function (str) {
+         var _p2 = A2($Json$Decode.decodeString,decoder,str);
+         if (_p2.ctor === "Ok") {
+               return $Task.succeed(_p2._0);
+            } else {
+               return $Task.fail(UnexpectedPayload(_p2._0));
+            }
+      };
+      return A2($Task.andThen,
+      A2($Task.mapError,promoteError,response),
+      handleResponse(decode));
+   });
+   var RawNetworkError = {ctor: "RawNetworkError"};
+   var RawTimeout = {ctor: "RawTimeout"};
+   var Blob = function (a) {    return {ctor: "Blob",_0: a};};
+   var Text = function (a) {    return {ctor: "Text",_0: a};};
+   var Response = F5(function (a,b,c,d,e) {
+      return {status: a,statusText: b,headers: c,url: d,value: e};
+   });
+   var defaultSettings = {timeout: 0
+                         ,onStart: $Maybe.Nothing
+                         ,onProgress: $Maybe.Nothing
+                         ,desiredResponseType: $Maybe.Nothing
+                         ,withCredentials: false};
+   var post = F3(function (decoder,url,body) {
+      var request = {verb: "POST"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: body};
+      return A2(fromJson,decoder,A2(send,defaultSettings,request));
+   });
+   var Settings = F5(function (a,b,c,d,e) {
+      return {timeout: a
+             ,onStart: b
+             ,onProgress: c
+             ,desiredResponseType: d
+             ,withCredentials: e};
+   });
+   var multipart = $Native$Http.multipart;
+   var FileData = F3(function (a,b,c) {
+      return {ctor: "FileData",_0: a,_1: b,_2: c};
+   });
+   var BlobData = F3(function (a,b,c) {
+      return {ctor: "BlobData",_0: a,_1: b,_2: c};
+   });
+   var blobData = BlobData;
+   var StringData = F2(function (a,b) {
+      return {ctor: "StringData",_0: a,_1: b};
+   });
+   var stringData = StringData;
+   var BodyBlob = function (a) {
+      return {ctor: "BodyBlob",_0: a};
+   };
+   var BodyFormData = {ctor: "BodyFormData"};
+   var ArrayBuffer = {ctor: "ArrayBuffer"};
+   var BodyString = function (a) {
+      return {ctor: "BodyString",_0: a};
+   };
+   var string = BodyString;
+   var Empty = {ctor: "Empty"};
+   var empty = Empty;
+   var getString = function (url) {
+      var request = {verb: "GET"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: empty};
+      return A2($Task.andThen,
+      A2($Task.mapError,
+      promoteError,
+      A2(send,defaultSettings,request)),
+      handleResponse($Task.succeed));
+   };
+   var get = F2(function (decoder,url) {
+      var request = {verb: "GET"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: empty};
+      return A2(fromJson,decoder,A2(send,defaultSettings,request));
+   });
+   var Request = F4(function (a,b,c,d) {
+      return {verb: a,headers: b,url: c,body: d};
+   });
+   var uriDecode = $Native$Http.uriDecode;
+   var uriEncode = $Native$Http.uriEncode;
+   var queryEscape = function (string) {
+      return A2($String.join,
+      "+",
+      A2($String.split,"%20",uriEncode(string)));
+   };
+   var queryPair = function (_p3) {
+      var _p4 = _p3;
+      return A2($Basics._op["++"],
+      queryEscape(_p4._0),
+      A2($Basics._op["++"],"=",queryEscape(_p4._1)));
+   };
+   var url = F2(function (baseUrl,args) {
+      var _p5 = args;
+      if (_p5.ctor === "[]") {
+            return baseUrl;
+         } else {
+            return A2($Basics._op["++"],
+            baseUrl,
+            A2($Basics._op["++"],
+            "?",
+            A2($String.join,"&",A2($List.map,queryPair,args))));
+         }
+   });
+   var TODO_implement_file_in_another_library = {ctor: "TODO_implement_file_in_another_library"};
+   var TODO_implement_blob_in_another_library = {ctor: "TODO_implement_blob_in_another_library"};
+   return _elm.Http.values = {_op: _op
+                             ,getString: getString
+                             ,get: get
+                             ,post: post
+                             ,send: send
+                             ,url: url
+                             ,uriEncode: uriEncode
+                             ,uriDecode: uriDecode
+                             ,empty: empty
+                             ,string: string
+                             ,multipart: multipart
+                             ,stringData: stringData
+                             ,defaultSettings: defaultSettings
+                             ,fromJson: fromJson
+                             ,Request: Request
+                             ,Settings: Settings
+                             ,Response: Response
+                             ,Text: Text
+                             ,Blob: Blob
+                             ,Timeout: Timeout
+                             ,NetworkError: NetworkError
+                             ,UnexpectedPayload: UnexpectedPayload
+                             ,BadResponse: BadResponse
+                             ,RawTimeout: RawTimeout
+                             ,RawNetworkError: RawNetworkError};
+};
+Elm.Decoders = Elm.Decoders || {};
+Elm.Decoders.make = function (_elm) {
+   "use strict";
+   _elm.Decoders = _elm.Decoders || {};
+   if (_elm.Decoders.values) return _elm.Decoders.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var gustDefGenerator = A4($Json$Decode.object3,
+   $Models.GustDef,
+   A2($Json$Decode._op[":="],"angle",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"speed",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"radius",$Json$Decode.$float));
+   var gustGeneratorDecoder = A3($Json$Decode.object2,
+   $Models.GustGenerator,
+   A2($Json$Decode._op[":="],"interval",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],
+   "defs",
+   $Json$Decode.list(gustDefGenerator)));
+   var windGeneratorDecoder = A5($Json$Decode.object4,
+   $Models.WindGenerator,
+   A2($Json$Decode._op[":="],"wavelength1",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"amplitude1",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"wavelength2",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"amplitude2",$Json$Decode.$int));
+   var tileKindDecoder = function (s) {
+      var _p0 = s;
+      switch (_p0)
+      {case "W": return $Json$Decode.succeed($Models.Water);
+         case "G": return $Json$Decode.succeed($Models.Grass);
+         case "R": return $Json$Decode.succeed($Models.Rock);
+         default: return $Json$Decode.fail(A2($Basics._op["++"],
+           s,
+           " is not a TileKind"));}
+   };
+   var gridRowDecoder = A2($Json$Decode.map,
+   $Dict.fromList,
+   $Json$Decode.list(A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   }),
+   $Json$Decode.$int,
+   A2($Json$Decode.andThen,$Json$Decode.string,tileKindDecoder))));
+   var gridDecoder = A2($Json$Decode.map,
+   $Dict.fromList,
+   $Json$Decode.list(A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   }),
+   $Json$Decode.$int,
+   gridRowDecoder)));
+   var gateDecoder = A3($Json$Decode.object2,
+   $Models.Gate,
+   A2($Json$Decode._op[":="],"y",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"width",$Json$Decode.$float));
+   var pointDecoder = A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   }),
+   $Json$Decode.$float,
+   $Json$Decode.$float);
+   var raceAreaDecoder = A3($Json$Decode.object2,
+   $Models.RaceArea,
+   A2($Json$Decode._op[":="],"rightTop",pointDecoder),
+   A2($Json$Decode._op[":="],"leftBottom",pointDecoder));
+   var courseDecoder = A8($Json$Decode.object7,
+   $Models.Course,
+   A2($Json$Decode._op[":="],"upwind",gateDecoder),
+   A2($Json$Decode._op[":="],"downwind",gateDecoder),
+   A2($Json$Decode._op[":="],"grid",gridDecoder),
+   A2($Json$Decode._op[":="],"laps",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"area",raceAreaDecoder),
+   A2($Json$Decode._op[":="],"windGenerator",windGeneratorDecoder),
+   A2($Json$Decode._op[":="],
+   "gustGenerator",
+   gustGeneratorDecoder));
+   var playerDecoder = A8($Json$Decode.object7,
+   $Models.Player,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "handle",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "status",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "avatarId",
+   $Json$Decode.string)),
+   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"guest",$Json$Decode.bool),
+   A2($Json$Decode._op[":="],"user",$Json$Decode.bool));
+   var messageDecoder = A4($Json$Decode.object3,
+   $Models.Message,
+   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],"time",$Json$Decode.$float));
+   var trackDecoder = A6($Json$Decode.object5,
+   $Models.Track,
+   A2($Json$Decode._op[":="],"_id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"name",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"draft",$Json$Decode.bool),
+   A2($Json$Decode._op[":="],"creatorId",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"course",courseDecoder));
+   var playerTallyDecoder = A4($Json$Decode.object3,
+   $Models.PlayerTally,
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],
+   "gates",
+   $Json$Decode.list($Json$Decode.$float)),
+   A2($Json$Decode._op[":="],"finished",$Json$Decode.bool));
+   var rankingDecoder = A4($Json$Decode.object3,
+   $Models.Ranking,
+   A2($Json$Decode._op[":="],"rank",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],"finishTime",$Json$Decode.$float));
+   var raceDecoder = A6($Json$Decode.object5,
+   $Models.Race,
+   A2($Json$Decode._op[":="],"_id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"trackId",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"startTime",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "players",
+   $Json$Decode.list(playerDecoder)),
+   A2($Json$Decode._op[":="],
+   "tallies",
+   $Json$Decode.list(playerTallyDecoder)));
+   var liveTrackDecoder = A5($Json$Decode.object4,
+   $Models.LiveTrack,
+   A2($Json$Decode._op[":="],"track",trackDecoder),
+   A2($Json$Decode._op[":="],
+   "players",
+   $Json$Decode.list(playerDecoder)),
+   A2($Json$Decode._op[":="],
+   "races",
+   $Json$Decode.list(raceDecoder)),
+   A2($Json$Decode._op[":="],
+   "rankings",
+   $Json$Decode.list(rankingDecoder)));
+   var liveStatusDecoder = A3($Json$Decode.object2,
+   $Models.LiveStatus,
+   A2($Json$Decode._op[":="],
+   "liveTracks",
+   $Json$Decode.list(liveTrackDecoder)),
+   A2($Json$Decode._op[":="],
+   "onlinePlayers",
+   $Json$Decode.list(playerDecoder)));
+   return _elm.Decoders.values = {_op: _op
+                                 ,liveStatusDecoder: liveStatusDecoder
+                                 ,liveTrackDecoder: liveTrackDecoder
+                                 ,raceDecoder: raceDecoder
+                                 ,rankingDecoder: rankingDecoder
+                                 ,playerTallyDecoder: playerTallyDecoder
+                                 ,trackDecoder: trackDecoder
+                                 ,playerDecoder: playerDecoder
+                                 ,messageDecoder: messageDecoder
+                                 ,pointDecoder: pointDecoder
+                                 ,courseDecoder: courseDecoder
+                                 ,gateDecoder: gateDecoder
+                                 ,gridDecoder: gridDecoder
+                                 ,gridRowDecoder: gridRowDecoder
+                                 ,tileKindDecoder: tileKindDecoder
+                                 ,raceAreaDecoder: raceAreaDecoder
+                                 ,windGeneratorDecoder: windGeneratorDecoder
+                                 ,gustGeneratorDecoder: gustGeneratorDecoder
+                                 ,gustDefGenerator: gustDefGenerator};
 };
 Elm.Encoders = Elm.Encoders || {};
 Elm.Encoders.make = function (_elm) {
@@ -13716,15 +13720,17 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    var _op = {};
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
-   $AppTypes.HomeAction);
+   function (_p0) {
+      return $AppTypes.ScreenAction($AppTypes.HomeAction(_p0));
+   });
    var refreshLiveStatus = A2($Task.andThen,
    $ServerApi.getLiveStatus,
    function (result) {
-      var _p0 = result;
-      if (_p0.ctor === "Ok") {
+      var _p1 = result;
+      if (_p1.ctor === "Ok") {
             return A2($Signal.send,
             addr,
-            $Screens$Home$Types.SetLiveStatus(_p0._0));
+            $Screens$Home$Types.SetLiveStatus(_p1._0));
          } else {
             return $Task.succeed({ctor: "_Tuple0"});
          }
@@ -13738,47 +13744,47 @@ Elm.Screens.Home.Updates.make = function (_elm) {
       return A2($AppTypes.react,initial,refreshLiveStatus);
    };
    var update = F2(function (action,screen) {
-      var _p1 = action;
-      switch (_p1.ctor)
+      var _p2 = action;
+      switch (_p2.ctor)
       {case "SetLiveStatus": return A2($AppTypes.react,
-           _U.update(screen,{liveStatus: _p1._0}),
+           _U.update(screen,{liveStatus: _p2._0}),
            A2($Task$Extra.delay,5 * $Time.second,refreshLiveStatus));
          case "SetHandle": return $AppTypes.local(_U.update(screen,
-           {handle: _p1._0}));
+           {handle: _p2._0}));
          case "SubmitHandle": return A2($AppTypes.react,
            screen,
            A2($Task.andThen,
            $ServerApi.postHandle(screen.handle),
            function (result) {
-              var _p2 = result;
-              if (_p2.ctor === "Ok") {
+              var _p3 = result;
+              if (_p3.ctor === "Ok") {
                     return A2($Signal.send,
                     addr,
-                    $Screens$Home$Types.SubmitHandleSuccess(_p2._0));
+                    $Screens$Home$Types.SubmitHandleSuccess(_p3._0));
                  } else {
                     return $Task.succeed({ctor: "_Tuple0"});
                  }
            }));
          case "SubmitHandleSuccess": return A2($AppTypes.request,
            screen,
-           $AppTypes.SetPlayer(_p1._0));
+           $AppTypes.SetPlayer(_p2._0));
          case "CreateTrack": return A2($AppTypes.react,
            screen,
            A2($Task.andThen,
            $ServerApi.createTrack,
            function (result) {
-              var _p3 = result;
-              if (_p3.ctor === "Ok") {
+              var _p4 = result;
+              if (_p4.ctor === "Ok") {
                     return A2($Signal.send,
                     addr,
-                    $Screens$Home$Types.TrackCreated(_p3._0.id));
+                    $Screens$Home$Types.TrackCreated(_p4._0.id));
                  } else {
                     return $Task.succeed({ctor: "_Tuple0"});
                  }
            }));
          case "TrackCreated": return A2($AppTypes.request,
            screen,
-           $AppTypes.SetPath(A2($Basics._op["++"],"/edit/",_p1._0)));
+           $AppTypes.SetPath(A2($Basics._op["++"],"/edit/",_p2._0)));
          default: return $AppTypes.local(screen);}
    });
    return _elm.Screens.Home.Updates.values = {_op: _op
@@ -13820,7 +13826,9 @@ Elm.Screens.Register.Updates.make = function (_elm) {
    }();
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
-   $AppTypes.RegisterAction);
+   function (_p0) {
+      return $AppTypes.ScreenAction($AppTypes.RegisterAction(_p0));
+   });
    var submitTask = function (screen) {
       return A2($Task.andThen,
       A3($ServerApi.postRegister,
@@ -13828,36 +13836,36 @@ Elm.Screens.Register.Updates.make = function (_elm) {
       screen.handle,
       screen.password),
       function (result) {
-         var _p0 = result;
-         if (_p0.ctor === "Ok") {
+         var _p1 = result;
+         if (_p1.ctor === "Ok") {
                return A2($Signal.send,
                addr,
-               $Screens$Register$Types.FormSuccess(_p0._0));
+               $Screens$Register$Types.FormSuccess(_p1._0));
             } else {
                return A2($Signal.send,
                addr,
-               $Screens$Register$Types.FormFailure(_p0._0));
+               $Screens$Register$Types.FormFailure(_p1._0));
             }
       });
    };
    var update = F2(function (action,screen) {
-      var _p1 = action;
-      switch (_p1.ctor)
+      var _p2 = action;
+      switch (_p2.ctor)
       {case "NoOp": return $AppTypes.local(screen);
          case "SetHandle": return $AppTypes.local(_U.update(screen,
-           {handle: _p1._0}));
+           {handle: _p2._0}));
          case "SetEmail": return $AppTypes.local(_U.update(screen,
-           {email: _p1._0}));
+           {email: _p2._0}));
          case "SetPassword": return $AppTypes.local(_U.update(screen,
-           {password: _p1._0}));
+           {password: _p2._0}));
          case "Submit": return A2($AppTypes.react,
            _U.update(screen,{loading: true,errors: $Dict.empty}),
            submitTask(screen));
          case "FormSuccess": return A2($AppTypes.request,
            _U.update(screen,{loading: false,errors: $Dict.empty}),
-           $AppTypes.SetPlayer(_p1._0));
+           $AppTypes.SetPlayer(_p2._0));
          default: return $AppTypes.local(_U.update(screen,
-           {loading: false,errors: _p1._0}));}
+           {loading: false,errors: _p2._0}));}
    });
    return _elm.Screens.Register.Updates.values = {_op: _op
                                                  ,addr: addr
@@ -13896,35 +13904,37 @@ Elm.Screens.Login.Updates.make = function (_elm) {
    }();
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
-   $AppTypes.LoginAction);
+   function (_p0) {
+      return $AppTypes.ScreenAction($AppTypes.LoginAction(_p0));
+   });
    var submitTask = function (screen) {
       return A2($Task.andThen,
       A2($ServerApi.postLogin,screen.email,screen.password),
       function (result) {
-         var _p0 = result;
-         if (_p0.ctor === "Ok") {
+         var _p1 = result;
+         if (_p1.ctor === "Ok") {
                return A2($Signal.send,
                addr,
-               $Screens$Login$Types.Success(_p0._0));
+               $Screens$Login$Types.Success(_p1._0));
             } else {
                return A2($Signal.send,addr,$Screens$Login$Types.Error);
             }
       });
    };
    var update = F2(function (action,screen) {
-      var _p1 = action;
-      switch (_p1.ctor)
+      var _p2 = action;
+      switch (_p2.ctor)
       {case "NoOp": return $AppTypes.local(screen);
          case "SetEmail": return $AppTypes.local(_U.update(screen,
-           {email: _p1._0}));
+           {email: _p2._0}));
          case "SetPassword": return $AppTypes.local(_U.update(screen,
-           {password: _p1._0}));
+           {password: _p2._0}));
          case "Submit": return A2($AppTypes.react,
            _U.update(screen,{loading: true}),
            submitTask(screen));
          case "Success": return A2($AppTypes.request,
            _U.update(screen,{loading: false,error: false}),
-           $AppTypes.SetPlayer(_p1._0));
+           $AppTypes.SetPlayer(_p2._0));
          default: return $AppTypes.local(_U.update(screen,
            {loading: false,error: true}));}
    });
@@ -13967,16 +13977,18 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
    });
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
-   $AppTypes.ShowTrackAction);
+   function (_p1) {
+      return $AppTypes.ScreenAction($AppTypes.ShowTrackAction(_p1));
+   });
    var loadTrack = function (slug) {
       return A2($Task.andThen,
       $ServerApi.getTrack(slug),
       function (result) {
-         var _p1 = result;
-         if (_p1.ctor === "Ok") {
+         var _p2 = result;
+         if (_p2.ctor === "Ok") {
                return A2($Signal.send,
                addr,
-               $Screens$ShowTrack$Types.SetTrack(_p1._0));
+               $Screens$ShowTrack$Types.SetTrack(_p2._0));
             } else {
                return $Task.succeed({ctor: "_Tuple0"});
             }
@@ -14640,16 +14652,18 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                           $DragAndDrop.mouseEvents)]));
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
-   $AppTypes.EditTrackAction);
+   function (_p2) {
+      return $AppTypes.ScreenAction($AppTypes.EditTrackAction(_p2));
+   });
    var loadTrack = function (id) {
       return A2($Task.andThen,
       $ServerApi.getTrack(id),
       function (result) {
-         var _p2 = result;
-         if (_p2.ctor === "Ok") {
+         var _p3 = result;
+         if (_p3.ctor === "Ok") {
                return A2($Signal.send,
                addr,
-               $Screens$EditTrack$Types.SetTrack(_p2._0));
+               $Screens$EditTrack$Types.SetTrack(_p3._0));
             } else {
                return $Task.succeed({ctor: "_Tuple0"});
             }
@@ -14662,65 +14676,65 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     ,dims: dims};
       return A2($AppTypes.react,initial,loadTrack(id));
    });
-   var save = F2(function (id,_p3) {
-      var _p4 = _p3;
-      var _p6 = _p4.course;
-      var area = getRaceArea(_p6.grid);
-      var withArea = _U.update(_p6,{area: area});
+   var save = F2(function (id,_p4) {
+      var _p5 = _p4;
+      var _p7 = _p5.course;
+      var area = getRaceArea(_p7.grid);
+      var withArea = _U.update(_p7,{area: area});
       return A2($Task.andThen,
       A2($Task$Extra.delay,
       500,
-      A3($ServerApi.saveTrack,id,_p4.name,withArea)),
-      function (_p5) {
+      A3($ServerApi.saveTrack,id,_p5.name,withArea)),
+      function (_p6) {
          return A2($Signal.send,
          addr,
-         $Screens$EditTrack$Types.SaveResult(_p5));
+         $Screens$EditTrack$Types.SaveResult(_p6));
       });
    });
    var update = F2(function (action,screen) {
-      var _p7 = action;
-      switch (_p7.ctor)
-      {case "SetTrack": var _p8 = _p7._0;
-           var editor = {course: _p8.course
+      var _p8 = action;
+      switch (_p8.ctor)
+      {case "SetTrack": var _p9 = _p8._0;
+           var editor = {course: _p9.course
                         ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
                         ,courseDims: getCourseDims(screen.dims)
                         ,mode: $Screens$EditTrack$Types.Watch
                         ,altMove: false
-                        ,name: _p8.name
+                        ,name: _p9.name
                         ,saving: false};
            return $AppTypes.local(_U.update(screen,
-           {track: $Maybe.Just(_p8),editor: $Maybe.Just(editor)}));
+           {track: $Maybe.Just(_p9),editor: $Maybe.Just(editor)}));
          case "TrackNotFound": return $AppTypes.local(_U.update(screen,
            {notFound: true}));
          case "SetName": return $AppTypes.local(A2(updateEditor,
            function (e) {
-              return _U.update(e,{name: _p7._0});
+              return _U.update(e,{name: _p8._0});
            },
            screen));
-         case "MouseAction": return $AppTypes.local(A2(function (_p9) {
-              return updateEditor($Screens$EditTrack$GridUpdates.mouseAction(_p9));
+         case "MouseAction": return $AppTypes.local(A2(function (_p10) {
+              return updateEditor($Screens$EditTrack$GridUpdates.mouseAction(_p10));
            },
-           _p7._0,
+           _p8._0,
            screen));
          case "SetMode": return $AppTypes.local(A2(updateEditor,
            function (e) {
-              return _U.update(e,{mode: _p7._0});
+              return _U.update(e,{mode: _p8._0});
            },
            screen));
          case "AltMoveMode": return $AppTypes.local(A2(updateEditor,
            function (e) {
-              return _U.update(e,{altMove: _p7._0});
+              return _U.update(e,{altMove: _p8._0});
            },
            screen));
-         case "FormAction": return $AppTypes.local(A2(function (_p10) {
-              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p10)));
+         case "FormAction": return $AppTypes.local(A2(function (_p11) {
+              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p11)));
            },
-           _p7._0,
+           _p8._0,
            screen));
-         case "Save": var _p11 = {ctor: "_Tuple2"
+         case "Save": var _p12 = {ctor: "_Tuple2"
                                  ,_0: screen.track
                                  ,_1: screen.editor};
-           if (_p11.ctor === "_Tuple2" && _p11._0.ctor === "Just" && _p11._1.ctor === "Just")
+           if (_p12.ctor === "_Tuple2" && _p12._0.ctor === "Just" && _p12._1.ctor === "Just")
            {
                  return A2($AppTypes.react,
                  A2(updateEditor,
@@ -14728,7 +14742,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     return _U.update(e,{saving: true});
                  },
                  screen),
-                 A2(save,_p11._0._0.id,_p11._1._0));
+                 A2(save,_p12._0._0.id,_p12._1._0));
               } else {
                  return $AppTypes.local(screen);
               }
@@ -14783,7 +14797,9 @@ Elm.Screens.ShowProfile.Updates.make = function (_elm) {
    };
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
-   $AppTypes.ShowProfileAction);
+   function (_p1) {
+      return $AppTypes.ScreenAction($AppTypes.ShowProfileAction(_p1));
+   });
    return _elm.Screens.ShowProfile.Updates.values = {_op: _op
                                                     ,addr: addr
                                                     ,mount: mount
@@ -15716,16 +15732,18 @@ Elm.Screens.Game.Updates.make = function (_elm) {
    };
    var addr = A2($Signal.forwardTo,
    $AppTypes.appActionsMailbox.address,
-   $AppTypes.GameAction);
+   function (_p4) {
+      return $AppTypes.ScreenAction($AppTypes.GameAction(_p4));
+   });
    var loadLiveTrack = function (slug) {
       return A2($Task.andThen,
       $ServerApi.getLiveTrack(slug),
       function (result) {
-         var _p4 = result;
-         if (_p4.ctor === "Ok") {
+         var _p5 = result;
+         if (_p5.ctor === "Ok") {
                return A2($Signal.send,
                addr,
-               $Screens$Game$Types.SetLiveTrack(_p4._0));
+               $Screens$Game$Types.SetLiveTrack(_p5._0));
             } else {
                return $Task.succeed({ctor: "_Tuple0"});
             }
@@ -15746,15 +15764,15 @@ Elm.Screens.Game.Updates.make = function (_elm) {
    30 * $Time.millisecond,
    A2($Signal.send,addr,$Screens$Game$Types.PingServer));
    var update = F4(function (player,clock,action,screen) {
-      var _p5 = action;
-      switch (_p5.ctor)
-      {case "SetLiveTrack": var _p6 = _p5._0;
+      var _p6 = action;
+      switch (_p6.ctor)
+      {case "SetLiveTrack": var _p7 = _p6._0;
            var gameState = A3($Game$Models.defaultGame,
            clock.time,
-           _p6.track.course,
+           _p7.track.course,
            player);
            var newScreen = A2(applyLiveTrack,
-           _p6,
+           _p7,
            _U.update(screen,{gameState: $Maybe.Just(gameState)}));
            return A2($AppTypes.react,newScreen,pingServer);
          case "PingServer":
@@ -15765,7 +15783,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
          case "TrackNotFound": return $AppTypes.local(_U.update(screen,
            {notFound: true}));
          case "GameUpdate": var newGameState = A2($Maybe.map,
-           A2($Game$Steps.gameStep,clock,_p5._0),
+           A2($Game$Steps.gameStep,clock,_p6._0),
            screen.gameState);
            return $AppTypes.local(_U.update(screen,
            {gameState: newGameState,live: true}));
@@ -15785,7 +15803,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
            {gameState: newGameState}));
          case "UpdateMessageField":
          return $AppTypes.local(_U.update(screen,
-           {messageField: _p5._0}));
+           {messageField: _p6._0}));
          case "SubmitMessage": if (screen.live) {
                  var msgTask = sendMessage(screen.messageField);
                  return A2($AppTypes.react,
@@ -15795,9 +15813,9 @@ Elm.Screens.Game.Updates.make = function (_elm) {
          case "NewMessage": return $AppTypes.local(_U.update(screen,
            {messages: A2($List.take,
            30,
-           A2($List._op["::"],_p5._0,screen.messages))}));
+           A2($List._op["::"],_p6._0,screen.messages))}));
          case "UpdateLiveTrack":
-         return $AppTypes.local(A2(applyLiveTrack,_p5._0,screen));
+         return $AppTypes.local(A2(applyLiveTrack,_p6._0,screen));
          default: return $AppTypes.local(screen);}
    });
    return _elm.Screens.Game.Updates.values = {_op: _op
@@ -15863,94 +15881,107 @@ Elm.AppUpdates.make = function (_elm) {
             return appScreen;
          }
    });
-   var update = F2(function (_p3,_p2) {
-      var _p4 = _p3;
-      var _p5 = _p2;
-      var _p8 = _p5.appState;
-      var _p6 = {ctor: "_Tuple2",_0: _p4.action,_1: _p8.screen};
-      _v4_9: do {
-         if (_p6.ctor === "_Tuple2") {
-               switch (_p6._0.ctor)
-               {case "UpdateDims": var _p7 = _p6._0._0;
-                    var newScreen = A2(updateScreenDims,_p7,_p8.screen);
-                    return A3($AppTypes.AppUpdate,
-                    _U.update(_p8,{dims: _p7,screen: newScreen}),
-                    $Maybe.Nothing,
-                    $Maybe.Nothing);
-                  case "HomeAction": if (_p6._1.ctor === "HomeScreen") {
-                          return A3($AppTypes.mapAppUpdate,
-                          _p8,
-                          $AppTypes.HomeScreen,
-                          A2($Screens$Home$Updates.update,_p6._0._0,_p6._1._0));
-                       } else {
-                          break _v4_9;
-                       }
-                  case "LoginAction": if (_p6._1.ctor === "LoginScreen") {
-                          return A3($AppTypes.mapAppUpdate,
-                          _p8,
-                          $AppTypes.LoginScreen,
-                          A2($Screens$Login$Updates.update,_p6._0._0,_p6._1._0));
-                       } else {
-                          break _v4_9;
-                       }
-                  case "RegisterAction": if (_p6._1.ctor === "RegisterScreen") {
-                          return A3($AppTypes.mapAppUpdate,
-                          _p8,
-                          $AppTypes.RegisterScreen,
-                          A2($Screens$Register$Updates.update,_p6._0._0,_p6._1._0));
-                       } else {
-                          break _v4_9;
-                       }
-                  case "ShowTrackAction": if (_p6._1.ctor === "ShowTrackScreen") {
-                          return A3($AppTypes.mapAppUpdate,
-                          _p8,
-                          $AppTypes.ShowTrackScreen,
-                          A2($Screens$ShowTrack$Updates.update,_p6._0._0,_p6._1._0));
-                       } else {
-                          break _v4_9;
-                       }
-                  case "EditTrackAction": if (_p6._1.ctor === "EditTrackScreen") {
-                          return A3($AppTypes.mapAppUpdate,
-                          _p8,
-                          $AppTypes.EditTrackScreen,
-                          A2($Screens$EditTrack$Updates.update,_p6._0._0,_p6._1._0));
-                       } else {
-                          break _v4_9;
-                       }
-                  case "ShowProfileAction":
-                  if (_p6._1.ctor === "ShowProfileScreen") {
-                          return A3($AppTypes.mapAppUpdate,
-                          _p8,
-                          $AppTypes.ShowProfileScreen,
-                          A2($Screens$ShowProfile$Updates.update,_p6._0._0,_p6._1._0));
-                       } else {
-                          break _v4_9;
-                       }
-                  case "GameAction": if (_p6._1.ctor === "GameScreen") {
-                          return A3($AppTypes.mapAppUpdate,
-                          _p8,
-                          $AppTypes.GameScreen,
-                          A4($Screens$Game$Updates.update,
-                          _p8.player,
-                          _p4.clock,
-                          _p6._0._0,
-                          _p6._1._0));
-                       } else {
-                          break _v4_9;
-                       }
-                  case "Logout": return A3($AppTypes.AppUpdate,
-                    _p8,
-                    $Maybe.Just(logoutTask),
-                    $Maybe.Nothing);
-                  default: break _v4_9;}
-            } else {
-               break _v4_9;
-            }
-      } while (false);
-      return noUpdate(_p8);
+   var updateScreen = F3(function (clock,screenAction,_p2) {
+      var _p3 = _p2;
+      var _p13 = _p3.screen;
+      var _p12 = _p3;
+      var _p4 = screenAction;
+      switch (_p4.ctor)
+      {case "HomeAction": var _p5 = _p13;
+           if (_p5.ctor === "HomeScreen") {
+                 return A3($AppTypes.mapAppUpdate,
+                 _p12,
+                 $AppTypes.HomeScreen,
+                 A2($Screens$Home$Updates.update,_p4._0,_p5._0));
+              } else {
+                 return noUpdate(_p12);
+              }
+         case "LoginAction": var _p6 = _p13;
+           if (_p6.ctor === "LoginScreen") {
+                 return A3($AppTypes.mapAppUpdate,
+                 _p12,
+                 $AppTypes.LoginScreen,
+                 A2($Screens$Login$Updates.update,_p4._0,_p6._0));
+              } else {
+                 return noUpdate(_p12);
+              }
+         case "RegisterAction": var _p7 = _p13;
+           if (_p7.ctor === "RegisterScreen") {
+                 return A3($AppTypes.mapAppUpdate,
+                 _p12,
+                 $AppTypes.RegisterScreen,
+                 A2($Screens$Register$Updates.update,_p4._0,_p7._0));
+              } else {
+                 return noUpdate(_p12);
+              }
+         case "ShowTrackAction": var _p8 = _p13;
+           if (_p8.ctor === "ShowTrackScreen") {
+                 return A3($AppTypes.mapAppUpdate,
+                 _p12,
+                 $AppTypes.ShowTrackScreen,
+                 A2($Screens$ShowTrack$Updates.update,_p4._0,_p8._0));
+              } else {
+                 return noUpdate(_p12);
+              }
+         case "EditTrackAction": var _p9 = _p13;
+           if (_p9.ctor === "EditTrackScreen") {
+                 return A3($AppTypes.mapAppUpdate,
+                 _p12,
+                 $AppTypes.EditTrackScreen,
+                 A2($Screens$EditTrack$Updates.update,_p4._0,_p9._0));
+              } else {
+                 return noUpdate(_p12);
+              }
+         case "ShowProfileAction": var _p10 = _p13;
+           if (_p10.ctor === "ShowProfileScreen") {
+                 return A3($AppTypes.mapAppUpdate,
+                 _p12,
+                 $AppTypes.ShowProfileScreen,
+                 A2($Screens$ShowProfile$Updates.update,_p4._0,_p10._0));
+              } else {
+                 return noUpdate(_p12);
+              }
+         default: var _p11 = _p13;
+           if (_p11.ctor === "GameScreen") {
+                 return A3($AppTypes.mapAppUpdate,
+                 _p12,
+                 $AppTypes.GameScreen,
+                 A4($Screens$Game$Updates.update,
+                 _p12.player,
+                 clock,
+                 _p4._0,
+                 _p11._0));
+              } else {
+                 return noUpdate(_p12);
+              }}
+   });
+   var update = F2(function (_p15,_p14) {
+      var _p16 = _p15;
+      var _p17 = _p14;
+      var _p20 = _p17.appState;
+      var _p18 = _p16.action;
+      switch (_p18.ctor)
+      {case "SetPlayer": return noUpdate(_p20);
+         case "SetPath": return noUpdate(_p20);
+         case "UpdateDims": var _p19 = _p18._0;
+           var newScreen = A2(updateScreenDims,_p19,_p20.screen);
+           return A3($AppTypes.AppUpdate,
+           _U.update(_p20,{dims: _p19,screen: newScreen}),
+           $Maybe.Nothing,
+           $Maybe.Nothing);
+         case "Logout": return A3($AppTypes.AppUpdate,
+           _p20,
+           $Maybe.Just(logoutTask),
+           $Maybe.Nothing);
+         case "ScreenAction": return A3(updateScreen,
+           _p16.clock,
+           _p18._0,
+           _p20);
+         default: return noUpdate(_p20);}
    });
    return _elm.AppUpdates.values = {_op: _op
                                    ,update: update
+                                   ,updateScreen: updateScreen
                                    ,updateScreenDims: updateScreenDims
                                    ,noUpdate: noUpdate
                                    ,logoutTask: logoutTask};
@@ -22587,7 +22618,9 @@ Elm.Main.make = function (_elm) {
    },
    $Time.timestamp($Time.fps(30)));
    var editorInputActions = A2($Signal.map,
-   $AppTypes.EditTrackAction,
+   function (_p2) {
+      return $AppTypes.ScreenAction($AppTypes.EditTrackAction(_p2));
+   },
    $Screens$EditTrack$Updates.inputs);
    var dimsActions = A2($Signal.map,
    $AppTypes.UpdateDims,
@@ -22601,8 +22634,8 @@ Elm.Main.make = function (_elm) {
       return v;
    });
    var gameActions = A2($Signal.map,
-   function (_p2) {
-      return $AppTypes.GameAction($Screens$Game$Decoders.decodeAction(_p2));
+   function (_p3) {
+      return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Decoders.decodeAction(_p3)));
    },
    gameActionsInput);
    var chatScrollDown = Elm.Native.Port.make(_elm).outboundSignal("chatScrollDown",
@@ -22755,7 +22788,9 @@ Elm.Main.make = function (_elm) {
    var raceUpdateActions = $Signal.dropRepeats(A2($Signal.sampleOn,
    clock,
    A3($Signal.filterMap,
-   $Maybe.map($AppTypes.GameAction),
+   $Maybe.map(function (_p4) {
+      return $AppTypes.ScreenAction($AppTypes.GameAction(_p4));
+   }),
    $AppTypes.AppNoOp,
    A4($Signal.map3,
    $Screens$Game$Updates.mapGameUpdate,
