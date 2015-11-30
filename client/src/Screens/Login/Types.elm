@@ -17,5 +17,4 @@ type Action
   | Submit
   | Success Player
   | Error
-  | NoOp
 

@@ -24,6 +24,7 @@ routeParsers =
   , dyn1 PlayTrack "/play/" string ""
   ]
 
+
 toPath : Route -> String
 toPath route =
   case route of
@@ -35,30 +36,3 @@ toPath route =
     EditTrack id -> "/edit/" ++ id
     PlayTrack id -> "/play/" ++ id
 
-
-
--- showTrack : AppState -> String -> AppUpdate
--- showTrack appState slug =
---   mapAppUpdate appState ShowTrackScreen (ShowTrack.mount slug)
-
-
--- editTrack : AppState -> String -> AppUpdate
--- editTrack appState slug =
---   mapAppUpdate appState EditTrackScreen (EditTrack.mount appState.dims slug)
-
-
-
--- notFound : AppState -> String -> AppUpdate
--- notFound appState path =
---   AppUpdate { appState | screen <- NotFoundScreen path } Nothing Nothing
-
-
--- path changes
-
--- pathChangeMailbox : Signal.Mailbox (Task error ())
--- pathChangeMailbox = Signal.mailbox (Task.succeed ())
-
-
--- changePath : String -> Task error ()
--- changePath path =
---   Signal.send pathChangeMailbox.address (History.setPath path)

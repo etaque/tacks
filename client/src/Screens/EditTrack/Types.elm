@@ -42,7 +42,6 @@ type Action
   | SetName String
   | Save
   | SaveResult (FormResult Track)
-  | NoOp
 
 type FormUpdate
   = SetDownwindY Int

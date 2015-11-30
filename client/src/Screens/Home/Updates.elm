@@ -71,8 +71,6 @@ update action screen =
     TrackCreated id ->
       react screen (History.setPath (Routes.toPath (Routes.EditTrack id)))
 
-    _ ->
-      local screen
 
 refreshLiveStatus : Task Never ()
 refreshLiveStatus =

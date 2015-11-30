@@ -70,9 +70,11 @@ mountRoute ({player, dims} as appState) route =
       PlayTrack id ->
         mount GameScreen (Game.mount id)
 
+
 mountNotFound : AppState -> String -> AppUpdate
 mountNotFound appState path =
   AppUpdate { appState | screen = NotFoundScreen path } Nothing
+
 
 updateScreen : Clock -> ScreenAction -> AppState -> AppUpdate
 updateScreen clock screenAction ({screen} as appState) =
@@ -135,15 +137,18 @@ updateScreenDims dims appScreen =
     _ ->
       appScreen
 
+
 noUpdate : AppState -> AppUpdate
 noUpdate appState =
   AppUpdate appState Nothing
+
 
 toAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
 toAppUpdate appState toAppScreen {screen, reaction} =
   AppUpdate
     { appState | screen = toAppScreen screen }
     reaction
+
 
 logoutTask : Task Never ()
 logoutTask =

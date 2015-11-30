@@ -21,4 +21,3 @@ type Action
   | Submit
   | FormSuccess Player
   | FormFailure (Dict String (List String))
-  | NoOp

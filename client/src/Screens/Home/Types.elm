@@ -10,12 +10,10 @@ type alias Screen =
 
 
 type Action
-  = Load
-  | SetLiveStatus LiveStatus
+  = SetLiveStatus LiveStatus
   | SetHandle String
   | SubmitHandle
   | SubmitHandleSuccess Player
   | CreateTrack
   | TrackCreated String
-  | NoOp
 

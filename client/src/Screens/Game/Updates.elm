@@ -103,7 +103,7 @@ update player clock action screen =
     UpdateLiveTrack liveTrack ->
       local (applyLiveTrack liveTrack screen)
 
-    _ ->
+    NoOp ->
       local screen
 
 

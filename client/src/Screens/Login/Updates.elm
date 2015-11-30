@@ -32,9 +32,6 @@ update : Action -> Screen -> Update
 update action screen =
   case action of
 
-    NoOp ->
-      local screen
-
     SetEmail e ->
       local { screen | email = e }
 

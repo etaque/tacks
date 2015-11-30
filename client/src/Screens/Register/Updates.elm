@@ -33,9 +33,6 @@ update : Action -> Screen -> Update
 update action screen =
   case action of
 
-    NoOp ->
-      local screen
-
     SetHandle h ->
       local { screen | handle = h }
 

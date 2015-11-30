@@ -105,9 +105,6 @@ update action screen =
         |> updateEditor (\e -> { e | saving = False })
         |> local
 
-    _ ->
-      local screen
-
 
 updateEditor : (Editor -> Editor) -> Screen -> Screen
 updateEditor update screen =

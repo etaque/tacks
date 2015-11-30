@@ -11195,7 +11195,6 @@ Elm.Screens.Home.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var NoOp = {ctor: "NoOp"};
    var TrackCreated = function (a) {
       return {ctor: "TrackCreated",_0: a};
    };
@@ -11210,20 +11209,17 @@ Elm.Screens.Home.Types.make = function (_elm) {
    var SetLiveStatus = function (a) {
       return {ctor: "SetLiveStatus",_0: a};
    };
-   var Load = {ctor: "Load"};
    var Screen = F2(function (a,b) {
       return {handle: a,liveStatus: b};
    });
    return _elm.Screens.Home.Types.values = {_op: _op
                                            ,Screen: Screen
-                                           ,Load: Load
                                            ,SetLiveStatus: SetLiveStatus
                                            ,SetHandle: SetHandle
                                            ,SubmitHandle: SubmitHandle
                                            ,SubmitHandleSuccess: SubmitHandleSuccess
                                            ,CreateTrack: CreateTrack
-                                           ,TrackCreated: TrackCreated
-                                           ,NoOp: NoOp};
+                                           ,TrackCreated: TrackCreated};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Login = Elm.Screens.Login || {};
@@ -11244,7 +11240,6 @@ Elm.Screens.Login.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var NoOp = {ctor: "NoOp"};
    var Error = {ctor: "Error"};
    var Success = function (a) {
       return {ctor: "Success",_0: a};
@@ -11265,8 +11260,7 @@ Elm.Screens.Login.Types.make = function (_elm) {
                                             ,SetPassword: SetPassword
                                             ,Submit: Submit
                                             ,Success: Success
-                                            ,Error: Error
-                                            ,NoOp: NoOp};
+                                            ,Error: Error};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Register = Elm.Screens.Register || {};
@@ -11288,7 +11282,6 @@ Elm.Screens.Register.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var NoOp = {ctor: "NoOp"};
    var FormFailure = function (a) {
       return {ctor: "FormFailure",_0: a};
    };
@@ -11315,8 +11308,7 @@ Elm.Screens.Register.Types.make = function (_elm) {
                                                ,SetPassword: SetPassword
                                                ,Submit: Submit
                                                ,FormSuccess: FormSuccess
-                                               ,FormFailure: FormFailure
-                                               ,NoOp: NoOp};
+                                               ,FormFailure: FormFailure};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
@@ -12045,7 +12037,6 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var SetDownwindY = function (a) {
       return {ctor: "SetDownwindY",_0: a};
    };
-   var NoOp = {ctor: "NoOp"};
    var SaveResult = function (a) {
       return {ctor: "SaveResult",_0: a};
    };
@@ -12106,7 +12097,6 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,SetName: SetName
                                                 ,Save: Save
                                                 ,SaveResult: SaveResult
-                                                ,NoOp: NoOp
                                                 ,SetDownwindY: SetDownwindY
                                                 ,SetUpwindY: SetUpwindY
                                                 ,SetGateWidth: SetGateWidth
@@ -13972,10 +13962,9 @@ Elm.Screens.Home.Updates.make = function (_elm) {
                     return $Task.succeed({ctor: "_Tuple0"});
                  }
            }));
-         case "TrackCreated": return A2($AppTypes.react,
+         default: return A2($AppTypes.react,
            screen,
-           $History.setPath($Routes.toPath($Routes.EditTrack(_p2._0))));
-         default: return $AppTypes.local(screen);}
+           $History.setPath($Routes.toPath($Routes.EditTrack(_p2._0))));}
    });
    return _elm.Screens.Home.Updates.values = {_op: _op
                                              ,addr: addr
@@ -14041,8 +14030,7 @@ Elm.Screens.Register.Updates.make = function (_elm) {
    var update = F2(function (action,screen) {
       var _p2 = action;
       switch (_p2.ctor)
-      {case "NoOp": return $AppTypes.local(screen);
-         case "SetHandle": return $AppTypes.local(_U.update(screen,
+      {case "SetHandle": return $AppTypes.local(_U.update(screen,
            {handle: _p2._0}));
          case "SetEmail": return $AppTypes.local(_U.update(screen,
            {email: _p2._0}));
@@ -14116,8 +14104,7 @@ Elm.Screens.Login.Updates.make = function (_elm) {
    var update = F2(function (action,screen) {
       var _p2 = action;
       switch (_p2.ctor)
-      {case "NoOp": return $AppTypes.local(screen);
-         case "SetEmail": return $AppTypes.local(_U.update(screen,
+      {case "SetEmail": return $AppTypes.local(_U.update(screen,
            {email: _p2._0}));
          case "SetPassword": return $AppTypes.local(_U.update(screen,
            {password: _p2._0}));
@@ -14940,12 +14927,11 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
               } else {
                  return $AppTypes.local(screen);
               }
-         case "SaveResult": return $AppTypes.local(A2(updateEditor,
+         default: return $AppTypes.local(A2(updateEditor,
            function (e) {
               return _U.update(e,{saving: false});
            },
-           screen));
-         default: return $AppTypes.local(screen);}
+           screen));}
    });
    return _elm.Screens.EditTrack.Updates.values = {_op: _op
                                                   ,addr: addr
