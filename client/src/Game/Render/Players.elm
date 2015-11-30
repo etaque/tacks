@@ -240,16 +240,25 @@ renderVmgSign player =
 
 vmgIcon : PlayerState -> Svg
 vmgIcon player =
-  let a = (abs player.windAngle)
-      margin = 3
-  in  if a < 90 then
-        if | a < player.upwindVmg.angle - margin -> badVmg
-           | a > player.upwindVmg.angle + margin -> warnVmg
-           | otherwise                           -> goodVmg
+  let
+    a = (abs player.windAngle)
+    margin = 3
+  in
+    if a < 90
+    then
+      if a < player.upwindVmg.angle - margin
+      then badVmg
       else
-        if | a > player.downwindVmg.angle + margin -> badVmg
-           | a < player.downwindVmg.angle - margin -> warnVmg
-           | otherwise                             -> goodVmg
+        if a > player.upwindVmg.angle + margin
+        then warnVmg
+        else goodVmg
+    else
+      if a > player.downwindVmg.angle + margin
+      then badVmg
+      else
+        if a < player.downwindVmg.angle - margin
+        then warnVmg
+        else goodVmg
 
 badVmg : Svg
 badVmg =

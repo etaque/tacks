@@ -8,7 +8,7 @@ import Models exposing (..)
 import Constants exposing (..)
 import Screens.Utils exposing (..)
 
-import Screens.EditTrack.Updates exposing (actions)
+import Screens.EditTrack.Updates exposing (addr)
 import Screens.EditTrack.Types exposing (..)
 
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
@@ -26,7 +26,7 @@ sideView track ({courseDims, course, name, saving, mode} as editor) =
 
     , div [ class "form-actions" ]
       [ button
-        [ onClick actions.address Save
+        [ onClick addr Save
         , class "btn btn-primary btn-block"
         , disabled saving
         ]
@@ -117,7 +117,7 @@ renderSurfaceMode currentMode mode =
     (abbr, label) = modeName mode
   in
     a [ classList  [ ("current", currentMode == mode), (abbr, True) ]
-      , onClick actions.address (SetMode mode)
+      , onClick addr (SetMode mode)
       , style [ ("background-color", color) ]
       , title label
       ]
@@ -138,7 +138,7 @@ gustDefsHeader =
     , th [] [ text "speed" ]
     , th [] [ text "radius" ]
     , th [ class "action" ]
-      [ a [ onClick actions.address (FormAction CreateGustDef) ]
+      [ a [ onClick addr (FormAction CreateGustDef) ]
           [ text "+" ]
       ]
     ]
@@ -151,7 +151,7 @@ gustDefRow i def =
     , td [] [ intInput def.speed (SetGustSpeed i) [ ] ]
     , td [] [ intInput def.radius (SetGustRadius i) [ HtmlAttr.min "10", step "10" ] ]
     , td [ class "action" ]
-        [ a [ onClick actions.address (FormAction (RemoveGustDef i)) ]
+        [ a [ onClick addr (FormAction (RemoveGustDef i)) ]
             [ text "-" ]
         ]
     ]
@@ -161,7 +161,7 @@ nameInput : String -> Html
 nameInput n =
   textInput
     [ value n
-    , onInput actions.address SetName
+    , onInput addr SetName
     , type' "text"
     ]
 
@@ -170,7 +170,7 @@ intInput : number -> (Int -> FormUpdate) -> List Attribute -> Html
 intInput val formUpdate attrs =
   textInput
    ([ value (toString val)
-    , onIntInput actions.address (formUpdate >> FormAction)
+    , onIntInput addr (formUpdate >> FormAction)
     , type' "number"
     ] ++ attrs)
 

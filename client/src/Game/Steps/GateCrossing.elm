@@ -19,18 +19,25 @@ gateCrossingStep previousState ({course} as gameState) ({crossedGates,position} 
     newCrossedGates = case getNextGate course (L.length crossedGates) of
 
       Just StartLine ->
-        if | started && gateCrossedFromSouth course.downwind step -> t :: crossedGates
-           | otherwise                                            -> crossedGates
+        if started && gateCrossedFromSouth course.downwind step
+        then t :: crossedGates
+        else crossedGates
 
       Just UpwindGate ->
-        if | gateCrossedFromSouth course.upwind step   -> t :: crossedGates
-           | gateCrossedFromSouth course.downwind step -> L.tail crossedGates |> M.withDefault []
-           | otherwise                                 -> crossedGates
+        if gateCrossedFromSouth course.upwind step
+        then t :: crossedGates
+        else
+          if gateCrossedFromSouth course.downwind step
+          then L.tail crossedGates |> M.withDefault []
+          else crossedGates
 
       Just DownwindGate ->
-        if | gateCrossedFromNorth course.downwind step -> t :: crossedGates
-           | gateCrossedFromNorth course.upwind step   -> L.tail crossedGates |> M.withDefault []
-           | otherwise                                 -> crossedGates
+        if gateCrossedFromNorth course.downwind step
+        then t :: crossedGates
+        else
+          if gateCrossedFromNorth course.upwind step
+          then L.tail crossedGates |> M.withDefault []
+          else crossedGates
 
       Nothing ->
         crossedGates
@@ -38,18 +45,23 @@ gateCrossingStep previousState ({course} as gameState) ({crossedGates,position} 
     nextGate = getNextGate course (L.length newCrossedGates)
   in
     { state
-      | crossedGates <- newCrossedGates
-      , nextGate <- nextGate
+      | crossedGates = newCrossedGates
+      , nextGate = nextGate
     }
 
 
 
 getNextGate : Course -> Int -> Maybe GateLocation
 getNextGate course crossedGates =
-  if | crossedGates == course.laps * 2 + 1 -> Nothing
-     | crossedGates == 0                   -> Just StartLine
-     | crossedGates % 2 == 0               -> Just DownwindGate
-     | otherwise                           -> Just UpwindGate
+  if crossedGates == course.laps * 2 + 1
+  then Nothing
+  else
+    if crossedGates == 0
+    then Just StartLine
+    else
+      if crossedGates % 2 == 0
+      then Just DownwindGate
+      else Just UpwindGate
 
 
 gateCrossedInX : Gate -> Segment -> Bool

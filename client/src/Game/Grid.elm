@@ -1,6 +1,5 @@
 module Game.Grid where
 
-import Game.Core as Core
 import Models exposing (..)
 
 import Dict exposing (Dict)
@@ -77,9 +76,11 @@ cubeRound (x, y, z) =
     yDiff = abs (toFloat ry - y)
     zDiff = abs (toFloat rz - z)
   in
-    if | xDiff > yDiff && xDiff > zDiff -> (-ry-rz, ry, rz)
-       | yDiff > zDiff                  -> (rx, -rx-rz, rz)
-       | otherwise                      -> (rx, ry, -rx-ry)
+    if xDiff > yDiff && xDiff > zDiff then
+      (-ry-rz, ry, rz)
+    else if yDiff > zDiff then
+           (rx, -rx-rz, rz)
+         else (rx, ry, -rx-ry)
 
 cubeToHex : Cube number -> (number, number)
 cubeToHex (x, y, z) =

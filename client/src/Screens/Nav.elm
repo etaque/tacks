@@ -7,10 +7,11 @@ import Html.Events exposing (..)
 import Screens.Utils exposing (..)
 import Models exposing (..)
 import AppTypes exposing (..)
-import AppUpdates exposing (actionsMailbox)
 
 
-logoWidth = 160
+logoWidth : Int
+logoWidth =
+  160
 
 view : AppState -> Html
 view appState =
@@ -46,5 +47,5 @@ guestMenu =
 userMenu : List Html
 userMenu =
     [ li [] [ linkTo "/me" [] [ text "Profile" ] ]
-    , li [] [ a [ onClick actionsMailbox.address Logout ] [ text "Logout"] ]
+    , li [] [ a [ onClick appActionsMailbox.address Logout ] [ text "Logout"] ]
     ]

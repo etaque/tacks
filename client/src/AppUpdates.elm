@@ -1,9 +1,7 @@
 module AppUpdates where
 
 import Task exposing (Task, andThen)
-import Http
 
-import Models exposing (..)
 import AppTypes exposing (..)
 
 import Screens.Home.Updates as Home
@@ -15,41 +13,25 @@ import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 
 import ServerApi
-import Routes exposing (route)
+-- import Routes exposing (route)
 
-
-screenActions : Signal AppAction
-screenActions =
-  Signal.mergeMany
-    [ .signal Home.actions |> Signal.map HomeAction
-    , .signal Register.actions |> Signal.map RegisterAction
-    , .signal Login.actions |> Signal.map LoginAction
-    , .signal ShowTrack.actions |> Signal.map ShowTrackAction
-    , .signal EditTrack.actions |> Signal.map EditTrackAction
-    , .signal Game.actions |> Signal.map GameAction
-    ]
-
-
-actionsMailbox : Signal.Mailbox AppAction
-actionsMailbox =
-  Signal.mailbox NoOp
 
 
 update : AppInput -> AppUpdate -> AppUpdate
 update {action, clock} {appState} =
   case (action, appState.screen) of
 
-    (SetPlayer p, _) ->
-      AppUpdate { appState | player <- p } (Just (Routes.changePath "/")) Nothing
+    -- (SetPlayer p, _) ->
+    --   AppUpdate { appState | player = p } (Just (Routes.changePath "/")) Nothing
 
-    (SetPath path, _) ->
-      route appState path
+    -- (SetPath path, _) ->
+    --   route appState path
 
     (UpdateDims dims, _) ->
       let
         newScreen = updateScreenDims dims appState.screen
       in
-        AppUpdate { appState | dims <- dims, screen <- newScreen } Nothing Nothing
+        AppUpdate { appState | dims = dims, screen = newScreen } Nothing Nothing
 
     (HomeAction a, HomeScreen screen) ->
       Home.update a screen
@@ -102,7 +84,7 @@ logoutTask =
     \result ->
       case result of
         Ok p ->
-          Signal.send actionsMailbox.address (SetPlayer p)
+          Signal.send appActionsMailbox.address (SetPlayer p)
         Err _ ->
           -- TODO handle error
           Task.succeed ()

@@ -9,7 +9,7 @@ import Models exposing (..)
 import Constants exposing (..)
 
 import Screens.Home.Types exposing (..)
-import Screens.Home.Updates exposing (actions)
+import Screens.Home.Updates exposing (addr)
 import Screens.Utils exposing (..)
 
 
@@ -43,13 +43,13 @@ setHandleBlock handle =
           [ placeholder "Got a nickname?"
           , value handle
           -- , onInputFormUpdate (\s -> UpdateSetHandleForm (\f -> { f | handle <- s } ))
-          , onInput actions.address SetHandle
-          , onEnter actions.address SubmitHandle
+          , onInput addr SetHandle
+          , onEnter addr SubmitHandle
           ]
         , span [ class "input-group-btn" ]
           [ button
             [ class "btn btn-primary"
-            , onClick actions.address SubmitHandle
+            , onClick addr SubmitHandle
             ]
             [ text "submit" ]
           ]
@@ -95,7 +95,7 @@ createTrackBlock : Html
 createTrackBlock =
   div [ class "row" ]
     [ p [ class "align-center"]
-      [ a [ onClick actions.address CreateTrack
+      [ a [ onClick addr CreateTrack
           , class "btn btn-primary" ]
         [ text "Create track" ]
       ]

@@ -4,12 +4,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import AppTypes exposing (..)
 import Models exposing (..)
-import Game.Models exposing (GameState)
 
 import Screens.Game.Types exposing (..)
-import Screens.Game.Updates exposing (actions)
+import Screens.Game.Updates exposing (addr)
 
 import Screens.Utils exposing (..)
 
@@ -48,8 +46,8 @@ chatField field =
   textInput
     [ value field
     , placeholder "type in there..."
-    , onInput actions.address UpdateMessageField
-    , onEnter actions.address SubmitMessage
-    , onFocus actions.address EnterChat
-    , onBlur actions.address LeaveChat
+    , onInput addr UpdateMessageField
+    , onEnter addr SubmitMessage
+    , onFocus addr EnterChat
+    , onBlur addr LeaveChat
     ]

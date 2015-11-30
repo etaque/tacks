@@ -17,9 +17,9 @@ vmgStep state =
     downwindVmg = getDownwindVmg state.windSpeed
   in
     { state
-      | vmgValue <- vmgValue
-      , upwindVmg <- upwindVmg
-      , downwindVmg <- downwindVmg
+      | vmgValue = vmgValue
+      , upwindVmg = upwindVmg
+      , downwindVmg = downwindVmg
     }
 
 makeVmg : Float -> Float -> Vmg

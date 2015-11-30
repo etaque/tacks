@@ -30,16 +30,17 @@ turningStep elapsed input state =
     windAngle = angleDelta heading state.windOrigin
 
     newControlMode =
-      if | manualTurn input -> FixedHeading
-         | lock || targetReached -> FixedAngle
-         | otherwise -> state.controlMode
+      if manualTurn input then FixedHeading
+      else
+        if lock || targetReached then FixedAngle
+        else state.controlMode
   in
     { state
-      | heading <- heading
-      , windAngle <- windAngle
-      , isTurning <- isTurning input
-      , tackTarget <- tackTarget
-      , controlMode <- newControlMode
+      | heading = heading
+      , windAngle = windAngle
+      , isTurning = isTurning input
+      , tackTarget = tackTarget
+      , controlMode = newControlMode
     }
 
 

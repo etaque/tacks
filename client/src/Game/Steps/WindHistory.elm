@@ -15,7 +15,7 @@ updateWindHistory now wind h =
 takeSample : Time -> Wind -> WindHistory -> WindHistory
 takeSample now {origin, speed} h =
   if now - h.lastSample > windHistorySampling then
-    { h | samples <- (WindSample origin speed now) :: h.samples, lastSample <- now }
+    { h | samples = (WindSample origin speed now) :: h.samples, lastSample = now }
   else
     h
 
@@ -25,5 +25,5 @@ keepInWindow now h =
     minTime = now - windHistoryLength
     samples = List.filter (\{time} -> time > minTime) h.samples
   in
-    { h | samples <- samples }
+    { h | samples = samples }
 

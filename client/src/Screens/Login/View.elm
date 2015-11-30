@@ -4,10 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import AppTypes exposing (..)
-
 import Screens.Login.Types exposing (..)
-import Screens.Login.Updates exposing (actions)
+import Screens.Login.Updates exposing (addr)
 
 import Screens.Utils exposing (..)
 
@@ -27,16 +25,16 @@ loginForm {email, password, loading, error} =
         [ textInput
           [ placeholder "Email"
           , value email
-          , onInput actions.address SetEmail
-          , onEnter actions.address Submit
+          , onInput addr SetEmail
+          , onEnter addr Submit
           ]
         ]
       , div [ class "form-group" ]
         [ passwordInput
           [ placeholder "Password"
           , value password
-          , onInput actions.address SetPassword
-          , onEnter actions.address Submit
+          , onInput addr SetPassword
+          , onEnter addr Submit
           ]
         ]
       , errorLine error
@@ -44,7 +42,7 @@ loginForm {email, password, loading, error} =
         [ button
           [ class "btn btn-primary btn-block"
           , disabled loading
-          , onClick actions.address Submit
+          , onClick addr Submit
           ]
           [ text "Submit" ]
         ]

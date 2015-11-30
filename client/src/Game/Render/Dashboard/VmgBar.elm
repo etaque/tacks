@@ -64,10 +64,18 @@ render playerState =
 vmgCoef : PlayerState -> Float
 vmgCoef {windAngle,velocity,vmgValue,downwindVmg,upwindVmg} =
   let
-    theoricVmgValue = if (abs windAngle) < 90 then upwindVmg.value else downwindVmg.value
-    boundedVmgValue = if | vmgValue > theoricVmgValue -> theoricVmgValue
-                         | vmgValue < 0               -> 0
-                         | otherwise                  -> vmgValue
+    theoricVmgValue =
+      if (abs windAngle) < 90
+      then upwindVmg.value
+      else downwindVmg.value
+
+    boundedVmgValue =
+      if vmgValue > theoricVmgValue
+      then theoricVmgValue
+      else
+        if vmgValue < 0
+        then 0
+        else vmgValue
   in
     boundedVmgValue / theoricVmgValue
 

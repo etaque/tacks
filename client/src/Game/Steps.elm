@@ -63,29 +63,29 @@ raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
 
     updatedOpponents = updateOpponents gameState.opponents delta opponents
 
-    newPlayerState = { playerState | time <- now }
+    newPlayerState = { playerState | time = now }
 
     windHistory = updateWindHistory now raceInput.wind gameState.windHistory
 
     newTimers =
       { timers
-        | serverNow <- Just serverNow
-        , now <- now
-        , startTime <- startTime
-        , localTime <- time
-        , rtd <- Just rtd
+        | serverNow = Just serverNow
+        , now = now
+        , startTime = startTime
+        , localTime = time
+        , rtd = Just rtd
       }
 
   in
     { gameState
-      | opponents <- updatedOpponents
-      , ghosts <- ghosts
-      , wind <- raceInput.wind
-      , windHistory <- windHistory
-      , tallies <- tallies
-      , playerState <- newPlayerState
-      , live <- not initial
-      , timers <- newTimers
+      | opponents = updatedOpponents
+      , ghosts = ghosts
+      , wind = raceInput.wind
+      , windHistory = windHistory
+      , tallies = tallies
+      , playerState = newPlayerState
+      , live = not initial
+      , timers = newTimers
     }
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState
@@ -100,7 +100,7 @@ playerStep keyboardInput elapsed gameState =
         |> playerTimeStep elapsed
         |> raceEscapeStep keyboardInput.escapeRace
   in
-    { gameState | playerState <- playerState }
+    { gameState | playerState = playerState }
 
 
 centerStep : Point -> (Int, Int) -> GameState -> GameState
@@ -115,7 +115,7 @@ centerStep (px, py) dims ({center, playerState, course} as gameState) =
       , axisCenter py py' cy h yMin yMax
       )
   in
-    { gameState | center <- newCenter }
+    { gameState | center = newCenter }
 
 axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
 axisCenter p p' c window areaMin areaMax =
@@ -126,16 +126,21 @@ axisCenter p p' c window areaMin areaMax =
     minExit = delta < 0 && p' < c - offset
     maxExit = delta > 0 && p' > c + offset
   in
-    if | minExit -> if areaMin > c - outOffset then c else c + delta
-       | maxExit -> if areaMax < c + outOffset then c else c + delta
-       | otherwise -> c
+    if minExit
+    then
+      if areaMin > c - outOffset then c else c + delta
+    else
+       if maxExit
+       then
+         if areaMax < c + outOffset then c else c + delta
+       else c
 
 moveOpponentState : OpponentState -> Float -> OpponentState
 moveOpponentState state delta =
   let
     position = movePoint state.position delta state.velocity state.heading
   in
-    { state | position <- position }
+    { state | position = position }
 
 
 updateOpponent : Maybe Opponent -> Float -> Opponent -> Opponent
@@ -143,7 +148,7 @@ updateOpponent previousMaybe delta opponent =
   case previousMaybe of
     Just previous ->
       if previous.state.time == opponent.state.time then
-        { opponent | state <- moveOpponentState opponent.state delta }
+        { opponent | state = moveOpponentState opponent.state delta }
       else
         opponent
     Nothing ->
@@ -158,11 +163,11 @@ updateOpponents previousOpponents delta newOpponents =
 
 playerTimeStep : Float -> PlayerState -> PlayerState
 playerTimeStep elapsed state =
-  { state | time <- state.time + elapsed }
+  { state | time = state.time + elapsed }
 
 raceEscapeStep : Bool -> PlayerState -> PlayerState
 raceEscapeStep doEscape playerState =
   let
     crossedGates = if doEscape then [] else playerState.crossedGates
   in
-    { playerState | crossedGates <- crossedGates }
+    { playerState | crossedGates = crossedGates }

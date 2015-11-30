@@ -15,6 +15,12 @@ import Screens.ShowProfile.Types as ShowProfile
 import Screens.Game.Types as Game
 
 
+
+appActionsMailbox : Signal.Mailbox AppAction
+appActionsMailbox =
+  Signal.mailbox AppNoOp
+
+
 type alias AppSetup =
   { player : Player
   , path : String
@@ -38,7 +44,7 @@ type AppAction
   | ShowProfileAction ShowProfile.Action
   | GameAction Game.Action
   | Logout
-  | NoOp
+  | AppNoOp
 
 
 type alias Clock =
@@ -107,7 +113,7 @@ request screen appAction =
 mapAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
 mapAppUpdate appState toAppScreen {screen, reaction, request} =
   AppUpdate
-    { appState | screen <- toAppScreen screen }
+    { appState | screen = toAppScreen screen }
     reaction
     request
 

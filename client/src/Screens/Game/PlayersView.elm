@@ -2,17 +2,13 @@ module Screens.Game.PlayersView where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 
 import Date exposing (..)
 import Date.Format exposing (format)
 
-import AppTypes exposing (..)
 import Models exposing (..)
-import Game.Models exposing (GameState)
 
 import Screens.Game.Types exposing (..)
-import Screens.Game.Updates exposing (actions)
 
 import Screens.Utils exposing (..)
 

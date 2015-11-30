@@ -73,7 +73,7 @@ isTurning ki = manualTurn ki && not ki.subtleTurn
 isSubtleTurning ki = manualTurn ki && ki.subtleTurn
 isLocking ki = ki.arrows.y > 0 || ki.lock
 
-toKeyboardInput : UserArrows -> Set Keyboard.KeyCode -> KeyboardInput
+toKeyboardInput : UserArrows -> Set Int -> KeyboardInput
 toKeyboardInput arrows keys =
   { arrows = arrows
   , lock = S.member 13 keys

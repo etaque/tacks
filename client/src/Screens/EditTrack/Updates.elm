@@ -2,15 +2,13 @@ module Screens.EditTrack.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
 import Task.Extra exposing (delay)
-import Time exposing (second)
-import Http
 import Keyboard
 import Array
 
 import DragAndDrop exposing (mouseEvents)
 
 import Constants exposing (sidebarWidth)
-import AppTypes exposing (local, react, request, Never)
+import AppTypes exposing (..)
 import Models exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
@@ -21,8 +19,10 @@ import Game.Grid exposing (..)
 import ServerApi
 
 
-actions : Signal.Mailbox Action
-actions = Signal.mailbox NoOp
+addr : Signal.Address Action
+addr =
+  Signal.forwardTo appActionsMailbox.address EditTrackAction
+
 
 inputs : Signal Action
 inputs =
@@ -63,14 +63,14 @@ update action screen =
           , saving = False
           }
       in
-        local { screen | track <- Just track, editor <- Just editor }
+        local { screen | track = Just track, editor = Just editor }
 
     TrackNotFound ->
-      local { screen | notFound <- True }
+      local { screen | notFound = True }
 
     SetName n ->
       screen
-        |> updateEditor (\e -> { e | name <- n })
+        |> updateEditor (\e -> { e | name = n })
         |> local
 
     MouseAction event ->
@@ -80,12 +80,12 @@ update action screen =
 
     SetMode mode ->
       screen
-        |> updateEditor (\e -> { e | mode <- mode })
+        |> updateEditor (\e -> { e | mode = mode })
         |> local
 
     AltMoveMode b ->
       screen
-        |> updateEditor (\e -> { e | altMove <- b })
+        |> updateEditor (\e -> { e | altMove = b })
         |> local
 
     FormAction a ->
@@ -96,13 +96,13 @@ update action screen =
     Save ->
       case (screen.track, screen.editor) of
         (Just track, Just editor) ->
-          react (updateEditor (\e -> { e | saving <- True}) screen) (save track.id editor)
+          react (updateEditor (\e -> { e | saving = True}) screen) (save track.id editor)
         _ ->
           local screen
 
     SaveResult _ ->
       screen
-        |> updateEditor (\e -> { e | saving <- False })
+        |> updateEditor (\e -> { e | saving = False })
         |> local
 
     _ ->
@@ -114,12 +114,12 @@ updateEditor update screen =
   let
     newEditor = Maybe.map update screen.editor
   in
-    { screen | editor <- newEditor }
+    { screen | editor = newEditor }
 
 
 updateCourse : (Course -> Course) -> Editor -> Editor
 updateCourse update editor =
-  { editor | course <- update editor.course }
+  { editor | course = update editor.course }
 
 
 loadTrack : String -> Task Never ()
@@ -128,7 +128,7 @@ loadTrack id =
     \result ->
       case result of
         Ok track ->
-          Signal.send actions.address (SetTrack track)
+          Signal.send addr (SetTrack track)
         Err _ ->
           Task.succeed ()
 
@@ -136,9 +136,9 @@ loadTrack id =
 updateDims : Dims -> Screen -> Screen
 updateDims dims screen =
   let
-    newEditor = Maybe.map (\e -> { e | courseDims <- getCourseDims dims } ) screen.editor
+    newEditor = Maybe.map (\e -> { e | courseDims = getCourseDims dims } ) screen.editor
   in
-    { screen | editor <- newEditor, dims <- dims }
+    { screen | editor = newEditor, dims = dims }
 
 
 getCourseDims : Dims -> Dims
@@ -150,10 +150,10 @@ save : String -> Editor -> Task Never ()
 save id ({course, name} as editor) =
   let
     area = getRaceArea course.grid
-    withArea = { course | area <- area }
+    withArea = { course | area = area }
   in
     delay 500 (ServerApi.saveTrack id name withArea)
-      `andThen` (SaveResult >> (Signal.send actions.address))
+      `andThen` (SaveResult >> (Signal.send addr))
 
 
 getRaceArea : Grid -> RaceArea

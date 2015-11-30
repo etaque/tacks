@@ -1,17 +1,15 @@
 module Screens.ShowTrack.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
-import Time exposing (second)
-import Http
 
-import AppTypes exposing (local, react, request, Never)
-import Models exposing (..)
+import AppTypes exposing (..)
 import Screens.ShowTrack.Types exposing (..)
 import ServerApi
 
 
-actions : Signal.Mailbox Action
-actions = Signal.mailbox NoOp
+addr : Signal.Address Action
+addr =
+  Signal.forwardTo appActionsMailbox.address ShowTrackAction
 
 
 type alias Update = AppTypes.ScreenUpdate Screen
@@ -33,10 +31,10 @@ update action screen =
   case action of
 
     SetTrack track ->
-      local { screen | track <- Just track }
+      local { screen | track = Just track }
 
     TrackNotFound ->
-      local { screen | notFound <- True }
+      local { screen | notFound = True }
 
     _ ->
       local screen
@@ -47,6 +45,6 @@ loadTrack slug =
     \result ->
       case result of
         Ok track ->
-          Signal.send actions.address (SetTrack track)
+          Signal.send addr (SetTrack track)
         Err _ ->
           Task.succeed ()

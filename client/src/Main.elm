@@ -15,7 +15,6 @@ import Game.Inputs exposing (RaceInput)
 import Game.Outputs exposing (PlayerOutput)
 import Game.Outputs exposing (PlayerOutput)
 import Screens.Game.Updates exposing (mapGameUpdate,chat)
-import Screens.Game.Types exposing (Action(NewMessage))
 import Screens.EditTrack.Updates as EditTrack
 import Screens.Game.Decoders as GameDecoders
 import AppView
@@ -31,6 +30,7 @@ port initialDims : (Int, Int)
 port raceInput : Signal (Maybe RaceInput)
 
 port gameActionsInput : Signal Json.Value
+
 
 -- Signals
 
@@ -59,8 +59,7 @@ allActions =
     [ initPathAction
     , pathActions
     , dimsActions
-    , screenActions
-    , actionsMailbox.signal
+    , appActionsMailbox.signal
     , raceUpdateActions
     , gameActions
     , editorInputActions
@@ -81,7 +80,7 @@ dimsActions =
 raceUpdateActions : Signal AppAction
 raceUpdateActions =
   Signal.map3 mapGameUpdate Game.Inputs.keyboardInput Window.dimensions raceInput
-    |> Signal.filterMap (Maybe.map GameAction) AppTypes.NoOp
+    |> Signal.filterMap (Maybe.map GameAction) AppTypes.AppNoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 
@@ -101,7 +100,7 @@ reactions =
 requests : Signal (Task error AppAction)
 requests =
   Signal.map .request appUpdates
-    |> Signal.filterMap identity AppTypes.NoOp
+    |> Signal.filterMap identity AppTypes.AppNoOp
     |> Signal.map Task.succeed
 
 clock : Signal Clock
@@ -117,7 +116,7 @@ port reactionsRunner =
 
 port requestsRunner : Signal (Task error Task.ThreadID)
 port requestsRunner =
-  Signal.map (\t -> Task.spawn (t `andThen` (Signal.send actionsMailbox.address))) requests
+  Signal.map (\t -> Task.spawn (t `andThen` (Signal.send appActionsMailbox.address))) requests
 
 port pathChangeRunner : Signal (Task error ())
 port pathChangeRunner =

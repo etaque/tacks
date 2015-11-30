@@ -42,9 +42,9 @@ updateTileAction kind event editor =
 withGrid : Grid -> Editor -> Editor
 withGrid grid ({course} as editor) =
   let
-    newCourse = { course | grid <- grid }
+    newCourse = { course | grid = grid }
   in
-    { editor | course <- newCourse }
+    { editor | course = newCourse }
 
 
 getMouseEventTiles : Editor -> MouseEvent -> List Coords
@@ -97,7 +97,7 @@ updateCenter event ({courseDims, center} as editor) =
           (0, 0)
     newCenter = (fst center + toFloat dx, snd center + toFloat dy)
   in
-    { editor | center <- newCenter }
+    { editor | center = newCenter }
 
 
 withinWindow : Dims -> (Int, Int) -> Bool

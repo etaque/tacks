@@ -3,16 +3,17 @@ module Screens.Home.Updates where
 import Task exposing (Task, succeed, map, andThen)
 import Task.Extra exposing (delay)
 import Time exposing (second)
-import Http
+import Signal
 
-import AppTypes exposing (local, react, request, Never)
+import AppTypes exposing (AppAction (..), appActionsMailbox, local, react, request, Never)
 import Models exposing (..)
 import Screens.Home.Types exposing (..)
 import ServerApi
 
 
-actions : Signal.Mailbox Action
-actions = Signal.mailbox NoOp
+addr : Signal.Address Action
+addr =
+  Signal.forwardTo appActionsMailbox.address HomeAction
 
 
 type alias Update = AppTypes.ScreenUpdate Screen
@@ -34,18 +35,18 @@ update action screen =
   case action of
 
     SetLiveStatus liveStatus ->
-      react { screen | liveStatus <- liveStatus }
+      react { screen | liveStatus = liveStatus }
         (delay (5 * second) refreshLiveStatus)
 
     SetHandle handle ->
-      local { screen | handle <- handle }
+      local { screen | handle = handle }
 
     SubmitHandle ->
       react screen <| (ServerApi.postHandle screen.handle) `andThen`
         \result ->
           case result of
             Ok player ->
-              Signal.send actions.address (SubmitHandleSuccess player)
+              Signal.send addr (SubmitHandleSuccess player)
             Err errors ->
               -- TODO
               Task.succeed ()
@@ -58,7 +59,7 @@ update action screen =
         \result ->
           case result of
             Ok track ->
-              Signal.send actions.address (TrackCreated track.id)
+              Signal.send addr (TrackCreated track.id)
             Err _ ->
               -- TODO
               Task.succeed ()
@@ -75,7 +76,7 @@ refreshLiveStatus =
     \result ->
       case result of
         Ok liveStatus ->
-          Signal.send actions.address (SetLiveStatus liveStatus)
+          Signal.send addr (SetLiveStatus liveStatus)
         Err _ ->
           Task.succeed ()
 

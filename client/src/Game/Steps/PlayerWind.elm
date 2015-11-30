@@ -50,9 +50,9 @@ playerWindStep ({wind, gusts, course, opponents} as gameState) state =
 
   in
     { state
-      | windOrigin <- easedOrigin
-      , windSpeed <- speed
-      , shadowDirection <- shadowDirection
+      | windOrigin = easedOrigin
+      , windSpeed = speed
+      , shadowDirection = shadowDirection
     }
 
 isGustOnPlayer : PlayerState -> TiledGust -> Bool

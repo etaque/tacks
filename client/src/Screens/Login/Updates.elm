@@ -1,18 +1,16 @@
 module Screens.Login.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
-import Http
 import Result exposing (Result(Ok, Err))
 
-import AppTypes exposing (local, react, request, Never)
+import AppTypes exposing (..)
 import Screens.Login.Types exposing (..)
 import ServerApi
 
 
-actions : Signal.Mailbox Action
-actions =
-  Signal.mailbox NoOp
-
+addr : Signal.Address Action
+addr =
+  Signal.forwardTo appActionsMailbox.address LoginAction
 
 type alias Update = AppTypes.ScreenUpdate Screen
 
@@ -34,21 +32,24 @@ update : Action -> Screen -> Update
 update action screen =
   case action of
 
+    NoOp ->
+      local screen
+
     SetEmail e ->
-      local { screen | email <- e }
+      local { screen | email = e }
 
     SetPassword p ->
-      local { screen | password <- p }
+      local { screen | password = p }
 
     Submit ->
-      react { screen | loading <- True } (submitTask screen)
+      react { screen | loading = True } (submitTask screen)
 
     Success player ->
-      request { screen | loading <- False, error <- False }
+      request { screen | loading = False, error = False }
         (AppTypes.SetPlayer player)
 
     Error ->
-      local { screen | loading <- False, error <- True }
+      local { screen | loading = False, error = True }
 
 
 submitTask : Screen -> Task Never ()
@@ -57,8 +58,8 @@ submitTask screen =
     `andThen` \result ->
       case result of
         Ok player ->
-          Signal.send actions.address (Success player)
+          Signal.send addr (Success player)
         Err _ ->
-          Signal.send actions.address Error
+          Signal.send addr Error
 
 

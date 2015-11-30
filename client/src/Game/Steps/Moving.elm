@@ -33,10 +33,10 @@ movingStep elapsed course state =
       trail = L.take 20 (position :: state.trail)
     in
       { state
-        | isGrounded <- grounded
-        , velocity <- velocity
-        , position <- position
-        , trail <- trail
+        | isGrounded = grounded
+        , velocity = velocity
+        , position = position
+        , trail = trail
       }
 
 

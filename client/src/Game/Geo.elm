@@ -57,9 +57,10 @@ angleDelta a1 a2 =
   let
     delta = a1 - a2
   in
-    if | delta > 180   -> delta - 360
-       | delta <= -180 -> delta + 360
-       | otherwise     -> delta
+    if delta > 180 then delta - 360
+    else
+      if delta <= -180 then delta + 360
+      else delta
 
 angleBetween : Point -> Point -> Float
 angleBetween (x1, y1) (x2, y2) =

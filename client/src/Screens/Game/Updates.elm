@@ -6,8 +6,9 @@ import Task.Extra exposing (delay)
 import Time exposing (millisecond, second)
 import Http
 import String
+import Signal
 
-import AppTypes exposing (local, react, request, Clock, Never)
+import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.Game.Types exposing (..)
 import ServerApi
@@ -16,12 +17,14 @@ import Game.Steps exposing (gameStep)
 import Game.Inputs exposing (..)
 
 
-actions : Signal.Mailbox Action
-actions = Signal.mailbox NoOp
+addr : Signal.Address Action
+addr =
+  Signal.forwardTo appActionsMailbox.address GameAction
 
 
 chat : Signal.Mailbox String
-chat = Signal.mailbox ""
+chat =
+  Signal.mailbox ""
 
 
 type alias Update = AppTypes.ScreenUpdate Screen
@@ -51,7 +54,7 @@ update player clock action screen =
     SetLiveTrack liveTrack ->
       let
         gameState = defaultGame clock.time liveTrack.track.course player
-        newScreen = { screen | gameState <- Just gameState }
+        newScreen = { screen | gameState = Just gameState }
           |> applyLiveTrack liveTrack
       in
         react newScreen pingServer
@@ -60,43 +63,43 @@ update player clock action screen =
       if screen.live then
         local screen
       else
-        react { screen | gameState <- updateTime clock screen.gameState} pingServer
+        react { screen | gameState = updateTime clock screen.gameState} pingServer
 
     TrackNotFound ->
-      local { screen | notFound <- True }
+      local { screen | notFound = True }
 
     GameUpdate gameInput ->
       let
         newGameState = Maybe.map (gameStep clock gameInput) screen.gameState
       in
-        local { screen | gameState <- newGameState, live <- True }
+        local { screen | gameState = newGameState, live = True }
 
     EnterChat ->
       let
-        newGameState = Maybe.map (\gs -> { gs | chatting <- True }) screen.gameState
+        newGameState = Maybe.map (\gs -> { gs | chatting = True }) screen.gameState
       in
-        local { screen | gameState <- newGameState }
+        local { screen | gameState = newGameState }
 
     LeaveChat ->
       let
-        newGameState = Maybe.map (\gs -> { gs | chatting <- False }) screen.gameState
+        newGameState = Maybe.map (\gs -> { gs | chatting = False }) screen.gameState
       in
-        local { screen | gameState <- newGameState }
+        local { screen | gameState = newGameState }
 
     UpdateMessageField s ->
-      local { screen | messageField <- s }
+      local { screen | messageField = s }
 
     SubmitMessage ->
       if screen.live then
         let
           msgTask = sendMessage screen.messageField
         in
-          react { screen | messageField <- "" } msgTask
+          react { screen | messageField = "" } msgTask
       else
         local screen
 
     NewMessage msg ->
-      local { screen | messages <- take 30 (msg :: screen.messages) }
+      local { screen | messages = take 30 (msg :: screen.messages) }
 
     UpdateLiveTrack liveTrack ->
       local (applyLiveTrack liveTrack screen)
@@ -112,7 +115,7 @@ applyLiveTrack ({track, players, races} as liveTrack) screen =
     inRace p = List.member p racePlayers
     freePlayers = List.filter (not << inRace) players
   in
-    { screen | liveTrack <- Just liveTrack, races <- races, freePlayers <- freePlayers }
+    { screen | liveTrack = Just liveTrack, races = races, freePlayers = freePlayers }
 
 loadLiveTrack : String -> Task Never ()
 loadLiveTrack slug =
@@ -120,7 +123,7 @@ loadLiveTrack slug =
     \result ->
       case result of
         Ok liveTrack ->
-          Signal.send actions.address (SetLiveTrack liveTrack)
+          Signal.send addr (SetLiveTrack liveTrack)
         Err _ ->
           -- TODO handle failure
           Task.succeed ()
@@ -129,12 +132,12 @@ loadLiveTrack slug =
 -- updateLiveTrack : String -> Task Http.Error ()
 -- updateLiveTrack slug =
 --   delay (2 * second) (ServerApi.getLiveTrack slug) `andThen`
---     \liveTrack -> Signal.send actions.address (UpdateLiveTrack liveTrack)
+--     \liveTrack -> Signal.send addr (UpdateLiveTrack liveTrack)
 
 
 pingServer : Task Never ()
 pingServer =
-  delay (30 * millisecond) (Signal.send actions.address PingServer)
+  delay (30 * millisecond) (Signal.send addr PingServer)
 
 
 sendMessage : String -> Task error ()
@@ -148,9 +151,9 @@ sendMessage content =
 updateTime : Clock -> Maybe GameState -> Maybe GameState
 updateTime clock =
   let
-    updateTime timers t = { timers | localTime <- clock.time }
+    updateTime timers t = { timers | localTime = clock.time }
   in
-    Maybe.map (\gs -> { gs | timers <- updateTime gs.timers clock.time })
+    Maybe.map (\gs -> { gs | timers = updateTime gs.timers clock.time })
 
 
 mapGameUpdate : KeyboardInput -> (Int,Int) -> Maybe RaceInput -> Maybe Action

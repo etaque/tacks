@@ -5,7 +5,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import AppTypes exposing (..)
-import AppUpdates exposing (actionsMailbox)
 import Models exposing (..)
 
 import Screens.Utils exposing (..)
@@ -50,6 +49,6 @@ guestItems =
 userItems : Player -> List Html
 userItems player =
   [ li [] [ linkTo "/me" [ ] [ text "Profile" ] ]
-  , li [] [ a [ onClick actionsMailbox.address Logout ] [ text "Logout"] ]
+  , li [] [ a [ onClick appActionsMailbox.address Logout ] [ text "Logout"] ]
   ]
 

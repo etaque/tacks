@@ -1,18 +1,14 @@
 module Screens.ShowProfile.Updates where
 
-import Task exposing (Task, succeed, map, andThen)
-import Time exposing (second)
-import Http
 
-import AppTypes exposing (local, react, request)
+import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.ShowProfile.Types exposing (..)
-import ServerApi
 
 
-actions : Signal.Mailbox Action
-actions = Signal.mailbox NoOp
-
+addr : Signal.Address Action
+addr =
+  Signal.forwardTo appActionsMailbox.address ShowProfileAction
 
 type alias Update = AppTypes.ScreenUpdate Screen
 
