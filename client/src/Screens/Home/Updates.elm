@@ -69,7 +69,11 @@ update action screen =
               Task.succeed ()
 
     TrackCreated id ->
-      react screen (History.setPath (Routes.toPath (Routes.EditTrack id)))
+      let
+        newPath = Routes.toPath (Routes.EditTrack id)
+        reaction = Signal.send appActionsMailbox.address (AppTypes.SetPath newPath)
+      in
+        react screen reaction
 
 
 refreshLiveStatus : Task Never ()

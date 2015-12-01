@@ -34,6 +34,7 @@ type alias AppInput =
 type AppAction
   = SetPlayer Player
   | SetPath String
+  | PathChanged String
   | UpdateDims (Int, Int)
   | ScreenAction ScreenAction
   | Logout

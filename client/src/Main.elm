@@ -66,11 +66,11 @@ allActions =
 
 initPathAction : Signal AppAction
 initPathAction =
-  Signal.constant (SetPath appSetup.path)
+  Signal.constant (PathChanged appSetup.path)
 
 pathActions : Signal AppAction
 pathActions =
-  Signal.map SetPath History.path
+  Signal.map PathChanged History.path
 
 dimsActions : Signal AppAction
 dimsActions =

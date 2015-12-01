@@ -1,6 +1,7 @@
 module AppUpdates where
 
 import Task exposing (Task, andThen)
+import Signal exposing (send)
 import History
 import RouteParser
 
@@ -23,13 +24,19 @@ update {action, clock} {appState} =
   case action of
 
     SetPath path ->
-      RouteParser.match routeParsers path
+      AppUpdate appState
+        (Just <| History.setPath path)
+
+
+    PathChanged path ->
+     RouteParser.match routeParsers path
         |> Maybe.map (mountRoute appState)
         |> Maybe.withDefault (mountNotFound appState path)
 
     SetPlayer p ->
       let
-        reaction = History.setPath (Routes.toPath Routes.Home)
+        newPath = Routes.toPath Routes.Home
+        reaction = Signal.send appActionsMailbox.address (SetPath newPath)
       in
         AppUpdate { appState | player = p } (Just reaction)
 
