@@ -9,14 +9,16 @@ import Signal
 
 import Models exposing (..)
 import AppTypes exposing (appActionsMailbox)
+import Routes
 
 
 type alias Wrapper = List Html -> Html
 
 
-linkTo : String -> List Attribute -> List Html -> Html
-linkTo path attrs content =
+linkTo : Routes.Route -> List Attribute -> List Html -> Html
+linkTo route attrs content =
   let
+    path = Routes.toPath route
     linkAttrs =
       [ href path
       , onPathClick path

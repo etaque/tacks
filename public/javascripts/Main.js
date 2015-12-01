@@ -18628,6 +18628,7 @@ Elm.Screens.Utils.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
@@ -18798,7 +18799,8 @@ Elm.Screens.Utils.make = function (_elm) {
          $AppTypes.SetPath(path));
       });
    };
-   var linkTo = F3(function (path,attrs,content) {
+   var linkTo = F3(function (route,attrs,content) {
+      var path = $Routes.toPath(route);
       var linkAttrs = _U.list([$Html$Attributes.href(path)
                               ,onPathClick(path)]);
       return A2($Html.a,
@@ -18850,6 +18852,7 @@ Elm.Screens.Home.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
    $Screens$Home$Updates = Elm.Screens.Home.Updates.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
@@ -18884,7 +18887,7 @@ Elm.Screens.Home.View.make = function (_elm) {
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class("live-track")]),
       _U.list([A3($Screens$Utils.linkTo,
-      A2($Basics._op["++"],"/play/",_p4.id),
+      $Routes.PlayTrack(_p4.id),
       _U.list([$Html$Attributes.$class("show")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
@@ -18936,7 +18939,7 @@ Elm.Screens.Home.View.make = function (_elm) {
                                            ,A2($Html.p,
                                            _U.list([$Html$Attributes.$class("align-center")]),
                                            _U.list([A3($Screens$Utils.linkTo,
-                                           "/login",
+                                           $Routes.Login,
                                            _U.list([]),
                                            _U.list([$Html.text("or log in")]))]))]))]));
    };
@@ -19180,13 +19183,14 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var joinButton = function (track) {
       return A3($Screens$Utils.linkTo,
-      A2($Basics._op["++"],"/play/",track.id),
+      $Routes.PlayTrack(track.id),
       _U.list([$Html$Attributes.$class("btn btn-warning join-track")]),
       _U.list([$Html.text("Join")]));
    };
@@ -20330,6 +20334,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
    $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
@@ -20453,11 +20458,11 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                       _U.list([]),
                       _U.list([$Html.text("track editor")]))
                       ,A3($Screens$Utils.linkTo,
-                      "/",
+                      $Routes.Home,
                       _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
                       _U.list([$Html.text("Exit")]))
                       ,A3($Screens$Utils.linkTo,
-                      A2($Basics._op["++"],"/play/",track.id),
+                      $Routes.PlayTrack(track.id),
                       _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
                       _U.list([$Html.text("Try")]))]))
               ,A2($Html.div,
@@ -21350,12 +21355,12 @@ Elm.Screens.Game.SideView.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var emptyDiv = A2($Html.div,_U.list([]),_U.list([]));
    var helpItem = function (_p0) {
       var _p1 = _p0;
       return _U.list([A2($Html.dt,
@@ -21409,7 +21414,7 @@ Elm.Screens.Game.SideView.make = function (_elm) {
                      _U.list([$Html$Attributes.$class("draft-warning")]),
                      _U.list([$Html.text("This is a draft, you\'re the only one seeing this race track.")]))
                      ,A3($Screens$Utils.linkTo,
-                     A2($Basics._op["++"],"/edit/",_p5.track.id),
+                     $Routes.EditTrack(_p5.track.id),
                      _U.list([$Html$Attributes.$class("btn btn-block btn-primary")]),
                      _U.list([$Html.text("Edit race track")]))]);
    };
@@ -21420,7 +21425,7 @@ Elm.Screens.Game.SideView.make = function (_elm) {
               _U.list([]),
               _U.list([$Html.text(liveTrack.track.name)]))
               ,A3($Screens$Utils.linkTo,
-              "/",
+              $Routes.Home,
               _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
               _U.list([$Html.text("Exit")]))]));
    };
@@ -21441,8 +21446,7 @@ Elm.Screens.Game.SideView.make = function (_elm) {
                                               ,rankingItem: rankingItem
                                               ,helpBlock: helpBlock
                                               ,helpItems: helpItems
-                                              ,helpItem: helpItem
-                                              ,emptyDiv: emptyDiv};
+                                              ,helpItem: helpItem};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};
@@ -22241,6 +22245,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -22248,7 +22253,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
       return _U.list([A2($Html.li,
                      _U.list([]),
                      _U.list([A3($Screens$Utils.linkTo,
-                     "/me",
+                     $Routes.ShowProfile,
                      _U.list([]),
                      _U.list([$Html.text("Profile")]))]))
                      ,A2($Html.li,
@@ -22262,13 +22267,13 @@ Elm.Screens.Sidebar.make = function (_elm) {
    var guestItems = _U.list([A2($Html.li,
                             _U.list([]),
                             _U.list([A3($Screens$Utils.linkTo,
-                            "/login",
+                            $Routes.Login,
                             _U.list([]),
                             _U.list([$Html.text("Login")]))]))
                             ,A2($Html.li,
                             _U.list([]),
                             _U.list([A3($Screens$Utils.linkTo,
-                            "/register",
+                            $Routes.Register,
                             _U.list([]),
                             _U.list([$Html.text("Register")]))]))]);
    var mainMenu = function (player) {
@@ -22277,7 +22282,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
       _U.list([A2($Html.li,
       _U.list([]),
       _U.list([A3($Screens$Utils.linkTo,
-      "/",
+      $Routes.Home,
       _U.list([]),
       _U.list([$Html.text("Home")]))]))]),
       playerItems);
@@ -22288,7 +22293,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
    var logo = A2($Html.div,
    _U.list([$Html$Attributes.$class("logo")]),
    _U.list([A3($Screens$Utils.linkTo,
-   "/",
+   $Routes.Home,
    _U.list([]),
    _U.list([A2($Html.img,
    _U.list([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
@@ -22327,13 +22332,14 @@ Elm.Screens.Nav.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var userMenu = _U.list([A2($Html.li,
                           _U.list([]),
                           _U.list([A3($Screens$Utils.linkTo,
-                          "/me",
+                          $Routes.ShowProfile,
                           _U.list([]),
                           _U.list([$Html.text("Profile")]))]))
                           ,A2($Html.li,
@@ -22346,13 +22352,13 @@ Elm.Screens.Nav.make = function (_elm) {
    var guestMenu = _U.list([A2($Html.li,
                            _U.list([]),
                            _U.list([A3($Screens$Utils.linkTo,
-                           "/login",
+                           $Routes.Login,
                            _U.list([]),
                            _U.list([$Html.text("Login")]))]))
                            ,A2($Html.li,
                            _U.list([]),
                            _U.list([A3($Screens$Utils.linkTo,
-                           "/register",
+                           $Routes.Register,
                            _U.list([]),
                            _U.list([$Html.text("Register")]))]))]);
    var playerMenu = function (player) {
@@ -22364,7 +22370,7 @@ Elm.Screens.Nav.make = function (_elm) {
       _U.list([A2($Html.li,
       _U.list([]),
       _U.list([A3($Screens$Utils.linkTo,
-      "/",
+      $Routes.Home,
       _U.list([]),
       _U.list([$Html.text("Home")]))]))]),
       player.guest ? guestMenu : userMenu))]));
@@ -22372,7 +22378,7 @@ Elm.Screens.Nav.make = function (_elm) {
    var logo = A2($Html.div,
    _U.list([$Html$Attributes.$class("col-md-6 logo")]),
    _U.list([A3($Screens$Utils.linkTo,
-   "/",
+   $Routes.Home,
    _U.list([]),
    _U.list([A2($Html.img,
    _U.list([$Html$Attributes.src("/assets/images/logo-header-2.svg")]),

@@ -2,10 +2,9 @@ module Screens.ShowTrack.View where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 
-import AppTypes exposing (..)
 import Models exposing (..)
+import Routes exposing (..)
 
 import Screens.ShowTrack.Types exposing (..)
 
@@ -31,6 +30,6 @@ withTrack track =
 
 joinButton : Track -> Html
 joinButton track =
-  linkTo ("/play/" ++ track.id)
+  linkTo (PlayTrack track.id)
     [ class "btn btn-warning join-track"]
     [ text "Join"]

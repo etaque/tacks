@@ -7,6 +7,7 @@ import Html.Events exposing (..)
 import Models exposing (..)
 import Constants exposing (..)
 import Screens.Utils exposing (..)
+import Routes exposing (..)
 
 import Screens.EditTrack.Updates exposing (addr)
 import Screens.EditTrack.Types exposing (..)
@@ -20,8 +21,8 @@ sideView track ({courseDims, course, name, saving, mode} as editor) =
     [ div
         [ class "track-menu" ]
         [ h2 [] [ text "track editor" ]
-        , linkTo "/" [ class "btn btn-xs btn-default" ] [ text "Exit" ]
-        , linkTo ("/play/" ++ track.id) [ class "btn btn-xs btn-default" ] [ text "Try" ]
+        , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
+        , linkTo (PlayTrack track.id) [ class "btn btn-xs btn-default" ] [ text "Try" ]
         ]
 
     , div [ class "form-actions" ]

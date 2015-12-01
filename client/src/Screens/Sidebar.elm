@@ -9,6 +9,7 @@ import Models exposing (..)
 
 import Screens.Utils exposing (..)
 import Constants exposing (..)
+import Routes exposing (..)
 
 
 view : Player -> Html
@@ -23,7 +24,7 @@ view player =
 logo : Html
 logo =
   div [ class "logo" ]
-    [ linkTo "/" [ ]
+    [ linkTo Home [ ]
       [ img [ src "/assets/images/logo-header-2.png" ] [] ]
     ]
 
@@ -33,7 +34,7 @@ mainMenu player =
   let
     playerItems = if player.guest then guestItems else userItems player
     allItems =
-      [ li [ ] [ linkTo "/" [ ] [ text "Home" ] ]
+      [ li [ ] [ linkTo Home [ ] [ text "Home" ] ]
       ] ++ playerItems
   in
     ul [ class "user-menu" ] allItems
@@ -41,14 +42,14 @@ mainMenu player =
 
 guestItems : List Html
 guestItems =
-  [ li [] [ linkTo "/login" [ ] [ text "Login" ] ]
-  , li [] [ linkTo "/register" [ ] [ text "Register"] ]
+  [ li [] [ linkTo Login [ ] [ text "Login" ] ]
+  , li [] [ linkTo Register [ ] [ text "Register"] ]
   ]
 
 
 userItems : Player -> List Html
 userItems player =
-  [ li [] [ linkTo "/me" [ ] [ text "Profile" ] ]
+  [ li [] [ linkTo ShowProfile [ ] [ text "Profile" ] ]
   , li [] [ a [ onClick appActionsMailbox.address Logout ] [ text "Logout"] ]
   ]
 

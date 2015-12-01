@@ -11,6 +11,7 @@ import Screens.Game.PlayersView as PlayersView
 
 import Screens.Utils exposing (..)
 import Constants exposing (..)
+import Routes exposing (..)
 
 
 view : Int -> Screen -> LiveTrack -> GameState -> Html
@@ -29,7 +30,7 @@ trackNav : LiveTrack -> Html
 trackNav liveTrack =
   div [ class "track-menu" ]
     [ h2 [ ] [ text liveTrack.track.name ]
-    , linkTo "/" [ class "btn btn-xs btn-default" ] [ text "Exit" ]
+    , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
     ]
 
 
@@ -37,7 +38,7 @@ draftBlocks : LiveTrack -> List Html
 draftBlocks {track} =
   [ p [ class "draft-warning" ]
       [ text "This is a draft, you're the only one seeing this race track." ]
-  , linkTo ("/edit/" ++ track.id) [ class "btn btn-block btn-primary" ]
+  , linkTo (EditTrack track.id) [ class "btn btn-block btn-primary" ]
       [ text "Edit race track" ]
   ]
 
@@ -89,9 +90,4 @@ helpItems =
 helpItem : (String, String) -> List Html
 helpItem (keys, role) =
   [ dt [ ] [ text keys ], dd [ ] [ text role ] ]
-
-
-emptyDiv = div [ ] [ ]
-
-
 

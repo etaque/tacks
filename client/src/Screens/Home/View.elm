@@ -4,9 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import AppTypes exposing (..)
 import Models exposing (..)
-import Constants exposing (..)
+import Routes exposing (..)
 
 import Screens.Home.Types exposing (..)
 import Screens.Home.Updates exposing (addr)
@@ -54,7 +53,7 @@ setHandleBlock handle =
             [ text "submit" ]
           ]
         ]
-      , p [ class "align-center" ] [ linkTo "/login" [ ] [ text "or log in"] ]
+      , p [ class "align-center" ] [ linkTo Login [ ] [ text "or log in"] ]
       ]
     ]
 
@@ -70,7 +69,7 @@ liveTrackBlock : LiveTrack -> Html
 liveTrackBlock ({track, players} as lt) =
   div [ class "col-md-4" ]
     [ div [ class "live-track" ]
-      [ linkTo ("/play/" ++ track.id)
+      [ linkTo (PlayTrack track.id)
         [ class "show"
         ]
         [ div
