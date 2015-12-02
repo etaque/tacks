@@ -16,22 +16,17 @@ view : Player -> Screen -> Html
 view player screen =
   div
     [ class "home" ]
-    [ welcome player screen.handle
+    [ h1 [ ] [ text "Welcome to Tacks" ]
+    , welcomeForm player screen.handle
     , liveTracks player screen.liveStatus
     ]
 
-welcome : Player -> String -> Html
-welcome player handle =
-  titleWrapper <| List.append
-    [ h1 [] [ text ("welcome, " ++ (Maybe.withDefault "Anonymous" player.handle)) ] ]
-    (welcomeForms player handle)
-
-welcomeForms : Player -> String -> List Html
-welcomeForms player handle =
+welcomeForm : Player -> String -> Html
+welcomeForm player handle =
   if player.guest then
-    [ setHandleBlock handle ]
+    setHandleBlock handle
   else
-    []
+    div [ ] [ ]
 
 setHandleBlock : String -> Html
 setHandleBlock handle =
@@ -60,7 +55,7 @@ setHandleBlock handle =
 
 liveTracks : Player -> LiveStatus -> Html
 liveTracks player {liveTracks} =
-  div [ class "container" ]
+  div [ class "liveTracks" ]
     [ div [ class "row" ] (List.map liveTrackBlock liveTracks)
     , if isAdmin player then createTrackBlock else div [] []
     ]
@@ -72,11 +67,8 @@ liveTrackBlock ({track, players} as lt) =
       [ linkTo (PlayTrack track.id)
         [ class "show"
         ]
-        [ div
-          [ class <| "player-count player-count-" ++ (toString (List.length players)) ]
-          [ text << toString <| List.length players ]
-        , span [ class "name" ] [ text track.name ]
-        , div [ class "description"] [ text "TODO description" ]
+        [ h3 [ class "name" ] [ text track.name ]
+        , div [ class "description"] [ text track.creatorId ]
         , playersList players
         ]
       ]
@@ -92,11 +84,9 @@ playerItem player =
 
 createTrackBlock : Html
 createTrackBlock =
-  div [ class "row" ]
-    [ p [ class "align-center"]
-      [ a [ onClick addr CreateTrack
-          , class "btn btn-primary" ]
-        [ text "Create track" ]
-      ]
+  p [ class "" ]
+    [ a [ onClick addr CreateTrack
+        , class "btn btn-primary" ]
+      [ text "Create track" ]
     ]
 

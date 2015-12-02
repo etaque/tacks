@@ -13,39 +13,37 @@ import Screens.Utils exposing (..)
 view : Screen -> Html
 view screen =
   div [ class "login"]
-    [ titleWrapper [ h1 [] [ text "Login" ] ]
-    , div [ class "container"] [ loginForm screen ]
+    [ h1 [] [ text "Login" ]
+    , loginForm screen
     ]
 
 loginForm : Screen -> Html
 loginForm {email, password, loading, error} =
-  div [ class "row form-login" ]
-    [ whitePanel
-      [ div [ class "form-group" ]
-        [ textInput
-          [ placeholder "Email"
-          , value email
-          , onInput addr SetEmail
-          , onEnter addr Submit
-          ]
+  div [ class "form-login" ]
+    [ div [ class "form-group" ]
+      [ textInput
+        [ placeholder "Email"
+        , value email
+        , onInput addr SetEmail
+        , onEnter addr Submit
         ]
-      , div [ class "form-group" ]
-        [ passwordInput
-          [ placeholder "Password"
-          , value password
-          , onInput addr SetPassword
-          , onEnter addr Submit
-          ]
+      ]
+    , div [ class "form-group" ]
+      [ passwordInput
+        [ placeholder "Password"
+        , value password
+        , onInput addr SetPassword
+        , onEnter addr Submit
         ]
-      , errorLine error
-      , div []
-        [ button
-          [ class "btn btn-primary btn-block"
-          , disabled loading
-          , onClick addr Submit
-          ]
-          [ text "Submit" ]
+      ]
+    , errorLine error
+    , div []
+      [ button
+        [ class "btn btn-primary"
+        , disabled loading
+        , onClick addr Submit
         ]
+        [ text "Submit" ]
       ]
     ]
 

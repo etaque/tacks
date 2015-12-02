@@ -3,7 +3,6 @@ module AppView where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-import Models exposing (..)
 import AppTypes exposing (..)
 
 import Screens.Home.View as Home
@@ -46,7 +45,10 @@ view appState =
       GameScreen screen ->
         Game.view appState.dims screen
 
-      _ ->
+      NotFoundScreen s ->
+        emptyView
+
+      NoScreen ->
         emptyView
 
   in
@@ -70,7 +72,7 @@ layout appState content =
       content
     else
       div
-        [ class "content-with-nav" ]
-        [ Nav.view appState
+        [ class "content" ]
+        [ Sidebar.view appState.player
         , main' [ ] [ content ]
         ]

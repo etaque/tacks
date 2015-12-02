@@ -11055,7 +11055,7 @@ Elm.Constants.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var admins = _U.list(["milox"]);
-   var colors = {water: "rgb(147, 202, 223)"
+   var colors = {water: "rgb(33, 148, 206)"
                 ,sand: "rgb(242, 243, 196)"
                 ,grass: "rgb(200, 230, 180)"
                 ,rock: "rgb(160, 146, 159)"
@@ -12783,6 +12783,9 @@ Elm.AppTypes.make = function (_elm) {
    var UpdateDims = function (a) {
       return {ctor: "UpdateDims",_0: a};
    };
+   var PathChanged = function (a) {
+      return {ctor: "PathChanged",_0: a};
+   };
    var SetPath = function (a) {
       return {ctor: "SetPath",_0: a};
    };
@@ -12802,6 +12805,7 @@ Elm.AppTypes.make = function (_elm) {
                                  ,AppInput: AppInput
                                  ,SetPlayer: SetPlayer
                                  ,SetPath: SetPath
+                                 ,PathChanged: PathChanged
                                  ,UpdateDims: UpdateDims
                                  ,ScreenAction: ScreenAction
                                  ,Logout: Logout
@@ -13883,7 +13887,6 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $History = Elm.History.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -13962,9 +13965,12 @@ Elm.Screens.Home.Updates.make = function (_elm) {
                     return $Task.succeed({ctor: "_Tuple0"});
                  }
            }));
-         default: return A2($AppTypes.react,
-           screen,
-           $History.setPath($Routes.toPath($Routes.EditTrack(_p2._0))));}
+         default:
+         var newPath = $Routes.toPath($Routes.EditTrack(_p2._0));
+           var reaction = A2($Signal.send,
+           $AppTypes.appActionsMailbox.address,
+           $AppTypes.SetPath(newPath));
+           return A2($AppTypes.react,screen,reaction);}
    });
    return _elm.Screens.Home.Updates.values = {_op: _op
                                              ,addr: addr
@@ -16180,14 +16186,19 @@ Elm.AppUpdates.make = function (_elm) {
       var _p27 = _p23.appState;
       var _p24 = _p22.action;
       switch (_p24.ctor)
-      {case "SetPath": var _p25 = _p24._0;
+      {case "SetPath": return A2($AppTypes.AppUpdate,
+           _p27,
+           $Maybe.Just($History.setPath(_p24._0)));
+         case "PathChanged": var _p25 = _p24._0;
            return A2($Maybe.withDefault,
            A2(mountNotFound,_p27,_p25),
            A2($Maybe.map,
            mountRoute(_p27),
            A2($RouteParser.match,$Routes.routeParsers,_p25)));
-         case "SetPlayer":
-         var reaction = $History.setPath($Routes.toPath($Routes.Home));
+         case "SetPlayer": var newPath = $Routes.toPath($Routes.Home);
+           var reaction = A2($Signal.send,
+           $AppTypes.appActionsMailbox.address,
+           $AppTypes.SetPath(newPath));
            return A2($AppTypes.AppUpdate,
            _U.update(_p27,{player: _p24._0}),
            $Maybe.Just(reaction));
@@ -18858,16 +18869,14 @@ Elm.Screens.Home.View.make = function (_elm) {
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var createTrackBlock = A2($Html.div,
-   _U.list([$Html$Attributes.$class("row")]),
-   _U.list([A2($Html.p,
-   _U.list([$Html$Attributes.$class("align-center")]),
+   var createTrackBlock = A2($Html.p,
+   _U.list([$Html$Attributes.$class("")]),
    _U.list([A2($Html.a,
    _U.list([A2($Html$Events.onClick,
            $Screens$Home$Updates.addr,
            $Screens$Home$Types.CreateTrack)
            ,$Html$Attributes.$class("btn btn-primary")]),
-   _U.list([$Html.text("Create track")]))]))]));
+   _U.list([$Html.text("Create track")]))]));
    var playerItem = function (player) {
       return A2($Html.li,
       _U.list([$Html$Attributes.$class("player")]),
@@ -18880,37 +18889,29 @@ Elm.Screens.Home.View.make = function (_elm) {
    };
    var liveTrackBlock = function (_p0) {
       var _p1 = _p0;
-      var _p4 = _p1.track;
-      var _p3 = _p1.players;
+      var _p2 = _p1.track;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("col-md-4")]),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class("live-track")]),
       _U.list([A3($Screens$Utils.linkTo,
-      $Routes.PlayTrack(_p4.id),
+      $Routes.PlayTrack(_p2.id),
       _U.list([$Html$Attributes.$class("show")]),
-      _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
-              "player-count player-count-",
-              $Basics.toString($List.length(_p3))))]),
-              _U.list([function (_p2) {
-                 return $Html.text($Basics.toString(_p2));
-              }($List.length(_p3))]))
-              ,A2($Html.span,
+      _U.list([A2($Html.h3,
               _U.list([$Html$Attributes.$class("name")]),
-              _U.list([$Html.text(_p4.name)]))
+              _U.list([$Html.text(_p2.name)]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("description")]),
-              _U.list([$Html.text("TODO description")]))
-              ,playersList(_p3)]))]))]));
+              _U.list([$Html.text(_p2.creatorId)]))
+              ,playersList(_p1.players)]))]))]));
    };
-   var liveTracks = F2(function (player,_p5) {
-      var _p6 = _p5;
+   var liveTracks = F2(function (player,_p3) {
+      var _p4 = _p3;
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("container")]),
+      _U.list([$Html$Attributes.$class("liveTracks")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("row")]),
-              A2($List.map,liveTrackBlock,_p6.liveTracks))
+              A2($List.map,liveTrackBlock,_p4.liveTracks))
               ,$Models.isAdmin(player) ? createTrackBlock : A2($Html.div,
               _U.list([]),
               _U.list([]))]));
@@ -18943,28 +18944,23 @@ Elm.Screens.Home.View.make = function (_elm) {
                                            _U.list([]),
                                            _U.list([$Html.text("or log in")]))]))]))]));
    };
-   var welcomeForms = F2(function (player,handle) {
-      return player.guest ? _U.list([setHandleBlock(handle)]) : _U.list([]);
-   });
-   var welcome = F2(function (player,handle) {
-      return $Screens$Utils.titleWrapper(A2($List.append,
-      _U.list([A2($Html.h1,
+   var welcomeForm = F2(function (player,handle) {
+      return player.guest ? setHandleBlock(handle) : A2($Html.div,
       _U.list([]),
-      _U.list([$Html.text(A2($Basics._op["++"],
-      "welcome, ",
-      A2($Maybe.withDefault,"Anonymous",player.handle)))]))]),
-      A2(welcomeForms,player,handle)));
+      _U.list([]));
    });
    var view = F2(function (player,screen) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("home")]),
-      _U.list([A2(welcome,player,screen.handle)
+      _U.list([A2($Html.h1,
+              _U.list([]),
+              _U.list([$Html.text("Welcome to Tacks")]))
+              ,A2(welcomeForm,player,screen.handle)
               ,A2(liveTracks,player,screen.liveStatus)]));
    });
    return _elm.Screens.Home.View.values = {_op: _op
                                           ,view: view
-                                          ,welcome: welcome
-                                          ,welcomeForms: welcomeForms
+                                          ,welcomeForm: welcomeForm
                                           ,setHandleBlock: setHandleBlock
                                           ,liveTracks: liveTracks
                                           ,liveTrackBlock: liveTrackBlock
@@ -19006,47 +19002,43 @@ Elm.Screens.Login.View.make = function (_elm) {
    var loginForm = function (_p0) {
       var _p1 = _p0;
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("row form-login")]),
-      _U.list([$Screens$Utils.whitePanel(_U.list([A2($Html.div,
-                                                 _U.list([$Html$Attributes.$class("form-group")]),
-                                                 _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Email")
-                                                                                           ,$Html$Attributes.value(_p1.email)
-                                                                                           ,A2($Screens$Utils.onInput,
-                                                                                           $Screens$Login$Updates.addr,
-                                                                                           $Screens$Login$Types.SetEmail)
-                                                                                           ,A2($Screens$Utils.onEnter,
-                                                                                           $Screens$Login$Updates.addr,
-                                                                                           $Screens$Login$Types.Submit)]))]))
-                                                 ,A2($Html.div,
-                                                 _U.list([$Html$Attributes.$class("form-group")]),
-                                                 _U.list([$Screens$Utils.passwordInput(_U.list([$Html$Attributes.placeholder("Password")
-                                                                                               ,$Html$Attributes.value(_p1.password)
-                                                                                               ,A2($Screens$Utils.onInput,
-                                                                                               $Screens$Login$Updates.addr,
-                                                                                               $Screens$Login$Types.SetPassword)
-                                                                                               ,A2($Screens$Utils.onEnter,
-                                                                                               $Screens$Login$Updates.addr,
-                                                                                               $Screens$Login$Types.Submit)]))]))
-                                                 ,errorLine(_p1.error)
-                                                 ,A2($Html.div,
-                                                 _U.list([]),
-                                                 _U.list([A2($Html.button,
-                                                 _U.list([$Html$Attributes.$class("btn btn-primary btn-block")
-                                                         ,$Html$Attributes.disabled(_p1.loading)
-                                                         ,A2($Html$Events.onClick,
-                                                         $Screens$Login$Updates.addr,
-                                                         $Screens$Login$Types.Submit)]),
-                                                 _U.list([$Html.text("Submit")]))]))]))]));
+      _U.list([$Html$Attributes.$class("form-login")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("form-group")]),
+              _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Email")
+                                                        ,$Html$Attributes.value(_p1.email)
+                                                        ,A2($Screens$Utils.onInput,
+                                                        $Screens$Login$Updates.addr,
+                                                        $Screens$Login$Types.SetEmail)
+                                                        ,A2($Screens$Utils.onEnter,
+                                                        $Screens$Login$Updates.addr,
+                                                        $Screens$Login$Types.Submit)]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("form-group")]),
+              _U.list([$Screens$Utils.passwordInput(_U.list([$Html$Attributes.placeholder("Password")
+                                                            ,$Html$Attributes.value(_p1.password)
+                                                            ,A2($Screens$Utils.onInput,
+                                                            $Screens$Login$Updates.addr,
+                                                            $Screens$Login$Types.SetPassword)
+                                                            ,A2($Screens$Utils.onEnter,
+                                                            $Screens$Login$Updates.addr,
+                                                            $Screens$Login$Types.Submit)]))]))
+              ,errorLine(_p1.error)
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-primary")
+                      ,$Html$Attributes.disabled(_p1.loading)
+                      ,A2($Html$Events.onClick,
+                      $Screens$Login$Updates.addr,
+                      $Screens$Login$Types.Submit)]),
+              _U.list([$Html.text("Submit")]))]))]));
    };
    var view = function (screen) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("login")]),
-      _U.list([$Screens$Utils.titleWrapper(_U.list([A2($Html.h1,
-              _U.list([]),
-              _U.list([$Html.text("Login")]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("container")]),
-              _U.list([loginForm(screen)]))]));
+      _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Login")]))
+              ,loginForm(screen)]));
    };
    return _elm.Screens.Login.View.values = {_op: _op
                                            ,view: view
@@ -19098,65 +19090,63 @@ Elm.Screens.Register.View.make = function (_elm) {
       var _p2 = _p1;
       var _p3 = _p2.errors;
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("row form-login")]),
-      _U.list([$Screens$Utils.whitePanel(_U.list([A2($Screens$Utils.formGroup,
-                                                 A2(hasError,_p3,"handle"),
-                                                 _U.list([A2($Html.label,
-                                                         _U.list([]),
-                                                         _U.list([$Html.text("Handle")]))
-                                                         ,$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p2.handle)
-                                                                                           ,A2($Screens$Utils.onInput,
-                                                                                           $Screens$Register$Updates.addr,
-                                                                                           $Screens$Register$Types.SetHandle)
-                                                                                           ,A2($Screens$Utils.onEnter,
-                                                                                           $Screens$Register$Updates.addr,
-                                                                                           $Screens$Register$Types.Submit)]))
-                                                         ,A2(fieldError,_p3,"handle")]))
-                                                 ,A2($Screens$Utils.formGroup,
-                                                 A2(hasError,_p3,"email"),
-                                                 _U.list([A2($Html.label,
-                                                         _U.list([]),
-                                                         _U.list([$Html.text("Email")]))
-                                                         ,$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p2.email)
-                                                                                           ,A2($Screens$Utils.onInput,
-                                                                                           $Screens$Register$Updates.addr,
-                                                                                           $Screens$Register$Types.SetEmail)
-                                                                                           ,A2($Screens$Utils.onEnter,
-                                                                                           $Screens$Register$Updates.addr,
-                                                                                           $Screens$Register$Types.Submit)]))
-                                                         ,A2(fieldError,_p3,"email")]))
-                                                 ,A2($Screens$Utils.formGroup,
-                                                 A2(hasError,_p3,"password"),
-                                                 _U.list([A2($Html.label,
-                                                         _U.list([]),
-                                                         _U.list([$Html.text("Password")]))
-                                                         ,$Screens$Utils.passwordInput(_U.list([$Html$Attributes.value(_p2.password)
-                                                                                               ,A2($Screens$Utils.onInput,
-                                                                                               $Screens$Register$Updates.addr,
-                                                                                               $Screens$Register$Types.SetPassword)
-                                                                                               ,A2($Screens$Utils.onEnter,
-                                                                                               $Screens$Register$Updates.addr,
-                                                                                               $Screens$Register$Types.Submit)]))
-                                                         ,A2(fieldError,_p3,"password")]))
-                                                 ,A2($Html.div,
-                                                 _U.list([]),
-                                                 _U.list([A2($Html.button,
-                                                 _U.list([$Html$Attributes.$class("btn btn-primary btn-block")
-                                                         ,A2($Html$Events.onClick,
-                                                         $Screens$Register$Updates.addr,
-                                                         $Screens$Register$Types.Submit)
-                                                         ,$Html$Attributes.disabled(_p2.loading)]),
-                                                 _U.list([$Html.text("Submit")]))]))]))]));
+      _U.list([$Html$Attributes.$class("form-login")]),
+      _U.list([A2($Screens$Utils.formGroup,
+              A2(hasError,_p3,"handle"),
+              _U.list([A2($Html.label,
+                      _U.list([]),
+                      _U.list([$Html.text("Handle")]))
+                      ,$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p2.handle)
+                                                        ,A2($Screens$Utils.onInput,
+                                                        $Screens$Register$Updates.addr,
+                                                        $Screens$Register$Types.SetHandle)
+                                                        ,A2($Screens$Utils.onEnter,
+                                                        $Screens$Register$Updates.addr,
+                                                        $Screens$Register$Types.Submit)]))
+                      ,A2(fieldError,_p3,"handle")]))
+              ,A2($Screens$Utils.formGroup,
+              A2(hasError,_p3,"email"),
+              _U.list([A2($Html.label,
+                      _U.list([]),
+                      _U.list([$Html.text("Email")]))
+                      ,$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p2.email)
+                                                        ,A2($Screens$Utils.onInput,
+                                                        $Screens$Register$Updates.addr,
+                                                        $Screens$Register$Types.SetEmail)
+                                                        ,A2($Screens$Utils.onEnter,
+                                                        $Screens$Register$Updates.addr,
+                                                        $Screens$Register$Types.Submit)]))
+                      ,A2(fieldError,_p3,"email")]))
+              ,A2($Screens$Utils.formGroup,
+              A2(hasError,_p3,"password"),
+              _U.list([A2($Html.label,
+                      _U.list([]),
+                      _U.list([$Html.text("Password")]))
+                      ,$Screens$Utils.passwordInput(_U.list([$Html$Attributes.value(_p2.password)
+                                                            ,A2($Screens$Utils.onInput,
+                                                            $Screens$Register$Updates.addr,
+                                                            $Screens$Register$Types.SetPassword)
+                                                            ,A2($Screens$Utils.onEnter,
+                                                            $Screens$Register$Updates.addr,
+                                                            $Screens$Register$Types.Submit)]))
+                      ,A2(fieldError,_p3,"password")]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-primary")
+                      ,A2($Html$Events.onClick,
+                      $Screens$Register$Updates.addr,
+                      $Screens$Register$Types.Submit)
+                      ,$Html$Attributes.disabled(_p2.loading)]),
+              _U.list([$Html.text("Submit")]))]))]));
    };
    var view = function (screen) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("register")]),
-      _U.list([$Screens$Utils.titleWrapper(_U.list([A2($Html.h1,
+      _U.list([A2($Html.h1,
               _U.list([]),
-              _U.list([$Html.text("Register")]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("container")]),
-              _U.list([registerForm(screen)]))]));
+              _U.list([$Html.text("Register")]))
+              ,registerForm(screen)]));
    };
    return _elm.Screens.Register.View.values = {_op: _op
                                               ,view: view
@@ -22419,10 +22409,10 @@ Elm.AppView.make = function (_elm) {
    $Screens$Game$View = Elm.Screens.Game.View.make(_elm),
    $Screens$Home$View = Elm.Screens.Home.View.make(_elm),
    $Screens$Login$View = Elm.Screens.Login.View.make(_elm),
-   $Screens$Nav = Elm.Screens.Nav.make(_elm),
    $Screens$Register$View = Elm.Screens.Register.View.make(_elm),
    $Screens$ShowProfile$View = Elm.Screens.ShowProfile.View.make(_elm),
    $Screens$ShowTrack$View = Elm.Screens.ShowTrack.View.make(_elm),
+   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var layout = F2(function (appState,content) {
@@ -22434,8 +22424,8 @@ Elm.AppView.make = function (_elm) {
             default: return false;}
       }();
       return noNav ? content : A2($Html.div,
-      _U.list([$Html$Attributes.$class("content-with-nav")]),
-      _U.list([$Screens$Nav.view(appState)
+      _U.list([$Html$Attributes.$class("content")]),
+      _U.list([$Screens$Sidebar.view(appState.player)
               ,A2($Html.main$,_U.list([]),_U.list([content]))]));
    });
    var emptyView = A2($Html.div,
@@ -22461,6 +22451,7 @@ Elm.AppView.make = function (_elm) {
             case "GameScreen": return A2($Screens$Game$View.view,
               appState.dims,
               _p1._0);
+            case "NotFoundScreen": return emptyView;
             default: return emptyView;}
       }();
       return A2(layout,appState,content);
@@ -22652,7 +22643,7 @@ Elm.Main.make = function (_elm) {
    $AppTypes.UpdateDims,
    $Window.dimensions);
    var pathActions = A2($Signal.map,
-   $AppTypes.SetPath,
+   $AppTypes.PathChanged,
    $History.path);
    var gameActionsInput = Elm.Native.Port.make(_elm).inboundSignal("gameActionsInput",
    "Json.Decode.Value",
@@ -22856,7 +22847,7 @@ Elm.Main.make = function (_elm) {
                                                                      v.path)} : _U.badPort("an object with fields `player`, `path`",
       v);
    });
-   var initPathAction = $Signal.constant($AppTypes.SetPath(appSetup.path));
+   var initPathAction = $Signal.constant($AppTypes.PathChanged(appSetup.path));
    var allActions = $Signal.mergeMany(_U.list([initPathAction
                                               ,pathActions
                                               ,dimsActions

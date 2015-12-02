@@ -7,7 +7,10 @@
   @return desaturate(darken($color, 12%), 15%);
 }
 
-$seaBlue: rgb(147, 202, 223);
+$seaBlue: rgb(33, 148, 206); // #428cde; // #2194CE;
+$linkBlue: $seaBlue;
+
+/* $seaBlue: rgb(147, 202, 223); */
 
 $lightSeaBlue: lighten($seaBlue, 6%);
 $lighterSeaBlue: lighten($seaBlue, 12%);
@@ -30,7 +33,7 @@ $lighterRock: lighten($lightRock, 15%);
 $darkRock: desat-dark($rock);
 $darkerRock: desat-dark($darkRock);
 
-$mainBlue: darken(saturate($seaBlue, 10%), 10%);
+$mainBlue: lighten($seaBlue, 10%); //darken(saturate($seaBlue, 10%), 10%);
 
 $orange: #E0A349;
 $lightOrange: lighten($orange, 12%);
@@ -39,8 +42,8 @@ $lighterOrange: lighten($orange, 25%);
 $darkGray: #51585E;
 $gray: desaturate($rock, 50%);
 $mediumGray: lighten($gray, 20%);
-$lightGray: lighten($gray, 50%);
-$smokeWhite: #f8f9fb;
+$lightGray: lighten($gray, 35%);
+$smokeWhite: #FAFAFA;
 
 $shadow: rgba(0, 0, 0, 0.075);
 $strongShadow: rgba(0, 0, 0, 0.2);
@@ -49,4 +52,6 @@ $dark: rgba(0, 0, 0, 0.5);
 $whiteRed: #f2dede;
 $lightRed: #ebccd1;
 $red: #a94442;
+
+$white: white;
 

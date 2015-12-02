@@ -4,43 +4,28 @@
 @import 'fonts';
 
 
-body {
-  color: #666;
-  font-family: $baseFont;
-  font-size: 15px;
-  background-color: $smokeWhite;
-}
-
-.content-with-nav {
-  background-color: $seaBlue;
-  color: $darkerSand;
-  font-family: $baseFont;
-  @include linear-gradient($lightGray, $smokeWhite);
-}
-
-.content {
-  background-color: $sand;
-}
-
 h1 {
-  font-family: $headerFont;
-  color: $darkerSand;
+  font-family: $baseFont;
+  font-size: 25px;
+  color: #333;
   margin-bottom: 30px;
-  text-align: center;
 }
 
 h2, h3, h4, h5, h6 {
-  font-family: $headerFont;
+  font-family: $baseFont;
+  font-weight: bold;
   font-size: 21px;
   margin-bottom: 15px;
 }
 
 a {
-  color: $darkerSeaBlue;
+  color: $linkBlue;
   transition: all .1s ease-in;
   cursor: pointer;
+  text-decoration: none;
 
   &:hover {
+    color: $seaBlue;
     text-decoration: none;
   }
 }
@@ -83,11 +68,11 @@ a {
 
 .btn-primary {
   background-color: $mainBlue;
-  border-color: desat-dark($mainBlue);
+  border-color: little-desat-dark($mainBlue);
 
   &:hover {
     background-color: darken($mainBlue, 5%);
-    border-color: darken(desat-dark($mainBlue), 5%);
+    border-color: darken(little-desat-dark($mainBlue), 5%);
   }
 }
 
@@ -113,12 +98,11 @@ a {
 }
 
 .form-control {
-  border: 2px solid $smokeWhite;
+  border: 2px solid $mediumGray;
   border-radius: 0;
-  background-color: $lighterRock;
+  background-color: $white;
+  font-size: 15px;
   font-weight: bold;
-  color: $darkRock;
-  box-shadow: inset 1px 1px 1px $shadow;
 
   &:focus {
     outline: 0;
@@ -144,16 +128,6 @@ a {
 
 .uppercase {
   text-transform: uppercase;
-}
-
-@mixin upclassic {
-  text-transform: uppercase;
-  font-family: $thin;
-  letter-spacing: 1px;
-}
-
-.upclassic {
-  @include upclassic;
 }
 
 .player-avatar {
@@ -198,5 +172,11 @@ a {
       float: right;
       color: white;
     }
+  }
+}
+
+.form-login {
+  .form-group {
+    width: 250px;
   }
 }

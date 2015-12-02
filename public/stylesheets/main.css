@@ -6022,6 +6022,7 @@ button.close {
   .hidden-print {
     display: none !important; } }
 
+/* $seaBlue: rgb(147, 202, 223); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6047,13 +6048,15 @@ body {
   width: 100%;
   height: 100%;
   margin: 0;
-  padding: 0; }
+  padding: 0;
+  color: #555;
+  font-family: "Inconsolata", "mono";
+  font-size: 15px;
+  line-height: 18px;
+  background-color: #FAFAFA; }
 
 body > div {
-  min-height: 100%; }
-
-.content-with-nav {
-  /* height: 100%; */ }
+  height: 100%; }
 
 .content {
   height: 100%;
@@ -6062,12 +6065,17 @@ body > div {
   flex-direction: row; }
 
 main {
-  flex: 1; }
+  /* flex: 1; */
+  width: 800px;
+  padding: 20px; }
 
 aside {
-  min-height: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
+  padding: 15px;
+  background-color: #f2f2f2;
+  border-right: 2px solid #cccccc;
   /* .logo { */
   /*   a { */
   /*     display: block; */
@@ -6080,26 +6088,110 @@ aside {
   /*       width: auto; */
   /*     } */
   /*   } */
-  /* } */
-  /* .user-menu { */
-  /*   list-style: none; */
-  /*   margin: 0; */
-  /*   margin-top: 20px; */
-  /*   padding: 0; */
-  /*   font-family: $navFont; */
-  /*   text-transform: lowercase; */
-  /*   li { */
+  /* } */ }
+  aside .user-menu {
+    list-style: none;
+    margin: 0;
+    margin-top: 20px;
+    padding: 0;
+    text-transform: lowercase; }
+    aside .user-menu a {
+      display: block;
+      padding: 5px 10px;
+      font-weight: bold; }
+      aside .user-menu a:before {
+        /* content: "# "; */ }
+
+/* $seaBlue: rgb(147, 202, 223); */
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+/* nav { */
+/*   padding-top: 15px; */
+/*   padding-bottom: 15px; */
+/*   background-color: $seaBlue; */
+/*   /\* @include linear-gradient($seaBlue, $lightSeaBlue); *\/ */
+/*   border: none; */
+/*   .logo { */
+/*     display: inline-block; */
+/*   } */
+/*   .player-menu { */
+/*     float: right; */
+/*     list-style: none; */
+/*     font-family: $navFont; */
+/*     font-size: 16px; */
+/*     margin: 0; */
+/*     margin-top: 10px; */
+/*     padding: 0; */
+/*     li { */
+/*       float: left; */
+/*       $navColor: $darkerSeaBlue; */
+/*       $navHoverColor: $blackSeaBlue; */
+/*       a { */
+/*         display: block; */
+/*         /\* padding: 0 15px; *\/ */
+/*         line-height: 25px; */
+/*         text-transform: lowercase; */
+/*         color: $navColor; */
+/*         border-top: 2px solid transparent; */
+/*         border-bottom: 2px solid $navColor; */
+/*         &:hover { */
+/*           border-bottom-color: $navHoverColor; */
+/*           color: $navHoverColor; */
+/*         } */
+/*       } */
+/*     } */
+/*     li + li { */
+/*       margin-left: 30px; */
+/*     } */
+/*   } */
+/* } */
+aside {
+  /* background-color: $mediumGray; */
+  /* color: $darkRock; */
+  /* border-right: 2px solid $smokeWhite; */
+  /* .track-menu { */
+  /*   margin-bottom: 20px; */
+  /*   h2 { */
+  /*     color: $darkerRock; */
+  /*     margin: 0; */
+  /*     float: left; */
   /*   } */
-  /*   a { */
-  /*     display: block; */
-  /*     color: white; */
-  /*     padding: 5px 10px; */
-  /*     &:before { */
-  /*       /\* content: "# "; *\/ */
-  /*     } */
+  /*   .btn { */
+  /*     float: right; */
+  /*     margin-left: 5px; */
+  /*   } */
+  /* } */
+  /* .aside-module { */
+  /*   h3 { */
+  /*     color: $smokeWhite; */
+  /*     background-color: $darkRock; */
+  /*     margin: 0 0 5px 0; */
+  /*     padding: 5px; */
+  /*     /\* text-align: center; *\/ */
+  /*     text-transform: uppercase; */
+  /*     font-size: 13px; */
   /*   } */
   /* } */ }
 
+/* $seaBlue: rgb(147, 202, 223); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6119,126 +6211,26 @@ aside {
 @font-face {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
-
-nav {
-  padding-top: 15px;
-  padding-bottom: 15px;
-  background-color: #93cadf;
-  /* @include linear-gradient($seaBlue, $lightSeaBlue); */
-  border: none; }
-  nav .logo {
-    display: inline-block; }
-  nav .player-menu {
-    float: right;
-    list-style: none;
-    font-family: "Museo Slab";
-    font-size: 16px;
-    margin: 0;
-    margin-top: 10px;
-    padding: 0; }
-    nav .player-menu li {
-      float: left; }
-      nav .player-menu li a {
-        display: block;
-        /* padding: 0 15px; */
-        line-height: 25px;
-        text-transform: lowercase;
-        color: #486a77;
-        border-top: 2px solid transparent;
-        border-bottom: 2px solid #486a77; }
-        nav .player-menu li a:hover {
-          border-bottom-color: #26424d;
-          color: #26424d; }
-    nav .player-menu li + li {
-      margin-left: 30px; }
-
-aside {
-  background-color: #cccccc;
-  color: #737373;
-  border-right: 2px solid #f8f9fb;
-  padding: 15px; }
-  aside .track-menu {
-    margin-bottom: 20px; }
-    aside .track-menu h2 {
-      color: #4d4d4d;
-      margin: 0;
-      float: left; }
-    aside .track-menu .btn {
-      float: right;
-      margin-left: 5px; }
-  aside .aside-module h3 {
-    color: #f8f9fb;
-    background-color: #737373;
-    margin: 0 0 5px 0;
-    padding: 5px;
-    /* text-align: center; */
-    text-transform: uppercase;
-    font-size: 13px; }
-
-@font-face {
-  font-family: "Proxima Nova Regular";
-  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
-
-@font-face {
-  font-family: "Bangers";
-  src: url("/assets/fonts/Bangers.ttf"); }
-
-@font-face {
-  font-family: "Museo Slab";
-  src: url("/assets/fonts/Museo Slab.otf"); }
-
-@font-face {
-  font-family: "Proxima Nova Thin";
-  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
-
-@font-face {
-  font-family: "Proxima Nova Light";
-  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
-
-body {
-  color: #666;
-  font-family: "Inconsolata", "mono";
-  font-size: 15px;
-  background-color: #f8f9fb; }
-
-.content-with-nav {
-  background-color: #93cadf;
-  color: dimgray;
-  font-family: "Inconsolata", "mono";
-  background-color: #f8f9fb;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(white), to(#f8f9fb));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, white, #f8f9fb);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, white, #f8f9fb);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, white, #f8f9fb);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, white, #f8f9fb);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, white, #f8f9fb);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='white', EndColorStr='#f8f9fb'); }
-
-.content {
-  background-color: #f2f3c4; }
 
 h1 {
-  font-family: "Museo Slab";
-  color: dimgray;
-  margin-bottom: 30px;
-  text-align: center; }
+  font-family: "Inconsolata", "mono";
+  font-size: 25px;
+  color: #333;
+  margin-bottom: 30px; }
 
 h2, h3, h4, h5, h6 {
-  font-family: "Museo Slab";
+  font-family: "Inconsolata", "mono";
+  font-weight: bold;
   font-size: 21px;
   margin-bottom: 15px; }
 
 a {
-  color: #486a77;
+  color: #2194ce;
   transition: all 0.1s ease-in;
-  cursor: pointer; }
+  cursor: pointer;
+  text-decoration: none; }
   a:hover {
+    color: #2194ce;
     text-decoration: none; }
 
 .align-center {
@@ -6260,20 +6252,20 @@ a {
   padding: 3px 5px 1px 5px; }
 
 .btn-default {
-  background-color: white;
-  border-color: #f2f2f2;
+  background-color: #f2f2f2;
+  border-color: #e6e6e6;
   color: #999999; }
   .btn-default:hover {
-    background-color: #f2f2f2;
-    border-color: #e6e6e6;
+    background-color: #e6e6e6;
+    border-color: #d9d9d9;
     color: #51585E; }
 
 .btn-primary {
-  background-color: #62bbdd;
-  border-color: #508ca3; }
+  background-color: #41abe1;
+  border-color: #3188b4; }
   .btn-primary:hover {
-    background-color: #4db2d8;
-    border-color: #477d92; }
+    background-color: #2ba2dd;
+    border-color: #2b79a0; }
 
 .btn-warning {
   background-color: #E0A349;
@@ -6290,12 +6282,11 @@ a {
   color: #a94442; }
 
 .form-control {
-  border: 2px solid #f8f9fb;
+  border: 2px solid #cccccc;
   border-radius: 0;
-  background-color: #e7e4e7;
-  font-weight: bold;
-  color: #737373;
-  box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.075); }
+  background-color: white;
+  font-size: 15px;
+  font-weight: bold; }
   .form-control:focus {
     outline: 0;
     box-shadow: inset 1px 1px 1px rgba(0, 0, 0, 0.075);
@@ -6315,11 +6306,6 @@ a {
 .uppercase {
   text-transform: uppercase; }
 
-.upclassic {
-  text-transform: uppercase;
-  font-family: "Proxima Nova Thin";
-  letter-spacing: 1px; }
-
 .player-avatar {
   display: inline-block; }
   .player-avatar .avatar {
@@ -6332,6 +6318,10 @@ a {
   .player-avatar .handle {
     font-weight: bold; }
 
+.form-login .form-group {
+  width: 250px; }
+
+/* $seaBlue: rgb(147, 202, 223); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6352,100 +6342,101 @@ a {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
-.form-new-user {
-  margin-top: 15px;
-  padding-top: 15px;
-  background-color: #f8f9fb;
-  border-radius: 5px;
-  box-shadow: 0 2px 2px #789fad; }
-
-.form-set-handle {
-  margin-top: 20px;
-  margin-bottom: 20px; }
-
-.update-name {
-  margin-top: 30px; }
-
-.live-track {
-  margin-top: 30px; }
-  .live-track a.show, .live-track a.show:visited {
-    display: block;
-    position: relative;
-    height: 200px;
-    margin-bottom: 10px;
-    background-color: white;
-    color: #737373;
-    box-shadow: 0 2px 2px rgba(0, 0, 0, 0.075);
-    border: 2px solid #c4bbc3;
-    transition: none; }
-    .live-track a.show .name, .live-track a.show:visited .name {
-      display: block;
-      background-color: #c4bbc3;
-      color: white;
-      text-transform: lowercase;
-      text-align: center;
-      font-family: "Museo Slab";
-      line-height: 40px; }
-    .live-track a.show .description, .live-track a.show:visited .description {
-      padding: 10px; }
-    .live-track a.show .player-count, .live-track a.show:visited .player-count {
-      position: absolute;
-      top: -12px;
-      right: 7px;
-      display: block;
-      border-radius: 15px;
-      border: 2px solid white;
-      opacity: 0.9;
-      line-height: 23px;
-      width: 27px;
-      background-color: #a0929f;
-      color: white;
-      font-weight: bold;
-      text-align: center;
-      font-size: 14px;
-      box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.075); }
-      .live-track a.show .player-count.player-count-0, .live-track a.show:visited .player-count.player-count-0 {
-        display: none; }
-    .live-track a.show .track-players, .live-track a.show:visited .track-players {
-      display: none;
-      height: 160px;
-      overflow-y: auto;
-      /* color: white; */
-      text-align: left;
-      padding: 10px 15px; }
-      .live-track a.show .track-players li + li, .live-track a.show:visited .track-players li + li {
-        margin-top: 5px; }
-      .live-track a.show .track-players .player-avatar, .live-track a.show .track-players a.player-avatar, .live-track a.show:visited .track-players .player-avatar, .live-track a.show:visited .track-players a.player-avatar {
-        color: #789fad; }
-    .live-track a.show:hover, .live-track a.show:visited:hover {
-      border-color: #62bbdd; }
-      .live-track a.show:hover .name, .live-track a.show:visited:hover .name {
-        background-color: #62bbdd;
-        /* color: white; */ }
-      .live-track a.show:hover .track-players, .live-track a.show:visited:hover .track-players {
-        display: block; }
-      .live-track a.show:hover .player-count, .live-track a.show:visited:hover .player-count {
-        background-color: #789fad; }
-      .live-track a.show:hover .description, .live-track a.show:visited:hover .description {
-        display: none; }
-
-.post .block-img, .article .block-img {
-  margin-top: 30px;
-  margin-bottom: 30px;
-  text-align: center; }
-  .post .block-img img, .article .block-img img {
-    box-shadow: 0 2px 2px white;
-    border: 2px solid white;
-    border-radius: 2px; }
-
-.post .legend, .article .legend {
-  margin-bottom: 30px;
-  text-align: center;
-  font-style: italic; }
-
-.post + .post {
-  margin-top: 50px; }
-
+/* .form-new-user { */
+/*   margin-top: 15px; */
+/*   padding-top: 15px; */
+/*   background-color: $smokeWhite; */
+/*   border-radius: 5px; */
+/*   box-shadow: 0 2px 2px $darkSeaBlue; */
+/* } */
+/* .form-set-handle { */
+/*   margin-top: 20px; */
+/*   margin-bottom: 20px; */
+/* } */
+/* .update-name { */
+/*   margin-top: 30px; */
+/* } */
+/* .live-track { */
+/*   $br: 3px; */
+/*   margin-top: 30px; */
+/*   $normalColor: $lightRock; */
+/*   $hoverColor: $mainBlue; */
+/*   a.show, a.show:visited { */
+/*     display: block; */
+/*     position: relative; */
+/*     height: 200px; */
+/*     margin-bottom: 10px; */
+/*     background-color: white; */
+/*     color: $darkRock; */
+/*     box-shadow: 0 2px 2px $shadow; */
+/*     border: 2px solid $normalColor; */
+/*     transition: none; */
+/*     .name { */
+/*       display: block; */
+/*       background-color: $normalColor; */
+/*       color: white; */
+/*       text-transform: lowercase; */
+/*       text-align: center; */
+/*       font-family: $headerFont; */
+/*       line-height: 40px; */
+/*     } */
+/*     .description { */
+/*       padding: 10px; */
+/*     } */
+/*     .player-count { */
+/*       &.player-count-0 { */
+/*         display: none; */
+/*       } */
+/*       position: absolute; */
+/*       top: -12px; */
+/*       right: 7px; */
+/*       display: block; */
+/*       border-radius: 15px; */
+/*       border: 2px solid white; */
+/*       opacity: 0.9; */
+/*       line-height: 23px; */
+/*       width: 27px; */
+/*       background-color: $rock; */
+/*       color: white; */
+/*       font-weight: bold; */
+/*       text-align: center; */
+/*       font-size: 14px; */
+/*       box-shadow: 1px 1px 0 $shadow; */
+/*     } */
+/*     .track-players { */
+/*       display: none; */
+/*       height: 160px;  */
+/*       overflow-y: auto; */
+/*       /\* color: white; *\/ */
+/*       text-align: left; */
+/*       padding: 10px 15px; */
+/*       li + li { */
+/*         margin-top: 5px; */
+/*       } */
+/*       .player-avatar, a.player-avatar { */
+/*         color: $darkSeaBlue; */
+/*       } */
+/*     } */
+/*     &:hover { */
+/*       border-color: $hoverColor; */
+/*       .name { */
+/*         background-color: $hoverColor; */
+/*         /\* color: white; *\/ */
+/*       } */
+/*       .track-players { */
+/*         display: block; */
+/*       } */
+/*       .player-count { */
+/*         background-color: $darkSeaBlue; */
+/*       } */
+/*       .description { */
+/*         display: none; */
+/*       } */
+/*     } */
+/*   } */
+/* } */
+/* @import 'blog'; */
+/* $seaBlue: rgb(147, 202, 223); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6558,7 +6549,7 @@ aside {
       margin: 0; }
     .module-chat .messages .message-handle {
       font-weight: bold;
-      color: white; }
+      color: #f2f2f2; }
       .module-chat .messages .message-handle:after {
         content: ": "; }
   .module-chat input[type="text"] {
@@ -6571,7 +6562,9 @@ aside {
       background-color: white;
       color: black; }
 
+/* $seaBlue: rgb(147, 202, 223); */
 .editor svg {
+  background-color: #f2f3c4;
   user-select: none;
   -moz-user-select: none;
   cursor: cell; }
@@ -6613,7 +6606,7 @@ aside {
       box-shadow: none; }
 
 .editor aside .form-group {
-  background-color: #f8f9fb;
+  background-color: #FAFAFA;
   margin-bottom: 5px;
   border-radius: 2px; }
   .editor aside .form-group:after {
@@ -6647,7 +6640,7 @@ aside {
 
 .editor aside .table-gust-defs {
   width: 100%;
-  background-color: #f8f9fb;
+  background-color: #FAFAFA;
   border-spacing: 1px;
   border-collapse: separate;
   border-radius: 2px; }

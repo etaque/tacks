@@ -3,88 +3,87 @@
 @import 'mixins';
 @import 'fonts';
 
-nav {
-  padding-top: 15px;
-  padding-bottom: 15px;
+/* nav { */
+/*   padding-top: 15px; */
+/*   padding-bottom: 15px; */
 
-  background-color: $seaBlue;
-  /* @include linear-gradient($seaBlue, $lightSeaBlue); */
-  border: none;
+/*   background-color: $seaBlue; */
+/*   /\* @include linear-gradient($seaBlue, $lightSeaBlue); *\/ */
+/*   border: none; */
 
-  .logo {
-    display: inline-block;
-  }
+/*   .logo { */
+/*     display: inline-block; */
+/*   } */
 
-  .player-menu {
-    float: right;
-    list-style: none;
-    font-family: $navFont;
-    font-size: 16px;
-    margin: 0;
-    margin-top: 10px;
-    padding: 0;
+/*   .player-menu { */
+/*     float: right; */
+/*     list-style: none; */
+/*     font-family: $navFont; */
+/*     font-size: 16px; */
+/*     margin: 0; */
+/*     margin-top: 10px; */
+/*     padding: 0; */
 
-    li {
-      float: left;
+/*     li { */
+/*       float: left; */
 
-      $navColor: $darkerSeaBlue;
-      $navHoverColor: $blackSeaBlue;
+/*       $navColor: $darkerSeaBlue; */
+/*       $navHoverColor: $blackSeaBlue; */
 
-      a {
-        display: block;
-        /* padding: 0 15px; */
-        line-height: 25px;
-        text-transform: lowercase;
-        color: $navColor;
-        border-top: 2px solid transparent;
-        border-bottom: 2px solid $navColor;
+/*       a { */
+/*         display: block; */
+/*         /\* padding: 0 15px; *\/ */
+/*         line-height: 25px; */
+/*         text-transform: lowercase; */
+/*         color: $navColor; */
+/*         border-top: 2px solid transparent; */
+/*         border-bottom: 2px solid $navColor; */
 
-        &:hover {
-          border-bottom-color: $navHoverColor;
-          color: $navHoverColor;
-        }
-      }
-    }
+/*         &:hover { */
+/*           border-bottom-color: $navHoverColor; */
+/*           color: $navHoverColor; */
+/*         } */
+/*       } */
+/*     } */
 
-    li + li {
-      margin-left: 30px;
-    }
-  }
-}
+/*     li + li { */
+/*       margin-left: 30px; */
+/*     } */
+/*   } */
+/* } */
 
 aside {
-  background-color: $mediumGray;
-  color: $darkRock;
-  border-right: 2px solid $smokeWhite;
-  padding: 15px;
+  /* background-color: $mediumGray; */
+  /* color: $darkRock; */
+  /* border-right: 2px solid $smokeWhite; */
 
-  .track-menu {
-    margin-bottom: 20px;
+  /* .track-menu { */
+  /*   margin-bottom: 20px; */
 
-    h2 {
-      color: $darkerRock;
-      margin: 0;
-      float: left;
-    }
+  /*   h2 { */
+  /*     color: $darkerRock; */
+  /*     margin: 0; */
+  /*     float: left; */
+  /*   } */
 
-    .btn {
-      float: right;
-      margin-left: 5px;
-    }
-  }
+  /*   .btn { */
+  /*     float: right; */
+  /*     margin-left: 5px; */
+  /*   } */
+  /* } */
 
-  .aside-module {
+  /* .aside-module { */
 
-    h3 {
-      color: $smokeWhite;
-      background-color: $darkRock;
-      margin: 0 0 5px 0;
-      padding: 5px;
-      /* text-align: center; */
-      text-transform: uppercase;
-      font-size: 13px;
-    }
+  /*   h3 { */
+  /*     color: $smokeWhite; */
+  /*     background-color: $darkRock; */
+  /*     margin: 0 0 5px 0; */
+  /*     padding: 5px; */
+  /*     /\* text-align: center; *\/ */
+  /*     text-transform: uppercase; */
+  /*     font-size: 13px; */
+  /*   } */
 
-  }
+  /* } */
 
 }

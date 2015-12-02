@@ -2,117 +2,117 @@
 @import 'fonts';
 @import 'mixins';
 
-.form-new-user {
-  margin-top: 15px;
-  padding-top: 15px;
-  background-color: $smokeWhite;
-  border-radius: 5px;
-  box-shadow: 0 2px 2px $darkSeaBlue;
-}
+/* .form-new-user { */
+/*   margin-top: 15px; */
+/*   padding-top: 15px; */
+/*   background-color: $smokeWhite; */
+/*   border-radius: 5px; */
+/*   box-shadow: 0 2px 2px $darkSeaBlue; */
+/* } */
 
-.form-set-handle {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
+/* .form-set-handle { */
+/*   margin-top: 20px; */
+/*   margin-bottom: 20px; */
+/* } */
 
-.update-name {
-  margin-top: 30px;
-}
-
-
-.live-track {
-  $br: 3px;
-  margin-top: 30px;
-
-  $normalColor: $lightRock;
-  $hoverColor: $mainBlue;
-
-  a.show, a.show:visited {
-    display: block;
-    position: relative;
-    height: 200px;
-    margin-bottom: 10px;
-    background-color: white;
-    color: $darkRock;
-    box-shadow: 0 2px 2px $shadow;
-    border: 2px solid $normalColor;
-    transition: none;
-
-    .name {
-      display: block;
-      background-color: $normalColor;
-      color: white;
-      text-transform: lowercase;
-      text-align: center;
-      font-family: $headerFont;
-      line-height: 40px;
-    }
-
-    .description {
-      padding: 10px;
-    }
-
-    .player-count {
-      &.player-count-0 {
-        display: none;
-      }
-
-      position: absolute;
-      top: -12px;
-      right: 7px;
-      display: block;
-      border-radius: 15px;
-      border: 2px solid white;
-      opacity: 0.9;
-      line-height: 23px;
-      width: 27px;
-      background-color: $rock;
-      color: white;
-      font-weight: bold;
-      text-align: center;
-      font-size: 14px;
-      box-shadow: 1px 1px 0 $shadow;
-    }
-
-    .track-players {
-      display: none;
-      height: 160px; 
-      overflow-y: auto;
-      /* color: white; */
-      text-align: left;
-      padding: 10px 15px;
-
-      li + li {
-        margin-top: 5px;
-      }
-
-      .player-avatar, a.player-avatar {
-        color: $darkSeaBlue;
-      }
-    }
-
-    &:hover {
-      border-color: $hoverColor;
-
-      .name {
-        background-color: $hoverColor;
-        /* color: white; */
-      }
-
-      .track-players {
-        display: block;
-      }
-
-      .player-count {
-        background-color: $darkSeaBlue;
-      }
-
-      .description {
-        display: none;
-      }
-
-    }
+/* .update-name { */
+/*   margin-top: 30px; */
+/* } */
 
 
-  }
-}
+/* .live-track { */
+/*   $br: 3px; */
+/*   margin-top: 30px; */
+
+/*   $normalColor: $lightRock; */
+/*   $hoverColor: $mainBlue; */
+
+/*   a.show, a.show:visited { */
+/*     display: block; */
+/*     position: relative; */
+/*     height: 200px; */
+/*     margin-bottom: 10px; */
+/*     background-color: white; */
+/*     color: $darkRock; */
+/*     box-shadow: 0 2px 2px $shadow; */
+/*     border: 2px solid $normalColor; */
+/*     transition: none; */
+
+/*     .name { */
+/*       display: block; */
+/*       background-color: $normalColor; */
+/*       color: white; */
+/*       text-transform: lowercase; */
+/*       text-align: center; */
+/*       font-family: $headerFont; */
+/*       line-height: 40px; */
+/*     } */
+
+/*     .description { */
+/*       padding: 10px; */
+/*     } */
+
+/*     .player-count { */
+/*       &.player-count-0 { */
+/*         display: none; */
+/*       } */
+
+/*       position: absolute; */
+/*       top: -12px; */
+/*       right: 7px; */
+/*       display: block; */
+/*       border-radius: 15px; */
+/*       border: 2px solid white; */
+/*       opacity: 0.9; */
+/*       line-height: 23px; */
+/*       width: 27px; */
+/*       background-color: $rock; */
+/*       color: white; */
+/*       font-weight: bold; */
+/*       text-align: center; */
+/*       font-size: 14px; */
+/*       box-shadow: 1px 1px 0 $shadow; */
+/*     } */
+
+/*     .track-players { */
+/*       display: none; */
+/*       height: 160px;  */
+/*       overflow-y: auto; */
+/*       /\* color: white; *\/ */
+/*       text-align: left; */
+/*       padding: 10px 15px; */
+
+/*       li + li { */
+/*         margin-top: 5px; */
+/*       } */
+
+/*       .player-avatar, a.player-avatar { */
+/*         color: $darkSeaBlue; */
+/*       } */
+/*     } */
+
+/*     &:hover { */
+/*       border-color: $hoverColor; */
+
+/*       .name { */
+/*         background-color: $hoverColor; */
+/*         /\* color: white; *\/ */
+/*       } */
+
+/*       .track-players { */
+/*         display: block; */
+/*       } */
+
+/*       .player-count { */
+/*         background-color: $darkSeaBlue; */
+/*       } */
+
+/*       .description { */
+/*         display: none; */
+/*       } */
+
+/*     } */
+
+
+/*   } */
+/* } */
