@@ -1,89 +1,72 @@
 module Screens.Home.Updates where
 
-import Task exposing (Task, succeed, map, andThen)
+import Task exposing (Task, succeed, andThen)
 import Task.Extra exposing (delay)
 import Time exposing (second)
 import Signal
-import History
+import Effects exposing (Effects, Never, none, map)
 
 import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.Home.Types exposing (..)
 import ServerApi
 import Routes
+import Screens.UpdateUtils as Utils
 
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address (HomeAction >> ScreenAction)
+  Utils.screenAddr HomeAction
 
 
-type alias Update = AppTypes.ScreenUpdate Screen
-
-
-mount : Player -> Update
+mount : Player -> (Screen, Effects Action)
 mount player =
-  let
-    initial =
-      { handle = Maybe.withDefault "" player.handle
-      , liveStatus = { liveTracks = [], onlinePlayers = [] }
-      }
-  in
-    react initial refreshLiveStatus
+  initial player &! refreshLiveStatus
 
 
-update : Action -> Screen -> Update
+update : Action -> Screen -> (Screen, Effects Action)
 update action screen =
   case action of
 
-    SetLiveStatus liveStatus ->
-      react { screen | liveStatus = liveStatus }
-        (delay (5 * second) refreshLiveStatus)
+    SetLiveStatus result ->
+      let
+        liveStatus = result ?: screen.liveStatus
+        task = delay (5 * second) refreshLiveStatus
+      in
+        { screen | liveStatus = liveStatus } &! task
 
     SetHandle handle ->
-      local { screen | handle = handle }
+      { screen | handle = handle } &: none
 
     SubmitHandle ->
-      react screen <| (ServerApi.postHandle screen.handle) `andThen`
-        \result ->
-          case result of
-            Ok player ->
-              Signal.send addr (SubmitHandleSuccess player)
-            Err errors ->
-              -- TODO
-              Task.succeed ()
+      let
+        task = Task.map SubmitHandleResult (ServerApi.postHandle screen.handle)
+      in
+        screen &! task
 
-    SubmitHandleSuccess player ->
-      react
-        screen
-        (Signal.send appActionsMailbox.address (AppTypes.SetPlayer player))
+    SubmitHandleResult result ->
+      let
+        effect = Result.map Utils.setPlayer result ?: none
+          |> Utils.always NoOp
+      in
+        screen &: effect
 
     CreateTrack ->
-      react screen <| (ServerApi.createTrack) `andThen`
-        \result ->
-          case result of
-            Ok track ->
-              Signal.send addr (TrackCreated track.id)
-            Err _ ->
-              -- TODO
-              Task.succeed ()
+      screen &! (Task.map CreateTrackResult ServerApi.createTrack)
 
-    TrackCreated id ->
-      let
-        newPath = Routes.toPath (Routes.EditTrack id)
-        reaction = Signal.send appActionsMailbox.address (AppTypes.SetPath newPath)
-      in
-        react screen reaction
-
-
-refreshLiveStatus : Task Never ()
-refreshLiveStatus =
-  ServerApi.getLiveStatus `andThen`
-    \result ->
+    CreateTrackResult result ->
       case result of
-        Ok liveStatus ->
-          Signal.send addr (SetLiveStatus liveStatus)
-        Err _ ->
-          Task.succeed ()
+        Ok track ->
+          screen &: (Utils.redirect (Routes.EditTrack track.id) |> Utils.always NoOp)
+        Err formErrors -> -- TODO
+          screen &: none
 
+    NoOp ->
+      screen &: none
+
+
+refreshLiveStatus : Task Never Action
+refreshLiveStatus =
+  ServerApi.getLiveStatus
+    |> Task.map SetLiveStatus
 

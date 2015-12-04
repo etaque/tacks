@@ -4,6 +4,7 @@ import AppTypes exposing (..)
 import Screens.Game.Types exposing (..)
 import Game.Models exposing (..)
 import Game.Inputs exposing (..)
+import Routes
 
 
 type alias PlayerOutput =
@@ -22,9 +23,9 @@ extractPlayerOutput appState action =
         _ ->
           Nothing
     gameState =
-      case appState.screen of
-        GameScreen screen ->
-          screen.gameState
+      case appState.route of
+        Just (Routes.PlayTrack _) ->
+          appState.screens.game.gameState
         _ ->
           Nothing
   in
@@ -45,9 +46,9 @@ makePlayerOutput keyboardInput gameState =
 
 getActiveTrack : AppState -> Maybe String
 getActiveTrack appState =
-  case appState.screen of
-    GameScreen screen ->
-      Maybe.map (.track >> .id) screen.liveTrack
+  case appState.route of
+    Just (Routes.PlayTrack _) ->
+      Maybe.map (.track >> .id) appState.screens.game.liveTrack
     _ ->
       Nothing
 

@@ -1,6 +1,7 @@
 module AppTypes where
 
 import Task exposing (Task)
+import Effects exposing (Effects)
 
 import Models exposing (..)
 
@@ -12,22 +13,37 @@ import Screens.EditTrack.Types as EditTrack
 import Screens.ShowProfile.Types as ShowProfile
 import Screens.Game.Types as Game
 
-
+import Routes
 
 appActionsMailbox : Signal.Mailbox AppAction
 appActionsMailbox =
   Signal.mailbox AppNoOp
 
+appActionsAddress : Signal.Address AppAction
+appActionsAddress =
+  appActionsMailbox.address
+
+
+(&!) : a -> Task Effects.Never b -> (a, Effects b)
+(&!) model task =
+  (model, Effects.task task)
+
+(&:) : a -> Effects b -> (a, Effects b)
+(&:) = (,)
+
+(?) : Maybe a -> a -> a
+(?) maybe default =
+  Maybe.withDefault default maybe
+
+(?:) : Result x a -> a -> a
+(?:) result default =
+  Result.withDefault default result
+
+infixr 9 ?
 
 type alias AppSetup =
   { player : Player
   , path : String
-  }
-
-
-type alias AppInput =
-  { action : AppAction
-  , clock : Clock
   }
 
 
@@ -50,68 +66,43 @@ type ScreenAction
   | ShowProfileAction ShowProfile.Action
   | GameAction Game.Action
 
-type alias Clock =
-  { delta : Float
-  , time : Float
-  }
-
-type alias AppUpdate =
-  { appState : AppState
-  , reaction : Maybe (Task Never ())
-  }
 
 
 type alias AppState =
   { player : Player
   , dims : (Int, Int)
-  , screen : AppScreen
+  , route : Maybe Routes.Route
+  , path : String
+  , screens : Screens
   }
 
-
-type AppScreen
-  = HomeScreen Home.Screen
-  | LoginScreen Login.Screen
-  | RegisterScreen Register.Screen
-  | ShowTrackScreen ShowTrack.Screen
-  | EditTrackScreen EditTrack.Screen
-  | ShowProfileScreen ShowProfile.Screen
-  | GameScreen Game.Screen
-  | NotFoundScreen String
-  | NoScreen
-
-
-type alias ScreenUpdate screen =
-  { screen : screen
-  , reaction : Maybe (Task Never ())
+type alias Screens =
+  { home : Home.Screen
+  , login : Login.Screen
+  , register : Register.Screen
+  , showTrack : ShowTrack.Screen
+  , editTrack : EditTrack.Screen
+  , showProfile : ShowProfile.Screen
+  , game : Game.Screen
   }
-
-type Never = Never Never
-
-
-local : screen -> ScreenUpdate screen
-local screen =
-  { screen = screen
-  , reaction = Nothing
-  }
-
-
-react : screen -> Task Never () -> ScreenUpdate screen
-react screen task =
-  { screen = screen
-  , reaction = Just task
-  }
-
-
-initialAppUpdate : (Int, Int) -> Player -> AppUpdate
+initialAppUpdate : (Int, Int) -> Player -> (AppState, Effects AppAction)
 initialAppUpdate dims player =
-  AppUpdate
-    (initialAppState dims player)
-    Nothing
+    ((initialAppState dims player), Effects.none)
 
 
 initialAppState : (Int, Int) -> Player -> AppState
 initialAppState dims player =
   { player = player
-  , screen = NoScreen
   , dims = dims
+  , route = Just Routes.Home
+  , path = "/"
+  , screens =
+    { home = Home.initial player
+    , login = Login.initial
+    , register = Register.initial
+    , showTrack = ShowTrack.initial
+    , editTrack = EditTrack.initial dims
+    , showProfile = ShowProfile.initial player
+    , game = Game.initial
+    }
   }

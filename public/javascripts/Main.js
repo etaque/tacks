@@ -6027,320 +6027,6 @@ Elm.Signal.make = function (_elm) {
                                ,forwardTo: forwardTo
                                ,Mailbox: Mailbox};
 };
-Elm.Signal = Elm.Signal || {};
-Elm.Signal.Extra = Elm.Signal.Extra || {};
-Elm.Signal.Extra.make = function (_elm) {
-   "use strict";
-   _elm.Signal = _elm.Signal || {};
-   _elm.Signal.Extra = _elm.Signal.Extra || {};
-   if (_elm.Signal.Extra.values) return _elm.Signal.Extra.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var unsafeFromJust = function (maybe) {
-      var _p0 = maybe;
-      if (_p0.ctor === "Just") {
-            return _p0._0;
-         } else {
-            return _U.crashCase("Signal.Extra",
-            {start: {line: 510,column: 3},end: {line: 515,column: 59}},
-            _p0)("This case should have been unreachable");
-         }
-   };
-   var passiveMap2 = F2(function (func,a) {
-      return function (_p2) {
-         return A3($Signal.map2,func,a,A2($Signal.sampleOn,a,_p2));
-      };
-   });
-   var withPassive = passiveMap2(F2(function (x,y) {
-      return x(y);
-   }));
-   var combine = A2($List.foldr,
-   $Signal.map2(F2(function (x,y) {
-      return A2($List._op["::"],x,y);
-   })),
-   $Signal.constant(_U.list([])));
-   var mergeMany = F2(function (original,others) {
-      return A3($List.foldl,$Signal.merge,original,others);
-   });
-   var filter = function (initial) {
-      return A2($Signal.filterMap,$Basics.identity,initial);
-   };
-   var keepIf = $Signal.filter;
-   var runBuffer$ = F3(function (l,n,input) {
-      var f = F2(function (inp,prev) {
-         var l = $List.length(prev);
-         return _U.cmp(l,n) < 0 ? A2($Basics._op["++"],
-         prev,
-         _U.list([inp])) : A2($Basics._op["++"],
-         A2($List.drop,l - n + 1,prev),
-         _U.list([inp]));
-      });
-      return A3($Signal.foldp,f,l,input);
-   });
-   var runBuffer = runBuffer$(_U.list([]));
-   var initSignal = function (s) {
-      return A2($Signal.sampleOn,
-      $Signal.constant({ctor: "_Tuple0"}),
-      s);
-   };
-   var zip4 = $Signal.map4(F4(function (v0,v1,v2,v3) {
-      return {ctor: "_Tuple4",_0: v0,_1: v1,_2: v2,_3: v3};
-   }));
-   var zip3 = $Signal.map3(F3(function (v0,v1,v2) {
-      return {ctor: "_Tuple3",_0: v0,_1: v1,_2: v2};
-   }));
-   var zip = $Signal.map2(F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }));
-   var keepWhen = F3(function (boolSig,a,aSig) {
-      return A2($Signal.map,
-      $Basics.snd,
-      A3(keepIf,
-      $Basics.fst,
-      {ctor: "_Tuple2",_0: true,_1: a},
-      A2($Signal.sampleOn,aSig,A2(zip,boolSig,aSig))));
-   });
-   var sampleWhen = F3(function (bs,def,sig) {
-      return A2($Signal.map,
-      $Basics.snd,
-      A3(keepIf,
-      $Basics.fst,
-      {ctor: "_Tuple2",_0: true,_1: def},
-      A2(zip,bs,sig)));
-   });
-   var andMap = $Signal.map2(F2(function (x,y) {
-      return x(y);
-   }));
-   _op["~"] = andMap;
-   var applyMany = F2(function (fs,l) {
-      return A2(_op["~"],fs,combine(l));
-   });
-   _op["~>"] = $Basics.flip($Signal.map);
-   var foldpWith = F4(function (unpack,step,init,input) {
-      var step$ = F2(function (a,_p3) {
-         var _p4 = _p3;
-         return unpack(A2(step,a,_p4._1));
-      });
-      return A2(_op["~>"],
-      A3($Signal.foldp,step$,init,input),
-      $Basics.fst);
-   });
-   _op["<~"] = $Signal.map;
-   var unzip = function (pairS) {
-      return {ctor: "_Tuple2"
-             ,_0: A2(_op["<~"],$Basics.fst,pairS)
-             ,_1: A2(_op["<~"],$Basics.snd,pairS)};
-   };
-   var unzip3 = function (pairS) {
-      return {ctor: "_Tuple3"
-             ,_0: A2(_op["<~"],
-             function (_p5) {
-                var _p6 = _p5;
-                return _p6._0;
-             },
-             pairS)
-             ,_1: A2(_op["<~"],
-             function (_p7) {
-                var _p8 = _p7;
-                return _p8._1;
-             },
-             pairS)
-             ,_2: A2(_op["<~"],
-             function (_p9) {
-                var _p10 = _p9;
-                return _p10._2;
-             },
-             pairS)};
-   };
-   var unzip4 = function (pairS) {
-      return {ctor: "_Tuple4"
-             ,_0: A2(_op["<~"],
-             function (_p11) {
-                var _p12 = _p11;
-                return _p12._0;
-             },
-             pairS)
-             ,_1: A2(_op["<~"],
-             function (_p13) {
-                var _p14 = _p13;
-                return _p14._1;
-             },
-             pairS)
-             ,_2: A2(_op["<~"],
-             function (_p15) {
-                var _p16 = _p15;
-                return _p16._2;
-             },
-             pairS)
-             ,_3: A2(_op["<~"],
-             function (_p17) {
-                var _p18 = _p17;
-                return _p18._3;
-             },
-             pairS)};
-   };
-   var foldp$ = F3(function (fun,initFun,input) {
-      var fun$ = F2(function (_p19,mb) {
-         var _p20 = _p19;
-         return $Maybe.Just(A2(fun,
-         _p20._0,
-         A2($Maybe.withDefault,_p20._1,mb)));
-      });
-      var initial = A2(_op["~>"],initSignal(input),initFun);
-      var rest = A3($Signal.foldp,
-      fun$,
-      $Maybe.Nothing,
-      A2(zip,input,initial));
-      return A2(_op["<~"],
-      unsafeFromJust,
-      A2($Signal.merge,A2(_op["<~"],$Maybe.Just,initial),rest));
-   });
-   var deltas = function (signal) {
-      var initial = function (value) {
-         return {ctor: "_Tuple2",_0: value,_1: value};
-      };
-      var step = F2(function (value,delta) {
-         return {ctor: "_Tuple2",_0: $Basics.snd(delta),_1: value};
-      });
-      return A3(foldp$,step,initial,signal);
-   };
-   var foldps = F3(function (f,bs,aS) {
-      return A2(_op["<~"],
-      $Basics.fst,
-      A3($Signal.foldp,
-      F2(function (a,_p21) {
-         var _p22 = _p21;
-         return A2(f,a,_p22._1);
-      }),
-      bs,
-      aS));
-   });
-   var delayRound = F2(function (b,bS) {
-      return A3(foldps,
-      F2(function ($new,old) {
-         return {ctor: "_Tuple2",_0: old,_1: $new};
-      }),
-      {ctor: "_Tuple2",_0: b,_1: b},
-      bS);
-   });
-   var filterFold = F2(function (f,initial) {
-      var f$ = F2(function (a,s) {
-         var res = A2(f,a,s);
-         return {ctor: "_Tuple2"
-                ,_0: res
-                ,_1: A2($Maybe.withDefault,s,res)};
-      });
-      return function (_p23) {
-         return A2(filter,
-         initial,
-         A3(foldps,
-         f$,
-         {ctor: "_Tuple2",_0: $Maybe.Just(initial),_1: initial},
-         _p23));
-      };
-   });
-   var foldps$ = F3(function (f,iF,aS) {
-      return A2(_op["<~"],
-      $Basics.fst,
-      A3(foldp$,
-      F2(function (a,_p24) {
-         var _p25 = _p24;
-         return A2(f,a,_p25._1);
-      }),
-      iF,
-      aS));
-   });
-   var switchHelper = F4(function (filter,b,l,r) {
-      var lAndR = A2($Signal.merge,
-      A3(filter,b,$Maybe.Nothing,A2(_op["<~"],$Maybe.Just,l)),
-      A3(filter,
-      A2(_op["<~"],$Basics.not,b),
-      $Maybe.Nothing,
-      A2(_op["<~"],$Maybe.Just,r)));
-      var base = A2(_op["~"],
-      A2(_op["~"],
-      A2(_op["<~"],
-      F3(function (bi,li,ri) {    return $Maybe.Just(bi ? li : ri);}),
-      initSignal(b)),
-      initSignal(l)),
-      initSignal(r));
-      return A2(_op["<~"],
-      unsafeFromJust,
-      A2($Signal.merge,base,lAndR));
-   });
-   var switchWhen = F3(function (b,l,r) {
-      return A4(switchHelper,keepWhen,b,l,r);
-   });
-   var switchSample = F3(function (b,l,r) {
-      return A4(switchHelper,sampleWhen,b,l,r);
-   });
-   var keepThen = F3(function (choice,base,signal) {
-      return A3(switchSample,choice,signal,$Signal.constant(base));
-   });
-   var keepWhenI = F2(function (fs,s) {
-      return A2(_op["~>"],
-      A3(keepWhen,
-      A2($Signal.merge,$Signal.constant(true),fs),
-      $Maybe.Nothing,
-      A2(_op["<~"],$Maybe.Just,s)),
-      unsafeFromJust);
-   });
-   var fairMerge = F3(function (resolve,left,right) {
-      var merged = A2($Signal.merge,left,right);
-      var boolRight = A2(_op["<~"],$Basics.always(false),right);
-      var boolLeft = A2(_op["<~"],$Basics.always(true),left);
-      var bothUpdated = A2(_op["~"],
-      A2(_op["<~"],
-      F2(function (x,y) {    return !_U.eq(x,y);}),
-      A2($Signal.merge,boolLeft,boolRight)),
-      A2($Signal.merge,boolRight,boolLeft));
-      var keep = keepWhenI(bothUpdated);
-      var resolved = A2(_op["~"],
-      A2(_op["<~"],resolve,keep(left)),
-      keep(right));
-      return A2($Signal.merge,resolved,merged);
-   });
-   var mapMany = F2(function (f,l) {
-      return A2(_op["<~"],f,combine(l));
-   });
-   return _elm.Signal.Extra.values = {_op: _op
-                                     ,andMap: andMap
-                                     ,zip: zip
-                                     ,zip3: zip3
-                                     ,zip4: zip4
-                                     ,unzip: unzip
-                                     ,unzip3: unzip3
-                                     ,unzip4: unzip4
-                                     ,foldp$: foldp$
-                                     ,foldps: foldps
-                                     ,foldps$: foldps$
-                                     ,runBuffer: runBuffer
-                                     ,runBuffer$: runBuffer$
-                                     ,deltas: deltas
-                                     ,delayRound: delayRound
-                                     ,keepIf: keepIf
-                                     ,keepWhen: keepWhen
-                                     ,sampleWhen: sampleWhen
-                                     ,switchWhen: switchWhen
-                                     ,keepWhenI: keepWhenI
-                                     ,switchSample: switchSample
-                                     ,keepThen: keepThen
-                                     ,filter: filter
-                                     ,filterFold: filterFold
-                                     ,fairMerge: fairMerge
-                                     ,mergeMany: mergeMany
-                                     ,combine: combine
-                                     ,mapMany: mapMany
-                                     ,applyMany: applyMany
-                                     ,passiveMap2: passiveMap2
-                                     ,withPassive: withPassive};
-};
 Elm.Native.Time = {};
 
 Elm.Native.Time.make = function(localRuntime)
@@ -7979,6 +7665,1171 @@ Elm.Task.Extra.make = function (_elm) {
                                    ,interceptError: interceptError
                                    ,computeLazyAsync: computeLazyAsync};
 };
+Elm.Native.Array = {};
+Elm.Native.Array.make = function(localRuntime) {
+
+	localRuntime.Native = localRuntime.Native || {};
+	localRuntime.Native.Array = localRuntime.Native.Array || {};
+	if (localRuntime.Native.Array.values)
+	{
+		return localRuntime.Native.Array.values;
+	}
+	if ('values' in Elm.Native.Array)
+	{
+		return localRuntime.Native.Array.values = Elm.Native.Array.values;
+	}
+
+	var List = Elm.Native.List.make(localRuntime);
+
+	// A RRB-Tree has two distinct data types.
+	// Leaf -> "height"  is always 0
+	//         "table"   is an array of elements
+	// Node -> "height"  is always greater than 0
+	//         "table"   is an array of child nodes
+	//         "lengths" is an array of accumulated lengths of the child nodes
+
+	// M is the maximal table size. 32 seems fast. E is the allowed increase
+	// of search steps when concatting to find an index. Lower values will
+	// decrease balancing, but will increase search steps.
+	var M = 32;
+	var E = 2;
+
+	// An empty array.
+	var empty = {
+		ctor: '_Array',
+		height: 0,
+		table: []
+	};
+
+
+	function get(i, array)
+	{
+		if (i < 0 || i >= length(array))
+		{
+			throw new Error(
+				'Index ' + i + ' is out of range. Check the length of ' +
+				'your array first or use getMaybe or getWithDefault.');
+		}
+		return unsafeGet(i, array);
+	}
+
+
+	function unsafeGet(i, array)
+	{
+		for (var x = array.height; x > 0; x--)
+		{
+			var slot = i >> (x * 5);
+			while (array.lengths[slot] <= i)
+			{
+				slot++;
+			}
+			if (slot > 0)
+			{
+				i -= array.lengths[slot - 1];
+			}
+			array = array.table[slot];
+		}
+		return array.table[i];
+	}
+
+
+	// Sets the value at the index i. Only the nodes leading to i will get
+	// copied and updated.
+	function set(i, item, array)
+	{
+		if (i < 0 || length(array) <= i)
+		{
+			return array;
+		}
+		return unsafeSet(i, item, array);
+	}
+
+
+	function unsafeSet(i, item, array)
+	{
+		array = nodeCopy(array);
+
+		if (array.height === 0)
+		{
+			array.table[i] = item;
+		}
+		else
+		{
+			var slot = getSlot(i, array);
+			if (slot > 0)
+			{
+				i -= array.lengths[slot - 1];
+			}
+			array.table[slot] = unsafeSet(i, item, array.table[slot]);
+		}
+		return array;
+	}
+
+
+	function initialize(len, f)
+	{
+		if (len <= 0)
+		{
+			return empty;
+		}
+		var h = Math.floor( Math.log(len) / Math.log(M) );
+		return initialize_(f, h, 0, len);
+	}
+
+	function initialize_(f, h, from, to)
+	{
+		if (h === 0)
+		{
+			var table = new Array((to - from) % (M + 1));
+			for (var i = 0; i < table.length; i++)
+			{
+			  table[i] = f(from + i);
+			}
+			return {
+				ctor: '_Array',
+				height: 0,
+				table: table
+			};
+		}
+
+		var step = Math.pow(M, h);
+		var table = new Array(Math.ceil((to - from) / step));
+		var lengths = new Array(table.length);
+		for (var i = 0; i < table.length; i++)
+		{
+			table[i] = initialize_(f, h - 1, from + (i * step), Math.min(from + ((i + 1) * step), to));
+			lengths[i] = length(table[i]) + (i > 0 ? lengths[i-1] : 0);
+		}
+		return {
+			ctor: '_Array',
+			height: h,
+			table: table,
+			lengths: lengths
+		};
+	}
+
+	function fromList(list)
+	{
+		if (list === List.Nil)
+		{
+			return empty;
+		}
+
+		// Allocate M sized blocks (table) and write list elements to it.
+		var table = new Array(M);
+		var nodes = [];
+		var i = 0;
+
+		while (list.ctor !== '[]')
+		{
+			table[i] = list._0;
+			list = list._1;
+			i++;
+
+			// table is full, so we can push a leaf containing it into the
+			// next node.
+			if (i === M)
+			{
+				var leaf = {
+					ctor: '_Array',
+					height: 0,
+					table: table
+				};
+				fromListPush(leaf, nodes);
+				table = new Array(M);
+				i = 0;
+			}
+		}
+
+		// Maybe there is something left on the table.
+		if (i > 0)
+		{
+			var leaf = {
+				ctor: '_Array',
+				height: 0,
+				table: table.splice(0, i)
+			};
+			fromListPush(leaf, nodes);
+		}
+
+		// Go through all of the nodes and eventually push them into higher nodes.
+		for (var h = 0; h < nodes.length - 1; h++)
+		{
+			if (nodes[h].table.length > 0)
+			{
+				fromListPush(nodes[h], nodes);
+			}
+		}
+
+		var head = nodes[nodes.length - 1];
+		if (head.height > 0 && head.table.length === 1)
+		{
+			return head.table[0];
+		}
+		else
+		{
+			return head;
+		}
+	}
+
+	// Push a node into a higher node as a child.
+	function fromListPush(toPush, nodes)
+	{
+		var h = toPush.height;
+
+		// Maybe the node on this height does not exist.
+		if (nodes.length === h)
+		{
+			var node = {
+				ctor: '_Array',
+				height: h + 1,
+				table: [],
+				lengths: []
+			};
+			nodes.push(node);
+		}
+
+		nodes[h].table.push(toPush);
+		var len = length(toPush);
+		if (nodes[h].lengths.length > 0)
+		{
+			len += nodes[h].lengths[nodes[h].lengths.length - 1];
+		}
+		nodes[h].lengths.push(len);
+
+		if (nodes[h].table.length === M)
+		{
+			fromListPush(nodes[h], nodes);
+			nodes[h] = {
+				ctor: '_Array',
+				height: h + 1,
+				table: [],
+				lengths: []
+			};
+		}
+	}
+
+	// Pushes an item via push_ to the bottom right of a tree.
+	function push(item, a)
+	{
+		var pushed = push_(item, a);
+		if (pushed !== null)
+		{
+			return pushed;
+		}
+
+		var newTree = create(item, a.height);
+		return siblise(a, newTree);
+	}
+
+	// Recursively tries to push an item to the bottom-right most
+	// tree possible. If there is no space left for the item,
+	// null will be returned.
+	function push_(item, a)
+	{
+		// Handle resursion stop at leaf level.
+		if (a.height === 0)
+		{
+			if (a.table.length < M)
+			{
+				var newA = {
+					ctor: '_Array',
+					height: 0,
+					table: a.table.slice()
+				};
+				newA.table.push(item);
+				return newA;
+			}
+			else
+			{
+			  return null;
+			}
+		}
+
+		// Recursively push
+		var pushed = push_(item, botRight(a));
+
+		// There was space in the bottom right tree, so the slot will
+		// be updated.
+		if (pushed !== null)
+		{
+			var newA = nodeCopy(a);
+			newA.table[newA.table.length - 1] = pushed;
+			newA.lengths[newA.lengths.length - 1]++;
+			return newA;
+		}
+
+		// When there was no space left, check if there is space left
+		// for a new slot with a tree which contains only the item
+		// at the bottom.
+		if (a.table.length < M)
+		{
+			var newSlot = create(item, a.height - 1);
+			var newA = nodeCopy(a);
+			newA.table.push(newSlot);
+			newA.lengths.push(newA.lengths[newA.lengths.length - 1] + length(newSlot));
+			return newA;
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	// Converts an array into a list of elements.
+	function toList(a)
+	{
+		return toList_(List.Nil, a);
+	}
+
+	function toList_(list, a)
+	{
+		for (var i = a.table.length - 1; i >= 0; i--)
+		{
+			list =
+				a.height === 0
+					? List.Cons(a.table[i], list)
+					: toList_(list, a.table[i]);
+		}
+		return list;
+	}
+
+	// Maps a function over the elements of an array.
+	function map(f, a)
+	{
+		var newA = {
+			ctor: '_Array',
+			height: a.height,
+			table: new Array(a.table.length)
+		};
+		if (a.height > 0)
+		{
+			newA.lengths = a.lengths;
+		}
+		for (var i = 0; i < a.table.length; i++)
+		{
+			newA.table[i] =
+				a.height === 0
+					? f(a.table[i])
+					: map(f, a.table[i]);
+		}
+		return newA;
+	}
+
+	// Maps a function over the elements with their index as first argument.
+	function indexedMap(f, a)
+	{
+		return indexedMap_(f, a, 0);
+	}
+
+	function indexedMap_(f, a, from)
+	{
+		var newA = {
+			ctor: '_Array',
+			height: a.height,
+			table: new Array(a.table.length)
+		};
+		if (a.height > 0)
+		{
+			newA.lengths = a.lengths;
+		}
+		for (var i = 0; i < a.table.length; i++)
+		{
+			newA.table[i] =
+				a.height === 0
+					? A2(f, from + i, a.table[i])
+					: indexedMap_(f, a.table[i], i == 0 ? from : from + a.lengths[i - 1]);
+		}
+		return newA;
+	}
+
+	function foldl(f, b, a)
+	{
+		if (a.height === 0)
+		{
+			for (var i = 0; i < a.table.length; i++)
+			{
+				b = A2(f, a.table[i], b);
+			}
+		}
+		else
+		{
+			for (var i = 0; i < a.table.length; i++)
+			{
+				b = foldl(f, b, a.table[i]);
+			}
+		}
+		return b;
+	}
+
+	function foldr(f, b, a)
+	{
+		if (a.height === 0)
+		{
+			for (var i = a.table.length; i--; )
+			{
+				b = A2(f, a.table[i], b);
+			}
+		}
+		else
+		{
+			for (var i = a.table.length; i--; )
+			{
+				b = foldr(f, b, a.table[i]);
+			}
+		}
+		return b;
+	}
+
+	// TODO: currently, it slices the right, then the left. This can be
+	// optimized.
+	function slice(from, to, a)
+	{
+		if (from < 0)
+		{
+			from += length(a);
+		}
+		if (to < 0)
+		{
+			to += length(a);
+		}
+		return sliceLeft(from, sliceRight(to, a));
+	}
+
+	function sliceRight(to, a)
+	{
+		if (to === length(a))
+		{
+			return a;
+		}
+
+		// Handle leaf level.
+		if (a.height === 0)
+		{
+			var newA = { ctor:'_Array', height:0 };
+			newA.table = a.table.slice(0, to);
+			return newA;
+		}
+
+		// Slice the right recursively.
+		var right = getSlot(to, a);
+		var sliced = sliceRight(to - (right > 0 ? a.lengths[right - 1] : 0), a.table[right]);
+
+		// Maybe the a node is not even needed, as sliced contains the whole slice.
+		if (right === 0)
+		{
+			return sliced;
+		}
+
+		// Create new node.
+		var newA = {
+			ctor: '_Array',
+			height: a.height,
+			table: a.table.slice(0, right),
+			lengths: a.lengths.slice(0, right)
+		};
+		if (sliced.table.length > 0)
+		{
+			newA.table[right] = sliced;
+			newA.lengths[right] = length(sliced) + (right > 0 ? newA.lengths[right - 1] : 0);
+		}
+		return newA;
+	}
+
+	function sliceLeft(from, a)
+	{
+		if (from === 0)
+		{
+			return a;
+		}
+
+		// Handle leaf level.
+		if (a.height === 0)
+		{
+			var newA = { ctor:'_Array', height:0 };
+			newA.table = a.table.slice(from, a.table.length + 1);
+			return newA;
+		}
+
+		// Slice the left recursively.
+		var left = getSlot(from, a);
+		var sliced = sliceLeft(from - (left > 0 ? a.lengths[left - 1] : 0), a.table[left]);
+
+		// Maybe the a node is not even needed, as sliced contains the whole slice.
+		if (left === a.table.length - 1)
+		{
+			return sliced;
+		}
+
+		// Create new node.
+		var newA = {
+			ctor: '_Array',
+			height: a.height,
+			table: a.table.slice(left, a.table.length + 1),
+			lengths: new Array(a.table.length - left)
+		};
+		newA.table[0] = sliced;
+		var len = 0;
+		for (var i = 0; i < newA.table.length; i++)
+		{
+			len += length(newA.table[i]);
+			newA.lengths[i] = len;
+		}
+
+		return newA;
+	}
+
+	// Appends two trees.
+	function append(a,b)
+	{
+		if (a.table.length === 0)
+		{
+			return b;
+		}
+		if (b.table.length === 0)
+		{
+			return a;
+		}
+
+		var c = append_(a, b);
+
+		// Check if both nodes can be crunshed together.
+		if (c[0].table.length + c[1].table.length <= M)
+		{
+			if (c[0].table.length === 0)
+			{
+				return c[1];
+			}
+			if (c[1].table.length === 0)
+			{
+				return c[0];
+			}
+
+			// Adjust .table and .lengths
+			c[0].table = c[0].table.concat(c[1].table);
+			if (c[0].height > 0)
+			{
+				var len = length(c[0]);
+				for (var i = 0; i < c[1].lengths.length; i++)
+				{
+					c[1].lengths[i] += len;
+				}
+				c[0].lengths = c[0].lengths.concat(c[1].lengths);
+			}
+
+			return c[0];
+		}
+
+		if (c[0].height > 0)
+		{
+			var toRemove = calcToRemove(a, b);
+			if (toRemove > E)
+			{
+				c = shuffle(c[0], c[1], toRemove);
+			}
+		}
+
+		return siblise(c[0], c[1]);
+	}
+
+	// Returns an array of two nodes; right and left. One node _may_ be empty.
+	function append_(a, b)
+	{
+		if (a.height === 0 && b.height === 0)
+		{
+			return [a, b];
+		}
+
+		if (a.height !== 1 || b.height !== 1)
+		{
+			if (a.height === b.height)
+			{
+				a = nodeCopy(a);
+				b = nodeCopy(b);
+				var appended = append_(botRight(a), botLeft(b));
+
+				insertRight(a, appended[1]);
+				insertLeft(b, appended[0]);
+			}
+			else if (a.height > b.height)
+			{
+				a = nodeCopy(a);
+				var appended = append_(botRight(a), b);
+
+				insertRight(a, appended[0]);
+				b = parentise(appended[1], appended[1].height + 1);
+			}
+			else
+			{
+				b = nodeCopy(b);
+				var appended = append_(a, botLeft(b));
+
+				var left = appended[0].table.length === 0 ? 0 : 1;
+				var right = left === 0 ? 1 : 0;
+				insertLeft(b, appended[left]);
+				a = parentise(appended[right], appended[right].height + 1);
+			}
+		}
+
+		// Check if balancing is needed and return based on that.
+		if (a.table.length === 0 || b.table.length === 0)
+		{
+			return [a, b];
+		}
+
+		var toRemove = calcToRemove(a, b);
+		if (toRemove <= E)
+		{
+			return [a, b];
+		}
+		return shuffle(a, b, toRemove);
+	}
+
+	// Helperfunctions for append_. Replaces a child node at the side of the parent.
+	function insertRight(parent, node)
+	{
+		var index = parent.table.length - 1;
+		parent.table[index] = node;
+		parent.lengths[index] = length(node);
+		parent.lengths[index] += index > 0 ? parent.lengths[index - 1] : 0;
+	}
+
+	function insertLeft(parent, node)
+	{
+		if (node.table.length > 0)
+		{
+			parent.table[0] = node;
+			parent.lengths[0] = length(node);
+
+			var len = length(parent.table[0]);
+			for (var i = 1; i < parent.lengths.length; i++)
+			{
+				len += length(parent.table[i]);
+				parent.lengths[i] = len;
+			}
+		}
+		else
+		{
+			parent.table.shift();
+			for (var i = 1; i < parent.lengths.length; i++)
+			{
+				parent.lengths[i] = parent.lengths[i] - parent.lengths[0];
+			}
+			parent.lengths.shift();
+		}
+	}
+
+	// Returns the extra search steps for E. Refer to the paper.
+	function calcToRemove(a, b)
+	{
+		var subLengths = 0;
+		for (var i = 0; i < a.table.length; i++)
+		{
+			subLengths += a.table[i].table.length;
+		}
+		for (var i = 0; i < b.table.length; i++)
+		{
+			subLengths += b.table[i].table.length;
+		}
+
+		var toRemove = a.table.length + b.table.length;
+		return toRemove - (Math.floor((subLengths - 1) / M) + 1);
+	}
+
+	// get2, set2 and saveSlot are helpers for accessing elements over two arrays.
+	function get2(a, b, index)
+	{
+		return index < a.length
+			? a[index]
+			: b[index - a.length];
+	}
+
+	function set2(a, b, index, value)
+	{
+		if (index < a.length)
+		{
+			a[index] = value;
+		}
+		else
+		{
+			b[index - a.length] = value;
+		}
+	}
+
+	function saveSlot(a, b, index, slot)
+	{
+		set2(a.table, b.table, index, slot);
+
+		var l = (index === 0 || index === a.lengths.length)
+			? 0
+			: get2(a.lengths, a.lengths, index - 1);
+
+		set2(a.lengths, b.lengths, index, l + length(slot));
+	}
+
+	// Creates a node or leaf with a given length at their arrays for perfomance.
+	// Is only used by shuffle.
+	function createNode(h, length)
+	{
+		if (length < 0)
+		{
+			length = 0;
+		}
+		var a = {
+			ctor: '_Array',
+			height: h,
+			table: new Array(length)
+		};
+		if (h > 0)
+		{
+			a.lengths = new Array(length);
+		}
+		return a;
+	}
+
+	// Returns an array of two balanced nodes.
+	function shuffle(a, b, toRemove)
+	{
+		var newA = createNode(a.height, Math.min(M, a.table.length + b.table.length - toRemove));
+		var newB = createNode(a.height, newA.table.length - (a.table.length + b.table.length - toRemove));
+
+		// Skip the slots with size M. More precise: copy the slot references
+		// to the new node
+		var read = 0;
+		while (get2(a.table, b.table, read).table.length % M === 0)
+		{
+			set2(newA.table, newB.table, read, get2(a.table, b.table, read));
+			set2(newA.lengths, newB.lengths, read, get2(a.lengths, b.lengths, read));
+			read++;
+		}
+
+		// Pulling items from left to right, caching in a slot before writing
+		// it into the new nodes.
+		var write = read;
+		var slot = new createNode(a.height - 1, 0);
+		var from = 0;
+
+		// If the current slot is still containing data, then there will be at
+		// least one more write, so we do not break this loop yet.
+		while (read - write - (slot.table.length > 0 ? 1 : 0) < toRemove)
+		{
+			// Find out the max possible items for copying.
+			var source = get2(a.table, b.table, read);
+			var to = Math.min(M - slot.table.length, source.table.length);
+
+			// Copy and adjust size table.
+			slot.table = slot.table.concat(source.table.slice(from, to));
+			if (slot.height > 0)
+			{
+				var len = slot.lengths.length;
+				for (var i = len; i < len + to - from; i++)
+				{
+					slot.lengths[i] = length(slot.table[i]);
+					slot.lengths[i] += (i > 0 ? slot.lengths[i - 1] : 0);
+				}
+			}
+
+			from += to;
+
+			// Only proceed to next slots[i] if the current one was
+			// fully copied.
+			if (source.table.length <= to)
+			{
+				read++; from = 0;
+			}
+
+			// Only create a new slot if the current one is filled up.
+			if (slot.table.length === M)
+			{
+				saveSlot(newA, newB, write, slot);
+				slot = createNode(a.height - 1, 0);
+				write++;
+			}
+		}
+
+		// Cleanup after the loop. Copy the last slot into the new nodes.
+		if (slot.table.length > 0)
+		{
+			saveSlot(newA, newB, write, slot);
+			write++;
+		}
+
+		// Shift the untouched slots to the left
+		while (read < a.table.length + b.table.length )
+		{
+			saveSlot(newA, newB, write, get2(a.table, b.table, read));
+			read++;
+			write++;
+		}
+
+		return [newA, newB];
+	}
+
+	// Navigation functions
+	function botRight(a)
+	{
+		return a.table[a.table.length - 1];
+	}
+	function botLeft(a)
+	{
+		return a.table[0];
+	}
+
+	// Copies a node for updating. Note that you should not use this if
+	// only updating only one of "table" or "lengths" for performance reasons.
+	function nodeCopy(a)
+	{
+		var newA = {
+			ctor: '_Array',
+			height: a.height,
+			table: a.table.slice()
+		};
+		if (a.height > 0)
+		{
+			newA.lengths = a.lengths.slice();
+		}
+		return newA;
+	}
+
+	// Returns how many items are in the tree.
+	function length(array)
+	{
+		if (array.height === 0)
+		{
+			return array.table.length;
+		}
+		else
+		{
+			return array.lengths[array.lengths.length - 1];
+		}
+	}
+
+	// Calculates in which slot of "table" the item probably is, then
+	// find the exact slot via forward searching in  "lengths". Returns the index.
+	function getSlot(i, a)
+	{
+		var slot = i >> (5 * a.height);
+		while (a.lengths[slot] <= i)
+		{
+			slot++;
+		}
+		return slot;
+	}
+
+	// Recursively creates a tree with a given height containing
+	// only the given item.
+	function create(item, h)
+	{
+		if (h === 0)
+		{
+			return {
+				ctor: '_Array',
+				height: 0,
+				table: [item]
+			};
+		}
+		return {
+			ctor: '_Array',
+			height: h,
+			table: [create(item, h - 1)],
+			lengths: [1]
+		};
+	}
+
+	// Recursively creates a tree that contains the given tree.
+	function parentise(tree, h)
+	{
+		if (h === tree.height)
+		{
+			return tree;
+		}
+
+		return {
+			ctor: '_Array',
+			height: h,
+			table: [parentise(tree, h - 1)],
+			lengths: [length(tree)]
+		};
+	}
+
+	// Emphasizes blood brotherhood beneath two trees.
+	function siblise(a, b)
+	{
+		return {
+			ctor: '_Array',
+			height: a.height + 1,
+			table: [a, b],
+			lengths: [length(a), length(a) + length(b)]
+		};
+	}
+
+	function toJSArray(a)
+	{
+		var jsArray = new Array(length(a));
+		toJSArray_(jsArray, 0, a);
+		return jsArray;
+	}
+
+	function toJSArray_(jsArray, i, a)
+	{
+		for (var t = 0; t < a.table.length; t++)
+		{
+			if (a.height === 0)
+			{
+				jsArray[i + t] = a.table[t];
+			}
+			else
+			{
+				var inc = t === 0 ? 0 : a.lengths[t - 1];
+				toJSArray_(jsArray, i + inc, a.table[t]);
+			}
+		}
+	}
+
+	function fromJSArray(jsArray)
+	{
+		if (jsArray.length === 0)
+		{
+			return empty;
+		}
+		var h = Math.floor(Math.log(jsArray.length) / Math.log(M));
+		return fromJSArray_(jsArray, h, 0, jsArray.length);
+	}
+
+	function fromJSArray_(jsArray, h, from, to)
+	{
+		if (h === 0)
+		{
+			return {
+				ctor: '_Array',
+				height: 0,
+				table: jsArray.slice(from, to)
+			};
+		}
+
+		var step = Math.pow(M, h);
+		var table = new Array(Math.ceil((to - from) / step));
+		var lengths = new Array(table.length);
+		for (var i = 0; i < table.length; i++)
+		{
+			table[i] = fromJSArray_(jsArray, h - 1, from + (i * step), Math.min(from + ((i + 1) * step), to));
+			lengths[i] = length(table[i]) + (i > 0 ? lengths[i - 1] : 0);
+		}
+		return {
+			ctor: '_Array',
+			height: h,
+			table: table,
+			lengths: lengths
+		};
+	}
+
+	Elm.Native.Array.values = {
+		empty: empty,
+		fromList: fromList,
+		toList: toList,
+		initialize: F2(initialize),
+		append: F2(append),
+		push: F2(push),
+		slice: F3(slice),
+		get: F2(get),
+		set: F3(set),
+		map: F2(map),
+		indexedMap: F2(indexedMap),
+		foldl: F3(foldl),
+		foldr: F3(foldr),
+		length: length,
+
+		toJSArray: toJSArray,
+		fromJSArray: fromJSArray
+	};
+
+	return localRuntime.Native.Array.values = Elm.Native.Array.values;
+};
+
+Elm.Array = Elm.Array || {};
+Elm.Array.make = function (_elm) {
+   "use strict";
+   _elm.Array = _elm.Array || {};
+   if (_elm.Array.values) return _elm.Array.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Array = Elm.Native.Array.make(_elm);
+   var _op = {};
+   var append = $Native$Array.append;
+   var length = $Native$Array.length;
+   var isEmpty = function (array) {
+      return _U.eq(length(array),0);
+   };
+   var slice = $Native$Array.slice;
+   var set = $Native$Array.set;
+   var get = F2(function (i,array) {
+      return _U.cmp(0,i) < 1 && _U.cmp(i,
+      $Native$Array.length(array)) < 0 ? $Maybe.Just(A2($Native$Array.get,
+      i,
+      array)) : $Maybe.Nothing;
+   });
+   var push = $Native$Array.push;
+   var empty = $Native$Array.empty;
+   var filter = F2(function (isOkay,arr) {
+      var update = F2(function (x,xs) {
+         return isOkay(x) ? A2($Native$Array.push,x,xs) : xs;
+      });
+      return A3($Native$Array.foldl,update,$Native$Array.empty,arr);
+   });
+   var foldr = $Native$Array.foldr;
+   var foldl = $Native$Array.foldl;
+   var indexedMap = $Native$Array.indexedMap;
+   var map = $Native$Array.map;
+   var toIndexedList = function (array) {
+      return A3($List.map2,
+      F2(function (v0,v1) {
+         return {ctor: "_Tuple2",_0: v0,_1: v1};
+      }),
+      _U.range(0,$Native$Array.length(array) - 1),
+      $Native$Array.toList(array));
+   };
+   var toList = $Native$Array.toList;
+   var fromList = $Native$Array.fromList;
+   var initialize = $Native$Array.initialize;
+   var repeat = F2(function (n,e) {
+      return A2(initialize,n,$Basics.always(e));
+   });
+   var Array = {ctor: "Array"};
+   return _elm.Array.values = {_op: _op
+                              ,empty: empty
+                              ,repeat: repeat
+                              ,initialize: initialize
+                              ,fromList: fromList
+                              ,isEmpty: isEmpty
+                              ,length: length
+                              ,push: push
+                              ,append: append
+                              ,get: get
+                              ,set: set
+                              ,slice: slice
+                              ,toList: toList
+                              ,toIndexedList: toIndexedList
+                              ,map: map
+                              ,indexedMap: indexedMap
+                              ,filter: filter
+                              ,foldl: foldl
+                              ,foldr: foldr};
+};
+Elm.Native.Date = {};
+Elm.Native.Date.make = function(localRuntime) {
+	localRuntime.Native = localRuntime.Native || {};
+	localRuntime.Native.Date = localRuntime.Native.Date || {};
+	if (localRuntime.Native.Date.values)
+	{
+		return localRuntime.Native.Date.values;
+	}
+
+	var Result = Elm.Result.make(localRuntime);
+
+	function readDate(str)
+	{
+		var date = new Date(str);
+		return isNaN(date.getTime())
+			? Result.Err('unable to parse \'' + str + '\' as a date')
+			: Result.Ok(date);
+	}
+
+	var dayTable = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+	var monthTable =
+		['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+		 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+
+	return localRuntime.Native.Date.values = {
+		read: readDate,
+		year: function(d) { return d.getFullYear(); },
+		month: function(d) { return { ctor: monthTable[d.getMonth()] }; },
+		day: function(d) { return d.getDate(); },
+		hour: function(d) { return d.getHours(); },
+		minute: function(d) { return d.getMinutes(); },
+		second: function(d) { return d.getSeconds(); },
+		millisecond: function(d) { return d.getMilliseconds(); },
+		toTime: function(d) { return d.getTime(); },
+		fromTime: function(t) { return new Date(t); },
+		dayOfWeek: function(d) { return { ctor: dayTable[d.getDay()] }; }
+	};
+};
+
+Elm.Date = Elm.Date || {};
+Elm.Date.make = function (_elm) {
+   "use strict";
+   _elm.Date = _elm.Date || {};
+   if (_elm.Date.values) return _elm.Date.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Native$Date = Elm.Native.Date.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var millisecond = $Native$Date.millisecond;
+   var second = $Native$Date.second;
+   var minute = $Native$Date.minute;
+   var hour = $Native$Date.hour;
+   var dayOfWeek = $Native$Date.dayOfWeek;
+   var day = $Native$Date.day;
+   var month = $Native$Date.month;
+   var year = $Native$Date.year;
+   var fromTime = $Native$Date.fromTime;
+   var toTime = $Native$Date.toTime;
+   var fromString = $Native$Date.read;
+   var Dec = {ctor: "Dec"};
+   var Nov = {ctor: "Nov"};
+   var Oct = {ctor: "Oct"};
+   var Sep = {ctor: "Sep"};
+   var Aug = {ctor: "Aug"};
+   var Jul = {ctor: "Jul"};
+   var Jun = {ctor: "Jun"};
+   var May = {ctor: "May"};
+   var Apr = {ctor: "Apr"};
+   var Mar = {ctor: "Mar"};
+   var Feb = {ctor: "Feb"};
+   var Jan = {ctor: "Jan"};
+   var Sun = {ctor: "Sun"};
+   var Sat = {ctor: "Sat"};
+   var Fri = {ctor: "Fri"};
+   var Thu = {ctor: "Thu"};
+   var Wed = {ctor: "Wed"};
+   var Tue = {ctor: "Tue"};
+   var Mon = {ctor: "Mon"};
+   var Date = {ctor: "Date"};
+   return _elm.Date.values = {_op: _op
+                             ,fromString: fromString
+                             ,toTime: toTime
+                             ,fromTime: fromTime
+                             ,year: year
+                             ,month: month
+                             ,day: day
+                             ,dayOfWeek: dayOfWeek
+                             ,hour: hour
+                             ,minute: minute
+                             ,second: second
+                             ,millisecond: millisecond
+                             ,Jan: Jan
+                             ,Feb: Feb
+                             ,Mar: Mar
+                             ,Apr: Apr
+                             ,May: May
+                             ,Jun: Jun
+                             ,Jul: Jul
+                             ,Aug: Aug
+                             ,Sep: Sep
+                             ,Oct: Oct
+                             ,Nov: Nov
+                             ,Dec: Dec
+                             ,Mon: Mon
+                             ,Tue: Tue
+                             ,Wed: Wed
+                             ,Thu: Thu
+                             ,Fri: Fri
+                             ,Sat: Sat
+                             ,Sun: Sun};
+};
 Elm.Dict = Elm.Dict || {};
 Elm.Dict.make = function (_elm) {
    "use strict";
@@ -9235,1058 +10086,6 @@ Elm.Native.Json.make = function(localRuntime) {
 	};
 };
 
-Elm.Native.Array = {};
-Elm.Native.Array.make = function(localRuntime) {
-
-	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.Array = localRuntime.Native.Array || {};
-	if (localRuntime.Native.Array.values)
-	{
-		return localRuntime.Native.Array.values;
-	}
-	if ('values' in Elm.Native.Array)
-	{
-		return localRuntime.Native.Array.values = Elm.Native.Array.values;
-	}
-
-	var List = Elm.Native.List.make(localRuntime);
-
-	// A RRB-Tree has two distinct data types.
-	// Leaf -> "height"  is always 0
-	//         "table"   is an array of elements
-	// Node -> "height"  is always greater than 0
-	//         "table"   is an array of child nodes
-	//         "lengths" is an array of accumulated lengths of the child nodes
-
-	// M is the maximal table size. 32 seems fast. E is the allowed increase
-	// of search steps when concatting to find an index. Lower values will
-	// decrease balancing, but will increase search steps.
-	var M = 32;
-	var E = 2;
-
-	// An empty array.
-	var empty = {
-		ctor: '_Array',
-		height: 0,
-		table: []
-	};
-
-
-	function get(i, array)
-	{
-		if (i < 0 || i >= length(array))
-		{
-			throw new Error(
-				'Index ' + i + ' is out of range. Check the length of ' +
-				'your array first or use getMaybe or getWithDefault.');
-		}
-		return unsafeGet(i, array);
-	}
-
-
-	function unsafeGet(i, array)
-	{
-		for (var x = array.height; x > 0; x--)
-		{
-			var slot = i >> (x * 5);
-			while (array.lengths[slot] <= i)
-			{
-				slot++;
-			}
-			if (slot > 0)
-			{
-				i -= array.lengths[slot - 1];
-			}
-			array = array.table[slot];
-		}
-		return array.table[i];
-	}
-
-
-	// Sets the value at the index i. Only the nodes leading to i will get
-	// copied and updated.
-	function set(i, item, array)
-	{
-		if (i < 0 || length(array) <= i)
-		{
-			return array;
-		}
-		return unsafeSet(i, item, array);
-	}
-
-
-	function unsafeSet(i, item, array)
-	{
-		array = nodeCopy(array);
-
-		if (array.height === 0)
-		{
-			array.table[i] = item;
-		}
-		else
-		{
-			var slot = getSlot(i, array);
-			if (slot > 0)
-			{
-				i -= array.lengths[slot - 1];
-			}
-			array.table[slot] = unsafeSet(i, item, array.table[slot]);
-		}
-		return array;
-	}
-
-
-	function initialize(len, f)
-	{
-		if (len <= 0)
-		{
-			return empty;
-		}
-		var h = Math.floor( Math.log(len) / Math.log(M) );
-		return initialize_(f, h, 0, len);
-	}
-
-	function initialize_(f, h, from, to)
-	{
-		if (h === 0)
-		{
-			var table = new Array((to - from) % (M + 1));
-			for (var i = 0; i < table.length; i++)
-			{
-			  table[i] = f(from + i);
-			}
-			return {
-				ctor: '_Array',
-				height: 0,
-				table: table
-			};
-		}
-
-		var step = Math.pow(M, h);
-		var table = new Array(Math.ceil((to - from) / step));
-		var lengths = new Array(table.length);
-		for (var i = 0; i < table.length; i++)
-		{
-			table[i] = initialize_(f, h - 1, from + (i * step), Math.min(from + ((i + 1) * step), to));
-			lengths[i] = length(table[i]) + (i > 0 ? lengths[i-1] : 0);
-		}
-		return {
-			ctor: '_Array',
-			height: h,
-			table: table,
-			lengths: lengths
-		};
-	}
-
-	function fromList(list)
-	{
-		if (list === List.Nil)
-		{
-			return empty;
-		}
-
-		// Allocate M sized blocks (table) and write list elements to it.
-		var table = new Array(M);
-		var nodes = [];
-		var i = 0;
-
-		while (list.ctor !== '[]')
-		{
-			table[i] = list._0;
-			list = list._1;
-			i++;
-
-			// table is full, so we can push a leaf containing it into the
-			// next node.
-			if (i === M)
-			{
-				var leaf = {
-					ctor: '_Array',
-					height: 0,
-					table: table
-				};
-				fromListPush(leaf, nodes);
-				table = new Array(M);
-				i = 0;
-			}
-		}
-
-		// Maybe there is something left on the table.
-		if (i > 0)
-		{
-			var leaf = {
-				ctor: '_Array',
-				height: 0,
-				table: table.splice(0, i)
-			};
-			fromListPush(leaf, nodes);
-		}
-
-		// Go through all of the nodes and eventually push them into higher nodes.
-		for (var h = 0; h < nodes.length - 1; h++)
-		{
-			if (nodes[h].table.length > 0)
-			{
-				fromListPush(nodes[h], nodes);
-			}
-		}
-
-		var head = nodes[nodes.length - 1];
-		if (head.height > 0 && head.table.length === 1)
-		{
-			return head.table[0];
-		}
-		else
-		{
-			return head;
-		}
-	}
-
-	// Push a node into a higher node as a child.
-	function fromListPush(toPush, nodes)
-	{
-		var h = toPush.height;
-
-		// Maybe the node on this height does not exist.
-		if (nodes.length === h)
-		{
-			var node = {
-				ctor: '_Array',
-				height: h + 1,
-				table: [],
-				lengths: []
-			};
-			nodes.push(node);
-		}
-
-		nodes[h].table.push(toPush);
-		var len = length(toPush);
-		if (nodes[h].lengths.length > 0)
-		{
-			len += nodes[h].lengths[nodes[h].lengths.length - 1];
-		}
-		nodes[h].lengths.push(len);
-
-		if (nodes[h].table.length === M)
-		{
-			fromListPush(nodes[h], nodes);
-			nodes[h] = {
-				ctor: '_Array',
-				height: h + 1,
-				table: [],
-				lengths: []
-			};
-		}
-	}
-
-	// Pushes an item via push_ to the bottom right of a tree.
-	function push(item, a)
-	{
-		var pushed = push_(item, a);
-		if (pushed !== null)
-		{
-			return pushed;
-		}
-
-		var newTree = create(item, a.height);
-		return siblise(a, newTree);
-	}
-
-	// Recursively tries to push an item to the bottom-right most
-	// tree possible. If there is no space left for the item,
-	// null will be returned.
-	function push_(item, a)
-	{
-		// Handle resursion stop at leaf level.
-		if (a.height === 0)
-		{
-			if (a.table.length < M)
-			{
-				var newA = {
-					ctor: '_Array',
-					height: 0,
-					table: a.table.slice()
-				};
-				newA.table.push(item);
-				return newA;
-			}
-			else
-			{
-			  return null;
-			}
-		}
-
-		// Recursively push
-		var pushed = push_(item, botRight(a));
-
-		// There was space in the bottom right tree, so the slot will
-		// be updated.
-		if (pushed !== null)
-		{
-			var newA = nodeCopy(a);
-			newA.table[newA.table.length - 1] = pushed;
-			newA.lengths[newA.lengths.length - 1]++;
-			return newA;
-		}
-
-		// When there was no space left, check if there is space left
-		// for a new slot with a tree which contains only the item
-		// at the bottom.
-		if (a.table.length < M)
-		{
-			var newSlot = create(item, a.height - 1);
-			var newA = nodeCopy(a);
-			newA.table.push(newSlot);
-			newA.lengths.push(newA.lengths[newA.lengths.length - 1] + length(newSlot));
-			return newA;
-		}
-		else
-		{
-			return null;
-		}
-	}
-
-	// Converts an array into a list of elements.
-	function toList(a)
-	{
-		return toList_(List.Nil, a);
-	}
-
-	function toList_(list, a)
-	{
-		for (var i = a.table.length - 1; i >= 0; i--)
-		{
-			list =
-				a.height === 0
-					? List.Cons(a.table[i], list)
-					: toList_(list, a.table[i]);
-		}
-		return list;
-	}
-
-	// Maps a function over the elements of an array.
-	function map(f, a)
-	{
-		var newA = {
-			ctor: '_Array',
-			height: a.height,
-			table: new Array(a.table.length)
-		};
-		if (a.height > 0)
-		{
-			newA.lengths = a.lengths;
-		}
-		for (var i = 0; i < a.table.length; i++)
-		{
-			newA.table[i] =
-				a.height === 0
-					? f(a.table[i])
-					: map(f, a.table[i]);
-		}
-		return newA;
-	}
-
-	// Maps a function over the elements with their index as first argument.
-	function indexedMap(f, a)
-	{
-		return indexedMap_(f, a, 0);
-	}
-
-	function indexedMap_(f, a, from)
-	{
-		var newA = {
-			ctor: '_Array',
-			height: a.height,
-			table: new Array(a.table.length)
-		};
-		if (a.height > 0)
-		{
-			newA.lengths = a.lengths;
-		}
-		for (var i = 0; i < a.table.length; i++)
-		{
-			newA.table[i] =
-				a.height === 0
-					? A2(f, from + i, a.table[i])
-					: indexedMap_(f, a.table[i], i == 0 ? from : from + a.lengths[i - 1]);
-		}
-		return newA;
-	}
-
-	function foldl(f, b, a)
-	{
-		if (a.height === 0)
-		{
-			for (var i = 0; i < a.table.length; i++)
-			{
-				b = A2(f, a.table[i], b);
-			}
-		}
-		else
-		{
-			for (var i = 0; i < a.table.length; i++)
-			{
-				b = foldl(f, b, a.table[i]);
-			}
-		}
-		return b;
-	}
-
-	function foldr(f, b, a)
-	{
-		if (a.height === 0)
-		{
-			for (var i = a.table.length; i--; )
-			{
-				b = A2(f, a.table[i], b);
-			}
-		}
-		else
-		{
-			for (var i = a.table.length; i--; )
-			{
-				b = foldr(f, b, a.table[i]);
-			}
-		}
-		return b;
-	}
-
-	// TODO: currently, it slices the right, then the left. This can be
-	// optimized.
-	function slice(from, to, a)
-	{
-		if (from < 0)
-		{
-			from += length(a);
-		}
-		if (to < 0)
-		{
-			to += length(a);
-		}
-		return sliceLeft(from, sliceRight(to, a));
-	}
-
-	function sliceRight(to, a)
-	{
-		if (to === length(a))
-		{
-			return a;
-		}
-
-		// Handle leaf level.
-		if (a.height === 0)
-		{
-			var newA = { ctor:'_Array', height:0 };
-			newA.table = a.table.slice(0, to);
-			return newA;
-		}
-
-		// Slice the right recursively.
-		var right = getSlot(to, a);
-		var sliced = sliceRight(to - (right > 0 ? a.lengths[right - 1] : 0), a.table[right]);
-
-		// Maybe the a node is not even needed, as sliced contains the whole slice.
-		if (right === 0)
-		{
-			return sliced;
-		}
-
-		// Create new node.
-		var newA = {
-			ctor: '_Array',
-			height: a.height,
-			table: a.table.slice(0, right),
-			lengths: a.lengths.slice(0, right)
-		};
-		if (sliced.table.length > 0)
-		{
-			newA.table[right] = sliced;
-			newA.lengths[right] = length(sliced) + (right > 0 ? newA.lengths[right - 1] : 0);
-		}
-		return newA;
-	}
-
-	function sliceLeft(from, a)
-	{
-		if (from === 0)
-		{
-			return a;
-		}
-
-		// Handle leaf level.
-		if (a.height === 0)
-		{
-			var newA = { ctor:'_Array', height:0 };
-			newA.table = a.table.slice(from, a.table.length + 1);
-			return newA;
-		}
-
-		// Slice the left recursively.
-		var left = getSlot(from, a);
-		var sliced = sliceLeft(from - (left > 0 ? a.lengths[left - 1] : 0), a.table[left]);
-
-		// Maybe the a node is not even needed, as sliced contains the whole slice.
-		if (left === a.table.length - 1)
-		{
-			return sliced;
-		}
-
-		// Create new node.
-		var newA = {
-			ctor: '_Array',
-			height: a.height,
-			table: a.table.slice(left, a.table.length + 1),
-			lengths: new Array(a.table.length - left)
-		};
-		newA.table[0] = sliced;
-		var len = 0;
-		for (var i = 0; i < newA.table.length; i++)
-		{
-			len += length(newA.table[i]);
-			newA.lengths[i] = len;
-		}
-
-		return newA;
-	}
-
-	// Appends two trees.
-	function append(a,b)
-	{
-		if (a.table.length === 0)
-		{
-			return b;
-		}
-		if (b.table.length === 0)
-		{
-			return a;
-		}
-
-		var c = append_(a, b);
-
-		// Check if both nodes can be crunshed together.
-		if (c[0].table.length + c[1].table.length <= M)
-		{
-			if (c[0].table.length === 0)
-			{
-				return c[1];
-			}
-			if (c[1].table.length === 0)
-			{
-				return c[0];
-			}
-
-			// Adjust .table and .lengths
-			c[0].table = c[0].table.concat(c[1].table);
-			if (c[0].height > 0)
-			{
-				var len = length(c[0]);
-				for (var i = 0; i < c[1].lengths.length; i++)
-				{
-					c[1].lengths[i] += len;
-				}
-				c[0].lengths = c[0].lengths.concat(c[1].lengths);
-			}
-
-			return c[0];
-		}
-
-		if (c[0].height > 0)
-		{
-			var toRemove = calcToRemove(a, b);
-			if (toRemove > E)
-			{
-				c = shuffle(c[0], c[1], toRemove);
-			}
-		}
-
-		return siblise(c[0], c[1]);
-	}
-
-	// Returns an array of two nodes; right and left. One node _may_ be empty.
-	function append_(a, b)
-	{
-		if (a.height === 0 && b.height === 0)
-		{
-			return [a, b];
-		}
-
-		if (a.height !== 1 || b.height !== 1)
-		{
-			if (a.height === b.height)
-			{
-				a = nodeCopy(a);
-				b = nodeCopy(b);
-				var appended = append_(botRight(a), botLeft(b));
-
-				insertRight(a, appended[1]);
-				insertLeft(b, appended[0]);
-			}
-			else if (a.height > b.height)
-			{
-				a = nodeCopy(a);
-				var appended = append_(botRight(a), b);
-
-				insertRight(a, appended[0]);
-				b = parentise(appended[1], appended[1].height + 1);
-			}
-			else
-			{
-				b = nodeCopy(b);
-				var appended = append_(a, botLeft(b));
-
-				var left = appended[0].table.length === 0 ? 0 : 1;
-				var right = left === 0 ? 1 : 0;
-				insertLeft(b, appended[left]);
-				a = parentise(appended[right], appended[right].height + 1);
-			}
-		}
-
-		// Check if balancing is needed and return based on that.
-		if (a.table.length === 0 || b.table.length === 0)
-		{
-			return [a, b];
-		}
-
-		var toRemove = calcToRemove(a, b);
-		if (toRemove <= E)
-		{
-			return [a, b];
-		}
-		return shuffle(a, b, toRemove);
-	}
-
-	// Helperfunctions for append_. Replaces a child node at the side of the parent.
-	function insertRight(parent, node)
-	{
-		var index = parent.table.length - 1;
-		parent.table[index] = node;
-		parent.lengths[index] = length(node);
-		parent.lengths[index] += index > 0 ? parent.lengths[index - 1] : 0;
-	}
-
-	function insertLeft(parent, node)
-	{
-		if (node.table.length > 0)
-		{
-			parent.table[0] = node;
-			parent.lengths[0] = length(node);
-
-			var len = length(parent.table[0]);
-			for (var i = 1; i < parent.lengths.length; i++)
-			{
-				len += length(parent.table[i]);
-				parent.lengths[i] = len;
-			}
-		}
-		else
-		{
-			parent.table.shift();
-			for (var i = 1; i < parent.lengths.length; i++)
-			{
-				parent.lengths[i] = parent.lengths[i] - parent.lengths[0];
-			}
-			parent.lengths.shift();
-		}
-	}
-
-	// Returns the extra search steps for E. Refer to the paper.
-	function calcToRemove(a, b)
-	{
-		var subLengths = 0;
-		for (var i = 0; i < a.table.length; i++)
-		{
-			subLengths += a.table[i].table.length;
-		}
-		for (var i = 0; i < b.table.length; i++)
-		{
-			subLengths += b.table[i].table.length;
-		}
-
-		var toRemove = a.table.length + b.table.length;
-		return toRemove - (Math.floor((subLengths - 1) / M) + 1);
-	}
-
-	// get2, set2 and saveSlot are helpers for accessing elements over two arrays.
-	function get2(a, b, index)
-	{
-		return index < a.length
-			? a[index]
-			: b[index - a.length];
-	}
-
-	function set2(a, b, index, value)
-	{
-		if (index < a.length)
-		{
-			a[index] = value;
-		}
-		else
-		{
-			b[index - a.length] = value;
-		}
-	}
-
-	function saveSlot(a, b, index, slot)
-	{
-		set2(a.table, b.table, index, slot);
-
-		var l = (index === 0 || index === a.lengths.length)
-			? 0
-			: get2(a.lengths, a.lengths, index - 1);
-
-		set2(a.lengths, b.lengths, index, l + length(slot));
-	}
-
-	// Creates a node or leaf with a given length at their arrays for perfomance.
-	// Is only used by shuffle.
-	function createNode(h, length)
-	{
-		if (length < 0)
-		{
-			length = 0;
-		}
-		var a = {
-			ctor: '_Array',
-			height: h,
-			table: new Array(length)
-		};
-		if (h > 0)
-		{
-			a.lengths = new Array(length);
-		}
-		return a;
-	}
-
-	// Returns an array of two balanced nodes.
-	function shuffle(a, b, toRemove)
-	{
-		var newA = createNode(a.height, Math.min(M, a.table.length + b.table.length - toRemove));
-		var newB = createNode(a.height, newA.table.length - (a.table.length + b.table.length - toRemove));
-
-		// Skip the slots with size M. More precise: copy the slot references
-		// to the new node
-		var read = 0;
-		while (get2(a.table, b.table, read).table.length % M === 0)
-		{
-			set2(newA.table, newB.table, read, get2(a.table, b.table, read));
-			set2(newA.lengths, newB.lengths, read, get2(a.lengths, b.lengths, read));
-			read++;
-		}
-
-		// Pulling items from left to right, caching in a slot before writing
-		// it into the new nodes.
-		var write = read;
-		var slot = new createNode(a.height - 1, 0);
-		var from = 0;
-
-		// If the current slot is still containing data, then there will be at
-		// least one more write, so we do not break this loop yet.
-		while (read - write - (slot.table.length > 0 ? 1 : 0) < toRemove)
-		{
-			// Find out the max possible items for copying.
-			var source = get2(a.table, b.table, read);
-			var to = Math.min(M - slot.table.length, source.table.length);
-
-			// Copy and adjust size table.
-			slot.table = slot.table.concat(source.table.slice(from, to));
-			if (slot.height > 0)
-			{
-				var len = slot.lengths.length;
-				for (var i = len; i < len + to - from; i++)
-				{
-					slot.lengths[i] = length(slot.table[i]);
-					slot.lengths[i] += (i > 0 ? slot.lengths[i - 1] : 0);
-				}
-			}
-
-			from += to;
-
-			// Only proceed to next slots[i] if the current one was
-			// fully copied.
-			if (source.table.length <= to)
-			{
-				read++; from = 0;
-			}
-
-			// Only create a new slot if the current one is filled up.
-			if (slot.table.length === M)
-			{
-				saveSlot(newA, newB, write, slot);
-				slot = createNode(a.height - 1, 0);
-				write++;
-			}
-		}
-
-		// Cleanup after the loop. Copy the last slot into the new nodes.
-		if (slot.table.length > 0)
-		{
-			saveSlot(newA, newB, write, slot);
-			write++;
-		}
-
-		// Shift the untouched slots to the left
-		while (read < a.table.length + b.table.length )
-		{
-			saveSlot(newA, newB, write, get2(a.table, b.table, read));
-			read++;
-			write++;
-		}
-
-		return [newA, newB];
-	}
-
-	// Navigation functions
-	function botRight(a)
-	{
-		return a.table[a.table.length - 1];
-	}
-	function botLeft(a)
-	{
-		return a.table[0];
-	}
-
-	// Copies a node for updating. Note that you should not use this if
-	// only updating only one of "table" or "lengths" for performance reasons.
-	function nodeCopy(a)
-	{
-		var newA = {
-			ctor: '_Array',
-			height: a.height,
-			table: a.table.slice()
-		};
-		if (a.height > 0)
-		{
-			newA.lengths = a.lengths.slice();
-		}
-		return newA;
-	}
-
-	// Returns how many items are in the tree.
-	function length(array)
-	{
-		if (array.height === 0)
-		{
-			return array.table.length;
-		}
-		else
-		{
-			return array.lengths[array.lengths.length - 1];
-		}
-	}
-
-	// Calculates in which slot of "table" the item probably is, then
-	// find the exact slot via forward searching in  "lengths". Returns the index.
-	function getSlot(i, a)
-	{
-		var slot = i >> (5 * a.height);
-		while (a.lengths[slot] <= i)
-		{
-			slot++;
-		}
-		return slot;
-	}
-
-	// Recursively creates a tree with a given height containing
-	// only the given item.
-	function create(item, h)
-	{
-		if (h === 0)
-		{
-			return {
-				ctor: '_Array',
-				height: 0,
-				table: [item]
-			};
-		}
-		return {
-			ctor: '_Array',
-			height: h,
-			table: [create(item, h - 1)],
-			lengths: [1]
-		};
-	}
-
-	// Recursively creates a tree that contains the given tree.
-	function parentise(tree, h)
-	{
-		if (h === tree.height)
-		{
-			return tree;
-		}
-
-		return {
-			ctor: '_Array',
-			height: h,
-			table: [parentise(tree, h - 1)],
-			lengths: [length(tree)]
-		};
-	}
-
-	// Emphasizes blood brotherhood beneath two trees.
-	function siblise(a, b)
-	{
-		return {
-			ctor: '_Array',
-			height: a.height + 1,
-			table: [a, b],
-			lengths: [length(a), length(a) + length(b)]
-		};
-	}
-
-	function toJSArray(a)
-	{
-		var jsArray = new Array(length(a));
-		toJSArray_(jsArray, 0, a);
-		return jsArray;
-	}
-
-	function toJSArray_(jsArray, i, a)
-	{
-		for (var t = 0; t < a.table.length; t++)
-		{
-			if (a.height === 0)
-			{
-				jsArray[i + t] = a.table[t];
-			}
-			else
-			{
-				var inc = t === 0 ? 0 : a.lengths[t - 1];
-				toJSArray_(jsArray, i + inc, a.table[t]);
-			}
-		}
-	}
-
-	function fromJSArray(jsArray)
-	{
-		if (jsArray.length === 0)
-		{
-			return empty;
-		}
-		var h = Math.floor(Math.log(jsArray.length) / Math.log(M));
-		return fromJSArray_(jsArray, h, 0, jsArray.length);
-	}
-
-	function fromJSArray_(jsArray, h, from, to)
-	{
-		if (h === 0)
-		{
-			return {
-				ctor: '_Array',
-				height: 0,
-				table: jsArray.slice(from, to)
-			};
-		}
-
-		var step = Math.pow(M, h);
-		var table = new Array(Math.ceil((to - from) / step));
-		var lengths = new Array(table.length);
-		for (var i = 0; i < table.length; i++)
-		{
-			table[i] = fromJSArray_(jsArray, h - 1, from + (i * step), Math.min(from + ((i + 1) * step), to));
-			lengths[i] = length(table[i]) + (i > 0 ? lengths[i - 1] : 0);
-		}
-		return {
-			ctor: '_Array',
-			height: h,
-			table: table,
-			lengths: lengths
-		};
-	}
-
-	Elm.Native.Array.values = {
-		empty: empty,
-		fromList: fromList,
-		toList: toList,
-		initialize: F2(initialize),
-		append: F2(append),
-		push: F2(push),
-		slice: F3(slice),
-		get: F2(get),
-		set: F3(set),
-		map: F2(map),
-		indexedMap: F2(indexedMap),
-		foldl: F3(foldl),
-		foldr: F3(foldr),
-		length: length,
-
-		toJSArray: toJSArray,
-		fromJSArray: fromJSArray
-	};
-
-	return localRuntime.Native.Array.values = Elm.Native.Array.values;
-};
-
-Elm.Array = Elm.Array || {};
-Elm.Array.make = function (_elm) {
-   "use strict";
-   _elm.Array = _elm.Array || {};
-   if (_elm.Array.values) return _elm.Array.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Native$Array = Elm.Native.Array.make(_elm);
-   var _op = {};
-   var append = $Native$Array.append;
-   var length = $Native$Array.length;
-   var isEmpty = function (array) {
-      return _U.eq(length(array),0);
-   };
-   var slice = $Native$Array.slice;
-   var set = $Native$Array.set;
-   var get = F2(function (i,array) {
-      return _U.cmp(0,i) < 1 && _U.cmp(i,
-      $Native$Array.length(array)) < 0 ? $Maybe.Just(A2($Native$Array.get,
-      i,
-      array)) : $Maybe.Nothing;
-   });
-   var push = $Native$Array.push;
-   var empty = $Native$Array.empty;
-   var filter = F2(function (isOkay,arr) {
-      var update = F2(function (x,xs) {
-         return isOkay(x) ? A2($Native$Array.push,x,xs) : xs;
-      });
-      return A3($Native$Array.foldl,update,$Native$Array.empty,arr);
-   });
-   var foldr = $Native$Array.foldr;
-   var foldl = $Native$Array.foldl;
-   var indexedMap = $Native$Array.indexedMap;
-   var map = $Native$Array.map;
-   var toIndexedList = function (array) {
-      return A3($List.map2,
-      F2(function (v0,v1) {
-         return {ctor: "_Tuple2",_0: v0,_1: v1};
-      }),
-      _U.range(0,$Native$Array.length(array) - 1),
-      $Native$Array.toList(array));
-   };
-   var toList = $Native$Array.toList;
-   var fromList = $Native$Array.fromList;
-   var initialize = $Native$Array.initialize;
-   var repeat = F2(function (n,e) {
-      return A2(initialize,n,$Basics.always(e));
-   });
-   var Array = {ctor: "Array"};
-   return _elm.Array.values = {_op: _op
-                              ,empty: empty
-                              ,repeat: repeat
-                              ,initialize: initialize
-                              ,fromList: fromList
-                              ,isEmpty: isEmpty
-                              ,length: length
-                              ,push: push
-                              ,append: append
-                              ,get: get
-                              ,set: set
-                              ,slice: slice
-                              ,toList: toList
-                              ,toIndexedList: toIndexedList
-                              ,map: map
-                              ,indexedMap: indexedMap
-                              ,filter: filter
-                              ,foldl: foldl
-                              ,foldr: foldr};
-};
 Elm.Json = Elm.Json || {};
 Elm.Json.Encode = Elm.Json.Encode || {};
 Elm.Json.Encode.make = function (_elm) {
@@ -10417,119 +10216,6 @@ Elm.Json.Decode.make = function (_elm) {
                                     ,andThen: andThen
                                     ,value: value
                                     ,customDecoder: customDecoder};
-};
-Elm.Native.Date = {};
-Elm.Native.Date.make = function(localRuntime) {
-	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.Date = localRuntime.Native.Date || {};
-	if (localRuntime.Native.Date.values)
-	{
-		return localRuntime.Native.Date.values;
-	}
-
-	var Result = Elm.Result.make(localRuntime);
-
-	function readDate(str)
-	{
-		var date = new Date(str);
-		return isNaN(date.getTime())
-			? Result.Err('unable to parse \'' + str + '\' as a date')
-			: Result.Ok(date);
-	}
-
-	var dayTable = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-	var monthTable =
-		['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-		 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-
-	return localRuntime.Native.Date.values = {
-		read: readDate,
-		year: function(d) { return d.getFullYear(); },
-		month: function(d) { return { ctor: monthTable[d.getMonth()] }; },
-		day: function(d) { return d.getDate(); },
-		hour: function(d) { return d.getHours(); },
-		minute: function(d) { return d.getMinutes(); },
-		second: function(d) { return d.getSeconds(); },
-		millisecond: function(d) { return d.getMilliseconds(); },
-		toTime: function(d) { return d.getTime(); },
-		fromTime: function(t) { return new Date(t); },
-		dayOfWeek: function(d) { return { ctor: dayTable[d.getDay()] }; }
-	};
-};
-
-Elm.Date = Elm.Date || {};
-Elm.Date.make = function (_elm) {
-   "use strict";
-   _elm.Date = _elm.Date || {};
-   if (_elm.Date.values) return _elm.Date.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Native$Date = Elm.Native.Date.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var millisecond = $Native$Date.millisecond;
-   var second = $Native$Date.second;
-   var minute = $Native$Date.minute;
-   var hour = $Native$Date.hour;
-   var dayOfWeek = $Native$Date.dayOfWeek;
-   var day = $Native$Date.day;
-   var month = $Native$Date.month;
-   var year = $Native$Date.year;
-   var fromTime = $Native$Date.fromTime;
-   var toTime = $Native$Date.toTime;
-   var fromString = $Native$Date.read;
-   var Dec = {ctor: "Dec"};
-   var Nov = {ctor: "Nov"};
-   var Oct = {ctor: "Oct"};
-   var Sep = {ctor: "Sep"};
-   var Aug = {ctor: "Aug"};
-   var Jul = {ctor: "Jul"};
-   var Jun = {ctor: "Jun"};
-   var May = {ctor: "May"};
-   var Apr = {ctor: "Apr"};
-   var Mar = {ctor: "Mar"};
-   var Feb = {ctor: "Feb"};
-   var Jan = {ctor: "Jan"};
-   var Sun = {ctor: "Sun"};
-   var Sat = {ctor: "Sat"};
-   var Fri = {ctor: "Fri"};
-   var Thu = {ctor: "Thu"};
-   var Wed = {ctor: "Wed"};
-   var Tue = {ctor: "Tue"};
-   var Mon = {ctor: "Mon"};
-   var Date = {ctor: "Date"};
-   return _elm.Date.values = {_op: _op
-                             ,fromString: fromString
-                             ,toTime: toTime
-                             ,fromTime: fromTime
-                             ,year: year
-                             ,month: month
-                             ,day: day
-                             ,dayOfWeek: dayOfWeek
-                             ,hour: hour
-                             ,minute: minute
-                             ,second: second
-                             ,millisecond: millisecond
-                             ,Jan: Jan
-                             ,Feb: Feb
-                             ,Mar: Mar
-                             ,Apr: Apr
-                             ,May: May
-                             ,Jun: Jun
-                             ,Jul: Jul
-                             ,Aug: Aug
-                             ,Sep: Sep
-                             ,Oct: Oct
-                             ,Nov: Nov
-                             ,Dec: Dec
-                             ,Mon: Mon
-                             ,Tue: Tue
-                             ,Wed: Wed
-                             ,Thu: Thu
-                             ,Fri: Fri
-                             ,Sat: Sat
-                             ,Sun: Sun};
 };
 Elm.Set = Elm.Set || {};
 Elm.Set.make = function (_elm) {
@@ -11041,6 +10727,230 @@ Elm.RouteParser.make = function (_elm) {
                                     ,dyn3: dyn3
                                     ,match: match};
 };
+Elm.Native.Effects = {};
+Elm.Native.Effects.make = function(localRuntime) {
+
+	localRuntime.Native = localRuntime.Native || {};
+	localRuntime.Native.Effects = localRuntime.Native.Effects || {};
+	if (localRuntime.Native.Effects.values)
+	{
+		return localRuntime.Native.Effects.values;
+	}
+
+	var Task = Elm.Native.Task.make(localRuntime);
+	var Utils = Elm.Native.Utils.make(localRuntime);
+	var Signal = Elm.Signal.make(localRuntime);
+	var List = Elm.Native.List.make(localRuntime);
+
+
+	// polyfill so things will work even if rAF is not available for some reason
+	var _requestAnimationFrame =
+		typeof requestAnimationFrame !== 'undefined'
+			? requestAnimationFrame
+			: function(cb) { setTimeout(cb, 1000 / 60); }
+			;
+
+
+	// batchedSending and sendCallback implement a small state machine in order
+	// to schedule only one send(time) call per animation frame.
+	//
+	// Invariants:
+	// 1. In the NO_REQUEST state, there is never a scheduled sendCallback.
+	// 2. In the PENDING_REQUEST and EXTRA_REQUEST states, there is always exactly
+	//    one scheduled sendCallback.
+	var NO_REQUEST = 0;
+	var PENDING_REQUEST = 1;
+	var EXTRA_REQUEST = 2;
+	var state = NO_REQUEST;
+	var messageArray = [];
+
+
+	function batchedSending(address, tickMessages)
+	{
+		// insert ticks into the messageArray
+		var foundAddress = false;
+
+		for (var i = messageArray.length; i--; )
+		{
+			if (messageArray[i].address === address)
+			{
+				foundAddress = true;
+				messageArray[i].tickMessages = A3(List.foldl, List.cons, messageArray[i].tickMessages, tickMessages);
+				break;
+			}
+		}
+
+		if (!foundAddress)
+		{
+			messageArray.push({ address: address, tickMessages: tickMessages });
+		}
+
+		// do the appropriate state transition
+		switch (state)
+		{
+			case NO_REQUEST:
+				_requestAnimationFrame(sendCallback);
+				state = PENDING_REQUEST;
+				break;
+			case PENDING_REQUEST:
+				state = PENDING_REQUEST;
+				break;
+			case EXTRA_REQUEST:
+				state = PENDING_REQUEST;
+				break;
+		}
+	}
+
+
+	function sendCallback(time)
+	{
+		switch (state)
+		{
+			case NO_REQUEST:
+				// This state should not be possible. How can there be no
+				// request, yet somehow we are actively fulfilling a
+				// request?
+				throw new Error(
+					'Unexpected send callback.\n' +
+					'Please report this to <https://github.com/evancz/elm-effects/issues>.'
+				);
+
+			case PENDING_REQUEST:
+				// At this point, we do not *know* that another frame is
+				// needed, but we make an extra request to rAF just in
+				// case. It's possible to drop a frame if rAF is called
+				// too late, so we just do it preemptively.
+				_requestAnimationFrame(sendCallback);
+				state = EXTRA_REQUEST;
+
+				// There's also stuff we definitely need to send.
+				send(time);
+				return;
+
+			case EXTRA_REQUEST:
+				// Turns out the extra request was not needed, so we will
+				// stop calling rAF. No reason to call it all the time if
+				// no one needs it.
+				state = NO_REQUEST;
+				return;
+		}
+	}
+
+
+	function send(time)
+	{
+		for (var i = messageArray.length; i--; )
+		{
+			var messages = A3(
+				List.foldl,
+				F2( function(toAction, list) { return List.Cons(toAction(time), list); } ),
+				List.Nil,
+				messageArray[i].tickMessages
+			);
+			Task.perform( A2(Signal.send, messageArray[i].address, messages) );
+		}
+		messageArray = [];
+	}
+
+
+	function requestTickSending(address, tickMessages)
+	{
+		return Task.asyncFunction(function(callback) {
+			batchedSending(address, tickMessages);
+			callback(Task.succeed(Utils.Tuple0));
+		});
+	}
+
+
+	return localRuntime.Native.Effects.values = {
+		requestTickSending: F2(requestTickSending)
+	};
+
+};
+
+Elm.Effects = Elm.Effects || {};
+Elm.Effects.make = function (_elm) {
+   "use strict";
+   _elm.Effects = _elm.Effects || {};
+   if (_elm.Effects.values) return _elm.Effects.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Effects = Elm.Native.Effects.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var ignore = function (task) {
+      return A2($Task.map,$Basics.always({ctor: "_Tuple0"}),task);
+   };
+   var requestTickSending = $Native$Effects.requestTickSending;
+   var toTaskHelp = F3(function (address,effect,_p0) {
+      var _p1 = _p0;
+      var _p5 = _p1._1;
+      var _p4 = _p1;
+      var _p3 = _p1._0;
+      var _p2 = effect;
+      switch (_p2.ctor)
+      {case "Task": var reporter = A2($Task.andThen,
+           _p2._0,
+           function (answer) {
+              return A2($Signal.send,address,_U.list([answer]));
+           });
+           return {ctor: "_Tuple2"
+                  ,_0: A2($Task.andThen,
+                  _p3,
+                  $Basics.always(ignore($Task.spawn(reporter))))
+                  ,_1: _p5};
+         case "Tick": return {ctor: "_Tuple2"
+                             ,_0: _p3
+                             ,_1: A2($List._op["::"],_p2._0,_p5)};
+         case "None": return _p4;
+         default: return A3($List.foldl,toTaskHelp(address),_p4,_p2._0);}
+   });
+   var toTask = F2(function (address,effect) {
+      var _p6 = A3(toTaskHelp,
+      address,
+      effect,
+      {ctor: "_Tuple2"
+      ,_0: $Task.succeed({ctor: "_Tuple0"})
+      ,_1: _U.list([])});
+      var combinedTask = _p6._0;
+      var tickMessages = _p6._1;
+      return $List.isEmpty(tickMessages) ? combinedTask : A2($Task.andThen,
+      combinedTask,
+      $Basics.always(A2(requestTickSending,address,tickMessages)));
+   });
+   var Never = function (a) {    return {ctor: "Never",_0: a};};
+   var Batch = function (a) {    return {ctor: "Batch",_0: a};};
+   var batch = Batch;
+   var None = {ctor: "None"};
+   var none = None;
+   var Tick = function (a) {    return {ctor: "Tick",_0: a};};
+   var tick = Tick;
+   var Task = function (a) {    return {ctor: "Task",_0: a};};
+   var task = Task;
+   var map = F2(function (func,effect) {
+      var _p7 = effect;
+      switch (_p7.ctor)
+      {case "Task": return Task(A2($Task.map,func,_p7._0));
+         case "Tick": return Tick(function (_p8) {
+              return func(_p7._0(_p8));
+           });
+         case "None": return None;
+         default: return Batch(A2($List.map,map(func),_p7._0));}
+   });
+   return _elm.Effects.values = {_op: _op
+                                ,none: none
+                                ,task: task
+                                ,tick: tick
+                                ,map: map
+                                ,batch: batch
+                                ,toTask: toTask};
+};
 Elm.Constants = Elm.Constants || {};
 Elm.Constants.make = function (_elm) {
    "use strict";
@@ -11195,12 +11105,13 @@ Elm.Screens.Home.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var TrackCreated = function (a) {
-      return {ctor: "TrackCreated",_0: a};
+   var NoOp = {ctor: "NoOp"};
+   var CreateTrackResult = function (a) {
+      return {ctor: "CreateTrackResult",_0: a};
    };
    var CreateTrack = {ctor: "CreateTrack"};
-   var SubmitHandleSuccess = function (a) {
-      return {ctor: "SubmitHandleSuccess",_0: a};
+   var SubmitHandleResult = function (a) {
+      return {ctor: "SubmitHandleResult",_0: a};
    };
    var SubmitHandle = {ctor: "SubmitHandle"};
    var SetHandle = function (a) {
@@ -11209,17 +11120,24 @@ Elm.Screens.Home.Types.make = function (_elm) {
    var SetLiveStatus = function (a) {
       return {ctor: "SetLiveStatus",_0: a};
    };
+   var initial = function (player) {
+      return {handle: A2($Maybe.withDefault,"",player.handle)
+             ,liveStatus: {liveTracks: _U.list([])
+                          ,onlinePlayers: _U.list([])}};
+   };
    var Screen = F2(function (a,b) {
       return {handle: a,liveStatus: b};
    });
    return _elm.Screens.Home.Types.values = {_op: _op
                                            ,Screen: Screen
+                                           ,initial: initial
                                            ,SetLiveStatus: SetLiveStatus
                                            ,SetHandle: SetHandle
                                            ,SubmitHandle: SubmitHandle
-                                           ,SubmitHandleSuccess: SubmitHandleSuccess
+                                           ,SubmitHandleResult: SubmitHandleResult
                                            ,CreateTrack: CreateTrack
-                                           ,TrackCreated: TrackCreated};
+                                           ,CreateTrackResult: CreateTrackResult
+                                           ,NoOp: NoOp};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Login = Elm.Screens.Login || {};
@@ -11240,9 +11158,9 @@ Elm.Screens.Login.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var Error = {ctor: "Error"};
-   var Success = function (a) {
-      return {ctor: "Success",_0: a};
+   var NoOp = {ctor: "NoOp"};
+   var SubmitResult = function (a) {
+      return {ctor: "SubmitResult",_0: a};
    };
    var Submit = {ctor: "Submit"};
    var SetPassword = function (a) {
@@ -11251,16 +11169,21 @@ Elm.Screens.Login.Types.make = function (_elm) {
    var SetEmail = function (a) {
       return {ctor: "SetEmail",_0: a};
    };
+   var initial = {email: ""
+                 ,password: ""
+                 ,loading: false
+                 ,error: false};
    var Screen = F4(function (a,b,c,d) {
       return {email: a,password: b,loading: c,error: d};
    });
    return _elm.Screens.Login.Types.values = {_op: _op
                                             ,Screen: Screen
+                                            ,initial: initial
                                             ,SetEmail: SetEmail
                                             ,SetPassword: SetPassword
                                             ,Submit: Submit
-                                            ,Success: Success
-                                            ,Error: Error};
+                                            ,SubmitResult: SubmitResult
+                                            ,NoOp: NoOp};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Register = Elm.Screens.Register || {};
@@ -11282,11 +11205,9 @@ Elm.Screens.Register.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var FormFailure = function (a) {
-      return {ctor: "FormFailure",_0: a};
-   };
-   var FormSuccess = function (a) {
-      return {ctor: "FormSuccess",_0: a};
+   var NoOp = {ctor: "NoOp"};
+   var SubmitResult = function (a) {
+      return {ctor: "SubmitResult",_0: a};
    };
    var Submit = {ctor: "Submit"};
    var SetPassword = function (a) {
@@ -11298,17 +11219,23 @@ Elm.Screens.Register.Types.make = function (_elm) {
    var SetHandle = function (a) {
       return {ctor: "SetHandle",_0: a};
    };
+   var initial = {handle: ""
+                 ,email: ""
+                 ,password: ""
+                 ,loading: false
+                 ,errors: $Dict.empty};
    var Screen = F5(function (a,b,c,d,e) {
       return {handle: a,email: b,password: c,loading: d,errors: e};
    });
    return _elm.Screens.Register.Types.values = {_op: _op
                                                ,Screen: Screen
+                                               ,initial: initial
                                                ,SetHandle: SetHandle
                                                ,SetEmail: SetEmail
                                                ,SetPassword: SetPassword
                                                ,Submit: Submit
-                                               ,FormSuccess: FormSuccess
-                                               ,FormFailure: FormFailure};
+                                               ,SubmitResult: SubmitResult
+                                               ,NoOp: NoOp};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
@@ -11329,220 +11256,19 @@ Elm.Screens.ShowTrack.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var TrackNotFound = {ctor: "TrackNotFound"};
-   var SetTrack = function (a) {
-      return {ctor: "SetTrack",_0: a};
+   var NoOp = {ctor: "NoOp"};
+   var LoadTrack = function (a) {
+      return {ctor: "LoadTrack",_0: a};
    };
+   var initial = {track: $Maybe.Nothing,notFound: false};
    var Screen = F2(function (a,b) {
       return {track: a,notFound: b};
    });
    return _elm.Screens.ShowTrack.Types.values = {_op: _op
                                                 ,Screen: Screen
-                                                ,SetTrack: SetTrack
-                                                ,TrackNotFound: TrackNotFound};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Core = Elm.Game.Core || {};
-Elm.Game.Core.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Core = _elm.Game.Core || {};
-   if (_elm.Game.Core.values) return _elm.Game.Core.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var isNothing = function (m) {
-      var _p0 = m;
-      if (_p0.ctor === "Nothing") {
-            return true;
-         } else {
-            return false;
-         }
-   };
-   var isJust = function (m) {
-      return $Basics.not(isNothing(m));
-   };
-   var floatRange = F2(function (from,to) {
-      return A2($List.map,$Basics.toFloat,_U.range(from,to));
-   });
-   var find = F2(function (f,list) {
-      return $List.head(A2($List.filter,f,list));
-   });
-   var exists = F2(function (f,list) {
-      return isJust(A2(find,f,list));
-   });
-   var lift = F2(function (n,items) {
-      return $List.head(A2($List.drop,n,items));
-   });
-   var average = function (items) {
-      return $List.sum(items) / $Basics.toFloat($List.length(items));
-   };
-   var compact = function (maybes) {
-      var folder = F2(function (m,list) {
-         var _p1 = m;
-         if (_p1.ctor === "Just") {
-               return A2($List._op["::"],_p1._0,list);
-            } else {
-               return list;
-            }
-      });
-      return A3($List.foldl,folder,_U.list([]),maybes);
-   };
-   var getCountdown = function (maybeCountdown) {
-      return A2($Maybe.withDefault,0,maybeCountdown);
-   };
-   var floatMod = F2(function (val,div) {
-      var flooredQuotient = $Basics.toFloat($Basics.floor(val / div));
-      return val - flooredQuotient * div;
-   });
-   var toDegrees = function (rad) {
-      return (0 - rad) * 180 / $Basics.pi + 90;
-   };
-   var toRadians = function (deg) {
-      return $Basics.radians((90 - deg) * $Basics.pi / 180);
-   };
-   return _elm.Game.Core.values = {_op: _op
-                                  ,toRadians: toRadians
-                                  ,toDegrees: toDegrees
-                                  ,floatMod: floatMod
-                                  ,getCountdown: getCountdown
-                                  ,compact: compact
-                                  ,average: average
-                                  ,lift: lift
-                                  ,find: find
-                                  ,exists: exists
-                                  ,floatRange: floatRange
-                                  ,isNothing: isNothing
-                                  ,isJust: isJust};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Geo = Elm.Game.Geo || {};
-Elm.Game.Geo.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Geo = _elm.Game.Geo || {};
-   if (_elm.Game.Geo.values) return _elm.Game.Geo.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var angleDelta = F2(function (a1,a2) {
-      var delta = a1 - a2;
-      return _U.cmp(delta,180) > 0 ? delta - 360 : _U.cmp(delta,
-      -180) < 1 ? delta + 360 : delta;
-   });
-   var inSector = F3(function (b1,b2,angle) {
-      var a2 = 0 - A2(angleDelta,angle,b2);
-      var a1 = 0 - A2(angleDelta,b1,angle);
-      return _U.cmp(a1,0) > -1 && _U.cmp(a2,0) > -1;
-   });
-   var ensure360 = function (val) {
-      var rounded = $Basics.round(val);
-      var excess = val - $Basics.toFloat(rounded);
-      return $Basics.toFloat(A2($Basics._op["%"],
-      rounded + 360,
-      360)) + excess;
-   };
-   var angleBetween = F2(function (_p1,_p0) {
-      var _p2 = _p1;
-      var _p3 = _p0;
-      var yDelta = _p3._1 - _p2._1;
-      var xDelta = _p3._0 - _p2._0;
-      var rad = A2($Basics.atan2,yDelta,xDelta);
-      return ensure360($Game$Core.toDegrees(rad));
-   });
-   var rotateDeg = F2(function (deg,radius) {
-      var a = $Game$Core.toRadians(deg);
-      return {ctor: "_Tuple2"
-             ,_0: radius * $Basics.cos(a)
-             ,_1: radius * $Basics.sin(a)};
-   });
-   var movePoint = F4(function (_p4,delta,velocity,direction) {
-      var _p5 = _p4;
-      var angle = $Game$Core.toRadians(direction);
-      var x$ = _p5._0 + delta * 1.0e-3 * velocity * $Basics.cos(angle);
-      var y$ = _p5._1 + delta * 1.0e-3 * velocity * $Basics.sin(angle);
-      return {ctor: "_Tuple2",_0: x$,_1: y$};
-   });
-   var toBox = F3(function (_p6,w,h) {
-      var _p7 = _p6;
-      var _p9 = _p7._1;
-      var _p8 = _p7._0;
-      return {ctor: "_Tuple2"
-             ,_0: {ctor: "_Tuple2",_0: _p8 + w / 2,_1: _p9 + h / 2}
-             ,_1: {ctor: "_Tuple2",_0: _p8 - w / 2,_1: _p9 - h / 2}};
-   });
-   var inBox = F2(function (_p11,_p10) {
-      var _p12 = _p11;
-      var _p15 = _p12._1;
-      var _p14 = _p12._0;
-      var _p13 = _p10;
-      return _U.cmp(_p14,_p13._1._0) > 0 && (_U.cmp(_p14,
-      _p13._0._0) < 0 && (_U.cmp(_p15,_p13._1._1) > 0 && _U.cmp(_p15,
-      _p13._0._1) < 0));
-   });
-   var distance = F2(function (_p17,_p16) {
-      var _p18 = _p17;
-      var _p19 = _p16;
-      return $Basics.sqrt(Math.pow(_p18._0 - _p19._0,
-      2) + Math.pow(_p18._1 - _p19._1,2));
-   });
-   var scale = F2(function (s,_p20) {
-      var _p21 = _p20;
-      return {ctor: "_Tuple2",_0: _p21._0 * s,_1: _p21._1 * s};
-   });
-   var neg = function (_p22) {
-      var _p23 = _p22;
-      return {ctor: "_Tuple2",_0: 0 - _p23._0,_1: 0 - _p23._1};
-   };
-   var sub = F2(function (_p25,_p24) {
-      var _p26 = _p25;
-      var _p27 = _p24;
-      return {ctor: "_Tuple2"
-             ,_0: _p27._0 - _p26._0
-             ,_1: _p27._1 - _p26._1};
-   });
-   var add = F2(function (_p29,_p28) {
-      var _p30 = _p29;
-      var _p31 = _p28;
-      return {ctor: "_Tuple2"
-             ,_0: _p31._0 + _p30._0
-             ,_1: _p31._1 + _p30._1};
-   });
-   var floatify = function (_p32) {
-      var _p33 = _p32;
-      return {ctor: "_Tuple2"
-             ,_0: $Basics.toFloat(_p33._0)
-             ,_1: $Basics.toFloat(_p33._1)};
-   };
-   return _elm.Game.Geo.values = {_op: _op
-                                 ,floatify: floatify
-                                 ,add: add
-                                 ,sub: sub
-                                 ,neg: neg
-                                 ,scale: scale
-                                 ,distance: distance
-                                 ,inBox: inBox
-                                 ,toBox: toBox
-                                 ,movePoint: movePoint
-                                 ,rotateDeg: rotateDeg
-                                 ,ensure360: ensure360
-                                 ,angleDelta: angleDelta
-                                 ,angleBetween: angleBetween
-                                 ,inSector: inSector};
+                                                ,initial: initial
+                                                ,LoadTrack: LoadTrack
+                                                ,NoOp: NoOp};
 };
 Elm.Automaton = Elm.Automaton || {};
 Elm.Automaton.make = function (_elm) {
@@ -12037,6 +11763,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var SetDownwindY = function (a) {
       return {ctor: "SetDownwindY",_0: a};
    };
+   var NoOp = {ctor: "NoOp"};
    var SaveResult = function (a) {
       return {ctor: "SaveResult",_0: a};
    };
@@ -12056,9 +11783,8 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var MouseAction = function (a) {
       return {ctor: "MouseAction",_0: a};
    };
-   var TrackNotFound = {ctor: "TrackNotFound"};
-   var SetTrack = function (a) {
-      return {ctor: "SetTrack",_0: a};
+   var LoadTrack = function (a) {
+      return {ctor: "LoadTrack",_0: a};
    };
    var Watch = {ctor: "Watch"};
    var realMode = function (_p1) {
@@ -12078,18 +11804,24 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
              ,name: f
              ,saving: g};
    });
+   var initial = function (dims) {
+      return {track: $Maybe.Nothing
+             ,editor: $Maybe.Nothing
+             ,notFound: false
+             ,dims: dims};
+   };
    var Screen = F4(function (a,b,c,d) {
       return {track: a,editor: b,notFound: c,dims: d};
    });
    return _elm.Screens.EditTrack.Types.values = {_op: _op
                                                 ,Screen: Screen
+                                                ,initial: initial
                                                 ,Editor: Editor
                                                 ,CreateTile: CreateTile
                                                 ,Erase: Erase
                                                 ,Watch: Watch
                                                 ,realMode: realMode
-                                                ,SetTrack: SetTrack
-                                                ,TrackNotFound: TrackNotFound
+                                                ,LoadTrack: LoadTrack
                                                 ,MouseAction: MouseAction
                                                 ,SetMode: SetMode
                                                 ,AltMoveMode: AltMoveMode
@@ -12097,6 +11829,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,SetName: SetName
                                                 ,Save: Save
                                                 ,SaveResult: SaveResult
+                                                ,NoOp: NoOp
                                                 ,SetDownwindY: SetDownwindY
                                                 ,SetUpwindY: SetUpwindY
                                                 ,SetGateWidth: SetGateWidth
@@ -12133,10 +11866,92 @@ Elm.Screens.ShowProfile.Types.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
+   var initial = function (player) {    return {player: player};};
    var Screen = function (a) {    return {player: a};};
    return _elm.Screens.ShowProfile.Types.values = {_op: _op
                                                   ,Screen: Screen
+                                                  ,initial: initial
                                                   ,NoOp: NoOp};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Core = Elm.Game.Core || {};
+Elm.Game.Core.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Core = _elm.Game.Core || {};
+   if (_elm.Game.Core.values) return _elm.Game.Core.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var isNothing = function (m) {
+      var _p0 = m;
+      if (_p0.ctor === "Nothing") {
+            return true;
+         } else {
+            return false;
+         }
+   };
+   var isJust = function (m) {
+      return $Basics.not(isNothing(m));
+   };
+   var floatRange = F2(function (from,to) {
+      return A2($List.map,$Basics.toFloat,_U.range(from,to));
+   });
+   var find = F2(function (f,list) {
+      return $List.head(A2($List.filter,f,list));
+   });
+   var exists = F2(function (f,list) {
+      return isJust(A2(find,f,list));
+   });
+   var lift = F2(function (n,items) {
+      return $List.head(A2($List.drop,n,items));
+   });
+   var average = function (items) {
+      return $List.sum(items) / $Basics.toFloat($List.length(items));
+   };
+   var compact = function (maybes) {
+      var folder = F2(function (m,list) {
+         var _p1 = m;
+         if (_p1.ctor === "Just") {
+               return A2($List._op["::"],_p1._0,list);
+            } else {
+               return list;
+            }
+      });
+      return A3($List.foldl,folder,_U.list([]),maybes);
+   };
+   var getCountdown = function (maybeCountdown) {
+      return A2($Maybe.withDefault,0,maybeCountdown);
+   };
+   var floatMod = F2(function (val,div) {
+      var flooredQuotient = $Basics.toFloat($Basics.floor(val / div));
+      return val - flooredQuotient * div;
+   });
+   var toDegrees = function (rad) {
+      return (0 - rad) * 180 / $Basics.pi + 90;
+   };
+   var toRadians = function (deg) {
+      return $Basics.radians((90 - deg) * $Basics.pi / 180);
+   };
+   return _elm.Game.Core.values = {_op: _op
+                                  ,toRadians: toRadians
+                                  ,toDegrees: toDegrees
+                                  ,floatMod: floatMod
+                                  ,getCountdown: getCountdown
+                                  ,compact: compact
+                                  ,average: average
+                                  ,lift: lift
+                                  ,find: find
+                                  ,exists: exists
+                                  ,floatRange: floatRange
+                                  ,isNothing: isNothing
+                                  ,isJust: isJust};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Models = Elm.Game.Models || {};
@@ -12599,11 +12414,21 @@ Elm.Game.Inputs.make = function (_elm) {
              ,startCountdown: e
              ,escapeRace: f};
    });
-   var GameInput = F3(function (a,b,c) {
-      return {keyboardInput: a,windowInput: b,raceInput: c};
+   var Clock = F2(function (a,b) {    return {delta: a,time: b};});
+   var GameInput = F4(function (a,b,c,d) {
+      return {keyboardInput: a
+             ,windowInput: b
+             ,clock: c
+             ,raceInput: d};
+   });
+   var buildGameInput = F2(function (_p0,clock) {
+      var _p1 = _p0;
+      return A2($Maybe.map,A3(GameInput,_p1._0,_p1._1,clock),_p1._2);
    });
    return _elm.Game.Inputs.values = {_op: _op
+                                    ,buildGameInput: buildGameInput
                                     ,GameInput: GameInput
+                                    ,Clock: Clock
                                     ,KeyboardInput: KeyboardInput
                                     ,emptyKeyboardInput: emptyKeyboardInput
                                     ,UserArrows: UserArrows
@@ -12635,7 +12460,8 @@ Elm.Screens.Game.Types.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
    var NewMessage = function (a) {
@@ -12650,14 +12476,26 @@ Elm.Screens.Game.Types.make = function (_elm) {
    var GameUpdate = function (a) {
       return {ctor: "GameUpdate",_0: a};
    };
-   var PingServer = {ctor: "PingServer"};
-   var TrackNotFound = {ctor: "TrackNotFound"};
+   var PingServer = function (a) {
+      return {ctor: "PingServer",_0: a};
+   };
    var UpdateLiveTrack = function (a) {
       return {ctor: "UpdateLiveTrack",_0: a};
    };
-   var SetLiveTrack = function (a) {
-      return {ctor: "SetLiveTrack",_0: a};
+   var InitGameState = F2(function (a,b) {
+      return {ctor: "InitGameState",_0: a,_1: b};
+   });
+   var LoadLiveTrack = function (a) {
+      return {ctor: "LoadLiveTrack",_0: a};
    };
+   var initial = {liveTrack: $Maybe.Nothing
+                 ,gameState: $Maybe.Nothing
+                 ,races: _U.list([])
+                 ,freePlayers: _U.list([])
+                 ,live: false
+                 ,messages: _U.list([])
+                 ,messageField: ""
+                 ,notFound: false};
    var Screen = F8(function (a,b,c,d,e,f,g,h) {
       return {liveTrack: a
              ,gameState: b
@@ -12670,9 +12508,10 @@ Elm.Screens.Game.Types.make = function (_elm) {
    });
    return _elm.Screens.Game.Types.values = {_op: _op
                                            ,Screen: Screen
-                                           ,SetLiveTrack: SetLiveTrack
+                                           ,initial: initial
+                                           ,LoadLiveTrack: LoadLiveTrack
+                                           ,InitGameState: InitGameState
                                            ,UpdateLiveTrack: UpdateLiveTrack
-                                           ,TrackNotFound: TrackNotFound
                                            ,PingServer: PingServer
                                            ,GameUpdate: GameUpdate
                                            ,EnterChat: EnterChat
@@ -12682,6 +12521,70 @@ Elm.Screens.Game.Types.make = function (_elm) {
                                            ,NewMessage: NewMessage
                                            ,NoOp: NoOp};
 };
+Elm.Routes = Elm.Routes || {};
+Elm.Routes.make = function (_elm) {
+   "use strict";
+   _elm.Routes = _elm.Routes || {};
+   if (_elm.Routes.values) return _elm.Routes.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var toPath = function (route) {
+      var _p0 = route;
+      switch (_p0.ctor)
+      {case "Home": return "/";
+         case "Login": return "/login";
+         case "Register": return "/register";
+         case "ShowProfile": return "/me";
+         case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
+         case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
+         default: return A2($Basics._op["++"],"/play/",_p0._0);}
+   };
+   var PlayTrack = function (a) {
+      return {ctor: "PlayTrack",_0: a};
+   };
+   var EditTrack = function (a) {
+      return {ctor: "EditTrack",_0: a};
+   };
+   var ShowTrack = function (a) {
+      return {ctor: "ShowTrack",_0: a};
+   };
+   var ShowProfile = {ctor: "ShowProfile"};
+   var Register = {ctor: "Register"};
+   var Login = {ctor: "Login"};
+   var Home = {ctor: "Home"};
+   var routeParsers = _U.list([A2($RouteParser.$static,Home,"/")
+                              ,A2($RouteParser.$static,Login,"/login")
+                              ,A2($RouteParser.$static,Register,"/register")
+                              ,A2($RouteParser.$static,ShowProfile,"/me")
+                              ,A4($RouteParser.dyn1,
+                              ShowTrack,
+                              "/track/",
+                              $RouteParser.string,
+                              "")
+                              ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
+                              ,A4($RouteParser.dyn1,
+                              PlayTrack,
+                              "/play/",
+                              $RouteParser.string,
+                              "")]);
+   return _elm.Routes.values = {_op: _op
+                               ,Home: Home
+                               ,Login: Login
+                               ,Register: Register
+                               ,ShowProfile: ShowProfile
+                               ,ShowTrack: ShowTrack
+                               ,EditTrack: EditTrack
+                               ,PlayTrack: PlayTrack
+                               ,routeParsers: routeParsers
+                               ,toPath: toPath};
+};
 Elm.AppTypes = Elm.AppTypes || {};
 Elm.AppTypes.make = function (_elm) {
    "use strict";
@@ -12690,10 +12593,12 @@ Elm.AppTypes.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
@@ -12704,56 +12609,36 @@ Elm.AppTypes.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var react = F2(function (screen,task) {
-      return {screen: screen,reaction: $Maybe.Just(task)};
-   });
-   var local = function (screen) {
-      return {screen: screen,reaction: $Maybe.Nothing};
-   };
-   var Never = function (a) {    return {ctor: "Never",_0: a};};
-   var ScreenUpdate = F2(function (a,b) {
-      return {screen: a,reaction: b};
-   });
-   var NoScreen = {ctor: "NoScreen"};
    var initialAppState = F2(function (dims,player) {
-      return {player: player,screen: NoScreen,dims: dims};
-   });
-   var NotFoundScreen = function (a) {
-      return {ctor: "NotFoundScreen",_0: a};
-   };
-   var GameScreen = function (a) {
-      return {ctor: "GameScreen",_0: a};
-   };
-   var ShowProfileScreen = function (a) {
-      return {ctor: "ShowProfileScreen",_0: a};
-   };
-   var EditTrackScreen = function (a) {
-      return {ctor: "EditTrackScreen",_0: a};
-   };
-   var ShowTrackScreen = function (a) {
-      return {ctor: "ShowTrackScreen",_0: a};
-   };
-   var RegisterScreen = function (a) {
-      return {ctor: "RegisterScreen",_0: a};
-   };
-   var LoginScreen = function (a) {
-      return {ctor: "LoginScreen",_0: a};
-   };
-   var HomeScreen = function (a) {
-      return {ctor: "HomeScreen",_0: a};
-   };
-   var AppState = F3(function (a,b,c) {
-      return {player: a,dims: b,screen: c};
-   });
-   var AppUpdate = F2(function (a,b) {
-      return {appState: a,reaction: b};
+      return {player: player
+             ,dims: dims
+             ,route: $Maybe.Just($Routes.Home)
+             ,path: "/"
+             ,screens: {home: $Screens$Home$Types.initial(player)
+                       ,login: $Screens$Login$Types.initial
+                       ,register: $Screens$Register$Types.initial
+                       ,showTrack: $Screens$ShowTrack$Types.initial
+                       ,editTrack: $Screens$EditTrack$Types.initial(dims)
+                       ,showProfile: $Screens$ShowProfile$Types.initial(player)
+                       ,game: $Screens$Game$Types.initial}};
    });
    var initialAppUpdate = F2(function (dims,player) {
-      return A2(AppUpdate,
-      A2(initialAppState,dims,player),
-      $Maybe.Nothing);
+      return {ctor: "_Tuple2"
+             ,_0: A2(initialAppState,dims,player)
+             ,_1: $Effects.none};
    });
-   var Clock = F2(function (a,b) {    return {delta: a,time: b};});
+   var Screens = F7(function (a,b,c,d,e,f,g) {
+      return {home: a
+             ,login: b
+             ,register: c
+             ,showTrack: d
+             ,editTrack: e
+             ,showProfile: f
+             ,game: g};
+   });
+   var AppState = F5(function (a,b,c,d,e) {
+      return {player: a,dims: b,route: c,path: d,screens: e};
+   });
    var GameAction = function (a) {
       return {ctor: "GameAction",_0: a};
    };
@@ -12783,25 +12668,39 @@ Elm.AppTypes.make = function (_elm) {
    var UpdateDims = function (a) {
       return {ctor: "UpdateDims",_0: a};
    };
+   var PathChanged = function (a) {
+      return {ctor: "PathChanged",_0: a};
+   };
    var SetPath = function (a) {
       return {ctor: "SetPath",_0: a};
    };
    var SetPlayer = function (a) {
       return {ctor: "SetPlayer",_0: a};
    };
-   var AppInput = F2(function (a,b) {
-      return {action: a,clock: b};
-   });
    var AppSetup = F2(function (a,b) {
       return {player: a,path: b};
    });
+   _op["?:"] = F2(function (result,$default) {
+      return A2($Result.withDefault,$default,result);
+   });
+   _op["?"] = F2(function (maybe,$default) {
+      return A2($Maybe.withDefault,$default,maybe);
+   });
+   _op["&:"] = F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   });
+   _op["&!"] = F2(function (model,task) {
+      return {ctor: "_Tuple2",_0: model,_1: $Effects.task(task)};
+   });
    var appActionsMailbox = $Signal.mailbox(AppNoOp);
+   var appActionsAddress = appActionsMailbox.address;
    return _elm.AppTypes.values = {_op: _op
                                  ,appActionsMailbox: appActionsMailbox
+                                 ,appActionsAddress: appActionsAddress
                                  ,AppSetup: AppSetup
-                                 ,AppInput: AppInput
                                  ,SetPlayer: SetPlayer
                                  ,SetPath: SetPath
+                                 ,PathChanged: PathChanged
                                  ,UpdateDims: UpdateDims
                                  ,ScreenAction: ScreenAction
                                  ,Logout: Logout
@@ -12813,22 +12712,8 @@ Elm.AppTypes.make = function (_elm) {
                                  ,EditTrackAction: EditTrackAction
                                  ,ShowProfileAction: ShowProfileAction
                                  ,GameAction: GameAction
-                                 ,Clock: Clock
-                                 ,AppUpdate: AppUpdate
                                  ,AppState: AppState
-                                 ,HomeScreen: HomeScreen
-                                 ,LoginScreen: LoginScreen
-                                 ,RegisterScreen: RegisterScreen
-                                 ,ShowTrackScreen: ShowTrackScreen
-                                 ,EditTrackScreen: EditTrackScreen
-                                 ,ShowProfileScreen: ShowProfileScreen
-                                 ,GameScreen: GameScreen
-                                 ,NotFoundScreen: NotFoundScreen
-                                 ,NoScreen: NoScreen
-                                 ,ScreenUpdate: ScreenUpdate
-                                 ,Never: Never
-                                 ,local: local
-                                 ,react: react
+                                 ,Screens: Screens
                                  ,initialAppUpdate: initialAppUpdate
                                  ,initialAppState: initialAppState};
 };
@@ -13638,11 +13523,11 @@ Elm.ServerApi.make = function (_elm) {
    _elm.ServerApi = _elm.ServerApi || {};
    if (_elm.ServerApi.values) return _elm.ServerApi.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Decoders = Elm.Decoders.make(_elm),
    $Dict = Elm.Dict.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $Encoders = Elm.Encoders.make(_elm),
    $Http = Elm.Http.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
@@ -13805,69 +13690,55 @@ Elm.ServerApi.make = function (_elm) {
                                   ,errorsDecoder: errorsDecoder
                                   ,serverError: serverError};
 };
-Elm.Routes = Elm.Routes || {};
-Elm.Routes.make = function (_elm) {
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.UpdateUtils = Elm.Screens.UpdateUtils || {};
+Elm.Screens.UpdateUtils.make = function (_elm) {
    "use strict";
-   _elm.Routes = _elm.Routes || {};
-   if (_elm.Routes.values) return _elm.Routes.values;
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.UpdateUtils = _elm.Screens.UpdateUtils || {};
+   if (_elm.Screens.UpdateUtils.values)
+   return _elm.Screens.UpdateUtils.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $RouteParser = Elm.RouteParser.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var toPath = function (route) {
-      var _p0 = route;
-      switch (_p0.ctor)
-      {case "Home": return "/";
-         case "Login": return "/login";
-         case "Register": return "/register";
-         case "ShowProfile": return "/me";
-         case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
-         case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
-         default: return A2($Basics._op["++"],"/play/",_p0._0);}
+   var screenAddr = function (toScreenAction) {
+      return A2($Signal.forwardTo,
+      $AppTypes.appActionsAddress,
+      function (_p0) {
+         return $AppTypes.ScreenAction(toScreenAction(_p0));
+      });
    };
-   var PlayTrack = function (a) {
-      return {ctor: "PlayTrack",_0: a};
+   var always = F2(function (action,effect) {
+      return A2($Effects.map,
+      function (_p1) {
+         return action;
+      },
+      effect);
+   });
+   var setPlayer = function (player) {
+      return $Effects.task(A2($Signal.send,
+      $AppTypes.appActionsAddress,
+      $AppTypes.SetPlayer(player)));
    };
-   var EditTrack = function (a) {
-      return {ctor: "EditTrack",_0: a};
+   var redirect = function (route) {
+      return $Effects.task(A2($Signal.send,
+      $AppTypes.appActionsAddress,
+      $AppTypes.SetPath($Routes.toPath(route))));
    };
-   var ShowTrack = function (a) {
-      return {ctor: "ShowTrack",_0: a};
-   };
-   var ShowProfile = {ctor: "ShowProfile"};
-   var Register = {ctor: "Register"};
-   var Login = {ctor: "Login"};
-   var Home = {ctor: "Home"};
-   var routeParsers = _U.list([A2($RouteParser.$static,Home,"/")
-                              ,A2($RouteParser.$static,Login,"/login")
-                              ,A2($RouteParser.$static,Register,"/register")
-                              ,A2($RouteParser.$static,ShowProfile,"/me")
-                              ,A4($RouteParser.dyn1,
-                              ShowTrack,
-                              "/track/",
-                              $RouteParser.string,
-                              "")
-                              ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
-                              ,A4($RouteParser.dyn1,
-                              PlayTrack,
-                              "/play/",
-                              $RouteParser.string,
-                              "")]);
-   return _elm.Routes.values = {_op: _op
-                               ,Home: Home
-                               ,Login: Login
-                               ,Register: Register
-                               ,ShowProfile: ShowProfile
-                               ,ShowTrack: ShowTrack
-                               ,EditTrack: EditTrack
-                               ,PlayTrack: PlayTrack
-                               ,routeParsers: routeParsers
-                               ,toPath: toPath};
+   return _elm.Screens.UpdateUtils.values = {_op: _op
+                                            ,redirect: redirect
+                                            ,setPlayer: setPlayer
+                                            ,always: always
+                                            ,screenAddr: screenAddr};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Home = Elm.Screens.Home || {};
@@ -13883,89 +13754,72 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $History = Elm.History.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
    $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Task$Extra = Elm.Task.Extra.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
-   var addr = A2($Signal.forwardTo,
-   $AppTypes.appActionsMailbox.address,
-   function (_p0) {
-      return $AppTypes.ScreenAction($AppTypes.HomeAction(_p0));
-   });
-   var refreshLiveStatus = A2($Task.andThen,
-   $ServerApi.getLiveStatus,
-   function (result) {
-      var _p1 = result;
-      if (_p1.ctor === "Ok") {
-            return A2($Signal.send,
-            addr,
-            $Screens$Home$Types.SetLiveStatus(_p1._0));
-         } else {
-            return $Task.succeed({ctor: "_Tuple0"});
-         }
+   var refreshLiveStatus = A2($Task.map,
+   $Screens$Home$Types.SetLiveStatus,
+   $ServerApi.getLiveStatus);
+   var update = F2(function (action,screen) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "SetLiveStatus": var task = A2($Task$Extra.delay,
+           5 * $Time.second,
+           refreshLiveStatus);
+           var liveStatus = A2($AppTypes._op["?:"],
+           _p0._0,
+           screen.liveStatus);
+           return A2($AppTypes._op["&!"],
+           _U.update(screen,{liveStatus: liveStatus}),
+           task);
+         case "SetHandle": return A2($AppTypes._op["&:"],
+           _U.update(screen,{handle: _p0._0}),
+           $Effects.none);
+         case "SubmitHandle": var task = A2($Task.map,
+           $Screens$Home$Types.SubmitHandleResult,
+           $ServerApi.postHandle(screen.handle));
+           return A2($AppTypes._op["&!"],screen,task);
+         case "SubmitHandleResult":
+         var effect = A2($Screens$UpdateUtils.always,
+           $Screens$Home$Types.NoOp,
+           A2($AppTypes._op["?:"],
+           A2($Result.map,$Screens$UpdateUtils.setPlayer,_p0._0),
+           $Effects.none));
+           return A2($AppTypes._op["&:"],screen,effect);
+         case "CreateTrack": return A2($AppTypes._op["&!"],
+           screen,
+           A2($Task.map,
+           $Screens$Home$Types.CreateTrackResult,
+           $ServerApi.createTrack));
+         case "CreateTrackResult": var _p1 = _p0._0;
+           if (_p1.ctor === "Ok") {
+                 return A2($AppTypes._op["&:"],
+                 screen,
+                 A2($Screens$UpdateUtils.always,
+                 $Screens$Home$Types.NoOp,
+                 $Screens$UpdateUtils.redirect($Routes.EditTrack(_p1._0.id))));
+              } else {
+                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+              }
+         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
    var mount = function (player) {
-      var initial = {handle: A2($Maybe.withDefault,
-                    "",
-                    player.handle)
-                    ,liveStatus: {liveTracks: _U.list([])
-                                 ,onlinePlayers: _U.list([])}};
-      return A2($AppTypes.react,initial,refreshLiveStatus);
+      return A2($AppTypes._op["&!"],
+      $Screens$Home$Types.initial(player),
+      refreshLiveStatus);
    };
-   var update = F2(function (action,screen) {
-      var _p2 = action;
-      switch (_p2.ctor)
-      {case "SetLiveStatus": return A2($AppTypes.react,
-           _U.update(screen,{liveStatus: _p2._0}),
-           A2($Task$Extra.delay,5 * $Time.second,refreshLiveStatus));
-         case "SetHandle": return $AppTypes.local(_U.update(screen,
-           {handle: _p2._0}));
-         case "SubmitHandle": return A2($AppTypes.react,
-           screen,
-           A2($Task.andThen,
-           $ServerApi.postHandle(screen.handle),
-           function (result) {
-              var _p3 = result;
-              if (_p3.ctor === "Ok") {
-                    return A2($Signal.send,
-                    addr,
-                    $Screens$Home$Types.SubmitHandleSuccess(_p3._0));
-                 } else {
-                    return $Task.succeed({ctor: "_Tuple0"});
-                 }
-           }));
-         case "SubmitHandleSuccess": return A2($AppTypes.react,
-           screen,
-           A2($Signal.send,
-           $AppTypes.appActionsMailbox.address,
-           $AppTypes.SetPlayer(_p2._0)));
-         case "CreateTrack": return A2($AppTypes.react,
-           screen,
-           A2($Task.andThen,
-           $ServerApi.createTrack,
-           function (result) {
-              var _p4 = result;
-              if (_p4.ctor === "Ok") {
-                    return A2($Signal.send,
-                    addr,
-                    $Screens$Home$Types.TrackCreated(_p4._0.id));
-                 } else {
-                    return $Task.succeed({ctor: "_Tuple0"});
-                 }
-           }));
-         default: return A2($AppTypes.react,
-           screen,
-           $History.setPath($Routes.toPath($Routes.EditTrack(_p2._0))));}
-   });
+   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.HomeAction);
    return _elm.Screens.Home.Updates.values = {_op: _op
                                              ,addr: addr
                                              ,mount: mount
@@ -13987,66 +13841,58 @@ Elm.Screens.Register.Updates.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Dict = Elm.Dict.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Register$Types = Elm.Screens.Register.Types.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var mount = function () {
-      var initial = {handle: ""
-                    ,email: ""
-                    ,password: ""
-                    ,loading: false
-                    ,errors: $Dict.empty};
-      return $AppTypes.local(initial);
-   }();
-   var addr = A2($Signal.forwardTo,
-   $AppTypes.appActionsMailbox.address,
-   function (_p0) {
-      return $AppTypes.ScreenAction($AppTypes.RegisterAction(_p0));
-   });
    var submitTask = function (screen) {
-      return A2($Task.andThen,
+      return A2($Task.map,
+      $Screens$Register$Types.SubmitResult,
       A3($ServerApi.postRegister,
       screen.email,
       screen.handle,
-      screen.password),
-      function (result) {
-         var _p1 = result;
-         if (_p1.ctor === "Ok") {
-               return A2($Signal.send,
-               addr,
-               $Screens$Register$Types.FormSuccess(_p1._0));
-            } else {
-               return A2($Signal.send,
-               addr,
-               $Screens$Register$Types.FormFailure(_p1._0));
-            }
-      });
+      screen.password));
    };
    var update = F2(function (action,screen) {
-      var _p2 = action;
-      switch (_p2.ctor)
-      {case "SetHandle": return $AppTypes.local(_U.update(screen,
-           {handle: _p2._0}));
-         case "SetEmail": return $AppTypes.local(_U.update(screen,
-           {email: _p2._0}));
-         case "SetPassword": return $AppTypes.local(_U.update(screen,
-           {password: _p2._0}));
-         case "Submit": return A2($AppTypes.react,
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "SetHandle": return A2($AppTypes._op["&:"],
+           _U.update(screen,{handle: _p0._0}),
+           $Effects.none);
+         case "SetEmail": return A2($AppTypes._op["&:"],
+           _U.update(screen,{email: _p0._0}),
+           $Effects.none);
+         case "SetPassword": return A2($AppTypes._op["&:"],
+           _U.update(screen,{password: _p0._0}),
+           $Effects.none);
+         case "Submit": return A2($AppTypes._op["&!"],
            _U.update(screen,{loading: true,errors: $Dict.empty}),
            submitTask(screen));
-         case "FormSuccess": return A2($AppTypes.react,
-           _U.update(screen,{loading: false,errors: $Dict.empty}),
-           A2($Signal.send,
-           $AppTypes.appActionsMailbox.address,
-           $AppTypes.SetPlayer(_p2._0)));
-         default: return $AppTypes.local(_U.update(screen,
-           {loading: false,errors: _p2._0}));}
+         case "SubmitResult": var _p1 = _p0._0;
+           if (_p1.ctor === "Ok") {
+                 var effect = A2($Screens$UpdateUtils.always,
+                 $Screens$Register$Types.NoOp,
+                 $Screens$UpdateUtils.setPlayer(_p1._0));
+                 var newScreen = _U.update(screen,
+                 {loading: false,errors: $Dict.empty});
+                 return A2($AppTypes._op["&:"],newScreen,effect);
+              } else {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(screen,{loading: false,errors: _p1._0}),
+                 $Effects.none);
+              }
+         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
+   var mount = A2($AppTypes._op["&:"],
+   $Screens$Register$Types.initial,
+   $Effects.none);
+   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.RegisterAction);
    return _elm.Screens.Register.Updates.values = {_op: _op
                                                  ,addr: addr
                                                  ,mount: mount
@@ -14067,58 +13913,51 @@ Elm.Screens.Login.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Login$Types = Elm.Screens.Login.Types.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var mount = function () {
-      var initial = {email: ""
-                    ,password: ""
-                    ,loading: false
-                    ,error: false};
-      return $AppTypes.local(initial);
-   }();
-   var addr = A2($Signal.forwardTo,
-   $AppTypes.appActionsMailbox.address,
-   function (_p0) {
-      return $AppTypes.ScreenAction($AppTypes.LoginAction(_p0));
-   });
    var submitTask = function (screen) {
-      return A2($Task.andThen,
-      A2($ServerApi.postLogin,screen.email,screen.password),
-      function (result) {
-         var _p1 = result;
-         if (_p1.ctor === "Ok") {
-               return A2($Signal.send,
-               addr,
-               $Screens$Login$Types.Success(_p1._0));
-            } else {
-               return A2($Signal.send,addr,$Screens$Login$Types.Error);
-            }
-      });
+      return A2($Task.map,
+      $Screens$Login$Types.SubmitResult,
+      A2($ServerApi.postLogin,screen.email,screen.password));
    };
    var update = F2(function (action,screen) {
-      var _p2 = action;
-      switch (_p2.ctor)
-      {case "SetEmail": return $AppTypes.local(_U.update(screen,
-           {email: _p2._0}));
-         case "SetPassword": return $AppTypes.local(_U.update(screen,
-           {password: _p2._0}));
-         case "Submit": return A2($AppTypes.react,
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "SetEmail": return A2($AppTypes._op["&:"],
+           _U.update(screen,{email: _p0._0}),
+           $Effects.none);
+         case "SetPassword": return A2($AppTypes._op["&:"],
+           _U.update(screen,{password: _p0._0}),
+           $Effects.none);
+         case "Submit": return A2($AppTypes._op["&!"],
            _U.update(screen,{loading: true}),
            submitTask(screen));
-         case "Success": return A2($AppTypes.react,
-           _U.update(screen,{loading: false,error: false}),
-           A2($Signal.send,
-           $AppTypes.appActionsMailbox.address,
-           $AppTypes.SetPlayer(_p2._0)));
-         default: return $AppTypes.local(_U.update(screen,
-           {loading: false,error: true}));}
+         case "SubmitResult": var _p1 = _p0._0;
+           if (_p1.ctor === "Ok") {
+                 var effect = A2($Screens$UpdateUtils.always,
+                 $Screens$Login$Types.NoOp,
+                 $Screens$UpdateUtils.setPlayer(_p1._0));
+                 var newScreen = _U.update(screen,{loading: false,error: false});
+                 return A2($AppTypes._op["&:"],newScreen,effect);
+              } else {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(screen,{loading: false,error: true}),
+                 $Effects.none);
+              }
+         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
+   var mount = A2($AppTypes._op["&:"],
+   $Screens$Login$Types.initial,
+   $Effects.none);
+   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.LoginAction);
    return _elm.Screens.Login.Updates.values = {_op: _op
                                               ,addr: addr
                                               ,mount: mount
@@ -14139,46 +13978,44 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
+   var loadTrack = function (slug) {
+      return A2($Task.map,
+      $Screens$ShowTrack$Types.LoadTrack,
+      $ServerApi.getTrack(slug));
+   };
    var update = F2(function (action,screen) {
       var _p0 = action;
-      if (_p0.ctor === "SetTrack") {
-            return $AppTypes.local(_U.update(screen,
-            {track: $Maybe.Just(_p0._0)}));
+      if (_p0.ctor === "LoadTrack") {
+            var _p1 = _p0._0;
+            if (_p1.ctor === "Ok") {
+                  return A2($AppTypes._op["&:"],
+                  _U.update(screen,{track: $Maybe.Just(_p1._0)}),
+                  $Effects.none);
+               } else {
+                  return A2($AppTypes._op["&:"],
+                  _U.update(screen,{notFound: true}),
+                  $Effects.none);
+               }
          } else {
-            return $AppTypes.local(_U.update(screen,{notFound: true}));
+            return A2($AppTypes._op["&:"],screen,$Effects.none);
          }
    });
-   var addr = A2($Signal.forwardTo,
-   $AppTypes.appActionsMailbox.address,
-   function (_p1) {
-      return $AppTypes.ScreenAction($AppTypes.ShowTrackAction(_p1));
-   });
-   var loadTrack = function (slug) {
-      return A2($Task.andThen,
-      $ServerApi.getTrack(slug),
-      function (result) {
-         var _p2 = result;
-         if (_p2.ctor === "Ok") {
-               return A2($Signal.send,
-               addr,
-               $Screens$ShowTrack$Types.SetTrack(_p2._0));
-            } else {
-               return $Task.succeed({ctor: "_Tuple0"});
-            }
-      });
-   };
    var mount = function (slug) {
-      var initial = {track: $Maybe.Nothing,notFound: false};
-      return A2($AppTypes.react,initial,loadTrack(slug));
+      return A2($AppTypes._op["&!"],
+      $Screens$ShowTrack$Types.initial,
+      loadTrack(slug));
    };
+   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowTrackAction);
    return _elm.Screens.ShowTrack.Updates.values = {_op: _op
                                                   ,addr: addr
                                                   ,mount: mount
@@ -14758,6 +14595,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
@@ -14767,6 +14605,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $Screens$EditTrack$FormUpdates = Elm.Screens.EditTrack.FormUpdates.make(_elm),
    $Screens$EditTrack$GridUpdates = Elm.Screens.EditTrack.GridUpdates.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
@@ -14804,11 +14643,22 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       {ctor: "_Tuple2",_0: right,_1: top},
       {ctor: "_Tuple2",_0: left,_1: bottom});
    };
-   var getCourseDims = function (_p0) {
+   var save = F2(function (id,_p0) {
       var _p1 = _p0;
+      var _p2 = _p1.course;
+      var area = getRaceArea(_p2.grid);
+      var withArea = _U.update(_p2,{area: area});
+      return A2($Task.map,
+      $Screens$EditTrack$Types.SaveResult,
+      A2($Task$Extra.delay,
+      500,
+      A3($ServerApi.saveTrack,id,_p1.name,withArea)));
+   });
+   var getCourseDims = function (_p3) {
+      var _p4 = _p3;
       return {ctor: "_Tuple2"
-             ,_0: _p1._0 - $Constants.sidebarWidth
-             ,_1: _p1._1};
+             ,_0: _p4._0 - $Constants.sidebarWidth
+             ,_1: _p4._1};
    };
    var updateDims = F2(function (dims,screen) {
       var newEditor = A2($Maybe.map,
@@ -14818,6 +14668,11 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       screen.editor);
       return _U.update(screen,{editor: newEditor,dims: dims});
    });
+   var loadTrack = function (id) {
+      return A2($Task.map,
+      $Screens$EditTrack$Types.LoadTrack,
+      $ServerApi.getTrack(id));
+   };
    var updateCourse = F2(function (update,editor) {
       return _U.update(editor,{course: update(editor.course)});
    });
@@ -14825,114 +14680,99 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       var newEditor = A2($Maybe.map,update,screen.editor);
       return _U.update(screen,{editor: newEditor});
    });
+   var update = F2(function (action,screen) {
+      var _p5 = action;
+      switch (_p5.ctor)
+      {case "LoadTrack": var _p6 = _p5._0;
+           if (_p6.ctor === "Ok") {
+                 var _p7 = _p6._0;
+                 var editor = {course: _p7.course
+                              ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
+                              ,courseDims: getCourseDims(screen.dims)
+                              ,mode: $Screens$EditTrack$Types.Watch
+                              ,altMove: false
+                              ,name: _p7.name
+                              ,saving: false};
+                 return A2($AppTypes._op["&:"],
+                 _U.update(screen,
+                 {track: $Maybe.Just(_p7),editor: $Maybe.Just(editor)}),
+                 $Effects.none);
+              } else {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(screen,{notFound: true}),
+                 $Effects.none);
+              }
+         case "SetName": return A2($AppTypes._op["&:"],
+           A2(updateEditor,
+           function (e) {
+              return _U.update(e,{name: _p5._0});
+           },
+           screen),
+           $Effects.none);
+         case "MouseAction": return A2($AppTypes._op["&:"],
+           A2(function (_p8) {
+              return updateEditor($Screens$EditTrack$GridUpdates.mouseAction(_p8));
+           },
+           _p5._0,
+           screen),
+           $Effects.none);
+         case "SetMode": return A2($AppTypes._op["&:"],
+           A2(updateEditor,
+           function (e) {
+              return _U.update(e,{mode: _p5._0});
+           },
+           screen),
+           $Effects.none);
+         case "AltMoveMode": return A2($AppTypes._op["&:"],
+           A2(updateEditor,
+           function (e) {
+              return _U.update(e,{altMove: _p5._0});
+           },
+           screen),
+           $Effects.none);
+         case "FormAction": return A2($AppTypes._op["&:"],
+           A2(function (_p9) {
+              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p9)));
+           },
+           _p5._0,
+           screen),
+           $Effects.none);
+         case "Save": var _p10 = {ctor: "_Tuple2"
+                                 ,_0: screen.track
+                                 ,_1: screen.editor};
+           if (_p10.ctor === "_Tuple2" && _p10._0.ctor === "Just" && _p10._1.ctor === "Just")
+           {
+                 return A2($AppTypes._op["&!"],
+                 A2(updateEditor,
+                 function (e) {
+                    return _U.update(e,{saving: true});
+                 },
+                 screen),
+                 A2(save,_p10._0._0.id,_p10._1._0));
+              } else {
+                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+              }
+         case "SaveResult": return A2($AppTypes._op["&:"],
+           A2(updateEditor,
+           function (e) {
+              return _U.update(e,{saving: false});
+           },
+           screen),
+           $Effects.none);
+         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+   });
+   var mount = F2(function (dims,id) {
+      return A2($AppTypes._op["&!"],
+      $Screens$EditTrack$Types.initial(dims),
+      loadTrack(id));
+   });
    var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
                                           $Screens$EditTrack$Types.AltMoveMode,
                                           $Keyboard.shift)
                                           ,A2($Signal.map,
                                           $Screens$EditTrack$Types.MouseAction,
                                           $DragAndDrop.mouseEvents)]));
-   var addr = A2($Signal.forwardTo,
-   $AppTypes.appActionsMailbox.address,
-   function (_p2) {
-      return $AppTypes.ScreenAction($AppTypes.EditTrackAction(_p2));
-   });
-   var loadTrack = function (id) {
-      return A2($Task.andThen,
-      $ServerApi.getTrack(id),
-      function (result) {
-         var _p3 = result;
-         if (_p3.ctor === "Ok") {
-               return A2($Signal.send,
-               addr,
-               $Screens$EditTrack$Types.SetTrack(_p3._0));
-            } else {
-               return $Task.succeed({ctor: "_Tuple0"});
-            }
-      });
-   };
-   var mount = F2(function (dims,id) {
-      var initial = {track: $Maybe.Nothing
-                    ,editor: $Maybe.Nothing
-                    ,notFound: false
-                    ,dims: dims};
-      return A2($AppTypes.react,initial,loadTrack(id));
-   });
-   var save = F2(function (id,_p4) {
-      var _p5 = _p4;
-      var _p7 = _p5.course;
-      var area = getRaceArea(_p7.grid);
-      var withArea = _U.update(_p7,{area: area});
-      return A2($Task.andThen,
-      A2($Task$Extra.delay,
-      500,
-      A3($ServerApi.saveTrack,id,_p5.name,withArea)),
-      function (_p6) {
-         return A2($Signal.send,
-         addr,
-         $Screens$EditTrack$Types.SaveResult(_p6));
-      });
-   });
-   var update = F2(function (action,screen) {
-      var _p8 = action;
-      switch (_p8.ctor)
-      {case "SetTrack": var _p9 = _p8._0;
-           var editor = {course: _p9.course
-                        ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
-                        ,courseDims: getCourseDims(screen.dims)
-                        ,mode: $Screens$EditTrack$Types.Watch
-                        ,altMove: false
-                        ,name: _p9.name
-                        ,saving: false};
-           return $AppTypes.local(_U.update(screen,
-           {track: $Maybe.Just(_p9),editor: $Maybe.Just(editor)}));
-         case "TrackNotFound": return $AppTypes.local(_U.update(screen,
-           {notFound: true}));
-         case "SetName": return $AppTypes.local(A2(updateEditor,
-           function (e) {
-              return _U.update(e,{name: _p8._0});
-           },
-           screen));
-         case "MouseAction": return $AppTypes.local(A2(function (_p10) {
-              return updateEditor($Screens$EditTrack$GridUpdates.mouseAction(_p10));
-           },
-           _p8._0,
-           screen));
-         case "SetMode": return $AppTypes.local(A2(updateEditor,
-           function (e) {
-              return _U.update(e,{mode: _p8._0});
-           },
-           screen));
-         case "AltMoveMode": return $AppTypes.local(A2(updateEditor,
-           function (e) {
-              return _U.update(e,{altMove: _p8._0});
-           },
-           screen));
-         case "FormAction": return $AppTypes.local(A2(function (_p11) {
-              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p11)));
-           },
-           _p8._0,
-           screen));
-         case "Save": var _p12 = {ctor: "_Tuple2"
-                                 ,_0: screen.track
-                                 ,_1: screen.editor};
-           if (_p12.ctor === "_Tuple2" && _p12._0.ctor === "Just" && _p12._1.ctor === "Just")
-           {
-                 return A2($AppTypes.react,
-                 A2(updateEditor,
-                 function (e) {
-                    return _U.update(e,{saving: true});
-                 },
-                 screen),
-                 A2(save,_p12._0._0.id,_p12._1._0));
-              } else {
-                 return $AppTypes.local(screen);
-              }
-         default: return $AppTypes.local(A2(updateEditor,
-           function (e) {
-              return _U.update(e,{saving: false});
-           },
-           screen));}
-   });
+   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.EditTrackAction);
    return _elm.Screens.EditTrack.Updates.values = {_op: _op
                                                   ,addr: addr
                                                   ,inputs: inputs
@@ -14960,30 +14800,152 @@ Elm.Screens.ShowProfile.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$ShowProfile$Types = Elm.Screens.ShowProfile.Types.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var update = F2(function (action,screen) {
       var _p0 = action;
-      return $AppTypes.local(screen);
+      return A2($AppTypes._op["&:"],screen,$Effects.none);
    });
    var mount = function (player) {
-      var initial = {player: player};
-      return $AppTypes.local(initial);
+      return A2($AppTypes._op["&:"],
+      $Screens$ShowProfile$Types.initial(player),
+      $Effects.none);
    };
-   var addr = A2($Signal.forwardTo,
-   $AppTypes.appActionsMailbox.address,
-   function (_p1) {
-      return $AppTypes.ScreenAction($AppTypes.ShowProfileAction(_p1));
-   });
+   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowProfileAction);
    return _elm.Screens.ShowProfile.Updates.values = {_op: _op
                                                     ,addr: addr
                                                     ,mount: mount
                                                     ,update: update};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Geo = Elm.Game.Geo || {};
+Elm.Game.Geo.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Geo = _elm.Game.Geo || {};
+   if (_elm.Game.Geo.values) return _elm.Game.Geo.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Core = Elm.Game.Core.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var angleDelta = F2(function (a1,a2) {
+      var delta = a1 - a2;
+      return _U.cmp(delta,180) > 0 ? delta - 360 : _U.cmp(delta,
+      -180) < 1 ? delta + 360 : delta;
+   });
+   var inSector = F3(function (b1,b2,angle) {
+      var a2 = 0 - A2(angleDelta,angle,b2);
+      var a1 = 0 - A2(angleDelta,b1,angle);
+      return _U.cmp(a1,0) > -1 && _U.cmp(a2,0) > -1;
+   });
+   var ensure360 = function (val) {
+      var rounded = $Basics.round(val);
+      var excess = val - $Basics.toFloat(rounded);
+      return $Basics.toFloat(A2($Basics._op["%"],
+      rounded + 360,
+      360)) + excess;
+   };
+   var angleBetween = F2(function (_p1,_p0) {
+      var _p2 = _p1;
+      var _p3 = _p0;
+      var yDelta = _p3._1 - _p2._1;
+      var xDelta = _p3._0 - _p2._0;
+      var rad = A2($Basics.atan2,yDelta,xDelta);
+      return ensure360($Game$Core.toDegrees(rad));
+   });
+   var rotateDeg = F2(function (deg,radius) {
+      var a = $Game$Core.toRadians(deg);
+      return {ctor: "_Tuple2"
+             ,_0: radius * $Basics.cos(a)
+             ,_1: radius * $Basics.sin(a)};
+   });
+   var movePoint = F4(function (_p4,delta,velocity,direction) {
+      var _p5 = _p4;
+      var angle = $Game$Core.toRadians(direction);
+      var x$ = _p5._0 + delta * 1.0e-3 * velocity * $Basics.cos(angle);
+      var y$ = _p5._1 + delta * 1.0e-3 * velocity * $Basics.sin(angle);
+      return {ctor: "_Tuple2",_0: x$,_1: y$};
+   });
+   var toBox = F3(function (_p6,w,h) {
+      var _p7 = _p6;
+      var _p9 = _p7._1;
+      var _p8 = _p7._0;
+      return {ctor: "_Tuple2"
+             ,_0: {ctor: "_Tuple2",_0: _p8 + w / 2,_1: _p9 + h / 2}
+             ,_1: {ctor: "_Tuple2",_0: _p8 - w / 2,_1: _p9 - h / 2}};
+   });
+   var inBox = F2(function (_p11,_p10) {
+      var _p12 = _p11;
+      var _p15 = _p12._1;
+      var _p14 = _p12._0;
+      var _p13 = _p10;
+      return _U.cmp(_p14,_p13._1._0) > 0 && (_U.cmp(_p14,
+      _p13._0._0) < 0 && (_U.cmp(_p15,_p13._1._1) > 0 && _U.cmp(_p15,
+      _p13._0._1) < 0));
+   });
+   var distance = F2(function (_p17,_p16) {
+      var _p18 = _p17;
+      var _p19 = _p16;
+      return $Basics.sqrt(Math.pow(_p18._0 - _p19._0,
+      2) + Math.pow(_p18._1 - _p19._1,2));
+   });
+   var scale = F2(function (s,_p20) {
+      var _p21 = _p20;
+      return {ctor: "_Tuple2",_0: _p21._0 * s,_1: _p21._1 * s};
+   });
+   var neg = function (_p22) {
+      var _p23 = _p22;
+      return {ctor: "_Tuple2",_0: 0 - _p23._0,_1: 0 - _p23._1};
+   };
+   var sub = F2(function (_p25,_p24) {
+      var _p26 = _p25;
+      var _p27 = _p24;
+      return {ctor: "_Tuple2"
+             ,_0: _p27._0 - _p26._0
+             ,_1: _p27._1 - _p26._1};
+   });
+   var add = F2(function (_p29,_p28) {
+      var _p30 = _p29;
+      var _p31 = _p28;
+      return {ctor: "_Tuple2"
+             ,_0: _p31._0 + _p30._0
+             ,_1: _p31._1 + _p30._1};
+   });
+   var floatify = function (_p32) {
+      var _p33 = _p32;
+      return {ctor: "_Tuple2"
+             ,_0: $Basics.toFloat(_p33._0)
+             ,_1: $Basics.toFloat(_p33._1)};
+   };
+   return _elm.Game.Geo.values = {_op: _op
+                                 ,floatify: floatify
+                                 ,add: add
+                                 ,sub: sub
+                                 ,neg: neg
+                                 ,scale: scale
+                                 ,distance: distance
+                                 ,inBox: inBox
+                                 ,toBox: toBox
+                                 ,movePoint: movePoint
+                                 ,rotateDeg: rotateDeg
+                                 ,ensure360: ensure360
+                                 ,angleDelta: angleDelta
+                                 ,angleBetween: angleBetween
+                                 ,inSector: inSector};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
@@ -15633,7 +15595,6 @@ Elm.Game.Steps.make = function (_elm) {
    _elm.Game.Steps = _elm.Game.Steps || {};
    if (_elm.Game.Steps.values) return _elm.Game.Steps.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -15806,22 +15767,23 @@ Elm.Game.Steps.make = function (_elm) {
       ,live: $Basics.not(initial)
       ,timers: newTimers});
    });
-   var gameStep = F3(function (clock,_p20,gameState) {
+   var gameStep = F2(function (_p20,gameState) {
       var _p21 = _p20;
-      var _p22 = _p21.windowInput;
+      var _p23 = _p21.windowInput;
+      var _p22 = _p21.clock;
       var gameDims = {ctor: "_Tuple2"
-                     ,_0: $Basics.fst(_p22) - $Constants.sidebarWidth
-                     ,_1: $Basics.snd(_p22)};
+                     ,_0: $Basics.fst(_p23) - $Constants.sidebarWidth
+                     ,_1: $Basics.snd(_p23)};
       var keyboardInputWithFocus = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : _p21.keyboardInput;
       return A3(centerStep,
       gameState.playerState.position,
       gameDims,
       A3(playerStep,
       keyboardInputWithFocus,
-      clock.delta,
+      _p22.delta,
       $Game$Steps$Gusts.gustsStep(A3(raceInputStep,
       _p21.raceInput,
-      clock,
+      _p22,
       gameState))));
    });
    return _elm.Game.Steps.values = {_op: _op
@@ -15850,7 +15812,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Game$Inputs = Elm.Game.Inputs.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Steps = Elm.Game.Steps.make(_elm),
    $List = Elm.List.make(_elm),
@@ -15858,30 +15820,26 @@ Elm.Screens.Game.Updates.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Task$Extra = Elm.Task.Extra.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
-   var mapGameUpdate = F3(function (keyboardInput,
-   dims,
-   maybeRaceInput) {
-      return A2($Maybe.map,
-      $Screens$Game$Types.GameUpdate,
-      A2($Maybe.map,
-      A2($Game$Inputs.GameInput,keyboardInput,dims),
-      maybeRaceInput));
-   });
-   var updateTime = function (clock) {
+   var updateTime = function (time) {
       var updateTime = F2(function (timers,t) {
-         return _U.update(timers,{localTime: clock.time});
+         return _U.update(timers,{localTime: time});
       });
       return $Maybe.map(function (gs) {
-         return _U.update(gs,
-         {timers: A2(updateTime,gs.timers,clock.time)});
+         return _U.update(gs,{timers: A2(updateTime,gs.timers,time)});
       });
+   };
+   var pingServer = $Effects.tick($Screens$Game$Types.PingServer);
+   var loadLiveTrack = function (id) {
+      return A2($Task.map,
+      $Screens$Game$Types.LoadLiveTrack,
+      $ServerApi.getLiveTrack(id));
    };
    var applyLiveTrack = F2(function (_p0,screen) {
       var _p1 = _p0;
@@ -15904,100 +15862,90 @@ Elm.Screens.Game.Updates.make = function (_elm) {
       ,races: _p3
       ,freePlayers: freePlayers});
    });
+   var mount = function (id) {
+      return A2($AppTypes._op["&!"],
+      $Screens$Game$Types.initial,
+      loadLiveTrack(id));
+   };
    var chat = $Signal.mailbox("");
    var sendMessage = function (content) {
-      return $String.isEmpty(content) ? $Task.succeed({ctor: "_Tuple0"}) : A2($Signal.send,
-      chat.address,
-      content);
+      return $String.isEmpty(content) ? $Task.succeed($Screens$Game$Types.NoOp) : A2($Task.map,
+      function (_p4) {
+         return $Screens$Game$Types.NoOp;
+      },
+      A2($Signal.send,chat.address,content));
    };
-   var addr = A2($Signal.forwardTo,
-   $AppTypes.appActionsMailbox.address,
-   function (_p4) {
-      return $AppTypes.ScreenAction($AppTypes.GameAction(_p4));
-   });
-   var loadLiveTrack = function (slug) {
-      return A2($Task.andThen,
-      $ServerApi.getLiveTrack(slug),
-      function (result) {
-         var _p5 = result;
-         if (_p5.ctor === "Ok") {
-               return A2($Signal.send,
-               addr,
-               $Screens$Game$Types.SetLiveTrack(_p5._0));
-            } else {
-               return $Task.succeed({ctor: "_Tuple0"});
-            }
-      });
-   };
-   var mount = function (slug) {
-      var initial = {liveTrack: $Maybe.Nothing
-                    ,gameState: $Maybe.Nothing
-                    ,races: _U.list([])
-                    ,freePlayers: _U.list([])
-                    ,live: false
-                    ,messages: _U.list([])
-                    ,messageField: ""
-                    ,notFound: false};
-      return A2($AppTypes.react,initial,loadLiveTrack(slug));
-   };
-   var pingServer = A2($Task$Extra.delay,
-   30 * $Time.millisecond,
-   A2($Signal.send,addr,$Screens$Game$Types.PingServer));
-   var update = F4(function (player,clock,action,screen) {
-      var _p6 = action;
-      switch (_p6.ctor)
-      {case "SetLiveTrack": var _p7 = _p6._0;
+   var update = F3(function (player,action,screen) {
+      var _p5 = action;
+      switch (_p5.ctor)
+      {case "LoadLiveTrack": var _p6 = _p5._0;
+           if (_p6.ctor === "Ok") {
+                 return A2($AppTypes._op["&:"],
+                 screen,
+                 $Effects.tick($Screens$Game$Types.InitGameState(_p6._0)));
+              } else {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(screen,{notFound: true}),
+                 $Effects.none);
+              }
+         case "InitGameState": var _p7 = _p5._0;
            var gameState = A3($Game$Models.defaultGame,
-           clock.time,
+           _p5._1,
            _p7.track.course,
            player);
            var newScreen = A2(applyLiveTrack,
            _p7,
            _U.update(screen,{gameState: $Maybe.Just(gameState)}));
-           return A2($AppTypes.react,newScreen,pingServer);
-         case "PingServer":
-         return screen.live ? $AppTypes.local(screen) : A2($AppTypes.react,
+           return A2($AppTypes._op["&:"],newScreen,pingServer);
+         case "PingServer": return screen.live ? A2($AppTypes._op["&:"],
+           screen,
+           $Effects.none) : A2($AppTypes._op["&:"],
            _U.update(screen,
-           {gameState: A2(updateTime,clock,screen.gameState)}),
+           {gameState: A2(updateTime,_p5._0,screen.gameState)}),
            pingServer);
-         case "TrackNotFound": return $AppTypes.local(_U.update(screen,
-           {notFound: true}));
          case "GameUpdate": var newGameState = A2($Maybe.map,
-           A2($Game$Steps.gameStep,clock,_p6._0),
+           $Game$Steps.gameStep(_p5._0),
            screen.gameState);
-           return $AppTypes.local(_U.update(screen,
-           {gameState: newGameState,live: true}));
+           return A2($AppTypes._op["&:"],
+           _U.update(screen,{gameState: newGameState,live: true}),
+           $Effects.none);
          case "EnterChat": var newGameState = A2($Maybe.map,
            function (gs) {
               return _U.update(gs,{chatting: true});
            },
            screen.gameState);
-           return $AppTypes.local(_U.update(screen,
-           {gameState: newGameState}));
+           return A2($AppTypes._op["&:"],
+           _U.update(screen,{gameState: newGameState}),
+           $Effects.none);
          case "LeaveChat": var newGameState = A2($Maybe.map,
            function (gs) {
               return _U.update(gs,{chatting: false});
            },
            screen.gameState);
-           return $AppTypes.local(_U.update(screen,
-           {gameState: newGameState}));
-         case "UpdateMessageField":
-         return $AppTypes.local(_U.update(screen,
-           {messageField: _p6._0}));
-         case "SubmitMessage": if (screen.live) {
-                 var msgTask = sendMessage(screen.messageField);
-                 return A2($AppTypes.react,
-                 _U.update(screen,{messageField: ""}),
-                 msgTask);
-              } else return $AppTypes.local(screen);
-         case "NewMessage": return $AppTypes.local(_U.update(screen,
+           return A2($AppTypes._op["&:"],
+           _U.update(screen,{gameState: newGameState}),
+           $Effects.none);
+         case "UpdateMessageField": return A2($AppTypes._op["&:"],
+           _U.update(screen,{messageField: _p5._0}),
+           $Effects.none);
+         case "SubmitMessage":
+         return screen.live ? A2($AppTypes._op["&!"],
+           _U.update(screen,{messageField: ""}),
+           sendMessage(screen.messageField)) : A2($AppTypes._op["&:"],
+           screen,
+           $Effects.none);
+         case "NewMessage": return A2($AppTypes._op["&:"],
+           _U.update(screen,
            {messages: A2($List.take,
            30,
-           A2($List._op["::"],_p6._0,screen.messages))}));
-         case "UpdateLiveTrack":
-         return $AppTypes.local(A2(applyLiveTrack,_p6._0,screen));
-         default: return $AppTypes.local(screen);}
+           A2($List._op["::"],_p5._0,screen.messages))}),
+           $Effects.none);
+         case "UpdateLiveTrack": return A2($AppTypes._op["&:"],
+           A2(applyLiveTrack,_p5._0,screen),
+           $Effects.none);
+         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
+   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.GameAction);
    return _elm.Screens.Game.Updates.values = {_op: _op
                                              ,addr: addr
                                              ,chat: chat
@@ -16007,8 +15955,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
                                              ,loadLiveTrack: loadLiveTrack
                                              ,pingServer: pingServer
                                              ,sendMessage: sendMessage
-                                             ,updateTime: updateTime
-                                             ,mapGameUpdate: mapGameUpdate};
+                                             ,updateTime: updateTime};
 };
 Elm.AppUpdates = Elm.AppUpdates || {};
 Elm.AppUpdates.make = function (_elm) {
@@ -16019,6 +15966,7 @@ Elm.AppUpdates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $History = Elm.History.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -16032,188 +15980,188 @@ Elm.AppUpdates.make = function (_elm) {
    $Screens$Register$Updates = Elm.Screens.Register.Updates.make(_elm),
    $Screens$ShowProfile$Updates = Elm.Screens.ShowProfile.Updates.make(_elm),
    $Screens$ShowTrack$Updates = Elm.Screens.ShowTrack.Updates.make(_elm),
+   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var logoutTask = A2($Task.andThen,
-   $ServerApi.postLogout,
-   function (result) {
-      var _p0 = result;
-      if (_p0.ctor === "Ok") {
-            return A2($Signal.send,
-            $AppTypes.appActionsMailbox.address,
-            $AppTypes.SetPlayer(_p0._0));
-         } else {
-            return $Task.succeed({ctor: "_Tuple0"});
-         }
+   var applyScreen = F4(function (screensUpdater,
+   toScreenAction,
+   _p0,
+   appState) {
+      var _p1 = _p0;
+      var newEffect = A2($Effects.map,
+      function (_p2) {
+         return $AppTypes.ScreenAction(toScreenAction(_p2));
+      },
+      _p1._1);
+      var newState = _U.update(appState,
+      {screens: A2(screensUpdater,_p1._0,appState.screens)});
+      return A2($AppTypes._op["&:"],newState,newEffect);
    });
-   var toAppUpdate = F3(function (appState,toAppScreen,_p1) {
-      var _p2 = _p1;
-      return A2($AppTypes.AppUpdate,
-      _U.update(appState,{screen: toAppScreen(_p2.screen)}),
-      _p2.reaction);
-   });
-   var noUpdate = function (appState) {
-      return A2($AppTypes.AppUpdate,appState,$Maybe.Nothing);
-   };
-   var updateScreenDims = F2(function (dims,appScreen) {
-      var _p3 = appScreen;
-      if (_p3.ctor === "EditTrackScreen") {
-            return $AppTypes.EditTrackScreen(A2($Screens$EditTrack$Updates.updateDims,
+   var applyGame = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{game: s});
+   }),
+   $AppTypes.GameAction);
+   var applyEditTrack = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{editTrack: s});
+   }),
+   $AppTypes.EditTrackAction);
+   var applyShowTrack = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{showTrack: s});
+   }),
+   $AppTypes.ShowTrackAction);
+   var applyShowProfile = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{showProfile: s});
+   }),
+   $AppTypes.ShowProfileAction);
+   var applyRegister = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{register: s});
+   }),
+   $AppTypes.RegisterAction);
+   var applyLogin = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{login: s});
+   }),
+   $AppTypes.LoginAction);
+   var applyHome = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{home: s});
+   }),
+   $AppTypes.HomeAction);
+   var logoutTask = A2($Task.map,
+   function (r) {
+      return A2($Result.withDefault,
+      $AppTypes.AppNoOp,
+      A2($Result.map,$AppTypes.SetPlayer,r));
+   },
+   $ServerApi.postLogout);
+   var updateScreenDims = F2(function (dims,_p3) {
+      var _p4 = _p3;
+      var _p7 = _p4.screens;
+      var _p6 = _p4;
+      var _p5 = _p4.route;
+      if (_p5.ctor === "Just" && _p5._0.ctor === "EditTrack") {
+            var newScreens = _U.update(_p7,
+            {editTrack: A2($Screens$EditTrack$Updates.updateDims,
             dims,
-            _p3._0));
+            _p7.editTrack)});
+            return _U.update(_p6,{screens: newScreens,dims: dims});
          } else {
-            return appScreen;
+            return _p6;
          }
    });
-   var updateScreen = F3(function (clock,screenAction,_p4) {
-      var _p5 = _p4;
-      var _p15 = _p5.screen;
-      var _p14 = _p5;
-      var _p6 = screenAction;
-      switch (_p6.ctor)
-      {case "HomeAction": var _p7 = _p15;
-           if (_p7.ctor === "HomeScreen") {
-                 return A3(toAppUpdate,
-                 _p14,
-                 $AppTypes.HomeScreen,
-                 A2($Screens$Home$Updates.update,_p6._0,_p7._0));
-              } else {
-                 return noUpdate(_p14);
-              }
-         case "LoginAction": var _p8 = _p15;
-           if (_p8.ctor === "LoginScreen") {
-                 return A3(toAppUpdate,
-                 _p14,
-                 $AppTypes.LoginScreen,
-                 A2($Screens$Login$Updates.update,_p6._0,_p8._0));
-              } else {
-                 return noUpdate(_p14);
-              }
-         case "RegisterAction": var _p9 = _p15;
-           if (_p9.ctor === "RegisterScreen") {
-                 return A3(toAppUpdate,
-                 _p14,
-                 $AppTypes.RegisterScreen,
-                 A2($Screens$Register$Updates.update,_p6._0,_p9._0));
-              } else {
-                 return noUpdate(_p14);
-              }
-         case "ShowTrackAction": var _p10 = _p15;
-           if (_p10.ctor === "ShowTrackScreen") {
-                 return A3(toAppUpdate,
-                 _p14,
-                 $AppTypes.ShowTrackScreen,
-                 A2($Screens$ShowTrack$Updates.update,_p6._0,_p10._0));
-              } else {
-                 return noUpdate(_p14);
-              }
-         case "EditTrackAction": var _p11 = _p15;
-           if (_p11.ctor === "EditTrackScreen") {
-                 return A3(toAppUpdate,
-                 _p14,
-                 $AppTypes.EditTrackScreen,
-                 A2($Screens$EditTrack$Updates.update,_p6._0,_p11._0));
-              } else {
-                 return noUpdate(_p14);
-              }
-         case "ShowProfileAction": var _p12 = _p15;
-           if (_p12.ctor === "ShowProfileScreen") {
-                 return A3(toAppUpdate,
-                 _p14,
-                 $AppTypes.ShowProfileScreen,
-                 A2($Screens$ShowProfile$Updates.update,_p6._0,_p12._0));
-              } else {
-                 return noUpdate(_p14);
-              }
-         default: var _p13 = _p15;
-           if (_p13.ctor === "GameScreen") {
-                 return A3(toAppUpdate,
-                 _p14,
-                 $AppTypes.GameScreen,
-                 A4($Screens$Game$Updates.update,
-                 _p14.player,
-                 clock,
-                 _p6._0,
-                 _p13._0));
-              } else {
-                 return noUpdate(_p14);
-              }}
+   var updateScreen = F2(function (screenAction,_p8) {
+      var _p9 = _p8;
+      var _p12 = _p9.screens;
+      var _p11 = _p9;
+      var _p10 = screenAction;
+      switch (_p10.ctor)
+      {case "HomeAction": return A2(applyHome,
+           A2($Screens$Home$Updates.update,_p10._0,_p12.home),
+           _p11);
+         case "LoginAction": return A2(applyLogin,
+           A2($Screens$Login$Updates.update,_p10._0,_p12.login),
+           _p11);
+         case "RegisterAction": return A2(applyRegister,
+           A2($Screens$Register$Updates.update,_p10._0,_p12.register),
+           _p11);
+         case "ShowTrackAction": return A2(applyShowTrack,
+           A2($Screens$ShowTrack$Updates.update,_p10._0,_p12.showTrack),
+           _p11);
+         case "EditTrackAction": return A2(applyEditTrack,
+           A2($Screens$EditTrack$Updates.update,_p10._0,_p12.editTrack),
+           _p11);
+         case "ShowProfileAction": return A2(applyShowProfile,
+           A2($Screens$ShowProfile$Updates.update,
+           _p10._0,
+           _p12.showProfile),
+           _p11);
+         default: return A2(applyGame,
+           A3($Screens$Game$Updates.update,_p11.player,_p10._0,_p12.game),
+           _p11);}
    });
-   var mountNotFound = F2(function (appState,path) {
-      return A2($AppTypes.AppUpdate,
-      _U.update(appState,{screen: $AppTypes.NotFoundScreen(path)}),
-      $Maybe.Nothing);
+   var mountRoute = F2(function (_p13,route) {
+      var _p14 = _p13;
+      var _p17 = _p14.player;
+      var _p16 = _p14;
+      var _p15 = route;
+      switch (_p15.ctor)
+      {case "Home": return A2(applyHome,
+           $Screens$Home$Updates.mount(_p17),
+           _p16);
+         case "Login": return A2(applyLogin,
+           $Screens$Login$Updates.mount,
+           _p16);
+         case "Register": return A2(applyRegister,
+           $Screens$Register$Updates.mount,
+           _p16);
+         case "ShowProfile": return A2(applyShowProfile,
+           $Screens$ShowProfile$Updates.mount(_p17),
+           _p16);
+         case "ShowTrack": return A2(applyShowTrack,
+           $Screens$ShowTrack$Updates.mount(_p15._0),
+           _p16);
+         case "EditTrack": return A2(applyEditTrack,
+           A2($Screens$EditTrack$Updates.mount,_p14.dims,_p15._0),
+           _p16);
+         default: return A2(applyGame,
+           $Screens$Game$Updates.mount(_p15._0),
+           _p16);}
    });
-   var mountRoute = F2(function (_p16,route) {
-      var _p17 = _p16;
-      var _p19 = _p17.player;
-      var mount = toAppUpdate(_p17);
-      var _p18 = route;
+   var update = F2(function (appAction,appState) {
+      var _p18 = appAction;
       switch (_p18.ctor)
-      {case "Home": return A2(mount,
-           $AppTypes.HomeScreen,
-           $Screens$Home$Updates.mount(_p19));
-         case "Login": return A2(mount,
-           $AppTypes.LoginScreen,
-           $Screens$Login$Updates.mount);
-         case "Register": return A2(mount,
-           $AppTypes.RegisterScreen,
-           $Screens$Register$Updates.mount);
-         case "ShowProfile": return A2(mount,
-           $AppTypes.ShowProfileScreen,
-           $Screens$ShowProfile$Updates.mount(_p19));
-         case "ShowTrack": return A2(mount,
-           $AppTypes.ShowTrackScreen,
-           $Screens$ShowTrack$Updates.mount(_p18._0));
-         case "EditTrack": return A2(mount,
-           $AppTypes.EditTrackScreen,
-           A2($Screens$EditTrack$Updates.mount,_p17.dims,_p18._0));
-         default: return A2(mount,
-           $AppTypes.GameScreen,
-           $Screens$Game$Updates.mount(_p18._0));}
-   });
-   var update = F2(function (_p21,_p20) {
-      var _p22 = _p21;
-      var _p23 = _p20;
-      var _p27 = _p23.appState;
-      var _p24 = _p22.action;
-      switch (_p24.ctor)
-      {case "SetPath": var _p25 = _p24._0;
-           return A2($Maybe.withDefault,
-           A2(mountNotFound,_p27,_p25),
-           A2($Maybe.map,
-           mountRoute(_p27),
-           A2($RouteParser.match,$Routes.routeParsers,_p25)));
-         case "SetPlayer":
-         var reaction = $History.setPath($Routes.toPath($Routes.Home));
-           return A2($AppTypes.AppUpdate,
-           _U.update(_p27,{player: _p24._0}),
-           $Maybe.Just(reaction));
-         case "UpdateDims": var _p26 = _p24._0;
-           var newScreen = A2(updateScreenDims,_p26,_p27.screen);
-           return A2($AppTypes.AppUpdate,
-           _U.update(_p27,{dims: _p26,screen: newScreen}),
-           $Maybe.Nothing);
-         case "Logout": return A2($AppTypes.AppUpdate,
-           _p27,
-           $Maybe.Just(logoutTask));
-         case "ScreenAction": return A3(updateScreen,
-           _p22.clock,
-           _p24._0,
-           _p27);
-         default: return noUpdate(_p27);}
+      {case "SetPath": return A2($AppTypes._op["&!"],
+           appState,
+           A2($Task.map,
+           function (_p19) {
+              return $AppTypes.AppNoOp;
+           },
+           $History.setPath(_p18._0)));
+         case "PathChanged": var newAppState = _U.update(appState,
+           {route: A2($RouteParser.match,$Routes.routeParsers,_p18._0)});
+           var _p20 = newAppState.route;
+           if (_p20.ctor === "Just") {
+                 return A2(mountRoute,newAppState,_p20._0);
+              } else {
+                 return A2($AppTypes._op["&:"],newAppState,$Effects.none);
+              }
+         case "SetPlayer": return A2($AppTypes._op["&:"],
+           _U.update(appState,{player: _p18._0}),
+           A2($Effects.map,
+           function (_p21) {
+              return $AppTypes.AppNoOp;
+           },
+           $Screens$UpdateUtils.redirect($Routes.Home)));
+         case "UpdateDims": return A2($AppTypes._op["&:"],
+           A2(updateScreenDims,_p18._0,appState),
+           $Effects.none);
+         case "Logout": return A2($AppTypes._op["&!"],
+           appState,
+           logoutTask);
+         case "ScreenAction": return A2(updateScreen,_p18._0,appState);
+         default: return A2($AppTypes._op["&:"],appState,$Effects.none);}
    });
    return _elm.AppUpdates.values = {_op: _op
                                    ,update: update
                                    ,mountRoute: mountRoute
-                                   ,mountNotFound: mountNotFound
                                    ,updateScreen: updateScreen
                                    ,updateScreenDims: updateScreenDims
-                                   ,noUpdate: noUpdate
-                                   ,toAppUpdate: toAppUpdate
-                                   ,logoutTask: logoutTask};
+                                   ,logoutTask: logoutTask
+                                   ,applyHome: applyHome
+                                   ,applyLogin: applyLogin
+                                   ,applyRegister: applyRegister
+                                   ,applyShowProfile: applyShowProfile
+                                   ,applyShowTrack: applyShowTrack
+                                   ,applyEditTrack: applyEditTrack
+                                   ,applyGame: applyGame
+                                   ,applyScreen: applyScreen};
 };
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
@@ -18795,7 +18743,7 @@ Elm.Screens.Utils.make = function (_elm) {
       $Json$Decode.value,
       function (_p4) {
          return A2($Signal.message,
-         $AppTypes.appActionsMailbox.address,
+         $AppTypes.appActionsAddress,
          $AppTypes.SetPath(path));
       });
    };
@@ -22260,7 +22208,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
                      _U.list([]),
                      _U.list([A2($Html.a,
                      _U.list([A2($Html$Events.onClick,
-                     $AppTypes.appActionsMailbox.address,
+                     $AppTypes.appActionsAddress,
                      $AppTypes.Logout)]),
                      _U.list([$Html.text("Logout")]))]))]);
    };
@@ -22346,7 +22294,7 @@ Elm.Screens.Nav.make = function (_elm) {
                           _U.list([]),
                           _U.list([A2($Html.a,
                           _U.list([A2($Html$Events.onClick,
-                          $AppTypes.appActionsMailbox.address,
+                          $AppTypes.appActionsAddress,
                           $AppTypes.Logout)]),
                           _U.list([$Html.text("Logout")]))]))]);
    var guestMenu = _U.list([A2($Html.li,
@@ -22415,6 +22363,7 @@ Elm.AppView.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$EditTrack$View = Elm.Screens.EditTrack.View.make(_elm),
    $Screens$Game$View = Elm.Screens.Game.View.make(_elm),
    $Screens$Home$View = Elm.Screens.Home.View.make(_elm),
@@ -22427,11 +22376,18 @@ Elm.AppView.make = function (_elm) {
    var _op = {};
    var layout = F2(function (appState,content) {
       var noNav = function () {
-         var _p0 = appState.screen;
-         switch (_p0.ctor)
-         {case "EditTrackScreen": return true;
-            case "GameScreen": return true;
-            default: return false;}
+         var _p0 = appState.route;
+         _v0_2: do {
+            if (_p0.ctor === "Just") {
+                  switch (_p0._0.ctor)
+                  {case "EditTrack": return true;
+                     case "PlayTrack": return true;
+                     default: break _v0_2;}
+               } else {
+                  break _v0_2;
+               }
+         } while (false);
+         return false;
       }();
       return noNav ? content : A2($Html.div,
       _U.list([$Html$Attributes.$class("content-with-nav")]),
@@ -22441,32 +22397,35 @@ Elm.AppView.make = function (_elm) {
    var emptyView = A2($Html.div,
    _U.list([]),
    _U.list([$Html.text("emptyView")]));
-   var view = function (appState) {
-      var content = function () {
-         var _p1 = appState.screen;
-         switch (_p1.ctor)
-         {case "HomeScreen": return A2($Screens$Home$View.view,
-              appState.player,
-              _p1._0);
-            case "RegisterScreen":
-            return $Screens$Register$View.view(_p1._0);
-            case "LoginScreen": return $Screens$Login$View.view(_p1._0);
-            case "ShowTrackScreen":
-            return $Screens$ShowTrack$View.view(_p1._0);
-            case "EditTrackScreen": return A2($Screens$EditTrack$View.view,
-              appState.player,
-              _p1._0);
-            case "ShowProfileScreen":
-            return $Screens$ShowProfile$View.view(_p1._0);
-            case "GameScreen": return A2($Screens$Game$View.view,
-              appState.dims,
-              _p1._0);
-            default: return emptyView;}
-      }();
-      return A2(layout,appState,content);
-   };
+   var routeView = F2(function (_p1,route) {
+      var _p2 = _p1;
+      var _p5 = _p2.screens;
+      var _p4 = _p2.player;
+      var _p3 = route;
+      switch (_p3.ctor)
+      {case "Home": return A2($Screens$Home$View.view,_p4,_p5.home);
+         case "Register":
+         return $Screens$Register$View.view(_p5.register);
+         case "Login": return $Screens$Login$View.view(_p5.login);
+         case "ShowTrack":
+         return $Screens$ShowTrack$View.view(_p5.showTrack);
+         case "EditTrack": return A2($Screens$EditTrack$View.view,
+           _p4,
+           _p5.editTrack);
+         case "ShowProfile":
+         return $Screens$ShowProfile$View.view(_p5.showProfile);
+         default: return A2($Screens$Game$View.view,_p2.dims,_p5.game);}
+   });
+   var view = F2(function (_p6,appState) {
+      return A2(layout,
+      appState,
+      A2($Maybe.withDefault,
+      emptyView,
+      A2($Maybe.map,routeView(appState),appState.route)));
+   });
    return _elm.AppView.values = {_op: _op
                                 ,view: view
+                                ,routeView: routeView
                                 ,emptyView: emptyView
                                 ,layout: layout};
 };
@@ -22486,6 +22445,7 @@ Elm.Game.Outputs.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -22499,15 +22459,15 @@ Elm.Game.Outputs.make = function (_elm) {
          }
    };
    var getActiveTrack = function (appState) {
-      var _p1 = appState.screen;
-      if (_p1.ctor === "GameScreen") {
+      var _p1 = appState.route;
+      if (_p1.ctor === "Just" && _p1._0.ctor === "PlayTrack") {
             return A2($Maybe.map,
             function (_p2) {
                return function (_) {
                   return _.id;
                }(function (_) {    return _.track;}(_p2));
             },
-            _p1._0.liveTrack);
+            appState.screens.game.liveTrack);
          } else {
             return $Maybe.Nothing;
          }
@@ -22522,9 +22482,9 @@ Elm.Game.Outputs.make = function (_elm) {
    });
    var extractPlayerOutput = F2(function (appState,action) {
       var gameState = function () {
-         var _p3 = appState.screen;
-         if (_p3.ctor === "GameScreen") {
-               return _p3._0.gameState;
+         var _p3 = appState.route;
+         if (_p3.ctor === "Just" && _p3._0.ctor === "PlayTrack") {
+               return appState.screens.game.gameState;
             } else {
                return $Maybe.Nothing;
             }
@@ -22549,6 +22509,71 @@ Elm.Game.Outputs.make = function (_elm) {
                                      ,makePlayerOutput: makePlayerOutput
                                      ,getActiveTrack: getActiveTrack
                                      ,needChatScrollDown: needChatScrollDown};
+};
+Elm.StartApp = Elm.StartApp || {};
+Elm.StartApp.make = function (_elm) {
+   "use strict";
+   _elm.StartApp = _elm.StartApp || {};
+   if (_elm.StartApp.values) return _elm.StartApp.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var start = function (config) {
+      var updateStep = F2(function (action,_p0) {
+         var _p1 = _p0;
+         var _p2 = A2(config.update,action,_p1._0);
+         var newModel = _p2._0;
+         var additionalEffects = _p2._1;
+         return {ctor: "_Tuple2"
+                ,_0: newModel
+                ,_1: $Effects.batch(_U.list([_p1._1,additionalEffects]))};
+      });
+      var update = F2(function (actions,_p3) {
+         var _p4 = _p3;
+         return A3($List.foldl,
+         updateStep,
+         {ctor: "_Tuple2",_0: _p4._0,_1: $Effects.none},
+         actions);
+      });
+      var messages = $Signal.mailbox(_U.list([]));
+      var singleton = function (action) {
+         return _U.list([action]);
+      };
+      var address = A2($Signal.forwardTo,messages.address,singleton);
+      var inputs = $Signal.mergeMany(A2($List._op["::"],
+      messages.signal,
+      A2($List.map,$Signal.map(singleton),config.inputs)));
+      var effectsAndModel = A3($Signal.foldp,
+      update,
+      config.init,
+      inputs);
+      var model = A2($Signal.map,$Basics.fst,effectsAndModel);
+      return {html: A2($Signal.map,config.view(address),model)
+             ,model: model
+             ,tasks: A2($Signal.map,
+             function (_p5) {
+                return A2($Effects.toTask,messages.address,$Basics.snd(_p5));
+             },
+             effectsAndModel)};
+   };
+   var App = F3(function (a,b,c) {
+      return {html: a,model: b,tasks: c};
+   });
+   var Config = F4(function (a,b,c,d) {
+      return {init: a,update: b,view: c,inputs: d};
+   });
+   return _elm.StartApp.values = {_op: _op
+                                 ,start: start
+                                 ,Config: Config
+                                 ,App: App};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Game = Elm.Screens.Game || {};
@@ -22615,6 +22640,7 @@ Elm.Main.make = function (_elm) {
    $AppView = Elm.AppView.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
    $Game$Inputs = Elm.Game.Inputs.make(_elm),
    $Game$Outputs = Elm.Game.Outputs.make(_elm),
    $History = Elm.History.make(_elm),
@@ -22625,9 +22651,10 @@ Elm.Main.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
    $Screens$Game$Decoders = Elm.Screens.Game.Decoders.make(_elm),
+   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Game$Updates = Elm.Screens.Game.Updates.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Signal$Extra = Elm.Signal.Extra.make(_elm),
+   $StartApp = Elm.StartApp.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm),
    $Window = Elm.Window.make(_elm);
@@ -22652,7 +22679,7 @@ Elm.Main.make = function (_elm) {
    $AppTypes.UpdateDims,
    $Window.dimensions);
    var pathActions = A2($Signal.map,
-   $AppTypes.SetPath,
+   $AppTypes.PathChanged,
    $History.path);
    var gameActionsInput = Elm.Native.Port.make(_elm).inboundSignal("gameActionsInput",
    "Json.Decode.Value",
@@ -22664,14 +22691,6 @@ Elm.Main.make = function (_elm) {
       return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Decoders.decodeAction(_p3)));
    },
    gameActionsInput);
-   var chatScrollDown = Elm.Native.Port.make(_elm).outboundSignal("chatScrollDown",
-   function (v) {
-      return [];
-   },
-   A3($Signal.filterMap,
-   $Game$Outputs.needChatScrollDown,
-   {ctor: "_Tuple0"},
-   gameActions));
    var raceInput = Elm.Native.Port.make(_elm).inboundSignal("raceInput",
    "Maybe.Maybe\n    Game.Inputs.RaceInput",
    function (v) {
@@ -22811,18 +22830,24 @@ Elm.Main.make = function (_elm) {
                                                                                                                                                                                                                                                                 v.clientTime)} : _U.badPort("an object with fields `serverNow`, `startTime`, `wind`, `opponents`, `ghosts`, `tallies`, `initial`, `clientTime`",
       v));
    });
+   var rawInput = A4($Signal.map3,
+   F3(function (v0,v1,v2) {
+      return {ctor: "_Tuple3",_0: v0,_1: v1,_2: v2};
+   }),
+   $Game$Inputs.keyboardInput,
+   $Window.dimensions,
+   raceInput);
    var raceUpdateActions = $Signal.dropRepeats(A2($Signal.sampleOn,
    clock,
    A3($Signal.filterMap,
    $Maybe.map(function (_p4) {
-      return $AppTypes.ScreenAction($AppTypes.GameAction(_p4));
+      return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Types.GameUpdate(_p4)));
    }),
    $AppTypes.AppNoOp,
-   A4($Signal.map3,
-   $Screens$Game$Updates.mapGameUpdate,
-   $Game$Inputs.keyboardInput,
-   $Window.dimensions,
-   raceInput))));
+   A3($Signal.map2,
+   $Game$Inputs.buildGameInput,
+   rawInput,
+   A2($Signal.sampleOn,rawInput,clock)))));
    var initialDims = Elm.Native.Port.make(_elm).inbound("initialDims",
    "( Int, Int )",
    function (v) {
@@ -22856,33 +22881,21 @@ Elm.Main.make = function (_elm) {
                                                                      v.path)} : _U.badPort("an object with fields `player`, `path`",
       v);
    });
-   var initPathAction = $Signal.constant($AppTypes.SetPath(appSetup.path));
-   var allActions = $Signal.mergeMany(_U.list([initPathAction
+   var initPathAction = $Signal.constant($AppTypes.PathChanged(appSetup.path));
+   var app = $StartApp.start({init: A2($AppTypes.initialAppUpdate,
+                             initialDims,
+                             appSetup.player)
+                             ,update: $AppUpdates.update
+                             ,view: $AppView.view
+                             ,inputs: _U.list([initPathAction
                                               ,pathActions
                                               ,dimsActions
                                               ,$AppTypes.appActionsMailbox.signal
                                               ,raceUpdateActions
-                                              ,gameActions
-                                              ,editorInputActions]));
-   var appInputs = A3($Signal$Extra.passiveMap2,
-   $AppTypes.AppInput,
-   allActions,
-   clock);
-   var appUpdates = function () {
-      var initialUpdate = A2($Basics.flip,
-      $AppUpdates.update,
-      A2($AppTypes.initialAppUpdate,initialDims,appSetup.player));
-      return A3($Signal$Extra.foldp$,
-      $AppUpdates.update,
-      initialUpdate,
-      appInputs);
-   }();
-   var appState = A2($Signal.map,
-   function (_) {
-      return _.appState;
-   },
-   appUpdates);
-   var main = A2($Signal.map,$AppView.view,appState);
+                                              ,gameActions])});
+   var main = app.html;
+   var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
+   app.tasks);
    var playerOutput = Elm.Native.Port.make(_elm).outboundSignal("playerOutput",
    function (v) {
       return v.ctor === "Nothing" ? null : {state: {time: v._0.state.time
@@ -22905,7 +22918,7 @@ Elm.Main.make = function (_elm) {
    },
    $Signal.dropRepeats(A3($Signal.map2,
    $Game$Outputs.extractPlayerOutput,
-   appState,
+   app.model,
    raceUpdateActions)));
    var activeTrack = Elm.Native.Port.make(_elm).outboundSignal("activeTrack",
    function (v) {
@@ -22913,29 +22926,16 @@ Elm.Main.make = function (_elm) {
    },
    $Signal.dropRepeats(A2($Signal.map,
    $Game$Outputs.getActiveTrack,
-   appState)));
-   var reactions = A3($Signal.filterMap,
-   $Basics.identity,
-   $Task.succeed({ctor: "_Tuple0"}),
-   A2($Signal.map,
-   function (_) {
-      return _.reaction;
-   },
-   appUpdates));
-   var reactionsRunner = Elm.Native.Task.make(_elm).performSignal("reactionsRunner",
-   A2($Signal.map,$Task.spawn,reactions));
+   app.model)));
    return _elm.Main.values = {_op: _op
+                             ,app: app
                              ,main: main
-                             ,appState: appState
-                             ,appUpdates: appUpdates
-                             ,appInputs: appInputs
-                             ,allActions: allActions
                              ,initPathAction: initPathAction
                              ,pathActions: pathActions
                              ,dimsActions: dimsActions
+                             ,rawInput: rawInput
                              ,raceUpdateActions: raceUpdateActions
                              ,gameActions: gameActions
                              ,editorInputActions: editorInputActions
-                             ,reactions: reactions
                              ,clock: clock};
 };

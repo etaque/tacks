@@ -1,16 +1,23 @@
 module Screens.EditTrack.Types where
 
 import Models exposing (..)
-import Game.Geo exposing (..)
 
-import Result exposing (Result(..))
 import DragAndDrop exposing (MouseEvent(..))
+
 
 type alias Screen =
   { track : Maybe Track
   , editor : Maybe Editor
   , notFound : Bool
   , dims : Dims
+  }
+
+initial : Dims -> Screen
+initial dims =
+  { track = Nothing
+  , editor = Nothing
+  , notFound = False
+  , dims = dims
   }
 
 type alias Editor =
@@ -33,8 +40,7 @@ realMode {mode, altMove} =
   if altMove then Watch else mode
 
 type Action
-  = SetTrack Track
-  | TrackNotFound
+  = LoadTrack (Result () Track)
   | MouseAction MouseEvent
   | SetMode Mode
   | AltMoveMode Bool
@@ -42,6 +48,7 @@ type Action
   | SetName String
   | Save
   | SaveResult (FormResult Track)
+  | NoOp
 
 type FormUpdate
   = SetDownwindY Int

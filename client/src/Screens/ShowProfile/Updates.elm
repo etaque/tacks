@@ -1,29 +1,26 @@
 module Screens.ShowProfile.Updates where
 
+import Effects exposing (Effects, Never, none)
 
 import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.ShowProfile.Types exposing (..)
+import Screens.UpdateUtils as Utils
 
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address (ShowProfileAction >> ScreenAction)
-
-type alias Update = AppTypes.ScreenUpdate Screen
+  Utils.screenAddr ShowProfileAction
 
 
-mount : Player -> Update
+mount : Player -> (Screen, Effects Action)
 mount player =
-  let
-    initial = { player = player }
-  in
-    local initial
+  initial player &: none
 
 
-update : Action -> Screen -> Update
+update : Action -> Screen -> (Screen, Effects Action)
 update action screen =
   case action of
 
-    _ ->
-      local screen
+    NoOp ->
+      screen &: none

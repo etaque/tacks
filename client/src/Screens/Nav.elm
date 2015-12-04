@@ -48,5 +48,5 @@ guestMenu =
 userMenu : List Html
 userMenu =
     [ li [] [ linkTo ShowProfile [] [ text "Profile" ] ]
-    , li [] [ a [ onClick appActionsMailbox.address Logout ] [ text "Logout"] ]
+    , li [] [ a [ onClick appActionsAddress Logout ] [ text "Logout"] ]
     ]

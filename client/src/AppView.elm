@@ -2,55 +2,57 @@ module AppView where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Maybe
 
 import Models exposing (..)
 import AppTypes exposing (..)
 
-import Screens.Home.View as Home
-import Screens.Login.View as Login
-import Screens.Register.View as Register
-import Screens.ShowTrack.View as ShowTrack
-import Screens.EditTrack.View as EditTrack
-import Screens.ShowProfile.View as ShowProfile
-import Screens.Game.View as Game
+import Screens.Home.View as HomeScreen
+import Screens.Login.View as LoginScreen
+import Screens.Register.View as RegisterScreen
+import Screens.ShowTrack.View as ShowTrackScreen
+import Screens.EditTrack.View as EditTrackScreen
+import Screens.ShowProfile.View as ShowProfileScreen
+import Screens.Game.View as GameScreen
 
 import Screens.Sidebar as Sidebar
 import Screens.Nav as Nav
 
 import Constants exposing (..)
+import Routes exposing (..)
 
 
-view : AppState -> Html
-view appState =
-  let
-    content = case appState.screen of
+view : Signal.Address AppAction -> AppState -> Html
+view _ appState =
+  Maybe.map (routeView appState) appState.route
+    |> Maybe.withDefault emptyView
+    |> layout appState
 
-      HomeScreen screen ->
-        Home.view appState.player screen
 
-      RegisterScreen screen ->
-        Register.view screen
+routeView : AppState -> Routes.Route -> Html
+routeView {screens, player, dims} route =
+  case route of
 
-      LoginScreen screen ->
-        Login.view screen
+    Home ->
+      HomeScreen.view player screens.home
 
-      ShowTrackScreen screen ->
-        ShowTrack.view screen
+    Register ->
+      RegisterScreen.view screens.register
 
-      EditTrackScreen screen ->
-        EditTrack.view appState.player screen
+    Login ->
+      LoginScreen.view screens.login
 
-      ShowProfileScreen screen ->
-        ShowProfile.view screen
+    ShowTrack _ ->
+      ShowTrackScreen.view screens.showTrack
 
-      GameScreen screen ->
-        Game.view appState.dims screen
+    EditTrack _ ->
+      EditTrackScreen.view player screens.editTrack
 
-      _ ->
-        emptyView
+    ShowProfile ->
+      ShowProfileScreen.view screens.showProfile
 
-  in
-    layout appState content
+    PlayTrack _ ->
+      GameScreen.view dims screens.game
 
 
 emptyView : Html
@@ -61,9 +63,9 @@ emptyView =
 layout : AppState -> Html -> Html
 layout appState content =
   let
-    noNav = case appState.screen of
-      EditTrackScreen _ -> True
-      GameScreen _ -> True
+    noNav = case appState.route of
+      Just (EditTrack _) -> True
+      Just (PlayTrack _) -> True
       _ -> False
   in
     if noNav then

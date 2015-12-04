@@ -1,9 +1,10 @@
 module AppUpdates where
 
 import Task exposing (Task, andThen)
-import Signal exposing (send)
 import History
 import RouteParser
+import Effects exposing (Effects, map, none, task)
+import Result
 
 import AppTypes exposing (..)
 
@@ -17,153 +18,117 @@ import Screens.Game.Updates as Game
 
 import ServerApi
 import Routes exposing (..)
+import Screens.UpdateUtils as Utils
 
 
-update : AppInput -> AppUpdate -> AppUpdate
-update {action, clock} {appState} =
-  case action of
+update : AppAction -> AppState -> (AppState, Effects AppAction)
+update appAction appState =
+  case appAction of
 
     SetPath path ->
-      AppUpdate appState
-        (Just <| History.setPath path)
-
+      appState &! (History.setPath path |> Task.map (\_ -> AppNoOp))
 
     PathChanged path ->
-     RouteParser.match routeParsers path
-        |> Maybe.map (mountRoute appState)
-        |> Maybe.withDefault (mountNotFound appState path)
+      let
+        newAppState = { appState | route = RouteParser.match routeParsers path }
+      in
+        case newAppState.route of
+          Just route ->
+            mountRoute newAppState route
+          Nothing -> -- TODO 404
+            newAppState &: none
 
     SetPlayer p ->
-      let
-        newPath = Routes.toPath Routes.Home
-        reaction = Signal.send appActionsMailbox.address (SetPath newPath)
-      in
-        AppUpdate { appState | player = p } (Just reaction)
+      { appState | player = p } &: (map (\_ -> AppNoOp) (Utils.redirect Routes.Home))
 
     UpdateDims dims ->
-      let
-        newScreen = updateScreenDims dims appState.screen
-      in
-        AppUpdate { appState | dims = dims, screen = newScreen } Nothing
+      updateScreenDims dims appState &: none
 
     Logout ->
-      AppUpdate appState (Just logoutTask)
+      appState &! logoutTask
 
     ScreenAction screenAction ->
-      updateScreen clock screenAction appState
+      updateScreen screenAction appState
 
     AppNoOp ->
-      noUpdate appState
+      appState &: none
 
 
-mountRoute : AppState -> Routes.Route -> AppUpdate
+mountRoute : AppState -> Routes.Route -> (AppState, Effects AppAction)
 mountRoute ({player, dims} as appState) route =
-  let
-    mount = toAppUpdate appState
-  in
-    case route of
-      Home ->
-        mount HomeScreen (Home.mount player)
-      Login ->
-        mount LoginScreen Login.mount
-      Register ->
-        mount RegisterScreen Register.mount
-      ShowProfile ->
-        mount ShowProfileScreen (ShowProfile.mount player)
-      ShowTrack id ->
-        mount ShowTrackScreen (ShowTrack.mount id)
-      EditTrack id ->
-        mount EditTrackScreen (EditTrack.mount dims id)
-      PlayTrack id ->
-        mount GameScreen (Game.mount id)
+  case route of
+    Home ->
+      applyHome (Home.mount player) appState
+    Login ->
+      applyLogin Login.mount appState
+    Register ->
+      applyRegister Register.mount appState
+    ShowProfile ->
+      applyShowProfile (ShowProfile.mount player) appState
+    ShowTrack id ->
+      applyShowTrack (ShowTrack.mount id) appState
+    EditTrack id ->
+      applyEditTrack (EditTrack.mount dims id) appState
+    PlayTrack id ->
+      applyGame (Game.mount id) appState
 
 
-mountNotFound : AppState -> String -> AppUpdate
-mountNotFound appState path =
-  AppUpdate { appState | screen = NotFoundScreen path } Nothing
-
-
-updateScreen : Clock -> ScreenAction -> AppState -> AppUpdate
-updateScreen clock screenAction ({screen} as appState) =
+updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
+updateScreen screenAction ({screens} as appState) =
   case screenAction of
 
     HomeAction a ->
-      case screen of
-        HomeScreen s ->
-          Home.update a s |> toAppUpdate appState HomeScreen
-        _ ->
-          noUpdate appState
+      applyHome (Home.update a screens.home) appState
 
     LoginAction a ->
-      case screen of
-        LoginScreen s ->
-          Login.update a s |> toAppUpdate appState LoginScreen
-        _ ->
-          noUpdate appState
+      applyLogin (Login.update a screens.login) appState
 
     RegisterAction a ->
-      case screen of
-        RegisterScreen s ->
-          Register.update a s |> toAppUpdate appState RegisterScreen
-        _ ->
-          noUpdate appState
+      applyRegister (Register.update a screens.register) appState
 
     ShowTrackAction a ->
-      case screen of
-        ShowTrackScreen s ->
-          ShowTrack.update a s |> toAppUpdate appState ShowTrackScreen
-        _ ->
-          noUpdate appState
+      applyShowTrack (ShowTrack.update a screens.showTrack) appState
 
     EditTrackAction a ->
-      case screen of
-        EditTrackScreen s ->
-          EditTrack.update a s |> toAppUpdate appState EditTrackScreen
-        _ ->
-          noUpdate appState
+      applyEditTrack (EditTrack.update a screens.editTrack) appState
 
     ShowProfileAction a ->
-      case screen of
-        ShowProfileScreen s ->
-          ShowProfile.update a s |> toAppUpdate appState ShowProfileScreen
-        _ ->
-          noUpdate appState
+      applyShowProfile (ShowProfile.update a screens.showProfile) appState
 
     GameAction a ->
-      case screen of
-        GameScreen s ->
-          Game.update appState.player clock a s |> toAppUpdate appState GameScreen
-        _ ->
-          noUpdate appState
+      applyGame (Game.update appState.player a screens.game) appState
 
-updateScreenDims : (Int, Int) -> AppScreen -> AppScreen
-updateScreenDims dims appScreen =
-  case appScreen of
-    EditTrackScreen screen ->
-      EditTrackScreen (EditTrack.updateDims dims screen)
+
+updateScreenDims : (Int, Int) -> AppState -> AppState
+updateScreenDims dims ({route, screens} as appState) =
+  case route of
+    Just (EditTrack _) ->
+      let
+        newScreens = { screens | editTrack = EditTrack.updateDims dims screens.editTrack }
+      in
+        { appState | screens = newScreens, dims = dims }
     _ ->
-      appScreen
+      appState
 
 
-noUpdate : AppState -> AppUpdate
-noUpdate appState =
-  AppUpdate appState Nothing
-
-
-toAppUpdate : AppState -> (screen -> AppScreen) -> ScreenUpdate screen -> AppUpdate
-toAppUpdate appState toAppScreen {screen, reaction} =
-  AppUpdate
-    { appState | screen = toAppScreen screen }
-    reaction
-
-
-logoutTask : Task Never ()
+logoutTask : Task Effects.Never AppAction
 logoutTask =
-  ServerApi.postLogout `andThen`
-    \result ->
-      case result of
-        Ok p ->
-          Signal.send appActionsMailbox.address (SetPlayer p)
-        Err _ ->
-          -- TODO handle error
-          Task.succeed ()
+  ServerApi.postLogout
+    |> Task.map (\r -> Result.map SetPlayer r |> Result.withDefault AppNoOp)
+
+applyHome = applyScreen (\s screens -> { screens | home = s }) HomeAction
+applyLogin = applyScreen (\s screens -> { screens | login = s }) LoginAction
+applyRegister = applyScreen (\s screens -> { screens | register = s }) RegisterAction
+applyShowProfile = applyScreen (\s screens -> { screens | showProfile = s }) ShowProfileAction
+applyShowTrack = applyScreen (\s screens -> { screens | showTrack = s }) ShowTrackAction
+applyEditTrack = applyScreen (\s screens -> { screens | editTrack = s }) EditTrackAction
+applyGame = applyScreen (\s screens -> { screens | game = s }) GameAction
+
+applyScreen : (screen -> Screens -> Screens) -> (a -> ScreenAction) -> (screen, Effects a) -> AppState -> (AppState, Effects AppAction)
+applyScreen screensUpdater toScreenAction (screen, effect) appState =
+  let
+    newState = { appState | screens = screensUpdater screen appState.screens }
+    newEffect = map (toScreenAction >> ScreenAction) effect
+  in
+    newState &: newEffect
+

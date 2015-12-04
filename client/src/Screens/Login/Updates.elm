@@ -2,61 +2,53 @@ module Screens.Login.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
+import Effects exposing (Effects, Never, none)
 
 import AppTypes exposing (..)
 import Screens.Login.Types exposing (..)
 import ServerApi
+import Screens.UpdateUtils as Utils
 
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address (LoginAction >> ScreenAction)
-
-type alias Update = AppTypes.ScreenUpdate Screen
+  Utils.screenAddr LoginAction
 
 
-mount : Update
+mount : (Screen, Effects Action)
 mount =
-  let
-    initial =
-      { email = ""
-      , password = ""
-      , loading = False
-      , error = False
-      }
-  in
-    local initial
+  initial &: none
 
 
-update : Action -> Screen -> Update
+update : Action -> Screen -> (Screen, Effects Action)
 update action screen =
   case action of
 
     SetEmail e ->
-      local { screen | email = e }
+      { screen | email = e } &: none
 
     SetPassword p ->
-      local { screen | password = p }
+      { screen | password = p } &: none
 
     Submit ->
-      react { screen | loading = True } (submitTask screen)
+      { screen | loading = True } &! (submitTask screen)
 
-    Success player ->
-      react { screen | loading = False, error = False }
-        (Signal.send appActionsMailbox.address (AppTypes.SetPlayer player))
-
-    Error ->
-      local { screen | loading = False, error = True }
-
-
-submitTask : Screen -> Task Never ()
-submitTask screen =
-  ServerApi.postLogin screen.email screen.password
-    `andThen` \result ->
+    SubmitResult result ->
       case result of
         Ok player ->
-          Signal.send addr (Success player)
-        Err _ ->
-          Signal.send addr Error
+          let
+            newScreen = { screen | loading = False, error = False }
+            effect = Utils.setPlayer player |> Utils.always NoOp
+          in
+            newScreen &: effect
+        Err formErrors ->
+          { screen | loading = False, error = True } &: none
 
+    NoOp ->
+      screen &: none
+
+submitTask : Screen -> Task Never Action
+submitTask screen =
+  ServerApi.postLogin screen.email screen.password
+    |> Task.map SubmitResult
 
