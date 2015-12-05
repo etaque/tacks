@@ -6,7 +6,6 @@ import Html exposing (Html)
 import Window
 import History
 import Json.Decode as Json
--- import Signal.Extra exposing (foldp', passiveMap2)
 import Effects exposing (Effects, Never)
 import StartApp
 
@@ -31,14 +30,15 @@ port raceInput : Signal (Maybe RaceInput)
 port gameActionsInput : Signal Json.Value
 
 
+-- Wiring
+
 app : StartApp.App AppState
 app = StartApp.start
   { init = AppUpdates.initialAppUpdate appSetup
   , update = AppUpdates.update
   , view = AppView.view
   , inputs =
-    [ initPathAction
-    , pathActions
+    [ pathActions
     , dimsActions
     , appActionsMailbox.signal
     , raceUpdateActions
@@ -52,27 +52,6 @@ main = app.html
 
 port tasks : Signal (Task.Task Never ())
 port tasks = app.tasks
-
--- Signals
-
--- stateWithEffects : Signal (AppState, Effects AppAction)
--- stateWithEffects =
---   let
---     initialUpdate = (flip AppUpdates.update) (initialAppUpdate initialDims appSetup.player)
---   in
---     foldp' AppUpdates.update initialUpdate appInputs
-
--- allActions : Signal AppAction
--- allActions =
---   Signal.mergeMany
---     [ initPathAction
---     , pathActions
---     , dimsActions
---     , appActionsMailbox.signal
---     , raceUpdateActions
---     , gameActions
---     , editorInputActions
---     ]
 
 initPathAction : Signal AppAction
 initPathAction =
@@ -118,9 +97,6 @@ port playerOutput : Signal (Maybe PlayerOutput)
 port playerOutput =
   Signal.map2 Game.Outputs.extractPlayerOutput app.model raceUpdateActions
     |> Signal.dropRepeats
-
--- port title : Signal String
--- port title = Render.Utils.gameTitle <~ app.mo
 
 port activeTrack : Signal (Maybe String)
 port activeTrack =

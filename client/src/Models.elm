@@ -32,9 +32,10 @@ type alias LiveStatus =
 
 
 type alias LiveTrack =
-  { track: Track
-  , players: List Player
-  , races: List Race
+  { track : Track
+  , creator : Player
+  , players : List Player
+  , races : List Race
   , rankings : List Ranking
   }
 

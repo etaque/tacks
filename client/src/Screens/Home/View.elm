@@ -61,14 +61,14 @@ liveTracks player {liveTracks} =
     ]
 
 liveTrackBlock : LiveTrack -> Html
-liveTrackBlock ({track, players} as lt) =
+liveTrackBlock ({track, creator, players} as lt) =
   div [ class "col-md-4" ]
     [ div [ class "live-track" ]
       [ linkTo (PlayTrack track.id)
         [ class "show"
         ]
         [ h3 [ class "name" ] [ text track.name ]
-        , div [ class "description"] [ text track.creatorId ]
+        , div [ class "description"] [ text <| "by " ++ Maybe.withDefault "?" creator.handle ]
         , playersList players
         ]
       ]

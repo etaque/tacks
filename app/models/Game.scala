@@ -145,6 +145,7 @@ case class LiveTrackUpdate(liveTrack: LiveTrack)
 
 case class LiveTrack(
   track: Track,
+  creator: User,
   races: Seq[Race],
   players: Seq[Player],
   rankings: Seq[PlayerRanking]

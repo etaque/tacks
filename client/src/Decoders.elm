@@ -14,8 +14,9 @@ liveStatusDecoder =
 
 liveTrackDecoder : Decoder LiveTrack
 liveTrackDecoder =
-  object4 LiveTrack
+  object5 LiveTrack
     ("track" := trackDecoder)
+    ("creator" := playerDecoder)
     ("players" := list playerDecoder)
     ("races" := list raceDecoder)
     ("rankings" := list rankingDecoder)

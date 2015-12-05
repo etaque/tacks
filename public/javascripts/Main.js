@@ -11039,8 +11039,8 @@ Elm.Models.make = function (_elm) {
    var Track = F5(function (a,b,c,d,e) {
       return {id: a,name: b,draft: c,creatorId: d,course: e};
    });
-   var LiveTrack = F4(function (a,b,c,d) {
-      return {track: a,players: b,races: c,rankings: d};
+   var LiveTrack = F5(function (a,b,c,d,e) {
+      return {track: a,creator: b,players: c,races: d,rankings: e};
    });
    var LiveStatus = F2(function (a,b) {
       return {liveTracks: a,onlinePlayers: b};
@@ -13361,9 +13361,10 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "tallies",
    $Json$Decode.list(playerTallyDecoder)));
-   var liveTrackDecoder = A5($Json$Decode.object4,
+   var liveTrackDecoder = A6($Json$Decode.object5,
    $Models.LiveTrack,
    A2($Json$Decode._op[":="],"track",trackDecoder),
+   A2($Json$Decode._op[":="],"creator",playerDecoder),
    A2($Json$Decode._op[":="],
    "players",
    $Json$Decode.list(playerDecoder)),
@@ -18842,7 +18843,9 @@ Elm.Screens.Home.View.make = function (_elm) {
               _U.list([$Html.text(_p2.name)]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("description")]),
-              _U.list([$Html.text(_p2.creatorId)]))
+              _U.list([$Html.text(A2($Basics._op["++"],
+              "by ",
+              A2($Maybe.withDefault,"?",_p1.creator.handle)))]))
               ,playersList(_p1.players)]))]))]));
    };
    var liveTracks = F2(function (player,_p3) {
@@ -22868,12 +22871,10 @@ Elm.Main.make = function (_elm) {
                                                                                     v.dims)} : _U.badPort("an object with fields `player`, `path`, `dims`",
       v);
    });
-   var initPathAction = $Signal.constant($AppTypes.PathChanged(appSetup.path));
    var app = $StartApp.start({init: $AppUpdates.initialAppUpdate(appSetup)
                              ,update: $AppUpdates.update
                              ,view: $AppView.view
-                             ,inputs: _U.list([initPathAction
-                                              ,pathActions
+                             ,inputs: _U.list([pathActions
                                               ,dimsActions
                                               ,$AppTypes.appActionsMailbox.signal
                                               ,raceUpdateActions
@@ -22913,6 +22914,7 @@ Elm.Main.make = function (_elm) {
    $Signal.dropRepeats(A2($Signal.map,
    $Game$Outputs.getActiveTrack,
    app.model)));
+   var initPathAction = $Signal.constant($AppTypes.PathChanged(appSetup.path));
    return _elm.Main.values = {_op: _op
                              ,app: app
                              ,main: main

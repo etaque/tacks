@@ -49,13 +49,16 @@ class RacesSupervisor extends Actor {
       case Some((track, ref)) => {
         for {
           (races, opponents) <- (ref ? GetStatus).mapTo[(Seq[Race], Seq[Opponent])]
+          creator <- UserDAO.findById(track.creatorId)
           rankings <- RacesSupervisor.playerRankings(track.id)
         }
-        yield LiveTrack(track, races, opponents.map(_.player), rankings)
+        yield LiveTrack(track, creator, races, opponents.map(_.player), rankings)
       }
       case None => {
-        RacesSupervisor.playerRankings(track.id).map { rankings =>
-          LiveTrack(track, Nil, Nil, rankings)
+        RacesSupervisor.playerRankings(track.id).flatMap { rankings =>
+          UserDAO.findById(track.creatorId).map { creator =>
+            LiveTrack(track, creator, Nil, Nil, rankings)
+          }
         }
       }
     }
