@@ -27,13 +27,13 @@ function mountElm() {
   });
 
   game.ports.playerOutput.subscribe(function(output) {
-    if (ws.readyState == WebSocket.OPEN) {
+    if (ws && ws.readyState == WebSocket.OPEN) {
       ws.send(JSON.stringify({ tag: "PlayerInput", "playerInput": output }));
     }
   });
 
   game.ports.chatOutput.subscribe(function(output) {
-    if (output && ws.readyState == WebSocket.OPEN) {
+    if (output && ws && ws.readyState == WebSocket.OPEN) {
       ws.send(JSON.stringify({ tag: "NewMessage", "content": output }));
     }
   });
