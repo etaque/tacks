@@ -10,11 +10,18 @@ type alias Screen =
   , error : Bool
   }
 
+initial : Screen
+initial =
+  { email = ""
+  , password = ""
+  , loading = False
+  , error = False
+  }
 
 type Action
   = SetEmail String
   | SetPassword String
   | Submit
-  | Success Player
-  | Error
+  | SubmitResult (FormResult Player)
+  | NoOp
 

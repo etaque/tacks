@@ -8,7 +8,7 @@ import String
 import Signal
 
 import Models exposing (..)
-import AppTypes exposing (appActionsMailbox)
+import AppTypes exposing (appActionsAddress)
 import Routes
 
 
@@ -28,8 +28,7 @@ linkTo route attrs content =
 
 onPathClick : String -> Attribute
 onPathClick path =
-  onWithOptions "click" eventOptions Json.value
-    (\_ -> Signal.message appActionsMailbox.address (AppTypes.SetPath path))
+  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message appActionsAddress (AppTypes.SetPath path))
 
 onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =

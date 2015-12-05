@@ -9,11 +9,18 @@ type alias Screen =
   }
 
 
+initial : Player -> Screen
+initial player =
+  { handle = Maybe.withDefault "" player.handle
+  , liveStatus = { liveTracks = [], onlinePlayers = [] }
+  }
+
 type Action
-  = SetLiveStatus LiveStatus
+  = SetLiveStatus (Result () LiveStatus)
   | SetHandle String
   | SubmitHandle
-  | SubmitHandleSuccess Player
+  | SubmitHandleResult (FormResult Player)
   | CreateTrack
-  | TrackCreated String
+  | CreateTrackResult (FormResult Track)
+  | NoOp
 

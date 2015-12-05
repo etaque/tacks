@@ -10,12 +10,22 @@ import Game.Models exposing (..)
 import Models exposing (..)
 
 
+buildGameInput : (KeyboardInput, (Int,Int), Maybe RaceInput) -> Clock -> Maybe GameInput
+buildGameInput (keyboardInput, dims, maybeRaceInput) clock =
+  Maybe.map (GameInput keyboardInput dims clock) maybeRaceInput
+
 -- Game
 
 type alias GameInput =
   { keyboardInput : KeyboardInput
   , windowInput : (Int,Int)
+  , clock : Clock
   , raceInput : RaceInput
+  }
+
+type alias Clock =
+  { delta : Float
+  , time : Float
   }
 
 type alias KeyboardInput =

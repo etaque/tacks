@@ -1,5 +1,7 @@
 module Screens.Game.Types where
 
+import Time exposing (Time)
+
 import Models exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs exposing (GameInput)
@@ -15,11 +17,23 @@ type alias Screen =
   , notFound : Bool
   }
 
+initial : Screen
+initial =
+  { liveTrack = Nothing
+  , gameState = Nothing
+  , races = []
+  , freePlayers = []
+  , live = False
+  , messages = []
+  , messageField = ""
+  , notFound = False
+  }
+
 type Action
-  = SetLiveTrack LiveTrack
+  = LoadLiveTrack (Result () LiveTrack)
+  | InitGameState LiveTrack Time
   | UpdateLiveTrack LiveTrack
-  | TrackNotFound
-  | PingServer
+  | PingServer Time
   | GameUpdate GameInput
   | EnterChat
   | LeaveChat

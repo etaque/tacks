@@ -22,8 +22,8 @@ import Game.Steps.Gusts exposing (gustsStep)
 
 
 
-gameStep : Clock -> GameInput -> GameState -> GameState
-gameStep clock {raceInput, windowInput, keyboardInput} gameState =
+gameStep : GameInput -> GameState -> GameState
+gameStep {raceInput, windowInput, keyboardInput, clock} gameState =
   let
     keyboardInputWithFocus =
       if gameState.chatting

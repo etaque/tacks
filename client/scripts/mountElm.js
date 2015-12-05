@@ -18,21 +18,22 @@ function dims() {
 function mountElm() {
   var ws, wsUrl, currentTrackId;
 
+  var appSetup = $.extend(readData("appSetup"), { dims : dims() });
+
   var game = window.Elm.fullscreen(window.Elm.Main, {
     raceInput: null,
     gameActionsInput: { tag: "NoOp" },
-    appSetup: readData("appSetup"),
-    initialDims: dims()
+    appSetup: appSetup
   });
 
   game.ports.playerOutput.subscribe(function(output) {
-    if (ws.readyState == WebSocket.OPEN) {
+    if (ws && ws.readyState == WebSocket.OPEN) {
       ws.send(JSON.stringify({ tag: "PlayerInput", "playerInput": output }));
     }
   });
 
   game.ports.chatOutput.subscribe(function(output) {
-    if (output && ws.readyState == WebSocket.OPEN) {
+    if (output && ws && ws.readyState == WebSocket.OPEN) {
       ws.send(JSON.stringify({ tag: "NewMessage", "content": output }));
     }
   });

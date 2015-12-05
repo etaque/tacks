@@ -8,8 +8,13 @@ type alias Screen =
   , notFound : Bool
   }
 
+initial : Screen
+initial =
+  { track = Nothing
+  , notFound = False
+  }
 
 type Action
-  = SetTrack Track
-  | TrackNotFound
+  = LoadTrack (Result () Track)
+  | NoOp
 

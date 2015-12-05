@@ -2,65 +2,58 @@ module Screens.Register.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
 import Dict exposing (Dict)
+import Result exposing (Result(Ok, Err))
+import Effects exposing (Effects, Never, none)
 
 import AppTypes exposing (..)
 import Screens.Register.Types exposing (..)
 import ServerApi
+import Screens.UpdateUtils as Utils
 
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address (RegisterAction >> ScreenAction)
-
-type alias Update = AppTypes.ScreenUpdate Screen
+  Utils.screenAddr RegisterAction
 
 
-mount : Update
+mount : (Screen, Effects Action)
 mount =
-  let
-    initial =
-      { handle = ""
-      , email = ""
-      , password = ""
-      , loading = False
-      , errors = Dict.empty
-      }
-  in
-    local initial
+  initial &: none
 
 
-update : Action -> Screen -> Update
+update : Action -> Screen -> (Screen, Effects Action)
 update action screen =
   case action of
 
     SetHandle h ->
-      local { screen | handle = h }
+      { screen | handle = h } &: none
 
     SetEmail e ->
-      local { screen | email = e }
+      { screen | email = e } &: none
 
     SetPassword p ->
-      local { screen | password = p }
+      { screen | password = p } &: none
 
     Submit ->
-      react { screen | loading = True, errors = Dict.empty }
-        (submitTask screen)
+      { screen | loading = True, errors = Dict.empty } &! (submitTask screen)
 
-    FormSuccess player ->
-      react { screen | loading = False, errors = Dict.empty }
-        (Signal.send appActionsMailbox.address (AppTypes.SetPlayer player))
-
-    FormFailure errors ->
-      local { screen | loading = False, errors = errors }
-
-
-submitTask : Screen -> Task Never ()
-submitTask screen =
-  ServerApi.postRegister screen.email screen.handle screen.password
-    `andThen` \result ->
+    SubmitResult result ->
       case result of
         Ok player ->
-          Signal.send addr (FormSuccess player)
+          let
+            newScreen = { screen | loading = False, errors = Dict.empty }
+            effect = Utils.setPlayer player |> Utils.always NoOp
+          in
+            newScreen &: effect
         Err errors ->
-          Signal.send addr (FormFailure errors)
+          { screen | loading = False, errors = errors } &: none
+
+    NoOp ->
+      screen &: none
+
+
+submitTask : Screen -> Task Never Action
+submitTask screen =
+  ServerApi.postRegister screen.email screen.handle screen.password
+    |> Task.map SubmitResult
 

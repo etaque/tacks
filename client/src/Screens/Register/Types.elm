@@ -13,11 +13,19 @@ type alias Screen =
   , errors : Dict String (List String)
   }
 
+initial : Screen
+initial =
+  { handle = ""
+  , email = ""
+  , password = ""
+  , loading = False
+  , errors = Dict.empty
+  }
 
 type Action
   = SetHandle String
   | SetEmail String
   | SetPassword String
   | Submit
-  | FormSuccess Player
-  | FormFailure (Dict String (List String))
+  | SubmitResult (FormResult Player)
+  | NoOp

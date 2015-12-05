@@ -1,6 +1,8 @@
 module Screens.EditTrack.Updates where
 
 import Task exposing (Task, succeed, map, andThen)
+import Result exposing (Result(Ok, Err))
+import Effects exposing (Effects, Never, none)
 import Task.Extra exposing (delay)
 import Keyboard
 import Array
@@ -17,11 +19,12 @@ import Screens.EditTrack.GridUpdates as GridUpdates exposing (mouseAction)
 
 import Game.Grid exposing (..)
 import ServerApi
+import Screens.UpdateUtils as Utils
 
 
 addr : Signal.Address Action
 addr =
-  Signal.forwardTo appActionsMailbox.address (EditTrackAction >> ScreenAction)
+  Utils.screenAddr EditTrackAction
 
 
 inputs : Signal Action
@@ -31,79 +34,60 @@ inputs =
     , Signal.map MouseAction mouseEvents
     ]
 
-type alias Update = AppTypes.ScreenUpdate Screen
-
-
-mount : Dims -> String -> Update
+mount : Dims -> String -> (Screen, Effects Action)
 mount dims id =
-  let
-    initial =
-      { track = Nothing
-      , editor = Nothing
-      , notFound = False
-      , dims = dims
-      }
-  in
-    react initial (loadTrack id)
+  (initial dims) &! (loadTrack id)
 
 
-update : Action -> Screen -> Update
+update : Action -> Screen -> (Screen, Effects Action)
 update action screen =
   case action of
 
-    SetTrack track ->
-      let
-        editor =
-          { course = track.course
-          , center = (0, 0)
-          , courseDims = getCourseDims screen.dims
-          , mode = Watch
-          , altMove = False
-          , name = track.name
-          , saving = False
-          }
-      in
-        local { screen | track = Just track, editor = Just editor }
-
-    TrackNotFound ->
-      local { screen | notFound = True }
+    LoadTrack result ->
+      case result of
+        Ok track ->
+          let
+            editor =
+              { course = track.course
+              , center = (0, 0)
+              , courseDims = getCourseDims screen.dims
+              , mode = Watch
+              , altMove = False
+              , name = track.name
+              , saving = False
+              }
+          in
+            { screen | track = Just track, editor = Just editor } &: none
+        Err _ ->
+        { screen | notFound = True } &: none
 
     SetName n ->
-      screen
-        |> updateEditor (\e -> { e | name = n })
-        |> local
+      (updateEditor (\e -> { e | name = n }) screen) &: none
 
     MouseAction event ->
-      screen
-        |> (GridUpdates.mouseAction >> updateEditor) event
-        |> local
+      (GridUpdates.mouseAction >> updateEditor) event screen &: none
 
     SetMode mode ->
-      screen
-        |> updateEditor (\e -> { e | mode = mode })
-        |> local
+      updateEditor (\e -> { e | mode = mode }) screen &: none
 
     AltMoveMode b ->
-      screen
-        |> updateEditor (\e -> { e | altMove = b })
-        |> local
+      updateEditor (\e -> { e | altMove = b }) screen &: none
 
     FormAction a ->
-      screen
-        |> (FormUpdates.update >> updateCourse >> updateEditor) a
-        |> local
+      (FormUpdates.update >> updateCourse >> updateEditor) a screen &: none
 
     Save ->
       case (screen.track, screen.editor) of
         (Just track, Just editor) ->
-          react (updateEditor (\e -> { e | saving = True}) screen) (save track.id editor)
+          (updateEditor (\e -> { e | saving = True}) screen) &! (save track.id editor)
         _ ->
-          local screen
+          screen &: none
 
-    SaveResult _ ->
-      screen
-        |> updateEditor (\e -> { e | saving = False })
-        |> local
+    SaveResult result -> -- TODO
+      updateEditor (\e -> { e | saving = False }) screen &: none
+
+    NoOp ->
+      screen &: none
 
 
 updateEditor : (Editor -> Editor) -> Screen -> Screen
@@ -119,15 +103,10 @@ updateCourse update editor =
   { editor | course = update editor.course }
 
 
-loadTrack : String -> Task Never ()
+loadTrack : String -> Task Never Action
 loadTrack id =
-  ServerApi.getTrack id `andThen`
-    \result ->
-      case result of
-        Ok track ->
-          Signal.send addr (SetTrack track)
-        Err _ ->
-          Task.succeed ()
+  ServerApi.getTrack id
+    |> Task.map LoadTrack
 
 
 updateDims : Dims -> Screen -> Screen
@@ -143,14 +122,14 @@ getCourseDims (w, h) =
   (w - sidebarWidth, h)
 
 
-save : String -> Editor -> Task Never ()
+save : String -> Editor -> Task Never Action
 save id ({course, name} as editor) =
   let
     area = getRaceArea course.grid
     withArea = { course | area = area }
   in
     delay 500 (ServerApi.saveTrack id name withArea)
-      `andThen` (SaveResult >> (Signal.send addr))
+      |> Task.map SaveResult 
 
 
 getRaceArea : Grid -> RaceArea
