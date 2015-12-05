@@ -12609,24 +12609,22 @@ Elm.AppTypes.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var initialAppState = F2(function (dims,player) {
-      return {player: player
-             ,dims: dims
-             ,route: $Maybe.Just($Routes.Home)
-             ,path: "/"
-             ,screens: {home: $Screens$Home$Types.initial(player)
+   var initialAppState = function (_p0) {
+      var _p1 = _p0;
+      var _p3 = _p1.player;
+      var _p2 = _p1.dims;
+      return {player: _p3
+             ,dims: _p2
+             ,path: _p1.path
+             ,route: $Maybe.Nothing
+             ,screens: {home: $Screens$Home$Types.initial(_p3)
                        ,login: $Screens$Login$Types.initial
                        ,register: $Screens$Register$Types.initial
                        ,showTrack: $Screens$ShowTrack$Types.initial
-                       ,editTrack: $Screens$EditTrack$Types.initial(dims)
-                       ,showProfile: $Screens$ShowProfile$Types.initial(player)
+                       ,editTrack: $Screens$EditTrack$Types.initial(_p2)
+                       ,showProfile: $Screens$ShowProfile$Types.initial(_p3)
                        ,game: $Screens$Game$Types.initial}};
-   });
-   var initialAppUpdate = F2(function (dims,player) {
-      return {ctor: "_Tuple2"
-             ,_0: A2(initialAppState,dims,player)
-             ,_1: $Effects.none};
-   });
+   };
    var Screens = F7(function (a,b,c,d,e,f,g) {
       return {home: a
              ,login: b
@@ -12677,8 +12675,8 @@ Elm.AppTypes.make = function (_elm) {
    var SetPlayer = function (a) {
       return {ctor: "SetPlayer",_0: a};
    };
-   var AppSetup = F2(function (a,b) {
-      return {player: a,path: b};
+   var AppSetup = F3(function (a,b,c) {
+      return {player: a,path: b,dims: c};
    });
    _op["?:"] = F2(function (result,$default) {
       return A2($Result.withDefault,$default,result);
@@ -12714,7 +12712,6 @@ Elm.AppTypes.make = function (_elm) {
                                  ,GameAction: GameAction
                                  ,AppState: AppState
                                  ,Screens: Screens
-                                 ,initialAppUpdate: initialAppUpdate
                                  ,initialAppState: initialAppState};
 };
 Elm.Native = Elm.Native || {};
@@ -16148,7 +16145,13 @@ Elm.AppUpdates.make = function (_elm) {
          case "ScreenAction": return A2(updateScreen,_p18._0,appState);
          default: return A2($AppTypes._op["&:"],appState,$Effects.none);}
    });
+   var initialAppUpdate = function (setup) {
+      var task = $Task.succeed($AppTypes.SetPath(setup.path));
+      var appState = $AppTypes.initialAppState(setup);
+      return A2($AppTypes._op["&!"],appState,task);
+   };
    return _elm.AppUpdates.values = {_op: _op
+                                   ,initialAppUpdate: initialAppUpdate
                                    ,update: update
                                    ,mountRoute: mountRoute
                                    ,updateScreen: updateScreen
@@ -22691,6 +22694,14 @@ Elm.Main.make = function (_elm) {
       return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Decoders.decodeAction(_p3)));
    },
    gameActionsInput);
+   var chatScrollDown = Elm.Native.Port.make(_elm).outboundSignal("chatScrollDown",
+   function (v) {
+      return [];
+   },
+   A3($Signal.filterMap,
+   $Game$Outputs.needChatScrollDown,
+   {ctor: "_Tuple0"},
+   gameActions));
    var raceInput = Elm.Native.Port.make(_elm).inboundSignal("raceInput",
    "Maybe.Maybe\n    Game.Inputs.RaceInput",
    function (v) {
@@ -22848,43 +22859,38 @@ Elm.Main.make = function (_elm) {
    $Game$Inputs.buildGameInput,
    rawInput,
    A2($Signal.sampleOn,rawInput,clock)))));
-   var initialDims = Elm.Native.Port.make(_elm).inbound("initialDims",
-   "( Int, Int )",
-   function (v) {
-      return typeof v === "object" && v instanceof Array ? {ctor: "_Tuple2"
-                                                           ,_0: typeof v[0] === "number" && isFinite(v[0]) && Math.floor(v[0]) === v[0] ? v[0] : _U.badPort("an integer",
-                                                           v[0])
-                                                           ,_1: typeof v[1] === "number" && isFinite(v[1]) && Math.floor(v[1]) === v[1] ? v[1] : _U.badPort("an integer",
-                                                           v[1])} : _U.badPort("an array",v);
-   });
    var appSetup = Elm.Native.Port.make(_elm).inbound("appSetup",
    "AppTypes.AppSetup",
    function (v) {
-      return typeof v === "object" && "player" in v && "path" in v ? {_: {}
-                                                                     ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player && "avatarId" in v.player && "vmgMagnet" in v.player && "guest" in v.player && "user" in v.player ? {_: {}
-                                                                                                                                                                                                                                                                                   ,id: typeof v.player.id === "string" || typeof v.player.id === "object" && v.player.id instanceof String ? v.player.id : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                   v.player.id)
-                                                                                                                                                                                                                                                                                   ,handle: v.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                   v.player.handle))
-                                                                                                                                                                                                                                                                                   ,status: v.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.status === "string" || typeof v.player.status === "object" && v.player.status instanceof String ? v.player.status : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                   v.player.status))
-                                                                                                                                                                                                                                                                                   ,avatarId: v.player.avatarId === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.avatarId === "string" || typeof v.player.avatarId === "object" && v.player.avatarId instanceof String ? v.player.avatarId : _U.badPort("a string",
-                                                                                                                                                                                                                                                                                   v.player.avatarId))
-                                                                                                                                                                                                                                                                                   ,vmgMagnet: typeof v.player.vmgMagnet === "number" && isFinite(v.player.vmgMagnet) && Math.floor(v.player.vmgMagnet) === v.player.vmgMagnet ? v.player.vmgMagnet : _U.badPort("an integer",
-                                                                                                                                                                                                                                                                                   v.player.vmgMagnet)
-                                                                                                                                                                                                                                                                                   ,guest: typeof v.player.guest === "boolean" ? v.player.guest : _U.badPort("a boolean (true or false)",
-                                                                                                                                                                                                                                                                                   v.player.guest)
-                                                                                                                                                                                                                                                                                   ,user: typeof v.player.user === "boolean" ? v.player.user : _U.badPort("a boolean (true or false)",
-                                                                                                                                                                                                                                                                                   v.player.user)} : _U.badPort("an object with fields `id`, `handle`, `status`, `avatarId`, `vmgMagnet`, `guest`, `user`",
-                                                                     v.player)
-                                                                     ,path: typeof v.path === "string" || typeof v.path === "object" && v.path instanceof String ? v.path : _U.badPort("a string",
-                                                                     v.path)} : _U.badPort("an object with fields `player`, `path`",
+      return typeof v === "object" && "player" in v && "path" in v && "dims" in v ? {_: {}
+                                                                                    ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player && "avatarId" in v.player && "vmgMagnet" in v.player && "guest" in v.player && "user" in v.player ? {_: {}
+                                                                                                                                                                                                                                                                                                  ,id: typeof v.player.id === "string" || typeof v.player.id === "object" && v.player.id instanceof String ? v.player.id : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                  v.player.id)
+                                                                                                                                                                                                                                                                                                  ,handle: v.player.handle === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.handle === "string" || typeof v.player.handle === "object" && v.player.handle instanceof String ? v.player.handle : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                  v.player.handle))
+                                                                                                                                                                                                                                                                                                  ,status: v.player.status === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.status === "string" || typeof v.player.status === "object" && v.player.status instanceof String ? v.player.status : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                  v.player.status))
+                                                                                                                                                                                                                                                                                                  ,avatarId: v.player.avatarId === null ? Elm.Maybe.make(_elm).Nothing : Elm.Maybe.make(_elm).Just(typeof v.player.avatarId === "string" || typeof v.player.avatarId === "object" && v.player.avatarId instanceof String ? v.player.avatarId : _U.badPort("a string",
+                                                                                                                                                                                                                                                                                                  v.player.avatarId))
+                                                                                                                                                                                                                                                                                                  ,vmgMagnet: typeof v.player.vmgMagnet === "number" && isFinite(v.player.vmgMagnet) && Math.floor(v.player.vmgMagnet) === v.player.vmgMagnet ? v.player.vmgMagnet : _U.badPort("an integer",
+                                                                                                                                                                                                                                                                                                  v.player.vmgMagnet)
+                                                                                                                                                                                                                                                                                                  ,guest: typeof v.player.guest === "boolean" ? v.player.guest : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                  v.player.guest)
+                                                                                                                                                                                                                                                                                                  ,user: typeof v.player.user === "boolean" ? v.player.user : _U.badPort("a boolean (true or false)",
+                                                                                                                                                                                                                                                                                                  v.player.user)} : _U.badPort("an object with fields `id`, `handle`, `status`, `avatarId`, `vmgMagnet`, `guest`, `user`",
+                                                                                    v.player)
+                                                                                    ,path: typeof v.path === "string" || typeof v.path === "object" && v.path instanceof String ? v.path : _U.badPort("a string",
+                                                                                    v.path)
+                                                                                    ,dims: typeof v.dims === "object" && v.dims instanceof Array ? {ctor: "_Tuple2"
+                                                                                                                                                   ,_0: typeof v.dims[0] === "number" && isFinite(v.dims[0]) && Math.floor(v.dims[0]) === v.dims[0] ? v.dims[0] : _U.badPort("an integer",
+                                                                                                                                                   v.dims[0])
+                                                                                                                                                   ,_1: typeof v.dims[1] === "number" && isFinite(v.dims[1]) && Math.floor(v.dims[1]) === v.dims[1] ? v.dims[1] : _U.badPort("an integer",
+                                                                                                                                                   v.dims[1])} : _U.badPort("an array",
+                                                                                    v.dims)} : _U.badPort("an object with fields `player`, `path`, `dims`",
       v);
    });
    var initPathAction = $Signal.constant($AppTypes.PathChanged(appSetup.path));
-   var app = $StartApp.start({init: A2($AppTypes.initialAppUpdate,
-                             initialDims,
-                             appSetup.player)
+   var app = $StartApp.start({init: $AppUpdates.initialAppUpdate(appSetup)
                              ,update: $AppUpdates.update
                              ,view: $AppView.view
                              ,inputs: _U.list([initPathAction
@@ -22892,7 +22898,8 @@ Elm.Main.make = function (_elm) {
                                               ,dimsActions
                                               ,$AppTypes.appActionsMailbox.signal
                                               ,raceUpdateActions
-                                              ,gameActions])});
+                                              ,gameActions
+                                              ,editorInputActions])});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);

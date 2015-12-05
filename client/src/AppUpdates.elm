@@ -21,6 +21,15 @@ import Routes exposing (..)
 import Screens.UpdateUtils as Utils
 
 
+initialAppUpdate : AppSetup -> (AppState, Effects AppAction)
+initialAppUpdate setup =
+  let
+    appState = initialAppState setup
+    task = Task.succeed (SetPath setup.path)
+  in
+    appState &! task
+
+
 update : AppAction -> AppState -> (AppState, Effects AppAction)
 update appAction appState =
   case appAction of

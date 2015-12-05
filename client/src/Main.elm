@@ -10,7 +10,7 @@ import Json.Decode as Json
 import Effects exposing (Effects, Never)
 import StartApp
 
-import AppUpdates exposing (..)
+import AppUpdates
 import AppTypes exposing (..)
 import Game.Inputs exposing (..)
 import Game.Outputs exposing (PlayerOutput)
@@ -26,8 +26,6 @@ import AppView
 
 port appSetup : AppSetup
 
-port initialDims : (Int, Int)
-
 port raceInput : Signal (Maybe RaceInput)
 
 port gameActionsInput : Signal Json.Value
@@ -35,7 +33,7 @@ port gameActionsInput : Signal Json.Value
 
 app : StartApp.App AppState
 app = StartApp.start
-  { init = initialAppUpdate initialDims appSetup.player
+  { init = AppUpdates.initialAppUpdate appSetup
   , update = AppUpdates.update
   , view = AppView.view
   , inputs =
@@ -45,6 +43,7 @@ app = StartApp.start
     , appActionsMailbox.signal
     , raceUpdateActions
     , gameActions
+    , editorInputActions
     ]
   }
 
@@ -62,10 +61,6 @@ port tasks = app.tasks
 --     initialUpdate = (flip AppUpdates.update) (initialAppUpdate initialDims appSetup.player)
 --   in
 --     foldp' AppUpdates.update initialUpdate appInputs
-
--- appInputs : Signal AppInput
--- appInputs =
---   passiveMap2 AppInput allActions clock
 
 -- allActions : Signal AppAction
 -- allActions =
@@ -136,6 +131,6 @@ port chatOutput : Signal String
 port chatOutput =
   chat.signal
 
--- port chatScrollDown : Signal ()
--- port chatScrollDown =
---   Signal.filterMap Game.Outputs.needChatScrollDown () gameActions
+port chatScrollDown : Signal ()
+port chatScrollDown =
+  Signal.filterMap Game.Outputs.needChatScrollDown () gameActions

@@ -15,6 +15,7 @@ import Screens.Game.Types as Game
 
 import Routes
 
+
 appActionsMailbox : Signal.Mailbox AppAction
 appActionsMailbox =
   Signal.mailbox AppNoOp
@@ -44,6 +45,7 @@ infixr 9 ?
 type alias AppSetup =
   { player : Player
   , path : String
+  , dims : (Int, Int)
   }
 
 
@@ -85,17 +87,14 @@ type alias Screens =
   , showProfile : ShowProfile.Screen
   , game : Game.Screen
   }
-initialAppUpdate : (Int, Int) -> Player -> (AppState, Effects AppAction)
-initialAppUpdate dims player =
-    ((initialAppState dims player), Effects.none)
 
 
-initialAppState : (Int, Int) -> Player -> AppState
-initialAppState dims player =
+initialAppState : AppSetup -> AppState
+initialAppState { path, dims, player } =
   { player = player
   , dims = dims
-  , route = Just Routes.Home
-  , path = "/"
+  , path = path
+  , route = Nothing
   , screens =
     { home = Home.initial player
     , login = Login.initial

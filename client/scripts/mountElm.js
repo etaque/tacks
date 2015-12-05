@@ -18,11 +18,12 @@ function dims() {
 function mountElm() {
   var ws, wsUrl, currentTrackId;
 
+  var appSetup = $.extend(readData("appSetup"), { dims : dims() });
+
   var game = window.Elm.fullscreen(window.Elm.Main, {
     raceInput: null,
     gameActionsInput: { tag: "NoOp" },
-    appSetup: readData("appSetup"),
-    initialDims: dims()
+    appSetup: appSetup
   });
 
   game.ports.playerOutput.subscribe(function(output) {
