@@ -146,6 +146,7 @@ object JsonFormats {
   implicit val runFormat: Format[Run] = Json.format[Run]
   implicit val runRankingFormat: Format[RunRanking] = Json.format[RunRanking]
   implicit val playerRankingFormat: Format[PlayerRanking] = Json.format[PlayerRanking]
+  implicit val trackMetaFormat: Format[TrackMeta] = Json.format[TrackMeta]
   implicit val liveTrackFormat: Format[LiveTrack] = Json.format[LiveTrack]
 
   implicit val messageFormat: Format[Message] = Json.format[Message]

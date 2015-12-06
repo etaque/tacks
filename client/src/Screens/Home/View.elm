@@ -67,10 +67,11 @@ liveTracks player {liveTracks} =
     ]
 
 liveTrackBlock : LiveTrack -> Html
-liveTrackBlock ({track, creator, players} as lt) =
+liveTrackBlock ({track, meta, players} as lt) =
   div [ class "col-md-4" ]
     [ div [ class "live-track" ]
       [ h3 [ class "name" ] [ linkTo (PlayTrack track.id) [ ] [ text track.name ] ]
+      , span [ class "runs-count"] [ text <| toString meta.runsCount ++ " runs" ]
       -- , span [ class "creator"] [ text <| "by " ++ Maybe.withDefault "?" creator.handle ]
       , playersList players
       ]
@@ -88,7 +89,7 @@ createTrackBlock : Html
 createTrackBlock =
   p [ class "" ]
     [ a [ onClick addr CreateTrack
-        , class "btn btn-primary" ]
+        , class "btn btn-default" ]
       [ text "Create track" ]
     ]
 

@@ -11036,11 +11036,14 @@ Elm.Models.make = function (_elm) {
    var Race = F5(function (a,b,c,d,e) {
       return {id: a,trackId: b,startTime: c,players: d,tallies: e};
    });
+   var TrackMeta = F3(function (a,b,c) {
+      return {creator: a,rankings: b,runsCount: c};
+   });
    var Track = F5(function (a,b,c,d,e) {
       return {id: a,name: b,draft: c,creatorId: d,course: e};
    });
-   var LiveTrack = F5(function (a,b,c,d,e) {
-      return {track: a,creator: b,players: c,races: d,rankings: e};
+   var LiveTrack = F4(function (a,b,c,d) {
+      return {track: a,meta: b,players: c,races: d};
    });
    var LiveStatus = F2(function (a,b) {
       return {liveTracks: a,onlinePlayers: b};
@@ -11068,6 +11071,7 @@ Elm.Models.make = function (_elm) {
                                ,LiveStatus: LiveStatus
                                ,LiveTrack: LiveTrack
                                ,Track: Track
+                               ,TrackMeta: TrackMeta
                                ,Race: Race
                                ,PlayerTally: PlayerTally
                                ,Ranking: Ranking
@@ -13361,19 +13365,23 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "tallies",
    $Json$Decode.list(playerTallyDecoder)));
-   var liveTrackDecoder = A6($Json$Decode.object5,
+   var trackMetaDecoder = A4($Json$Decode.object3,
+   $Models.TrackMeta,
+   A2($Json$Decode._op[":="],"creator",playerDecoder),
+   A2($Json$Decode._op[":="],
+   "rankings",
+   $Json$Decode.list(rankingDecoder)),
+   A2($Json$Decode._op[":="],"runsCount",$Json$Decode.$int));
+   var liveTrackDecoder = A5($Json$Decode.object4,
    $Models.LiveTrack,
    A2($Json$Decode._op[":="],"track",trackDecoder),
-   A2($Json$Decode._op[":="],"creator",playerDecoder),
+   A2($Json$Decode._op[":="],"meta",trackMetaDecoder),
    A2($Json$Decode._op[":="],
    "players",
    $Json$Decode.list(playerDecoder)),
    A2($Json$Decode._op[":="],
    "races",
-   $Json$Decode.list(raceDecoder)),
-   A2($Json$Decode._op[":="],
-   "rankings",
-   $Json$Decode.list(rankingDecoder)));
+   $Json$Decode.list(raceDecoder)));
    var liveStatusDecoder = A3($Json$Decode.object2,
    $Models.LiveStatus,
    A2($Json$Decode._op[":="],
@@ -13385,6 +13393,7 @@ Elm.Decoders.make = function (_elm) {
    return _elm.Decoders.values = {_op: _op
                                  ,liveStatusDecoder: liveStatusDecoder
                                  ,liveTrackDecoder: liveTrackDecoder
+                                 ,trackMetaDecoder: trackMetaDecoder
                                  ,raceDecoder: raceDecoder
                                  ,rankingDecoder: rankingDecoder
                                  ,playerTallyDecoder: playerTallyDecoder
@@ -18822,7 +18831,7 @@ Elm.Screens.Home.View.make = function (_elm) {
    _U.list([A2($Html$Events.onClick,
            $Screens$Home$Updates.addr,
            $Screens$Home$Types.CreateTrack)
-           ,$Html$Attributes.$class("btn btn-primary")]),
+           ,$Html$Attributes.$class("btn btn-default")]),
    _U.list([$Html.text("Create track")]))]));
    var playerItem = function (player) {
       return A2($Html.li,
@@ -18847,6 +18856,11 @@ Elm.Screens.Home.View.make = function (_elm) {
               $Routes.PlayTrack(_p2.id),
               _U.list([]),
               _U.list([$Html.text(_p2.name)]))]))
+              ,A2($Html.span,
+              _U.list([$Html$Attributes.$class("runs-count")]),
+              _U.list([$Html.text(A2($Basics._op["++"],
+              $Basics.toString(_p1.meta.runsCount),
+              " runs"))]))
               ,playersList(_p1.players)]))]));
    };
    var liveTracks = F2(function (player,_p3) {

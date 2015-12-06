@@ -14,12 +14,18 @@ liveStatusDecoder =
 
 liveTrackDecoder : Decoder LiveTrack
 liveTrackDecoder =
-  object5 LiveTrack
+  object4 LiveTrack
     ("track" := trackDecoder)
-    ("creator" := playerDecoder)
+    ("meta" := trackMetaDecoder)
     ("players" := list playerDecoder)
     ("races" := list raceDecoder)
+
+trackMetaDecoder : Decoder TrackMeta
+trackMetaDecoder =
+  object3 TrackMeta
+    ("creator" := playerDecoder)
     ("rankings" := list rankingDecoder)
+    ("runsCount" := int)
 
 raceDecoder : Decoder Race
 raceDecoder =

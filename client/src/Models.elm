@@ -33,10 +33,9 @@ type alias LiveStatus =
 
 type alias LiveTrack =
   { track : Track
-  , creator : Player
+  , meta : TrackMeta
   , players : List Player
   , races : List Race
-  , rankings : List Ranking
   }
 
 type alias Track =
@@ -45,6 +44,12 @@ type alias Track =
   , draft : Bool
   , creatorId: String
   , course: Course
+  }
+
+type alias TrackMeta =
+  { creator : Player
+  , rankings : List Ranking
+  , runsCount : Int
   }
 
 type alias Race =
