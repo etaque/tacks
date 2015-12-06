@@ -1,5 +1,6 @@
 @import 'colors';
 @import 'fonts';
+@import 'mixins';
 
 
 html,
@@ -8,18 +9,19 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  color: #555;
+  color: $whiteSeaBlue;
   font-family: $baseFont;
-  font-size: 15px;
-  line-height: 18px;
-  background-color: $smokeWhite;
+  font-size: 18px;
+  line-height: 20px;
+
+  background-color: $seaBlue;
 }
 
 body > div {
   height: 100%;
 }
     
-.content {
+.layout {
   height: 100%;
   flex: 1;
   display: flex;
@@ -29,13 +31,7 @@ body > div {
 main {
   /* flex: 1; */
   width: 800px;
-  padding: 20px;
-}
-
-.nav-wrapper {
-}
-
-nav {
+  padding: 40px;
 }
 
 aside {
@@ -43,8 +39,7 @@ aside {
   display: flex;
   flex-direction: column;
   padding: 15px;
-  background-color: $lightGray;
-  border-right: 2px solid $mediumGray;
+  @include linear-gradient($darkerSeaBlue, $darkSeaBlue);
 
   /* .logo { */
   /*   a { */
@@ -66,15 +61,24 @@ aside {
     margin: 0;
     margin-top: 20px;
     padding: 0;
-    text-transform: lowercase;
 
     li {
     }
 
     a {
       display: block;
-      padding: 5px 10px;
+      color: $whiteSeaBlue;
+      text-transform: uppercase;
+      font-family: $thin;
+      font-size: 16px;
+      letter-spacing: 1px;
+      line-height: 24px;
       font-weight: bold;
+      padding: 5px 10px;
+
+      &:hover {
+        color: $white;
+      }
 
       &:before {
         /* content: "# "; */

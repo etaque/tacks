@@ -21,17 +21,17 @@ loginForm : Screen -> Html
 loginForm {email, password, loading, error} =
   div [ class "form-login" ]
     [ div [ class "form-group" ]
-      [ textInput
-        [ placeholder "Email"
-        , value email
+      [ label [] [ text "Email" ]
+      , textInput
+        [ value email
         , onInput addr SetEmail
         , onEnter addr Submit
         ]
       ]
     , div [ class "form-group" ]
-      [ passwordInput
-        [ placeholder "Password"
-        , value password
+      [ label [] [ text "Password" ]
+      , passwordInput
+        [ value password
         , onInput addr SetPassword
         , onEnter addr Submit
         ]

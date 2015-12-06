@@ -18699,6 +18699,11 @@ Elm.Screens.Utils.make = function (_elm) {
       _U.list([$Html$Attributes.$class("row")]),
       content);
    };
+   var fullWidth = function (content) {
+      return row(_U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("col-lg-12")]),
+      content)]));
+   };
    var container = function (content) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("container")]),
@@ -18770,6 +18775,7 @@ Elm.Screens.Utils.make = function (_elm) {
                                       ,is13: is13
                                       ,container: container
                                       ,row: row
+                                      ,fullWidth: fullWidth
                                       ,col4: col4
                                       ,whitePanel: whitePanel
                                       ,formGroup: formGroup
@@ -18835,23 +18841,18 @@ Elm.Screens.Home.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("col-md-4")]),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class("live-track")]),
-      _U.list([A3($Screens$Utils.linkTo,
-      $Routes.PlayTrack(_p2.id),
-      _U.list([$Html$Attributes.$class("show")]),
       _U.list([A2($Html.h3,
               _U.list([$Html$Attributes.$class("name")]),
-              _U.list([$Html.text(_p2.name)]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("description")]),
-              _U.list([$Html.text(A2($Basics._op["++"],
-              "by ",
-              A2($Maybe.withDefault,"?",_p1.creator.handle)))]))
-              ,playersList(_p1.players)]))]))]));
+              _U.list([A3($Screens$Utils.linkTo,
+              $Routes.PlayTrack(_p2.id),
+              _U.list([]),
+              _U.list([$Html.text(_p2.name)]))]))
+              ,playersList(_p1.players)]))]));
    };
    var liveTracks = F2(function (player,_p3) {
       var _p4 = _p3;
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("liveTracks")]),
+      _U.list([$Html$Attributes.$class("live-tracks")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("row")]),
               A2($List.map,liveTrackBlock,_p4.liveTracks))
@@ -18861,48 +18862,55 @@ Elm.Screens.Home.View.make = function (_elm) {
    });
    var setHandleBlock = function (handle) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("row form-set-handle")]),
-      _U.list([$Screens$Utils.col4(_U.list([A2($Html.div,
-                                           _U.list([$Html$Attributes.$class("input-group")]),
-                                           _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
-                                                                                     ,$Html$Attributes.value(handle)
-                                                                                     ,A2($Screens$Utils.onInput,
-                                                                                     $Screens$Home$Updates.addr,
-                                                                                     $Screens$Home$Types.SetHandle)
-                                                                                     ,A2($Screens$Utils.onEnter,
-                                                                                     $Screens$Home$Updates.addr,
-                                                                                     $Screens$Home$Types.SubmitHandle)]))
-                                                   ,A2($Html.span,
-                                                   _U.list([$Html$Attributes.$class("input-group-btn")]),
-                                                   _U.list([A2($Html.button,
-                                                   _U.list([$Html$Attributes.$class("btn btn-primary")
-                                                           ,A2($Html$Events.onClick,
-                                                           $Screens$Home$Updates.addr,
-                                                           $Screens$Home$Types.SubmitHandle)]),
-                                                   _U.list([$Html.text("submit")]))]))]))
-                                           ,A2($Html.p,
-                                           _U.list([$Html$Attributes.$class("align-center")]),
-                                           _U.list([A3($Screens$Utils.linkTo,
-                                           $Routes.Login,
-                                           _U.list([]),
-                                           _U.list([$Html.text("or log in")]))]))]))]));
+      _U.list([$Html$Attributes.$class("form-set-handle row")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("col-md-4 ")]),
+              _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("input-group")]),
+              _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
+                                                        ,$Html$Attributes.value(handle)
+                                                        ,A2($Screens$Utils.onInput,
+                                                        $Screens$Home$Updates.addr,
+                                                        $Screens$Home$Types.SetHandle)
+                                                        ,A2($Screens$Utils.onEnter,
+                                                        $Screens$Home$Updates.addr,
+                                                        $Screens$Home$Types.SubmitHandle)]))
+                      ,A2($Html.span,
+                      _U.list([$Html$Attributes.$class("input-group-btn")]),
+                      _U.list([A2($Html.button,
+                      _U.list([$Html$Attributes.$class("btn btn-primary")
+                              ,A2($Html$Events.onClick,
+                              $Screens$Home$Updates.addr,
+                              $Screens$Home$Types.SubmitHandle)]),
+                      _U.list([$Html.text("submit")]))]))]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("col-md-8")]),
+              _U.list([A3($Screens$Utils.linkTo,
+              $Routes.Login,
+              _U.list([$Html$Attributes.$class("btn btn-default")]),
+              _U.list([$Html.text("or log in")]))]))]));
    };
    var welcomeForm = F2(function (player,handle) {
       return player.guest ? setHandleBlock(handle) : A2($Html.div,
       _U.list([]),
       _U.list([]));
    });
+   var intro = $Screens$Utils.fullWidth(_U.list([A2($Html.h1,
+                                                _U.list([]),
+                                                _U.list([$Html.text("Sailing tactics from the sofa")]))
+                                                ,A2($Html.p,
+                                                _U.list([]),
+                                                _U.list([$Html.text("Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings.")]))]));
    var view = F2(function (player,screen) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("home")]),
-      _U.list([A2($Html.h1,
-              _U.list([]),
-              _U.list([$Html.text("Welcome to Tacks")]))
+      _U.list([$Html$Attributes.$class("container home")]),
+      _U.list([intro
               ,A2(welcomeForm,player,screen.handle)
               ,A2(liveTracks,player,screen.liveStatus)]));
    });
    return _elm.Screens.Home.View.values = {_op: _op
                                           ,view: view
+                                          ,intro: intro
                                           ,welcomeForm: welcomeForm
                                           ,setHandleBlock: setHandleBlock
                                           ,liveTracks: liveTracks
@@ -18948,8 +18956,10 @@ Elm.Screens.Login.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("form-login")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Email")
-                                                        ,$Html$Attributes.value(_p1.email)
+              _U.list([A2($Html.label,
+                      _U.list([]),
+                      _U.list([$Html.text("Email")]))
+                      ,$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p1.email)
                                                         ,A2($Screens$Utils.onInput,
                                                         $Screens$Login$Updates.addr,
                                                         $Screens$Login$Types.SetEmail)
@@ -18958,8 +18968,10 @@ Elm.Screens.Login.View.make = function (_elm) {
                                                         $Screens$Login$Types.Submit)]))]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([$Screens$Utils.passwordInput(_U.list([$Html$Attributes.placeholder("Password")
-                                                            ,$Html$Attributes.value(_p1.password)
+              _U.list([A2($Html.label,
+                      _U.list([]),
+                      _U.list([$Html.text("Password")]))
+                      ,$Screens$Utils.passwordInput(_U.list([$Html$Attributes.value(_p1.password)
                                                             ,A2($Screens$Utils.onInput,
                                                             $Screens$Login$Updates.addr,
                                                             $Screens$Login$Types.SetPassword)
@@ -20899,7 +20911,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    };
    var editorView = F2(function (track,editor) {
       return A2($Html.div,
-      _U.list([$Svg$Attributes.$class("content editor")]),
+      _U.list([$Svg$Attributes.$class("layout editor")]),
       _U.list([A2($Screens$EditTrack$SideView.sideView,track,editor)
               ,renderCourse(editor)]));
    });
@@ -22130,7 +22142,7 @@ Elm.Screens.Game.View.make = function (_elm) {
       {ctor: "_Tuple2",_0: _p1._0 - $Constants.sidebarWidth,_1: _p2},
       gameState);
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("content")]),
+      _U.list([$Html$Attributes.$class("layout")]),
       _U.list([A4($Screens$Game$SideView.view,
               _p2,
               screen,
@@ -22150,7 +22162,7 @@ Elm.Screens.Game.View.make = function (_elm) {
             return A4(mainView,dims,screen,_p3._0._0,_p3._1._0);
          } else {
             return A2($Html.div,
-            _U.list([$Html$Attributes.$class("content")]),
+            _U.list([$Html$Attributes.$class("layout")]),
             _U.list([$Html.text("loading...")]));
          }
    });
@@ -22225,12 +22237,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
    };
    var logo = A2($Html.div,
    _U.list([$Html$Attributes.$class("logo")]),
-   _U.list([A3($Screens$Utils.linkTo,
-   $Routes.Home,
-   _U.list([]),
-   _U.list([A2($Html.img,
-   _U.list([$Html$Attributes.src("/assets/images/logo-header-2.png")]),
-   _U.list([]))]))]));
+   _U.list([]));
    var view = function (player) {
       return A2($Html.aside,
       _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
@@ -22375,7 +22382,7 @@ Elm.AppView.make = function (_elm) {
          return false;
       }();
       return noNav ? content : A2($Html.div,
-      _U.list([$Html$Attributes.$class("content")]),
+      _U.list([$Html$Attributes.$class("layout")]),
       _U.list([$Screens$Sidebar.view(appState.player)
               ,A2($Html.main$,_U.list([]),_U.list([content]))]));
    });

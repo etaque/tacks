@@ -2,6 +2,27 @@
 @import 'fonts';
 @import 'mixins';
 
+.live-tracks {
+  margin-top: 40px;
+}
+
+.live-track {
+  /* background-color: $smokeWhite; */
+  /* border-radius: 2px; */
+  /* padding: 10px; */
+  margin-bottom: 20px;
+
+  h3 {
+    /* display: inline-block; */
+    margin-top: 0;
+  }
+
+  .creator {
+    display: inline-block;
+    margin-left: 5px;
+  }
+}
+
 /* .form-new-user { */
 /*   margin-top: 15px; */
 /*   padding-top: 15px; */

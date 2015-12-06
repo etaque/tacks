@@ -71,7 +71,7 @@ layout appState content =
       content
     else
       div
-        [ class "content" ]
+        [ class "layout" ]
         [ Sidebar.view appState.player
         , main' [ ] [ content ]
         ]

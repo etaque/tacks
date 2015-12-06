@@ -66,6 +66,10 @@ row : Wrapper
 row content =
   div [ class "row" ] content
 
+fullWidth : Wrapper
+fullWidth content =
+  row [ div [ class "col-lg-12" ] content ]
+
 col4 : Wrapper
 col4 content =
   div [ class "col-lg-4 col-lg-offset-4" ] content

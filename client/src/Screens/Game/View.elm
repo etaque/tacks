@@ -20,7 +20,7 @@ view dims screen =
     (Just liveTrack, Just gameState) ->
       mainView dims screen liveTrack gameState
     _ ->
-      div [ class "content" ] [ text "loading..." ]
+      div [ class "layout" ] [ text "loading..." ]
 
 
 mainView : Dims -> Screen -> LiveTrack -> GameState -> Html
@@ -28,7 +28,7 @@ mainView (w, h) screen liveTrack gameState =
   let
     gameSvg = render (w - sidebarWidth, h) gameState
   in
-    div [ class "content" ]
+    div [ class "layout" ]
       [ SideView.view h screen liveTrack gameState
       , div [ class "game" ] [ gameSvg ]
       , ChatView.view h screen

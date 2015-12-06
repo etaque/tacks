@@ -15,10 +15,17 @@ import Screens.Utils exposing (..)
 view : Player -> Screen -> Html
 view player screen =
   div
-    [ class "home" ]
-    [ h1 [ ] [ text "Welcome to Tacks" ]
+    [ class "container home" ]
+    [ intro
     , welcomeForm player screen.handle
     , liveTracks player screen.liveStatus
+    ]
+
+intro : Html
+intro =
+  fullWidth
+    [ h1 [ ] [ text "Sailing tactics from the sofa" ]
+    , p [ ] [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings."]
     ]
 
 welcomeForm : Player -> String -> Html
@@ -30,13 +37,12 @@ welcomeForm player handle =
 
 setHandleBlock : String -> Html
 setHandleBlock handle =
-  div [ class "row form-set-handle" ]
-    [ col4
+  div [ class "form-set-handle row" ]
+    [ div [ class "col-md-4 "]
       [ div [ class "input-group" ]
         [ textInput
           [ placeholder "Got a nickname?"
           , value handle
-          -- , onInputFormUpdate (\s -> UpdateSetHandleForm (\f -> { f | handle <- s } ))
           , onInput addr SetHandle
           , onEnter addr SubmitHandle
           ]
@@ -48,14 +54,14 @@ setHandleBlock handle =
             [ text "submit" ]
           ]
         ]
-      , p [ class "align-center" ] [ linkTo Login [ ] [ text "or log in"] ]
       ]
-    ]
+    , div [ class "col-md-8" ] [ linkTo Login [ class "btn btn-default" ] [ text "or log in"] ]
+  ]
 
 
 liveTracks : Player -> LiveStatus -> Html
 liveTracks player {liveTracks} =
-  div [ class "liveTracks" ]
+  div [ class "live-tracks" ]
     [ div [ class "row" ] (List.map liveTrackBlock liveTracks)
     , if isAdmin player then createTrackBlock else div [] []
     ]
@@ -64,13 +70,9 @@ liveTrackBlock : LiveTrack -> Html
 liveTrackBlock ({track, creator, players} as lt) =
   div [ class "col-md-4" ]
     [ div [ class "live-track" ]
-      [ linkTo (PlayTrack track.id)
-        [ class "show"
-        ]
-        [ h3 [ class "name" ] [ text track.name ]
-        , div [ class "description"] [ text <| "by " ++ Maybe.withDefault "?" creator.handle ]
-        , playersList players
-        ]
+      [ h3 [ class "name" ] [ linkTo (PlayTrack track.id) [ ] [ text track.name ] ]
+      -- , span [ class "creator"] [ text <| "by " ++ Maybe.withDefault "?" creator.handle ]
+      , playersList players
       ]
     ]
 

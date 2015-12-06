@@ -32,7 +32,7 @@ view player screen =
 
 editorView : Track -> Editor -> Html
 editorView track editor =
-  Html.div [ class "content editor" ]
+  Html.div [ class "layout editor" ]
     [ sideView track editor
     , renderCourse editor
     ]
