@@ -3,34 +3,33 @@ module Screens.Game.View where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
+import AppTypes exposing (..)
 import Models exposing (..)
-import Game.Models exposing (GameState)
 
 import Screens.Game.Types exposing (..)
 import Screens.Game.ChatView as ChatView
 import Screens.Game.SideView as SideView
 
+import Screens.Layout as Layout
+
 import Game.Render.All exposing (render)
 import Constants exposing (..)
 
 
-view : Dims -> Screen -> Html
-view dims screen =
+view : Context -> Screen -> Html
+view ctx screen =
   case (screen.liveTrack, screen.gameState) of
     (Just liveTrack, Just gameState) ->
-      mainView dims screen liveTrack gameState
+      let
+        (w, h) = ctx.dims
+      in
+        Layout.layout
+          (SideView.view screen liveTrack gameState)
+          [ div [ class "game" ]
+              [ render (w - sidebarWidth, h) gameState
+              , ChatView.view h screen
+              ]
+          ]
     _ ->
-      div [ class "layout" ] [ text "loading..." ]
-
-
-mainView : Dims -> Screen -> LiveTrack -> GameState -> Html
-mainView (w, h) screen liveTrack gameState =
-  let
-    gameSvg = render (w - sidebarWidth, h) gameState
-  in
-    div [ class "layout" ]
-      [ SideView.view h screen liveTrack gameState
-      , div [ class "game" ] [ gameSvg ]
-      , ChatView.view h screen
-      ]
+      div [ class "" ] [ ]
 

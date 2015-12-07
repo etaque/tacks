@@ -5,10 +5,12 @@ import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
+import AppTypes exposing (..)
 import Models exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
-import Screens.EditTrack.SideView exposing (sideView)
+import Screens.EditTrack.SideView as SideView
+import Screens.Layout as Layout
 
 import Game.Geo exposing (floatify)
 import Game.Render.SvgUtils exposing (..)
@@ -18,24 +20,18 @@ import Game.Render.Gates exposing (renderOpenGate)
 import Game.Render.Players exposing (renderPlayerHull)
 
 
-view : Player -> Screen -> Html
-view player screen =
+view : Context -> Screen -> Html
+view {player} screen =
   case (screen.track, screen.editor) of
     (Just track, Just editor) ->
       if player.id == track.creatorId || isAdmin player then
-        editorView track editor
+        Layout.layout
+          (SideView.view track editor)
+          [ renderCourse editor ]
       else
         Html.text "Access forbidden."
     _ ->
       Html.text "loading"
-
-
-editorView : Track -> Editor -> Html
-editorView track editor =
-  Html.div [ class "layout editor" ]
-    [ sideView track editor
-    , renderCourse editor
-    ]
 
 
 renderCourse : Editor -> Html

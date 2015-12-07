@@ -1,6 +1,7 @@
 module AppUpdates where
 
 import Task exposing (Task, andThen)
+import Task.Extra exposing (delay)
 import History
 import RouteParser
 import Effects exposing (Effects, map, none, task)
@@ -31,7 +32,7 @@ initialAppUpdate setup =
 
 
 update : AppAction -> AppState -> (AppState, Effects AppAction)
-update appAction appState =
+update appAction ({screens, ctx} as appState) =
   case appAction of
 
     SetPath path ->
@@ -39,7 +40,20 @@ update appAction appState =
 
     PathChanged path ->
       let
-        newAppState = { appState | route = RouteParser.match routeParsers path }
+        newCtx = { ctx | transitStatus = Exit }
+        newAppState = { appState | path = path, ctx = newCtx }
+        newRoute = RouteParser.match routeParsers path
+        fx = MountRoute newRoute
+          |> Task.succeed
+          |> delay 100
+          |> Effects.task
+      in
+        newAppState &: fx
+
+    MountRoute maybeRoute ->
+      let
+        newCtx = { ctx | transitStatus = Enter }
+        newAppState = { appState | route = maybeRoute, ctx = newCtx }
       in
         case newAppState.route of
           Just route ->
@@ -48,7 +62,11 @@ update appAction appState =
             newAppState &: none
 
     SetPlayer p ->
-      { appState | player = p } &: (map (\_ -> AppNoOp) (Utils.redirect Routes.Home))
+      let
+        newCtx = { ctx | player = p }
+        fx = map (\_ -> AppNoOp) (Utils.redirect Routes.Home)
+      in
+      { appState | ctx = newCtx } &: fx
 
     UpdateDims dims ->
       updateScreenDims dims appState &: none
@@ -64,26 +82,33 @@ update appAction appState =
 
 
 mountRoute : AppState -> Routes.Route -> (AppState, Effects AppAction)
-mountRoute ({player, dims} as appState) route =
+mountRoute ({ctx} as appState) route =
   case route of
+
     Home ->
-      applyHome (Home.mount player) appState
+      applyHome (Home.mount ctx.player) appState
+
     Login ->
       applyLogin Login.mount appState
+
     Register ->
       applyRegister Register.mount appState
+
     ShowProfile ->
-      applyShowProfile (ShowProfile.mount player) appState
+      applyShowProfile (ShowProfile.mount ctx.player) appState
+
     ShowTrack id ->
       applyShowTrack (ShowTrack.mount id) appState
+
     EditTrack id ->
-      applyEditTrack (EditTrack.mount dims id) appState
+      applyEditTrack (EditTrack.mount ctx.dims id) appState
+
     PlayTrack id ->
       applyGame (Game.mount id) appState
 
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
-updateScreen screenAction ({screens} as appState) =
+updateScreen screenAction ({screens, ctx} as appState) =
   case screenAction of
 
     HomeAction a ->
@@ -105,17 +130,18 @@ updateScreen screenAction ({screens} as appState) =
       applyShowProfile (ShowProfile.update a screens.showProfile) appState
 
     GameAction a ->
-      applyGame (Game.update appState.player a screens.game) appState
+      applyGame (Game.update ctx.player a screens.game) appState
 
 
 updateScreenDims : (Int, Int) -> AppState -> AppState
-updateScreenDims dims ({route, screens} as appState) =
+updateScreenDims dims ({route, screens, ctx} as appState) =
   case route of
     Just (EditTrack _) ->
       let
         newScreens = { screens | editTrack = EditTrack.updateDims dims screens.editTrack }
+        newCtx = { ctx | dims = dims }
       in
-        { appState | screens = newScreens, dims = dims }
+        { appState | screens = newScreens, ctx = newCtx }
     _ ->
       appState
 

@@ -4,21 +4,25 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
+import AppTypes exposing (..)
 import Models exposing (..)
 import Routes exposing (..)
 
 import Screens.Home.Types exposing (..)
 import Screens.Home.Updates exposing (addr)
+
 import Screens.Utils exposing (..)
+import Screens.Layout as Layout
 
 
-view : Player -> Screen -> Html
-view player screen =
-  div
-    [ class "container home" ]
-    [ intro
-    , welcomeForm player screen.handle
-    , liveTracks player screen.liveStatus
+view : Context -> Screen -> Html
+view ctx screen =
+  Layout.layoutWithNav ctx
+    [ container "home"
+        [ intro
+        , welcomeForm ctx.player screen.handle
+        , liveTracks ctx.player screen.liveStatus
+        ]
     ]
 
 intro : Html

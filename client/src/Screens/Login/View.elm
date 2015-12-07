@@ -4,17 +4,23 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
+import AppTypes exposing (..)
+import Models exposing (..)
+
 import Screens.Login.Types exposing (..)
 import Screens.Login.Updates exposing (addr)
 
 import Screens.Utils exposing (..)
+import Screens.Layout as Layout
 
 
-view : Screen -> Html
-view screen =
-  div [ class "login"]
-    [ h1 [] [ text "Login" ]
-    , loginForm screen
+view : Context -> Screen -> Html
+view ctx screen =
+  Layout.layoutWithNav ctx
+    [ container "login"
+      [ h1 [] [ text "Login" ]
+      , loginForm screen
+      ]
     ]
 
 loginForm : Screen -> Html

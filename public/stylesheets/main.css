@@ -6067,8 +6067,13 @@ body > div {
 
 main {
   /* flex: 1; */
-  width: 800px;
-  padding: 40px; }
+  width: 800px; }
+  main > .padded {
+    padding: 40px;
+    opacity: 1;
+    transition: opacity 0.1s ease-in-out; }
+    main > .padded.exit {
+      opacity: 0; }
 
 aside {
   height: 100%;
@@ -6276,7 +6281,7 @@ a {
   transition: all 0.1s ease-in;
   border-radius: 2px;
   font-family: "Museo Slab";
-  font-size: 16px;
+  font-size: 15px;
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
 
 .btn-xs, .btn-group-xs > .btn {

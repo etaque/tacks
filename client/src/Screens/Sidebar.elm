@@ -8,17 +8,14 @@ import AppTypes exposing (..)
 import Models exposing (..)
 
 import Screens.Utils exposing (..)
-import Constants exposing (..)
 import Routes exposing (..)
 
 
-view : Player -> Html
-view player =
-  aside
-    [ style [ ("width", toString sidebarWidth ++ "px") ] ]
-    [ logo
-    , mainMenu player
-    ]
+view : Context -> List Html
+view {player} =
+  [ logo
+  , mainMenu player
+  ]
 
 
 logo : Html

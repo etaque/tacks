@@ -14,13 +14,16 @@ import Screens.Register.Types exposing (..)
 import Screens.Register.Updates exposing (addr)
 
 import Screens.Utils exposing (..)
+import Screens.Layout as Layout
 
 
-view : Screen -> Html
-view screen =
-  div [ class "register"]
-    [ h1 [] [ text "Register" ]
-    , registerForm screen
+view : Context -> Screen -> Html
+view ctx screen =
+  Layout.layoutWithNav ctx
+    [ container "register"
+      [ h1 [] [ text "Register" ]
+      , registerForm screen
+      ]
     ]
 
 registerForm : Screen -> Html

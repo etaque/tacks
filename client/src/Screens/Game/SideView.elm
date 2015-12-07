@@ -10,12 +10,11 @@ import Screens.Game.Types exposing (..)
 import Screens.Game.PlayersView as PlayersView
 
 import Screens.Utils exposing (..)
-import Constants exposing (..)
 import Routes exposing (..)
 
 
-view : Int -> Screen -> LiveTrack -> GameState -> Html
-view h screen liveTrack gameState =
+view : Screen -> LiveTrack -> GameState -> List Html
+view screen liveTrack gameState =
   let
     blocks =
       if liveTrack.track.draft then
@@ -23,7 +22,7 @@ view h screen liveTrack gameState =
       else
         liveBlocks screen liveTrack
   in
-    sidebar (sidebarWidth, h) ((trackNav liveTrack) :: blocks)
+    (trackNav liveTrack) :: blocks
 
 
 trackNav : LiveTrack -> Html
@@ -52,10 +51,10 @@ liveBlocks screen liveTrack =
 
 
 rankingsBlock : LiveTrack -> Html
-rankingsBlock {rankings} =
+rankingsBlock {meta} =
   div [ class "aside-module module-rankings" ]
     [ h3 [ ] [ text "Best times" ]
-    , ul [ class "list-unstyled list-rankings" ] (List.map rankingItem rankings)
+    , ul [ class "list-unstyled list-rankings" ] (List.map rankingItem meta.rankings)
     ]
 
 

@@ -1,7 +1,6 @@
 module AppView where
 
 import Html exposing (..)
-import Html.Attributes exposing (..)
 import Maybe
 
 import AppTypes exposing (..)
@@ -14,64 +13,45 @@ import Screens.EditTrack.View as EditTrackScreen
 import Screens.ShowProfile.View as ShowProfileScreen
 import Screens.Game.View as GameScreen
 
-import Screens.Sidebar as Sidebar
-import Screens.Nav as Nav
-
-import Constants exposing (..)
 import Routes exposing (..)
 
 
 view : Signal.Address AppAction -> AppState -> Html
 view _ appState =
-  Maybe.map (routeView appState) appState.route
-    |> Maybe.withDefault emptyView
-    |> layout appState
+  case appState.route of
+    Just route ->
+      routeView appState route
+    Nothing ->
+      emptyView
 
 
 routeView : AppState -> Routes.Route -> Html
-routeView {screens, player, dims} route =
+routeView {screens, ctx} route =
   case route of
 
     Home ->
-      HomeScreen.view player screens.home
+      HomeScreen.view ctx screens.home
 
     Register ->
-      RegisterScreen.view screens.register
+      RegisterScreen.view ctx screens.register
 
     Login ->
-      LoginScreen.view screens.login
+      LoginScreen.view ctx screens.login
 
     ShowTrack _ ->
-      ShowTrackScreen.view screens.showTrack
+      ShowTrackScreen.view ctx screens.showTrack
 
     EditTrack _ ->
-      EditTrackScreen.view player screens.editTrack
+      EditTrackScreen.view ctx screens.editTrack
 
     ShowProfile ->
-      ShowProfileScreen.view screens.showProfile
+      ShowProfileScreen.view ctx screens.showProfile
 
     PlayTrack _ ->
-      GameScreen.view dims screens.game
+      GameScreen.view ctx screens.game
 
 
 emptyView : Html
 emptyView =
-  div [ ] [ text "emptyView" ]
+  div [ ] [ ]
 
-
-layout : AppState -> Html -> Html
-layout appState content =
-  let
-    noNav = case appState.route of
-      Just (EditTrack _) -> True
-      Just (PlayTrack _) -> True
-      _ -> False
-  in
-    if noNav then
-      content
-    else
-      div
-        [ class "layout" ]
-        [ Sidebar.view appState.player
-        , main' [ ] [ content ]
-        ]

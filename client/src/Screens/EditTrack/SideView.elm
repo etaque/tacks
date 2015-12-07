@@ -15,84 +15,83 @@ import Screens.EditTrack.Types exposing (..)
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 
 
-sideView : Track -> Editor -> Html
-sideView track ({courseDims, course, name, saving, mode} as editor) =
-  sidebar (sidebarWidth, snd courseDims)
-    [ div
-        [ class "track-menu" ]
-        [ h2 [] [ text "track editor" ]
-        , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
-        , linkTo (PlayTrack track.id) [ class "btn btn-xs btn-default" ] [ text "Try" ]
-        ]
-
-    , div [ class "form-actions" ]
-      [ button
-        [ onClick addr Save
-        , class "btn btn-primary btn-block"
-        , disabled saving
-        ]
-        [ text (if saving then "Saving.." else "Save") ]
+view : Track -> Editor -> List Html
+view track ({course, name, saving, mode} as editor) =
+  [ div
+      [ class "track-menu" ]
+      [ h2 [] [ text "track editor" ]
+      , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
+      , linkTo (PlayTrack track.id) [ class "btn btn-xs btn-default" ] [ text "Try" ]
       ]
 
-    , div [ class "aside-module" ]
-
-      [ h3 [] [ text "Name" ]
-
-      , div [ class "form-group"]
-        [ nameInput name ]
-
-      , h3 [] [ text "Surface pencil" ]
-
-      , surfaceBlock editor
-
-      , h3 [] [ text "Gates" ]
-
-      , div [ class "form-group"]
-        [ label [ class "" ] [ text "Downwind" ]
-        , intInput course.downwind.y SetDownwindY [ step "10" ]
-        ]
-      , div [ class "form-group"]
-        [ label [ class "" ] [ text "Upwind" ]
-        , intInput course.upwind.y SetUpwindY [ step "10" ]
-        ]
-      , div [ class "form-group"]
-        [ label [ class "" ] [ text "Width" ]
-        , intInput course.downwind.width SetGateWidth [ HtmlAttr.min "50", step "10" ]
-        ]
-      , div [ class "form-group" ]
-        [ label [ class "" ] [ text "Laps" ]
-        , intInput course.laps SetLaps [ HtmlAttr.min "1" ]
-        ]
-
-      , h3 [] [ text "Wind" ]
-
-      , div [ class "form-group" ]
-        [ label [ class "" ] [ text "Wavelength 1" ]
-        , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
-        ]
-      , div [ class "form-group" ]
-        [ label [ class "" ] [ text "Amplitude 1" ]
-        , intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
-        ]
-      , div [ class "form-group" ]
-        [ label [ class "" ] [ text "Wavelength 2" ]
-        , intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
-        ]
-      , div [ class "form-group" ]
-        [ label [ class "" ] [ text "Amplitude 2" ]
-        , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
-        ]
-
-      , h3 [] [ text "Gusts" ]
-
-      , div [ class "form-group" ]
-        [ label [ class "" ] [ text "Interval (s)" ]
-        , intInput course.gustGenerator.interval SetGustInterval [ HtmlAttr.min "10"]
-        ]
-
-      , gustDefsTable course.gustGenerator.defs
+  , div [ class "form-actions" ]
+    [ button
+      [ onClick addr Save
+      , class "btn btn-primary btn-block"
+      , disabled saving
       ]
+      [ text (if saving then "Saving.." else "Save") ]
     ]
+
+  , div [ class "aside-module" ]
+
+    [ h3 [] [ text "Name" ]
+
+    , div [ class "form-group"]
+      [ nameInput name ]
+
+    , h3 [] [ text "Surface pencil" ]
+
+    , surfaceBlock editor
+
+    , h3 [] [ text "Gates" ]
+
+    , div [ class "form-group"]
+      [ label [ class "" ] [ text "Downwind" ]
+      , intInput course.downwind.y SetDownwindY [ step "10" ]
+      ]
+    , div [ class "form-group"]
+      [ label [ class "" ] [ text "Upwind" ]
+      , intInput course.upwind.y SetUpwindY [ step "10" ]
+      ]
+    , div [ class "form-group"]
+      [ label [ class "" ] [ text "Width" ]
+      , intInput course.downwind.width SetGateWidth [ HtmlAttr.min "50", step "10" ]
+      ]
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Laps" ]
+      , intInput course.laps SetLaps [ HtmlAttr.min "1" ]
+      ]
+
+    , h3 [] [ text "Wind" ]
+
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Wavelength 1" ]
+      , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
+      ]
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Amplitude 1" ]
+      , intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
+      ]
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Wavelength 2" ]
+      , intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
+      ]
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Amplitude 2" ]
+      , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
+      ]
+
+    , h3 [] [ text "Gusts" ]
+
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Interval (s)" ]
+      , intInput course.gustGenerator.interval SetGustInterval [ HtmlAttr.min "10"]
+      ]
+
+    , gustDefsTable course.gustGenerator.defs
+    ]
+  ]
 
 
 surfaceBlock : Editor -> Html

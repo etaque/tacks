@@ -12613,12 +12613,21 @@ Elm.AppTypes.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
+   var Screens = F7(function (a,b,c,d,e,f,g) {
+      return {home: a
+             ,login: b
+             ,register: c
+             ,showTrack: d
+             ,editTrack: e
+             ,showProfile: f
+             ,game: g};
+   });
+   var Enter = {ctor: "Enter"};
    var initialAppState = function (_p0) {
       var _p1 = _p0;
       var _p3 = _p1.player;
       var _p2 = _p1.dims;
-      return {player: _p3
-             ,dims: _p2
+      return {ctx: {player: _p3,dims: _p2,transitStatus: Enter}
              ,path: _p1.path
              ,route: $Maybe.Nothing
              ,screens: {home: $Screens$Home$Types.initial(_p3)
@@ -12629,17 +12638,12 @@ Elm.AppTypes.make = function (_elm) {
                        ,showProfile: $Screens$ShowProfile$Types.initial(_p3)
                        ,game: $Screens$Game$Types.initial}};
    };
-   var Screens = F7(function (a,b,c,d,e,f,g) {
-      return {home: a
-             ,login: b
-             ,register: c
-             ,showTrack: d
-             ,editTrack: e
-             ,showProfile: f
-             ,game: g};
+   var Exit = {ctor: "Exit"};
+   var Context = F3(function (a,b,c) {
+      return {player: a,dims: b,transitStatus: c};
    });
-   var AppState = F5(function (a,b,c,d,e) {
-      return {player: a,dims: b,route: c,path: d,screens: e};
+   var AppState = F4(function (a,b,c,d) {
+      return {ctx: a,route: b,path: c,screens: d};
    });
    var GameAction = function (a) {
       return {ctor: "GameAction",_0: a};
@@ -12669,6 +12673,9 @@ Elm.AppTypes.make = function (_elm) {
    };
    var UpdateDims = function (a) {
       return {ctor: "UpdateDims",_0: a};
+   };
+   var MountRoute = function (a) {
+      return {ctor: "MountRoute",_0: a};
    };
    var PathChanged = function (a) {
       return {ctor: "PathChanged",_0: a};
@@ -12703,6 +12710,7 @@ Elm.AppTypes.make = function (_elm) {
                                  ,SetPlayer: SetPlayer
                                  ,SetPath: SetPath
                                  ,PathChanged: PathChanged
+                                 ,MountRoute: MountRoute
                                  ,UpdateDims: UpdateDims
                                  ,ScreenAction: ScreenAction
                                  ,Logout: Logout
@@ -12715,6 +12723,9 @@ Elm.AppTypes.make = function (_elm) {
                                  ,ShowProfileAction: ShowProfileAction
                                  ,GameAction: GameAction
                                  ,AppState: AppState
+                                 ,Context: Context
+                                 ,Exit: Exit
+                                 ,Enter: Enter
                                  ,Screens: Screens
                                  ,initialAppState: initialAppState};
 };
@@ -15990,7 +16001,8 @@ Elm.AppUpdates.make = function (_elm) {
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
+   $Task = Elm.Task.make(_elm),
+   $Task$Extra = Elm.Task.Extra.make(_elm);
    var _op = {};
    var applyScreen = F4(function (screensUpdater,
    toScreenAction,
@@ -16054,11 +16066,12 @@ Elm.AppUpdates.make = function (_elm) {
       var _p6 = _p4;
       var _p5 = _p4.route;
       if (_p5.ctor === "Just" && _p5._0.ctor === "EditTrack") {
+            var newCtx = _U.update(_p4.ctx,{dims: dims});
             var newScreens = _U.update(_p7,
             {editTrack: A2($Screens$EditTrack$Updates.updateDims,
             dims,
             _p7.editTrack)});
-            return _U.update(_p6,{screens: newScreens,dims: dims});
+            return _U.update(_p6,{screens: newScreens,ctx: newCtx});
          } else {
             return _p6;
          }
@@ -16090,17 +16103,20 @@ Elm.AppUpdates.make = function (_elm) {
            _p12.showProfile),
            _p11);
          default: return A2(applyGame,
-           A3($Screens$Game$Updates.update,_p11.player,_p10._0,_p12.game),
+           A3($Screens$Game$Updates.update,
+           _p9.ctx.player,
+           _p10._0,
+           _p12.game),
            _p11);}
    });
    var mountRoute = F2(function (_p13,route) {
       var _p14 = _p13;
-      var _p17 = _p14.player;
+      var _p17 = _p14.ctx;
       var _p16 = _p14;
       var _p15 = route;
       switch (_p15.ctor)
       {case "Home": return A2(applyHome,
-           $Screens$Home$Updates.mount(_p17),
+           $Screens$Home$Updates.mount(_p17.player),
            _p16);
          case "Login": return A2(applyLogin,
            $Screens$Login$Updates.mount,
@@ -16109,51 +16125,61 @@ Elm.AppUpdates.make = function (_elm) {
            $Screens$Register$Updates.mount,
            _p16);
          case "ShowProfile": return A2(applyShowProfile,
-           $Screens$ShowProfile$Updates.mount(_p17),
+           $Screens$ShowProfile$Updates.mount(_p17.player),
            _p16);
          case "ShowTrack": return A2(applyShowTrack,
            $Screens$ShowTrack$Updates.mount(_p15._0),
            _p16);
          case "EditTrack": return A2(applyEditTrack,
-           A2($Screens$EditTrack$Updates.mount,_p14.dims,_p15._0),
+           A2($Screens$EditTrack$Updates.mount,_p17.dims,_p15._0),
            _p16);
          default: return A2(applyGame,
            $Screens$Game$Updates.mount(_p15._0),
            _p16);}
    });
-   var update = F2(function (appAction,appState) {
-      var _p18 = appAction;
-      switch (_p18.ctor)
+   var update = F2(function (appAction,_p18) {
+      var _p19 = _p18;
+      var _p26 = _p19.ctx;
+      var _p25 = _p19;
+      var _p20 = appAction;
+      switch (_p20.ctor)
       {case "SetPath": return A2($AppTypes._op["&!"],
-           appState,
+           _p25,
            A2($Task.map,
-           function (_p19) {
-              return $AppTypes.AppNoOp;
-           },
-           $History.setPath(_p18._0)));
-         case "PathChanged": var newAppState = _U.update(appState,
-           {route: A2($RouteParser.match,$Routes.routeParsers,_p18._0)});
-           var _p20 = newAppState.route;
-           if (_p20.ctor === "Just") {
-                 return A2(mountRoute,newAppState,_p20._0);
-              } else {
-                 return A2($AppTypes._op["&:"],newAppState,$Effects.none);
-              }
-         case "SetPlayer": return A2($AppTypes._op["&:"],
-           _U.update(appState,{player: _p18._0}),
-           A2($Effects.map,
            function (_p21) {
               return $AppTypes.AppNoOp;
            },
-           $Screens$UpdateUtils.redirect($Routes.Home)));
+           $History.setPath(_p20._0)));
+         case "PathChanged": var _p22 = _p20._0;
+           var newRoute = A2($RouteParser.match,$Routes.routeParsers,_p22);
+           var fx = $Effects.task(A2($Task$Extra.delay,
+           100,
+           $Task.succeed($AppTypes.MountRoute(newRoute))));
+           var newCtx = _U.update(_p26,{transitStatus: $AppTypes.Exit});
+           var newAppState = _U.update(_p25,{path: _p22,ctx: newCtx});
+           return A2($AppTypes._op["&:"],newAppState,fx);
+         case "MountRoute": var newCtx = _U.update(_p26,
+           {transitStatus: $AppTypes.Enter});
+           var newAppState = _U.update(_p25,{route: _p20._0,ctx: newCtx});
+           var _p23 = newAppState.route;
+           if (_p23.ctor === "Just") {
+                 return A2(mountRoute,newAppState,_p23._0);
+              } else {
+                 return A2($AppTypes._op["&:"],newAppState,$Effects.none);
+              }
+         case "SetPlayer": var fx = A2($Effects.map,
+           function (_p24) {
+              return $AppTypes.AppNoOp;
+           },
+           $Screens$UpdateUtils.redirect($Routes.Home));
+           var newCtx = _U.update(_p26,{player: _p20._0});
+           return A2($AppTypes._op["&:"],_U.update(_p25,{ctx: newCtx}),fx);
          case "UpdateDims": return A2($AppTypes._op["&:"],
-           A2(updateScreenDims,_p18._0,appState),
+           A2(updateScreenDims,_p20._0,_p25),
            $Effects.none);
-         case "Logout": return A2($AppTypes._op["&!"],
-           appState,
-           logoutTask);
-         case "ScreenAction": return A2(updateScreen,_p18._0,appState);
-         default: return A2($AppTypes._op["&:"],appState,$Effects.none);}
+         case "Logout": return A2($AppTypes._op["&!"],_p25,logoutTask);
+         case "ScreenAction": return A2(updateScreen,_p20._0,_p25);
+         default: return A2($AppTypes._op["&:"],_p25,$Effects.none);}
    });
    var initialAppUpdate = function (setup) {
       var task = $Task.succeed($AppTypes.SetPath(setup.path));
@@ -18645,30 +18671,6 @@ Elm.Screens.Utils.make = function (_elm) {
       _U.list([$Html$Attributes.$class("player-avatar")]),
       _U.list([avatarImg,$Html.text(" "),handleSpan]));
    };
-   var sidebar = F2(function (_p1,content) {
-      var _p2 = _p1;
-      return A2($Html.aside,
-      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                               ,_0: "height"
-                                               ,_1: A2($Basics._op["++"],$Basics.toString(_p2._1),"px")}
-                                              ,{ctor: "_Tuple2"
-                                               ,_0: "width"
-                                               ,_1: A2($Basics._op["++"],$Basics.toString(_p2._0),"px")}]))]),
-      content);
-   });
-   var blockWrapper = F2(function (wrapperClass,content) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class(wrapperClass)]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("container")]),
-      content)]));
-   });
-   var lightWrapper = function (content) {
-      return A2(blockWrapper,"light-wrapper",content);
-   };
-   var titleWrapper = function (content) {
-      return A2(blockWrapper,"title-wrapper",content);
-   };
    var passwordInput = function (attributes) {
       return A2($Html.input,
       A2($List.append,
@@ -18693,16 +18695,6 @@ Elm.Screens.Utils.make = function (_elm) {
                                                   ,{ctor: "_Tuple2",_0: "has-error",_1: hasErr}]))]),
       content);
    });
-   var col4 = function (content) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("col-lg-4 col-lg-offset-4")]),
-      content);
-   };
-   var whitePanel = function (content) {
-      return col4(_U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("white-panel")]),
-      content)]));
-   };
    var row = function (content) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("row")]),
@@ -18713,12 +18705,14 @@ Elm.Screens.Utils.make = function (_elm) {
       _U.list([$Html$Attributes.$class("col-lg-12")]),
       content)]));
    };
-   var container = function (content) {
+   var container = F2(function (className,content) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("container")]),
+      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
+      "container ",
+      className))]),
       content);
-   };
-   var is13 = function (code) {
+   });
+   var isEnter = function (code) {
       return _U.eq(code,
       13) ? $Result.Ok({ctor: "_Tuple0"}) : $Result.Err("not the right key code");
    };
@@ -18726,8 +18720,8 @@ Elm.Screens.Utils.make = function (_elm) {
    var onEnter = F2(function (address,value) {
       return A3($Html$Events.on,
       "keydown",
-      A2($Json$Decode.customDecoder,$Html$Events.keyCode,is13),
-      function (_p3) {
+      A2($Json$Decode.customDecoder,$Html$Events.keyCode,isEnter),
+      function (_p1) {
          return A2($Signal.message,address,value);
       });
    });
@@ -18759,7 +18753,7 @@ Elm.Screens.Utils.make = function (_elm) {
       "click",
       eventOptions,
       $Json$Decode.value,
-      function (_p4) {
+      function (_p2) {
          return A2($Signal.message,
          $AppTypes.appActionsAddress,
          $AppTypes.SetPath(path));
@@ -18781,23 +18775,150 @@ Elm.Screens.Utils.make = function (_elm) {
                                       ,intTargetValue: intTargetValue
                                       ,onEnter: onEnter
                                       ,eventOptions: eventOptions
-                                      ,is13: is13
+                                      ,isEnter: isEnter
                                       ,container: container
                                       ,row: row
                                       ,fullWidth: fullWidth
-                                      ,col4: col4
-                                      ,whitePanel: whitePanel
                                       ,formGroup: formGroup
                                       ,textInput: textInput
                                       ,passwordInput: passwordInput
-                                      ,titleWrapper: titleWrapper
-                                      ,lightWrapper: lightWrapper
-                                      ,blockWrapper: blockWrapper
-                                      ,sidebar: sidebar
                                       ,playerWithAvatar: playerWithAvatar
                                       ,avatarUrl: avatarUrl
                                       ,playerHandle: playerHandle
                                       ,formatTimer: formatTimer};
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Sidebar = Elm.Screens.Sidebar || {};
+Elm.Screens.Sidebar.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Sidebar = _elm.Screens.Sidebar || {};
+   if (_elm.Screens.Sidebar.values)
+   return _elm.Screens.Sidebar.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
+   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var userItems = function (player) {
+      return _U.list([A2($Html.li,
+                     _U.list([]),
+                     _U.list([A3($Screens$Utils.linkTo,
+                     $Routes.ShowProfile,
+                     _U.list([]),
+                     _U.list([$Html.text("Profile")]))]))
+                     ,A2($Html.li,
+                     _U.list([]),
+                     _U.list([A2($Html.a,
+                     _U.list([A2($Html$Events.onClick,
+                     $AppTypes.appActionsAddress,
+                     $AppTypes.Logout)]),
+                     _U.list([$Html.text("Logout")]))]))]);
+   };
+   var guestItems = _U.list([A2($Html.li,
+                            _U.list([]),
+                            _U.list([A3($Screens$Utils.linkTo,
+                            $Routes.Login,
+                            _U.list([]),
+                            _U.list([$Html.text("Login")]))]))
+                            ,A2($Html.li,
+                            _U.list([]),
+                            _U.list([A3($Screens$Utils.linkTo,
+                            $Routes.Register,
+                            _U.list([]),
+                            _U.list([$Html.text("Register")]))]))]);
+   var mainMenu = function (player) {
+      var playerItems = player.guest ? guestItems : userItems(player);
+      var allItems = A2($Basics._op["++"],
+      _U.list([A2($Html.li,
+      _U.list([]),
+      _U.list([A3($Screens$Utils.linkTo,
+      $Routes.Home,
+      _U.list([]),
+      _U.list([$Html.text("Home")]))]))]),
+      playerItems);
+      return A2($Html.ul,
+      _U.list([$Html$Attributes.$class("user-menu")]),
+      allItems);
+   };
+   var logo = A2($Html.div,
+   _U.list([$Html$Attributes.$class("logo")]),
+   _U.list([]));
+   var view = function (_p0) {
+      var _p1 = _p0;
+      return _U.list([logo,mainMenu(_p1.player)]);
+   };
+   return _elm.Screens.Sidebar.values = {_op: _op
+                                        ,view: view
+                                        ,logo: logo
+                                        ,mainMenu: mainMenu
+                                        ,guestItems: guestItems
+                                        ,userItems: userItems};
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Layout = Elm.Screens.Layout || {};
+Elm.Screens.Layout.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Layout = _elm.Screens.Layout || {};
+   if (_elm.Screens.Layout.values)
+   return _elm.Screens.Layout.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var layout = F2(function (sideContent,mainContent) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("layout")]),
+      _U.list([A2($Html.aside,
+              _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                                       ,_0: "width"
+                                                       ,_1: A2($Basics._op["++"],
+                                                       $Basics.toString($Constants.sidebarWidth),
+                                                       "px")}]))]),
+              sideContent)
+              ,A2($Html.main$,_U.list([]),mainContent)]));
+   });
+   var transitionName = function (status) {
+      var _p0 = status;
+      if (_p0.ctor === "Exit") {
+            return "exit";
+         } else {
+            return "enter";
+         }
+   };
+   var layoutWithNav = F2(function (ctx,content) {
+      return A2(layout,
+      $Screens$Sidebar.view(ctx),
+      _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
+      "padded ",
+      transitionName(ctx.transitStatus)))]),
+      content)]));
+   });
+   return _elm.Screens.Layout.values = {_op: _op
+                                       ,layoutWithNav: layoutWithNav
+                                       ,transitionName: transitionName
+                                       ,layout: layout};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Home = Elm.Screens.Home || {};
@@ -18810,6 +18931,7 @@ Elm.Screens.Home.View.make = function (_elm) {
    if (_elm.Screens.Home.View.values)
    return _elm.Screens.Home.View.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -18822,6 +18944,7 @@ Elm.Screens.Home.View.make = function (_elm) {
    $Routes = Elm.Routes.make(_elm),
    $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
    $Screens$Home$Updates = Elm.Screens.Home.Updates.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -18915,12 +19038,14 @@ Elm.Screens.Home.View.make = function (_elm) {
                                                 ,A2($Html.p,
                                                 _U.list([]),
                                                 _U.list([$Html.text("Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings.")]))]));
-   var view = F2(function (player,screen) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("container home")]),
+   var view = F2(function (ctx,screen) {
+      return A2($Screens$Layout.layoutWithNav,
+      ctx,
+      _U.list([A2($Screens$Utils.container,
+      "home",
       _U.list([intro
-              ,A2(welcomeForm,player,screen.handle)
-              ,A2(liveTracks,player,screen.liveStatus)]));
+              ,A2(welcomeForm,ctx.player,screen.handle)
+              ,A2(liveTracks,ctx.player,screen.liveStatus)]))]));
    });
    return _elm.Screens.Home.View.values = {_op: _op
                                           ,view: view
@@ -18944,6 +19069,7 @@ Elm.Screens.Login.View.make = function (_elm) {
    if (_elm.Screens.Login.View.values)
    return _elm.Screens.Login.View.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -18952,6 +19078,7 @@ Elm.Screens.Login.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$Login$Types = Elm.Screens.Login.Types.make(_elm),
    $Screens$Login$Updates = Elm.Screens.Login.Updates.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
@@ -19003,12 +19130,14 @@ Elm.Screens.Login.View.make = function (_elm) {
                       $Screens$Login$Types.Submit)]),
               _U.list([$Html.text("Submit")]))]))]));
    };
-   var view = function (screen) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("login")]),
+   var view = F2(function (ctx,screen) {
+      return A2($Screens$Layout.layoutWithNav,
+      ctx,
+      _U.list([A2($Screens$Utils.container,
+      "login",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Login")]))
-              ,loginForm(screen)]));
-   };
+              ,loginForm(screen)]))]));
+   });
    return _elm.Screens.Login.View.values = {_op: _op
                                            ,view: view
                                            ,loginForm: loginForm
@@ -19025,6 +19154,7 @@ Elm.Screens.Register.View.make = function (_elm) {
    if (_elm.Screens.Register.View.values)
    return _elm.Screens.Register.View.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $CoreExtra = Elm.CoreExtra.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -19036,6 +19166,7 @@ Elm.Screens.Register.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$Register$Types = Elm.Screens.Register.Types.make(_elm),
    $Screens$Register$Updates = Elm.Screens.Register.Updates.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
@@ -19109,14 +19240,16 @@ Elm.Screens.Register.View.make = function (_elm) {
                       ,$Html$Attributes.disabled(_p2.loading)]),
               _U.list([$Html.text("Submit")]))]))]));
    };
-   var view = function (screen) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("register")]),
+   var view = F2(function (ctx,screen) {
+      return A2($Screens$Layout.layoutWithNav,
+      ctx,
+      _U.list([A2($Screens$Utils.container,
+      "register",
       _U.list([A2($Html.h1,
               _U.list([]),
               _U.list([$Html.text("Register")]))
-              ,registerForm(screen)]));
-   };
+              ,registerForm(screen)]))]));
+   });
    return _elm.Screens.Register.View.values = {_op: _op
                                               ,view: view
                                               ,registerForm: registerForm
@@ -19134,6 +19267,7 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    if (_elm.Screens.ShowTrack.View.values)
    return _elm.Screens.ShowTrack.View.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -19143,6 +19277,7 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -19154,22 +19289,26 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       _U.list([$Html.text("Join")]));
    };
    var withTrack = function (track) {
-      return $Screens$Utils.titleWrapper(_U.list([A2($Html.h1,
-                                                 _U.list([]),
-                                                 _U.list([$Html.text(track.id)]))
-                                                 ,joinButton(track)]));
-   };
-   var loading = $Screens$Utils.titleWrapper(_U.list([A2($Html.h1,
-   _U.list([]),
-   _U.list([$Html.text("loading...")]))]));
-   var view = function (_p0) {
-      var _p1 = _p0;
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("show-track")]),
+      _U.list([]),
+      _U.list([A2($Html.h1,
+              _U.list([]),
+              _U.list([$Html.text(track.id)]))
+              ,joinButton(track)]));
+   };
+   var loading = A2($Html.h1,
+   _U.list([]),
+   _U.list([$Html.text("loading...")]));
+   var view = F2(function (ctx,_p0) {
+      var _p1 = _p0;
+      return A2($Screens$Layout.layoutWithNav,
+      ctx,
+      _U.list([A2($Screens$Utils.container,
+      "show-track",
       _U.list([A2($Maybe.withDefault,
       loading,
-      A2($Maybe.map,withTrack,_p1.track))]));
-   };
+      A2($Maybe.map,withTrack,_p1.track))]))]));
+   });
    return _elm.Screens.ShowTrack.View.values = {_op: _op
                                                ,view: view
                                                ,loading: loading
@@ -20403,135 +20542,131 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
       _U.list([$Html$Attributes.$class("surface-modes")]),
       A2($List.map,renderSurfaceMode(currentMode),modes));
    };
-   var sideView = F2(function (track,_p3) {
+   var view = F2(function (track,_p3) {
       var _p4 = _p3;
       var _p6 = _p4.saving;
       var _p5 = _p4.course;
-      return A2($Screens$Utils.sidebar,
-      {ctor: "_Tuple2"
-      ,_0: $Constants.sidebarWidth
-      ,_1: $Basics.snd(_p4.courseDims)},
-      _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class("track-menu")]),
-              _U.list([A2($Html.h2,
-                      _U.list([]),
-                      _U.list([$Html.text("track editor")]))
-                      ,A3($Screens$Utils.linkTo,
-                      $Routes.Home,
-                      _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
-                      _U.list([$Html.text("Exit")]))
-                      ,A3($Screens$Utils.linkTo,
-                      $Routes.PlayTrack(track.id),
-                      _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
-                      _U.list([$Html.text("Try")]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("form-actions")]),
-              _U.list([A2($Html.button,
-              _U.list([A2($Html$Events.onClick,
-                      $Screens$EditTrack$Updates.addr,
-                      $Screens$EditTrack$Types.Save)
-                      ,$Html$Attributes.$class("btn btn-primary btn-block")
-                      ,$Html$Attributes.disabled(_p6)]),
-              _U.list([$Html.text(_p6 ? "Saving.." : "Save")]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("aside-module")]),
-              _U.list([A2($Html.h3,_U.list([]),_U.list([$Html.text("Name")]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([nameInput(_p4.name)]))
-                      ,A2($Html.h3,
-                      _U.list([]),
-                      _U.list([$Html.text("Surface pencil")]))
-                      ,surfaceBlock(_p4)
-                      ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Gates")]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Downwind")]))
-                              ,A3(intInput,
-                              _p5.downwind.y,
-                              $Screens$EditTrack$Types.SetDownwindY,
-                              _U.list([$Html$Attributes.step("10")]))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Upwind")]))
-                              ,A3(intInput,
-                              _p5.upwind.y,
-                              $Screens$EditTrack$Types.SetUpwindY,
-                              _U.list([$Html$Attributes.step("10")]))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Width")]))
-                              ,A3(intInput,
-                              _p5.downwind.width,
-                              $Screens$EditTrack$Types.SetGateWidth,
-                              _U.list([$Html$Attributes.min("50")
-                                      ,$Html$Attributes.step("10")]))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Laps")]))
-                              ,A3(intInput,
-                              _p5.laps,
-                              $Screens$EditTrack$Types.SetLaps,
-                              _U.list([$Html$Attributes.min("1")]))]))
-                      ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Wind")]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Wavelength 1")]))
-                              ,A3(intInput,
-                              _p5.windGenerator.wavelength1,
-                              $Screens$EditTrack$Types.SetWindW1,
-                              _U.list([$Html$Attributes.min("1")]))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Amplitude 1")]))
-                              ,A3(intInput,
-                              _p5.windGenerator.amplitude1,
-                              $Screens$EditTrack$Types.SetWindA1,
-                              _U.list([$Html$Attributes.min("1")]))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Wavelength 2")]))
-                              ,A3(intInput,
-                              _p5.windGenerator.wavelength2,
-                              $Screens$EditTrack$Types.SetWindW2,
-                              _U.list([$Html$Attributes.min("1")]))]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Amplitude 2")]))
-                              ,A3(intInput,
-                              _p5.windGenerator.amplitude2,
-                              $Screens$EditTrack$Types.SetWindA2,
-                              _U.list([$Html$Attributes.min("1")]))]))
-                      ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Gusts")]))
-                      ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("form-group")]),
-                      _U.list([A2($Html.label,
-                              _U.list([$Html$Attributes.$class("")]),
-                              _U.list([$Html.text("Interval (s)")]))
-                              ,A3(intInput,
-                              _p5.gustGenerator.interval,
-                              $Screens$EditTrack$Types.SetGustInterval,
-                              _U.list([$Html$Attributes.min("10")]))]))
-                      ,gustDefsTable(_p5.gustGenerator.defs)]))]));
+      return _U.list([A2($Html.div,
+                     _U.list([$Html$Attributes.$class("track-menu")]),
+                     _U.list([A2($Html.h2,
+                             _U.list([]),
+                             _U.list([$Html.text("track editor")]))
+                             ,A3($Screens$Utils.linkTo,
+                             $Routes.Home,
+                             _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
+                             _U.list([$Html.text("Exit")]))
+                             ,A3($Screens$Utils.linkTo,
+                             $Routes.PlayTrack(track.id),
+                             _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
+                             _U.list([$Html.text("Try")]))]))
+                     ,A2($Html.div,
+                     _U.list([$Html$Attributes.$class("form-actions")]),
+                     _U.list([A2($Html.button,
+                     _U.list([A2($Html$Events.onClick,
+                             $Screens$EditTrack$Updates.addr,
+                             $Screens$EditTrack$Types.Save)
+                             ,$Html$Attributes.$class("btn btn-primary btn-block")
+                             ,$Html$Attributes.disabled(_p6)]),
+                     _U.list([$Html.text(_p6 ? "Saving.." : "Save")]))]))
+                     ,A2($Html.div,
+                     _U.list([$Html$Attributes.$class("aside-module")]),
+                     _U.list([A2($Html.h3,_U.list([]),_U.list([$Html.text("Name")]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([nameInput(_p4.name)]))
+                             ,A2($Html.h3,
+                             _U.list([]),
+                             _U.list([$Html.text("Surface pencil")]))
+                             ,surfaceBlock(_p4)
+                             ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Gates")]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Downwind")]))
+                                     ,A3(intInput,
+                                     _p5.downwind.y,
+                                     $Screens$EditTrack$Types.SetDownwindY,
+                                     _U.list([$Html$Attributes.step("10")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Upwind")]))
+                                     ,A3(intInput,
+                                     _p5.upwind.y,
+                                     $Screens$EditTrack$Types.SetUpwindY,
+                                     _U.list([$Html$Attributes.step("10")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Width")]))
+                                     ,A3(intInput,
+                                     _p5.downwind.width,
+                                     $Screens$EditTrack$Types.SetGateWidth,
+                                     _U.list([$Html$Attributes.min("50")
+                                             ,$Html$Attributes.step("10")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Laps")]))
+                                     ,A3(intInput,
+                                     _p5.laps,
+                                     $Screens$EditTrack$Types.SetLaps,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Wind")]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Wavelength 1")]))
+                                     ,A3(intInput,
+                                     _p5.windGenerator.wavelength1,
+                                     $Screens$EditTrack$Types.SetWindW1,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Amplitude 1")]))
+                                     ,A3(intInput,
+                                     _p5.windGenerator.amplitude1,
+                                     $Screens$EditTrack$Types.SetWindA1,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Wavelength 2")]))
+                                     ,A3(intInput,
+                                     _p5.windGenerator.wavelength2,
+                                     $Screens$EditTrack$Types.SetWindW2,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Amplitude 2")]))
+                                     ,A3(intInput,
+                                     _p5.windGenerator.amplitude2,
+                                     $Screens$EditTrack$Types.SetWindA2,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Gusts")]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Interval (s)")]))
+                                     ,A3(intInput,
+                                     _p5.gustGenerator.interval,
+                                     $Screens$EditTrack$Types.SetGustInterval,
+                                     _U.list([$Html$Attributes.min("10")]))]))
+                             ,gustDefsTable(_p5.gustGenerator.defs)]))]);
    });
    return _elm.Screens.EditTrack.SideView.values = {_op: _op
-                                                   ,sideView: sideView
+                                                   ,view: view
                                                    ,surfaceBlock: surfaceBlock
                                                    ,renderSurfaceMode: renderSurfaceMode
                                                    ,gustDefsTable: gustDefsTable
@@ -20881,6 +21016,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    if (_elm.Screens.EditTrack.View.values)
    return _elm.Screens.EditTrack.View.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
@@ -20895,6 +21031,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Screens$EditTrack$SideView = Elm.Screens.EditTrack.SideView.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
@@ -20923,30 +21060,24 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
               ,A2($Game$Render$Gates.renderOpenGate,_p4.downwind,0)
               ,A2($Game$Render$Players.renderPlayerHull,0,0)]))]));
    };
-   var editorView = F2(function (track,editor) {
-      return A2($Html.div,
-      _U.list([$Svg$Attributes.$class("layout editor")]),
-      _U.list([A2($Screens$EditTrack$SideView.sideView,track,editor)
-              ,renderCourse(editor)]));
-   });
-   var view = F2(function (player,screen) {
-      var _p5 = {ctor: "_Tuple2"
-                ,_0: screen.track
-                ,_1: screen.editor};
-      if (_p5.ctor === "_Tuple2" && _p5._0.ctor === "Just" && _p5._1.ctor === "Just")
+   var view = F2(function (_p5,screen) {
+      var _p6 = _p5;
+      var _p10 = _p6.player;
+      var _p7 = {ctor: "_Tuple2",_0: screen.track,_1: screen.editor};
+      if (_p7.ctor === "_Tuple2" && _p7._0.ctor === "Just" && _p7._1.ctor === "Just")
       {
-            var _p6 = _p5._0._0;
-            return _U.eq(player.id,
-            _p6.creatorId) || $Models.isAdmin(player) ? A2(editorView,
-            _p6,
-            _p5._1._0) : $Html.text("Access forbidden.");
+            var _p9 = _p7._0._0;
+            var _p8 = _p7._1._0;
+            return _U.eq(_p10.id,
+            _p9.creatorId) || $Models.isAdmin(_p10) ? A2($Screens$Layout.layout,
+            A2($Screens$EditTrack$SideView.view,_p9,_p8),
+            _U.list([renderCourse(_p8)])) : $Html.text("Access forbidden.");
          } else {
             return $Html.text("loading");
          }
    });
    return _elm.Screens.EditTrack.View.values = {_op: _op
                                                ,view: view
-                                               ,editorView: editorView
                                                ,renderCourse: renderCourse};
 };
 Elm.Screens = Elm.Screens || {};
@@ -20960,6 +21091,7 @@ Elm.Screens.ShowProfile.View.make = function (_elm) {
    if (_elm.Screens.ShowProfile.View.values)
    return _elm.Screens.ShowProfile.View.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -20967,25 +21099,28 @@ Elm.Screens.ShowProfile.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$ShowProfile$Types = Elm.Screens.ShowProfile.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var view = function (_p0) {
+   var view = F2(function (ctx,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.player;
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("show-user")]),
-      _U.list([$Screens$Utils.titleWrapper(_U.list([$Screens$Utils.container(_U.list([A2($Html.img,
-                                                                                     _U.list([$Html$Attributes.$class("avatar avatar-user")
-                                                                                             ,$Html$Attributes.src($Screens$Utils.avatarUrl(_p2))
-                                                                                             ,$Html$Attributes.width(160)
-                                                                                             ,$Html$Attributes.height(160)]),
-                                                                                     _U.list([]))
-                                                                                     ,A2($Html.h1,
-                                                                                     _U.list([]),
-                                                                                     _U.list([$Html.text($Screens$Utils.playerHandle(_p2))]))]))]))]));
-   };
+      return A2($Screens$Layout.layoutWithNav,
+      ctx,
+      _U.list([A2($Screens$Utils.container,
+      "show-profile",
+      _U.list([A2($Html.img,
+              _U.list([$Html$Attributes.$class("avatar avatar-user")
+                      ,$Html$Attributes.src($Screens$Utils.avatarUrl(_p2))
+                      ,$Html$Attributes.width(160)
+                      ,$Html$Attributes.height(160)]),
+              _U.list([]))
+              ,A2($Html.h1,
+              _U.list([]),
+              _U.list([$Html.text($Screens$Utils.playerHandle(_p2))]))]))]));
+   });
    return _elm.Screens.ShowProfile.View.values = {_op: _op
                                                  ,view: view};
 };
@@ -21305,7 +21440,6 @@ Elm.Screens.Game.SideView.make = function (_elm) {
    return _elm.Screens.Game.SideView.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -21360,7 +21494,7 @@ Elm.Screens.Game.SideView.make = function (_elm) {
               _U.list([$Html.text("Best times")]))
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-              A2($List.map,rankingItem,_p3.rankings))]));
+              A2($List.map,rankingItem,_p3.meta.rankings))]));
    };
    var liveBlocks = F2(function (screen,liveTrack) {
       return _U.list([$Screens$Game$PlayersView.block(screen)
@@ -21388,13 +21522,11 @@ Elm.Screens.Game.SideView.make = function (_elm) {
               _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
               _U.list([$Html.text("Exit")]))]));
    };
-   var view = F4(function (h,screen,liveTrack,gameState) {
+   var view = F3(function (screen,liveTrack,gameState) {
       var blocks = liveTrack.track.draft ? draftBlocks(liveTrack) : A2(liveBlocks,
       screen,
       liveTrack);
-      return A2($Screens$Utils.sidebar,
-      {ctor: "_Tuple2",_0: $Constants.sidebarWidth,_1: h},
-      A2($List._op["::"],trackNav(liveTrack),blocks));
+      return A2($List._op["::"],trackNav(liveTrack),blocks);
    });
    return _elm.Screens.Game.SideView.values = {_op: _op
                                               ,view: view
@@ -22133,227 +22265,47 @@ Elm.Screens.Game.View.make = function (_elm) {
    if (_elm.Screens.Game.View.values)
    return _elm.Screens.Game.View.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Render$All = Elm.Game.Render.All.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
    $Screens$Game$SideView = Elm.Screens.Game.SideView.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var mainView = F4(function (_p0,screen,liveTrack,gameState) {
-      var _p1 = _p0;
-      var _p2 = _p1._1;
-      var gameSvg = A2($Game$Render$All.render,
-      {ctor: "_Tuple2",_0: _p1._0 - $Constants.sidebarWidth,_1: _p2},
-      gameState);
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("layout")]),
-      _U.list([A4($Screens$Game$SideView.view,
-              _p2,
-              screen,
-              liveTrack,
-              gameState)
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("game")]),
-              _U.list([gameSvg]))
-              ,A2($Screens$Game$ChatView.view,_p2,screen)]));
-   });
-   var view = F2(function (dims,screen) {
-      var _p3 = {ctor: "_Tuple2"
+   var view = F2(function (ctx,screen) {
+      var _p0 = {ctor: "_Tuple2"
                 ,_0: screen.liveTrack
                 ,_1: screen.gameState};
-      if (_p3.ctor === "_Tuple2" && _p3._0.ctor === "Just" && _p3._1.ctor === "Just")
+      if (_p0.ctor === "_Tuple2" && _p0._0.ctor === "Just" && _p0._1.ctor === "Just")
       {
-            return A4(mainView,dims,screen,_p3._0._0,_p3._1._0);
+            var _p2 = _p0._1._0;
+            var _p1 = ctx.dims;
+            var w = _p1._0;
+            var h = _p1._1;
+            return A2($Screens$Layout.layout,
+            A3($Screens$Game$SideView.view,screen,_p0._0._0,_p2),
+            _U.list([A2($Html.div,
+            _U.list([$Html$Attributes.$class("game")]),
+            _U.list([A2($Game$Render$All.render,
+                    {ctor: "_Tuple2",_0: w - $Constants.sidebarWidth,_1: h},
+                    _p2)
+                    ,A2($Screens$Game$ChatView.view,h,screen)]))]));
          } else {
             return A2($Html.div,
-            _U.list([$Html$Attributes.$class("layout")]),
-            _U.list([$Html.text("loading...")]));
+            _U.list([$Html$Attributes.$class("")]),
+            _U.list([]));
          }
    });
-   return _elm.Screens.Game.View.values = {_op: _op
-                                          ,view: view
-                                          ,mainView: mainView};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Sidebar = Elm.Screens.Sidebar || {};
-Elm.Screens.Sidebar.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Sidebar = _elm.Screens.Sidebar || {};
-   if (_elm.Screens.Sidebar.values)
-   return _elm.Screens.Sidebar.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var userItems = function (player) {
-      return _U.list([A2($Html.li,
-                     _U.list([]),
-                     _U.list([A3($Screens$Utils.linkTo,
-                     $Routes.ShowProfile,
-                     _U.list([]),
-                     _U.list([$Html.text("Profile")]))]))
-                     ,A2($Html.li,
-                     _U.list([]),
-                     _U.list([A2($Html.a,
-                     _U.list([A2($Html$Events.onClick,
-                     $AppTypes.appActionsAddress,
-                     $AppTypes.Logout)]),
-                     _U.list([$Html.text("Logout")]))]))]);
-   };
-   var guestItems = _U.list([A2($Html.li,
-                            _U.list([]),
-                            _U.list([A3($Screens$Utils.linkTo,
-                            $Routes.Login,
-                            _U.list([]),
-                            _U.list([$Html.text("Login")]))]))
-                            ,A2($Html.li,
-                            _U.list([]),
-                            _U.list([A3($Screens$Utils.linkTo,
-                            $Routes.Register,
-                            _U.list([]),
-                            _U.list([$Html.text("Register")]))]))]);
-   var mainMenu = function (player) {
-      var playerItems = player.guest ? guestItems : userItems(player);
-      var allItems = A2($Basics._op["++"],
-      _U.list([A2($Html.li,
-      _U.list([]),
-      _U.list([A3($Screens$Utils.linkTo,
-      $Routes.Home,
-      _U.list([]),
-      _U.list([$Html.text("Home")]))]))]),
-      playerItems);
-      return A2($Html.ul,
-      _U.list([$Html$Attributes.$class("user-menu")]),
-      allItems);
-   };
-   var logo = A2($Html.div,
-   _U.list([$Html$Attributes.$class("logo")]),
-   _U.list([]));
-   var view = function (player) {
-      return A2($Html.aside,
-      _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                               ,_0: "width"
-                                               ,_1: A2($Basics._op["++"],
-                                               $Basics.toString($Constants.sidebarWidth),
-                                               "px")}]))]),
-      _U.list([logo,mainMenu(player)]));
-   };
-   return _elm.Screens.Sidebar.values = {_op: _op
-                                        ,view: view
-                                        ,logo: logo
-                                        ,mainMenu: mainMenu
-                                        ,guestItems: guestItems
-                                        ,userItems: userItems};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Nav = Elm.Screens.Nav || {};
-Elm.Screens.Nav.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Nav = _elm.Screens.Nav || {};
-   if (_elm.Screens.Nav.values) return _elm.Screens.Nav.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var userMenu = _U.list([A2($Html.li,
-                          _U.list([]),
-                          _U.list([A3($Screens$Utils.linkTo,
-                          $Routes.ShowProfile,
-                          _U.list([]),
-                          _U.list([$Html.text("Profile")]))]))
-                          ,A2($Html.li,
-                          _U.list([]),
-                          _U.list([A2($Html.a,
-                          _U.list([A2($Html$Events.onClick,
-                          $AppTypes.appActionsAddress,
-                          $AppTypes.Logout)]),
-                          _U.list([$Html.text("Logout")]))]))]);
-   var guestMenu = _U.list([A2($Html.li,
-                           _U.list([]),
-                           _U.list([A3($Screens$Utils.linkTo,
-                           $Routes.Login,
-                           _U.list([]),
-                           _U.list([$Html.text("Login")]))]))
-                           ,A2($Html.li,
-                           _U.list([]),
-                           _U.list([A3($Screens$Utils.linkTo,
-                           $Routes.Register,
-                           _U.list([]),
-                           _U.list([$Html.text("Register")]))]))]);
-   var playerMenu = function (player) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("col-md-6")]),
-      _U.list([A2($Html.ul,
-      _U.list([$Html$Attributes.$class("player-menu")]),
-      A2($Basics._op["++"],
-      _U.list([A2($Html.li,
-      _U.list([]),
-      _U.list([A3($Screens$Utils.linkTo,
-      $Routes.Home,
-      _U.list([]),
-      _U.list([$Html.text("Home")]))]))]),
-      player.guest ? guestMenu : userMenu))]));
-   };
-   var logo = A2($Html.div,
-   _U.list([$Html$Attributes.$class("col-md-6 logo")]),
-   _U.list([A3($Screens$Utils.linkTo,
-   $Routes.Home,
-   _U.list([]),
-   _U.list([A2($Html.img,
-   _U.list([$Html$Attributes.src("/assets/images/logo-header-2.svg")]),
-   _U.list([]))]))]));
-   var view = function (appState) {
-      return A2($Html.nav,
-      _U.list([]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("container")]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("row")]),
-      _U.list([logo,playerMenu(appState.player)]))]))]));
-   };
-   var logoWidth = 160;
-   return _elm.Screens.Nav.values = {_op: _op
-                                    ,logoWidth: logoWidth
-                                    ,view: view
-                                    ,logo: logo
-                                    ,playerMenu: playerMenu
-                                    ,guestMenu: guestMenu
-                                    ,userMenu: userMenu};
+   return _elm.Screens.Game.View.values = {_op: _op,view: view};
 };
 Elm.AppView = Elm.AppView || {};
 Elm.AppView.make = function (_elm) {
@@ -22365,7 +22317,6 @@ Elm.AppView.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22377,63 +22328,43 @@ Elm.AppView.make = function (_elm) {
    $Screens$Register$View = Elm.Screens.Register.View.make(_elm),
    $Screens$ShowProfile$View = Elm.Screens.ShowProfile.View.make(_elm),
    $Screens$ShowTrack$View = Elm.Screens.ShowTrack.View.make(_elm),
-   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var layout = F2(function (appState,content) {
-      var noNav = function () {
-         var _p0 = appState.route;
-         _v0_2: do {
-            if (_p0.ctor === "Just") {
-                  switch (_p0._0.ctor)
-                  {case "EditTrack": return true;
-                     case "PlayTrack": return true;
-                     default: break _v0_2;}
-               } else {
-                  break _v0_2;
-               }
-         } while (false);
-         return false;
-      }();
-      return noNav ? content : A2($Html.div,
-      _U.list([$Html$Attributes.$class("layout")]),
-      _U.list([$Screens$Sidebar.view(appState.player)
-              ,A2($Html.main$,_U.list([]),_U.list([content]))]));
-   });
-   var emptyView = A2($Html.div,
-   _U.list([]),
-   _U.list([$Html.text("emptyView")]));
-   var routeView = F2(function (_p1,route) {
-      var _p2 = _p1;
-      var _p5 = _p2.screens;
-      var _p4 = _p2.player;
-      var _p3 = route;
-      switch (_p3.ctor)
-      {case "Home": return A2($Screens$Home$View.view,_p4,_p5.home);
-         case "Register":
-         return $Screens$Register$View.view(_p5.register);
-         case "Login": return $Screens$Login$View.view(_p5.login);
-         case "ShowTrack":
-         return $Screens$ShowTrack$View.view(_p5.showTrack);
+   var emptyView = A2($Html.div,_U.list([]),_U.list([]));
+   var routeView = F2(function (_p0,route) {
+      var _p1 = _p0;
+      var _p4 = _p1.screens;
+      var _p3 = _p1.ctx;
+      var _p2 = route;
+      switch (_p2.ctor)
+      {case "Home": return A2($Screens$Home$View.view,_p3,_p4.home);
+         case "Register": return A2($Screens$Register$View.view,
+           _p3,
+           _p4.register);
+         case "Login": return A2($Screens$Login$View.view,_p3,_p4.login);
+         case "ShowTrack": return A2($Screens$ShowTrack$View.view,
+           _p3,
+           _p4.showTrack);
          case "EditTrack": return A2($Screens$EditTrack$View.view,
-           _p4,
-           _p5.editTrack);
-         case "ShowProfile":
-         return $Screens$ShowProfile$View.view(_p5.showProfile);
-         default: return A2($Screens$Game$View.view,_p2.dims,_p5.game);}
+           _p3,
+           _p4.editTrack);
+         case "ShowProfile": return A2($Screens$ShowProfile$View.view,
+           _p3,
+           _p4.showProfile);
+         default: return A2($Screens$Game$View.view,_p3,_p4.game);}
    });
-   var view = F2(function (_p6,appState) {
-      return A2(layout,
-      appState,
-      A2($Maybe.withDefault,
-      emptyView,
-      A2($Maybe.map,routeView(appState),appState.route)));
+   var view = F2(function (_p5,appState) {
+      var _p6 = appState.route;
+      if (_p6.ctor === "Just") {
+            return A2(routeView,appState,_p6._0);
+         } else {
+            return emptyView;
+         }
    });
    return _elm.AppView.values = {_op: _op
                                 ,view: view
                                 ,routeView: routeView
-                                ,emptyView: emptyView
-                                ,layout: layout};
+                                ,emptyView: emptyView};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Outputs = Elm.Game.Outputs || {};

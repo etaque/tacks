@@ -12,8 +12,7 @@ import AppTypes exposing (appActionsAddress)
 import Routes
 
 
-type alias Wrapper = List Html -> Html
-
+-- Events
 
 linkTo : Routes.Route -> List Attribute -> List Html -> Html
 linkTo route attrs content =
@@ -45,7 +44,7 @@ intTargetValue =
 onEnter : Signal.Address a -> a -> Attribute
 onEnter address value =
     on "keydown"
-      (Json.customDecoder keyCode is13)
+      (Json.customDecoder keyCode isEnter)
       (\_ -> Signal.message address value)
 
 eventOptions : Options
@@ -54,13 +53,18 @@ eventOptions =
   , preventDefault = True
   }
 
-is13 : Int -> Result String ()
-is13 code =
+isEnter : Int -> Result String ()
+isEnter code =
   if code == 13 then Ok () else Err "not the right key code"
 
-container : Wrapper
-container content =
-  div [ class "container" ] content
+
+-- Wrappers
+
+type alias Wrapper = List Html -> Html
+
+container : String -> Wrapper
+container className content =
+  div [ class ("container " ++ className) ] content
 
 row : Wrapper
 row content =
@@ -69,14 +73,6 @@ row content =
 fullWidth : Wrapper
 fullWidth content =
   row [ div [ class "col-lg-12" ] content ]
-
-col4 : Wrapper
-col4 content =
-  div [ class "col-lg-4 col-lg-offset-4" ] content
-
-whitePanel : Wrapper
-whitePanel content =
-  col4 [ div [ class "white-panel" ] content ]
 
 formGroup : Bool -> List Html -> Html
 formGroup hasErr content =
@@ -92,28 +88,8 @@ passwordInput : List Attribute -> Html
 passwordInput attributes =
   input (List.append [ type' "password", class "form-control"] attributes) []
 
-titleWrapper : Wrapper
-titleWrapper content =
-  blockWrapper "title-wrapper" content
 
-lightWrapper : Wrapper
-lightWrapper content =
-  blockWrapper "light-wrapper" content
-
-blockWrapper : String -> Wrapper
-blockWrapper wrapperClass content =
-  div [ class wrapperClass ] [ div [ class "container" ] content ]
-
-sidebar : Dims -> Wrapper
-sidebar (w, h) content =
-  aside
-    [ style
-      [ ("height", toString h ++ "px")
-      , ("width", toString w ++ "px")
-      ]
-    ]
-    content
-
+-- Components
 
 playerWithAvatar : Player -> Html
 playerWithAvatar player =
@@ -136,6 +112,9 @@ avatarUrl p =
 playerHandle : Player -> String
 playerHandle p =
   Maybe.withDefault "anonymous" p.handle
+
+
+-- Misc
 
 formatTimer : Bool -> Float -> String
 formatTimer showMs t =

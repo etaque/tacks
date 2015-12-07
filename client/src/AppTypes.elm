@@ -53,6 +53,7 @@ type AppAction
   = SetPlayer Player
   | SetPath String
   | PathChanged String
+  | MountRoute (Maybe Routes.Route)
   | UpdateDims (Int, Int)
   | ScreenAction ScreenAction
   | Logout
@@ -71,12 +72,19 @@ type ScreenAction
 
 
 type alias AppState =
-  { player : Player
-  , dims : (Int, Int)
+  { ctx : Context
   , route : Maybe Routes.Route
   , path : String
   , screens : Screens
   }
+
+type alias Context =
+  { player : Player
+  , dims : (Int, Int)
+  , transitStatus : TransitStatus
+  }
+
+type TransitStatus = Exit | Enter
 
 type alias Screens =
   { home : Home.Screen
@@ -91,8 +99,11 @@ type alias Screens =
 
 initialAppState : AppSetup -> AppState
 initialAppState { path, dims, player } =
-  { player = player
-  , dims = dims
+  { ctx =
+      { player = player
+      , dims = dims
+      , transitStatus = Enter
+      }
   , path = path
   , route = Nothing
   , screens =

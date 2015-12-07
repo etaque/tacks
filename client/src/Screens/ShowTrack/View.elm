@@ -3,27 +3,31 @@ module Screens.ShowTrack.View where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
+import AppTypes exposing (..)
 import Models exposing (..)
 import Routes exposing (..)
 
 import Screens.ShowTrack.Types exposing (..)
 
 import Screens.Utils exposing (..)
+import Screens.Layout as Layout
 
 
-view : Screen -> Html
-view {track} =
-  div [ class "show-track" ]
-    [ Maybe.withDefault loading (Maybe.map withTrack track)
+view : Context -> Screen -> Html
+view ctx {track} =
+  Layout.layoutWithNav ctx
+    [ container "show-track"
+      [ Maybe.withDefault loading (Maybe.map withTrack track)
+      ]
     ]
 
 loading : Html
 loading =
-  titleWrapper [ h1 [] [ text "loading..." ]]
+  h1 [] [ text "loading..." ]
 
 withTrack : Track -> Html
 withTrack track =
-  titleWrapper
+  div []
     [ h1 [] [ text <| track.id ]
     , joinButton track
     ]
