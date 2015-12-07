@@ -18671,6 +18671,17 @@ Elm.Screens.Utils.make = function (_elm) {
       _U.list([$Html$Attributes.$class("player-avatar")]),
       _U.list([avatarImg,$Html.text(" "),handleSpan]));
    };
+   var rankingItem = function (ranking) {
+      return A2($Html.li,
+      _U.list([$Html$Attributes.$class("ranking")]),
+      _U.list([A2($Html.span,
+              _U.list([$Html$Attributes.$class("rank")]),
+              _U.list([$Html.text($Basics.toString(ranking.rank))]))
+              ,A2($Html.span,
+              _U.list([$Html$Attributes.$class("status")]),
+              _U.list([$Html.text(A2(formatTimer,true,ranking.finishTime))]))
+              ,playerWithAvatar(ranking.player)]));
+   };
    var passwordInput = function (attributes) {
       return A2($Html.input,
       A2($List.append,
@@ -18785,6 +18796,7 @@ Elm.Screens.Utils.make = function (_elm) {
                                       ,playerWithAvatar: playerWithAvatar
                                       ,avatarUrl: avatarUrl
                                       ,playerHandle: playerHandle
+                                      ,rankingItem: rankingItem
                                       ,formatTimer: formatTimer};
 };
 Elm.Screens = Elm.Screens || {};
@@ -18966,9 +18978,15 @@ Elm.Screens.Home.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("list-unstyled track-players")]),
       A2($List.map,playerItem,players));
    };
+   var rankingsExtract = function (rankings) {
+      return A2($Html.ul,
+      _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
+      A2($List.map,$Screens$Utils.rankingItem,rankings));
+   };
    var liveTrackBlock = function (_p0) {
       var _p1 = _p0;
-      var _p2 = _p1.track;
+      var _p3 = _p1.track;
+      var _p2 = _p1.meta;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("col-md-4")]),
       _U.list([A2($Html.div,
@@ -18976,23 +18994,26 @@ Elm.Screens.Home.View.make = function (_elm) {
       _U.list([A2($Html.h3,
               _U.list([$Html$Attributes.$class("name")]),
               _U.list([A3($Screens$Utils.linkTo,
-              $Routes.PlayTrack(_p2.id),
+              $Routes.PlayTrack(_p3.id),
               _U.list([]),
-              _U.list([$Html.text(_p2.name)]))]))
-              ,A2($Html.span,
-              _U.list([$Html$Attributes.$class("runs-count")]),
-              _U.list([$Html.text(A2($Basics._op["++"],
-              $Basics.toString(_p1.meta.runsCount),
-              " runs"))]))
-              ,playersList(_p1.players)]))]));
+              _U.list([$Html.text(_p3.name)]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("info")]),
+              _U.list([rankingsExtract(_p2.rankings)
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("runs-count")]),
+                      _U.list([$Html.text(A2($Basics._op["++"],
+                      $Basics.toString(_p2.runsCount),
+                      " runs"))]))
+                      ,playersList(_p1.players)]))]))]));
    };
-   var liveTracks = F2(function (player,_p3) {
-      var _p4 = _p3;
+   var liveTracks = F2(function (player,_p4) {
+      var _p5 = _p4;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("live-tracks")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("row")]),
-              A2($List.map,liveTrackBlock,_p4.liveTracks))
+              A2($List.map,liveTrackBlock,_p5.liveTracks))
               ,$Models.isAdmin(player) ? createTrackBlock : A2($Html.div,
               _U.list([]),
               _U.list([]))]));
@@ -19054,6 +19075,7 @@ Elm.Screens.Home.View.make = function (_elm) {
                                           ,setHandleBlock: setHandleBlock
                                           ,liveTracks: liveTracks
                                           ,liveTrackBlock: liveTrackBlock
+                                          ,rankingsExtract: rankingsExtract
                                           ,playersList: playersList
                                           ,playerItem: playerItem
                                           ,createTrackBlock: createTrackBlock};
@@ -21472,19 +21494,6 @@ Elm.Screens.Game.SideView.make = function (_elm) {
    _U.list([$Html$Attributes.$class("aside-module module-help")]),
    _U.list([A2($Html.h3,_U.list([]),_U.list([$Html.text("Help")]))
            ,A2($Html.dl,_U.list([]),helpItems)]));
-   var rankingItem = function (ranking) {
-      return A2($Html.li,
-      _U.list([$Html$Attributes.$class("ranking")]),
-      _U.list([A2($Html.span,
-              _U.list([$Html$Attributes.$class("rank")]),
-              _U.list([$Html.text($Basics.toString(ranking.rank))]))
-              ,A2($Html.span,
-              _U.list([$Html$Attributes.$class("status")]),
-              _U.list([$Html.text(A2($Screens$Utils.formatTimer,
-              true,
-              ranking.finishTime))]))
-              ,$Screens$Utils.playerWithAvatar(ranking.player)]));
-   };
    var rankingsBlock = function (_p2) {
       var _p3 = _p2;
       return A2($Html.div,
@@ -21494,7 +21503,7 @@ Elm.Screens.Game.SideView.make = function (_elm) {
               _U.list([$Html.text("Best times")]))
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-              A2($List.map,rankingItem,_p3.meta.rankings))]));
+              A2($List.map,$Screens$Utils.rankingItem,_p3.meta.rankings))]));
    };
    var liveBlocks = F2(function (screen,liveTrack) {
       return _U.list([$Screens$Game$PlayersView.block(screen)
@@ -21534,7 +21543,6 @@ Elm.Screens.Game.SideView.make = function (_elm) {
                                               ,draftBlocks: draftBlocks
                                               ,liveBlocks: liveBlocks
                                               ,rankingsBlock: rankingsBlock
-                                              ,rankingItem: rankingItem
                                               ,helpBlock: helpBlock
                                               ,helpItems: helpItems
                                               ,helpItem: helpItem};

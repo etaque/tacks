@@ -75,11 +75,17 @@ liveTrackBlock ({track, meta, players} as lt) =
   div [ class "col-md-4" ]
     [ div [ class "live-track" ]
       [ h3 [ class "name" ] [ linkTo (PlayTrack track.id) [ ] [ text track.name ] ]
-      , span [ class "runs-count"] [ text <| toString meta.runsCount ++ " runs" ]
-      -- , span [ class "creator"] [ text <| "by " ++ Maybe.withDefault "?" creator.handle ]
-      , playersList players
+      , div  [ class "info"]
+          [ rankingsExtract meta.rankings
+          , div [ class "runs-count"] [ text <| toString meta.runsCount ++ " runs" ]
+          , playersList players
+          ]
       ]
     ]
+
+rankingsExtract : List Ranking -> Html
+rankingsExtract rankings =
+   ul [ class "list-unstyled list-rankings" ] (List.map rankingItem rankings)
 
 playersList : List Player -> Html
 playersList players =

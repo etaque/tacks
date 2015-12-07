@@ -58,15 +58,6 @@ rankingsBlock {meta} =
     ]
 
 
-rankingItem : Ranking -> Html
-rankingItem ranking =
-  li [ class "ranking" ]
-    [ span [ class "rank" ] [ text (toString ranking.rank)]
-    , span [ class "status" ] [ text (formatTimer True ranking.finishTime) ]
-    , playerWithAvatar ranking.player
-    ]
-
-
 helpBlock : Html
 helpBlock =
   div [ class "aside-module module-help" ]

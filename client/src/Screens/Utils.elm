@@ -113,6 +113,15 @@ playerHandle : Player -> String
 playerHandle p =
   Maybe.withDefault "anonymous" p.handle
 
+rankingItem : Ranking -> Html
+rankingItem ranking =
+  li [ class "ranking" ]
+    [ span [ class "rank" ] [ text (toString ranking.rank)]
+    , span [ class "status" ] [ text (formatTimer True ranking.finishTime) ]
+    , playerWithAvatar ranking.player
+    ]
+
+
 
 -- Misc
 
