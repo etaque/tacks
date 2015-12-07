@@ -6093,20 +6093,10 @@ aside {
   background-image: -o-linear-gradient(top, #215068, #237199);
   /* Opera 11.10+ */
   background-image: linear-gradient(top, #215068, #237199);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#215068', EndColorStr='#237199');
-  /* .logo { */
-  /*   a { */
-  /*     display: block; */
-  /*     text-align: center; */
-  /*     background-color: rgb(58,120,201); */
-  /*     /\* border: 2px solid white; *\/ */
-  /*     img { */
-  /*       height: 50px; */
-  /*       /\* max-height: 100%; *\/ */
-  /*       width: auto; */
-  /*     } */
-  /*   } */
-  /* } */ }
+  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#215068', EndColorStr='#237199'); }
+  aside .logo a img {
+    width: 160px;
+    height: auto; }
   aside .user-menu {
     list-style: none;
     margin: 0;

@@ -20,10 +20,10 @@ view {player} =
 
 logo : Html
 logo =
-  div [ class "logo" ] []
-    -- [ linkTo Home [ ]
-    --   [ img [ src "/assets/images/logo-header-2.png" ] [] ]
-    -- ]
+  div [ class "logo" ]
+    [ linkTo Home [ ]
+      [ img [ src "/assets/images/logo-header-2@2x.png" ] [] ]
+    ]
 
 
 mainMenu : Player -> Html

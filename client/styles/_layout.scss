@@ -56,20 +56,14 @@ aside {
   padding: 15px;
   @include linear-gradient($darkerSeaBlue, $darkSeaBlue);
 
-  /* .logo { */
-  /*   a { */
-  /*     display: block; */
-  /*     text-align: center; */
-  /*     background-color: rgb(58,120,201); */
-  /*     /\* border: 2px solid white; *\/ */
-
-  /*     img { */
-  /*       height: 50px; */
-  /*       /\* max-height: 100%; *\/ */
-  /*       width: auto; */
-  /*     } */
-  /*   } */
-  /* } */
+  .logo {
+    a {
+      img {
+        width: 160px;
+        height: auto;
+      }
+    }
+  }
 
   .user-menu {
     list-style: none;

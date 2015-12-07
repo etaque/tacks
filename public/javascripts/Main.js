@@ -18865,7 +18865,12 @@ Elm.Screens.Sidebar.make = function (_elm) {
    };
    var logo = A2($Html.div,
    _U.list([$Html$Attributes.$class("logo")]),
-   _U.list([]));
+   _U.list([A3($Screens$Utils.linkTo,
+   $Routes.Home,
+   _U.list([]),
+   _U.list([A2($Html.img,
+   _U.list([$Html$Attributes.src("/assets/images/logo-header-2@2x.png")]),
+   _U.list([]))]))]));
    var view = function (_p0) {
       var _p1 = _p0;
       return _U.list([logo,mainMenu(_p1.player)]);
