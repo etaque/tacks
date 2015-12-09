@@ -46,7 +46,6 @@ guestItems =
 
 userItems : Player -> List Html
 userItems player =
-  [ li [] [ linkTo ShowProfile [ ] [ text "Profile" ] ]
-  , li [] [ a [ onClick appActionsAddress Logout ] [ text "Logout"] ]
+  [ li [] [ a [ onClick appActionsAddress Logout ] [ text "Logout"] ]
   ]
 

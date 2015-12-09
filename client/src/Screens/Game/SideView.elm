@@ -8,6 +8,7 @@ import Game.Models exposing (GameState)
 
 import Screens.Game.Types exposing (..)
 import Screens.Game.PlayersView as PlayersView
+import Screens.Sidebar as Sidebar
 
 import Screens.Utils exposing (..)
 import Routes exposing (..)
@@ -22,14 +23,14 @@ view screen liveTrack gameState =
       else
         liveBlocks screen liveTrack
   in
-    (trackNav liveTrack) :: blocks
+    Sidebar.logo :: (trackNav liveTrack) :: blocks
 
 
 trackNav : LiveTrack -> Html
 trackNav liveTrack =
   div [ class "track-menu" ]
-    [ h2 [ ] [ text liveTrack.track.name ]
-    , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
+    [ h2 [ class "track-name" ] [ text liveTrack.track.name ]
+    -- , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
     ]
 
 
@@ -53,7 +54,7 @@ liveBlocks screen liveTrack =
 rankingsBlock : LiveTrack -> Html
 rankingsBlock {meta} =
   div [ class "aside-module module-rankings" ]
-    [ h3 [ ] [ text "Best times" ]
+    [ moduleTitle "Best times"
     , ul [ class "list-unstyled list-rankings" ] (List.map rankingItem meta.rankings)
     ]
 
@@ -61,7 +62,7 @@ rankingsBlock {meta} =
 helpBlock : Html
 helpBlock =
   div [ class "aside-module module-help" ]
-    [ h3 [ ] [ text "Help" ]
+    [ moduleTitle "Help"
     , dl [ ] helpItems
     ]
 

@@ -179,9 +179,10 @@ label {
 }
 
 @mixin players-list {
-  padding: 5px;
+  /* padding: 5px; */
   margin-bottom: 10px;
-  font-size: 14px;
+  font-size: 16px;
+  font-family: $mono;
 
   li {
     margin-bottom: 3px;
@@ -197,6 +198,10 @@ label {
       &:before {
         content: "#";
       }
+    }
+
+    .handle {
+      font-weight: bold;
     }
 
     .status {

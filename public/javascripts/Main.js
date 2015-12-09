@@ -18644,8 +18644,28 @@ Elm.Screens.Utils.make = function (_elm) {
       ":",
       A2($Basics._op["++"],sSeconds,sMillis)));
    });
+   var moduleTitle = function (title) {
+      return A2($Html.h3,
+      _U.list([]),
+      _U.list([A2($Html.span,
+      _U.list([]),
+      _U.list([$Html.text(title)]))]));
+   };
    var playerHandle = function (p) {
       return A2($Maybe.withDefault,"anonymous",p.handle);
+   };
+   var rankingItem = function (ranking) {
+      return A2($Html.li,
+      _U.list([$Html$Attributes.$class("ranking")]),
+      _U.list([A2($Html.span,
+              _U.list([$Html$Attributes.$class("rank")]),
+              _U.list([$Html.text($Basics.toString(ranking.rank))]))
+              ,A2($Html.span,
+              _U.list([$Html$Attributes.$class("status")]),
+              _U.list([$Html.text(A2(formatTimer,true,ranking.finishTime))]))
+              ,A2($Html.span,
+              _U.list([$Html$Attributes.$class("handle")]),
+              _U.list([$Html.text(playerHandle(ranking.player))]))]));
    };
    var avatarUrl = function (p) {
       var _p0 = p.avatarId;
@@ -18670,17 +18690,6 @@ Elm.Screens.Utils.make = function (_elm) {
               ,handleSpan])) : A2($Html.span,
       _U.list([$Html$Attributes.$class("player-avatar")]),
       _U.list([avatarImg,$Html.text(" "),handleSpan]));
-   };
-   var rankingItem = function (ranking) {
-      return A2($Html.li,
-      _U.list([$Html$Attributes.$class("ranking")]),
-      _U.list([A2($Html.span,
-              _U.list([$Html$Attributes.$class("rank")]),
-              _U.list([$Html.text($Basics.toString(ranking.rank))]))
-              ,A2($Html.span,
-              _U.list([$Html$Attributes.$class("status")]),
-              _U.list([$Html.text(A2(formatTimer,true,ranking.finishTime))]))
-              ,playerWithAvatar(ranking.player)]));
    };
    var passwordInput = function (attributes) {
       return A2($Html.input,
@@ -18797,6 +18806,7 @@ Elm.Screens.Utils.make = function (_elm) {
                                       ,avatarUrl: avatarUrl
                                       ,playerHandle: playerHandle
                                       ,rankingItem: rankingItem
+                                      ,moduleTitle: moduleTitle
                                       ,formatTimer: formatTimer};
 };
 Elm.Screens = Elm.Screens || {};
@@ -18824,18 +18834,12 @@ Elm.Screens.Sidebar.make = function (_elm) {
    var _op = {};
    var userItems = function (player) {
       return _U.list([A2($Html.li,
-                     _U.list([]),
-                     _U.list([A3($Screens$Utils.linkTo,
-                     $Routes.ShowProfile,
-                     _U.list([]),
-                     _U.list([$Html.text("Profile")]))]))
-                     ,A2($Html.li,
-                     _U.list([]),
-                     _U.list([A2($Html.a,
-                     _U.list([A2($Html$Events.onClick,
-                     $AppTypes.appActionsAddress,
-                     $AppTypes.Logout)]),
-                     _U.list([$Html.text("Logout")]))]))]);
+      _U.list([]),
+      _U.list([A2($Html.a,
+      _U.list([A2($Html$Events.onClick,
+      $AppTypes.appActionsAddress,
+      $AppTypes.Logout)]),
+      _U.list([$Html.text("Logout")]))]))]);
    };
    var guestItems = _U.list([A2($Html.li,
                             _U.list([]),
@@ -18976,7 +18980,7 @@ Elm.Screens.Home.View.make = function (_elm) {
    var playerItem = function (player) {
       return A2($Html.li,
       _U.list([$Html$Attributes.$class("player")]),
-      _U.list([$Screens$Utils.playerWithAvatar(player)]));
+      _U.list([$Html.text($Screens$Utils.playerHandle(player))]));
    };
    var playersList = function (players) {
       return A2($Html.ul,
@@ -19006,10 +19010,10 @@ Elm.Screens.Home.View.make = function (_elm) {
               _U.list([$Html$Attributes.$class("info")]),
               _U.list([rankingsExtract(_p2.rankings)
                       ,A2($Html.div,
-                      _U.list([$Html$Attributes.$class("runs-count")]),
+                      _U.list([$Html$Attributes.$class("rankings-size")]),
                       _U.list([$Html.text(A2($Basics._op["++"],
-                      $Basics.toString(_p2.runsCount),
-                      " runs"))]))
+                      $Basics.toString($List.length(_p2.rankings)),
+                      " entries"))]))
                       ,playersList(_p1.players)]))]))]));
    };
    var liveTracks = F2(function (player,_p4) {
@@ -21439,9 +21443,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
       var _p7 = _p6.freePlayers;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("aside-module module-players")]),
-      _U.list([A2($Html.h3,
-              _U.list([]),
-              _U.list([$Html.text("Online players")]))
+      _U.list([$Screens$Utils.moduleTitle("Online players")
               ,racesBlock(_p6.races)
               ,$List.isEmpty(_p7) ? A2($Html.div,
               _U.list([]),
@@ -21478,6 +21480,7 @@ Elm.Screens.Game.SideView.make = function (_elm) {
    $Routes = Elm.Routes.make(_elm),
    $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
    $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21497,15 +21500,13 @@ Elm.Screens.Game.SideView.make = function (_elm) {
            ,{ctor: "_Tuple2",_0: "ESC",_1: "quit race"}]));
    var helpBlock = A2($Html.div,
    _U.list([$Html$Attributes.$class("aside-module module-help")]),
-   _U.list([A2($Html.h3,_U.list([]),_U.list([$Html.text("Help")]))
+   _U.list([$Screens$Utils.moduleTitle("Help")
            ,A2($Html.dl,_U.list([]),helpItems)]));
    var rankingsBlock = function (_p2) {
       var _p3 = _p2;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("aside-module module-rankings")]),
-      _U.list([A2($Html.h3,
-              _U.list([]),
-              _U.list([$Html.text("Best times")]))
+      _U.list([$Screens$Utils.moduleTitle("Best times")
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
               A2($List.map,$Screens$Utils.rankingItem,_p3.meta.rankings))]));
@@ -21529,18 +21530,16 @@ Elm.Screens.Game.SideView.make = function (_elm) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("track-menu")]),
       _U.list([A2($Html.h2,
-              _U.list([]),
-              _U.list([$Html.text(liveTrack.track.name)]))
-              ,A3($Screens$Utils.linkTo,
-              $Routes.Home,
-              _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
-              _U.list([$Html.text("Exit")]))]));
+      _U.list([$Html$Attributes.$class("track-name")]),
+      _U.list([$Html.text(liveTrack.track.name)]))]));
    };
    var view = F3(function (screen,liveTrack,gameState) {
       var blocks = liveTrack.track.draft ? draftBlocks(liveTrack) : A2(liveBlocks,
       screen,
       liveTrack);
-      return A2($List._op["::"],trackNav(liveTrack),blocks);
+      return A2($List._op["::"],
+      $Screens$Sidebar.logo,
+      A2($List._op["::"],trackNav(liveTrack),blocks));
    });
    return _elm.Screens.Game.SideView.values = {_op: _op
                                               ,view: view

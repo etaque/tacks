@@ -77,7 +77,7 @@ liveTrackBlock ({track, meta, players} as lt) =
       [ h3 [ class "name" ] [ linkTo (PlayTrack track.id) [ ] [ text track.name ] ]
       , div  [ class "info"]
           [ rankingsExtract meta.rankings
-          , div [ class "runs-count"] [ text <| toString meta.runsCount ++ " runs" ]
+          , div [ class "rankings-size"] [ text <| toString (List.length meta.rankings) ++ " entries" ]
           , playersList players
           ]
       ]
@@ -93,7 +93,8 @@ playersList players =
 
 playerItem : Player -> Html
 playerItem player =
-  li [ class "player" ] [ playerWithAvatar player ]
+  li [ class "player" ] [ text (playerHandle player) ]
+  -- li [ class "player" ] [ playerWithAvatar player ]
 
 createTrackBlock : Html
 createTrackBlock =

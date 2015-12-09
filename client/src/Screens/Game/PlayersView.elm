@@ -16,7 +16,7 @@ import Screens.Utils exposing (..)
 block : Screen -> Html
 block {races, freePlayers} =
   div [ class "aside-module module-players" ]
-    [ h3 [] [ text "Online players" ]
+    [ moduleTitle "Online players"
     , racesBlock races
     , if (List.isEmpty freePlayers) then div [] [] else freePlayersBlock freePlayers
     ]

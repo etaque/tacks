@@ -109,10 +109,11 @@ object Api extends Controller with Security {
     val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     for {
       tracks <- tracksFu
+      homeLiveTracks = tracks.filterNot(_.track.draft).sortBy(_.meta.rankings.length).reverse
       onlinePlayers <- onlinePlayersFu
     }
     yield Ok(Json.obj(
-      "liveTracks" -> Json.toJson(tracks),
+      "liveTracks" -> Json.toJson(homeLiveTracks),
       "onlinePlayers" -> Json.toJson(onlinePlayers)
     ))
   }

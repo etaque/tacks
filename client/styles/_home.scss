@@ -1,6 +1,7 @@
 @import 'colors';
 @import 'fonts';
 @import 'mixins';
+@import 'theme';
 
 .live-tracks {
   margin-top: 40px;
@@ -28,6 +29,12 @@
 
   .info {
     padding: 10px;
+    font-family: $mono;
+    font-size: 16px;
+
+    .list-rankings {
+      @include players-list;
+    }
   }
 }
 

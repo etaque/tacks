@@ -72,18 +72,37 @@ aside {
   /*   } */
   /* } */
 
-  /* .aside-module { */
+  h2.track-name {
+    margin: 0 10px;
+    padding: 8px 10px 5px 10px;
+    color: $white;
+    font-size: 18px;
+    background-color: $seaBlue;
+    border-bottom: 3px solid $lightSeaBlue;
+    text-align: center;
+  }
 
-  /*   h3 { */
-  /*     color: $smokeWhite; */
-  /*     background-color: $darkRock; */
-  /*     margin: 0 0 5px 0; */
-  /*     padding: 5px; */
-  /*     /\* text-align: center; *\/ */
-  /*     text-transform: uppercase; */
-  /*     font-size: 13px; */
-  /*   } */
+  .aside-module {
+    padding: 10px;
 
-  /* } */
+    h3 {
+      background-color: $darkSeaBlue;
+      margin: 0 0 10px 0;
+      text-transform: lowercase;
+      font-size: 13px;
+
+      span {
+        background-color: $seaBlue;
+        color: $white;
+        padding: 5px 10px;
+        display: inline-block;
+      }
+    }
+
+    ul {
+      padding: 0 5px;
+    }
+
+  }
 
 }

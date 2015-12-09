@@ -6066,9 +6066,9 @@ body > div {
   flex-direction: row; }
 
 main {
-  /* flex: 1; */
-  width: 800px; }
+  /* flex: 1; */ }
   main > .padded {
+    width: 800px;
     padding: 40px;
     opacity: 1;
     transition: opacity 0.1s ease-in-out; }
@@ -6079,21 +6079,9 @@ aside {
   height: 100%;
   display: flex;
   flex-direction: column;
-  padding: 15px;
-  background-color: #237199;
-  /* Fallback Color */
-  background-image: -webkit-gradient(linear, left top, left bottom, from(#215068), to(#237199));
-  /* Saf4+, Chrome */
-  background-image: -webkit-linear-gradient(top, #215068, #237199);
-  /* Chrome 10+, Saf5.1+, iOS 5+ */
-  background-image: -moz-linear-gradient(top, #215068, #237199);
-  /* FF3.6 */
-  background-image: -ms-linear-gradient(top, #215068, #237199);
-  /* IE10 */
-  background-image: -o-linear-gradient(top, #215068, #237199);
-  /* Opera 11.10+ */
-  background-image: linear-gradient(top, #215068, #237199);
-  filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#215068', EndColorStr='#237199'); }
+  overflow-y: auto;
+  background-color: #1d526c;
+  /* @include linear-gradient($darkerSeaBlue, $darkSeaBlue); */ }
   aside .logo a img {
     width: 160px;
     height: auto; }
@@ -6101,7 +6089,7 @@ aside {
     list-style: none;
     margin: 0;
     margin-top: 20px;
-    padding: 0; }
+    padding: 10px; }
     aside .user-menu a {
       display: block;
       color: #99d2ef;
@@ -6194,18 +6182,29 @@ aside {
   /*     float: right; */
   /*     margin-left: 5px; */
   /*   } */
-  /* } */
-  /* .aside-module { */
-  /*   h3 { */
-  /*     color: $smokeWhite; */
-  /*     background-color: $darkRock; */
-  /*     margin: 0 0 5px 0; */
-  /*     padding: 5px; */
-  /*     /\* text-align: center; *\/ */
-  /*     text-transform: uppercase; */
-  /*     font-size: 13px; */
-  /*   } */
   /* } */ }
+  aside h2.track-name {
+    margin: 0 10px;
+    padding: 8px 10px 5px 10px;
+    color: white;
+    font-size: 18px;
+    background-color: #2194ce;
+    border-bottom: 3px solid #30a3de;
+    text-align: center; }
+  aside .aside-module {
+    padding: 10px; }
+    aside .aside-module h3 {
+      background-color: #21729b;
+      margin: 0 0 10px 0;
+      text-transform: lowercase;
+      font-size: 13px; }
+      aside .aside-module h3 span {
+        background-color: #2194ce;
+        color: white;
+        padding: 5px 10px;
+        display: inline-block; }
+    aside .aside-module ul {
+      padding: 0 5px; }
 
 /* $darkSeaBlue: desat-dark($seaBlue); */
 /* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
@@ -6289,10 +6288,10 @@ a {
 
 .btn-primary {
   background-color: #4eb8ee;
-  border-color: #2ba2dd; }
+  border-color: #28a3e1; }
   .btn-primary:hover {
     background-color: #36afec;
-    border-color: #2194ce; }
+    border-color: #1d95d2; }
 
 .btn-warning {
   background-color: #E0A349;
@@ -6315,7 +6314,7 @@ a {
   font-size: 16px;
   /* font-weight: bold; */
   box-shadow: none;
-  color: #237199;
+  color: #21729b;
   /* box-shadow: inset 1px 1px 1px $shadow; */ }
   .form-control:focus {
     outline: 0;
@@ -6385,6 +6384,162 @@ label {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
+/* $darkSeaBlue: desat-dark($seaBlue); */
+/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+h1 {
+  font-family: "Proxima Nova Thin";
+  font-size: 42px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white; }
+
+h2, h3, h4, h5, h6 {
+  font-family: "Museo Slab";
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 15px; }
+
+h2 {
+  font-size: 24px; }
+
+h3 {
+  font-size: 21px; }
+
+a {
+  color: white;
+  transition: all 0.1s ease-in;
+  cursor: pointer; }
+  a:hover {
+    color: #99d2ef;
+    text-decoration: none; }
+  a:active {
+    color: #99d2ef;
+    text-decoration: none; }
+
+.align-center {
+  text-align: center; }
+
+.btn {
+  text-transform: lowercase;
+  background-color: white;
+  border: none;
+  border-bottom: 3px solid #f5f5f5;
+  padding: 7px 12px 5px 12px;
+  transition: all 0.1s ease-in;
+  border-radius: 2px;
+  font-family: "Museo Slab";
+  font-size: 15px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
+
+.btn-xs, .btn-group-xs > .btn {
+  border-bottom-width: 2px;
+  padding: 3px 5px 1px 5px; }
+
+.btn-default {
+  background-color: #f2f2f2;
+  border-color: #e6e6e6;
+  color: #999999; }
+  .btn-default:hover {
+    background-color: #e6e6e6;
+    border-color: #d9d9d9;
+    color: #51585E; }
+
+.btn-primary {
+  background-color: #4eb8ee;
+  border-color: #28a3e1; }
+  .btn-primary:hover {
+    background-color: #36afec;
+    border-color: #1d95d2; }
+
+.btn-warning {
+  background-color: #E0A349;
+  border-color: #9b7741; }
+  .btn-warning:hover {
+    background-color: #dc9833;
+    border-color: #89693a; }
+
+.alert {
+  border-radius: 0;
+  border-width: 3px; }
+
+.alert-danger a {
+  color: #a94442; }
+
+.form-control {
+  border: none;
+  border: 0px solid white;
+  background-color: white;
+  font-size: 16px;
+  /* font-weight: bold; */
+  box-shadow: none;
+  color: #21729b;
+  /* box-shadow: inset 1px 1px 1px $shadow; */ }
+  .form-control:focus {
+    outline: 0;
+    box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.075);
+    border-color: white;
+    background-color: white; }
+
+.form-group.has-error .form-control {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+label {
+  color: white;
+  /* font-family: $thin; */
+  /* text-transform: uppercase; */
+  font-size: 16px; }
+
+.has-error .error-message {
+  margin-top: 0;
+  padding: 6px 12px;
+  background-color: #f2dede;
+  font-size: 14px;
+  color: #a94442;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px; }
+
+.form-actions {
+  margin-top: 30px; }
+
+.uppercase {
+  text-transform: uppercase; }
+
+.player-avatar {
+  display: inline-block; }
+  .player-avatar .avatar {
+    display: inline-block;
+    vertical-align: none;
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+    margin-right: -2px; }
+  .player-avatar .handle {
+    font-weight: bold; }
+
+.form-login .form-group {
+  width: 250px; }
+
 .live-tracks {
   margin-top: 40px; }
 
@@ -6402,7 +6557,28 @@ label {
         background-color: #30a3de;
         color: white; }
   .live-track .info {
-    padding: 10px; }
+    padding: 10px;
+    font-family: "Inconsolata", "mono";
+    font-size: 16px; }
+    .live-track .info .list-rankings {
+      /* padding: 5px; */
+      margin-bottom: 10px;
+      font-size: 16px;
+      font-family: "Inconsolata", "mono"; }
+      .live-track .info .list-rankings li {
+        margin-bottom: 3px; }
+        .live-track .info .list-rankings li .handle {
+          color: white; }
+        .live-track .info .list-rankings li .rank {
+          margin-right: 10px;
+          font-weight: bold; }
+          .live-track .info .list-rankings li .rank:before {
+            content: "#"; }
+        .live-track .info .list-rankings li .handle {
+          font-weight: bold; }
+        .live-track .info .list-rankings li .status {
+          float: right;
+          color: white; }
 
 .form-set-handle {
   margin-top: 20px;
@@ -6431,70 +6607,233 @@ label {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
+/* $darkSeaBlue: desat-dark($seaBlue); */
+/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+h1 {
+  font-family: "Proxima Nova Thin";
+  font-size: 42px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white; }
+
+h2, h3, h4, h5, h6 {
+  font-family: "Museo Slab";
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 15px; }
+
+h2 {
+  font-size: 24px; }
+
+h3 {
+  font-size: 21px; }
+
+a {
+  color: white;
+  transition: all 0.1s ease-in;
+  cursor: pointer; }
+  a:hover {
+    color: #99d2ef;
+    text-decoration: none; }
+  a:active {
+    color: #99d2ef;
+    text-decoration: none; }
+
+.align-center {
+  text-align: center; }
+
+.btn {
+  text-transform: lowercase;
+  background-color: white;
+  border: none;
+  border-bottom: 3px solid #f5f5f5;
+  padding: 7px 12px 5px 12px;
+  transition: all 0.1s ease-in;
+  border-radius: 2px;
+  font-family: "Museo Slab";
+  font-size: 15px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
+
+.btn-xs, .btn-group-xs > .btn {
+  border-bottom-width: 2px;
+  padding: 3px 5px 1px 5px; }
+
+.btn-default {
+  background-color: #f2f2f2;
+  border-color: #e6e6e6;
+  color: #999999; }
+  .btn-default:hover {
+    background-color: #e6e6e6;
+    border-color: #d9d9d9;
+    color: #51585E; }
+
+.btn-primary {
+  background-color: #4eb8ee;
+  border-color: #28a3e1; }
+  .btn-primary:hover {
+    background-color: #36afec;
+    border-color: #1d95d2; }
+
+.btn-warning {
+  background-color: #E0A349;
+  border-color: #9b7741; }
+  .btn-warning:hover {
+    background-color: #dc9833;
+    border-color: #89693a; }
+
+.alert {
+  border-radius: 0;
+  border-width: 3px; }
+
+.alert-danger a {
+  color: #a94442; }
+
+.form-control {
+  border: none;
+  border: 0px solid white;
+  background-color: white;
+  font-size: 16px;
+  /* font-weight: bold; */
+  box-shadow: none;
+  color: #21729b;
+  /* box-shadow: inset 1px 1px 1px $shadow; */ }
+  .form-control:focus {
+    outline: 0;
+    box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.075);
+    border-color: white;
+    background-color: white; }
+
+.form-group.has-error .form-control {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+label {
+  color: white;
+  /* font-family: $thin; */
+  /* text-transform: uppercase; */
+  font-size: 16px; }
+
+.has-error .error-message {
+  margin-top: 0;
+  padding: 6px 12px;
+  background-color: #f2dede;
+  font-size: 14px;
+  color: #a94442;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px; }
+
+.form-actions {
+  margin-top: 30px; }
+
+.uppercase {
+  text-transform: uppercase; }
+
+.player-avatar {
+  display: inline-block; }
+  .player-avatar .avatar {
+    display: inline-block;
+    vertical-align: none;
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+    margin-right: -2px; }
+  .player-avatar .handle {
+    font-weight: bold; }
+
+.form-login .form-group {
+  width: 250px; }
+
 .game {
   background-color: #f2f3c4; }
   .game svg {
     display: block; }
 
-aside {
-  overflow-y: auto; }
-  aside p {
-    font-family: "Proxima Nova Regular";
+aside p {
+  /* font-family: $regular; */
+  /* font-size: 14px; */
+  padding: 10px; }
+
+aside .module-players {
+  flex: 0.5; }
+  aside .module-players h4 {
     font-size: 13px;
-    padding: 10px; }
-  aside .module-players {
-    flex: 0.5; }
-    aside .module-players h4 {
-      font-size: 13px;
-      margin: 0;
-      padding: 5px;
-      color: #737373; }
-    aside .module-players .list-players, aside .module-players .list-tallies {
-      padding: 5px;
-      margin-bottom: 10px;
-      font-size: 14px; }
-      aside .module-players .list-players li, aside .module-players .list-tallies li {
-        margin-bottom: 3px; }
-        aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
-          color: white; }
-        aside .module-players .list-players li .rank, aside .module-players .list-tallies li .rank {
-          margin-right: 10px;
-          font-weight: bold; }
-          aside .module-players .list-players li .rank:before, aside .module-players .list-tallies li .rank:before {
-            content: "#"; }
-        aside .module-players .list-players li .status, aside .module-players .list-tallies li .status {
-          float: right;
-          color: white; }
-  aside .module-rankings {
-    flex: 0.5; }
-    aside .module-rankings .list-rankings {
-      padding: 5px;
-      margin-bottom: 10px;
-      font-size: 14px; }
-      aside .module-rankings .list-rankings li {
-        margin-bottom: 3px; }
-        aside .module-rankings .list-rankings li .handle {
-          color: white; }
-        aside .module-rankings .list-rankings li .rank {
-          margin-right: 10px;
-          font-weight: bold; }
-          aside .module-rankings .list-rankings li .rank:before {
-            content: "#"; }
-        aside .module-rankings .list-rankings li .status {
-          float: right;
-          color: white; }
-  aside .module-help {
-    font-size: 12px; }
-    aside .module-help dl {
-      padding: 5px;
-      color: white; }
-    aside .module-help dt {
-      font-weight: bold;
-      clear: both;
-      float: left;
-      opacity: 0.8; }
-    aside .module-help dd {
-      float: right; }
+    margin: 0;
+    padding: 5px;
+    color: #4aafe2; }
+  aside .module-players .list-players, aside .module-players .list-tallies {
+    /* padding: 5px; */
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-family: "Inconsolata", "mono"; }
+    aside .module-players .list-players li, aside .module-players .list-tallies li {
+      margin-bottom: 3px; }
+      aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
+        color: white; }
+      aside .module-players .list-players li .rank, aside .module-players .list-tallies li .rank {
+        margin-right: 10px;
+        font-weight: bold; }
+        aside .module-players .list-players li .rank:before, aside .module-players .list-tallies li .rank:before {
+          content: "#"; }
+      aside .module-players .list-players li .handle, aside .module-players .list-tallies li .handle {
+        font-weight: bold; }
+      aside .module-players .list-players li .status, aside .module-players .list-tallies li .status {
+        float: right;
+        color: white; }
+
+aside .module-rankings {
+  flex: 0.5; }
+  aside .module-rankings .list-rankings {
+    /* padding: 5px; */
+    margin-bottom: 10px;
+    font-size: 16px;
+    font-family: "Inconsolata", "mono"; }
+    aside .module-rankings .list-rankings li {
+      margin-bottom: 3px; }
+      aside .module-rankings .list-rankings li .handle {
+        color: white; }
+      aside .module-rankings .list-rankings li .rank {
+        margin-right: 10px;
+        font-weight: bold; }
+        aside .module-rankings .list-rankings li .rank:before {
+          content: "#"; }
+      aside .module-rankings .list-rankings li .handle {
+        font-weight: bold; }
+      aside .module-rankings .list-rankings li .status {
+        float: right;
+        color: white; }
+
+aside .module-help {
+  font-size: 12px; }
+  aside .module-help dl {
+    padding: 5px;
+    color: white; }
+  aside .module-help dt {
+    font-weight: bold;
+    clear: both;
+    float: left;
+    opacity: 0.8; }
+  aside .module-help dd {
+    float: right; }
 
 .module-chat {
   position: absolute;
