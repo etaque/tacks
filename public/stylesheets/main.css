@@ -6080,11 +6080,12 @@ aside {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background-color: #1d526c;
-  /* @include linear-gradient($darkerSeaBlue, $darkSeaBlue); */ }
-  aside .logo a img {
-    width: 160px;
-    height: auto; }
+  background-color: #1d526c; }
+  aside .logo {
+    text-align: center; }
+    aside .logo a img {
+      width: 160px;
+      height: auto; }
   aside .user-menu {
     list-style: none;
     margin: 0;
@@ -6102,8 +6103,6 @@ aside {
       padding: 5px 10px; }
       aside .user-menu a:hover {
         color: white; }
-      aside .user-menu a:before {
-        /* content: "# "; */ }
 
 /* $darkSeaBlue: desat-dark($seaBlue); */
 /* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
@@ -6127,46 +6126,6 @@ aside {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
-/* nav { */
-/*   padding-top: 15px; */
-/*   padding-bottom: 15px; */
-/*   background-color: $seaBlue; */
-/*   /\* @include linear-gradient($seaBlue, $lightSeaBlue); *\/ */
-/*   border: none; */
-/*   .logo { */
-/*     display: inline-block; */
-/*   } */
-/*   .player-menu { */
-/*     float: right; */
-/*     list-style: none; */
-/*     font-family: $navFont; */
-/*     font-size: 16px; */
-/*     margin: 0; */
-/*     margin-top: 10px; */
-/*     padding: 0; */
-/*     li { */
-/*       float: left; */
-/*       $navColor: $darkerSeaBlue; */
-/*       $navHoverColor: $blackSeaBlue; */
-/*       a { */
-/*         display: block; */
-/*         /\* padding: 0 15px; *\/ */
-/*         line-height: 25px; */
-/*         text-transform: lowercase; */
-/*         color: $navColor; */
-/*         border-top: 2px solid transparent; */
-/*         border-bottom: 2px solid $navColor; */
-/*         &:hover { */
-/*           border-bottom-color: $navHoverColor; */
-/*           color: $navHoverColor; */
-/*         } */
-/*       } */
-/*     } */
-/*     li + li { */
-/*       margin-left: 30px; */
-/*     } */
-/*   } */
-/* } */
 aside {
   /* background-color: $mediumGray; */
   /* color: $darkRock; */
@@ -6185,24 +6144,24 @@ aside {
   /* } */ }
   aside h2.track-name {
     margin: 0 10px;
-    padding: 8px 10px 5px 10px;
-    color: white;
+    padding: 8px;
+    color: #1d526c;
     font-size: 18px;
-    background-color: #2194ce;
-    border-bottom: 3px solid #30a3de;
-    text-align: center; }
+    background-color: #99d2ef; }
   aside .aside-module {
     padding: 10px; }
-    aside .aside-module h3 {
+    aside .aside-module .module-title {
       background-color: #21729b;
       margin: 0 0 10px 0;
-      text-transform: lowercase;
-      font-size: 13px; }
-      aside .aside-module h3 span {
-        background-color: #2194ce;
+      padding: 0; }
+      aside .aside-module .module-title h3 {
+        font-family: "Proxima Nova Regular";
         color: white;
         padding: 5px 10px;
-        display: inline-block; }
+        margin: 0;
+        display: inline-block;
+        text-transform: lowercase;
+        font-size: 13px; }
     aside .aside-module ul {
       padding: 0 5px; }
 
@@ -6769,8 +6728,6 @@ label {
     display: block; }
 
 aside p {
-  /* font-family: $regular; */
-  /* font-size: 14px; */
   padding: 10px; }
 
 aside .module-players {

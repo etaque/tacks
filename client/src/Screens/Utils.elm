@@ -124,7 +124,7 @@ rankingItem ranking =
 
 moduleTitle : String -> Html
 moduleTitle title =
-  h3 [ ] [ span [ ] [ text title ] ]
+  div [ class "module-title" ] [ h3 [ ] [ text title ] ]
 
 -- Misc
 

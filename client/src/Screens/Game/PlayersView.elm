@@ -38,7 +38,7 @@ raceItem {startTime, tallies} =
       |> format "%H:%M"
   in
     div [ class "race" ]
-      [ h4 [ ] [ text ("race started at " ++ formatted) ]
+      [ h4 [ ] [ text ("on race started at " ++ formatted) ]
       , ul [ class "list-unstyled list-tallies" ] (List.indexedMap tallyItem tallies)
       ]
 
@@ -58,14 +58,15 @@ tallyItem i {player, gates, finished} =
     li [ class "player" ]
       [ span [ class "rank" ] [ text rank ]
       , span [ class "status" ] [ text status ]
-      , playerWithAvatar player
+      , span [ class "handle" ] [ text (playerHandle player) ]
+      -- , playerWithAvatar player
       ]
 
 
 freePlayersBlock : List Player -> Html
 freePlayersBlock players =
   div [ class "free-players" ]
-    [ h4 [] [ text "free players"]
+    [ h4 [] [ text "not racing"]
     , ul [ class "list-unstyled list-players" ] (List.map freePlayerItem players)
     ]
 

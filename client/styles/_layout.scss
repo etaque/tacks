@@ -55,9 +55,10 @@ aside {
   flex-direction: column;
   overflow-y: auto;
   background-color: $darkerSeaBlue;
-  /* @include linear-gradient($darkerSeaBlue, $darkSeaBlue); */
 
   .logo {
+    text-align: center;
+
     a {
       img {
         width: 160px;
@@ -88,10 +89,6 @@ aside {
 
       &:hover {
         color: $white;
-      }
-
-      &:before {
-        /* content: "# "; */
       }
     }
   }

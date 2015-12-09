@@ -18645,9 +18645,9 @@ Elm.Screens.Utils.make = function (_elm) {
       A2($Basics._op["++"],sSeconds,sMillis)));
    });
    var moduleTitle = function (title) {
-      return A2($Html.h3,
-      _U.list([]),
-      _U.list([A2($Html.span,
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("module-title")]),
+      _U.list([A2($Html.h3,
       _U.list([]),
       _U.list([$Html.text(title)]))]));
    };
@@ -21386,7 +21386,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
       _U.list([$Html$Attributes.$class("free-players")]),
       _U.list([A2($Html.h4,
               _U.list([]),
-              _U.list([$Html.text("free players")]))
+              _U.list([$Html.text("not racing")]))
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled list-players")]),
               A2($List.map,freePlayerItem,players))]));
@@ -21411,7 +21411,9 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
               ,A2($Html.span,
               _U.list([$Html$Attributes.$class("status")]),
               _U.list([$Html.text(status)]))
-              ,$Screens$Utils.playerWithAvatar(_p1.player)]));
+              ,A2($Html.span,
+              _U.list([$Html$Attributes.$class("handle")]),
+              _U.list([$Html.text($Screens$Utils.playerHandle(_p1.player))]))]));
    });
    var raceItem = function (_p3) {
       var _p4 = _p3;
@@ -21423,7 +21425,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
       _U.list([A2($Html.h4,
               _U.list([]),
               _U.list([$Html.text(A2($Basics._op["++"],
-              "race started at ",
+              "on race started at ",
               formatted))]))
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled list-tallies")]),

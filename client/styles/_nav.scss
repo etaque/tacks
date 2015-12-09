@@ -3,55 +3,6 @@
 @import 'mixins';
 @import 'fonts';
 
-/* nav { */
-/*   padding-top: 15px; */
-/*   padding-bottom: 15px; */
-
-/*   background-color: $seaBlue; */
-/*   /\* @include linear-gradient($seaBlue, $lightSeaBlue); *\/ */
-/*   border: none; */
-
-/*   .logo { */
-/*     display: inline-block; */
-/*   } */
-
-/*   .player-menu { */
-/*     float: right; */
-/*     list-style: none; */
-/*     font-family: $navFont; */
-/*     font-size: 16px; */
-/*     margin: 0; */
-/*     margin-top: 10px; */
-/*     padding: 0; */
-
-/*     li { */
-/*       float: left; */
-
-/*       $navColor: $darkerSeaBlue; */
-/*       $navHoverColor: $blackSeaBlue; */
-
-/*       a { */
-/*         display: block; */
-/*         /\* padding: 0 15px; *\/ */
-/*         line-height: 25px; */
-/*         text-transform: lowercase; */
-/*         color: $navColor; */
-/*         border-top: 2px solid transparent; */
-/*         border-bottom: 2px solid $navColor; */
-
-/*         &:hover { */
-/*           border-bottom-color: $navHoverColor; */
-/*           color: $navHoverColor; */
-/*         } */
-/*       } */
-/*     } */
-
-/*     li + li { */
-/*       margin-left: 30px; */
-/*     } */
-/*   } */
-/* } */
-
 aside {
   /* background-color: $mediumGray; */
   /* color: $darkRock; */
@@ -74,28 +25,28 @@ aside {
 
   h2.track-name {
     margin: 0 10px;
-    padding: 8px 10px 5px 10px;
-    color: $white;
+    padding: 8px;
+    color: $darkerSeaBlue;
     font-size: 18px;
-    background-color: $seaBlue;
-    border-bottom: 3px solid $lightSeaBlue;
-    text-align: center;
+    background-color: $whiteSeaBlue;
   }
 
   .aside-module {
     padding: 10px;
 
-    h3 {
+    .module-title {
       background-color: $darkSeaBlue;
       margin: 0 0 10px 0;
-      text-transform: lowercase;
-      font-size: 13px;
+      padding: 0;
 
-      span {
-        background-color: $seaBlue;
+      h3 {
+        font-family: $regular;
         color: $white;
         padding: 5px 10px;
+        margin: 0;
         display: inline-block;
+        text-transform: lowercase;
+        font-size: 13px;
       }
     }
 
