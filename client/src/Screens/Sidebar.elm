@@ -13,39 +13,35 @@ import Routes exposing (..)
 
 view : Context -> List Html
 view {player} =
-  [ logo
-  , mainMenu player
-  ]
+  logo :: if player.guest then guestContent else (userContent player)
 
 
 logo : Html
 logo =
   div [ class "logo" ]
-    [ linkTo Home [ ]
-      [ img [ src "/assets/images/logo-header-2@2x.png" ] [] ]
+  [ linkTo Home [ ]
+    [ img [ src "/assets/images/logo-header-2@2x.png" ] [] ]
+  ]
+
+guestContent : List Html
+guestContent =
+  [ ul [ class "user-menu" ]
+    [ li [] [ linkTo Home [ ] [ text "Home" ] ]
+    , li [] [ linkTo Login [ ] [ text "Login" ] ]
+    , li [] [ linkTo Register [ ] [ text "Register"] ]
     ]
+  ]
 
 
-mainMenu : Player -> Html
-mainMenu player =
+userContent : Player -> List Html
+userContent player =
   let
-    playerItems = if player.guest then guestItems else userItems player
-    allItems =
-      [ li [ ] [ linkTo Home [ ] [ text "Home" ] ]
-      ] ++ playerItems
+    draftsLink = li [ ] [ linkTo ListDrafts [ ] [ text "Drafts" ] ]
   in
-    ul [ class "user-menu" ] allItems
-
-
-guestItems : List Html
-guestItems =
-  [ li [] [ linkTo Login [ ] [ text "Login" ] ]
-  , li [] [ linkTo Register [ ] [ text "Register"] ]
-  ]
-
-
-userItems : Player -> List Html
-userItems player =
-  [ li [] [ a [ onClick appActionsAddress Logout ] [ text "Logout"] ]
-  ]
-
+    [ p [ ] [ text <| "logged in as " ++ (playerHandle player) ]
+    , ul [ class "user-menu" ] <|
+        li [] [ linkTo Home [ ] [ text "Home" ] ]
+        :: (if isAdmin player then [ draftsLink ] else [ ])
+    , div [ class "logout" ]
+      [ a [ onClick appActionsAddress Logout, class "logout" ] [ text "Logout" ] ]
+    ]

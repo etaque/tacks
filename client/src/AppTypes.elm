@@ -12,6 +12,7 @@ import Screens.ShowTrack.Types as ShowTrack
 import Screens.EditTrack.Types as EditTrack
 import Screens.ShowProfile.Types as ShowProfile
 import Screens.Game.Types as Game
+import Screens.ListDrafts.Types as ListDrafts
 
 import Routes
 
@@ -68,6 +69,7 @@ type ScreenAction
   | EditTrackAction EditTrack.Action
   | ShowProfileAction ShowProfile.Action
   | GameAction Game.Action
+  | ListDraftsAction ListDrafts.Action
 
 
 
@@ -94,6 +96,7 @@ type alias Screens =
   , editTrack : EditTrack.Screen
   , showProfile : ShowProfile.Screen
   , game : Game.Screen
+  , listDrafts: ListDrafts.Screen
   }
 
 
@@ -114,5 +117,6 @@ initialAppState { path, dims, player } =
     , editTrack = EditTrack.initial dims
     , showProfile = ShowProfile.initial player
     , game = Game.initial
+    , listDrafts = ListDrafts.initial
     }
   }

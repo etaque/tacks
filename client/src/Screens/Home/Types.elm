@@ -20,7 +20,5 @@ type Action
   | SetHandle String
   | SubmitHandle
   | SubmitHandleResult (FormResult Player)
-  | CreateTrack
-  | CreateTrackResult (FormResult Track)
   | NoOp
 

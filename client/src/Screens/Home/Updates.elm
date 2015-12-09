@@ -51,16 +51,6 @@ update action screen =
       in
         screen &: effect
 
-    CreateTrack ->
-      screen &! (Task.map CreateTrackResult ServerApi.createTrack)
-
-    CreateTrackResult result ->
-      case result of
-        Ok track ->
-          screen &: (Utils.redirect (Routes.EditTrack track.id) |> Utils.always NoOp)
-        Err formErrors -> -- TODO
-          screen &: none
-
     NoOp ->
       screen &: none
 

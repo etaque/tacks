@@ -67,7 +67,6 @@ liveTracks : Player -> LiveStatus -> Html
 liveTracks player {liveTracks} =
   div [ class "live-tracks" ]
     [ div [ class "row" ] (List.map liveTrackBlock liveTracks)
-    , if isAdmin player then createTrackBlock else div [] []
     ]
 
 liveTrackBlock : LiveTrack -> Html
@@ -96,11 +95,4 @@ playerItem player =
   li [ class "player" ] [ text (playerHandle player) ]
   -- li [ class "player" ] [ playerWithAvatar player ]
 
-createTrackBlock : Html
-createTrackBlock =
-  p [ class "" ]
-    [ a [ onClick addr CreateTrack
-        , class "btn btn-default" ]
-      [ text "Create track" ]
-    ]
 

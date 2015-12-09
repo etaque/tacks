@@ -106,14 +106,17 @@ object Api extends Controller with Security {
 
   def liveStatus = PlayerAction.async() { implicit request =>
     val tracksFu = (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]]
+    val draftsFu = TrackDAO.listByCreatorId(request.player.id).map(_.filter(_.draft))
     val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     for {
       tracks <- tracksFu
       homeLiveTracks = tracks.filterNot(_.track.draft).sortBy(_.meta.rankings.length).reverse
+      drafts <- draftsFu
       onlinePlayers <- onlinePlayersFu
     }
     yield Ok(Json.obj(
       "liveTracks" -> Json.toJson(homeLiveTracks),
+      "drafts" -> Json.toJson(drafts),
       "onlinePlayers" -> Json.toJson(onlinePlayers)
     ))
   }
@@ -134,11 +137,19 @@ object Api extends Controller with Security {
     }
   }
 
+  def drafts = PlayerAction.async() { implicit request =>
+    TrackDAO.listByCreatorId(request.player.id).map { tracks =>
+      Ok(Json.toJson(tracks.filter(_.draft)))
+    }
+  }
+
   def createDraftTrack() = PlayerAction.async(parse.json) { implicit request =>
     if (request.player.isAdmin) {
+      val id = BSONObjectID.generate
+      val name = (request.body \ "name").asOpt[String].getOrElse(id.stringify)
       val track = Track(
-        _id = BSONObjectID.generate,
-        name = "New track",
+        _id = id,
+        name = name,
         draft = true,
         creatorId = request.player.id,
         course = Course.spawn

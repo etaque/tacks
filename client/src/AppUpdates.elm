@@ -16,6 +16,7 @@ import Screens.ShowTrack.Updates as ShowTrack
 import Screens.EditTrack.Updates as EditTrack
 import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
+import Screens.ListDrafts.Updates as ListDrafts
 
 import ServerApi
 import Routes exposing (..)
@@ -106,6 +107,8 @@ mountRoute ({ctx} as appState) route =
     PlayTrack id ->
       applyGame (Game.mount id) appState
 
+    ListDrafts ->
+      applyListDrafts ListDrafts.mount appState
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
 updateScreen screenAction ({screens, ctx} as appState) =
@@ -131,6 +134,9 @@ updateScreen screenAction ({screens, ctx} as appState) =
 
     GameAction a ->
       applyGame (Game.update ctx.player a screens.game) appState
+
+    ListDraftsAction a ->
+      applyListDrafts (ListDrafts.update a screens.listDrafts) appState
 
 
 updateScreenDims : (Int, Int) -> AppState -> AppState
@@ -158,6 +164,7 @@ applyShowProfile = applyScreen (\s screens -> { screens | showProfile = s }) Sho
 applyShowTrack = applyScreen (\s screens -> { screens | showTrack = s }) ShowTrackAction
 applyEditTrack = applyScreen (\s screens -> { screens | editTrack = s }) EditTrackAction
 applyGame = applyScreen (\s screens -> { screens | game = s }) GameAction
+applyListDrafts = applyScreen (\s screens -> { screens | listDrafts = s }) ListDraftsAction
 
 applyScreen : (screen -> Screens -> Screens) -> (a -> ScreenAction) -> (screen, Effects a) -> AppState -> (AppState, Effects AppAction)
 applyScreen screensUpdater toScreenAction (screen, effect) appState =

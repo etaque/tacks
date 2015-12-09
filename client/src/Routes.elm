@@ -9,6 +9,7 @@ type Route
   | Register
   | ShowProfile
   | ShowTrack String
+  | ListDrafts
   | EditTrack String
   | PlayTrack String
 
@@ -19,6 +20,7 @@ routeParsers =
   , static Login "/login"
   , static Register "/register"
   , static ShowProfile "/me"
+  , static ListDrafts "/drafts"
   , dyn1 ShowTrack "/track/" string ""
   , dyn1 EditTrack "/edit/" string ""
   , dyn1 PlayTrack "/play/" string ""
@@ -32,6 +34,7 @@ toPath route =
     Login -> "/login"
     Register -> "/register"
     ShowProfile -> "/me"
+    ListDrafts -> "/drafts"
     ShowTrack id -> "/track/" ++ id
     EditTrack id -> "/edit/" ++ id
     PlayTrack id -> "/play/" ++ id

@@ -12,6 +12,7 @@ GET         /api/track/:id                                     controllers.Api.t
 GET         /api/liveTrack/:id                                 controllers.Api.liveTrack(id: String)
 POST        /api/setHandle                                     controllers.Api.setHandle
 POST        /api/track                                         controllers.Api.createDraftTrack()
+GET         /api/drafts                                        controllers.Api.drafts()
 POST        /api/track/:id                                     controllers.Api.updateTrack(id: String)
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)

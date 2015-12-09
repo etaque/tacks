@@ -6086,23 +6086,6 @@ aside {
     aside .logo a img {
       width: 160px;
       height: auto; }
-  aside .user-menu {
-    list-style: none;
-    margin: 0;
-    margin-top: 20px;
-    padding: 10px; }
-    aside .user-menu a {
-      display: block;
-      color: #99d2ef;
-      text-transform: uppercase;
-      font-family: "Proxima Nova Thin";
-      font-size: 16px;
-      letter-spacing: 1px;
-      line-height: 24px;
-      font-weight: bold;
-      padding: 5px 10px; }
-      aside .user-menu a:hover {
-        color: white; }
 
 /* $darkSeaBlue: desat-dark($seaBlue); */
 /* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
@@ -6142,6 +6125,26 @@ aside {
   /*     margin-left: 5px; */
   /*   } */
   /* } */ }
+  aside .user-menu {
+    list-style: none;
+    margin: 0;
+    margin-top: 20px;
+    padding: 10px; }
+  aside .logout {
+    padding: 10px; }
+  aside .user-menu a, aside .logout a {
+    display: block;
+    color: #99d2ef;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Thin";
+    font-size: 16px;
+    letter-spacing: 1px;
+    line-height: 24px;
+    font-weight: bold;
+    padding: 5px 10px; }
+    aside .user-menu a:hover, aside .logout a:hover {
+      color: white;
+      background-color: #21729b; }
   aside h2.track-name {
     margin: 0 10px;
     padding: 8px;
