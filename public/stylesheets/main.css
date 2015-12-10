@@ -6109,64 +6109,62 @@ aside {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
-aside {
-  /* background-color: $mediumGray; */
-  /* color: $darkRock; */
-  /* border-right: 2px solid $smokeWhite; */
-  /* .track-menu { */
-  /*   margin-bottom: 20px; */
-  /*   h2 { */
-  /*     color: $darkerRock; */
-  /*     margin: 0; */
-  /*     float: left; */
-  /*   } */
-  /*   .btn { */
-  /*     float: right; */
-  /*     margin-left: 5px; */
-  /*   } */
-  /* } */ }
-  aside .user-menu {
-    list-style: none;
-    margin: 0;
-    margin-top: 20px;
-    padding: 10px; }
-  aside .logout {
-    padding: 10px; }
-  aside .user-menu a, aside .logout a {
-    display: block;
-    color: #99d2ef;
-    text-transform: uppercase;
-    font-family: "Proxima Nova Thin";
-    font-size: 16px;
-    letter-spacing: 1px;
-    line-height: 24px;
-    font-weight: bold;
-    padding: 5px 10px; }
-    aside .user-menu a:hover, aside .logout a:hover {
+aside .user-info {
+  margin: 5px 15px;
+  padding: 10px;
+  font-size: 14px; }
+
+aside .user-menu {
+  list-style: none;
+  padding: 0;
+  padding-top: 10px;
+  margin: 0 15px 5px 15px;
+  border-top: 2px solid #2194ce; }
+
+aside .logout {
+  border-top: 2px solid #2194ce;
+  margin: 0 15px 5px 15px;
+  padding-top: 10px; }
+
+aside .user-menu a, aside .logout a {
+  display: block;
+  color: #99d2ef;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-family: "Museo Slab";
+  font-size: 16px;
+  letter-spacing: 1px;
+  line-height: 24px;
+  font-weight: normal;
+  padding: 5px 10px;
+  margin-bottom: 5px; }
+  aside .user-menu a:hover, aside .logout a:hover {
+    color: white;
+    background-color: #2194ce; }
+
+aside h2.track-name {
+  margin: 0 10px;
+  padding: 8px;
+  color: #1d526c;
+  font-size: 18px;
+  background-color: #99d2ef; }
+
+aside .aside-module {
+  padding: 10px; }
+  aside .aside-module .module-title {
+    background-color: #21729b;
+    margin: 0 0 10px 0;
+    padding: 0; }
+    aside .aside-module .module-title h3 {
+      font-family: "Proxima Nova Regular";
       color: white;
-      background-color: #21729b; }
-  aside h2.track-name {
-    margin: 0 10px;
-    padding: 8px;
-    color: #1d526c;
-    font-size: 18px;
-    background-color: #99d2ef; }
-  aside .aside-module {
-    padding: 10px; }
-    aside .aside-module .module-title {
-      background-color: #21729b;
-      margin: 0 0 10px 0;
-      padding: 0; }
-      aside .aside-module .module-title h3 {
-        font-family: "Proxima Nova Regular";
-        color: white;
-        padding: 5px 10px;
-        margin: 0;
-        display: inline-block;
-        text-transform: lowercase;
-        font-size: 13px; }
-    aside .aside-module ul {
-      padding: 0 5px; }
+      padding: 5px 10px;
+      margin: 0;
+      display: inline-block;
+      text-transform: lowercase;
+      font-size: 13px; }
+  aside .aside-module ul {
+    padding: 0 5px; }
 
 /* $darkSeaBlue: desat-dark($seaBlue); */
 /* $darkerSeaBlue: darken($darkSeaBlue, 20%); */

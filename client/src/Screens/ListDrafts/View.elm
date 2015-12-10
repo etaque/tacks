@@ -30,6 +30,7 @@ draftItem : Track -> Html
 draftItem draft =
   li [ ] [ linkTo (EditTrack draft.id) [ class "" ] [ text draft.name ] ]
 
+
 createTrackForm : Screen -> Html
 createTrackForm {name} =
   div [ class "form-new-draft" ]

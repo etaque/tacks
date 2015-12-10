@@ -18959,12 +18959,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
       $Routes.ListDrafts,
       _U.list([]),
       _U.list([$Html.text("Drafts")]))]));
-      return _U.list([A2($Html.p,
-                     _U.list([]),
-                     _U.list([$Html.text(A2($Basics._op["++"],
-                     "logged in as ",
-                     $Screens$Utils.playerHandle(player)))]))
-                     ,A2($Html.ul,
+      return _U.list([A2($Html.ul,
                      _U.list([$Html$Attributes.$class("user-menu")]),
                      A2($List._op["::"],
                      A2($Html.li,
@@ -18978,9 +18973,8 @@ Elm.Screens.Sidebar.make = function (_elm) {
                      _U.list([$Html$Attributes.$class("logout")]),
                      _U.list([A2($Html.a,
                      _U.list([A2($Html$Events.onClick,
-                             $AppTypes.appActionsAddress,
-                             $AppTypes.Logout)
-                             ,$Html$Attributes.$class("logout")]),
+                     $AppTypes.appActionsAddress,
+                     $AppTypes.Logout)]),
                      _U.list([$Html.text("Logout")]))]))]);
    };
    var guestContent = _U.list([A2($Html.ul,
@@ -19014,8 +19008,15 @@ Elm.Screens.Sidebar.make = function (_elm) {
    var view = function (_p0) {
       var _p1 = _p0;
       var _p2 = _p1.player;
-      return A2($List._op["::"],
-      logo,
+      return A2($Basics._op["++"],
+      _U.list([logo
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("user-info")]),
+              _U.list([$Html.text("Hello, ")
+                      ,A2($Html.strong,
+                      _U.list([]),
+                      _U.list([$Html.text($Screens$Utils.playerHandle(_p2))]))
+                      ,$Html.text(".")]))]),
       _p2.guest ? guestContent : userContent(_p2));
    };
    return _elm.Screens.Sidebar.values = {_op: _op
