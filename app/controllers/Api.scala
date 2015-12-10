@@ -192,6 +192,18 @@ object Api extends Controller with Security {
     }
   }
 
+  def deleteDraft(id: String) = PlayerAction.async(parse.json) { implicit request =>
+    TrackDAO.findById(id).flatMap { track =>
+      if (track.creatorId == request.player.id) {
+        TrackDAO.remove(id).map { _ =>
+          Ok(Json.obj())
+        }
+      } else {
+        Future.successful(BadRequest)
+      }
+    }
+  }
+
   def setHandle = PlayerAction(parse.json) { implicit request =>
     (request.body \ "handle").asOpt[String] match {
       case Some(handle) => Ok(playerFormat.writes(Guest(request.player.id, Some(handle)))).addingToSession("playerHandle" -> handle)

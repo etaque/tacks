@@ -12682,6 +12682,12 @@ Elm.Screens.ListDrafts.Types.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
+   var DeleteDraftResult = function (a) {
+      return {ctor: "DeleteDraftResult",_0: a};
+   };
+   var DeleteDraft = function (a) {
+      return {ctor: "DeleteDraft",_0: a};
+   };
    var CreateDraftResult = function (a) {
       return {ctor: "CreateDraftResult",_0: a};
    };
@@ -12703,6 +12709,8 @@ Elm.Screens.ListDrafts.Types.make = function (_elm) {
                                                  ,SetDraftName: SetDraftName
                                                  ,CreateDraft: CreateDraft
                                                  ,CreateDraftResult: CreateDraftResult
+                                                 ,DeleteDraft: DeleteDraft
+                                                 ,DeleteDraftResult: DeleteDraftResult
                                                  ,NoOp: NoOp};
 };
 Elm.Routes = Elm.Routes || {};
@@ -13665,6 +13673,21 @@ Elm.ServerApi.make = function (_elm) {
       $Http.defaultSettings,
       A2(jsonRequest,url,jsonBody))));
    });
+   var getJson = F2(function (decoder,path) {
+      return A2($Task.map,
+      $Result.formatError(function (_p6) {
+         return {ctor: "_Tuple0"};
+      }),
+      $Task.toResult(A2($Http.get,decoder,path)));
+   });
+   var deleteDraft = function (id) {
+      return A3(postJson,
+      $Json$Decode.succeed(id),
+      A2($Basics._op["++"],
+      "/api/track/",
+      A2($Basics._op["++"],id,"/delete")),
+      $Json$Encode.$null);
+   };
    var saveTrack = F3(function (id,name,course) {
       var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
                                               ,_0: "course"
@@ -13714,13 +13737,6 @@ Elm.ServerApi.make = function (_elm) {
                                    ,_0: "handle"
                                    ,_1: $Json$Encode.string(handle)}])));
    };
-   var getJson = F2(function (decoder,path) {
-      return A2($Task.map,
-      $Result.formatError(function (_p6) {
-         return {ctor: "_Tuple0"};
-      }),
-      $Task.toResult(A2($Http.get,decoder,path)));
-   });
    var getDrafts = A2(getJson,
    $Json$Decode.list($Decoders.trackDecoder),
    "/api/drafts");
@@ -13748,13 +13764,14 @@ Elm.ServerApi.make = function (_elm) {
                                   ,getTrack: getTrack
                                   ,getLiveTrack: getLiveTrack
                                   ,getDrafts: getDrafts
-                                  ,getJson: getJson
                                   ,postHandle: postHandle
                                   ,postRegister: postRegister
                                   ,postLogin: postLogin
                                   ,postLogout: postLogout
                                   ,createTrack: createTrack
                                   ,saveTrack: saveTrack
+                                  ,deleteDraft: deleteDraft
+                                  ,getJson: getJson
                                   ,postJson: postJson
                                   ,jsonRequest: jsonRequest
                                   ,handleResult: handleResult
@@ -16038,6 +16055,11 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
+   var deleteDraft = function (id) {
+      return A2($Task.map,
+      $Screens$ListDrafts$Types.DeleteDraftResult,
+      $ServerApi.deleteDraft(id));
+   };
    var loadDrafts = A2($Task.map,
    $Screens$ListDrafts$Types.DraftsResult,
    $ServerApi.getDrafts);
@@ -16070,6 +16092,22 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
+         case "DeleteDraft": return A2($AppTypes._op["&!"],
+           screen,
+           deleteDraft(_p0._0));
+         case "DeleteDraftResult": var _p3 = _p0._0;
+           if (_p3.ctor === "Ok") {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(screen,
+                 {drafts: A2($List.filter,
+                 function (t) {
+                    return !_U.eq(t.id,_p3._0);
+                 },
+                 screen.drafts)}),
+                 $Effects.none);
+              } else {
+                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+              }
          default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
    var mount = A2($AppTypes._op["&!"],
@@ -16080,7 +16118,8 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
                                                    ,addr: addr
                                                    ,mount: mount
                                                    ,update: update
-                                                   ,loadDrafts: loadDrafts};
+                                                   ,loadDrafts: loadDrafts
+                                                   ,deleteDraft: deleteDraft};
 };
 Elm.AppUpdates = Elm.AppUpdates || {};
 Elm.AppUpdates.make = function (_elm) {
@@ -22503,9 +22542,16 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
       return A2($Html.li,
       _U.list([]),
       _U.list([A3($Screens$Utils.linkTo,
-      $Routes.EditTrack(draft.id),
-      _U.list([$Html$Attributes.$class("")]),
-      _U.list([$Html.text(draft.name)]))]));
+              $Routes.EditTrack(draft.id),
+              _U.list([$Html$Attributes.$class("")]),
+              _U.list([$Html.text(draft.name)]))
+              ,$Html.text(" ")
+              ,A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-danger btn-xs")
+                      ,A2($Html$Events.onClick,
+                      $Screens$ListDrafts$Updates.addr,
+                      $Screens$ListDrafts$Types.DeleteDraft(draft.id))]),
+              _U.list([$Html.text("Delete")]))]));
    };
    var view = F2(function (ctx,_p2) {
       var _p3 = _p2;

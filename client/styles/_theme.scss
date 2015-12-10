@@ -49,9 +49,8 @@ a {
 
 .btn {
   text-transform: lowercase;
-  background-color: white;
   border: none;
-  border-bottom: 3px solid #f5f5f5;
+  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all .1s ease-in;
   border-radius: 2px;
@@ -98,6 +97,11 @@ a {
     background-color: darken($orange, 5%);
     border-color: darken(desat-dark($orange), 5%);
   }
+}
+
+.btn-danger {
+  background-color: $red;
+  border-color: desat-dark($red);
 }
 
 .alert {

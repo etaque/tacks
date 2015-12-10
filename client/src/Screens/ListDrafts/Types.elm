@@ -19,5 +19,7 @@ type Action
   | SetDraftName String
   | CreateDraft
   | CreateDraftResult (FormResult Track)
+  | DeleteDraft String
+  | DeleteDraftResult (FormResult String)
   | NoOp
 

@@ -28,7 +28,11 @@ view ctx ({drafts} as screen) =
 
 draftItem : Track -> Html
 draftItem draft =
-  li [ ] [ linkTo (EditTrack draft.id) [ class "" ] [ text draft.name ] ]
+  li [ ]
+  [ linkTo (EditTrack draft.id) [ class "" ] [ text draft.name ]
+  , text " "
+  , button [ class "btn btn-danger btn-xs", onClick addr (DeleteDraft draft.id) ] [ text "Delete" ]
+  ]
 
 
 createTrackForm : Screen -> Html

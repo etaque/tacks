@@ -46,6 +46,15 @@ update action screen =
         Err formErrors -> -- TODO
           screen &: none
 
+    DeleteDraft id ->
+      screen &! (deleteDraft id)
+
+    DeleteDraftResult result ->
+      case result of
+        Ok id ->
+          { screen | drafts = List.filter (\t -> t.id /= id) screen.drafts } &: none
+        Err _ ->
+          screen &: none
 
     NoOp ->
       screen &: none
@@ -54,3 +63,8 @@ loadDrafts : Task Never Action
 loadDrafts =
   ServerApi.getDrafts
     |> Task.map DraftsResult
+
+deleteDraft : String -> Task Never Action
+deleteDraft id =
+  ServerApi.deleteDraft id
+    |> Task.map DeleteDraftResult

@@ -38,12 +38,6 @@ getDrafts : GetJsonTask (List Track)
 getDrafts =
   getJson (Json.list trackDecoder) "/api/drafts"
 
-getJson : Json.Decoder a -> String -> GetJsonTask a
-getJson decoder path =
-  Http.get decoder path
-    |> Task.toResult
-    |> Task.map (Result.formatError (\_ -> ()))
-
 -- POST
 
 postHandle : String -> Task Never (FormResult Player)
@@ -92,8 +86,18 @@ saveTrack id name course =
   in
     postJson trackDecoder ("/api/track/" ++ id) body
 
+deleteDraft : String -> Task Never (FormResult String)
+deleteDraft id =
+  postJson (Json.succeed id) ("/api/track/" ++ id ++ "/delete") JsEncode.null
 
 -- Tooling
+
+getJson : Json.Decoder a -> String -> GetJsonTask a
+getJson decoder path =
+  Http.get decoder path
+    |> Task.toResult
+    |> Task.map (Result.formatError (\_ -> ()))
+
 
 postJson : Json.Decoder a -> String -> JsEncode.Value -> Task Never (FormResult a)
 postJson decoder url jsonBody =

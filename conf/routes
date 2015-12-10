@@ -14,6 +14,7 @@ POST        /api/setHandle                                     controllers.Api.s
 POST        /api/track                                         controllers.Api.createDraftTrack()
 GET         /api/drafts                                        controllers.Api.drafts()
 POST        /api/track/:id                                     controllers.Api.updateTrack(id: String)
+POST        /api/track/:id/delete                              controllers.Api.deleteDraft(id: String)
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)
 GET         /ws/notifications                                  controllers.WebSockets.notifications

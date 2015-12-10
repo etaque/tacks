@@ -6133,7 +6133,6 @@ aside .user-menu a, aside .logout a {
   text-decoration: none;
   font-family: "Museo Slab";
   font-size: 16px;
-  letter-spacing: 1px;
   line-height: 24px;
   font-weight: normal;
   padding: 5px 10px;
@@ -6223,9 +6222,8 @@ a {
 
 .btn {
   text-transform: lowercase;
-  background-color: white;
   border: none;
-  border-bottom: 3px solid #f5f5f5;
+  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all 0.1s ease-in;
   border-radius: 2px;
@@ -6260,12 +6258,16 @@ a {
     background-color: #dc9833;
     border-color: #89693a; }
 
+.btn-danger {
+  background-color: #d9534f;
+  border-color: #944a48; }
+
 .alert {
   border-radius: 0;
   border-width: 3px; }
 
 .alert-danger a {
-  color: #a94442; }
+  color: #d9534f; }
 
 .form-control {
   border: none;
@@ -6297,7 +6299,7 @@ label {
   padding: 6px 12px;
   background-color: #f2dede;
   font-size: 14px;
-  color: #a94442;
+  color: #d9534f;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px; }
 
@@ -6401,9 +6403,8 @@ a {
 
 .btn {
   text-transform: lowercase;
-  background-color: white;
   border: none;
-  border-bottom: 3px solid #f5f5f5;
+  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all 0.1s ease-in;
   border-radius: 2px;
@@ -6438,12 +6439,16 @@ a {
     background-color: #dc9833;
     border-color: #89693a; }
 
+.btn-danger {
+  background-color: #d9534f;
+  border-color: #944a48; }
+
 .alert {
   border-radius: 0;
   border-width: 3px; }
 
 .alert-danger a {
-  color: #a94442; }
+  color: #d9534f; }
 
 .form-control {
   border: none;
@@ -6475,7 +6480,7 @@ label {
   padding: 6px 12px;
   background-color: #f2dede;
   font-size: 14px;
-  color: #a94442;
+  color: #d9534f;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px; }
 
@@ -6624,9 +6629,8 @@ a {
 
 .btn {
   text-transform: lowercase;
-  background-color: white;
   border: none;
-  border-bottom: 3px solid #f5f5f5;
+  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all 0.1s ease-in;
   border-radius: 2px;
@@ -6661,12 +6665,16 @@ a {
     background-color: #dc9833;
     border-color: #89693a; }
 
+.btn-danger {
+  background-color: #d9534f;
+  border-color: #944a48; }
+
 .alert {
   border-radius: 0;
   border-width: 3px; }
 
 .alert-danger a {
-  color: #a94442; }
+  color: #d9534f; }
 
 .form-control {
   border: none;
@@ -6698,7 +6706,7 @@ label {
   padding: 6px 12px;
   background-color: #f2dede;
   font-size: 14px;
-  color: #a94442;
+  color: #d9534f;
   border-bottom-left-radius: 4px;
   border-bottom-right-radius: 4px; }
 
