@@ -22626,7 +22626,10 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
       var _p1 = _p0;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("form-new-draft")]),
-      _U.list([A2($Screens$Utils.formGroup,
+      _U.list([A2($Html.h3,
+              _U.list([]),
+              _U.list([$Html.text("New draft")]))
+              ,A2($Screens$Utils.formGroup,
               false,
               _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p1.name)
                                                         ,$Html$Attributes.placeholder("Track name")
@@ -22654,7 +22657,7 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
               _U.list([$Html.text(draft.name)]))
               ,$Html.text(" ")
               ,A2($Html.button,
-              _U.list([$Html$Attributes.$class("btn btn-danger btn-xs")
+              _U.list([$Html$Attributes.$class("btn btn-danger btn-xs pull-right")
                       ,A2($Html$Events.onClick,
                       $Screens$ListDrafts$Updates.addr,
                       $Screens$ListDrafts$Types.DeleteDraft(draft.id))]),
@@ -22670,7 +22673,9 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
       _U.list([A2($Html.h1,
               _U.list([]),
               _U.list([$Html.text("Drafts")]))
-              ,A2($Html.ul,_U.list([]),A2($List.map,draftItem,_p3.drafts))
+              ,A2($Html.ul,
+              _U.list([$Html$Attributes.$class("list-unstyled drafts")]),
+              A2($List.map,draftItem,_p3.drafts))
               ,$Models.isAdmin(ctx.player) ? createTrackForm(_p3) : A2($Html.div,
               _U.list([]),
               _U.list([]))]))]));

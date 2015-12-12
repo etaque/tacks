@@ -6982,3 +6982,49 @@ aside .module-help {
     padding: 2px 2px 2px 6px;
     height: 25px;
     font-size: 13px; }
+
+/* $darkSeaBlue: desat-dark($seaBlue); */
+/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+.list-drafts ul.drafts li {
+  clear: both;
+  border-bottom: 2px solid #30a3de;
+  margin-bottom: 10px; }
+
+.list-drafts ul.drafts a {
+  display: inline-block;
+  padding: 10px 10px 8px 10px;
+  font-size: 21px;
+  font-weight: bold;
+  font-family: "Museo Slab";
+  transition: background 0.2s ease-in; }
+  .list-drafts ul.drafts a:hover {
+    background-color: #30a3de;
+    color: white; }
+
+.list-drafts ul.drafts button {
+  margin-top: 3px; }
+
+.list-drafts .form-new-draft {
+  margin-top: 30px; }
+  .list-drafts .form-new-draft .form-control {
+    width: 250px; }

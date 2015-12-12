@@ -1,0 +1,39 @@
+@import 'colors';
+@import 'fonts';
+
+.list-drafts {
+  ul.drafts {
+
+    li {
+      clear: both;
+      border-bottom: 2px solid $lightSeaBlue;
+      margin-bottom: 10px;
+    }
+
+    a {
+      display: inline-block;
+      padding: 10px 10px 8px 10px;
+      font-size: 21px;
+      font-weight: bold;
+      font-family: $serif;
+      transition: background .2s ease-in;
+      
+      &:hover {
+        background-color: $lightSeaBlue;
+        color: $white;
+      }
+    }
+
+    button {
+      margin-top: 3px;
+    }
+  }
+
+  .form-new-draft {
+    margin-top: 30px;
+
+    .form-control {
+      width: 250px;
+    }
+  }
+}
