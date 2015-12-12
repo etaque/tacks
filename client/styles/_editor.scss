@@ -1,4 +1,5 @@
 @import 'colors';
+@import 'fonts';
 
 .editor {
 
@@ -10,23 +11,43 @@
     cursor: cell;
 
     &.mode-m {
-      cursor: move;
+      cursor: move
+      ;
     }
   }
 
-  .track-menu {
-    margin-bottom: 10px;
-  }
-
   .form-actions {
-    margin-top: 0;
-    margin-bottom: 20px;
+    display: flex;
+
+    .btn {
+      margin-top: 0;
+
+      &[disabled] {
+        cursor: progress;
+      }
+    }
+
+    .btn-save {
+      margin-right: 10px;
+    }
   }
 
   aside {
 
     .aside-module {
-      margin-bottom: 15px;
+      .module-title .glyphicon {
+        float: right;        
+        top: 3px;
+      }
+
+      &.closed {
+        .module-title {
+          color: $whiteSeaBlue;
+        }
+        .module-body {
+          display: none;
+        }
+      }
     }
 
     .surface-modes {
@@ -35,17 +56,18 @@
 
       a {
         flex: 1;
+        opacity: 0.5;
         display: inline-block;
         margin-right: 10px;
+        height: 30px;
+
         line-height: 26px;
-        width: 30px;
-        text-align: center;
-        border: 2px solid white;
-        border-radius: 2px;
+        font-family: $thin;
+        font-size: 14px;
         font-weight: bold;
+        text-align: center;
         color: $dark;
-        box-shadow: inset 1px 1px 1px $shadow;
-        text-shadow: 1px 1px 1px $shadow;
+        border: 2px solid $darkerSeaBlue;
         text-transform: uppercase;
 
         &:last-child {
@@ -53,17 +75,19 @@
         }
 
         &.current {
-          border-color: black;
-          color: black;
-          box-shadow: none;
+          opacity: 1;
+          box-shadow: 1px 1px 1px $strongShadow;
+          border: 2px solid $strongLight;
+          border-radius: 2px;
+          color: $veryDark;
         }
       }
     }
 
     .form-group {
-      background-color: $smokeWhite;
+      background-color: $lightSeaBlue;
       margin-bottom: 5px;
-      border-radius: 2px;
+      border-radius: 0;
 
       &:after {
         clear: both;
@@ -73,22 +97,14 @@
 
     }
 
-    h3 {
-      margin-bottom: 10px;
-    }
-
-    .form-group + h3 {
-      margin-top: 10px;
-    }
-
     label {
       float: left;
       line-height: 23px;
-      padding-left: 6px;
+      padding-left: 10px;
       margin: 0;
       text-transform: lowercase;
-      color: $darkRock;
       font-size: 13px;
+      color: $whiteSeaBlue;
     }
 
     label + .form-control {
@@ -97,20 +113,22 @@
       padding: 2px 2px 2px 6px;
       height: 25px;
       font-size: 13px;
-      border-top-right-radius: 2px;
-      border-bottom-right-radius: 2px;
+      border-left: 4px solid $darkerSeaBlue;
+      border-radius: 0;
+      /* border-top-right-radius: 3px; */
+      /* border-bottom-right-radius: 3px; */
 
     }
 
     .table-gust-defs {
       width: 100%;
-      background-color: $smokeWhite;
-      border-spacing: 1px;
+      background-color: $lightSeaBlue;
+      /* border: 2px solid $lightSeaBlue; */
+      border-spacing: 4px;
       border-collapse: separate;
-      border-radius: 2px;
 
       a {
-        color: $rock;
+        color: $white;
       }
 
       th {
@@ -130,6 +148,7 @@
       .form-control {
         width: 100%;
         /* border: none; */
+        border-radius: 0;
         padding: 2px 2px 2px 6px;
         height: 25px;
         font-size: 13px;
@@ -138,3 +157,4 @@
   }
 
 }
+

@@ -21,13 +21,22 @@ initial dims =
   }
 
 type alias Editor =
-  { course : Course
+  { blocks : SideBlocks
+  , course : Course
   , center : Point
   , courseDims : Dims
   , mode : Mode
   , altMove : Bool
   , name : String
   , saving : Bool
+  }
+
+type alias SideBlocks =
+  { name : Bool
+  , surface : Bool
+  , gates : Bool
+  , wind : Bool
+  , gusts : Bool
   }
 
 type Mode
@@ -45,10 +54,18 @@ type Action
   | SetMode Mode
   | AltMoveMode Bool
   | FormAction FormUpdate
+  | ToggleBlock SideBlock
   | SetName String
-  | Save
-  | SaveResult (FormResult Track)
+  | Save Bool
+  | SaveResult Bool (FormResult Track)
   | NoOp
+
+type SideBlock
+  = Name
+  | Surface
+  | Gates
+  | Wind
+  | Gusts
 
 type FormUpdate
   = SetDownwindY Int

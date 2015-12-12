@@ -169,9 +169,9 @@ object Api extends Controller with Security {
 
   implicit val updateTrackFormat: Format[UpdateTrack] = Json.format[UpdateTrack]
 
-  def updateTrack(id: String) = PlayerAction.async(parse.json) { implicit request =>
-    if (request.player.isAdmin) {
-      TrackDAO.findById(id).flatMap { track =>
+  def updateDraft(id: String) = PlayerAction.async(parse.json) { implicit request =>
+    TrackDAO.findById(id).flatMap { track =>
+      if (canUpdateDraft(track)) {
         request.body.validate(updateTrackFormat).fold(
           errors => Future.successful(BadRequest(JsonErrors.format(errors))),
           {
@@ -186,15 +186,15 @@ object Api extends Controller with Security {
             }
           }
         )
+      } else {
+        Future.successful(Forbidden)
       }
-    } else {
-      Future.successful(Forbidden)
     }
   }
 
   def deleteDraft(id: String) = PlayerAction.async(parse.json) { implicit request =>
     TrackDAO.findById(id).flatMap { track =>
-      if (track.creatorId == request.player.id) {
+      if (canUpdateDraft(track)) {
         TrackDAO.remove(id).map { _ =>
           Ok(Json.obj())
         }
@@ -202,6 +202,10 @@ object Api extends Controller with Security {
         Future.successful(BadRequest)
       }
     }
+  }
+
+  private def canUpdateDraft(track: Track)(implicit request: PlayerRequest[_]) = {
+    track.draft && (request.player.isAdmin || request.player.id == track.creatorId)
   }
 
   def setHandle = PlayerAction(parse.json) { implicit request =>

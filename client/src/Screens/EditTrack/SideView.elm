@@ -11,42 +11,33 @@ import Routes exposing (..)
 
 import Screens.EditTrack.Updates exposing (addr)
 import Screens.EditTrack.Types exposing (..)
+import Screens.Sidebar as Sidebar
 
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 
 
 view : Track -> Editor -> List Html
-view track ({course, name, saving, mode} as editor) =
-  [ div
+view track ({course, name, saving, mode, blocks} as editor) =
+  [ Sidebar.logo
+
+  , div
       [ class "track-menu" ]
-      [ h2 [] [ text "track editor" ]
-      , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
-      , linkTo (PlayTrack track.id) [ class "btn btn-xs btn-default" ] [ text "Try" ]
+      [ hr'
+      , h2 [] [ text name ]
+      , hr'
       ]
 
-  , div [ class "form-actions" ]
-    [ button
-      [ onClick addr Save
-      , class "btn btn-primary btn-block"
-      , disabled saving
-      ]
-      [ text (if saving then "Saving.." else "Save") ]
+  , sideBlock "Name" blocks.name (ToggleBlock Name)
+    [ div [ class "form-group"]
+      [ nameInput name ]
     ]
 
-  , div [ class "aside-module" ]
+  , sideBlock "Surface pencil" blocks.surface (ToggleBlock Surface)
+    [ surfaceBlock editor
+    ]
 
-    [ h3 [] [ text "Name" ]
-
-    , div [ class "form-group"]
-      [ nameInput name ]
-
-    , h3 [] [ text "Surface pencil" ]
-
-    , surfaceBlock editor
-
-    , h3 [] [ text "Gates" ]
-
-    , div [ class "form-group"]
+  , sideBlock "Gates" blocks.gates (ToggleBlock Gates)
+    [ div [ class "form-group"]
       [ label [ class "" ] [ text "Downwind" ]
       , intInput course.downwind.y SetDownwindY [ step "10" ]
       ]
@@ -62,10 +53,10 @@ view track ({course, name, saving, mode} as editor) =
       [ label [ class "" ] [ text "Laps" ]
       , intInput course.laps SetLaps [ HtmlAttr.min "1" ]
       ]
+    ]
 
-    , h3 [] [ text "Wind" ]
-
-    , div [ class "form-group" ]
+  , sideBlock "Wind" blocks.wind (ToggleBlock Wind)
+    [ div [ class "form-group" ]
       [ label [ class "" ] [ text "Wavelength 1" ]
       , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
       ]
@@ -81,15 +72,29 @@ view track ({course, name, saving, mode} as editor) =
       [ label [ class "" ] [ text "Amplitude 2" ]
       , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
       ]
+    ]
 
-    , h3 [] [ text "Gusts" ]
-
-    , div [ class "form-group" ]
+  , sideBlock "Gusts" blocks.gusts (ToggleBlock Gusts)
+    [ div [ class "form-group" ]
       [ label [ class "" ] [ text "Interval (s)" ]
       , intInput course.gustGenerator.interval SetGustInterval [ HtmlAttr.min "10"]
       ]
-
     , gustDefsTable course.gustGenerator.defs
+    ]
+
+  , div [ class "form-actions" ]
+    [ button
+      [ onClick addr (Save False)
+      , class "btn btn-primary btn-block btn-save"
+      , disabled saving
+      ]
+      [ text "Save" ]
+    , button
+      [ onClick addr (Save True)
+      , class "btn btn-default btn-block btn-save-and-try"
+      , disabled saving
+      ]
+      [ text "Save and try" ]
     ]
   ]
 
@@ -174,3 +179,15 @@ intInput val formUpdate attrs =
     , type' "number"
     ] ++ attrs)
 
+
+sideBlock : String -> Bool -> Action -> List Html -> Html
+sideBlock title open action content =
+  div [ classList [ ("aside-module", True), ("closed", not open) ] ] <|
+  [ div [ class "module-header" ]
+    [ a [ class "module-title", onClick addr action ]
+      [ text title
+      , span [ class <| "glyphicon glyphicon-" ++ if open then "chevron-down" else "chevron-right" ] []
+      ]
+    ]
+  , div [ class "module-body" ] content
+  ]

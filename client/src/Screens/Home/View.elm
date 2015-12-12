@@ -17,8 +17,8 @@ import Screens.Layout as Layout
 
 view : Context -> Screen -> Html
 view ctx screen =
-  Layout.layoutWithNav ctx
-    [ container "home"
+  Layout.layoutWithNav "home" ctx
+    [ container ""
         [ intro
         , welcomeForm ctx.player screen.handle
         , liveTracks ctx.player screen.liveStatus

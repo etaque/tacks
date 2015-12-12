@@ -23,7 +23,7 @@ view ctx screen =
       let
         (w, h) = ctx.dims
       in
-        Layout.layout
+        Layout.layout "play-track"
           (SideView.view screen liveTrack gameState)
           [ div [ class "game" ]
               [ render (w - sidebarWidth, h) gameState

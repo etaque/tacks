@@ -43,9 +43,9 @@ intTargetValue =
 
 onEnter : Signal.Address a -> a -> Attribute
 onEnter address value =
-    on "keydown"
-      (Json.customDecoder keyCode isEnter)
-      (\_ -> Signal.message address value)
+  on "keydown"
+    (Json.customDecoder keyCode isEnter)
+    (\_ -> Signal.message address value)
 
 eventOptions : Options
 eventOptions =
@@ -66,6 +66,10 @@ container : String -> Wrapper
 container className content =
   div [ class ("container " ++ className) ] content
 
+containerFluid : String -> Wrapper
+containerFluid className content =
+  div [ class ("container-fluid " ++ className) ] content
+
 row : Wrapper
 row content =
   div [ class "row" ] content
@@ -73,6 +77,10 @@ row content =
 fullWidth : Wrapper
 fullWidth content =
   row [ div [ class "col-lg-12" ] content ]
+
+hr' : Html
+hr' =
+  hr [] []
 
 formGroup : Bool -> List Html -> Html
 formGroup hasErr content =
@@ -124,7 +132,7 @@ rankingItem ranking =
 
 moduleTitle : String -> Html
 moduleTitle title =
-  div [ class "module-title" ] [ h3 [ ] [ text title ] ]
+  div [ class "module-header" ] [ h3 [ ] [ text title ] ]
 
 -- Misc
 

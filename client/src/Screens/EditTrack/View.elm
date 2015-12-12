@@ -24,8 +24,8 @@ view : Context -> Screen -> Html
 view {player} screen =
   case (screen.track, screen.editor) of
     (Just track, Just editor) ->
-      if player.id == track.creatorId || isAdmin player then
-        Layout.layout
+      if hasDraft player track then
+        Layout.layout "editor"
           (SideView.view track editor)
           [ renderCourse editor ]
       else

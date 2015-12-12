@@ -25,6 +25,10 @@ isAdmin player =
     Just h -> List.member h admins
     Nothing -> False
 
+hasDraft : Player -> Track -> Bool
+hasDraft player track =
+  track.draft && (player.id == track.creatorId || isAdmin player)
+
 type alias LiveStatus =
   { liveTracks : List LiveTrack
   , onlinePlayers : List Player

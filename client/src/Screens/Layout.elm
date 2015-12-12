@@ -8,9 +8,9 @@ import Constants exposing (..)
 import AppTypes exposing (..)
 
 
-layoutWithNav : Context -> List Html -> Html
-layoutWithNav ctx content =
-  layout
+layoutWithNav : String -> Context -> List Html -> Html
+layoutWithNav name ctx content =
+  layout name
     (Sidebar.view ctx)
     [ div [ class <| "padded " ++ (transitionName ctx.transitStatus) ] content ]
 
@@ -20,10 +20,10 @@ transitionName status =
     Exit -> "exit"
     Enter -> "enter"
 
-layout : List Html -> List Html -> Html
-layout sideContent mainContent =
+layout : String -> List Html -> List Html -> Html
+layout name sideContent mainContent =
   div
-    [ class "layout" ]
+    [ class ("layout " ++ name) ]
     [ aside
         [ style [ ("width", toString sidebarWidth ++ "px") ] ]
         sideContent

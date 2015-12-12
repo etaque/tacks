@@ -29,17 +29,20 @@ view screen liveTrack gameState =
 trackNav : LiveTrack -> Html
 trackNav liveTrack =
   div [ class "track-menu" ]
-    [ h2 [ class "track-name" ] [ text liveTrack.track.name ]
-    -- , linkTo Home [ class "btn btn-xs btn-default" ] [ text "Exit" ]
+    [ hr'
+    , h2 [] [ text liveTrack.track.name ]
+    , hr'
     ]
 
 
 draftBlocks : LiveTrack -> List Html
 draftBlocks {track} =
   [ p [ class "draft-warning" ]
-      [ text "This is a draft, you're the only one seeing this race track." ]
-  , linkTo (EditTrack track.id) [ class "btn btn-block btn-primary" ]
-      [ text "Edit race track" ]
+    [ text "This is a draft, you're the only one seeing this race track." ]
+  , div [ class "form-actions" ]
+    [ linkTo (EditTrack track.id) [ class "btn btn-block btn-primary" ]
+      [ text "Edit draft" ]
+    ]
   ]
 
 

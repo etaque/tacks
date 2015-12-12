@@ -16,8 +16,8 @@ import Screens.Layout as Layout
 
 view : Context -> Screen -> Html
 view ctx screen =
-  Layout.layoutWithNav ctx
-    [ container "login"
+  Layout.layoutWithNav "login" ctx
+    [ container ""
       [ h1 [] [ text "Login" ]
       , loginForm screen
       ]

@@ -14,8 +14,8 @@ import Screens.Layout as Layout
 
 view : Context -> Screen -> Html
 view ctx {player} =
-  Layout.layoutWithNav ctx
-    [ container "show-profile"
+  Layout.layoutWithNav "show-profile" ctx
+    [ container ""
       [ img [ class "avatar avatar-user", src (avatarUrl player), width 160, height 160 ] []
       , h1 [ ] [ text <| playerHandle player ]
       ]

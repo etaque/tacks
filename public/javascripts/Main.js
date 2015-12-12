@@ -11199,6 +11199,10 @@ Elm.Models.make = function (_elm) {
             return false;
          }
    };
+   var hasDraft = F2(function (player,track) {
+      return track.draft && (_U.eq(player.id,
+      track.creatorId) || isAdmin(player));
+   });
    var Player = F7(function (a,b,c,d,e,f,g) {
       return {id: a
              ,handle: b
@@ -11211,6 +11215,7 @@ Elm.Models.make = function (_elm) {
    return _elm.Models.values = {_op: _op
                                ,Player: Player
                                ,isAdmin: isAdmin
+                               ,hasDraft: hasDraft
                                ,LiveStatus: LiveStatus
                                ,LiveTrack: LiveTrack
                                ,Track: Track
@@ -11904,13 +11909,21 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var SetDownwindY = function (a) {
       return {ctor: "SetDownwindY",_0: a};
    };
+   var Gusts = {ctor: "Gusts"};
+   var Wind = {ctor: "Wind"};
+   var Gates = {ctor: "Gates"};
+   var Surface = {ctor: "Surface"};
+   var Name = {ctor: "Name"};
    var NoOp = {ctor: "NoOp"};
-   var SaveResult = function (a) {
-      return {ctor: "SaveResult",_0: a};
-   };
-   var Save = {ctor: "Save"};
+   var SaveResult = F2(function (a,b) {
+      return {ctor: "SaveResult",_0: a,_1: b};
+   });
+   var Save = function (a) {    return {ctor: "Save",_0: a};};
    var SetName = function (a) {
       return {ctor: "SetName",_0: a};
+   };
+   var ToggleBlock = function (a) {
+      return {ctor: "ToggleBlock",_0: a};
    };
    var FormAction = function (a) {
       return {ctor: "FormAction",_0: a};
@@ -11936,14 +11949,18 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var CreateTile = function (a) {
       return {ctor: "CreateTile",_0: a};
    };
-   var Editor = F7(function (a,b,c,d,e,f,g) {
-      return {course: a
-             ,center: b
-             ,courseDims: c
-             ,mode: d
-             ,altMove: e
-             ,name: f
-             ,saving: g};
+   var SideBlocks = F5(function (a,b,c,d,e) {
+      return {name: a,surface: b,gates: c,wind: d,gusts: e};
+   });
+   var Editor = F8(function (a,b,c,d,e,f,g,h) {
+      return {blocks: a
+             ,course: b
+             ,center: c
+             ,courseDims: d
+             ,mode: e
+             ,altMove: f
+             ,name: g
+             ,saving: h};
    });
    var initial = function (dims) {
       return {track: $Maybe.Nothing
@@ -11958,6 +11975,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,Screen: Screen
                                                 ,initial: initial
                                                 ,Editor: Editor
+                                                ,SideBlocks: SideBlocks
                                                 ,CreateTile: CreateTile
                                                 ,Erase: Erase
                                                 ,Watch: Watch
@@ -11967,10 +11985,16 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,SetMode: SetMode
                                                 ,AltMoveMode: AltMoveMode
                                                 ,FormAction: FormAction
+                                                ,ToggleBlock: ToggleBlock
                                                 ,SetName: SetName
                                                 ,Save: Save
                                                 ,SaveResult: SaveResult
                                                 ,NoOp: NoOp
+                                                ,Name: Name
+                                                ,Surface: Surface
+                                                ,Gates: Gates
+                                                ,Wind: Wind
+                                                ,Gusts: Gusts
                                                 ,SetDownwindY: SetDownwindY
                                                 ,SetUpwindY: SetUpwindY
                                                 ,SetGateWidth: SetGateWidth
@@ -14675,6 +14699,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
    $Screens$EditTrack$FormUpdates = Elm.Screens.EditTrack.FormUpdates.make(_elm),
    $Screens$EditTrack$GridUpdates = Elm.Screens.EditTrack.GridUpdates.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
@@ -14716,13 +14741,13 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       {ctor: "_Tuple2",_0: right,_1: top},
       {ctor: "_Tuple2",_0: left,_1: bottom});
    };
-   var save = F2(function (id,_p0) {
+   var save = F3(function ($try,id,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.course;
       var area = getRaceArea(_p2.grid);
       var withArea = _U.update(_p2,{area: area});
       return A2($Task.map,
-      $Screens$EditTrack$Types.SaveResult,
+      $Screens$EditTrack$Types.SaveResult($try),
       A2($Task$Extra.delay,
       500,
       A3($ServerApi.saveTrack,id,_p1.name,withArea)));
@@ -14746,6 +14771,24 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       $Screens$EditTrack$Types.LoadTrack,
       $ServerApi.getTrack(id));
    };
+   var updateBlocks = F2(function (b,_p5) {
+      var _p6 = _p5;
+      var _p8 = _p6.blocks;
+      var newBlocks = function () {
+         var _p7 = b;
+         switch (_p7.ctor)
+         {case "Name": return _U.update(_p8,
+              {name: $Basics.not(_p8.name)});
+            case "Surface": return _U.update(_p8,
+              {surface: $Basics.not(_p8.surface)});
+            case "Gates": return _U.update(_p8,
+              {gates: $Basics.not(_p8.gates)});
+            case "Wind": return _U.update(_p8,
+              {wind: $Basics.not(_p8.wind)});
+            default: return _U.update(_p8,{gusts: $Basics.not(_p8.gusts)});}
+      }();
+      return _U.update(_p6,{blocks: newBlocks});
+   });
    var updateCourse = F2(function (update,editor) {
       return _U.update(editor,{course: update(editor.course)});
    });
@@ -14754,66 +14797,78 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       return _U.update(screen,{editor: newEditor});
    });
    var update = F2(function (action,screen) {
-      var _p5 = action;
-      switch (_p5.ctor)
-      {case "LoadTrack": var _p6 = _p5._0;
-           if (_p6.ctor === "Ok") {
-                 var _p7 = _p6._0;
-                 var editor = {course: _p7.course
+      var _p9 = action;
+      switch (_p9.ctor)
+      {case "LoadTrack": var _p10 = _p9._0;
+           if (_p10.ctor === "Ok") {
+                 var _p11 = _p10._0;
+                 var editor = {blocks: {name: true
+                                       ,surface: true
+                                       ,gates: false
+                                       ,wind: false
+                                       ,gusts: false}
+                              ,course: _p11.course
                               ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
                               ,courseDims: getCourseDims(screen.dims)
                               ,mode: $Screens$EditTrack$Types.Watch
                               ,altMove: false
-                              ,name: _p7.name
+                              ,name: _p11.name
                               ,saving: false};
                  return A2($AppTypes._op["&:"],
                  _U.update(screen,
-                 {track: $Maybe.Just(_p7),editor: $Maybe.Just(editor)}),
+                 {track: $Maybe.Just(_p11),editor: $Maybe.Just(editor)}),
                  $Effects.none);
               } else {
                  return A2($AppTypes._op["&:"],
                  _U.update(screen,{notFound: true}),
                  $Effects.none);
               }
+         case "ToggleBlock": return A2($AppTypes._op["&:"],
+           A2(function (_p12) {
+              return updateEditor(updateBlocks(_p12));
+           },
+           _p9._0,
+           screen),
+           $Effects.none);
          case "SetName": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{name: _p5._0});
+              return _U.update(e,{name: _p9._0});
            },
            screen),
            $Effects.none);
          case "MouseAction": return A2($AppTypes._op["&:"],
-           A2(function (_p8) {
-              return updateEditor($Screens$EditTrack$GridUpdates.mouseAction(_p8));
+           A2(function (_p13) {
+              return updateEditor($Screens$EditTrack$GridUpdates.mouseAction(_p13));
            },
-           _p5._0,
+           _p9._0,
            screen),
            $Effects.none);
          case "SetMode": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{mode: _p5._0});
+              return _U.update(e,{mode: _p9._0});
            },
            screen),
            $Effects.none);
          case "AltMoveMode": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{altMove: _p5._0});
+              return _U.update(e,{altMove: _p9._0});
            },
            screen),
            $Effects.none);
          case "FormAction": return A2($AppTypes._op["&:"],
-           A2(function (_p9) {
-              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p9)));
+           A2(function (_p14) {
+              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p14)));
            },
-           _p5._0,
+           _p9._0,
            screen),
            $Effects.none);
-         case "Save": var _p10 = {ctor: "_Tuple2"
+         case "Save": var _p15 = {ctor: "_Tuple2"
                                  ,_0: screen.track
                                  ,_1: screen.editor};
-           if (_p10.ctor === "_Tuple2" && _p10._0.ctor === "Just" && _p10._1.ctor === "Just")
+           if (_p15.ctor === "_Tuple2" && _p15._0.ctor === "Just" && _p15._1.ctor === "Just")
            {
                  return A2($AppTypes._op["&!"],
                  A2(updateEditor,
@@ -14821,17 +14876,26 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     return _U.update(e,{saving: true});
                  },
                  screen),
-                 A2(save,_p10._0._0.id,_p10._1._0));
+                 A3(save,_p9._0,_p15._0._0.id,_p15._1._0));
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
-         case "SaveResult": return A2($AppTypes._op["&:"],
-           A2(updateEditor,
-           function (e) {
-              return _U.update(e,{saving: false});
-           },
-           screen),
-           $Effects.none);
+         case "SaveResult": var _p16 = _p9._1;
+           if (_p16.ctor === "Ok") {
+                 var effect = _p9._0 ? A2($Effects.map,
+                 function (_p17) {
+                    return $Screens$EditTrack$Types.NoOp;
+                 },
+                 $Screens$UpdateUtils.redirect($Routes.PlayTrack(_p16._0.id))) : $Effects.none;
+                 var newScreen = A2(updateEditor,
+                 function (e) {
+                    return _U.update(e,{saving: false});
+                 },
+                 screen);
+                 return A2($AppTypes._op["&:"],newScreen,effect);
+              } else {
+                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+              }
          default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
    var mount = F2(function (dims,id) {
@@ -14853,6 +14917,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                                   ,update: update
                                                   ,updateEditor: updateEditor
                                                   ,updateCourse: updateCourse
+                                                  ,updateBlocks: updateBlocks
                                                   ,loadTrack: loadTrack
                                                   ,updateDims: updateDims
                                                   ,getCourseDims: getCourseDims
@@ -18805,7 +18870,7 @@ Elm.Screens.Utils.make = function (_elm) {
    });
    var moduleTitle = function (title) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("module-title")]),
+      _U.list([$Html$Attributes.$class("module-header")]),
       _U.list([A2($Html.h3,
       _U.list([]),
       _U.list([$Html.text(title)]))]));
@@ -18874,6 +18939,7 @@ Elm.Screens.Utils.make = function (_elm) {
                                                   ,{ctor: "_Tuple2",_0: "has-error",_1: hasErr}]))]),
       content);
    });
+   var hr$ = A2($Html.hr,_U.list([]),_U.list([]));
    var row = function (content) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("row")]),
@@ -18884,6 +18950,13 @@ Elm.Screens.Utils.make = function (_elm) {
       _U.list([$Html$Attributes.$class("col-lg-12")]),
       content)]));
    };
+   var containerFluid = F2(function (className,content) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
+      "container-fluid ",
+      className))]),
+      content);
+   });
    var container = F2(function (className,content) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
@@ -18956,8 +19029,10 @@ Elm.Screens.Utils.make = function (_elm) {
                                       ,eventOptions: eventOptions
                                       ,isEnter: isEnter
                                       ,container: container
+                                      ,containerFluid: containerFluid
                                       ,row: row
                                       ,fullWidth: fullWidth
+                                      ,hr$: hr$
                                       ,formGroup: formGroup
                                       ,textInput: textInput
                                       ,passwordInput: passwordInput
@@ -19085,9 +19160,11 @@ Elm.Screens.Layout.make = function (_elm) {
    $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var layout = F2(function (sideContent,mainContent) {
+   var layout = F3(function (name,sideContent,mainContent) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("layout")]),
+      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
+      "layout ",
+      name))]),
       _U.list([A2($Html.aside,
               _U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                        ,_0: "width"
@@ -19105,8 +19182,9 @@ Elm.Screens.Layout.make = function (_elm) {
             return "enter";
          }
    };
-   var layoutWithNav = F2(function (ctx,content) {
-      return A2(layout,
+   var layoutWithNav = F3(function (name,ctx,content) {
+      return A3(layout,
+      name,
       $Screens$Sidebar.view(ctx),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
@@ -19236,10 +19314,11 @@ Elm.Screens.Home.View.make = function (_elm) {
                                                 _U.list([]),
                                                 _U.list([$Html.text("Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings.")]))]));
    var view = F2(function (ctx,screen) {
-      return A2($Screens$Layout.layoutWithNav,
+      return A3($Screens$Layout.layoutWithNav,
+      "home",
       ctx,
       _U.list([A2($Screens$Utils.container,
-      "home",
+      "",
       _U.list([intro
               ,A2(welcomeForm,ctx.player,screen.handle)
               ,A2(liveTracks,ctx.player,screen.liveStatus)]))]));
@@ -19328,10 +19407,11 @@ Elm.Screens.Login.View.make = function (_elm) {
               _U.list([$Html.text("Submit")]))]))]));
    };
    var view = F2(function (ctx,screen) {
-      return A2($Screens$Layout.layoutWithNav,
+      return A3($Screens$Layout.layoutWithNav,
+      "login",
       ctx,
       _U.list([A2($Screens$Utils.container,
-      "login",
+      "",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Login")]))
               ,loginForm(screen)]))]));
    });
@@ -19438,10 +19518,11 @@ Elm.Screens.Register.View.make = function (_elm) {
               _U.list([$Html.text("Submit")]))]))]));
    };
    var view = F2(function (ctx,screen) {
-      return A2($Screens$Layout.layoutWithNav,
+      return A3($Screens$Layout.layoutWithNav,
+      "register",
       ctx,
       _U.list([A2($Screens$Utils.container,
-      "register",
+      "",
       _U.list([A2($Html.h1,
               _U.list([]),
               _U.list([$Html.text("Register")]))
@@ -19498,10 +19579,11 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    _U.list([$Html.text("loading...")]));
    var view = F2(function (ctx,_p0) {
       var _p1 = _p0;
-      return A2($Screens$Layout.layoutWithNav,
+      return A3($Screens$Layout.layoutWithNav,
+      "show-track",
       ctx,
       _U.list([A2($Screens$Utils.container,
-      "show-track",
+      "",
       _U.list([A2($Maybe.withDefault,
       loading,
       A2($Maybe.map,withTrack,_p1.track))]))]));
@@ -20629,12 +20711,35 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
    $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
    $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
+   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var sideBlock = F4(function (title,open,action,content) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
+                                                   ,_0: "aside-module"
+                                                   ,_1: true}
+                                                  ,{ctor: "_Tuple2",_0: "closed",_1: $Basics.not(open)}]))]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("module-header")]),
+              _U.list([A2($Html.a,
+              _U.list([$Html$Attributes.$class("module-title")
+                      ,A2($Html$Events.onClick,
+                      $Screens$EditTrack$Updates.addr,
+                      action)]),
+              _U.list([$Html.text(title)
+                      ,A2($Html.span,
+                      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
+                      "glyphicon glyphicon-",
+                      open ? "chevron-down" : "chevron-right"))]),
+                      _U.list([]))]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("module-body")]),
+              content)]));
+   });
    var intInput = F3(function (val,formUpdate,attrs) {
       return $Screens$Utils.textInput(A2($Basics._op["++"],
       _U.list([$Html$Attributes.value($Basics.toString(val))
@@ -20741,48 +20846,39 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    };
    var view = F2(function (track,_p3) {
       var _p4 = _p3;
-      var _p6 = _p4.saving;
-      var _p5 = _p4.course;
-      return _U.list([A2($Html.div,
+      var _p8 = _p4.saving;
+      var _p7 = _p4.name;
+      var _p6 = _p4.course;
+      var _p5 = _p4.blocks;
+      return _U.list([$Screens$Sidebar.logo
+                     ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("track-menu")]),
-                     _U.list([A2($Html.h2,
-                             _U.list([]),
-                             _U.list([$Html.text("track editor")]))
-                             ,A3($Screens$Utils.linkTo,
-                             $Routes.Home,
-                             _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
-                             _U.list([$Html.text("Exit")]))
-                             ,A3($Screens$Utils.linkTo,
-                             $Routes.PlayTrack(track.id),
-                             _U.list([$Html$Attributes.$class("btn btn-xs btn-default")]),
-                             _U.list([$Html.text("Try")]))]))
-                     ,A2($Html.div,
-                     _U.list([$Html$Attributes.$class("form-actions")]),
-                     _U.list([A2($Html.button,
-                     _U.list([A2($Html$Events.onClick,
-                             $Screens$EditTrack$Updates.addr,
-                             $Screens$EditTrack$Types.Save)
-                             ,$Html$Attributes.$class("btn btn-primary btn-block")
-                             ,$Html$Attributes.disabled(_p6)]),
-                     _U.list([$Html.text(_p6 ? "Saving.." : "Save")]))]))
-                     ,A2($Html.div,
-                     _U.list([$Html$Attributes.$class("aside-module")]),
-                     _U.list([A2($Html.h3,_U.list([]),_U.list([$Html.text("Name")]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([nameInput(_p4.name)]))
-                             ,A2($Html.h3,
-                             _U.list([]),
-                             _U.list([$Html.text("Surface pencil")]))
-                             ,surfaceBlock(_p4)
-                             ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Gates")]))
-                             ,A2($Html.div,
+                     _U.list([$Screens$Utils.hr$
+                             ,A2($Html.h2,_U.list([]),_U.list([$Html.text(_p7)]))
+                             ,$Screens$Utils.hr$]))
+                     ,A4(sideBlock,
+                     "Name",
+                     _p5.name,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Name),
+                     _U.list([A2($Html.div,
+                     _U.list([$Html$Attributes.$class("form-group")]),
+                     _U.list([nameInput(_p7)]))]))
+                     ,A4(sideBlock,
+                     "Surface pencil",
+                     _p5.surface,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Surface),
+                     _U.list([surfaceBlock(_p4)]))
+                     ,A4(sideBlock,
+                     "Gates",
+                     _p5.gates,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gates),
+                     _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Downwind")]))
                                      ,A3(intInput,
-                                     _p5.downwind.y,
+                                     _p6.downwind.y,
                                      $Screens$EditTrack$Types.SetDownwindY,
                                      _U.list([$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
@@ -20791,7 +20887,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Upwind")]))
                                      ,A3(intInput,
-                                     _p5.upwind.y,
+                                     _p6.upwind.y,
                                      $Screens$EditTrack$Types.SetUpwindY,
                                      _U.list([$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
@@ -20800,7 +20896,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Width")]))
                                      ,A3(intInput,
-                                     _p5.downwind.width,
+                                     _p6.downwind.width,
                                      $Screens$EditTrack$Types.SetGateWidth,
                                      _U.list([$Html$Attributes.min("50")
                                              ,$Html$Attributes.step("10")]))]))
@@ -20810,17 +20906,20 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Laps")]))
                                      ,A3(intInput,
-                                     _p5.laps,
+                                     _p6.laps,
                                      $Screens$EditTrack$Types.SetLaps,
-                                     _U.list([$Html$Attributes.min("1")]))]))
-                             ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Wind")]))
-                             ,A2($Html.div,
+                                     _U.list([$Html$Attributes.min("1")]))]))]))
+                     ,A4(sideBlock,
+                     "Wind",
+                     _p5.wind,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Wind),
+                     _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Wavelength 1")]))
                                      ,A3(intInput,
-                                     _p5.windGenerator.wavelength1,
+                                     _p6.windGenerator.wavelength1,
                                      $Screens$EditTrack$Types.SetWindW1,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
@@ -20829,7 +20928,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Amplitude 1")]))
                                      ,A3(intInput,
-                                     _p5.windGenerator.amplitude1,
+                                     _p6.windGenerator.amplitude1,
                                      $Screens$EditTrack$Types.SetWindA1,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
@@ -20838,7 +20937,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Wavelength 2")]))
                                      ,A3(intInput,
-                                     _p5.windGenerator.wavelength2,
+                                     _p6.windGenerator.wavelength2,
                                      $Screens$EditTrack$Types.SetWindW2,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
@@ -20847,20 +20946,39 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Amplitude 2")]))
                                      ,A3(intInput,
-                                     _p5.windGenerator.amplitude2,
+                                     _p6.windGenerator.amplitude2,
                                      $Screens$EditTrack$Types.SetWindA2,
-                                     _U.list([$Html$Attributes.min("1")]))]))
-                             ,A2($Html.h3,_U.list([]),_U.list([$Html.text("Gusts")]))
-                             ,A2($Html.div,
+                                     _U.list([$Html$Attributes.min("1")]))]))]))
+                     ,A4(sideBlock,
+                     "Gusts",
+                     _p5.gusts,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gusts),
+                     _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
                                      _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Interval (s)")]))
                                      ,A3(intInput,
-                                     _p5.gustGenerator.interval,
+                                     _p6.gustGenerator.interval,
                                      $Screens$EditTrack$Types.SetGustInterval,
                                      _U.list([$Html$Attributes.min("10")]))]))
-                             ,gustDefsTable(_p5.gustGenerator.defs)]))]);
+                             ,gustDefsTable(_p6.gustGenerator.defs)]))
+                     ,A2($Html.div,
+                     _U.list([$Html$Attributes.$class("form-actions")]),
+                     _U.list([A2($Html.button,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.Save(false))
+                                     ,$Html$Attributes.$class("btn btn-primary btn-block btn-save")
+                                     ,$Html$Attributes.disabled(_p8)]),
+                             _U.list([$Html.text("Save")]))
+                             ,A2($Html.button,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.Save(true))
+                                     ,$Html$Attributes.$class("btn btn-default btn-block btn-save-and-try")
+                                     ,$Html$Attributes.disabled(_p8)]),
+                             _U.list([$Html.text("Save and try")]))]))]);
    });
    return _elm.Screens.EditTrack.SideView.values = {_op: _op
                                                    ,view: view
@@ -20870,7 +20988,8 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                    ,gustDefsHeader: gustDefsHeader
                                                    ,gustDefRow: gustDefRow
                                                    ,nameInput: nameInput
-                                                   ,intInput: intInput};
+                                                   ,intInput: intInput
+                                                   ,sideBlock: sideBlock};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};
@@ -21259,14 +21378,15 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    };
    var view = F2(function (_p5,screen) {
       var _p6 = _p5;
-      var _p10 = _p6.player;
       var _p7 = {ctor: "_Tuple2",_0: screen.track,_1: screen.editor};
       if (_p7.ctor === "_Tuple2" && _p7._0.ctor === "Just" && _p7._1.ctor === "Just")
       {
             var _p9 = _p7._0._0;
             var _p8 = _p7._1._0;
-            return _U.eq(_p10.id,
-            _p9.creatorId) || $Models.isAdmin(_p10) ? A2($Screens$Layout.layout,
+            return A2($Models.hasDraft,
+            _p6.player,
+            _p9) ? A3($Screens$Layout.layout,
+            "editor",
             A2($Screens$EditTrack$SideView.view,_p9,_p8),
             _U.list([renderCourse(_p8)])) : $Html.text("Access forbidden.");
          } else {
@@ -21304,10 +21424,11 @@ Elm.Screens.ShowProfile.View.make = function (_elm) {
    var view = F2(function (ctx,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.player;
-      return A2($Screens$Layout.layoutWithNav,
+      return A3($Screens$Layout.layoutWithNav,
+      "show-profile",
       ctx,
       _U.list([A2($Screens$Utils.container,
-      "show-profile",
+      "",
       _U.list([A2($Html.img,
               _U.list([$Html$Attributes.$class("avatar avatar-user")
                       ,$Html$Attributes.src($Screens$Utils.avatarUrl(_p2))
@@ -21689,17 +21810,21 @@ Elm.Screens.Game.SideView.make = function (_elm) {
       return _U.list([A2($Html.p,
                      _U.list([$Html$Attributes.$class("draft-warning")]),
                      _U.list([$Html.text("This is a draft, you\'re the only one seeing this race track.")]))
-                     ,A3($Screens$Utils.linkTo,
+                     ,A2($Html.div,
+                     _U.list([$Html$Attributes.$class("form-actions")]),
+                     _U.list([A3($Screens$Utils.linkTo,
                      $Routes.EditTrack(_p5.track.id),
                      _U.list([$Html$Attributes.$class("btn btn-block btn-primary")]),
-                     _U.list([$Html.text("Edit race track")]))]);
+                     _U.list([$Html.text("Edit draft")]))]))]);
    };
    var trackNav = function (liveTrack) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("track-menu")]),
-      _U.list([A2($Html.h2,
-      _U.list([$Html$Attributes.$class("track-name")]),
-      _U.list([$Html.text(liveTrack.track.name)]))]));
+      _U.list([$Screens$Utils.hr$
+              ,A2($Html.h2,
+              _U.list([]),
+              _U.list([$Html.text(liveTrack.track.name)]))
+              ,$Screens$Utils.hr$]));
    };
    var view = F3(function (screen,liveTrack,gameState) {
       var blocks = liveTrack.track.draft ? draftBlocks(liveTrack) : A2(liveBlocks,
@@ -22471,7 +22596,8 @@ Elm.Screens.Game.View.make = function (_elm) {
             var _p1 = ctx.dims;
             var w = _p1._0;
             var h = _p1._1;
-            return A2($Screens$Layout.layout,
+            return A3($Screens$Layout.layout,
+            "play-track",
             A3($Screens$Game$SideView.view,screen,_p0._0._0,_p2),
             _U.list([A2($Html.div,
             _U.list([$Html$Attributes.$class("game")]),
@@ -22555,10 +22681,11 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
    };
    var view = F2(function (ctx,_p2) {
       var _p3 = _p2;
-      return A2($Screens$Layout.layoutWithNav,
+      return A3($Screens$Layout.layoutWithNav,
+      "list-drafts",
       ctx,
       _U.list([A2($Screens$Utils.container,
-      "list-drafts",
+      "",
       _U.list([A2($Html.h1,
               _U.list([]),
               _U.list([$Html.text("Drafts")]))

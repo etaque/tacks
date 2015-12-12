@@ -15,8 +15,8 @@ import Screens.Layout as Layout
 
 view : Context -> Screen -> Html
 view ctx {track} =
-  Layout.layoutWithNav ctx
-    [ container "show-track"
+  Layout.layoutWithNav "show-track" ctx
+    [ container ""
       [ Maybe.withDefault loading (Maybe.map withTrack track)
       ]
     ]

@@ -17,8 +17,8 @@ import Screens.Layout as Layout
 
 view : Context -> Screen -> Html
 view ctx ({drafts} as screen) =
-  Layout.layoutWithNav ctx
-    [ container "list-drafts"
+  Layout.layoutWithNav "list-drafts" ctx
+    [ container ""
       [ h1 [ ] [ text "Drafts" ]
       , ul [ ] (List.map draftItem drafts)
       , if isAdmin ctx.player then createTrackForm screen else div [] []

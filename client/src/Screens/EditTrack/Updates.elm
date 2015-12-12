@@ -20,6 +20,7 @@ import Screens.EditTrack.GridUpdates as GridUpdates exposing (mouseAction)
 import Game.Grid exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
+import Routes
 
 
 addr : Signal.Address Action
@@ -48,7 +49,14 @@ update action screen =
         Ok track ->
           let
             editor =
-              { course = track.course
+              { blocks =
+                { name = True
+                , surface = True
+                , gates = False
+                , wind = False
+                , gusts = False
+                }
+              , course = track.course
               , center = (0, 0)
               , courseDims = getCourseDims screen.dims
               , mode = Watch
@@ -60,6 +68,9 @@ update action screen =
             { screen | track = Just track, editor = Just editor } &: none
         Err _ ->
         { screen | notFound = True } &: none
+
+    ToggleBlock b ->
+      (updateBlocks >> updateEditor) b screen &: none
 
     SetName n ->
       (updateEditor (\e -> { e | name = n }) screen) &: none
@@ -76,15 +87,25 @@ update action screen =
     FormAction a ->
       (FormUpdates.update >> updateCourse >> updateEditor) a screen &: none
 
-    Save ->
+    Save try ->
       case (screen.track, screen.editor) of
         (Just track, Just editor) ->
-          (updateEditor (\e -> { e | saving = True}) screen) &! (save track.id editor)
+          (updateEditor (\e -> { e | saving = True}) screen) &! (save try track.id editor)
         _ ->
           screen &: none
 
-    SaveResult result -> -- TODO
-      updateEditor (\e -> { e | saving = False }) screen &: none
+    SaveResult try result ->
+      case result of
+        Ok track ->
+          let
+            newScreen = updateEditor (\e -> { e | saving = False }) screen
+            effect = if try
+              then Effects.map (\_ -> NoOp) (Utils.redirect (Routes.PlayTrack track.id))
+              else none
+          in
+            newScreen &: effect
+        Err _ ->
+          screen &: none -- TODO
 
     NoOp ->
       screen &: none
@@ -102,6 +123,17 @@ updateCourse : (Course -> Course) -> Editor -> Editor
 updateCourse update editor =
   { editor | course = update editor.course }
 
+updateBlocks : SideBlock -> Editor -> Editor
+updateBlocks b ({blocks} as editor) =
+  let
+    newBlocks = case b of
+      Name -> { blocks | name = not blocks.name }
+      Surface -> { blocks | surface = not blocks.surface }
+      Gates -> { blocks | gates = not blocks.gates }
+      Wind -> { blocks | wind = not blocks.wind }
+      Gusts -> { blocks | gusts = not blocks.gusts }
+  in
+    { editor | blocks = newBlocks }
 
 loadTrack : String -> Task Never Action
 loadTrack id =
@@ -122,14 +154,14 @@ getCourseDims (w, h) =
   (w - sidebarWidth, h)
 
 
-save : String -> Editor -> Task Never Action
-save id ({course, name} as editor) =
+save : Bool -> String -> Editor -> Task Never Action
+save try id ({course, name} as editor) =
   let
     area = getRaceArea course.grid
     withArea = { course | area = area }
   in
     delay 500 (ServerApi.saveTrack id name withArea)
-      |> Task.map SaveResult 
+      |> Task.map (SaveResult try)
 
 
 getRaceArea : Grid -> RaceArea

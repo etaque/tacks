@@ -4,24 +4,40 @@
 @import 'fonts';
 
 aside {
+  padding: 0 15px;
 
   .user-info {
-    margin: 5px 15px;
+    margin: 5px 5px;
     padding: 10px;
     font-size: 14px;
+  }
+
+  h2 {
+    margin: 0;
+    text-align: center;
+    color: $whiteSeaBlue;
+    text-decoration: none;
+    font-family: $serif;
+    font-size: 21px;
+    font-weight: normal;
+  }
+
+  hr {
+    border-top: 2px solid $seaBlue;
+    margin: 10px 0;
   }
 
   .user-menu {
     list-style: none;
     padding: 0;
     padding-top: 10px;
-    margin: 0 15px 5px 15px;
+    margin: 0 0 5px 0;
     border-top: 2px solid $seaBlue;
   }
 
   .logout {
     border-top: 2px solid $seaBlue;
-    margin: 0 15px 5px 15px;
+    margin: 0 0 5px 0;
     padding-top: 10px;
   }
 
@@ -43,30 +59,40 @@ aside {
     }
   }
 
-  h2.track-name {
-    margin: 0 10px;
-    padding: 8px;
-    color: $darkerSeaBlue;
-    font-size: 18px;
-    background-color: $whiteSeaBlue;
+  .track-menu {
+    margin: 0;
+  }
+
+  .form-actions {
+    margin: 10px 0;
   }
 
   .aside-module {
-    padding: 10px;
+    margin-top: 10px;
 
-    .module-title {
+    .module-header {
       background-color: $darkSeaBlue;
       margin: 0 0 10px 0;
       padding: 0;
 
-      h3 {
+      h3, a.module-title {
         font-family: $regular;
+        font-weight: bold;
         color: $white;
         padding: 5px 10px;
         margin: 0;
-        display: inline-block;
+        display: block;
         text-transform: lowercase;
         font-size: 13px;
+      }
+
+      a.module-title {
+        color: $white;
+
+        &:hover {
+          color: $white;
+          background-color: $seaBlue;
+        }
       }
     }
 
