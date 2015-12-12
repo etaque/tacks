@@ -10,30 +10,33 @@ import Game.Grid exposing (..)
 import Screens.EditTrack.Types exposing (..)
 
 
-mouseAction : MouseEvent -> Editor -> Editor
-mouseAction event editor =
-  case realMode editor of
-    CreateTile kind ->
-      updateTileAction kind event editor
-    Erase ->
-      deleteTileAction event editor
-    Watch ->
-      updateCenter event editor
-
-
-deleteTileAction : MouseEvent -> Editor -> Editor
-deleteTileAction event editor =
+mouseAction : MouseEvent -> Dims -> Editor -> Editor
+mouseAction event dims editor =
   let
-    coordsList = getMouseEventTiles editor event
+    courseDims = getCourseDims dims
+  in
+    case realMode editor of
+      CreateTile kind ->
+        updateTileAction kind event courseDims editor
+      Erase ->
+        deleteTileAction event courseDims editor
+      Watch ->
+        updateCenter event courseDims editor
+
+
+deleteTileAction : MouseEvent -> Dims -> Editor -> Editor
+deleteTileAction event courseDims editor =
+  let
+    coordsList = getMouseEventTiles editor courseDims event
     newGrid = List.foldl deleteTile editor.course.grid coordsList
   in
     withGrid newGrid editor
 
 
-updateTileAction : TileKind -> MouseEvent -> Editor -> Editor
-updateTileAction kind event editor =
+updateTileAction : TileKind -> MouseEvent -> Dims -> Editor -> Editor
+updateTileAction kind event courseDims editor =
   let
-    coordsList = getMouseEventTiles editor event
+    coordsList = getMouseEventTiles editor courseDims event
     newGrid = List.foldl (createTile kind) editor.course.grid coordsList
   in
     withGrid newGrid editor
@@ -47,10 +50,10 @@ withGrid grid ({course} as editor) =
     { editor | course = newCourse }
 
 
-getMouseEventTiles : Editor -> MouseEvent -> List Coords
-getMouseEventTiles editor event =
+getMouseEventTiles : Editor -> Dims -> MouseEvent -> List Coords
+getMouseEventTiles editor courseDims event =
   let
-    tileCoords = (clickPoint editor) >> (Maybe.map pointToHexCoords)
+    tileCoords = (clickPoint editor courseDims) >> (Maybe.map pointToHexCoords)
   in
     case event of
       StartAt p ->
@@ -67,8 +70,8 @@ getMouseEventTiles editor event =
         [ ]
 
 
-clickPoint : Editor -> (Int, Int) -> Maybe Point
-clickPoint {courseDims, center} (x, y) =
+clickPoint : Editor -> Dims -> (Int, Int) -> Maybe Point
+clickPoint {center} courseDims (x, y) =
   if withinWindow courseDims (x, y) then
     let
       (w, h) = courseDims
@@ -81,8 +84,8 @@ clickPoint {courseDims, center} (x, y) =
     Nothing
 
 
-updateCenter : MouseEvent -> Editor -> Editor
-updateCenter event ({courseDims, center} as editor) =
+updateCenter : MouseEvent -> Dims -> Editor -> Editor
+updateCenter event courseDims ({center} as editor) =
   let
     (dx, dy) =
       case event of

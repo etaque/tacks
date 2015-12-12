@@ -11849,6 +11849,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    return _elm.Screens.EditTrack.Types.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $List = Elm.List.make(_elm),
@@ -11857,10 +11858,16 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var getCourseDims = function (_p0) {
+      var _p1 = _p0;
+      return {ctor: "_Tuple2"
+             ,_0: _p1._0 - $Constants.sidebarWidth
+             ,_1: _p1._1};
+   };
    var modeName = function (mode) {
-      var _p0 = mode;
-      switch (_p0.ctor)
-      {case "CreateTile": switch (_p0._0.ctor)
+      var _p2 = mode;
+      switch (_p2.ctor)
+      {case "CreateTile": switch (_p2._0.ctor)
            {case "Water": return {ctor: "_Tuple2",_0: "w",_1: "Water"};
               case "Grass": return {ctor: "_Tuple2",_0: "g",_1: "Grass"};
               default: return {ctor: "_Tuple2",_0: "r",_1: "Rock"};}
@@ -11941,9 +11948,9 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
       return {ctor: "LoadTrack",_0: a};
    };
    var Watch = {ctor: "Watch"};
-   var realMode = function (_p1) {
-      var _p2 = _p1;
-      return _p2.altMove ? Watch : _p2.mode;
+   var realMode = function (_p3) {
+      var _p4 = _p3;
+      return _p4.altMove ? Watch : _p4.mode;
    };
    var Erase = {ctor: "Erase"};
    var CreateTile = function (a) {
@@ -11952,24 +11959,20 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var SideBlocks = F5(function (a,b,c,d,e) {
       return {name: a,surface: b,gates: c,wind: d,gusts: e};
    });
-   var Editor = F8(function (a,b,c,d,e,f,g,h) {
+   var Editor = F7(function (a,b,c,d,e,f,g) {
       return {blocks: a
              ,course: b
              ,center: c
-             ,courseDims: d
-             ,mode: e
-             ,altMove: f
-             ,name: g
-             ,saving: h};
+             ,mode: d
+             ,altMove: e
+             ,name: f
+             ,saving: g};
    });
-   var initial = function (dims) {
-      return {track: $Maybe.Nothing
-             ,editor: $Maybe.Nothing
-             ,notFound: false
-             ,dims: dims};
-   };
-   var Screen = F4(function (a,b,c,d) {
-      return {track: a,editor: b,notFound: c,dims: d};
+   var initial = {track: $Maybe.Nothing
+                 ,editor: $Maybe.Nothing
+                 ,notFound: false};
+   var Screen = F3(function (a,b,c) {
+      return {track: a,editor: b,notFound: c};
    });
    return _elm.Screens.EditTrack.Types.values = {_op: _op
                                                 ,Screen: Screen
@@ -12009,7 +12012,8 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,SetWindA1: SetWindA1
                                                 ,SetWindW2: SetWindW2
                                                 ,SetWindA2: SetWindA2
-                                                ,modeName: modeName};
+                                                ,modeName: modeName
+                                                ,getCourseDims: getCourseDims};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ShowProfile = Elm.Screens.ShowProfile || {};
@@ -12843,17 +12847,16 @@ Elm.AppTypes.make = function (_elm) {
    var Enter = {ctor: "Enter"};
    var initialAppState = function (_p0) {
       var _p1 = _p0;
-      var _p3 = _p1.player;
-      var _p2 = _p1.dims;
-      return {ctx: {player: _p3,dims: _p2,transitStatus: Enter}
+      var _p2 = _p1.player;
+      return {ctx: {player: _p2,dims: _p1.dims,transitStatus: Enter}
              ,path: _p1.path
              ,route: $Maybe.Nothing
-             ,screens: {home: $Screens$Home$Types.initial(_p3)
+             ,screens: {home: $Screens$Home$Types.initial(_p2)
                        ,login: $Screens$Login$Types.initial
                        ,register: $Screens$Register$Types.initial
                        ,showTrack: $Screens$ShowTrack$Types.initial
-                       ,editTrack: $Screens$EditTrack$Types.initial(_p2)
-                       ,showProfile: $Screens$ShowProfile$Types.initial(_p3)
+                       ,editTrack: $Screens$EditTrack$Types.initial
+                       ,showProfile: $Screens$ShowProfile$Types.initial(_p2)
                        ,game: $Screens$Game$Types.initial
                        ,listDrafts: $Screens$ListDrafts$Types.initial}};
    };
@@ -14560,9 +14563,8 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
       xWindow,
       _p3._0) && A2($CoreExtra.within,yWindow,_p4);
    });
-   var updateCenter = F2(function (event,_p5) {
+   var updateCenter = F3(function (event,courseDims,_p5) {
       var _p6 = _p5;
-      var _p14 = _p6.courseDims;
       var _p13 = _p6.center;
       var _p7 = function () {
          var _p8 = event;
@@ -14573,9 +14575,9 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
               var _p10 = _p8._1._0;
               var _p9 = _p8._0._0;
               return A2(withinWindow,
-              _p14,
+              courseDims,
               {ctor: "_Tuple2",_0: _p9,_1: _p11}) && A2(withinWindow,
-              _p14,
+              courseDims,
               {ctor: "_Tuple2",_0: _p10,_1: _p12}) ? {ctor: "_Tuple2"
                                                      ,_0: _p10 - _p9
                                                      ,_1: _p11 - _p12} : {ctor: "_Tuple2",_0: 0,_1: 0};
@@ -14588,82 +14590,97 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
                       ,_1: $Basics.snd(_p13) + $Basics.toFloat(dy)};
       return _U.update(_p6,{center: newCenter});
    });
-   var clickPoint = F2(function (_p16,_p15) {
-      var _p17 = _p16;
-      var _p23 = _p17.courseDims;
-      var _p18 = _p15;
-      var _p22 = _p18._1;
-      var _p21 = _p18._0;
-      if (A2(withinWindow,_p23,{ctor: "_Tuple2",_0: _p21,_1: _p22})) {
-            var _p19 = _p17.center;
-            var cx = _p19._0;
-            var cy = _p19._1;
-            var _p20 = _p23;
-            var w = _p20._0;
-            var h = _p20._1;
-            var x$ = $Basics.toFloat(_p21 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
-            var y$ = $Basics.toFloat(0 - _p22) - cy + $Basics.toFloat(h) / 2;
+   var clickPoint = F3(function (_p15,courseDims,_p14) {
+      var _p16 = _p15;
+      var _p17 = _p14;
+      var _p21 = _p17._1;
+      var _p20 = _p17._0;
+      if (A2(withinWindow,
+      courseDims,
+      {ctor: "_Tuple2",_0: _p20,_1: _p21})) {
+            var _p18 = _p16.center;
+            var cx = _p18._0;
+            var cy = _p18._1;
+            var _p19 = courseDims;
+            var w = _p19._0;
+            var h = _p19._1;
+            var x$ = $Basics.toFloat(_p20 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
+            var y$ = $Basics.toFloat(0 - _p21) - cy + $Basics.toFloat(h) / 2;
             return $Maybe.Just({ctor: "_Tuple2",_0: x$,_1: y$});
          } else return $Maybe.Nothing;
    });
-   var getMouseEventTiles = F2(function (editor,event) {
-      var tileCoords = function (_p24) {
+   var getMouseEventTiles = F3(function (editor,courseDims,event) {
+      var tileCoords = function (_p22) {
          return A2($Maybe.map,
          $Game$Grid.pointToHexCoords,
-         A2(clickPoint,editor,_p24));
+         A3(clickPoint,editor,courseDims,_p22));
       };
-      var _p25 = event;
-      switch (_p25.ctor)
-      {case "StartAt": var _p26 = tileCoords(_p25._0);
-           if (_p26.ctor === "Just") {
-                 return _U.list([_p26._0]);
+      var _p23 = event;
+      switch (_p23.ctor)
+      {case "StartAt": var _p24 = tileCoords(_p23._0);
+           if (_p24.ctor === "Just") {
+                 return _U.list([_p24._0]);
               } else {
                  return _U.list([]);
               }
-         case "MoveFromTo": var _p27 = {ctor: "_Tuple2"
-                                       ,_0: tileCoords(_p25._0)
-                                       ,_1: tileCoords(_p25._1)};
-           if (_p27.ctor === "_Tuple2" && _p27._0.ctor === "Just" && _p27._1.ctor === "Just")
+         case "MoveFromTo": var _p25 = {ctor: "_Tuple2"
+                                       ,_0: tileCoords(_p23._0)
+                                       ,_1: tileCoords(_p23._1)};
+           if (_p25.ctor === "_Tuple2" && _p25._0.ctor === "Just" && _p25._1.ctor === "Just")
            {
-                 var _p29 = _p27._1._0;
-                 var _p28 = _p27._0._0;
-                 return _U.eq(_p28,
-                 _p29) ? _U.list([_p28]) : A2($Game$Grid.hexLine,_p28,_p29);
+                 var _p27 = _p25._1._0;
+                 var _p26 = _p25._0._0;
+                 return _U.eq(_p26,
+                 _p27) ? _U.list([_p26]) : A2($Game$Grid.hexLine,_p26,_p27);
               } else {
                  return _U.list([]);
               }
          default: return _U.list([]);}
    });
-   var withGrid = F2(function (grid,_p30) {
-      var _p31 = _p30;
-      var newCourse = _U.update(_p31.course,{grid: grid});
-      return _U.update(_p31,{course: newCourse});
+   var withGrid = F2(function (grid,_p28) {
+      var _p29 = _p28;
+      var newCourse = _U.update(_p29.course,{grid: grid});
+      return _U.update(_p29,{course: newCourse});
    });
-   var updateTileAction = F3(function (kind,event,editor) {
-      var coordsList = A2(getMouseEventTiles,editor,event);
+   var updateTileAction = F4(function (kind,
+   event,
+   courseDims,
+   editor) {
+      var coordsList = A3(getMouseEventTiles,
+      editor,
+      courseDims,
+      event);
       var newGrid = A3($List.foldl,
       $Game$Grid.createTile(kind),
       editor.course.grid,
       coordsList);
       return A2(withGrid,newGrid,editor);
    });
-   var deleteTileAction = F2(function (event,editor) {
-      var coordsList = A2(getMouseEventTiles,editor,event);
+   var deleteTileAction = F3(function (event,courseDims,editor) {
+      var coordsList = A3(getMouseEventTiles,
+      editor,
+      courseDims,
+      event);
       var newGrid = A3($List.foldl,
       $Game$Grid.deleteTile,
       editor.course.grid,
       coordsList);
       return A2(withGrid,newGrid,editor);
    });
-   var mouseAction = F2(function (event,editor) {
-      var _p32 = $Screens$EditTrack$Types.realMode(editor);
-      switch (_p32.ctor)
-      {case "CreateTile": return A3(updateTileAction,
-           _p32._0,
+   var mouseAction = F3(function (event,dims,editor) {
+      var courseDims = $Screens$EditTrack$Types.getCourseDims(dims);
+      var _p30 = $Screens$EditTrack$Types.realMode(editor);
+      switch (_p30.ctor)
+      {case "CreateTile": return A4(updateTileAction,
+           _p30._0,
            event,
+           courseDims,
            editor);
-         case "Erase": return A2(deleteTileAction,event,editor);
-         default: return A2(updateCenter,event,editor);}
+         case "Erase": return A3(deleteTileAction,
+           event,
+           courseDims,
+           editor);
+         default: return A3(updateCenter,event,courseDims,editor);}
    });
    return _elm.Screens.EditTrack.GridUpdates.values = {_op: _op
                                                       ,mouseAction: mouseAction
@@ -14689,7 +14706,6 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Effects = Elm.Effects.make(_elm),
@@ -14752,42 +14768,28 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       500,
       A3($ServerApi.saveTrack,id,_p1.name,withArea)));
    });
-   var getCourseDims = function (_p3) {
-      var _p4 = _p3;
-      return {ctor: "_Tuple2"
-             ,_0: _p4._0 - $Constants.sidebarWidth
-             ,_1: _p4._1};
-   };
-   var updateDims = F2(function (dims,screen) {
-      var newEditor = A2($Maybe.map,
-      function (e) {
-         return _U.update(e,{courseDims: getCourseDims(dims)});
-      },
-      screen.editor);
-      return _U.update(screen,{editor: newEditor,dims: dims});
-   });
    var loadTrack = function (id) {
       return A2($Task.map,
       $Screens$EditTrack$Types.LoadTrack,
       $ServerApi.getTrack(id));
    };
-   var updateBlocks = F2(function (b,_p5) {
-      var _p6 = _p5;
-      var _p8 = _p6.blocks;
+   var updateBlocks = F2(function (b,_p3) {
+      var _p4 = _p3;
+      var _p6 = _p4.blocks;
       var newBlocks = function () {
-         var _p7 = b;
-         switch (_p7.ctor)
-         {case "Name": return _U.update(_p8,
-              {name: $Basics.not(_p8.name)});
-            case "Surface": return _U.update(_p8,
-              {surface: $Basics.not(_p8.surface)});
-            case "Gates": return _U.update(_p8,
-              {gates: $Basics.not(_p8.gates)});
-            case "Wind": return _U.update(_p8,
-              {wind: $Basics.not(_p8.wind)});
-            default: return _U.update(_p8,{gusts: $Basics.not(_p8.gusts)});}
+         var _p5 = b;
+         switch (_p5.ctor)
+         {case "Name": return _U.update(_p6,
+              {name: $Basics.not(_p6.name)});
+            case "Surface": return _U.update(_p6,
+              {surface: $Basics.not(_p6.surface)});
+            case "Gates": return _U.update(_p6,
+              {gates: $Basics.not(_p6.gates)});
+            case "Wind": return _U.update(_p6,
+              {wind: $Basics.not(_p6.wind)});
+            default: return _U.update(_p6,{gusts: $Basics.not(_p6.gusts)});}
       }();
-      return _U.update(_p6,{blocks: newBlocks});
+      return _U.update(_p4,{blocks: newBlocks});
    });
    var updateCourse = F2(function (update,editor) {
       return _U.update(editor,{course: update(editor.course)});
@@ -14796,27 +14798,26 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       var newEditor = A2($Maybe.map,update,screen.editor);
       return _U.update(screen,{editor: newEditor});
    });
-   var update = F2(function (action,screen) {
-      var _p9 = action;
-      switch (_p9.ctor)
-      {case "LoadTrack": var _p10 = _p9._0;
-           if (_p10.ctor === "Ok") {
-                 var _p11 = _p10._0;
-                 var editor = {blocks: {name: true
-                                       ,surface: true
+   var update = F3(function (dims,action,screen) {
+      var _p7 = action;
+      switch (_p7.ctor)
+      {case "LoadTrack": var _p8 = _p7._0;
+           if (_p8.ctor === "Ok") {
+                 var _p9 = _p8._0;
+                 var editor = {blocks: {name: false
+                                       ,surface: false
                                        ,gates: false
                                        ,wind: false
                                        ,gusts: false}
-                              ,course: _p11.course
+                              ,course: _p9.course
                               ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
-                              ,courseDims: getCourseDims(screen.dims)
                               ,mode: $Screens$EditTrack$Types.Watch
                               ,altMove: false
-                              ,name: _p11.name
+                              ,name: _p9.name
                               ,saving: false};
                  return A2($AppTypes._op["&:"],
                  _U.update(screen,
-                 {track: $Maybe.Just(_p11),editor: $Maybe.Just(editor)}),
+                 {track: $Maybe.Just(_p9),editor: $Maybe.Just(editor)}),
                  $Effects.none);
               } else {
                  return A2($AppTypes._op["&:"],
@@ -14824,51 +14825,49 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  $Effects.none);
               }
          case "ToggleBlock": return A2($AppTypes._op["&:"],
-           A2(function (_p12) {
-              return updateEditor(updateBlocks(_p12));
+           A2(function (_p10) {
+              return updateEditor(updateBlocks(_p10));
            },
-           _p9._0,
+           _p7._0,
            screen),
            $Effects.none);
          case "SetName": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{name: _p9._0});
+              return _U.update(e,{name: _p7._0});
            },
            screen),
            $Effects.none);
          case "MouseAction": return A2($AppTypes._op["&:"],
-           A2(function (_p13) {
-              return updateEditor($Screens$EditTrack$GridUpdates.mouseAction(_p13));
-           },
-           _p9._0,
+           A2(updateEditor,
+           A2($Screens$EditTrack$GridUpdates.mouseAction,_p7._0,dims),
            screen),
            $Effects.none);
          case "SetMode": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{mode: _p9._0});
+              return _U.update(e,{mode: _p7._0});
            },
            screen),
            $Effects.none);
          case "AltMoveMode": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{altMove: _p9._0});
+              return _U.update(e,{altMove: _p7._0});
            },
            screen),
            $Effects.none);
          case "FormAction": return A2($AppTypes._op["&:"],
-           A2(function (_p14) {
-              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p14)));
+           A2(function (_p11) {
+              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p11)));
            },
-           _p9._0,
+           _p7._0,
            screen),
            $Effects.none);
-         case "Save": var _p15 = {ctor: "_Tuple2"
+         case "Save": var _p12 = {ctor: "_Tuple2"
                                  ,_0: screen.track
                                  ,_1: screen.editor};
-           if (_p15.ctor === "_Tuple2" && _p15._0.ctor === "Just" && _p15._1.ctor === "Just")
+           if (_p12.ctor === "_Tuple2" && _p12._0.ctor === "Just" && _p12._1.ctor === "Just")
            {
                  return A2($AppTypes._op["&!"],
                  A2(updateEditor,
@@ -14876,17 +14875,17 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     return _U.update(e,{saving: true});
                  },
                  screen),
-                 A3(save,_p9._0,_p15._0._0.id,_p15._1._0));
+                 A3(save,_p7._0,_p12._0._0.id,_p12._1._0));
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
-         case "SaveResult": var _p16 = _p9._1;
-           if (_p16.ctor === "Ok") {
-                 var effect = _p9._0 ? A2($Effects.map,
-                 function (_p17) {
+         case "SaveResult": var _p13 = _p7._1;
+           if (_p13.ctor === "Ok") {
+                 var effect = _p7._0 ? A2($Effects.map,
+                 function (_p14) {
                     return $Screens$EditTrack$Types.NoOp;
                  },
-                 $Screens$UpdateUtils.redirect($Routes.PlayTrack(_p16._0.id))) : $Effects.none;
+                 $Screens$UpdateUtils.redirect($Routes.PlayTrack(_p13._0.id))) : $Effects.none;
                  var newScreen = A2(updateEditor,
                  function (e) {
                     return _U.update(e,{saving: false});
@@ -14898,11 +14897,11 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
               }
          default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
-   var mount = F2(function (dims,id) {
+   var mount = function (id) {
       return A2($AppTypes._op["&!"],
-      $Screens$EditTrack$Types.initial(dims),
+      $Screens$EditTrack$Types.initial,
       loadTrack(id));
-   });
+   };
    var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
                                           $Screens$EditTrack$Types.AltMoveMode,
                                           $Keyboard.shift)
@@ -14919,8 +14918,6 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                                   ,updateCourse: updateCourse
                                                   ,updateBlocks: updateBlocks
                                                   ,loadTrack: loadTrack
-                                                  ,updateDims: updateDims
-                                                  ,getCourseDims: getCourseDims
                                                   ,save: save
                                                   ,getRaceArea: getRaceArea};
 };
@@ -16277,132 +16274,115 @@ Elm.AppUpdates.make = function (_elm) {
       A2($Result.map,$AppTypes.SetPlayer,r));
    },
    $ServerApi.postLogout);
-   var updateScreenDims = F2(function (dims,_p3) {
+   var updateScreen = F2(function (screenAction,_p3) {
       var _p4 = _p3;
-      var _p7 = _p4.screens;
+      var _p8 = _p4.screens;
+      var _p7 = _p4.ctx;
       var _p6 = _p4;
-      var _p5 = _p4.route;
-      if (_p5.ctor === "Just" && _p5._0.ctor === "EditTrack") {
-            var newCtx = _U.update(_p4.ctx,{dims: dims});
-            var newScreens = _U.update(_p7,
-            {editTrack: A2($Screens$EditTrack$Updates.updateDims,
-            dims,
-            _p7.editTrack)});
-            return _U.update(_p6,{screens: newScreens,ctx: newCtx});
-         } else {
-            return _p6;
-         }
-   });
-   var updateScreen = F2(function (screenAction,_p8) {
-      var _p9 = _p8;
-      var _p12 = _p9.screens;
-      var _p11 = _p9;
-      var _p10 = screenAction;
-      switch (_p10.ctor)
+      var _p5 = screenAction;
+      switch (_p5.ctor)
       {case "HomeAction": return A2(applyHome,
-           A2($Screens$Home$Updates.update,_p10._0,_p12.home),
-           _p11);
+           A2($Screens$Home$Updates.update,_p5._0,_p8.home),
+           _p6);
          case "LoginAction": return A2(applyLogin,
-           A2($Screens$Login$Updates.update,_p10._0,_p12.login),
-           _p11);
+           A2($Screens$Login$Updates.update,_p5._0,_p8.login),
+           _p6);
          case "RegisterAction": return A2(applyRegister,
-           A2($Screens$Register$Updates.update,_p10._0,_p12.register),
-           _p11);
+           A2($Screens$Register$Updates.update,_p5._0,_p8.register),
+           _p6);
          case "ShowTrackAction": return A2(applyShowTrack,
-           A2($Screens$ShowTrack$Updates.update,_p10._0,_p12.showTrack),
-           _p11);
+           A2($Screens$ShowTrack$Updates.update,_p5._0,_p8.showTrack),
+           _p6);
          case "EditTrackAction": return A2(applyEditTrack,
-           A2($Screens$EditTrack$Updates.update,_p10._0,_p12.editTrack),
-           _p11);
+           A3($Screens$EditTrack$Updates.update,
+           _p7.dims,
+           _p5._0,
+           _p8.editTrack),
+           _p6);
          case "ShowProfileAction": return A2(applyShowProfile,
-           A2($Screens$ShowProfile$Updates.update,
-           _p10._0,
-           _p12.showProfile),
-           _p11);
+           A2($Screens$ShowProfile$Updates.update,_p5._0,_p8.showProfile),
+           _p6);
          case "GameAction": return A2(applyGame,
-           A3($Screens$Game$Updates.update,
-           _p9.ctx.player,
-           _p10._0,
-           _p12.game),
-           _p11);
+           A3($Screens$Game$Updates.update,_p7.player,_p5._0,_p8.game),
+           _p6);
          default: return A2(applyListDrafts,
-           A2($Screens$ListDrafts$Updates.update,_p10._0,_p12.listDrafts),
-           _p11);}
+           A2($Screens$ListDrafts$Updates.update,_p5._0,_p8.listDrafts),
+           _p6);}
    });
-   var mountRoute = F2(function (_p13,route) {
-      var _p14 = _p13;
-      var _p17 = _p14.ctx;
-      var _p16 = _p14;
-      var _p15 = route;
-      switch (_p15.ctor)
+   var mountRoute = F2(function (_p9,route) {
+      var _p10 = _p9;
+      var _p13 = _p10.ctx;
+      var _p12 = _p10;
+      var _p11 = route;
+      switch (_p11.ctor)
       {case "Home": return A2(applyHome,
-           $Screens$Home$Updates.mount(_p17.player),
-           _p16);
+           $Screens$Home$Updates.mount(_p13.player),
+           _p12);
          case "Login": return A2(applyLogin,
            $Screens$Login$Updates.mount,
-           _p16);
+           _p12);
          case "Register": return A2(applyRegister,
            $Screens$Register$Updates.mount,
-           _p16);
+           _p12);
          case "ShowProfile": return A2(applyShowProfile,
-           $Screens$ShowProfile$Updates.mount(_p17.player),
-           _p16);
+           $Screens$ShowProfile$Updates.mount(_p13.player),
+           _p12);
          case "ShowTrack": return A2(applyShowTrack,
-           $Screens$ShowTrack$Updates.mount(_p15._0),
-           _p16);
+           $Screens$ShowTrack$Updates.mount(_p11._0),
+           _p12);
          case "EditTrack": return A2(applyEditTrack,
-           A2($Screens$EditTrack$Updates.mount,_p17.dims,_p15._0),
-           _p16);
+           $Screens$EditTrack$Updates.mount(_p11._0),
+           _p12);
          case "PlayTrack": return A2(applyGame,
-           $Screens$Game$Updates.mount(_p15._0),
-           _p16);
+           $Screens$Game$Updates.mount(_p11._0),
+           _p12);
          default: return A2(applyListDrafts,
            $Screens$ListDrafts$Updates.mount,
-           _p16);}
+           _p12);}
    });
-   var update = F2(function (appAction,_p18) {
-      var _p19 = _p18;
-      var _p26 = _p19.ctx;
-      var _p25 = _p19;
-      var _p20 = appAction;
-      switch (_p20.ctor)
+   var update = F2(function (appAction,_p14) {
+      var _p15 = _p14;
+      var _p22 = _p15.ctx;
+      var _p21 = _p15;
+      var _p16 = appAction;
+      switch (_p16.ctor)
       {case "SetPath": return A2($AppTypes._op["&!"],
-           _p25,
+           _p21,
            A2($Task.map,
-           function (_p21) {
+           function (_p17) {
               return $AppTypes.AppNoOp;
            },
-           $History.setPath(_p20._0)));
-         case "PathChanged": var _p22 = _p20._0;
-           var newRoute = A2($RouteParser.match,$Routes.routeParsers,_p22);
+           $History.setPath(_p16._0)));
+         case "PathChanged": var _p18 = _p16._0;
+           var newRoute = A2($RouteParser.match,$Routes.routeParsers,_p18);
            var fx = $Effects.task(A2($Task$Extra.delay,
            100,
            $Task.succeed($AppTypes.MountRoute(newRoute))));
-           var newCtx = _U.update(_p26,{transitStatus: $AppTypes.Exit});
-           var newAppState = _U.update(_p25,{path: _p22,ctx: newCtx});
+           var newCtx = _U.update(_p22,{transitStatus: $AppTypes.Exit});
+           var newAppState = _U.update(_p21,{path: _p18,ctx: newCtx});
            return A2($AppTypes._op["&:"],newAppState,fx);
-         case "MountRoute": var newCtx = _U.update(_p26,
+         case "MountRoute": var newCtx = _U.update(_p22,
            {transitStatus: $AppTypes.Enter});
-           var newAppState = _U.update(_p25,{route: _p20._0,ctx: newCtx});
-           var _p23 = newAppState.route;
-           if (_p23.ctor === "Just") {
-                 return A2(mountRoute,newAppState,_p23._0);
+           var newAppState = _U.update(_p21,{route: _p16._0,ctx: newCtx});
+           var _p19 = newAppState.route;
+           if (_p19.ctor === "Just") {
+                 return A2(mountRoute,newAppState,_p19._0);
               } else {
                  return A2($AppTypes._op["&:"],newAppState,$Effects.none);
               }
          case "SetPlayer": var fx = A2($Effects.map,
-           function (_p24) {
+           function (_p20) {
               return $AppTypes.AppNoOp;
            },
            $Screens$UpdateUtils.redirect($Routes.Home));
-           var newCtx = _U.update(_p26,{player: _p20._0});
-           return A2($AppTypes._op["&:"],_U.update(_p25,{ctx: newCtx}),fx);
+           var newCtx = _U.update(_p22,{player: _p16._0});
+           return A2($AppTypes._op["&:"],_U.update(_p21,{ctx: newCtx}),fx);
          case "UpdateDims": return A2($AppTypes._op["&:"],
-           A2(updateScreenDims,_p20._0,_p25),
+           _U.update(_p21,{ctx: _U.update(_p22,{dims: _p16._0})}),
            $Effects.none);
-         case "Logout": return A2($AppTypes._op["&!"],_p25,logoutTask);
-         case "ScreenAction": return A2(updateScreen,_p20._0,_p25);
-         default: return A2($AppTypes._op["&:"],_p25,$Effects.none);}
+         case "Logout": return A2($AppTypes._op["&!"],_p21,logoutTask);
+         case "ScreenAction": return A2(updateScreen,_p16._0,_p21);
+         default: return A2($AppTypes._op["&:"],_p21,$Effects.none);}
    });
    var initialAppUpdate = function (setup) {
       var task = $Task.succeed($AppTypes.SetPath(setup.path));
@@ -16414,7 +16394,6 @@ Elm.AppUpdates.make = function (_elm) {
                                    ,update: update
                                    ,mountRoute: mountRoute
                                    ,updateScreen: updateScreen
-                                   ,updateScreenDims: updateScreenDims
                                    ,logoutTask: logoutTask
                                    ,applyHome: applyHome
                                    ,applyLogin: applyLogin
@@ -21352,11 +21331,11 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
    var _op = {};
-   var renderCourse = function (_p0) {
+   var renderCourse = F2(function (dims,_p0) {
       var _p1 = _p0;
       var _p4 = _p1.course;
       var _p3 = _p1.center;
-      var _p2 = $Game$Geo.floatify(_p1.courseDims);
+      var _p2 = $Game$Geo.floatify($Screens$EditTrack$Types.getCourseDims(dims));
       var w = _p2._0;
       var h = _p2._1;
       var cx = w / 2 + $Basics.fst(_p3);
@@ -21375,7 +21354,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
               ,A2($Game$Render$Gates.renderOpenGate,_p4.upwind,0)
               ,A2($Game$Render$Gates.renderOpenGate,_p4.downwind,0)
               ,A2($Game$Render$Players.renderPlayerHull,0,0)]))]));
-   };
+   });
    var view = F2(function (_p5,screen) {
       var _p6 = _p5;
       var _p7 = {ctor: "_Tuple2",_0: screen.track,_1: screen.editor};
@@ -21388,7 +21367,9 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
             _p9) ? A3($Screens$Layout.layout,
             "editor",
             A2($Screens$EditTrack$SideView.view,_p9,_p8),
-            _U.list([renderCourse(_p8)])) : $Html.text("Access forbidden.");
+            _U.list([A2(renderCourse,
+            _p6.dims,
+            _p8)])) : $Html.text("Access forbidden.");
          } else {
             return $Html.text("loading");
          }
@@ -22954,7 +22935,7 @@ Elm.Screens.Game.Decoders.make = function (_elm) {
    var decodeAction = function (value) {
       var _p1 = A2($Json$Decode.decodeValue,actionDecoder,value);
       if (_p1.ctor === "Err") {
-            return A2($Debug.log,_p1._0,$Screens$Game$Types.NoOp);
+            return $Screens$Game$Types.NoOp;
          } else {
             return _p1._0;
          }

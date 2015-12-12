@@ -1,6 +1,7 @@
 module Screens.EditTrack.Types where
 
 import Models exposing (..)
+import Constants exposing (sidebarWidth)
 
 import DragAndDrop exposing (MouseEvent(..))
 
@@ -9,22 +10,19 @@ type alias Screen =
   { track : Maybe Track
   , editor : Maybe Editor
   , notFound : Bool
-  , dims : Dims
   }
 
-initial : Dims -> Screen
-initial dims =
+initial : Screen
+initial =
   { track = Nothing
   , editor = Nothing
   , notFound = False
-  , dims = dims
   }
 
 type alias Editor =
   { blocks : SideBlocks
   , course : Course
   , center : Point
-  , courseDims : Dims
   , mode : Mode
   , altMove : Bool
   , name : String
@@ -91,3 +89,7 @@ modeName mode =
     CreateTile Rock -> ("r", "Rock")
     Erase -> ("s", "Sand")
     Watch -> ("m", "Move (press SHIFT for temporary move mode)")
+
+getCourseDims : Dims -> Dims
+getCourseDims (w, h) =
+  (w - sidebarWidth, h)

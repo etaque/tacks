@@ -65,7 +65,6 @@ dimsActions : Signal AppAction
 dimsActions =
   Signal.map UpdateDims Window.dimensions
 
-
 rawInput : Signal (KeyboardInput, (Int, Int), Maybe RaceInput)
 rawInput =
   Signal.map3 (,,) Game.Inputs.keyboardInput Window.dimensions raceInput

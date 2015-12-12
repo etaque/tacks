@@ -6,6 +6,7 @@ import Effects exposing (Effects, Never, none)
 import Task.Extra exposing (delay)
 import Keyboard
 import Array
+import Window
 
 import DragAndDrop exposing (mouseEvents)
 
@@ -35,13 +36,13 @@ inputs =
     , Signal.map MouseAction mouseEvents
     ]
 
-mount : Dims -> String -> (Screen, Effects Action)
-mount dims id =
-  (initial dims) &! (loadTrack id)
+mount : String -> (Screen, Effects Action)
+mount id =
+  initial &! (loadTrack id)
 
 
-update : Action -> Screen -> (Screen, Effects Action)
-update action screen =
+update : Dims -> Action -> Screen -> (Screen, Effects Action)
+update dims action screen =
   case action of
 
     LoadTrack result ->
@@ -50,15 +51,14 @@ update action screen =
           let
             editor =
               { blocks =
-                { name = True
-                , surface = True
+                { name = False
+                , surface = False
                 , gates = False
                 , wind = False
                 , gusts = False
                 }
               , course = track.course
               , center = (0, 0)
-              , courseDims = getCourseDims screen.dims
               , mode = Watch
               , altMove = False
               , name = track.name
@@ -76,7 +76,7 @@ update action screen =
       (updateEditor (\e -> { e | name = n }) screen) &: none
 
     MouseAction event ->
-      (GridUpdates.mouseAction >> updateEditor) event screen &: none
+      updateEditor (GridUpdates.mouseAction event dims) screen &: none
 
     SetMode mode ->
       updateEditor (\e -> { e | mode = mode }) screen &: none
@@ -135,23 +135,11 @@ updateBlocks b ({blocks} as editor) =
   in
     { editor | blocks = newBlocks }
 
+
 loadTrack : String -> Task Never Action
 loadTrack id =
   ServerApi.getTrack id
     |> Task.map LoadTrack
-
-
-updateDims : Dims -> Screen -> Screen
-updateDims dims screen =
-  let
-    newEditor = Maybe.map (\e -> { e | courseDims = getCourseDims dims } ) screen.editor
-  in
-    { screen | editor = newEditor, dims = dims }
-
-
-getCourseDims : Dims -> Dims
-getCourseDims (w, h) =
-  (w - sidebarWidth, h)
 
 
 save : Bool -> String -> Editor -> Task Never Action

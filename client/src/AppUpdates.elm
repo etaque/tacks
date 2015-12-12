@@ -67,10 +67,10 @@ update appAction ({screens, ctx} as appState) =
         newCtx = { ctx | player = p }
         fx = map (\_ -> AppNoOp) (Utils.redirect Routes.Home)
       in
-      { appState | ctx = newCtx } &: fx
+        { appState | ctx = newCtx } &: fx
 
     UpdateDims dims ->
-      updateScreenDims dims appState &: none
+      {appState | ctx = { ctx | dims = dims } } &: none
 
     Logout ->
       appState &! logoutTask
@@ -102,13 +102,14 @@ mountRoute ({ctx} as appState) route =
       applyShowTrack (ShowTrack.mount id) appState
 
     EditTrack id ->
-      applyEditTrack (EditTrack.mount ctx.dims id) appState
+      applyEditTrack (EditTrack.mount id) appState
 
     PlayTrack id ->
       applyGame (Game.mount id) appState
 
     ListDrafts ->
       applyListDrafts ListDrafts.mount appState
+
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
 updateScreen screenAction ({screens, ctx} as appState) =
@@ -127,7 +128,7 @@ updateScreen screenAction ({screens, ctx} as appState) =
       applyShowTrack (ShowTrack.update a screens.showTrack) appState
 
     EditTrackAction a ->
-      applyEditTrack (EditTrack.update a screens.editTrack) appState
+      applyEditTrack (EditTrack.update ctx.dims a screens.editTrack) appState
 
     ShowProfileAction a ->
       applyShowProfile (ShowProfile.update a screens.showProfile) appState
@@ -139,23 +140,11 @@ updateScreen screenAction ({screens, ctx} as appState) =
       applyListDrafts (ListDrafts.update a screens.listDrafts) appState
 
 
-updateScreenDims : (Int, Int) -> AppState -> AppState
-updateScreenDims dims ({route, screens, ctx} as appState) =
-  case route of
-    Just (EditTrack _) ->
-      let
-        newScreens = { screens | editTrack = EditTrack.updateDims dims screens.editTrack }
-        newCtx = { ctx | dims = dims }
-      in
-        { appState | screens = newScreens, ctx = newCtx }
-    _ ->
-      appState
-
-
 logoutTask : Task Effects.Never AppAction
 logoutTask =
   ServerApi.postLogout
     |> Task.map (\r -> Result.map SetPlayer r |> Result.withDefault AppNoOp)
+
 
 applyHome = applyScreen (\s screens -> { screens | home = s }) HomeAction
 applyLogin = applyScreen (\s screens -> { screens | login = s }) LoginAction

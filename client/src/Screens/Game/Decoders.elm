@@ -5,12 +5,11 @@ import Json.Decode as Json exposing (..)
 import Decoders exposing (..)
 import Screens.Game.Types exposing (..)
 
-import Debug
 
 decodeAction : Json.Value -> Action
 decodeAction value =
   case Json.decodeValue actionDecoder value of
-    Err e -> Debug.log e NoOp
+    Err e -> NoOp
     Ok action -> action
 
 actionDecoder : Decoder Action

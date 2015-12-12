@@ -21,23 +21,23 @@ import Game.Render.Players exposing (renderPlayerHull)
 
 
 view : Context -> Screen -> Html
-view {player} screen =
+view {player, dims} screen =
   case (screen.track, screen.editor) of
     (Just track, Just editor) ->
       if hasDraft player track then
         Layout.layout "editor"
           (SideView.view track editor)
-          [ renderCourse editor ]
+          [ renderCourse dims editor ]
       else
         Html.text "Access forbidden."
     _ ->
       Html.text "loading"
 
 
-renderCourse : Editor -> Html
-renderCourse ({courseDims, center, course, mode} as editor) =
+renderCourse : Dims -> Editor -> Html
+renderCourse dims ({center, course, mode} as editor) =
   let
-    (w, h) = floatify courseDims
+    (w, h) = floatify (getCourseDims dims)
     cx = w / 2 + fst center
     cy = -h / 2 + snd center
   in
