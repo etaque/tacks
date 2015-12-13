@@ -102,12 +102,13 @@ pointDecoder =
 
 courseDecoder : Decoder Course
 courseDecoder =
-  object7 Course
+  object8 Course
     ("upwind" := gateDecoder)
     ("downwind" := gateDecoder)
     ("grid" := gridDecoder)
     ("laps" := int)
     ("area" := raceAreaDecoder)
+    ("windSpeed" := int)
     ("windGenerator" := windGeneratorDecoder)
     ("gustGenerator" := gustGeneratorDecoder)
 

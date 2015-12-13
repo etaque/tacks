@@ -12,13 +12,11 @@ import Dict exposing (Dict)
 shadowSpeedImpact : Float
 shadowSpeedImpact = -5 -- knots
 
-
 shadowArc : Float
 shadowArc = 30 -- degrees
 
-
+maxWindShift : Float
 maxWindShift = 0.5
-
 
 playerWindStep : GameState -> PlayerState -> PlayerState
 playerWindStep ({wind, gusts, course, opponents} as gameState) state =

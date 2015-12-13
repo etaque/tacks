@@ -1,33 +1,29 @@
 module Game.Render.Dashboard.WindSpeedGraph where
 
 import Game.Models exposing (..)
-import Game.Core exposing (..)
-import Models exposing (..)
-
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Gates exposing (..)
 
-import String
 import List exposing (..)
-import Maybe as M
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
+
 
 graphWidth = 200
 
 windCoef = 3
 maxSpeed = 25
 
-timeScale = graphWidth / windHistoryLength
+timeScale : Float
+timeScale =
+  graphWidth / windHistoryLength
 
-render : Float -> Wind -> WindHistory -> Svg
-render now wind {lastSample, samples, init} =
+render : Float -> Float -> WindHistory -> Svg
+render now windSpeed {lastSample, samples, init} =
   let
     steps = map (\{time, speed} -> (timeX init now time, speedY speed)) samples
     currentX = timeX init now now
-    currentY = speedY wind.speed
+    currentY = speedY windSpeed
 
     historyPath = Svg.path
       [ pathPoints ((currentX, currentY) :: steps)
@@ -51,7 +47,7 @@ render now wind {lastSample, samples, init} =
       , y (toString (currentY + 3))
       , fontSize "12px"
       ]
-      [ text <| toString (round wind.speed) ++ "kn" ]
+      [ text <| toString (round windSpeed) ++ "kn" ]
 
     xMark = segment
       [ stroke "black"

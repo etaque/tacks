@@ -17,6 +17,7 @@ courseEncoder course =
     , "grid" => gridEncoder course.grid
     , "laps" => Js.int course.laps
     , "area" => areaEncoder course.area
+    , "windSpeed" => Js.int course.windSpeed
     , "windGenerator" => windGeneratorEncoder course.windGenerator
     , "gustGenerator" => gustGeneratorEncoder course.gustGenerator
     ]

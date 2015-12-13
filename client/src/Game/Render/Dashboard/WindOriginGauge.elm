@@ -1,33 +1,25 @@
 module Game.Render.Dashboard.WindOriginGauge where
 
-import Game.Models exposing (..)
-import Game.Core exposing (..)
-import Models exposing (..)
-
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Gates exposing (..)
-
-import String
-import List exposing (..)
-import Maybe as M
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
 
+
+windGaugeCy : Float
 windGaugeCy = 500
 
-render : Int -> Wind -> Svg
-render h wind =
+render : Int -> Float -> Svg
+render h windOrigin =
   let
     cy = (toFloat h / 2)
   in
     g [ opacity "0.5"
       ]
       [ renderRuledArc
-      , g [ transform <| rotate_ wind.origin 0 windGaugeCy ]
+      , g [ transform <| rotate_ windOrigin 0 windGaugeCy ]
           [ renderWindArrow
-          , renderWindOriginText wind.origin
+          , renderWindOriginText windOrigin
           ]
       ]
 

@@ -57,6 +57,10 @@ view track ({course, name, saving, mode, blocks} as editor) =
 
   , sideBlock "Wind" blocks.wind (ToggleBlock Wind)
     [ div [ class "form-group" ]
+      [ label [ class "" ] [ text "Speed" ]
+      , intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
+      ]
+    , div [ class "form-group" ]
       [ label [ class "" ] [ text "Wavelength 1" ]
       , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
       ]

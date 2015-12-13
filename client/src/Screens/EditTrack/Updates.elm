@@ -6,11 +6,9 @@ import Effects exposing (Effects, Never, none)
 import Task.Extra exposing (delay)
 import Keyboard
 import Array
-import Window
 
 import DragAndDrop exposing (mouseEvents)
 
-import Constants exposing (sidebarWidth)
 import AppTypes exposing (..)
 import Models exposing (..)
 

@@ -2,22 +2,25 @@ module Game.Steps.WindHistory where
 
 import Time exposing (Time)
 
-import Models exposing (..)
 import Game.Models exposing (..)
 
 
-updateWindHistory : Time -> Wind -> WindHistory -> WindHistory
-updateWindHistory now wind h =
-  takeSample now wind h
-    |> keepInWindow now
+windHistoryStep : GameState -> GameState
+windHistoryStep ({playerState, windHistory} as gameState) =
+  let
+    newWindHistory = takeSample playerState windHistory
+      |> keepInWindow playerState.time
+  in
+    { gameState | windHistory = newWindHistory }
 
 
-takeSample : Time -> Wind -> WindHistory -> WindHistory
-takeSample now {origin, speed} h =
-  if now - h.lastSample > windHistorySampling then
-    { h | samples = (WindSample origin speed now) :: h.samples, lastSample = now }
+takeSample : PlayerState -> WindHistory -> WindHistory
+takeSample {time, windOrigin, windSpeed} h =
+  if time - h.lastSample > windHistorySampling then
+    { h | samples = (WindSample windOrigin windSpeed time) :: h.samples, lastSample = time }
   else
     h
+
 
 keepInWindow : Time -> WindHistory -> WindHistory
 keepInWindow now h =

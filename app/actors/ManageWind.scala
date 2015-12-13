@@ -33,7 +33,8 @@ trait ManageWind {
     val elapsed = previousWindUpdate.map(c - _)
     wind = wind.copy(
       origin = course.windGenerator.windOrigin(c),
-      speed = course.windGenerator.windSpeed(c),
+      // speed = course.windGenerator.windSpeed(c),
+      speed = course.windSpeed,
       gusts = elapsed.fold(wind.gusts)(e => moveGusts(c, wind.gusts, e))
     )
     previousWindUpdate = Some(c)

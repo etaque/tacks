@@ -11158,14 +11158,15 @@ Elm.Models.make = function (_elm) {
       return {rightTop: a,leftBottom: b};
    });
    var Gate = F2(function (a,b) {    return {y: a,width: b};});
-   var Course = F7(function (a,b,c,d,e,f,g) {
+   var Course = F8(function (a,b,c,d,e,f,g,h) {
       return {upwind: a
              ,downwind: b
              ,grid: c
              ,laps: d
              ,area: e
-             ,windGenerator: f
-             ,gustGenerator: g};
+             ,windSpeed: f
+             ,windGenerator: g
+             ,gustGenerator: h};
    });
    var Message = F3(function (a,b,c) {
       return {content: a,player: b,time: c};
@@ -11888,6 +11889,9 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var SetWindW1 = function (a) {
       return {ctor: "SetWindW1",_0: a};
    };
+   var SetWindSpeed = function (a) {
+      return {ctor: "SetWindSpeed",_0: a};
+   };
    var SetGustRadius = F2(function (a,b) {
       return {ctor: "SetGustRadius",_0: a,_1: b};
    });
@@ -12008,6 +12012,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,SetGustAngle: SetGustAngle
                                                 ,SetGustSpeed: SetGustSpeed
                                                 ,SetGustRadius: SetGustRadius
+                                                ,SetWindSpeed: SetWindSpeed
                                                 ,SetWindW1: SetWindW1
                                                 ,SetWindA1: SetWindA1
                                                 ,SetWindW2: SetWindW2
@@ -13398,13 +13403,14 @@ Elm.Decoders.make = function (_elm) {
    $Models.RaceArea,
    A2($Json$Decode._op[":="],"rightTop",pointDecoder),
    A2($Json$Decode._op[":="],"leftBottom",pointDecoder));
-   var courseDecoder = A8($Json$Decode.object7,
+   var courseDecoder = A9($Json$Decode.object8,
    $Models.Course,
    A2($Json$Decode._op[":="],"upwind",gateDecoder),
    A2($Json$Decode._op[":="],"downwind",gateDecoder),
    A2($Json$Decode._op[":="],"grid",gridDecoder),
    A2($Json$Decode._op[":="],"laps",$Json$Decode.$int),
    A2($Json$Decode._op[":="],"area",raceAreaDecoder),
+   A2($Json$Decode._op[":="],"windSpeed",$Json$Decode.$int),
    A2($Json$Decode._op[":="],"windGenerator",windGeneratorDecoder),
    A2($Json$Decode._op[":="],
    "gustGenerator",
@@ -13598,6 +13604,7 @@ Elm.Encoders.make = function (_elm) {
                                          ,A2(_op["=>"],"grid",gridEncoder(course.grid))
                                          ,A2(_op["=>"],"laps",$Json$Encode.$int(course.laps))
                                          ,A2(_op["=>"],"area",areaEncoder(course.area))
+                                         ,A2(_op["=>"],"windSpeed",$Json$Encode.$int(course.windSpeed))
                                          ,A2(_op["=>"],
                                          "windGenerator",
                                          windGeneratorEncoder(course.windGenerator))
@@ -14217,14 +14224,13 @@ Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
    });
    var updateDownwindY = F2(function (y,_p2) {
       var _p3 = _p2;
-      var newDownwind = _U.update(_p3.downwind,
-      {y: $Basics.toFloat(y)});
-      return _U.update(_p3,{downwind: newDownwind});
+      return _U.update(_p3,
+      {downwind: _U.update(_p3.downwind,{y: $Basics.toFloat(y)})});
    });
    var updateUpwindY = F2(function (y,_p4) {
       var _p5 = _p4;
-      var newUpwind = _U.update(_p5.upwind,{y: $Basics.toFloat(y)});
-      return _U.update(_p5,{upwind: newUpwind});
+      return _U.update(_p5,
+      {upwind: _U.update(_p5.upwind,{y: $Basics.toFloat(y)})});
    });
    var update = F2(function (fu,course) {
       var _p6 = fu;
@@ -14277,6 +14283,8 @@ Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
            },
            $CoreExtra.removeAt(_p6._0),
            course);
+         case "SetWindSpeed": return _U.update(course,
+           {windSpeed: _p6._0});
          case "SetWindW1": return A2(updateWindGen,
            function (g) {
               return _U.update(g,{wavelength1: _p6._0});
@@ -15625,20 +15633,26 @@ Elm.Game.Steps.WindHistory.make = function (_elm) {
       h.samples);
       return _U.update(h,{samples: samples});
    });
-   var takeSample = F3(function (now,_p2,h) {
+   var takeSample = F2(function (_p2,h) {
       var _p3 = _p2;
-      return _U.cmp(now - h.lastSample,
+      var _p4 = _p3.time;
+      return _U.cmp(_p4 - h.lastSample,
       $Game$Models.windHistorySampling) > 0 ? _U.update(h,
       {samples: A2($List._op["::"],
-      A3($Game$Models.WindSample,_p3.origin,_p3.speed,now),
+      A3($Game$Models.WindSample,_p3.windOrigin,_p3.windSpeed,_p4),
       h.samples)
-      ,lastSample: now}) : h;
+      ,lastSample: _p4}) : h;
    });
-   var updateWindHistory = F3(function (now,wind,h) {
-      return A2(keepInWindow,now,A3(takeSample,now,wind,h));
-   });
+   var windHistoryStep = function (_p5) {
+      var _p6 = _p5;
+      var _p7 = _p6.playerState;
+      var newWindHistory = A2(keepInWindow,
+      _p7.time,
+      A2(takeSample,_p7,_p6.windHistory));
+      return _U.update(_p6,{windHistory: newWindHistory});
+   };
    return _elm.Game.Steps.WindHistory.values = {_op: _op
-                                               ,updateWindHistory: updateWindHistory
+                                               ,windHistoryStep: windHistoryStep
                                                ,takeSample: takeSample
                                                ,keepInWindow: keepInWindow};
 };
@@ -15878,10 +15892,6 @@ Elm.Game.Steps.make = function (_elm) {
             }
       }();
       var newPlayerState = _U.update(_p12.playerState,{time: now});
-      var windHistory = A3($Game$Steps$WindHistory.updateWindHistory,
-      now,
-      raceInput.wind,
-      _p16.windHistory);
       var updatedOpponents = A3(updateOpponents,
       _p16.opponents,
       _p18,
@@ -15896,7 +15906,6 @@ Elm.Game.Steps.make = function (_elm) {
       {opponents: updatedOpponents
       ,ghosts: ghosts
       ,wind: raceInput.wind
-      ,windHistory: windHistory
       ,tallies: tallies
       ,playerState: newPlayerState
       ,live: $Basics.not(initial)
@@ -15913,13 +15922,13 @@ Elm.Game.Steps.make = function (_elm) {
       return A3(centerStep,
       gameState.playerState.position,
       gameDims,
-      A3(playerStep,
+      $Game$Steps$WindHistory.windHistoryStep(A3(playerStep,
       keyboardInputWithFocus,
       _p22.delta,
       $Game$Steps$Gusts.gustsStep(A3(raceInputStep,
       _p21.raceInput,
       _p22,
-      gameState))));
+      gameState)))));
    });
    return _elm.Game.Steps.values = {_op: _op
                                    ,gameStep: gameStep
@@ -20896,6 +20905,16 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
                                      _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Speed")]))
+                                     ,A3(intInput,
+                                     _p6.windSpeed,
+                                     $Screens$EditTrack$Types.SetWindSpeed,
+                                     _U.list([$Html$Attributes.min("10")
+                                             ,$Html$Attributes.max("20")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
                                      _U.list([$Html.text("Wavelength 1")]))
                                      ,A3(intInput,
                                      _p6.windGenerator.wavelength1,
@@ -22069,10 +22088,10 @@ Elm.Game.Render.Dashboard.WindSpeedGraph.make = function (_elm) {
       now - init);
       return timeScale * (nowX - (now - t));
    });
-   var render = F3(function (now,wind,_p0) {
+   var render = F3(function (now,windSpeed,_p0) {
       var _p1 = _p0;
       var _p4 = _p1.init;
-      var currentY = speedY(wind.speed);
+      var currentY = speedY(windSpeed);
       var currentX = A3(timeX,_p4,now,now);
       var currentCircle = A2($Svg.circle,
       _U.list([$Svg$Attributes.cx("0")
@@ -22089,7 +22108,7 @@ Elm.Game.Render.Dashboard.WindSpeedGraph.make = function (_elm) {
               ,$Svg$Attributes.y($Basics.toString(currentY + 3))
               ,$Svg$Attributes.fontSize("12px")]),
       _U.list([$Svg.text(A2($Basics._op["++"],
-      $Basics.toString($Basics.round(wind.speed)),
+      $Basics.toString($Basics.round(windSpeed)),
       "kn"))]));
       var xMark = A2($Game$Render$SvgUtils.segment,
       _U.list([$Svg$Attributes.stroke("black")
@@ -22144,7 +22163,6 @@ Elm.Game.Render.Dashboard.WindOriginGauge.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -22202,18 +22220,17 @@ Elm.Game.Render.Dashboard.WindOriginGauge.make = function (_elm) {
               ,bigTick(10)
               ,smallTick(15)]));
    }();
-   var render = F2(function (h,wind) {
+   var render = F2(function (h,windOrigin) {
       var cy = $Basics.toFloat(h) / 2;
       return A2($Svg.g,
       _U.list([$Svg$Attributes.opacity("0.5")]),
       _U.list([renderRuledArc
               ,A2($Svg.g,
               _U.list([$Svg$Attributes.transform(A3($Game$Render$SvgUtils.rotate_,
-              wind.origin,
+              windOrigin,
               0,
               windGaugeCy))]),
-              _U.list([renderWindArrow
-                      ,renderWindOriginText(wind.origin)]))]));
+              _U.list([renderWindArrow,renderWindOriginText(windOrigin)]))]));
    });
    return _elm.Game.Render.Dashboard.WindOriginGauge.values = {_op: _op
                                                               ,windGaugeCy: windGaugeCy
@@ -22454,36 +22471,39 @@ Elm.Game.Render.Dashboard.make = function (_elm) {
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
    var _op = {};
-   var renderDashboard = F2(function (_p0,gameState) {
-      var _p1 = _p0;
-      var _p2 = _p1._0;
+   var renderDashboard = F2(function (_p1,_p0) {
+      var _p2 = _p1;
+      var _p6 = _p2._0;
+      var _p3 = _p0;
+      var _p5 = _p3.playerState;
+      var _p4 = _p3;
       return A2($Svg.g,
       _U.list([]),
       _U.list([A2($Svg.g,
               _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-              _p2 / 2 | 0,
+              _p6 / 2 | 0,
               120))]),
-              _U.list([$Game$Render$Dashboard$Status.render(gameState)]))
+              _U.list([$Game$Render$Dashboard$Status.render(_p4)]))
               ,A2($Svg.g,
               _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-              $Basics.toFloat(_p2) / 2,
+              $Basics.toFloat(_p6) / 2,
               30))]),
               _U.list([A2($Game$Render$Dashboard$WindOriginGauge.render,
-              _p1._1,
-              gameState.wind)]))
+              _p2._1,
+              _p5.windOrigin)]))
               ,A2($Svg.g,
               _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
               30,
               30))]),
               _U.list([A3($Game$Render$Dashboard$WindSpeedGraph.render,
-              gameState.timers.now,
-              gameState.wind,
-              gameState.windHistory)]))
+              _p4.timers.now,
+              _p5.windSpeed,
+              _p4.windHistory)]))
               ,A2($Svg.g,
               _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-              $Basics.toFloat(_p2) - $Game$Render$Dashboard$VmgBar.barWidth - 40,
+              $Basics.toFloat(_p6) - $Game$Render$Dashboard$VmgBar.barWidth - 40,
               40))]),
-              _U.list([$Game$Render$Dashboard$VmgBar.render(gameState.playerState)]))]));
+              _U.list([$Game$Render$Dashboard$VmgBar.render(_p4.playerState)]))]));
    });
    return _elm.Game.Render.Dashboard.values = {_op: _op
                                               ,renderDashboard: renderDashboard};

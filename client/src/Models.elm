@@ -91,6 +91,7 @@ type alias Course =
   , grid : Grid
   , laps : Int
   , area : RaceArea
+  , windSpeed : Int
   , windGenerator : WindGenerator
   , gustGenerator : GustGenerator
   }

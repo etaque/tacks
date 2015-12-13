@@ -76,6 +76,7 @@ type FormUpdate
   | SetGustAngle Int Int
   | SetGustSpeed Int Int
   | SetGustRadius Int Int
+  | SetWindSpeed Int
   | SetWindW1 Int
   | SetWindA1 Int
   | SetWindW2 Int

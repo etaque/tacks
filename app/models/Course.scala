@@ -15,6 +15,7 @@ case class Course(
   laps: Int,
   grid: Course.Grid = Nil,
   area: RaceArea,
+  windSpeed: Int,
   windGenerator: WindGenerator,
   gustGenerator: GustGenerator
 )
@@ -27,6 +28,7 @@ object Course {
       laps = 2,
       grid = Nil,
       area = RaceArea((0, 0), (0, 0)),
+      windSpeed = 15,
       windGenerator = WindGenerator.spawn(),
       gustGenerator = GustGenerator.spawn
     )

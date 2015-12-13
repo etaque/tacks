@@ -1,8 +1,5 @@
 module Game.Steps where
 
-import Task
-import Time exposing (Time)
-
 import AppTypes exposing (..)
 import Models exposing (..)
 import Game.Inputs exposing (..)
@@ -17,7 +14,7 @@ import Game.Steps.Moving exposing (movingStep)
 import Game.Steps.Turning exposing (turningStep)
 import Game.Steps.Vmg exposing (vmgStep)
 import Game.Steps.PlayerWind exposing (playerWindStep)
-import Game.Steps.WindHistory exposing (updateWindHistory)
+import Game.Steps.WindHistory exposing (windHistoryStep)
 import Game.Steps.Gusts exposing (gustsStep)
 
 
@@ -37,6 +34,7 @@ gameStep {raceInput, windowInput, keyboardInput, clock} gameState =
     raceInputStep raceInput clock gameState
       |> gustsStep
       |> playerStep keyboardInputWithFocus clock.delta
+      |> windHistoryStep
       |> centerStep gameState.playerState.position gameDims
 
 
@@ -65,8 +63,6 @@ raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
 
     newPlayerState = { playerState | time = now }
 
-    windHistory = updateWindHistory now raceInput.wind gameState.windHistory
-
     newTimers =
       { timers
         | serverNow = Just serverNow
@@ -81,7 +77,6 @@ raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
       | opponents = updatedOpponents
       , ghosts = ghosts
       , wind = raceInput.wind
-      , windHistory = windHistory
       , tallies = tallies
       , playerState = newPlayerState
       , live = not initial

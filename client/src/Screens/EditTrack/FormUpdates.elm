@@ -40,6 +40,9 @@ update fu course =
     RemoveGustDef i ->
       (updateGustGen << updateGustDefs) (removeAt i) course
 
+    SetWindSpeed s ->
+      { course | windSpeed = s }
+
     SetWindW1 i ->
       updateWindGen (\g -> { g | wavelength1 = i }) course
 
@@ -55,18 +58,12 @@ update fu course =
 
 updateUpwindY : Int -> Course -> Course
 updateUpwindY y ({upwind} as course) =
-  let
-    newUpwind = { upwind | y = toFloat y }
-  in
-    { course | upwind = newUpwind }
+  { course | upwind = { upwind | y = toFloat y } }
 
 
 updateDownwindY : Int -> Course -> Course
 updateDownwindY y ({downwind} as course) =
-  let
-    newDownwind = { downwind | y = toFloat y }
-  in
-    { course | downwind = newDownwind }
+  { course | downwind = { downwind | y = toFloat y } }
 
 
 updateGateWidth : Int -> Course -> Course
