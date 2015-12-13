@@ -8,6 +8,7 @@ import CoreExtra exposing (..)
 import Game.Grid exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
+import Hexagons
 
 
 mouseAction : MouseEvent -> Dims -> Editor -> Editor
@@ -53,7 +54,7 @@ withGrid grid ({course} as editor) =
 getMouseEventTiles : Editor -> Dims -> MouseEvent -> List Coords
 getMouseEventTiles editor courseDims event =
   let
-    tileCoords = (clickPoint editor courseDims) >> (Maybe.map pointToHexCoords)
+    tileCoords = (clickPoint editor courseDims) >> (Maybe.map (Hexagons.pointToAxial hexRadius))
   in
     case event of
       StartAt p ->
@@ -63,7 +64,7 @@ getMouseEventTiles editor courseDims event =
       MoveFromTo p1 p2 ->
         case (tileCoords p1, tileCoords p2) of
           (Just c1, Just c2) ->
-            if c1 == c2 then [ c1 ] else hexLine c1 c2
+            if c1 == c2 then [ c1 ] else Hexagons.axialLine c1 c2
           _ ->
             [ ]
       EndAt _ ->

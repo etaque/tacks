@@ -20,6 +20,7 @@ import Game.Grid exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 import Routes
+import Hexagons
 
 
 addr : Signal.Address Action
@@ -155,7 +156,7 @@ getRaceArea grid =
   let
     waterPoints = getTilesList grid
       |> List.filter (\t -> t.kind == Water)
-      |> List.map (\t -> hexCoordsToPoint t.coords)
+      |> List.map (\t -> Hexagons.axialToPoint hexRadius t.coords)
 
     xVals = waterPoints
       |> List.map fst

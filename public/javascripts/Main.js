@@ -14315,6 +14315,143 @@ Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
                                                       ,updateGustGen: updateGustGen
                                                       ,updateWindGen: updateWindGen};
 };
+Elm.Hexagons = Elm.Hexagons || {};
+Elm.Hexagons.make = function (_elm) {
+   "use strict";
+   _elm.Hexagons = _elm.Hexagons || {};
+   if (_elm.Hexagons.values) return _elm.Hexagons.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var axialToCube = function (_p0) {
+      var _p1 = _p0;
+      var _p3 = _p1._1;
+      var _p2 = _p1._0;
+      return {ctor: "_Tuple3",_0: _p2,_1: _p3,_2: 0 - _p2 - _p3};
+   };
+   var cubeToAxial = function (_p4) {
+      var _p5 = _p4;
+      return {ctor: "_Tuple2",_0: _p5._0,_1: _p5._1};
+   };
+   var cubeAdd = F2(function (_p7,_p6) {
+      var _p8 = _p7;
+      var _p9 = _p6;
+      return {ctor: "_Tuple3"
+             ,_0: _p8._0 + _p9._0
+             ,_1: _p8._1 + _p9._1
+             ,_2: _p8._2 + _p9._2};
+   });
+   var axialAdd = F2(function (_p11,_p10) {
+      var _p12 = _p11;
+      var _p13 = _p10;
+      return {ctor: "_Tuple2"
+             ,_0: _p12._0 + _p13._0
+             ,_1: _p12._1 + _p13._1};
+   });
+   var floatCube = function (_p14) {
+      var _p15 = _p14;
+      return {ctor: "_Tuple3"
+             ,_0: $Basics.toFloat(_p15._0)
+             ,_1: $Basics.toFloat(_p15._1)
+             ,_2: $Basics.toFloat(_p15._2)};
+   };
+   var cubeLinearInterpol = F3(function (a,b,t) {
+      var _p16 = floatCube(b);
+      var bx = _p16._0;
+      var by = _p16._1;
+      var bz = _p16._2;
+      var _p17 = floatCube(a);
+      var ax = _p17._0;
+      var ay = _p17._1;
+      var az = _p17._2;
+      var i = ax + (bx - ax) * t;
+      var j = ay + (by - ay) * t;
+      var k = az + (bz - az) * t;
+      return {ctor: "_Tuple3",_0: i,_1: j,_2: k};
+   });
+   var cubeDistance = F2(function (_p19,_p18) {
+      var _p20 = _p19;
+      var _p21 = _p18;
+      return ($Basics.abs(_p20._0 - _p21._0) + $Basics.abs(_p20._1 - _p21._1) + $Basics.abs(_p20._2 - _p21._2)) / 2 | 0;
+   });
+   var axialDistance = F2(function (a,b) {
+      return A2(cubeDistance,axialToCube(a),axialToCube(b));
+   });
+   var cubeRound = function (_p22) {
+      var _p23 = _p22;
+      var _p26 = _p23._2;
+      var _p25 = _p23._1;
+      var _p24 = _p23._0;
+      var rz = $Basics.round(_p26);
+      var zDiff = $Basics.abs($Basics.toFloat(rz) - _p26);
+      var ry = $Basics.round(_p25);
+      var yDiff = $Basics.abs($Basics.toFloat(ry) - _p25);
+      var rx = $Basics.round(_p24);
+      var xDiff = $Basics.abs($Basics.toFloat(rx) - _p24);
+      return _U.cmp(xDiff,yDiff) > 0 && _U.cmp(xDiff,
+      zDiff) > 0 ? {ctor: "_Tuple3"
+                   ,_0: 0 - ry - rz
+                   ,_1: ry
+                   ,_2: rz} : _U.cmp(yDiff,zDiff) > 0 ? {ctor: "_Tuple3"
+                                                        ,_0: rx
+                                                        ,_1: 0 - rx - rz
+                                                        ,_2: rz} : {ctor: "_Tuple3",_0: rx,_1: ry,_2: 0 - rx - ry};
+   };
+   var cubeLine = F2(function (a,b) {
+      var n = A2(cubeDistance,a,b);
+      var offsetMapper = function (i) {
+         return cubeRound(A3(cubeLinearInterpol,
+         a,
+         b,
+         1 / $Basics.toFloat(n) * $Basics.toFloat(i)));
+      };
+      return A2($List.map,offsetMapper,_U.range(0,n));
+   });
+   var axialRound = function (_p27) {
+      return cubeToAxial(cubeRound(axialToCube(_p27)));
+   };
+   var axialRange = F2(function (center,n) {
+      var mapX = function (dx) {
+         var mapY = function (dy) {
+            return A2(axialAdd,center,{ctor: "_Tuple2",_0: dx,_1: dy});
+         };
+         var toY = A2($Basics.min,n,0 - dx + n);
+         var fromY = A2($Basics.max,0 - n,0 - dx - n);
+         return A2($List.map,mapY,_U.range(fromY,toY));
+      };
+      return A2($List.concatMap,mapX,_U.range(0 - n,n));
+   });
+   var axialLine = F2(function (a,b) {
+      return A2($List.map,
+      cubeToAxial,
+      A2(cubeLine,axialToCube(a),axialToCube(b)));
+   });
+   var pointToAxial = F2(function (axialRadius,_p28) {
+      var _p29 = _p28;
+      var _p30 = _p29._1;
+      var j = _p30 * (2 / 3) / axialRadius;
+      var i = (_p29._0 * $Basics.sqrt(3) / 3 - _p30 / 3) / axialRadius;
+      return axialRound({ctor: "_Tuple2",_0: i,_1: j});
+   });
+   var axialToPoint = F2(function (axialRadius,_p31) {
+      var _p32 = _p31;
+      var _p33 = _p32._1;
+      var y = axialRadius * 3 / 2 * $Basics.toFloat(_p33);
+      var x = axialRadius * $Basics.sqrt(3) * ($Basics.toFloat(_p32._0) + $Basics.toFloat(_p33) / 2);
+      return {ctor: "_Tuple2",_0: x,_1: y};
+   });
+   return _elm.Hexagons.values = {_op: _op
+                                 ,axialToPoint: axialToPoint
+                                 ,pointToAxial: pointToAxial
+                                 ,axialLine: axialLine
+                                 ,axialDistance: axialDistance
+                                 ,axialRange: axialRange};
+};
 Elm.Game = Elm.Game || {};
 Elm.Game.Grid = Elm.Game.Grid || {};
 Elm.Game.Grid.make = function (_elm) {
@@ -14326,6 +14463,7 @@ Elm.Game.Grid.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Dict = Elm.Dict.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -14346,168 +14484,53 @@ Elm.Game.Grid.make = function (_elm) {
       var rows = $Dict.toList(grid);
       return A2($List.concatMap,mapRow,rows);
    };
-   var cubeAdd = F2(function (_p5,_p4) {
-      var _p6 = _p5;
-      var _p7 = _p4;
-      return {ctor: "_Tuple3"
-             ,_0: _p6._0 + _p7._0
-             ,_1: _p6._1 + _p7._1
-             ,_2: _p6._2 + _p7._2};
-   });
-   var hexAdd = F2(function (_p9,_p8) {
-      var _p10 = _p9;
-      var _p11 = _p8;
-      return {ctor: "_Tuple2"
-             ,_0: _p10._0 + _p11._0
-             ,_1: _p10._1 + _p11._1};
-   });
-   var hexRange = F2(function (center,n) {
-      var mapX = function (dx) {
-         var mapY = function (dy) {
-            return A2(hexAdd,center,{ctor: "_Tuple2",_0: dx,_1: dy});
-         };
-         var toY = A2($Basics.min,n,0 - dx + n);
-         var fromY = A2($Basics.max,0 - n,0 - dx - n);
-         return A2($List.map,mapY,_U.range(fromY,toY));
-      };
-      return A2($List.concatMap,mapX,_U.range(0 - n,n));
-   });
-   var floatCube = function (_p12) {
-      var _p13 = _p12;
-      return {ctor: "_Tuple3"
-             ,_0: $Basics.toFloat(_p13._0)
-             ,_1: $Basics.toFloat(_p13._1)
-             ,_2: $Basics.toFloat(_p13._2)};
-   };
-   var cubeLinearInterpol = F3(function (a,b,t) {
-      var _p14 = floatCube(b);
-      var bx = _p14._0;
-      var by = _p14._1;
-      var bz = _p14._2;
-      var _p15 = floatCube(a);
-      var ax = _p15._0;
-      var ay = _p15._1;
-      var az = _p15._2;
-      var i = ax + (bx - ax) * t;
-      var j = ay + (by - ay) * t;
-      var k = az + (bz - az) * t;
-      return {ctor: "_Tuple3",_0: i,_1: j,_2: k};
-   });
-   var cubeDistance = F2(function (_p17,_p16) {
-      var _p18 = _p17;
-      var _p19 = _p16;
-      return ($Basics.abs(_p18._0 - _p19._0) + $Basics.abs(_p18._1 - _p19._1) + $Basics.abs(_p18._2 - _p19._2)) / 2 | 0;
-   });
-   var hexToCube = function (_p20) {
-      var _p21 = _p20;
-      var _p23 = _p21._1;
-      var _p22 = _p21._0;
-      return {ctor: "_Tuple3",_0: _p22,_1: _p23,_2: 0 - _p22 - _p23};
-   };
-   var hexDistance = F2(function (a,b) {
-      return A2(cubeDistance,hexToCube(a),hexToCube(b));
-   });
-   var cubeToHex = function (_p24) {
-      var _p25 = _p24;
-      return {ctor: "_Tuple2",_0: _p25._0,_1: _p25._1};
-   };
-   var cubeRound = function (_p26) {
-      var _p27 = _p26;
-      var _p30 = _p27._2;
-      var _p29 = _p27._1;
-      var _p28 = _p27._0;
-      var rz = $Basics.round(_p30);
-      var zDiff = $Basics.abs($Basics.toFloat(rz) - _p30);
-      var ry = $Basics.round(_p29);
-      var yDiff = $Basics.abs($Basics.toFloat(ry) - _p29);
-      var rx = $Basics.round(_p28);
-      var xDiff = $Basics.abs($Basics.toFloat(rx) - _p28);
-      return _U.cmp(xDiff,yDiff) > 0 && _U.cmp(xDiff,
-      zDiff) > 0 ? {ctor: "_Tuple3"
-                   ,_0: 0 - ry - rz
-                   ,_1: ry
-                   ,_2: rz} : _U.cmp(yDiff,zDiff) > 0 ? {ctor: "_Tuple3"
-                                                        ,_0: rx
-                                                        ,_1: 0 - rx - rz
-                                                        ,_2: rz} : {ctor: "_Tuple3",_0: rx,_1: ry,_2: 0 - rx - ry};
-   };
-   var cubeLine = F2(function (a,b) {
-      var n = A2(cubeDistance,a,b);
-      var offsetMapper = function (i) {
-         return cubeRound(A3(cubeLinearInterpol,
-         a,
-         b,
-         1 / $Basics.toFloat(n) * $Basics.toFloat(i)));
-      };
-      return A2($List.map,offsetMapper,_U.range(0,n));
-   });
-   var hexLine = F2(function (a,b) {
-      return A2($List.map,
-      cubeToHex,
-      A2(cubeLine,hexToCube(a),hexToCube(b)));
-   });
-   var hexRound = function (_p31) {
-      return cubeToHex(cubeRound(hexToCube(_p31)));
-   };
-   var deleteTile = F2(function (_p32,grid) {
-      var _p33 = _p32;
-      var _p35 = _p33._0;
+   var deleteTile = F2(function (_p4,grid) {
+      var _p5 = _p4;
+      var _p7 = _p5._0;
       var deleteInRow = function (maybeRow) {
-         var _p34 = maybeRow;
-         if (_p34.ctor === "Just") {
-               return A2($Dict.remove,_p33._1,_p34._0);
+         var _p6 = maybeRow;
+         if (_p6.ctor === "Just") {
+               return A2($Dict.remove,_p5._1,_p6._0);
             } else {
                return $Dict.empty;
             }
       };
       return A3($Dict.insert,
-      _p35,
-      deleteInRow(A2($Dict.get,_p35,grid)),
+      _p7,
+      deleteInRow(A2($Dict.get,_p7,grid)),
       grid);
    });
-   var createTile = F3(function (kind,_p36,grid) {
-      var _p37 = _p36;
-      var _p40 = _p37._1;
-      var _p39 = _p37._0;
+   var createTile = F3(function (kind,_p8,grid) {
+      var _p9 = _p8;
+      var _p12 = _p9._1;
+      var _p11 = _p9._0;
       var updateRow = function (maybeRow) {
-         var _p38 = maybeRow;
-         if (_p38.ctor === "Just") {
-               return A3($Dict.insert,_p40,kind,_p38._0);
+         var _p10 = maybeRow;
+         if (_p10.ctor === "Just") {
+               return A3($Dict.insert,_p12,kind,_p10._0);
             } else {
-               return A2($Dict.singleton,_p40,kind);
+               return A2($Dict.singleton,_p12,kind);
             }
       };
       return A3($Dict.insert,
-      _p39,
-      updateRow(A2($Dict.get,_p39,grid)),
+      _p11,
+      updateRow(A2($Dict.get,_p11,grid)),
       grid);
    });
-   var getTile = F2(function (grid,_p41) {
-      var _p42 = _p41;
+   var getTile = F2(function (grid,_p13) {
+      var _p14 = _p13;
       return A2($Maybe.andThen,
-      A2($Dict.get,_p42._0,grid),
-      $Dict.get(_p42._1));
+      A2($Dict.get,_p14._0,grid),
+      $Dict.get(_p14._1));
    });
    var hexRadius = 50;
    var hexHeight = hexRadius * 2;
    var hexWidth = $Basics.sqrt(3) / 2 * hexHeight;
    var hexDims = {ctor: "_Tuple2",_0: hexWidth,_1: hexHeight};
-   var hexCoordsToPoint = function (_p43) {
-      var _p44 = _p43;
-      var _p45 = _p44._1;
-      var y = hexRadius * 3 / 2 * $Basics.toFloat(_p45);
-      var x = hexRadius * $Basics.sqrt(3) * ($Basics.toFloat(_p44._0) + $Basics.toFloat(_p45) / 2);
-      return {ctor: "_Tuple2",_0: x,_1: y};
-   };
-   var pointToHexCoords = function (_p46) {
-      var _p47 = _p46;
-      var _p48 = _p47._1;
-      var j = _p48 * (2 / 3) / hexRadius;
-      var i = (_p47._0 * $Basics.sqrt(3) / 3 - _p48 / 3) / hexRadius;
-      return hexRound({ctor: "_Tuple2",_0: i,_1: j});
-   };
    var currentTile = F2(function (grid,p) {
-      return A2(getTile,grid,pointToHexCoords(p));
+      return A2(getTile,
+      grid,
+      A2($Hexagons.pointToAxial,hexRadius,p));
    });
    return _elm.Game.Grid.values = {_op: _op
                                   ,hexRadius: hexRadius
@@ -14518,21 +14541,6 @@ Elm.Game.Grid.make = function (_elm) {
                                   ,getTile: getTile
                                   ,createTile: createTile
                                   ,deleteTile: deleteTile
-                                  ,hexCoordsToPoint: hexCoordsToPoint
-                                  ,pointToHexCoords: pointToHexCoords
-                                  ,hexRound: hexRound
-                                  ,cubeRound: cubeRound
-                                  ,cubeToHex: cubeToHex
-                                  ,hexToCube: hexToCube
-                                  ,cubeDistance: cubeDistance
-                                  ,hexDistance: hexDistance
-                                  ,cubeLinearInterpol: cubeLinearInterpol
-                                  ,floatCube: floatCube
-                                  ,cubeLine: cubeLine
-                                  ,hexRange: hexRange
-                                  ,hexAdd: hexAdd
-                                  ,cubeAdd: cubeAdd
-                                  ,hexLine: hexLine
                                   ,getTilesList: getTilesList};
 };
 Elm.Screens = Elm.Screens || {};
@@ -14552,6 +14560,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -14620,7 +14629,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
    var getMouseEventTiles = F3(function (editor,courseDims,event) {
       var tileCoords = function (_p22) {
          return A2($Maybe.map,
-         $Game$Grid.pointToHexCoords,
+         $Hexagons.pointToAxial($Game$Grid.hexRadius),
          A3(clickPoint,editor,courseDims,_p22));
       };
       var _p23 = event;
@@ -14639,7 +14648,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
                  var _p27 = _p25._1._0;
                  var _p26 = _p25._0._0;
                  return _U.eq(_p26,
-                 _p27) ? _U.list([_p26]) : A2($Game$Grid.hexLine,_p26,_p27);
+                 _p27) ? _U.list([_p26]) : A2($Hexagons.axialLine,_p26,_p27);
               } else {
                  return _U.list([]);
               }
@@ -14718,6 +14727,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -14744,7 +14754,9 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       };
       var waterPoints = A2($List.map,
       function (t) {
-         return $Game$Grid.hexCoordsToPoint(t.coords);
+         return A2($Hexagons.axialToPoint,
+         $Game$Grid.hexRadius,
+         t.coords);
       },
       A2($List.filter,
       function (t) {
@@ -15517,6 +15529,7 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
    $Game$Geo = Elm.Game.Geo.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -15524,7 +15537,9 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var findGustTile = F2(function (p,gustGrid) {
-      return A2($Dict.get,$Game$Grid.pointToHexCoords(p),gustGrid);
+      return A2($Dict.get,
+      A2($Hexagons.pointToAxial,$Game$Grid.hexRadius,p),
+      gustGrid);
    });
    var isGustOnPlayer = F2(function (s,g) {
       return _U.cmp(A2($Game$Geo.distance,s.position,g.position),
@@ -15673,6 +15688,7 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
    $Game$Geo = Elm.Game.Geo.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -15684,7 +15700,7 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
       var _p2 = _p1.radius;
       var distance = A2($Game$Geo.distance,
       _p1.position,
-      $Game$Grid.hexCoordsToPoint(coords));
+      A2($Hexagons.axialToPoint,$Game$Grid.hexRadius,coords));
       if (_U.cmp(distance,_p2) < 1) {
             var fromEdge = _p2 - distance;
             var factor = A2($Basics.min,fromEdge / (_p2 * 0.2),1);
@@ -15701,12 +15717,14 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
       var _p4 = _p3;
       var _p6 = _p4.radius;
       var _p5 = _p4.position;
-      var southTile = $Game$Grid.pointToHexCoords(A2($Game$Geo.add,
-      _p5,
-      {ctor: "_Tuple2",_0: 0,_1: 0 - _p6}));
-      var centerTile = $Game$Grid.pointToHexCoords(_p5);
-      var distance = A2($Game$Grid.hexDistance,centerTile,southTile);
-      var coordsList = A2($Game$Grid.hexRange,centerTile,distance);
+      var southTile = A2($Hexagons.pointToAxial,
+      $Game$Grid.hexRadius,
+      A2($Game$Geo.add,_p5,{ctor: "_Tuple2",_0: 0,_1: 0 - _p6}));
+      var centerTile = A2($Hexagons.pointToAxial,
+      $Game$Grid.hexRadius,
+      _p5);
+      var distance = A2($Hexagons.axialDistance,centerTile,southTile);
+      var coordsList = A2($Hexagons.axialRange,centerTile,distance);
       var tiles = $Dict.fromList(A2($List.filterMap,
       A2(genGustTile,grid,_p4),
       coordsList));
@@ -20345,243 +20363,6 @@ Elm.Svg.Lazy.make = function (_elm) {
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.SvgUtils = Elm.Game.Render.SvgUtils || {};
-Elm.Game.Render.SvgUtils.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.SvgUtils = _elm.Game.Render.SvgUtils || {};
-   if (_elm.Game.Render.SvgUtils.values)
-   return _elm.Game.Render.SvgUtils.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Geo = Elm.Game.Geo.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var empty = A2($Svg.g,_U.list([]),_U.list([]));
-   var buildCmd = F2(function (cmd,numbers) {
-      return A2($String.join,
-      " ",
-      A2($List._op["::"],cmd,A2($List.map,$Basics.toString,numbers)));
-   });
-   var arc = F2(function (attrs,_p0) {
-      var _p1 = _p0;
-      var _p5 = _p1.radius;
-      var _p4 = _p1.center;
-      var _p2 = A2($Game$Geo.sub,
-      A2($Game$Geo.rotateDeg,_p1.toAngle,_p5),
-      _p4);
-      var x2 = _p2._0;
-      var y2 = _p2._1;
-      var arcCmd = A2(buildCmd,"A",_U.list([_p5,_p5,0,0,0,x2,y2]));
-      var _p3 = A2($Game$Geo.sub,
-      A2($Game$Geo.rotateDeg,_p1.fromAngle,_p5),
-      _p4);
-      var x1 = _p3._0;
-      var y1 = _p3._1;
-      var moveCmd = A2(buildCmd,"M",_U.list([x1,y1]));
-      var cmd = A2($Basics._op["++"],moveCmd,arcCmd);
-      return A2($Svg.path,
-      A2($List._op["::"],$Svg$Attributes.d(cmd),attrs),
-      _U.list([]));
-   });
-   var ArcDef = F4(function (a,b,c,d) {
-      return {center: a,radius: b,fromAngle: c,toAngle: d};
-   });
-   var lineCoords = F2(function (p1,p2) {
-      var y = function (_p6) {
-         return $Basics.toString($Basics.snd(_p6));
-      };
-      var x = function (_p7) {
-         return $Basics.toString($Basics.fst(_p7));
-      };
-      return _U.list([$Svg$Attributes.x1(x(p1))
-                     ,$Svg$Attributes.y1(y(p1))
-                     ,$Svg$Attributes.x2(x(p2))
-                     ,$Svg$Attributes.y2(y(p2))]);
-   });
-   var pathPoints = function (pointsList) {
-      var coords = A2($String.join,
-      " ",
-      A2($List.map,
-      function (_p8) {
-         var _p9 = _p8;
-         return A2($Basics._op["++"],
-         $Basics.toString(_p9._0),
-         A2($Basics._op["++"],",",$Basics.toString(_p9._1)));
-      },
-      pointsList));
-      return $Svg$Attributes.d(A2($Basics._op["++"],"M ",coords));
-   };
-   var polygonPoints = function (pointsList) {
-      return $Svg$Attributes.points(A2($String.join,
-      " ",
-      A2($List.map,
-      function (_p10) {
-         var _p11 = _p10;
-         return A2($Basics._op["++"],
-         $Basics.toString(_p11._0),
-         A2($Basics._op["++"],",",$Basics.toString(_p11._1)));
-      },
-      pointsList)));
-   };
-   var segment = F2(function (attrs,_p12) {
-      var _p13 = _p12;
-      return A2($Svg.line,
-      A2($Basics._op["++"],attrs,A2(lineCoords,_p13._0,_p13._1)),
-      _U.list([]));
-   });
-   var rotate_ = F3(function (a,cx,cy) {
-      return A2($Basics._op["++"],
-      "rotate(",
-      A2($Basics._op["++"],
-      $Basics.toString(a),
-      A2($Basics._op["++"],
-      ", ",
-      A2($Basics._op["++"],
-      $Basics.toString(cx),
-      A2($Basics._op["++"],
-      ", ",
-      A2($Basics._op["++"],$Basics.toString(cy),")"))))));
-   });
-   var translate = F2(function (x,y) {
-      return A2($Basics._op["++"],
-      "translate(",
-      A2($Basics._op["++"],
-      $Basics.toString(x),
-      A2($Basics._op["++"],
-      ", ",
-      A2($Basics._op["++"],$Basics.toString(y),")"))));
-   });
-   var translatePoint = function (_p14) {
-      var _p15 = _p14;
-      return A2(translate,_p15._0,_p15._1);
-   };
-   return _elm.Game.Render.SvgUtils.values = {_op: _op
-                                             ,translate: translate
-                                             ,translatePoint: translatePoint
-                                             ,rotate_: rotate_
-                                             ,segment: segment
-                                             ,polygonPoints: polygonPoints
-                                             ,pathPoints: pathPoints
-                                             ,lineCoords: lineCoords
-                                             ,ArcDef: ArcDef
-                                             ,arc: arc
-                                             ,buildCmd: buildCmd
-                                             ,empty: empty};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Gates = Elm.Game.Render.Gates || {};
-Elm.Game.Render.Gates.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Gates = _elm.Game.Render.Gates || {};
-   if (_elm.Game.Render.Gates.values)
-   return _elm.Game.Render.Gates.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var gateLineOpacity = function (timer) {
-      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
-   };
-   var renderGateMark = F2(function (color,p) {
-      return A2($Svg.circle,
-      _U.list([$Svg$Attributes.r($Basics.toString($Game$Models.markRadius))
-              ,$Svg$Attributes.stroke("white")
-              ,$Svg$Attributes.strokeWidth("2")
-              ,$Svg$Attributes.fill(color)
-              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(p))]),
-      _U.list([]));
-   });
-   var renderGateMarks = F2(function (color,gate) {
-      var _p0 = $Game$Models.getGateMarks(gate);
-      var left = _p0._0;
-      var right = _p0._1;
-      return A2($Svg.g,
-      _U.list([]),
-      A2($List.map,renderGateMark(color),_U.list([left,right])));
-   });
-   var renderGate = F3(function (gate,lineStyle,color) {
-      var marks = A2(renderGateMarks,color,gate);
-      var l = A2($Game$Render$SvgUtils.segment,
-      lineStyle,
-      $Game$Models.getGateMarks(gate));
-      return A2($Svg.g,_U.list([]),_U.list([l,marks]));
-   });
-   var renderClosedGate = F2(function (gate,timer) {
-      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
-                              ,$Svg$Attributes.strokeWidth("2")]);
-      return A3(renderGate,gate,lineStyle,"black");
-   });
-   var renderOpenGate = F2(function (gate,timer) {
-      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
-                              ,$Svg$Attributes.strokeWidth("2")
-                              ,$Svg$Attributes.strokeDasharray("5,3")
-                              ,$Svg$Attributes.opacity($Basics.toString(gateLineOpacity(timer)))]);
-      return A3(renderGate,gate,lineStyle,$Constants.colors.green);
-   });
-   var renderUpwind = F3(function (playerState,course,now) {
-      var _p1 = playerState.nextGate;
-      if (_p1.ctor === "Just" && _p1._0.ctor === "UpwindGate") {
-            return A2(renderOpenGate,course.upwind,now);
-         } else {
-            return A2(renderClosedGate,course.upwind,now);
-         }
-   });
-   var renderDownwind = F4(function (playerState,
-   course,
-   now,
-   started) {
-      var _p2 = playerState.nextGate;
-      _v1_2: do {
-         if (_p2.ctor === "Just") {
-               switch (_p2._0.ctor)
-               {case "StartLine": return started ? A2(renderOpenGate,
-                    course.downwind,
-                    now) : A2(renderClosedGate,course.downwind,now);
-                  case "DownwindGate": return A2(renderOpenGate,
-                    course.downwind,
-                    now);
-                  default: break _v1_2;}
-            } else {
-               break _v1_2;
-            }
-      } while (false);
-      return A2(renderClosedGate,course.downwind,now);
-   });
-   return _elm.Game.Render.Gates.values = {_op: _op
-                                          ,renderDownwind: renderDownwind
-                                          ,renderUpwind: renderUpwind
-                                          ,renderOpenGate: renderOpenGate
-                                          ,renderClosedGate: renderClosedGate
-                                          ,renderGate: renderGate
-                                          ,renderGateMarks: renderGateMarks
-                                          ,renderGateMark: renderGateMark
-                                          ,gateLineOpacity: gateLineOpacity};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
 Elm.Game.Render.Tiles = Elm.Game.Render.Tiles || {};
 Elm.Game.Render.Tiles.make = function (_elm) {
    "use strict";
@@ -20595,6 +20376,7 @@ Elm.Game.Render.Tiles.make = function (_elm) {
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game$Grid = Elm.Game.Grid.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -20642,7 +20424,9 @@ Elm.Game.Render.Tiles.make = function (_elm) {
    var renderTile = function (_p4) {
       var _p5 = _p4;
       var color = tileKindColor(_p5.kind);
-      var _p6 = $Game$Grid.hexCoordsToPoint(_p5.coords);
+      var _p6 = A2($Hexagons.axialToPoint,
+      $Game$Grid.hexRadius,
+      _p5.coords);
       var x = _p6._0;
       var y = _p6._1;
       return A2($Svg.polygon,
@@ -20988,6 +20772,243 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                    ,nameInput: nameInput
                                                    ,intInput: intInput
                                                    ,sideBlock: sideBlock};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.SvgUtils = Elm.Game.Render.SvgUtils || {};
+Elm.Game.Render.SvgUtils.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.SvgUtils = _elm.Game.Render.SvgUtils || {};
+   if (_elm.Game.Render.SvgUtils.values)
+   return _elm.Game.Render.SvgUtils.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Geo = Elm.Game.Geo.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var empty = A2($Svg.g,_U.list([]),_U.list([]));
+   var buildCmd = F2(function (cmd,numbers) {
+      return A2($String.join,
+      " ",
+      A2($List._op["::"],cmd,A2($List.map,$Basics.toString,numbers)));
+   });
+   var arc = F2(function (attrs,_p0) {
+      var _p1 = _p0;
+      var _p5 = _p1.radius;
+      var _p4 = _p1.center;
+      var _p2 = A2($Game$Geo.sub,
+      A2($Game$Geo.rotateDeg,_p1.toAngle,_p5),
+      _p4);
+      var x2 = _p2._0;
+      var y2 = _p2._1;
+      var arcCmd = A2(buildCmd,"A",_U.list([_p5,_p5,0,0,0,x2,y2]));
+      var _p3 = A2($Game$Geo.sub,
+      A2($Game$Geo.rotateDeg,_p1.fromAngle,_p5),
+      _p4);
+      var x1 = _p3._0;
+      var y1 = _p3._1;
+      var moveCmd = A2(buildCmd,"M",_U.list([x1,y1]));
+      var cmd = A2($Basics._op["++"],moveCmd,arcCmd);
+      return A2($Svg.path,
+      A2($List._op["::"],$Svg$Attributes.d(cmd),attrs),
+      _U.list([]));
+   });
+   var ArcDef = F4(function (a,b,c,d) {
+      return {center: a,radius: b,fromAngle: c,toAngle: d};
+   });
+   var lineCoords = F2(function (p1,p2) {
+      var y = function (_p6) {
+         return $Basics.toString($Basics.snd(_p6));
+      };
+      var x = function (_p7) {
+         return $Basics.toString($Basics.fst(_p7));
+      };
+      return _U.list([$Svg$Attributes.x1(x(p1))
+                     ,$Svg$Attributes.y1(y(p1))
+                     ,$Svg$Attributes.x2(x(p2))
+                     ,$Svg$Attributes.y2(y(p2))]);
+   });
+   var pathPoints = function (pointsList) {
+      var coords = A2($String.join,
+      " ",
+      A2($List.map,
+      function (_p8) {
+         var _p9 = _p8;
+         return A2($Basics._op["++"],
+         $Basics.toString(_p9._0),
+         A2($Basics._op["++"],",",$Basics.toString(_p9._1)));
+      },
+      pointsList));
+      return $Svg$Attributes.d(A2($Basics._op["++"],"M ",coords));
+   };
+   var polygonPoints = function (pointsList) {
+      return $Svg$Attributes.points(A2($String.join,
+      " ",
+      A2($List.map,
+      function (_p10) {
+         var _p11 = _p10;
+         return A2($Basics._op["++"],
+         $Basics.toString(_p11._0),
+         A2($Basics._op["++"],",",$Basics.toString(_p11._1)));
+      },
+      pointsList)));
+   };
+   var segment = F2(function (attrs,_p12) {
+      var _p13 = _p12;
+      return A2($Svg.line,
+      A2($Basics._op["++"],attrs,A2(lineCoords,_p13._0,_p13._1)),
+      _U.list([]));
+   });
+   var rotate_ = F3(function (a,cx,cy) {
+      return A2($Basics._op["++"],
+      "rotate(",
+      A2($Basics._op["++"],
+      $Basics.toString(a),
+      A2($Basics._op["++"],
+      ", ",
+      A2($Basics._op["++"],
+      $Basics.toString(cx),
+      A2($Basics._op["++"],
+      ", ",
+      A2($Basics._op["++"],$Basics.toString(cy),")"))))));
+   });
+   var translate = F2(function (x,y) {
+      return A2($Basics._op["++"],
+      "translate(",
+      A2($Basics._op["++"],
+      $Basics.toString(x),
+      A2($Basics._op["++"],
+      ", ",
+      A2($Basics._op["++"],$Basics.toString(y),")"))));
+   });
+   var translatePoint = function (_p14) {
+      var _p15 = _p14;
+      return A2(translate,_p15._0,_p15._1);
+   };
+   return _elm.Game.Render.SvgUtils.values = {_op: _op
+                                             ,translate: translate
+                                             ,translatePoint: translatePoint
+                                             ,rotate_: rotate_
+                                             ,segment: segment
+                                             ,polygonPoints: polygonPoints
+                                             ,pathPoints: pathPoints
+                                             ,lineCoords: lineCoords
+                                             ,ArcDef: ArcDef
+                                             ,arc: arc
+                                             ,buildCmd: buildCmd
+                                             ,empty: empty};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Gates = Elm.Game.Render.Gates || {};
+Elm.Game.Render.Gates.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Gates = _elm.Game.Render.Gates || {};
+   if (_elm.Game.Render.Gates.values)
+   return _elm.Game.Render.Gates.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var gateLineOpacity = function (timer) {
+      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
+   };
+   var renderGateMark = F2(function (color,p) {
+      return A2($Svg.circle,
+      _U.list([$Svg$Attributes.r($Basics.toString($Game$Models.markRadius))
+              ,$Svg$Attributes.stroke("white")
+              ,$Svg$Attributes.strokeWidth("2")
+              ,$Svg$Attributes.fill(color)
+              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(p))]),
+      _U.list([]));
+   });
+   var renderGateMarks = F2(function (color,gate) {
+      var _p0 = $Game$Models.getGateMarks(gate);
+      var left = _p0._0;
+      var right = _p0._1;
+      return A2($Svg.g,
+      _U.list([]),
+      A2($List.map,renderGateMark(color),_U.list([left,right])));
+   });
+   var renderGate = F3(function (gate,lineStyle,color) {
+      var marks = A2(renderGateMarks,color,gate);
+      var l = A2($Game$Render$SvgUtils.segment,
+      lineStyle,
+      $Game$Models.getGateMarks(gate));
+      return A2($Svg.g,_U.list([]),_U.list([l,marks]));
+   });
+   var renderClosedGate = F2(function (gate,timer) {
+      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
+                              ,$Svg$Attributes.strokeWidth("2")]);
+      return A3(renderGate,gate,lineStyle,"black");
+   });
+   var renderOpenGate = F2(function (gate,timer) {
+      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
+                              ,$Svg$Attributes.strokeWidth("2")
+                              ,$Svg$Attributes.strokeDasharray("5,3")
+                              ,$Svg$Attributes.opacity($Basics.toString(gateLineOpacity(timer)))]);
+      return A3(renderGate,gate,lineStyle,$Constants.colors.green);
+   });
+   var renderUpwind = F3(function (playerState,course,now) {
+      var _p1 = playerState.nextGate;
+      if (_p1.ctor === "Just" && _p1._0.ctor === "UpwindGate") {
+            return A2(renderOpenGate,course.upwind,now);
+         } else {
+            return A2(renderClosedGate,course.upwind,now);
+         }
+   });
+   var renderDownwind = F4(function (playerState,
+   course,
+   now,
+   started) {
+      var _p2 = playerState.nextGate;
+      _v1_2: do {
+         if (_p2.ctor === "Just") {
+               switch (_p2._0.ctor)
+               {case "StartLine": return started ? A2(renderOpenGate,
+                    course.downwind,
+                    now) : A2(renderClosedGate,course.downwind,now);
+                  case "DownwindGate": return A2(renderOpenGate,
+                    course.downwind,
+                    now);
+                  default: break _v1_2;}
+            } else {
+               break _v1_2;
+            }
+      } while (false);
+      return A2(renderClosedGate,course.downwind,now);
+   });
+   return _elm.Game.Render.Gates.values = {_op: _op
+                                          ,renderDownwind: renderDownwind
+                                          ,renderUpwind: renderUpwind
+                                          ,renderOpenGate: renderOpenGate
+                                          ,renderClosedGate: renderClosedGate
+                                          ,renderGate: renderGate
+                                          ,renderGateMarks: renderGateMarks
+                                          ,renderGateMark: renderGateMark
+                                          ,gateLineOpacity: gateLineOpacity};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};
@@ -21954,6 +21975,7 @@ Elm.Game.Render.Course.make = function (_elm) {
    $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
    $Game$Render$Tiles = Elm.Game.Render.Tiles.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -21982,7 +22004,9 @@ Elm.Game.Render.Course.make = function (_elm) {
       var _p3 = _p1._1.speed;
       var color = _U.cmp(_p3,0) > 0 ? "black" : "white";
       var a = 0.3 * $Basics.abs(_p3) / 10;
-      var _p2 = $Game$Grid.hexCoordsToPoint(_p1._0);
+      var _p2 = A2($Hexagons.axialToPoint,
+      $Game$Grid.hexRadius,
+      _p1._0);
       var x = _p2._0;
       var y = _p2._1;
       return A2($Svg.polygon,

@@ -4,18 +4,16 @@ import Game.Models exposing (..)
 import Models exposing (..)
 import Game.Grid as Grid
 
+import Hexagons
+
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Gates exposing (..)
 import Game.Render.Tiles exposing (..)
 
-import String
 import Dict
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
-
-import Debug
 
 
 renderCourse : GameState -> Svg
@@ -43,7 +41,7 @@ renderTiledGust {tiles} =
 renderGustTile : (Coords, GustTile) -> Svg
 renderGustTile (coords, {angle, speed}) =
   let
-    (x,y) = Grid.hexCoordsToPoint coords
+    (x,y) = Hexagons.axialToPoint Grid.hexRadius coords
     a = 0.3 * (abs speed) / 10
     color = if speed > 0 then "black" else "white"
   in

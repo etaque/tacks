@@ -4,6 +4,7 @@ import Models exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Grid as Grid
+import Hexagons
 
 import List exposing (..)
 import Dict exposing (Dict)
@@ -60,7 +61,7 @@ isGustOnPlayer s g =
 
 findGustTile : Point -> Dict Coords GustTile -> Maybe GustTile
 findGustTile p gustGrid =
-  Dict.get (Grid.pointToHexCoords p) gustGrid
+  Dict.get (Hexagons.pointToAxial Grid.hexRadius p) gustGrid
 
 
 inShadow : PlayerState -> Opponent -> Bool

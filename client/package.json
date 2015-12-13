@@ -22,7 +22,9 @@
     "build": "npm run build-elm & npm run build-js & npm run build-sass",
     "build-elm": "elm make src/Main.elm --output ../public/javascripts/Main.js",
     "build-js": "browserify scripts/setup.js -o ../public/javascripts/setup.js -g uglifyify",
-    "build-sass": "node-sass -o ../public/stylesheets styles/main.scss"
+    "build-sass": "node-sass -o ../public/stylesheets styles/main.scss",
+
+    "clean-elm": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/"
   },
   "dependencies": {
     "bootstrap-sass": "~3.3.6",

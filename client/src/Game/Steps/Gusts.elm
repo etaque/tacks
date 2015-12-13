@@ -5,6 +5,7 @@ import Game.Models exposing (..)
 
 import Game.Grid as Grid exposing (..)
 import Game.Geo as Geo
+import Hexagons
 
 import Dict
 
@@ -30,11 +31,11 @@ genTiledGusts grid now {gusts} =
 genTiledGust : Grid -> Gust -> TiledGust
 genTiledGust grid ({position, angle, speed, radius} as gust) =
   let
-    centerTile = pointToHexCoords position
-    southTile = pointToHexCoords (Geo.add position (0, -radius))
+    centerTile = Hexagons.pointToAxial hexRadius position
+    southTile = Hexagons.pointToAxial hexRadius (Geo.add position (0, -radius))
 
-    distance = hexDistance centerTile southTile
-    coordsList = hexRange centerTile distance
+    distance = Hexagons.axialDistance centerTile southTile
+    coordsList = Hexagons.axialRange centerTile distance
 
     tiles = coordsList
       |> List.filterMap (genGustTile grid gust)
@@ -46,7 +47,7 @@ genTiledGust grid ({position, angle, speed, radius} as gust) =
 genGustTile : Grid -> Gust -> Coords -> Maybe (Coords, GustTile)
 genGustTile grid {position, angle, speed, radius} coords =
   let
-    distance = Geo.distance position (hexCoordsToPoint coords)
+    distance = Geo.distance position (Hexagons.axialToPoint hexRadius coords)
   in
     if distance <= radius then
       let
