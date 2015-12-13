@@ -15,8 +15,6 @@ $lightSeaBlue: lighten($seaBlue, 6%);
 $lighterSeaBlue: lighten($seaBlue, 12%);
 $whiteSeaBlue: lighten($seaBlue, 30%);
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 $darkSeaBlue: little-desat-dark($seaBlue); // #2b4772;
 $darkerSeaBlue: little-desat-dark($darkSeaBlue);
 $blackSeaBlue: desaturate(darken($seaBlue, 50%), 20%);

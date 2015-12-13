@@ -1,15 +1,18 @@
 module Game.Steps.Gusts where
 
+import Constants exposing (..)
 import Models exposing (..)
 import Game.Models exposing (..)
 
-import Game.Grid as Grid exposing (..)
 import Game.Geo as Geo
+
 import Hexagons
+import Hexagons.Grid as Grid
 
 import Dict
 
 
+interval : Float
 interval = 500
 
 
@@ -55,7 +58,7 @@ genGustTile grid {position, angle, speed, radius} coords =
         factor = min (fromEdge / (radius * 0.2)) 1
         gustTile = GustTile (angle * factor) (speed * factor)
       in
-        if getTile grid coords == Just Water then
+        if Grid.get grid coords == Just Water then
           Just (coords, gustTile)
         else
           Nothing

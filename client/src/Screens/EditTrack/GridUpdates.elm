@@ -2,13 +2,13 @@ module Screens.EditTrack.GridUpdates where
 
 import DragAndDrop exposing (mouseEvents, MouseEvent(..))
 
-import Constants exposing (sidebarWidth)
+import Constants exposing (sidebarWidth, hexRadius)
 import Models exposing (..)
 import CoreExtra exposing (..)
-import Game.Grid exposing (..)
 
 import Screens.EditTrack.Types exposing (..)
 import Hexagons
+import Hexagons.Grid as Grid
 
 
 mouseAction : MouseEvent -> Dims -> Editor -> Editor
@@ -29,7 +29,7 @@ deleteTileAction : MouseEvent -> Dims -> Editor -> Editor
 deleteTileAction event courseDims editor =
   let
     coordsList = getMouseEventTiles editor courseDims event
-    newGrid = List.foldl deleteTile editor.course.grid coordsList
+    newGrid = List.foldl Grid.delete editor.course.grid coordsList
   in
     withGrid newGrid editor
 
@@ -38,7 +38,7 @@ updateTileAction : TileKind -> MouseEvent -> Dims -> Editor -> Editor
 updateTileAction kind event courseDims editor =
   let
     coordsList = getMouseEventTiles editor courseDims event
-    newGrid = List.foldl (createTile kind) editor.course.grid coordsList
+    newGrid = List.foldl (Grid.set kind) editor.course.grid coordsList
   in
     withGrid newGrid editor
 

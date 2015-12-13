@@ -10,5 +10,10 @@ colors =
   , green = "rgb(100, 180, 106)"
   }
 
-admins = [ "milox" ]
+hexRadius : Float
+hexRadius = 50
+
+admins : List String
+admins =
+  [ "milox" ]
 

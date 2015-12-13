@@ -5,9 +5,11 @@ import List as L
 import Models exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
-import Game.Grid exposing (currentTile)
 import Game.Core exposing (..)
 import Game.Steps.Util exposing (..)
+import Constants exposing (hexRadius)
+
+import Hexagons.Grid as Grid
 
 
 maxAccel : Float
@@ -61,6 +63,6 @@ isGrounded p course =
     halfBoatWidth = boatWidth / 2
 
     stuckOnMark = exists (\m -> (distance p m) <= markRadius + halfBoatWidth) marks
-    onGround = (currentTile course.grid p) /= Just Water
+    onGround = (Grid.getPoint hexRadius course.grid p) /= Just Water
   in
     stuckOnMark || onGround

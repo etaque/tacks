@@ -1,10 +1,12 @@
 module Game.Steps.PlayerWind where
 
+import Constants exposing (..)
 import Models exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
-import Game.Grid as Grid
+
 import Hexagons
+import Hexagons.Grid as Grid
 
 import List exposing (..)
 import Dict exposing (Dict)
@@ -56,12 +58,12 @@ playerWindStep ({wind, gusts, course, opponents} as gameState) state =
 
 isGustOnPlayer : PlayerState -> TiledGust -> Bool
 isGustOnPlayer s g =
-  (distance s.position g.position) < g.radius + Grid.hexRadius
+  (distance s.position g.position) < g.radius + hexRadius
 
 
 findGustTile : Point -> Dict Coords GustTile -> Maybe GustTile
 findGustTile p gustGrid =
-  Dict.get (Hexagons.pointToAxial Grid.hexRadius p) gustGrid
+  Dict.get (Hexagons.pointToAxial hexRadius p) gustGrid
 
 
 inShadow : PlayerState -> Opponent -> Bool

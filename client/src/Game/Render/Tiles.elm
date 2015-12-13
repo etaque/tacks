@@ -1,12 +1,10 @@
 module Game.Render.Tiles where
 
-import Constants exposing (colors)
-
+import Constants exposing (..)
 import Models exposing (..)
 
-import Game.Grid as Grid exposing (getTilesList)
-
 import Hexagons
+import Hexagons.Grid as Grid
 
 import String
 import Svg exposing (..)
@@ -21,15 +19,15 @@ lazyRenderTiles grid =
 renderTiles : Grid -> Svg
 renderTiles grid =
   let
-    tiles = List.map renderTile (getTilesList grid)
+    tiles = List.map renderTile (Grid.list grid)
   in
     g [ ] tiles
 
 renderTile : Tile -> Svg
-renderTile {kind, coords} =
+renderTile {content, coords} =
   let
-    (x,y) = Hexagons.axialToPoint Grid.hexRadius coords
-    color = tileKindColor kind
+    (x,y) = Hexagons.axialToPoint hexRadius coords
+    color = tileKindColor content
   in
     polygon
       [ points verticesPoints
@@ -54,7 +52,7 @@ verticesPoints =
 vertices : List Point
 vertices =
   let
-    (w,h) = Grid.hexDims
+    (w,h) = Hexagons.dims Constants.hexRadius
     w2 = w / 2
     h2 = h / 2
     h4 = h / 4

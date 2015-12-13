@@ -16,11 +16,13 @@ import Screens.EditTrack.Types exposing (..)
 import Screens.EditTrack.FormUpdates as FormUpdates exposing (update)
 import Screens.EditTrack.GridUpdates as GridUpdates exposing (mouseAction)
 
-import Game.Grid exposing (..)
+import Constants exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 import Routes
+
 import Hexagons
+import Hexagons.Grid as Grid
 
 
 addr : Signal.Address Action
@@ -154,8 +156,8 @@ save try id ({course, name} as editor) =
 getRaceArea : Grid -> RaceArea
 getRaceArea grid =
   let
-    waterPoints = getTilesList grid
-      |> List.filter (\t -> t.kind == Water)
+    waterPoints = Grid.list grid
+      |> List.filter (\t -> t.content == Water)
       |> List.map (\t -> Hexagons.axialToPoint hexRadius t.coords)
 
     xVals = waterPoints

@@ -10769,6 +10769,231 @@ Elm.Window.make = function (_elm) {
                                ,width: width
                                ,height: height};
 };
+Elm.Hexagons = Elm.Hexagons || {};
+Elm.Hexagons.make = function (_elm) {
+   "use strict";
+   _elm.Hexagons = _elm.Hexagons || {};
+   if (_elm.Hexagons.values) return _elm.Hexagons.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var axialToCube = function (_p0) {
+      var _p1 = _p0;
+      var _p3 = _p1._1;
+      var _p2 = _p1._0;
+      return {ctor: "_Tuple3",_0: _p2,_1: _p3,_2: 0 - _p2 - _p3};
+   };
+   var cubeToAxial = function (_p4) {
+      var _p5 = _p4;
+      return {ctor: "_Tuple2",_0: _p5._0,_1: _p5._1};
+   };
+   var cubeAdd = F2(function (_p7,_p6) {
+      var _p8 = _p7;
+      var _p9 = _p6;
+      return {ctor: "_Tuple3"
+             ,_0: _p8._0 + _p9._0
+             ,_1: _p8._1 + _p9._1
+             ,_2: _p8._2 + _p9._2};
+   });
+   var axialAdd = F2(function (_p11,_p10) {
+      var _p12 = _p11;
+      var _p13 = _p10;
+      return {ctor: "_Tuple2"
+             ,_0: _p12._0 + _p13._0
+             ,_1: _p12._1 + _p13._1};
+   });
+   var floatCube = function (_p14) {
+      var _p15 = _p14;
+      return {ctor: "_Tuple3"
+             ,_0: $Basics.toFloat(_p15._0)
+             ,_1: $Basics.toFloat(_p15._1)
+             ,_2: $Basics.toFloat(_p15._2)};
+   };
+   var cubeLinearInterpol = F3(function (a,b,t) {
+      var _p16 = floatCube(b);
+      var bx = _p16._0;
+      var by = _p16._1;
+      var bz = _p16._2;
+      var _p17 = floatCube(a);
+      var ax = _p17._0;
+      var ay = _p17._1;
+      var az = _p17._2;
+      var i = ax + (bx - ax) * t;
+      var j = ay + (by - ay) * t;
+      var k = az + (bz - az) * t;
+      return {ctor: "_Tuple3",_0: i,_1: j,_2: k};
+   });
+   var cubeDistance = F2(function (_p19,_p18) {
+      var _p20 = _p19;
+      var _p21 = _p18;
+      return ($Basics.abs(_p20._0 - _p21._0) + $Basics.abs(_p20._1 - _p21._1) + $Basics.abs(_p20._2 - _p21._2)) / 2 | 0;
+   });
+   var cubeRound = function (_p22) {
+      var _p23 = _p22;
+      var _p26 = _p23._2;
+      var _p25 = _p23._1;
+      var _p24 = _p23._0;
+      var rz = $Basics.round(_p26);
+      var zDiff = $Basics.abs($Basics.toFloat(rz) - _p26);
+      var ry = $Basics.round(_p25);
+      var yDiff = $Basics.abs($Basics.toFloat(ry) - _p25);
+      var rx = $Basics.round(_p24);
+      var xDiff = $Basics.abs($Basics.toFloat(rx) - _p24);
+      return _U.cmp(xDiff,yDiff) > 0 && _U.cmp(xDiff,
+      zDiff) > 0 ? {ctor: "_Tuple3"
+                   ,_0: 0 - ry - rz
+                   ,_1: ry
+                   ,_2: rz} : _U.cmp(yDiff,zDiff) > 0 ? {ctor: "_Tuple3"
+                                                        ,_0: rx
+                                                        ,_1: 0 - rx - rz
+                                                        ,_2: rz} : {ctor: "_Tuple3",_0: rx,_1: ry,_2: 0 - rx - ry};
+   };
+   var cubeLine = F2(function (a,b) {
+      var n = A2(cubeDistance,a,b);
+      var offsetMapper = function (i) {
+         return cubeRound(A3(cubeLinearInterpol,
+         a,
+         b,
+         1 / $Basics.toFloat(n) * $Basics.toFloat(i)));
+      };
+      return A2($List.map,offsetMapper,_U.range(0,n));
+   });
+   var axialRound = function (_p27) {
+      return cubeToAxial(cubeRound(axialToCube(_p27)));
+   };
+   var axialDistance = F2(function (a,b) {
+      return A2(cubeDistance,axialToCube(a),axialToCube(b));
+   });
+   var axialRange = F2(function (center,n) {
+      var mapX = function (dx) {
+         var mapY = function (dy) {
+            return A2(axialAdd,center,{ctor: "_Tuple2",_0: dx,_1: dy});
+         };
+         var toY = A2($Basics.min,n,0 - dx + n);
+         var fromY = A2($Basics.max,0 - n,0 - dx - n);
+         return A2($List.map,mapY,_U.range(fromY,toY));
+      };
+      return A2($List.concatMap,mapX,_U.range(0 - n,n));
+   });
+   var axialLine = F2(function (a,b) {
+      return A2($List.map,
+      cubeToAxial,
+      A2(cubeLine,axialToCube(a),axialToCube(b)));
+   });
+   var pointToAxial = F2(function (axialRadius,_p28) {
+      var _p29 = _p28;
+      var _p30 = _p29._1;
+      var j = _p30 * (2 / 3) / axialRadius;
+      var i = (_p29._0 * $Basics.sqrt(3) / 3 - _p30 / 3) / axialRadius;
+      return axialRound({ctor: "_Tuple2",_0: i,_1: j});
+   });
+   var axialToPoint = F2(function (axialRadius,_p31) {
+      var _p32 = _p31;
+      var _p33 = _p32._1;
+      var y = axialRadius * 3 / 2 * $Basics.toFloat(_p33);
+      var x = axialRadius * $Basics.sqrt(3) * ($Basics.toFloat(_p32._0) + $Basics.toFloat(_p33) / 2);
+      return {ctor: "_Tuple2",_0: x,_1: y};
+   });
+   var dims = function (hexRadius) {
+      var hexHeight = hexRadius * 2;
+      var hexWidth = $Basics.sqrt(3) / 2 * hexHeight;
+      return {ctor: "_Tuple2",_0: hexWidth,_1: hexHeight};
+   };
+   return _elm.Hexagons.values = {_op: _op
+                                 ,dims: dims
+                                 ,axialToPoint: axialToPoint
+                                 ,pointToAxial: pointToAxial
+                                 ,axialLine: axialLine
+                                 ,axialDistance: axialDistance
+                                 ,axialRange: axialRange};
+};
+Elm.Hexagons = Elm.Hexagons || {};
+Elm.Hexagons.Grid = Elm.Hexagons.Grid || {};
+Elm.Hexagons.Grid.make = function (_elm) {
+   "use strict";
+   _elm.Hexagons = _elm.Hexagons || {};
+   _elm.Hexagons.Grid = _elm.Hexagons.Grid || {};
+   if (_elm.Hexagons.Grid.values) return _elm.Hexagons.Grid.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var $delete = F2(function (_p0,grid) {
+      var _p1 = _p0;
+      var _p3 = _p1._0;
+      var deleteInRow = function (maybeRow) {
+         var _p2 = maybeRow;
+         if (_p2.ctor === "Just") {
+               return A2($Dict.remove,_p1._1,_p2._0);
+            } else {
+               return $Dict.empty;
+            }
+      };
+      return A3($Dict.insert,
+      _p3,
+      deleteInRow(A2($Dict.get,_p3,grid)),
+      grid);
+   });
+   var set = F3(function (tile,_p4,grid) {
+      var _p5 = _p4;
+      var _p8 = _p5._1;
+      var _p7 = _p5._0;
+      var updateRow = function (maybeRow) {
+         var _p6 = maybeRow;
+         if (_p6.ctor === "Just") {
+               return A3($Dict.insert,_p8,tile,_p6._0);
+            } else {
+               return A2($Dict.singleton,_p8,tile);
+            }
+      };
+      return A3($Dict.insert,
+      _p7,
+      updateRow(A2($Dict.get,_p7,grid)),
+      grid);
+   });
+   var get = F2(function (grid,_p9) {
+      var _p10 = _p9;
+      return A2($Maybe.andThen,
+      A2($Dict.get,_p10._0,grid),
+      $Dict.get(_p10._1));
+   });
+   var getPoint = F3(function (hexRadius,grid,p) {
+      return A2(get,grid,A2($Hexagons.pointToAxial,hexRadius,p));
+   });
+   var Tile = F2(function (a,b) {
+      return {content: a,coords: b};
+   });
+   var list = function (grid) {
+      var mapTile = F2(function (i,_p11) {
+         var _p12 = _p11;
+         return A2(Tile,_p12._1,{ctor: "_Tuple2",_0: i,_1: _p12._0});
+      });
+      var mapRow = function (_p13) {
+         var _p14 = _p13;
+         return A2($List.map,mapTile(_p14._0),$Dict.toList(_p14._1));
+      };
+      var rows = $Dict.toList(grid);
+      return A2($List.concatMap,mapRow,rows);
+   };
+   return _elm.Hexagons.Grid.values = {_op: _op
+                                      ,get: get
+                                      ,set: set
+                                      ,$delete: $delete
+                                      ,list: list
+                                      ,getPoint: getPoint
+                                      ,Tile: Tile};
+};
 Elm.RouteParser = Elm.RouteParser || {};
 Elm.RouteParser.make = function (_elm) {
    "use strict";
@@ -11108,6 +11333,7 @@ Elm.Constants.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var admins = _U.list(["milox"]);
+   var hexRadius = 50;
    var colors = {water: "rgb(33, 148, 206)"
                 ,sand: "rgb(242, 243, 196)"
                 ,grass: "rgb(200, 230, 180)"
@@ -11117,6 +11343,7 @@ Elm.Constants.make = function (_elm) {
    return _elm.Constants.values = {_op: _op
                                   ,sidebarWidth: sidebarWidth
                                   ,colors: colors
+                                  ,hexRadius: hexRadius
                                   ,admins: admins};
 };
 Elm.Models = Elm.Models || {};
@@ -11129,6 +11356,8 @@ Elm.Models.make = function (_elm) {
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Dict = Elm.Dict.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -11138,7 +11367,6 @@ Elm.Models.make = function (_elm) {
    var Rock = {ctor: "Rock"};
    var Grass = {ctor: "Grass"};
    var Water = {ctor: "Water"};
-   var Tile = F2(function (a,b) {    return {kind: a,coords: b};});
    var GustDef = F3(function (a,b,c) {
       return {angle: a,speed: b,radius: c};
    });
@@ -11234,7 +11462,6 @@ Elm.Models.make = function (_elm) {
                                ,WindGenerator: WindGenerator
                                ,GustGenerator: GustGenerator
                                ,GustDef: GustDef
-                               ,Tile: Tile
                                ,Water: Water
                                ,Grass: Grass
                                ,Rock: Rock};
@@ -14315,234 +14542,6 @@ Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
                                                       ,updateGustGen: updateGustGen
                                                       ,updateWindGen: updateWindGen};
 };
-Elm.Hexagons = Elm.Hexagons || {};
-Elm.Hexagons.make = function (_elm) {
-   "use strict";
-   _elm.Hexagons = _elm.Hexagons || {};
-   if (_elm.Hexagons.values) return _elm.Hexagons.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var axialToCube = function (_p0) {
-      var _p1 = _p0;
-      var _p3 = _p1._1;
-      var _p2 = _p1._0;
-      return {ctor: "_Tuple3",_0: _p2,_1: _p3,_2: 0 - _p2 - _p3};
-   };
-   var cubeToAxial = function (_p4) {
-      var _p5 = _p4;
-      return {ctor: "_Tuple2",_0: _p5._0,_1: _p5._1};
-   };
-   var cubeAdd = F2(function (_p7,_p6) {
-      var _p8 = _p7;
-      var _p9 = _p6;
-      return {ctor: "_Tuple3"
-             ,_0: _p8._0 + _p9._0
-             ,_1: _p8._1 + _p9._1
-             ,_2: _p8._2 + _p9._2};
-   });
-   var axialAdd = F2(function (_p11,_p10) {
-      var _p12 = _p11;
-      var _p13 = _p10;
-      return {ctor: "_Tuple2"
-             ,_0: _p12._0 + _p13._0
-             ,_1: _p12._1 + _p13._1};
-   });
-   var floatCube = function (_p14) {
-      var _p15 = _p14;
-      return {ctor: "_Tuple3"
-             ,_0: $Basics.toFloat(_p15._0)
-             ,_1: $Basics.toFloat(_p15._1)
-             ,_2: $Basics.toFloat(_p15._2)};
-   };
-   var cubeLinearInterpol = F3(function (a,b,t) {
-      var _p16 = floatCube(b);
-      var bx = _p16._0;
-      var by = _p16._1;
-      var bz = _p16._2;
-      var _p17 = floatCube(a);
-      var ax = _p17._0;
-      var ay = _p17._1;
-      var az = _p17._2;
-      var i = ax + (bx - ax) * t;
-      var j = ay + (by - ay) * t;
-      var k = az + (bz - az) * t;
-      return {ctor: "_Tuple3",_0: i,_1: j,_2: k};
-   });
-   var cubeDistance = F2(function (_p19,_p18) {
-      var _p20 = _p19;
-      var _p21 = _p18;
-      return ($Basics.abs(_p20._0 - _p21._0) + $Basics.abs(_p20._1 - _p21._1) + $Basics.abs(_p20._2 - _p21._2)) / 2 | 0;
-   });
-   var axialDistance = F2(function (a,b) {
-      return A2(cubeDistance,axialToCube(a),axialToCube(b));
-   });
-   var cubeRound = function (_p22) {
-      var _p23 = _p22;
-      var _p26 = _p23._2;
-      var _p25 = _p23._1;
-      var _p24 = _p23._0;
-      var rz = $Basics.round(_p26);
-      var zDiff = $Basics.abs($Basics.toFloat(rz) - _p26);
-      var ry = $Basics.round(_p25);
-      var yDiff = $Basics.abs($Basics.toFloat(ry) - _p25);
-      var rx = $Basics.round(_p24);
-      var xDiff = $Basics.abs($Basics.toFloat(rx) - _p24);
-      return _U.cmp(xDiff,yDiff) > 0 && _U.cmp(xDiff,
-      zDiff) > 0 ? {ctor: "_Tuple3"
-                   ,_0: 0 - ry - rz
-                   ,_1: ry
-                   ,_2: rz} : _U.cmp(yDiff,zDiff) > 0 ? {ctor: "_Tuple3"
-                                                        ,_0: rx
-                                                        ,_1: 0 - rx - rz
-                                                        ,_2: rz} : {ctor: "_Tuple3",_0: rx,_1: ry,_2: 0 - rx - ry};
-   };
-   var cubeLine = F2(function (a,b) {
-      var n = A2(cubeDistance,a,b);
-      var offsetMapper = function (i) {
-         return cubeRound(A3(cubeLinearInterpol,
-         a,
-         b,
-         1 / $Basics.toFloat(n) * $Basics.toFloat(i)));
-      };
-      return A2($List.map,offsetMapper,_U.range(0,n));
-   });
-   var axialRound = function (_p27) {
-      return cubeToAxial(cubeRound(axialToCube(_p27)));
-   };
-   var axialRange = F2(function (center,n) {
-      var mapX = function (dx) {
-         var mapY = function (dy) {
-            return A2(axialAdd,center,{ctor: "_Tuple2",_0: dx,_1: dy});
-         };
-         var toY = A2($Basics.min,n,0 - dx + n);
-         var fromY = A2($Basics.max,0 - n,0 - dx - n);
-         return A2($List.map,mapY,_U.range(fromY,toY));
-      };
-      return A2($List.concatMap,mapX,_U.range(0 - n,n));
-   });
-   var axialLine = F2(function (a,b) {
-      return A2($List.map,
-      cubeToAxial,
-      A2(cubeLine,axialToCube(a),axialToCube(b)));
-   });
-   var pointToAxial = F2(function (axialRadius,_p28) {
-      var _p29 = _p28;
-      var _p30 = _p29._1;
-      var j = _p30 * (2 / 3) / axialRadius;
-      var i = (_p29._0 * $Basics.sqrt(3) / 3 - _p30 / 3) / axialRadius;
-      return axialRound({ctor: "_Tuple2",_0: i,_1: j});
-   });
-   var axialToPoint = F2(function (axialRadius,_p31) {
-      var _p32 = _p31;
-      var _p33 = _p32._1;
-      var y = axialRadius * 3 / 2 * $Basics.toFloat(_p33);
-      var x = axialRadius * $Basics.sqrt(3) * ($Basics.toFloat(_p32._0) + $Basics.toFloat(_p33) / 2);
-      return {ctor: "_Tuple2",_0: x,_1: y};
-   });
-   return _elm.Hexagons.values = {_op: _op
-                                 ,axialToPoint: axialToPoint
-                                 ,pointToAxial: pointToAxial
-                                 ,axialLine: axialLine
-                                 ,axialDistance: axialDistance
-                                 ,axialRange: axialRange};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Grid = Elm.Game.Grid || {};
-Elm.Game.Grid.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Grid = _elm.Game.Grid || {};
-   if (_elm.Game.Grid.values) return _elm.Game.Grid.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Hexagons = Elm.Hexagons.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var getTilesList = function (grid) {
-      var mapTile = F2(function (i,_p0) {
-         var _p1 = _p0;
-         return A2($Models.Tile,
-         _p1._1,
-         {ctor: "_Tuple2",_0: i,_1: _p1._0});
-      });
-      var mapRow = function (_p2) {
-         var _p3 = _p2;
-         return A2($List.map,mapTile(_p3._0),$Dict.toList(_p3._1));
-      };
-      var rows = $Dict.toList(grid);
-      return A2($List.concatMap,mapRow,rows);
-   };
-   var deleteTile = F2(function (_p4,grid) {
-      var _p5 = _p4;
-      var _p7 = _p5._0;
-      var deleteInRow = function (maybeRow) {
-         var _p6 = maybeRow;
-         if (_p6.ctor === "Just") {
-               return A2($Dict.remove,_p5._1,_p6._0);
-            } else {
-               return $Dict.empty;
-            }
-      };
-      return A3($Dict.insert,
-      _p7,
-      deleteInRow(A2($Dict.get,_p7,grid)),
-      grid);
-   });
-   var createTile = F3(function (kind,_p8,grid) {
-      var _p9 = _p8;
-      var _p12 = _p9._1;
-      var _p11 = _p9._0;
-      var updateRow = function (maybeRow) {
-         var _p10 = maybeRow;
-         if (_p10.ctor === "Just") {
-               return A3($Dict.insert,_p12,kind,_p10._0);
-            } else {
-               return A2($Dict.singleton,_p12,kind);
-            }
-      };
-      return A3($Dict.insert,
-      _p11,
-      updateRow(A2($Dict.get,_p11,grid)),
-      grid);
-   });
-   var getTile = F2(function (grid,_p13) {
-      var _p14 = _p13;
-      return A2($Maybe.andThen,
-      A2($Dict.get,_p14._0,grid),
-      $Dict.get(_p14._1));
-   });
-   var hexRadius = 50;
-   var hexHeight = hexRadius * 2;
-   var hexWidth = $Basics.sqrt(3) / 2 * hexHeight;
-   var hexDims = {ctor: "_Tuple2",_0: hexWidth,_1: hexHeight};
-   var currentTile = F2(function (grid,p) {
-      return A2(getTile,
-      grid,
-      A2($Hexagons.pointToAxial,hexRadius,p));
-   });
-   return _elm.Game.Grid.values = {_op: _op
-                                  ,hexRadius: hexRadius
-                                  ,hexHeight: hexHeight
-                                  ,hexWidth: hexWidth
-                                  ,hexDims: hexDims
-                                  ,currentTile: currentTile
-                                  ,getTile: getTile
-                                  ,createTile: createTile
-                                  ,deleteTile: deleteTile
-                                  ,getTilesList: getTilesList};
-};
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
 Elm.Screens.EditTrack.GridUpdates = Elm.Screens.EditTrack.GridUpdates || {};
@@ -14559,8 +14558,8 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
    $CoreExtra = Elm.CoreExtra.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -14629,7 +14628,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
    var getMouseEventTiles = F3(function (editor,courseDims,event) {
       var tileCoords = function (_p22) {
          return A2($Maybe.map,
-         $Hexagons.pointToAxial($Game$Grid.hexRadius),
+         $Hexagons.pointToAxial($Constants.hexRadius),
          A3(clickPoint,editor,courseDims,_p22));
       };
       var _p23 = event;
@@ -14668,7 +14667,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
       courseDims,
       event);
       var newGrid = A3($List.foldl,
-      $Game$Grid.createTile(kind),
+      $Hexagons$Grid.set(kind),
       editor.course.grid,
       coordsList);
       return A2(withGrid,newGrid,editor);
@@ -14679,7 +14678,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
       courseDims,
       event);
       var newGrid = A3($List.foldl,
-      $Game$Grid.deleteTile,
+      $Hexagons$Grid.$delete,
       editor.course.grid,
       coordsList);
       return A2(withGrid,newGrid,editor);
@@ -14723,11 +14722,12 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Effects = Elm.Effects.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -14755,24 +14755,24 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       var waterPoints = A2($List.map,
       function (t) {
          return A2($Hexagons.axialToPoint,
-         $Game$Grid.hexRadius,
+         $Constants.hexRadius,
          t.coords);
       },
       A2($List.filter,
       function (t) {
-         return _U.eq(t.kind,$Models.Water);
+         return _U.eq(t.content,$Models.Water);
       },
-      $Game$Grid.getTilesList(grid)));
+      $Hexagons$Grid.list(grid)));
       var xVals = $Array.fromList($List.sort(A2($List.map,
       $Basics.fst,
       waterPoints)));
-      var right = getLast(xVals) + $Game$Grid.hexRadius;
-      var left = getFirst(xVals) - $Game$Grid.hexRadius;
+      var right = getLast(xVals) + $Constants.hexRadius;
+      var left = getFirst(xVals) - $Constants.hexRadius;
       var yVals = $Array.fromList($List.sort(A2($List.map,
       $Basics.snd,
       waterPoints)));
-      var top = getLast(yVals) + $Game$Grid.hexRadius;
-      var bottom = getFirst(yVals) - $Game$Grid.hexRadius;
+      var top = getLast(yVals) + $Constants.hexRadius;
+      var bottom = getFirst(yVals) - $Constants.hexRadius;
       return A2($Models.RaceArea,
       {ctor: "_Tuple2",_0: right,_1: top},
       {ctor: "_Tuple2",_0: left,_1: bottom});
@@ -15265,12 +15265,13 @@ Elm.Game.Steps.Moving.make = function (_elm) {
    return _elm.Game.Steps.Moving.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game$Core = Elm.Game.Core.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Steps$Util = Elm.Game.Steps.Util.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -15278,7 +15279,8 @@ Elm.Game.Steps.Moving.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var isGrounded = F2(function (p,course) {
-      var onGround = !_U.eq(A2($Game$Grid.currentTile,
+      var onGround = !_U.eq(A3($Hexagons$Grid.getPoint,
+      $Constants.hexRadius,
       course.grid,
       p),
       $Maybe.Just($Models.Water));
@@ -15524,10 +15526,10 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
    return _elm.Game.Steps.PlayerWind.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Dict = Elm.Dict.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
@@ -15538,12 +15540,12 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
    var _op = {};
    var findGustTile = F2(function (p,gustGrid) {
       return A2($Dict.get,
-      A2($Hexagons.pointToAxial,$Game$Grid.hexRadius,p),
+      A2($Hexagons.pointToAxial,$Constants.hexRadius,p),
       gustGrid);
    });
    var isGustOnPlayer = F2(function (s,g) {
       return _U.cmp(A2($Game$Geo.distance,s.position,g.position),
-      g.radius + $Game$Grid.hexRadius) < 0;
+      g.radius + $Constants.hexRadius) < 0;
    });
    var maxWindShift = 0.5;
    var shadowArc = 30;
@@ -15683,12 +15685,13 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
    return _elm.Game.Steps.Gusts.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Dict = Elm.Dict.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -15700,14 +15703,14 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
       var _p2 = _p1.radius;
       var distance = A2($Game$Geo.distance,
       _p1.position,
-      A2($Hexagons.axialToPoint,$Game$Grid.hexRadius,coords));
+      A2($Hexagons.axialToPoint,$Constants.hexRadius,coords));
       if (_U.cmp(distance,_p2) < 1) {
             var fromEdge = _p2 - distance;
             var factor = A2($Basics.min,fromEdge / (_p2 * 0.2),1);
             var gustTile = A2($Game$Models.GustTile,
             _p1.angle * factor,
             _p1.speed * factor);
-            return _U.eq(A2($Game$Grid.getTile,grid,coords),
+            return _U.eq(A2($Hexagons$Grid.get,grid,coords),
             $Maybe.Just($Models.Water)) ? $Maybe.Just({ctor: "_Tuple2"
                                                       ,_0: coords
                                                       ,_1: gustTile}) : $Maybe.Nothing;
@@ -15718,10 +15721,10 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
       var _p6 = _p4.radius;
       var _p5 = _p4.position;
       var southTile = A2($Hexagons.pointToAxial,
-      $Game$Grid.hexRadius,
+      $Constants.hexRadius,
       A2($Game$Geo.add,_p5,{ctor: "_Tuple2",_0: 0,_1: 0 - _p6}));
       var centerTile = A2($Hexagons.pointToAxial,
-      $Game$Grid.hexRadius,
+      $Constants.hexRadius,
       _p5);
       var distance = A2($Hexagons.axialDistance,centerTile,southTile);
       var coordsList = A2($Hexagons.axialRange,centerTile,distance);
@@ -15767,7 +15770,6 @@ Elm.Game.Steps.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $Game$Core = Elm.Game.Core.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Inputs = Elm.Game.Inputs.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Steps$GateCrossing = Elm.Game.Steps.GateCrossing.make(_elm),
@@ -15828,7 +15830,7 @@ Elm.Game.Steps.make = function (_elm) {
    });
    var axisCenter = F6(function (p,p$,c,window,areaMin,areaMax) {
       var delta = p$ - p;
-      var outOffset = window / 2 - $Game$Grid.hexRadius;
+      var outOffset = window / 2 - $Constants.hexRadius;
       var offset = window / 2 - window * 0.48;
       var minExit = _U.cmp(delta,0) < 0 && _U.cmp(p$,c - offset) < 0;
       var maxExit = _U.cmp(delta,0) > 0 && _U.cmp(p$,c + offset) > 0;
@@ -20375,8 +20377,8 @@ Elm.Game.Render.Tiles.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -20400,7 +20402,7 @@ Elm.Game.Render.Tiles.make = function (_elm) {
       points));
    };
    var vertices = function () {
-      var _p2 = $Game$Grid.hexDims;
+      var _p2 = $Hexagons.dims($Constants.hexRadius);
       var w = _p2._0;
       var h = _p2._1;
       var w2 = w / 2;
@@ -20423,9 +20425,9 @@ Elm.Game.Render.Tiles.make = function (_elm) {
    };
    var renderTile = function (_p4) {
       var _p5 = _p4;
-      var color = tileKindColor(_p5.kind);
+      var color = tileKindColor(_p5.content);
       var _p6 = A2($Hexagons.axialToPoint,
-      $Game$Grid.hexRadius,
+      $Constants.hexRadius,
       _p5.coords);
       var x = _p6._0;
       var y = _p6._1;
@@ -20446,7 +20448,7 @@ Elm.Game.Render.Tiles.make = function (_elm) {
    var renderTiles = function (grid) {
       var tiles = A2($List.map,
       renderTile,
-      $Game$Grid.getTilesList(grid));
+      $Hexagons$Grid.list(grid));
       return A2($Svg.g,_U.list([]),tiles);
    };
    var lazyRenderTiles = function (grid) {
@@ -21968,9 +21970,9 @@ Elm.Game.Render.Course.make = function (_elm) {
    return _elm.Game.Render.Course.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Dict = Elm.Dict.make(_elm),
-   $Game$Grid = Elm.Game.Grid.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
@@ -22005,7 +22007,7 @@ Elm.Game.Render.Course.make = function (_elm) {
       var color = _U.cmp(_p3,0) > 0 ? "black" : "white";
       var a = 0.3 * $Basics.abs(_p3) / 10;
       var _p2 = A2($Hexagons.axialToPoint,
-      $Game$Grid.hexRadius,
+      $Constants.hexRadius,
       _p1._0);
       var x = _p2._0;
       var y = _p2._1;

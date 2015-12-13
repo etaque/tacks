@@ -7,7 +7,7 @@ import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Core exposing (..)
 import Constants exposing (..)
-import Game.Grid as Grid
+import Hexagons.Grid as Grid
 
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving exposing (movingStep)
@@ -116,7 +116,7 @@ axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
 axisCenter p p' c window areaMin areaMax =
   let
     offset = (window / 2) - (window * 0.48)
-    outOffset = (window / 2) - Grid.hexRadius
+    outOffset = (window / 2) - Constants.hexRadius
     delta = p' - p
     minExit = delta < 0 && p' < c - offset
     maxExit = delta > 0 && p' > c + offset

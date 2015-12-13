@@ -2,6 +2,8 @@ module Models where
 
 import Time exposing (Time)
 import Dict exposing (Dict)
+import Hexagons
+import Hexagons.Grid as HexGrid
 
 import Constants exposing (..)
 
@@ -135,19 +137,14 @@ type alias Dims = (Int, Int)
 
 type alias Segment = (Point, Point)
 
-type alias Coords = (Int, Int)
+type alias Coords = Hexagons.Axial
 
-type alias Cube number = (number, number, number)
 
 -- Grid
 
-type alias Grid = Dict Int GridRow
-type alias GridRow = Dict Int TileKind
-
-type alias Tile =
-  { kind : TileKind
-  , coords : Coords
-  }
+type alias Grid = HexGrid.Grid TileKind
+type alias GridRow = HexGrid.Row TileKind
+type alias Tile = HexGrid.Tile TileKind
 
 type TileKind = Water | Grass | Rock
 

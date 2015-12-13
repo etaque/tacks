@@ -6022,8 +6022,6 @@ button.close {
   .hidden-print {
     display: none !important; } }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6087,8 +6085,6 @@ aside {
       width: 160px;
       height: auto; }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6177,8 +6173,6 @@ aside {
     aside .aside-module ul {
       padding: 0 5px; }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6336,8 +6330,6 @@ label {
 .form-login .form-group {
   width: 250px; }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6358,8 +6350,6 @@ label {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6562,8 +6552,6 @@ label {
   margin-bottom: 20px; }
 
 /* @import 'blog'; */
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6584,8 +6572,6 @@ label {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6855,8 +6841,6 @@ aside .module-help {
       background-color: white;
       color: black; }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6983,8 +6967,6 @@ aside .module-help {
     height: 25px;
     font-size: 13px; }
 
-/* $darkSeaBlue: desat-dark($seaBlue); */
-/* $darkerSeaBlue: darken($darkSeaBlue, 20%); */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
