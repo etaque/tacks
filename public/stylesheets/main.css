@@ -6108,9 +6108,10 @@ aside {
 aside {
   padding: 0 15px; }
   aside .user-info {
-    margin: 5px 5px;
     padding: 10px;
-    font-size: 14px; }
+    font-size: 14px;
+    text-align: center;
+    color: #2194ce; }
   aside h2 {
     margin: 0;
     text-align: center;
@@ -6118,18 +6119,20 @@ aside {
     text-decoration: none;
     font-family: "Museo Slab";
     font-size: 21px;
-    font-weight: normal; }
+    font-weight: normal;
+    /* padding: 10px; */
+    /* background-color: $darkSeaBlue; */ }
   aside hr {
-    border-top: 2px solid #2194ce;
+    border-top: 2px solid #21729b;
     margin: 10px 0; }
   aside .user-menu {
     list-style: none;
     padding: 0;
     padding-top: 10px;
-    margin: 0 0 5px 0;
-    border-top: 2px solid #2194ce; }
+    margin: 30px 0 5px 0;
+    /* border-top: 2px solid $darkSeaBlue; */ }
   aside .logout {
-    border-top: 2px solid #2194ce;
+    /* border-top: 2px solid $darkSeaBlue; */
     margin: 0 0 5px 0;
     padding-top: 10px; }
   aside .user-menu a, aside .logout a {
@@ -6137,15 +6140,18 @@ aside {
     color: #99d2ef;
     text-transform: uppercase;
     text-decoration: none;
-    font-family: "Museo Slab";
+    font-family: "Proxima Nova Thin";
     font-size: 16px;
     line-height: 24px;
-    font-weight: normal;
-    padding: 5px 10px;
-    margin-bottom: 5px; }
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+    border-left: 3px solid transparent; }
     aside .user-menu a:hover, aside .logout a:hover {
       color: white;
-      background-color: #2194ce; }
+      background-color: #21729b;
+      border-color: #2194ce; }
   aside .track-menu {
     margin: 0; }
   aside .form-actions {

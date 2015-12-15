@@ -11335,9 +11335,9 @@ Elm.Constants.make = function (_elm) {
    var admins = _U.list(["milox"]);
    var hexRadius = 50;
    var colors = {water: "rgb(33, 148, 206)"
-                ,sand: "rgb(242, 243, 196)"
+                ,sand: "rgb(226, 219, 190)"
                 ,grass: "rgb(200, 230, 180)"
-                ,rock: "rgb(160, 146, 159)"
+                ,rock: "rgb(171, 196, 198)"
                 ,green: "rgb(100, 180, 106)"};
    var sidebarWidth = 280;
    return _elm.Constants.values = {_op: _op
@@ -20627,9 +20627,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
       return _U.list([$Screens$Sidebar.logo
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("track-menu")]),
-                     _U.list([$Screens$Utils.hr$
-                             ,A2($Html.h2,_U.list([]),_U.list([$Html.text(_p7)]))
-                             ,$Screens$Utils.hr$]))
+                     _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(_p7)]))]))
                      ,A4(sideBlock,
                      "Name",
                      _p5.name,

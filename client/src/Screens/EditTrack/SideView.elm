@@ -22,9 +22,7 @@ view track ({course, name, saving, mode, blocks} as editor) =
 
   , div
       [ class "track-menu" ]
-      [ hr'
-      , h2 [] [ text name ]
-      , hr'
+      [ h2 [] [ text name ]
       ]
 
   , sideBlock "Name" blocks.name (ToggleBlock Name)
