@@ -55,9 +55,18 @@ trackDecoder =
   object5 Track
     ("_id" := string)
     ("name" := string)
-    ("draft" := bool)
     ("creatorId" := string)
     ("course" := courseDecoder)
+    ("status" := string `andThen` trackStatusDecoder)
+
+trackStatusDecoder : String -> Decoder TrackStatus
+trackStatusDecoder s =
+  case s of
+    "draft" -> succeed Draft
+    "open" -> succeed Open
+    "archived" -> succeed Archived
+    "deleted" -> succeed Deleted
+    _ -> fail (s ++ " is not a TrackStatus")
 
 playerDecoder : Decoder Player
 playerDecoder =

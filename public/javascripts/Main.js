@@ -11408,11 +11408,15 @@ Elm.Models.make = function (_elm) {
    var Race = F5(function (a,b,c,d,e) {
       return {id: a,trackId: b,startTime: c,players: d,tallies: e};
    });
+   var Deleted = {ctor: "Deleted"};
+   var Archived = {ctor: "Archived"};
+   var Open = {ctor: "Open"};
+   var Draft = {ctor: "Draft"};
    var TrackMeta = F3(function (a,b,c) {
       return {creator: a,rankings: b,runsCount: c};
    });
    var Track = F5(function (a,b,c,d,e) {
-      return {id: a,name: b,draft: c,creatorId: d,course: e};
+      return {id: a,name: b,creatorId: c,course: d,status: e};
    });
    var LiveTrack = F4(function (a,b,c,d) {
       return {track: a,meta: b,players: c,races: d};
@@ -11429,7 +11433,7 @@ Elm.Models.make = function (_elm) {
          }
    };
    var hasDraft = F2(function (player,track) {
-      return track.draft && (_U.eq(player.id,
+      return _U.eq(track.status,Draft) && (_U.eq(player.id,
       track.creatorId) || isAdmin(player));
    });
    var Player = F7(function (a,b,c,d,e,f,g) {
@@ -11449,6 +11453,10 @@ Elm.Models.make = function (_elm) {
                                ,LiveTrack: LiveTrack
                                ,Track: Track
                                ,TrackMeta: TrackMeta
+                               ,Draft: Draft
+                               ,Open: Open
+                               ,Archived: Archived
+                               ,Deleted: Deleted
                                ,Race: Race
                                ,PlayerTally: PlayerTally
                                ,Ranking: Ranking
@@ -13662,13 +13670,26 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],"content",$Json$Decode.string),
    A2($Json$Decode._op[":="],"player",playerDecoder),
    A2($Json$Decode._op[":="],"time",$Json$Decode.$float));
+   var trackStatusDecoder = function (s) {
+      var _p1 = s;
+      switch (_p1)
+      {case "draft": return $Json$Decode.succeed($Models.Draft);
+         case "open": return $Json$Decode.succeed($Models.Open);
+         case "archived": return $Json$Decode.succeed($Models.Archived);
+         case "deleted": return $Json$Decode.succeed($Models.Deleted);
+         default: return $Json$Decode.fail(A2($Basics._op["++"],
+           s,
+           " is not a TrackStatus"));}
+   };
    var trackDecoder = A6($Json$Decode.object5,
    $Models.Track,
    A2($Json$Decode._op[":="],"_id",$Json$Decode.string),
    A2($Json$Decode._op[":="],"name",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"draft",$Json$Decode.bool),
    A2($Json$Decode._op[":="],"creatorId",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"course",courseDecoder));
+   A2($Json$Decode._op[":="],"course",courseDecoder),
+   A2($Json$Decode.andThen,
+   A2($Json$Decode._op[":="],"status",$Json$Decode.string),
+   trackStatusDecoder));
    var playerTallyDecoder = A4($Json$Decode.object3,
    $Models.PlayerTally,
    A2($Json$Decode._op[":="],"player",playerDecoder),
@@ -13725,6 +13746,7 @@ Elm.Decoders.make = function (_elm) {
                                  ,rankingDecoder: rankingDecoder
                                  ,playerTallyDecoder: playerTallyDecoder
                                  ,trackDecoder: trackDecoder
+                                 ,trackStatusDecoder: trackStatusDecoder
                                  ,playerDecoder: playerDecoder
                                  ,messageDecoder: messageDecoder
                                  ,pointDecoder: pointDecoder
@@ -21848,7 +21870,8 @@ Elm.Screens.Game.SideView.make = function (_elm) {
               ,$Screens$Utils.hr$]));
    };
    var view = F3(function (screen,liveTrack,gameState) {
-      var blocks = liveTrack.track.draft ? draftBlocks(liveTrack) : A2(liveBlocks,
+      var blocks = _U.eq(liveTrack.track.status,
+      $Models.Draft) ? draftBlocks(liveTrack) : A2(liveBlocks,
       screen,
       liveTrack);
       return A2($List._op["::"],

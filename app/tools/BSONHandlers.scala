@@ -2,6 +2,7 @@ package tools
 
 import org.joda.time.DateTime
 import reactivemongo.bson._
+import scala.util.Try
 
 object BSONHandlers {
 
@@ -27,4 +28,15 @@ object BSONHandlers {
     }
     def write(aSeq: Seq[A]) = BSONArray(aSeq.map(handler.write))
   }
+
+  def enumHandler[E <: Enumeration](enum: E) = new BSONHandler[BSONString, E#Value] {
+    def read(bs: BSONString) =
+      bs.seeAsOpt[BSONString].flatMap { case BSONString(s) =>
+        Try(enum.withName(s)).toOption
+      }.getOrElse(sys.error("Unexpected TrackStatus value: " + bs))
+
+    def write(e: E#Value): BSONString = BSONString(e.toString)
+  }
+
+
 }

@@ -30,6 +30,8 @@ object TrackDAO extends MongoDAO[Track] {
       unique = true))
   }
 
+  import TrackStatus.handler
+
   implicit val bsonReader: BSONDocumentReader[Track] = Macros.reader[Track]
   implicit val bsonWriter: BSONDocumentWriter[Track] = Macros.writer[Track]
 }

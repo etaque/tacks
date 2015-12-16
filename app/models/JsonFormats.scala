@@ -7,6 +7,7 @@ import play.api.libs.functional.syntax._
 import play.api.libs.json._
 import reactivemongo.bson.BSONObjectID
 import tools.JsonFormats._
+import scala.util.{Try, Success, Failure}
 
 object JsonFormats {
 
@@ -140,6 +141,8 @@ object JsonFormats {
       (__ \ 'initial).format[Boolean] and
       (__ \ 'clientTime).format[Long]
     )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
+
+  implicit val trackStatusFormat: Format[TrackStatus.Value] = enumFormat(TrackStatus)
 
   implicit val raceFormat: Format[Race] = Json.format[Race]
   implicit val trackFormat: Format[Track] = Json.format[Track]

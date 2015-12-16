@@ -18,7 +18,7 @@ view : Screen -> LiveTrack -> GameState -> List Html
 view screen liveTrack gameState =
   let
     blocks =
-      if liveTrack.track.draft then
+      if liveTrack.track.status == Draft then
         draftBlocks liveTrack
       else
         liveBlocks screen liveTrack

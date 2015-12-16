@@ -106,11 +106,11 @@ object Api extends Controller with Security {
 
   def liveStatus = PlayerAction.async() { implicit request =>
     val tracksFu = (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]]
-    val draftsFu = TrackDAO.listByCreatorId(request.player.id).map(_.filter(_.draft))
+    val draftsFu = TrackDAO.listByCreatorId(request.player.id).map(_.filter(_.isDraft))
     val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     for {
       tracks <- tracksFu
-      homeLiveTracks = tracks.filterNot(_.track.draft).sortBy(_.meta.rankings.length).reverse
+      homeLiveTracks = tracks.filter(_.track.isOpen).sortBy(_.meta.rankings.length).reverse
       drafts <- draftsFu
       onlinePlayers <- onlinePlayersFu
     }
@@ -139,7 +139,7 @@ object Api extends Controller with Security {
 
   def drafts = PlayerAction.async() { implicit request =>
     TrackDAO.listByCreatorId(request.player.id).map { tracks =>
-      Ok(Json.toJson(tracks.filter(_.draft)))
+      Ok(Json.toJson(tracks.filter(_.isDraft)))
     }
   }
 
@@ -150,9 +150,9 @@ object Api extends Controller with Security {
       val track = Track(
         _id = id,
         name = name,
-        draft = true,
         creatorId = request.player.id,
-        course = Course.spawn
+        course = Course.spawn,
+        status = TrackStatus.draft
       )
       TrackDAO.save(track).map { _ =>
         Ok(Json.toJson(track))
@@ -205,7 +205,7 @@ object Api extends Controller with Security {
   }
 
   private def canUpdateDraft(track: Track)(implicit request: PlayerRequest[_]) = {
-    track.draft && (request.player.isAdmin || request.player.id == track.creatorId)
+    track.isDraft && (request.player.isAdmin || request.player.id == track.creatorId)
   }
 
   def setHandle = PlayerAction(parse.json) { implicit request =>

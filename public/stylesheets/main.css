@@ -6106,7 +6106,7 @@ aside {
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
 aside {
-  padding: 0 15px; }
+  padding: 0 15px 15px 15px; }
   aside .user-info {
     padding: 10px;
     font-size: 14px;

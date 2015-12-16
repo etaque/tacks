@@ -29,7 +29,7 @@ isAdmin player =
 
 hasDraft : Player -> Track -> Bool
 hasDraft player track =
-  track.draft && (player.id == track.creatorId || isAdmin player)
+  track.status == Draft && (player.id == track.creatorId || isAdmin player)
 
 type alias LiveStatus =
   { liveTracks : List LiveTrack
@@ -47,9 +47,9 @@ type alias LiveTrack =
 type alias Track =
   { id: String
   , name: String
-  , draft : Bool
   , creatorId: String
   , course: Course
+  , status: TrackStatus
   }
 
 type alias TrackMeta =
@@ -57,6 +57,8 @@ type alias TrackMeta =
   , rankings : List Ranking
   , runsCount : Int
   }
+
+type TrackStatus = Draft | Open | Archived | Deleted
 
 type alias Race =
   { id : String
