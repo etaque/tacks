@@ -17,6 +17,7 @@ import Screens.EditTrack.Updates as EditTrack
 import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 import Screens.ListDrafts.Updates as ListDrafts
+import Screens.Admin.Updates as Admin
 
 import ServerApi
 import Routes exposing (..)
@@ -46,7 +47,7 @@ update appAction ({screens, ctx} as appState) =
         newRoute = RouteParser.match routeParsers path
         fx = MountRoute newRoute
           |> Task.succeed
-          |> delay 100
+          -- |> delay 100
           |> Effects.task
       in
         newAppState &: fx
@@ -82,6 +83,18 @@ update appAction ({screens, ctx} as appState) =
       appState &: none
 
 
+needsTransition : Routes.Route -> Routes.Route -> Bool
+needsTransition before after =
+  if before == after then
+    False
+  else
+    case (before, after) of
+      (Admin _, Admin _) ->
+        False
+      _ ->
+        True
+
+
 mountRoute : AppState -> Routes.Route -> (AppState, Effects AppAction)
 mountRoute ({ctx} as appState) route =
   case route of
@@ -109,6 +122,9 @@ mountRoute ({ctx} as appState) route =
 
     ListDrafts ->
       applyListDrafts ListDrafts.mount appState
+
+    Admin adminRoute ->
+      applyAdmin (Admin.mount adminRoute) appState
 
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
@@ -139,6 +155,9 @@ updateScreen screenAction ({screens, ctx} as appState) =
     ListDraftsAction a ->
       applyListDrafts (ListDrafts.update a screens.listDrafts) appState
 
+    AdminAction a ->
+      applyAdmin (Admin.update a screens.admin) appState
+
 
 logoutTask : Task Effects.Never AppAction
 logoutTask =
@@ -154,6 +173,7 @@ applyShowTrack = applyScreen (\s screens -> { screens | showTrack = s }) ShowTra
 applyEditTrack = applyScreen (\s screens -> { screens | editTrack = s }) EditTrackAction
 applyGame = applyScreen (\s screens -> { screens | game = s }) GameAction
 applyListDrafts = applyScreen (\s screens -> { screens | listDrafts = s }) ListDraftsAction
+applyAdmin = applyScreen (\s screens -> { screens | admin = s }) AdminAction
 
 applyScreen : (screen -> Screens -> Screens) -> (a -> ScreenAction) -> (screen, Effects a) -> AppState -> (AppState, Effects AppAction)
 applyScreen screensUpdater toScreenAction (screen, effect) appState =

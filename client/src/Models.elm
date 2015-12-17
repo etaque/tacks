@@ -21,6 +21,16 @@ type alias Player =
   , user: Bool
   }
 
+type alias User =
+  { id : String
+  , email : String
+  , handle: String
+  , status: Maybe String
+  , avatarId: Maybe String
+  , vmgMagnet: Int
+  , creationTime : Float
+  }
+
 isAdmin : Player -> Bool
 isAdmin player =
   case player.handle of
@@ -151,3 +161,9 @@ type alias Tile = HexGrid.Tile TileKind
 type TileKind = Water | Grass | Rock
 
 
+-- Admin
+
+type alias AdminData =
+  { tracks : List Track
+  , users : List User
+  }

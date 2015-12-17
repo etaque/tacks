@@ -34,11 +34,11 @@ main {
   & > .padded {
     width: 800px;
     padding: 40px;
-    opacity: 1;
-    transition: opacity 0.1s ease-in-out;
+    /* opacity: 1; */
+    /* transition: opacity 0.1s ease-in-out; */
 
     &.exit {
-      opacity: 0;
+      /* opacity: 0; */
     }
 
     &.enter {

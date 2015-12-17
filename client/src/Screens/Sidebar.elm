@@ -43,11 +43,12 @@ guestContent =
 userContent : Player -> List Html
 userContent player =
   let
-    draftsLink = li [ ] [ linkTo ListDrafts [ ] [ text "Drafts" ] ]
+    draftsLink = li [ ] [ linkTo ListDrafts [ ] [ text "Track editor" ] ]
+    adminLink = li [ ] [ linkTo (Admin Dashboard) [ ] [ text "Admin" ] ]
   in
     [ ul [ class "user-menu" ] <|
         li [] [ linkTo Home [ ] [ text "Home" ] ]
-        :: (if isAdmin player then [ draftsLink ] else [ ])
+        :: (if isAdmin player then [ draftsLink, adminLink ] else [ ])
     , div [ class "logout" ]
       [ a [ onClick appActionsAddress Logout ] [ text "Logout" ] ]
     ]

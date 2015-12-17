@@ -6068,10 +6068,10 @@ main {
   main > .padded {
     width: 800px;
     padding: 40px;
-    opacity: 1;
-    transition: opacity 0.1s ease-in-out; }
+    /* opacity: 1; */
+    /* transition: opacity 0.1s ease-in-out; */ }
     main > .padded.exit {
-      opacity: 0; }
+      /* opacity: 0; */ }
 
 aside {
   height: 100%;
@@ -6245,7 +6245,8 @@ a {
 
 .btn-xs, .btn-group-xs > .btn {
   border-bottom-width: 2px;
-  padding: 3px 5px 1px 5px; }
+  font-size: 13px;
+  padding: 2px 5px 0px 5px; }
 
 .btn-default {
   background-color: #e1e1e1;
@@ -6271,8 +6272,17 @@ a {
     border-color: #89693a; }
 
 .btn-danger {
-  background-color: #d9534f;
-  border-color: #944a48; }
+  background-color: white;
+  border-color: #d5d5d5;
+  color: #d9534f;
+  /* background-color: $red; */
+  /* border-color: desat-dark($red); */ }
+  .btn-danger:hover {
+    background-color: #d9534f;
+    border-color: #944a48;
+    /* color: desat-dark($red); */
+    /* background-color: $whiteRed; */
+    /* border-color: darken($lightGray, 10%); */ }
 
 .alert {
   border-radius: 0;
@@ -6302,9 +6312,17 @@ a {
 
 label {
   color: white;
-  /* font-family: $thin; */
-  /* text-transform: uppercase; */
   font-size: 16px; }
+
+.label {
+  font-family: "Proxima Nova Thin";
+  text-transform: uppercase;
+  padding: 0 5px;
+  line-height: 1.4;
+  border-radius: 2px; }
+  .label.label-default {
+    background-color: #30a3de;
+    color: white; }
 
 .has-error .error-message {
   margin-top: 0;
@@ -6422,7 +6440,8 @@ a {
 
 .btn-xs, .btn-group-xs > .btn {
   border-bottom-width: 2px;
-  padding: 3px 5px 1px 5px; }
+  font-size: 13px;
+  padding: 2px 5px 0px 5px; }
 
 .btn-default {
   background-color: #e1e1e1;
@@ -6448,8 +6467,17 @@ a {
     border-color: #89693a; }
 
 .btn-danger {
-  background-color: #d9534f;
-  border-color: #944a48; }
+  background-color: white;
+  border-color: #d5d5d5;
+  color: #d9534f;
+  /* background-color: $red; */
+  /* border-color: desat-dark($red); */ }
+  .btn-danger:hover {
+    background-color: #d9534f;
+    border-color: #944a48;
+    /* color: desat-dark($red); */
+    /* background-color: $whiteRed; */
+    /* border-color: darken($lightGray, 10%); */ }
 
 .alert {
   border-radius: 0;
@@ -6479,9 +6507,17 @@ a {
 
 label {
   color: white;
-  /* font-family: $thin; */
-  /* text-transform: uppercase; */
   font-size: 16px; }
+
+.label {
+  font-family: "Proxima Nova Thin";
+  text-transform: uppercase;
+  padding: 0 5px;
+  line-height: 1.4;
+  border-radius: 2px; }
+  .label.label-default {
+    background-color: #30a3de;
+    color: white; }
 
 .has-error .error-message {
   margin-top: 0;
@@ -6644,7 +6680,8 @@ a {
 
 .btn-xs, .btn-group-xs > .btn {
   border-bottom-width: 2px;
-  padding: 3px 5px 1px 5px; }
+  font-size: 13px;
+  padding: 2px 5px 0px 5px; }
 
 .btn-default {
   background-color: #e1e1e1;
@@ -6670,8 +6707,17 @@ a {
     border-color: #89693a; }
 
 .btn-danger {
-  background-color: #d9534f;
-  border-color: #944a48; }
+  background-color: white;
+  border-color: #d5d5d5;
+  color: #d9534f;
+  /* background-color: $red; */
+  /* border-color: desat-dark($red); */ }
+  .btn-danger:hover {
+    background-color: #d9534f;
+    border-color: #944a48;
+    /* color: desat-dark($red); */
+    /* background-color: $whiteRed; */
+    /* border-color: darken($lightGray, 10%); */ }
 
 .alert {
   border-radius: 0;
@@ -6701,9 +6747,17 @@ a {
 
 label {
   color: white;
-  /* font-family: $thin; */
-  /* text-transform: uppercase; */
   font-size: 16px; }
+
+.label {
+  font-family: "Proxima Nova Thin";
+  text-transform: uppercase;
+  padding: 0 5px;
+  line-height: 1.4;
+  border-radius: 2px; }
+  .label.label-default {
+    background-color: #30a3de;
+    color: white; }
 
 .has-error .error-message {
   margin-top: 0;
@@ -7016,3 +7070,97 @@ aside .module-help {
   margin-top: 30px; }
   .list-drafts .form-new-draft .form-control {
     width: 250px; }
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+.admin .admin-tabs {
+  margin-bottom: 30px;
+  border-bottom: 3px solid #99d2ef; }
+  .admin .admin-tabs li {
+    /* font-weight: bold; */
+    margin-bottom: 0px; }
+    .admin .admin-tabs li a {
+      margin-right: 10px;
+      line-height: 18px;
+      color: #99d2ef;
+      font-family: "Museo Slab";
+      border-radius: 0; }
+    .admin .admin-tabs li a:hover {
+      background-color: #4aafe2;
+      border-color: #4aafe2 #4aafe2 transparent;
+      color: white; }
+  .admin .admin-tabs li.active a,
+  .admin .admin-tabs li.active a:hover {
+    background-color: #99d2ef;
+    color: #2194ce;
+    border-color: #99d2ef; }
+
+.admin ul.admin-tracks li,
+.admin ul.admin-users li {
+  clear: both; }
+
+.admin ul.admin-tracks .excerpt,
+.admin ul.admin-users .excerpt {
+  border-bottom: 2px solid #30a3de;
+  margin-top: 10px; }
+  .admin ul.admin-tracks .excerpt:after,
+  .admin ul.admin-users .excerpt:after {
+    clear: left;
+    content: '';
+    display: block; }
+  .admin ul.admin-tracks .excerpt .name,
+  .admin ul.admin-users .excerpt .name {
+    display: block;
+    float: left;
+    padding: 5px;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: "Museo Slab";
+    transition: background 0.2s ease-in; }
+    .admin ul.admin-tracks .excerpt .name:hover,
+    .admin ul.admin-users .excerpt .name:hover {
+      background-color: #30a3de;
+      color: white; }
+  .admin ul.admin-tracks .excerpt span,
+  .admin ul.admin-users .excerpt span {
+    display: block;
+    margin: 5px;
+    float: left;
+    margin-left: 5px; }
+  .admin ul.admin-tracks .excerpt .label,
+  .admin ul.admin-users .excerpt .label {
+    margin-bottom: 2px; }
+
+.admin ul.admin-tracks .detail,
+.admin ul.admin-users .detail {
+  display: none;
+  margin: 10px; }
+  .admin ul.admin-tracks .detail.open,
+  .admin ul.admin-users .detail.open {
+    display: block; }
+  .admin ul.admin-tracks .detail dl,
+  .admin ul.admin-users .detail dl {
+    font-size: 14px; }
+  .admin ul.admin-tracks .detail dt,
+  .admin ul.admin-users .detail dt {
+    color: white;
+    text-transform: uppercase;
+    font-family: "Proxima Nova Thin"; }

@@ -38,6 +38,10 @@ getDrafts : GetJsonTask (List Track)
 getDrafts =
   getJson (Json.list trackDecoder) "/api/drafts"
 
+loadAdminData : GetJsonTask AdminData
+loadAdminData =
+  getJson adminDataDecoder "/api/admin"
+
 -- POST
 
 postHandle : String -> Task Never (FormResult Player)

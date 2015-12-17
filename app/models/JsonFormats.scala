@@ -64,6 +64,20 @@ object JsonFormats {
   }
   implicit val userFormat: Format[User] = Format(userReads, userWrites)
 
+  val fullUserWrites: Writes[User] = Writes { (u: User) =>
+    Json.obj(
+      "id" -> u.id,
+      "email" -> u.email,
+      "handle" -> u.handle,
+      "status" -> u.status,
+      "avatarId" -> u.avatarId,
+      "vmgMagnet" -> u.vmgMagnet,
+      "creationTime" -> u.creationTime
+    )
+  }
+  val fullUserFormat: Format[User] = Format(Json.reads[User], fullUserWrites)
+  val fullUserSeqFormat: Format[Seq[User]] = Format(Reads.seq(fullUserFormat), Writes.seq(fullUserFormat))
+
   implicit val guestReads: Reads[Guest] = Json.reads[Guest]
   implicit val guestWrites: Writes[Guest] = Writes { (g: Guest) =>
     Json.obj(

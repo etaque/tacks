@@ -64,7 +64,8 @@ a {
 
 .btn-xs {
   border-bottom-width: 2px;
-  padding: 3px 5px 1px 5px;
+  font-size: 13px;
+  padding: 2px 5px 0px 5px;
 }
 
 .btn-default {
@@ -100,8 +101,19 @@ a {
 }
 
 .btn-danger {
-  background-color: $red;
-  border-color: desat-dark($red);
+  background-color: $white;
+  border-color: darken($lightGray, 5%);
+  color: $red;
+  /* background-color: $red; */
+  /* border-color: desat-dark($red); */
+
+  &:hover {
+    background-color: $red;
+    border-color: desat-dark($red);
+    /* color: desat-dark($red); */
+    /* background-color: $whiteRed; */
+    /* border-color: darken($lightGray, 10%); */
+  }
 }
 
 .alert {
@@ -140,9 +152,20 @@ a {
 
 label {
   color: $white;
-  /* font-family: $thin; */
-  /* text-transform: uppercase; */
   font-size: 16px;
+}
+
+.label {
+  font-family: $thin;
+  text-transform: uppercase;
+  padding: 0 5px;
+  line-height: 1.4;
+  border-radius: 2px;
+
+  &.label-default {
+    background-color: $lightSeaBlue;
+    color: $white;
+  }
 }
 
 .has-error {

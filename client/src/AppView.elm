@@ -13,6 +13,7 @@ import Screens.EditTrack.View as EditTrackScreen
 import Screens.ShowProfile.View as ShowProfileScreen
 import Screens.Game.View as GameScreen
 import Screens.ListDrafts.View as ListDraftsScreen
+import Screens.Admin.View as AdminScreen
 
 import Routes exposing (..)
 
@@ -54,6 +55,8 @@ routeView {screens, ctx} route =
     ListDrafts ->
       ListDraftsScreen.view ctx screens.listDrafts
 
+    Admin _ ->
+      AdminScreen.view ctx screens.admin
 
 emptyView : Html
 emptyView =

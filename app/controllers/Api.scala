@@ -215,4 +215,16 @@ object Api extends Controller with Security {
     }
   }
 
+  def admin = PlayerAction.async(parse.anyContent) { implicit request =>
+    asAdmin { user =>
+      for {
+        tracks <- TrackDAO.list
+        users <- UserDAO.list
+      }
+      yield Ok(Json.obj(
+        "tracks" -> Json.toJson(tracks),
+        "users" -> Json.toJson(users)(fullUserSeqFormat)
+      ))
+    }
+  }
 }

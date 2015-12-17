@@ -79,6 +79,17 @@ playerDecoder =
     ("guest" := bool)
     ("user" := bool)
 
+userDecoder : Decoder User
+userDecoder =
+  object7 User
+    ("id" := string)
+    ("email" := string)
+    ("handle" := string)
+    (maybe ("status" := string))
+    (maybe ("avatarId" := string))
+    ("vmgMagnet" := int)
+    ("creationTime" := float)
+
 messageDecoder : Decoder Message
 messageDecoder =
   object3 Message
@@ -172,3 +183,9 @@ gustDefGenerator =
     ("angle" := float)
     ("speed" := float)
     ("radius" := float)
+
+adminDataDecoder : Decoder AdminData
+adminDataDecoder =
+  object2 AdminData
+    ("tracks" := list trackDecoder)
+    ("users" := list userDecoder)
