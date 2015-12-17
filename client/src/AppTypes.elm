@@ -121,6 +121,6 @@ initialAppState { path, dims, player } =
     , showProfile = ShowProfile.initial player
     , game = Game.initial
     , listDrafts = ListDrafts.initial
-    , admin = Admin.initial Routes.Dashboard
+    , admin = Admin.initial
     }
   }

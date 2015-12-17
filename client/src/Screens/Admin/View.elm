@@ -17,15 +17,15 @@ import Screens.Layout as Layout
 
 type Tab = DashboardTab | TracksTab | UsersTab
 
-view : Context -> Screen -> Html
-view ctx screen =
+view : Context -> AdminRoute -> Screen -> Html
+view ctx route screen =
   let
-    menuItem = routeMenuItem screen.route
+    menuItem = routeMenuItem route
   in
     Layout.layoutWithNav "admin" ctx <|
       [ h1 [] [ text "Admin" ]
       , menu menuItem
-      ] ++ content menuItem screen
+      ] ++ content route menuItem screen
 
 menu : Tab -> Html
 menu item =
@@ -45,24 +45,24 @@ routeMenuItem r =
     ListTracks _ -> TracksTab
     ListUsers _ -> UsersTab
 
-content : Tab -> Screen -> List Html
-content item ({tracks, users, route} as screen) =
+content : AdminRoute -> Tab -> Screen -> List Html
+content route item ({tracks, users} as screen) =
   case item of
     DashboardTab ->
       dashboardContent screen
     TracksTab ->
-      tracksContent screen
+      tracksContent route screen
     UsersTab ->
-      usersContent screen
+      usersContent route screen
 
 dashboardContent : Screen -> List Html
-dashboardContent ({tracks, users, route} as screen) =
+dashboardContent ({tracks, users} as screen) =
   [ div [ class "" ] [ text <| toString (List.length users) ++ " users" ]
   , div [ class "" ] [ text <| toString (List.length tracks) ++ " tracks" ]
   ]
 
-tracksContent : Screen -> List Html
-tracksContent ({tracks, users, route} as screen) =
+tracksContent : AdminRoute -> Screen -> List Html
+tracksContent route ({tracks, users} as screen) =
   [ ul [ class "list-unstyled admin-tracks" ]
     (List.map (\t -> trackItem (route == ListTracks (Just t.id)) t) tracks)
   ]
@@ -80,8 +80,8 @@ trackItem open track =
     [ text "detail" ]
   ]
 
-usersContent : Screen -> List Html
-usersContent ({tracks, users, route} as screen) =
+usersContent : AdminRoute -> Screen -> List Html
+usersContent route ({tracks, users} as screen) =
   [ ul [ class "list-unstyled admin-users" ]
     (List.map (\u -> userItem (route == ListUsers (Just u.id)) u) users)
   ]

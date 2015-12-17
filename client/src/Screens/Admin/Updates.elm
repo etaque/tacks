@@ -1,8 +1,6 @@
 module Screens.Admin.Updates where
 
 import Task exposing (Task, succeed, andThen)
-import Task.Extra exposing (delay)
-import Time exposing (second)
 import Signal
 import Effects exposing (Effects, Never, none, map)
 
@@ -10,7 +8,6 @@ import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.Admin.Types exposing (..)
 import ServerApi
-import Routes
 import Screens.UpdateUtils as Utils
 
 
@@ -19,9 +16,9 @@ addr =
   Utils.screenAddr AdminAction
 
 
-mount : Routes.AdminRoute -> (Screen, Effects Action)
-mount route =
-  initial route &! refreshData
+mount : (Screen, Effects Action)
+mount =
+  initial &! refreshData
 
 
 update : Action -> Screen -> (Screen, Effects Action)

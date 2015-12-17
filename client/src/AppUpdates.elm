@@ -59,7 +59,9 @@ update appAction ({screens, ctx} as appState) =
       in
         case newAppState.route of
           Just route ->
-            mountRoute newAppState route
+            if needsTransition appState.route maybeRoute
+              then mountRoute newAppState route
+              else newAppState &: none
           Nothing -> -- TODO 404
             newAppState &: none
 
@@ -83,13 +85,13 @@ update appAction ({screens, ctx} as appState) =
       appState &: none
 
 
-needsTransition : Routes.Route -> Routes.Route -> Bool
+needsTransition : Maybe Routes.Route -> Maybe Routes.Route -> Bool
 needsTransition before after =
   if before == after then
     False
   else
     case (before, after) of
-      (Admin _, Admin _) ->
+      (Just (Admin _), Just (Admin _)) ->
         False
       _ ->
         True
@@ -124,7 +126,7 @@ mountRoute ({ctx} as appState) route =
       applyListDrafts ListDrafts.mount appState
 
     Admin adminRoute ->
-      applyAdmin (Admin.mount adminRoute) appState
+      applyAdmin Admin.mount appState
 
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
