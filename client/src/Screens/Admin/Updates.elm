@@ -38,7 +38,14 @@ update action screen =
         { screen | tracks = tracks, users = users } &: none
 
     DeleteTrack id ->
-      screen &: none -- TODO
+      screen &! Task.map DeleteTrackResult (ServerApi.deleteDraft id)
+
+    DeleteTrackResult result ->
+      case result of
+        Ok id ->
+          { screen | tracks = List.filter (\t -> t.id /= id) screen.tracks } &: none
+        Err _ ->
+          screen &: none
 
     NoOp ->
       screen &: none

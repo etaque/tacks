@@ -8,6 +8,17 @@
       clear: both;
       border-bottom: 2px solid $lightSeaBlue;
       margin-bottom: 10px;
+
+      .delete-draft {
+        display: none;
+        margin-right: 5px;
+      }
+
+      &.confirm-delete {
+        .delete-draft {
+          display: block;
+        }
+      }
     }
 
     a {

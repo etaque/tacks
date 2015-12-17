@@ -17,10 +17,10 @@
   }
 
   .form-actions {
-    display: flex;
+    /* display: flex; */
 
     .btn {
-      margin-top: 0;
+      /* margin-top: 0; */
 
       &[disabled] {
         cursor: progress;
@@ -28,7 +28,7 @@
     }
 
     .btn-save {
-      margin-right: 10px;
+      /* margin-right: 10px; */
     }
   }
 

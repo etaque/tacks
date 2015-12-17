@@ -21,5 +21,6 @@ type Action
   = RefreshData
   | RefreshDataResult (Result () AdminData)
   | DeleteTrack String
+  | DeleteTrackResult (FormResult String)
   | NoOp
 

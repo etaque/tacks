@@ -6930,13 +6930,13 @@ aside .module-help {
     cursor: move; }
 
 .editor .form-actions {
-  display: flex; }
+  /* display: flex; */ }
   .editor .form-actions .btn {
-    margin-top: 0; }
+    /* margin-top: 0; */ }
     .editor .form-actions .btn[disabled] {
       cursor: progress; }
   .editor .form-actions .btn-save {
-    margin-right: 10px; }
+    /* margin-right: 10px; */ }
 
 .editor aside .aside-module .module-title .glyphicon {
   float: right;
@@ -7051,6 +7051,11 @@ aside .module-help {
   clear: both;
   border-bottom: 2px solid #30a3de;
   margin-bottom: 10px; }
+  .list-drafts ul.drafts li .delete-draft {
+    display: none;
+    margin-right: 5px; }
+  .list-drafts ul.drafts li.confirm-delete .delete-draft {
+    display: block; }
 
 .list-drafts ul.drafts a {
   display: inline-block;

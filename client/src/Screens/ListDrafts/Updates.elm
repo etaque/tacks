@@ -46,6 +46,12 @@ update action screen =
         Err formErrors -> -- TODO
           screen &: none
 
+    ConfirmDeleteDraft track ->
+      let
+        newConfirm = if Just track == screen.confirmDelete then Nothing else Just track
+      in
+        { screen | confirmDelete = newConfirm } &: none
+
     DeleteDraft id ->
       screen &! (deleteDraft id)
 

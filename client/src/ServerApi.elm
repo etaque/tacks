@@ -90,6 +90,10 @@ saveTrack id name course =
   in
     postJson trackDecoder ("/api/track/" ++ id) body
 
+publishTrack : String -> Task Never (FormResult Track)
+publishTrack id =
+  postJson trackDecoder ("/api/track/" ++ id ++ "/publish") JsEncode.null
+
 deleteDraft : String -> Task Never (FormResult String)
 deleteDraft id =
   postJson (Json.succeed id) ("/api/track/" ++ id ++ "/delete") JsEncode.null

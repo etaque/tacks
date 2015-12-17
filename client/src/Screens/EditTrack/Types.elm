@@ -27,6 +27,25 @@ type alias Editor =
   , altMove : Bool
   , name : String
   , saving : Bool
+  , confirmPublish : Bool
+  }
+
+initialEditor : Track -> Editor
+initialEditor track =
+  { blocks =
+    { name = False
+    , surface = False
+    , gates = False
+    , wind = False
+    , gusts = False
+    }
+  , course = track.course
+  , center = (0, 0)
+  , mode = Watch
+  , altMove = False
+  , name = track.name
+  , saving = False
+  , confirmPublish = False
   }
 
 type alias SideBlocks =
@@ -56,6 +75,8 @@ type Action
   | SetName String
   | Save Bool
   | SaveResult Bool (FormResult Track)
+  | ConfirmPublish
+  | Publish
   | NoOp
 
 type SideBlock

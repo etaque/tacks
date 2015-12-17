@@ -84,19 +84,32 @@ view track ({course, name, saving, mode, blocks} as editor) =
     , gustDefsTable course.gustGenerator.defs
     ]
 
-  , div [ class "form-actions" ]
-    [ button
+  , div [ class "form-actions btn-group btn-group-justified" ]
+    [ a
       [ onClick addr (Save False)
-      , class "btn btn-primary btn-block btn-save"
+      , class "btn btn-primary btn-save"
       , disabled saving
       ]
       [ text "Save" ]
-    , button
+    , a
       [ onClick addr (Save True)
-      , class "btn btn-default btn-block btn-save-and-try"
+      , class "btn btn-default btn-save-and-try"
       , disabled saving
       ]
       [ text "Save and try" ]
+    ]
+  , div [ class "btn-group-vertical" ]
+    [ button
+      [ onClick addr ConfirmPublish
+      , class "btn btn-default btn-block btn-confirm-publish"
+      ]
+      [ text "Save and publish" ]
+    , if editor.confirmPublish
+      then
+        button [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
+        [ text "Confirm? You can't go back!" ]
+      else
+        text ""
     ]
   ]
 

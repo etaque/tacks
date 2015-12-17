@@ -49,26 +49,9 @@ update dims action screen =
     LoadTrack result ->
       case result of
         Ok track ->
-          let
-            editor =
-              { blocks =
-                { name = False
-                , surface = False
-                , gates = False
-                , wind = False
-                , gusts = False
-                }
-              , course = track.course
-              , center = (0, 0)
-              , mode = Watch
-              , altMove = False
-              , name = track.name
-              , saving = False
-              }
-          in
-            { screen | track = Just track, editor = Just editor } &: none
+          { screen | track = Just track, editor = Just (initialEditor track) } &: none
         Err _ ->
-        { screen | notFound = True } &: none
+          { screen | notFound = True } &: none
 
     ToggleBlock b ->
       (updateBlocks >> updateEditor) b screen &: none
@@ -108,6 +91,16 @@ update dims action screen =
         Err _ ->
           screen &: none -- TODO
 
+    ConfirmPublish ->
+      updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) screen &: none
+
+    Publish ->
+      case (screen.track, screen.editor) of
+        (Just track, Just editor) ->
+          (updateEditor (\e -> { e | saving = True}) screen) &! (publish track.id editor)
+        _ ->
+          screen &: none
+
     NoOp ->
       screen &: none
 
@@ -143,14 +136,21 @@ loadTrack id =
     |> Task.map LoadTrack
 
 
+saveEditor : String -> Editor -> Task Never (FormResult Track)
+saveEditor id ({course, name} as editor) =
+  ServerApi.saveTrack id name { course | area = getRaceArea course.grid }
+
+
 save : Bool -> String -> Editor -> Task Never Action
-save try id ({course, name} as editor) =
-  let
-    area = getRaceArea course.grid
-    withArea = { course | area = area }
-  in
-    delay 500 (ServerApi.saveTrack id name withArea)
-      |> Task.map (SaveResult try)
+save try id editor =
+  delay 500 (saveEditor id editor)
+    |> Task.map (SaveResult try)
+
+
+publish : String -> Editor -> Task Never Action
+publish id ({course, name} as editor) =
+  delay 500 (saveEditor id editor) `andThen` (\_ -> ServerApi.publishTrack id)
+    |> Task.map (SaveResult True)
 
 
 getRaceArea : Grid -> RaceArea

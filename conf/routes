@@ -13,8 +13,9 @@ GET         /api/liveTrack/:id                                 controllers.Api.l
 POST        /api/setHandle                                     controllers.Api.setHandle
 POST        /api/track                                         controllers.Api.createDraftTrack()
 GET         /api/drafts                                        controllers.Api.drafts()
-POST        /api/track/:id                                     controllers.Api.updateDraft(id: String)
-POST        /api/track/:id/delete                              controllers.Api.deleteDraft(id: String)
+POST        /api/track/:id                                     controllers.Api.updateTrack(id: String)
+POST        /api/track/:id/delete                              controllers.Api.deleteTrack(id: String)
+POST        /api/track/:id/publish                             controllers.Api.publishTrack(id: String)
 GET         /api/admin                                         controllers.Api.admin
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)

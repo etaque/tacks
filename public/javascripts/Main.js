@@ -12175,6 +12175,8 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var Surface = {ctor: "Surface"};
    var Name = {ctor: "Name"};
    var NoOp = {ctor: "NoOp"};
+   var Publish = {ctor: "Publish"};
+   var ConfirmPublish = {ctor: "ConfirmPublish"};
    var SaveResult = F2(function (a,b) {
       return {ctor: "SaveResult",_0: a,_1: b};
    });
@@ -12212,14 +12214,29 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var SideBlocks = F5(function (a,b,c,d,e) {
       return {name: a,surface: b,gates: c,wind: d,gusts: e};
    });
-   var Editor = F7(function (a,b,c,d,e,f,g) {
+   var initialEditor = function (track) {
+      return {blocks: {name: false
+                      ,surface: false
+                      ,gates: false
+                      ,wind: false
+                      ,gusts: false}
+             ,course: track.course
+             ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
+             ,mode: Watch
+             ,altMove: false
+             ,name: track.name
+             ,saving: false
+             ,confirmPublish: false};
+   };
+   var Editor = F8(function (a,b,c,d,e,f,g,h) {
       return {blocks: a
              ,course: b
              ,center: c
              ,mode: d
              ,altMove: e
              ,name: f
-             ,saving: g};
+             ,saving: g
+             ,confirmPublish: h};
    });
    var initial = {track: $Maybe.Nothing
                  ,editor: $Maybe.Nothing
@@ -12231,6 +12248,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,Screen: Screen
                                                 ,initial: initial
                                                 ,Editor: Editor
+                                                ,initialEditor: initialEditor
                                                 ,SideBlocks: SideBlocks
                                                 ,CreateTile: CreateTile
                                                 ,Erase: Erase
@@ -12245,6 +12263,8 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
                                                 ,SetName: SetName
                                                 ,Save: Save
                                                 ,SaveResult: SaveResult
+                                                ,ConfirmPublish: ConfirmPublish
+                                                ,Publish: Publish
                                                 ,NoOp: NoOp
                                                 ,Name: Name
                                                 ,Surface: Surface
@@ -12970,6 +12990,9 @@ Elm.Screens.ListDrafts.Types.make = function (_elm) {
    var DeleteDraft = function (a) {
       return {ctor: "DeleteDraft",_0: a};
    };
+   var ConfirmDeleteDraft = function (a) {
+      return {ctor: "ConfirmDeleteDraft",_0: a};
+   };
    var CreateDraftResult = function (a) {
       return {ctor: "CreateDraftResult",_0: a};
    };
@@ -12980,9 +13003,15 @@ Elm.Screens.ListDrafts.Types.make = function (_elm) {
    var DraftsResult = function (a) {
       return {ctor: "DraftsResult",_0: a};
    };
-   var initial = {drafts: _U.list([]),name: ""};
-   var Screen = F2(function (a,b) {
-      return {drafts: a,name: b};
+   var initial = {drafts: _U.list([])
+                 ,name: ""
+                 ,confirmDelete: $Maybe.Nothing
+                 ,confirmPublish: $Maybe.Nothing};
+   var Screen = F4(function (a,b,c,d) {
+      return {drafts: a
+             ,name: b
+             ,confirmDelete: c
+             ,confirmPublish: d};
    });
    return _elm.Screens.ListDrafts.Types.values = {_op: _op
                                                  ,Screen: Screen
@@ -12991,6 +13020,7 @@ Elm.Screens.ListDrafts.Types.make = function (_elm) {
                                                  ,SetDraftName: SetDraftName
                                                  ,CreateDraft: CreateDraft
                                                  ,CreateDraftResult: CreateDraftResult
+                                                 ,ConfirmDeleteDraft: ConfirmDeleteDraft
                                                  ,DeleteDraft: DeleteDraft
                                                  ,DeleteDraftResult: DeleteDraftResult
                                                  ,NoOp: NoOp};
@@ -13135,6 +13165,9 @@ Elm.Screens.Admin.Types.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
+   var DeleteTrackResult = function (a) {
+      return {ctor: "DeleteTrackResult",_0: a};
+   };
    var DeleteTrack = function (a) {
       return {ctor: "DeleteTrack",_0: a};
    };
@@ -13156,6 +13189,7 @@ Elm.Screens.Admin.Types.make = function (_elm) {
                                             ,RefreshData: RefreshData
                                             ,RefreshDataResult: RefreshDataResult
                                             ,DeleteTrack: DeleteTrack
+                                            ,DeleteTrackResult: DeleteTrackResult
                                             ,NoOp: NoOp};
 };
 Elm.AppTypes = Elm.AppTypes || {};
@@ -14110,6 +14144,14 @@ Elm.ServerApi.make = function (_elm) {
       A2($Basics._op["++"],id,"/delete")),
       $Json$Encode.$null);
    };
+   var publishTrack = function (id) {
+      return A3(postJson,
+      $Decoders.trackDecoder,
+      A2($Basics._op["++"],
+      "/api/track/",
+      A2($Basics._op["++"],id,"/publish")),
+      $Json$Encode.$null);
+   };
    var saveTrack = F3(function (id,name,course) {
       var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
                                               ,_0: "course"
@@ -14196,6 +14238,7 @@ Elm.ServerApi.make = function (_elm) {
                                   ,postLogout: postLogout
                                   ,createTrack: createTrack
                                   ,saveTrack: saveTrack
+                                  ,publishTrack: publishTrack
                                   ,deleteDraft: deleteDraft
                                   ,getJson: getJson
                                   ,postJson: postJson
@@ -14942,39 +14985,51 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       {ctor: "_Tuple2",_0: right,_1: top},
       {ctor: "_Tuple2",_0: left,_1: bottom});
    };
-   var save = F3(function ($try,id,_p0) {
+   var saveEditor = F2(function (id,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.course;
-      var area = getRaceArea(_p2.grid);
-      var withArea = _U.update(_p2,{area: area});
+      return A3($ServerApi.saveTrack,
+      id,
+      _p1.name,
+      _U.update(_p2,{area: getRaceArea(_p2.grid)}));
+   });
+   var save = F3(function ($try,id,editor) {
       return A2($Task.map,
       $Screens$EditTrack$Types.SaveResult($try),
-      A2($Task$Extra.delay,
-      500,
-      A3($ServerApi.saveTrack,id,_p1.name,withArea)));
+      A2($Task$Extra.delay,500,A2(saveEditor,id,editor)));
+   });
+   var publish = F2(function (id,_p3) {
+      var _p4 = _p3;
+      return A2($Task.map,
+      $Screens$EditTrack$Types.SaveResult(true),
+      A2($Task.andThen,
+      A2($Task$Extra.delay,500,A2(saveEditor,id,_p4)),
+      function (_p5) {
+         return $ServerApi.publishTrack(id);
+      }));
    });
    var loadTrack = function (id) {
       return A2($Task.map,
       $Screens$EditTrack$Types.LoadTrack,
       $ServerApi.getTrack(id));
    };
-   var updateBlocks = F2(function (b,_p3) {
-      var _p4 = _p3;
-      var _p6 = _p4.blocks;
+   var updateBlocks = F2(function (b,_p6) {
+      var _p7 = _p6;
+      var _p9 = _p7.blocks;
       var newBlocks = function () {
-         var _p5 = b;
-         switch (_p5.ctor)
-         {case "Name": return _U.update(_p6,
-              {name: $Basics.not(_p6.name)});
-            case "Surface": return _U.update(_p6,
-              {surface: $Basics.not(_p6.surface)});
-            case "Gates": return _U.update(_p6,
-              {gates: $Basics.not(_p6.gates)});
-            case "Wind": return _U.update(_p6,
-              {wind: $Basics.not(_p6.wind)});
-            default: return _U.update(_p6,{gusts: $Basics.not(_p6.gusts)});}
+         var _p8 = b;
+         switch (_p8.ctor)
+         {case "Name": return _U.update(_p9,
+              {name: $Basics.not(_p9.name)});
+            case "Surface": return _U.update(_p9,
+              {surface: $Basics.not(_p9.surface)});
+            case "Gates": return _U.update(_p9,
+              {gates: $Basics.not(_p9.gates)});
+            case "Wind": return _U.update(_p9,
+              {wind: $Basics.not(_p9.wind)});
+            default: return _U.update(_p9,{gusts: $Basics.not(_p9.gusts)});}
       }();
-      return _U.update(_p4,{blocks: newBlocks});
+      return _U.update(_p7,{blocks: newBlocks});
    });
    var updateCourse = F2(function (update,editor) {
       return _U.update(editor,{course: update(editor.course)});
@@ -14984,25 +15039,15 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       return _U.update(screen,{editor: newEditor});
    });
    var update = F3(function (dims,action,screen) {
-      var _p7 = action;
-      switch (_p7.ctor)
-      {case "LoadTrack": var _p8 = _p7._0;
-           if (_p8.ctor === "Ok") {
-                 var _p9 = _p8._0;
-                 var editor = {blocks: {name: false
-                                       ,surface: false
-                                       ,gates: false
-                                       ,wind: false
-                                       ,gusts: false}
-                              ,course: _p9.course
-                              ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
-                              ,mode: $Screens$EditTrack$Types.Watch
-                              ,altMove: false
-                              ,name: _p9.name
-                              ,saving: false};
+      var _p10 = action;
+      switch (_p10.ctor)
+      {case "LoadTrack": var _p11 = _p10._0;
+           if (_p11.ctor === "Ok") {
+                 var _p12 = _p11._0;
                  return A2($AppTypes._op["&:"],
                  _U.update(screen,
-                 {track: $Maybe.Just(_p9),editor: $Maybe.Just(editor)}),
+                 {track: $Maybe.Just(_p12)
+                 ,editor: $Maybe.Just($Screens$EditTrack$Types.initialEditor(_p12))}),
                  $Effects.none);
               } else {
                  return A2($AppTypes._op["&:"],
@@ -15010,49 +15055,49 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  $Effects.none);
               }
          case "ToggleBlock": return A2($AppTypes._op["&:"],
-           A2(function (_p10) {
-              return updateEditor(updateBlocks(_p10));
+           A2(function (_p13) {
+              return updateEditor(updateBlocks(_p13));
            },
-           _p7._0,
+           _p10._0,
            screen),
            $Effects.none);
          case "SetName": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{name: _p7._0});
+              return _U.update(e,{name: _p10._0});
            },
            screen),
            $Effects.none);
          case "MouseAction": return A2($AppTypes._op["&:"],
            A2(updateEditor,
-           A2($Screens$EditTrack$GridUpdates.mouseAction,_p7._0,dims),
+           A2($Screens$EditTrack$GridUpdates.mouseAction,_p10._0,dims),
            screen),
            $Effects.none);
          case "SetMode": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{mode: _p7._0});
+              return _U.update(e,{mode: _p10._0});
            },
            screen),
            $Effects.none);
          case "AltMoveMode": return A2($AppTypes._op["&:"],
            A2(updateEditor,
            function (e) {
-              return _U.update(e,{altMove: _p7._0});
+              return _U.update(e,{altMove: _p10._0});
            },
            screen),
            $Effects.none);
          case "FormAction": return A2($AppTypes._op["&:"],
-           A2(function (_p11) {
-              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p11)));
+           A2(function (_p14) {
+              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p14)));
            },
-           _p7._0,
+           _p10._0,
            screen),
            $Effects.none);
-         case "Save": var _p12 = {ctor: "_Tuple2"
+         case "Save": var _p15 = {ctor: "_Tuple2"
                                  ,_0: screen.track
                                  ,_1: screen.editor};
-           if (_p12.ctor === "_Tuple2" && _p12._0.ctor === "Just" && _p12._1.ctor === "Just")
+           if (_p15.ctor === "_Tuple2" && _p15._0.ctor === "Just" && _p15._1.ctor === "Just")
            {
                  return A2($AppTypes._op["&!"],
                  A2(updateEditor,
@@ -15060,23 +15105,46 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     return _U.update(e,{saving: true});
                  },
                  screen),
-                 A3(save,_p7._0,_p12._0._0.id,_p12._1._0));
+                 A3(save,_p10._0,_p15._0._0.id,_p15._1._0));
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
-         case "SaveResult": var _p13 = _p7._1;
-           if (_p13.ctor === "Ok") {
-                 var effect = _p7._0 ? A2($Effects.map,
-                 function (_p14) {
+         case "SaveResult": var _p16 = _p10._1;
+           if (_p16.ctor === "Ok") {
+                 var effect = _p10._0 ? A2($Effects.map,
+                 function (_p17) {
                     return $Screens$EditTrack$Types.NoOp;
                  },
-                 $Screens$UpdateUtils.redirect($Routes.PlayTrack(_p13._0.id))) : $Effects.none;
+                 $Screens$UpdateUtils.redirect($Routes.PlayTrack(_p16._0.id))) : $Effects.none;
                  var newScreen = A2(updateEditor,
                  function (e) {
                     return _U.update(e,{saving: false});
                  },
                  screen);
                  return A2($AppTypes._op["&:"],newScreen,effect);
+              } else {
+                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+              }
+         case "ConfirmPublish": return A2($AppTypes._op["&:"],
+           A2(updateEditor,
+           function (e) {
+              return _U.update(e,
+              {confirmPublish: $Basics.not(e.confirmPublish)});
+           },
+           screen),
+           $Effects.none);
+         case "Publish": var _p18 = {ctor: "_Tuple2"
+                                    ,_0: screen.track
+                                    ,_1: screen.editor};
+           if (_p18.ctor === "_Tuple2" && _p18._0.ctor === "Just" && _p18._1.ctor === "Just")
+           {
+                 return A2($AppTypes._op["&!"],
+                 A2(updateEditor,
+                 function (e) {
+                    return _U.update(e,{saving: true});
+                 },
+                 screen),
+                 A2(publish,_p18._0._0.id,_p18._1._0));
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
@@ -15103,7 +15171,9 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                                   ,updateCourse: updateCourse
                                                   ,updateBlocks: updateBlocks
                                                   ,loadTrack: loadTrack
+                                                  ,saveEditor: saveEditor
                                                   ,save: save
+                                                  ,publish: publish
                                                   ,getRaceArea: getRaceArea};
 };
 Elm.Screens = Elm.Screens || {};
@@ -16348,16 +16418,22 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
+         case "ConfirmDeleteDraft": var _p3 = _p0._0;
+           var newConfirm = _U.eq($Maybe.Just(_p3),
+           screen.confirmDelete) ? $Maybe.Nothing : $Maybe.Just(_p3);
+           return A2($AppTypes._op["&:"],
+           _U.update(screen,{confirmDelete: newConfirm}),
+           $Effects.none);
          case "DeleteDraft": return A2($AppTypes._op["&!"],
            screen,
            deleteDraft(_p0._0));
-         case "DeleteDraftResult": var _p3 = _p0._0;
-           if (_p3.ctor === "Ok") {
+         case "DeleteDraftResult": var _p4 = _p0._0;
+           if (_p4.ctor === "Ok") {
                  return A2($AppTypes._op["&:"],
                  _U.update(screen,
                  {drafts: A2($List.filter,
                  function (t) {
-                    return !_U.eq(t.id,_p3._0);
+                    return !_U.eq(t.id,_p4._0);
                  },
                  screen.drafts)}),
                  $Effects.none);
@@ -16420,9 +16496,24 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
            return A2($AppTypes._op["&:"],
            _U.update(screen,{tracks: tracks,users: users}),
            $Effects.none);
-         case "DeleteTrack": return A2($AppTypes._op["&:"],
+         case "DeleteTrack": return A2($AppTypes._op["&!"],
            screen,
-           $Effects.none);
+           A2($Task.map,
+           $Screens$Admin$Types.DeleteTrackResult,
+           $ServerApi.deleteDraft(_p0._0)));
+         case "DeleteTrackResult": var _p2 = _p0._0;
+           if (_p2.ctor === "Ok") {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(screen,
+                 {tracks: A2($List.filter,
+                 function (t) {
+                    return !_U.eq(t.id,_p2._0);
+                 },
+                 screen.tracks)}),
+                 $Effects.none);
+              } else {
+                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+              }
          default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
    var mount = function (route) {
@@ -19333,7 +19424,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
       _U.list([A3($Screens$Utils.linkTo,
       $Routes.ListDrafts,
       _U.list([]),
-      _U.list([$Html.text("Track editor")]))]));
+      _U.list([$Html.text("Your tracks")]))]));
       return _U.list([A2($Html.ul,
                      _U.list([$Html$Attributes.$class("user-menu")]),
                      A2($List._op["::"],
@@ -20874,26 +20965,27 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    };
    var view = F2(function (track,_p3) {
       var _p4 = _p3;
-      var _p8 = _p4.saving;
-      var _p7 = _p4.name;
+      var _p9 = _p4.saving;
+      var _p8 = _p4.name;
+      var _p7 = _p4;
       var _p6 = _p4.course;
       var _p5 = _p4.blocks;
       return _U.list([$Screens$Sidebar.logo
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("track-menu")]),
-                     _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(_p7)]))]))
+                     _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(_p8)]))]))
                      ,A4(sideBlock,
                      "Name",
                      _p5.name,
                      $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Name),
                      _U.list([A2($Html.div,
                      _U.list([$Html$Attributes.$class("form-group")]),
-                     _U.list([nameInput(_p7)]))]))
+                     _U.list([nameInput(_p8)]))]))
                      ,A4(sideBlock,
                      "Surface pencil",
                      _p5.surface,
                      $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Surface),
-                     _U.list([surfaceBlock(_p4)]))
+                     _U.list([surfaceBlock(_p7)]))
                      ,A4(sideBlock,
                      "Gates",
                      _p5.gates,
@@ -21000,21 +21092,35 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html$Attributes.min("10")]))]))
                              ,gustDefsTable(_p6.gustGenerator.defs)]))
                      ,A2($Html.div,
-                     _U.list([$Html$Attributes.$class("form-actions")]),
-                     _U.list([A2($Html.button,
+                     _U.list([$Html$Attributes.$class("form-actions btn-group btn-group-justified")]),
+                     _U.list([A2($Html.a,
                              _U.list([A2($Html$Events.onClick,
                                      $Screens$EditTrack$Updates.addr,
                                      $Screens$EditTrack$Types.Save(false))
-                                     ,$Html$Attributes.$class("btn btn-primary btn-block btn-save")
-                                     ,$Html$Attributes.disabled(_p8)]),
+                                     ,$Html$Attributes.$class("btn btn-primary btn-save")
+                                     ,$Html$Attributes.disabled(_p9)]),
                              _U.list([$Html.text("Save")]))
-                             ,A2($Html.button,
+                             ,A2($Html.a,
                              _U.list([A2($Html$Events.onClick,
                                      $Screens$EditTrack$Updates.addr,
                                      $Screens$EditTrack$Types.Save(true))
-                                     ,$Html$Attributes.$class("btn btn-default btn-block btn-save-and-try")
-                                     ,$Html$Attributes.disabled(_p8)]),
-                             _U.list([$Html.text("Save and try")]))]))]);
+                                     ,$Html$Attributes.$class("btn btn-default btn-save-and-try")
+                                     ,$Html$Attributes.disabled(_p9)]),
+                             _U.list([$Html.text("Save and try")]))]))
+                     ,A2($Html.div,
+                     _U.list([$Html$Attributes.$class("btn-group-vertical")]),
+                     _U.list([A2($Html.button,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.ConfirmPublish)
+                                     ,$Html$Attributes.$class("btn btn-default btn-block btn-confirm-publish")]),
+                             _U.list([$Html.text("Save and publish")]))
+                             ,_p7.confirmPublish ? A2($Html.button,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.Publish)
+                                     ,$Html$Attributes.$class("btn btn-success btn-block btn-confirm-publish")]),
+                             _U.list([$Html.text("Confirm? You can\'t go back!")])) : $Html.text("")]))]);
    });
    return _elm.Screens.EditTrack.SideView.values = {_op: _op
                                                    ,view: view
@@ -22947,23 +23053,31 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
                       $Screens$ListDrafts$Types.CreateDraft)]),
               _U.list([$Html.text("Create draft")]))]))]));
    };
-   var draftItem = function (draft) {
+   var draftItem = F2(function (confirmDelete,draft) {
       return A2($Html.li,
-      _U.list([]),
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
+                                                   ,_0: "confirm-delete"
+                                                   ,_1: confirmDelete}]))]),
       _U.list([A3($Screens$Utils.linkTo,
               $Routes.EditTrack(draft.id),
               _U.list([$Html$Attributes.$class("")]),
               _U.list([$Html.text(draft.name)]))
-              ,$Html.text(" ")
               ,A2($Html.button,
-              _U.list([$Html$Attributes.$class("btn btn-danger btn-xs pull-right")
+              _U.list([$Html$Attributes.$class("btn btn-default btn-xs pull-right")
+                      ,A2($Html$Events.onClick,
+                      $Screens$ListDrafts$Updates.addr,
+                      $Screens$ListDrafts$Types.ConfirmDeleteDraft(draft))]),
+              _U.list([$Html.text("Delete")]))
+              ,A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-danger btn-xs pull-right delete-draft")
                       ,A2($Html$Events.onClick,
                       $Screens$ListDrafts$Updates.addr,
                       $Screens$ListDrafts$Types.DeleteDraft(draft.id))]),
-              _U.list([$Html.text("Delete")]))]));
-   };
+              _U.list([$Html.text("Confirm?")]))]));
+   });
    var view = F2(function (ctx,_p2) {
       var _p3 = _p2;
+      var _p4 = _p3;
       return A3($Screens$Layout.layoutWithNav,
       "list-drafts",
       ctx,
@@ -22974,8 +23088,14 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
               _U.list([$Html.text("Drafts")]))
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled drafts")]),
-              A2($List.map,draftItem,_p3.drafts))
-              ,$Models.isAdmin(ctx.player) ? createTrackForm(_p3) : A2($Html.div,
+              A2($List.map,
+              function (t) {
+                 return A2(draftItem,
+                 _U.eq($Maybe.Just(t),_p4.confirmDelete),
+                 t);
+              },
+              _p3.drafts))
+              ,$Models.isAdmin(ctx.player) ? createTrackForm(_p4) : A2($Html.div,
               _U.list([]),
               _U.list([]))]))]));
    });

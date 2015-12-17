@@ -17,6 +17,10 @@ object TrackDAO extends MongoDAO[Track] {
     update(id, BSONDocument("name" -> name, "course" -> course))
   }
 
+  def publish(id: BSONObjectID): Future[_] = {
+    update(id, BSONDocument("status" -> TrackStatus.open))
+  }
+
   def listByCreatorId(id: BSONObjectID): Future[Seq[Track]] = {
     list(BSONDocument("creatorId" -> id))
   }

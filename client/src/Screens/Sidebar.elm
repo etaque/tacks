@@ -43,7 +43,7 @@ guestContent =
 userContent : Player -> List Html
 userContent player =
   let
-    draftsLink = li [ ] [ linkTo ListDrafts [ ] [ text "Track editor" ] ]
+    draftsLink = li [ ] [ linkTo ListDrafts [ ] [ text "Your tracks" ] ]
     adminLink = li [ ] [ linkTo (Admin Dashboard) [ ] [ text "Admin" ] ]
   in
     [ ul [ class "user-menu" ] <|
