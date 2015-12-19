@@ -6022,6 +6022,22 @@ button.close {
   .hidden-print {
     display: none !important; } }
 
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6042,6 +6058,22 @@ button.close {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
 html,
 body {
   width: 100%;
@@ -6058,7 +6090,7 @@ body > div {
   height: 100%; }
 
 .layout {
-  height: 100%;
+  min-height: 100%;
   flex: 1;
   display: flex;
   flex-direction: row; }
@@ -6066,7 +6098,7 @@ body > div {
 main {
   /* flex: 1; */ }
   main > .padded {
-    width: 800px;
+    /* width: 800px; */
     padding: 40px;
     /* opacity: 1; */
     /* transition: opacity 0.1s ease-in-out; */ }
@@ -6074,7 +6106,7 @@ main {
       /* opacity: 0; */ }
 
 aside {
-  height: 100%;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
@@ -6085,6 +6117,22 @@ aside {
       width: 160px;
       height: auto; }
 
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6179,6 +6227,22 @@ aside {
     aside .aside-module ul {
       padding: 0 5px; }
 
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6206,26 +6270,27 @@ h1 {
   margin-bottom: 20px;
   color: white; }
 
-h2, h3, h4, h5, h6 {
+h2 {
+  font-size: 24px;
+  font-family: "Proxima Nova Thin";
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white; }
+
+h3, h4, h5, h6 {
   font-family: "Museo Slab";
   font-weight: bold;
   font-size: 15px;
   margin-bottom: 15px; }
 
-h2 {
-  font-size: 24px; }
-
 h3 {
-  font-size: 21px; }
+  font-size: 18px; }
 
 a {
   color: white;
   transition: all 0.1s ease-in;
   cursor: pointer; }
-  a:hover {
-    color: #99d2ef;
-    text-decoration: none; }
-  a:active {
+  a:hover, a:active {
     color: #99d2ef;
     text-decoration: none; }
 
@@ -6233,20 +6298,27 @@ a {
   text-align: center; }
 
 .btn {
-  text-transform: lowercase;
-  border: none;
-  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all 0.1s ease-in;
-  border-radius: 2px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 3px;
   font-family: "Museo Slab";
   font-size: 15px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
+  text-transform: lowercase; }
+
+.btn-sm, .btn-group-sm > .btn {
+  padding: 3px 8px 3px 8px;
+  border-bottom-width: 2px;
+  border-radius: 2px;
+  font-size: 14px; }
 
 .btn-xs, .btn-group-xs > .btn {
-  border-bottom-width: 2px;
-  font-size: 13px;
-  padding: 2px 5px 0px 5px; }
+  padding: 2px 5px 0px 5px;
+  border-bottom-width: 1px;
+  border-radius: 1px;
+  font-size: 13px; }
 
 .btn-default {
   background-color: #e1e1e1;
@@ -6351,8 +6423,48 @@ label {
   .player-avatar .handle {
     font-weight: bold; }
 
+.list-rankings {
+  /* padding: 5px; */
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: "Inconsolata", "mono"; }
+  .list-rankings li {
+    margin-bottom: 3px; }
+    .list-rankings li .handle {
+      color: white; }
+    .list-rankings li .rank {
+      margin-right: 10px;
+      font-weight: bold; }
+      .list-rankings li .rank:before {
+        content: "#"; }
+    .list-rankings li .handle {
+      font-weight: bold; }
+    .list-rankings li .status {
+      float: right;
+      color: white; }
+
 .form-login .form-group {
   width: 250px; }
+
+.fade-slide-in {
+  -webkit-animation: fade-slide-in-anim 200ms ease-out;
+  animation: fade-slide-in-anim 200ms ease-out; }
+
+@-webkit-keyframes fade-slide-in-anim {
+  0% {
+    -webkit-transform: translateX(40px);
+    opacity: 0; }
+  100% {
+    -webkit-transform: translateX(0);
+    opacity: 1; } }
+
+@keyframes fade-slide-in-anim {
+  0% {
+    transform: translateX(40px);
+    opacity: 0; }
+  100% {
+    transform: translateX(0);
+    opacity: 1; } }
 
 @font-face {
   font-family: "Proxima Nova Regular";
@@ -6374,6 +6486,38 @@ label {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6401,26 +6545,27 @@ h1 {
   margin-bottom: 20px;
   color: white; }
 
-h2, h3, h4, h5, h6 {
+h2 {
+  font-size: 24px;
+  font-family: "Proxima Nova Thin";
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white; }
+
+h3, h4, h5, h6 {
   font-family: "Museo Slab";
   font-weight: bold;
   font-size: 15px;
   margin-bottom: 15px; }
 
-h2 {
-  font-size: 24px; }
-
 h3 {
-  font-size: 21px; }
+  font-size: 18px; }
 
 a {
   color: white;
   transition: all 0.1s ease-in;
   cursor: pointer; }
-  a:hover {
-    color: #99d2ef;
-    text-decoration: none; }
-  a:active {
+  a:hover, a:active {
     color: #99d2ef;
     text-decoration: none; }
 
@@ -6428,20 +6573,27 @@ a {
   text-align: center; }
 
 .btn {
-  text-transform: lowercase;
-  border: none;
-  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all 0.1s ease-in;
-  border-radius: 2px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 3px;
   font-family: "Museo Slab";
   font-size: 15px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
+  text-transform: lowercase; }
+
+.btn-sm, .btn-group-sm > .btn {
+  padding: 3px 8px 3px 8px;
+  border-bottom-width: 2px;
+  border-radius: 2px;
+  font-size: 14px; }
 
 .btn-xs, .btn-group-xs > .btn {
-  border-bottom-width: 2px;
-  font-size: 13px;
-  padding: 2px 5px 0px 5px; }
+  padding: 2px 5px 0px 5px;
+  border-bottom-width: 1px;
+  border-radius: 1px;
+  font-size: 13px; }
 
 .btn-default {
   background-color: #e1e1e1;
@@ -6546,52 +6698,443 @@ label {
   .player-avatar .handle {
     font-weight: bold; }
 
+.list-rankings {
+  /* padding: 5px; */
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: "Inconsolata", "mono"; }
+  .list-rankings li {
+    margin-bottom: 3px; }
+    .list-rankings li .handle {
+      color: white; }
+    .list-rankings li .rank {
+      margin-right: 10px;
+      font-weight: bold; }
+      .list-rankings li .rank:before {
+        content: "#"; }
+    .list-rankings li .handle {
+      font-weight: bold; }
+    .list-rankings li .status {
+      float: right;
+      color: white; }
+
 .form-login .form-group {
   width: 250px; }
-
-.live-tracks {
-  margin-top: 40px; }
-
-.live-track {
-  margin-bottom: 20px; }
-  .live-track h3 {
-    margin-top: 0;
-    margin-bottom: 0; }
-    .live-track h3 a {
-      display: block;
-      border-bottom: 2px solid #30a3de;
-      padding: 10px 10px 8px 10px;
-      transition: background 0.2s ease-in; }
-      .live-track h3 a:hover {
-        background-color: #30a3de;
-        color: white; }
-  .live-track .info {
-    padding: 10px;
-    font-family: "Inconsolata", "mono";
-    font-size: 16px; }
-    .live-track .info .list-rankings {
-      /* padding: 5px; */
-      margin-bottom: 10px;
-      font-size: 16px;
-      font-family: "Inconsolata", "mono"; }
-      .live-track .info .list-rankings li {
-        margin-bottom: 3px; }
-        .live-track .info .list-rankings li .handle {
-          color: white; }
-        .live-track .info .list-rankings li .rank {
-          margin-right: 10px;
-          font-weight: bold; }
-          .live-track .info .list-rankings li .rank:before {
-            content: "#"; }
-        .live-track .info .list-rankings li .handle {
-          font-weight: bold; }
-        .live-track .info .list-rankings li .status {
-          float: right;
-          color: white; }
 
 .form-set-handle {
   margin-top: 20px;
   margin-bottom: 20px; }
+
+.live-center {
+  margin-top: 40px; }
+
+.live-track {
+  margin-bottom: 30px;
+  transition: background 0.1s ease-in;
+  position: relative; }
+  .live-track h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-bottom: 2px solid #4aafe2; }
+    .live-track h3 .name {
+      display: block;
+      padding: 10px;
+      color: white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+      .live-track h3 .name:hover {
+        background-color: #4aafe2; }
+  .live-track .info {
+    height: 150px;
+    overflow-y: auto;
+    font-size: 16px;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075);
+    background-color: #30a3de;
+    /* border-top-left-radius: 3px; */
+    /* border-top-right-radius: 3px; */ }
+    .live-track .info .list-rankings {
+      padding: 10px 15px; }
+    .live-track .info .rankings-size {
+      text-align: center; }
+  .live-track .btn-join {
+    margin-top: 5px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0; }
+
+.active-players .empty {
+  font-size: 14px; }
+
+.active-players h3 {
+  margin: 0;
+  padding: 10px;
+  color: white; }
+
+.active-players .active-track-players {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #30a3de;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
+
+.active-players h4 {
+  margin: 0 0 5px 0;
+  padding-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-bottom: 2px solid #4aafe2; }
+  .active-players h4 a {
+    color: #99d2ef; }
+    .active-players h4 a:hover {
+      color: white; }
+
+.active-players .live-players {
+  /* padding: 5px; */
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: "Inconsolata", "mono";
+  margin-bottom: 0;
+  font-weight: bold;
+  color: white; }
+  .active-players .live-players li {
+    margin-bottom: 3px; }
+    .active-players .live-players li .handle {
+      color: white; }
+    .active-players .live-players li .rank {
+      margin-right: 10px;
+      font-weight: bold; }
+      .active-players .live-players li .rank:before {
+        content: "#"; }
+    .active-players .live-players li .handle {
+      font-weight: bold; }
+    .active-players .live-players li .status {
+      float: right;
+      color: white; }
+  .active-players .live-players li:last-child {
+    margin-bottom: 0; }
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
+h1 {
+  font-family: "Proxima Nova Thin";
+  font-size: 42px;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white; }
+
+h2 {
+  font-size: 24px;
+  font-family: "Proxima Nova Thin";
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white; }
+
+h3, h4, h5, h6 {
+  font-family: "Museo Slab";
+  font-weight: bold;
+  font-size: 15px;
+  margin-bottom: 15px; }
+
+h3 {
+  font-size: 18px; }
+
+a {
+  color: white;
+  transition: all 0.1s ease-in;
+  cursor: pointer; }
+  a:hover, a:active {
+    color: #99d2ef;
+    text-decoration: none; }
+
+.align-center {
+  text-align: center; }
+
+.btn {
+  padding: 7px 12px 5px 12px;
+  transition: all 0.1s ease-in;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 3px;
+  font-family: "Museo Slab";
+  font-size: 15px;
+  text-transform: lowercase; }
+
+.btn-sm, .btn-group-sm > .btn {
+  padding: 3px 8px 3px 8px;
+  border-bottom-width: 2px;
+  border-radius: 2px;
+  font-size: 14px; }
+
+.btn-xs, .btn-group-xs > .btn {
+  padding: 2px 5px 0px 5px;
+  border-bottom-width: 1px;
+  border-radius: 1px;
+  font-size: 13px; }
+
+.btn-default {
+  background-color: #e1e1e1;
+  border-color: #d5d5d5;
+  color: #888; }
+  .btn-default:hover {
+    background-color: #d5d5d5;
+    border-color: #c8c8c8;
+    color: #51585E; }
+
+.btn-primary {
+  background-color: #4eb8ee;
+  border-color: #28a3e1; }
+  .btn-primary:hover {
+    background-color: #36afec;
+    border-color: #1d95d2; }
+
+.btn-warning {
+  background-color: #E0A349;
+  border-color: #9b7741; }
+  .btn-warning:hover {
+    background-color: #dc9833;
+    border-color: #89693a; }
+
+.btn-danger {
+  background-color: white;
+  border-color: #d5d5d5;
+  color: #d9534f;
+  /* background-color: $red; */
+  /* border-color: desat-dark($red); */ }
+  .btn-danger:hover {
+    background-color: #d9534f;
+    border-color: #944a48;
+    /* color: desat-dark($red); */
+    /* background-color: $whiteRed; */
+    /* border-color: darken($lightGray, 10%); */ }
+
+.alert {
+  border-radius: 0;
+  border-width: 3px; }
+
+.alert-danger a {
+  color: #d9534f; }
+
+.form-control {
+  border: none;
+  border: 0px solid white;
+  background-color: white;
+  font-size: 16px;
+  /* font-weight: bold; */
+  box-shadow: none;
+  color: #21729b;
+  /* box-shadow: inset 1px 1px 1px $shadow; */ }
+  .form-control:focus {
+    outline: 0;
+    box-shadow: inset 2px 2px 1px rgba(0, 0, 0, 0.075);
+    border-color: white;
+    background-color: white; }
+
+.form-group.has-error .form-control {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0; }
+
+label {
+  color: white;
+  font-size: 16px; }
+
+.label {
+  font-family: "Proxima Nova Thin";
+  text-transform: uppercase;
+  padding: 0 5px;
+  line-height: 1.4;
+  border-radius: 2px; }
+  .label.label-default {
+    background-color: #30a3de;
+    color: white; }
+
+.has-error .error-message {
+  margin-top: 0;
+  padding: 6px 12px;
+  background-color: #f2dede;
+  font-size: 14px;
+  color: #d9534f;
+  border-bottom-left-radius: 4px;
+  border-bottom-right-radius: 4px; }
+
+.form-actions {
+  margin-top: 30px; }
+
+.uppercase {
+  text-transform: uppercase; }
+
+.player-avatar {
+  display: inline-block; }
+  .player-avatar .avatar {
+    display: inline-block;
+    vertical-align: none;
+    height: 19px;
+    width: 19px;
+    border-radius: 10px;
+    margin-right: -2px; }
+  .player-avatar .handle {
+    font-weight: bold; }
+
+.list-rankings {
+  /* padding: 5px; */
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: "Inconsolata", "mono"; }
+  .list-rankings li {
+    margin-bottom: 3px; }
+    .list-rankings li .handle {
+      color: white; }
+    .list-rankings li .rank {
+      margin-right: 10px;
+      font-weight: bold; }
+      .list-rankings li .rank:before {
+        content: "#"; }
+    .list-rankings li .handle {
+      font-weight: bold; }
+    .list-rankings li .status {
+      float: right;
+      color: white; }
+
+.form-login .form-group {
+  width: 250px; }
+
+.show-track .track-header {
+  margin-bottom: 30px;
+  padding-bottom: 5px;
+  border-bottom: 2px solid #30a3de; }
+  .show-track .track-header:after {
+    content: "";
+    display: table;
+    clear: both; }
+  .show-track .track-header .track-name,
+  .show-track .track-header .track-creator {
+    float: left;
+    padding-top: 10px; }
+  .show-track .track-header .track-name {
+    margin: 0;
+    font-family: "Museo Slab";
+    font-weight: bold;
+    font-size: 18px;
+    color: white; }
+  .show-track .track-header .track-creator {
+    margin-left: 5px;
+    font-size: 18px; }
+  .show-track .track-header .btn-join {
+    float: right; }
+
+.show-track .course {
+  /* .expand-course { */
+  /*   text-align: center; */
+  /*   button { */
+  /*     background-color: $whiteSeaBlue; */
+  /*   } */
+  /* } */ }
+  .show-track .course svg {
+    display: block;
+    cursor: move;
+    user-select: none;
+    -moz-user-select: none;
+    background-color: #f2f3c4;
+    border: 5px solid #99d2ef; }
+
+.show-track h2 {
+  margin-top: 30px;
+  margin-bottom: 15px; }
+
+.show-track .rankings .list-rankings {
+  padding: 8px 12px;
+  background-color: #30a3de; }
+
+.show-track .about h2 {
+  margin-top: 0; }
+
+.show-track .about dl {
+  padding: 8px 12px;
+  background-color: #30a3de;
+  font-size: 15px; }
+  .show-track .about dl abbr {
+    display: inline-block;
+    margin-left: 2px;
+    /* text-transform: uppercase; */
+    color: #99d2ef;
+    border: none;
+    text-decoration: none; }
+  .show-track .about dl dt {
+    text-align: left;
+    width: 110px; }
+  .show-track .about dl dd {
+    color: white;
+    margin-left: 130px; }
 
 /* @import 'blog'; */
 @font-face {
@@ -6614,6 +7157,22 @@ label {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
 @font-face {
   font-family: "Proxima Nova Regular";
   src: url("/assets/fonts/Proxima Nova Regular.otf"); }
@@ -6641,26 +7200,27 @@ h1 {
   margin-bottom: 20px;
   color: white; }
 
-h2, h3, h4, h5, h6 {
+h2 {
+  font-size: 24px;
+  font-family: "Proxima Nova Thin";
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: white; }
+
+h3, h4, h5, h6 {
   font-family: "Museo Slab";
   font-weight: bold;
   font-size: 15px;
   margin-bottom: 15px; }
 
-h2 {
-  font-size: 24px; }
-
 h3 {
-  font-size: 21px; }
+  font-size: 18px; }
 
 a {
   color: white;
   transition: all 0.1s ease-in;
   cursor: pointer; }
-  a:hover {
-    color: #99d2ef;
-    text-decoration: none; }
-  a:active {
+  a:hover, a:active {
     color: #99d2ef;
     text-decoration: none; }
 
@@ -6668,20 +7228,27 @@ a {
   text-align: center; }
 
 .btn {
-  text-transform: lowercase;
-  border: none;
-  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all 0.1s ease-in;
-  border-radius: 2px;
+  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075);
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 3px;
   font-family: "Museo Slab";
   font-size: 15px;
-  box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.075); }
+  text-transform: lowercase; }
+
+.btn-sm, .btn-group-sm > .btn {
+  padding: 3px 8px 3px 8px;
+  border-bottom-width: 2px;
+  border-radius: 2px;
+  font-size: 14px; }
 
 .btn-xs, .btn-group-xs > .btn {
-  border-bottom-width: 2px;
-  font-size: 13px;
-  padding: 2px 5px 0px 5px; }
+  padding: 2px 5px 0px 5px;
+  border-bottom-width: 1px;
+  border-radius: 1px;
+  font-size: 13px; }
 
 .btn-default {
   background-color: #e1e1e1;
@@ -6785,6 +7352,26 @@ label {
     margin-right: -2px; }
   .player-avatar .handle {
     font-weight: bold; }
+
+.list-rankings {
+  /* padding: 5px; */
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: "Inconsolata", "mono"; }
+  .list-rankings li {
+    margin-bottom: 3px; }
+    .list-rankings li .handle {
+      color: white; }
+    .list-rankings li .rank {
+      margin-right: 10px;
+      font-weight: bold; }
+      .list-rankings li .rank:before {
+        content: "#"; }
+    .list-rankings li .handle {
+      font-weight: bold; }
+    .list-rankings li .status {
+      float: right;
+      color: white; }
 
 .form-login .form-group {
   width: 250px; }
@@ -6828,25 +7415,6 @@ aside .module-players {
 
 aside .module-rankings {
   flex: 0.5; }
-  aside .module-rankings .list-rankings {
-    /* padding: 5px; */
-    margin-bottom: 10px;
-    font-size: 16px;
-    font-family: "Inconsolata", "mono"; }
-    aside .module-rankings .list-rankings li {
-      margin-bottom: 3px; }
-      aside .module-rankings .list-rankings li .handle {
-        color: white; }
-      aside .module-rankings .list-rankings li .rank {
-        margin-right: 10px;
-        font-weight: bold; }
-        aside .module-rankings .list-rankings li .rank:before {
-          content: "#"; }
-      aside .module-rankings .list-rankings li .handle {
-        font-weight: bold; }
-      aside .module-rankings .list-rankings li .status {
-        float: right;
-        color: white; }
 
 aside .module-help {
   font-size: 12px; }

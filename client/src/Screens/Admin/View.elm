@@ -22,10 +22,12 @@ view ctx route screen =
   let
     menuItem = routeMenuItem route
   in
-    Layout.layoutWithNav "admin" ctx <|
-      [ h1 [] [ text "Admin" ]
-      , menu menuItem
-      ] ++ content route menuItem screen
+    Layout.layoutWithNav "admin" ctx
+      [ container "" <|
+        [ h1 [] [ text "Admin" ]
+        , menu menuItem
+        ] ++ content route menuItem screen
+      ]
 
 menu : Tab -> Html
 menu item =

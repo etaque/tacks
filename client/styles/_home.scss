@@ -3,44 +3,107 @@
 @import 'mixins';
 @import 'theme';
 
-.live-tracks {
-  margin-top: 40px;
-}
-
-.live-track {
-  margin-bottom: 20px;
-
-  h3 {
-    margin-top: 0;
-    margin-bottom: 0;
-
-    a {
-      display: block;
-      border-bottom: 2px solid $lightSeaBlue;
-      padding: 10px 10px 8px 10px;
-      transition: background .2s ease-in;
-
-      &:hover {
-        background-color: $lightSeaBlue;
-        color: $white;
-      }
-    }
-  }
-
-  .info {
-    padding: 10px;
-    font-family: $mono;
-    font-size: 16px;
-
-    .list-rankings {
-      @include players-list;
-    }
-  }
-}
-
 .form-set-handle {
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
+.live-center {
+  margin-top: 40px;
+}
 
+.live-track {
+  margin-bottom: 30px;
+  transition: background .1s ease-in;
+  position: relative;
+
+  h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-bottom: 2px solid $lighterSeaBlue;
+
+    .name {
+      display: block;
+      padding: 10px;
+      color: $white;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+
+      &:hover {
+        background-color: $lighterSeaBlue;
+      }
+    }
+  }
+
+  .info {
+    height: 150px;
+    overflow-y: auto;
+    font-size: 16px;
+    box-shadow: 1px 1px 1px $shadow;
+    background-color: $lightSeaBlue;
+    /* border-top-left-radius: 3px; */
+    /* border-top-right-radius: 3px; */
+
+    .list-rankings {
+      padding: 10px 15px;
+    }
+
+    .rankings-size {
+      text-align: center;
+    }
+  }
+
+  .btn-join {
+    margin-top: 5px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+
+.active-players {
+  .empty {
+    font-size: 14px;
+  }
+
+  h3 {
+    margin: 0;
+    padding: 10px;
+    color: $white;
+  }
+
+  .active-track-players {
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: $lightSeaBlue;
+    box-shadow: 1px 1px 1px $shadow;
+  }
+
+  h4 {
+    margin: 0 0 5px 0;
+    padding-bottom: 8px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-bottom: 2px solid $lighterSeaBlue;
+
+    a {
+      color: $whiteSeaBlue;
+      &:hover {
+        color: $white;
+      }
+    }
+  }
+
+  .live-players {
+    @include players-list;
+    margin-bottom: 0;
+    font-weight: bold;
+    color: $white;
+
+    li:last-child {
+      margin-bottom: 0;
+    }
+  }
+}

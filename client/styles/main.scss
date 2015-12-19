@@ -11,8 +11,10 @@ $icon-font-path: "/assets/fonts/bootstrap/";
 @import 'layout';
 @import 'nav';
 @import 'theme';
+@import 'animations';
 
 @import 'home';
+@import 'show-track';
 /* @import 'blog'; */
 @import 'game';
 @import 'editor';

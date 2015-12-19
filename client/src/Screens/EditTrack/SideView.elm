@@ -98,19 +98,23 @@ view track ({course, name, saving, mode, blocks} as editor) =
       ]
       [ text "Save and try" ]
     ]
-  , div [ class "btn-group-vertical" ]
-    [ button
-      [ onClick addr ConfirmPublish
-      , class "btn btn-default btn-block btn-confirm-publish"
+  , if track.status == Draft
+    then
+      div [ class "btn-group-vertical" ]
+      [ button
+        [ onClick addr ConfirmPublish
+        , class "btn btn-default btn-block btn-confirm-publish"
+        ]
+        [ text "Save and publish" ]
+      , if editor.confirmPublish
+        then
+          button [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
+          [ text "Confirm? You can't go back!" ]
+        else
+          text ""
       ]
-      [ text "Save and publish" ]
-    , if editor.confirmPublish
-      then
-        button [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
-        [ text "Confirm? You can't go back!" ]
-      else
-        text ""
-    ]
+    else
+      text ""
   ]
 
 

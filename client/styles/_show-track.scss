@@ -1,0 +1,101 @@
+@import 'colors';
+@import 'fonts';
+@import 'mixins';
+@import 'theme';
+
+.show-track {
+
+  .track-header {
+    @include clearfix;
+    margin-bottom: 30px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid $lightSeaBlue;
+
+    .track-name,
+    .track-creator {
+      float: left;
+      padding-top: 10px;
+    }
+
+    .track-name {
+      margin: 0;
+      font-family: $serif;
+      font-weight: bold;
+      font-size: 18px;
+      color: $white;
+    }
+
+    .track-creator {
+      margin-left: 5px;
+      font-size: 18px;
+    }
+
+    .btn-join {
+      float: right;
+    }
+  }
+
+  .course {
+
+    svg {
+      display: block;
+      cursor: move;
+      user-select: none;
+      -moz-user-select: none;
+      background-color: $sand;
+      border: 5px solid $whiteSeaBlue;
+    }
+
+    /* .expand-course { */
+    /*   text-align: center; */
+
+    /*   button { */
+    /*     background-color: $whiteSeaBlue; */
+    /*   } */
+    /* } */
+  }
+
+  h2 {
+    margin-top: 30px;
+    margin-bottom: 15px;
+  }
+
+  .rankings {
+    .list-rankings {
+      padding: 8px 12px;
+      background-color: $lightSeaBlue;
+    }
+  }
+
+  .about {
+    h2 {
+      margin-top: 0;
+    }
+
+    dl {
+      padding: 8px 12px;
+      background-color: $lightSeaBlue;
+      font-size: 15px;
+
+      abbr {
+        display: inline-block;
+        margin-left: 2px;
+        /* text-transform: uppercase; */
+        color: $whiteSeaBlue;
+        border: none;
+        text-decoration: none;
+      }
+
+      dt {
+        text-align: left;
+        width: 110px;
+      }
+
+      dd {
+        color: $white;
+        margin-left: 130px;
+      }
+    }
+
+  }
+}

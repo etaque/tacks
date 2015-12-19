@@ -75,6 +75,19 @@ update appAction ({screens, ctx} as appState) =
     UpdateDims dims ->
       {appState | ctx = { ctx | dims = dims } } &: none
 
+    MouseEvent mouseEvent ->
+      let
+        handlerMaybe = case appState.route of
+          Just (EditTrack _) -> Just (EditTrackAction << EditTrack.mouseAction)
+          Just (ShowTrack _) -> Just (ShowTrackAction << ShowTrack.mouseAction)
+          _ -> Nothing
+      in
+        case handlerMaybe of
+          Just handler ->
+            updateScreen (handler mouseEvent) appState
+          _ ->
+            appState &: none
+
     Logout ->
       appState &! logoutTask
 

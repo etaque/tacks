@@ -2,6 +2,7 @@ module AppTypes where
 
 import Task exposing (Task)
 import Effects exposing (Effects)
+import DragAndDrop exposing (MouseEvent)
 
 import Models exposing (..)
 
@@ -57,6 +58,7 @@ type AppAction
   | PathChanged String
   | MountRoute (Maybe Routes.Route)
   | UpdateDims (Int, Int)
+  | MouseEvent MouseEvent
   | ScreenAction ScreenAction
   | Logout
   | AppNoOp

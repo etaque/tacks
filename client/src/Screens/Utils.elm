@@ -7,6 +7,7 @@ import Json.Decode as Json
 import String
 import Signal
 
+import Constants exposing (..)
 import Models exposing (..)
 import AppTypes exposing (appActionsAddress)
 import Routes
@@ -82,6 +83,14 @@ hr' : Html
 hr' =
   hr [] []
 
+dl' : List (String, List Html) -> Html
+dl' items =
+  dl [ class "dl-horizontal" ] (List.concatMap (\(term, desc) -> [ dt [] [ text term ], dd [] desc ]) items)
+
+abbr' : String -> String -> Html
+abbr' short long =
+  abbr [ title long ] [ text short ]
+
 formGroup : Bool -> List Html -> Html
 formGroup hasErr content =
   div
@@ -149,3 +158,8 @@ formatTimer showMs t =
     sMillis = if showMs then "." ++ (String.padLeft 3 '0' (toString millis)) else ""
   in
     sMinutes ++ ":" ++ sSeconds ++ sMillis
+
+
+colWidth : Int -> Float
+colWidth col =
+  (containerWidth + gutterWidth) / 12 * (toFloat col) - gutterWidth

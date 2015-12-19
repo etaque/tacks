@@ -37,9 +37,9 @@ isAdmin player =
     Just h -> List.member h admins
     Nothing -> False
 
-hasDraft : Player -> Track -> Bool
-hasDraft player track =
-  track.status == Draft && (player.id == track.creatorId || isAdmin player)
+canUpdateDraft : Player -> Track -> Bool
+canUpdateDraft player track =
+  (track.status == Draft && player.id == track.creatorId) || isAdmin player
 
 type alias LiveStatus =
   { liveTracks : List LiveTrack
@@ -55,12 +55,14 @@ type alias LiveTrack =
   }
 
 type alias Track =
-  { id: String
+  { id: TrackId
   , name: String
   , creatorId: String
   , course: Course
   , status: TrackStatus
   }
+
+type alias TrackId = String
 
 type alias TrackMeta =
   { creator : Player

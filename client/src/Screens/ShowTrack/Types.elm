@@ -1,20 +1,37 @@
 module Screens.ShowTrack.Types where
 
 import Models exposing (..)
+import DragAndDrop exposing (MouseEvent(..))
 
 
 type alias Screen =
-  { track : Maybe Track
+  { liveTrack : Maybe LiveTrack
   , notFound : Bool
+  , courseControl : CourseControl
+  }
+
+type alias CourseControl =
+  { over : Bool
+  , dragging : Bool
+  , center : Point
+  , scale : Float
   }
 
 initial : Screen
 initial =
-  { track = Nothing
+  { liveTrack = Nothing
   , notFound = False
+  , courseControl =
+    { over = False
+    , dragging = False
+    , center = (0, 0)
+    , scale = 0.5
+    }
   }
 
 type Action
-  = LoadTrack (Result () Track)
+  = LiveTrackResult (Result () LiveTrack)
+  | SetOverCourse Bool
+  | MouseAction MouseEvent
   | NoOp
 

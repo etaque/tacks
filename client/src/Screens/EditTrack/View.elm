@@ -24,7 +24,7 @@ view : Context -> Screen -> Html
 view {player, dims} screen =
   case (screen.track, screen.editor) of
     (Just track, Just editor) ->
-      if hasDraft player track then
+      if canUpdateDraft player track then
         Layout.layout "editor"
           (SideView.view track editor)
           [ renderCourse dims editor ]

@@ -48,7 +48,8 @@ userContent player =
   in
     [ ul [ class "user-menu" ] <|
         li [] [ linkTo Home [ ] [ text "Home" ] ]
-        :: (if isAdmin player then [ draftsLink, adminLink ] else [ ])
+        :: draftsLink
+        :: (if isAdmin player then [ adminLink ] else [ ])
     , div [ class "logout" ]
       [ a [ onClick appActionsAddress Logout ] [ text "Logout" ] ]
     ]

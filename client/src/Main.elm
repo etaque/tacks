@@ -8,6 +8,7 @@ import History
 import Json.Decode as Json
 import Effects exposing (Effects, Never)
 import StartApp
+import DragAndDrop exposing (mouseEvents)
 
 import AppUpdates
 import AppTypes exposing (..)
@@ -40,6 +41,7 @@ app = StartApp.start
   , inputs =
     [ pathActions
     , dimsActions
+    , mouseEventActions
     , appActionsMailbox.signal
     , raceUpdateActions
     , gameActions
@@ -64,6 +66,10 @@ pathActions =
 dimsActions : Signal AppAction
 dimsActions =
   Signal.map UpdateDims Window.dimensions
+
+mouseEventActions : Signal AppAction
+mouseEventActions =
+  Signal.map MouseEvent mouseEvents
 
 rawInput : Signal (KeyboardInput, (Int, Int), Maybe RaceInput)
 rawInput =

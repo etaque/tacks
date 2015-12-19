@@ -12,19 +12,23 @@ h1 {
   color: $white;
 }
 
-h2, h3, h4, h5, h6 {
+h2 {
+  font-size: 24px;
+  font-family: $thin;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: $white;
+}
+
+h3, h4, h5, h6 {
   font-family: $serif;
   font-weight: bold;
   font-size: 15px;
   margin-bottom: 15px;
 }
 
-h2 {
-  font-size: 24px;
-}
-
 h3 {
-  font-size: 21px;
+  font-size: 18px;
 }
 
 a {
@@ -32,12 +36,7 @@ a {
   transition: all .1s ease-in;
   cursor: pointer;
 
-  &:hover {
-    color: $whiteSeaBlue;
-    text-decoration: none;
-  }
-
-  &:active {
+  &:hover, &:active {
     color: $whiteSeaBlue;
     text-decoration: none;
   }
@@ -48,24 +47,32 @@ a {
 }
 
 .btn {
-  text-transform: lowercase;
-  border: none;
-  border-bottom: 3px solid transparent;
   padding: 7px 12px 5px 12px;
   transition: all .1s ease-in;
-  border-radius: 2px;
+  box-shadow: 1px 1px 1px $shadow;
+  border: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 3px;
   font-family: $serif;
   font-size: 15px;
-  box-shadow: 1px 1px 1px $shadow;
+  text-transform: lowercase;
 
   &:hover {
   }
 }
 
-.btn-xs {
+.btn-sm {
+  padding: 3px 8px 3px 8px;
   border-bottom-width: 2px;
-  font-size: 13px;
+  border-radius: 2px;
+  font-size: 14px;
+}
+
+.btn-xs {
   padding: 2px 5px 0px 5px;
+  border-bottom-width: 1px;
+  border-radius: 1px;
+  font-size: 13px;
 }
 
 .btn-default {
@@ -236,6 +243,10 @@ label {
       color: white;
     }
   }
+}
+
+.list-rankings {
+  @include players-list;
 }
 
 .form-login {

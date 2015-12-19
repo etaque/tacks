@@ -5,22 +5,22 @@
   &:-ms-input-placeholder      {@content}
 }
 
-@mixin placeholder-color($color) {
-  &::-webkit-input-placeholder { /* WebKit browsers */
-    color:    $color;
-  }
-  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
-    color:    $color;
-    opacity:  1;
-  }
-  &::-moz-placeholder { /* Mozilla Firefox 19+ */
-    color:    $color;
-    opacity:  1;
-  }
-  &:-ms-input-placeholder { /* Internet Explorer 10+ */
-    color:    $color;
-  }
-}
+/* @mixin placeholder-color($color) { */
+/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
+/*     color:    $color; */
+/*   } */
+/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
+/*     color:    $color; */
+/*     opacity:  1; */
+/*   } */
+/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
+/*     color:    $color; */
+/*   } */
+/* } */
 
 @mixin blur {
   -webkit-filter: blur(5px);
@@ -28,6 +28,14 @@
   -o-filter: blur(5px);
   -ms-filter: blur(5px);
   filter: blur(5px);
+}
+
+@mixin clearfix {
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
 }
 
 @mixin linear-gradient($fromColor, $toColor) {
@@ -40,3 +48,4 @@
   background-image:         linear-gradient(top, $fromColor, $toColor);
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{$fromColor}', EndColorStr='#{$toColor}');
 }
+

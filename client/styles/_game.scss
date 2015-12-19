@@ -35,10 +35,6 @@ aside {
 
   .module-rankings {
     flex: 0.5;
-
-    .list-rankings {
-      @include players-list;
-    }
   }
 
   .module-help {

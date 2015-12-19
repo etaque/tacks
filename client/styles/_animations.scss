@@ -1,0 +1,36 @@
+@mixin fade-slide-in {
+  $name: fade-slide-in-anim;
+  $duration: 200ms;
+  $offset: 40px;
+
+  -webkit-animation: $name $duration ease-out;
+  animation: $name $duration ease-out;
+
+  @-webkit-keyframes #{$name} {
+    0% {
+      -webkit-transform: translateX($offset);
+      opacity: 0;
+    }
+
+    100% {
+      -webkit-transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes #{$name} {
+    0% {
+      transform: translateX($offset);
+      opacity: 0;
+    }
+
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+}
+
+.fade-slide-in {
+  @include fade-slide-in;
+}

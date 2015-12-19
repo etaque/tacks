@@ -7,7 +7,7 @@ import Task.Extra exposing (delay)
 import Keyboard
 import Array
 
-import DragAndDrop exposing (mouseEvents)
+import DragAndDrop exposing (MouseEvent)
 
 import AppTypes exposing (..)
 import Models exposing (..)
@@ -34,8 +34,11 @@ inputs : Signal Action
 inputs =
   Signal.mergeMany
     [ Signal.map AltMoveMode Keyboard.shift
-    , Signal.map MouseAction mouseEvents
     ]
+
+mouseAction : MouseEvent -> Action
+mouseAction =
+  MouseAction
 
 mount : String -> (Screen, Effects Action)
 mount id =

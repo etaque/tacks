@@ -144,21 +144,19 @@ object Api extends Controller with Security {
   }
 
   def createDraftTrack() = PlayerAction.async(parse.json) { implicit request =>
-    if (request.player.isAdmin) {
+    asUser {  user =>
       val id = BSONObjectID.generate
       val name = (request.body \ "name").asOpt[String].getOrElse(id.stringify)
       val track = Track(
         _id = id,
         name = name,
-        creatorId = request.player.id,
+        creatorId = user.id,
         course = Course.spawn,
         status = TrackStatus.draft
       )
       TrackDAO.save(track).map { _ =>
         Ok(Json.toJson(track))
       }
-    } else {
-      Future.successful(Forbidden)
     }
   }
 

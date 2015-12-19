@@ -11319,353 +11319,6 @@ Elm.Effects.make = function (_elm) {
                                 ,batch: batch
                                 ,toTask: toTask};
 };
-Elm.Constants = Elm.Constants || {};
-Elm.Constants.make = function (_elm) {
-   "use strict";
-   _elm.Constants = _elm.Constants || {};
-   if (_elm.Constants.values) return _elm.Constants.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var admins = _U.list(["milox"]);
-   var hexRadius = 50;
-   var colors = {water: "rgb(33, 148, 206)"
-                ,sand: "rgb(226, 219, 190)"
-                ,grass: "rgb(200, 230, 180)"
-                ,rock: "rgb(171, 196, 198)"
-                ,green: "rgb(100, 180, 106)"};
-   var sidebarWidth = 280;
-   return _elm.Constants.values = {_op: _op
-                                  ,sidebarWidth: sidebarWidth
-                                  ,colors: colors
-                                  ,hexRadius: hexRadius
-                                  ,admins: admins};
-};
-Elm.Models = Elm.Models || {};
-Elm.Models.make = function (_elm) {
-   "use strict";
-   _elm.Models = _elm.Models || {};
-   if (_elm.Models.values) return _elm.Models.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Hexagons = Elm.Hexagons.make(_elm),
-   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var AdminData = F2(function (a,b) {
-      return {tracks: a,users: b};
-   });
-   var Rock = {ctor: "Rock"};
-   var Grass = {ctor: "Grass"};
-   var Water = {ctor: "Water"};
-   var GustDef = F3(function (a,b,c) {
-      return {angle: a,speed: b,radius: c};
-   });
-   var GustGenerator = F2(function (a,b) {
-      return {interval: a,defs: b};
-   });
-   var WindGenerator = F4(function (a,b,c,d) {
-      return {wavelength1: a
-             ,amplitude1: b
-             ,wavelength2: c
-             ,amplitude2: d};
-   });
-   var StartLine = {ctor: "StartLine"};
-   var UpwindGate = {ctor: "UpwindGate"};
-   var DownwindGate = {ctor: "DownwindGate"};
-   var RaceArea = F2(function (a,b) {
-      return {rightTop: a,leftBottom: b};
-   });
-   var Gate = F2(function (a,b) {    return {y: a,width: b};});
-   var Course = F8(function (a,b,c,d,e,f,g,h) {
-      return {upwind: a
-             ,downwind: b
-             ,grid: c
-             ,laps: d
-             ,area: e
-             ,windSpeed: f
-             ,windGenerator: g
-             ,gustGenerator: h};
-   });
-   var Message = F3(function (a,b,c) {
-      return {content: a,player: b,time: c};
-   });
-   var Ranking = F3(function (a,b,c) {
-      return {rank: a,player: b,finishTime: c};
-   });
-   var PlayerTally = F3(function (a,b,c) {
-      return {player: a,gates: b,finished: c};
-   });
-   var Race = F5(function (a,b,c,d,e) {
-      return {id: a,trackId: b,startTime: c,players: d,tallies: e};
-   });
-   var Deleted = {ctor: "Deleted"};
-   var Archived = {ctor: "Archived"};
-   var Open = {ctor: "Open"};
-   var Draft = {ctor: "Draft"};
-   var TrackMeta = F3(function (a,b,c) {
-      return {creator: a,rankings: b,runsCount: c};
-   });
-   var Track = F5(function (a,b,c,d,e) {
-      return {id: a,name: b,creatorId: c,course: d,status: e};
-   });
-   var LiveTrack = F4(function (a,b,c,d) {
-      return {track: a,meta: b,players: c,races: d};
-   });
-   var LiveStatus = F2(function (a,b) {
-      return {liveTracks: a,onlinePlayers: b};
-   });
-   var isAdmin = function (player) {
-      var _p0 = player.handle;
-      if (_p0.ctor === "Just") {
-            return A2($List.member,_p0._0,$Constants.admins);
-         } else {
-            return false;
-         }
-   };
-   var hasDraft = F2(function (player,track) {
-      return _U.eq(track.status,Draft) && (_U.eq(player.id,
-      track.creatorId) || isAdmin(player));
-   });
-   var User = F7(function (a,b,c,d,e,f,g) {
-      return {id: a
-             ,email: b
-             ,handle: c
-             ,status: d
-             ,avatarId: e
-             ,vmgMagnet: f
-             ,creationTime: g};
-   });
-   var Player = F7(function (a,b,c,d,e,f,g) {
-      return {id: a
-             ,handle: b
-             ,status: c
-             ,avatarId: d
-             ,vmgMagnet: e
-             ,guest: f
-             ,user: g};
-   });
-   return _elm.Models.values = {_op: _op
-                               ,Player: Player
-                               ,User: User
-                               ,isAdmin: isAdmin
-                               ,hasDraft: hasDraft
-                               ,LiveStatus: LiveStatus
-                               ,LiveTrack: LiveTrack
-                               ,Track: Track
-                               ,TrackMeta: TrackMeta
-                               ,Draft: Draft
-                               ,Open: Open
-                               ,Archived: Archived
-                               ,Deleted: Deleted
-                               ,Race: Race
-                               ,PlayerTally: PlayerTally
-                               ,Ranking: Ranking
-                               ,Message: Message
-                               ,Course: Course
-                               ,Gate: Gate
-                               ,RaceArea: RaceArea
-                               ,DownwindGate: DownwindGate
-                               ,UpwindGate: UpwindGate
-                               ,StartLine: StartLine
-                               ,WindGenerator: WindGenerator
-                               ,GustGenerator: GustGenerator
-                               ,GustDef: GustDef
-                               ,Water: Water
-                               ,Grass: Grass
-                               ,Rock: Rock
-                               ,AdminData: AdminData};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Home = Elm.Screens.Home || {};
-Elm.Screens.Home.Types = Elm.Screens.Home.Types || {};
-Elm.Screens.Home.Types.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Home = _elm.Screens.Home || {};
-   _elm.Screens.Home.Types = _elm.Screens.Home.Types || {};
-   if (_elm.Screens.Home.Types.values)
-   return _elm.Screens.Home.Types.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var NoOp = {ctor: "NoOp"};
-   var SubmitHandleResult = function (a) {
-      return {ctor: "SubmitHandleResult",_0: a};
-   };
-   var SubmitHandle = {ctor: "SubmitHandle"};
-   var SetHandle = function (a) {
-      return {ctor: "SetHandle",_0: a};
-   };
-   var SetLiveStatus = function (a) {
-      return {ctor: "SetLiveStatus",_0: a};
-   };
-   var initial = function (player) {
-      return {handle: A2($Maybe.withDefault,"",player.handle)
-             ,liveStatus: {liveTracks: _U.list([])
-                          ,onlinePlayers: _U.list([])}};
-   };
-   var Screen = F2(function (a,b) {
-      return {handle: a,liveStatus: b};
-   });
-   return _elm.Screens.Home.Types.values = {_op: _op
-                                           ,Screen: Screen
-                                           ,initial: initial
-                                           ,SetLiveStatus: SetLiveStatus
-                                           ,SetHandle: SetHandle
-                                           ,SubmitHandle: SubmitHandle
-                                           ,SubmitHandleResult: SubmitHandleResult
-                                           ,NoOp: NoOp};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Login = Elm.Screens.Login || {};
-Elm.Screens.Login.Types = Elm.Screens.Login.Types || {};
-Elm.Screens.Login.Types.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Login = _elm.Screens.Login || {};
-   _elm.Screens.Login.Types = _elm.Screens.Login.Types || {};
-   if (_elm.Screens.Login.Types.values)
-   return _elm.Screens.Login.Types.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var NoOp = {ctor: "NoOp"};
-   var SubmitResult = function (a) {
-      return {ctor: "SubmitResult",_0: a};
-   };
-   var Submit = {ctor: "Submit"};
-   var SetPassword = function (a) {
-      return {ctor: "SetPassword",_0: a};
-   };
-   var SetEmail = function (a) {
-      return {ctor: "SetEmail",_0: a};
-   };
-   var initial = {email: ""
-                 ,password: ""
-                 ,loading: false
-                 ,error: false};
-   var Screen = F4(function (a,b,c,d) {
-      return {email: a,password: b,loading: c,error: d};
-   });
-   return _elm.Screens.Login.Types.values = {_op: _op
-                                            ,Screen: Screen
-                                            ,initial: initial
-                                            ,SetEmail: SetEmail
-                                            ,SetPassword: SetPassword
-                                            ,Submit: Submit
-                                            ,SubmitResult: SubmitResult
-                                            ,NoOp: NoOp};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Register = Elm.Screens.Register || {};
-Elm.Screens.Register.Types = Elm.Screens.Register.Types || {};
-Elm.Screens.Register.Types.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Register = _elm.Screens.Register || {};
-   _elm.Screens.Register.Types = _elm.Screens.Register.Types || {};
-   if (_elm.Screens.Register.Types.values)
-   return _elm.Screens.Register.Types.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var NoOp = {ctor: "NoOp"};
-   var SubmitResult = function (a) {
-      return {ctor: "SubmitResult",_0: a};
-   };
-   var Submit = {ctor: "Submit"};
-   var SetPassword = function (a) {
-      return {ctor: "SetPassword",_0: a};
-   };
-   var SetEmail = function (a) {
-      return {ctor: "SetEmail",_0: a};
-   };
-   var SetHandle = function (a) {
-      return {ctor: "SetHandle",_0: a};
-   };
-   var initial = {handle: ""
-                 ,email: ""
-                 ,password: ""
-                 ,loading: false
-                 ,errors: $Dict.empty};
-   var Screen = F5(function (a,b,c,d,e) {
-      return {handle: a,email: b,password: c,loading: d,errors: e};
-   });
-   return _elm.Screens.Register.Types.values = {_op: _op
-                                               ,Screen: Screen
-                                               ,initial: initial
-                                               ,SetHandle: SetHandle
-                                               ,SetEmail: SetEmail
-                                               ,SetPassword: SetPassword
-                                               ,Submit: Submit
-                                               ,SubmitResult: SubmitResult
-                                               ,NoOp: NoOp};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
-Elm.Screens.ShowTrack.Types = Elm.Screens.ShowTrack.Types || {};
-Elm.Screens.ShowTrack.Types.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
-   _elm.Screens.ShowTrack.Types = _elm.Screens.ShowTrack.Types || {};
-   if (_elm.Screens.ShowTrack.Types.values)
-   return _elm.Screens.ShowTrack.Types.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var NoOp = {ctor: "NoOp"};
-   var LoadTrack = function (a) {
-      return {ctor: "LoadTrack",_0: a};
-   };
-   var initial = {track: $Maybe.Nothing,notFound: false};
-   var Screen = F2(function (a,b) {
-      return {track: a,notFound: b};
-   });
-   return _elm.Screens.ShowTrack.Types.values = {_op: _op
-                                                ,Screen: Screen
-                                                ,initial: initial
-                                                ,LoadTrack: LoadTrack
-                                                ,NoOp: NoOp};
-};
 Elm.Automaton = Elm.Automaton || {};
 Elm.Automaton.make = function (_elm) {
    "use strict";
@@ -12086,6 +11739,380 @@ Elm.DragAndDrop.make = function (_elm) {
                                     ,Release: Release
                                     ,Mouse: Mouse
                                     ,Hover: Hover};
+};
+Elm.Constants = Elm.Constants || {};
+Elm.Constants.make = function (_elm) {
+   "use strict";
+   _elm.Constants = _elm.Constants || {};
+   if (_elm.Constants.values) return _elm.Constants.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var admins = _U.list(["milox"]);
+   var hexRadius = 50;
+   var colors = {water: "rgb(33, 148, 206)"
+                ,sand: "rgb(226, 219, 190)"
+                ,grass: "rgb(200, 230, 180)"
+                ,rock: "rgb(171, 196, 198)"
+                ,green: "rgb(100, 180, 106)"};
+   var gutterWidth = 30;
+   var containerWidth = 940;
+   var sidebarWidth = 280;
+   return _elm.Constants.values = {_op: _op
+                                  ,sidebarWidth: sidebarWidth
+                                  ,containerWidth: containerWidth
+                                  ,gutterWidth: gutterWidth
+                                  ,colors: colors
+                                  ,hexRadius: hexRadius
+                                  ,admins: admins};
+};
+Elm.Models = Elm.Models || {};
+Elm.Models.make = function (_elm) {
+   "use strict";
+   _elm.Models = _elm.Models || {};
+   if (_elm.Models.values) return _elm.Models.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var AdminData = F2(function (a,b) {
+      return {tracks: a,users: b};
+   });
+   var Rock = {ctor: "Rock"};
+   var Grass = {ctor: "Grass"};
+   var Water = {ctor: "Water"};
+   var GustDef = F3(function (a,b,c) {
+      return {angle: a,speed: b,radius: c};
+   });
+   var GustGenerator = F2(function (a,b) {
+      return {interval: a,defs: b};
+   });
+   var WindGenerator = F4(function (a,b,c,d) {
+      return {wavelength1: a
+             ,amplitude1: b
+             ,wavelength2: c
+             ,amplitude2: d};
+   });
+   var StartLine = {ctor: "StartLine"};
+   var UpwindGate = {ctor: "UpwindGate"};
+   var DownwindGate = {ctor: "DownwindGate"};
+   var RaceArea = F2(function (a,b) {
+      return {rightTop: a,leftBottom: b};
+   });
+   var Gate = F2(function (a,b) {    return {y: a,width: b};});
+   var Course = F8(function (a,b,c,d,e,f,g,h) {
+      return {upwind: a
+             ,downwind: b
+             ,grid: c
+             ,laps: d
+             ,area: e
+             ,windSpeed: f
+             ,windGenerator: g
+             ,gustGenerator: h};
+   });
+   var Message = F3(function (a,b,c) {
+      return {content: a,player: b,time: c};
+   });
+   var Ranking = F3(function (a,b,c) {
+      return {rank: a,player: b,finishTime: c};
+   });
+   var PlayerTally = F3(function (a,b,c) {
+      return {player: a,gates: b,finished: c};
+   });
+   var Race = F5(function (a,b,c,d,e) {
+      return {id: a,trackId: b,startTime: c,players: d,tallies: e};
+   });
+   var Deleted = {ctor: "Deleted"};
+   var Archived = {ctor: "Archived"};
+   var Open = {ctor: "Open"};
+   var Draft = {ctor: "Draft"};
+   var TrackMeta = F3(function (a,b,c) {
+      return {creator: a,rankings: b,runsCount: c};
+   });
+   var Track = F5(function (a,b,c,d,e) {
+      return {id: a,name: b,creatorId: c,course: d,status: e};
+   });
+   var LiveTrack = F4(function (a,b,c,d) {
+      return {track: a,meta: b,players: c,races: d};
+   });
+   var LiveStatus = F2(function (a,b) {
+      return {liveTracks: a,onlinePlayers: b};
+   });
+   var isAdmin = function (player) {
+      var _p0 = player.handle;
+      if (_p0.ctor === "Just") {
+            return A2($List.member,_p0._0,$Constants.admins);
+         } else {
+            return false;
+         }
+   };
+   var canUpdateDraft = F2(function (player,track) {
+      return _U.eq(track.status,Draft) && _U.eq(player.id,
+      track.creatorId) || isAdmin(player);
+   });
+   var User = F7(function (a,b,c,d,e,f,g) {
+      return {id: a
+             ,email: b
+             ,handle: c
+             ,status: d
+             ,avatarId: e
+             ,vmgMagnet: f
+             ,creationTime: g};
+   });
+   var Player = F7(function (a,b,c,d,e,f,g) {
+      return {id: a
+             ,handle: b
+             ,status: c
+             ,avatarId: d
+             ,vmgMagnet: e
+             ,guest: f
+             ,user: g};
+   });
+   return _elm.Models.values = {_op: _op
+                               ,Player: Player
+                               ,User: User
+                               ,isAdmin: isAdmin
+                               ,canUpdateDraft: canUpdateDraft
+                               ,LiveStatus: LiveStatus
+                               ,LiveTrack: LiveTrack
+                               ,Track: Track
+                               ,TrackMeta: TrackMeta
+                               ,Draft: Draft
+                               ,Open: Open
+                               ,Archived: Archived
+                               ,Deleted: Deleted
+                               ,Race: Race
+                               ,PlayerTally: PlayerTally
+                               ,Ranking: Ranking
+                               ,Message: Message
+                               ,Course: Course
+                               ,Gate: Gate
+                               ,RaceArea: RaceArea
+                               ,DownwindGate: DownwindGate
+                               ,UpwindGate: UpwindGate
+                               ,StartLine: StartLine
+                               ,WindGenerator: WindGenerator
+                               ,GustGenerator: GustGenerator
+                               ,GustDef: GustDef
+                               ,Water: Water
+                               ,Grass: Grass
+                               ,Rock: Rock
+                               ,AdminData: AdminData};
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Home = Elm.Screens.Home || {};
+Elm.Screens.Home.Types = Elm.Screens.Home.Types || {};
+Elm.Screens.Home.Types.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Home = _elm.Screens.Home || {};
+   _elm.Screens.Home.Types = _elm.Screens.Home.Types || {};
+   if (_elm.Screens.Home.Types.values)
+   return _elm.Screens.Home.Types.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var NoOp = {ctor: "NoOp"};
+   var SubmitHandleResult = function (a) {
+      return {ctor: "SubmitHandleResult",_0: a};
+   };
+   var SubmitHandle = {ctor: "SubmitHandle"};
+   var FocusTrack = function (a) {
+      return {ctor: "FocusTrack",_0: a};
+   };
+   var SetHandle = function (a) {
+      return {ctor: "SetHandle",_0: a};
+   };
+   var SetLiveStatus = function (a) {
+      return {ctor: "SetLiveStatus",_0: a};
+   };
+   var initial = function (player) {
+      return {handle: A2($Maybe.withDefault,"",player.handle)
+             ,liveStatus: {liveTracks: _U.list([])
+                          ,onlinePlayers: _U.list([])}
+             ,trackFocus: $Maybe.Nothing};
+   };
+   var Screen = F3(function (a,b,c) {
+      return {handle: a,liveStatus: b,trackFocus: c};
+   });
+   return _elm.Screens.Home.Types.values = {_op: _op
+                                           ,Screen: Screen
+                                           ,initial: initial
+                                           ,SetLiveStatus: SetLiveStatus
+                                           ,SetHandle: SetHandle
+                                           ,FocusTrack: FocusTrack
+                                           ,SubmitHandle: SubmitHandle
+                                           ,SubmitHandleResult: SubmitHandleResult
+                                           ,NoOp: NoOp};
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Login = Elm.Screens.Login || {};
+Elm.Screens.Login.Types = Elm.Screens.Login.Types || {};
+Elm.Screens.Login.Types.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Login = _elm.Screens.Login || {};
+   _elm.Screens.Login.Types = _elm.Screens.Login.Types || {};
+   if (_elm.Screens.Login.Types.values)
+   return _elm.Screens.Login.Types.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var NoOp = {ctor: "NoOp"};
+   var SubmitResult = function (a) {
+      return {ctor: "SubmitResult",_0: a};
+   };
+   var Submit = {ctor: "Submit"};
+   var SetPassword = function (a) {
+      return {ctor: "SetPassword",_0: a};
+   };
+   var SetEmail = function (a) {
+      return {ctor: "SetEmail",_0: a};
+   };
+   var initial = {email: ""
+                 ,password: ""
+                 ,loading: false
+                 ,error: false};
+   var Screen = F4(function (a,b,c,d) {
+      return {email: a,password: b,loading: c,error: d};
+   });
+   return _elm.Screens.Login.Types.values = {_op: _op
+                                            ,Screen: Screen
+                                            ,initial: initial
+                                            ,SetEmail: SetEmail
+                                            ,SetPassword: SetPassword
+                                            ,Submit: Submit
+                                            ,SubmitResult: SubmitResult
+                                            ,NoOp: NoOp};
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Register = Elm.Screens.Register || {};
+Elm.Screens.Register.Types = Elm.Screens.Register.Types || {};
+Elm.Screens.Register.Types.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Register = _elm.Screens.Register || {};
+   _elm.Screens.Register.Types = _elm.Screens.Register.Types || {};
+   if (_elm.Screens.Register.Types.values)
+   return _elm.Screens.Register.Types.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var NoOp = {ctor: "NoOp"};
+   var SubmitResult = function (a) {
+      return {ctor: "SubmitResult",_0: a};
+   };
+   var Submit = {ctor: "Submit"};
+   var SetPassword = function (a) {
+      return {ctor: "SetPassword",_0: a};
+   };
+   var SetEmail = function (a) {
+      return {ctor: "SetEmail",_0: a};
+   };
+   var SetHandle = function (a) {
+      return {ctor: "SetHandle",_0: a};
+   };
+   var initial = {handle: ""
+                 ,email: ""
+                 ,password: ""
+                 ,loading: false
+                 ,errors: $Dict.empty};
+   var Screen = F5(function (a,b,c,d,e) {
+      return {handle: a,email: b,password: c,loading: d,errors: e};
+   });
+   return _elm.Screens.Register.Types.values = {_op: _op
+                                               ,Screen: Screen
+                                               ,initial: initial
+                                               ,SetHandle: SetHandle
+                                               ,SetEmail: SetEmail
+                                               ,SetPassword: SetPassword
+                                               ,Submit: Submit
+                                               ,SubmitResult: SubmitResult
+                                               ,NoOp: NoOp};
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
+Elm.Screens.ShowTrack.Types = Elm.Screens.ShowTrack.Types || {};
+Elm.Screens.ShowTrack.Types.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
+   _elm.Screens.ShowTrack.Types = _elm.Screens.ShowTrack.Types || {};
+   if (_elm.Screens.ShowTrack.Types.values)
+   return _elm.Screens.ShowTrack.Types.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var NoOp = {ctor: "NoOp"};
+   var MouseAction = function (a) {
+      return {ctor: "MouseAction",_0: a};
+   };
+   var SetOverCourse = function (a) {
+      return {ctor: "SetOverCourse",_0: a};
+   };
+   var LiveTrackResult = function (a) {
+      return {ctor: "LiveTrackResult",_0: a};
+   };
+   var initial = {liveTrack: $Maybe.Nothing
+                 ,notFound: false
+                 ,courseControl: {over: false
+                                 ,dragging: false
+                                 ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
+                                 ,scale: 0.5}};
+   var CourseControl = F4(function (a,b,c,d) {
+      return {over: a,dragging: b,center: c,scale: d};
+   });
+   var Screen = F3(function (a,b,c) {
+      return {liveTrack: a,notFound: b,courseControl: c};
+   });
+   return _elm.Screens.ShowTrack.Types.values = {_op: _op
+                                                ,Screen: Screen
+                                                ,CourseControl: CourseControl
+                                                ,initial: initial
+                                                ,LiveTrackResult: LiveTrackResult
+                                                ,SetOverCourse: SetOverCourse
+                                                ,MouseAction: MouseAction
+                                                ,NoOp: NoOp};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
@@ -13195,6 +13222,7 @@ Elm.AppTypes.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
@@ -13280,6 +13308,9 @@ Elm.AppTypes.make = function (_elm) {
    var ScreenAction = function (a) {
       return {ctor: "ScreenAction",_0: a};
    };
+   var MouseEvent = function (a) {
+      return {ctor: "MouseEvent",_0: a};
+   };
    var UpdateDims = function (a) {
       return {ctor: "UpdateDims",_0: a};
    };
@@ -13321,6 +13352,7 @@ Elm.AppTypes.make = function (_elm) {
                                  ,PathChanged: PathChanged
                                  ,MountRoute: MountRoute
                                  ,UpdateDims: UpdateDims
+                                 ,MouseEvent: MouseEvent
                                  ,ScreenAction: ScreenAction
                                  ,Logout: Logout
                                  ,AppNoOp: AppNoOp
@@ -14349,6 +14381,9 @@ Elm.Screens.Home.Updates.make = function (_elm) {
            A2($Result.map,$Screens$UpdateUtils.setPlayer,_p0._0),
            $Effects.none));
            return A2($AppTypes._op["&:"],screen,effect);
+         case "FocusTrack": return A2($AppTypes._op["&:"],
+           _U.update(screen,{trackFocus: _p0._0}),
+           $Effects.none);
          default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
    var mount = function (player) {
@@ -14515,9 +14550,11 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
@@ -14525,39 +14562,75 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var loadTrack = function (slug) {
+   var loadLiveTrack = function (id) {
       return A2($Task.map,
-      $Screens$ShowTrack$Types.LoadTrack,
-      $ServerApi.getTrack(slug));
+      $Screens$ShowTrack$Types.LiveTrackResult,
+      $ServerApi.getLiveTrack(id));
    };
-   var update = F2(function (action,screen) {
-      var _p0 = action;
-      if (_p0.ctor === "LoadTrack") {
-            var _p1 = _p0._0;
-            if (_p1.ctor === "Ok") {
-                  return A2($AppTypes._op["&:"],
-                  _U.update(screen,{track: $Maybe.Just(_p1._0)}),
-                  $Effects.none);
-               } else {
-                  return A2($AppTypes._op["&:"],
-                  _U.update(screen,{notFound: true}),
-                  $Effects.none);
-               }
-         } else {
-            return A2($AppTypes._op["&:"],screen,$Effects.none);
-         }
+   var update = F2(function (action,_p0) {
+      var _p1 = _p0;
+      var _p10 = _p1;
+      var _p9 = _p1.courseControl;
+      var _p2 = action;
+      switch (_p2.ctor)
+      {case "LiveTrackResult": var _p3 = _p2._0;
+           if (_p3.ctor === "Ok") {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(_p10,{liveTrack: $Maybe.Just(_p3._0)}),
+                 $Effects.none);
+              } else {
+                 return A2($AppTypes._op["&:"],
+                 _U.update(_p10,{notFound: true}),
+                 $Effects.none);
+              }
+         case "SetOverCourse": return A2($AppTypes._op["&:"],
+           _U.update(_p10,{courseControl: _U.update(_p9,{over: _p2._0})}),
+           $Effects.none);
+         case "MouseAction": var _p8 = _p2._0;
+           var _p4 = _p9.center;
+           var x = _p4._0;
+           var y = _p4._1;
+           var _p5 = function () {
+              var _p6 = _p8;
+              switch (_p6.ctor)
+              {case "StartAt": return {ctor: "_Tuple2",_0: 0,_1: 0};
+                 case "MoveFromTo": return _p9.dragging ? {ctor: "_Tuple2"
+                                                          ,_0: $Basics.toFloat(_p6._1._0 - _p6._0._0) / _p9.scale
+                                                          ,_1: $Basics.toFloat(_p6._0._1 - _p6._1._1) / _p9.scale} : {ctor: "_Tuple2"
+                                                                                                                     ,_0: 0
+                                                                                                                     ,_1: 0};
+                 default: return {ctor: "_Tuple2",_0: 0,_1: 0};}
+           }();
+           var dx = _p5._0;
+           var dy = _p5._1;
+           var newCenter = {ctor: "_Tuple2",_0: x + dx,_1: y + dy};
+           var dragging = function () {
+              var _p7 = _p8;
+              switch (_p7.ctor)
+              {case "StartAt": return _p9.over;
+                 case "MoveFromTo": return _p9.dragging;
+                 default: return false;}
+           }();
+           var newControl = _U.update(_p9,
+           {center: newCenter,dragging: dragging});
+           return A2($AppTypes._op["&:"],
+           _U.update(_p10,{courseControl: newControl}),
+           $Effects.none);
+         default: return A2($AppTypes._op["&:"],_p10,$Effects.none);}
    });
+   var mouseAction = $Screens$ShowTrack$Types.MouseAction;
    var mount = function (slug) {
       return A2($AppTypes._op["&!"],
       $Screens$ShowTrack$Types.initial,
-      loadTrack(slug));
+      loadLiveTrack(slug));
    };
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowTrackAction);
    return _elm.Screens.ShowTrack.Updates.values = {_op: _op
                                                   ,addr: addr
                                                   ,mount: mount
+                                                  ,mouseAction: mouseAction
                                                   ,update: update
-                                                  ,loadTrack: loadTrack};
+                                                  ,loadLiveTrack: loadLiveTrack};
 };
 Elm.CoreExtra = Elm.CoreExtra || {};
 Elm.CoreExtra.make = function (_elm) {
@@ -15150,16 +15223,15 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       $Screens$EditTrack$Types.initial,
       loadTrack(id));
    };
+   var mouseAction = $Screens$EditTrack$Types.MouseAction;
    var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
-                                          $Screens$EditTrack$Types.AltMoveMode,
-                                          $Keyboard.shift)
-                                          ,A2($Signal.map,
-                                          $Screens$EditTrack$Types.MouseAction,
-                                          $DragAndDrop.mouseEvents)]));
+   $Screens$EditTrack$Types.AltMoveMode,
+   $Keyboard.shift)]));
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.EditTrackAction);
    return _elm.Screens.EditTrack.Updates.values = {_op: _op
                                                   ,addr: addr
                                                   ,inputs: inputs
+                                                  ,mouseAction: mouseAction
                                                   ,mount: mount
                                                   ,update: update
                                                   ,updateEditor: updateEditor
@@ -16701,12 +16773,12 @@ Elm.AppUpdates.make = function (_elm) {
    });
    var update = F2(function (appAction,_p15) {
       var _p16 = _p15;
-      var _p24 = _p16.ctx;
-      var _p23 = _p16;
+      var _p28 = _p16.ctx;
+      var _p27 = _p16;
       var _p17 = appAction;
       switch (_p17.ctor)
       {case "SetPath": return A2($AppTypes._op["&!"],
-           _p23,
+           _p27,
            A2($Task.map,
            function (_p18) {
               return $AppTypes.AppNoOp;
@@ -16715,15 +16787,15 @@ Elm.AppUpdates.make = function (_elm) {
          case "PathChanged": var _p19 = _p17._0;
            var newRoute = A2($RouteParser.match,$Routes.routeParsers,_p19);
            var fx = $Effects.task($Task.succeed($AppTypes.MountRoute(newRoute)));
-           var newCtx = _U.update(_p24,{transitStatus: $AppTypes.Exit});
-           var newAppState = _U.update(_p23,{path: _p19,ctx: newCtx});
+           var newCtx = _U.update(_p28,{transitStatus: $AppTypes.Exit});
+           var newAppState = _U.update(_p27,{path: _p19,ctx: newCtx});
            return A2($AppTypes._op["&:"],newAppState,fx);
          case "MountRoute": var _p21 = _p17._0;
-           var newCtx = _U.update(_p24,{transitStatus: $AppTypes.Enter});
-           var newAppState = _U.update(_p23,{route: _p21,ctx: newCtx});
+           var newCtx = _U.update(_p28,{transitStatus: $AppTypes.Enter});
+           var newAppState = _U.update(_p27,{route: _p21,ctx: newCtx});
            var _p20 = newAppState.route;
            if (_p20.ctor === "Just") {
-                 return A2(needsTransition,_p23.route,_p21) ? A2(mountRoute,
+                 return A2(needsTransition,_p27.route,_p21) ? A2(mountRoute,
                  newAppState,
                  _p20._0) : A2($AppTypes._op["&:"],newAppState,$Effects.none);
               } else {
@@ -16734,14 +16806,38 @@ Elm.AppUpdates.make = function (_elm) {
               return $AppTypes.AppNoOp;
            },
            $Screens$UpdateUtils.redirect($Routes.Home));
-           var newCtx = _U.update(_p24,{player: _p17._0});
-           return A2($AppTypes._op["&:"],_U.update(_p23,{ctx: newCtx}),fx);
+           var newCtx = _U.update(_p28,{player: _p17._0});
+           return A2($AppTypes._op["&:"],_U.update(_p27,{ctx: newCtx}),fx);
          case "UpdateDims": return A2($AppTypes._op["&:"],
-           _U.update(_p23,{ctx: _U.update(_p24,{dims: _p17._0})}),
+           _U.update(_p27,{ctx: _U.update(_p28,{dims: _p17._0})}),
            $Effects.none);
-         case "Logout": return A2($AppTypes._op["&!"],_p23,logoutTask);
-         case "ScreenAction": return A2(updateScreen,_p17._0,_p23);
-         default: return A2($AppTypes._op["&:"],_p23,$Effects.none);}
+         case "MouseEvent": var handlerMaybe = function () {
+              var _p23 = _p27.route;
+              _v9_2: do {
+                 if (_p23.ctor === "Just") {
+                       switch (_p23._0.ctor)
+                       {case "EditTrack": return $Maybe.Just(function (_p24) {
+                               return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p24));
+                            });
+                          case "ShowTrack": return $Maybe.Just(function (_p25) {
+                               return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p25));
+                            });
+                          default: break _v9_2;}
+                    } else {
+                       break _v9_2;
+                    }
+              } while (false);
+              return $Maybe.Nothing;
+           }();
+           var _p26 = handlerMaybe;
+           if (_p26.ctor === "Just") {
+                 return A2(updateScreen,_p26._0(_p17._0),_p27);
+              } else {
+                 return A2($AppTypes._op["&:"],_p27,$Effects.none);
+              }
+         case "Logout": return A2($AppTypes._op["&!"],_p27,logoutTask);
+         case "ScreenAction": return A2(updateScreen,_p17._0,_p27);
+         default: return A2($AppTypes._op["&:"],_p27,$Effects.none);}
    });
    var initialAppUpdate = function (setup) {
       var task = $Task.succeed($AppTypes.SetPath(setup.path));
@@ -19170,6 +19266,7 @@ Elm.Screens.Utils.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
@@ -19183,6 +19280,9 @@ Elm.Screens.Utils.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
+   var colWidth = function (col) {
+      return ($Constants.containerWidth + $Constants.gutterWidth) / 12 * $Basics.toFloat(col) - $Constants.gutterWidth;
+   };
    var formatTimer = F2(function (showMs,t) {
       var t$ = $Basics.abs($Basics.ceiling(t));
       var totalSeconds = t$ / 1000 | 0;
@@ -19279,6 +19379,24 @@ Elm.Screens.Utils.make = function (_elm) {
                                                   ,{ctor: "_Tuple2",_0: "has-error",_1: hasErr}]))]),
       content);
    });
+   var abbr$ = F2(function ($short,$long) {
+      return A2($Html.abbr,
+      _U.list([$Html$Attributes.title($long)]),
+      _U.list([$Html.text($short)]));
+   });
+   var dl$ = function (items) {
+      return A2($Html.dl,
+      _U.list([$Html$Attributes.$class("dl-horizontal")]),
+      A2($List.concatMap,
+      function (_p1) {
+         var _p2 = _p1;
+         return _U.list([A2($Html.dt,
+                        _U.list([]),
+                        _U.list([$Html.text(_p2._0)]))
+                        ,A2($Html.dd,_U.list([]),_p2._1)]);
+      },
+      items));
+   };
    var hr$ = A2($Html.hr,_U.list([]),_U.list([]));
    var row = function (content) {
       return A2($Html.div,
@@ -19313,7 +19431,7 @@ Elm.Screens.Utils.make = function (_elm) {
       return A3($Html$Events.on,
       "keydown",
       A2($Json$Decode.customDecoder,$Html$Events.keyCode,isEnter),
-      function (_p1) {
+      function (_p3) {
          return A2($Signal.message,address,value);
       });
    });
@@ -19345,7 +19463,7 @@ Elm.Screens.Utils.make = function (_elm) {
       "click",
       eventOptions,
       $Json$Decode.value,
-      function (_p2) {
+      function (_p4) {
          return A2($Signal.message,
          $AppTypes.appActionsAddress,
          $AppTypes.SetPath(path));
@@ -19373,6 +19491,8 @@ Elm.Screens.Utils.make = function (_elm) {
                                       ,row: row
                                       ,fullWidth: fullWidth
                                       ,hr$: hr$
+                                      ,dl$: dl$
+                                      ,abbr$: abbr$
                                       ,formGroup: formGroup
                                       ,textInput: textInput
                                       ,passwordInput: passwordInput
@@ -19381,7 +19501,8 @@ Elm.Screens.Utils.make = function (_elm) {
                                       ,playerHandle: playerHandle
                                       ,rankingItem: rankingItem
                                       ,moduleTitle: moduleTitle
-                                      ,formatTimer: formatTimer};
+                                      ,formatTimer: formatTimer
+                                      ,colWidth: colWidth};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Sidebar = Elm.Screens.Sidebar || {};
@@ -19428,8 +19549,9 @@ Elm.Screens.Sidebar.make = function (_elm) {
                      $Routes.Home,
                      _U.list([]),
                      _U.list([$Html.text("Home")]))])),
-                     $Models.isAdmin(player) ? _U.list([draftsLink
-                                                       ,adminLink]) : _U.list([])))
+                     A2($List._op["::"],
+                     draftsLink,
+                     $Models.isAdmin(player) ? _U.list([adminLink]) : _U.list([]))))
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("logout")]),
                      _U.list([A2($Html.a,
@@ -19579,45 +19701,108 @@ Elm.Screens.Home.View.make = function (_elm) {
    };
    var playersList = function (players) {
       return A2($Html.ul,
-      _U.list([$Html$Attributes.$class("list-unstyled track-players")]),
+      _U.list([$Html$Attributes.$class("list-unstyled live-players")]),
       A2($List.map,playerItem,players));
+   };
+   var activeTrackPlayers = function (_p0) {
+      var _p1 = _p0;
+      var _p2 = _p1.track;
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("active-track-players")]),
+      _U.list([A2($Html.h4,
+              _U.list([]),
+              _U.list([A3($Screens$Utils.linkTo,
+              $Routes.PlayTrack(_p2.id),
+              _U.list([]),
+              _U.list([$Html.text(_p2.name)]))]))
+              ,playersList(_p1.players)]));
+   };
+   var activePlayers = function (liveTracks) {
+      var activeLiveTracks = $List.reverse(A2($List.sortBy,
+      function (lt) {
+         return $List.length(lt.players);
+      },
+      A2($List.filter,
+      function (lt) {
+         return $Basics.not($List.isEmpty(lt.players));
+      },
+      liveTracks)));
+      var content = $List.isEmpty(activeLiveTracks) ? _U.list([A2($Html.div,
+      _U.list([$Html$Attributes.$class("empty")]),
+      _U.list([$Html.text("Nobody\'s playing right now.")]))]) : A2($List.map,
+      activeTrackPlayers,
+      activeLiveTracks);
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("active-players")]),
+      A2($List._op["::"],
+      A2($Html.h2,
+      _U.list([]),
+      _U.list([$Html.text("Online players")])),
+      content));
    };
    var rankingsExtract = function (rankings) {
       return A2($Html.ul,
       _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
       A2($List.map,$Screens$Utils.rankingItem,rankings));
    };
-   var liveTrackBlock = function (_p0) {
-      var _p1 = _p0;
-      var _p3 = _p1.track;
-      var _p2 = _p1.meta;
+   var liveTrackBlock = F2(function (maybeTrackId,_p3) {
+      var _p4 = _p3;
+      var _p7 = _p4.track;
+      var _p6 = _p4.players;
+      var _p5 = _p4.meta;
+      var empty = _U.eq($List.length(_p6),0);
+      var hasFocus = _U.eq(maybeTrackId,$Maybe.Just(_p7.id));
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("col-md-4")]),
+      _U.list([$Html$Attributes.$class("col-md-6")]),
       _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("live-track")]),
-      _U.list([A2($Html.h3,
-              _U.list([$Html$Attributes.$class("name")]),
-              _U.list([A3($Screens$Utils.linkTo,
-              $Routes.PlayTrack(_p3.id),
-              _U.list([]),
-              _U.list([$Html.text(_p3.name)]))]))
-              ,A2($Html.div,
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
+                                                   ,_0: "live-track"
+                                                   ,_1: true}
+                                                  ,{ctor: "_Tuple2",_0: "has-focus",_1: hasFocus}
+                                                  ,{ctor: "_Tuple2",_0: "is-empty",_1: empty}]))]),
+      _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("info")]),
-              _U.list([rankingsExtract(_p2.rankings)
+              _U.list([A2($Html.h3,
+                      _U.list([]),
+                      _U.list([A3($Screens$Utils.linkTo,
+                      $Routes.ShowTrack(_p7.id),
+                      _U.list([$Html$Attributes.$class("name")]),
+                      _U.list([$Html.text(_p7.name)]))]))
+                      ,rankingsExtract(_p5.rankings)
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("rankings-size")]),
                       _U.list([$Html.text(A2($Basics._op["++"],
-                      $Basics.toString($List.length(_p2.rankings)),
-                      " entries"))]))
-                      ,playersList(_p1.players)]))]))]));
-   };
-   var liveTracks = F2(function (player,_p4) {
-      var _p5 = _p4;
+                      $Basics.toString($List.length(_p5.rankings)),
+                      " entries"))]))]))
+              ,A3($Screens$Utils.linkTo,
+              $Routes.PlayTrack(_p7.id),
+              _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
+                      "btn btn-block btn-join btn-",
+                      empty ? "primary" : "warning"))
+                      ,A2($Html$Events.onMouseOver,
+                      $Screens$Home$Updates.addr,
+                      $Screens$Home$Types.FocusTrack($Maybe.Just(_p7.id)))
+                      ,A2($Html$Events.onMouseOut,
+                      $Screens$Home$Updates.addr,
+                      $Screens$Home$Types.FocusTrack($Maybe.Nothing))]),
+              _U.list([$Html.text(A2($Basics._op["++"],
+              "Join",
+              empty ? "" : A2($Basics._op["++"],
+              " (",
+              A2($Basics._op["++"],
+              $Basics.toString($List.length(_p6)),
+              ")"))))]))]))]));
+   });
+   var liveTracks = F3(function (player,_p8,maybeTrackId) {
+      var _p9 = _p8;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("live-tracks")]),
-      _U.list([A2($Html.div,
-      _U.list([$Html$Attributes.$class("row")]),
-      A2($List.map,liveTrackBlock,_p5.liveTracks))]));
+      _U.list([A2($Html.h2,
+              _U.list([]),
+              _U.list([$Html.text("Sailing tracks")]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("row")]),
+              A2($List.map,liveTrackBlock(maybeTrackId),_p9.liveTracks))]));
    });
    var setHandleBlock = function (handle) {
       return A2($Html.div,
@@ -19668,7 +19853,17 @@ Elm.Screens.Home.View.make = function (_elm) {
       "",
       _U.list([intro
               ,A2(welcomeForm,ctx.player,screen.handle)
-              ,A2(liveTracks,ctx.player,screen.liveStatus)]))]));
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("row live-center")]),
+              _U.list([A2($Html.div,
+                      _U.list([$Html$Attributes.$class("col-md-9")]),
+                      _U.list([A3(liveTracks,
+                      ctx.player,
+                      screen.liveStatus,
+                      screen.trackFocus)]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("col-md-3")]),
+                      _U.list([activePlayers(screen.liveStatus.liveTracks)]))]))]))]));
    });
    return _elm.Screens.Home.View.values = {_op: _op
                                           ,view: view
@@ -19678,6 +19873,8 @@ Elm.Screens.Home.View.make = function (_elm) {
                                           ,liveTracks: liveTracks
                                           ,liveTrackBlock: liveTrackBlock
                                           ,rankingsExtract: rankingsExtract
+                                          ,activePlayers: activePlayers
+                                          ,activeTrackPlayers: activeTrackPlayers
                                           ,playersList: playersList
                                           ,playerItem: playerItem};
 };
@@ -19880,66 +20077,6 @@ Elm.Screens.Register.View.make = function (_elm) {
                                               ,registerForm: registerForm
                                               ,hasError: hasError
                                               ,fieldError: fieldError};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
-Elm.Screens.ShowTrack.View = Elm.Screens.ShowTrack.View || {};
-Elm.Screens.ShowTrack.View.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
-   _elm.Screens.ShowTrack.View = _elm.Screens.ShowTrack.View || {};
-   if (_elm.Screens.ShowTrack.View.values)
-   return _elm.Screens.ShowTrack.View.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var joinButton = function (track) {
-      return A3($Screens$Utils.linkTo,
-      $Routes.PlayTrack(track.id),
-      _U.list([$Html$Attributes.$class("btn btn-warning join-track")]),
-      _U.list([$Html.text("Join")]));
-   };
-   var withTrack = function (track) {
-      return A2($Html.div,
-      _U.list([]),
-      _U.list([A2($Html.h1,
-              _U.list([]),
-              _U.list([$Html.text(track.id)]))
-              ,joinButton(track)]));
-   };
-   var loading = A2($Html.h1,
-   _U.list([]),
-   _U.list([$Html.text("loading...")]));
-   var view = F2(function (ctx,_p0) {
-      var _p1 = _p0;
-      return A3($Screens$Layout.layoutWithNav,
-      "show-track",
-      ctx,
-      _U.list([A2($Screens$Utils.container,
-      "",
-      _U.list([A2($Maybe.withDefault,
-      loading,
-      A2($Maybe.map,withTrack,_p1.track))]))]));
-   });
-   return _elm.Screens.ShowTrack.View.values = {_op: _op
-                                               ,view: view
-                                               ,loading: loading
-                                               ,withTrack: withTrack
-                                               ,joinButton: joinButton};
 };
 Elm.Svg = Elm.Svg || {};
 Elm.Svg.make = function (_elm) {
@@ -20802,331 +20939,6 @@ Elm.Game.Render.Tiles.make = function (_elm) {
                                           ,vertices: vertices
                                           ,toSvgPoints: toSvgPoints};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.SideView = Elm.Screens.EditTrack.SideView || {};
-Elm.Screens.EditTrack.SideView.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.SideView = _elm.Screens.EditTrack.SideView || {};
-   if (_elm.Screens.EditTrack.SideView.values)
-   return _elm.Screens.EditTrack.SideView.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Render$Tiles = Elm.Game.Render.Tiles.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
-   $Html$Events = Elm.Html.Events.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
-   $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
-   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var sideBlock = F4(function (title,open,action,content) {
-      return A2($Html.div,
-      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
-                                                   ,_0: "aside-module"
-                                                   ,_1: true}
-                                                  ,{ctor: "_Tuple2",_0: "closed",_1: $Basics.not(open)}]))]),
-      _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class("module-header")]),
-              _U.list([A2($Html.a,
-              _U.list([$Html$Attributes.$class("module-title")
-                      ,A2($Html$Events.onClick,
-                      $Screens$EditTrack$Updates.addr,
-                      action)]),
-              _U.list([$Html.text(title)
-                      ,A2($Html.span,
-                      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
-                      "glyphicon glyphicon-",
-                      open ? "chevron-down" : "chevron-right"))]),
-                      _U.list([]))]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("module-body")]),
-              content)]));
-   });
-   var intInput = F3(function (val,formUpdate,attrs) {
-      return $Screens$Utils.textInput(A2($Basics._op["++"],
-      _U.list([$Html$Attributes.value($Basics.toString(val))
-              ,A2($Screens$Utils.onIntInput,
-              $Screens$EditTrack$Updates.addr,
-              function (_p0) {
-                 return $Screens$EditTrack$Types.FormAction(formUpdate(_p0));
-              })
-              ,$Html$Attributes.type$("number")]),
-      attrs));
-   });
-   var nameInput = function (n) {
-      return $Screens$Utils.textInput(_U.list([$Html$Attributes.value(n)
-                                              ,A2($Screens$Utils.onInput,
-                                              $Screens$EditTrack$Updates.addr,
-                                              $Screens$EditTrack$Types.SetName)
-                                              ,$Html$Attributes.type$("text")]));
-   };
-   var gustDefRow = F2(function (i,def) {
-      return A2($Html.tr,
-      _U.list([]),
-      _U.list([A2($Html.td,
-              _U.list([]),
-              _U.list([A3(intInput,
-              def.angle,
-              $Screens$EditTrack$Types.SetGustAngle(i),
-              _U.list([]))]))
-              ,A2($Html.td,
-              _U.list([]),
-              _U.list([A3(intInput,
-              def.speed,
-              $Screens$EditTrack$Types.SetGustSpeed(i),
-              _U.list([]))]))
-              ,A2($Html.td,
-              _U.list([]),
-              _U.list([A3(intInput,
-              def.radius,
-              $Screens$EditTrack$Types.SetGustRadius(i),
-              _U.list([$Html$Attributes.min("10")
-                      ,$Html$Attributes.step("10")]))]))
-              ,A2($Html.td,
-              _U.list([$Html$Attributes.$class("action")]),
-              _U.list([A2($Html.a,
-              _U.list([A2($Html$Events.onClick,
-              $Screens$EditTrack$Updates.addr,
-              $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.RemoveGustDef(i)))]),
-              _U.list([$Html.text("-")]))]))]));
-   });
-   var gustDefsHeader = A2($Html.tr,
-   _U.list([]),
-   _U.list([A2($Html.th,_U.list([]),_U.list([$Html.text("angle")]))
-           ,A2($Html.th,_U.list([]),_U.list([$Html.text("speed")]))
-           ,A2($Html.th,_U.list([]),_U.list([$Html.text("radius")]))
-           ,A2($Html.th,
-           _U.list([$Html$Attributes.$class("action")]),
-           _U.list([A2($Html.a,
-           _U.list([A2($Html$Events.onClick,
-           $Screens$EditTrack$Updates.addr,
-           $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.CreateGustDef))]),
-           _U.list([$Html.text("+")]))]))]));
-   var gustDefsTable = function (defs) {
-      return A2($Html.table,
-      _U.list([$Html$Attributes.$class("table-gust-defs")]),
-      A2($List._op["::"],
-      gustDefsHeader,
-      A2($List.indexedMap,gustDefRow,defs)));
-   };
-   var renderSurfaceMode = F2(function (currentMode,mode) {
-      var _p1 = $Screens$EditTrack$Types.modeName(mode);
-      var abbr = _p1._0;
-      var label = _p1._1;
-      var color = function () {
-         var _p2 = mode;
-         switch (_p2.ctor)
-         {case "CreateTile":
-            return $Game$Render$Tiles.tileKindColor(_p2._0);
-            case "Erase": return $Constants.colors.sand;
-            default: return "white";}
-      }();
-      return A2($Html.a,
-      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
-                                                   ,_0: "current"
-                                                   ,_1: _U.eq(currentMode,mode)}
-                                                  ,{ctor: "_Tuple2",_0: abbr,_1: true}]))
-              ,A2($Html$Events.onClick,
-              $Screens$EditTrack$Updates.addr,
-              $Screens$EditTrack$Types.SetMode(mode))
-              ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
-                                               ,_0: "background-color"
-                                               ,_1: color}]))
-              ,$Html$Attributes.title(label)]),
-      _U.list([$Html.text(abbr)]));
-   });
-   var surfaceBlock = function (editor) {
-      var currentMode = $Screens$EditTrack$Types.realMode(editor);
-      var modes = _U.list([$Screens$EditTrack$Types.Watch
-                          ,$Screens$EditTrack$Types.CreateTile($Models.Water)
-                          ,$Screens$EditTrack$Types.CreateTile($Models.Rock)
-                          ,$Screens$EditTrack$Types.CreateTile($Models.Grass)
-                          ,$Screens$EditTrack$Types.Erase]);
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("surface-modes")]),
-      A2($List.map,renderSurfaceMode(currentMode),modes));
-   };
-   var view = F2(function (track,_p3) {
-      var _p4 = _p3;
-      var _p9 = _p4.saving;
-      var _p8 = _p4.name;
-      var _p7 = _p4;
-      var _p6 = _p4.course;
-      var _p5 = _p4.blocks;
-      return _U.list([$Screens$Sidebar.logo
-                     ,A2($Html.div,
-                     _U.list([$Html$Attributes.$class("track-menu")]),
-                     _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(_p8)]))]))
-                     ,A4(sideBlock,
-                     "Name",
-                     _p5.name,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Name),
-                     _U.list([A2($Html.div,
-                     _U.list([$Html$Attributes.$class("form-group")]),
-                     _U.list([nameInput(_p8)]))]))
-                     ,A4(sideBlock,
-                     "Surface pencil",
-                     _p5.surface,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Surface),
-                     _U.list([surfaceBlock(_p7)]))
-                     ,A4(sideBlock,
-                     "Gates",
-                     _p5.gates,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gates),
-                     _U.list([A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Downwind")]))
-                                     ,A3(intInput,
-                                     _p6.downwind.y,
-                                     $Screens$EditTrack$Types.SetDownwindY,
-                                     _U.list([$Html$Attributes.step("10")]))]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Upwind")]))
-                                     ,A3(intInput,
-                                     _p6.upwind.y,
-                                     $Screens$EditTrack$Types.SetUpwindY,
-                                     _U.list([$Html$Attributes.step("10")]))]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Width")]))
-                                     ,A3(intInput,
-                                     _p6.downwind.width,
-                                     $Screens$EditTrack$Types.SetGateWidth,
-                                     _U.list([$Html$Attributes.min("50")
-                                             ,$Html$Attributes.step("10")]))]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Laps")]))
-                                     ,A3(intInput,
-                                     _p6.laps,
-                                     $Screens$EditTrack$Types.SetLaps,
-                                     _U.list([$Html$Attributes.min("1")]))]))]))
-                     ,A4(sideBlock,
-                     "Wind",
-                     _p5.wind,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Wind),
-                     _U.list([A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Speed")]))
-                                     ,A3(intInput,
-                                     _p6.windSpeed,
-                                     $Screens$EditTrack$Types.SetWindSpeed,
-                                     _U.list([$Html$Attributes.min("10")
-                                             ,$Html$Attributes.max("20")]))]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Wavelength 1")]))
-                                     ,A3(intInput,
-                                     _p6.windGenerator.wavelength1,
-                                     $Screens$EditTrack$Types.SetWindW1,
-                                     _U.list([$Html$Attributes.min("1")]))]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Amplitude 1")]))
-                                     ,A3(intInput,
-                                     _p6.windGenerator.amplitude1,
-                                     $Screens$EditTrack$Types.SetWindA1,
-                                     _U.list([$Html$Attributes.min("1")]))]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Wavelength 2")]))
-                                     ,A3(intInput,
-                                     _p6.windGenerator.wavelength2,
-                                     $Screens$EditTrack$Types.SetWindW2,
-                                     _U.list([$Html$Attributes.min("1")]))]))
-                             ,A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Amplitude 2")]))
-                                     ,A3(intInput,
-                                     _p6.windGenerator.amplitude2,
-                                     $Screens$EditTrack$Types.SetWindA2,
-                                     _U.list([$Html$Attributes.min("1")]))]))]))
-                     ,A4(sideBlock,
-                     "Gusts",
-                     _p5.gusts,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gusts),
-                     _U.list([A2($Html.div,
-                             _U.list([$Html$Attributes.$class("form-group")]),
-                             _U.list([A2($Html.label,
-                                     _U.list([$Html$Attributes.$class("")]),
-                                     _U.list([$Html.text("Interval (s)")]))
-                                     ,A3(intInput,
-                                     _p6.gustGenerator.interval,
-                                     $Screens$EditTrack$Types.SetGustInterval,
-                                     _U.list([$Html$Attributes.min("10")]))]))
-                             ,gustDefsTable(_p6.gustGenerator.defs)]))
-                     ,A2($Html.div,
-                     _U.list([$Html$Attributes.$class("form-actions btn-group btn-group-justified")]),
-                     _U.list([A2($Html.a,
-                             _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.Save(false))
-                                     ,$Html$Attributes.$class("btn btn-primary btn-save")
-                                     ,$Html$Attributes.disabled(_p9)]),
-                             _U.list([$Html.text("Save")]))
-                             ,A2($Html.a,
-                             _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.Save(true))
-                                     ,$Html$Attributes.$class("btn btn-default btn-save-and-try")
-                                     ,$Html$Attributes.disabled(_p9)]),
-                             _U.list([$Html.text("Save and try")]))]))
-                     ,A2($Html.div,
-                     _U.list([$Html$Attributes.$class("btn-group-vertical")]),
-                     _U.list([A2($Html.button,
-                             _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.ConfirmPublish)
-                                     ,$Html$Attributes.$class("btn btn-default btn-block btn-confirm-publish")]),
-                             _U.list([$Html.text("Save and publish")]))
-                             ,_p7.confirmPublish ? A2($Html.button,
-                             _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.Publish)
-                                     ,$Html$Attributes.$class("btn btn-success btn-block btn-confirm-publish")]),
-                             _U.list([$Html.text("Confirm? You can\'t go back!")])) : $Html.text("")]))]);
-   });
-   return _elm.Screens.EditTrack.SideView.values = {_op: _op
-                                                   ,view: view
-                                                   ,surfaceBlock: surfaceBlock
-                                                   ,renderSurfaceMode: renderSurfaceMode
-                                                   ,gustDefsTable: gustDefsTable
-                                                   ,gustDefsHeader: gustDefsHeader
-                                                   ,gustDefRow: gustDefRow
-                                                   ,nameInput: nameInput
-                                                   ,intInput: intInput
-                                                   ,sideBlock: sideBlock};
-};
 Elm.Game = Elm.Game || {};
 Elm.Game.Render = Elm.Game.Render || {};
 Elm.Game.Render.SvgUtils = Elm.Game.Render.SvgUtils || {};
@@ -21695,6 +21507,489 @@ Elm.Game.Render.Players.make = function (_elm) {
                                             ,warnVmg: warnVmg};
 };
 Elm.Screens = Elm.Screens || {};
+Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
+Elm.Screens.ShowTrack.View = Elm.Screens.ShowTrack.View || {};
+Elm.Screens.ShowTrack.View.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
+   _elm.Screens.ShowTrack.View = _elm.Screens.ShowTrack.View || {};
+   if (_elm.Screens.ShowTrack.View.values)
+   return _elm.Screens.ShowTrack.View.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
+   $Game$Render$Players = Elm.Game.Render.Players.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $Game$Render$Tiles = Elm.Game.Render.Tiles.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
+   $Screens$Layout = Elm.Screens.Layout.make(_elm),
+   $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
+   $Screens$ShowTrack$Updates = Elm.Screens.ShowTrack.Updates.make(_elm),
+   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var np = A2($Screens$Utils.abbr$,"np","Nautic pixels");
+   var renderCourse = F2(function (_p0,course) {
+      var _p1 = _p0;
+      var _p3 = _p1.scale;
+      var _p2 = _p1.center;
+      var scaleTr = A2($Basics._op["++"],
+      "scale(",
+      A2($Basics._op["++"],
+      $Basics.toString(_p3),
+      A2($Basics._op["++"],
+      ",-",
+      A2($Basics._op["++"],$Basics.toString(_p3),")"))));
+      var h = 300;
+      var w = $Screens$Utils.colWidth(8);
+      var zoom = 0.5;
+      var cx = w / 2 / zoom + $Basics.fst(_p2);
+      var cy = (0 - h) / 2 / zoom + $Basics.snd(_p2);
+      return A2($Svg.svg,
+      _U.list([$Svg$Attributes.width($Basics.toString(w))
+              ,$Svg$Attributes.height($Basics.toString(h))]),
+      _U.list([A2($Svg.g,
+      _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
+      scaleTr,
+      A2($Game$Render$SvgUtils.translate,cx,cy)))]),
+      _U.list([$Game$Render$Tiles.lazyRenderTiles(course.grid)
+              ,A2($Game$Render$Gates.renderOpenGate,course.upwind,0)
+              ,A2($Game$Render$Gates.renderOpenGate,course.downwind,0)
+              ,A2($Game$Render$Players.renderPlayerHull,0,0)]))]));
+   });
+   var courseBlock = F2(function (control,course) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("course")
+              ,A2($Html$Events.onMouseOver,
+              $Screens$ShowTrack$Updates.addr,
+              $Screens$ShowTrack$Types.SetOverCourse(true))
+              ,A2($Html$Events.onMouseOut,
+              $Screens$ShowTrack$Updates.addr,
+              $Screens$ShowTrack$Types.SetOverCourse(false))]),
+      _U.list([A2(renderCourse,control,course)]));
+   });
+   var about = F2(function (_p4,meta) {
+      var _p5 = _p4;
+      var _p6 = _p5.course;
+      return $Screens$Utils.dl$(_U.list([{ctor: "_Tuple2"
+                                         ,_0: "Laps"
+                                         ,_1: _U.list([$Html.text($Basics.toString(_p6.laps))])}
+                                        ,{ctor: "_Tuple2"
+                                         ,_0: "Distance"
+                                         ,_1: _U.list([$Html.text($Basics.toString(_p6.upwind.y - _p6.downwind.y))
+                                                      ,np])}
+                                        ,{ctor: "_Tuple2"
+                                         ,_0: "Wind speed"
+                                         ,_1: _U.list([$Html.text($Basics.toString(_p6.windSpeed))
+                                                      ,A2($Screens$Utils.abbr$,"kn","Knots")])}]));
+   });
+   var rankingsList = function (rankings) {
+      return A2($Html.ul,
+      _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
+      A2($List.map,$Screens$Utils.rankingItem,rankings));
+   };
+   var joinButton = function (track) {
+      return A3($Screens$Utils.linkTo,
+      $Routes.PlayTrack(track.id),
+      _U.list([$Html$Attributes.$class("btn btn-warning btn-sm btn-join")]),
+      _U.list([$Html.text("Join")]));
+   };
+   var withLiveTrack = F2(function (control,_p7) {
+      var _p8 = _p7;
+      var _p10 = _p8.track;
+      var _p9 = _p8.meta;
+      return A2($Html.div,
+      _U.list([]),
+      _U.list([A2($Html.h1,
+              _U.list([]),
+              _U.list([$Html.text("Sailing track")]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("track-header")]),
+              _U.list([A2($Html.h2,
+                      _U.list([$Html$Attributes.$class("track-name")]),
+                      _U.list([$Html.text(_p10.name)]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("track-creator")]),
+                      _U.list([$Html.text("by ")
+                              ,A2($Html.strong,
+                              _U.list([]),
+                              _U.list([$Html.text($Screens$Utils.playerHandle(_p9.creator))]))]))
+                      ,joinButton(_p10)]))
+              ,$Screens$Utils.row(_U.list([A2($Html.div,
+                                          _U.list([$Html$Attributes.$class("col-md-8")]),
+                                          _U.list([A2(courseBlock,control,_p10.course)]))
+                                          ,A2($Html.div,
+                                          _U.list([$Html$Attributes.$class("col-md-4 about")]),
+                                          _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("About")]))
+                                                  ,A2(about,_p10,_p9)]))]))
+              ,$Screens$Utils.row(_U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("col-md-5 rankings")]),
+              _U.list([A2($Html.h2,
+                      _U.list([]),
+                      _U.list([$Html.text("Rankings")]))
+                      ,rankingsList(_p9.rankings)]))]))]));
+   });
+   var view = F2(function (ctx,_p11) {
+      var _p12 = _p11;
+      return A3($Screens$Layout.layoutWithNav,
+      "show-track",
+      ctx,
+      _U.list([A2($Screens$Utils.container,
+      "",
+      _U.list([A2($Maybe.withDefault,
+      $Html.text(""),
+      A2($Maybe.map,
+      withLiveTrack(_p12.courseControl),
+      _p12.liveTrack))]))]));
+   });
+   return _elm.Screens.ShowTrack.View.values = {_op: _op
+                                               ,view: view
+                                               ,withLiveTrack: withLiveTrack
+                                               ,joinButton: joinButton
+                                               ,rankingsList: rankingsList
+                                               ,about: about
+                                               ,courseBlock: courseBlock
+                                               ,renderCourse: renderCourse
+                                               ,np: np};
+};
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
+Elm.Screens.EditTrack.SideView = Elm.Screens.EditTrack.SideView || {};
+Elm.Screens.EditTrack.SideView.make = function (_elm) {
+   "use strict";
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
+   _elm.Screens.EditTrack.SideView = _elm.Screens.EditTrack.SideView || {};
+   if (_elm.Screens.EditTrack.SideView.values)
+   return _elm.Screens.EditTrack.SideView.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Render$Tiles = Elm.Game.Render.Tiles.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
+   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
+   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var sideBlock = F4(function (title,open,action,content) {
+      return A2($Html.div,
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
+                                                   ,_0: "aside-module"
+                                                   ,_1: true}
+                                                  ,{ctor: "_Tuple2",_0: "closed",_1: $Basics.not(open)}]))]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("module-header")]),
+              _U.list([A2($Html.a,
+              _U.list([$Html$Attributes.$class("module-title")
+                      ,A2($Html$Events.onClick,
+                      $Screens$EditTrack$Updates.addr,
+                      action)]),
+              _U.list([$Html.text(title)
+                      ,A2($Html.span,
+                      _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
+                      "glyphicon glyphicon-",
+                      open ? "chevron-down" : "chevron-right"))]),
+                      _U.list([]))]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("module-body")]),
+              content)]));
+   });
+   var intInput = F3(function (val,formUpdate,attrs) {
+      return $Screens$Utils.textInput(A2($Basics._op["++"],
+      _U.list([$Html$Attributes.value($Basics.toString(val))
+              ,A2($Screens$Utils.onIntInput,
+              $Screens$EditTrack$Updates.addr,
+              function (_p0) {
+                 return $Screens$EditTrack$Types.FormAction(formUpdate(_p0));
+              })
+              ,$Html$Attributes.type$("number")]),
+      attrs));
+   });
+   var nameInput = function (n) {
+      return $Screens$Utils.textInput(_U.list([$Html$Attributes.value(n)
+                                              ,A2($Screens$Utils.onInput,
+                                              $Screens$EditTrack$Updates.addr,
+                                              $Screens$EditTrack$Types.SetName)
+                                              ,$Html$Attributes.type$("text")]));
+   };
+   var gustDefRow = F2(function (i,def) {
+      return A2($Html.tr,
+      _U.list([]),
+      _U.list([A2($Html.td,
+              _U.list([]),
+              _U.list([A3(intInput,
+              def.angle,
+              $Screens$EditTrack$Types.SetGustAngle(i),
+              _U.list([]))]))
+              ,A2($Html.td,
+              _U.list([]),
+              _U.list([A3(intInput,
+              def.speed,
+              $Screens$EditTrack$Types.SetGustSpeed(i),
+              _U.list([]))]))
+              ,A2($Html.td,
+              _U.list([]),
+              _U.list([A3(intInput,
+              def.radius,
+              $Screens$EditTrack$Types.SetGustRadius(i),
+              _U.list([$Html$Attributes.min("10")
+                      ,$Html$Attributes.step("10")]))]))
+              ,A2($Html.td,
+              _U.list([$Html$Attributes.$class("action")]),
+              _U.list([A2($Html.a,
+              _U.list([A2($Html$Events.onClick,
+              $Screens$EditTrack$Updates.addr,
+              $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.RemoveGustDef(i)))]),
+              _U.list([$Html.text("-")]))]))]));
+   });
+   var gustDefsHeader = A2($Html.tr,
+   _U.list([]),
+   _U.list([A2($Html.th,_U.list([]),_U.list([$Html.text("angle")]))
+           ,A2($Html.th,_U.list([]),_U.list([$Html.text("speed")]))
+           ,A2($Html.th,_U.list([]),_U.list([$Html.text("radius")]))
+           ,A2($Html.th,
+           _U.list([$Html$Attributes.$class("action")]),
+           _U.list([A2($Html.a,
+           _U.list([A2($Html$Events.onClick,
+           $Screens$EditTrack$Updates.addr,
+           $Screens$EditTrack$Types.FormAction($Screens$EditTrack$Types.CreateGustDef))]),
+           _U.list([$Html.text("+")]))]))]));
+   var gustDefsTable = function (defs) {
+      return A2($Html.table,
+      _U.list([$Html$Attributes.$class("table-gust-defs")]),
+      A2($List._op["::"],
+      gustDefsHeader,
+      A2($List.indexedMap,gustDefRow,defs)));
+   };
+   var renderSurfaceMode = F2(function (currentMode,mode) {
+      var _p1 = $Screens$EditTrack$Types.modeName(mode);
+      var abbr = _p1._0;
+      var label = _p1._1;
+      var color = function () {
+         var _p2 = mode;
+         switch (_p2.ctor)
+         {case "CreateTile":
+            return $Game$Render$Tiles.tileKindColor(_p2._0);
+            case "Erase": return $Constants.colors.sand;
+            default: return "white";}
+      }();
+      return A2($Html.a,
+      _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
+                                                   ,_0: "current"
+                                                   ,_1: _U.eq(currentMode,mode)}
+                                                  ,{ctor: "_Tuple2",_0: abbr,_1: true}]))
+              ,A2($Html$Events.onClick,
+              $Screens$EditTrack$Updates.addr,
+              $Screens$EditTrack$Types.SetMode(mode))
+              ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
+                                               ,_0: "background-color"
+                                               ,_1: color}]))
+              ,$Html$Attributes.title(label)]),
+      _U.list([$Html.text(abbr)]));
+   });
+   var surfaceBlock = function (editor) {
+      var currentMode = $Screens$EditTrack$Types.realMode(editor);
+      var modes = _U.list([$Screens$EditTrack$Types.Watch
+                          ,$Screens$EditTrack$Types.CreateTile($Models.Water)
+                          ,$Screens$EditTrack$Types.CreateTile($Models.Rock)
+                          ,$Screens$EditTrack$Types.CreateTile($Models.Grass)
+                          ,$Screens$EditTrack$Types.Erase]);
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("surface-modes")]),
+      A2($List.map,renderSurfaceMode(currentMode),modes));
+   };
+   var view = F2(function (track,_p3) {
+      var _p4 = _p3;
+      var _p9 = _p4.saving;
+      var _p8 = _p4.name;
+      var _p7 = _p4;
+      var _p6 = _p4.course;
+      var _p5 = _p4.blocks;
+      return _U.list([$Screens$Sidebar.logo
+                     ,A2($Html.div,
+                     _U.list([$Html$Attributes.$class("track-menu")]),
+                     _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(_p8)]))]))
+                     ,A4(sideBlock,
+                     "Name",
+                     _p5.name,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Name),
+                     _U.list([A2($Html.div,
+                     _U.list([$Html$Attributes.$class("form-group")]),
+                     _U.list([nameInput(_p8)]))]))
+                     ,A4(sideBlock,
+                     "Surface pencil",
+                     _p5.surface,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Surface),
+                     _U.list([surfaceBlock(_p7)]))
+                     ,A4(sideBlock,
+                     "Gates",
+                     _p5.gates,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gates),
+                     _U.list([A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Downwind")]))
+                                     ,A3(intInput,
+                                     _p6.downwind.y,
+                                     $Screens$EditTrack$Types.SetDownwindY,
+                                     _U.list([$Html$Attributes.step("10")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Upwind")]))
+                                     ,A3(intInput,
+                                     _p6.upwind.y,
+                                     $Screens$EditTrack$Types.SetUpwindY,
+                                     _U.list([$Html$Attributes.step("10")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Width")]))
+                                     ,A3(intInput,
+                                     _p6.downwind.width,
+                                     $Screens$EditTrack$Types.SetGateWidth,
+                                     _U.list([$Html$Attributes.min("50")
+                                             ,$Html$Attributes.step("10")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Laps")]))
+                                     ,A3(intInput,
+                                     _p6.laps,
+                                     $Screens$EditTrack$Types.SetLaps,
+                                     _U.list([$Html$Attributes.min("1")]))]))]))
+                     ,A4(sideBlock,
+                     "Wind",
+                     _p5.wind,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Wind),
+                     _U.list([A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Speed")]))
+                                     ,A3(intInput,
+                                     _p6.windSpeed,
+                                     $Screens$EditTrack$Types.SetWindSpeed,
+                                     _U.list([$Html$Attributes.min("10")
+                                             ,$Html$Attributes.max("20")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Wavelength 1")]))
+                                     ,A3(intInput,
+                                     _p6.windGenerator.wavelength1,
+                                     $Screens$EditTrack$Types.SetWindW1,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Amplitude 1")]))
+                                     ,A3(intInput,
+                                     _p6.windGenerator.amplitude1,
+                                     $Screens$EditTrack$Types.SetWindA1,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Wavelength 2")]))
+                                     ,A3(intInput,
+                                     _p6.windGenerator.wavelength2,
+                                     $Screens$EditTrack$Types.SetWindW2,
+                                     _U.list([$Html$Attributes.min("1")]))]))
+                             ,A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Amplitude 2")]))
+                                     ,A3(intInput,
+                                     _p6.windGenerator.amplitude2,
+                                     $Screens$EditTrack$Types.SetWindA2,
+                                     _U.list([$Html$Attributes.min("1")]))]))]))
+                     ,A4(sideBlock,
+                     "Gusts",
+                     _p5.gusts,
+                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gusts),
+                     _U.list([A2($Html.div,
+                             _U.list([$Html$Attributes.$class("form-group")]),
+                             _U.list([A2($Html.label,
+                                     _U.list([$Html$Attributes.$class("")]),
+                                     _U.list([$Html.text("Interval (s)")]))
+                                     ,A3(intInput,
+                                     _p6.gustGenerator.interval,
+                                     $Screens$EditTrack$Types.SetGustInterval,
+                                     _U.list([$Html$Attributes.min("10")]))]))
+                             ,gustDefsTable(_p6.gustGenerator.defs)]))
+                     ,A2($Html.div,
+                     _U.list([$Html$Attributes.$class("form-actions btn-group btn-group-justified")]),
+                     _U.list([A2($Html.a,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.Save(false))
+                                     ,$Html$Attributes.$class("btn btn-primary btn-save")
+                                     ,$Html$Attributes.disabled(_p9)]),
+                             _U.list([$Html.text("Save")]))
+                             ,A2($Html.a,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.Save(true))
+                                     ,$Html$Attributes.$class("btn btn-default btn-save-and-try")
+                                     ,$Html$Attributes.disabled(_p9)]),
+                             _U.list([$Html.text("Save and try")]))]))
+                     ,_U.eq(track.status,$Models.Draft) ? A2($Html.div,
+                     _U.list([$Html$Attributes.$class("btn-group-vertical")]),
+                     _U.list([A2($Html.button,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.ConfirmPublish)
+                                     ,$Html$Attributes.$class("btn btn-default btn-block btn-confirm-publish")]),
+                             _U.list([$Html.text("Save and publish")]))
+                             ,_p7.confirmPublish ? A2($Html.button,
+                             _U.list([A2($Html$Events.onClick,
+                                     $Screens$EditTrack$Updates.addr,
+                                     $Screens$EditTrack$Types.Publish)
+                                     ,$Html$Attributes.$class("btn btn-success btn-block btn-confirm-publish")]),
+                             _U.list([$Html.text("Confirm? You can\'t go back!")])) : $Html.text("")])) : $Html.text("")]);
+   });
+   return _elm.Screens.EditTrack.SideView.values = {_op: _op
+                                                   ,view: view
+                                                   ,surfaceBlock: surfaceBlock
+                                                   ,renderSurfaceMode: renderSurfaceMode
+                                                   ,gustDefsTable: gustDefsTable
+                                                   ,gustDefsHeader: gustDefsHeader
+                                                   ,gustDefRow: gustDefRow
+                                                   ,nameInput: nameInput
+                                                   ,intInput: intInput
+                                                   ,sideBlock: sideBlock};
+};
+Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
 Elm.Screens.EditTrack.View = Elm.Screens.EditTrack.View || {};
 Elm.Screens.EditTrack.View.make = function (_elm) {
@@ -21756,7 +22051,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
       {
             var _p9 = _p7._0._0;
             var _p8 = _p7._1._0;
-            return A2($Models.hasDraft,
+            return A2($Models.canUpdateDraft,
             _p6.player,
             _p9) ? A3($Screens$Layout.layout,
             "editor",
@@ -23089,9 +23384,7 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
                  t);
               },
               _p3.drafts))
-              ,$Models.isAdmin(ctx.player) ? createTrackForm(_p4) : A2($Html.div,
-              _U.list([]),
-              _U.list([]))]))]));
+              ,createTrackForm(_p4)]))]));
    });
    return _elm.Screens.ListDrafts.View.values = {_op: _op
                                                 ,view: view
@@ -23277,10 +23570,12 @@ Elm.Screens.Admin.View.make = function (_elm) {
       return A3($Screens$Layout.layoutWithNav,
       "admin",
       ctx,
+      _U.list([A2($Screens$Utils.container,
+      "",
       A2($Basics._op["++"],
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Admin")]))
               ,menu(menuItem)]),
-      A3(content,route,menuItem,screen)));
+      A3(content,route,menuItem,screen)))]));
    });
    return _elm.Screens.Admin.View.values = {_op: _op
                                            ,DashboardTab: DashboardTab
@@ -23578,6 +23873,7 @@ Elm.Main.make = function (_elm) {
    $AppView = Elm.AppView.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $Game$Inputs = Elm.Game.Inputs.make(_elm),
    $Game$Outputs = Elm.Game.Outputs.make(_elm),
@@ -23613,6 +23909,9 @@ Elm.Main.make = function (_elm) {
       return $AppTypes.ScreenAction($AppTypes.EditTrackAction(_p2));
    },
    $Screens$EditTrack$Updates.inputs);
+   var mouseEventActions = A2($Signal.map,
+   $AppTypes.MouseEvent,
+   $DragAndDrop.mouseEvents);
    var dimsActions = A2($Signal.map,
    $AppTypes.UpdateDims,
    $Window.dimensions);
@@ -23829,6 +24128,7 @@ Elm.Main.make = function (_elm) {
                              ,view: $AppView.view
                              ,inputs: _U.list([pathActions
                                               ,dimsActions
+                                              ,mouseEventActions
                                               ,$AppTypes.appActionsMailbox.signal
                                               ,raceUpdateActions
                                               ,gameActions
@@ -23874,6 +24174,7 @@ Elm.Main.make = function (_elm) {
                              ,initPathAction: initPathAction
                              ,pathActions: pathActions
                              ,dimsActions: dimsActions
+                             ,mouseEventActions: mouseEventActions
                              ,rawInput: rawInput
                              ,raceUpdateActions: raceUpdateActions
                              ,gameActions: gameActions

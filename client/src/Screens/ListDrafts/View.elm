@@ -24,7 +24,7 @@ view ctx ({drafts} as screen) =
     -- , Maybe.map confirmDelete screen.confirmDelete |> Maybe.withDefault (text "")
     , ul [ class "list-unstyled drafts" ]
       (List.map (\t -> draftItem (Just t == screen.confirmDelete) t) drafts)
-    , if isAdmin ctx.player then createTrackForm screen else div [] []
+    , createTrackForm screen
     ]
   ]
 

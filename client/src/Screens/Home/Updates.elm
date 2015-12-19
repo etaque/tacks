@@ -51,6 +51,9 @@ update action screen =
       in
         screen &: effect
 
+    FocusTrack maybeTrackId ->
+      { screen | trackFocus = maybeTrackId } &: none
+
     NoOp ->
       screen &: none
 
