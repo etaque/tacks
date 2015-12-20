@@ -39,7 +39,7 @@
 
     svg {
       display: block;
-      cursor: move;
+      cursor: grab;
       user-select: none;
       -moz-user-select: none;
       background-color: $sand;
@@ -76,6 +76,7 @@
       padding: 8px 12px;
       background-color: $lightSeaBlue;
       font-size: 15px;
+      font-family: $mono;
 
       abbr {
         display: inline-block;
@@ -87,13 +88,15 @@
       }
 
       dt {
-        text-align: left;
-        width: 110px;
+        /* text-align: left; */
+        width: 120px;
+        /* font-weight: normal; */
       }
 
       dd {
         color: $white;
-        margin-left: 130px;
+        margin-left: 140px;
+        font-weight: bold;
       }
     }
 

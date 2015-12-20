@@ -48,7 +48,7 @@ withLiveTrack control {track, meta, players} =
     ]
   , row
     [ div [ class "col-md-5 rankings" ]
-      [ h2 [] [ text "Rankings" ]
+      [ h2 [] [ text "Best times" ]
       , rankingsList meta.rankings
       ]
     ]
@@ -69,6 +69,24 @@ about {course} meta =
   [ ( "Laps", [ text <| toString course.laps ] )
   , ( "Distance", [ text <| toString (course.upwind.y - course.downwind.y), np ] )
   , ( "Wind speed", [ text <| toString course.windSpeed, abbr' "kn" "Knots" ] )
+  , ( "Gusts interval", [ text <| toString course.gustGenerator.interval, abbr' "s" "Seconds" ] )
+  , ( "Gusts radius", aboutGustRadius course.gustGenerator )
+  , ( "Gusts effect", aboutGustWind course.gustGenerator )
+  ]
+
+aboutGustRadius : GustGenerator -> List Html
+aboutGustRadius gen =
+  [ text (toString gen.radiusBase ++ " +/- " ++ toString gen.radiusVariation)
+  , np
+  ]
+
+aboutGustWind : GustGenerator -> List Html
+aboutGustWind {speedVariation, originVariation} =
+  [ text (toString speedVariation.start ++ ".." ++ toString speedVariation.end)
+  , abbr' "Δkn" "Knots variation range"
+  , br [] []
+  , text (toString originVariation.start ++ ".." ++ toString originVariation.end)
+  , abbr' "Δ°" "Degrees variation range"
   ]
 
 courseBlock : CourseControl -> Course -> Html
@@ -105,3 +123,4 @@ renderCourse {center, scale} course =
 np : Html
 np =
   abbr' "np" "Nautic pixels"
+

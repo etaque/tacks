@@ -21540,20 +21540,52 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
               $Screens$ShowTrack$Types.SetOverCourse(false))]),
       _U.list([A2(renderCourse,control,course)]));
    });
-   var about = F2(function (_p4,meta) {
+   var aboutGustWind = function (_p4) {
       var _p5 = _p4;
-      var _p6 = _p5.course;
+      var _p7 = _p5.speedVariation;
+      var _p6 = _p5.originVariation;
+      return _U.list([$Html.text(A2($Basics._op["++"],
+                     $Basics.toString(_p7.start),
+                     A2($Basics._op["++"],"..",$Basics.toString(_p7.end))))
+                     ,A2($Screens$Utils.abbr$,"Δkn","Knots variation range")
+                     ,A2($Html.br,_U.list([]),_U.list([]))
+                     ,$Html.text(A2($Basics._op["++"],
+                     $Basics.toString(_p6.start),
+                     A2($Basics._op["++"],"..",$Basics.toString(_p6.end))))
+                     ,A2($Screens$Utils.abbr$,"Δ°","Degrees variation range")]);
+   };
+   var aboutGustRadius = function (gen) {
+      return _U.list([$Html.text(A2($Basics._op["++"],
+                     $Basics.toString(gen.radiusBase),
+                     A2($Basics._op["++"],
+                     " +/- ",
+                     $Basics.toString(gen.radiusVariation))))
+                     ,np]);
+   };
+   var about = F2(function (_p8,meta) {
+      var _p9 = _p8;
+      var _p10 = _p9.course;
       return $Screens$Utils.dl$(_U.list([{ctor: "_Tuple2"
                                          ,_0: "Laps"
-                                         ,_1: _U.list([$Html.text($Basics.toString(_p6.laps))])}
+                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.laps))])}
                                         ,{ctor: "_Tuple2"
                                          ,_0: "Distance"
-                                         ,_1: _U.list([$Html.text($Basics.toString(_p6.upwind.y - _p6.downwind.y))
+                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.upwind.y - _p10.downwind.y))
                                                       ,np])}
                                         ,{ctor: "_Tuple2"
                                          ,_0: "Wind speed"
-                                         ,_1: _U.list([$Html.text($Basics.toString(_p6.windSpeed))
-                                                      ,A2($Screens$Utils.abbr$,"kn","Knots")])}]));
+                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.windSpeed))
+                                                      ,A2($Screens$Utils.abbr$,"kn","Knots")])}
+                                        ,{ctor: "_Tuple2"
+                                         ,_0: "Gusts interval"
+                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.gustGenerator.interval))
+                                                      ,A2($Screens$Utils.abbr$,"s","Seconds")])}
+                                        ,{ctor: "_Tuple2"
+                                         ,_0: "Gusts radius"
+                                         ,_1: aboutGustRadius(_p10.gustGenerator)}
+                                        ,{ctor: "_Tuple2"
+                                         ,_0: "Gusts effect"
+                                         ,_1: aboutGustWind(_p10.gustGenerator)}]));
    });
    var rankingsList = function (rankings) {
       return A2($Html.ul,
@@ -21566,10 +21598,10 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("btn btn-warning btn-sm btn-join")]),
       _U.list([$Html.text("Join")]));
    };
-   var withLiveTrack = F2(function (control,_p7) {
-      var _p8 = _p7;
-      var _p10 = _p8.track;
-      var _p9 = _p8.meta;
+   var withLiveTrack = F2(function (control,_p11) {
+      var _p12 = _p11;
+      var _p14 = _p12.track;
+      var _p13 = _p12.meta;
       return A2($Html.div,
       _U.list([]),
       _U.list([A2($Html.h1,
@@ -21579,30 +21611,30 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
               _U.list([$Html$Attributes.$class("track-header")]),
               _U.list([A2($Html.h2,
                       _U.list([$Html$Attributes.$class("track-name")]),
-                      _U.list([$Html.text(_p10.name)]))
+                      _U.list([$Html.text(_p14.name)]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("track-creator")]),
                       _U.list([$Html.text("by ")
                               ,A2($Html.strong,
                               _U.list([]),
-                              _U.list([$Html.text($Screens$Utils.playerHandle(_p9.creator))]))]))
-                      ,joinButton(_p10)]))
+                              _U.list([$Html.text($Screens$Utils.playerHandle(_p13.creator))]))]))
+                      ,joinButton(_p14)]))
               ,$Screens$Utils.row(_U.list([A2($Html.div,
                                           _U.list([$Html$Attributes.$class("col-md-8")]),
-                                          _U.list([A2(courseBlock,control,_p10.course)]))
+                                          _U.list([A2(courseBlock,control,_p14.course)]))
                                           ,A2($Html.div,
                                           _U.list([$Html$Attributes.$class("col-md-4 about")]),
                                           _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("About")]))
-                                                  ,A2(about,_p10,_p9)]))]))
+                                                  ,A2(about,_p14,_p13)]))]))
               ,$Screens$Utils.row(_U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("col-md-5 rankings")]),
               _U.list([A2($Html.h2,
                       _U.list([]),
-                      _U.list([$Html.text("Rankings")]))
-                      ,rankingsList(_p9.rankings)]))]))]));
+                      _U.list([$Html.text("Best times")]))
+                      ,rankingsList(_p13.rankings)]))]))]));
    });
-   var view = F2(function (ctx,_p11) {
-      var _p12 = _p11;
+   var view = F2(function (ctx,_p15) {
+      var _p16 = _p15;
       return A3($Screens$Layout.layoutWithNav,
       "show-track",
       ctx,
@@ -21611,8 +21643,8 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       _U.list([A2($Maybe.withDefault,
       $Html.text(""),
       A2($Maybe.map,
-      withLiveTrack(_p12.courseControl),
-      _p12.liveTrack))]))]));
+      withLiveTrack(_p16.courseControl),
+      _p16.liveTrack))]))]));
    });
    return _elm.Screens.ShowTrack.View.values = {_op: _op
                                                ,view: view
@@ -21620,6 +21652,8 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
                                                ,joinButton: joinButton
                                                ,rankingsList: rankingsList
                                                ,about: about
+                                               ,aboutGustRadius: aboutGustRadius
+                                               ,aboutGustWind: aboutGustWind
                                                ,courseBlock: courseBlock
                                                ,renderCourse: renderCourse
                                                ,np: np};

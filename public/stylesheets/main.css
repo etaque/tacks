@@ -7103,7 +7103,7 @@ label {
   /* } */ }
   .show-track .course svg {
     display: block;
-    cursor: move;
+    cursor: grab;
     user-select: none;
     -moz-user-select: none;
     background-color: #f2f3c4;
@@ -7123,7 +7123,8 @@ label {
 .show-track .about dl {
   padding: 8px 12px;
   background-color: #30a3de;
-  font-size: 15px; }
+  font-size: 15px;
+  font-family: "Inconsolata", "mono"; }
   .show-track .about dl abbr {
     display: inline-block;
     margin-left: 2px;
@@ -7132,11 +7133,13 @@ label {
     border: none;
     text-decoration: none; }
   .show-track .about dl dt {
-    text-align: left;
-    width: 110px; }
+    /* text-align: left; */
+    width: 120px;
+    /* font-weight: normal; */ }
   .show-track .about dl dd {
     color: white;
-    margin-left: 130px; }
+    margin-left: 140px;
+    font-weight: bold; }
 
 /* @import 'blog'; */
 @font-face {
