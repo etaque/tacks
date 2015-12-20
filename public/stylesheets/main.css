@@ -6116,6 +6116,8 @@ aside {
     aside .logo a img {
       width: 160px;
       height: auto; }
+  aside .aside-module {
+    width: 250px; }
 
 /* @mixin placeholder-color($color) { */
 /*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
@@ -7497,14 +7499,8 @@ aside .module-help {
   .editor svg.mode-m {
     cursor: move; }
 
-.editor .form-actions {
-  /* display: flex; */ }
-  .editor .form-actions .btn {
-    /* margin-top: 0; */ }
-    .editor .form-actions .btn[disabled] {
-      cursor: progress; }
-  .editor .form-actions .btn-save {
-    /* margin-right: 10px; */ }
+.editor .form-actions .btn[disabled] {
+  cursor: progress; }
 
 .editor aside .aside-module .module-title .glyphicon {
   float: right;
@@ -7543,57 +7539,32 @@ aside .module-help {
       color: rgba(0, 0, 0, 0.7); }
 
 .editor aside .form-group {
-  background-color: #30a3de;
   margin-bottom: 5px;
   border-radius: 0; }
-  .editor aside .form-group:after {
-    clear: both;
-    display: table;
-    content: ''; }
 
 .editor aside label {
-  float: left;
-  line-height: 23px;
+  display: inline-block;
+  width: 165px;
+  line-height: 25px;
   padding-left: 10px;
   margin: 0;
+  margin-right: 5px;
   text-transform: lowercase;
   font-size: 13px;
+  background-color: #30a3de;
   color: #99d2ef; }
 
-.editor aside label + .form-control {
-  float: right;
-  width: 75px;
+.editor aside label + .form-control,
+.editor aside .range .form-control {
+  display: inline-block;
+  width: 80px;
   padding: 2px 2px 2px 6px;
   height: 25px;
   font-size: 13px;
-  border-left: 4px solid #1d526c;
-  border-radius: 0;
-  /* border-top-right-radius: 3px; */
-  /* border-bottom-right-radius: 3px; */ }
+  border-radius: 0; }
 
-.editor aside .table-gust-defs {
-  width: 100%;
-  background-color: #30a3de;
-  /* border: 2px solid $lightSeaBlue; */
-  border-spacing: 4px;
-  border-collapse: separate; }
-  .editor aside .table-gust-defs a {
-    color: white; }
-  .editor aside .table-gust-defs th {
-    font-size: 13px;
-    padding: 2px 4px;
-    font-weight: bold; }
-  .editor aside .table-gust-defs td.action {
-    padding: 2px;
-    text-align: center;
-    font-weight: bold; }
-  .editor aside .table-gust-defs .form-control {
-    width: 100%;
-    /* border: none; */
-    border-radius: 0;
-    padding: 2px 2px 2px 6px;
-    height: 25px;
-    font-size: 13px; }
+.editor aside .range .form-control {
+  width: 40px; }
 
 @font-face {
   font-family: "Proxima Nova Regular";

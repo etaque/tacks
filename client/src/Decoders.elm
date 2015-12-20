@@ -173,16 +173,18 @@ windGeneratorDecoder =
 
 gustGeneratorDecoder : Decoder GustGenerator
 gustGeneratorDecoder =
-  object2 GustGenerator
+  object5 GustGenerator
     ("interval" := int)
-    ("defs" := list gustDefGenerator)
+    ("radiusBase" := int)
+    ("radiusVariation" := int)
+    ("speedVariation" := rangeDecoder)
+    ("originVariation" := rangeDecoder)
 
-gustDefGenerator : Decoder GustDef
-gustDefGenerator =
-  object3 GustDef
-    ("angle" := float)
-    ("speed" := float)
-    ("radius" := float)
+rangeDecoder : Decoder Range
+rangeDecoder =
+  object2 Range
+    ("start" := int)
+    ("end" := int)
 
 adminDataDecoder : Decoder AdminData
 adminDataDecoder =

@@ -17,18 +17,8 @@
   }
 
   .form-actions {
-    /* display: flex; */
-
-    .btn {
-      /* margin-top: 0; */
-
-      &[disabled] {
-        cursor: progress;
-      }
-    }
-
-    .btn-save {
-      /* margin-right: 10px; */
+    .btn[disabled] {
+      cursor: progress;
     }
   }
 
@@ -85,76 +75,39 @@
     }
 
     .form-group {
-      background-color: $lightSeaBlue;
       margin-bottom: 5px;
       border-radius: 0;
-
-      &:after {
-        clear: both;
-        display: table;
-        content: '';
-      }
-
     }
 
     label {
-      float: left;
-      line-height: 23px;
+      display: inline-block;
+      width: 165px;
+      line-height: 25px;
       padding-left: 10px;
       margin: 0;
+      margin-right: 5px;
       text-transform: lowercase;
       font-size: 13px;
+      background-color: $lightSeaBlue;
       color: $whiteSeaBlue;
     }
 
-    label + .form-control {
-      float: right;
-      width: 75px;
+    label + .form-control,
+    .range .form-control {
+      display: inline-block;
+      width: 80px;
       padding: 2px 2px 2px 6px;
       height: 25px;
       font-size: 13px;
-      border-left: 4px solid $darkerSeaBlue;
       border-radius: 0;
-      /* border-top-right-radius: 3px; */
-      /* border-bottom-right-radius: 3px; */
 
     }
 
-    .table-gust-defs {
-      width: 100%;
-      background-color: $lightSeaBlue;
-      /* border: 2px solid $lightSeaBlue; */
-      border-spacing: 4px;
-      border-collapse: separate;
-
-      a {
-        color: $white;
-      }
-
-      th {
-        font-size: 13px;
-        padding: 2px 4px;
-        font-weight: bold;
-      }
-
-      td {
-        &.action {
-          padding: 2px;
-          text-align: center;
-          font-weight: bold;
-        }
-      }
-
+    .range {
       .form-control {
-        width: 100%;
-        /* border: none; */
-        border-radius: 0;
-        padding: 2px 2px 2px 6px;
-        height: 25px;
-        font-size: 13px;
+        width: 40px;
       }
     }
   }
-
 }
 

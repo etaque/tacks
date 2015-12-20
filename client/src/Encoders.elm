@@ -68,16 +68,15 @@ gustGeneratorEncoder : GustGenerator -> Value
 gustGeneratorEncoder g =
   Js.object
     [ "interval" => Js.int g.interval
-    , "defs" => Js.list (List.map gustDefEncoder g.defs)
+    , "radiusBase" => Js.int g.radiusBase
+    , "radiusVariation" => Js.int g.radiusVariation
+    , "speedVariation" => rangeEncoder g.speedVariation
+    , "originVariation" => rangeEncoder g.originVariation
     ]
 
-gustDefEncoder : GustDef -> Value
-gustDefEncoder d =
-  Js.object
-    [ "angle" => Js.float d.angle
-    , "speed" => Js.float d.speed
-    , "radius" => Js.float d.radius
-    ]
+rangeEncoder : Range -> Value
+rangeEncoder r =
+  Js.object [ "start" => Js.int r.start, "end" => Js.int r.end ]
 
 dictEncoder : (comparable -> Value) -> (v -> Value) -> Dict comparable v -> Value
 dictEncoder encodeKey encodeValue dict =

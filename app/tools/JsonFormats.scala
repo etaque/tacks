@@ -4,6 +4,7 @@ import scala.util.Try
 
 import play.api.data.validation.ValidationError
 import play.api.libs.json._
+import play.api.libs.functional.syntax._
 import play.api.libs.concurrent.Execution.Implicits._
 
 import reactivemongo.bson.BSONObjectID
@@ -95,5 +96,16 @@ object JsonFormats {
   def enumFormat[E <: Enumeration](enum: E): Format[E#Value] = {
     Format(enumReads(enum), enumWrites)
   }
+
+
+  implicit val rangeWrites: Writes[Range] = Writes { range: Range =>
+    Json.obj("start" -> range.start, "end" -> range.end)
+  }
+
+  implicit val rangeReads: Reads[Range] = (
+    (__ \ 'start).read[Int] and (__ \ 'end).read[Int]
+  )(Range(_, _))
+
+  implicit val rangeFormat: Format[Range] = Format(rangeReads, rangeWrites)
 
 }

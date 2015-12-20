@@ -1,10 +1,12 @@
 package models
 
-import scala.util.Random._
+import scala.util.Random
 import scala.util.Try
 import java.lang.Math._
+
 import org.joda.time.DateTime
 import reactivemongo.bson._
+import play.api.libs.json.Format
 
 import models.Geo._
 import tools.BSONHandlers._
@@ -30,7 +32,7 @@ object Course {
       area = RaceArea((0, 0), (0, 0)),
       windSpeed = 15,
       windGenerator = WindGenerator.spawn(),
-      gustGenerator = GustGenerator.spawn
+      gustGenerator = GustGenerator.default
     )
   }
 
@@ -95,9 +97,32 @@ case class WindGenerator(
 
 object WindGenerator {
   def spawn(w1: Int = 6, a1: Int = 6, w2: Int = 4, a2: Int = 4) = {
-    WindGenerator(nextInt(w1) + w1, nextInt(a1) + a1, nextInt(w2) + w2, nextInt(a2) + a2)
+    WindGenerator(Random.nextInt(w1) + w1, Random.nextInt(a1) + a1, Random.nextInt(w2) + w2, Random.nextInt(a2) + a2)
   }
   val empty = WindGenerator(0, 1, 0, 1)
+}
+
+case class GustGenerator(
+  interval: Int,
+  radiusBase: Int,
+  radiusVariation: Int,
+  speedVariation: Range,
+  originVariation: Range
+) {
+  def generateSpeed() = Random.shuffle(speedVariation.toList).headOption.getOrElse(0)
+  def generateOrigin() = Random.shuffle(originVariation.toList).headOption.getOrElse(0)
+  def generateRadius() = min(radiusBase + Random.nextInt(radiusVariation) - radiusVariation / 2, GustGenerator.minRadius)
+}
+
+object GustGenerator {
+  val minRadius = 50
+  val default = GustGenerator(
+    interval = 20,
+    radiusBase = 250,
+    radiusVariation = 100,
+    speedVariation = Range(-5, 5),
+    originVariation = Range(-10, 10)
+  )
 }
 
 case class GustDef(
@@ -105,26 +130,3 @@ case class GustDef(
   speed: Double,
   radius: Double
 )
-
-object GustDef {
-  def spawn = GustDef(
-    angle = nextInt(10) - 5,
-    speed = nextInt(10) - 3,
-    radius = nextInt(100) + 200
-  )
-}
-
-case class GustGenerator(
-  interval: Int,
-  defs: Seq[GustDef]
-) {
-  def nthDef(n: Int): Option[GustDef] = if (defs.isEmpty) None else defs.lift(n % defs.size)
-}
-
-object GustGenerator {
-  def spawn() = {
-    GustGenerator(20, Seq.fill[GustDef](10)(GustDef.spawn))
-  }
-  val empty = GustGenerator(0, Nil)
-}
-

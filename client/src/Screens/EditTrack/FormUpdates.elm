@@ -3,8 +3,6 @@ module Screens.EditTrack.FormUpdates where
 import Models exposing (..)
 import Screens.EditTrack.Types exposing (..)
 
-import CoreExtra exposing (..)
-
 
 update : FormUpdate -> Course -> Course
 update fu course =
@@ -22,23 +20,8 @@ update fu course =
     SetLaps laps ->
       { course | laps = laps }
 
-    SetGustInterval i ->
-      updateGustGen (\gen -> { gen | interval = i }) course
-
-    SetGustAngle i angle ->
-      (updateGustGen << updateGustDefs) (updateAt i (\def -> { def | angle = toFloat angle })) course
-
-    SetGustSpeed i speed ->
-      (updateGustGen << updateGustDefs) (updateAt i (\def -> { def | speed = toFloat speed })) course
-
-    SetGustRadius i radius ->
-      (updateGustGen << updateGustDefs) (updateAt i (\def -> { def | radius = toFloat radius })) course
-
-    CreateGustDef ->
-      (updateGustGen << updateGustDefs) (\defs -> GustDef 0 0 200 :: defs) course
-
-    RemoveGustDef i ->
-      (updateGustGen << updateGustDefs) (removeAt i) course
+    UpdateGustGen fn ->
+      updateGustGen fn course
 
     SetWindSpeed s ->
       { course | windSpeed = s }
@@ -73,11 +56,6 @@ updateGateWidth w ({upwind, downwind} as course) =
     newUpwind = { upwind | width = toFloat w }
   in
     { course | downwind = newDownwind, upwind = newUpwind }
-
-
-updateGustDefs : (List GustDef -> List GustDef) -> GustGenerator -> GustGenerator
-updateGustDefs update gen =
-  { gen | defs = update gen.defs }
 
 
 updateGustGen : (GustGenerator -> GustGenerator) -> Course -> Course

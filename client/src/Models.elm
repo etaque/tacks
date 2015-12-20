@@ -136,13 +136,15 @@ type alias WindGenerator =
 
 type alias GustGenerator =
   { interval : Int
-  , defs: List GustDef
+  , radiusBase : Int
+  , radiusVariation : Int
+  , speedVariation : Range
+  , originVariation : Range
   }
 
-type alias GustDef =
-  { angle : Float
-  , speed : Float
-  , radius : Float
+type alias Range =
+  { start : Int
+  , end : Int
   }
 
 type alias Point = (Float, Float)

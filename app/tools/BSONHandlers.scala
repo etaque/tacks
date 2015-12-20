@@ -29,6 +29,14 @@ object BSONHandlers {
     def write(aSeq: Seq[A]) = BSONArray(aSeq.map(handler.write))
   }
 
+  implicit val rangeHandler = new BSONHandler[BSONDocument, Range] {
+    def read(doc: BSONDocument) = (doc.getAs[Int]("start"), doc.getAs[Int]("end")) match {
+      case (Some(start), Some(end)) => Range(start, end)
+      case _ => sys.error("Unexpected Range value: " + doc)
+    }
+    def write(range: Range) = BSONDocument("start" -> BSONInteger(range.start), "end" -> BSONInteger(range.end))
+  }
+
   def enumHandler[E <: Enumeration](enum: E) = new BSONHandler[BSONString, E#Value] {
     def read(bs: BSONString) =
       bs.seeAsOpt[BSONString].flatMap { case BSONString(s) =>

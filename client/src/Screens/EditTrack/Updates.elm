@@ -120,6 +120,20 @@ updateCourse : (Course -> Course) -> Editor -> Editor
 updateCourse update editor =
   { editor | course = update editor.course }
 
+updateSpeedVariation : (Range -> Range) -> GustGenerator -> GustGenerator
+updateSpeedVariation updateRange ({speedVariation} as gen) =
+  { gen | speedVariation = updateRange speedVariation  }
+
+updateOriginVariation : (Range -> Range) -> GustGenerator -> GustGenerator
+updateOriginVariation updateRange ({originVariation} as gen) =
+  { gen | originVariation = updateRange originVariation  }
+
+updateRangeStart start range =
+  { range | start = start }
+
+updateRangeEnd end range =
+  { range | end = end }
+
 updateBlocks : SideBlock -> Editor -> Editor
 updateBlocks b ({blocks} as editor) =
   let

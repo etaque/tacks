@@ -7,9 +7,8 @@ import Html.Events exposing (..)
 import Models exposing (..)
 import Constants exposing (..)
 import Screens.Utils exposing (..)
-import Routes exposing (..)
 
-import Screens.EditTrack.Updates exposing (addr)
+import Screens.EditTrack.Updates exposing (..)
 import Screens.EditTrack.Types exposing (..)
 import Screens.Sidebar as Sidebar
 
@@ -27,7 +26,12 @@ view track ({course, name, saving, mode, blocks} as editor) =
 
   , sideBlock "Name" blocks.name (ToggleBlock Name)
     [ div [ class "form-group"]
-      [ nameInput name ]
+      [ textInput
+        [ value name
+        , onInput addr SetName
+        , type' "text"
+        ]
+      ]
     ]
 
   , sideBlock "Surface pencil" blocks.surface (ToggleBlock Surface)
@@ -78,10 +82,48 @@ view track ({course, name, saving, mode, blocks} as editor) =
 
   , sideBlock "Gusts" blocks.gusts (ToggleBlock Gusts)
     [ div [ class "form-group" ]
-      [ label [ class "" ] [ text "Interval (s)" ]
-      , intInput course.gustGenerator.interval SetGustInterval [ HtmlAttr.min "10"]
+      [ label [ class "" ] [ text "Spawn interval (s)" ]
+      , intInput
+          course.gustGenerator.interval
+          (\i -> UpdateGustGen (\gen -> { gen | interval = i }))
+          [ HtmlAttr.min "10"]
       ]
-    , gustDefsTable course.gustGenerator.defs
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Average radius" ]
+      , intInput
+          course.gustGenerator.radiusBase
+          (\i -> UpdateGustGen (\gen -> { gen | radiusBase = i }))
+          [ HtmlAttr.min "50", HtmlAttr.step "10", HtmlAttr.max "1000" ]
+      ]
+    , div [ class "form-group" ]
+      [ label [ class "" ] [ text "Radius variation (+/-)" ]
+      , intInput
+          course.gustGenerator.radiusVariation
+          (\i -> UpdateGustGen (\gen -> { gen | radiusVariation = i }))
+          [ HtmlAttr.min "0", HtmlAttr.step "10", HtmlAttr.max "500" ]
+      ]
+    , div [ class "form-group range" ]
+      [ label [ class "" ] [ text "Wind speed variation" ]
+      , intInput
+          course.gustGenerator.speedVariation.start
+          (UpdateGustGen << updateSpeedVariation << updateRangeStart)
+          [ HtmlAttr.min "-10", HtmlAttr.step "1", HtmlAttr.max "0" ]
+      , intInput
+          course.gustGenerator.speedVariation.end
+          (UpdateGustGen << updateSpeedVariation << updateRangeEnd)
+          [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "10" ]
+      ]
+    , div [ class "form-group range" ]
+      [ label [ class "" ] [ text "Wind origin variation" ]
+      , intInput
+          course.gustGenerator.originVariation.start
+          (UpdateGustGen << updateOriginVariation << updateRangeStart)
+          [ HtmlAttr.min "-20", HtmlAttr.step "1", HtmlAttr.max "0" ]
+      , intInput
+          course.gustGenerator.originVariation.end
+          (UpdateGustGen << updateOriginVariation << updateRangeEnd)
+          [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "20" ]
+      ]
     ]
 
   , div [ class "form-actions btn-group btn-group-justified" ]
@@ -117,7 +159,6 @@ view track ({course, name, saving, mode, blocks} as editor) =
       text ""
   ]
 
-
 surfaceBlock : Editor -> Html
 surfaceBlock editor =
   let
@@ -146,48 +187,6 @@ renderSurfaceMode currentMode mode =
       , title label
       ]
       [ text abbr ]
-
-
-gustDefsTable : List GustDef -> Html
-gustDefsTable defs =
-  table
-    [ class "table-gust-defs" ]
-    (gustDefsHeader :: List.indexedMap gustDefRow defs)
-
-
-gustDefsHeader : Html
-gustDefsHeader =
-  tr []
-    [ th [] [ text "angle" ]
-    , th [] [ text "speed" ]
-    , th [] [ text "radius" ]
-    , th [ class "action" ]
-      [ a [ onClick addr (FormAction CreateGustDef) ]
-          [ text "+" ]
-      ]
-    ]
-
-
-gustDefRow : Int -> GustDef -> Html
-gustDefRow i def =
-  tr []
-    [ td [] [ intInput def.angle (SetGustAngle i) [ ] ]
-    , td [] [ intInput def.speed (SetGustSpeed i) [ ] ]
-    , td [] [ intInput def.radius (SetGustRadius i) [ HtmlAttr.min "10", step "10" ] ]
-    , td [ class "action" ]
-        [ a [ onClick addr (FormAction (RemoveGustDef i)) ]
-            [ text "-" ]
-        ]
-    ]
-
-
-nameInput : String -> Html
-nameInput n =
-  textInput
-    [ value n
-    , onInput addr SetName
-    , type' "text"
-    ]
 
 
 intInput : number -> (Int -> FormUpdate) -> List Attribute -> Html

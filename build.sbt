@@ -22,3 +22,5 @@ play.PlayScala.projectSettings
 initialCommands in console := """implicit val app = new play.core.StaticApplication(new java.io.File("."))"""
 
 scalacOptions += "-feature"
+
+offline := true
