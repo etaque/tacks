@@ -103,7 +103,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
         players += (player.id -> newContext)
 
         state.playerRace(player.id).foreach { race =>
-          if (race.startTime.plusMinutes(10).isAfterNow) { // max 10min de trace
+          if (track.status == TrackStatus.open && race.startTime.plusMinutes(10).isAfterNow) { // max 10min de trace
             paths += player.id -> TrackActor.tracePlayer(newContext, race, paths.toMap, clock)
           }
         }
