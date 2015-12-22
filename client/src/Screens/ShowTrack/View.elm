@@ -82,12 +82,16 @@ aboutGustRadius gen =
 
 aboutGustWind : GustGenerator -> List Html
 aboutGustWind {speedVariation, originVariation} =
-  [ text (toString speedVariation.start ++ ".." ++ toString speedVariation.end)
-  , abbr' "Δkn" "Knots variation range"
-  , br [] []
-  , text (toString originVariation.start ++ ".." ++ toString originVariation.end)
-  , abbr' "Δ°" "Degrees variation range"
+  (range speedVariation kn) ++ [ br' ] ++ (range originVariation deg)
+
+range : Range -> Html -> List Html
+range {start, end} unitAbbr =
+  [ text ("[" ++ toString start), unitAbbr
+  , text ".."
+  , text (toString end), unitAbbr
+  , text "]"
   ]
+
 
 courseBlock : CourseControl -> Course -> Html
 courseBlock control course =
@@ -124,3 +128,14 @@ np : Html
 np =
   abbr' "np" "Nautic pixels"
 
+kn : Html
+kn =
+  abbr' "kn" "Knots"
+
+deg : Html
+deg =
+  abbr' "°" "Degrees"
+
+br' : Html
+br' =
+  br [] []

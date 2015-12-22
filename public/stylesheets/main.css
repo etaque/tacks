@@ -7094,20 +7094,13 @@ label {
   .show-track .track-header .btn-join {
     float: right; }
 
-.show-track .course {
-  /* .expand-course { */
-  /*   text-align: center; */
-  /*   button { */
-  /*     background-color: $whiteSeaBlue; */
-  /*   } */
-  /* } */ }
-  .show-track .course svg {
-    display: block;
-    cursor: grab;
-    user-select: none;
-    -moz-user-select: none;
-    background-color: #f2f3c4;
-    border: 5px solid #99d2ef; }
+.show-track .course svg {
+  display: block;
+  cursor: grab;
+  user-select: none;
+  -moz-user-select: none;
+  background-color: #f2f3c4;
+  border: 5px solid #99d2ef; }
 
 .show-track h2 {
   margin-top: 30px;
@@ -7128,14 +7121,11 @@ label {
   .show-track .about dl abbr {
     display: inline-block;
     margin-left: 2px;
-    /* text-transform: uppercase; */
     color: #99d2ef;
     border: none;
     text-decoration: none; }
   .show-track .about dl dt {
-    /* text-align: left; */
-    width: 120px;
-    /* font-weight: normal; */ }
+    width: 120px; }
   .show-track .about dl dd {
     color: white;
     margin-left: 140px;

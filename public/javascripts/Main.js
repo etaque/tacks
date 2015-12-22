@@ -21500,6 +21500,9 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
    var _op = {};
+   var br$ = A2($Html.br,_U.list([]),_U.list([]));
+   var deg = A2($Screens$Utils.abbr$,"°","Degrees");
+   var kn = A2($Screens$Utils.abbr$,"kn","Knots");
    var np = A2($Screens$Utils.abbr$,"np","Nautic pixels");
    var renderCourse = F2(function (_p0,course) {
       var _p1 = _p0;
@@ -21540,19 +21543,24 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
               $Screens$ShowTrack$Types.SetOverCourse(false))]),
       _U.list([A2(renderCourse,control,course)]));
    });
-   var aboutGustWind = function (_p4) {
+   var range = F2(function (_p4,unitAbbr) {
       var _p5 = _p4;
-      var _p7 = _p5.speedVariation;
-      var _p6 = _p5.originVariation;
       return _U.list([$Html.text(A2($Basics._op["++"],
-                     $Basics.toString(_p7.start),
-                     A2($Basics._op["++"],"..",$Basics.toString(_p7.end))))
-                     ,A2($Screens$Utils.abbr$,"Δkn","Knots variation range")
-                     ,A2($Html.br,_U.list([]),_U.list([]))
-                     ,$Html.text(A2($Basics._op["++"],
-                     $Basics.toString(_p6.start),
-                     A2($Basics._op["++"],"..",$Basics.toString(_p6.end))))
-                     ,A2($Screens$Utils.abbr$,"Δ°","Degrees variation range")]);
+                     "[",
+                     $Basics.toString(_p5.start)))
+                     ,unitAbbr
+                     ,$Html.text("..")
+                     ,$Html.text($Basics.toString(_p5.end))
+                     ,unitAbbr
+                     ,$Html.text("]")]);
+   });
+   var aboutGustWind = function (_p6) {
+      var _p7 = _p6;
+      return A2($Basics._op["++"],
+      A2(range,_p7.speedVariation,kn),
+      A2($Basics._op["++"],
+      _U.list([br$]),
+      A2(range,_p7.originVariation,deg)));
    };
    var aboutGustRadius = function (gen) {
       return _U.list([$Html.text(A2($Basics._op["++"],
@@ -21654,9 +21662,13 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
                                                ,about: about
                                                ,aboutGustRadius: aboutGustRadius
                                                ,aboutGustWind: aboutGustWind
+                                               ,range: range
                                                ,courseBlock: courseBlock
                                                ,renderCourse: renderCourse
-                                               ,np: np};
+                                               ,np: np
+                                               ,kn: kn
+                                               ,deg: deg
+                                               ,br$: br$};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};

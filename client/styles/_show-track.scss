@@ -36,7 +36,6 @@
   }
 
   .course {
-
     svg {
       display: block;
       cursor: grab;
@@ -45,14 +44,6 @@
       background-color: $sand;
       border: 5px solid $whiteSeaBlue;
     }
-
-    /* .expand-course { */
-    /*   text-align: center; */
-
-    /*   button { */
-    /*     background-color: $whiteSeaBlue; */
-    /*   } */
-    /* } */
   }
 
   h2 {
@@ -81,16 +72,13 @@
       abbr {
         display: inline-block;
         margin-left: 2px;
-        /* text-transform: uppercase; */
         color: $whiteSeaBlue;
         border: none;
         text-decoration: none;
       }
 
       dt {
-        /* text-align: left; */
         width: 120px;
-        /* font-weight: normal; */
       }
 
       dd {
