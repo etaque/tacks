@@ -1,11 +1,11 @@
 module AppUpdates where
 
-import Task exposing (Task, andThen)
-import Task.Extra exposing (delay)
+import Task exposing (Task)
 import History
 import RouteParser
 import Effects exposing (Effects, map, none, task)
 import Result
+import Animation
 
 import AppTypes exposing (..)
 
@@ -60,10 +60,14 @@ update appAction ({screens, ctx} as appState) =
         case newAppState.route of
           Just route ->
             if needsTransition appState.route maybeRoute
-              then mountRoute newAppState route
+              then mountRoute newAppState route |> triggerAnim
               else newAppState &: none
           Nothing -> -- TODO 404
             newAppState &: none
+
+    TransitionAction step ->
+      updateTransitionAnim appState step
+        |> mapEffect TransitionAction
 
     SetPlayer p ->
       let
@@ -108,6 +112,38 @@ needsTransition before after =
         False
       _ ->
         True
+
+
+triggerAnim : (AppState, Effects AppAction) -> (AppState, Effects AppAction)
+triggerAnim (({ctx} as state), fx) =
+  let
+    animTick = TransitionAction << TransitionStart
+    newState = { state | ctx = { ctx | animValue = Just 0 } }
+  in
+    (newState, (Effects.batch [ fx, Effects.tick animTick ]))
+
+
+updateTransitionAnim : AppState -> TransitionStep -> (AppState, Effects TransitionStep)
+updateTransitionAnim ({ctx} as appState) step =
+  case step of
+
+    TransitionStart t ->
+      let
+        anim = Animation.animation t
+          |> Animation.duration 200
+      in
+        appState &: (Effects.tick <| TransitionTick anim)
+
+    TransitionTick anim t ->
+      let
+        (animValue, fx) = if Animation.isDone t anim
+          then (Nothing, none)
+          else
+            ( Just <| Animation.animate t anim
+            , Effects.tick <| TransitionTick anim
+            )
+      in
+        { appState | ctx = { ctx | animValue = animValue } } &: fx
 
 
 mountRoute : AppState -> Routes.Route -> (AppState, Effects AppAction)
@@ -191,10 +227,14 @@ applyListDrafts = applyScreen (\s screens -> { screens | listDrafts = s }) ListD
 applyAdmin = applyScreen (\s screens -> { screens | admin = s }) AdminAction
 
 applyScreen : (screen -> Screens -> Screens) -> (a -> ScreenAction) -> (screen, Effects a) -> AppState -> (AppState, Effects AppAction)
-applyScreen screensUpdater toScreenAction (screen, effect) appState =
+applyScreen screensUpdater actionWrapper (screen, effect) appState =
   let
     newState = { appState | screens = screensUpdater screen appState.screens }
-    newEffect = map (toScreenAction >> ScreenAction) effect
+    newEffect = map (actionWrapper >> ScreenAction) effect
   in
     newState &: newEffect
 
+
+mapEffect : (a -> b) -> (model, Effects a) -> (model, Effects b)
+mapEffect f (m, fx) =
+  (m, Effects.map f fx)

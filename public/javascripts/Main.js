@@ -11740,6 +11740,277 @@ Elm.DragAndDrop.make = function (_elm) {
                                     ,Mouse: Mouse
                                     ,Hover: Hover};
 };
+Elm.Animation = Elm.Animation || {};
+Elm.Animation.make = function (_elm) {
+   "use strict";
+   _elm.Animation = _elm.Animation || {};
+   if (_elm.Animation.values) return _elm.Animation.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var isScheduled = F2(function (t,_p0) {
+      var _p1 = _p0;
+      return _U.cmp(t,_p1._0.start + _p1._0.delay) < 1;
+   });
+   var getTo = function (_p2) {
+      var _p3 = _p2;
+      return _p3._0.to;
+   };
+   var getFrom = function (_p4) {
+      var _p5 = _p4;
+      return _p5._0.from;
+   };
+   var getEase = function (_p6) {
+      var _p7 = _p6;
+      return _p7._0.ease;
+   };
+   var getDelay = function (_p8) {
+      var _p9 = _p8;
+      return _p9._0.delay;
+   };
+   var getStart = function (_p10) {
+      var _p11 = _p10;
+      return _p11._0.start;
+   };
+   var timeElapsed = F2(function (t,_p12) {
+      var _p13 = _p12;
+      return A2($Basics.max,0,t - (_p13._0.start + _p13._0.delay));
+   });
+   var defaultEase = function (x) {
+      return (1 - $Basics.cos($Basics.pi * x)) / 2;
+   };
+   var spd = F3(function (dos,from,to) {
+      var _p14 = dos;
+      if (_p14.ctor === "Duration") {
+            return $Basics.abs(to - from) / _p14._0;
+         } else {
+            return _p14._0;
+         }
+   });
+   var getSpeed = function (_p15) {
+      var _p16 = _p15;
+      return A3(spd,_p16._0.dos,_p16._0.from,_p16._0.to);
+   };
+   var dur = F3(function (dos,from,to) {
+      var _p17 = dos;
+      if (_p17.ctor === "Duration") {
+            return _p17._0;
+         } else {
+            return $Basics.abs(to - from) / _p17._0;
+         }
+   });
+   var animate = F2(function (t,_p18) {
+      var _p19 = _p18;
+      var _p23 = _p19._0.to;
+      var _p22 = _p19._0.start;
+      var _p21 = _p19._0.from;
+      var duration = A3(dur,_p19._0.dos,_p21,_p23);
+      var fr = A3($Basics.clamp,
+      0,
+      1,
+      (t - _p22 - _p19._0.delay) / duration);
+      var eased = _p19._0.ease(fr);
+      var correction = function () {
+         var _p20 = _p19._0.ramp;
+         if (_p20.ctor === "Nothing") {
+               return 0;
+            } else {
+               var from$ = _p20._0 * (t - _p22);
+               var eased$ = defaultEase(fr);
+               return from$ - from$ * eased$;
+            }
+      }();
+      return _p21 + (_p23 - _p21) * eased + correction;
+   });
+   var velocity = F2(function (t,u) {
+      var forwDiff = A2(animate,t + 10,u);
+      var backDiff = A2(animate,t - 10,u);
+      return (forwDiff - backDiff) / 20;
+   });
+   var timeRemaining = F2(function (t,_p24) {
+      var _p25 = _p24;
+      var duration = A3(dur,_p25._0.dos,_p25._0.from,_p25._0.to);
+      return A2($Basics.max,
+      0,
+      _p25._0.start + _p25._0.delay + duration - t);
+   });
+   var getDuration = function (_p26) {
+      var _p27 = _p26;
+      return A3(dur,_p27._0.dos,_p27._0.from,_p27._0.to);
+   };
+   var equals = F2(function (_p29,_p28) {
+      var _p30 = _p29;
+      var _p33 = _p30._0;
+      var _p31 = _p28;
+      var _p32 = _p31._0;
+      return _U.eq(_p33.start + _p33.delay,
+      _p32.start + _p32.delay) && (_U.eq(_p33.from,
+      _p32.from) && (_U.eq(_p33.to,_p32.to) && (_U.eq(_p33.ramp,
+      _p32.ramp) && ((_U.eq(_p33.dos,_p32.dos) || _U.cmp(1.0e-3,
+      $Basics.abs(A3(dur,_p33.dos,_p33.from,_p33.to) - A3(dur,
+      _p32.dos,
+      _p32.from,
+      _p32.to))) > -1) && A2($List.all,
+      function (t) {
+         return _U.eq(_p33.ease(t),_p32.ease(t));
+      },
+      _U.list([0.1,0.3,0.7,0.9]))))));
+   });
+   var isRunning = F2(function (t,_p34) {
+      var _p35 = _p34;
+      var _p37 = _p35._0.start;
+      var _p36 = _p35._0.delay;
+      var duration = A3(dur,_p35._0.dos,_p35._0.from,_p35._0.to);
+      return _U.cmp(t,_p37 + _p36) > 0 && _U.cmp(t,
+      _p37 + _p36 + duration) < 0;
+   });
+   var isDone = F2(function (t,_p38) {
+      var _p39 = _p38;
+      var duration = A3(dur,_p39._0.dos,_p39._0.from,_p39._0.to);
+      return _U.cmp(t,_p39._0.start + _p39._0.delay + duration) > -1;
+   });
+   var A = function (a) {    return {ctor: "A",_0: a};};
+   var undo = F2(function (t,_p40) {
+      var _p41 = _p40;
+      var _p42 = _p41._0;
+      return A(_U.update(_p42,
+      {from: _p42.to
+      ,to: _p42.from
+      ,start: t
+      ,delay: 0 - A2(timeRemaining,t,_p41)
+      ,ramp: $Maybe.Nothing
+      ,ease: function (t) {
+         return 1 - _p42.ease(1 - t);
+      }}));
+   });
+   var delay = F2(function (x,_p43) {
+      var _p44 = _p43;
+      return A(_U.update(_p44._0,{delay: x}));
+   });
+   var ease = F2(function (x,_p45) {
+      var _p46 = _p45;
+      return A(_U.update(_p46._0,{ease: x}));
+   });
+   var from = F2(function (x,_p47) {
+      var _p48 = _p47;
+      return A(_U.update(_p48._0,{from: x,ramp: $Maybe.Nothing}));
+   });
+   var to = F2(function (x,_p49) {
+      var _p50 = _p49;
+      return A(_U.update(_p50._0,{to: x,ramp: $Maybe.Nothing}));
+   });
+   var AnimRecord = F7(function (a,b,c,d,e,f,g) {
+      return {start: a
+             ,delay: b
+             ,dos: c
+             ,ramp: d
+             ,ease: e
+             ,from: f
+             ,to: g};
+   });
+   var Speed = function (a) {    return {ctor: "Speed",_0: a};};
+   var speed = F2(function (x,_p51) {
+      var _p52 = _p51;
+      return A(_U.update(_p52._0,{dos: Speed($Basics.abs(x))}));
+   });
+   var Duration = function (a) {
+      return {ctor: "Duration",_0: a};
+   };
+   var defaultDuration = Duration(750 * $Time.millisecond);
+   var animation = function (t) {
+      return A(A7(AnimRecord,
+      t,
+      0,
+      defaultDuration,
+      $Maybe.Nothing,
+      defaultEase,
+      0,
+      1));
+   };
+   var retarget = F3(function (t,newTo,_p53) {
+      var _p54 = _p53;
+      var _p57 = _p54;
+      var _p56 = _p54._0;
+      if (_U.eq(newTo,_p56.to)) return _p57; else if (_U.eq(_p56.from,
+         _p56.to)) return A(_U.update(_p56,
+            {start: t
+            ,to: newTo
+            ,dos: defaultDuration
+            ,ramp: $Maybe.Nothing})); else if (A2(isScheduled,t,_p57))
+            return A(_U.update(_p56,{to: newTo,ramp: $Maybe.Nothing}));
+            else if (A2(isDone,t,_p57)) return A(_U.update(_p56,
+                  {start: t
+                  ,delay: 0
+                  ,from: _p56.to
+                  ,to: newTo
+                  ,ramp: $Maybe.Nothing})); else {
+                     var newSpeed = function () {
+                        var _p55 = _p56.dos;
+                        if (_p55.ctor === "Speed") {
+                              return _p56.dos;
+                           } else {
+                              return Speed(A3(spd,_p56.dos,_p56.from,_p56.to));
+                           }
+                     }();
+                     var pos = A2(animate,t,_p57);
+                     var vel = A2(velocity,t,_p57);
+                     return A(A7(AnimRecord,
+                     t,
+                     0,
+                     newSpeed,
+                     $Maybe.Just(vel),
+                     _p56.ease,
+                     pos,
+                     newTo));
+                  }
+   });
+   var $static = function (x) {
+      return A(A7(AnimRecord,
+      0,
+      0,
+      Duration(0),
+      $Maybe.Nothing,
+      defaultEase,
+      x,
+      x));
+   };
+   var duration = F2(function (x,_p58) {
+      var _p59 = _p58;
+      return A(_U.update(_p59._0,{dos: Duration(x)}));
+   });
+   return _elm.Animation.values = {_op: _op
+                                  ,animation: animation
+                                  ,$static: $static
+                                  ,animate: animate
+                                  ,duration: duration
+                                  ,speed: speed
+                                  ,delay: delay
+                                  ,ease: ease
+                                  ,from: from
+                                  ,to: to
+                                  ,undo: undo
+                                  ,retarget: retarget
+                                  ,getStart: getStart
+                                  ,getDuration: getDuration
+                                  ,getSpeed: getSpeed
+                                  ,getDelay: getDelay
+                                  ,getEase: getEase
+                                  ,getFrom: getFrom
+                                  ,getTo: getTo
+                                  ,equals: equals
+                                  ,velocity: velocity
+                                  ,timeElapsed: timeElapsed
+                                  ,timeRemaining: timeRemaining
+                                  ,isScheduled: isScheduled
+                                  ,isRunning: isRunning
+                                  ,isDone: isDone};
+};
 Elm.Constants = Elm.Constants || {};
 Elm.Constants.make = function (_elm) {
    "use strict";
@@ -13204,6 +13475,7 @@ Elm.AppTypes.make = function (_elm) {
    _elm.AppTypes = _elm.AppTypes || {};
    if (_elm.AppTypes.values) return _elm.AppTypes.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $Animation = Elm.Animation.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
@@ -13240,7 +13512,10 @@ Elm.AppTypes.make = function (_elm) {
    var initialAppState = function (_p0) {
       var _p1 = _p0;
       var _p2 = _p1.player;
-      return {ctx: {player: _p2,dims: _p1.dims,transitStatus: Enter}
+      return {ctx: {player: _p2
+                   ,dims: _p1.dims
+                   ,transitStatus: Enter
+                   ,animValue: $Maybe.Nothing}
              ,path: _p1.path
              ,route: $Maybe.Nothing
              ,screens: {home: $Screens$Home$Types.initial(_p2)
@@ -13254,8 +13529,8 @@ Elm.AppTypes.make = function (_elm) {
                        ,admin: $Screens$Admin$Types.initial}};
    };
    var Exit = {ctor: "Exit"};
-   var Context = F3(function (a,b,c) {
-      return {player: a,dims: b,transitStatus: c};
+   var Context = F4(function (a,b,c,d) {
+      return {player: a,dims: b,transitStatus: c,animValue: d};
    });
    var AppState = F4(function (a,b,c,d) {
       return {ctx: a,route: b,path: c,screens: d};
@@ -13287,6 +13562,12 @@ Elm.AppTypes.make = function (_elm) {
    var HomeAction = function (a) {
       return {ctor: "HomeAction",_0: a};
    };
+   var TransitionTick = F2(function (a,b) {
+      return {ctor: "TransitionTick",_0: a,_1: b};
+   });
+   var TransitionStart = function (a) {
+      return {ctor: "TransitionStart",_0: a};
+   };
    var AppNoOp = {ctor: "AppNoOp"};
    var Logout = {ctor: "Logout"};
    var ScreenAction = function (a) {
@@ -13297,6 +13578,9 @@ Elm.AppTypes.make = function (_elm) {
    };
    var UpdateDims = function (a) {
       return {ctor: "UpdateDims",_0: a};
+   };
+   var TransitionAction = function (a) {
+      return {ctor: "TransitionAction",_0: a};
    };
    var MountRoute = function (a) {
       return {ctor: "MountRoute",_0: a};
@@ -13335,11 +13619,14 @@ Elm.AppTypes.make = function (_elm) {
                                  ,SetPath: SetPath
                                  ,PathChanged: PathChanged
                                  ,MountRoute: MountRoute
+                                 ,TransitionAction: TransitionAction
                                  ,UpdateDims: UpdateDims
                                  ,MouseEvent: MouseEvent
                                  ,ScreenAction: ScreenAction
                                  ,Logout: Logout
                                  ,AppNoOp: AppNoOp
+                                 ,TransitionStart: TransitionStart
+                                 ,TransitionTick: TransitionTick
                                  ,HomeAction: HomeAction
                                  ,LoginAction: LoginAction
                                  ,RegisterAction: RegisterAction
@@ -16558,6 +16845,7 @@ Elm.AppUpdates.make = function (_elm) {
    _elm.AppUpdates = _elm.AppUpdates || {};
    if (_elm.AppUpdates.values) return _elm.AppUpdates.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $Animation = Elm.Animation.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16582,18 +16870,24 @@ Elm.AppUpdates.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
-   var applyScreen = F4(function (screensUpdater,
-   toScreenAction,
-   _p0,
-   appState) {
+   var mapEffect = F2(function (f,_p0) {
       var _p1 = _p0;
+      return {ctor: "_Tuple2"
+             ,_0: _p1._0
+             ,_1: A2($Effects.map,f,_p1._1)};
+   });
+   var applyScreen = F4(function (screensUpdater,
+   actionWrapper,
+   _p2,
+   appState) {
+      var _p3 = _p2;
       var newEffect = A2($Effects.map,
-      function (_p2) {
-         return $AppTypes.ScreenAction(toScreenAction(_p2));
+      function (_p4) {
+         return $AppTypes.ScreenAction(actionWrapper(_p4));
       },
-      _p1._1);
+      _p3._1);
       var newState = _U.update(appState,
-      {screens: A2(screensUpdater,_p1._0,appState.screens)});
+      {screens: A2(screensUpdater,_p3._0,appState.screens)});
       return A2($AppTypes._op["&:"],newState,newEffect);
    });
    var applyAdmin = A2(applyScreen,
@@ -16648,82 +16942,121 @@ Elm.AppUpdates.make = function (_elm) {
       A2($Result.map,$AppTypes.SetPlayer,r));
    },
    $ServerApi.postLogout);
-   var updateScreen = F2(function (screenAction,_p3) {
-      var _p4 = _p3;
-      var _p8 = _p4.screens;
-      var _p7 = _p4.ctx;
-      var _p6 = _p4;
-      var _p5 = screenAction;
-      switch (_p5.ctor)
+   var updateScreen = F2(function (screenAction,_p5) {
+      var _p6 = _p5;
+      var _p10 = _p6.screens;
+      var _p9 = _p6.ctx;
+      var _p8 = _p6;
+      var _p7 = screenAction;
+      switch (_p7.ctor)
       {case "HomeAction": return A2(applyHome,
-           A2($Screens$Home$Updates.update,_p5._0,_p8.home),
-           _p6);
+           A2($Screens$Home$Updates.update,_p7._0,_p10.home),
+           _p8);
          case "LoginAction": return A2(applyLogin,
-           A2($Screens$Login$Updates.update,_p5._0,_p8.login),
-           _p6);
+           A2($Screens$Login$Updates.update,_p7._0,_p10.login),
+           _p8);
          case "RegisterAction": return A2(applyRegister,
-           A2($Screens$Register$Updates.update,_p5._0,_p8.register),
-           _p6);
+           A2($Screens$Register$Updates.update,_p7._0,_p10.register),
+           _p8);
          case "ShowTrackAction": return A2(applyShowTrack,
-           A2($Screens$ShowTrack$Updates.update,_p5._0,_p8.showTrack),
-           _p6);
+           A2($Screens$ShowTrack$Updates.update,_p7._0,_p10.showTrack),
+           _p8);
          case "EditTrackAction": return A2(applyEditTrack,
            A3($Screens$EditTrack$Updates.update,
-           _p7.dims,
-           _p5._0,
-           _p8.editTrack),
-           _p6);
+           _p9.dims,
+           _p7._0,
+           _p10.editTrack),
+           _p8);
          case "ShowProfileAction": return A2(applyShowProfile,
-           A2($Screens$ShowProfile$Updates.update,_p5._0,_p8.showProfile),
-           _p6);
+           A2($Screens$ShowProfile$Updates.update,_p7._0,_p10.showProfile),
+           _p8);
          case "GameAction": return A2(applyGame,
-           A3($Screens$Game$Updates.update,_p7.player,_p5._0,_p8.game),
-           _p6);
+           A3($Screens$Game$Updates.update,_p9.player,_p7._0,_p10.game),
+           _p8);
          case "ListDraftsAction": return A2(applyListDrafts,
-           A2($Screens$ListDrafts$Updates.update,_p5._0,_p8.listDrafts),
-           _p6);
+           A2($Screens$ListDrafts$Updates.update,_p7._0,_p10.listDrafts),
+           _p8);
          default: return A2(applyAdmin,
-           A2($Screens$Admin$Updates.update,_p5._0,_p8.admin),
-           _p6);}
+           A2($Screens$Admin$Updates.update,_p7._0,_p10.admin),
+           _p8);}
    });
-   var mountRoute = F2(function (_p9,route) {
-      var _p10 = _p9;
-      var _p13 = _p10.ctx;
-      var _p12 = _p10;
-      var _p11 = route;
-      switch (_p11.ctor)
+   var mountRoute = F2(function (_p11,route) {
+      var _p12 = _p11;
+      var _p15 = _p12.ctx;
+      var _p14 = _p12;
+      var _p13 = route;
+      switch (_p13.ctor)
       {case "Home": return A2(applyHome,
-           $Screens$Home$Updates.mount(_p13.player),
-           _p12);
+           $Screens$Home$Updates.mount(_p15.player),
+           _p14);
          case "Login": return A2(applyLogin,
            $Screens$Login$Updates.mount,
-           _p12);
+           _p14);
          case "Register": return A2(applyRegister,
            $Screens$Register$Updates.mount,
-           _p12);
+           _p14);
          case "ShowProfile": return A2(applyShowProfile,
-           $Screens$ShowProfile$Updates.mount(_p13.player),
-           _p12);
+           $Screens$ShowProfile$Updates.mount(_p15.player),
+           _p14);
          case "ShowTrack": return A2(applyShowTrack,
-           $Screens$ShowTrack$Updates.mount(_p11._0),
-           _p12);
+           $Screens$ShowTrack$Updates.mount(_p13._0),
+           _p14);
          case "EditTrack": return A2(applyEditTrack,
-           $Screens$EditTrack$Updates.mount(_p11._0),
-           _p12);
+           $Screens$EditTrack$Updates.mount(_p13._0),
+           _p14);
          case "PlayTrack": return A2(applyGame,
-           $Screens$Game$Updates.mount(_p11._0),
-           _p12);
+           $Screens$Game$Updates.mount(_p13._0),
+           _p14);
          case "ListDrafts": return A2(applyListDrafts,
            $Screens$ListDrafts$Updates.mount,
-           _p12);
+           _p14);
          default: return A2(applyAdmin,
            $Screens$Admin$Updates.mount,
-           _p12);}
+           _p14);}
    });
+   var updateTransitionAnim = F2(function (_p16,step) {
+      var _p17 = _p16;
+      var _p22 = _p17;
+      var _p18 = step;
+      if (_p18.ctor === "TransitionStart") {
+            var anim = A2($Animation.duration,
+            200,
+            $Animation.animation(_p18._0));
+            return A2($AppTypes._op["&:"],
+            _p22,
+            $Effects.tick($AppTypes.TransitionTick(anim)));
+         } else {
+            var _p21 = _p18._1;
+            var _p20 = _p18._0;
+            var _p19 = A2($Animation.isDone,_p21,_p20) ? {ctor: "_Tuple2"
+                                                         ,_0: $Maybe.Nothing
+                                                         ,_1: $Effects.none} : {ctor: "_Tuple2"
+                                                                               ,_0: $Maybe.Just(A2($Animation.animate,_p21,_p20))
+                                                                               ,_1: $Effects.tick($AppTypes.TransitionTick(_p20))};
+            var animValue = _p19._0;
+            var fx = _p19._1;
+            return A2($AppTypes._op["&:"],
+            _U.update(_p22,
+            {ctx: _U.update(_p17.ctx,{animValue: animValue})}),
+            fx);
+         }
+   });
+   var triggerAnim = function (_p23) {
+      var _p24 = _p23;
+      var newState = _U.update(_p24._0,
+      {ctx: _U.update(_p24._0.ctx,{animValue: $Maybe.Just(0)})});
+      var animTick = function (_p25) {
+         return $AppTypes.TransitionAction($AppTypes.TransitionStart(_p25));
+      };
+      return {ctor: "_Tuple2"
+             ,_0: newState
+             ,_1: $Effects.batch(_U.list([_p24._1
+                                         ,$Effects.tick(animTick)]))};
+   };
    var needsTransition = F2(function (before,after) {
       if (_U.eq(before,after)) return false; else {
-            var _p14 = {ctor: "_Tuple2",_0: before,_1: after};
-            if (_p14.ctor === "_Tuple2" && _p14._0.ctor === "Just" && _p14._0._0.ctor === "Admin" && _p14._1.ctor === "Just" && _p14._1._0.ctor === "Admin")
+            var _p26 = {ctor: "_Tuple2",_0: before,_1: after};
+            if (_p26.ctor === "_Tuple2" && _p26._0.ctor === "Just" && _p26._0._0.ctor === "Admin" && _p26._1.ctor === "Just" && _p26._1._0.ctor === "Admin")
             {
                   return false;
                } else {
@@ -16731,73 +17064,78 @@ Elm.AppUpdates.make = function (_elm) {
                }
          }
    });
-   var update = F2(function (appAction,_p15) {
-      var _p16 = _p15;
-      var _p28 = _p16.ctx;
-      var _p27 = _p16;
-      var _p17 = appAction;
-      switch (_p17.ctor)
+   var update = F2(function (appAction,_p27) {
+      var _p28 = _p27;
+      var _p40 = _p28.ctx;
+      var _p39 = _p28;
+      var _p29 = appAction;
+      switch (_p29.ctor)
       {case "SetPath": return A2($AppTypes._op["&!"],
-           _p27,
+           _p39,
            A2($Task.map,
-           function (_p18) {
+           function (_p30) {
               return $AppTypes.AppNoOp;
            },
-           $History.setPath(_p17._0)));
-         case "PathChanged": var _p19 = _p17._0;
-           var newRoute = A2($RouteParser.match,$Routes.routeParsers,_p19);
+           $History.setPath(_p29._0)));
+         case "PathChanged": var _p31 = _p29._0;
+           var newRoute = A2($RouteParser.match,$Routes.routeParsers,_p31);
            var fx = $Effects.task($Task.succeed($AppTypes.MountRoute(newRoute)));
-           var newCtx = _U.update(_p28,{transitStatus: $AppTypes.Exit});
-           var newAppState = _U.update(_p27,{path: _p19,ctx: newCtx});
+           var newCtx = _U.update(_p40,{transitStatus: $AppTypes.Exit});
+           var newAppState = _U.update(_p39,{path: _p31,ctx: newCtx});
            return A2($AppTypes._op["&:"],newAppState,fx);
-         case "MountRoute": var _p21 = _p17._0;
-           var newCtx = _U.update(_p28,{transitStatus: $AppTypes.Enter});
-           var newAppState = _U.update(_p27,{route: _p21,ctx: newCtx});
-           var _p20 = newAppState.route;
-           if (_p20.ctor === "Just") {
-                 return A2(needsTransition,_p27.route,_p21) ? A2(mountRoute,
+         case "MountRoute": var _p33 = _p29._0;
+           var newCtx = _U.update(_p40,{transitStatus: $AppTypes.Enter});
+           var newAppState = _U.update(_p39,{route: _p33,ctx: newCtx});
+           var _p32 = newAppState.route;
+           if (_p32.ctor === "Just") {
+                 return A2(needsTransition,
+                 _p39.route,
+                 _p33) ? triggerAnim(A2(mountRoute,
                  newAppState,
-                 _p20._0) : A2($AppTypes._op["&:"],newAppState,$Effects.none);
+                 _p32._0)) : A2($AppTypes._op["&:"],newAppState,$Effects.none);
               } else {
                  return A2($AppTypes._op["&:"],newAppState,$Effects.none);
               }
+         case "TransitionAction": return A2(mapEffect,
+           $AppTypes.TransitionAction,
+           A2(updateTransitionAnim,_p39,_p29._0));
          case "SetPlayer": var fx = A2($Effects.map,
-           function (_p22) {
+           function (_p34) {
               return $AppTypes.AppNoOp;
            },
            $Screens$UpdateUtils.redirect($Routes.Home));
-           var newCtx = _U.update(_p28,{player: _p17._0});
-           return A2($AppTypes._op["&:"],_U.update(_p27,{ctx: newCtx}),fx);
+           var newCtx = _U.update(_p40,{player: _p29._0});
+           return A2($AppTypes._op["&:"],_U.update(_p39,{ctx: newCtx}),fx);
          case "UpdateDims": return A2($AppTypes._op["&:"],
-           _U.update(_p27,{ctx: _U.update(_p28,{dims: _p17._0})}),
+           _U.update(_p39,{ctx: _U.update(_p40,{dims: _p29._0})}),
            $Effects.none);
          case "MouseEvent": var handlerMaybe = function () {
-              var _p23 = _p27.route;
-              _v9_2: do {
-                 if (_p23.ctor === "Just") {
-                       switch (_p23._0.ctor)
-                       {case "EditTrack": return $Maybe.Just(function (_p24) {
-                               return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p24));
+              var _p35 = _p39.route;
+              _v13_2: do {
+                 if (_p35.ctor === "Just") {
+                       switch (_p35._0.ctor)
+                       {case "EditTrack": return $Maybe.Just(function (_p36) {
+                               return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p36));
                             });
-                          case "ShowTrack": return $Maybe.Just(function (_p25) {
-                               return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p25));
+                          case "ShowTrack": return $Maybe.Just(function (_p37) {
+                               return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p37));
                             });
-                          default: break _v9_2;}
+                          default: break _v13_2;}
                     } else {
-                       break _v9_2;
+                       break _v13_2;
                     }
               } while (false);
               return $Maybe.Nothing;
            }();
-           var _p26 = handlerMaybe;
-           if (_p26.ctor === "Just") {
-                 return A2(updateScreen,_p26._0(_p17._0),_p27);
+           var _p38 = handlerMaybe;
+           if (_p38.ctor === "Just") {
+                 return A2(updateScreen,_p38._0(_p29._0),_p39);
               } else {
-                 return A2($AppTypes._op["&:"],_p27,$Effects.none);
+                 return A2($AppTypes._op["&:"],_p39,$Effects.none);
               }
-         case "Logout": return A2($AppTypes._op["&!"],_p27,logoutTask);
-         case "ScreenAction": return A2(updateScreen,_p17._0,_p27);
-         default: return A2($AppTypes._op["&:"],_p27,$Effects.none);}
+         case "Logout": return A2($AppTypes._op["&!"],_p39,logoutTask);
+         case "ScreenAction": return A2(updateScreen,_p29._0,_p39);
+         default: return A2($AppTypes._op["&:"],_p39,$Effects.none);}
    });
    var initialAppUpdate = function (setup) {
       var task = $Task.succeed($AppTypes.SetPath(setup.path));
@@ -16808,6 +17146,8 @@ Elm.AppUpdates.make = function (_elm) {
                                    ,initialAppUpdate: initialAppUpdate
                                    ,update: update
                                    ,needsTransition: needsTransition
+                                   ,triggerAnim: triggerAnim
+                                   ,updateTransitionAnim: updateTransitionAnim
                                    ,mountRoute: mountRoute
                                    ,updateScreen: updateScreen
                                    ,logoutTask: logoutTask
@@ -16820,7 +17160,8 @@ Elm.AppUpdates.make = function (_elm) {
                                    ,applyGame: applyGame
                                    ,applyListDrafts: applyListDrafts
                                    ,applyAdmin: applyAdmin
-                                   ,applyScreen: applyScreen};
+                                   ,applyScreen: applyScreen
+                                   ,mapEffect: mapEffect};
 };
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
@@ -19612,13 +19953,31 @@ Elm.Screens.Layout.make = function (_elm) {
          }
    };
    var layoutWithNav = F3(function (name,ctx,content) {
+      var transform = function (v) {
+         return A2($Basics._op["++"],
+         "translateX(",
+         A2($Basics._op["++"],$Basics.toString(40 - v * 40),"px)"));
+      };
+      var transitionStyle = function () {
+         var _p1 = ctx.animValue;
+         if (_p1.ctor === "Just") {
+               var _p2 = _p1._0;
+               return _U.list([{ctor: "_Tuple2"
+                               ,_0: "opacity"
+                               ,_1: $Basics.toString(_p2)}
+                              ,{ctor: "_Tuple2",_0: "transform",_1: transform(_p2)}]);
+            } else {
+               return _U.list([]);
+            }
+      }();
       return A3(layout,
       name,
       $Screens$Sidebar.view(ctx),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
-      "padded ",
-      transitionName(ctx.transitStatus)))]),
+              "padded ",
+              transitionName(ctx.transitStatus)))
+              ,$Html$Attributes.style(transitionStyle)]),
       content)]));
    });
    return _elm.Screens.Layout.values = {_op: _op

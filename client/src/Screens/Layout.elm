@@ -10,9 +10,25 @@ import AppTypes exposing (..)
 
 layoutWithNav : String -> Context -> List Html -> Html
 layoutWithNav name ctx content =
-  layout name
-    (Sidebar.view ctx)
-    [ div [ class <| "padded " ++ (transitionName ctx.transitStatus) ] content ]
+  let
+    transform v = "translateX(" ++ toString (40 - v * 40) ++ "px)"
+    transitionStyle =
+      case ctx.animValue of
+        Just v ->
+          [ ("opacity", toString v)
+          , ("transform", transform v)
+          ]
+        Nothing ->
+          []
+  in
+    layout name
+      (Sidebar.view ctx)
+      [ div
+          [ class <| "padded " ++ (transitionName ctx.transitStatus)
+          , style transitionStyle
+          ]
+        content
+      ]
 
 transitionName : TransitStatus -> String
 transitionName status =

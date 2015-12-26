@@ -3,6 +3,7 @@ module AppTypes where
 import Task exposing (Task)
 import Effects exposing (Effects)
 import DragAndDrop exposing (MouseEvent)
+import Animation exposing (Animation)
 
 import Models exposing (..)
 
@@ -57,11 +58,17 @@ type AppAction
   | SetPath String
   | PathChanged String
   | MountRoute (Maybe Routes.Route)
+  | TransitionAction TransitionStep
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
   | ScreenAction ScreenAction
   | Logout
   | AppNoOp
+
+
+type TransitionStep
+  = TransitionStart Float
+  | TransitionTick Animation Float
 
 
 type ScreenAction
@@ -88,6 +95,7 @@ type alias Context =
   { player : Player
   , dims : (Int, Int)
   , transitStatus : TransitStatus
+  , animValue : Maybe Float
   }
 
 type TransitStatus = Exit | Enter
@@ -111,6 +119,7 @@ initialAppState { path, dims, player } =
       { player = player
       , dims = dims
       , transitStatus = Enter
+      , animValue = Nothing
       }
   , path = path
   , route = Nothing
