@@ -14,7 +14,7 @@ import Screens.Admin.Updates exposing (addr)
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout
 
-import Transition
+import Transit
 
 
 type Tab = DashboardTab | TracksTab | UsersTab
@@ -53,7 +53,7 @@ routeMenuItem r =
 content : Context -> AdminRoute -> Tab -> Screen -> Html
 content ctx route item ({tracks, users} as screen) =
   let
-    styleAttr = style (Layout.transitionStyle screen.transition)
+    styleAttr = style (Transit.slideLeftStyle screen.transition)
     tabContent =
       case item of
         DashboardTab ->

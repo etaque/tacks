@@ -6,6 +6,7 @@ import RouteParser
 import Effects exposing (Effects, map, none, task)
 import Result
 
+import Constants exposing (..)
 import AppTypes exposing (..)
 
 import Screens.Home.Updates as Home
@@ -23,7 +24,7 @@ import ServerApi
 import Routes exposing (..)
 import Screens.UpdateUtils as Utils
 
-import Transition
+import Transit
 
 
 initialAppUpdate : AppSetup -> (AppState, Effects AppAction)
@@ -56,7 +57,7 @@ update appAction ({screens, ctx} as appState) =
 
     TransitionAction a ->
       let
-        (newCtx, fx) = Transition.applyStep ctx TransitionAction a
+        (newCtx, fx) = Transit.update a ctx TransitionAction
       in
         ({ appState | ctx = newCtx }, fx)
 
@@ -101,13 +102,15 @@ addTransition prevRoute route (({ctx,screens} as appState), fx) =
     case (prevRoute, route) of
       (Just (Admin _), Admin _) ->
         let
-          (newAdminScreen, tfx) = Transition.applyInit screens.admin (ScreenAction << AdminAction << AdminTypes.TransitionAction)
+          (newAdminScreen, tfx) =
+            Transit.init transitionDuration screens.admin
+                     (ScreenAction << AdminAction << AdminTypes.TransitionAction)
           newScreens = { screens | admin = newAdminScreen }
         in
           ({ appState | screens = newScreens }, Effects.batch [ fx, tfx ])
       _ ->
         let
-          (newCtx, tfx) = Transition.applyInit ctx TransitionAction
+          (newCtx, tfx) = Transit.init transitionDuration ctx TransitionAction
         in
           ({ appState | ctx = newCtx }, Effects.batch [ fx, tfx ])
 

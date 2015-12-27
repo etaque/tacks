@@ -7,7 +7,7 @@ import Screens.Sidebar as Sidebar
 import Constants exposing (..)
 import AppTypes exposing (..)
 
-import Transition
+import Transit
 
 
 layoutWithNav : String -> Context -> List Html -> Html
@@ -16,7 +16,7 @@ layoutWithNav name ctx content =
     (Sidebar.view ctx)
     [ div
         [ class "padded"
-        , style (transitionStyle ctx.transition)
+        , style (Transit.slideLeftStyle ctx.transition)
         ]
       content
     ]
@@ -31,12 +31,3 @@ layout name sideContent mainContent =
     , main' [ ] mainContent
     ]
 
-transitionStyle : Transition.Transition -> List (String, String)
-transitionStyle t =
-  case Transition.value t of
-    Just v ->
-      [ ("opacity", toString v)
-      , ("transform", "translateX(" ++ toString (40 - v * 40) ++ "px)")
-      ]
-    Nothing ->
-      []

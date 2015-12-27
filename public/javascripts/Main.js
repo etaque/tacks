@@ -7265,6 +7265,30 @@ Elm.Combine.make = function (_elm) {
       many(skip(p)),
       $Basics.always(succeed({ctor: "_Tuple0"})));
    };
+   var manyTill = F2(function (p,end) {
+      var accumulate = F2(function (acc,cx) {
+         accumulate: while (true) {
+            var _p17 = A2(app,end,cx);
+            if (_p17._0.ctor === "Fail") {
+                  var _p19 = _p17._1;
+                  var _p18 = A2(app,p,_p19);
+                  if (_p18.ctor === "_Tuple2" && _p18._0.ctor === "Done") {
+                        var _v16 = A2($List._op["::"],_p18._0._0,acc),_v17 = _p18._1;
+                        acc = _v16;
+                        cx = _v17;
+                        continue accumulate;
+                     } else {
+                        return {ctor: "_Tuple2",_0: Fail(_p17._0._0),_1: _p19};
+                     }
+               } else {
+                  return {ctor: "_Tuple2"
+                         ,_0: Done($List.reverse(acc))
+                         ,_1: _p17._1};
+               }
+         }
+      });
+      return Parser(accumulate(_U.list([])));
+   });
    var Context = F2(function (a,b) {
       return {input: a,position: b};
    });
@@ -7289,6 +7313,7 @@ Elm.Combine.make = function (_elm) {
                                 ,maybe: maybe
                                 ,many: many
                                 ,many1: many1
+                                ,manyTill: manyTill
                                 ,sepBy: sepBy
                                 ,sepBy1: sepBy1
                                 ,skip: skip
@@ -11319,6 +11344,365 @@ Elm.Effects.make = function (_elm) {
                                 ,batch: batch
                                 ,toTask: toTask};
 };
+Elm.Animation = Elm.Animation || {};
+Elm.Animation.make = function (_elm) {
+   "use strict";
+   _elm.Animation = _elm.Animation || {};
+   if (_elm.Animation.values) return _elm.Animation.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var isScheduled = F2(function (t,_p0) {
+      var _p1 = _p0;
+      return _U.cmp(t,_p1._0.start + _p1._0.delay) < 1;
+   });
+   var getTo = function (_p2) {
+      var _p3 = _p2;
+      return _p3._0.to;
+   };
+   var getFrom = function (_p4) {
+      var _p5 = _p4;
+      return _p5._0.from;
+   };
+   var getEase = function (_p6) {
+      var _p7 = _p6;
+      return _p7._0.ease;
+   };
+   var getDelay = function (_p8) {
+      var _p9 = _p8;
+      return _p9._0.delay;
+   };
+   var getStart = function (_p10) {
+      var _p11 = _p10;
+      return _p11._0.start;
+   };
+   var timeElapsed = F2(function (t,_p12) {
+      var _p13 = _p12;
+      return A2($Basics.max,0,t - (_p13._0.start + _p13._0.delay));
+   });
+   var defaultEase = function (x) {
+      return (1 - $Basics.cos($Basics.pi * x)) / 2;
+   };
+   var spd = F3(function (dos,from,to) {
+      var _p14 = dos;
+      if (_p14.ctor === "Duration") {
+            return $Basics.abs(to - from) / _p14._0;
+         } else {
+            return _p14._0;
+         }
+   });
+   var getSpeed = function (_p15) {
+      var _p16 = _p15;
+      return A3(spd,_p16._0.dos,_p16._0.from,_p16._0.to);
+   };
+   var dur = F3(function (dos,from,to) {
+      var _p17 = dos;
+      if (_p17.ctor === "Duration") {
+            return _p17._0;
+         } else {
+            return $Basics.abs(to - from) / _p17._0;
+         }
+   });
+   var animate = F2(function (t,_p18) {
+      var _p19 = _p18;
+      var _p23 = _p19._0.to;
+      var _p22 = _p19._0.start;
+      var _p21 = _p19._0.from;
+      var duration = A3(dur,_p19._0.dos,_p21,_p23);
+      var fr = A3($Basics.clamp,
+      0,
+      1,
+      (t - _p22 - _p19._0.delay) / duration);
+      var eased = _p19._0.ease(fr);
+      var correction = function () {
+         var _p20 = _p19._0.ramp;
+         if (_p20.ctor === "Nothing") {
+               return 0;
+            } else {
+               var from$ = _p20._0 * (t - _p22);
+               var eased$ = defaultEase(fr);
+               return from$ - from$ * eased$;
+            }
+      }();
+      return _p21 + (_p23 - _p21) * eased + correction;
+   });
+   var velocity = F2(function (t,u) {
+      var forwDiff = A2(animate,t + 10,u);
+      var backDiff = A2(animate,t - 10,u);
+      return (forwDiff - backDiff) / 20;
+   });
+   var timeRemaining = F2(function (t,_p24) {
+      var _p25 = _p24;
+      var duration = A3(dur,_p25._0.dos,_p25._0.from,_p25._0.to);
+      return A2($Basics.max,
+      0,
+      _p25._0.start + _p25._0.delay + duration - t);
+   });
+   var getDuration = function (_p26) {
+      var _p27 = _p26;
+      return A3(dur,_p27._0.dos,_p27._0.from,_p27._0.to);
+   };
+   var equals = F2(function (_p29,_p28) {
+      var _p30 = _p29;
+      var _p33 = _p30._0;
+      var _p31 = _p28;
+      var _p32 = _p31._0;
+      return _U.eq(_p33.start + _p33.delay,
+      _p32.start + _p32.delay) && (_U.eq(_p33.from,
+      _p32.from) && (_U.eq(_p33.to,_p32.to) && (_U.eq(_p33.ramp,
+      _p32.ramp) && ((_U.eq(_p33.dos,_p32.dos) || _U.cmp(1.0e-3,
+      $Basics.abs(A3(dur,_p33.dos,_p33.from,_p33.to) - A3(dur,
+      _p32.dos,
+      _p32.from,
+      _p32.to))) > -1) && A2($List.all,
+      function (t) {
+         return _U.eq(_p33.ease(t),_p32.ease(t));
+      },
+      _U.list([0.1,0.3,0.7,0.9]))))));
+   });
+   var isRunning = F2(function (t,_p34) {
+      var _p35 = _p34;
+      var _p37 = _p35._0.start;
+      var _p36 = _p35._0.delay;
+      var duration = A3(dur,_p35._0.dos,_p35._0.from,_p35._0.to);
+      return _U.cmp(t,_p37 + _p36) > 0 && _U.cmp(t,
+      _p37 + _p36 + duration) < 0;
+   });
+   var isDone = F2(function (t,_p38) {
+      var _p39 = _p38;
+      var duration = A3(dur,_p39._0.dos,_p39._0.from,_p39._0.to);
+      return _U.cmp(t,_p39._0.start + _p39._0.delay + duration) > -1;
+   });
+   var A = function (a) {    return {ctor: "A",_0: a};};
+   var undo = F2(function (t,_p40) {
+      var _p41 = _p40;
+      var _p42 = _p41._0;
+      return A(_U.update(_p42,
+      {from: _p42.to
+      ,to: _p42.from
+      ,start: t
+      ,delay: 0 - A2(timeRemaining,t,_p41)
+      ,ramp: $Maybe.Nothing
+      ,ease: function (t) {
+         return 1 - _p42.ease(1 - t);
+      }}));
+   });
+   var delay = F2(function (x,_p43) {
+      var _p44 = _p43;
+      return A(_U.update(_p44._0,{delay: x}));
+   });
+   var ease = F2(function (x,_p45) {
+      var _p46 = _p45;
+      return A(_U.update(_p46._0,{ease: x}));
+   });
+   var from = F2(function (x,_p47) {
+      var _p48 = _p47;
+      return A(_U.update(_p48._0,{from: x,ramp: $Maybe.Nothing}));
+   });
+   var to = F2(function (x,_p49) {
+      var _p50 = _p49;
+      return A(_U.update(_p50._0,{to: x,ramp: $Maybe.Nothing}));
+   });
+   var AnimRecord = F7(function (a,b,c,d,e,f,g) {
+      return {start: a
+             ,delay: b
+             ,dos: c
+             ,ramp: d
+             ,ease: e
+             ,from: f
+             ,to: g};
+   });
+   var Speed = function (a) {    return {ctor: "Speed",_0: a};};
+   var speed = F2(function (x,_p51) {
+      var _p52 = _p51;
+      return A(_U.update(_p52._0,{dos: Speed($Basics.abs(x))}));
+   });
+   var Duration = function (a) {
+      return {ctor: "Duration",_0: a};
+   };
+   var defaultDuration = Duration(750 * $Time.millisecond);
+   var animation = function (t) {
+      return A(A7(AnimRecord,
+      t,
+      0,
+      defaultDuration,
+      $Maybe.Nothing,
+      defaultEase,
+      0,
+      1));
+   };
+   var retarget = F3(function (t,newTo,_p53) {
+      var _p54 = _p53;
+      var _p57 = _p54;
+      var _p56 = _p54._0;
+      if (_U.eq(newTo,_p56.to)) return _p57; else if (_U.eq(_p56.from,
+         _p56.to)) return A(_U.update(_p56,
+            {start: t
+            ,to: newTo
+            ,dos: defaultDuration
+            ,ramp: $Maybe.Nothing})); else if (A2(isScheduled,t,_p57))
+            return A(_U.update(_p56,{to: newTo,ramp: $Maybe.Nothing}));
+            else if (A2(isDone,t,_p57)) return A(_U.update(_p56,
+                  {start: t
+                  ,delay: 0
+                  ,from: _p56.to
+                  ,to: newTo
+                  ,ramp: $Maybe.Nothing})); else {
+                     var newSpeed = function () {
+                        var _p55 = _p56.dos;
+                        if (_p55.ctor === "Speed") {
+                              return _p56.dos;
+                           } else {
+                              return Speed(A3(spd,_p56.dos,_p56.from,_p56.to));
+                           }
+                     }();
+                     var pos = A2(animate,t,_p57);
+                     var vel = A2(velocity,t,_p57);
+                     return A(A7(AnimRecord,
+                     t,
+                     0,
+                     newSpeed,
+                     $Maybe.Just(vel),
+                     _p56.ease,
+                     pos,
+                     newTo));
+                  }
+   });
+   var $static = function (x) {
+      return A(A7(AnimRecord,
+      0,
+      0,
+      Duration(0),
+      $Maybe.Nothing,
+      defaultEase,
+      x,
+      x));
+   };
+   var duration = F2(function (x,_p58) {
+      var _p59 = _p58;
+      return A(_U.update(_p59._0,{dos: Duration(x)}));
+   });
+   return _elm.Animation.values = {_op: _op
+                                  ,animation: animation
+                                  ,$static: $static
+                                  ,animate: animate
+                                  ,duration: duration
+                                  ,speed: speed
+                                  ,delay: delay
+                                  ,ease: ease
+                                  ,from: from
+                                  ,to: to
+                                  ,undo: undo
+                                  ,retarget: retarget
+                                  ,getStart: getStart
+                                  ,getDuration: getDuration
+                                  ,getSpeed: getSpeed
+                                  ,getDelay: getDelay
+                                  ,getEase: getEase
+                                  ,getFrom: getFrom
+                                  ,getTo: getTo
+                                  ,equals: equals
+                                  ,velocity: velocity
+                                  ,timeElapsed: timeElapsed
+                                  ,timeRemaining: timeRemaining
+                                  ,isScheduled: isScheduled
+                                  ,isRunning: isRunning
+                                  ,isDone: isDone};
+};
+Elm.Transit = Elm.Transit || {};
+Elm.Transit.make = function (_elm) {
+   "use strict";
+   _elm.Transit = _elm.Transit || {};
+   if (_elm.Transit.values) return _elm.Transit.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Animation = Elm.Animation.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var value = function (_p0) {    var _p1 = _p0;return _p1._0;};
+   var slideLeftStyle = function (_p2) {
+      var _p3 = _p2;
+      var _p4 = _p3._0;
+      if (_p4.ctor === "Just") {
+            var _p5 = _p4._0;
+            return _U.list([{ctor: "_Tuple2"
+                            ,_0: "opacity"
+                            ,_1: $Basics.toString(_p5)}
+                           ,{ctor: "_Tuple2"
+                            ,_0: "transform"
+                            ,_1: A2($Basics._op["++"],
+                            "translateX(",
+                            A2($Basics._op["++"],$Basics.toString(40 - _p5 * 40),"px)"))}]);
+         } else {
+            return _U.list([]);
+         }
+   };
+   var T = function (a) {    return {ctor: "T",_0: a};};
+   var empty = T($Maybe.Nothing);
+   var start = T($Maybe.Just(0));
+   var set = function (_p6) {    return T($Maybe.Just(_p6));};
+   var Tick = F2(function (a,b) {
+      return {ctor: "Tick",_0: a,_1: b};
+   });
+   var Start = F2(function (a,b) {
+      return {ctor: "Start",_0: a,_1: b};
+   });
+   var step = function (action) {
+      var _p7 = action;
+      switch (_p7.ctor)
+      {case "Init": return {ctor: "_Tuple2"
+                           ,_0: start
+                           ,_1: $Effects.tick(Start(_p7._0))};
+         case "Start": var _p8 = _p7._1;
+           var anim = A2($Animation.duration,
+           _p7._0,
+           $Animation.animation(_p8));
+           var fx = $Effects.tick(Tick(anim));
+           return {ctor: "_Tuple2"
+                  ,_0: set(A2($Animation.animate,_p8,anim))
+                  ,_1: fx};
+         default: var _p10 = _p7._1;
+           var _p9 = _p7._0;
+           return A2($Animation.isDone,_p10,_p9) ? {ctor: "_Tuple2"
+                                                   ,_0: empty
+                                                   ,_1: $Effects.none} : {ctor: "_Tuple2"
+                                                                         ,_0: set(A2($Animation.animate,_p10,_p9))
+                                                                         ,_1: $Effects.tick(Tick(_p9))};}
+   };
+   var update = F3(function (action,model,actionWrapper) {
+      var _p11 = step(action);
+      var t = _p11._0;
+      var fx = _p11._1;
+      return {ctor: "_Tuple2"
+             ,_0: _U.update(model,{transition: t})
+             ,_1: A2($Effects.map,actionWrapper,fx)};
+   });
+   var Init = function (a) {    return {ctor: "Init",_0: a};};
+   var initAction = Init;
+   var init = F3(function (dur,model,actionWrapper) {
+      return A3(update,initAction(dur),model,actionWrapper);
+   });
+   return _elm.Transit.values = {_op: _op
+                                ,initAction: initAction
+                                ,step: step
+                                ,init: init
+                                ,update: update
+                                ,value: value
+                                ,empty: empty
+                                ,slideLeftStyle: slideLeftStyle};
+};
 Elm.Automaton = Elm.Automaton || {};
 Elm.Automaton.make = function (_elm) {
    "use strict";
@@ -11760,6 +12144,7 @@ Elm.Constants.make = function (_elm) {
                 ,grass: "rgb(200, 230, 180)"
                 ,rock: "rgb(171, 196, 198)"
                 ,green: "rgb(100, 180, 106)"};
+   var transitionDuration = 100;
    var gutterWidth = 30;
    var containerWidth = 940;
    var sidebarWidth = 280;
@@ -11767,6 +12152,7 @@ Elm.Constants.make = function (_elm) {
                                   ,sidebarWidth: sidebarWidth
                                   ,containerWidth: containerWidth
                                   ,gutterWidth: gutterWidth
+                                  ,transitionDuration: transitionDuration
                                   ,colors: colors
                                   ,hexRadius: hexRadius
                                   ,admins: admins};
@@ -13155,345 +13541,6 @@ Elm.Routes.make = function (_elm) {
                                ,toPath: toPath
                                ,maybeSegment: maybeSegment};
 };
-Elm.Animation = Elm.Animation || {};
-Elm.Animation.make = function (_elm) {
-   "use strict";
-   _elm.Animation = _elm.Animation || {};
-   if (_elm.Animation.values) return _elm.Animation.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var isScheduled = F2(function (t,_p0) {
-      var _p1 = _p0;
-      return _U.cmp(t,_p1._0.start + _p1._0.delay) < 1;
-   });
-   var getTo = function (_p2) {
-      var _p3 = _p2;
-      return _p3._0.to;
-   };
-   var getFrom = function (_p4) {
-      var _p5 = _p4;
-      return _p5._0.from;
-   };
-   var getEase = function (_p6) {
-      var _p7 = _p6;
-      return _p7._0.ease;
-   };
-   var getDelay = function (_p8) {
-      var _p9 = _p8;
-      return _p9._0.delay;
-   };
-   var getStart = function (_p10) {
-      var _p11 = _p10;
-      return _p11._0.start;
-   };
-   var timeElapsed = F2(function (t,_p12) {
-      var _p13 = _p12;
-      return A2($Basics.max,0,t - (_p13._0.start + _p13._0.delay));
-   });
-   var defaultEase = function (x) {
-      return (1 - $Basics.cos($Basics.pi * x)) / 2;
-   };
-   var spd = F3(function (dos,from,to) {
-      var _p14 = dos;
-      if (_p14.ctor === "Duration") {
-            return $Basics.abs(to - from) / _p14._0;
-         } else {
-            return _p14._0;
-         }
-   });
-   var getSpeed = function (_p15) {
-      var _p16 = _p15;
-      return A3(spd,_p16._0.dos,_p16._0.from,_p16._0.to);
-   };
-   var dur = F3(function (dos,from,to) {
-      var _p17 = dos;
-      if (_p17.ctor === "Duration") {
-            return _p17._0;
-         } else {
-            return $Basics.abs(to - from) / _p17._0;
-         }
-   });
-   var animate = F2(function (t,_p18) {
-      var _p19 = _p18;
-      var _p23 = _p19._0.to;
-      var _p22 = _p19._0.start;
-      var _p21 = _p19._0.from;
-      var duration = A3(dur,_p19._0.dos,_p21,_p23);
-      var fr = A3($Basics.clamp,
-      0,
-      1,
-      (t - _p22 - _p19._0.delay) / duration);
-      var eased = _p19._0.ease(fr);
-      var correction = function () {
-         var _p20 = _p19._0.ramp;
-         if (_p20.ctor === "Nothing") {
-               return 0;
-            } else {
-               var from$ = _p20._0 * (t - _p22);
-               var eased$ = defaultEase(fr);
-               return from$ - from$ * eased$;
-            }
-      }();
-      return _p21 + (_p23 - _p21) * eased + correction;
-   });
-   var velocity = F2(function (t,u) {
-      var forwDiff = A2(animate,t + 10,u);
-      var backDiff = A2(animate,t - 10,u);
-      return (forwDiff - backDiff) / 20;
-   });
-   var timeRemaining = F2(function (t,_p24) {
-      var _p25 = _p24;
-      var duration = A3(dur,_p25._0.dos,_p25._0.from,_p25._0.to);
-      return A2($Basics.max,
-      0,
-      _p25._0.start + _p25._0.delay + duration - t);
-   });
-   var getDuration = function (_p26) {
-      var _p27 = _p26;
-      return A3(dur,_p27._0.dos,_p27._0.from,_p27._0.to);
-   };
-   var equals = F2(function (_p29,_p28) {
-      var _p30 = _p29;
-      var _p33 = _p30._0;
-      var _p31 = _p28;
-      var _p32 = _p31._0;
-      return _U.eq(_p33.start + _p33.delay,
-      _p32.start + _p32.delay) && (_U.eq(_p33.from,
-      _p32.from) && (_U.eq(_p33.to,_p32.to) && (_U.eq(_p33.ramp,
-      _p32.ramp) && ((_U.eq(_p33.dos,_p32.dos) || _U.cmp(1.0e-3,
-      $Basics.abs(A3(dur,_p33.dos,_p33.from,_p33.to) - A3(dur,
-      _p32.dos,
-      _p32.from,
-      _p32.to))) > -1) && A2($List.all,
-      function (t) {
-         return _U.eq(_p33.ease(t),_p32.ease(t));
-      },
-      _U.list([0.1,0.3,0.7,0.9]))))));
-   });
-   var isRunning = F2(function (t,_p34) {
-      var _p35 = _p34;
-      var _p37 = _p35._0.start;
-      var _p36 = _p35._0.delay;
-      var duration = A3(dur,_p35._0.dos,_p35._0.from,_p35._0.to);
-      return _U.cmp(t,_p37 + _p36) > 0 && _U.cmp(t,
-      _p37 + _p36 + duration) < 0;
-   });
-   var isDone = F2(function (t,_p38) {
-      var _p39 = _p38;
-      var duration = A3(dur,_p39._0.dos,_p39._0.from,_p39._0.to);
-      return _U.cmp(t,_p39._0.start + _p39._0.delay + duration) > -1;
-   });
-   var A = function (a) {    return {ctor: "A",_0: a};};
-   var undo = F2(function (t,_p40) {
-      var _p41 = _p40;
-      var _p42 = _p41._0;
-      return A(_U.update(_p42,
-      {from: _p42.to
-      ,to: _p42.from
-      ,start: t
-      ,delay: 0 - A2(timeRemaining,t,_p41)
-      ,ramp: $Maybe.Nothing
-      ,ease: function (t) {
-         return 1 - _p42.ease(1 - t);
-      }}));
-   });
-   var delay = F2(function (x,_p43) {
-      var _p44 = _p43;
-      return A(_U.update(_p44._0,{delay: x}));
-   });
-   var ease = F2(function (x,_p45) {
-      var _p46 = _p45;
-      return A(_U.update(_p46._0,{ease: x}));
-   });
-   var from = F2(function (x,_p47) {
-      var _p48 = _p47;
-      return A(_U.update(_p48._0,{from: x,ramp: $Maybe.Nothing}));
-   });
-   var to = F2(function (x,_p49) {
-      var _p50 = _p49;
-      return A(_U.update(_p50._0,{to: x,ramp: $Maybe.Nothing}));
-   });
-   var AnimRecord = F7(function (a,b,c,d,e,f,g) {
-      return {start: a
-             ,delay: b
-             ,dos: c
-             ,ramp: d
-             ,ease: e
-             ,from: f
-             ,to: g};
-   });
-   var Speed = function (a) {    return {ctor: "Speed",_0: a};};
-   var speed = F2(function (x,_p51) {
-      var _p52 = _p51;
-      return A(_U.update(_p52._0,{dos: Speed($Basics.abs(x))}));
-   });
-   var Duration = function (a) {
-      return {ctor: "Duration",_0: a};
-   };
-   var defaultDuration = Duration(750 * $Time.millisecond);
-   var animation = function (t) {
-      return A(A7(AnimRecord,
-      t,
-      0,
-      defaultDuration,
-      $Maybe.Nothing,
-      defaultEase,
-      0,
-      1));
-   };
-   var retarget = F3(function (t,newTo,_p53) {
-      var _p54 = _p53;
-      var _p57 = _p54;
-      var _p56 = _p54._0;
-      if (_U.eq(newTo,_p56.to)) return _p57; else if (_U.eq(_p56.from,
-         _p56.to)) return A(_U.update(_p56,
-            {start: t
-            ,to: newTo
-            ,dos: defaultDuration
-            ,ramp: $Maybe.Nothing})); else if (A2(isScheduled,t,_p57))
-            return A(_U.update(_p56,{to: newTo,ramp: $Maybe.Nothing}));
-            else if (A2(isDone,t,_p57)) return A(_U.update(_p56,
-                  {start: t
-                  ,delay: 0
-                  ,from: _p56.to
-                  ,to: newTo
-                  ,ramp: $Maybe.Nothing})); else {
-                     var newSpeed = function () {
-                        var _p55 = _p56.dos;
-                        if (_p55.ctor === "Speed") {
-                              return _p56.dos;
-                           } else {
-                              return Speed(A3(spd,_p56.dos,_p56.from,_p56.to));
-                           }
-                     }();
-                     var pos = A2(animate,t,_p57);
-                     var vel = A2(velocity,t,_p57);
-                     return A(A7(AnimRecord,
-                     t,
-                     0,
-                     newSpeed,
-                     $Maybe.Just(vel),
-                     _p56.ease,
-                     pos,
-                     newTo));
-                  }
-   });
-   var $static = function (x) {
-      return A(A7(AnimRecord,
-      0,
-      0,
-      Duration(0),
-      $Maybe.Nothing,
-      defaultEase,
-      x,
-      x));
-   };
-   var duration = F2(function (x,_p58) {
-      var _p59 = _p58;
-      return A(_U.update(_p59._0,{dos: Duration(x)}));
-   });
-   return _elm.Animation.values = {_op: _op
-                                  ,animation: animation
-                                  ,$static: $static
-                                  ,animate: animate
-                                  ,duration: duration
-                                  ,speed: speed
-                                  ,delay: delay
-                                  ,ease: ease
-                                  ,from: from
-                                  ,to: to
-                                  ,undo: undo
-                                  ,retarget: retarget
-                                  ,getStart: getStart
-                                  ,getDuration: getDuration
-                                  ,getSpeed: getSpeed
-                                  ,getDelay: getDelay
-                                  ,getEase: getEase
-                                  ,getFrom: getFrom
-                                  ,getTo: getTo
-                                  ,equals: equals
-                                  ,velocity: velocity
-                                  ,timeElapsed: timeElapsed
-                                  ,timeRemaining: timeRemaining
-                                  ,isScheduled: isScheduled
-                                  ,isRunning: isRunning
-                                  ,isDone: isDone};
-};
-Elm.Transition = Elm.Transition || {};
-Elm.Transition.make = function (_elm) {
-   "use strict";
-   _elm.Transition = _elm.Transition || {};
-   if (_elm.Transition.values) return _elm.Transition.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Animation = Elm.Animation.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var value = function (_p0) {    var _p1 = _p0;return _p1._0;};
-   var Tick = F2(function (a,b) {
-      return {ctor: "Tick",_0: a,_1: b};
-   });
-   var Start = function (a) {    return {ctor: "Start",_0: a};};
-   var Init = {ctor: "Init"};
-   var init = Init;
-   var T = function (a) {    return {ctor: "T",_0: a};};
-   var start = T($Maybe.Just(0));
-   var set = function (_p2) {    return T($Maybe.Just(_p2));};
-   var empty = T($Maybe.Nothing);
-   var step = function (action) {
-      var _p3 = action;
-      switch (_p3.ctor)
-      {case "Init": return {ctor: "_Tuple2"
-                           ,_0: start
-                           ,_1: $Effects.tick(Start)};
-         case "Start": var _p4 = _p3._0;
-           var anim = A2($Animation.duration,
-           200,
-           $Animation.animation(_p4));
-           var fx = $Effects.tick(Tick(anim));
-           return {ctor: "_Tuple2"
-                  ,_0: set(A2($Animation.animate,_p4,anim))
-                  ,_1: fx};
-         default: var _p6 = _p3._1;
-           var _p5 = _p3._0;
-           return A2($Animation.isDone,_p6,_p5) ? {ctor: "_Tuple2"
-                                                  ,_0: empty
-                                                  ,_1: $Effects.none} : {ctor: "_Tuple2"
-                                                                        ,_0: set(A2($Animation.animate,_p6,_p5))
-                                                                        ,_1: $Effects.tick(Tick(_p5))};}
-   };
-   var applyStep = F3(function (model,actionWrapper,action) {
-      var _p7 = step(action);
-      var t = _p7._0;
-      var fx = _p7._1;
-      return {ctor: "_Tuple2"
-             ,_0: _U.update(model,{transition: t})
-             ,_1: A2($Effects.map,actionWrapper,fx)};
-   });
-   var applyInit = F2(function (model,actionWrapper) {
-      return A3(applyStep,model,actionWrapper,init);
-   });
-   return _elm.Transition.values = {_op: _op
-                                   ,init: init
-                                   ,step: step
-                                   ,applyInit: applyInit
-                                   ,applyStep: applyStep
-                                   ,value: value
-                                   ,empty: empty};
-};
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Admin = Elm.Screens.Admin || {};
 Elm.Screens.Admin.Types = Elm.Screens.Admin.Types || {};
@@ -13513,7 +13560,7 @@ Elm.Screens.Admin.Types.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Transition = Elm.Transition.make(_elm);
+   $Transit = Elm.Transit.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
    var TransitionAction = function (a) {
@@ -13531,7 +13578,7 @@ Elm.Screens.Admin.Types.make = function (_elm) {
    var RefreshData = {ctor: "RefreshData"};
    var initial = {tracks: _U.list([])
                  ,users: _U.list([])
-                 ,transition: $Transition.empty
+                 ,transition: $Transit.empty
                  ,route: $Routes.Dashboard};
    return _elm.Screens.Admin.Types.values = {_op: _op
                                             ,initial: initial
@@ -13568,14 +13615,14 @@ Elm.AppTypes.make = function (_elm) {
    $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Transition = Elm.Transition.make(_elm);
+   $Transit = Elm.Transit.make(_elm);
    var _op = {};
    var initialAppState = function (_p0) {
       var _p1 = _p0;
       var _p2 = _p1.player;
       return {ctx: {player: _p2
                    ,dims: _p1.dims
-                   ,transition: $Transition.empty}
+                   ,transition: $Transit.empty}
              ,path: _p1.path
              ,route: $Maybe.Nothing
              ,screens: {home: $Screens$Home$Types.initial(_p2)
@@ -16843,7 +16890,7 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Transition = Elm.Transition.make(_elm);
+   $Transit = Elm.Transit.make(_elm);
    var _op = {};
    var refreshData = A2($Task.map,
    $Screens$Admin$Types.RefreshDataResult,
@@ -16880,10 +16927,10 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
-         case "TransitionAction": return A3($Transition.applyStep,
+         case "TransitionAction": return A3($Transit.update,
+           _p0._0,
            screen,
-           $Screens$Admin$Types.TransitionAction,
-           _p0._0);
+           $Screens$Admin$Types.TransitionAction);
          default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
    });
    var mount = A2($AppTypes._op["&!"],
@@ -16904,6 +16951,7 @@ Elm.AppUpdates.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $History = Elm.History.make(_elm),
@@ -16926,7 +16974,7 @@ Elm.AppUpdates.make = function (_elm) {
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Transition = Elm.Transition.make(_elm);
+   $Transit = Elm.Transit.make(_elm);
    var _op = {};
    var mapEffect = F2(function (f,_p0) {
       var _p1 = _p0;
@@ -17082,7 +17130,8 @@ Elm.AppUpdates.make = function (_elm) {
             var _p18 = {ctor: "_Tuple2",_0: prevRoute,_1: route};
             if (_p18.ctor === "_Tuple2" && _p18._0.ctor === "Just" && _p18._0._0.ctor === "Admin" && _p18._1.ctor === "Admin")
             {
-                  var _p19 = A2($Transition.applyInit,
+                  var _p19 = A3($Transit.init,
+                  $Constants.transitionDuration,
                   _p24.admin,
                   function (_p20) {
                      return $AppTypes.ScreenAction($AppTypes.AdminAction($Screens$Admin$Types.TransitionAction(_p20)));
@@ -17094,7 +17143,8 @@ Elm.AppUpdates.make = function (_elm) {
                          ,_0: _U.update(_p22,{screens: newScreens})
                          ,_1: $Effects.batch(_U.list([_p23,tfx]))};
                } else {
-                  var _p21 = A2($Transition.applyInit,
+                  var _p21 = A3($Transit.init,
+                  $Constants.transitionDuration,
                   _p17._0.ctx,
                   $AppTypes.TransitionAction);
                   var newCtx = _p21._0;
@@ -17131,10 +17181,10 @@ Elm.AppUpdates.make = function (_elm) {
               } else {
                  return A2($AppTypes._op["&:"],newAppState,$Effects.none);
               }
-         case "TransitionAction": var _p32 = A3($Transition.applyStep,
+         case "TransitionAction": var _p32 = A3($Transit.update,
+           _p27._0,
            _p39,
-           $AppTypes.TransitionAction,
-           _p27._0);
+           $AppTypes.TransitionAction);
            var newCtx = _p32._0;
            var fx = _p32._1;
            return {ctor: "_Tuple2"
@@ -19968,24 +20018,8 @@ Elm.Screens.Layout.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Transition = Elm.Transition.make(_elm);
+   $Transit = Elm.Transit.make(_elm);
    var _op = {};
-   var transitionStyle = function (t) {
-      var _p0 = $Transition.value(t);
-      if (_p0.ctor === "Just") {
-            var _p1 = _p0._0;
-            return _U.list([{ctor: "_Tuple2"
-                            ,_0: "opacity"
-                            ,_1: $Basics.toString(_p1)}
-                           ,{ctor: "_Tuple2"
-                            ,_0: "transform"
-                            ,_1: A2($Basics._op["++"],
-                            "translateX(",
-                            A2($Basics._op["++"],$Basics.toString(40 - _p1 * 40),"px)"))}]);
-         } else {
-            return _U.list([]);
-         }
-   };
    var layout = F3(function (name,sideContent,mainContent) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
@@ -20006,13 +20040,12 @@ Elm.Screens.Layout.make = function (_elm) {
       $Screens$Sidebar.view(ctx),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class("padded")
-              ,$Html$Attributes.style(transitionStyle(ctx.transition))]),
+              ,$Html$Attributes.style($Transit.slideLeftStyle(ctx.transition))]),
       content)]));
    });
    return _elm.Screens.Layout.values = {_op: _op
                                        ,layoutWithNav: layoutWithNav
-                                       ,layout: layout
-                                       ,transitionStyle: transitionStyle};
+                                       ,layout: layout};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Home = Elm.Screens.Home || {};
@@ -23830,7 +23863,8 @@ Elm.Screens.Admin.View.make = function (_elm) {
    $Screens$Admin$Updates = Elm.Screens.Admin.Updates.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $Transit = Elm.Transit.make(_elm);
    var _op = {};
    var dl$ = function (items) {
       return A2($Html.dl,
@@ -23941,7 +23975,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
             case "TracksTab": return A2(tracksContent,route,_p11);
             default: return A2(usersContent,route,_p11);}
       }();
-      var styleAttr = $Html$Attributes.style($Screens$Layout.transitionStyle(_p11.transition));
+      var styleAttr = $Html$Attributes.style($Transit.slideLeftStyle(_p11.transition));
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("admin-content"),styleAttr]),
       tabContent);

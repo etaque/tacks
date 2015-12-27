@@ -17,7 +17,7 @@ import Screens.ListDrafts.Types as ListDrafts
 import Screens.Admin.Types as Admin
 
 import Routes
-import Transition exposing (WithTransition)
+import Transit exposing (WithTransition)
 
 
 appActionsMailbox : Signal.Mailbox AppAction
@@ -57,7 +57,7 @@ type AppAction
   = SetPlayer Player
   | SetPath String
   | PathChanged String
-  | TransitionAction Transition.Action
+  | TransitionAction Transit.Action
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
   | ScreenAction ScreenAction
@@ -107,7 +107,7 @@ initialAppState { path, dims, player } =
   { ctx =
       { player = player
       , dims = dims
-      , transition = Transition.empty
+      , transition = Transit.empty
       }
   , path = path
   , route = Nothing

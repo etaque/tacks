@@ -4,7 +4,7 @@ import Task exposing (Task, succeed, andThen)
 import Signal
 import Effects exposing (Effects, Never, none, map)
 
-import Transition
+import Transit
 
 import AppTypes exposing (..)
 import Models exposing (..)
@@ -47,7 +47,7 @@ update action screen =
           screen &: none
 
     Types.TransitionAction a ->
-      Transition.applyStep screen Types.TransitionAction a
+      Transit.update a screen Types.TransitionAction
 
     NoOp ->
       screen &: none

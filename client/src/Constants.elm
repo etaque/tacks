@@ -5,6 +5,8 @@ sidebarWidth = 280
 containerWidth = 940
 gutterWidth = 30
 
+transitionDuration = 100
+
 colors =
   { water = "rgb(33, 148, 206)" -- "rgb(147, 202, 223)"
   , sand = "rgb(226, 219, 190)"
