@@ -7,34 +7,19 @@ import Screens.Sidebar as Sidebar
 import Constants exposing (..)
 import AppTypes exposing (..)
 
+import Transition
+
 
 layoutWithNav : String -> Context -> List Html -> Html
 layoutWithNav name ctx content =
-  let
-    transform v = "translateX(" ++ toString (40 - v * 40) ++ "px)"
-    transitionStyle =
-      case ctx.animValue of
-        Just v ->
-          [ ("opacity", toString v)
-          , ("transform", transform v)
-          ]
-        Nothing ->
-          []
-  in
-    layout name
-      (Sidebar.view ctx)
-      [ div
-          [ class <| "padded " ++ (transitionName ctx.transitStatus)
-          , style transitionStyle
-          ]
-        content
-      ]
-
-transitionName : TransitStatus -> String
-transitionName status =
-  case status of
-    Exit -> "exit"
-    Enter -> "enter"
+  layout name
+    (Sidebar.view ctx)
+    [ div
+        [ class "padded"
+        , style (transitionStyle ctx.transition)
+        ]
+      content
+    ]
 
 layout : String -> List Html -> List Html -> Html
 layout name sideContent mainContent =
@@ -46,3 +31,12 @@ layout name sideContent mainContent =
     , main' [ ] mainContent
     ]
 
+transitionStyle : Transition.Transition -> List (String, String)
+transitionStyle t =
+  case Transition.value t of
+    Just v ->
+      [ ("opacity", toString v)
+      , ("transform", "translateX(" ++ toString (40 - v * 40) ++ "px)")
+      ]
+    Nothing ->
+      []

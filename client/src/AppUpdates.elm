@@ -5,7 +5,6 @@ import History
 import RouteParser
 import Effects exposing (Effects, map, none, task)
 import Result
-import Animation
 
 import AppTypes exposing (..)
 
@@ -18,10 +17,13 @@ import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 import Screens.ListDrafts.Updates as ListDrafts
 import Screens.Admin.Updates as Admin
+import Screens.Admin.Types as AdminTypes
 
 import ServerApi
 import Routes exposing (..)
 import Screens.UpdateUtils as Utils
+
+import Transition
 
 
 initialAppUpdate : AppSetup -> (AppState, Effects AppAction)
@@ -42,32 +44,21 @@ update appAction ({screens, ctx} as appState) =
 
     PathChanged path ->
       let
-        newCtx = { ctx | transitStatus = Exit }
-        newAppState = { appState | path = path, ctx = newCtx }
         newRoute = RouteParser.match routeParsers path
-        fx = MountRoute newRoute
-          |> Task.succeed
-          -- |> delay 100
-          |> Effects.task
-      in
-        newAppState &: fx
-
-    MountRoute maybeRoute ->
-      let
-        newCtx = { ctx | transitStatus = Enter }
-        newAppState = { appState | route = maybeRoute, ctx = newCtx }
+        newAppState = { appState | path = path, route = newRoute }
       in
         case newAppState.route of
           Just route ->
-            if needsTransition appState.route maybeRoute
-              then mountRoute newAppState route |> triggerAnim
-              else newAppState &: none
+            mountRoute newAppState route
+              |> addTransition appState.route route
           Nothing -> -- TODO 404
             newAppState &: none
 
-    TransitionAction step ->
-      updateTransitionAnim appState step
-        |> mapEffect TransitionAction
+    TransitionAction a ->
+      let
+        (newCtx, fx) = Transition.applyStep ctx TransitionAction a
+      in
+        ({ appState | ctx = newCtx }, fx)
 
     SetPlayer p ->
       let
@@ -102,48 +93,23 @@ update appAction ({screens, ctx} as appState) =
       appState &: none
 
 
-needsTransition : Maybe Routes.Route -> Maybe Routes.Route -> Bool
-needsTransition before after =
-  if before == after then
-    False
+addTransition : Maybe Routes.Route -> Routes.Route -> (AppState, Effects AppAction) -> (AppState, Effects AppAction)
+addTransition prevRoute route (({ctx,screens} as appState), fx) =
+  if prevRoute == Just route then
+    appState &: fx
   else
-    case (before, after) of
-      (Just (Admin _), Just (Admin _)) ->
-        False
+    case (prevRoute, route) of
+      (Just (Admin _), Admin _) ->
+        let
+          (newAdminScreen, tfx) = Transition.applyInit screens.admin (ScreenAction << AdminAction << AdminTypes.TransitionAction)
+          newScreens = { screens | admin = newAdminScreen }
+        in
+          ({ appState | screens = newScreens }, Effects.batch [ fx, tfx ])
       _ ->
-        True
-
-
-triggerAnim : (AppState, Effects AppAction) -> (AppState, Effects AppAction)
-triggerAnim (({ctx} as state), fx) =
-  let
-    animTick = TransitionAction << TransitionStart
-    newState = { state | ctx = { ctx | animValue = Just 0 } }
-  in
-    (newState, (Effects.batch [ fx, Effects.tick animTick ]))
-
-
-updateTransitionAnim : AppState -> TransitionStep -> (AppState, Effects TransitionStep)
-updateTransitionAnim ({ctx} as appState) step =
-  case step of
-
-    TransitionStart t ->
-      let
-        anim = Animation.animation t
-          |> Animation.duration 200
-      in
-        appState &: (Effects.tick <| TransitionTick anim)
-
-    TransitionTick anim t ->
-      let
-        (animValue, fx) = if Animation.isDone t anim
-          then (Nothing, none)
-          else
-            ( Just <| Animation.animate t anim
-            , Effects.tick <| TransitionTick anim
-            )
-      in
-        { appState | ctx = { ctx | animValue = animValue } } &: fx
+        let
+          (newCtx, tfx) = Transition.applyInit ctx TransitionAction
+        in
+          ({ appState | ctx = newCtx }, Effects.batch [ fx, tfx ])
 
 
 mountRoute : AppState -> Routes.Route -> (AppState, Effects AppAction)

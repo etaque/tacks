@@ -4,9 +4,11 @@ import Task exposing (Task, succeed, andThen)
 import Signal
 import Effects exposing (Effects, Never, none, map)
 
+import Transition
+
 import AppTypes exposing (..)
 import Models exposing (..)
-import Screens.Admin.Types exposing (..)
+import Screens.Admin.Types as Types exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 
@@ -43,6 +45,9 @@ update action screen =
           { screen | tracks = List.filter (\t -> t.id /= id) screen.tracks } &: none
         Err _ ->
           screen &: none
+
+    Types.TransitionAction a ->
+      Transition.applyStep screen Types.TransitionAction a
 
     NoOp ->
       screen &: none

@@ -14,6 +14,8 @@ import Screens.Admin.Updates exposing (addr)
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout
 
+import Transition
+
 
 type Tab = DashboardTab | TracksTab | UsersTab
 
@@ -26,7 +28,8 @@ view ctx route screen =
       [ container "" <|
         [ h1 [] [ text "Admin" ]
         , menu menuItem
-        ] ++ content route menuItem screen
+        , content ctx route menuItem screen
+        ]
       ]
 
 menu : Tab -> Html
@@ -47,15 +50,21 @@ routeMenuItem r =
     ListTracks _ -> TracksTab
     ListUsers _ -> UsersTab
 
-content : AdminRoute -> Tab -> Screen -> List Html
-content route item ({tracks, users} as screen) =
-  case item of
-    DashboardTab ->
-      dashboardContent screen
-    TracksTab ->
-      tracksContent route screen
-    UsersTab ->
-      usersContent route screen
+content : Context -> AdminRoute -> Tab -> Screen -> Html
+content ctx route item ({tracks, users} as screen) =
+  let
+    styleAttr = style (Layout.transitionStyle screen.transition)
+    tabContent =
+      case item of
+        DashboardTab ->
+          dashboardContent screen
+        TracksTab ->
+          tracksContent route screen
+        UsersTab ->
+          usersContent route screen
+  in
+    div [ class "admin-content", styleAttr ] tabContent
+
 
 dashboardContent : Screen -> List Html
 dashboardContent ({tracks, users} as screen) =

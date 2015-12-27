@@ -3,7 +3,6 @@ module AppTypes where
 import Task exposing (Task)
 import Effects exposing (Effects)
 import DragAndDrop exposing (MouseEvent)
-import Animation exposing (Animation)
 
 import Models exposing (..)
 
@@ -18,6 +17,7 @@ import Screens.ListDrafts.Types as ListDrafts
 import Screens.Admin.Types as Admin
 
 import Routes
+import Transition exposing (WithTransition)
 
 
 appActionsMailbox : Signal.Mailbox AppAction
@@ -57,18 +57,12 @@ type AppAction
   = SetPlayer Player
   | SetPath String
   | PathChanged String
-  | MountRoute (Maybe Routes.Route)
-  | TransitionAction TransitionStep
+  | TransitionAction Transition.Action
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
   | ScreenAction ScreenAction
   | Logout
   | AppNoOp
-
-
-type TransitionStep
-  = TransitionStart Float
-  | TransitionTick Animation Float
 
 
 type ScreenAction
@@ -83,7 +77,6 @@ type ScreenAction
   | AdminAction Admin.Action
 
 
-
 type alias AppState =
   { ctx : Context
   , route : Maybe Routes.Route
@@ -91,14 +84,10 @@ type alias AppState =
   , screens : Screens
   }
 
-type alias Context =
+type alias Context = WithTransition
   { player : Player
   , dims : (Int, Int)
-  , transitStatus : TransitStatus
-  , animValue : Maybe Float
   }
-
-type TransitStatus = Exit | Enter
 
 type alias Screens =
   { home : Home.Screen
@@ -118,8 +107,7 @@ initialAppState { path, dims, player } =
   { ctx =
       { player = player
       , dims = dims
-      , transitStatus = Enter
-      , animValue = Nothing
+      , transition = Transition.empty
       }
   , path = path
   , route = Nothing
