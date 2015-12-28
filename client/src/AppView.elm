@@ -55,8 +55,8 @@ routeView {screens, ctx} route =
     ListDrafts ->
       ListDraftsScreen.view ctx screens.listDrafts
 
-    Admin adminRoute ->
-      AdminScreen.view ctx adminRoute screens.admin
+    Admin _ ->
+      AdminScreen.view ctx screens.admin
 
 emptyView : Html
 emptyView =

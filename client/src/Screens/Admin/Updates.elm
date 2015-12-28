@@ -6,9 +6,11 @@ import Effects exposing (Effects, Never, none, map)
 
 import Transit
 
+import Constants exposing (transitionDuration)
 import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.Admin.Types as Types exposing (..)
+import Screens.Admin.Routes exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 
@@ -46,11 +48,18 @@ update action screen =
         Err _ ->
           screen &: none
 
+    UpdateRoute route ->
+      Transit.init transitionDuration { screen | route = route } Types.TransitionAction
+
     Types.TransitionAction a ->
       Transit.update a screen Types.TransitionAction
 
     NoOp ->
       screen &: none
+
+updateRouteEffect : Route -> Effects Action
+updateRouteEffect route =
+  Task.succeed (UpdateRoute route) |> Effects.task
 
 
 refreshData : Task Never Action

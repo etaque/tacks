@@ -1,6 +1,7 @@
-module Routes where
+module Routes (Route(..), fromPath, toPath) where
 
 import RouteParser exposing (..)
+import Screens.Admin.Routes as AdminRoutes
 
 
 type Route
@@ -12,15 +13,15 @@ type Route
   | ListDrafts
   | EditTrack String
   | PlayTrack String
-  | Admin AdminRoute
+  | Admin AdminRoutes.Route
 
-type AdminRoute
-  = Dashboard
-  | ListTracks (Maybe String)
-  | ListUsers (Maybe String)
 
-routeParsers : Parsers Route
-routeParsers =
+fromPath : String -> Maybe Route
+fromPath =
+  match matchers
+
+matchers : List (Matcher Route)
+matchers =
   [ static Home "/"
   , static Login "/login"
   , static Register "/register"
@@ -29,13 +30,7 @@ routeParsers =
   , dyn1 ShowTrack "/track/" string ""
   , dyn1 EditTrack "/edit/" string ""
   , dyn1 PlayTrack "/play/" string ""
-  , static (Admin Dashboard) "/admin"
-  , static (Admin (ListTracks Nothing)) "/admin/tracks"
-  , dyn1 (Admin << ListTracks << Just) "/admin/tracks/" string ""
-  , static (Admin (ListUsers Nothing)) "/admin/users"
-  , dyn1 (Admin << ListUsers << Just) "/admin/users/" string ""
-  ]
-
+  ] ++ (mapMatchers Admin AdminRoutes.matchers)
 
 toPath : Route -> String
 toPath route =
@@ -48,14 +43,5 @@ toPath route =
     ShowTrack id -> "/track/" ++ id
     EditTrack id -> "/edit/" ++ id
     PlayTrack id -> "/play/" ++ id
-    Admin adminRoute -> "/admin" ++
-      case adminRoute of
-        Dashboard -> ""
-        ListTracks id -> "/tracks" ++ (maybeSegment id)
-        ListUsers id -> "/users" ++ (maybeSegment id)
+    Admin adminRoute -> AdminRoutes.toPath adminRoute
 
-maybeSegment : Maybe String -> String
-maybeSegment ms =
-  case ms of
-    Just s -> "/" ++ s
-    Nothing -> ""

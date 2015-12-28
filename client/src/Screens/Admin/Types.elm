@@ -1,22 +1,26 @@
 module Screens.Admin.Types where
 
 import Models exposing (..)
-import Routes
+import Screens.Admin.Routes exposing (..)
 import Transit exposing (Transition)
 
 
 type alias Screen = Transit.WithTransition
   { tracks : List Track
   , users : List User
-  , route : Routes.AdminRoute
+  , route : Route
   }
+
+initialRoute : Route
+initialRoute =
+  Dashboard
 
 initial : Screen
 initial =
   { tracks = []
   , users = []
   , transition = Transit.empty
-  , route = Routes.Dashboard
+  , route = initialRoute
   }
 
 type Action
@@ -25,5 +29,6 @@ type Action
   | DeleteTrack String
   | DeleteTrackResult (FormResult String)
   | TransitionAction Transit.Action
+  | UpdateRoute Route
   | NoOp
 

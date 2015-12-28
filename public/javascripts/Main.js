@@ -11037,88 +11037,128 @@ Elm.RouteParser.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm);
    var _op = {};
-   var matchUrl = F3(function (url,parser,maybeRoute) {
-      var _p0 = maybeRoute;
-      if (_p0.ctor === "Just") {
+   var matchUrl = F3(function (path,_p0,maybeRoute) {
+      var _p1 = _p0;
+      var _p2 = maybeRoute;
+      if (_p2.ctor === "Just") {
             return maybeRoute;
          } else {
-            var _p1 = A2($Combine.parse,parser,url);
-            if (_p1.ctor === "_Tuple2" && _p1._0.ctor === "Done") {
-                  return $Maybe.Just(_p1._0._0);
-               } else {
-                  return $Maybe.Nothing;
-               }
+            return _p1._0(path);
          }
    });
    var match = F2(function (parsers,url) {
       return A3($List.foldl,matchUrl(url),$Maybe.Nothing,parsers);
    });
-   var dyn3 = F8(function (route,s1,pa,s2,pb,s3,pc,s4) {
-      return A2($Combine.andThen,
-      A2($Combine.andThen,
+   var Router = F2(function (a,b) {
+      return {fromPath: a,toPath: b};
+   });
+   var router = F2(function (routeParsers,pathGenerator) {
+      return A2(Router,match(routeParsers),pathGenerator);
+   });
+   var P = function (a) {    return {ctor: "P",_0: a};};
+   var $int = P($Combine$Num.$int);
+   var string = P(A2($Combine$Infix._op["<$>"],
+   $String.fromList,
+   $Combine.many1($Combine$Char.noneOf(_U.list([_U.chr("/")
+                                               ,_U.chr("#")
+                                               ,_U.chr("?")])))));
+   var customParam = P;
+   var M = function (a) {    return {ctor: "M",_0: a};};
+   var rawMatcher = function (matcher) {    return M(matcher);};
+   var parserMatcher = function (parser) {
+      var matcher = function (path) {
+         var _p3 = A2($Combine.parse,parser,path);
+         if (_p3.ctor === "_Tuple2" && _p3._0.ctor === "Done") {
+               return $Maybe.Just(_p3._0._0);
+            } else {
+               return $Maybe.Nothing;
+            }
+      };
+      return rawMatcher(matcher);
+   };
+   var $static = F2(function (route,path) {
+      return parserMatcher(A2($Combine$Infix._op["<$"],
+      route,
+      A2($Combine$Infix._op["*>"],
+      $Combine.string(path),
+      $Combine.end)));
+   });
+   var dyn1 = F4(function (route,s1,_p4,s2) {
+      var _p5 = _p4;
+      return parserMatcher(A2($Combine$Infix._op["<*"],
+      A2($Combine$Infix._op["<*"],
       A2($Combine$Infix._op["<$>"],
       route,
-      A2($Combine$Infix._op["*>"],$Combine.string(s1),pa)),
+      A2($Combine$Infix._op["*>"],$Combine.string(s1),_p5._0)),
+      $Combine.string(s2)),
+      $Combine.end));
+   });
+   var dyn2 = F6(function (route,s1,_p7,s2,_p6,s3) {
+      var _p8 = _p7;
+      var _p9 = _p6;
+      return parserMatcher(A2($Combine.andThen,
+      A2($Combine$Infix._op["<$>"],
+      route,
+      A2($Combine$Infix._op["*>"],$Combine.string(s1),_p8._0)),
       function (r) {
          return A2($Combine$Infix._op["<$>"],
          r,
-         A2($Combine$Infix._op["*>"],$Combine.string(s2),pb));
+         A2($Combine$Infix._op["<*"],
+         A2($Combine$Infix._op["<*"],
+         A2($Combine$Infix._op["*>"],$Combine.string(s2),_p9._0),
+         $Combine.string(s3)),
+         $Combine.end));
+      }));
+   });
+   var dyn3 = F8(function (route,s1,_p12,s2,_p11,s3,_p10,s4) {
+      var _p13 = _p12;
+      var _p14 = _p11;
+      var _p15 = _p10;
+      return parserMatcher(A2($Combine.andThen,
+      A2($Combine.andThen,
+      A2($Combine$Infix._op["<$>"],
+      route,
+      A2($Combine$Infix._op["*>"],$Combine.string(s1),_p13._0)),
+      function (r) {
+         return A2($Combine$Infix._op["<$>"],
+         r,
+         A2($Combine$Infix._op["*>"],$Combine.string(s2),_p14._0));
       }),
       function (r) {
          return A2($Combine$Infix._op["<$>"],
          r,
          A2($Combine$Infix._op["<*"],
          A2($Combine$Infix._op["<*"],
-         A2($Combine$Infix._op["*>"],$Combine.string(s3),pc),
+         A2($Combine$Infix._op["*>"],$Combine.string(s3),_p15._0),
          $Combine.string(s4)),
          $Combine.end));
-      });
+      }));
    });
-   var dyn2 = F6(function (route,s1,pa,s2,pb,s3) {
-      return A2($Combine.andThen,
-      A2($Combine$Infix._op["<$>"],
-      route,
-      A2($Combine$Infix._op["*>"],$Combine.string(s1),pa)),
-      function (r) {
-         return A2($Combine$Infix._op["<$>"],
-         r,
-         A2($Combine$Infix._op["<*"],
-         A2($Combine$Infix._op["<*"],
-         A2($Combine$Infix._op["*>"],$Combine.string(s2),pb),
-         $Combine.string(s3)),
-         $Combine.end));
-      });
+   var mapMatcher = F2(function (mapper,_p16) {
+      var _p17 = _p16;
+      var newMatcher = function (path) {
+         return A2($Maybe.map,mapper,_p17._0(path));
+      };
+      return M(newMatcher);
    });
-   var dyn1 = F4(function (route,s1,pa,s2) {
-      return A2($Combine$Infix._op["<*"],
-      A2($Combine$Infix._op["<*"],
-      A2($Combine$Infix._op["<$>"],
-      route,
-      A2($Combine$Infix._op["*>"],$Combine.string(s1),pa)),
-      $Combine.string(s2)),
-      $Combine.end);
+   var mapMatchers = F2(function (wrapper,matchers) {
+      return A2($List.map,mapMatcher(wrapper),matchers);
    });
-   var $static = F2(function (route,path) {
-      return A2($Combine$Infix._op["<$"],
-      route,
-      A2($Combine$Infix._op["*>"],
-      $Combine.string(path),
-      $Combine.end));
-   });
-   var string = A2($Combine$Infix._op["<$>"],
-   $String.fromList,
-   $Combine.many1($Combine$Char.noneOf(_U.list([_U.chr("/")
-                                               ,_U.chr("#")
-                                               ,_U.chr("?")]))));
-   var $int = $Combine$Num.$int;
    return _elm.RouteParser.values = {_op: _op
                                     ,$int: $int
                                     ,string: string
+                                    ,customParam: customParam
                                     ,$static: $static
                                     ,dyn1: dyn1
                                     ,dyn2: dyn2
                                     ,dyn3: dyn3
-                                    ,match: match};
+                                    ,parserMatcher: parserMatcher
+                                    ,rawMatcher: rawMatcher
+                                    ,match: match
+                                    ,router: router
+                                    ,mapMatcher: mapMatcher
+                                    ,mapMatchers: mapMatchers
+                                    ,Router: Router};
 };
 Elm.Native.Effects = {};
 Elm.Native.Effects.make = function(localRuntime) {
@@ -13422,11 +13462,16 @@ Elm.Screens.ListDrafts.Types.make = function (_elm) {
                                                  ,DeleteDraftResult: DeleteDraftResult
                                                  ,NoOp: NoOp};
 };
-Elm.Routes = Elm.Routes || {};
-Elm.Routes.make = function (_elm) {
+Elm.Screens = Elm.Screens || {};
+Elm.Screens.Admin = Elm.Screens.Admin || {};
+Elm.Screens.Admin.Routes = Elm.Screens.Admin.Routes || {};
+Elm.Screens.Admin.Routes.make = function (_elm) {
    "use strict";
-   _elm.Routes = _elm.Routes || {};
-   if (_elm.Routes.values) return _elm.Routes.values;
+   _elm.Screens = _elm.Screens || {};
+   _elm.Screens.Admin = _elm.Screens.Admin || {};
+   _elm.Screens.Admin.Routes = _elm.Screens.Admin.Routes || {};
+   if (_elm.Screens.Admin.Routes.values)
+   return _elm.Screens.Admin.Routes.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -13436,7 +13481,7 @@ Elm.Routes.make = function (_elm) {
    $RouteParser = Elm.RouteParser.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var maybeSegment = function (ms) {
+   var maybe = function (ms) {
       var _p0 = ms;
       if (_p0.ctor === "Just") {
             return A2($Basics._op["++"],"/",_p0._0);
@@ -13445,29 +13490,17 @@ Elm.Routes.make = function (_elm) {
          }
    };
    var toPath = function (route) {
-      var _p1 = route;
-      switch (_p1.ctor)
-      {case "Home": return "/";
-         case "Login": return "/login";
-         case "Register": return "/register";
-         case "ShowProfile": return "/me";
-         case "ListDrafts": return "/drafts";
-         case "ShowTrack": return A2($Basics._op["++"],"/track/",_p1._0);
-         case "EditTrack": return A2($Basics._op["++"],"/edit/",_p1._0);
-         case "PlayTrack": return A2($Basics._op["++"],"/play/",_p1._0);
-         default: return A2($Basics._op["++"],
-           "/admin",
-           function () {
-              var _p2 = _p1._0;
-              switch (_p2.ctor)
-              {case "Dashboard": return "";
-                 case "ListTracks": return A2($Basics._op["++"],
-                   "/tracks",
-                   maybeSegment(_p2._0));
-                 default: return A2($Basics._op["++"],
-                   "/users",
-                   maybeSegment(_p2._0));}
-           }());}
+      return A2($Basics._op["++"],
+      "/admin",
+      function () {
+         var _p1 = route;
+         switch (_p1.ctor)
+         {case "Dashboard": return "";
+            case "ListTracks": return A2($Basics._op["++"],
+              "/tracks",
+              maybe(_p1._0));
+            default: return A2($Basics._op["++"],"/users",maybe(_p1._0));}
+      }());
    };
    var ListUsers = function (a) {
       return {ctor: "ListUsers",_0: a};
@@ -13476,70 +13509,36 @@ Elm.Routes.make = function (_elm) {
       return {ctor: "ListTracks",_0: a};
    };
    var Dashboard = {ctor: "Dashboard"};
-   var Admin = function (a) {    return {ctor: "Admin",_0: a};};
-   var PlayTrack = function (a) {
-      return {ctor: "PlayTrack",_0: a};
-   };
-   var EditTrack = function (a) {
-      return {ctor: "EditTrack",_0: a};
-   };
-   var ListDrafts = {ctor: "ListDrafts"};
-   var ShowTrack = function (a) {
-      return {ctor: "ShowTrack",_0: a};
-   };
-   var ShowProfile = {ctor: "ShowProfile"};
-   var Register = {ctor: "Register"};
-   var Login = {ctor: "Login"};
-   var Home = {ctor: "Home"};
-   var routeParsers = _U.list([A2($RouteParser.$static,Home,"/")
-                              ,A2($RouteParser.$static,Login,"/login")
-                              ,A2($RouteParser.$static,Register,"/register")
-                              ,A2($RouteParser.$static,ShowProfile,"/me")
-                              ,A2($RouteParser.$static,ListDrafts,"/drafts")
-                              ,A4($RouteParser.dyn1,
-                              ShowTrack,
-                              "/track/",
-                              $RouteParser.string,
-                              "")
-                              ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
-                              ,A4($RouteParser.dyn1,PlayTrack,"/play/",$RouteParser.string,"")
-                              ,A2($RouteParser.$static,Admin(Dashboard),"/admin")
-                              ,A2($RouteParser.$static,
-                              Admin(ListTracks($Maybe.Nothing)),
-                              "/admin/tracks")
-                              ,A4($RouteParser.dyn1,
-                              function (_p3) {
-                                 return Admin(ListTracks($Maybe.Just(_p3)));
-                              },
-                              "/admin/tracks/",
-                              $RouteParser.string,
-                              "")
-                              ,A2($RouteParser.$static,
-                              Admin(ListUsers($Maybe.Nothing)),
-                              "/admin/users")
-                              ,A4($RouteParser.dyn1,
-                              function (_p4) {
-                                 return Admin(ListUsers($Maybe.Just(_p4)));
-                              },
-                              "/admin/users/",
-                              $RouteParser.string,
-                              "")]);
-   return _elm.Routes.values = {_op: _op
-                               ,Home: Home
-                               ,Login: Login
-                               ,Register: Register
-                               ,ShowProfile: ShowProfile
-                               ,ShowTrack: ShowTrack
-                               ,ListDrafts: ListDrafts
-                               ,EditTrack: EditTrack
-                               ,PlayTrack: PlayTrack
-                               ,Admin: Admin
-                               ,Dashboard: Dashboard
-                               ,ListTracks: ListTracks
-                               ,ListUsers: ListUsers
-                               ,routeParsers: routeParsers
-                               ,toPath: toPath
-                               ,maybeSegment: maybeSegment};
+   var matchers = _U.list([A2($RouteParser.$static,
+                          Dashboard,
+                          "/admin")
+                          ,A2($RouteParser.$static,
+                          ListTracks($Maybe.Nothing),
+                          "/admin/tracks")
+                          ,A4($RouteParser.dyn1,
+                          function (_p2) {
+                             return ListTracks($Maybe.Just(_p2));
+                          },
+                          "/admin/tracks/",
+                          $RouteParser.string,
+                          "")
+                          ,A2($RouteParser.$static,
+                          ListUsers($Maybe.Nothing),
+                          "/admin/users")
+                          ,A4($RouteParser.dyn1,
+                          function (_p3) {
+                             return ListUsers($Maybe.Just(_p3));
+                          },
+                          "/admin/users/",
+                          $RouteParser.string,
+                          "")]);
+   var router = A2($RouteParser.router,matchers,toPath);
+   return _elm.Screens.Admin.Routes.values = {_op: _op
+                                             ,matchers: matchers
+                                             ,toPath: toPath
+                                             ,Dashboard: Dashboard
+                                             ,ListTracks: ListTracks
+                                             ,ListUsers: ListUsers};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Admin = Elm.Screens.Admin || {};
@@ -13558,11 +13557,14 @@ Elm.Screens.Admin.Types.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
+   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Transit = Elm.Transit.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
+   var UpdateRoute = function (a) {
+      return {ctor: "UpdateRoute",_0: a};
+   };
    var TransitionAction = function (a) {
       return {ctor: "TransitionAction",_0: a};
    };
@@ -13576,18 +13578,98 @@ Elm.Screens.Admin.Types.make = function (_elm) {
       return {ctor: "RefreshDataResult",_0: a};
    };
    var RefreshData = {ctor: "RefreshData"};
+   var initialRoute = $Screens$Admin$Routes.Dashboard;
    var initial = {tracks: _U.list([])
                  ,users: _U.list([])
                  ,transition: $Transit.empty
-                 ,route: $Routes.Dashboard};
+                 ,route: initialRoute};
    return _elm.Screens.Admin.Types.values = {_op: _op
+                                            ,initialRoute: initialRoute
                                             ,initial: initial
                                             ,RefreshData: RefreshData
                                             ,RefreshDataResult: RefreshDataResult
                                             ,DeleteTrack: DeleteTrack
                                             ,DeleteTrackResult: DeleteTrackResult
                                             ,TransitionAction: TransitionAction
+                                            ,UpdateRoute: UpdateRoute
                                             ,NoOp: NoOp};
+};
+Elm.Routes = Elm.Routes || {};
+Elm.Routes.make = function (_elm) {
+   "use strict";
+   _elm.Routes = _elm.Routes || {};
+   if (_elm.Routes.values) return _elm.Routes.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var toPath = function (route) {
+      var _p0 = route;
+      switch (_p0.ctor)
+      {case "Home": return "/";
+         case "Login": return "/login";
+         case "Register": return "/register";
+         case "ShowProfile": return "/me";
+         case "ListDrafts": return "/drafts";
+         case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
+         case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
+         case "PlayTrack": return A2($Basics._op["++"],"/play/",_p0._0);
+         default: return $Screens$Admin$Routes.toPath(_p0._0);}
+   };
+   var Admin = function (a) {    return {ctor: "Admin",_0: a};};
+   var PlayTrack = function (a) {
+      return {ctor: "PlayTrack",_0: a};
+   };
+   var EditTrack = function (a) {
+      return {ctor: "EditTrack",_0: a};
+   };
+   var ListDrafts = {ctor: "ListDrafts"};
+   var ShowTrack = function (a) {
+      return {ctor: "ShowTrack",_0: a};
+   };
+   var ShowProfile = {ctor: "ShowProfile"};
+   var Register = {ctor: "Register"};
+   var Login = {ctor: "Login"};
+   var Home = {ctor: "Home"};
+   var matchers = A2($Basics._op["++"],
+   _U.list([A2($RouteParser.$static,Home,"/")
+           ,A2($RouteParser.$static,Login,"/login")
+           ,A2($RouteParser.$static,Register,"/register")
+           ,A2($RouteParser.$static,ShowProfile,"/me")
+           ,A2($RouteParser.$static,ListDrafts,"/drafts")
+           ,A4($RouteParser.dyn1,
+           ShowTrack,
+           "/track/",
+           $RouteParser.string,
+           "")
+           ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
+           ,A4($RouteParser.dyn1,
+           PlayTrack,
+           "/play/",
+           $RouteParser.string,
+           "")]),
+   A2($RouteParser.mapMatchers,
+   Admin,
+   $Screens$Admin$Routes.matchers));
+   var fromPath = $RouteParser.match(matchers);
+   return _elm.Routes.values = {_op: _op
+                               ,fromPath: fromPath
+                               ,toPath: toPath
+                               ,Home: Home
+                               ,Login: Login
+                               ,Register: Register
+                               ,ShowProfile: ShowProfile
+                               ,ShowTrack: ShowTrack
+                               ,ListDrafts: ListDrafts
+                               ,EditTrack: EditTrack
+                               ,PlayTrack: PlayTrack
+                               ,Admin: Admin};
 };
 Elm.AppTypes = Elm.AppTypes || {};
 Elm.AppTypes.make = function (_elm) {
@@ -16879,12 +16961,14 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
    $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
@@ -16895,6 +16979,9 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
    var refreshData = A2($Task.map,
    $Screens$Admin$Types.RefreshDataResult,
    $ServerApi.loadAdminData);
+   var updateRouteEffect = function (route) {
+      return $Effects.task($Task.succeed($Screens$Admin$Types.UpdateRoute(route)));
+   };
    var update = F2(function (action,screen) {
       var _p0 = action;
       switch (_p0.ctor)
@@ -16927,6 +17014,10 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
               } else {
                  return A2($AppTypes._op["&:"],screen,$Effects.none);
               }
+         case "UpdateRoute": return A3($Transit.init,
+           $Constants.transitionDuration,
+           _U.update(screen,{route: _p0._0}),
+           $Screens$Admin$Types.TransitionAction);
          case "TransitionAction": return A3($Transit.update,
            _p0._0,
            screen,
@@ -16941,6 +17032,7 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
                                               ,addr: addr
                                               ,mount: mount
                                               ,update: update
+                                              ,updateRouteEffect: updateRouteEffect
                                               ,refreshData: refreshData};
 };
 Elm.AppUpdates = Elm.AppUpdates || {};
@@ -16958,9 +17050,7 @@ Elm.AppUpdates.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $RouteParser = Elm.RouteParser.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
    $Screens$Admin$Updates = Elm.Screens.Admin.Updates.make(_elm),
    $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
    $Screens$Game$Updates = Elm.Screens.Game.Updates.make(_elm),
@@ -16976,24 +17066,18 @@ Elm.AppUpdates.make = function (_elm) {
    $Task = Elm.Task.make(_elm),
    $Transit = Elm.Transit.make(_elm);
    var _op = {};
-   var mapEffect = F2(function (f,_p0) {
-      var _p1 = _p0;
-      return {ctor: "_Tuple2"
-             ,_0: _p1._0
-             ,_1: A2($Effects.map,f,_p1._1)};
-   });
    var applyScreen = F4(function (screensUpdater,
    actionWrapper,
-   _p2,
+   _p0,
    appState) {
-      var _p3 = _p2;
+      var _p1 = _p0;
       var newEffect = A2($Effects.map,
-      function (_p4) {
-         return $AppTypes.ScreenAction(actionWrapper(_p4));
+      function (_p2) {
+         return $AppTypes.ScreenAction(actionWrapper(_p2));
       },
-      _p3._1);
+      _p1._1);
       var newState = _U.update(appState,
-      {screens: A2(screensUpdater,_p3._0,appState.screens)});
+      {screens: A2(screensUpdater,_p1._0,appState.screens)});
       return A2($AppTypes._op["&:"],newState,newEffect);
    });
    var applyAdmin = A2(applyScreen,
@@ -17048,168 +17132,161 @@ Elm.AppUpdates.make = function (_elm) {
       A2($Result.map,$AppTypes.SetPlayer,r));
    },
    $ServerApi.postLogout);
-   var updateScreen = F2(function (screenAction,_p5) {
-      var _p6 = _p5;
-      var _p10 = _p6.screens;
-      var _p9 = _p6.ctx;
-      var _p8 = _p6;
-      var _p7 = screenAction;
-      switch (_p7.ctor)
+   var updateScreen = F2(function (screenAction,_p3) {
+      var _p4 = _p3;
+      var _p8 = _p4.screens;
+      var _p7 = _p4.ctx;
+      var _p6 = _p4;
+      var _p5 = screenAction;
+      switch (_p5.ctor)
       {case "HomeAction": return A2(applyHome,
-           A2($Screens$Home$Updates.update,_p7._0,_p10.home),
-           _p8);
+           A2($Screens$Home$Updates.update,_p5._0,_p8.home),
+           _p6);
          case "LoginAction": return A2(applyLogin,
-           A2($Screens$Login$Updates.update,_p7._0,_p10.login),
-           _p8);
+           A2($Screens$Login$Updates.update,_p5._0,_p8.login),
+           _p6);
          case "RegisterAction": return A2(applyRegister,
-           A2($Screens$Register$Updates.update,_p7._0,_p10.register),
-           _p8);
+           A2($Screens$Register$Updates.update,_p5._0,_p8.register),
+           _p6);
          case "ShowTrackAction": return A2(applyShowTrack,
-           A2($Screens$ShowTrack$Updates.update,_p7._0,_p10.showTrack),
-           _p8);
+           A2($Screens$ShowTrack$Updates.update,_p5._0,_p8.showTrack),
+           _p6);
          case "EditTrackAction": return A2(applyEditTrack,
            A3($Screens$EditTrack$Updates.update,
-           _p9.dims,
-           _p7._0,
-           _p10.editTrack),
-           _p8);
+           _p7.dims,
+           _p5._0,
+           _p8.editTrack),
+           _p6);
          case "ShowProfileAction": return A2(applyShowProfile,
-           A2($Screens$ShowProfile$Updates.update,_p7._0,_p10.showProfile),
-           _p8);
+           A2($Screens$ShowProfile$Updates.update,_p5._0,_p8.showProfile),
+           _p6);
          case "GameAction": return A2(applyGame,
-           A3($Screens$Game$Updates.update,_p9.player,_p7._0,_p10.game),
-           _p8);
+           A3($Screens$Game$Updates.update,_p7.player,_p5._0,_p8.game),
+           _p6);
          case "ListDraftsAction": return A2(applyListDrafts,
-           A2($Screens$ListDrafts$Updates.update,_p7._0,_p10.listDrafts),
-           _p8);
+           A2($Screens$ListDrafts$Updates.update,_p5._0,_p8.listDrafts),
+           _p6);
          default: return A2(applyAdmin,
-           A2($Screens$Admin$Updates.update,_p7._0,_p10.admin),
-           _p8);}
+           A2($Screens$Admin$Updates.update,_p5._0,_p8.admin),
+           _p6);}
    });
-   var mountRoute = F2(function (_p11,route) {
-      var _p12 = _p11;
-      var _p15 = _p12.ctx;
-      var _p14 = _p12;
-      var _p13 = route;
-      switch (_p13.ctor)
+   var mountRoute = F3(function (prevRoute,_p9,newRoute) {
+      var _p10 = _p9;
+      var _p14 = _p10.ctx;
+      var _p13 = _p10;
+      var _p11 = newRoute;
+      switch (_p11.ctor)
       {case "Home": return A2(applyHome,
-           $Screens$Home$Updates.mount(_p15.player),
-           _p14);
+           $Screens$Home$Updates.mount(_p14.player),
+           _p13);
          case "Login": return A2(applyLogin,
            $Screens$Login$Updates.mount,
-           _p14);
+           _p13);
          case "Register": return A2(applyRegister,
            $Screens$Register$Updates.mount,
-           _p14);
+           _p13);
          case "ShowProfile": return A2(applyShowProfile,
-           $Screens$ShowProfile$Updates.mount(_p15.player),
-           _p14);
+           $Screens$ShowProfile$Updates.mount(_p14.player),
+           _p13);
          case "ShowTrack": return A2(applyShowTrack,
-           $Screens$ShowTrack$Updates.mount(_p13._0),
-           _p14);
+           $Screens$ShowTrack$Updates.mount(_p11._0),
+           _p13);
          case "EditTrack": return A2(applyEditTrack,
-           $Screens$EditTrack$Updates.mount(_p13._0),
-           _p14);
+           $Screens$EditTrack$Updates.mount(_p11._0),
+           _p13);
          case "PlayTrack": return A2(applyGame,
-           $Screens$Game$Updates.mount(_p13._0),
-           _p14);
+           $Screens$Game$Updates.mount(_p11._0),
+           _p13);
          case "ListDrafts": return A2(applyListDrafts,
            $Screens$ListDrafts$Updates.mount,
-           _p14);
-         default: return A2(applyAdmin,
-           $Screens$Admin$Updates.mount,
-           _p14);}
+           _p13);
+         default: var result = function () {
+              var _p12 = prevRoute;
+              if (_p12.ctor === "Just" && _p12._0.ctor === "Admin") {
+                    return {ctor: "_Tuple2"
+                           ,_0: _p10.screens.admin
+                           ,_1: $Screens$Admin$Updates.updateRouteEffect(_p11._0)};
+                 } else {
+                    return $Screens$Admin$Updates.mount;
+                 }
+           }();
+           return A2(applyAdmin,result,_p13);}
    });
-   var addTransition = F3(function (prevRoute,route,_p16) {
-      var _p17 = _p16;
-      var _p24 = _p17._0.screens;
-      var _p23 = _p17._1;
-      var _p22 = _p17._0;
-      if (_U.eq(prevRoute,$Maybe.Just(route)))
-      return A2($AppTypes._op["&:"],_p22,_p23); else {
-            var _p18 = {ctor: "_Tuple2",_0: prevRoute,_1: route};
-            if (_p18.ctor === "_Tuple2" && _p18._0.ctor === "Just" && _p18._0._0.ctor === "Admin" && _p18._1.ctor === "Admin")
-            {
-                  var _p19 = A3($Transit.init,
-                  $Constants.transitionDuration,
-                  _p24.admin,
-                  function (_p20) {
-                     return $AppTypes.ScreenAction($AppTypes.AdminAction($Screens$Admin$Types.TransitionAction(_p20)));
-                  });
-                  var newAdminScreen = _p19._0;
-                  var tfx = _p19._1;
-                  var newScreens = _U.update(_p24,{admin: newAdminScreen});
-                  return {ctor: "_Tuple2"
-                         ,_0: _U.update(_p22,{screens: newScreens})
-                         ,_1: $Effects.batch(_U.list([_p23,tfx]))};
-               } else {
-                  var _p21 = A3($Transit.init,
-                  $Constants.transitionDuration,
-                  _p17._0.ctx,
-                  $AppTypes.TransitionAction);
-                  var newCtx = _p21._0;
-                  var tfx = _p21._1;
-                  return {ctor: "_Tuple2"
-                         ,_0: _U.update(_p22,{ctx: newCtx})
-                         ,_1: $Effects.batch(_U.list([_p23,tfx]))};
-               }
+   var addTransition = F3(function (prevRoute,route,_p15) {
+      var _p16 = _p15;
+      var _p20 = _p16._1;
+      var _p19 = _p16._0;
+      var _p17 = {ctor: "_Tuple2",_0: prevRoute,_1: route};
+      if (_p17.ctor === "_Tuple2" && _p17._0.ctor === "Just" && _p17._0._0.ctor === "Admin" && _p17._1.ctor === "Admin")
+      {
+            return A2($AppTypes._op["&:"],_p19,_p20);
+         } else {
+            var _p18 = A3($Transit.init,
+            $Constants.transitionDuration,
+            _p16._0.ctx,
+            $AppTypes.TransitionAction);
+            var newCtx = _p18._0;
+            var tfx = _p18._1;
+            return {ctor: "_Tuple2"
+                   ,_0: _U.update(_p19,{ctx: newCtx})
+                   ,_1: $Effects.batch(_U.list([_p20,tfx]))};
          }
    });
-   var update = F2(function (appAction,_p25) {
-      var _p26 = _p25;
-      var _p39 = _p26.ctx;
-      var _p38 = _p26;
-      var _p27 = appAction;
-      switch (_p27.ctor)
+   var update = F2(function (appAction,_p21) {
+      var _p22 = _p21;
+      var _p35 = _p22.ctx;
+      var _p34 = _p22;
+      var _p23 = appAction;
+      switch (_p23.ctor)
       {case "SetPath": return A2($AppTypes._op["&!"],
-           _p38,
+           _p34,
            A2($Task.map,
-           function (_p28) {
+           function (_p24) {
               return $AppTypes.AppNoOp;
            },
-           $History.setPath(_p27._0)));
-         case "PathChanged": var _p31 = _p27._0;
-           var newRoute = A2($RouteParser.match,$Routes.routeParsers,_p31);
-           var newAppState = _U.update(_p38,{path: _p31,route: newRoute});
-           var _p29 = newAppState.route;
-           if (_p29.ctor === "Just") {
-                 var _p30 = _p29._0;
+           $History.setPath(_p23._0)));
+         case "PathChanged": var _p27 = _p23._0;
+           var newRoute = $Routes.fromPath(_p27);
+           var newAppState = _U.update(_p34,{path: _p27,route: newRoute});
+           var _p25 = newAppState.route;
+           if (_p25.ctor === "Just") {
+                 var _p26 = _p25._0;
                  return A3(addTransition,
-                 _p38.route,
-                 _p30,
-                 A2(mountRoute,newAppState,_p30));
+                 _p34.route,
+                 _p26,
+                 A3(mountRoute,_p34.route,newAppState,_p26));
               } else {
                  return A2($AppTypes._op["&:"],newAppState,$Effects.none);
               }
-         case "TransitionAction": var _p32 = A3($Transit.update,
-           _p27._0,
-           _p39,
+         case "TransitionAction": var _p28 = A3($Transit.update,
+           _p23._0,
+           _p35,
            $AppTypes.TransitionAction);
-           var newCtx = _p32._0;
-           var fx = _p32._1;
+           var newCtx = _p28._0;
+           var fx = _p28._1;
            return {ctor: "_Tuple2"
-                  ,_0: _U.update(_p38,{ctx: newCtx})
+                  ,_0: _U.update(_p34,{ctx: newCtx})
                   ,_1: fx};
          case "SetPlayer": var fx = A2($Effects.map,
-           function (_p33) {
+           function (_p29) {
               return $AppTypes.AppNoOp;
            },
            $Screens$UpdateUtils.redirect($Routes.Home));
-           var newCtx = _U.update(_p39,{player: _p27._0});
-           return A2($AppTypes._op["&:"],_U.update(_p38,{ctx: newCtx}),fx);
+           var newCtx = _U.update(_p35,{player: _p23._0});
+           return A2($AppTypes._op["&:"],_U.update(_p34,{ctx: newCtx}),fx);
          case "UpdateDims": return A2($AppTypes._op["&:"],
-           _U.update(_p38,{ctx: _U.update(_p39,{dims: _p27._0})}),
+           _U.update(_p34,{ctx: _U.update(_p35,{dims: _p23._0})}),
            $Effects.none);
          case "MouseEvent": var handlerMaybe = function () {
-              var _p34 = _p38.route;
+              var _p30 = _p34.route;
               _v11_2: do {
-                 if (_p34.ctor === "Just") {
-                       switch (_p34._0.ctor)
-                       {case "EditTrack": return $Maybe.Just(function (_p35) {
-                               return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p35));
+                 if (_p30.ctor === "Just") {
+                       switch (_p30._0.ctor)
+                       {case "EditTrack": return $Maybe.Just(function (_p31) {
+                               return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p31));
                             });
-                          case "ShowTrack": return $Maybe.Just(function (_p36) {
-                               return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p36));
+                          case "ShowTrack": return $Maybe.Just(function (_p32) {
+                               return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p32));
                             });
                           default: break _v11_2;}
                     } else {
@@ -17218,15 +17295,15 @@ Elm.AppUpdates.make = function (_elm) {
               } while (false);
               return $Maybe.Nothing;
            }();
-           var _p37 = handlerMaybe;
-           if (_p37.ctor === "Just") {
-                 return A2(updateScreen,_p37._0(_p27._0),_p38);
+           var _p33 = handlerMaybe;
+           if (_p33.ctor === "Just") {
+                 return A2(updateScreen,_p33._0(_p23._0),_p34);
               } else {
-                 return A2($AppTypes._op["&:"],_p38,$Effects.none);
+                 return A2($AppTypes._op["&:"],_p34,$Effects.none);
               }
-         case "Logout": return A2($AppTypes._op["&!"],_p38,logoutTask);
-         case "ScreenAction": return A2(updateScreen,_p27._0,_p38);
-         default: return A2($AppTypes._op["&:"],_p38,$Effects.none);}
+         case "Logout": return A2($AppTypes._op["&!"],_p34,logoutTask);
+         case "ScreenAction": return A2(updateScreen,_p23._0,_p34);
+         default: return A2($AppTypes._op["&:"],_p34,$Effects.none);}
    });
    var initialAppUpdate = function (setup) {
       var task = $Task.succeed($AppTypes.SetPath(setup.path));
@@ -17249,8 +17326,7 @@ Elm.AppUpdates.make = function (_elm) {
                                    ,applyGame: applyGame
                                    ,applyListDrafts: applyListDrafts
                                    ,applyAdmin: applyAdmin
-                                   ,applyScreen: applyScreen
-                                   ,mapEffect: mapEffect};
+                                   ,applyScreen: applyScreen};
 };
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
@@ -19914,6 +19990,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
+   $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -19921,7 +19998,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
       var adminLink = A2($Html.li,
       _U.list([]),
       _U.list([A3($Screens$Utils.linkTo,
-      $Routes.Admin($Routes.Dashboard),
+      $Routes.Admin($Screens$Admin$Types.initialRoute),
       _U.list([]),
       _U.list([$Html.text("Admin")]))]));
       var draftsLink = A2($Html.li,
@@ -23859,6 +23936,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
+   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
    $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
    $Screens$Admin$Updates = Elm.Screens.Admin.Updates.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
@@ -23885,7 +23963,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("excerpt")]),
               _U.list([A3($Screens$Utils.linkTo,
-                      $Routes.Admin($Routes.ListUsers($Maybe.Just(user.id))),
+                      $Routes.Admin($Screens$Admin$Routes.ListUsers($Maybe.Just(user.id))),
                       _U.list([$Html$Attributes.$class("name")]),
                       _U.list([$Html.text(user.handle)]))
                       ,A2($Html.span,
@@ -23903,18 +23981,19 @@ Elm.Screens.Admin.View.make = function (_elm) {
                                     ,_0: "VMG Magnet"
                                     ,_1: $Basics.toString(user.vmgMagnet)}]))]))]));
    });
-   var usersContent = F2(function (route,_p2) {
+   var usersContent = function (_p2) {
       var _p3 = _p2;
       return _U.list([A2($Html.ul,
       _U.list([$Html$Attributes.$class("list-unstyled admin-users")]),
       A2($List.map,
       function (u) {
          return A2(userItem,
-         _U.eq(route,$Routes.ListUsers($Maybe.Just(u.id))),
+         _U.eq(_p3.route,
+         $Screens$Admin$Routes.ListUsers($Maybe.Just(u.id))),
          u);
       },
       _p3.users))]);
-   });
+   };
    var trackItem = F2(function (open,track) {
       return A2($Html.li,
       _U.list([]),
@@ -23940,18 +24019,19 @@ Elm.Screens.Admin.View.make = function (_elm) {
                                                           ,{ctor: "_Tuple2",_0: "open",_1: open}]))]),
               _U.list([$Html.text("detail")]))]));
    });
-   var tracksContent = F2(function (route,_p4) {
+   var tracksContent = function (_p4) {
       var _p5 = _p4;
       return _U.list([A2($Html.ul,
       _U.list([$Html$Attributes.$class("list-unstyled admin-tracks")]),
       A2($List.map,
       function (t) {
          return A2(trackItem,
-         _U.eq(route,$Routes.ListTracks($Maybe.Just(t.id))),
+         _U.eq(_p5.route,
+         $Screens$Admin$Routes.ListTracks($Maybe.Just(t.id))),
          t);
       },
       _p5.tracks))]);
-   });
+   };
    var dashboardContent = function (_p6) {
       var _p7 = _p6;
       return _U.list([A2($Html.div,
@@ -23965,15 +24045,15 @@ Elm.Screens.Admin.View.make = function (_elm) {
                      $Basics.toString($List.length(_p7.tracks)),
                      " tracks"))]))]);
    };
-   var content = F4(function (ctx,route,item,_p8) {
+   var content = F3(function (ctx,item,_p8) {
       var _p9 = _p8;
       var _p11 = _p9;
       var tabContent = function () {
          var _p10 = item;
          switch (_p10.ctor)
          {case "DashboardTab": return dashboardContent(_p11);
-            case "TracksTab": return A2(tracksContent,route,_p11);
-            default: return A2(usersContent,route,_p11);}
+            case "TracksTab": return tracksContent(_p11);
+            default: return usersContent(_p11);}
       }();
       var styleAttr = $Html$Attributes.style($Transit.slideLeftStyle(_p11.transition));
       return A2($Html.div,
@@ -23991,7 +24071,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,DashboardTab)}]))]),
               _U.list([A3($Screens$Utils.linkTo,
-              $Routes.Admin($Routes.Dashboard),
+              $Routes.Admin($Screens$Admin$Routes.Dashboard),
               _U.list([]),
               _U.list([$Html.text("Dashboard")]))]))
               ,A2($Html.li,
@@ -23999,7 +24079,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,TracksTab)}]))]),
               _U.list([A3($Screens$Utils.linkTo,
-              $Routes.Admin($Routes.ListTracks($Maybe.Nothing)),
+              $Routes.Admin($Screens$Admin$Routes.ListTracks($Maybe.Nothing)),
               _U.list([]),
               _U.list([$Html.text("Tracks")]))]))
               ,A2($Html.li,
@@ -24007,7 +24087,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,UsersTab)}]))]),
               _U.list([A3($Screens$Utils.linkTo,
-              $Routes.Admin($Routes.ListUsers($Maybe.Nothing)),
+              $Routes.Admin($Screens$Admin$Routes.ListUsers($Maybe.Nothing)),
               _U.list([]),
               _U.list([$Html.text("Users")]))]))]));
    };
@@ -24018,8 +24098,8 @@ Elm.Screens.Admin.View.make = function (_elm) {
          case "ListTracks": return TracksTab;
          default: return UsersTab;}
    };
-   var view = F3(function (ctx,route,screen) {
-      var menuItem = routeMenuItem(route);
+   var view = F2(function (ctx,screen) {
+      var menuItem = routeMenuItem(screen.route);
       return A3($Screens$Layout.layoutWithNav,
       "admin",
       ctx,
@@ -24027,7 +24107,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
       "",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Admin")]))
               ,menu(menuItem)
-              ,A4(content,ctx,route,menuItem,screen)]))]));
+              ,A3(content,ctx,menuItem,screen)]))]));
    });
    return _elm.Screens.Admin.View.values = {_op: _op
                                            ,DashboardTab: DashboardTab
@@ -24096,10 +24176,7 @@ Elm.AppView.make = function (_elm) {
          case "ListDrafts": return A2($Screens$ListDrafts$View.view,
            _p3,
            _p4.listDrafts);
-         default: return A3($Screens$Admin$View.view,
-           _p3,
-           _p2._0,
-           _p4.admin);}
+         default: return A2($Screens$Admin$View.view,_p3,_p4.admin);}
    });
    var view = F2(function (_p5,appState) {
       var _p6 = appState.route;

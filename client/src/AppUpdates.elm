@@ -2,7 +2,6 @@ module AppUpdates where
 
 import Task exposing (Task)
 import History
-import RouteParser
 import Effects exposing (Effects, map, none, task)
 import Result
 
@@ -18,7 +17,6 @@ import Screens.ShowProfile.Updates as ShowProfile
 import Screens.Game.Updates as Game
 import Screens.ListDrafts.Updates as ListDrafts
 import Screens.Admin.Updates as Admin
-import Screens.Admin.Types as AdminTypes
 
 import ServerApi
 import Routes exposing (..)
@@ -45,12 +43,12 @@ update appAction ({screens, ctx} as appState) =
 
     PathChanged path ->
       let
-        newRoute = RouteParser.match routeParsers path
+        newRoute = Routes.fromPath path
         newAppState = { appState | path = path, route = newRoute }
       in
         case newAppState.route of
           Just route ->
-            mountRoute newAppState route
+            mountRoute appState.route newAppState route
               |> addTransition appState.route route
           Nothing -> -- TODO 404
             newAppState &: none
@@ -96,28 +94,19 @@ update appAction ({screens, ctx} as appState) =
 
 addTransition : Maybe Routes.Route -> Routes.Route -> (AppState, Effects AppAction) -> (AppState, Effects AppAction)
 addTransition prevRoute route (({ctx,screens} as appState), fx) =
-  if prevRoute == Just route then
-    appState &: fx
-  else
-    case (prevRoute, route) of
-      (Just (Admin _), Admin _) ->
-        let
-          (newAdminScreen, tfx) =
-            Transit.init transitionDuration screens.admin
-                     (ScreenAction << AdminAction << AdminTypes.TransitionAction)
-          newScreens = { screens | admin = newAdminScreen }
-        in
-          ({ appState | screens = newScreens }, Effects.batch [ fx, tfx ])
-      _ ->
-        let
-          (newCtx, tfx) = Transit.init transitionDuration ctx TransitionAction
-        in
-          ({ appState | ctx = newCtx }, Effects.batch [ fx, tfx ])
+  case (prevRoute, route) of
+    (Just (Admin _), Admin _) ->
+      appState &: fx
+    _ ->
+      let
+        (newCtx, tfx) = Transit.init transitionDuration ctx TransitionAction
+      in
+        ({ appState | ctx = newCtx }, Effects.batch [ fx, tfx ])
 
 
-mountRoute : AppState -> Routes.Route -> (AppState, Effects AppAction)
-mountRoute ({ctx} as appState) route =
-  case route of
+mountRoute : Maybe Routes.Route -> AppState -> Routes.Route -> (AppState, Effects AppAction)
+mountRoute prevRoute ({ctx, screens} as appState) newRoute =
+  case newRoute of
 
     Home ->
       applyHome (Home.mount ctx.player) appState
@@ -144,7 +133,14 @@ mountRoute ({ctx} as appState) route =
       applyListDrafts ListDrafts.mount appState
 
     Admin adminRoute ->
-      applyAdmin Admin.mount appState
+      let
+        result = case prevRoute of
+          Just (Routes.Admin _) ->
+            (screens.admin, Admin.updateRouteEffect adminRoute)
+          _ ->
+            Admin.mount
+      in
+        applyAdmin result appState
 
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
@@ -202,8 +198,3 @@ applyScreen screensUpdater actionWrapper (screen, effect) appState =
     newEffect = map (actionWrapper >> ScreenAction) effect
   in
     newState &: newEffect
-
-
-mapEffect : (a -> b) -> (model, Effects a) -> (model, Effects b)
-mapEffect f (m, fx) =
-  (m, Effects.map f fx)

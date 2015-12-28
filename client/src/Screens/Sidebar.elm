@@ -9,6 +9,7 @@ import Models exposing (..)
 
 import Screens.Utils exposing (..)
 import Routes exposing (..)
+import Screens.Admin.Types as Admin
 
 
 view : Context -> List Html
@@ -44,7 +45,7 @@ userContent : Player -> List Html
 userContent player =
   let
     draftsLink = li [ ] [ linkTo ListDrafts [ ] [ text "Your tracks" ] ]
-    adminLink = li [ ] [ linkTo (Admin Dashboard) [ ] [ text "Admin" ] ]
+    adminLink = li [ ] [ linkTo (Admin Admin.initialRoute) [ ] [ text "Admin" ] ]
   in
     [ ul [ class "user-menu" ] <|
         li [] [ linkTo Home [ ] [ text "Home" ] ]
