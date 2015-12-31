@@ -13,14 +13,14 @@ addr =
   Utils.screenAddr ShowProfileAction
 
 
-mount : Player -> (Screen, Effects Action)
+mount : Player -> Response Screen Action
 mount player =
-  initial player &: none
+  staticRes (initial player)
 
 
-update : Action -> Screen -> (Screen, Effects Action)
+update : Action -> Screen -> Response Screen Action
 update action screen =
   case action of
 
     NoOp ->
-      screen &: none
+      staticRes screen

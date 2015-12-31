@@ -22,7 +22,7 @@ addr =
 
 mount : (Screen, Effects Action)
 mount =
-  initial &! refreshData
+  taskRes initial refreshData
 
 
 update : Action -> Screen -> (Screen, Effects Action)
@@ -30,36 +30,49 @@ update action screen =
   case action of
 
     RefreshData ->
-      screen &! refreshData
+      taskRes screen refreshData
 
     RefreshDataResult result ->
       let
-        {tracks, users} = result ?: (AdminData [] [])
+        {tracks, users} = Result.withDefault (AdminData [] []) result
       in
-        { screen | tracks = tracks, users = users } &: none
+        res { screen | tracks = tracks, users = users } none
 
     DeleteTrack id ->
-      screen &! Task.map DeleteTrackResult (ServerApi.deleteDraft id)
+      taskRes screen (Task.map DeleteTrackResult (ServerApi.deleteDraft id))
 
     DeleteTrackResult result ->
       case result of
         Ok id ->
-          { screen | tracks = List.filter (\t -> t.id /= id) screen.tracks } &: none
+          res { screen | tracks = List.filter (\t -> t.id /= id) screen.tracks } none
         Err _ ->
-          screen &: none
+          res screen none
+
+    StartTransition route ->
+      let
+        timeline = Transit.timeline 100 (UpdateRoute route) 200
+      in
+        Transit.init Types.TransitionAction timeline screen
 
     UpdateRoute route ->
-      Transit.init transitionDuration { screen | route = route } Types.TransitionAction
+      res { screen | route = route } none
 
     Types.TransitionAction a ->
-      Transit.update a screen Types.TransitionAction
+      Transit.update Types.TransitionAction a screen
 
     NoOp ->
-      screen &: none
+      res screen none
 
-updateRouteEffect : Route -> Effects Action
-updateRouteEffect route =
-  Task.succeed (UpdateRoute route) |> Effects.task
+
+startTransition : Route -> Route -> Effects Action
+startTransition prevRoute newRoute =
+  let
+    noTrans = effect (UpdateRoute newRoute)
+  in
+    case (prevRoute, newRoute) of
+      (ListTracks _, ListTracks _) -> noTrans
+      (ListUsers _, ListUsers _) -> noTrans
+      _ -> effect (StartTransition newRoute)
 
 
 refreshData : Task Never Action

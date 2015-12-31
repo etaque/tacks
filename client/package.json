@@ -24,7 +24,7 @@
     "build-js": "browserify scripts/setup.js -o ../public/javascripts/setup.js -g uglifyify",
     "build-sass": "node-sass -o ../public/stylesheets styles/main.scss",
 
-    "clean-elm": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/"
+    "clean-elm": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/"
   },
   "dependencies": {
     "bootstrap-sass": "~3.3.6",

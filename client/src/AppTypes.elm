@@ -17,7 +17,7 @@ import Screens.ListDrafts.Types as ListDrafts
 import Screens.Admin.Types as Admin
 
 import Routes
-import Transit exposing (WithTransition)
+import Transit
 
 
 appActionsMailbox : Signal.Mailbox AppAction
@@ -29,22 +29,12 @@ appActionsAddress =
   appActionsMailbox.address
 
 
-(&!) : a -> Task Effects.Never b -> (a, Effects b)
-(&!) model task =
-  (model, Effects.task task)
-
-(&:) : a -> Effects b -> (a, Effects b)
-(&:) = (,)
-
 (?) : Maybe a -> a -> a
 (?) maybe default =
   Maybe.withDefault default maybe
 
-(?:) : Result x a -> a -> a
-(?:) result default =
-  Result.withDefault default result
-
 infixr 9 ?
+
 
 type alias AppSetup =
   { player : Player
@@ -52,12 +42,39 @@ type alias AppSetup =
   , dims : (Int, Int)
   }
 
+type alias Response m a = (m, Effects a)
+type alias AppResponse = Response AppState AppAction
+
+res : s -> Effects a -> Response s a
+res s fx =
+  (s, fx)
+
+taskRes : s -> Task Effects.Never a -> Response s a
+taskRes s t =
+  (s, Effects.task t)
+
+staticRes : s -> Response s a
+staticRes s =
+  (s, Effects.none)
+
+mapEffects : (fx -> fx') -> Response m fx -> Response m fx'
+mapEffects fn (m, fx) =
+  (m, Effects.map fn fx)
+
+mapState : (a -> b) -> Response a f -> Response b f
+mapState fn (a, fx) =
+  (fn a, fx)
+
+effect : a -> Effects a
+effect =
+  Task.succeed >> Effects.task
 
 type AppAction
   = SetPlayer Player
   | SetPath String
   | PathChanged String
-  | TransitionAction Transit.Action
+  | MountRoute (Maybe Routes.Route)
+  | TransitAction (Transit.Action AppAction)
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
   | ScreenAction ScreenAction
@@ -84,7 +101,7 @@ type alias AppState =
   , screens : Screens
   }
 
-type alias Context = WithTransition
+type alias Context = Transit.WithTransition
   { player : Player
   , dims : (Int, Int)
   }
@@ -107,7 +124,7 @@ initialAppState { path, dims, player } =
   { ctx =
       { player = player
       , dims = dims
-      , transition = Transit.empty
+      , transition = Transit.initial
       }
   , path = path
   , route = Nothing

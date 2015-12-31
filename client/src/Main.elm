@@ -35,7 +35,7 @@ port gameActionsInput : Signal Json.Value
 
 app : StartApp.App AppState
 app = StartApp.start
-  { init = AppUpdates.initialAppUpdate appSetup
+  { init = AppUpdates.init appSetup
   , update = AppUpdates.update
   , view = AppView.view
   , inputs =

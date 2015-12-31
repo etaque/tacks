@@ -16,27 +16,27 @@ addr : Signal.Address Action
 addr =
   Utils.screenAddr ShowTrackAction
 
-mount : String -> (Screen, Effects Action)
+mount : String -> Response Screen Action
 mount slug =
-  initial &! (loadLiveTrack slug)
+  taskRes initial (loadLiveTrack slug)
 
 mouseAction : MouseEvent -> Action
 mouseAction =
   MouseAction
 
-update : Action -> Screen -> (Screen, Effects Action)
+update : Action -> Screen -> Response Screen Action
 update action ({courseControl} as screen) =
   case action of
 
     LiveTrackResult result ->
       case result of
         Ok liveTrack ->
-          { screen | liveTrack = Just liveTrack } &: none
+          staticRes { screen | liveTrack = Just liveTrack }
         Err _ ->
-          { screen | notFound = True } &: none
+          staticRes { screen | notFound = True }
 
     SetOverCourse b ->
-      { screen | courseControl = { courseControl | over = b } } &: none
+      staticRes { screen | courseControl = { courseControl | over = b } }
 
     MouseAction event ->
       let
@@ -60,10 +60,10 @@ update action ({courseControl} as screen) =
         newCenter = (x + dx, y + dy)
         newControl = { courseControl | center = newCenter, dragging = dragging }
       in
-        { screen | courseControl = newControl } &: none
+        staticRes { screen | courseControl = newControl }
 
     NoOp ->
-      screen &: none
+      staticRes screen
 
 
 loadLiveTrack : TrackId -> Task Never Action

@@ -19,7 +19,7 @@ addr =
 
 mount : (Screen, Effects Action)
 mount =
-  initial &! loadDrafts
+  taskRes initial loadDrafts
 
 
 update : Action -> Screen -> (Screen, Effects Action)
@@ -29,41 +29,42 @@ update action screen =
     DraftsResult result ->
       case result of
         Ok drafts ->
-          { screen | drafts = drafts} &: none
+          staticRes { screen | drafts = drafts}
         Err _ ->
-          screen &: none
+          staticRes screen
 
     SetDraftName name ->
-      { screen | name = name } &: none
+      staticRes { screen | name = name }
 
     CreateDraft ->
-      screen &! (Task.map CreateDraftResult (ServerApi.createTrack screen.name))
+      taskRes screen (Task.map CreateDraftResult (ServerApi.createTrack screen.name))
 
     CreateDraftResult result ->
       case result of
         Ok track ->
-          screen &: (Utils.redirect (Routes.EditTrack track.id) |> Utils.always NoOp)
-        Err formErrors -> -- TODO
-          screen &: none
+          res screen (Utils.redirect (Routes.EditTrack track.id) |> Utils.always NoOp)
+        Err formErrors ->
+          -- TODO
+          staticRes screen
 
     ConfirmDeleteDraft track ->
       let
         newConfirm = if Just track == screen.confirmDelete then Nothing else Just track
       in
-        { screen | confirmDelete = newConfirm } &: none
+        staticRes { screen | confirmDelete = newConfirm }
 
     DeleteDraft id ->
-      screen &! (deleteDraft id)
+      taskRes screen (deleteDraft id)
 
     DeleteDraftResult result ->
       case result of
         Ok id ->
-          { screen | drafts = List.filter (\t -> t.id /= id) screen.drafts } &: none
+          staticRes { screen | drafts = List.filter (\t -> t.id /= id) screen.drafts }
         Err _ ->
-          screen &: none
+          staticRes screen
 
     NoOp ->
-      screen &: none
+      staticRes screen
 
 loadDrafts : Task Never Action
 loadDrafts =

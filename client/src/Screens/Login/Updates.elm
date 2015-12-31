@@ -17,7 +17,7 @@ addr =
 
 mount : (Screen, Effects Action)
 mount =
-  initial &: none
+  staticRes initial
 
 
 update : Action -> Screen -> (Screen, Effects Action)
@@ -25,13 +25,13 @@ update action screen =
   case action of
 
     SetEmail e ->
-      { screen | email = e } &: none
+      staticRes { screen | email = e }
 
     SetPassword p ->
-      { screen | password = p } &: none
+      staticRes { screen | password = p }
 
     Submit ->
-      { screen | loading = True } &! (submitTask screen)
+      taskRes { screen | loading = True } (submitTask screen)
 
     SubmitResult result ->
       case result of
@@ -40,12 +40,12 @@ update action screen =
             newScreen = { screen | loading = False, error = False }
             effect = Utils.setPlayer player |> Utils.always NoOp
           in
-            newScreen &: effect
+            res newScreen effect
         Err formErrors ->
-          { screen | loading = False, error = True } &: none
+          staticRes { screen | loading = False, error = True }
 
     NoOp ->
-      screen &: none
+      staticRes screen
 
 submitTask : Screen -> Task Never Action
 submitTask screen =

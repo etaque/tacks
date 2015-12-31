@@ -13,6 +13,7 @@ router : Router Route
 router =
   RouteParser.router matchers toPath
 
+
 matchers : List (Matcher Route)
 matchers =
   [ static Dashboard "/admin"
@@ -22,12 +23,14 @@ matchers =
   , dyn1 (ListUsers << Just) "/admin/users/" string ""
   ]
 
+
 toPath : Route -> String
 toPath route =
   "/admin" ++ case route of
     Dashboard -> ""
     ListTracks id -> "/tracks" ++ (maybe id)
     ListUsers id -> "/users" ++ (maybe id)
+
 
 maybe : Maybe String -> String
 maybe ms =

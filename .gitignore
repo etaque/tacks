@@ -1,6 +1,6 @@
 client/elm-stuff/
-public/javascripts/liveCenter.js
-public/javascripts/main.js
+public/javascripts/
+public/stylesheets/
 logs
 project/project
 project/target

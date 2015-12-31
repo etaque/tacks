@@ -32,7 +32,7 @@ chat =
 
 mount : String -> (Screen, Effects Action)
 mount id =
-  initial &! (loadLiveTrack id)
+  taskRes initial (loadLiveTrack id)
 
 
 update : Player -> Action -> Screen -> (Screen, Effects Action)
@@ -42,9 +42,9 @@ update player action screen =
     LoadLiveTrack result ->
       case result of
         Ok liveTrack ->
-          screen &: (tick <| InitGameState liveTrack)
+          res screen (tick <| InitGameState liveTrack)
         Err _ ->
-          { screen | notFound = True } &: none
+          res { screen | notFound = True } none
 
     InitGameState liveTrack time ->
       let
@@ -52,49 +52,49 @@ update player action screen =
         newScreen = { screen | gameState = Just gameState }
           |> applyLiveTrack liveTrack
       in
-        newScreen &: pingServer
+        res newScreen pingServer
 
     PingServer time ->
       if screen.live then
-        screen &: none
+        res screen none
       else
-        { screen | gameState = updateTime time screen.gameState } &: pingServer
+        res { screen | gameState = updateTime time screen.gameState } pingServer
 
     GameUpdate gameInput ->
       let
         newGameState = Maybe.map (gameStep gameInput) screen.gameState
       in
-        { screen | gameState = newGameState, live = True } &: none
+        res { screen | gameState = newGameState, live = True } none
 
     EnterChat ->
       let
         newGameState = Maybe.map (\gs -> { gs | chatting = True }) screen.gameState
       in
-        { screen | gameState = newGameState } &: none
+        res { screen | gameState = newGameState } none
 
     LeaveChat ->
       let
         newGameState = Maybe.map (\gs -> { gs | chatting = False }) screen.gameState
       in
-        { screen | gameState = newGameState } &: none
+        res { screen | gameState = newGameState } none
 
     UpdateMessageField s ->
-      { screen | messageField = s } &: none
+      res { screen | messageField = s } none
 
     SubmitMessage ->
       if screen.live then
-        { screen | messageField = "" } &! (sendMessage screen.messageField)
+        taskRes { screen | messageField = "" } (sendMessage screen.messageField)
       else
-        screen &: none
+        res screen none
 
     NewMessage msg ->
-      { screen | messages = take 30 (msg :: screen.messages) } &: none
+      res { screen | messages = take 30 (msg :: screen.messages) } none
 
     UpdateLiveTrack liveTrack ->
-      (applyLiveTrack liveTrack screen) &: none
+      res (applyLiveTrack liveTrack screen) none
 
     NoOp ->
-      screen &: none
+      res screen none
 
 
 applyLiveTrack : LiveTrack -> Screen -> Screen

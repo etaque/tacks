@@ -42,7 +42,7 @@ mouseAction =
 
 mount : String -> (Screen, Effects Action)
 mount id =
-  initial &! (loadTrack id)
+  taskRes initial (loadTrack id)
 
 
 update : Dims -> Action -> Screen -> (Screen, Effects Action)
@@ -52,34 +52,34 @@ update dims action screen =
     LoadTrack result ->
       case result of
         Ok track ->
-          { screen | track = Just track, editor = Just (initialEditor track) } &: none
+          staticRes { screen | track = Just track, editor = Just (initialEditor track) }
         Err _ ->
-          { screen | notFound = True } &: none
+          staticRes { screen | notFound = True }
 
     ToggleBlock b ->
-      (updateBlocks >> updateEditor) b screen &: none
+      staticRes ((updateBlocks >> updateEditor) b screen)
 
     SetName n ->
-      (updateEditor (\e -> { e | name = n }) screen) &: none
+      staticRes (updateEditor (\e -> { e | name = n }) screen)
 
     MouseAction event ->
-      updateEditor (GridUpdates.mouseAction event dims) screen &: none
+      staticRes (updateEditor (GridUpdates.mouseAction event dims) screen)
 
     SetMode mode ->
-      updateEditor (\e -> { e | mode = mode }) screen &: none
+      staticRes (updateEditor (\e -> { e | mode = mode }) screen)
 
     AltMoveMode b ->
-      updateEditor (\e -> { e | altMove = b }) screen &: none
+      staticRes (updateEditor (\e -> { e | altMove = b }) screen)
 
     FormAction a ->
-      (FormUpdates.update >> updateCourse >> updateEditor) a screen &: none
+      staticRes ((FormUpdates.update >> updateCourse >> updateEditor) a screen)
 
     Save try ->
       case (screen.track, screen.editor) of
         (Just track, Just editor) ->
-          (updateEditor (\e -> { e | saving = True}) screen) &! (save try track.id editor)
+          taskRes (updateEditor (\e -> { e | saving = True}) screen) (save try track.id editor)
         _ ->
-          screen &: none
+          res screen none
 
     SaveResult try result ->
       case result of
@@ -90,22 +90,22 @@ update dims action screen =
               then Effects.map (\_ -> NoOp) (Utils.redirect (Routes.PlayTrack track.id))
               else none
           in
-            newScreen &: effect
+            res newScreen effect
         Err _ ->
-          screen &: none -- TODO
+          res screen none -- TODO
 
     ConfirmPublish ->
-      updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) screen &: none
+      res (updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) screen) none
 
     Publish ->
       case (screen.track, screen.editor) of
         (Just track, Just editor) ->
-          (updateEditor (\e -> { e | saving = True}) screen) &! (publish track.id editor)
+          taskRes (updateEditor (\e -> { e | saving = True}) screen) (publish track.id editor)
         _ ->
-          screen &: none
+          res screen none
 
     NoOp ->
-      screen &: none
+      res screen none
 
 
 updateEditor : (Editor -> Editor) -> Screen -> Screen

@@ -15,7 +15,7 @@ import Screens.Admin.Updates exposing (addr)
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout
 
-import Transit
+import Transit.Style
 
 
 type Tab = DashboardTab | TracksTab | UsersTab
@@ -54,7 +54,7 @@ routeMenuItem r =
 content : Context -> Tab -> Screen -> Html
 content ctx item ({tracks, users} as screen) =
   let
-    styleAttr = style (Transit.slideLeftStyle screen.transition)
+    transitStyle = Transit.Style.fadeSlideLeft 50 screen
     tabContent =
       case item of
         DashboardTab ->
@@ -64,7 +64,7 @@ content ctx item ({tracks, users} as screen) =
         UsersTab ->
           usersContent screen
   in
-    div [ class "admin-content", styleAttr ] tabContent
+    div [ class "admin-content", style transitStyle ] tabContent
 
 
 dashboardContent : Screen -> List Html

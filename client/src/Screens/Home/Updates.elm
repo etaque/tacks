@@ -21,7 +21,7 @@ addr =
 
 mount : Player -> (Screen, Effects Action)
 mount player =
-  initial player &! refreshLiveStatus
+  taskRes (initial player) refreshLiveStatus
 
 
 update : Action -> Screen -> (Screen, Effects Action)
@@ -30,32 +30,29 @@ update action screen =
 
     SetLiveStatus result ->
       let
-        liveStatus = result ?: screen.liveStatus
-        task = delay (5 * second) refreshLiveStatus
+        liveStatus = Result.withDefault screen.liveStatus result
       in
-        { screen | liveStatus = liveStatus } &! task
+        delay (5 * second) refreshLiveStatus
+          |> taskRes { screen | liveStatus = liveStatus }
 
     SetHandle handle ->
-      { screen | handle = handle } &: none
+      res { screen | handle = handle } none
 
     SubmitHandle ->
-      let
-        task = Task.map SubmitHandleResult (ServerApi.postHandle screen.handle)
-      in
-        screen &! task
+      Task.map SubmitHandleResult (ServerApi.postHandle screen.handle)
+        |> taskRes screen
 
     SubmitHandleResult result ->
-      let
-        effect = Result.map Utils.setPlayer result ?: none
-          |> Utils.always NoOp
-      in
-        screen &: effect
+      Result.map (Utils.setPlayer) result
+        |> Result.withDefault none
+        |> Utils.always NoOp
+        |> res screen
 
     FocusTrack maybeTrackId ->
-      { screen | trackFocus = maybeTrackId } &: none
+      res { screen | trackFocus = maybeTrackId } none
 
     NoOp ->
-      screen &: none
+      res screen none
 
 
 refreshLiveStatus : Task Never Action

@@ -11669,79 +11669,235 @@ Elm.Transit.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
-   var value = function (_p0) {    var _p1 = _p0;return _p1._0;};
-   var slideLeftStyle = function (_p2) {
-      var _p3 = _p2;
-      var _p4 = _p3._0;
-      if (_p4.ctor === "Just") {
-            var _p5 = _p4._0;
-            return _U.list([{ctor: "_Tuple2"
-                            ,_0: "opacity"
-                            ,_1: $Basics.toString(_p5)}
-                           ,{ctor: "_Tuple2"
-                            ,_0: "transform"
-                            ,_1: A2($Basics._op["++"],
-                            "translateX(",
-                            A2($Basics._op["++"],$Basics.toString(40 - _p5 * 40),"px)"))}]);
-         } else {
-            return _U.list([]);
-         }
+   var getStatus = function (_p0) {
+      var _p1 = _p0;
+      return _p1._0.status;
    };
-   var T = function (a) {    return {ctor: "T",_0: a};};
-   var empty = T($Maybe.Nothing);
-   var start = T($Maybe.Just(0));
-   var set = function (_p6) {    return T($Maybe.Just(_p6));};
-   var Tick = F2(function (a,b) {
-      return {ctor: "Tick",_0: a,_1: b};
+   var getValue = function (_p2) {
+      var _p3 = _p2;
+      return _p3._0.value;
+   };
+   var triggerTimelineAction = F2(function (targetAction,_p4) {
+      var _p5 = _p4;
+      return {ctor: "_Tuple2"
+             ,_0: _p5._0
+             ,_1: $Effects.batch(_U.list([_p5._1
+                                         ,$Effects.task($Task.succeed(targetAction))]))};
+   });
+   var withEnterDuration = F2(function (d,timeline) {
+      return _U.update(timeline,{enterDuration: d});
+   });
+   var withExitDuration = F2(function (d,timeline) {
+      return _U.update(timeline,{exitDuration: d});
+   });
+   var Timeline = F3(function (a,b,c) {
+      return {exitDuration: a,action: b,enterDuration: c};
+   });
+   var timeline = Timeline;
+   var defaultTimeline = function (action) {
+      return A3(Timeline,100,action,200);
+   };
+   var EnterTick = F2(function (a,b) {
+      return {ctor: "EnterTick",_0: a,_1: b};
+   });
+   var ExitTick = F3(function (a,b,c) {
+      return {ctor: "ExitTick",_0: a,_1: b,_2: c};
    });
    var Start = F2(function (a,b) {
       return {ctor: "Start",_0: a,_1: b};
    });
-   var step = function (action) {
-      var _p7 = action;
-      switch (_p7.ctor)
-      {case "Init": return {ctor: "_Tuple2"
-                           ,_0: start
-                           ,_1: $Effects.tick(Start(_p7._0))};
-         case "Start": var _p8 = _p7._1;
-           var anim = A2($Animation.duration,
-           _p7._0,
-           $Animation.animation(_p8));
-           var fx = $Effects.tick(Tick(anim));
-           return {ctor: "_Tuple2"
-                  ,_0: set(A2($Animation.animate,_p8,anim))
-                  ,_1: fx};
-         default: var _p10 = _p7._1;
-           var _p9 = _p7._0;
-           return A2($Animation.isDone,_p10,_p9) ? {ctor: "_Tuple2"
-                                                   ,_0: empty
-                                                   ,_1: $Effects.none} : {ctor: "_Tuple2"
-                                                                         ,_0: set(A2($Animation.animate,_p10,_p9))
-                                                                         ,_1: $Effects.tick(Tick(_p9))};}
-   };
-   var update = F3(function (action,model,actionWrapper) {
-      var _p11 = step(action);
-      var t = _p11._0;
-      var fx = _p11._1;
-      return {ctor: "_Tuple2"
-             ,_0: _U.update(model,{transition: t})
-             ,_1: A2($Effects.map,actionWrapper,fx)};
-   });
    var Init = function (a) {    return {ctor: "Init",_0: a};};
-   var initAction = Init;
-   var init = F3(function (dur,model,actionWrapper) {
-      return A3(update,initAction(dur),model,actionWrapper);
+   var AnimationState = F2(function (a,b) {
+      return {startTime: a,animation: b};
+   });
+   var Done = {ctor: "Done"};
+   var Enter = {ctor: "Enter"};
+   var enterStep = F3(function (value,animState,state) {
+      return {ctor: "_Tuple2"
+             ,_0: _U.update(state,{value: value,status: Enter})
+             ,_1: $Effects.tick(EnterTick(animState))};
+   });
+   var Exit = {ctor: "Exit"};
+   var exitStep = F4(function (value,timeline,animState,state) {
+      return {ctor: "_Tuple2"
+             ,_0: _U.update(state,{value: value,status: Exit})
+             ,_1: $Effects.tick(A2(ExitTick,timeline,animState))};
+   });
+   var State = F3(function (a,b,c) {
+      return {value: a,status: b,startTime: c};
+   });
+   var initialState = A3(State,0,Done,0);
+   var T = function (a) {    return {ctor: "T",_0: a};};
+   var initial = T(initialState);
+   var update = F3(function (actionWrapper,action,target) {
+      var wrapForTarget = function (_p6) {
+         var _p7 = _p6;
+         return {ctor: "_Tuple2"
+                ,_0: _U.update(target,{transition: T(_p7._0)})
+                ,_1: A2($Effects.map,actionWrapper,_p7._1)};
+      };
+      var state = function () {
+         var _p8 = target.transition;
+         return _p8._0;
+      }();
+      var watchRetarget = F2(function (animState,_p9) {
+         var _p10 = _p9;
+         return _U.eq(state.startTime,
+         animState.startTime) ? {ctor: "_Tuple2"
+                                ,_0: _p10._0
+                                ,_1: _p10._1} : {ctor: "_Tuple2",_0: state,_1: $Effects.none};
+      });
+      var _p11 = action;
+      switch (_p11.ctor)
+      {case "Init": return wrapForTarget({ctor: "_Tuple2"
+                                         ,_0: A3(State,0,Exit,0)
+                                         ,_1: $Effects.tick(Start(_p11._0))});
+         case "Start": var _p13 = _p11._0;
+           var _p12 = _p11._1;
+           var newState = _U.update(state,{startTime: _p12});
+           var newAnim = A2($Animation.duration,
+           _p13.exitDuration,
+           $Animation.animation(_p12));
+           return wrapForTarget(A4(exitStep,
+           0,
+           _p13,
+           A2(AnimationState,_p12,newAnim),
+           newState));
+         case "ExitTick": var _p16 = _p11._0;
+           var _p15 = _p11._2;
+           var _p14 = _p11._1;
+           if (A2($Animation.isRunning,_p15,_p14.animation))
+           return wrapForTarget(A2(watchRetarget,
+              _p14,
+              A4(exitStep,
+              A2($Animation.animate,_p15,_p14.animation),
+              _p16,
+              _p14,
+              state))); else {
+                 var newAnim = A2($Animation.duration,
+                 _p16.enterDuration,
+                 $Animation.animation(_p15));
+                 return A2(triggerTimelineAction,
+                 _p16.action,
+                 wrapForTarget(A2(watchRetarget,
+                 _p14,
+                 A3(enterStep,0,_U.update(_p14,{animation: newAnim}),state))));
+              }
+         default: var _p18 = _p11._1;
+           var _p17 = _p11._0;
+           return A2($Animation.isRunning,
+           _p18,
+           _p17.animation) ? wrapForTarget(A2(watchRetarget,
+           _p17,
+           A3(enterStep,
+           A2($Animation.animate,_p18,_p17.animation),
+           _p17,
+           state))) : wrapForTarget({ctor: "_Tuple2"
+                                    ,_0: initialState
+                                    ,_1: $Effects.none});}
+   });
+   var init = F2(function (actionWrapper,timeline) {
+      return A2(update,actionWrapper,Init(timeline));
    });
    return _elm.Transit.values = {_op: _op
-                                ,initAction: initAction
-                                ,step: step
+                                ,initial: initial
+                                ,timeline: timeline
+                                ,defaultTimeline: defaultTimeline
+                                ,withEnterDuration: withEnterDuration
+                                ,withExitDuration: withExitDuration
                                 ,init: init
                                 ,update: update
-                                ,value: value
-                                ,empty: empty
-                                ,slideLeftStyle: slideLeftStyle};
+                                ,getStatus: getStatus
+                                ,getValue: getValue
+                                ,Timeline: Timeline
+                                ,Exit: Exit
+                                ,Enter: Enter
+                                ,Done: Done};
+};
+Elm.Transit = Elm.Transit || {};
+Elm.Transit.Style = Elm.Transit.Style || {};
+Elm.Transit.Style.make = function (_elm) {
+   "use strict";
+   _elm.Transit = _elm.Transit || {};
+   _elm.Transit.Style = _elm.Transit.Style || {};
+   if (_elm.Transit.Style.values) return _elm.Transit.Style.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Transit = Elm.Transit.make(_elm);
+   var _op = {};
+   var transition = F3(function (exit,enter,model) {
+      var _p0 = {ctor: "_Tuple2"
+                ,_0: $Transit.getStatus(model.transition)
+                ,_1: $Transit.getValue(model.transition)};
+      _v0_2: do {
+         if (_p0.ctor === "_Tuple2") {
+               switch (_p0._0.ctor)
+               {case "Exit": return exit(_p0._1);
+                  case "Enter": return enter(_p0._1);
+                  default: break _v0_2;}
+            } else {
+               break _v0_2;
+            }
+      } while (false);
+      return _U.list([]);
+   });
+   var fadeIn = function (v) {
+      return _U.list([{ctor: "_Tuple2"
+                      ,_0: "opacity"
+                      ,_1: $Basics.toString(v)}]);
+   };
+   var fadeOut = function (v) {
+      return _U.list([{ctor: "_Tuple2"
+                      ,_0: "opacity"
+                      ,_1: $Basics.toString(1 - v)}]);
+   };
+   var fade = function (m) {
+      return A3(transition,fadeOut,fadeIn,m);
+   };
+   var slideInLeft = F2(function (offset,v) {
+      return _U.list([{ctor: "_Tuple2"
+                      ,_0: "transform"
+                      ,_1: A2($Basics._op["++"],
+                      "translateX(",
+                      A2($Basics._op["++"],
+                      $Basics.toString(offset - v * offset),
+                      "px)"))}]);
+   });
+   var slideOutLeft = F2(function (offset,v) {
+      return _U.list([{ctor: "_Tuple2"
+                      ,_0: "transform"
+                      ,_1: A2($Basics._op["++"],
+                      "translateX(",
+                      A2($Basics._op["++"],
+                      $Basics.toString((0 - v) * offset),
+                      "px)"))}]);
+   });
+   var slideLeft = F2(function (offset,m) {
+      return A3(transition,
+      slideOutLeft(offset),
+      slideInLeft(offset),
+      m);
+   });
+   var fadeSlideLeft = F2(function (offset,m) {
+      return A2($Basics._op["++"],A2(slideLeft,offset,m),fade(m));
+   });
+   return _elm.Transit.Style.values = {_op: _op
+                                      ,fadeSlideLeft: fadeSlideLeft
+                                      ,slideLeft: slideLeft
+                                      ,slideOutLeft: slideOutLeft
+                                      ,slideInLeft: slideInLeft
+                                      ,fade: fade
+                                      ,fadeOut: fadeOut
+                                      ,fadeIn: fadeIn
+                                      ,transition: transition};
 };
 Elm.Automaton = Elm.Automaton || {};
 Elm.Automaton.make = function (_elm) {
@@ -13562,11 +13718,14 @@ Elm.Screens.Admin.Types.make = function (_elm) {
    $Transit = Elm.Transit.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
+   var TransitionAction = function (a) {
+      return {ctor: "TransitionAction",_0: a};
+   };
    var UpdateRoute = function (a) {
       return {ctor: "UpdateRoute",_0: a};
    };
-   var TransitionAction = function (a) {
-      return {ctor: "TransitionAction",_0: a};
+   var StartTransition = function (a) {
+      return {ctor: "StartTransition",_0: a};
    };
    var DeleteTrackResult = function (a) {
       return {ctor: "DeleteTrackResult",_0: a};
@@ -13581,7 +13740,7 @@ Elm.Screens.Admin.Types.make = function (_elm) {
    var initialRoute = $Screens$Admin$Routes.Dashboard;
    var initial = {tracks: _U.list([])
                  ,users: _U.list([])
-                 ,transition: $Transit.empty
+                 ,transition: $Transit.initial
                  ,route: initialRoute};
    return _elm.Screens.Admin.Types.values = {_op: _op
                                             ,initialRoute: initialRoute
@@ -13590,8 +13749,9 @@ Elm.Screens.Admin.Types.make = function (_elm) {
                                             ,RefreshDataResult: RefreshDataResult
                                             ,DeleteTrack: DeleteTrack
                                             ,DeleteTrackResult: DeleteTrackResult
-                                            ,TransitionAction: TransitionAction
+                                            ,StartTransition: StartTransition
                                             ,UpdateRoute: UpdateRoute
+                                            ,TransitionAction: TransitionAction
                                             ,NoOp: NoOp};
 };
 Elm.Routes = Elm.Routes || {};
@@ -13704,7 +13864,7 @@ Elm.AppTypes.make = function (_elm) {
       var _p2 = _p1.player;
       return {ctx: {player: _p2
                    ,dims: _p1.dims
-                   ,transition: $Transit.empty}
+                   ,transition: $Transit.initial}
              ,path: _p1.path
              ,route: $Maybe.Nothing
              ,screens: {home: $Screens$Home$Types.initial(_p2)
@@ -13769,8 +13929,11 @@ Elm.AppTypes.make = function (_elm) {
    var UpdateDims = function (a) {
       return {ctor: "UpdateDims",_0: a};
    };
-   var TransitionAction = function (a) {
-      return {ctor: "TransitionAction",_0: a};
+   var TransitAction = function (a) {
+      return {ctor: "TransitAction",_0: a};
+   };
+   var MountRoute = function (a) {
+      return {ctor: "MountRoute",_0: a};
    };
    var PathChanged = function (a) {
       return {ctor: "PathChanged",_0: a};
@@ -13781,20 +13944,33 @@ Elm.AppTypes.make = function (_elm) {
    var SetPlayer = function (a) {
       return {ctor: "SetPlayer",_0: a};
    };
+   var effect = function (_p3) {
+      return $Effects.task($Task.succeed(_p3));
+   };
+   var mapState = F2(function (fn,_p4) {
+      var _p5 = _p4;
+      return {ctor: "_Tuple2",_0: fn(_p5._0),_1: _p5._1};
+   });
+   var mapEffects = F2(function (fn,_p6) {
+      var _p7 = _p6;
+      return {ctor: "_Tuple2"
+             ,_0: _p7._0
+             ,_1: A2($Effects.map,fn,_p7._1)};
+   });
+   var staticRes = function (s) {
+      return {ctor: "_Tuple2",_0: s,_1: $Effects.none};
+   };
+   var taskRes = F2(function (s,t) {
+      return {ctor: "_Tuple2",_0: s,_1: $Effects.task(t)};
+   });
+   var res = F2(function (s,fx) {
+      return {ctor: "_Tuple2",_0: s,_1: fx};
+   });
    var AppSetup = F3(function (a,b,c) {
       return {player: a,path: b,dims: c};
    });
-   _op["?:"] = F2(function (result,$default) {
-      return A2($Result.withDefault,$default,result);
-   });
    _op["?"] = F2(function (maybe,$default) {
       return A2($Maybe.withDefault,$default,maybe);
-   });
-   _op["&:"] = F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   });
-   _op["&!"] = F2(function (model,task) {
-      return {ctor: "_Tuple2",_0: model,_1: $Effects.task(task)};
    });
    var appActionsMailbox = $Signal.mailbox(AppNoOp);
    var appActionsAddress = appActionsMailbox.address;
@@ -13802,10 +13978,17 @@ Elm.AppTypes.make = function (_elm) {
                                  ,appActionsMailbox: appActionsMailbox
                                  ,appActionsAddress: appActionsAddress
                                  ,AppSetup: AppSetup
+                                 ,res: res
+                                 ,taskRes: taskRes
+                                 ,staticRes: staticRes
+                                 ,mapEffects: mapEffects
+                                 ,mapState: mapState
+                                 ,effect: effect
                                  ,SetPlayer: SetPlayer
                                  ,SetPath: SetPath
                                  ,PathChanged: PathChanged
-                                 ,TransitionAction: TransitionAction
+                                 ,MountRoute: MountRoute
+                                 ,TransitAction: TransitAction
                                  ,UpdateDims: UpdateDims
                                  ,MouseEvent: MouseEvent
                                  ,ScreenAction: ScreenAction
@@ -14814,36 +14997,34 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    var update = F2(function (action,screen) {
       var _p0 = action;
       switch (_p0.ctor)
-      {case "SetLiveStatus": var task = A2($Task$Extra.delay,
-           5 * $Time.second,
-           refreshLiveStatus);
-           var liveStatus = A2($AppTypes._op["?:"],
-           _p0._0,
-           screen.liveStatus);
-           return A2($AppTypes._op["&!"],
+      {case "SetLiveStatus": var liveStatus = A2($Result.withDefault,
+           screen.liveStatus,
+           _p0._0);
+           return A2($AppTypes.taskRes,
            _U.update(screen,{liveStatus: liveStatus}),
-           task);
-         case "SetHandle": return A2($AppTypes._op["&:"],
+           A2($Task$Extra.delay,5 * $Time.second,refreshLiveStatus));
+         case "SetHandle": return A2($AppTypes.res,
            _U.update(screen,{handle: _p0._0}),
            $Effects.none);
-         case "SubmitHandle": var task = A2($Task.map,
+         case "SubmitHandle": return A2($AppTypes.taskRes,
+           screen,
+           A2($Task.map,
            $Screens$Home$Types.SubmitHandleResult,
-           $ServerApi.postHandle(screen.handle));
-           return A2($AppTypes._op["&!"],screen,task);
-         case "SubmitHandleResult":
-         var effect = A2($Screens$UpdateUtils.always,
+           $ServerApi.postHandle(screen.handle)));
+         case "SubmitHandleResult": return A2($AppTypes.res,
+           screen,
+           A2($Screens$UpdateUtils.always,
            $Screens$Home$Types.NoOp,
-           A2($AppTypes._op["?:"],
-           A2($Result.map,$Screens$UpdateUtils.setPlayer,_p0._0),
-           $Effects.none));
-           return A2($AppTypes._op["&:"],screen,effect);
-         case "FocusTrack": return A2($AppTypes._op["&:"],
+           A2($Result.withDefault,
+           $Effects.none,
+           A2($Result.map,$Screens$UpdateUtils.setPlayer,_p0._0))));
+         case "FocusTrack": return A2($AppTypes.res,
            _U.update(screen,{trackFocus: _p0._0}),
            $Effects.none);
-         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+         default: return A2($AppTypes.res,screen,$Effects.none);}
    });
    var mount = function (player) {
-      return A2($AppTypes._op["&!"],
+      return A2($AppTypes.taskRes,
       $Screens$Home$Types.initial(player),
       refreshLiveStatus);
    };
@@ -14890,16 +15071,13 @@ Elm.Screens.Register.Updates.make = function (_elm) {
    var update = F2(function (action,screen) {
       var _p0 = action;
       switch (_p0.ctor)
-      {case "SetHandle": return A2($AppTypes._op["&:"],
-           _U.update(screen,{handle: _p0._0}),
-           $Effects.none);
-         case "SetEmail": return A2($AppTypes._op["&:"],
-           _U.update(screen,{email: _p0._0}),
-           $Effects.none);
-         case "SetPassword": return A2($AppTypes._op["&:"],
-           _U.update(screen,{password: _p0._0}),
-           $Effects.none);
-         case "Submit": return A2($AppTypes._op["&!"],
+      {case "SetHandle": return $AppTypes.staticRes(_U.update(screen,
+           {handle: _p0._0}));
+         case "SetEmail": return $AppTypes.staticRes(_U.update(screen,
+           {email: _p0._0}));
+         case "SetPassword": return $AppTypes.staticRes(_U.update(screen,
+           {password: _p0._0}));
+         case "Submit": return A2($AppTypes.taskRes,
            _U.update(screen,{loading: true,errors: $Dict.empty}),
            submitTask(screen));
          case "SubmitResult": var _p1 = _p0._0;
@@ -14909,17 +15087,14 @@ Elm.Screens.Register.Updates.make = function (_elm) {
                  $Screens$UpdateUtils.setPlayer(_p1._0));
                  var newScreen = _U.update(screen,
                  {loading: false,errors: $Dict.empty});
-                 return A2($AppTypes._op["&:"],newScreen,effect);
+                 return A2($AppTypes.res,newScreen,effect);
               } else {
-                 return A2($AppTypes._op["&:"],
-                 _U.update(screen,{loading: false,errors: _p1._0}),
-                 $Effects.none);
+                 return $AppTypes.staticRes(_U.update(screen,
+                 {loading: false,errors: _p1._0}));
               }
-         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+         default: return $AppTypes.staticRes(screen);}
    });
-   var mount = A2($AppTypes._op["&:"],
-   $Screens$Register$Types.initial,
-   $Effects.none);
+   var mount = $AppTypes.staticRes($Screens$Register$Types.initial);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.RegisterAction);
    return _elm.Screens.Register.Updates.values = {_op: _op
                                                  ,addr: addr
@@ -14959,13 +15134,11 @@ Elm.Screens.Login.Updates.make = function (_elm) {
    var update = F2(function (action,screen) {
       var _p0 = action;
       switch (_p0.ctor)
-      {case "SetEmail": return A2($AppTypes._op["&:"],
-           _U.update(screen,{email: _p0._0}),
-           $Effects.none);
-         case "SetPassword": return A2($AppTypes._op["&:"],
-           _U.update(screen,{password: _p0._0}),
-           $Effects.none);
-         case "Submit": return A2($AppTypes._op["&!"],
+      {case "SetEmail": return $AppTypes.staticRes(_U.update(screen,
+           {email: _p0._0}));
+         case "SetPassword": return $AppTypes.staticRes(_U.update(screen,
+           {password: _p0._0}));
+         case "Submit": return A2($AppTypes.taskRes,
            _U.update(screen,{loading: true}),
            submitTask(screen));
          case "SubmitResult": var _p1 = _p0._0;
@@ -14974,17 +15147,14 @@ Elm.Screens.Login.Updates.make = function (_elm) {
                  $Screens$Login$Types.NoOp,
                  $Screens$UpdateUtils.setPlayer(_p1._0));
                  var newScreen = _U.update(screen,{loading: false,error: false});
-                 return A2($AppTypes._op["&:"],newScreen,effect);
+                 return A2($AppTypes.res,newScreen,effect);
               } else {
-                 return A2($AppTypes._op["&:"],
-                 _U.update(screen,{loading: false,error: true}),
-                 $Effects.none);
+                 return $AppTypes.staticRes(_U.update(screen,
+                 {loading: false,error: true}));
               }
-         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+         default: return $AppTypes.staticRes(screen);}
    });
-   var mount = A2($AppTypes._op["&:"],
-   $Screens$Login$Types.initial,
-   $Effects.none);
+   var mount = $AppTypes.staticRes($Screens$Login$Types.initial);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.LoginAction);
    return _elm.Screens.Login.Updates.values = {_op: _op
                                               ,addr: addr
@@ -15031,17 +15201,13 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
       switch (_p2.ctor)
       {case "LiveTrackResult": var _p3 = _p2._0;
            if (_p3.ctor === "Ok") {
-                 return A2($AppTypes._op["&:"],
-                 _U.update(_p10,{liveTrack: $Maybe.Just(_p3._0)}),
-                 $Effects.none);
+                 return $AppTypes.staticRes(_U.update(_p10,
+                 {liveTrack: $Maybe.Just(_p3._0)}));
               } else {
-                 return A2($AppTypes._op["&:"],
-                 _U.update(_p10,{notFound: true}),
-                 $Effects.none);
+                 return $AppTypes.staticRes(_U.update(_p10,{notFound: true}));
               }
-         case "SetOverCourse": return A2($AppTypes._op["&:"],
-           _U.update(_p10,{courseControl: _U.update(_p9,{over: _p2._0})}),
-           $Effects.none);
+         case "SetOverCourse": return $AppTypes.staticRes(_U.update(_p10,
+           {courseControl: _U.update(_p9,{over: _p2._0})}));
          case "MouseAction": var _p8 = _p2._0;
            var _p4 = _p9.center;
            var x = _p4._0;
@@ -15069,14 +15235,13 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
            }();
            var newControl = _U.update(_p9,
            {center: newCenter,dragging: dragging});
-           return A2($AppTypes._op["&:"],
-           _U.update(_p10,{courseControl: newControl}),
-           $Effects.none);
-         default: return A2($AppTypes._op["&:"],_p10,$Effects.none);}
+           return $AppTypes.staticRes(_U.update(_p10,
+           {courseControl: newControl}));
+         default: return $AppTypes.staticRes(_p10);}
    });
    var mouseAction = $Screens$ShowTrack$Types.MouseAction;
    var mount = function (slug) {
-      return A2($AppTypes._op["&!"],
+      return A2($AppTypes.taskRes,
       $Screens$ShowTrack$Types.initial,
       loadLiveTrack(slug));
    };
@@ -15536,62 +15701,49 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
       {case "LoadTrack": var _p15 = _p14._0;
            if (_p15.ctor === "Ok") {
                  var _p16 = _p15._0;
-                 return A2($AppTypes._op["&:"],
-                 _U.update(screen,
+                 return $AppTypes.staticRes(_U.update(screen,
                  {track: $Maybe.Just(_p16)
-                 ,editor: $Maybe.Just($Screens$EditTrack$Types.initialEditor(_p16))}),
-                 $Effects.none);
+                 ,editor: $Maybe.Just($Screens$EditTrack$Types.initialEditor(_p16))}));
               } else {
-                 return A2($AppTypes._op["&:"],
-                 _U.update(screen,{notFound: true}),
-                 $Effects.none);
+                 return $AppTypes.staticRes(_U.update(screen,
+                 {notFound: true}));
               }
-         case "ToggleBlock": return A2($AppTypes._op["&:"],
-           A2(function (_p17) {
+         case "ToggleBlock":
+         return $AppTypes.staticRes(A2(function (_p17) {
               return updateEditor(updateBlocks(_p17));
            },
            _p14._0,
-           screen),
-           $Effects.none);
-         case "SetName": return A2($AppTypes._op["&:"],
-           A2(updateEditor,
+           screen));
+         case "SetName": return $AppTypes.staticRes(A2(updateEditor,
            function (e) {
               return _U.update(e,{name: _p14._0});
            },
-           screen),
-           $Effects.none);
-         case "MouseAction": return A2($AppTypes._op["&:"],
-           A2(updateEditor,
+           screen));
+         case "MouseAction": return $AppTypes.staticRes(A2(updateEditor,
            A2($Screens$EditTrack$GridUpdates.mouseAction,_p14._0,dims),
-           screen),
-           $Effects.none);
-         case "SetMode": return A2($AppTypes._op["&:"],
-           A2(updateEditor,
+           screen));
+         case "SetMode": return $AppTypes.staticRes(A2(updateEditor,
            function (e) {
               return _U.update(e,{mode: _p14._0});
            },
-           screen),
-           $Effects.none);
-         case "AltMoveMode": return A2($AppTypes._op["&:"],
-           A2(updateEditor,
+           screen));
+         case "AltMoveMode": return $AppTypes.staticRes(A2(updateEditor,
            function (e) {
               return _U.update(e,{altMove: _p14._0});
            },
-           screen),
-           $Effects.none);
-         case "FormAction": return A2($AppTypes._op["&:"],
-           A2(function (_p18) {
+           screen));
+         case "FormAction":
+         return $AppTypes.staticRes(A2(function (_p18) {
               return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p18)));
            },
            _p14._0,
-           screen),
-           $Effects.none);
+           screen));
          case "Save": var _p19 = {ctor: "_Tuple2"
                                  ,_0: screen.track
                                  ,_1: screen.editor};
            if (_p19.ctor === "_Tuple2" && _p19._0.ctor === "Just" && _p19._1.ctor === "Just")
            {
-                 return A2($AppTypes._op["&!"],
+                 return A2($AppTypes.taskRes,
                  A2(updateEditor,
                  function (e) {
                     return _U.update(e,{saving: true});
@@ -15599,7 +15751,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  screen),
                  A3(save,_p14._0,_p19._0._0.id,_p19._1._0));
               } else {
-                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+                 return A2($AppTypes.res,screen,$Effects.none);
               }
          case "SaveResult": var _p20 = _p14._1;
            if (_p20.ctor === "Ok") {
@@ -15613,11 +15765,11 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                     return _U.update(e,{saving: false});
                  },
                  screen);
-                 return A2($AppTypes._op["&:"],newScreen,effect);
+                 return A2($AppTypes.res,newScreen,effect);
               } else {
-                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+                 return A2($AppTypes.res,screen,$Effects.none);
               }
-         case "ConfirmPublish": return A2($AppTypes._op["&:"],
+         case "ConfirmPublish": return A2($AppTypes.res,
            A2(updateEditor,
            function (e) {
               return _U.update(e,
@@ -15630,7 +15782,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                                     ,_1: screen.editor};
            if (_p22.ctor === "_Tuple2" && _p22._0.ctor === "Just" && _p22._1.ctor === "Just")
            {
-                 return A2($AppTypes._op["&!"],
+                 return A2($AppTypes.taskRes,
                  A2(updateEditor,
                  function (e) {
                     return _U.update(e,{saving: true});
@@ -15638,12 +15790,12 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  screen),
                  A2(publish,_p22._0._0.id,_p22._1._0));
               } else {
-                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+                 return A2($AppTypes.res,screen,$Effects.none);
               }
-         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+         default: return A2($AppTypes.res,screen,$Effects.none);}
    });
    var mount = function (id) {
-      return A2($AppTypes._op["&!"],
+      return A2($AppTypes.taskRes,
       $Screens$EditTrack$Types.initial,
       loadTrack(id));
    };
@@ -15685,7 +15837,6 @@ Elm.Screens.ShowProfile.Updates.make = function (_elm) {
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
@@ -15696,12 +15847,10 @@ Elm.Screens.ShowProfile.Updates.make = function (_elm) {
    var _op = {};
    var update = F2(function (action,screen) {
       var _p0 = action;
-      return A2($AppTypes._op["&:"],screen,$Effects.none);
+      return $AppTypes.staticRes(screen);
    });
    var mount = function (player) {
-      return A2($AppTypes._op["&:"],
-      $Screens$ShowProfile$Types.initial(player),
-      $Effects.none);
+      return $AppTypes.staticRes($Screens$ShowProfile$Types.initial(player));
    };
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowProfileAction);
    return _elm.Screens.ShowProfile.Updates.values = {_op: _op
@@ -16757,7 +16906,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
       ,freePlayers: freePlayers});
    });
    var mount = function (id) {
-      return A2($AppTypes._op["&!"],
+      return A2($AppTypes.taskRes,
       $Screens$Game$Types.initial,
       loadLiveTrack(id));
    };
@@ -16774,11 +16923,11 @@ Elm.Screens.Game.Updates.make = function (_elm) {
       switch (_p5.ctor)
       {case "LoadLiveTrack": var _p6 = _p5._0;
            if (_p6.ctor === "Ok") {
-                 return A2($AppTypes._op["&:"],
+                 return A2($AppTypes.res,
                  screen,
                  $Effects.tick($Screens$Game$Types.InitGameState(_p6._0)));
               } else {
-                 return A2($AppTypes._op["&:"],
+                 return A2($AppTypes.res,
                  _U.update(screen,{notFound: true}),
                  $Effects.none);
               }
@@ -16790,17 +16939,17 @@ Elm.Screens.Game.Updates.make = function (_elm) {
            var newScreen = A2(applyLiveTrack,
            _p7,
            _U.update(screen,{gameState: $Maybe.Just(gameState)}));
-           return A2($AppTypes._op["&:"],newScreen,pingServer);
-         case "PingServer": return screen.live ? A2($AppTypes._op["&:"],
+           return A2($AppTypes.res,newScreen,pingServer);
+         case "PingServer": return screen.live ? A2($AppTypes.res,
            screen,
-           $Effects.none) : A2($AppTypes._op["&:"],
+           $Effects.none) : A2($AppTypes.res,
            _U.update(screen,
            {gameState: A2(updateTime,_p5._0,screen.gameState)}),
            pingServer);
          case "GameUpdate": var newGameState = A2($Maybe.map,
            $Game$Steps.gameStep(_p5._0),
            screen.gameState);
-           return A2($AppTypes._op["&:"],
+           return A2($AppTypes.res,
            _U.update(screen,{gameState: newGameState,live: true}),
            $Effects.none);
          case "EnterChat": var newGameState = A2($Maybe.map,
@@ -16808,7 +16957,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
               return _U.update(gs,{chatting: true});
            },
            screen.gameState);
-           return A2($AppTypes._op["&:"],
+           return A2($AppTypes.res,
            _U.update(screen,{gameState: newGameState}),
            $Effects.none);
          case "LeaveChat": var newGameState = A2($Maybe.map,
@@ -16816,28 +16965,27 @@ Elm.Screens.Game.Updates.make = function (_elm) {
               return _U.update(gs,{chatting: false});
            },
            screen.gameState);
-           return A2($AppTypes._op["&:"],
+           return A2($AppTypes.res,
            _U.update(screen,{gameState: newGameState}),
            $Effects.none);
-         case "UpdateMessageField": return A2($AppTypes._op["&:"],
+         case "UpdateMessageField": return A2($AppTypes.res,
            _U.update(screen,{messageField: _p5._0}),
            $Effects.none);
-         case "SubmitMessage":
-         return screen.live ? A2($AppTypes._op["&!"],
+         case "SubmitMessage": return screen.live ? A2($AppTypes.taskRes,
            _U.update(screen,{messageField: ""}),
-           sendMessage(screen.messageField)) : A2($AppTypes._op["&:"],
+           sendMessage(screen.messageField)) : A2($AppTypes.res,
            screen,
            $Effects.none);
-         case "NewMessage": return A2($AppTypes._op["&:"],
+         case "NewMessage": return A2($AppTypes.res,
            _U.update(screen,
            {messages: A2($List.take,
            30,
            A2($List._op["::"],_p5._0,screen.messages))}),
            $Effects.none);
-         case "UpdateLiveTrack": return A2($AppTypes._op["&:"],
+         case "UpdateLiveTrack": return A2($AppTypes.res,
            A2(applyLiveTrack,_p5._0,screen),
            $Effects.none);
-         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+         default: return A2($AppTypes.res,screen,$Effects.none);}
    });
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.GameAction);
    return _elm.Screens.Game.Updates.values = {_op: _op
@@ -16889,55 +17037,50 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
       switch (_p0.ctor)
       {case "DraftsResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
-                 return A2($AppTypes._op["&:"],
-                 _U.update(screen,{drafts: _p1._0}),
-                 $Effects.none);
+                 return $AppTypes.staticRes(_U.update(screen,
+                 {drafts: _p1._0}));
               } else {
-                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+                 return $AppTypes.staticRes(screen);
               }
-         case "SetDraftName": return A2($AppTypes._op["&:"],
-           _U.update(screen,{name: _p0._0}),
-           $Effects.none);
-         case "CreateDraft": return A2($AppTypes._op["&!"],
+         case "SetDraftName":
+         return $AppTypes.staticRes(_U.update(screen,{name: _p0._0}));
+         case "CreateDraft": return A2($AppTypes.taskRes,
            screen,
            A2($Task.map,
            $Screens$ListDrafts$Types.CreateDraftResult,
            $ServerApi.createTrack(screen.name)));
          case "CreateDraftResult": var _p2 = _p0._0;
            if (_p2.ctor === "Ok") {
-                 return A2($AppTypes._op["&:"],
+                 return A2($AppTypes.res,
                  screen,
                  A2($Screens$UpdateUtils.always,
                  $Screens$ListDrafts$Types.NoOp,
                  $Screens$UpdateUtils.redirect($Routes.EditTrack(_p2._0.id))));
               } else {
-                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+                 return $AppTypes.staticRes(screen);
               }
          case "ConfirmDeleteDraft": var _p3 = _p0._0;
            var newConfirm = _U.eq($Maybe.Just(_p3),
            screen.confirmDelete) ? $Maybe.Nothing : $Maybe.Just(_p3);
-           return A2($AppTypes._op["&:"],
-           _U.update(screen,{confirmDelete: newConfirm}),
-           $Effects.none);
-         case "DeleteDraft": return A2($AppTypes._op["&!"],
+           return $AppTypes.staticRes(_U.update(screen,
+           {confirmDelete: newConfirm}));
+         case "DeleteDraft": return A2($AppTypes.taskRes,
            screen,
            deleteDraft(_p0._0));
          case "DeleteDraftResult": var _p4 = _p0._0;
            if (_p4.ctor === "Ok") {
-                 return A2($AppTypes._op["&:"],
-                 _U.update(screen,
+                 return $AppTypes.staticRes(_U.update(screen,
                  {drafts: A2($List.filter,
                  function (t) {
                     return !_U.eq(t.id,_p4._0);
                  },
-                 screen.drafts)}),
-                 $Effects.none);
+                 screen.drafts)}));
               } else {
-                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+                 return $AppTypes.staticRes(screen);
               }
-         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+         default: return $AppTypes.staticRes(screen);}
    });
-   var mount = A2($AppTypes._op["&!"],
+   var mount = A2($AppTypes.taskRes,
    $Screens$ListDrafts$Types.initial,
    loadDrafts);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ListDraftsAction);
@@ -16961,7 +17104,6 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
@@ -16979,52 +17121,79 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
    var refreshData = A2($Task.map,
    $Screens$Admin$Types.RefreshDataResult,
    $ServerApi.loadAdminData);
-   var updateRouteEffect = function (route) {
-      return $Effects.task($Task.succeed($Screens$Admin$Types.UpdateRoute(route)));
-   };
+   var startTransition = F2(function (prevRoute,newRoute) {
+      var noTrans = $AppTypes.effect($Screens$Admin$Types.UpdateRoute(newRoute));
+      var _p0 = {ctor: "_Tuple2",_0: prevRoute,_1: newRoute};
+      _v0_2: do {
+         if (_p0.ctor === "_Tuple2") {
+               switch (_p0._0.ctor)
+               {case "ListTracks": if (_p0._1.ctor === "ListTracks") {
+                          return noTrans;
+                       } else {
+                          break _v0_2;
+                       }
+                  case "ListUsers": if (_p0._1.ctor === "ListUsers") {
+                          return noTrans;
+                       } else {
+                          break _v0_2;
+                       }
+                  default: break _v0_2;}
+            } else {
+               break _v0_2;
+            }
+      } while (false);
+      return $AppTypes.effect($Screens$Admin$Types.StartTransition(newRoute));
+   });
    var update = F2(function (action,screen) {
-      var _p0 = action;
-      switch (_p0.ctor)
-      {case "RefreshData": return A2($AppTypes._op["&!"],
+      var _p1 = action;
+      switch (_p1.ctor)
+      {case "RefreshData": return A2($AppTypes.taskRes,
            screen,
            refreshData);
-         case "RefreshDataResult": var _p1 = A2($AppTypes._op["?:"],
-           _p0._0,
-           A2($Models.AdminData,_U.list([]),_U.list([])));
-           var tracks = _p1.tracks;
-           var users = _p1.users;
-           return A2($AppTypes._op["&:"],
+         case "RefreshDataResult": var _p2 = A2($Result.withDefault,
+           A2($Models.AdminData,_U.list([]),_U.list([])),
+           _p1._0);
+           var tracks = _p2.tracks;
+           var users = _p2.users;
+           return A2($AppTypes.res,
            _U.update(screen,{tracks: tracks,users: users}),
            $Effects.none);
-         case "DeleteTrack": return A2($AppTypes._op["&!"],
+         case "DeleteTrack": return A2($AppTypes.taskRes,
            screen,
            A2($Task.map,
            $Screens$Admin$Types.DeleteTrackResult,
-           $ServerApi.deleteDraft(_p0._0)));
-         case "DeleteTrackResult": var _p2 = _p0._0;
-           if (_p2.ctor === "Ok") {
-                 return A2($AppTypes._op["&:"],
+           $ServerApi.deleteDraft(_p1._0)));
+         case "DeleteTrackResult": var _p3 = _p1._0;
+           if (_p3.ctor === "Ok") {
+                 return A2($AppTypes.res,
                  _U.update(screen,
                  {tracks: A2($List.filter,
                  function (t) {
-                    return !_U.eq(t.id,_p2._0);
+                    return !_U.eq(t.id,_p3._0);
                  },
                  screen.tracks)}),
                  $Effects.none);
               } else {
-                 return A2($AppTypes._op["&:"],screen,$Effects.none);
+                 return A2($AppTypes.res,screen,$Effects.none);
               }
-         case "UpdateRoute": return A3($Transit.init,
-           $Constants.transitionDuration,
-           _U.update(screen,{route: _p0._0}),
-           $Screens$Admin$Types.TransitionAction);
+         case "StartTransition": var timeline = A3($Transit.timeline,
+           100,
+           $Screens$Admin$Types.UpdateRoute(_p1._0),
+           200);
+           return A3($Transit.init,
+           $Screens$Admin$Types.TransitionAction,
+           timeline,
+           screen);
+         case "UpdateRoute": return A2($AppTypes.res,
+           _U.update(screen,{route: _p1._0}),
+           $Effects.none);
          case "TransitionAction": return A3($Transit.update,
-           _p0._0,
-           screen,
-           $Screens$Admin$Types.TransitionAction);
-         default: return A2($AppTypes._op["&:"],screen,$Effects.none);}
+           $Screens$Admin$Types.TransitionAction,
+           _p1._0,
+           screen);
+         default: return A2($AppTypes.res,screen,$Effects.none);}
    });
-   var mount = A2($AppTypes._op["&!"],
+   var mount = A2($AppTypes.taskRes,
    $Screens$Admin$Types.initial,
    refreshData);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.AdminAction);
@@ -17032,8 +17201,88 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
                                               ,addr: addr
                                               ,mount: mount
                                               ,update: update
-                                              ,updateRouteEffect: updateRouteEffect
+                                              ,startTransition: startTransition
                                               ,refreshData: refreshData};
+};
+Elm.Transition = Elm.Transition || {};
+Elm.Transition.make = function (_elm) {
+   "use strict";
+   _elm.Transition = _elm.Transition || {};
+   if (_elm.Transition.values) return _elm.Transition.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Routes = Elm.Routes.make(_elm),
+   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
+   $Screens$Admin$Updates = Elm.Screens.Admin.Updates.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Transit = Elm.Transit.make(_elm);
+   var _op = {};
+   var update = F2(function (action,state) {
+      return A2($AppTypes.mapState,
+      function (ctx) {
+         return _U.update(state,{ctx: ctx});
+      },
+      A3($Transit.update,$AppTypes.TransitAction,action,state.ctx));
+   });
+   var initAdmin = F3(function (from,to,state) {
+      return A2($AppTypes.mapEffects,
+      function (_p0) {
+         return $AppTypes.ScreenAction($AppTypes.AdminAction(_p0));
+      },
+      A2($AppTypes.res,
+      state,
+      A2($Screens$Admin$Updates.startTransition,from,to)));
+   });
+   var initMain = F2(function (action,state) {
+      var timeline = A3($Transit.timeline,100,action,200);
+      return A2($AppTypes.mapState,
+      function (ctx) {
+         return _U.update(state,{ctx: ctx});
+      },
+      A3($Transit.init,$AppTypes.TransitAction,timeline,state.ctx));
+   });
+   var None = {ctor: "None"};
+   var ForAdmin = F2(function (a,b) {
+      return {ctor: "ForAdmin",_0: a,_1: b};
+   });
+   var ForMain = {ctor: "ForMain"};
+   var detect = F2(function (prevRoute,route) {
+      var _p1 = {ctor: "_Tuple2",_0: prevRoute,_1: route};
+      if (_p1.ctor === "_Tuple2" && _p1._0.ctor === "Just" && _p1._0._0.ctor === "Admin" && _p1._1.ctor === "Just" && _p1._1._0.ctor === "Admin")
+      {
+            return A2(ForAdmin,_p1._0._0._0,_p1._1._0._0);
+         } else {
+            return !_U.eq(prevRoute,route) ? ForMain : None;
+         }
+   });
+   var init = F2(function (route,appState) {
+      var mountAction = $AppTypes.MountRoute(route);
+      var transition = A2(detect,appState.route,route);
+      var _p2 = transition;
+      switch (_p2.ctor)
+      {case "ForMain": return A2(initMain,mountAction,appState);
+         case "ForAdmin": return A3(initAdmin,
+           _p2._0,
+           _p2._1,
+           _U.update(appState,{route: route}));
+         default: return A2($AppTypes.res,
+           appState,
+           $AppTypes.effect(mountAction));}
+   });
+   return _elm.Transition.values = {_op: _op
+                                   ,ForMain: ForMain
+                                   ,ForAdmin: ForAdmin
+                                   ,None: None
+                                   ,init: init
+                                   ,detect: detect
+                                   ,initMain: initMain
+                                   ,initAdmin: initAdmin
+                                   ,update: update};
 };
 Elm.AppUpdates = Elm.AppUpdates || {};
 Elm.AppUpdates.make = function (_elm) {
@@ -17043,7 +17292,6 @@ Elm.AppUpdates.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $History = Elm.History.make(_elm),
@@ -17064,21 +17312,22 @@ Elm.AppUpdates.make = function (_elm) {
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Transit = Elm.Transit.make(_elm);
+   $Transition = Elm.Transition.make(_elm);
    var _op = {};
    var applyScreen = F4(function (screensUpdater,
    actionWrapper,
-   _p0,
+   response,
    appState) {
-      var _p1 = _p0;
-      var newEffect = A2($Effects.map,
-      function (_p2) {
-         return $AppTypes.ScreenAction(actionWrapper(_p2));
+      return A2($AppTypes.mapEffects,
+      function (_p0) {
+         return $AppTypes.ScreenAction(actionWrapper(_p0));
       },
-      _p1._1);
-      var newState = _U.update(appState,
-      {screens: A2(screensUpdater,_p1._0,appState.screens)});
-      return A2($AppTypes._op["&:"],newState,newEffect);
+      A2($AppTypes.mapState,
+      function (screen) {
+         return _U.update(appState,
+         {screens: A2(screensUpdater,screen,appState.screens)});
+      },
+      response));
    });
    var applyAdmin = A2(applyScreen,
    F2(function (s,screens) {
@@ -17132,188 +17381,148 @@ Elm.AppUpdates.make = function (_elm) {
       A2($Result.map,$AppTypes.SetPlayer,r));
    },
    $ServerApi.postLogout);
-   var updateScreen = F2(function (screenAction,_p3) {
-      var _p4 = _p3;
-      var _p8 = _p4.screens;
-      var _p7 = _p4.ctx;
-      var _p6 = _p4;
-      var _p5 = screenAction;
-      switch (_p5.ctor)
+   var updateScreen = F2(function (screenAction,_p1) {
+      var _p2 = _p1;
+      var _p6 = _p2.screens;
+      var _p5 = _p2.ctx;
+      var _p4 = _p2;
+      var _p3 = screenAction;
+      switch (_p3.ctor)
       {case "HomeAction": return A2(applyHome,
-           A2($Screens$Home$Updates.update,_p5._0,_p8.home),
-           _p6);
+           A2($Screens$Home$Updates.update,_p3._0,_p6.home),
+           _p4);
          case "LoginAction": return A2(applyLogin,
-           A2($Screens$Login$Updates.update,_p5._0,_p8.login),
-           _p6);
+           A2($Screens$Login$Updates.update,_p3._0,_p6.login),
+           _p4);
          case "RegisterAction": return A2(applyRegister,
-           A2($Screens$Register$Updates.update,_p5._0,_p8.register),
-           _p6);
+           A2($Screens$Register$Updates.update,_p3._0,_p6.register),
+           _p4);
          case "ShowTrackAction": return A2(applyShowTrack,
-           A2($Screens$ShowTrack$Updates.update,_p5._0,_p8.showTrack),
-           _p6);
+           A2($Screens$ShowTrack$Updates.update,_p3._0,_p6.showTrack),
+           _p4);
          case "EditTrackAction": return A2(applyEditTrack,
            A3($Screens$EditTrack$Updates.update,
-           _p7.dims,
-           _p5._0,
-           _p8.editTrack),
-           _p6);
+           _p5.dims,
+           _p3._0,
+           _p6.editTrack),
+           _p4);
          case "ShowProfileAction": return A2(applyShowProfile,
-           A2($Screens$ShowProfile$Updates.update,_p5._0,_p8.showProfile),
-           _p6);
+           A2($Screens$ShowProfile$Updates.update,_p3._0,_p6.showProfile),
+           _p4);
          case "GameAction": return A2(applyGame,
-           A3($Screens$Game$Updates.update,_p7.player,_p5._0,_p8.game),
-           _p6);
+           A3($Screens$Game$Updates.update,_p5.player,_p3._0,_p6.game),
+           _p4);
          case "ListDraftsAction": return A2(applyListDrafts,
-           A2($Screens$ListDrafts$Updates.update,_p5._0,_p8.listDrafts),
-           _p6);
+           A2($Screens$ListDrafts$Updates.update,_p3._0,_p6.listDrafts),
+           _p4);
          default: return A2(applyAdmin,
-           A2($Screens$Admin$Updates.update,_p5._0,_p8.admin),
-           _p6);}
+           A2($Screens$Admin$Updates.update,_p3._0,_p6.admin),
+           _p4);}
    });
-   var mountRoute = F3(function (prevRoute,_p9,newRoute) {
-      var _p10 = _p9;
-      var _p14 = _p10.ctx;
-      var _p13 = _p10;
-      var _p11 = newRoute;
-      switch (_p11.ctor)
+   var mountRoute = F3(function (prevRoute,_p7,newRoute) {
+      var _p8 = _p7;
+      var _p12 = _p8.ctx;
+      var _p11 = _p8;
+      var _p9 = newRoute;
+      switch (_p9.ctor)
       {case "Home": return A2(applyHome,
-           $Screens$Home$Updates.mount(_p14.player),
-           _p13);
+           $Screens$Home$Updates.mount(_p12.player),
+           _p11);
          case "Login": return A2(applyLogin,
            $Screens$Login$Updates.mount,
-           _p13);
+           _p11);
          case "Register": return A2(applyRegister,
            $Screens$Register$Updates.mount,
-           _p13);
+           _p11);
          case "ShowProfile": return A2(applyShowProfile,
-           $Screens$ShowProfile$Updates.mount(_p14.player),
-           _p13);
+           $Screens$ShowProfile$Updates.mount(_p12.player),
+           _p11);
          case "ShowTrack": return A2(applyShowTrack,
-           $Screens$ShowTrack$Updates.mount(_p11._0),
-           _p13);
+           $Screens$ShowTrack$Updates.mount(_p9._0),
+           _p11);
          case "EditTrack": return A2(applyEditTrack,
-           $Screens$EditTrack$Updates.mount(_p11._0),
-           _p13);
+           $Screens$EditTrack$Updates.mount(_p9._0),
+           _p11);
          case "PlayTrack": return A2(applyGame,
-           $Screens$Game$Updates.mount(_p11._0),
-           _p13);
+           $Screens$Game$Updates.mount(_p9._0),
+           _p11);
          case "ListDrafts": return A2(applyListDrafts,
            $Screens$ListDrafts$Updates.mount,
-           _p13);
-         default: var result = function () {
-              var _p12 = prevRoute;
-              if (_p12.ctor === "Just" && _p12._0.ctor === "Admin") {
-                    return {ctor: "_Tuple2"
-                           ,_0: _p10.screens.admin
-                           ,_1: $Screens$Admin$Updates.updateRouteEffect(_p11._0)};
-                 } else {
-                    return $Screens$Admin$Updates.mount;
-                 }
-           }();
-           return A2(applyAdmin,result,_p13);}
+           _p11);
+         default: var _p10 = prevRoute;
+           return A2(applyAdmin,$Screens$Admin$Updates.mount,_p11);}
    });
-   var addTransition = F3(function (prevRoute,route,_p15) {
-      var _p16 = _p15;
-      var _p20 = _p16._1;
-      var _p19 = _p16._0;
-      var _p17 = {ctor: "_Tuple2",_0: prevRoute,_1: route};
-      if (_p17.ctor === "_Tuple2" && _p17._0.ctor === "Just" && _p17._0._0.ctor === "Admin" && _p17._1.ctor === "Admin")
-      {
-            return A2($AppTypes._op["&:"],_p19,_p20);
-         } else {
-            var _p18 = A3($Transit.init,
-            $Constants.transitionDuration,
-            _p16._0.ctx,
-            $AppTypes.TransitionAction);
-            var newCtx = _p18._0;
-            var tfx = _p18._1;
-            return {ctor: "_Tuple2"
-                   ,_0: _U.update(_p19,{ctx: newCtx})
-                   ,_1: $Effects.batch(_U.list([_p20,tfx]))};
-         }
-   });
-   var update = F2(function (appAction,_p21) {
-      var _p22 = _p21;
-      var _p35 = _p22.ctx;
-      var _p34 = _p22;
-      var _p23 = appAction;
-      switch (_p23.ctor)
-      {case "SetPath": return A2($AppTypes._op["&!"],
-           _p34,
+   var update = F2(function (appAction,_p13) {
+      var _p14 = _p13;
+      var _p25 = _p14.ctx;
+      var _p24 = _p14;
+      var _p15 = appAction;
+      switch (_p15.ctor)
+      {case "SetPath": return A2($AppTypes.taskRes,
+           _p24,
            A2($Task.map,
-           function (_p24) {
+           function (_p16) {
               return $AppTypes.AppNoOp;
            },
-           $History.setPath(_p23._0)));
-         case "PathChanged": var _p27 = _p23._0;
-           var newRoute = $Routes.fromPath(_p27);
-           var newAppState = _U.update(_p34,{path: _p27,route: newRoute});
-           var _p25 = newAppState.route;
-           if (_p25.ctor === "Just") {
-                 var _p26 = _p25._0;
-                 return A3(addTransition,
-                 _p34.route,
-                 _p26,
-                 A3(mountRoute,_p34.route,newAppState,_p26));
+           $History.setPath(_p15._0)));
+         case "PathChanged": var newRoute = $Routes.fromPath(_p15._0);
+           return A2($Transition.init,newRoute,_p24);
+         case "MountRoute": var _p18 = _p15._0;
+           var newAppState = _U.update(_p24,{route: _p18});
+           var _p17 = _p18;
+           if (_p17.ctor === "Just") {
+                 return A3(mountRoute,_p24.route,newAppState,_p17._0);
               } else {
-                 return A2($AppTypes._op["&:"],newAppState,$Effects.none);
+                 return $AppTypes.staticRes(newAppState);
               }
-         case "TransitionAction": var _p28 = A3($Transit.update,
-           _p23._0,
-           _p35,
-           $AppTypes.TransitionAction);
-           var newCtx = _p28._0;
-           var fx = _p28._1;
-           return {ctor: "_Tuple2"
-                  ,_0: _U.update(_p34,{ctx: newCtx})
-                  ,_1: fx};
+         case "TransitAction": return A2($Transition.update,
+           _p15._0,
+           _p24);
          case "SetPlayer": var fx = A2($Effects.map,
-           function (_p29) {
+           function (_p19) {
               return $AppTypes.AppNoOp;
            },
            $Screens$UpdateUtils.redirect($Routes.Home));
-           var newCtx = _U.update(_p35,{player: _p23._0});
-           return A2($AppTypes._op["&:"],_U.update(_p34,{ctx: newCtx}),fx);
-         case "UpdateDims": return A2($AppTypes._op["&:"],
-           _U.update(_p34,{ctx: _U.update(_p35,{dims: _p23._0})}),
-           $Effects.none);
+           var newCtx = _U.update(_p25,{player: _p15._0});
+           return A2($AppTypes.res,_U.update(_p24,{ctx: newCtx}),fx);
+         case "UpdateDims": return $AppTypes.staticRes(_U.update(_p24,
+           {ctx: _U.update(_p25,{dims: _p15._0})}));
          case "MouseEvent": var handlerMaybe = function () {
-              var _p30 = _p34.route;
-              _v11_2: do {
-                 if (_p30.ctor === "Just") {
-                       switch (_p30._0.ctor)
-                       {case "EditTrack": return $Maybe.Just(function (_p31) {
-                               return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p31));
+              var _p20 = _p24.route;
+              _v8_2: do {
+                 if (_p20.ctor === "Just") {
+                       switch (_p20._0.ctor)
+                       {case "EditTrack": return $Maybe.Just(function (_p21) {
+                               return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p21));
                             });
-                          case "ShowTrack": return $Maybe.Just(function (_p32) {
-                               return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p32));
+                          case "ShowTrack": return $Maybe.Just(function (_p22) {
+                               return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p22));
                             });
-                          default: break _v11_2;}
+                          default: break _v8_2;}
                     } else {
-                       break _v11_2;
+                       break _v8_2;
                     }
               } while (false);
               return $Maybe.Nothing;
            }();
-           var _p33 = handlerMaybe;
-           if (_p33.ctor === "Just") {
-                 return A2(updateScreen,_p33._0(_p23._0),_p34);
+           var _p23 = handlerMaybe;
+           if (_p23.ctor === "Just") {
+                 return A2(updateScreen,_p23._0(_p15._0),_p24);
               } else {
-                 return A2($AppTypes._op["&:"],_p34,$Effects.none);
+                 return $AppTypes.staticRes(_p24);
               }
-         case "Logout": return A2($AppTypes._op["&!"],_p34,logoutTask);
-         case "ScreenAction": return A2(updateScreen,_p23._0,_p34);
-         default: return A2($AppTypes._op["&:"],_p34,$Effects.none);}
+         case "Logout": return A2($AppTypes.taskRes,_p24,logoutTask);
+         case "ScreenAction": return A2(updateScreen,_p15._0,_p24);
+         default: return $AppTypes.staticRes(_p24);}
    });
-   var initialAppUpdate = function (setup) {
-      var task = $Task.succeed($AppTypes.SetPath(setup.path));
+   var init = function (setup) {
+      var fx = $Effects.task($Task.succeed($AppTypes.SetPath(setup.path)));
       var appState = $AppTypes.initialAppState(setup);
-      return A2($AppTypes._op["&!"],appState,task);
+      return A2($AppTypes.res,appState,fx);
    };
    return _elm.AppUpdates.values = {_op: _op
-                                   ,initialAppUpdate: initialAppUpdate
+                                   ,init: init
                                    ,update: update
-                                   ,addTransition: addTransition
                                    ,mountRoute: mountRoute
                                    ,updateScreen: updateScreen
                                    ,logoutTask: logoutTask
@@ -20095,7 +20304,7 @@ Elm.Screens.Layout.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Transit = Elm.Transit.make(_elm);
+   $Transit$Style = Elm.Transit.Style.make(_elm);
    var _op = {};
    var layout = F3(function (name,sideContent,mainContent) {
       return A2($Html.div,
@@ -20117,7 +20326,9 @@ Elm.Screens.Layout.make = function (_elm) {
       $Screens$Sidebar.view(ctx),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class("padded")
-              ,$Html$Attributes.style($Transit.slideLeftStyle(ctx.transition))]),
+              ,$Html$Attributes.style(A2($Transit$Style.fadeSlideLeft,
+              40,
+              ctx))]),
       content)]));
    });
    return _elm.Screens.Layout.values = {_op: _op
@@ -23942,7 +24153,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Transit = Elm.Transit.make(_elm);
+   $Transit$Style = Elm.Transit.Style.make(_elm);
    var _op = {};
    var dl$ = function (items) {
       return A2($Html.dl,
@@ -24055,9 +24266,10 @@ Elm.Screens.Admin.View.make = function (_elm) {
             case "TracksTab": return tracksContent(_p11);
             default: return usersContent(_p11);}
       }();
-      var styleAttr = $Html$Attributes.style($Transit.slideLeftStyle(_p11.transition));
+      var transitStyle = A2($Transit$Style.fadeSlideLeft,50,_p11);
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("admin-content"),styleAttr]),
+      _U.list([$Html$Attributes.$class("admin-content")
+              ,$Html$Attributes.style(transitStyle)]),
       tabContent);
    });
    var UsersTab = {ctor: "UsersTab"};
@@ -24652,7 +24864,7 @@ Elm.Main.make = function (_elm) {
                                                                                     v.dims)} : _U.badPort("an object with fields `player`, `path`, `dims`",
       v);
    });
-   var app = $StartApp.start({init: $AppUpdates.initialAppUpdate(appSetup)
+   var app = $StartApp.start({init: $AppUpdates.init(appSetup)
                              ,update: $AppUpdates.update
                              ,view: $AppView.view
                              ,inputs: _U.list([pathActions
