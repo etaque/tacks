@@ -6,7 +6,7 @@ import Effects exposing (Effects, Never, none)
 import Task.Extra exposing (delay)
 import Keyboard
 import Array
-
+import Response exposing (..)
 import DragAndDrop exposing (MouseEvent)
 
 import AppTypes exposing (..)
@@ -197,3 +197,6 @@ getRaceArea grid =
     bottom = getFirst yVals - hexRadius
   in
     RaceArea (right, top) (left, bottom)
+
+
+staticRes m = res m none

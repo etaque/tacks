@@ -6,24 +6,28 @@ import Html.Attributes exposing (..)
 import Screens.Sidebar as Sidebar
 import Constants exposing (..)
 import AppTypes exposing (..)
+import Routes
 
-import Transit.Style exposing (fadeSlideLeft)
+import TransitStyle exposing (fadeSlideLeft)
 
 
 layoutWithNav : String -> Context -> List Html -> Html
 layoutWithNav name ctx content =
-  layout name
-    (Sidebar.view ctx)
-    [ div
-        [ class "padded"
-        , style (fadeSlideLeft 40 ctx)
-        ]
-      content
-    ]
+  let
+    transitStyle =
+      case ctx.routeTransition of
+        Routes.ForMain -> (fadeSlideLeft 40 ctx.transition)
+        _ -> []
+  in
+    layout name
+      (Sidebar.view ctx)
+      [ div
+          [ class "padded"
+          , style transitStyle
+          ]
+        content
+      ]
 
--- transitionStyle : Context -> List (String, String)
--- transitionStyle {transition} =
---   (Transit.Style.slideLeftEnter transition) ++ (Transit.Style.fadeOutExit transition)
 
 layout : String -> List Html -> List Html -> Html
 layout name sideContent mainContent =

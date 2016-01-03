@@ -9,6 +9,7 @@ import Time exposing (Time)
 import Signal
 import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none, tick)
+import Response exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)

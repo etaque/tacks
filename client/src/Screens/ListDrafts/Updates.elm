@@ -2,6 +2,7 @@ module Screens.ListDrafts.Updates where
 
 import Effects exposing (Effects, Never, none)
 import Task exposing (Task)
+import Response exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
@@ -29,12 +30,12 @@ update action screen =
     DraftsResult result ->
       case result of
         Ok drafts ->
-          staticRes { screen | drafts = drafts}
+          res { screen | drafts = drafts} none
         Err _ ->
-          staticRes screen
+          res screen none
 
     SetDraftName name ->
-      staticRes { screen | name = name }
+      res { screen | name = name } none
 
     CreateDraft ->
       taskRes screen (Task.map CreateDraftResult (ServerApi.createTrack screen.name))
@@ -45,13 +46,13 @@ update action screen =
           res screen (Utils.redirect (Routes.EditTrack track.id) |> Utils.always NoOp)
         Err formErrors ->
           -- TODO
-          staticRes screen
+          res screen none
 
     ConfirmDeleteDraft track ->
       let
         newConfirm = if Just track == screen.confirmDelete then Nothing else Just track
       in
-        staticRes { screen | confirmDelete = newConfirm }
+        res { screen | confirmDelete = newConfirm } none
 
     DeleteDraft id ->
       taskRes screen (deleteDraft id)
@@ -59,12 +60,12 @@ update action screen =
     DeleteDraftResult result ->
       case result of
         Ok id ->
-          staticRes { screen | drafts = List.filter (\t -> t.id /= id) screen.drafts }
+          res { screen | drafts = List.filter (\t -> t.id /= id) screen.drafts } none
         Err _ ->
-          staticRes screen
+          res screen none
 
     NoOp ->
-      staticRes screen
+      res screen none
 
 loadDrafts : Task Never Action
 loadDrafts =

@@ -1,4 +1,4 @@
-module Routes (Route(..), fromPath, toPath) where
+module Routes (..) where
 
 import RouteParser exposing (..)
 import Screens.Admin.Routes as AdminRoutes
@@ -14,11 +14,20 @@ type Route
   | EditTrack String
   | PlayTrack String
   | Admin AdminRoutes.Route
+  | NotFound
+  | EmptyRoute
+
+type RouteTransition
+  = ForMain
+  | ForAdmin AdminRoutes.Route AdminRoutes.Route
+  | None
 
 
-fromPath : String -> Maybe Route
-fromPath =
-  match matchers
+fromPath : String -> Route
+fromPath path =
+  match matchers path
+    |> Maybe.withDefault NotFound
+
 
 matchers : List (Matcher Route)
 matchers =
@@ -44,4 +53,16 @@ toPath route =
     EditTrack id -> "/edit/" ++ id
     PlayTrack id -> "/play/" ++ id
     Admin adminRoute -> AdminRoutes.toPath adminRoute
+    EmptyRoute -> "/"
+    NotFound -> "/404"
 
+detectTransition : Route -> Route -> RouteTransition
+detectTransition prevRoute route =
+  case (prevRoute, route) of
+    (Admin from, Admin to) ->
+      ForAdmin from to
+    _ ->
+      if prevRoute /= route then
+        ForMain
+      else
+        None

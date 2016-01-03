@@ -1,11 +1,11 @@
 module AppUpdates where
 
 import Task exposing (Task)
-import History
 import Effects exposing (Effects, map, none, task)
 import Result
+import Response exposing (..)
+import TransitRouter exposing (getRoute)
 
-import Constants exposing (..)
 import AppTypes exposing (..)
 
 import Screens.Home.Updates as Home
@@ -22,67 +22,47 @@ import ServerApi
 import Routes exposing (..)
 import Screens.UpdateUtils as Utils
 
-import Transition
+
+routerConfig : TransitRouter.Config Route AppAction AppState
+routerConfig =
+  { mountRoute = mountRoute
+  , getDurations = (\_ _ _ -> (50, 200))
+  , actionWrapper = RouterAction
+  , routeDecoder = Routes.fromPath
+  }
 
 
 init : AppSetup -> AppResponse
 init setup =
-  let
-    appState = initialAppState setup
-    fx = SetPath setup.path |> Task.succeed |> task
-  in
-    res appState fx
+  TransitRouter.init routerConfig setup.path (initialAppState setup)
 
 
 update : AppAction -> AppState -> AppResponse
-update appAction ({screens, ctx} as appState) =
+update appAction ({screens} as appState) =
   case appAction of
 
-    SetPath path ->
-      taskRes appState (History.setPath path |> Task.map (\_ -> AppNoOp))
-
-    PathChanged path ->
-      let
-        newRoute = Routes.fromPath path
-      in
-        Transition.init newRoute appState
-
-    MountRoute route ->
-      let
-        newAppState = { appState | route = route }
-      in
-        case route of
-          Just r ->
-            mountRoute appState.route newAppState r
-          Nothing ->
-            -- TODO 404
-            staticRes newAppState
-
-    TransitAction a ->
-      Transition.update a appState
+    RouterAction routerAction ->
+      TransitRouter.update routerConfig routerAction appState
 
     SetPlayer p ->
-      let
-        newCtx = { ctx | player = p }
-        fx = map (\_ -> AppNoOp) (Utils.redirect Routes.Home)
-      in
-        res { appState | ctx = newCtx } fx
+      res { appState | player = p } (Utils.redirect Home)
+        |> mapEffects (\_ -> AppNoOp)
 
     UpdateDims dims ->
-      staticRes {appState | ctx = { ctx | dims = dims } }
+      res {appState | dims = dims } none
 
     MouseEvent mouseEvent ->
       let
-        handlerMaybe = case appState.route of
-          Just (EditTrack _) -> Just (EditTrackAction << EditTrack.mouseAction)
-          Just (ShowTrack _) -> Just (ShowTrackAction << ShowTrack.mouseAction)
+        handlerMaybe = case (getRoute appState) of
+          EditTrack _ -> Just (EditTrackAction << EditTrack.mouseAction)
+          ShowTrack _ -> Just (ShowTrackAction << ShowTrack.mouseAction)
           _ -> Nothing
       in
         case handlerMaybe of
           Just handler ->
             updateScreen (handler mouseEvent) appState
           _ ->
-            staticRes appState
+            res appState none
 
     Logout ->
       taskRes appState logoutTask
@@ -91,57 +71,53 @@ update appAction ({screens, ctx} as appState) =
       updateScreen screenAction appState
 
     AppNoOp ->
-      staticRes appState
+      res appState none
 
 
-mountRoute : Maybe Routes.Route -> AppState -> Routes.Route -> (AppState, Effects AppAction)
-mountRoute prevRoute ({ctx, screens} as appState) newRoute =
-  case newRoute of
+mountRoute : Route -> Route -> AppState -> AppResponse
+mountRoute prevRoute newRoute ({screens, player} as prevAppState) =
+  let
+    routeTransition = Routes.detectTransition prevRoute newRoute
+    appState = { prevAppState | routeTransition = routeTransition }
+  in
+    case newRoute of
 
-    Home ->
-      applyHome (Home.mount ctx.player) appState
+      Home ->
+        applyHome (Home.mount player) appState
 
-    Login ->
-      applyLogin Login.mount appState
+      Login ->
+        applyLogin Login.mount appState
 
-    Register ->
-      applyRegister Register.mount appState
+      Register ->
+        applyRegister Register.mount appState
 
-    ShowProfile ->
-      applyShowProfile (ShowProfile.mount ctx.player) appState
+      ShowProfile ->
+        applyShowProfile (ShowProfile.mount player) appState
 
-    ShowTrack id ->
-      applyShowTrack (ShowTrack.mount id) appState
+      ShowTrack id ->
+        applyShowTrack (ShowTrack.mount id) appState
 
-    EditTrack id ->
-      applyEditTrack (EditTrack.mount id) appState
+      EditTrack id ->
+        applyEditTrack (EditTrack.mount id) appState
 
-    PlayTrack id ->
-      applyGame (Game.mount id) appState
+      PlayTrack id ->
+        applyGame (Game.mount id) appState
 
-    ListDrafts ->
-      applyListDrafts ListDrafts.mount appState
+      ListDrafts ->
+        applyListDrafts ListDrafts.mount appState
 
-    Admin adminRoute ->
-      case prevRoute of
-        -- Just (Routes.Admin _) ->
-        --   applyAdmin (Admin.updateRoute adminRoute screens.admin) appState
-        _ ->
-          applyAdmin Admin.mount appState
+      Admin adminRoute ->
+        applyAdmin Admin.mount appState
 
-      -- let
-      --   result = case prevRoute of
-      --     Just (Routes.Admin _) ->
-      --       (screens.admin, Effects.none)
-      --       -- (screens.admin, Admin.updateRouteEffect adminRoute)
-      --     _ ->
-      --       Admin.mount
-      -- in
-      --   applyAdmin result appState
+      EmptyRoute ->
+        res appState none
+
+      NotFound ->
+        res appState none
 
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
-updateScreen screenAction ({screens, ctx} as appState) =
+updateScreen screenAction ({screens, player, dims} as appState) =
   case screenAction of
 
     HomeAction a ->
@@ -157,13 +133,13 @@ updateScreen screenAction ({screens, ctx} as appState) =
       applyShowTrack (ShowTrack.update a screens.showTrack) appState
 
     EditTrackAction a ->
-      applyEditTrack (EditTrack.update ctx.dims a screens.editTrack) appState
+      applyEditTrack (EditTrack.update dims a screens.editTrack) appState
 
     ShowProfileAction a ->
       applyShowProfile (ShowProfile.update a screens.showProfile) appState
 
     GameAction a ->
-      applyGame (Game.update ctx.player a screens.game) appState
+      applyGame (Game.update player a screens.game) appState
 
     ListDraftsAction a ->
       applyListDrafts (ListDrafts.update a screens.listDrafts) appState
@@ -191,5 +167,5 @@ applyAdmin = applyScreen (\s screens -> { screens | admin = s }) AdminAction
 applyScreen : (screen -> Screens -> Screens) -> (a -> ScreenAction) -> Response screen a -> AppState -> AppResponse
 applyScreen screensUpdater actionWrapper response appState =
   response
-    |> mapState (\screen -> { appState | screens = screensUpdater screen appState.screens })
+    |> mapModel (\screen -> { appState | screens = screensUpdater screen appState.screens })
     |> mapEffects (actionWrapper >> ScreenAction)

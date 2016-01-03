@@ -4,6 +4,7 @@ import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none)
 import DragAndDrop exposing (mouseEvents, MouseEvent(..))
+import Response exposing (..)
 
 import Models exposing (..)
 import AppTypes exposing (..)
@@ -31,12 +32,12 @@ update action ({courseControl} as screen) =
     LiveTrackResult result ->
       case result of
         Ok liveTrack ->
-          staticRes { screen | liveTrack = Just liveTrack }
+          res { screen | liveTrack = Just liveTrack } none
         Err _ ->
-          staticRes { screen | notFound = True }
+          res { screen | notFound = True } none
 
     SetOverCourse b ->
-      staticRes { screen | courseControl = { courseControl | over = b } }
+      res { screen | courseControl = { courseControl | over = b } } none
 
     MouseAction event ->
       let
@@ -60,10 +61,10 @@ update action ({courseControl} as screen) =
         newCenter = (x + dx, y + dy)
         newControl = { courseControl | center = newCenter, dragging = dragging }
       in
-        staticRes { screen | courseControl = newControl }
+        res { screen | courseControl = newControl } none
 
     NoOp ->
-      staticRes screen
+      res screen none
 
 
 loadLiveTrack : TrackId -> Task Never Action

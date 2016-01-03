@@ -1,5 +1,7 @@
 module Game.Outputs where
 
+import TransitRouter exposing (getRoute)
+
 import AppTypes exposing (..)
 import Screens.Game.Types exposing (..)
 import Game.Models exposing (..)
@@ -23,8 +25,8 @@ extractPlayerOutput appState action =
         _ ->
           Nothing
     gameState =
-      case appState.route of
-        Just (Routes.PlayTrack _) ->
+      case getRoute appState of
+        Routes.PlayTrack _ ->
           appState.screens.game.gameState
         _ ->
           Nothing
@@ -46,8 +48,8 @@ makePlayerOutput keyboardInput gameState =
 
 getActiveTrack : AppState -> Maybe String
 getActiveTrack appState =
-  case appState.route of
-    Just (Routes.PlayTrack _) ->
+  case getRoute appState of
+    Routes.PlayTrack _ ->
       Maybe.map (.track >> .id) appState.screens.game.liveTrack
     _ ->
       Nothing

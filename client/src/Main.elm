@@ -1,14 +1,15 @@
 module Main where
 
 import Time exposing (timestamp, fps, every, second)
+import Signal exposing (map)
 import Task exposing (Task, andThen)
 import Html exposing (Html)
 import Window
-import History
 import Json.Decode as Json
 import Effects exposing (Effects, Never)
 import StartApp
 import DragAndDrop exposing (mouseEvents)
+import TransitRouter
 
 import AppUpdates
 import AppTypes exposing (..)
@@ -39,13 +40,13 @@ app = StartApp.start
   , update = AppUpdates.update
   , view = AppView.view
   , inputs =
-    [ pathActions
-    , dimsActions
-    , mouseEventActions
+    [ map RouterAction TransitRouter.actions
+    , map UpdateDims Window.dimensions
+    , map MouseEvent mouseEvents
     , appActionsMailbox.signal
     , raceUpdateActions
     , gameActions
-    , editorInputActions
+    , map (EditTrackAction >> ScreenAction) EditTrack.inputs
     ]
   }
 
@@ -55,21 +56,8 @@ main = app.html
 port tasks : Signal (Task.Task Never ())
 port tasks = app.tasks
 
-initPathAction : Signal AppAction
-initPathAction =
-  Signal.constant (PathChanged appSetup.path)
 
-pathActions : Signal AppAction
-pathActions =
-  Signal.map PathChanged History.path
-
-dimsActions : Signal AppAction
-dimsActions =
-  Signal.map UpdateDims Window.dimensions
-
-mouseEventActions : Signal AppAction
-mouseEventActions =
-  Signal.map MouseEvent mouseEvents
+-- Complex signals
 
 rawInput : Signal (KeyboardInput, (Int, Int), Maybe RaceInput)
 rawInput =
@@ -86,10 +74,6 @@ raceUpdateActions =
 gameActions : Signal AppAction
 gameActions =
   Signal.map (GameDecoders.decodeAction >> GameAction >> ScreenAction) gameActionsInput
-
-editorInputActions : Signal AppAction
-editorInputActions =
-  Signal.map (EditTrackAction >> ScreenAction) EditTrack.inputs
 
 clock : Signal Clock
 clock =

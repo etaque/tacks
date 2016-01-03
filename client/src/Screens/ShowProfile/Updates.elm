@@ -1,6 +1,7 @@
 module Screens.ShowProfile.Updates where
 
 import Effects exposing (Effects, Never, none)
+import Response exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
@@ -15,7 +16,7 @@ addr =
 
 mount : Player -> Response Screen Action
 mount player =
-  staticRes (initial player)
+  res (initial player) none
 
 
 update : Action -> Screen -> Response Screen Action
@@ -23,4 +24,4 @@ update action screen =
   case action of
 
     NoOp ->
-      staticRes screen
+      res screen none

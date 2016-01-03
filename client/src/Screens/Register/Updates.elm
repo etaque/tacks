@@ -4,6 +4,7 @@ import Task exposing (Task, succeed, map, andThen)
 import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none)
+import Response exposing (..)
 
 import AppTypes exposing (..)
 import Screens.Register.Types exposing (..)
@@ -18,7 +19,7 @@ addr =
 
 mount : (Screen, Effects Action)
 mount =
-  staticRes initial
+  res initial none
 
 
 update : Action -> Screen -> (Screen, Effects Action)
@@ -26,13 +27,13 @@ update action screen =
   case action of
 
     SetHandle h ->
-      staticRes { screen | handle = h }
+      res { screen | handle = h } none
 
     SetEmail e ->
-      staticRes { screen | email = e }
+      res { screen | email = e } none
 
     SetPassword p ->
-      staticRes { screen | password = p }
+      res { screen | password = p } none
 
     Submit ->
       taskRes { screen | loading = True, errors = Dict.empty } (submitTask screen)
@@ -46,10 +47,10 @@ update action screen =
           in
             res newScreen effect
         Err errors ->
-          staticRes { screen | loading = False, errors = errors }
+          res { screen | loading = False, errors = errors } none
 
     NoOp ->
-      staticRes screen
+      res screen none
 
 
 submitTask : Screen -> Task Never Action

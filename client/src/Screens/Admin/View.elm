@@ -4,6 +4,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
+import TransitRouter exposing (getRoute)
+import TransitStyle exposing (fadeSlideLeft)
+
 import AppTypes exposing (..)
 import Models exposing (..)
 import Routes
@@ -15,21 +18,19 @@ import Screens.Admin.Updates exposing (addr)
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout
 
-import Transit.Style
-
 
 type Tab = DashboardTab | TracksTab | UsersTab
 
-view : Context -> Screen -> Html
-view ctx screen =
+view : Context -> Route -> Screen -> Html
+view ctx route screen =
   let
-    menuItem = routeMenuItem screen.route
+    menuItem = routeMenuItem route
   in
     Layout.layoutWithNav "admin" ctx
       [ container "" <|
         [ h1 [] [ text "Admin" ]
         , menu menuItem
-        , content ctx menuItem screen
+        , content route ctx menuItem screen
         ]
       ]
 
@@ -51,30 +52,33 @@ routeMenuItem r =
     ListTracks _ -> TracksTab
     ListUsers _ -> UsersTab
 
-content : Context -> Tab -> Screen -> Html
-content ctx item ({tracks, users} as screen) =
+content : Route -> Context -> Tab -> Screen -> Html
+content route ctx item ({tracks, users} as screen) =
   let
-    transitStyle = Transit.Style.fadeSlideLeft 50 screen
+    transitStyle =
+      case ctx.routeTransition of
+        Routes.ForAdmin _ _  -> (fadeSlideLeft 40 ctx.transition)
+        _ -> []
     tabContent =
       case item of
         DashboardTab ->
-          dashboardContent screen
+          dashboardContent route screen
         TracksTab ->
-          tracksContent screen
+          tracksContent route screen
         UsersTab ->
-          usersContent screen
+          usersContent route screen
   in
     div [ class "admin-content", style transitStyle ] tabContent
 
 
-dashboardContent : Screen -> List Html
-dashboardContent ({tracks, users} as screen) =
+dashboardContent : Route -> Screen -> List Html
+dashboardContent route ({tracks, users} as screen) =
   [ div [ class "" ] [ text <| toString (List.length users) ++ " users" ]
   , div [ class "" ] [ text <| toString (List.length tracks) ++ " tracks" ]
   ]
 
-tracksContent : Screen -> List Html
-tracksContent ({tracks, users, route} as screen) =
+tracksContent : Route -> Screen -> List Html
+tracksContent route ({tracks, users} as screen) =
   [ ul [ class "list-unstyled admin-tracks" ]
     (List.map (\t -> trackItem (route == ListTracks (Just t.id)) t) tracks)
   ]
@@ -92,8 +96,8 @@ trackItem open track =
     [ text "detail" ]
   ]
 
-usersContent : Screen -> List Html
-usersContent ({tracks, users, route} as screen) =
+usersContent : Route -> Screen -> List Html
+usersContent route ({tracks, users} as screen) =
   [ ul [ class "list-unstyled admin-users" ]
     (List.map (\u -> userItem (route == ListUsers (Just u.id)) u) users)
   ]

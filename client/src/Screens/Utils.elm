@@ -6,10 +6,10 @@ import Html.Events exposing (..)
 import Json.Decode as Json
 import String
 import Signal
+import TransitRouter
 
 import Constants exposing (..)
 import Models exposing (..)
-import AppTypes exposing (appActionsAddress)
 import Routes
 
 
@@ -28,7 +28,7 @@ linkTo route attrs content =
 
 onPathClick : String -> Attribute
 onPathClick path =
-  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message appActionsAddress (AppTypes.SetPath path))
+  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message TransitRouter.pushPathAddress path)
 
 onInput : Signal.Address a -> (String -> a) -> Attribute
 onInput address contentToValue =

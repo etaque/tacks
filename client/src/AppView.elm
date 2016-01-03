@@ -1,7 +1,7 @@
 module AppView where
 
 import Html exposing (..)
-import Maybe
+import TransitRouter exposing (getTransition)
 
 import AppTypes exposing (..)
 
@@ -19,46 +19,42 @@ import Routes exposing (..)
 
 
 view : Signal.Address AppAction -> AppState -> Html
-view _ appState =
-  case appState.route of
-    Just route ->
-      routeView appState route
-    Nothing ->
-      emptyView
+view _ ({screens, player, dims, routeTransition} as appState) =
+  let
+    ctx = Context player dims (getTransition appState) routeTransition
+  in
+    case (TransitRouter.getRoute appState) of
 
+      Home ->
+        HomeScreen.view ctx screens.home
 
-routeView : AppState -> Routes.Route -> Html
-routeView {screens, ctx} route =
-  case route of
+      Register ->
+        RegisterScreen.view ctx screens.register
 
-    Home ->
-      HomeScreen.view ctx screens.home
+      Login ->
+        LoginScreen.view ctx screens.login
 
-    Register ->
-      RegisterScreen.view ctx screens.register
+      ShowTrack _ ->
+        ShowTrackScreen.view ctx screens.showTrack
 
-    Login ->
-      LoginScreen.view ctx screens.login
+      EditTrack _ ->
+        EditTrackScreen.view ctx screens.editTrack
 
-    ShowTrack _ ->
-      ShowTrackScreen.view ctx screens.showTrack
+      ShowProfile ->
+        ShowProfileScreen.view ctx screens.showProfile
 
-    EditTrack _ ->
-      EditTrackScreen.view ctx screens.editTrack
+      PlayTrack _ ->
+        GameScreen.view ctx screens.game
 
-    ShowProfile ->
-      ShowProfileScreen.view ctx screens.showProfile
+      ListDrafts ->
+        ListDraftsScreen.view ctx screens.listDrafts
 
-    PlayTrack _ ->
-      GameScreen.view ctx screens.game
+      Admin adminRoute ->
+        AdminScreen.view ctx adminRoute screens.admin
 
-    ListDrafts ->
-      ListDraftsScreen.view ctx screens.listDrafts
+      NotFound ->
+        text "Not found!"
 
-    Admin _ ->
-      AdminScreen.view ctx screens.admin
-
-emptyView : Html
-emptyView =
-  div [ ] [ ]
+      EmptyRoute ->
+        text ""
 

@@ -3,6 +3,7 @@ module AppTypes where
 import Task exposing (Task)
 import Effects exposing (Effects)
 import DragAndDrop exposing (MouseEvent)
+import Response exposing (..)
 
 import Models exposing (..)
 
@@ -18,6 +19,7 @@ import Screens.Admin.Types as Admin
 
 import Routes
 import Transit
+import TransitRouter exposing (WithRoute)
 
 
 appActionsMailbox : Signal.Mailbox AppAction
@@ -42,28 +44,7 @@ type alias AppSetup =
   , dims : (Int, Int)
   }
 
-type alias Response m a = (m, Effects a)
 type alias AppResponse = Response AppState AppAction
-
-res : s -> Effects a -> Response s a
-res s fx =
-  (s, fx)
-
-taskRes : s -> Task Effects.Never a -> Response s a
-taskRes s t =
-  (s, Effects.task t)
-
-staticRes : s -> Response s a
-staticRes s =
-  (s, Effects.none)
-
-mapEffects : (fx -> fx') -> Response m fx -> Response m fx'
-mapEffects fn (m, fx) =
-  (m, Effects.map fn fx)
-
-mapState : (a -> b) -> Response a f -> Response b f
-mapState fn (a, fx) =
-  (fn a, fx)
 
 effect : a -> Effects a
 effect =
@@ -71,10 +52,7 @@ effect =
 
 type AppAction
   = SetPlayer Player
-  | SetPath String
-  | PathChanged String
-  | MountRoute (Maybe Routes.Route)
-  | TransitAction (Transit.Action AppAction)
+  | RouterAction (TransitRouter.Action Routes.Route)
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
   | ScreenAction ScreenAction
@@ -94,16 +72,18 @@ type ScreenAction
   | AdminAction Admin.Action
 
 
-type alias AppState =
-  { ctx : Context
-  , route : Maybe Routes.Route
-  , path : String
+type alias AppState = WithRoute Routes.Route
+  { player : Player
+  , dims : Dims
+  , routeTransition : Routes.RouteTransition
   , screens : Screens
   }
 
-type alias Context = Transit.WithTransition
+type alias Context =
   { player : Player
   , dims : (Int, Int)
+  , transition : Transit.Transition
+  , routeTransition : Routes.RouteTransition
   }
 
 type alias Screens =
@@ -121,13 +101,10 @@ type alias Screens =
 
 initialAppState : AppSetup -> AppState
 initialAppState { path, dims, player } =
-  { ctx =
-      { player = player
-      , dims = dims
-      , transition = Transit.initial
-      }
-  , path = path
-  , route = Nothing
+  { player = player
+  , dims = dims
+  , transitRouter = TransitRouter.empty Routes.EmptyRoute
+  , routeTransition = Routes.None
   , screens =
     { home = Home.initial player
     , login = Login.initial

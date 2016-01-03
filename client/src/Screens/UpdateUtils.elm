@@ -1,8 +1,7 @@
 module Screens.UpdateUtils where
 
 import Effects exposing (Effects)
-import Signal
-import Task
+import TransitRouter
 
 import Routes
 import AppTypes exposing (appActionsAddress)
@@ -11,8 +10,8 @@ import Models exposing (..)
 
 redirect : Routes.Route -> Effects ()
 redirect route =
-  AppTypes.SetPath (Routes.toPath route)
-    |> Signal.send appActionsAddress
+  Routes.toPath route
+    |> Signal.send TransitRouter.pushPathAddress
     |> Effects.task
 
 setPlayer : Player -> Effects ()

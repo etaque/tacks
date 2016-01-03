@@ -3,14 +3,11 @@ module Screens.Admin.Updates where
 import Task exposing (Task, succeed, andThen)
 import Signal
 import Effects exposing (Effects, Never, none, map)
+import Response exposing (..)
 
-import Transit
-
-import Constants exposing (transitionDuration)
 import AppTypes exposing (..)
 import Models exposing (..)
 import Screens.Admin.Types as Types exposing (..)
-import Screens.Admin.Routes exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 
@@ -48,31 +45,19 @@ update action screen =
         Err _ ->
           res screen none
 
-    StartTransition route ->
-      let
-        timeline = Transit.timeline 100 (UpdateRoute route) 200
-      in
-        Transit.init Types.TransitionAction timeline screen
-
-    UpdateRoute route ->
-      res { screen | route = route } none
-
-    Types.TransitionAction a ->
-      Transit.update Types.TransitionAction a screen
-
     NoOp ->
       res screen none
 
 
-startTransition : Route -> Route -> Effects Action
-startTransition prevRoute newRoute =
-  let
-    noTrans = effect (UpdateRoute newRoute)
-  in
-    case (prevRoute, newRoute) of
-      (ListTracks _, ListTracks _) -> noTrans
-      (ListUsers _, ListUsers _) -> noTrans
-      _ -> effect (StartTransition newRoute)
+-- startTransition : Route -> Route -> Effects Action
+-- startTransition prevRoute newRoute =
+--   let
+--     noTrans = effect (UpdateRoute newRoute)
+--   in
+--     case (prevRoute, newRoute) of
+--       (ListTracks _, ListTracks _) -> noTrans
+--       (ListUsers _, ListUsers _) -> noTrans
+--       _ -> effect (StartTransition newRoute)
 
 
 refreshData : Task Never Action
