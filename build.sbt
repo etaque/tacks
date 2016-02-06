@@ -9,7 +9,7 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 scalaVersion := "2.11.4"
 
 libraryDependencies ++= Seq(
-  "org.reactivemongo" %% "play2-reactivemongo" % "0.10.5.0.akka23",
+  "org.reactivemongo" %% "play2-reactivemongo" % "0.11.9",
   "org.mindrot" % "jbcrypt" % "0.3m",
   "io.prismic" %% "scala-kit" % "1.2.13",
   "com.sksamuel.scrimage" %% "scrimage-core" % "1.4.2",

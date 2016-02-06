@@ -114,47 +114,50 @@ object JsonFormats {
 
   implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
 
-  implicit val ghostStateFormat: Format[GhostState] = (
-    (__ \ 'position).format[Point] and
-      (__ \ 'heading).format[Double] and
-      (__ \ 'id).format[BSONObjectID] and
-      (__ \ 'handle).format[Option[String]] and
-      (__ \ 'gates).format[Seq[Long]]
-    )(GhostState.apply, unlift(GhostState.unapply))
+  implicit val ghostStateFormat: Format[GhostState] = Json.format[GhostState]
+    // (
+    // (__ \ 'position).format[Point] and
+    //   (__ \ 'heading).format[Double] and
+    //   (__ \ 'id).format[BSONObjectID] and
+    //   (__ \ 'handle).format[Option[String]] and
+    //   (__ \ 'gates).format[Seq[Long]]
+    // )(GhostState.apply _, unlift(GhostState.unapply _))
 
-  implicit val playerStateFormat: Format[PlayerState] = (
-    (__ \ 'player).format[Player] and
-      (__ \ 'time).format[Long] and
-      (__ \ 'position).format[Point] and
-      (__ \ 'isGrounded).format[Boolean] and
-      (__ \ 'isTurning).format[Boolean] and
-      (__ \ 'heading).format[Double] and
-      (__ \ 'velocity).format[Double] and
-      (__ \ 'vmgValue).format[Double] and
-      (__ \ 'windAngle).format[Double] and
-      (__ \ 'windOrigin).format[Double] and
-      (__ \ 'windSpeed).format[Double] and
-      (__ \ 'upwindVmg).format[Vmg] and
-      (__ \ 'downwindVmg).format[Vmg] and
-      (__ \ 'shadowDirection).format[Double] and
-      (__ \ 'trail).format[Seq[Point]] and
-      (__ \ 'controlMode).format[ControlMode] and
-      (__ \ 'tackTarget).format[Option[Double]] and
-      (__ \ 'crossedGates).format[Seq[Long]] and
-      (__ \ 'nextGate).format[Option[GateLocation]]
-    )(PlayerState.apply, unlift(PlayerState.unapply))
+  implicit val playerStateFormat: Format[PlayerState] = Json.format[PlayerState]
+  // (
+  //   (__ \ 'player).format[Player] and
+  //     (__ \ 'time).format[Long] and
+  //     (__ \ 'position).format[Point] and
+  //     (__ \ 'isGrounded).format[Boolean] and
+  //     (__ \ 'isTurning).format[Boolean] and
+  //     (__ \ 'heading).format[Double] and
+  //     (__ \ 'velocity).format[Double] and
+  //     (__ \ 'vmgValue).format[Double] and
+  //     (__ \ 'windAngle).format[Double] and
+  //     (__ \ 'windOrigin).format[Double] and
+  //     (__ \ 'windSpeed).format[Double] and
+  //     (__ \ 'upwindVmg).format[Vmg] and
+  //     (__ \ 'downwindVmg).format[Vmg] and
+  //     (__ \ 'shadowDirection).format[Double] and
+  //     (__ \ 'trail).format[Seq[Point]] and
+  //     (__ \ 'controlMode).format[ControlMode] and
+  //     (__ \ 'tackTarget).format[Option[Double]] and
+  //     (__ \ 'crossedGates).format[Seq[Long]] and
+  //     (__ \ 'nextGate).format[Option[GateLocation]]
+  //   )(PlayerState.apply _, unlift(PlayerState.unapply _))
 
-  implicit val raceUpdateFormat: Format[RaceUpdate] = (
-      (__ \ 'serverNow).format[DateTime] and
-      (__ \ 'startTime).format[Option[DateTime]] and
-      (__ \ 'wind).format[Wind] and
-      (__ \ 'opponents).format[Seq[Opponent]] and
-      (__ \ 'ghosts).format[Seq[GhostState]] and
-      (__ \ 'tallies).format[Seq[PlayerTally]] and
-      (__ \ 'isMaster).format[Boolean] and
-      (__ \ 'initial).format[Boolean] and
-      (__ \ 'clientTime).format[Long]
-    )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
+  implicit val raceUpdateFormat: Format[RaceUpdate] = Json.format[RaceUpdate]
+  // implicit val raceUpdateFormat: Format[RaceUpdate] = (
+  //     (__ \ 'serverNow).format[DateTime] and
+  //     (__ \ 'startTime).format[Option[DateTime]] and
+  //     (__ \ 'wind).format[Wind] and
+  //     (__ \ 'opponents).format[Seq[Opponent]] and
+  //     (__ \ 'ghosts).format[Seq[GhostState]] and
+  //     (__ \ 'tallies).format[Seq[PlayerTally]] and
+  //     (__ \ 'isMaster).format[Boolean] and
+  //     (__ \ 'initial).format[Boolean] and
+  //     (__ \ 'clientTime).format[Long]
+  //   )(RaceUpdate.apply _, unlift(RaceUpdate.unapply _))
 
   implicit val trackStatusFormat: Format[TrackStatus.Value] = enumFormat(TrackStatus)
 

@@ -1,9 +1,9 @@
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
-dependencyOverrides += "org.scala-sbt" % "sbt" % "0.13.7"
+dependencyOverrides += "org.scala-sbt" % "sbt" % "0.13.8"
 
 // The Play plugin
-addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.3.8")
+addSbtPlugin("com.typesafe.play" % "sbt-plugin" % "2.4.6")
 
 // web plugins
 
