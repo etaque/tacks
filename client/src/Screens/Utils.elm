@@ -8,6 +8,10 @@ import String
 import Signal
 import TransitRouter
 
+import Form
+import Form.Error exposing (..)
+
+import CoreExtra exposing (..)
 import Constants exposing (..)
 import Models exposing (..)
 import Routes
@@ -75,6 +79,10 @@ row : Wrapper
 row content =
   div [ class "row" ] content
 
+col' : Int -> List Html -> Html
+col' i content =
+  div [ class ("col-xs-" ++ toString i) ] content
+
 fullWidth : Wrapper
 fullWidth content =
   row [ div [ class "col-lg-12" ] content ]
@@ -85,11 +93,48 @@ hr' =
 
 dl' : List (String, List Html) -> Html
 dl' items =
-  dl [ class "dl-horizontal" ] (List.concatMap (\(term, desc) -> [ dt [] [ text term ], dd [] desc ]) items)
+  dl
+    [ class "dl-horizontal" ]
+    (List.concatMap (\ (term, desc) -> [ dt [] [ text term ], dd [] desc ]) items)
 
 abbr' : String -> String -> Html
 abbr' short long =
   abbr [ title long ] [ text short ]
+
+
+fieldGroup : String -> String -> List String -> List Html -> Html
+fieldGroup label' hint errors inputs =
+  let
+    feedbacksEl =
+      div
+        [ class "feedback" ]
+        [ List.filter (not << String.isEmpty) (hint :: errors) |> String.join " - " |> text ]
+  in
+    div
+      [ classList
+          [ ("row form-group", True)
+          , ("with-error", not (List.isEmpty errors))
+          ]
+      ]
+      [ col' 3 [ label [ class "control-label" ] [ text label' ] ]
+      , col' 9 (inputs ++ [ feedbacksEl ])
+      ]
+
+
+-- fieldError : Maybe (Error e) -> Html
+-- fieldError maybeError =
+--   case maybeError of
+--     Just e ->
+--       div [ class "error-message" ] [ text (errorMessage e) ]
+--     Nothing ->
+--       div [ class "error-message empty" ] [ text "nope" ]
+
+
+actionGroup : List Html -> Html
+actionGroup content =
+  row
+    [ div [ class "col-xs-offset-3 col-xs-9" ] content ]
+
 
 formGroup : Bool -> List Html -> Html
 formGroup hasErr content =
@@ -97,9 +142,11 @@ formGroup hasErr content =
     [ classList [ ("form-group", True), ("has-error", hasErr) ] ]
     content
 
+
 textInput : List Attribute -> Html
 textInput attributes =
   input (List.append [ type' "text", class "form-control"] attributes) []
+
 
 passwordInput : List Attribute -> Html
 passwordInput attributes =
@@ -163,3 +210,35 @@ formatTimer showMs t =
 colWidth : Int -> Float
 colWidth col =
   (containerWidth + gutterWidth) / 12 * (toFloat col) - gutterWidth
+
+
+errList : Maybe (Error e) -> List String
+errList me =
+  case me of
+    Just e ->
+      [ errMsg e ]
+    Nothing ->
+      []
+
+
+errMsg : Error e -> String
+errMsg e =
+  case e of
+    InvalidString ->
+      "Required"
+    Empty ->
+      "Required"
+    InvalidEmail ->
+      "Invalid email format"
+    InvalidUrl ->
+      "Invalid URL format"
+    InvalidFormat ->
+      "Invalid format"
+    InvalidInt ->
+      "Invalid integer format"
+    InvalidFloat ->
+      "Invalid floating number format"
+    ShorterStringThan i ->
+      "At least " ++ toString i ++ " chars"
+    _ ->
+      toString e

@@ -1,31 +1,47 @@
 module Screens.Register.Types where
 
+import Regex exposing (Regex)
+import Form exposing (Form)
+import Form.Validate exposing (..)
 import Dict exposing (Dict)
 
 import Models exposing (..)
 
 
 type alias Screen =
+  { form : Form () NewPlayer
+  , loading : Bool
+  , serverErrors : Dict String (List String)
+  }
+
+type alias NewPlayer =
   { handle : String
   , email : String
   , password : String
-  , loading : Bool
-  , errors : Dict String (List String)
   }
+
+validation : Validation () NewPlayer
+validation =
+  form3 NewPlayer
+    ("handle" := string `andThen` (\s -> format s handleFormat))
+    ("email" := email)
+    ("password" := string `andThen` minLength 4)
+
+
+handleFormat : Regex
+handleFormat =
+  Regex.regex "^\\w{3,20}$"
+
 
 initial : Screen
 initial =
-  { handle = ""
-  , email = ""
-  , password = ""
+  { form = Form.initial [] validation
   , loading = False
-  , errors = Dict.empty
+  , serverErrors = Dict.empty
   }
 
 type Action
-  = SetHandle String
-  | SetEmail String
-  | SetPassword String
-  | Submit
+  = FormAction Form.Action
+  | Submit NewPlayer
   | SubmitResult (FormResult Player)
   | NoOp

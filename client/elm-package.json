@@ -15,6 +15,7 @@
         "etaque/elm-hexagons": "1.0.0 <= v < 2.0.0",
         "etaque/elm-response": "1.0.0 <= v < 2.0.0",
         "etaque/elm-route-parser": "2.0.0 <= v < 3.0.0",
+        "etaque/elm-simple-form": "1.0.1 <= v < 2.0.0",
         "etaque/elm-transit": "5.0.0 <= v < 6.0.0",
         "etaque/elm-transit-router": "1.0.1 <= v < 2.0.0",
         "etaque/elm-transit-style": "1.0.1 <= v < 2.0.0",
@@ -23,7 +24,7 @@
         "evancz/elm-http": "3.0.0 <= v < 4.0.0",
         "evancz/elm-svg": "2.0.1 <= v < 3.0.0",
         "evancz/start-app": "2.0.2 <= v < 3.0.0",
-        "jvoigtlaender/elm-drag-and-drop": "1.0.3 <= v < 2.0.0",
+        "jvoigtlaender/elm-drag-and-drop": "1.0.3 <= v < 1.0.4",
         "mgold/elm-date-format": "1.0.2 <= v < 2.0.0"
     },
     "elm-version": "0.16.0 <= v < 0.17.0"

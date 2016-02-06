@@ -19,6 +19,7 @@
         color: $whiteSeaBlue;
         font-family: $serif;
         border-radius: 0;
+        transition: all .2s ease-in;
       }
 
       a:hover {
@@ -28,13 +29,10 @@
       }
     }
 
-    li.active {
-      a,
-      a:hover {
-        background-color: $bg;
-        color: $seaBlue;
-        border-color: $bg; 
-      }
+    li.active a {
+      background-color: $bg;
+      color: $seaBlue;
+      border-color: $bg; 
     }
   }
 

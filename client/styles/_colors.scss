@@ -25,6 +25,7 @@ $altBlue: #769FB6;
 $orange: #E0A349;
 $lightOrange: lighten($orange, 12%);
 $lighterOrange: lighten($orange, 25%);
+$darkOrange: darken($orange, 25%);
 
 $darkGray: #51585E;
 $gray: #888;
@@ -40,8 +41,9 @@ $veryDark: rgba(0, 0, 0, 0.7);
 $light: rgba(255, 255, 255, 0.2);
 $strongLight: rgba(255, 255, 255, 0.5);
 
+$red: #CC1426;
+$lightRed: #FF5640;
 $whiteRed: #f2dede;
-$red: #d9534f;
 
 $white: white;
 

@@ -19,27 +19,28 @@ view ctx screen =
   Layout.layoutWithNav "login" ctx
     [ container ""
       [ h1 [] [ text "Login" ]
-      , loginForm screen
+      , row [ col' 6 [ loginForm screen ] ]
       ]
     ]
 
 loginForm : Screen -> Html
 loginForm {email, password, loading, error} =
-  div [ class "form-login" ]
+  div [ class "form-login form-vertical" ]
+
     [ div [ class "form-group" ]
-      [ label [] [ text "Email" ]
-      , textInput
+      [ textInput
         [ value email
         , onInput addr SetEmail
         , onEnter addr Submit
+        , placeholder "Email"
         ]
       ]
     , div [ class "form-group" ]
-      [ label [] [ text "Password" ]
-      , passwordInput
+      [ passwordInput
         [ value password
         , onInput addr SetPassword
         , onEnter addr Submit
+        , placeholder "Password"
         ]
       ]
     , errorLine error
@@ -56,6 +57,6 @@ loginForm {email, password, loading, error} =
 errorLine : Bool -> Html
 errorLine error =
   if error then
-    p [ class "form-errors alert alert-danger" ] [ text "Login failure. Wrong credentials?" ]
+    p [ class "form-error-global" ] [ text "Login failure. Wrong credentials?" ]
   else
-    div [ ] [ ]
+    text ""

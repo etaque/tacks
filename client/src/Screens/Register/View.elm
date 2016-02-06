@@ -1,10 +1,12 @@
 module Screens.Register.View where
 
+import Dict exposing (Dict)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Dict exposing (Dict)
-import String
+
+import Form.Input as Input
+import Form
 
 import Models exposing (..)
 import AppTypes exposing (..)
@@ -22,59 +24,47 @@ view ctx screen =
   Layout.layoutWithNav "register" ctx
     [ container ""
       [ h1 [] [ text "Register" ]
-      , registerForm screen
+      , row [ col' 6 [ registerForm screen ] ]
       ]
     ]
 
 registerForm : Screen -> Html
-registerForm {handle, email, password, loading, errors} =
-  div [ class "form-login" ]
-    [ formGroup (hasError errors "handle")
-      [ label [] [ text "Handle" ]
-      , textInput
-        [ value handle
-        , onInput addr SetHandle
-        , onEnter addr Submit
-        ]
-      , fieldError errors "handle"
-      ]
-    , formGroup (hasError errors "email")
-      [ label [] [ text "Email" ]
-      , textInput
-        [ value email
-        , onInput addr SetEmail
-        , onEnter addr Submit
-        ]
-      , fieldError errors "email"
-      ]
-    , formGroup (hasError errors "password")
-      [ label [] [ text "Password" ]
-      , passwordInput
-        [ value password
-        , onInput addr SetPassword
-        , onEnter addr Submit
-        ]
-      , fieldError errors "password"
-      ]
-    , div []
-      [ button
-        [ class "btn btn-primary"
-        , onClick addr Submit
-        , disabled loading
-        ]
-        [ text "Submit" ]
-      ]
-    ]
+registerForm {form, loading, serverErrors} =
+  let
+    formAddr = Signal.forwardTo addr FormAction
+    (submitClick, submitDisabled) =
+      case Form.getOutput form of
+        Just newPlayer ->
+          (onClick addr (Submit newPlayer), not loading)
+        Nothing ->
+          (onClick formAddr Form.submit, Form.isSubmitted form)
+    handle = Form.getFieldAsString "handle" form
+    email = Form.getFieldAsString "email" form
+    password = Form.getFieldAsString "password" form
+    getServerErrors field =
+      Dict.get "handle" serverErrors |> Maybe.withDefault []
+  in
+    div [ class "form-login form-horizontal" ]
 
-hasError : FormErrors -> String -> Bool
-hasError formErrors field =
-  isJust (Dict.get field formErrors)
+      [ fieldGroup "Handle" "Alphanumeric, at least 4 chars"
+          (errList handle.liveError ++ (getServerErrors "handle") )
+          [ Input.textInput handle formAddr [ class "form-control" ] ]
 
+      , fieldGroup "Email" ""
+          (errList email.liveError)
+          [ Input.textInput email formAddr [ class "form-control" ] ]
 
-fieldError : FormErrors -> String -> Html
-fieldError formErrors field =
-  case Dict.get field formErrors of
-    Just fieldErrors ->
-      div [ class "error-message" ] [ text (String.join ", " fieldErrors) ]
-    Nothing ->
-      span [ ] [ ]
+      , fieldGroup "Password" ""
+          (errList password.liveError)
+          [ Input.passwordInput password formAddr [ class "form-control" ] ]
+
+      , actionGroup
+        [ button
+          [ class "btn btn-primary"
+          , submitClick
+          -- , disabled submitDisabled
+          ]
+          [ text "Submit" ]
+        ]
+      ]
+

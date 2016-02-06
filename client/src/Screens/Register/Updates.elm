@@ -6,6 +6,8 @@ import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none)
 import Response exposing (..)
 
+import Form
+
 import AppTypes exposing (..)
 import Screens.Register.Types exposing (..)
 import ServerApi
@@ -26,35 +28,32 @@ update : Action -> Screen -> (Screen, Effects Action)
 update action screen =
   case action of
 
-    SetHandle h ->
-      res { screen | handle = h } none
+    FormAction fa ->
+      let
+        newForm = Form.update fa screen.form
+      in
+        res { screen | form = newForm } none
 
-    SetEmail e ->
-      res { screen | email = e } none
-
-    SetPassword p ->
-      res { screen | password = p } none
-
-    Submit ->
-      taskRes { screen | loading = True, errors = Dict.empty } (submitTask screen)
+    Submit newPlayer ->
+      taskRes { screen | loading = True } (submitTask newPlayer)
 
     SubmitResult result ->
       case result of
         Ok player ->
           let
-            newScreen = { screen | loading = False, errors = Dict.empty }
+            newScreen = { screen | loading = False }
             effect = Utils.setPlayer player |> Utils.always NoOp
           in
             res newScreen effect
         Err errors ->
-          res { screen | loading = False, errors = errors } none
+          res { screen | loading = False, serverErrors = errors } none
 
     NoOp ->
       res screen none
 
 
-submitTask : Screen -> Task Never Action
-submitTask screen =
-  ServerApi.postRegister screen.email screen.handle screen.password
+submitTask : NewPlayer -> Task Never Action
+submitTask np =
+  ServerApi.postRegister np.email np.handle np.password
     |> Task.map SubmitResult
 

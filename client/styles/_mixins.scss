@@ -5,22 +5,22 @@
   &:-ms-input-placeholder      {@content}
 }
 
-/* @mixin placeholder-color($color) { */
-/*   &::-webkit-input-placeholder { /\* WebKit browsers *\/ */
-/*     color:    $color; */
-/*   } */
-/*   &:-moz-placeholder { /\* Mozilla Firefox 4 to 18 *\/ */
-/*     color:    $color; */
-/*     opacity:  1; */
-/*   } */
-/*   &::-moz-placeholder { /\* Mozilla Firefox 19+ *\/ */
-/*     color:    $color; */
-/*     opacity:  1; */
-/*   } */
-/*   &:-ms-input-placeholder { /\* Internet Explorer 10+ *\/ */
-/*     color:    $color; */
-/*   } */
-/* } */
+@mixin placeholder-color($color) {
+  &::-webkit-input-placeholder { /* WebKit browsers */
+    color:    $color;
+  }
+  &:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color:    $color;
+    opacity:  1;
+  }
+  &::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color:    $color;
+    opacity:  1;
+  }
+  &:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color:    $color;
+  }
+}
 
 @mixin blur {
   -webkit-filter: blur(5px);
@@ -49,3 +49,36 @@
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{$fromColor}', EndColorStr='#{$toColor}');
 }
 
+
+@mixin players-list {
+  /* padding: 5px; */
+  margin-bottom: 10px;
+  font-size: 16px;
+  font-family: $mono;
+
+  li {
+    margin-bottom: 3px;
+
+    .handle {
+      color: white;
+    }
+
+    .rank {
+      margin-right: 10px;
+      font-weight: bold;
+
+      &:before {
+        content: "#";
+      }
+    }
+
+    .handle {
+      font-weight: bold;
+    }
+
+    .status {
+      float: right;
+      color: white;
+    }
+  }
+}

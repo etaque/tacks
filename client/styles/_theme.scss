@@ -134,27 +134,65 @@ a {
   }
 }
 
-.form-control {
-  border: none;
-  border: 0px solid $white;
-  background-color: $white;
-  font-size: 16px;
-  /* font-weight: bold; */
-  box-shadow: none;
-  color: $darkSeaBlue;
-  /* box-shadow: inset 1px 1px 1px $shadow; */
+.alert-warning {
+  background-color: $lighterOrange;
+  border-color: $lightOrange;
+  color: $darkOrange;
+}
 
-  &:focus {
-    outline: 0;
-    box-shadow: inset 2px 2px 1px $shadow;
-    border-color: $white;
-    background-color: $white;
+.form-group {
+  .control-label {
+    color: $whiteSeaBlue;
+    font-family: $thin;
+  }
+
+  .form-control {
+    padding-left: 0;
+    padding-right: 0;
+    border: none;
+    border-radius: 0;
+    border-bottom: 2px solid $lighterSeaBlue;
+    background-color: transparent;
+    font-family: $regular;
+    font-weight: bold;
+    font-size: 16px;
+    box-shadow: none;
+    color: white;
+
+    @include placeholder-color($whiteSeaBlue);
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+      border-color: $whiteSeaBlue;
+    }
+  }
+
+  .feedback {
+    min-height: 24px;
+    line-height: 24px;
+    font-size: 14px;
+  }
+
+  &.with-error {
+    .has-error .control-label {
+      color: $whiteSeaBlue;
+    }
+
+    .form-control {
+      box-shadow: none;
+      border-color: $orange;
+    }
+
+    .feedback {
+      color: $lightOrange;
+    }
   }
 }
 
-.form-group.has-error .form-control {
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
+.form-error-global {
+  color: $lightOrange;
+  padding: 10px 0;
 }
 
 label {
@@ -172,18 +210,6 @@ label {
   &.label-default {
     background-color: $lightSeaBlue;
     color: $white;
-  }
-}
-
-.has-error {
-  .error-message {
-    margin-top: 0;
-    padding: 6px 12px;
-    background-color: $whiteRed;
-    font-size: 14px;
-    color: $red;
-    border-bottom-left-radius: 4px;
-    border-bottom-right-radius: 4px;
   }
 }
 
@@ -212,45 +238,12 @@ label {
   }
 }
 
-@mixin players-list {
-  /* padding: 5px; */
-  margin-bottom: 10px;
-  font-size: 16px;
-  font-family: $mono;
-
-  li {
-    margin-bottom: 3px;
-
-    .handle {
-      color: white;
-    }
-
-    .rank {
-      margin-right: 10px;
-      font-weight: bold;
-
-      &:before {
-        content: "#";
-      }
-    }
-
-    .handle {
-      font-weight: bold;
-    }
-
-    .status {
-      float: right;
-      color: white;
-    }
-  }
-}
-
 .list-rankings {
   @include players-list;
 }
 
 .form-login {
   .form-group {
-    width: 250px;
+    /* width: 250px; */
   }
 }
