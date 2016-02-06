@@ -19,9 +19,9 @@ object Frames {
     override def writes(f: InputFrame): JsValue = Json.obj()
 
     override def reads(json: JsValue): JsResult[InputFrame] = json \ "tag" match {
-      case JsString("PlayerInput") =>
+      case JsDefined(JsString("PlayerInput")) =>
         JsSuccess(PlayerInputFrame((json \ "playerInput").as[PlayerInput]))
-      case JsString("NewMessage") =>
+      case JsDefined(JsString("NewMessage")) =>
         JsSuccess(NewMessageFrame((json \ "content").as[String]))
       case _ =>
         JsError("Unkown InputFrame tag")

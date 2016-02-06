@@ -1,7 +1,5 @@
 package dao
 
-import reactivemongo.api.collections.default.BSONCollection
-
 import scala.concurrent.Future
 import play.api.libs.json._
 import play.api.Play.current
@@ -9,7 +7,9 @@ import play.modules.reactivemongo.json.BSONFormats
 import play.modules.reactivemongo.ReactiveMongoPlugin
 import reactivemongo.api.DefaultDB
 import reactivemongo.bson.{BSONDocument, BSONDocumentWriter, BSONDocumentReader, BSONObjectID}
-import reactivemongo.core.commands.{LastError, Count}
+import reactivemongo.api.commands.CountCommand
+import reactivemongo.api.collections.bson.BSONCollection
+import reactivemongo.api.commands.WriteResult
 import play.api.libs.concurrent.Execution.Implicits._
 import tools.future.Implicits.RichFutureOfOpt
 import org.joda.time.DateTime
@@ -26,46 +26,46 @@ trait MongoDAO[T] {
   def collection = db[BSONCollection](collectionName)
 
   def count(query: Option[BSONDocument] = None): Future[Int] = {
-    db.command(Count(collectionName, query))
+    collection.count(query)
   }
 
   def count: Future[Int] = count(None)
 
-  def save(doc: T): Future[LastError] = {
+  def save(doc: T): Future[WriteResult] = {
     collection.insert(doc)
   }
 
-  def remove(id: BSONObjectID): Future[LastError] = {
+  def remove(id: BSONObjectID): Future[WriteResult] = {
     val query = BSONDocument("_id" -> id)
     collection.remove(query)
   }
 
   def remove(id: String): Future[_] = remove(BSONObjectID(id))
 
-  private def updateCommand(id: BSONObjectID, updateDoc: BSONDocument, command: String): Future[LastError] = {
+  private def updateCommand(id: BSONObjectID, updateDoc: BSONDocument, command: String): Future[WriteResult] = {
     collection.update(
       selector = BSONDocument("_id" -> id),
       update = BSONDocument(command -> updateDoc)
     )
   }
 
-  def update(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
+  def update(id: BSONObjectID, updateDoc: BSONDocument): Future[WriteResult] = {
     updateCommand(id, updateDoc, "$set")
   }
 
-  def unset(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
+  def unset(id: BSONObjectID, updateDoc: BSONDocument): Future[WriteResult] = {
     updateCommand(id, updateDoc, "$unset")
   }
 
-  def push(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
+  def push(id: BSONObjectID, updateDoc: BSONDocument): Future[WriteResult] = {
     updateCommand(id, updateDoc, "$push")
   }
 
-  def pull(id: BSONObjectID, updateDoc: BSONDocument): Future[LastError] = {
+  def pull(id: BSONObjectID, updateDoc: BSONDocument): Future[WriteResult] = {
     updateCommand(id, updateDoc, "$pull")
   }
 
-  def update(id: String, updateDoc: BSONDocument): Future[LastError] = update(BSONObjectID(id), updateDoc)
+  def update(id: String, updateDoc: BSONDocument): Future[WriteResult] = update(BSONObjectID(id), updateDoc)
 
   def findByIdOpt(id: BSONObjectID): Future[Option[T]] = {
     val query = BSONDocument("_id" -> id)

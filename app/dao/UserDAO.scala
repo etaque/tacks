@@ -2,9 +2,9 @@ package dao
 
 import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
+import reactivemongo.api.commands.WriteResult
 import reactivemongo.bson._
 import play.api.libs.concurrent.Execution.Implicits._
-import reactivemongo.core.commands.LastError
 import scala.concurrent.Future
 
 import tools.Conf
@@ -56,11 +56,11 @@ object UserDAO extends MongoDAO[User] {
     case None => unset(id, BSONDocument("status" -> true))
   }
 
-  def updateSettings(id: BSONObjectID, vmgMagnet: Int): Future[LastError] = {
+  def updateSettings(id: BSONObjectID, vmgMagnet: Int): Future[WriteResult] = {
     update(id, BSONDocument("vmgMagnet" -> vmgMagnet))
   }
 
-  def updateAvatarId(id: BSONObjectID, avatarIdOption: Option[BSONObjectID]): Future[LastError] = {
+  def updateAvatarId(id: BSONObjectID, avatarIdOption: Option[BSONObjectID]): Future[WriteResult] = {
     avatarIdOption match {
       case Some(avatarId) => update(id, BSONDocument("avatarId" -> avatarId))
       case None => unset(id, BSONDocument("avatarId" -> true))

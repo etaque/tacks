@@ -12,6 +12,7 @@ import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
 import org.joda.time.DateTime
 import reactivemongo.bson.BSONObjectID
+import play.api.i18n.Messages.Implicits._
 
 import actors._
 import models._

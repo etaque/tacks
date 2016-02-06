@@ -2,6 +2,7 @@ package dao
 
 import play.api.libs.concurrent.Execution.Implicits._
 import org.joda.time.{LocalDate, DateTime}
+import reactivemongo.api.commands.WriteResult
 import reactivemongo.bson._
 import reactivemongo.core.commands._
 import tools.BSONHandlers.BSONDateTimeHandler
@@ -19,7 +20,7 @@ object RunPathDAO extends MongoDAO[RunPath] {
     collection.find(BSONDocument("runId" -> runId)).one[RunPath]
   }
 
-  def deleteByRunId(runId: BSONObjectID): Future[LastError] = {
+  def deleteByRunId(runId: BSONObjectID): Future[WriteResult] = {
     collection.remove(BSONDocument("runId" -> runId))
   }
 
