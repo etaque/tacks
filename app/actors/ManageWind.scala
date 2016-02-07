@@ -1,11 +1,11 @@
 package actors
 
+import java.util.UUID
 import models._
-import reactivemongo.bson.BSONObjectID
 
 trait ManageWind {
 
-  def id: BSONObjectID
+  def id: UUID
   def course: Course
   def clock: Long
 
@@ -17,7 +17,7 @@ trait ManageWind {
     val c = clock
     val cs = c / 1000
     val gust = Gust(
-      position = (course.area.genX(cs * id.timeSecond + id.timeSecond, 100), course.area.top),
+      position = (course.area.genX(cs * id.timestamp + id.timestamp, 100), course.area.top),
       angle = gen.generateOrigin(),
       speed = gen.generateSpeed(),
       radius = 0,

@@ -8,17 +8,17 @@ POST        /api/logout                                        controllers.Api.l
 POST        /api/register                                      controllers.Api.register
 GET         /api/currentPlayer                                 controllers.Api.currentPlayer
 GET         /api/liveStatus                                    controllers.Api.liveStatus
-GET         /api/track/:id                                     controllers.Api.track(id: String)
-GET         /api/liveTrack/:id                                 controllers.Api.liveTrack(id: String)
+GET         /api/track/:id                                     controllers.Api.track(id: java.util.UUID)
+GET         /api/liveTrack/:id                                 controllers.Api.liveTrack(id: java.util.UUID)
 POST        /api/setHandle                                     controllers.Api.setHandle
 POST        /api/track                                         controllers.Api.createDraftTrack()
 GET         /api/drafts                                        controllers.Api.drafts()
-POST        /api/track/:id                                     controllers.Api.updateTrack(id: String)
-POST        /api/track/:id/delete                              controllers.Api.deleteTrack(id: String)
-POST        /api/track/:id/publish                             controllers.Api.publishTrack(id: String)
+POST        /api/track/:id                                     controllers.Api.updateTrack(id: java.util.UUID)
+POST        /api/track/:id/delete                              controllers.Api.deleteTrack(id: java.util.UUID)
+POST        /api/track/:id/publish                             controllers.Api.publishTrack(id: java.util.UUID)
 GET         /api/admin                                         controllers.Api.admin
 
-GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId)
+GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId: java.util.UUID)
 GET         /ws/notifications                                  controllers.WebSockets.notifications
 
 #GET         /blog                                             controllers.Prismic.blog

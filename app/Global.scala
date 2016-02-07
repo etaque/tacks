@@ -12,8 +12,8 @@ import play.api.libs.concurrent.Execution.Implicits._
 object Global extends GlobalSettings {
   override def onStart(app: Application) {
 
-    UserDAO.ensureIndexes()
-    TrackDAO.ensureIndexes()
+    // UserDAO.ensureIndexes()
+    // TrackDAO.ensureIndexes()
 
     RacesSupervisor.start()
   }

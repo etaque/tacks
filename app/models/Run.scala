@@ -1,25 +1,25 @@
 package models
 
+import java.util.UUID
 import org.joda.time.{LocalDate, DateTime}
 import reactivemongo.bson._
 
 case class Run(
-  _id: BSONObjectID = BSONObjectID.generate,
-  trackId: BSONObjectID,
-  raceId: BSONObjectID,
-  playerId: BSONObjectID,
+  id: UUID = UUID.randomUUID(),
+  trackId: UUID,
+  raceId: UUID,
+  playerId: UUID,
   playerHandle: Option[String] = None,
   startTime: DateTime,
   tally: Seq[Long],
-  finishTime: Long
-) extends HasId with WithPlayer {
-  def creationTime = idTime
+  duration: Long
+) extends WithPlayer {
 }
 
 
 case class RunPath(
-  _id: BSONObjectID = BSONObjectID.generate,
-  runId: BSONObjectID,
+  id: UUID = UUID.randomUUID(),
+  runId: UUID,
   slices: Map[Long,Seq[PathPoint]]
 ) {
   def addPoint(second: Long, point: PathPoint): RunPath = {
@@ -34,7 +34,7 @@ case class RunPath(
 
 object RunPath {
   def init(s: Long, p: PathPoint): RunPath = {
-    RunPath(BSONObjectID.generate, BSONObjectID.generate, Map(s -> Seq(p)))
+    RunPath(UUID.randomUUID(), UUID.randomUUID(), Map(s -> Seq(p)))
   }
 }
 
@@ -45,12 +45,12 @@ case class PathPoint(
 )
 
 case class RunRanking(
-  rank: Int,
-  playerId: BSONObjectID,
+  rank: Long,
+  playerId: UUID,
   playerHandle: Option[String],
-  runId: BSONObjectID,
-  finishTime: Long
+  runId: UUID,
+  startTime: DateTime,
+  duration: Long
 ) extends WithPlayer {
-  def creationTime = new DateTime(runId.time)
-  def isRecent = creationTime.plusDays(1).isAfterNow
+  def isRecent = startTime.plusDays(1).isAfterNow
 }
