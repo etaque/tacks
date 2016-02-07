@@ -10,6 +10,9 @@ import dao._
 
 package object actors {
 
+  import java.util.UUID
+
+
   case class PlayerContext(
     player: Player,
     input: KeyboardInput,
@@ -29,19 +32,27 @@ package object actors {
 
   def trackMeta(track: Track): Future[TrackMeta] = {
     for {
-      creator <- UserDAO.findById(track.creatorId)
+      creator <- Users.findById(track.creatorId)
       rankings <- playerRankings(track.id)
-      runsCount <- RunDAO.countForTrack(track.id)
+      runsCount <- Runs.countForTrack(track.id)
     }
-    yield TrackMeta(creator, rankings, runsCount)
+    yield TrackMeta(creator.getOrElse(sys.error("TODO join")), rankings, runsCount)
   }
 
-  def playerRankings(trackId: BSONObjectID): Future[Seq[PlayerRanking]] = {
+  def playerRankings(trackId: UUID): Future[Seq[PlayerRanking]] = {
     for {
-      runRankings <- RunDAO.extractRankings(trackId)
-      players <- UserDAO.listByIds(runRankings.map(_.playerId))
-      playerRankings = runRankings.flatMap(r => players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.finishTime)))
+      runRankings <- Runs.extractRankings(trackId).map(_.map(RunRanking.tupled))
+      players <- Users.listByIds(runRankings.map(_.playerId))
+      playerRankings = runRankings.flatMap { r => players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.duration)) }
     }
     yield playerRankings
   }
+  // def playerRankings(trackId: UUID): Future[Seq[PlayerRanking]] = {
+  //   for {
+  //     runRankings <- RunDAO.extractRankings(trackId)
+  //     players <- UserDAO.listByIds(runRankings.map(_.playerId))
+  //     playerRankings = runRankings.flatMap(r => players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.finishTime)))
+  //   }
+  //   yield playerRankings
+  // }
 }

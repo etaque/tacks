@@ -1,5 +1,8 @@
 package controllers
 
+import java.util.UUID
+import play.api.Play
+import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -11,13 +14,13 @@ import play.api.Play.current
 import akka.util.Timeout
 import akka.pattern.{ ask, pipe }
 import org.joda.time.DateTime
-import reactivemongo.bson.BSONObjectID
 import play.api.i18n.Messages.Implicits._
 
 import actors._
 import models._
 import dao._
 import models.JsonFormats._
+import slick.driver.JdbcProfile
 import tools.future.Implicits._
 import tools.JsonErrors
 
@@ -38,12 +41,12 @@ object Api extends Controller with Security {
       {
         case (email, password) => {
           (for {
-            credentials <- UserDAO.getHashedPassword(email).map(UserDAO.checkPassword(password))
-            if credentials
-            user <- UserDAO.findByEmail(email).flattenOpt
+            credentials <- Users.findHashedPassword(email).map(_.filter(Users.checkPassword(password)))
+            if credentials.isDefined
+            user <- Users.findByEmail(email).flattenOpt
           }
           yield {
-            Ok(playerFormat.writes(user)).withSession("playerId" -> user.idToStr)
+            Ok(playerFormat.writes(user)).withSession("playerId" -> user.id.toString)
           }) recover {
             case _ => BadRequest("Wrong user or password")
           }
@@ -53,9 +56,9 @@ object Api extends Controller with Security {
   }
 
   def logout = Action.async(parse.json) { request =>
-    val newPlayer = Guest(BSONObjectID.generate)
+    val newPlayer = Guest(UUID.randomUUID())
     Future.successful(Ok(
-      playerFormat.writes(newPlayer)).withSession("playerId" -> newPlayer.id.stringify))
+      playerFormat.writes(newPlayer)).withSession("playerId" -> newPlayer.id.toString))
   }
 
   def currentPlayer = PlayerAction.async() { request =>
@@ -81,8 +84,8 @@ object Api extends Controller with Security {
       {
         case form @ RegisterForm(handle, email, password) => {
           for {
-            emailTaken <- UserDAO.findByEmail(email).map(_.nonEmpty)
-            handleTaken <- UserDAO.findByHandleOpt(handle).map(_.nonEmpty)
+            emailTaken <- Users.findByEmail(email).map(_.nonEmpty)
+            handleTaken <- Users.findByHandle(handle).map(_.nonEmpty)
             result <- handleRegisterForm(form, emailTaken, handleTaken)
           }
           yield result
@@ -97,9 +100,9 @@ object Api extends Controller with Security {
       val handleError = if (handleTaken) JsonErrors.one("handle", "error.handleTaken") else Json.obj()
       Future.successful(BadRequest(emailError ++ handleError))
     } else {
-      val user = User(email = form.email, handle = form.handle, status = None, avatarId = None, vmgMagnet = Player.defaultVmgMagnet)
-      UserDAO.create(user, form.password).map { _ =>
-        Ok(Json.toJson(user)(playerFormat)).withSession("playerId" -> user.idToStr)
+      val user = User(email = form.email, handle = form.handle, status = None, vmgMagnet = Player.defaultVmgMagnet)
+      Users.create(user, form.password).map { _ =>
+        Ok(Json.toJson(user)(playerFormat)).withSession("playerId" -> user.id.toString)
       }
     }
   }
@@ -107,7 +110,7 @@ object Api extends Controller with Security {
 
   def liveStatus = PlayerAction.async() { implicit request =>
     val tracksFu = (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]]
-    val draftsFu = TrackDAO.listByCreatorId(request.player.id).map(_.filter(_.isDraft))
+    val draftsFu = Tracks.listByCreatorId(request.player.id).map(_.filter(_.isDraft))
     val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     for {
       tracks <- tracksFu
@@ -122,16 +125,16 @@ object Api extends Controller with Security {
     ))
   }
 
-  def track(id: String) = PlayerAction.async() { implicit request =>
-    TrackDAO.findByIdOpt(id).map {
+  def track(id: UUID) = PlayerAction.async() { implicit request =>
+    Tracks.findById(id).map {
       case Some(track) => Ok(Json.toJson(track))
       case None => NotFound
     }
   }
 
-  def liveTrack(id: String) = PlayerAction.async() { implicit request =>
+  def liveTrack(id: UUID) = PlayerAction.async() { implicit request =>
     (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]].map { liveTracks =>
-      liveTracks.find(_.track.id == BSONObjectID(id)) match {
+      liveTracks.find(_.track.id == id) match {
         case Some(rcs) => Ok(Json.toJson(rcs))
         case None => NotFound
       }
@@ -139,23 +142,25 @@ object Api extends Controller with Security {
   }
 
   def drafts = PlayerAction.async() { implicit request =>
-    TrackDAO.listByCreatorId(request.player.id).map { tracks =>
+    Tracks.listByCreatorId(request.player.id).map { tracks =>
       Ok(Json.toJson(tracks.filter(_.isDraft)))
     }
   }
 
   def createDraftTrack() = PlayerAction.async(parse.json) { implicit request =>
     asUser {  user =>
-      val id = BSONObjectID.generate
-      val name = (request.body \ "name").asOpt[String].getOrElse(id.stringify)
+      val id = UUID.randomUUID()
+      val name = (request.body \ "name").asOpt[String].getOrElse(id.toString)
       val track = Track(
-        _id = id,
+        id = id,
         name = name,
         creatorId = user.id,
         course = Course.spawn,
-        status = TrackStatus.draft
+        status = TrackStatus.draft,
+        creationTime = DateTime.now,
+        updateTime = DateTime.now
       )
-      TrackDAO.save(track).map { _ =>
+      Tracks.save(track).map { _ =>
         Ok(Json.toJson(track))
       }
     }
@@ -168,15 +173,15 @@ object Api extends Controller with Security {
 
   implicit val updateTrackFormat: Format[UpdateTrack] = Json.format[UpdateTrack]
 
-  def updateTrack(id: String) = PlayerAction.async(parse.json) { implicit request =>
-    TrackDAO.findById(id).flatMap { track =>
-      if (canUpdateTrack(track)) {
+  def updateTrack(id: UUID) = PlayerAction.async(parse.json) { implicit request =>
+    Tracks.findById(id).flatMap {
+      _.filter(canUpdateTrack).map { track =>
         request.body.validate(updateTrackFormat).fold(
           errors => Future.successful(BadRequest(JsonErrors.format(errors))),
           {
             case UpdateTrack(course, name) => {
               for {
-                _ <- TrackDAO.updateFromEditor(track.id, name, course)
+                _ <- Tracks.updateFromEditor(track.id, name, course)
               } yield {
                 val newTrack = track.copy(course = course, name = name)
                 RacesSupervisor.actorRef ! ReloadTrack(newTrack)
@@ -185,35 +190,29 @@ object Api extends Controller with Security {
             }
           }
         )
-      } else {
-        Future.successful(Forbidden)
-      }
+      }.getOrElse(Future.successful(BadRequest))
     }
   }
 
-  def publishTrack(id: String) = PlayerAction.async(parse.json) { implicit request =>
-    TrackDAO.findById(id).flatMap { track =>
-      if (canUpdateTrack(track)) {
-        TrackDAO.publish(BSONObjectID(id)).map { _ =>
+  def publishTrack(id: UUID) = PlayerAction.async(parse.json) { implicit request =>
+    Tracks.findById(id).flatMap {
+      _.filter(canUpdateTrack).map { track =>
+        Tracks.publish(id).map { _ =>
           val newTrack = track.copy(status = TrackStatus.open)
           RacesSupervisor.actorRef ! ReloadTrack(newTrack)
           Ok(Json.toJson(newTrack))
         }
-      } else {
-        Future.successful(BadRequest)
-      }
+      }.getOrElse(Future.successful(BadRequest))
     }
   }
 
-  def deleteTrack(id: String) = PlayerAction.async(parse.json) { implicit request =>
-    TrackDAO.findById(id).flatMap { track =>
-      if (canUpdateTrack(track)) {
-        TrackDAO.remove(id).map { _ =>
+  def deleteTrack(id: UUID) = PlayerAction.async(parse.json) { implicit request =>
+    Tracks.findById(id).flatMap {
+      _.filter(canUpdateTrack).map { track =>
+        Tracks.remove(id).map { _ =>
           Ok(Json.obj())
         }
-      } else {
-        Future.successful(BadRequest)
-      }
+      }.getOrElse(Future.successful(BadRequest))
     }
   }
 
@@ -231,8 +230,8 @@ object Api extends Controller with Security {
   def admin = PlayerAction.async(parse.anyContent) { implicit request =>
     asAdmin { user =>
       for {
-        tracks <- TrackDAO.list
-        users <- UserDAO.list
+        tracks <- Tracks.list
+        users <- Users.list
       }
       yield Ok(Json.obj(
         "tracks" -> Json.toJson(tracks),

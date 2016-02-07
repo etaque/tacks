@@ -157,7 +157,7 @@ case class TrackMeta(
 )
 
 case class PlayerRanking(
-  rank: Int,
+  rank: Long,
   player: Player,
   finishTime: Long
 )

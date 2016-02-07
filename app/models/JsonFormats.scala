@@ -58,7 +58,7 @@ object JsonFormats {
       "guest" -> false,
       "handle" -> u.handle,
       "status" -> u.status,
-      "avatarId" -> u.avatarId,
+      "avatarId" -> JsNull,
       "vmgMagnet" -> u.vmgMagnet
     )
   }
@@ -70,7 +70,7 @@ object JsonFormats {
       "email" -> u.email,
       "handle" -> u.handle,
       "status" -> u.status,
-      "avatarId" -> u.avatarId,
+      "avatarId" -> JsNull,
       "vmgMagnet" -> u.vmgMagnet,
       "creationTime" -> u.creationTime
     )
@@ -162,10 +162,14 @@ object JsonFormats {
   implicit val trackStatusFormat: Format[TrackStatus.Value] = enumFormat(TrackStatus)
 
   implicit val raceFormat: Format[Race] = Json.format[Race]
+
   implicit val trackFormat: Format[Track] = Json.format[Track]
   implicit val runFormat: Format[Run] = Json.format[Run]
   implicit val runRankingFormat: Format[RunRanking] = Json.format[RunRanking]
   implicit val playerRankingFormat: Format[PlayerRanking] = Json.format[PlayerRanking]
+  implicit val pathPointFormat: Format[PathPoint] = Json.format[PathPoint]
+  implicit val pathSliceFormat: Format[(Long, Seq[PathPoint])] = tuple2Format[Long, Seq[PathPoint]]
+
   implicit val trackMetaFormat: Format[TrackMeta] = Json.format[TrackMeta]
   implicit val liveTrackFormat: Format[LiveTrack] = Json.format[LiveTrack]
 
