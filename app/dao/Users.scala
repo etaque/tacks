@@ -26,7 +26,7 @@ class UserTable(tag: Tag) extends Table[User](tag, "users") {
 object Users extends TableQuery(new UserTable(_)) {
 
   def list(): Future[Seq[User]] = DB.run {
-    map(identity).result
+    all.result
   }
 
   def findById(id: UUID): Future[Option[User]] = DB.run {
@@ -68,4 +68,7 @@ object Users extends TableQuery(new UserTable(_)) {
 
     DBIO.sequence(Seq(insert, setPassword))
   }
+
+  private def all =
+    map(identity)
 }
