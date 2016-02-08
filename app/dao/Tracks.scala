@@ -36,7 +36,7 @@ object Tracks extends TableQuery(new TrackTable(_)) {
   import TrackMappings._
 
   def list(): Future[Seq[Track]] = DB.run {
-    to[Seq].result
+    all.result
   }
 
   def findById(id: UUID): Future[Option[Track]] = DB.run {
@@ -48,7 +48,7 @@ object Tracks extends TableQuery(new TrackTable(_)) {
   }
 
   def save(track: Track): Future[Int] = DB.run {
-    map(identity) += track
+    all += track
   }
 
   def publish(id: UUID): Future[Int] = DB.run {
@@ -59,10 +59,13 @@ object Tracks extends TableQuery(new TrackTable(_)) {
     onId(id).delete
   }
 
-  def updateFromEditor(id: UUID, name: String, course: Course): Future[_] = DB.run {
+  def updateFromEditor(id: UUID, name: String, course: Course): Future[Int] = DB.run {
     onId(id).map(t => (t.name, t.course)).update(name, course)
   }
 
   private def onId(id: UUID) =
     filter(_.id === id)
+
+  private def all =
+    map(identity)
 }
