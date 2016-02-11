@@ -105,13 +105,28 @@ object JsonFormats {
     }
   }
 
-  implicit val opponentStateFormat: Format[OpponentState] = Json.format[OpponentState]
+  implicit val opponentStateFormat: Format[OpponentState] = (
+    (__ \ 'time).format(timestampFormat) and
+      (__ \ 'position).format[Point] and
+      (__ \ 'heading).format[Double] and
+      (__ \ 'velocity).format[Double] and
+      (__ \ 'windAngle).format[Double] and
+      (__ \ 'windOrigin).format[Double] and
+      (__ \ 'shadowDirection).format[Double] and
+      (__ \ 'crossedGates).format[Seq[Long]]
+  )(OpponentState.apply _, unlift(OpponentState.unapply _))
+
   implicit val opponentFormat: Format[Opponent] = Json.format[Opponent]
 
   implicit val vmgFormat: Format[Vmg] = Json.format[Vmg]
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val keyboardInputFormat: Format[KeyboardInput] = Json.format[KeyboardInput]
-  implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
+
+  implicit val playerInputFormat: Format[PlayerInput] = (
+    (__ \ 'state).format[OpponentState] and
+      (__ \ 'input).format[KeyboardInput] and
+      (__ \ 'localTime).format(timestampFormat)
+  )(PlayerInput.apply _, unlift(PlayerInput.unapply _))
 
   implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
 
