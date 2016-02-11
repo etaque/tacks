@@ -28,7 +28,6 @@ function mountElm() {
 
   game.ports.playerOutput.subscribe(function(output) {
     if (ws && ws.readyState == WebSocket.OPEN) {
-      console.log(output);
       ws.send(JSON.stringify({ tag: "PlayerInput", "playerInput": output }));
     }
   });
