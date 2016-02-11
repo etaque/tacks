@@ -2,7 +2,7 @@ package models
 
 import java.util.UUID
 import org.joda.time.{LocalDate, DateTime}
-import reactivemongo.bson._
+
 
 case class Run(
   id: UUID = UUID.randomUUID(),

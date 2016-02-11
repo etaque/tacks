@@ -11,11 +11,9 @@ import play.api.libs.json.{JsString, JsValue, Json, Format}
 import play.api.mvc.{Controller, WebSocket}
 import play.api.mvc.WebSocket.FrameFormatter
 import play.api.Play.current
-import reactivemongo.bson.BSONObjectID
 
 import models._
 import models.JsonFormats._
-import tools.JsonFormats.idFormat
 import actors._
 import dao._
 

@@ -6,14 +6,11 @@ import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import play.api.Play.current
 
-import play.modules.reactivemongo.MongoController
-import reactivemongo.bson.BSONObjectID
-import reactivemongo.api.gridfs.Implicits._
-
 import models._
 import dao._
 
-object Application extends Controller with Security { //with MongoController {
+
+object Application extends Controller with Security {
 
   def index(path: String = "") = PlayerAction.async() { implicit request =>
     Future.successful(Ok(views.html.index()))

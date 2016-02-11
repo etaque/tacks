@@ -17302,7 +17302,7 @@ Elm.Decoders.make = function (_elm) {
    };
    var trackDecoder = A6($Json$Decode.object5,
    $Models.Track,
-   A2($Json$Decode._op[":="],"_id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
    A2($Json$Decode._op[":="],"name",$Json$Decode.string),
    A2($Json$Decode._op[":="],"creatorId",$Json$Decode.string),
    A2($Json$Decode._op[":="],"course",courseDecoder),
@@ -17333,7 +17333,7 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],"finishTime",$Json$Decode.$float));
    var raceDecoder = A6($Json$Decode.object5,
    $Models.Race,
-   A2($Json$Decode._op[":="],"_id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
    A2($Json$Decode._op[":="],"trackId",$Json$Decode.string),
    A2($Json$Decode._op[":="],"startTime",$Json$Decode.$float),
    A2($Json$Decode._op[":="],
@@ -17593,8 +17593,8 @@ Elm.ServerApi.make = function (_elm) {
    });
    var getJson = F2(function (decoder,path) {
       return A2($Task.map,
-      $Result.formatError(function (_p6) {
-         return {ctor: "_Tuple0"};
+      $Result.formatError(function (e) {
+         return A2($Debug.log,$Basics.toString(e),{ctor: "_Tuple0"});
       }),
       $Task.toResult(A2($Http.get,decoder,path)));
    });

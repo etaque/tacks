@@ -19,10 +19,12 @@ object Frames {
     override def writes(f: InputFrame): JsValue = Json.obj()
 
     override def reads(json: JsValue): JsResult[InputFrame] = json \ "tag" match {
-      case JsDefined(JsString("PlayerInput")) =>
-        JsSuccess(PlayerInputFrame((json \ "playerInput").as[PlayerInput]))
-      case JsDefined(JsString("NewMessage")) =>
+      case JsDefined(JsString("PlayerInput")) => {
+        (json \ "playerInput").validate[PlayerInput].map(PlayerInputFrame(_))
+      }
+      case JsDefined(JsString("NewMessage")) => {
         JsSuccess(NewMessageFrame((json \ "content").as[String]))
+      }
       case _ =>
         JsError("Unkown InputFrame tag")
     }

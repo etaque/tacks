@@ -1,7 +1,6 @@
 package actors
 
 import play.api.Logger
-import reactivemongo.bson.BSONObjectID
 
 import scala.concurrent.duration._
 import akka.actor.{ActorRef, Props, Actor}
@@ -86,18 +85,18 @@ object LiveCenter {
     // state.chatRoom.foreach(_._2 ! Chat.UpdatePlayers(distinctPlayers))
   }
 
-  def updateStatus(state: LiveCenterState, playerId: BSONObjectID, status: String): LiveCenterState = {
-    state.copy(
-      subscribers = state.subscribers.map(updatePlayerStatus(playerId, status)),
-      chatRoom = state.chatRoom.map(updatePlayerStatus(playerId, status))
-    )
-  }
+  // def updateStatus(state: LiveCenterState, playerId: BSONObjectID, status: String): LiveCenterState = {
+  //   state.copy(
+  //     subscribers = state.subscribers.map(updatePlayerStatus(playerId, status)),
+  //     chatRoom = state.chatRoom.map(updatePlayerStatus(playerId, status))
+  //   )
+  // }
 
-  def updatePlayerStatus(id: BSONObjectID, status: String)(pair: (Player, ActorRef)): (Player, ActorRef) = {
-    val (p, ref) = pair
-    p match {
-      case u: User if u.id == id => (u.copy(status = Some(status)), ref)
-      case _ => (p, ref)
-    }
-  }
+  // def updatePlayerStatus(id: BSONObjectID, status: String)(pair: (Player, ActorRef)): (Player, ActorRef) = {
+  //   val (p, ref) = pair
+  //   p match {
+  //     case u: User if u.id == id => (u.copy(status = Some(status)), ref)
+  //     case _ => (p, ref)
+  //   }
+  // }
 }

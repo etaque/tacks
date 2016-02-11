@@ -7,28 +7,21 @@ import play.api.libs.json._
 import play.api.libs.functional.syntax._
 import play.api.libs.concurrent.Execution.Implicits._
 
-import reactivemongo.bson.BSONObjectID
 import org.joda.time.DateTime
 
 
 object JsonFormats {
 
-  implicit val idWrites: Writes[BSONObjectID] = Writes { id: BSONObjectID => JsString(id.stringify) }
-
-  implicit val idReads: Reads[BSONObjectID] = Reads { id: JsValue => id match {
-    case JsString(s) => JsSuccess(BSONObjectID(s))
-    case _ => JsError("Not a BSONObjectID")
-  } }
-
-  implicit val idFormat: Format[BSONObjectID] = Format(idReads, idWrites)
-
+  implicit val doubleOptionFormat = Format.optionWithNull[Double]
 
   // DateTime <-> Mongo Date
 
-  implicit val dateTimeReads: Reads[DateTime] = __.read[Long].map(new DateTime(_))
+  implicit val dateTimeReads: Reads[DateTime] =
+    __.read[Long].map(new DateTime(_))
 
   implicit val dateTimeWrites: Writes[DateTime] = new Writes[DateTime] {
-    def writes(dateTime: DateTime): JsValue = JsNumber(dateTime.getMillis)
+    def writes(dateTime: DateTime): JsValue =
+      JsNumber(dateTime.getMillis)
   }
 
   implicit val dateTimeFormat: Format[DateTime] = Format(dateTimeReads, dateTimeWrites)
@@ -107,5 +100,8 @@ object JsonFormats {
   )(Range(_, _))
 
   implicit val rangeFormat: Format[Range] = Format(rangeReads, rangeWrites)
+
+  val timestampFormat: Format[Long] =
+    Format(Reads.FloatReads.map(_.round.toLong), Writes.LongWrites)
 
 }

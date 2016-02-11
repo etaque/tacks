@@ -5,11 +5,10 @@ import scala.util.Try
 import java.lang.Math._
 
 import org.joda.time.DateTime
-import reactivemongo.bson._
 import play.api.libs.json.Format
 
 import models.Geo._
-import tools.BSONHandlers._
+
 
 case class Course(
   upwind: Gate,
@@ -38,18 +37,6 @@ object Course {
 
   type Grid = Seq[(Int, GridRow)]
   type GridRow = Seq[(Int, String)]
-
-  implicit val gridRowTupleHandler = tupleHandler[Int, BSONInteger, String, BSONString]
-  implicit val gridRowHandler = seqHandler[(Int, String), BSONArray]
-  implicit val gridTupleHandler = tupleHandler[Int, BSONInteger, GridRow, BSONArray]
-  implicit val gridHandler = seqHandler[(Int, GridRow), BSONArray]
-
-  implicit val raceAreaHandler = Macros.handler[RaceArea]
-  implicit val gustSpecHandler = Macros.handler[GustDef]
-  implicit val gustGeneratorHandler = Macros.handler[GustGenerator]
-  implicit val windGeneratorHandler = Macros.handler[WindGenerator]
-  implicit val gateHandler = Macros.handler[Gate]
-  implicit val courseHandler = Macros.handler[Course]
 }
 
 sealed trait GateLocation

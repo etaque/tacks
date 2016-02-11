@@ -60,7 +60,7 @@ object Users extends TableQuery(new UserTable(_)) {
   }
 
   def create(user: User, password: String): Future[_] = DB.run {
-    val insert = map(identity) += user
+    val insert = all += user
     val setPassword = sqlu"""
       UPDATE #${baseTableRow.tableName}
       SET password=${makePasswordHash(password)}
