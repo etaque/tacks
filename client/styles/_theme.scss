@@ -140,6 +140,35 @@ a {
   color: $darkOrange;
 }
 
+.form-control {
+  padding-left: 0;
+  padding-right: 0;
+  border: none;
+  border-radius: 0;
+  border-bottom: 2px solid $lighterSeaBlue;
+  background-color: transparent;
+  font-family: $regular;
+  font-weight: bold;
+  font-size: 16px;
+  box-shadow: none;
+  color: white;
+
+  @include placeholder-color($whiteSeaBlue);
+
+  &:focus {
+    outline: none;
+    box-shadow: none;
+    border-color: $whiteSeaBlue;
+  }
+}
+
+.form-inline {
+  .form-group + .btn,
+  .btn + .btn {
+    margin-left: 10px;
+  }
+}
+
 .form-group {
   .control-label {
     color: $whiteSeaBlue;
@@ -147,25 +176,6 @@ a {
   }
 
   .form-control {
-    padding-left: 0;
-    padding-right: 0;
-    border: none;
-    border-radius: 0;
-    border-bottom: 2px solid $lighterSeaBlue;
-    background-color: transparent;
-    font-family: $regular;
-    font-weight: bold;
-    font-size: 16px;
-    box-shadow: none;
-    color: white;
-
-    @include placeholder-color($whiteSeaBlue);
-
-    &:focus {
-      outline: none;
-      box-shadow: none;
-      border-color: $whiteSeaBlue;
-    }
   }
 
   .feedback {

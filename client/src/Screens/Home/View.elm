@@ -44,26 +44,23 @@ welcomeForm player handle =
 
 setHandleBlock : String -> Html
 setHandleBlock handle =
-  div [ class "form-set-handle row" ]
-    [ div [ class "col-md-4 "]
-      [ div [ class "input-group" ]
+  div
+    [ class "form-inline form-set-handle" ]
+    [ formGroup False
         [ textInput
           [ placeholder "Got a nickname?"
           , value handle
           , onInput addr SetHandle
           , onEnter addr SubmitHandle
           ]
-        , span [ class "input-group-btn" ]
-          [ button
-            [ class "btn btn-primary"
-            , onClick addr SubmitHandle
-            ]
-            [ text "submit" ]
-          ]
         ]
+    , button
+      [ class "btn btn-primary"
+      , onClick addr SubmitHandle
       ]
-    , div [ class "col-md-8" ] [ linkTo Login [ class "btn btn-default" ] [ text "or log in"] ]
-  ]
+      [ text "submit" ]
+    , linkTo Login [ class "btn btn-default" ] [ text "or log in"]
+    ]
 
 
 liveTracks : Player -> LiveStatus -> Maybe TrackId -> Html

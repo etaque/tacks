@@ -21740,11 +21740,9 @@ Elm.Screens.Home.View.make = function (_elm) {
    });
    var setHandleBlock = function (handle) {
       return A2($Html.div,
-      _U.list([$Html$Attributes.$class("form-set-handle row")]),
-      _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class("col-md-4 ")]),
-              _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class("input-group")]),
+      _U.list([$Html$Attributes.$class("form-inline form-set-handle")]),
+      _U.list([A2($Screens$Utils.formGroup,
+              false,
               _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
                                                         ,$Html$Attributes.value(handle)
                                                         ,A2($Screens$Utils.onInput,
@@ -21752,21 +21750,17 @@ Elm.Screens.Home.View.make = function (_elm) {
                                                         $Screens$Home$Types.SetHandle)
                                                         ,A2($Screens$Utils.onEnter,
                                                         $Screens$Home$Updates.addr,
-                                                        $Screens$Home$Types.SubmitHandle)]))
-                      ,A2($Html.span,
-                      _U.list([$Html$Attributes.$class("input-group-btn")]),
-                      _U.list([A2($Html.button,
-                      _U.list([$Html$Attributes.$class("btn btn-primary")
-                              ,A2($Html$Events.onClick,
-                              $Screens$Home$Updates.addr,
-                              $Screens$Home$Types.SubmitHandle)]),
-                      _U.list([$Html.text("submit")]))]))]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("col-md-8")]),
-              _U.list([A3($Screens$Utils.linkTo,
+                                                        $Screens$Home$Types.SubmitHandle)]))]))
+              ,A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-primary")
+                      ,A2($Html$Events.onClick,
+                      $Screens$Home$Updates.addr,
+                      $Screens$Home$Types.SubmitHandle)]),
+              _U.list([$Html.text("submit")]))
+              ,A3($Screens$Utils.linkTo,
               $Routes.Login,
               _U.list([$Html$Attributes.$class("btn btn-default")]),
-              _U.list([$Html.text("or log in")]))]))]));
+              _U.list([$Html.text("or log in")]))]));
    };
    var welcomeForm = F2(function (player,handle) {
       return player.guest ? setHandleBlock(handle) : A2($Html.div,
@@ -21929,7 +21923,7 @@ Elm.Screens.Register.View.make = function (_elm) {
       var getServerErrors = function (field) {
          return A2($Maybe.withDefault,
          _U.list([]),
-         A2($Dict.get,"handle",_p1.serverErrors));
+         A2($Dict.get,field,_p1.serverErrors));
       };
       var password = A2($Form.getFieldAsString,"password",_p4);
       var email = A2($Form.getFieldAsString,"email",_p4);
@@ -21968,7 +21962,9 @@ Elm.Screens.Register.View.make = function (_elm) {
               ,A4($Screens$Utils.fieldGroup,
               "Email",
               "",
+              A2($Basics._op["++"],
               $Screens$Utils.errList(email.liveError),
+              getServerErrors("email")),
               _U.list([A3($Form$Input.textInput,
               email,
               formAddr,

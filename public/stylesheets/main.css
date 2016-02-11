@@ -6306,11 +6306,7 @@ a {
   border-color: #e9bd7d;
   color: #916019; }
 
-.form-group .control-label {
-  color: #99d2ef;
-  font-family: "Proxima Nova Thin"; }
-
-.form-group .form-control {
+.form-control {
   padding-left: 0;
   padding-right: 0;
   border: none;
@@ -6322,24 +6318,32 @@ a {
   font-size: 16px;
   box-shadow: none;
   color: white; }
-  .form-group .form-control::-webkit-input-placeholder {
+  .form-control::-webkit-input-placeholder {
     /* WebKit browsers */
     color: #99d2ef; }
-  .form-group .form-control:-moz-placeholder {
+  .form-control:-moz-placeholder {
     /* Mozilla Firefox 4 to 18 */
     color: #99d2ef;
     opacity: 1; }
-  .form-group .form-control::-moz-placeholder {
+  .form-control::-moz-placeholder {
     /* Mozilla Firefox 19+ */
     color: #99d2ef;
     opacity: 1; }
-  .form-group .form-control:-ms-input-placeholder {
+  .form-control:-ms-input-placeholder {
     /* Internet Explorer 10+ */
     color: #99d2ef; }
-  .form-group .form-control:focus {
+  .form-control:focus {
     outline: none;
     box-shadow: none;
     border-color: #99d2ef; }
+
+.form-inline .form-group + .btn,
+.form-inline .btn + .btn {
+  margin-left: 10px; }
+
+.form-group .control-label {
+  color: #99d2ef;
+  font-family: "Proxima Nova Thin"; }
 
 .form-group .feedback {
   min-height: 24px;

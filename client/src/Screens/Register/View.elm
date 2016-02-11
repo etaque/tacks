@@ -42,7 +42,7 @@ registerForm {form, loading, serverErrors} =
     email = Form.getFieldAsString "email" form
     password = Form.getFieldAsString "password" form
     getServerErrors field =
-      Dict.get "handle" serverErrors |> Maybe.withDefault []
+      Dict.get field serverErrors |> Maybe.withDefault []
   in
     div [ class "form-login form-horizontal" ]
 
@@ -51,7 +51,7 @@ registerForm {form, loading, serverErrors} =
           [ Input.textInput handle formAddr [ class "form-control" ] ]
 
       , fieldGroup "Email" ""
-          (errList email.liveError)
+          (errList email.liveError ++ (getServerErrors "email"))
           [ Input.textInput email formAddr [ class "form-control" ] ]
 
       , fieldGroup "Password" ""
