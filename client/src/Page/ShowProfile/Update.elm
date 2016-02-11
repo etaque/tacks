@@ -6,7 +6,7 @@ import Response exposing (..)
 import AppTypes exposing (..)
 import Models exposing (..)
 import Page.ShowProfile.Model exposing (..)
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 addr : Signal.Address Action

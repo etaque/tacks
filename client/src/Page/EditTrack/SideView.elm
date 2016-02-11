@@ -6,11 +6,11 @@ import Html.Events exposing (..)
 
 import Models exposing (..)
 import Constants exposing (..)
-import Page.Utils exposing (..)
+import View.Utils exposing (..)
 
 import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
-import Page.Sidebar as Sidebar
+import View.Sidebar as Sidebar
 
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 

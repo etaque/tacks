@@ -8,9 +8,9 @@ import Game.Models exposing (GameState)
 
 import Page.Game.Model exposing (..)
 import Page.Game.PlayersView as PlayersView
-import Page.Sidebar as Sidebar
+import View.Sidebar as Sidebar
 
-import Page.Utils exposing (..)
+import View.Utils exposing (..)
 import Route exposing (..)
 
 

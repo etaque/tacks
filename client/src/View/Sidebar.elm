@@ -1,4 +1,4 @@
-module Page.Sidebar where
+module View.Sidebar where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -7,7 +7,7 @@ import Html.Events exposing (..)
 import AppTypes exposing (..)
 import Models exposing (..)
 
-import Page.Utils exposing (..)
+import View.Utils exposing (..)
 import Route exposing (..)
 import Page.Admin.Model as Admin
 

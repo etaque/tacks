@@ -12,8 +12,8 @@ import Route exposing (..)
 import Page.ListDrafts.Model exposing (..)
 import Page.ListDrafts.Update exposing (addr)
 
-import Page.Utils exposing (..)
-import Page.Layout as Layout
+import View.Utils exposing (..)
+import View.Layout as Layout
 
 
 view : Context -> Screen -> Html

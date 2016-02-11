@@ -10,7 +10,7 @@ import ServerApi
 import Route
 
 import Page.ListDrafts.Model exposing (..)
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 addr : Signal.Address Action

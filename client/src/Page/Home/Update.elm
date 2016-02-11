@@ -12,7 +12,7 @@ import Models exposing (..)
 import Page.Home.Model exposing (..)
 import ServerApi
 import Route
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 addr : Signal.Address Action

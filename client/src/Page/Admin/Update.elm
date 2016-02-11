@@ -9,7 +9,7 @@ import AppTypes exposing (..)
 import Models exposing (..)
 import Page.Admin.Model as Types exposing (..)
 import ServerApi
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 addr : Signal.Address Action

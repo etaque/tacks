@@ -1,10 +1,10 @@
-module Page.Nav where
+module View.Nav where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import Page.Utils exposing (..)
+import View.Utils exposing (..)
 import Models exposing (..)
 import AppTypes exposing (..)
 import Route exposing (..)

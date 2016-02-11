@@ -9,7 +9,7 @@ import Models exposing (..)
 import Page.Game.Model exposing (..)
 import Page.Game.Update exposing (addr)
 
-import Page.Utils exposing (..)
+import View.Utils exposing (..)
 
 
 view : Int -> Screen -> Html

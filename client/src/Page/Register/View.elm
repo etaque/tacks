@@ -15,8 +15,8 @@ import CoreExtra exposing (..)
 import Page.Register.Model exposing (..)
 import Page.Register.Update exposing (addr)
 
-import Page.Utils exposing (..)
-import Page.Layout as Layout
+import View.Utils exposing (..)
+import View.Layout as Layout
 
 
 view : Context -> Screen -> Html

@@ -18,7 +18,7 @@ import Page.EditTrack.GridUpdate as GridUpdate
 
 import Constants exposing (..)
 import ServerApi
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 import Route
 
 import Hexagons

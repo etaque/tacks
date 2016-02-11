@@ -18,7 +18,7 @@ import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps exposing (gameStep)
 import Game.Inputs exposing (..)
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 addr : Signal.Address Action

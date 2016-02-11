@@ -10,7 +10,7 @@ import Models exposing (..)
 
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.SideView as SideView
-import Page.Layout as Layout
+import View.Layout as Layout
 
 import Game.Geo exposing (floatify)
 import Game.Render.SvgUtils exposing (..)

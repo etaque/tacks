@@ -20,7 +20,7 @@ import Page.Admin.Update as Admin
 
 import ServerApi
 import Route exposing (..)
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 routerConfig : TransitRouter.Config Route AppAction AppState

@@ -1,9 +1,9 @@
-module Page.Layout where
+module View.Layout where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-import Page.Sidebar as Sidebar
+import View.Sidebar as Sidebar
 import Constants exposing (..)
 import AppTypes exposing (..)
 import Route

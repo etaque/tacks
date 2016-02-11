@@ -1,4 +1,4 @@
-module Page.UpdateUtils where
+module Update.Utils where
 
 import Effects exposing (Effects)
 import TransitRouter

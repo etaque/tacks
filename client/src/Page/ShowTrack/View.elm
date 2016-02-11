@@ -13,8 +13,8 @@ import Route exposing (..)
 import Page.ShowTrack.Model exposing (..)
 import Page.ShowTrack.Update exposing (addr)
 
-import Page.Utils exposing (..)
-import Page.Layout as Layout
+import View.Utils exposing (..)
+import View.Layout as Layout
 
 import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor)
 import Game.Render.Gates exposing (renderOpenGate)

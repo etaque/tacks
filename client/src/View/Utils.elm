@@ -1,4 +1,4 @@
-module Page.Utils where
+module View.Utils where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

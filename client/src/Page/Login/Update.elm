@@ -8,7 +8,7 @@ import Response exposing (..)
 import AppTypes exposing (..)
 import Page.Login.Model exposing (..)
 import ServerApi
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 addr : Signal.Address Action

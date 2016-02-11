@@ -10,7 +10,7 @@ import Models exposing (..)
 import AppTypes exposing (..)
 import Page.ShowTrack.Model exposing (..)
 import ServerApi
-import Page.UpdateUtils as Utils
+import Update.Utils as Utils
 
 
 addr : Signal.Address Action

@@ -15,8 +15,8 @@ import Page.Admin.Route exposing (..)
 import Page.Admin.Model exposing (..)
 import Page.Admin.Update exposing (addr)
 
-import Page.Utils exposing (..)
-import Page.Layout as Layout
+import View.Utils exposing (..)
+import View.Layout as Layout
 
 
 type Tab = DashboardTab | TracksTab | UsersTab

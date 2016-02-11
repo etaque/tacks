@@ -10,7 +10,7 @@ import Page.Game.Model exposing (..)
 import Page.Game.ChatView as ChatView
 import Page.Game.SideView as SideView
 
-import Page.Layout as Layout
+import View.Layout as Layout
 
 import Game.Render.All exposing (render)
 import Constants exposing (..)

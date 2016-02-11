@@ -8,8 +8,8 @@ import Models exposing (..)
 
 import Page.ShowProfile.Model exposing (..)
 
-import Page.Utils exposing (..)
-import Page.Layout as Layout
+import View.Utils exposing (..)
+import View.Layout as Layout
 
 
 view : Context -> Screen -> Html

@@ -21927,14 +21927,13 @@ Elm.ServerApi.make = function (_elm) {
                                   ,errorsDecoder: errorsDecoder
                                   ,serverError: serverError};
 };
-Elm.Page = Elm.Page || {};
-Elm.Page.UpdateUtils = Elm.Page.UpdateUtils || {};
-Elm.Page.UpdateUtils.make = function (_elm) {
+Elm.Update = Elm.Update || {};
+Elm.Update.Utils = Elm.Update.Utils || {};
+Elm.Update.Utils.make = function (_elm) {
    "use strict";
-   _elm.Page = _elm.Page || {};
-   _elm.Page.UpdateUtils = _elm.Page.UpdateUtils || {};
-   if (_elm.Page.UpdateUtils.values)
-   return _elm.Page.UpdateUtils.values;
+   _elm.Update = _elm.Update || {};
+   _elm.Update.Utils = _elm.Update.Utils || {};
+   if (_elm.Update.Utils.values) return _elm.Update.Utils.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -21972,11 +21971,11 @@ Elm.Page.UpdateUtils.make = function (_elm) {
       $TransitRouter.pushPathAddress,
       $Route.toPath(route)));
    };
-   return _elm.Page.UpdateUtils.values = {_op: _op
-                                         ,redirect: redirect
-                                         ,setPlayer: setPlayer
-                                         ,always: always
-                                         ,screenAddr: screenAddr};
+   return _elm.Update.Utils.values = {_op: _op
+                                     ,redirect: redirect
+                                     ,setPlayer: setPlayer
+                                     ,always: always
+                                     ,screenAddr: screenAddr};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Home = Elm.Page.Home || {};
@@ -21997,14 +21996,14 @@ Elm.Page.Home.Update.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Task$Extra = Elm.Task.Extra.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   $Time = Elm.Time.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var refreshLiveStatus = A2($Task.map,
    $Page$Home$Model.SetLiveStatus,
@@ -22028,11 +22027,11 @@ Elm.Page.Home.Update.make = function (_elm) {
            $ServerApi.postHandle(screen.handle)));
          case "SubmitHandleResult": return A2($Response.res,
            screen,
-           A2($Page$UpdateUtils.always,
+           A2($Update$Utils.always,
            $Page$Home$Model.NoOp,
            A2($Result.withDefault,
            $Effects.none,
-           A2($Result.map,$Page$UpdateUtils.setPlayer,_p0._0))));
+           A2($Result.map,$Update$Utils.setPlayer,_p0._0))));
          case "FocusTrack": return A2($Response.res,
            _U.update(screen,{trackFocus: _p0._0}),
            $Effects.none);
@@ -22043,7 +22042,7 @@ Elm.Page.Home.Update.make = function (_elm) {
       $Page$Home$Model.initial(player),
       refreshLiveStatus);
    };
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.HomeAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.HomeAction);
    return _elm.Page.Home.Update.values = {_op: _op
                                          ,addr: addr
                                          ,mount: mount
@@ -22069,12 +22068,12 @@ Elm.Page.Register.Update.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
+   $Task = Elm.Task.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var submitTask = function (np) {
       return A2($Task.map,
@@ -22095,9 +22094,9 @@ Elm.Page.Register.Update.make = function (_elm) {
            submitTask(_p0._0));
          case "SubmitResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
-                 var effect = A2($Page$UpdateUtils.always,
+                 var effect = A2($Update$Utils.always,
                  $Page$Register$Model.NoOp,
-                 $Page$UpdateUtils.setPlayer(_p1._0));
+                 $Update$Utils.setPlayer(_p1._0));
                  var newScreen = _U.update(screen,{loading: false});
                  return A2($Response.res,newScreen,effect);
               } else {
@@ -22110,7 +22109,7 @@ Elm.Page.Register.Update.make = function (_elm) {
    var mount = A2($Response.res,
    $Page$Register$Model.initial,
    $Effects.none);
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.RegisterAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.RegisterAction);
    return _elm.Page.Register.Update.values = {_op: _op
                                              ,addr: addr
                                              ,mount: mount
@@ -22135,12 +22134,12 @@ Elm.Page.Login.Update.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
+   $Task = Elm.Task.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var submitTask = function (screen) {
       return A2($Task.map,
@@ -22161,9 +22160,9 @@ Elm.Page.Login.Update.make = function (_elm) {
            submitTask(screen));
          case "SubmitResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
-                 var effect = A2($Page$UpdateUtils.always,
+                 var effect = A2($Update$Utils.always,
                  $Page$Login$Model.NoOp,
-                 $Page$UpdateUtils.setPlayer(_p1._0));
+                 $Update$Utils.setPlayer(_p1._0));
                  var newScreen = _U.update(screen,{loading: false,error: false});
                  return A2($Response.res,newScreen,effect);
               } else {
@@ -22176,7 +22175,7 @@ Elm.Page.Login.Update.make = function (_elm) {
    var mount = A2($Response.res,
    $Page$Login$Model.initial,
    $Effects.none);
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.LoginAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.LoginAction);
    return _elm.Page.Login.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
@@ -22203,12 +22202,12 @@ Elm.Page.ShowTrack.Update.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
+   $Task = Elm.Task.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var loadLiveTrack = function (id) {
       return A2($Task.map,
@@ -22272,7 +22271,7 @@ Elm.Page.ShowTrack.Update.make = function (_elm) {
       $Page$ShowTrack$Model.initial,
       loadLiveTrack(slug));
    };
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.ShowTrackAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.ShowTrackAction);
    return _elm.Page.ShowTrack.Update.values = {_op: _op
                                               ,addr: addr
                                               ,mount: mount
@@ -22558,14 +22557,14 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
    $Page$EditTrack$FormUpdate = Elm.Page.EditTrack.FormUpdate.make(_elm),
    $Page$EditTrack$GridUpdate = Elm.Page.EditTrack.GridUpdate.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Task$Extra = Elm.Task.Extra.make(_elm);
+   $Task$Extra = Elm.Task.Extra.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var staticRes = function (m) {
       return A2($Response.res,m,$Effects.none);
@@ -22734,7 +22733,7 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
                  function (_p21) {
                     return $Page$EditTrack$Model.NoOp;
                  },
-                 $Page$UpdateUtils.redirect($Route.PlayTrack(_p20._0.id))) : $Effects.none;
+                 $Update$Utils.redirect($Route.PlayTrack(_p20._0.id))) : $Effects.none;
                  var newScreen = A2(updateEditor,
                  function (e) {
                     return _U.update(e,{saving: false});
@@ -22778,7 +22777,7 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
    var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
    $Page$EditTrack$Model.AltMoveMode,
    $Keyboard.shift)]));
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.EditTrackAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.EditTrackAction);
    return _elm.Page.EditTrack.Update.values = {_op: _op
                                               ,addr: addr
                                               ,inputs: inputs
@@ -22818,10 +22817,10 @@ Elm.Page.ShowProfile.Update.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var update = F2(function (action,screen) {
       var _p0 = action;
@@ -22832,7 +22831,7 @@ Elm.Page.ShowProfile.Update.make = function (_elm) {
       $Page$ShowProfile$Model.initial(player),
       $Effects.none);
    };
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.ShowProfileAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.ShowProfileAction);
    return _elm.Page.ShowProfile.Update.values = {_op: _op
                                                 ,addr: addr
                                                 ,mount: mount
@@ -22859,14 +22858,14 @@ Elm.Page.Game.Update.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   $Time = Elm.Time.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var updateTime = function (time) {
       var updateTime = F2(function (timers,t) {
@@ -22985,7 +22984,7 @@ Elm.Page.Game.Update.make = function (_elm) {
            $Effects.none);
          default: return A2($Response.res,screen,$Effects.none);}
    });
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.GameAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.GameAction);
    return _elm.Page.Game.Update.values = {_op: _op
                                          ,addr: addr
                                          ,chat: chat
@@ -23015,13 +23014,13 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
+   $Task = Elm.Task.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var deleteDraft = function (id) {
       return A2($Task.map,
@@ -23054,9 +23053,9 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
            if (_p2.ctor === "Ok") {
                  return A2($Response.res,
                  screen,
-                 A2($Page$UpdateUtils.always,
+                 A2($Update$Utils.always,
                  $Page$ListDrafts$Model.NoOp,
-                 $Page$UpdateUtils.redirect($Route.EditTrack(_p2._0.id))));
+                 $Update$Utils.redirect($Route.EditTrack(_p2._0.id))));
               } else {
                  return A2($Response.res,screen,$Effects.none);
               }
@@ -23087,7 +23086,7 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
    var mount = A2($Response.taskRes,
    $Page$ListDrafts$Model.initial,
    loadDrafts);
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.ListDraftsAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.ListDraftsAction);
    return _elm.Page.ListDrafts.Update.values = {_op: _op
                                                ,addr: addr
                                                ,mount: mount
@@ -23114,12 +23113,12 @@ Elm.Page.Admin.Update.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
+   $Task = Elm.Task.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var refreshData = A2($Task.map,
    $Page$Admin$Model.RefreshDataResult,
@@ -23161,7 +23160,7 @@ Elm.Page.Admin.Update.make = function (_elm) {
    var mount = A2($Response.taskRes,
    $Page$Admin$Model.initial,
    refreshData);
-   var addr = $Page$UpdateUtils.screenAddr($AppTypes.AdminAction);
+   var addr = $Update$Utils.screenAddr($AppTypes.AdminAction);
    return _elm.Page.Admin.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
@@ -23189,14 +23188,14 @@ Elm.Update.make = function (_elm) {
    $Page$Register$Update = Elm.Page.Register.Update.make(_elm),
    $Page$ShowProfile$Update = Elm.Page.ShowProfile.Update.make(_elm),
    $Page$ShowTrack$Update = Elm.Page.ShowTrack.Update.make(_elm),
-   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $TransitRouter = Elm.TransitRouter.make(_elm);
+   $TransitRouter = Elm.TransitRouter.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
    var applyScreen = F4(function (screensUpdater,
    actionWrapper,
@@ -23368,7 +23367,7 @@ Elm.Update.make = function (_elm) {
            },
            A2($Response.res,
            _U.update(_p21,{player: _p15._0}),
-           $Page$UpdateUtils.redirect($Route.Home)));
+           $Update$Utils.redirect($Route.Home)));
          case "UpdateDims": return A2($Response.res,
            _U.update(_p21,{dims: _p15._0}),
            $Effects.none);
@@ -23465,13 +23464,13 @@ Elm.Page.Game.Decoders.make = function (_elm) {
                                            ,actionDecoder: actionDecoder
                                            ,specificActionDecoder: specificActionDecoder};
 };
-Elm.Page = Elm.Page || {};
-Elm.Page.Utils = Elm.Page.Utils || {};
-Elm.Page.Utils.make = function (_elm) {
+Elm.View = Elm.View || {};
+Elm.View.Utils = Elm.View.Utils || {};
+Elm.View.Utils.make = function (_elm) {
    "use strict";
-   _elm.Page = _elm.Page || {};
-   _elm.Page.Utils = _elm.Page.Utils || {};
-   if (_elm.Page.Utils.values) return _elm.Page.Utils.values;
+   _elm.View = _elm.View || {};
+   _elm.View.Utils = _elm.View.Utils || {};
+   if (_elm.View.Utils.values) return _elm.View.Utils.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
@@ -23748,7 +23747,7 @@ Elm.Page.Utils.make = function (_elm) {
       A2($Basics._op["++"],linkAttrs,attrs),
       content);
    });
-   return _elm.Page.Utils.values = {_op: _op
+   return _elm.View.Utils.values = {_op: _op
                                    ,linkTo: linkTo
                                    ,onPathClick: onPathClick
                                    ,onInput: onInput
@@ -23780,13 +23779,13 @@ Elm.Page.Utils.make = function (_elm) {
                                    ,errList: errList
                                    ,errMsg: errMsg};
 };
-Elm.Page = Elm.Page || {};
-Elm.Page.Sidebar = Elm.Page.Sidebar || {};
-Elm.Page.Sidebar.make = function (_elm) {
+Elm.View = Elm.View || {};
+Elm.View.Sidebar = Elm.View.Sidebar || {};
+Elm.View.Sidebar.make = function (_elm) {
    "use strict";
-   _elm.Page = _elm.Page || {};
-   _elm.Page.Sidebar = _elm.Page.Sidebar || {};
-   if (_elm.Page.Sidebar.values) return _elm.Page.Sidebar.values;
+   _elm.View = _elm.View || {};
+   _elm.View.Sidebar = _elm.View.Sidebar || {};
+   if (_elm.View.Sidebar.values) return _elm.View.Sidebar.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -23798,21 +23797,21 @@ Elm.Page.Sidebar.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var userContent = function (player) {
       var adminLink = A2($Html.li,
       _U.list([]),
-      _U.list([A3($Page$Utils.linkTo,
+      _U.list([A3($View$Utils.linkTo,
       $Route.Admin($Page$Admin$Model.initialRoute),
       _U.list([]),
       _U.list([$Html.text("Admin")]))]));
       var draftsLink = A2($Html.li,
       _U.list([]),
-      _U.list([A3($Page$Utils.linkTo,
+      _U.list([A3($View$Utils.linkTo,
       $Route.ListDrafts,
       _U.list([]),
       _U.list([$Html.text("Your tracks")]))]));
@@ -23821,7 +23820,7 @@ Elm.Page.Sidebar.make = function (_elm) {
                      A2($List._op["::"],
                      A2($Html.li,
                      _U.list([]),
-                     _U.list([A3($Page$Utils.linkTo,
+                     _U.list([A3($View$Utils.linkTo,
                      $Route.Home,
                      _U.list([]),
                      _U.list([$Html.text("Home")]))])),
@@ -23840,25 +23839,25 @@ Elm.Page.Sidebar.make = function (_elm) {
    _U.list([$Html$Attributes.$class("user-menu")]),
    _U.list([A2($Html.li,
            _U.list([]),
-           _U.list([A3($Page$Utils.linkTo,
+           _U.list([A3($View$Utils.linkTo,
            $Route.Home,
            _U.list([]),
            _U.list([$Html.text("Home")]))]))
            ,A2($Html.li,
            _U.list([]),
-           _U.list([A3($Page$Utils.linkTo,
+           _U.list([A3($View$Utils.linkTo,
            $Route.Login,
            _U.list([]),
            _U.list([$Html.text("Login")]))]))
            ,A2($Html.li,
            _U.list([]),
-           _U.list([A3($Page$Utils.linkTo,
+           _U.list([A3($View$Utils.linkTo,
            $Route.Register,
            _U.list([]),
            _U.list([$Html.text("Register")]))]))]))]);
    var logo = A2($Html.div,
    _U.list([$Html$Attributes.$class("logo")]),
-   _U.list([A3($Page$Utils.linkTo,
+   _U.list([A3($View$Utils.linkTo,
    $Route.Home,
    _U.list([]),
    _U.list([A2($Html.img,
@@ -23874,23 +23873,23 @@ Elm.Page.Sidebar.make = function (_elm) {
               _U.list([$Html.text("Hello, ")
                       ,A2($Html.strong,
                       _U.list([]),
-                      _U.list([$Html.text($Page$Utils.playerHandle(_p2))]))
+                      _U.list([$Html.text($View$Utils.playerHandle(_p2))]))
                       ,$Html.text(".")]))]),
       _p2.guest ? guestContent : userContent(_p2));
    };
-   return _elm.Page.Sidebar.values = {_op: _op
+   return _elm.View.Sidebar.values = {_op: _op
                                      ,view: view
                                      ,logo: logo
                                      ,guestContent: guestContent
                                      ,userContent: userContent};
 };
-Elm.Page = Elm.Page || {};
-Elm.Page.Layout = Elm.Page.Layout || {};
-Elm.Page.Layout.make = function (_elm) {
+Elm.View = Elm.View || {};
+Elm.View.Layout = Elm.View.Layout || {};
+Elm.View.Layout.make = function (_elm) {
    "use strict";
-   _elm.Page = _elm.Page || {};
-   _elm.Page.Layout = _elm.Page.Layout || {};
-   if (_elm.Page.Layout.values) return _elm.Page.Layout.values;
+   _elm.View = _elm.View || {};
+   _elm.View.Layout = _elm.View.Layout || {};
+   if (_elm.View.Layout.values) return _elm.View.Layout.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -23900,11 +23899,11 @@ Elm.Page.Layout.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Page$Sidebar = Elm.Page.Sidebar.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $TransitStyle = Elm.TransitStyle.make(_elm);
+   $TransitStyle = Elm.TransitStyle.make(_elm),
+   $View$Sidebar = Elm.View.Sidebar.make(_elm);
    var _op = {};
    var layout = F3(function (name,sideContent,mainContent) {
       return A2($Html.div,
@@ -23931,13 +23930,13 @@ Elm.Page.Layout.make = function (_elm) {
       }();
       return A3(layout,
       name,
-      $Page$Sidebar.view(ctx),
+      $View$Sidebar.view(ctx),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class("padded")
               ,$Html$Attributes.style(transitStyle)]),
       content)]));
    });
-   return _elm.Page.Layout.values = {_op: _op
+   return _elm.View.Layout.values = {_op: _op
                                     ,layoutWithNav: layoutWithNav
                                     ,layout: layout};
 };
@@ -23963,16 +23962,16 @@ Elm.Page.Home.View.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
    $Page$Home$Update = Elm.Page.Home.Update.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var playerItem = function (player) {
       return A2($Html.li,
       _U.list([$Html$Attributes.$class("player")]),
-      _U.list([$Html.text($Page$Utils.playerHandle(player))]));
+      _U.list([$Html.text($View$Utils.playerHandle(player))]));
    };
    var playersList = function (players) {
       return A2($Html.ul,
@@ -23986,7 +23985,7 @@ Elm.Page.Home.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("active-track-players")]),
       _U.list([A2($Html.h4,
               _U.list([]),
-              _U.list([A3($Page$Utils.linkTo,
+              _U.list([A3($View$Utils.linkTo,
               $Route.PlayTrack(_p2.id),
               _U.list([]),
               _U.list([$Html.text(_p2.name)]))]))
@@ -24018,7 +24017,7 @@ Elm.Page.Home.View.make = function (_elm) {
    var rankingsExtract = function (rankings) {
       return A2($Html.ul,
       _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-      A2($List.map,$Page$Utils.rankingItem,rankings));
+      A2($List.map,$View$Utils.rankingItem,rankings));
    };
    var liveTrackBlock = F2(function (maybeTrackId,_p3) {
       var _p4 = _p3;
@@ -24039,7 +24038,7 @@ Elm.Page.Home.View.make = function (_elm) {
               _U.list([$Html$Attributes.$class("info")]),
               _U.list([A2($Html.h3,
                       _U.list([]),
-                      _U.list([A3($Page$Utils.linkTo,
+                      _U.list([A3($View$Utils.linkTo,
                       $Route.ShowTrack(_p7.id),
                       _U.list([$Html$Attributes.$class("name")]),
                       _U.list([$Html.text(_p7.name)]))]))
@@ -24049,7 +24048,7 @@ Elm.Page.Home.View.make = function (_elm) {
                       _U.list([$Html.text(A2($Basics._op["++"],
                       $Basics.toString($List.length(_p5.rankings)),
                       " entries"))]))]))
-              ,A3($Page$Utils.linkTo,
+              ,A3($View$Utils.linkTo,
               $Route.PlayTrack(_p7.id),
               _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
                       "btn btn-block btn-join btn-",
@@ -24082,14 +24081,14 @@ Elm.Page.Home.View.make = function (_elm) {
    var setHandleBlock = function (handle) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("form-inline form-set-handle")]),
-      _U.list([A2($Page$Utils.formGroup,
+      _U.list([A2($View$Utils.formGroup,
               false,
-              _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
+              _U.list([$View$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
                                                      ,$Html$Attributes.value(handle)
-                                                     ,A2($Page$Utils.onInput,
+                                                     ,A2($View$Utils.onInput,
                                                      $Page$Home$Update.addr,
                                                      $Page$Home$Model.SetHandle)
-                                                     ,A2($Page$Utils.onEnter,
+                                                     ,A2($View$Utils.onEnter,
                                                      $Page$Home$Update.addr,
                                                      $Page$Home$Model.SubmitHandle)]))]))
               ,A2($Html.button,
@@ -24098,7 +24097,7 @@ Elm.Page.Home.View.make = function (_elm) {
                       $Page$Home$Update.addr,
                       $Page$Home$Model.SubmitHandle)]),
               _U.list([$Html.text("submit")]))
-              ,A3($Page$Utils.linkTo,
+              ,A3($View$Utils.linkTo,
               $Route.Login,
               _U.list([$Html$Attributes.$class("btn btn-default")]),
               _U.list([$Html.text("or log in")]))]));
@@ -24108,17 +24107,17 @@ Elm.Page.Home.View.make = function (_elm) {
       _U.list([]),
       _U.list([]));
    });
-   var intro = $Page$Utils.fullWidth(_U.list([A2($Html.h1,
+   var intro = $View$Utils.fullWidth(_U.list([A2($Html.h1,
                                              _U.list([]),
                                              _U.list([$Html.text("Sailing tactics from the sofa")]))
                                              ,A2($Html.p,
                                              _U.list([]),
                                              _U.list([$Html.text("Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings.")]))]));
    var view = F2(function (ctx,screen) {
-      return A3($Page$Layout.layoutWithNav,
+      return A3($View$Layout.layoutWithNav,
       "home",
       ctx,
-      _U.list([A2($Page$Utils.container,
+      _U.list([A2($View$Utils.container,
       "",
       _U.list([intro
               ,A2(welcomeForm,ctx.player,screen.handle)
@@ -24166,12 +24165,12 @@ Elm.Page.Login.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
    $Page$Login$Update = Elm.Page.Login.Update.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var errorLine = function (error) {
       return error ? A2($Html.p,
@@ -24184,21 +24183,21 @@ Elm.Page.Login.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("form-login form-vertical")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.value(_p1.email)
-                                                     ,A2($Page$Utils.onInput,
+              _U.list([$View$Utils.textInput(_U.list([$Html$Attributes.value(_p1.email)
+                                                     ,A2($View$Utils.onInput,
                                                      $Page$Login$Update.addr,
                                                      $Page$Login$Model.SetEmail)
-                                                     ,A2($Page$Utils.onEnter,
+                                                     ,A2($View$Utils.onEnter,
                                                      $Page$Login$Update.addr,
                                                      $Page$Login$Model.Submit)
                                                      ,$Html$Attributes.placeholder("Email")]))]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([$Page$Utils.passwordInput(_U.list([$Html$Attributes.value(_p1.password)
-                                                         ,A2($Page$Utils.onInput,
+              _U.list([$View$Utils.passwordInput(_U.list([$Html$Attributes.value(_p1.password)
+                                                         ,A2($View$Utils.onInput,
                                                          $Page$Login$Update.addr,
                                                          $Page$Login$Model.SetPassword)
-                                                         ,A2($Page$Utils.onEnter,
+                                                         ,A2($View$Utils.onEnter,
                                                          $Page$Login$Update.addr,
                                                          $Page$Login$Model.Submit)
                                                          ,$Html$Attributes.placeholder("Password")]))]))
@@ -24214,13 +24213,13 @@ Elm.Page.Login.View.make = function (_elm) {
               _U.list([$Html.text("Submit")]))]))]));
    };
    var view = F2(function (ctx,screen) {
-      return A3($Page$Layout.layoutWithNav,
+      return A3($View$Layout.layoutWithNav,
       "login",
       ctx,
-      _U.list([A2($Page$Utils.container,
+      _U.list([A2($View$Utils.container,
       "",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Login")]))
-              ,$Page$Utils.row(_U.list([A2($Page$Utils.col$,
+              ,$View$Utils.row(_U.list([A2($View$Utils.col$,
               6,
               _U.list([loginForm(screen)]))]))]))]));
    });
@@ -24251,12 +24250,12 @@ Elm.Page.Register.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
    $Page$Register$Update = Elm.Page.Register.Update.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var registerForm = function (_p0) {
       var _p1 = _p0;
@@ -24290,49 +24289,49 @@ Elm.Page.Register.View.make = function (_elm) {
       var submitDisabled = _p2._1;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("form-login form-horizontal")]),
-      _U.list([A4($Page$Utils.fieldGroup,
+      _U.list([A4($View$Utils.fieldGroup,
               "Handle",
               "Alphanumeric, at least 4 chars",
               A2($Basics._op["++"],
-              $Page$Utils.errList(handle.liveError),
+              $View$Utils.errList(handle.liveError),
               getServerErrors("handle")),
               _U.list([A3($Form$Input.textInput,
               handle,
               formAddr,
               _U.list([$Html$Attributes.$class("form-control")]))]))
-              ,A4($Page$Utils.fieldGroup,
+              ,A4($View$Utils.fieldGroup,
               "Email",
               "",
               A2($Basics._op["++"],
-              $Page$Utils.errList(email.liveError),
+              $View$Utils.errList(email.liveError),
               getServerErrors("email")),
               _U.list([A3($Form$Input.textInput,
               email,
               formAddr,
               _U.list([$Html$Attributes.$class("form-control")]))]))
-              ,A4($Page$Utils.fieldGroup,
+              ,A4($View$Utils.fieldGroup,
               "Password",
               "",
-              $Page$Utils.errList(password.liveError),
+              $View$Utils.errList(password.liveError),
               _U.list([A3($Form$Input.passwordInput,
               password,
               formAddr,
               _U.list([$Html$Attributes.$class("form-control")]))]))
-              ,$Page$Utils.actionGroup(_U.list([A2($Html.button,
+              ,$View$Utils.actionGroup(_U.list([A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,submitClick]),
               _U.list([$Html.text("Submit")]))]))]));
    };
    var view = F2(function (ctx,screen) {
-      return A3($Page$Layout.layoutWithNav,
+      return A3($View$Layout.layoutWithNav,
       "register",
       ctx,
-      _U.list([A2($Page$Utils.container,
+      _U.list([A2($View$Utils.container,
       "",
       _U.list([A2($Html.h1,
               _U.list([]),
               _U.list([$Html.text("Register")]))
-              ,$Page$Utils.row(_U.list([A2($Page$Utils.col$,
+              ,$View$Utils.row(_U.list([A2($View$Utils.col$,
               6,
               _U.list([registerForm(screen)]))]))]))]));
    });
@@ -24364,20 +24363,20 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
    $Page$ShowTrack$Update = Elm.Page.ShowTrack.Update.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var br$ = A2($Html.br,_U.list([]),_U.list([]));
-   var deg = A2($Page$Utils.abbr$,"°","Degrees");
-   var kn = A2($Page$Utils.abbr$,"kn","Knots");
-   var np = A2($Page$Utils.abbr$,"np","Nautic pixels");
+   var deg = A2($View$Utils.abbr$,"°","Degrees");
+   var kn = A2($View$Utils.abbr$,"kn","Knots");
+   var np = A2($View$Utils.abbr$,"np","Nautic pixels");
    var renderCourse = F2(function (_p0,course) {
       var _p1 = _p0;
       var _p3 = _p1.scale;
@@ -24390,7 +24389,7 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
       ",-",
       A2($Basics._op["++"],$Basics.toString(_p3),")"))));
       var h = 300;
-      var w = $Page$Utils.colWidth(8);
+      var w = $View$Utils.colWidth(8);
       var zoom = 0.5;
       var cx = w / 2 / zoom + $Basics.fst(_p2);
       var cy = (0 - h) / 2 / zoom + $Basics.snd(_p2);
@@ -24447,7 +24446,7 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
    var about = F2(function (_p8,meta) {
       var _p9 = _p8;
       var _p10 = _p9.course;
-      return $Page$Utils.dl$(_U.list([{ctor: "_Tuple2"
+      return $View$Utils.dl$(_U.list([{ctor: "_Tuple2"
                                       ,_0: "Laps"
                                       ,_1: _U.list([$Html.text($Basics.toString(_p10.laps))])}
                                      ,{ctor: "_Tuple2"
@@ -24457,11 +24456,11 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
                                      ,{ctor: "_Tuple2"
                                       ,_0: "Wind speed"
                                       ,_1: _U.list([$Html.text($Basics.toString(_p10.windSpeed))
-                                                   ,A2($Page$Utils.abbr$,"kn","Knots")])}
+                                                   ,A2($View$Utils.abbr$,"kn","Knots")])}
                                      ,{ctor: "_Tuple2"
                                       ,_0: "Gusts interval"
                                       ,_1: _U.list([$Html.text($Basics.toString(_p10.gustGenerator.interval))
-                                                   ,A2($Page$Utils.abbr$,"s","Seconds")])}
+                                                   ,A2($View$Utils.abbr$,"s","Seconds")])}
                                      ,{ctor: "_Tuple2"
                                       ,_0: "Gusts radius"
                                       ,_1: aboutGustRadius(_p10.gustGenerator)}
@@ -24472,10 +24471,10 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
    var rankingsList = function (rankings) {
       return A2($Html.ul,
       _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-      A2($List.map,$Page$Utils.rankingItem,rankings));
+      A2($List.map,$View$Utils.rankingItem,rankings));
    };
    var joinButton = function (track) {
-      return A3($Page$Utils.linkTo,
+      return A3($View$Utils.linkTo,
       $Route.PlayTrack(track.id),
       _U.list([$Html$Attributes.$class("btn btn-warning btn-sm btn-join")]),
       _U.list([$Html.text("Join")]));
@@ -24499,16 +24498,16 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
                       _U.list([$Html.text("by ")
                               ,A2($Html.strong,
                               _U.list([]),
-                              _U.list([$Html.text($Page$Utils.playerHandle(_p13.creator))]))]))
+                              _U.list([$Html.text($View$Utils.playerHandle(_p13.creator))]))]))
                       ,joinButton(_p14)]))
-              ,$Page$Utils.row(_U.list([A2($Html.div,
+              ,$View$Utils.row(_U.list([A2($Html.div,
                                        _U.list([$Html$Attributes.$class("col-md-8")]),
                                        _U.list([A2(courseBlock,control,_p14.course)]))
                                        ,A2($Html.div,
                                        _U.list([$Html$Attributes.$class("col-md-4 about")]),
                                        _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("About")]))
                                                ,A2(about,_p14,_p13)]))]))
-              ,$Page$Utils.row(_U.list([A2($Html.div,
+              ,$View$Utils.row(_U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("col-md-5 rankings")]),
               _U.list([A2($Html.h2,
                       _U.list([]),
@@ -24517,10 +24516,10 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
    });
    var view = F2(function (ctx,_p15) {
       var _p16 = _p15;
-      return A3($Page$Layout.layoutWithNav,
+      return A3($View$Layout.layoutWithNav,
       "show-track",
       ctx,
-      _U.list([A2($Page$Utils.container,
+      _U.list([A2($View$Utils.container,
       "",
       _U.list([A2($Maybe.withDefault,
       $Html.text(""),
@@ -24567,10 +24566,10 @@ Elm.Page.EditTrack.SideView.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
-   $Page$Sidebar = Elm.Page.Sidebar.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Sidebar = Elm.View.Sidebar.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var sideBlock = F4(function (title,open,action,content) {
       return A2($Html.div,
@@ -24594,9 +24593,9 @@ Elm.Page.EditTrack.SideView.make = function (_elm) {
               content)]));
    });
    var intInput = F3(function (val,formUpdate,attrs) {
-      return $Page$Utils.textInput(A2($Basics._op["++"],
+      return $View$Utils.textInput(A2($Basics._op["++"],
       _U.list([$Html$Attributes.value($Basics.toString(val))
-              ,A2($Page$Utils.onIntInput,
+              ,A2($View$Utils.onIntInput,
               $Page$EditTrack$Update.addr,
               function (_p0) {
                  return $Page$EditTrack$Model.FormAction(formUpdate(_p0));
@@ -24648,7 +24647,7 @@ Elm.Page.EditTrack.SideView.make = function (_elm) {
       var _p11 = _p4;
       var _p10 = _p4.course;
       var _p9 = _p4.blocks;
-      return _U.list([$Page$Sidebar.logo
+      return _U.list([$View$Sidebar.logo
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("track-menu")]),
                      _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(_p12)]))]))
@@ -24658,8 +24657,8 @@ Elm.Page.EditTrack.SideView.make = function (_elm) {
                      $Page$EditTrack$Model.ToggleBlock($Page$EditTrack$Model.Name),
                      _U.list([A2($Html.div,
                      _U.list([$Html$Attributes.$class("form-group")]),
-                     _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.value(_p12)
-                                                            ,A2($Page$Utils.onInput,
+                     _U.list([$View$Utils.textInput(_U.list([$Html$Attributes.value(_p12)
+                                                            ,A2($View$Utils.onInput,
                                                             $Page$EditTrack$Update.addr,
                                                             $Page$EditTrack$Model.SetName)
                                                             ,$Html$Attributes.type$("text")]))]))]))
@@ -24911,11 +24910,11 @@ Elm.Page.EditTrack.View.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Page$EditTrack$SideView = Elm.Page.EditTrack.SideView.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm);
    var _op = {};
    var renderCourse = F2(function (dims,_p0) {
       var _p1 = _p0;
@@ -24950,7 +24949,7 @@ Elm.Page.EditTrack.View.make = function (_elm) {
             var _p8 = _p7._1._0;
             return A2($Models.canUpdateDraft,
             _p6.player,
-            _p9) ? A3($Page$Layout.layout,
+            _p9) ? A3($View$Layout.layout,
             "editor",
             A2($Page$EditTrack$SideView.view,_p9,_p8),
             _U.list([A2(renderCourse,
@@ -24982,29 +24981,29 @@ Elm.Page.ShowProfile.View.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var view = F2(function (ctx,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.player;
-      return A3($Page$Layout.layoutWithNav,
+      return A3($View$Layout.layoutWithNav,
       "show-profile",
       ctx,
-      _U.list([A2($Page$Utils.container,
+      _U.list([A2($View$Utils.container,
       "",
       _U.list([A2($Html.img,
               _U.list([$Html$Attributes.$class("avatar avatar-user")
-                      ,$Html$Attributes.src($Page$Utils.avatarUrl(_p2))
+                      ,$Html$Attributes.src($View$Utils.avatarUrl(_p2))
                       ,$Html$Attributes.width(160)
                       ,$Html$Attributes.height(160)]),
               _U.list([]))
               ,A2($Html.h1,
               _U.list([]),
-              _U.list([$Html.text($Page$Utils.playerHandle(_p2))]))]))]));
+              _U.list([$Html.text($View$Utils.playerHandle(_p2))]))]))]));
    });
    return _elm.Page.ShowProfile.View.values = {_op: _op
                                               ,view: view};
@@ -25030,17 +25029,17 @@ Elm.Page.Game.ChatView.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Game$Update = Elm.Page.Game.Update.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var chatField = function (field) {
-      return $Page$Utils.textInput(_U.list([$Html$Attributes.value(field)
+      return $View$Utils.textInput(_U.list([$Html$Attributes.value(field)
                                            ,$Html$Attributes.placeholder("type in there...")
-                                           ,A2($Page$Utils.onInput,
+                                           ,A2($View$Utils.onInput,
                                            $Page$Game$Update.addr,
                                            $Page$Game$Model.UpdateMessageField)
-                                           ,A2($Page$Utils.onEnter,
+                                           ,A2($View$Utils.onEnter,
                                            $Page$Game$Update.addr,
                                            $Page$Game$Model.SubmitMessage)
                                            ,A2($Html$Events.onFocus,
@@ -25056,7 +25055,7 @@ Elm.Page.Game.ChatView.make = function (_elm) {
       _U.list([]),
       _U.list([A2($Html.span,
               _U.list([$Html$Attributes.$class("message-handle")]),
-              _U.list([$Html.text($Page$Utils.playerHandle(_p1.player))]))
+              _U.list([$Html.text($View$Utils.playerHandle(_p1.player))]))
               ,A2($Html.span,
               _U.list([$Html$Attributes.$class("message-content")]),
               _U.list([$Html.text(_p1.content)]))]));
@@ -25236,14 +25235,14 @@ Elm.Page.Game.PlayersView.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var freePlayerItem = function (player) {
       return A2($Html.li,
       _U.list([$Html$Attributes.$class("player")]),
-      _U.list([$Page$Utils.playerWithAvatar(player)]));
+      _U.list([$View$Utils.playerWithAvatar(player)]));
    };
    var freePlayersBlock = function (players) {
       return A2($Html.div,
@@ -25260,7 +25259,7 @@ Elm.Page.Game.PlayersView.make = function (_elm) {
       var _p2 = _p1.gates;
       var time = A2($Maybe.withDefault,
       "?",
-      A2($Maybe.map,$Page$Utils.formatTimer(true),$List.head(_p2)));
+      A2($Maybe.map,$View$Utils.formatTimer(true),$List.head(_p2)));
       var status = _p1.finished ? time : A2($Basics._op["++"],
       "gate ",
       $Basics.toString($List.length(_p2)));
@@ -25275,7 +25274,7 @@ Elm.Page.Game.PlayersView.make = function (_elm) {
               _U.list([$Html.text(status)]))
               ,A2($Html.span,
               _U.list([$Html$Attributes.$class("handle")]),
-              _U.list([$Html.text($Page$Utils.playerHandle(_p1.player))]))]));
+              _U.list([$Html.text($View$Utils.playerHandle(_p1.player))]))]));
    });
    var raceItem = function (_p3) {
       var _p4 = _p3;
@@ -25307,7 +25306,7 @@ Elm.Page.Game.PlayersView.make = function (_elm) {
       var _p7 = _p6.freePlayers;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("aside-module module-players")]),
-      _U.list([$Page$Utils.moduleTitle("Online players")
+      _U.list([$View$Utils.moduleTitle("Online players")
               ,racesBlock(_p6.races)
               ,$List.isEmpty(_p7) ? A2($Html.div,
               _U.list([]),
@@ -25342,11 +25341,11 @@ Elm.Page.Game.SideView.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Game$PlayersView = Elm.Page.Game.PlayersView.make(_elm),
-   $Page$Sidebar = Elm.Page.Sidebar.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Sidebar = Elm.View.Sidebar.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var helpItem = function (_p0) {
       var _p1 = _p0;
@@ -25364,16 +25363,16 @@ Elm.Page.Game.SideView.make = function (_elm) {
            ,{ctor: "_Tuple2",_0: "ESC",_1: "quit race"}]));
    var helpBlock = A2($Html.div,
    _U.list([$Html$Attributes.$class("aside-module module-help")]),
-   _U.list([$Page$Utils.moduleTitle("Help")
+   _U.list([$View$Utils.moduleTitle("Help")
            ,A2($Html.dl,_U.list([]),helpItems)]));
    var rankingsBlock = function (_p2) {
       var _p3 = _p2;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("aside-module module-rankings")]),
-      _U.list([$Page$Utils.moduleTitle("Best times")
+      _U.list([$View$Utils.moduleTitle("Best times")
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-              A2($List.map,$Page$Utils.rankingItem,_p3.meta.rankings))]));
+              A2($List.map,$View$Utils.rankingItem,_p3.meta.rankings))]));
    };
    var liveBlocks = F2(function (screen,liveTrack) {
       return _U.list([$Page$Game$PlayersView.block(screen)
@@ -25387,7 +25386,7 @@ Elm.Page.Game.SideView.make = function (_elm) {
                      _U.list([$Html.text("This is a draft, you\'re the only one seeing this race track.")]))
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("form-actions")]),
-                     _U.list([A3($Page$Utils.linkTo,
+                     _U.list([A3($View$Utils.linkTo,
                      $Route.EditTrack(_p5.track.id),
                      _U.list([$Html$Attributes.$class("btn btn-block btn-primary")]),
                      _U.list([$Html.text("Edit draft")]))]))]);
@@ -25395,11 +25394,11 @@ Elm.Page.Game.SideView.make = function (_elm) {
    var trackNav = function (liveTrack) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("track-menu")]),
-      _U.list([$Page$Utils.hr$
+      _U.list([$View$Utils.hr$
               ,A2($Html.h2,
               _U.list([]),
               _U.list([$Html.text(liveTrack.track.name)]))
-              ,$Page$Utils.hr$]));
+              ,$View$Utils.hr$]));
    };
    var view = F3(function (screen,liveTrack,gameState) {
       var blocks = _U.eq(liveTrack.track.status,
@@ -25407,7 +25406,7 @@ Elm.Page.Game.SideView.make = function (_elm) {
       screen,
       liveTrack);
       return A2($List._op["::"],
-      $Page$Sidebar.logo,
+      $View$Sidebar.logo,
       A2($List._op["::"],trackNav(liveTrack),blocks));
    });
    return _elm.Page.Game.SideView.values = {_op: _op
@@ -25443,9 +25442,9 @@ Elm.Page.Game.View.make = function (_elm) {
    $Page$Game$ChatView = Elm.Page.Game.ChatView.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Game$SideView = Elm.Page.Game.SideView.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm);
    var _op = {};
    var view = F2(function (ctx,screen) {
       var _p0 = {ctor: "_Tuple2"
@@ -25457,7 +25456,7 @@ Elm.Page.Game.View.make = function (_elm) {
             var _p1 = ctx.dims;
             var w = _p1._0;
             var h = _p1._1;
-            return A3($Page$Layout.layout,
+            return A3($View$Layout.layout,
             "play-track",
             A3($Page$Game$SideView.view,screen,_p0._0._0,_p2),
             _U.list([A2($Html.div,
@@ -25494,13 +25493,13 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
    $Page$ListDrafts$Update = Elm.Page.ListDrafts.Update.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var createTrackForm = function (_p0) {
       var _p1 = _p0;
@@ -25509,14 +25508,14 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
       _U.list([A2($Html.h3,
               _U.list([]),
               _U.list([$Html.text("New draft")]))
-              ,A2($Page$Utils.formGroup,
+              ,A2($View$Utils.formGroup,
               false,
-              _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.value(_p1.name)
+              _U.list([$View$Utils.textInput(_U.list([$Html$Attributes.value(_p1.name)
                                                      ,$Html$Attributes.placeholder("Track name")
-                                                     ,A2($Page$Utils.onInput,
+                                                     ,A2($View$Utils.onInput,
                                                      $Page$ListDrafts$Update.addr,
                                                      $Page$ListDrafts$Model.SetDraftName)
-                                                     ,A2($Page$Utils.onEnter,
+                                                     ,A2($View$Utils.onEnter,
                                                      $Page$ListDrafts$Update.addr,
                                                      $Page$ListDrafts$Model.CreateDraft)]))]))
               ,A2($Html.div,
@@ -25533,7 +25532,7 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
       _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                    ,_0: "confirm-delete"
                                                    ,_1: confirmDelete}]))]),
-      _U.list([A3($Page$Utils.linkTo,
+      _U.list([A3($View$Utils.linkTo,
               $Route.EditTrack(draft.id),
               _U.list([$Html$Attributes.$class("")]),
               _U.list([$Html.text(draft.name)]))
@@ -25553,10 +25552,10 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
    var view = F2(function (ctx,_p2) {
       var _p3 = _p2;
       var _p4 = _p3;
-      return A3($Page$Layout.layoutWithNav,
+      return A3($View$Layout.layoutWithNav,
       "list-drafts",
       ctx,
-      _U.list([A2($Page$Utils.container,
+      _U.list([A2($View$Utils.container,
       "",
       _U.list([A2($Html.h1,
               _U.list([]),
@@ -25600,12 +25599,12 @@ Elm.Page.Admin.View.make = function (_elm) {
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
    $Page$Admin$Update = Elm.Page.Admin.Update.make(_elm),
-   $Page$Layout = Elm.Page.Layout.make(_elm),
-   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $TransitStyle = Elm.TransitStyle.make(_elm);
+   $TransitStyle = Elm.TransitStyle.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var dl$ = function (items) {
       return A2($Html.dl,
@@ -25625,7 +25624,7 @@ Elm.Page.Admin.View.make = function (_elm) {
       _U.list([]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("excerpt")]),
-              _U.list([A3($Page$Utils.linkTo,
+              _U.list([A3($View$Utils.linkTo,
                       $Route.Admin($Page$Admin$Route.ListUsers($Maybe.Just(user.id))),
                       _U.list([$Html$Attributes.$class("name")]),
                       _U.list([$Html.text(user.handle)]))
@@ -25661,7 +25660,7 @@ Elm.Page.Admin.View.make = function (_elm) {
       _U.list([]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("excerpt")]),
-              _U.list([A3($Page$Utils.linkTo,
+              _U.list([A3($View$Utils.linkTo,
                       $Route.EditTrack(track.id),
                       _U.list([$Html$Attributes.$class("name")]),
                       _U.list([$Html.text(track.name)]))
@@ -25739,7 +25738,7 @@ Elm.Page.Admin.View.make = function (_elm) {
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,DashboardTab)}]))]),
-              _U.list([A3($Page$Utils.linkTo,
+              _U.list([A3($View$Utils.linkTo,
               $Route.Admin($Page$Admin$Route.Dashboard),
               _U.list([]),
               _U.list([$Html.text("Dashboard")]))]))
@@ -25747,7 +25746,7 @@ Elm.Page.Admin.View.make = function (_elm) {
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,TracksTab)}]))]),
-              _U.list([A3($Page$Utils.linkTo,
+              _U.list([A3($View$Utils.linkTo,
               $Route.Admin($Page$Admin$Route.ListTracks($Maybe.Nothing)),
               _U.list([]),
               _U.list([$Html.text("Tracks")]))]))
@@ -25755,7 +25754,7 @@ Elm.Page.Admin.View.make = function (_elm) {
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,UsersTab)}]))]),
-              _U.list([A3($Page$Utils.linkTo,
+              _U.list([A3($View$Utils.linkTo,
               $Route.Admin($Page$Admin$Route.ListUsers($Maybe.Nothing)),
               _U.list([]),
               _U.list([$Html.text("Users")]))]))]));
@@ -25769,10 +25768,10 @@ Elm.Page.Admin.View.make = function (_elm) {
    };
    var view = F3(function (ctx,route,screen) {
       var menuItem = routeMenuItem(route);
-      return A3($Page$Layout.layoutWithNav,
+      return A3($View$Layout.layoutWithNav,
       "admin",
       ctx,
-      _U.list([A2($Page$Utils.container,
+      _U.list([A2($View$Utils.container,
       "",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Admin")]))
               ,menu(menuItem)

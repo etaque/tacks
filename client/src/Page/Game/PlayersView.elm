@@ -10,7 +10,7 @@ import Models exposing (..)
 
 import Page.Game.Model exposing (..)
 
-import Page.Utils exposing (..)
+import View.Utils exposing (..)
 
 
 block : Screen -> Html
