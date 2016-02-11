@@ -3,17 +3,14 @@ package models
 import java.util.UUID
 import org.joda.time.DateTime
 import org.mindrot.jbcrypt.BCrypt
-import reactivemongo.bson._
 import play.api.libs.concurrent.Execution.Implicits._
-// import reactivemongo.core.commands.LastError
 
 import tools.Conf
 import scala.concurrent.Future
 import tools.future.Implicits._
-import tools.BSONHandlers.BSONDateTimeHandler
+
 
 sealed trait Player {
-  // val _id: BSONObjectID
   def id: UUID
 
   def vmgMagnet: Int

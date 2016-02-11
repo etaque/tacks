@@ -1,11 +1,13 @@
 package actors
 
 import java.util.UUID
+import org.joda.time.DateTime
+
 import models._
 
 trait ManageWind {
 
-  def id: UUID
+  def creationTime: DateTime
   def course: Course
   def clock: Long
 
@@ -17,7 +19,7 @@ trait ManageWind {
     val c = clock
     val cs = c / 1000
     val gust = Gust(
-      position = (course.area.genX(cs * id.timestamp + id.timestamp, 100), course.area.top),
+      position = (course.area.genX(cs * creationTime.getMillis + creationTime.getMillis, 100), course.area.top),
       angle = gen.generateOrigin(),
       speed = gen.generateSpeed(),
       radius = 0,

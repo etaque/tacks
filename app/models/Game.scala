@@ -1,9 +1,11 @@
 package models
 
-import reactivemongo.bson.BSONObjectID
+import java.util.UUID
 import org.joda.time.DateTime
-import Geo._
 import play.api.i18n.Lang
+
+import Geo._
+
 
 case class Arrows(x: Int, y: Int)
 
@@ -39,7 +41,7 @@ case class Vmg(
 
 case class PlayerState(
   player: Player,
-  time: Long,
+  time: Float,
   position: Point,
   isGrounded: Boolean,
   isTurning: Boolean,
@@ -110,13 +112,13 @@ case class PlayerUpdate(player: Player, playerInput: PlayerInput)
 case class GhostState(
   position: Point,
   heading: Double,
-  id: BSONObjectID,
+  id: UUID,
   handle: Option[String],
   gates: Seq[Long]
 )
 
 object GhostState {
-  def initial(id: BSONObjectID, handle: Option[String], gates: Seq[Long]) = GhostState((0,0), 0, id, handle, gates)
+  def initial(id: UUID, handle: Option[String], gates: Seq[Long]) = GhostState((0,0), 0, id, handle, gates)
 }
 
 case class RaceUpdate(
@@ -128,7 +130,7 @@ case class RaceUpdate(
   tallies: Seq[PlayerTally] = Nil,
   isMaster: Boolean = false,
   initial: Boolean = false,
-  clientTime: Long = 0
+  clientTime: Float = 0
 )
 
 object RaceUpdate {

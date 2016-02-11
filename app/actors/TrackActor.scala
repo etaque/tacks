@@ -44,7 +44,7 @@ case object RotateNextRace
 
 class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
-  val id = UUID.randomUUID()
+  val creationTime = trackInit.creationTime
 
   var state = TrackState(
     track = trackInit,

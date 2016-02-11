@@ -1,17 +1,14 @@
+import java.util.UUID
 import akka.actor._
 import scala.concurrent.Future
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
 
-import reactivemongo.bson.BSONObjectID
-
 import models._
 import dao._
 
+
 package object actors {
-
-  import java.util.UUID
-
 
   case class PlayerContext(
     player: Player,
