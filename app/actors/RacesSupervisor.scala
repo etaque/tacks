@@ -1,5 +1,6 @@
 package actors
 
+import java.util.UUID
 import tools.Conf
 
 import scala.concurrent.Future
@@ -11,7 +12,7 @@ import akka.actor._
 import akka.pattern.{ask,pipe}
 import akka.util.Timeout
 import org.joda.time.DateTime
-import reactivemongo.bson.BSONObjectID
+// import reactivemongo.bson.BSONObjectID
 
 import models._
 import dao._
@@ -21,10 +22,10 @@ case class GetTrackActorRef(track: Track)
 case object GetTracks
 case class ReloadTrack(track: Track)
 
-case class RaceActorNotFound(raceId: BSONObjectID)
+case class RaceActorNotFound(raceId: UUID)
 
 class RacesSupervisor extends Actor {
-  var mountedTracks = Map.empty[BSONObjectID, (Track, ActorRef)]
+  var mountedTracks = Map.empty[UUID, (Track, ActorRef)]
 
   implicit val timeout = Timeout(5.seconds)
 
@@ -33,7 +34,9 @@ class RacesSupervisor extends Actor {
     case GetTrackActorRef(track) => sender ! getTrackActorRef(track)
 
     case GetTracks => {
-      TrackDAO.list.flatMap { tracks => Future.sequence(tracks.map(getLiveTrack)) } pipeTo sender
+      Tracks.list().flatMap { tracks =>
+        Future.sequence(tracks.map(getLiveTrack))
+      }.pipeTo(sender)
     }
 
     case ReloadTrack(track) => {
@@ -75,15 +78,5 @@ object RacesSupervisor {
   implicit val timeout = Timeout(5.seconds)
 
   def start() = {}
-
-  def playerRankings(trackId: BSONObjectID): Future[Seq[PlayerRanking]] = {
-    for {
-      runRankings <- RunDAO.extractRankings(trackId)
-      players <- UserDAO.listByIds(runRankings.map(_.playerId))
-      playerRankings = runRankings.flatMap(r => players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.finishTime)))
-    }
-    yield playerRankings
-  }
-
 
 }

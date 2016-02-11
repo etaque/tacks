@@ -1,5 +1,6 @@
 package actors
 
+import java.util.UUID
 import scala.concurrent.duration._
 import scala.concurrent.Future
 import play.api.Play.current
@@ -7,7 +8,6 @@ import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import akka.actor._
 import akka.pattern.pipe
-import reactivemongo.bson.BSONObjectID
 import org.joda.time.DateTime
 
 import models._
@@ -18,11 +18,11 @@ case class TrackState(
   track: Track,
   races: Seq[Race]
 ) {
-  def raceTallies(raceId: BSONObjectID): Seq[PlayerTally] = {
+  def raceTallies(raceId: UUID): Seq[PlayerTally] = {
     races.find(_.id == raceId).map(_.tallies).getOrElse(Nil)
   }
 
-  def playerRace(playerId: BSONObjectID): Option[Race] = {
+  def playerRace(playerId: UUID): Option[Race] = {
     races.find(_.hasPlayer(playerId)).orElse(races.headOption)
   }
 
@@ -33,7 +33,7 @@ case class TrackState(
     }
   }
 
-  def escapePlayer(playerId: BSONObjectID): TrackState = {
+  def escapePlayer(playerId: UUID): TrackState = {
     copy(
       races = races.map(_.removePlayerId(playerId))
     )
@@ -44,7 +44,7 @@ case object RotateNextRace
 
 class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
-  val id = BSONObjectID.generate
+  val creationTime = trackInit.creationTime
 
   var state = TrackState(
     track = trackInit,
@@ -54,8 +54,8 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
   def track = state.track
   def course = track.course
 
-  val players = scala.collection.mutable.Map[BSONObjectID, PlayerContext]()
-  val paths = scala.collection.mutable.Map[BSONObjectID, RunPath]()
+  val players = scala.collection.mutable.Map[UUID, PlayerContext]()
+  val paths = scala.collection.mutable.Map[UUID, RunPath]()
 
   def clock: Long = DateTime.now.getMillis
 
@@ -167,11 +167,11 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
     } pipeTo self
   }
 
-  def playerOpponents(playerId: BSONObjectID): Seq[Opponent] = {
+  def playerOpponents(playerId: UUID): Seq[Opponent] = {
     players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
   }
 
-  def playerTallies(playerId: BSONObjectID): Seq[PlayerTally] = {
+  def playerTallies(playerId: UUID): Seq[PlayerTally] = {
     state.playerRace(playerId).map(_.id).map(state.raceTallies).getOrElse(Nil)
   }
 
@@ -194,7 +194,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 object TrackActor {
   def props(track: Track) = Props(new TrackActor(track))
 
-  def tracePlayer(ctx: PlayerContext, race: Race, paths: Map[BSONObjectID, RunPath], clock: Long): RunPath = {
+  def tracePlayer(ctx: PlayerContext, race: Race, paths: Map[UUID, RunPath], clock: Long): RunPath = {
     val playerId = ctx.player.id
     val elapsedMillis = clock - race.startTime.getMillis
     val currentSecond = elapsedMillis / 1000
@@ -223,7 +223,7 @@ object TrackActor {
     state.playerRace(player.id).map(_.startTime)
   }
 
-  def gateCrossedUpdate(state: TrackState, context: PlayerContext, playerContexts: Map[BSONObjectID, PlayerContext]): TrackState = {
+  def gateCrossedUpdate(state: TrackState, context: PlayerContext, playerContexts: Map[UUID, PlayerContext]): TrackState = {
     state.playerRace(context.player.id).map { race =>
 
       val players = race.players + context.player
@@ -245,14 +245,14 @@ object TrackActor {
     }.getOrElse(state)
   }
 
-  def startCountdown(state: TrackState, byPlayerId: BSONObjectID): TrackState = {
+  def startCountdown(state: TrackState, byPlayerId: UUID): TrackState = {
     state.races.headOption match {
       case Some(race) if !raceIsClosed(race, state.track) => {
         state
       }
       case _ => {
         val newRace = Race(
-          _id = BSONObjectID.generate,
+          id = UUID.randomUUID(),
           trackId = state.track.id,
           startTime = DateTime.now.plusSeconds(Conf.countdown),
           players = Set.empty,
@@ -269,30 +269,30 @@ object TrackActor {
 
   def saveIfFinished(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
     if (ctx.state.hasFinished(track.course)) {
-      val runId = pathMaybe.map(_.runId).getOrElse(BSONObjectID.generate)
+      val runId = pathMaybe.map(_.runId).getOrElse(UUID.randomUUID())
       val run = Run(
-        _id = runId,
+        id = runId,
         trackId = track.id,
         raceId = race.id,
         playerId = ctx.player.id,
         playerHandle = ctx.player.handleOpt,
         startTime = race.startTime,
         tally = ctx.state.crossedGates,
-        finishTime = ctx.state.crossedGates.head
+        duration = ctx.state.crossedGates.headOption.getOrElse(0)
       )
       for {
         _ <- pathMaybe.map(savePathIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
-        _ <- RunDAO.save(run)
+        _ <- Runs.save(run)
       }
       yield ()
     }
   }
 
-  def savePathIfBest(trackId: BSONObjectID, playerId: BSONObjectID)(path: RunPath): Future[Unit] = {
+  def savePathIfBest(trackId: UUID, playerId: UUID)(path: RunPath): Future[Unit] = {
     for {
-      bestMaybe <- RunDAO.findBestOnTrackForPlayer(trackId, playerId)
-      _ <- bestMaybe.map(_.id).map(RunPathDAO.deleteByRunId).getOrElse(Future.successful(()))
-      _ <- RunPathDAO.save(path)
+      bestMaybe <- Runs.findBestOnTrackForPlayer(trackId, playerId).map(_.headOption)
+      _ <- bestMaybe.map(r => RunPaths.deleteByRunId(r.id)).getOrElse(Future.successful(()))
+      _ <- RunPaths.save(path)
     }
     yield ()
   }

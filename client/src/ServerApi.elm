@@ -104,7 +104,7 @@ getJson : Json.Decoder a -> String -> GetJsonTask a
 getJson decoder path =
   Http.get decoder path
     |> Task.toResult
-    |> Task.map (Result.formatError (\_ -> ()))
+    |> Task.map (Result.formatError (\e -> Debug.log (toString e) ()))
 
 
 postJson : Json.Decoder a -> String -> JsEncode.Value -> Task Never (FormResult a)

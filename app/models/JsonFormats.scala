@@ -1,13 +1,14 @@
 package models
 
-import models.Geo._
 import org.joda.time.DateTime
 import play.api.data.validation.ValidationError
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import reactivemongo.bson.BSONObjectID
-import tools.JsonFormats._
 import scala.util.{Try, Success, Failure}
+
+import models.Geo._
+import tools.JsonFormats._
+
 
 object JsonFormats {
 
@@ -58,7 +59,7 @@ object JsonFormats {
       "guest" -> false,
       "handle" -> u.handle,
       "status" -> u.status,
-      "avatarId" -> u.avatarId,
+      "avatarId" -> JsNull,
       "vmgMagnet" -> u.vmgMagnet
     )
   }
@@ -70,7 +71,7 @@ object JsonFormats {
       "email" -> u.email,
       "handle" -> u.handle,
       "status" -> u.status,
-      "avatarId" -> u.avatarId,
+      "avatarId" -> JsNull,
       "vmgMagnet" -> u.vmgMagnet,
       "creationTime" -> u.creationTime
     )
@@ -104,27 +105,45 @@ object JsonFormats {
     }
   }
 
-  implicit val opponentStateFormat: Format[OpponentState] = Json.format[OpponentState]
+  implicit val opponentStateFormat: Format[OpponentState] = (
+    (__ \ 'time).format(timestampFormat) and
+      (__ \ 'position).format[Point] and
+      (__ \ 'heading).format[Double] and
+      (__ \ 'velocity).format[Double] and
+      (__ \ 'windAngle).format[Double] and
+      (__ \ 'windOrigin).format[Double] and
+      (__ \ 'shadowDirection).format[Double] and
+      (__ \ 'crossedGates).format[Seq[Long]]
+  )(OpponentState.apply _, unlift(OpponentState.unapply _))
+
   implicit val opponentFormat: Format[Opponent] = Json.format[Opponent]
 
   implicit val vmgFormat: Format[Vmg] = Json.format[Vmg]
   implicit val arrowsFormat: Format[Arrows] = Json.format[Arrows]
   implicit val keyboardInputFormat: Format[KeyboardInput] = Json.format[KeyboardInput]
-  implicit val playerInputFormat: Format[PlayerInput] = Json.format[PlayerInput]
+
+  implicit val playerInputFormat: Format[PlayerInput] = (
+    (__ \ 'state).format[OpponentState] and
+      (__ \ 'input).format[KeyboardInput] and
+      (__ \ 'localTime).format(timestampFormat)
+  )(PlayerInput.apply _, unlift(PlayerInput.unapply _))
 
   implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
 
-  implicit val ghostStateFormat: Format[GhostState] = (
-    (__ \ 'position).format[Point] and
-      (__ \ 'heading).format[Double] and
-      (__ \ 'id).format[BSONObjectID] and
-      (__ \ 'handle).format[Option[String]] and
-      (__ \ 'gates).format[Seq[Long]]
-    )(GhostState.apply, unlift(GhostState.unapply))
+  implicit val ghostStateFormat: Format[GhostState] = Json.format[GhostState]
+    // (
+    // (__ \ 'position).format[Point] and
+    //   (__ \ 'heading).format[Double] and
+    //   (__ \ 'id).format[BSONObjectID] and
+    //   (__ \ 'handle).format[Option[String]] and
+    //   (__ \ 'gates).format[Seq[Long]]
+    // )(GhostState.apply _, unlift(GhostState.unapply _))
+
+  implicit val optionGateLocationFormat = Format.optionWithNull[GateLocation]
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'player).format[Player] and
-      (__ \ 'time).format[Long] and
+      (__ \ 'time).format[Float] and
       (__ \ 'position).format[Point] and
       (__ \ 'isGrounded).format[Boolean] and
       (__ \ 'isTurning).format[Boolean] and
@@ -142,7 +161,9 @@ object JsonFormats {
       (__ \ 'tackTarget).format[Option[Double]] and
       (__ \ 'crossedGates).format[Seq[Long]] and
       (__ \ 'nextGate).format[Option[GateLocation]]
-    )(PlayerState.apply, unlift(PlayerState.unapply))
+    )(PlayerState.apply _, unlift(PlayerState.unapply _))
+
+  implicit val optionDateTimeFormat = Format.optionWithNull[DateTime]
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
       (__ \ 'serverNow).format[DateTime] and
@@ -153,16 +174,20 @@ object JsonFormats {
       (__ \ 'tallies).format[Seq[PlayerTally]] and
       (__ \ 'isMaster).format[Boolean] and
       (__ \ 'initial).format[Boolean] and
-      (__ \ 'clientTime).format[Long]
-    )(RaceUpdate.apply, unlift(RaceUpdate.unapply))
+      (__ \ 'clientTime).format[Float]
+    )(RaceUpdate.apply _, unlift(RaceUpdate.unapply _))
 
   implicit val trackStatusFormat: Format[TrackStatus.Value] = enumFormat(TrackStatus)
 
   implicit val raceFormat: Format[Race] = Json.format[Race]
+
   implicit val trackFormat: Format[Track] = Json.format[Track]
   implicit val runFormat: Format[Run] = Json.format[Run]
   implicit val runRankingFormat: Format[RunRanking] = Json.format[RunRanking]
   implicit val playerRankingFormat: Format[PlayerRanking] = Json.format[PlayerRanking]
+  implicit val pathPointFormat: Format[PathPoint] = Json.format[PathPoint]
+  implicit val pathSliceFormat: Format[(Long, Seq[PathPoint])] = tuple2Format[Long, Seq[PathPoint]]
+
   implicit val trackMetaFormat: Format[TrackMeta] = Json.format[TrackMeta]
   implicit val liveTrackFormat: Format[LiveTrack] = Json.format[LiveTrack]
 

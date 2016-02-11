@@ -77,7 +77,7 @@ gameActions =
 
 clock : Signal Clock
 clock =
-  Signal.map (\(time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
+  Signal.map (\ (time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
 
 
 -- Outputs
