@@ -8,7 +8,7 @@ import Date.Format exposing (format)
 
 import Models exposing (..)
 
-import Screens.Game.Types exposing (..)
+import Screens.Game.Model exposing (..)
 
 import Screens.Utils exposing (..)
 

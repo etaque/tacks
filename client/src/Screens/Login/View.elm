@@ -7,8 +7,8 @@ import Html.Events exposing (..)
 import AppTypes exposing (..)
 import Models exposing (..)
 
-import Screens.Login.Types exposing (..)
-import Screens.Login.Updates exposing (addr)
+import Screens.Login.Model exposing (..)
+import Screens.Login.Update exposing (addr)
 
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout

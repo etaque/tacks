@@ -16,9 +16,9 @@ import AppTypes exposing (..)
 import Game.Inputs exposing (..)
 import Game.Outputs exposing (PlayerOutput)
 import Game.Outputs exposing (PlayerOutput)
-import Screens.Game.Updates exposing (chat)
-import Screens.Game.Types as GameTypes
-import Screens.EditTrack.Updates as EditTrack
+import Screens.Game.Update exposing (chat)
+import Screens.Game.Model as GameTypes
+import Screens.EditTrack.Update as EditTrack
 import Screens.Game.Decoders as GameDecoders
 import AppView
 

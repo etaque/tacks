@@ -1,4 +1,4 @@
-module Screens.ListDrafts.Types where
+module Screens.ListDrafts.Model where
 
 import Models exposing (..)
 

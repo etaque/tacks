@@ -1,4 +1,4 @@
-module Screens.Home.Types where
+module Screens.Home.Model where
 
 import Models exposing (..)
 

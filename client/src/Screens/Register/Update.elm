@@ -1,4 +1,4 @@
-module Screens.Register.Updates where
+module Screens.Register.Update where
 
 import Task exposing (Task, succeed, map, andThen)
 import Dict exposing (Dict)
@@ -9,7 +9,7 @@ import Response exposing (..)
 import Form
 
 import AppTypes exposing (..)
-import Screens.Register.Types exposing (..)
+import Screens.Register.Model exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 

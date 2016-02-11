@@ -12,8 +12,8 @@ import Models exposing (..)
 import AppTypes exposing (..)
 import CoreExtra exposing (..)
 
-import Screens.Register.Types exposing (..)
-import Screens.Register.Updates exposing (addr)
+import Screens.Register.Model exposing (..)
+import Screens.Register.Update exposing (addr)
 
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout

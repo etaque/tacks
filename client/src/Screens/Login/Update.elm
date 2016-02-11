@@ -1,4 +1,4 @@
-module Screens.Login.Updates where
+module Screens.Login.Update where
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
@@ -6,7 +6,7 @@ import Effects exposing (Effects, Never, none)
 import Response exposing (..)
 
 import AppTypes exposing (..)
-import Screens.Login.Types exposing (..)
+import Screens.Login.Model exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 

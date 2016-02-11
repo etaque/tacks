@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import AppTypes exposing (..)
 import Models exposing (..)
 
-import Screens.ShowProfile.Types exposing (..)
+import Screens.ShowProfile.Model exposing (..)
 
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout

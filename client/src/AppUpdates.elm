@@ -8,15 +8,15 @@ import TransitRouter exposing (getRoute)
 
 import AppTypes exposing (..)
 
-import Screens.Home.Updates as Home
-import Screens.Register.Updates as Register
-import Screens.Login.Updates as Login
-import Screens.ShowTrack.Updates as ShowTrack
-import Screens.EditTrack.Updates as EditTrack
-import Screens.ShowProfile.Updates as ShowProfile
-import Screens.Game.Updates as Game
-import Screens.ListDrafts.Updates as ListDrafts
-import Screens.Admin.Updates as Admin
+import Screens.Home.Update as Home
+import Screens.Register.Update as Register
+import Screens.Login.Update as Login
+import Screens.ShowTrack.Update as ShowTrack
+import Screens.EditTrack.Update as EditTrack
+import Screens.ShowProfile.Update as ShowProfile
+import Screens.Game.Update as Game
+import Screens.ListDrafts.Update as ListDrafts
+import Screens.Admin.Update as Admin
 
 import ServerApi
 import Routes exposing (..)

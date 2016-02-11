@@ -1,4 +1,4 @@
-module Screens.Register.Types where
+module Screens.Register.Model where
 
 import Regex exposing (Regex)
 import Form exposing (Form)

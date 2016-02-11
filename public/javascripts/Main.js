@@ -16185,14 +16185,14 @@ Elm.Models.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Home = Elm.Screens.Home || {};
-Elm.Screens.Home.Types = Elm.Screens.Home.Types || {};
-Elm.Screens.Home.Types.make = function (_elm) {
+Elm.Screens.Home.Model = Elm.Screens.Home.Model || {};
+Elm.Screens.Home.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Home = _elm.Screens.Home || {};
-   _elm.Screens.Home.Types = _elm.Screens.Home.Types || {};
-   if (_elm.Screens.Home.Types.values)
-   return _elm.Screens.Home.Types.values;
+   _elm.Screens.Home.Model = _elm.Screens.Home.Model || {};
+   if (_elm.Screens.Home.Model.values)
+   return _elm.Screens.Home.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16225,7 +16225,7 @@ Elm.Screens.Home.Types.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {handle: a,liveStatus: b,trackFocus: c};
    });
-   return _elm.Screens.Home.Types.values = {_op: _op
+   return _elm.Screens.Home.Model.values = {_op: _op
                                            ,Screen: Screen
                                            ,initial: initial
                                            ,SetLiveStatus: SetLiveStatus
@@ -16237,14 +16237,14 @@ Elm.Screens.Home.Types.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Login = Elm.Screens.Login || {};
-Elm.Screens.Login.Types = Elm.Screens.Login.Types || {};
-Elm.Screens.Login.Types.make = function (_elm) {
+Elm.Screens.Login.Model = Elm.Screens.Login.Model || {};
+Elm.Screens.Login.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Login = _elm.Screens.Login || {};
-   _elm.Screens.Login.Types = _elm.Screens.Login.Types || {};
-   if (_elm.Screens.Login.Types.values)
-   return _elm.Screens.Login.Types.values;
+   _elm.Screens.Login.Model = _elm.Screens.Login.Model || {};
+   if (_elm.Screens.Login.Model.values)
+   return _elm.Screens.Login.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16272,7 +16272,7 @@ Elm.Screens.Login.Types.make = function (_elm) {
    var Screen = F4(function (a,b,c,d) {
       return {email: a,password: b,loading: c,error: d};
    });
-   return _elm.Screens.Login.Types.values = {_op: _op
+   return _elm.Screens.Login.Model.values = {_op: _op
                                             ,Screen: Screen
                                             ,initial: initial
                                             ,SetEmail: SetEmail
@@ -16283,14 +16283,14 @@ Elm.Screens.Login.Types.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Register = Elm.Screens.Register || {};
-Elm.Screens.Register.Types = Elm.Screens.Register.Types || {};
-Elm.Screens.Register.Types.make = function (_elm) {
+Elm.Screens.Register.Model = Elm.Screens.Register.Model || {};
+Elm.Screens.Register.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Register = _elm.Screens.Register || {};
-   _elm.Screens.Register.Types = _elm.Screens.Register.Types || {};
-   if (_elm.Screens.Register.Types.values)
-   return _elm.Screens.Register.Types.values;
+   _elm.Screens.Register.Model = _elm.Screens.Register.Model || {};
+   if (_elm.Screens.Register.Model.values)
+   return _elm.Screens.Register.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16337,7 +16337,7 @@ Elm.Screens.Register.Types.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {form: a,loading: b,serverErrors: c};
    });
-   return _elm.Screens.Register.Types.values = {_op: _op
+   return _elm.Screens.Register.Model.values = {_op: _op
                                                ,Screen: Screen
                                                ,NewPlayer: NewPlayer
                                                ,validation: validation
@@ -16350,14 +16350,14 @@ Elm.Screens.Register.Types.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
-Elm.Screens.ShowTrack.Types = Elm.Screens.ShowTrack.Types || {};
-Elm.Screens.ShowTrack.Types.make = function (_elm) {
+Elm.Screens.ShowTrack.Model = Elm.Screens.ShowTrack.Model || {};
+Elm.Screens.ShowTrack.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
-   _elm.Screens.ShowTrack.Types = _elm.Screens.ShowTrack.Types || {};
-   if (_elm.Screens.ShowTrack.Types.values)
-   return _elm.Screens.ShowTrack.Types.values;
+   _elm.Screens.ShowTrack.Model = _elm.Screens.ShowTrack.Model || {};
+   if (_elm.Screens.ShowTrack.Model.values)
+   return _elm.Screens.ShowTrack.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16390,7 +16390,7 @@ Elm.Screens.ShowTrack.Types.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {liveTrack: a,notFound: b,courseControl: c};
    });
-   return _elm.Screens.ShowTrack.Types.values = {_op: _op
+   return _elm.Screens.ShowTrack.Model.values = {_op: _op
                                                 ,Screen: Screen
                                                 ,CourseControl: CourseControl
                                                 ,initial: initial
@@ -16401,14 +16401,14 @@ Elm.Screens.ShowTrack.Types.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.Types = Elm.Screens.EditTrack.Types || {};
-Elm.Screens.EditTrack.Types.make = function (_elm) {
+Elm.Screens.EditTrack.Model = Elm.Screens.EditTrack.Model || {};
+Elm.Screens.EditTrack.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.Types = _elm.Screens.EditTrack.Types || {};
-   if (_elm.Screens.EditTrack.Types.values)
-   return _elm.Screens.EditTrack.Types.values;
+   _elm.Screens.EditTrack.Model = _elm.Screens.EditTrack.Model || {};
+   if (_elm.Screens.EditTrack.Model.values)
+   return _elm.Screens.EditTrack.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
@@ -16543,7 +16543,7 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {track: a,editor: b,notFound: c};
    });
-   return _elm.Screens.EditTrack.Types.values = {_op: _op
+   return _elm.Screens.EditTrack.Model.values = {_op: _op
                                                 ,Screen: Screen
                                                 ,initial: initial
                                                 ,Editor: Editor
@@ -16585,14 +16585,14 @@ Elm.Screens.EditTrack.Types.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ShowProfile = Elm.Screens.ShowProfile || {};
-Elm.Screens.ShowProfile.Types = Elm.Screens.ShowProfile.Types || {};
-Elm.Screens.ShowProfile.Types.make = function (_elm) {
+Elm.Screens.ShowProfile.Model = Elm.Screens.ShowProfile.Model || {};
+Elm.Screens.ShowProfile.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.ShowProfile = _elm.Screens.ShowProfile || {};
-   _elm.Screens.ShowProfile.Types = _elm.Screens.ShowProfile.Types || {};
-   if (_elm.Screens.ShowProfile.Types.values)
-   return _elm.Screens.ShowProfile.Types.values;
+   _elm.Screens.ShowProfile.Model = _elm.Screens.ShowProfile.Model || {};
+   if (_elm.Screens.ShowProfile.Model.values)
+   return _elm.Screens.ShowProfile.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16605,7 +16605,7 @@ Elm.Screens.ShowProfile.Types.make = function (_elm) {
    var NoOp = {ctor: "NoOp"};
    var initial = function (player) {    return {player: player};};
    var Screen = function (a) {    return {player: a};};
-   return _elm.Screens.ShowProfile.Types.values = {_op: _op
+   return _elm.Screens.ShowProfile.Model.values = {_op: _op
                                                   ,Screen: Screen
                                                   ,initial: initial
                                                   ,NoOp: NoOp};
@@ -17180,14 +17180,14 @@ Elm.Game.Inputs.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.Types = Elm.Screens.Game.Types || {};
-Elm.Screens.Game.Types.make = function (_elm) {
+Elm.Screens.Game.Model = Elm.Screens.Game.Model || {};
+Elm.Screens.Game.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.Types = _elm.Screens.Game.Types || {};
-   if (_elm.Screens.Game.Types.values)
-   return _elm.Screens.Game.Types.values;
+   _elm.Screens.Game.Model = _elm.Screens.Game.Model || {};
+   if (_elm.Screens.Game.Model.values)
+   return _elm.Screens.Game.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -17243,7 +17243,7 @@ Elm.Screens.Game.Types.make = function (_elm) {
              ,messageField: g
              ,notFound: h};
    });
-   return _elm.Screens.Game.Types.values = {_op: _op
+   return _elm.Screens.Game.Model.values = {_op: _op
                                            ,Screen: Screen
                                            ,initial: initial
                                            ,LoadLiveTrack: LoadLiveTrack
@@ -17260,14 +17260,14 @@ Elm.Screens.Game.Types.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ListDrafts = Elm.Screens.ListDrafts || {};
-Elm.Screens.ListDrafts.Types = Elm.Screens.ListDrafts.Types || {};
-Elm.Screens.ListDrafts.Types.make = function (_elm) {
+Elm.Screens.ListDrafts.Model = Elm.Screens.ListDrafts.Model || {};
+Elm.Screens.ListDrafts.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.ListDrafts = _elm.Screens.ListDrafts || {};
-   _elm.Screens.ListDrafts.Types = _elm.Screens.ListDrafts.Types || {};
-   if (_elm.Screens.ListDrafts.Types.values)
-   return _elm.Screens.ListDrafts.Types.values;
+   _elm.Screens.ListDrafts.Model = _elm.Screens.ListDrafts.Model || {};
+   if (_elm.Screens.ListDrafts.Model.values)
+   return _elm.Screens.ListDrafts.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -17307,7 +17307,7 @@ Elm.Screens.ListDrafts.Types.make = function (_elm) {
              ,confirmDelete: c
              ,confirmPublish: d};
    });
-   return _elm.Screens.ListDrafts.Types.values = {_op: _op
+   return _elm.Screens.ListDrafts.Model.values = {_op: _op
                                                  ,Screen: Screen
                                                  ,initial: initial
                                                  ,DraftsResult: DraftsResult
@@ -17399,14 +17399,14 @@ Elm.Screens.Admin.Routes.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Admin = Elm.Screens.Admin || {};
-Elm.Screens.Admin.Types = Elm.Screens.Admin.Types || {};
-Elm.Screens.Admin.Types.make = function (_elm) {
+Elm.Screens.Admin.Model = Elm.Screens.Admin.Model || {};
+Elm.Screens.Admin.Model.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Admin = _elm.Screens.Admin || {};
-   _elm.Screens.Admin.Types = _elm.Screens.Admin.Types || {};
-   if (_elm.Screens.Admin.Types.values)
-   return _elm.Screens.Admin.Types.values;
+   _elm.Screens.Admin.Model = _elm.Screens.Admin.Model || {};
+   if (_elm.Screens.Admin.Model.values)
+   return _elm.Screens.Admin.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -17433,7 +17433,7 @@ Elm.Screens.Admin.Types.make = function (_elm) {
    var Screen = F2(function (a,b) {
       return {tracks: a,users: b};
    });
-   return _elm.Screens.Admin.Types.values = {_op: _op
+   return _elm.Screens.Admin.Model.values = {_op: _op
                                             ,Screen: Screen
                                             ,initialRoute: initialRoute
                                             ,initial: initial
@@ -17565,15 +17565,15 @@ Elm.AppTypes.make = function (_elm) {
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
-   $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
-   $Screens$ListDrafts$Types = Elm.Screens.ListDrafts.Types.make(_elm),
-   $Screens$Login$Types = Elm.Screens.Login.Types.make(_elm),
-   $Screens$Register$Types = Elm.Screens.Register.Types.make(_elm),
-   $Screens$ShowProfile$Types = Elm.Screens.ShowProfile.Types.make(_elm),
-   $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
+   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
+   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
+   $Screens$Home$Model = Elm.Screens.Home.Model.make(_elm),
+   $Screens$ListDrafts$Model = Elm.Screens.ListDrafts.Model.make(_elm),
+   $Screens$Login$Model = Elm.Screens.Login.Model.make(_elm),
+   $Screens$Register$Model = Elm.Screens.Register.Model.make(_elm),
+   $Screens$ShowProfile$Model = Elm.Screens.ShowProfile.Model.make(_elm),
+   $Screens$ShowTrack$Model = Elm.Screens.ShowTrack.Model.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Transit = Elm.Transit.make(_elm),
@@ -17586,15 +17586,15 @@ Elm.AppTypes.make = function (_elm) {
              ,dims: _p1.dims
              ,transitRouter: $TransitRouter.empty($Routes.EmptyRoute)
              ,routeTransition: $Routes.None
-             ,screens: {home: $Screens$Home$Types.initial(_p2)
-                       ,login: $Screens$Login$Types.initial
-                       ,register: $Screens$Register$Types.initial
-                       ,showTrack: $Screens$ShowTrack$Types.initial
-                       ,editTrack: $Screens$EditTrack$Types.initial
-                       ,showProfile: $Screens$ShowProfile$Types.initial(_p2)
-                       ,game: $Screens$Game$Types.initial
-                       ,listDrafts: $Screens$ListDrafts$Types.initial
-                       ,admin: $Screens$Admin$Types.initial}};
+             ,screens: {home: $Screens$Home$Model.initial(_p2)
+                       ,login: $Screens$Login$Model.initial
+                       ,register: $Screens$Register$Model.initial
+                       ,showTrack: $Screens$ShowTrack$Model.initial
+                       ,editTrack: $Screens$EditTrack$Model.initial
+                       ,showProfile: $Screens$ShowProfile$Model.initial(_p2)
+                       ,game: $Screens$Game$Model.initial
+                       ,listDrafts: $Screens$ListDrafts$Model.initial
+                       ,admin: $Screens$Admin$Model.initial}};
    };
    var Screens = F9(function (a,b,c,d,e,f,g,h,i) {
       return {home: a
@@ -18652,14 +18652,14 @@ Elm.Screens.UpdateUtils.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Home = Elm.Screens.Home || {};
-Elm.Screens.Home.Updates = Elm.Screens.Home.Updates || {};
-Elm.Screens.Home.Updates.make = function (_elm) {
+Elm.Screens.Home.Update = Elm.Screens.Home.Update || {};
+Elm.Screens.Home.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Home = _elm.Screens.Home || {};
-   _elm.Screens.Home.Updates = _elm.Screens.Home.Updates || {};
-   if (_elm.Screens.Home.Updates.values)
-   return _elm.Screens.Home.Updates.values;
+   _elm.Screens.Home.Update = _elm.Screens.Home.Update || {};
+   if (_elm.Screens.Home.Update.values)
+   return _elm.Screens.Home.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -18670,7 +18670,7 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
+   $Screens$Home$Model = Elm.Screens.Home.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -18679,7 +18679,7 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    $Time = Elm.Time.make(_elm);
    var _op = {};
    var refreshLiveStatus = A2($Task.map,
-   $Screens$Home$Types.SetLiveStatus,
+   $Screens$Home$Model.SetLiveStatus,
    $ServerApi.getLiveStatus);
    var update = F2(function (action,screen) {
       var _p0 = action;
@@ -18696,12 +18696,12 @@ Elm.Screens.Home.Updates.make = function (_elm) {
          case "SubmitHandle": return A2($Response.taskRes,
            screen,
            A2($Task.map,
-           $Screens$Home$Types.SubmitHandleResult,
+           $Screens$Home$Model.SubmitHandleResult,
            $ServerApi.postHandle(screen.handle)));
          case "SubmitHandleResult": return A2($Response.res,
            screen,
            A2($Screens$UpdateUtils.always,
-           $Screens$Home$Types.NoOp,
+           $Screens$Home$Model.NoOp,
            A2($Result.withDefault,
            $Effects.none,
            A2($Result.map,$Screens$UpdateUtils.setPlayer,_p0._0))));
@@ -18712,26 +18712,26 @@ Elm.Screens.Home.Updates.make = function (_elm) {
    });
    var mount = function (player) {
       return A2($Response.taskRes,
-      $Screens$Home$Types.initial(player),
+      $Screens$Home$Model.initial(player),
       refreshLiveStatus);
    };
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.HomeAction);
-   return _elm.Screens.Home.Updates.values = {_op: _op
-                                             ,addr: addr
-                                             ,mount: mount
-                                             ,update: update
-                                             ,refreshLiveStatus: refreshLiveStatus};
+   return _elm.Screens.Home.Update.values = {_op: _op
+                                            ,addr: addr
+                                            ,mount: mount
+                                            ,update: update
+                                            ,refreshLiveStatus: refreshLiveStatus};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Register = Elm.Screens.Register || {};
-Elm.Screens.Register.Updates = Elm.Screens.Register.Updates || {};
-Elm.Screens.Register.Updates.make = function (_elm) {
+Elm.Screens.Register.Update = Elm.Screens.Register.Update || {};
+Elm.Screens.Register.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Register = _elm.Screens.Register || {};
-   _elm.Screens.Register.Updates = _elm.Screens.Register.Updates || {};
-   if (_elm.Screens.Register.Updates.values)
-   return _elm.Screens.Register.Updates.values;
+   _elm.Screens.Register.Update = _elm.Screens.Register.Update || {};
+   if (_elm.Screens.Register.Update.values)
+   return _elm.Screens.Register.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -18742,7 +18742,7 @@ Elm.Screens.Register.Updates.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Register$Types = Elm.Screens.Register.Types.make(_elm),
+   $Screens$Register$Model = Elm.Screens.Register.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -18750,7 +18750,7 @@ Elm.Screens.Register.Updates.make = function (_elm) {
    var _op = {};
    var submitTask = function (np) {
       return A2($Task.map,
-      $Screens$Register$Types.SubmitResult,
+      $Screens$Register$Model.SubmitResult,
       A3($ServerApi.postRegister,np.email,np.handle,np.password));
    };
    var update = F2(function (action,screen) {
@@ -18768,7 +18768,7 @@ Elm.Screens.Register.Updates.make = function (_elm) {
          case "SubmitResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
                  var effect = A2($Screens$UpdateUtils.always,
-                 $Screens$Register$Types.NoOp,
+                 $Screens$Register$Model.NoOp,
                  $Screens$UpdateUtils.setPlayer(_p1._0));
                  var newScreen = _U.update(screen,{loading: false});
                  return A2($Response.res,newScreen,effect);
@@ -18780,25 +18780,25 @@ Elm.Screens.Register.Updates.make = function (_elm) {
          default: return A2($Response.res,screen,$Effects.none);}
    });
    var mount = A2($Response.res,
-   $Screens$Register$Types.initial,
+   $Screens$Register$Model.initial,
    $Effects.none);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.RegisterAction);
-   return _elm.Screens.Register.Updates.values = {_op: _op
-                                                 ,addr: addr
-                                                 ,mount: mount
-                                                 ,update: update
-                                                 ,submitTask: submitTask};
+   return _elm.Screens.Register.Update.values = {_op: _op
+                                                ,addr: addr
+                                                ,mount: mount
+                                                ,update: update
+                                                ,submitTask: submitTask};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Login = Elm.Screens.Login || {};
-Elm.Screens.Login.Updates = Elm.Screens.Login.Updates || {};
-Elm.Screens.Login.Updates.make = function (_elm) {
+Elm.Screens.Login.Update = Elm.Screens.Login.Update || {};
+Elm.Screens.Login.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Login = _elm.Screens.Login || {};
-   _elm.Screens.Login.Updates = _elm.Screens.Login.Updates || {};
-   if (_elm.Screens.Login.Updates.values)
-   return _elm.Screens.Login.Updates.values;
+   _elm.Screens.Login.Update = _elm.Screens.Login.Update || {};
+   if (_elm.Screens.Login.Update.values)
+   return _elm.Screens.Login.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -18808,7 +18808,7 @@ Elm.Screens.Login.Updates.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Login$Types = Elm.Screens.Login.Types.make(_elm),
+   $Screens$Login$Model = Elm.Screens.Login.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -18816,7 +18816,7 @@ Elm.Screens.Login.Updates.make = function (_elm) {
    var _op = {};
    var submitTask = function (screen) {
       return A2($Task.map,
-      $Screens$Login$Types.SubmitResult,
+      $Screens$Login$Model.SubmitResult,
       A2($ServerApi.postLogin,screen.email,screen.password));
    };
    var update = F2(function (action,screen) {
@@ -18834,7 +18834,7 @@ Elm.Screens.Login.Updates.make = function (_elm) {
          case "SubmitResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
                  var effect = A2($Screens$UpdateUtils.always,
-                 $Screens$Login$Types.NoOp,
+                 $Screens$Login$Model.NoOp,
                  $Screens$UpdateUtils.setPlayer(_p1._0));
                  var newScreen = _U.update(screen,{loading: false,error: false});
                  return A2($Response.res,newScreen,effect);
@@ -18846,25 +18846,25 @@ Elm.Screens.Login.Updates.make = function (_elm) {
          default: return A2($Response.res,screen,$Effects.none);}
    });
    var mount = A2($Response.res,
-   $Screens$Login$Types.initial,
+   $Screens$Login$Model.initial,
    $Effects.none);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.LoginAction);
-   return _elm.Screens.Login.Updates.values = {_op: _op
-                                              ,addr: addr
-                                              ,mount: mount
-                                              ,update: update
-                                              ,submitTask: submitTask};
+   return _elm.Screens.Login.Update.values = {_op: _op
+                                             ,addr: addr
+                                             ,mount: mount
+                                             ,update: update
+                                             ,submitTask: submitTask};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
-Elm.Screens.ShowTrack.Updates = Elm.Screens.ShowTrack.Updates || {};
-Elm.Screens.ShowTrack.Updates.make = function (_elm) {
+Elm.Screens.ShowTrack.Update = Elm.Screens.ShowTrack.Update || {};
+Elm.Screens.ShowTrack.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
-   _elm.Screens.ShowTrack.Updates = _elm.Screens.ShowTrack.Updates || {};
-   if (_elm.Screens.ShowTrack.Updates.values)
-   return _elm.Screens.ShowTrack.Updates.values;
+   _elm.Screens.ShowTrack.Update = _elm.Screens.ShowTrack.Update || {};
+   if (_elm.Screens.ShowTrack.Update.values)
+   return _elm.Screens.ShowTrack.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -18876,7 +18876,7 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
+   $Screens$ShowTrack$Model = Elm.Screens.ShowTrack.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -18884,7 +18884,7 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
    var _op = {};
    var loadLiveTrack = function (id) {
       return A2($Task.map,
-      $Screens$ShowTrack$Types.LiveTrackResult,
+      $Screens$ShowTrack$Model.LiveTrackResult,
       $ServerApi.getLiveTrack(id));
    };
    var update = F2(function (action,_p0) {
@@ -18938,30 +18938,30 @@ Elm.Screens.ShowTrack.Updates.make = function (_elm) {
            $Effects.none);
          default: return A2($Response.res,_p10,$Effects.none);}
    });
-   var mouseAction = $Screens$ShowTrack$Types.MouseAction;
+   var mouseAction = $Screens$ShowTrack$Model.MouseAction;
    var mount = function (slug) {
       return A2($Response.taskRes,
-      $Screens$ShowTrack$Types.initial,
+      $Screens$ShowTrack$Model.initial,
       loadLiveTrack(slug));
    };
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowTrackAction);
-   return _elm.Screens.ShowTrack.Updates.values = {_op: _op
-                                                  ,addr: addr
-                                                  ,mount: mount
-                                                  ,mouseAction: mouseAction
-                                                  ,update: update
-                                                  ,loadLiveTrack: loadLiveTrack};
+   return _elm.Screens.ShowTrack.Update.values = {_op: _op
+                                                 ,addr: addr
+                                                 ,mount: mount
+                                                 ,mouseAction: mouseAction
+                                                 ,update: update
+                                                 ,loadLiveTrack: loadLiveTrack};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.FormUpdates = Elm.Screens.EditTrack.FormUpdates || {};
-Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
+Elm.Screens.EditTrack.FormUpdate = Elm.Screens.EditTrack.FormUpdate || {};
+Elm.Screens.EditTrack.FormUpdate.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.FormUpdates = _elm.Screens.EditTrack.FormUpdates || {};
-   if (_elm.Screens.EditTrack.FormUpdates.values)
-   return _elm.Screens.EditTrack.FormUpdates.values;
+   _elm.Screens.EditTrack.FormUpdate = _elm.Screens.EditTrack.FormUpdate || {};
+   if (_elm.Screens.EditTrack.FormUpdate.values)
+   return _elm.Screens.EditTrack.FormUpdate.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -18969,7 +18969,7 @@ Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var updateWindGen = F2(function (update,course) {
@@ -19029,13 +19029,13 @@ Elm.Screens.EditTrack.FormUpdates.make = function (_elm) {
            },
            course);}
    });
-   return _elm.Screens.EditTrack.FormUpdates.values = {_op: _op
-                                                      ,update: update
-                                                      ,updateUpwindY: updateUpwindY
-                                                      ,updateDownwindY: updateDownwindY
-                                                      ,updateGateWidth: updateGateWidth
-                                                      ,updateGustGen: updateGustGen
-                                                      ,updateWindGen: updateWindGen};
+   return _elm.Screens.EditTrack.FormUpdate.values = {_op: _op
+                                                     ,update: update
+                                                     ,updateUpwindY: updateUpwindY
+                                                     ,updateDownwindY: updateDownwindY
+                                                     ,updateGateWidth: updateGateWidth
+                                                     ,updateGustGen: updateGustGen
+                                                     ,updateWindGen: updateWindGen};
 };
 Elm.CoreExtra = Elm.CoreExtra || {};
 Elm.CoreExtra.make = function (_elm) {
@@ -19092,14 +19092,14 @@ Elm.CoreExtra.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.GridUpdates = Elm.Screens.EditTrack.GridUpdates || {};
-Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
+Elm.Screens.EditTrack.GridUpdate = Elm.Screens.EditTrack.GridUpdate || {};
+Elm.Screens.EditTrack.GridUpdate.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.GridUpdates = _elm.Screens.EditTrack.GridUpdates || {};
-   if (_elm.Screens.EditTrack.GridUpdates.values)
-   return _elm.Screens.EditTrack.GridUpdates.values;
+   _elm.Screens.EditTrack.GridUpdate = _elm.Screens.EditTrack.GridUpdate || {};
+   if (_elm.Screens.EditTrack.GridUpdate.values)
+   return _elm.Screens.EditTrack.GridUpdate.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
@@ -19112,7 +19112,7 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var withinWindow = F2(function (_p1,_p0) {
@@ -19232,8 +19232,8 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
       return A2(withGrid,newGrid,editor);
    });
    var mouseAction = F3(function (event,dims,editor) {
-      var courseDims = $Screens$EditTrack$Types.getCourseDims(dims);
-      var _p30 = $Screens$EditTrack$Types.realMode(editor);
+      var courseDims = $Screens$EditTrack$Model.getCourseDims(dims);
+      var _p30 = $Screens$EditTrack$Model.realMode(editor);
       switch (_p30.ctor)
       {case "CreateTile": return A4(updateTileAction,
            _p30._0,
@@ -19246,26 +19246,26 @@ Elm.Screens.EditTrack.GridUpdates.make = function (_elm) {
            editor);
          default: return A3(updateCenter,event,courseDims,editor);}
    });
-   return _elm.Screens.EditTrack.GridUpdates.values = {_op: _op
-                                                      ,mouseAction: mouseAction
-                                                      ,deleteTileAction: deleteTileAction
-                                                      ,updateTileAction: updateTileAction
-                                                      ,withGrid: withGrid
-                                                      ,getMouseEventTiles: getMouseEventTiles
-                                                      ,clickPoint: clickPoint
-                                                      ,updateCenter: updateCenter
-                                                      ,withinWindow: withinWindow};
+   return _elm.Screens.EditTrack.GridUpdate.values = {_op: _op
+                                                     ,mouseAction: mouseAction
+                                                     ,deleteTileAction: deleteTileAction
+                                                     ,updateTileAction: updateTileAction
+                                                     ,withGrid: withGrid
+                                                     ,getMouseEventTiles: getMouseEventTiles
+                                                     ,clickPoint: clickPoint
+                                                     ,updateCenter: updateCenter
+                                                     ,withinWindow: withinWindow};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.Updates = Elm.Screens.EditTrack.Updates || {};
-Elm.Screens.EditTrack.Updates.make = function (_elm) {
+Elm.Screens.EditTrack.Update = Elm.Screens.EditTrack.Update || {};
+Elm.Screens.EditTrack.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.Updates = _elm.Screens.EditTrack.Updates || {};
-   if (_elm.Screens.EditTrack.Updates.values)
-   return _elm.Screens.EditTrack.Updates.values;
+   _elm.Screens.EditTrack.Update = _elm.Screens.EditTrack.Update || {};
+   if (_elm.Screens.EditTrack.Update.values)
+   return _elm.Screens.EditTrack.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Array = Elm.Array.make(_elm),
@@ -19283,9 +19283,9 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$EditTrack$FormUpdates = Elm.Screens.EditTrack.FormUpdates.make(_elm),
-   $Screens$EditTrack$GridUpdates = Elm.Screens.EditTrack.GridUpdates.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
+   $Screens$EditTrack$FormUpdate = Elm.Screens.EditTrack.FormUpdate.make(_elm),
+   $Screens$EditTrack$GridUpdate = Elm.Screens.EditTrack.GridUpdate.make(_elm),
+   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -19339,13 +19339,13 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    });
    var save = F3(function ($try,id,editor) {
       return A2($Task.map,
-      $Screens$EditTrack$Types.SaveResult($try),
+      $Screens$EditTrack$Model.SaveResult($try),
       A2($Task$Extra.delay,500,A2(saveEditor,id,editor)));
    });
    var publish = F2(function (id,_p3) {
       var _p4 = _p3;
       return A2($Task.map,
-      $Screens$EditTrack$Types.SaveResult(true),
+      $Screens$EditTrack$Model.SaveResult(true),
       A2($Task.andThen,
       A2($Task$Extra.delay,500,A2(saveEditor,id,_p4)),
       function (_p5) {
@@ -19354,7 +19354,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    });
    var loadTrack = function (id) {
       return A2($Task.map,
-      $Screens$EditTrack$Types.LoadTrack,
+      $Screens$EditTrack$Model.LoadTrack,
       $ServerApi.getTrack(id));
    };
    var updateBlocks = F2(function (b,_p6) {
@@ -19406,7 +19406,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
                  var _p16 = _p15._0;
                  return staticRes(_U.update(screen,
                  {track: $Maybe.Just(_p16)
-                 ,editor: $Maybe.Just($Screens$EditTrack$Types.initialEditor(_p16))}));
+                 ,editor: $Maybe.Just($Screens$EditTrack$Model.initialEditor(_p16))}));
               } else {
                  return staticRes(_U.update(screen,{notFound: true}));
               }
@@ -19421,7 +19421,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
            },
            screen));
          case "MouseAction": return staticRes(A2(updateEditor,
-           A2($Screens$EditTrack$GridUpdates.mouseAction,_p14._0,dims),
+           A2($Screens$EditTrack$GridUpdate.mouseAction,_p14._0,dims),
            screen));
          case "SetMode": return staticRes(A2(updateEditor,
            function (e) {
@@ -19434,7 +19434,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
            },
            screen));
          case "FormAction": return staticRes(A2(function (_p18) {
-              return updateEditor(updateCourse($Screens$EditTrack$FormUpdates.update(_p18)));
+              return updateEditor(updateCourse($Screens$EditTrack$FormUpdate.update(_p18)));
            },
            _p14._0,
            screen));
@@ -19457,7 +19457,7 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
            if (_p20.ctor === "Ok") {
                  var effect = _p14._0 ? A2($Effects.map,
                  function (_p21) {
-                    return $Screens$EditTrack$Types.NoOp;
+                    return $Screens$EditTrack$Model.NoOp;
                  },
                  $Screens$UpdateUtils.redirect($Routes.PlayTrack(_p20._0.id))) : $Effects.none;
                  var newScreen = A2(updateEditor,
@@ -19496,44 +19496,44 @@ Elm.Screens.EditTrack.Updates.make = function (_elm) {
    });
    var mount = function (id) {
       return A2($Response.taskRes,
-      $Screens$EditTrack$Types.initial,
+      $Screens$EditTrack$Model.initial,
       loadTrack(id));
    };
-   var mouseAction = $Screens$EditTrack$Types.MouseAction;
+   var mouseAction = $Screens$EditTrack$Model.MouseAction;
    var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
-   $Screens$EditTrack$Types.AltMoveMode,
+   $Screens$EditTrack$Model.AltMoveMode,
    $Keyboard.shift)]));
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.EditTrackAction);
-   return _elm.Screens.EditTrack.Updates.values = {_op: _op
-                                                  ,addr: addr
-                                                  ,inputs: inputs
-                                                  ,mouseAction: mouseAction
-                                                  ,mount: mount
-                                                  ,update: update
-                                                  ,updateEditor: updateEditor
-                                                  ,updateCourse: updateCourse
-                                                  ,updateSpeedVariation: updateSpeedVariation
-                                                  ,updateOriginVariation: updateOriginVariation
-                                                  ,updateRangeStart: updateRangeStart
-                                                  ,updateRangeEnd: updateRangeEnd
-                                                  ,updateBlocks: updateBlocks
-                                                  ,loadTrack: loadTrack
-                                                  ,saveEditor: saveEditor
-                                                  ,save: save
-                                                  ,publish: publish
-                                                  ,getRaceArea: getRaceArea
-                                                  ,staticRes: staticRes};
+   return _elm.Screens.EditTrack.Update.values = {_op: _op
+                                                 ,addr: addr
+                                                 ,inputs: inputs
+                                                 ,mouseAction: mouseAction
+                                                 ,mount: mount
+                                                 ,update: update
+                                                 ,updateEditor: updateEditor
+                                                 ,updateCourse: updateCourse
+                                                 ,updateSpeedVariation: updateSpeedVariation
+                                                 ,updateOriginVariation: updateOriginVariation
+                                                 ,updateRangeStart: updateRangeStart
+                                                 ,updateRangeEnd: updateRangeEnd
+                                                 ,updateBlocks: updateBlocks
+                                                 ,loadTrack: loadTrack
+                                                 ,saveEditor: saveEditor
+                                                 ,save: save
+                                                 ,publish: publish
+                                                 ,getRaceArea: getRaceArea
+                                                 ,staticRes: staticRes};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ShowProfile = Elm.Screens.ShowProfile || {};
-Elm.Screens.ShowProfile.Updates = Elm.Screens.ShowProfile.Updates || {};
-Elm.Screens.ShowProfile.Updates.make = function (_elm) {
+Elm.Screens.ShowProfile.Update = Elm.Screens.ShowProfile.Update || {};
+Elm.Screens.ShowProfile.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.ShowProfile = _elm.Screens.ShowProfile || {};
-   _elm.Screens.ShowProfile.Updates = _elm.Screens.ShowProfile.Updates || {};
-   if (_elm.Screens.ShowProfile.Updates.values)
-   return _elm.Screens.ShowProfile.Updates.values;
+   _elm.Screens.ShowProfile.Update = _elm.Screens.ShowProfile.Update || {};
+   if (_elm.Screens.ShowProfile.Update.values)
+   return _elm.Screens.ShowProfile.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -19544,7 +19544,7 @@ Elm.Screens.ShowProfile.Updates.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$ShowProfile$Types = Elm.Screens.ShowProfile.Types.make(_elm),
+   $Screens$ShowProfile$Model = Elm.Screens.ShowProfile.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -19554,14 +19554,14 @@ Elm.Screens.ShowProfile.Updates.make = function (_elm) {
    });
    var mount = function (player) {
       return A2($Response.res,
-      $Screens$ShowProfile$Types.initial(player),
+      $Screens$ShowProfile$Model.initial(player),
       $Effects.none);
    };
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowProfileAction);
-   return _elm.Screens.ShowProfile.Updates.values = {_op: _op
-                                                    ,addr: addr
-                                                    ,mount: mount
-                                                    ,update: update};
+   return _elm.Screens.ShowProfile.Update.values = {_op: _op
+                                                   ,addr: addr
+                                                   ,mount: mount
+                                                   ,update: update};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Geo = Elm.Game.Geo || {};
@@ -20548,14 +20548,14 @@ Elm.Game.Steps.make = function (_elm) {
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.Updates = Elm.Screens.Game.Updates || {};
-Elm.Screens.Game.Updates.make = function (_elm) {
+Elm.Screens.Game.Update = Elm.Screens.Game.Update || {};
+Elm.Screens.Game.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.Updates = _elm.Screens.Game.Updates || {};
-   if (_elm.Screens.Game.Updates.values)
-   return _elm.Screens.Game.Updates.values;
+   _elm.Screens.Game.Update = _elm.Screens.Game.Update || {};
+   if (_elm.Screens.Game.Update.values)
+   return _elm.Screens.Game.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -20568,7 +20568,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -20584,10 +20584,10 @@ Elm.Screens.Game.Updates.make = function (_elm) {
          return _U.update(gs,{timers: A2(updateTime,gs.timers,time)});
       });
    };
-   var pingServer = $Effects.tick($Screens$Game$Types.PingServer);
+   var pingServer = $Effects.tick($Screens$Game$Model.PingServer);
    var loadLiveTrack = function (id) {
       return A2($Task.map,
-      $Screens$Game$Types.LoadLiveTrack,
+      $Screens$Game$Model.LoadLiveTrack,
       $ServerApi.getLiveTrack(id));
    };
    var applyLiveTrack = F2(function (_p0,screen) {
@@ -20613,14 +20613,14 @@ Elm.Screens.Game.Updates.make = function (_elm) {
    });
    var mount = function (id) {
       return A2($Response.taskRes,
-      $Screens$Game$Types.initial,
+      $Screens$Game$Model.initial,
       loadLiveTrack(id));
    };
    var chat = $Signal.mailbox("");
    var sendMessage = function (content) {
-      return $String.isEmpty(content) ? $Task.succeed($Screens$Game$Types.NoOp) : A2($Task.map,
+      return $String.isEmpty(content) ? $Task.succeed($Screens$Game$Model.NoOp) : A2($Task.map,
       function (_p4) {
-         return $Screens$Game$Types.NoOp;
+         return $Screens$Game$Model.NoOp;
       },
       A2($Signal.send,chat.address,content));
    };
@@ -20631,7 +20631,7 @@ Elm.Screens.Game.Updates.make = function (_elm) {
            if (_p6.ctor === "Ok") {
                  return A2($Response.res,
                  screen,
-                 $Effects.tick($Screens$Game$Types.InitGameState(_p6._0)));
+                 $Effects.tick($Screens$Game$Model.InitGameState(_p6._0)));
               } else {
                  return A2($Response.res,
                  _U.update(screen,{notFound: true}),
@@ -20694,27 +20694,27 @@ Elm.Screens.Game.Updates.make = function (_elm) {
          default: return A2($Response.res,screen,$Effects.none);}
    });
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.GameAction);
-   return _elm.Screens.Game.Updates.values = {_op: _op
-                                             ,addr: addr
-                                             ,chat: chat
-                                             ,mount: mount
-                                             ,update: update
-                                             ,applyLiveTrack: applyLiveTrack
-                                             ,loadLiveTrack: loadLiveTrack
-                                             ,pingServer: pingServer
-                                             ,sendMessage: sendMessage
-                                             ,updateTime: updateTime};
+   return _elm.Screens.Game.Update.values = {_op: _op
+                                            ,addr: addr
+                                            ,chat: chat
+                                            ,mount: mount
+                                            ,update: update
+                                            ,applyLiveTrack: applyLiveTrack
+                                            ,loadLiveTrack: loadLiveTrack
+                                            ,pingServer: pingServer
+                                            ,sendMessage: sendMessage
+                                            ,updateTime: updateTime};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.ListDrafts = Elm.Screens.ListDrafts || {};
-Elm.Screens.ListDrafts.Updates = Elm.Screens.ListDrafts.Updates || {};
-Elm.Screens.ListDrafts.Updates.make = function (_elm) {
+Elm.Screens.ListDrafts.Update = Elm.Screens.ListDrafts.Update || {};
+Elm.Screens.ListDrafts.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.ListDrafts = _elm.Screens.ListDrafts || {};
-   _elm.Screens.ListDrafts.Updates = _elm.Screens.ListDrafts.Updates || {};
-   if (_elm.Screens.ListDrafts.Updates.values)
-   return _elm.Screens.ListDrafts.Updates.values;
+   _elm.Screens.ListDrafts.Update = _elm.Screens.ListDrafts.Update || {};
+   if (_elm.Screens.ListDrafts.Update.values)
+   return _elm.Screens.ListDrafts.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -20725,7 +20725,7 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$ListDrafts$Types = Elm.Screens.ListDrafts.Types.make(_elm),
+   $Screens$ListDrafts$Model = Elm.Screens.ListDrafts.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -20733,11 +20733,11 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
    var _op = {};
    var deleteDraft = function (id) {
       return A2($Task.map,
-      $Screens$ListDrafts$Types.DeleteDraftResult,
+      $Screens$ListDrafts$Model.DeleteDraftResult,
       $ServerApi.deleteDraft(id));
    };
    var loadDrafts = A2($Task.map,
-   $Screens$ListDrafts$Types.DraftsResult,
+   $Screens$ListDrafts$Model.DraftsResult,
    $ServerApi.getDrafts);
    var update = F2(function (action,screen) {
       var _p0 = action;
@@ -20756,14 +20756,14 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
          case "CreateDraft": return A2($Response.taskRes,
            screen,
            A2($Task.map,
-           $Screens$ListDrafts$Types.CreateDraftResult,
+           $Screens$ListDrafts$Model.CreateDraftResult,
            $ServerApi.createTrack(screen.name)));
          case "CreateDraftResult": var _p2 = _p0._0;
            if (_p2.ctor === "Ok") {
                  return A2($Response.res,
                  screen,
                  A2($Screens$UpdateUtils.always,
-                 $Screens$ListDrafts$Types.NoOp,
+                 $Screens$ListDrafts$Model.NoOp,
                  $Screens$UpdateUtils.redirect($Routes.EditTrack(_p2._0.id))));
               } else {
                  return A2($Response.res,screen,$Effects.none);
@@ -20793,26 +20793,26 @@ Elm.Screens.ListDrafts.Updates.make = function (_elm) {
          default: return A2($Response.res,screen,$Effects.none);}
    });
    var mount = A2($Response.taskRes,
-   $Screens$ListDrafts$Types.initial,
+   $Screens$ListDrafts$Model.initial,
    loadDrafts);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ListDraftsAction);
-   return _elm.Screens.ListDrafts.Updates.values = {_op: _op
-                                                   ,addr: addr
-                                                   ,mount: mount
-                                                   ,update: update
-                                                   ,loadDrafts: loadDrafts
-                                                   ,deleteDraft: deleteDraft};
+   return _elm.Screens.ListDrafts.Update.values = {_op: _op
+                                                  ,addr: addr
+                                                  ,mount: mount
+                                                  ,update: update
+                                                  ,loadDrafts: loadDrafts
+                                                  ,deleteDraft: deleteDraft};
 };
 Elm.Screens = Elm.Screens || {};
 Elm.Screens.Admin = Elm.Screens.Admin || {};
-Elm.Screens.Admin.Updates = Elm.Screens.Admin.Updates || {};
-Elm.Screens.Admin.Updates.make = function (_elm) {
+Elm.Screens.Admin.Update = Elm.Screens.Admin.Update || {};
+Elm.Screens.Admin.Update.make = function (_elm) {
    "use strict";
    _elm.Screens = _elm.Screens || {};
    _elm.Screens.Admin = _elm.Screens.Admin || {};
-   _elm.Screens.Admin.Updates = _elm.Screens.Admin.Updates || {};
-   if (_elm.Screens.Admin.Updates.values)
-   return _elm.Screens.Admin.Updates.values;
+   _elm.Screens.Admin.Update = _elm.Screens.Admin.Update || {};
+   if (_elm.Screens.Admin.Update.values)
+   return _elm.Screens.Admin.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -20823,14 +20823,14 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
+   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
    var refreshData = A2($Task.map,
-   $Screens$Admin$Types.RefreshDataResult,
+   $Screens$Admin$Model.RefreshDataResult,
    $ServerApi.loadAdminData);
    var update = F2(function (action,screen) {
       var _p0 = action;
@@ -20849,7 +20849,7 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
          case "DeleteTrack": return A2($Response.taskRes,
            screen,
            A2($Task.map,
-           $Screens$Admin$Types.DeleteTrackResult,
+           $Screens$Admin$Model.DeleteTrackResult,
            $ServerApi.deleteDraft(_p0._0)));
          case "DeleteTrackResult": var _p2 = _p0._0;
            if (_p2.ctor === "Ok") {
@@ -20867,14 +20867,14 @@ Elm.Screens.Admin.Updates.make = function (_elm) {
          default: return A2($Response.res,screen,$Effects.none);}
    });
    var mount = A2($Response.taskRes,
-   $Screens$Admin$Types.initial,
+   $Screens$Admin$Model.initial,
    refreshData);
    var addr = $Screens$UpdateUtils.screenAddr($AppTypes.AdminAction);
-   return _elm.Screens.Admin.Updates.values = {_op: _op
-                                              ,addr: addr
-                                              ,mount: mount
-                                              ,update: update
-                                              ,refreshData: refreshData};
+   return _elm.Screens.Admin.Update.values = {_op: _op
+                                             ,addr: addr
+                                             ,mount: mount
+                                             ,update: update
+                                             ,refreshData: refreshData};
 };
 Elm.AppUpdates = Elm.AppUpdates || {};
 Elm.AppUpdates.make = function (_elm) {
@@ -20891,15 +20891,15 @@ Elm.AppUpdates.make = function (_elm) {
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Updates = Elm.Screens.Admin.Updates.make(_elm),
-   $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
-   $Screens$Game$Updates = Elm.Screens.Game.Updates.make(_elm),
-   $Screens$Home$Updates = Elm.Screens.Home.Updates.make(_elm),
-   $Screens$ListDrafts$Updates = Elm.Screens.ListDrafts.Updates.make(_elm),
-   $Screens$Login$Updates = Elm.Screens.Login.Updates.make(_elm),
-   $Screens$Register$Updates = Elm.Screens.Register.Updates.make(_elm),
-   $Screens$ShowProfile$Updates = Elm.Screens.ShowProfile.Updates.make(_elm),
-   $Screens$ShowTrack$Updates = Elm.Screens.ShowTrack.Updates.make(_elm),
+   $Screens$Admin$Update = Elm.Screens.Admin.Update.make(_elm),
+   $Screens$EditTrack$Update = Elm.Screens.EditTrack.Update.make(_elm),
+   $Screens$Game$Update = Elm.Screens.Game.Update.make(_elm),
+   $Screens$Home$Update = Elm.Screens.Home.Update.make(_elm),
+   $Screens$ListDrafts$Update = Elm.Screens.ListDrafts.Update.make(_elm),
+   $Screens$Login$Update = Elm.Screens.Login.Update.make(_elm),
+   $Screens$Register$Update = Elm.Screens.Register.Update.make(_elm),
+   $Screens$ShowProfile$Update = Elm.Screens.ShowProfile.Update.make(_elm),
+   $Screens$ShowTrack$Update = Elm.Screens.ShowTrack.Update.make(_elm),
    $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -20980,34 +20980,34 @@ Elm.AppUpdates.make = function (_elm) {
       var _p3 = screenAction;
       switch (_p3.ctor)
       {case "HomeAction": return A2(applyHome,
-           A2($Screens$Home$Updates.update,_p3._0,_p5.home),
+           A2($Screens$Home$Update.update,_p3._0,_p5.home),
            _p4);
          case "LoginAction": return A2(applyLogin,
-           A2($Screens$Login$Updates.update,_p3._0,_p5.login),
+           A2($Screens$Login$Update.update,_p3._0,_p5.login),
            _p4);
          case "RegisterAction": return A2(applyRegister,
-           A2($Screens$Register$Updates.update,_p3._0,_p5.register),
+           A2($Screens$Register$Update.update,_p3._0,_p5.register),
            _p4);
          case "ShowTrackAction": return A2(applyShowTrack,
-           A2($Screens$ShowTrack$Updates.update,_p3._0,_p5.showTrack),
+           A2($Screens$ShowTrack$Update.update,_p3._0,_p5.showTrack),
            _p4);
          case "EditTrackAction": return A2(applyEditTrack,
-           A3($Screens$EditTrack$Updates.update,
+           A3($Screens$EditTrack$Update.update,
            _p2.dims,
            _p3._0,
            _p5.editTrack),
            _p4);
          case "ShowProfileAction": return A2(applyShowProfile,
-           A2($Screens$ShowProfile$Updates.update,_p3._0,_p5.showProfile),
+           A2($Screens$ShowProfile$Update.update,_p3._0,_p5.showProfile),
            _p4);
          case "GameAction": return A2(applyGame,
-           A3($Screens$Game$Updates.update,_p2.player,_p3._0,_p5.game),
+           A3($Screens$Game$Update.update,_p2.player,_p3._0,_p5.game),
            _p4);
          case "ListDraftsAction": return A2(applyListDrafts,
-           A2($Screens$ListDrafts$Updates.update,_p3._0,_p5.listDrafts),
+           A2($Screens$ListDrafts$Update.update,_p3._0,_p5.listDrafts),
            _p4);
          default: return A2(applyAdmin,
-           A2($Screens$Admin$Updates.update,_p3._0,_p5.admin),
+           A2($Screens$Admin$Update.update,_p3._0,_p5.admin),
            _p4);}
    });
    var mountRoute = F3(function (prevRoute,newRoute,_p6) {
@@ -21021,31 +21021,31 @@ Elm.AppUpdates.make = function (_elm) {
       var _p8 = newRoute;
       switch (_p8.ctor)
       {case "Home": return A2(applyHome,
-           $Screens$Home$Updates.mount(_p9),
+           $Screens$Home$Update.mount(_p9),
            appState);
          case "Login": return A2(applyLogin,
-           $Screens$Login$Updates.mount,
+           $Screens$Login$Update.mount,
            appState);
          case "Register": return A2(applyRegister,
-           $Screens$Register$Updates.mount,
+           $Screens$Register$Update.mount,
            appState);
          case "ShowProfile": return A2(applyShowProfile,
-           $Screens$ShowProfile$Updates.mount(_p9),
+           $Screens$ShowProfile$Update.mount(_p9),
            appState);
          case "ShowTrack": return A2(applyShowTrack,
-           $Screens$ShowTrack$Updates.mount(_p8._0),
+           $Screens$ShowTrack$Update.mount(_p8._0),
            appState);
          case "EditTrack": return A2(applyEditTrack,
-           $Screens$EditTrack$Updates.mount(_p8._0),
+           $Screens$EditTrack$Update.mount(_p8._0),
            appState);
          case "PlayTrack": return A2(applyGame,
-           $Screens$Game$Updates.mount(_p8._0),
+           $Screens$Game$Update.mount(_p8._0),
            appState);
          case "ListDrafts": return A2(applyListDrafts,
-           $Screens$ListDrafts$Updates.mount,
+           $Screens$ListDrafts$Update.mount,
            appState);
          case "Admin": return A2(applyAdmin,
-           $Screens$Admin$Updates.mount,
+           $Screens$Admin$Update.mount,
            appState);
          case "EmptyRoute": return A2($Response.res,
            appState,
@@ -21087,10 +21087,10 @@ Elm.AppUpdates.make = function (_elm) {
               var _p17 = $TransitRouter.getRoute(_p21);
               switch (_p17.ctor)
               {case "EditTrack": return $Maybe.Just(function (_p18) {
-                      return $AppTypes.EditTrackAction($Screens$EditTrack$Updates.mouseAction(_p18));
+                      return $AppTypes.EditTrackAction($Screens$EditTrack$Update.mouseAction(_p18));
                    });
                  case "ShowTrack": return $Maybe.Just(function (_p19) {
-                      return $AppTypes.ShowTrackAction($Screens$ShowTrack$Updates.mouseAction(_p19));
+                      return $AppTypes.ShowTrackAction($Screens$ShowTrack$Update.mouseAction(_p19));
                    });
                  default: return $Maybe.Nothing;}
            }();
@@ -21457,7 +21457,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
+   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21465,7 +21465,7 @@ Elm.Screens.Sidebar.make = function (_elm) {
       var adminLink = A2($Html.li,
       _U.list([]),
       _U.list([A3($Screens$Utils.linkTo,
-      $Routes.Admin($Screens$Admin$Types.initialRoute),
+      $Routes.Admin($Screens$Admin$Model.initialRoute),
       _U.list([]),
       _U.list([$Html.text("Admin")]))]));
       var draftsLink = A2($Html.li,
@@ -21622,8 +21622,8 @@ Elm.Screens.Home.View.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$Home$Types = Elm.Screens.Home.Types.make(_elm),
-   $Screens$Home$Updates = Elm.Screens.Home.Updates.make(_elm),
+   $Screens$Home$Model = Elm.Screens.Home.Model.make(_elm),
+   $Screens$Home$Update = Elm.Screens.Home.Update.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -21714,11 +21714,11 @@ Elm.Screens.Home.View.make = function (_elm) {
                       "btn btn-block btn-join btn-",
                       empty ? "primary" : "warning"))
                       ,A2($Html$Events.onMouseOver,
-                      $Screens$Home$Updates.addr,
-                      $Screens$Home$Types.FocusTrack($Maybe.Just(_p7.id)))
+                      $Screens$Home$Update.addr,
+                      $Screens$Home$Model.FocusTrack($Maybe.Just(_p7.id)))
                       ,A2($Html$Events.onMouseOut,
-                      $Screens$Home$Updates.addr,
-                      $Screens$Home$Types.FocusTrack($Maybe.Nothing))]),
+                      $Screens$Home$Update.addr,
+                      $Screens$Home$Model.FocusTrack($Maybe.Nothing))]),
               _U.list([$Html.text(A2($Basics._op["++"],
               "Join",
               empty ? "" : A2($Basics._op["++"],
@@ -21746,16 +21746,16 @@ Elm.Screens.Home.View.make = function (_elm) {
               _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
                                                         ,$Html$Attributes.value(handle)
                                                         ,A2($Screens$Utils.onInput,
-                                                        $Screens$Home$Updates.addr,
-                                                        $Screens$Home$Types.SetHandle)
+                                                        $Screens$Home$Update.addr,
+                                                        $Screens$Home$Model.SetHandle)
                                                         ,A2($Screens$Utils.onEnter,
-                                                        $Screens$Home$Updates.addr,
-                                                        $Screens$Home$Types.SubmitHandle)]))]))
+                                                        $Screens$Home$Update.addr,
+                                                        $Screens$Home$Model.SubmitHandle)]))]))
               ,A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,A2($Html$Events.onClick,
-                      $Screens$Home$Updates.addr,
-                      $Screens$Home$Types.SubmitHandle)]),
+                      $Screens$Home$Update.addr,
+                      $Screens$Home$Model.SubmitHandle)]),
               _U.list([$Html.text("submit")]))
               ,A3($Screens$Utils.linkTo,
               $Routes.Login,
@@ -21827,8 +21827,8 @@ Elm.Screens.Login.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$Login$Types = Elm.Screens.Login.Types.make(_elm),
-   $Screens$Login$Updates = Elm.Screens.Login.Updates.make(_elm),
+   $Screens$Login$Model = Elm.Screens.Login.Model.make(_elm),
+   $Screens$Login$Update = Elm.Screens.Login.Update.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21845,21 +21845,21 @@ Elm.Screens.Login.View.make = function (_elm) {
               _U.list([$Html$Attributes.$class("form-group")]),
               _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p1.email)
                                                         ,A2($Screens$Utils.onInput,
-                                                        $Screens$Login$Updates.addr,
-                                                        $Screens$Login$Types.SetEmail)
+                                                        $Screens$Login$Update.addr,
+                                                        $Screens$Login$Model.SetEmail)
                                                         ,A2($Screens$Utils.onEnter,
-                                                        $Screens$Login$Updates.addr,
-                                                        $Screens$Login$Types.Submit)
+                                                        $Screens$Login$Update.addr,
+                                                        $Screens$Login$Model.Submit)
                                                         ,$Html$Attributes.placeholder("Email")]))]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("form-group")]),
               _U.list([$Screens$Utils.passwordInput(_U.list([$Html$Attributes.value(_p1.password)
                                                             ,A2($Screens$Utils.onInput,
-                                                            $Screens$Login$Updates.addr,
-                                                            $Screens$Login$Types.SetPassword)
+                                                            $Screens$Login$Update.addr,
+                                                            $Screens$Login$Model.SetPassword)
                                                             ,A2($Screens$Utils.onEnter,
-                                                            $Screens$Login$Updates.addr,
-                                                            $Screens$Login$Types.Submit)
+                                                            $Screens$Login$Update.addr,
+                                                            $Screens$Login$Model.Submit)
                                                             ,$Html$Attributes.placeholder("Password")]))]))
               ,errorLine(_p1.error)
               ,A2($Html.div,
@@ -21868,8 +21868,8 @@ Elm.Screens.Login.View.make = function (_elm) {
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,$Html$Attributes.disabled(_p1.loading)
                       ,A2($Html$Events.onClick,
-                      $Screens$Login$Updates.addr,
-                      $Screens$Login$Types.Submit)]),
+                      $Screens$Login$Update.addr,
+                      $Screens$Login$Model.Submit)]),
               _U.list([$Html.text("Submit")]))]))]));
    };
    var view = F2(function (ctx,screen) {
@@ -21912,8 +21912,8 @@ Elm.Screens.Register.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$Register$Types = Elm.Screens.Register.Types.make(_elm),
-   $Screens$Register$Updates = Elm.Screens.Register.Updates.make(_elm),
+   $Screens$Register$Model = Elm.Screens.Register.Model.make(_elm),
+   $Screens$Register$Update = Elm.Screens.Register.Update.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21929,15 +21929,15 @@ Elm.Screens.Register.View.make = function (_elm) {
       var email = A2($Form.getFieldAsString,"email",_p4);
       var handle = A2($Form.getFieldAsString,"handle",_p4);
       var formAddr = A2($Signal.forwardTo,
-      $Screens$Register$Updates.addr,
-      $Screens$Register$Types.FormAction);
+      $Screens$Register$Update.addr,
+      $Screens$Register$Model.FormAction);
       var _p2 = function () {
          var _p3 = $Form.getOutput(_p4);
          if (_p3.ctor === "Just") {
                return {ctor: "_Tuple2"
                       ,_0: A2($Html$Events.onClick,
-                      $Screens$Register$Updates.addr,
-                      $Screens$Register$Types.Submit(_p3._0))
+                      $Screens$Register$Update.addr,
+                      $Screens$Register$Model.Submit(_p3._0))
                       ,_1: $Basics.not(_p1.loading)};
             } else {
                return {ctor: "_Tuple2"
@@ -23454,8 +23454,8 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$ShowTrack$Types = Elm.Screens.ShowTrack.Types.make(_elm),
-   $Screens$ShowTrack$Updates = Elm.Screens.ShowTrack.Updates.make(_elm),
+   $Screens$ShowTrack$Model = Elm.Screens.ShowTrack.Model.make(_elm),
+   $Screens$ShowTrack$Update = Elm.Screens.ShowTrack.Update.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
@@ -23497,11 +23497,11 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("course")
               ,A2($Html$Events.onMouseOver,
-              $Screens$ShowTrack$Updates.addr,
-              $Screens$ShowTrack$Types.SetOverCourse(true))
+              $Screens$ShowTrack$Update.addr,
+              $Screens$ShowTrack$Model.SetOverCourse(true))
               ,A2($Html$Events.onMouseOut,
-              $Screens$ShowTrack$Updates.addr,
-              $Screens$ShowTrack$Types.SetOverCourse(false))]),
+              $Screens$ShowTrack$Update.addr,
+              $Screens$ShowTrack$Model.SetOverCourse(false))]),
       _U.list([A2(renderCourse,control,course)]));
    });
    var range = F2(function (_p4,unitAbbr) {
@@ -23653,8 +23653,8 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
-   $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
+   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
+   $Screens$EditTrack$Update = Elm.Screens.EditTrack.Update.make(_elm),
    $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -23670,7 +23670,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
               _U.list([A2($Html.a,
               _U.list([$Html$Attributes.$class("module-title")
                       ,A2($Html$Events.onClick,
-                      $Screens$EditTrack$Updates.addr,
+                      $Screens$EditTrack$Update.addr,
                       action)]),
               _U.list([$Html.text(title)
                       ,A2($Html.span,
@@ -23686,15 +23686,15 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
       return $Screens$Utils.textInput(A2($Basics._op["++"],
       _U.list([$Html$Attributes.value($Basics.toString(val))
               ,A2($Screens$Utils.onIntInput,
-              $Screens$EditTrack$Updates.addr,
+              $Screens$EditTrack$Update.addr,
               function (_p0) {
-                 return $Screens$EditTrack$Types.FormAction(formUpdate(_p0));
+                 return $Screens$EditTrack$Model.FormAction(formUpdate(_p0));
               })
               ,$Html$Attributes.type$("number")]),
       attrs));
    });
    var renderSurfaceMode = F2(function (currentMode,mode) {
-      var _p1 = $Screens$EditTrack$Types.modeName(mode);
+      var _p1 = $Screens$EditTrack$Model.modeName(mode);
       var abbr = _p1._0;
       var label = _p1._1;
       var color = function () {
@@ -23711,8 +23711,8 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                    ,_1: _U.eq(currentMode,mode)}
                                                   ,{ctor: "_Tuple2",_0: abbr,_1: true}]))
               ,A2($Html$Events.onClick,
-              $Screens$EditTrack$Updates.addr,
-              $Screens$EditTrack$Types.SetMode(mode))
+              $Screens$EditTrack$Update.addr,
+              $Screens$EditTrack$Model.SetMode(mode))
               ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                ,_0: "background-color"
                                                ,_1: color}]))
@@ -23720,12 +23720,12 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
       _U.list([$Html.text(abbr)]));
    });
    var surfaceBlock = function (editor) {
-      var currentMode = $Screens$EditTrack$Types.realMode(editor);
-      var modes = _U.list([$Screens$EditTrack$Types.Watch
-                          ,$Screens$EditTrack$Types.CreateTile($Models.Water)
-                          ,$Screens$EditTrack$Types.CreateTile($Models.Rock)
-                          ,$Screens$EditTrack$Types.CreateTile($Models.Grass)
-                          ,$Screens$EditTrack$Types.Erase]);
+      var currentMode = $Screens$EditTrack$Model.realMode(editor);
+      var modes = _U.list([$Screens$EditTrack$Model.Watch
+                          ,$Screens$EditTrack$Model.CreateTile($Models.Water)
+                          ,$Screens$EditTrack$Model.CreateTile($Models.Rock)
+                          ,$Screens$EditTrack$Model.CreateTile($Models.Grass)
+                          ,$Screens$EditTrack$Model.Erase]);
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("surface-modes")]),
       A2($List.map,renderSurfaceMode(currentMode),modes));
@@ -23744,23 +23744,23 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                      ,A4(sideBlock,
                      "Name",
                      _p9.name,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Name),
+                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Name),
                      _U.list([A2($Html.div,
                      _U.list([$Html$Attributes.$class("form-group")]),
                      _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p12)
                                                                ,A2($Screens$Utils.onInput,
-                                                               $Screens$EditTrack$Updates.addr,
-                                                               $Screens$EditTrack$Types.SetName)
+                                                               $Screens$EditTrack$Update.addr,
+                                                               $Screens$EditTrack$Model.SetName)
                                                                ,$Html$Attributes.type$("text")]))]))]))
                      ,A4(sideBlock,
                      "Surface pencil",
                      _p9.surface,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Surface),
+                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Surface),
                      _U.list([surfaceBlock(_p11)]))
                      ,A4(sideBlock,
                      "Gates",
                      _p9.gates,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gates),
+                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Gates),
                      _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
@@ -23768,7 +23768,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Downwind")]))
                                      ,A3(intInput,
                                      _p10.downwind.y,
-                                     $Screens$EditTrack$Types.SetDownwindY,
+                                     $Screens$EditTrack$Model.SetDownwindY,
                                      _U.list([$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23777,7 +23777,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Upwind")]))
                                      ,A3(intInput,
                                      _p10.upwind.y,
-                                     $Screens$EditTrack$Types.SetUpwindY,
+                                     $Screens$EditTrack$Model.SetUpwindY,
                                      _U.list([$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23786,7 +23786,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Width")]))
                                      ,A3(intInput,
                                      _p10.downwind.width,
-                                     $Screens$EditTrack$Types.SetGateWidth,
+                                     $Screens$EditTrack$Model.SetGateWidth,
                                      _U.list([$Html$Attributes.min("50")
                                              ,$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
@@ -23796,12 +23796,12 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Laps")]))
                                      ,A3(intInput,
                                      _p10.laps,
-                                     $Screens$EditTrack$Types.SetLaps,
+                                     $Screens$EditTrack$Model.SetLaps,
                                      _U.list([$Html$Attributes.min("1")]))]))]))
                      ,A4(sideBlock,
                      "Wind",
                      _p9.wind,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Wind),
+                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Wind),
                      _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
@@ -23809,7 +23809,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Speed")]))
                                      ,A3(intInput,
                                      _p10.windSpeed,
-                                     $Screens$EditTrack$Types.SetWindSpeed,
+                                     $Screens$EditTrack$Model.SetWindSpeed,
                                      _U.list([$Html$Attributes.min("10")
                                              ,$Html$Attributes.max("20")]))]))
                              ,A2($Html.div,
@@ -23819,7 +23819,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Wavelength 1")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.wavelength1,
-                                     $Screens$EditTrack$Types.SetWindW1,
+                                     $Screens$EditTrack$Model.SetWindW1,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23828,7 +23828,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Amplitude 1")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.amplitude1,
-                                     $Screens$EditTrack$Types.SetWindA1,
+                                     $Screens$EditTrack$Model.SetWindA1,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23837,7 +23837,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Wavelength 2")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.wavelength2,
-                                     $Screens$EditTrack$Types.SetWindW2,
+                                     $Screens$EditTrack$Model.SetWindW2,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23846,12 +23846,12 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Amplitude 2")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.amplitude2,
-                                     $Screens$EditTrack$Types.SetWindA2,
+                                     $Screens$EditTrack$Model.SetWindA2,
                                      _U.list([$Html$Attributes.min("1")]))]))]))
                      ,A4(sideBlock,
                      "Gusts",
                      _p9.gusts,
-                     $Screens$EditTrack$Types.ToggleBlock($Screens$EditTrack$Types.Gusts),
+                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Gusts),
                      _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
@@ -23860,7 +23860,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.interval,
                                      function (i) {
-                                        return $Screens$EditTrack$Types.UpdateGustGen(function (gen) {
+                                        return $Screens$EditTrack$Model.UpdateGustGen(function (gen) {
                                            return _U.update(gen,{interval: i});
                                         });
                                      },
@@ -23873,7 +23873,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.radiusBase,
                                      function (i) {
-                                        return $Screens$EditTrack$Types.UpdateGustGen(function (gen) {
+                                        return $Screens$EditTrack$Model.UpdateGustGen(function (gen) {
                                            return _U.update(gen,{radiusBase: i});
                                         });
                                      },
@@ -23888,7 +23888,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.radiusVariation,
                                      function (i) {
-                                        return $Screens$EditTrack$Types.UpdateGustGen(function (gen) {
+                                        return $Screens$EditTrack$Model.UpdateGustGen(function (gen) {
                                            return _U.update(gen,{radiusVariation: i});
                                         });
                                      },
@@ -23903,7 +23903,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.speedVariation.start,
                                      function (_p5) {
-                                        return $Screens$EditTrack$Types.UpdateGustGen($Screens$EditTrack$Updates.updateSpeedVariation($Screens$EditTrack$Updates.updateRangeStart(_p5)));
+                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateSpeedVariation($Screens$EditTrack$Update.updateRangeStart(_p5)));
                                      },
                                      _U.list([$Html$Attributes.min("-10")
                                              ,$Html$Attributes.step("1")
@@ -23911,7 +23911,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.speedVariation.end,
                                      function (_p6) {
-                                        return $Screens$EditTrack$Types.UpdateGustGen($Screens$EditTrack$Updates.updateSpeedVariation($Screens$EditTrack$Updates.updateRangeEnd(_p6)));
+                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateSpeedVariation($Screens$EditTrack$Update.updateRangeEnd(_p6)));
                                      },
                                      _U.list([$Html$Attributes.min("0")
                                              ,$Html$Attributes.step("1")
@@ -23924,7 +23924,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.originVariation.start,
                                      function (_p7) {
-                                        return $Screens$EditTrack$Types.UpdateGustGen($Screens$EditTrack$Updates.updateOriginVariation($Screens$EditTrack$Updates.updateRangeStart(_p7)));
+                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateOriginVariation($Screens$EditTrack$Update.updateRangeStart(_p7)));
                                      },
                                      _U.list([$Html$Attributes.min("-20")
                                              ,$Html$Attributes.step("1")
@@ -23932,7 +23932,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.originVariation.end,
                                      function (_p8) {
-                                        return $Screens$EditTrack$Types.UpdateGustGen($Screens$EditTrack$Updates.updateOriginVariation($Screens$EditTrack$Updates.updateRangeEnd(_p8)));
+                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateOriginVariation($Screens$EditTrack$Update.updateRangeEnd(_p8)));
                                      },
                                      _U.list([$Html$Attributes.min("0")
                                              ,$Html$Attributes.step("1")
@@ -23941,15 +23941,15 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                      _U.list([$Html$Attributes.$class("form-actions btn-group btn-group-justified")]),
                      _U.list([A2($Html.a,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.Save(false))
+                                     $Screens$EditTrack$Update.addr,
+                                     $Screens$EditTrack$Model.Save(false))
                                      ,$Html$Attributes.$class("btn btn-primary btn-save")
                                      ,$Html$Attributes.disabled(_p13)]),
                              _U.list([$Html.text("Save")]))
                              ,A2($Html.a,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.Save(true))
+                                     $Screens$EditTrack$Update.addr,
+                                     $Screens$EditTrack$Model.Save(true))
                                      ,$Html$Attributes.$class("btn btn-default btn-save-and-try")
                                      ,$Html$Attributes.disabled(_p13)]),
                              _U.list([$Html.text("Save and try")]))]))
@@ -23957,14 +23957,14 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                      _U.list([$Html$Attributes.$class("btn-group-vertical")]),
                      _U.list([A2($Html.button,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.ConfirmPublish)
+                                     $Screens$EditTrack$Update.addr,
+                                     $Screens$EditTrack$Model.ConfirmPublish)
                                      ,$Html$Attributes.$class("btn btn-default btn-block btn-confirm-publish")]),
                              _U.list([$Html.text("Save and publish")]))
                              ,_p11.confirmPublish ? A2($Html.button,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Updates.addr,
-                                     $Screens$EditTrack$Types.Publish)
+                                     $Screens$EditTrack$Update.addr,
+                                     $Screens$EditTrack$Model.Publish)
                                      ,$Html$Attributes.$class("btn btn-success btn-block btn-confirm-publish")]),
                              _U.list([$Html.text("Confirm? You can\'t go back!")])) : $Html.text("")])) : $Html.text("")]);
    });
@@ -23999,8 +23999,8 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
    $Screens$EditTrack$SideView = Elm.Screens.EditTrack.SideView.make(_elm),
-   $Screens$EditTrack$Types = Elm.Screens.EditTrack.Types.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
@@ -24010,7 +24010,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
       var _p1 = _p0;
       var _p4 = _p1.course;
       var _p3 = _p1.center;
-      var _p2 = $Game$Geo.floatify($Screens$EditTrack$Types.getCourseDims(dims));
+      var _p2 = $Game$Geo.floatify($Screens$EditTrack$Model.getCourseDims(dims));
       var w = _p2._0;
       var h = _p2._1;
       var cx = w / 2 + $Basics.fst(_p3);
@@ -24020,7 +24020,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
               ,$Svg$Attributes.height($Basics.toString(h))
               ,$Svg$Attributes.$class(A2($Basics._op["++"],
               "mode-",
-              $Basics.fst($Screens$EditTrack$Types.modeName($Screens$EditTrack$Types.realMode(_p1)))))]),
+              $Basics.fst($Screens$EditTrack$Model.modeName($Screens$EditTrack$Model.realMode(_p1)))))]),
       _U.list([A2($Svg.g,
       _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
       "scale(1,-1)",
@@ -24073,7 +24073,7 @@ Elm.Screens.ShowProfile.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$ShowProfile$Types = Elm.Screens.ShowProfile.Types.make(_elm),
+   $Screens$ShowProfile$Model = Elm.Screens.ShowProfile.Model.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -24118,8 +24118,8 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
-   $Screens$Game$Updates = Elm.Screens.Game.Updates.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
+   $Screens$Game$Update = Elm.Screens.Game.Update.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -24127,17 +24127,17 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
       return $Screens$Utils.textInput(_U.list([$Html$Attributes.value(field)
                                               ,$Html$Attributes.placeholder("type in there...")
                                               ,A2($Screens$Utils.onInput,
-                                              $Screens$Game$Updates.addr,
-                                              $Screens$Game$Types.UpdateMessageField)
+                                              $Screens$Game$Update.addr,
+                                              $Screens$Game$Model.UpdateMessageField)
                                               ,A2($Screens$Utils.onEnter,
-                                              $Screens$Game$Updates.addr,
-                                              $Screens$Game$Types.SubmitMessage)
+                                              $Screens$Game$Update.addr,
+                                              $Screens$Game$Model.SubmitMessage)
                                               ,A2($Html$Events.onFocus,
-                                              $Screens$Game$Updates.addr,
-                                              $Screens$Game$Types.EnterChat)
+                                              $Screens$Game$Update.addr,
+                                              $Screens$Game$Model.EnterChat)
                                               ,A2($Html$Events.onBlur,
-                                              $Screens$Game$Updates.addr,
-                                              $Screens$Game$Types.LeaveChat)]));
+                                              $Screens$Game$Update.addr,
+                                              $Screens$Game$Model.LeaveChat)]));
    };
    var messageItem = function (_p0) {
       var _p1 = _p0;
@@ -24325,7 +24325,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -24433,8 +24433,8 @@ Elm.Screens.Game.SideView.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
    $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -25252,8 +25252,8 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
    $Screens$Game$SideView = Elm.Screens.Game.SideView.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -25307,8 +25307,8 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$ListDrafts$Types = Elm.Screens.ListDrafts.Types.make(_elm),
-   $Screens$ListDrafts$Updates = Elm.Screens.ListDrafts.Updates.make(_elm),
+   $Screens$ListDrafts$Model = Elm.Screens.ListDrafts.Model.make(_elm),
+   $Screens$ListDrafts$Update = Elm.Screens.ListDrafts.Update.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -25324,18 +25324,18 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
               _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p1.name)
                                                         ,$Html$Attributes.placeholder("Track name")
                                                         ,A2($Screens$Utils.onInput,
-                                                        $Screens$ListDrafts$Updates.addr,
-                                                        $Screens$ListDrafts$Types.SetDraftName)
+                                                        $Screens$ListDrafts$Update.addr,
+                                                        $Screens$ListDrafts$Model.SetDraftName)
                                                         ,A2($Screens$Utils.onEnter,
-                                                        $Screens$ListDrafts$Updates.addr,
-                                                        $Screens$ListDrafts$Types.CreateDraft)]))]))
+                                                        $Screens$ListDrafts$Update.addr,
+                                                        $Screens$ListDrafts$Model.CreateDraft)]))]))
               ,A2($Html.div,
               _U.list([]),
               _U.list([A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,A2($Html$Events.onClick,
-                      $Screens$ListDrafts$Updates.addr,
-                      $Screens$ListDrafts$Types.CreateDraft)]),
+                      $Screens$ListDrafts$Update.addr,
+                      $Screens$ListDrafts$Model.CreateDraft)]),
               _U.list([$Html.text("Create draft")]))]))]));
    };
    var draftItem = F2(function (confirmDelete,draft) {
@@ -25350,14 +25350,14 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
               ,A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-default btn-xs pull-right")
                       ,A2($Html$Events.onClick,
-                      $Screens$ListDrafts$Updates.addr,
-                      $Screens$ListDrafts$Types.ConfirmDeleteDraft(draft))]),
+                      $Screens$ListDrafts$Update.addr,
+                      $Screens$ListDrafts$Model.ConfirmDeleteDraft(draft))]),
               _U.list([$Html.text("Delete")]))
               ,A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-danger btn-xs pull-right delete-draft")
                       ,A2($Html$Events.onClick,
-                      $Screens$ListDrafts$Updates.addr,
-                      $Screens$ListDrafts$Types.DeleteDraft(draft.id))]),
+                      $Screens$ListDrafts$Update.addr,
+                      $Screens$ListDrafts$Model.DeleteDraft(draft.id))]),
               _U.list([$Html.text("Confirm?")]))]));
    });
    var view = F2(function (ctx,_p2) {
@@ -25409,9 +25409,9 @@ Elm.Screens.Admin.View.make = function (_elm) {
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
+   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
    $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
-   $Screens$Admin$Types = Elm.Screens.Admin.Types.make(_elm),
-   $Screens$Admin$Updates = Elm.Screens.Admin.Updates.make(_elm),
+   $Screens$Admin$Update = Elm.Screens.Admin.Update.make(_elm),
    $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -25481,8 +25481,8 @@ Elm.Screens.Admin.View.make = function (_elm) {
                       ,A2($Html.button,
                       _U.list([$Html$Attributes.$class("btn btn-danger btn-xs pull-right")
                               ,A2($Html$Events.onClick,
-                              $Screens$Admin$Updates.addr,
-                              $Screens$Admin$Types.DeleteTrack(track.id))]),
+                              $Screens$Admin$Update.addr,
+                              $Screens$Admin$Model.DeleteTrack(track.id))]),
                       _U.list([$Html.text("Delete")]))]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
@@ -25687,7 +25687,7 @@ Elm.Game.Outputs.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Routes = Elm.Routes.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $TransitRouter = Elm.TransitRouter.make(_elm);
    var _op = {};
@@ -25835,21 +25835,21 @@ Elm.Screens.Game.Decoders.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var specificActionDecoder = function (tag) {
       var _p0 = tag;
       switch (_p0)
       {case "NoOp":
-         return $Json$Decode.succeed($Screens$Game$Types.NoOp);
+         return $Json$Decode.succeed($Screens$Game$Model.NoOp);
          case "LiveTrack": return A2($Json$Decode.object1,
-           $Screens$Game$Types.UpdateLiveTrack,
+           $Screens$Game$Model.UpdateLiveTrack,
            A2($Json$Decode._op[":="],
            "liveTrack",
            $Decoders.liveTrackDecoder));
          case "Message": return A2($Json$Decode.object1,
-           $Screens$Game$Types.NewMessage,
+           $Screens$Game$Model.NewMessage,
            A2($Json$Decode._op[":="],"message",$Decoders.messageDecoder));
          default: return $Json$Decode.fail(A2($Basics._op["++"],
            tag,
@@ -25861,7 +25861,7 @@ Elm.Screens.Game.Decoders.make = function (_elm) {
    var decodeAction = function (value) {
       var _p1 = A2($Json$Decode.decodeValue,actionDecoder,value);
       if (_p1.ctor === "Err") {
-            return $Screens$Game$Types.NoOp;
+            return $Screens$Game$Model.NoOp;
          } else {
             return _p1._0;
          }
@@ -25891,10 +25891,10 @@ Elm.Main.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Updates = Elm.Screens.EditTrack.Updates.make(_elm),
+   $Screens$EditTrack$Update = Elm.Screens.EditTrack.Update.make(_elm),
    $Screens$Game$Decoders = Elm.Screens.Game.Decoders.make(_elm),
-   $Screens$Game$Types = Elm.Screens.Game.Types.make(_elm),
-   $Screens$Game$Updates = Elm.Screens.Game.Updates.make(_elm),
+   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
+   $Screens$Game$Update = Elm.Screens.Game.Update.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
    $Task = Elm.Task.make(_elm),
@@ -25906,7 +25906,7 @@ Elm.Main.make = function (_elm) {
    function (v) {
       return v;
    },
-   $Screens$Game$Updates.chat.signal);
+   $Screens$Game$Update.chat.signal);
    var clock = A2($Signal.map,
    function (_p0) {
       var _p1 = _p0;
@@ -26081,7 +26081,7 @@ Elm.Main.make = function (_elm) {
    clock,
    A3($Signal.filterMap,
    $Maybe.map(function (_p3) {
-      return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Types.GameUpdate(_p3)));
+      return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Model.GameUpdate(_p3)));
    }),
    $AppTypes.AppNoOp,
    A3($Signal.map2,
@@ -26133,7 +26133,7 @@ Elm.Main.make = function (_elm) {
                                               function (_p4) {
                                                  return $AppTypes.ScreenAction($AppTypes.EditTrackAction(_p4));
                                               },
-                                              $Screens$EditTrack$Updates.inputs)])});
+                                              $Screens$EditTrack$Update.inputs)])});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);

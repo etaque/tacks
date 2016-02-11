@@ -1,4 +1,4 @@
-module Screens.Admin.Types where
+module Screens.Admin.Model where
 
 import Models exposing (..)
 import Screens.Admin.Routes exposing (..)

@@ -1,4 +1,4 @@
-module Screens.ListDrafts.Updates where
+module Screens.ListDrafts.Update where
 
 import Effects exposing (Effects, Never, none)
 import Task exposing (Task)
@@ -9,7 +9,7 @@ import Models exposing (..)
 import ServerApi
 import Routes
 
-import Screens.ListDrafts.Types exposing (..)
+import Screens.ListDrafts.Model exposing (..)
 import Screens.UpdateUtils as Utils
 
 

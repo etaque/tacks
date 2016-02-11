@@ -1,11 +1,11 @@
-module Screens.ShowProfile.Updates where
+module Screens.ShowProfile.Update where
 
 import Effects exposing (Effects, Never, none)
 import Response exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
-import Screens.ShowProfile.Types exposing (..)
+import Screens.ShowProfile.Model exposing (..)
 import Screens.UpdateUtils as Utils
 
 

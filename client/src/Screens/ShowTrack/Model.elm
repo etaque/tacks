@@ -1,4 +1,4 @@
-module Screens.ShowTrack.Types where
+module Screens.ShowTrack.Model where
 
 import Models exposing (..)
 import DragAndDrop exposing (MouseEvent(..))

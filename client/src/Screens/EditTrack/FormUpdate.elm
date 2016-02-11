@@ -1,7 +1,7 @@
-module Screens.EditTrack.FormUpdates where
+module Screens.EditTrack.FormUpdate where
 
 import Models exposing (..)
-import Screens.EditTrack.Types exposing (..)
+import Screens.EditTrack.Model exposing (..)
 
 
 update : FormUpdate -> Course -> Course
@@ -66,6 +66,3 @@ updateGustGen update course =
 updateWindGen : (WindGenerator -> WindGenerator) -> Course -> Course
 updateWindGen update course =
   { course | windGenerator = update course.windGenerator }
-
-
-

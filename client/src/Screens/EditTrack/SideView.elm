@@ -8,8 +8,8 @@ import Models exposing (..)
 import Constants exposing (..)
 import Screens.Utils exposing (..)
 
-import Screens.EditTrack.Updates exposing (..)
-import Screens.EditTrack.Types exposing (..)
+import Screens.EditTrack.Update exposing (..)
+import Screens.EditTrack.Model exposing (..)
 import Screens.Sidebar as Sidebar
 
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)

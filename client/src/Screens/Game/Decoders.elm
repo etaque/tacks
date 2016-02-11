@@ -3,7 +3,7 @@ module Screens.Game.Decoders where
 import Json.Decode as Json exposing (..)
 
 import Decoders exposing (..)
-import Screens.Game.Types exposing (..)
+import Screens.Game.Model exposing (..)
 
 
 decodeAction : Json.Value -> Action

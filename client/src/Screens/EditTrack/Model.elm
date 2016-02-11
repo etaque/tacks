@@ -1,4 +1,4 @@
-module Screens.EditTrack.Types where
+module Screens.EditTrack.Model where
 
 import Models exposing (..)
 import Constants exposing (sidebarWidth)

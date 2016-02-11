@@ -8,8 +8,8 @@ import AppTypes exposing (..)
 import Models exposing (..)
 import Routes exposing (..)
 
-import Screens.Home.Types exposing (..)
-import Screens.Home.Updates exposing (addr)
+import Screens.Home.Model exposing (..)
+import Screens.Home.Update exposing (addr)
 
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout

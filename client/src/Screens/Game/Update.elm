@@ -1,4 +1,4 @@
-module Screens.Game.Updates where
+module Screens.Game.Update where
 
 import List exposing (take, (::))
 import Task exposing (Task, succeed, map, andThen)
@@ -13,7 +13,7 @@ import Response exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
-import Screens.Game.Types exposing (..)
+import Screens.Game.Model exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps exposing (gameStep)

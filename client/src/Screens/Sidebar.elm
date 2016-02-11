@@ -9,7 +9,7 @@ import Models exposing (..)
 
 import Screens.Utils exposing (..)
 import Routes exposing (..)
-import Screens.Admin.Types as Admin
+import Screens.Admin.Model as Admin
 
 
 view : Context -> List Html

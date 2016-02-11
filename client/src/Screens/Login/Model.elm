@@ -1,4 +1,4 @@
-module Screens.Login.Types where
+module Screens.Login.Model where
 
 import Models exposing (..)
 

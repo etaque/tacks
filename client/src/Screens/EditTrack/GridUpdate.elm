@@ -1,4 +1,4 @@
-module Screens.EditTrack.GridUpdates where
+module Screens.EditTrack.GridUpdate where
 
 import DragAndDrop exposing (mouseEvents, MouseEvent(..))
 
@@ -6,7 +6,7 @@ import Constants exposing (sidebarWidth, hexRadius)
 import Models exposing (..)
 import CoreExtra exposing (..)
 
-import Screens.EditTrack.Types exposing (..)
+import Screens.EditTrack.Model exposing (..)
 import Hexagons
 import Hexagons.Grid as Grid
 
@@ -111,4 +111,3 @@ withinWindow (w, h) (x, y) =
     yWindow = (0, y)
   in
     within xWindow x && within yWindow y
-

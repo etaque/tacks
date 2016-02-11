@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import AppTypes exposing (..)
 import Models exposing (..)
 
-import Screens.Game.Types exposing (..)
+import Screens.Game.Model exposing (..)
 import Screens.Game.ChatView as ChatView
 import Screens.Game.SideView as SideView
 

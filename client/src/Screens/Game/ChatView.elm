@@ -6,8 +6,8 @@ import Html.Events exposing (..)
 
 import Models exposing (..)
 
-import Screens.Game.Types exposing (..)
-import Screens.Game.Updates exposing (addr)
+import Screens.Game.Model exposing (..)
+import Screens.Game.Update exposing (addr)
 
 import Screens.Utils exposing (..)
 

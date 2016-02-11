@@ -1,4 +1,4 @@
-module Screens.Admin.Updates where
+module Screens.Admin.Update where
 
 import Task exposing (Task, succeed, andThen)
 import Signal
@@ -7,7 +7,7 @@ import Response exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
-import Screens.Admin.Types as Types exposing (..)
+import Screens.Admin.Model as Types exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 

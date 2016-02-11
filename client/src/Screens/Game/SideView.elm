@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import Models exposing (..)
 import Game.Models exposing (GameState)
 
-import Screens.Game.Types exposing (..)
+import Screens.Game.Model exposing (..)
 import Screens.Game.PlayersView as PlayersView
 import Screens.Sidebar as Sidebar
 

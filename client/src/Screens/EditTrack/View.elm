@@ -8,7 +8,7 @@ import Svg.Attributes exposing (..)
 import AppTypes exposing (..)
 import Models exposing (..)
 
-import Screens.EditTrack.Types exposing (..)
+import Screens.EditTrack.Model exposing (..)
 import Screens.EditTrack.SideView as SideView
 import Screens.Layout as Layout
 

@@ -1,4 +1,4 @@
-module Screens.Game.Types where
+module Screens.Game.Model where
 
 import Time exposing (Time)
 

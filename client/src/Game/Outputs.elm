@@ -3,7 +3,7 @@ module Game.Outputs where
 import TransitRouter exposing (getRoute)
 
 import AppTypes exposing (..)
-import Screens.Game.Types exposing (..)
+import Screens.Game.Model exposing (..)
 import Game.Models exposing (..)
 import Game.Inputs exposing (..)
 import Routes

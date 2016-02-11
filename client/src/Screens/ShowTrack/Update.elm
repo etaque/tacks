@@ -1,4 +1,4 @@
-module Screens.ShowTrack.Updates where
+module Screens.ShowTrack.Update where
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
@@ -8,7 +8,7 @@ import Response exposing (..)
 
 import Models exposing (..)
 import AppTypes exposing (..)
-import Screens.ShowTrack.Types exposing (..)
+import Screens.ShowTrack.Model exposing (..)
 import ServerApi
 import Screens.UpdateUtils as Utils
 

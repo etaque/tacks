@@ -12,8 +12,8 @@ import Models exposing (..)
 import Routes
 
 import Screens.Admin.Routes exposing (..)
-import Screens.Admin.Types exposing (..)
-import Screens.Admin.Updates exposing (addr)
+import Screens.Admin.Model exposing (..)
+import Screens.Admin.Update exposing (addr)
 
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout

@@ -9,8 +9,8 @@ import AppTypes exposing (..)
 import Models exposing (..)
 import Routes exposing (..)
 
-import Screens.ListDrafts.Types exposing (..)
-import Screens.ListDrafts.Updates exposing (addr)
+import Screens.ListDrafts.Model exposing (..)
+import Screens.ListDrafts.Update exposing (addr)
 
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout

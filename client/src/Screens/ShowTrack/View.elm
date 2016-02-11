@@ -10,8 +10,8 @@ import AppTypes exposing (..)
 import Models exposing (..)
 import Routes exposing (..)
 
-import Screens.ShowTrack.Types exposing (..)
-import Screens.ShowTrack.Updates exposing (addr)
+import Screens.ShowTrack.Model exposing (..)
+import Screens.ShowTrack.Update exposing (addr)
 
 import Screens.Utils exposing (..)
 import Screens.Layout as Layout

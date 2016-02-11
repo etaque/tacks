@@ -1,4 +1,4 @@
-module Screens.ShowProfile.Types where
+module Screens.ShowProfile.Model where
 
 import Models exposing (..)
 

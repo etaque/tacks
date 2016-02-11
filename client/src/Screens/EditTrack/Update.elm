@@ -1,4 +1,4 @@
-module Screens.EditTrack.Updates where
+module Screens.EditTrack.Update where
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
@@ -12,9 +12,9 @@ import DragAndDrop exposing (MouseEvent)
 import AppTypes exposing (..)
 import Models exposing (..)
 
-import Screens.EditTrack.Types exposing (..)
-import Screens.EditTrack.FormUpdates as FormUpdates exposing (update)
-import Screens.EditTrack.GridUpdates as GridUpdates exposing (mouseAction)
+import Screens.EditTrack.Model exposing (..)
+import Screens.EditTrack.FormUpdate as FormUpdate
+import Screens.EditTrack.GridUpdate as GridUpdate
 
 import Constants exposing (..)
 import ServerApi
@@ -63,7 +63,7 @@ update dims action screen =
       staticRes (updateEditor (\e -> { e | name = n }) screen)
 
     MouseAction event ->
-      staticRes (updateEditor (GridUpdates.mouseAction event dims) screen)
+      staticRes (updateEditor (GridUpdate.mouseAction event dims) screen)
 
     SetMode mode ->
       staticRes (updateEditor (\e -> { e | mode = mode }) screen)
@@ -72,7 +72,7 @@ update dims action screen =
       staticRes (updateEditor (\e -> { e | altMove = b }) screen)
 
     FormAction a ->
-      staticRes ((FormUpdates.update >> updateCourse >> updateEditor) a screen)
+      staticRes ((FormUpdate.update >> updateCourse >> updateEditor) a screen)
 
     Save try ->
       case (screen.track, screen.editor) of

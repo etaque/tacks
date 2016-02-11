@@ -7,15 +7,15 @@ import Response exposing (..)
 
 import Models exposing (..)
 
-import Screens.Home.Types as Home
-import Screens.Login.Types as Login
-import Screens.Register.Types as Register
-import Screens.ShowTrack.Types as ShowTrack
-import Screens.EditTrack.Types as EditTrack
-import Screens.ShowProfile.Types as ShowProfile
-import Screens.Game.Types as Game
-import Screens.ListDrafts.Types as ListDrafts
-import Screens.Admin.Types as Admin
+import Screens.Home.Model as Home
+import Screens.Login.Model as Login
+import Screens.Register.Model as Register
+import Screens.ShowTrack.Model as ShowTrack
+import Screens.EditTrack.Model as EditTrack
+import Screens.ShowProfile.Model as ShowProfile
+import Screens.Game.Model as Game
+import Screens.ListDrafts.Model as ListDrafts
+import Screens.Admin.Model as Admin
 
 import Routes
 import Transit

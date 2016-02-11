@@ -1,4 +1,4 @@
-module Screens.Home.Updates where
+module Screens.Home.Update where
 
 import Task exposing (Task, succeed, andThen)
 import Task.Extra exposing (delay)
@@ -9,7 +9,7 @@ import Response exposing (..)
 
 import AppTypes exposing (..)
 import Models exposing (..)
-import Screens.Home.Types exposing (..)
+import Screens.Home.Model exposing (..)
 import ServerApi
 import Routes
 import Screens.UpdateUtils as Utils
