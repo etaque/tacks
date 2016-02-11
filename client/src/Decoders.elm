@@ -3,7 +3,7 @@ module Decoders where
 import Json.Decode as Json exposing (..)
 import Dict
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 
 liveStatusDecoder : Decoder LiveStatus

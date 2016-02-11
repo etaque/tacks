@@ -5,8 +5,8 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import View.Utils exposing (..)
-import Models exposing (..)
-import AppTypes exposing (..)
+import Model.Shared exposing (..)
+import Model exposing (..)
 import Route exposing (..)
 
 

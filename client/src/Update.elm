@@ -6,7 +6,7 @@ import Result
 import Response exposing (..)
 import TransitRouter exposing (getRoute)
 
-import AppTypes exposing (..)
+import Model exposing (..)
 
 import Page.Home.Update as Home
 import Page.Register.Update as Register

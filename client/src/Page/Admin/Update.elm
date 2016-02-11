@@ -5,8 +5,8 @@ import Signal
 import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 import Page.Admin.Model as Types exposing (..)
 import ServerApi
 import Update.Utils as Utils

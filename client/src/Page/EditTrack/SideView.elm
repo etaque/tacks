@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Constants exposing (..)
 import View.Utils exposing (..)
 

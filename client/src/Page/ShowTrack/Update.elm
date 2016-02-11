@@ -6,8 +6,8 @@ import Effects exposing (Effects, Never, none)
 import DragAndDrop exposing (mouseEvents, MouseEvent(..))
 import Response exposing (..)
 
-import Models exposing (..)
-import AppTypes exposing (..)
+import Model.Shared exposing (..)
+import Model exposing (..)
 import Page.ShowTrack.Model exposing (..)
 import ServerApi
 import Update.Utils as Utils

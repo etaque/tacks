@@ -3,7 +3,7 @@ module Page.Game.SideView where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 
 import Page.Game.Model exposing (..)

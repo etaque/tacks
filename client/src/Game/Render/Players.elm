@@ -3,7 +3,7 @@ module Game.Render.Players where
 import Game.Core exposing (..)
 import Game.Geo as Geo
 import Game.Models exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
 

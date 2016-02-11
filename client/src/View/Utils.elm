@@ -13,7 +13,7 @@ import Form.Error exposing (..)
 
 import CoreExtra exposing (..)
 import Constants exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Route
 
 

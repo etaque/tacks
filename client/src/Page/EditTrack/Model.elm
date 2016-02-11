@@ -1,6 +1,6 @@
 module Page.EditTrack.Model where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Constants exposing (sidebarWidth)
 
 import DragAndDrop exposing (MouseEvent(..))

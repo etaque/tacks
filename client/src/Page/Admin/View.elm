@@ -7,8 +7,8 @@ import Html.Events exposing (..)
 import TransitRouter exposing (getRoute)
 import TransitStyle exposing (fadeSlideLeft)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 import Route
 
 import Page.Admin.Route exposing (..)

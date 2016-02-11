@@ -1,6 +1,6 @@
 module Game.Render.SvgUtils where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Game.Core as Core exposing (toRadians)
 import Game.Geo as Geo exposing (rotateDeg)
 

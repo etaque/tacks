@@ -1,6 +1,6 @@
 module Page.ShowTrack.Model where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import DragAndDrop exposing (MouseEvent(..))
 
 

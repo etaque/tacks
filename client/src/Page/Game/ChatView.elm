@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Page.Game.Model exposing (..)
 import Page.Game.Update exposing (addr)

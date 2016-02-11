@@ -3,7 +3,7 @@ module View where
 import Html exposing (..)
 import TransitRouter exposing (getTransition)
 
-import AppTypes exposing (..)
+import Model exposing (..)
 
 import Page.Home.View as HomeScreen
 import Page.Login.View as LoginScreen

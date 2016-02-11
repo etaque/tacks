@@ -3,7 +3,7 @@ module Game.Steps.GateCrossing where
 import Maybe as M
 import List as L
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Core exposing (..)

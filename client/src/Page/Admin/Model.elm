@@ -1,6 +1,6 @@
 module Page.Admin.Model where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Page.Admin.Route exposing (..)
 
 

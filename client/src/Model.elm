@@ -1,11 +1,11 @@
-module AppTypes where
+module Model where
 
 import Task exposing (Task)
 import Effects exposing (Effects)
 import DragAndDrop exposing (MouseEvent)
 import Response exposing (..)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Page.Home.Model as Home
 import Page.Login.Model as Login

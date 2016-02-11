@@ -11,8 +11,8 @@ import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none, tick)
 import Response exposing (..)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)

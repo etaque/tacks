@@ -1,7 +1,7 @@
 module Game.Steps where
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 import Game.Inputs exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)

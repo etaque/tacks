@@ -1,7 +1,7 @@
 module Game.Render.Tiles where
 
 import Constants exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Hexagons
 import Hexagons.Grid as Grid

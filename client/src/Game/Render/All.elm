@@ -1,7 +1,7 @@
 module Game.Render.All where
 
 import Game.Models exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
 

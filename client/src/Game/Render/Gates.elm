@@ -1,7 +1,7 @@
 module Game.Render.Gates where
 
 import Game.Models exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Constants exposing (colors)
 

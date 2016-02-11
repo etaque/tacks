@@ -1,6 +1,6 @@
 module Page.ListDrafts.Model where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 
 type alias Screen =

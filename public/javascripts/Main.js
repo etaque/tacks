@@ -15585,6 +15585,1269 @@ Elm.TransitStyle.make = function (_elm) {
                                      ,fadeIn: fadeIn
                                      ,compose: compose};
 };
+Elm.Constants = Elm.Constants || {};
+Elm.Constants.make = function (_elm) {
+   "use strict";
+   _elm.Constants = _elm.Constants || {};
+   if (_elm.Constants.values) return _elm.Constants.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var admins = _U.list(["milox"]);
+   var hexRadius = 50;
+   var colors = {water: "rgb(33, 148, 206)"
+                ,sand: "rgb(226, 219, 190)"
+                ,grass: "rgb(200, 230, 180)"
+                ,rock: "rgb(171, 196, 198)"
+                ,green: "rgb(100, 180, 106)"};
+   var transitionDuration = 100;
+   var gutterWidth = 30;
+   var containerWidth = 940;
+   var sidebarWidth = 280;
+   return _elm.Constants.values = {_op: _op
+                                  ,sidebarWidth: sidebarWidth
+                                  ,containerWidth: containerWidth
+                                  ,gutterWidth: gutterWidth
+                                  ,transitionDuration: transitionDuration
+                                  ,colors: colors
+                                  ,hexRadius: hexRadius
+                                  ,admins: admins};
+};
+Elm.CoreExtra = Elm.CoreExtra || {};
+Elm.CoreExtra.make = function (_elm) {
+   "use strict";
+   _elm.CoreExtra = _elm.CoreExtra || {};
+   if (_elm.CoreExtra.values) return _elm.CoreExtra.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var within = F2(function (_p0,c) {
+      var _p1 = _p0;
+      return _U.cmp(c,_p1._0) > -1 && _U.cmp(c,_p1._1) < 1;
+   });
+   var updateAt = F3(function (i,update,items) {
+      var asArray = $Array.fromList(items);
+      var _p2 = A2($Array.get,i,asArray);
+      if (_p2.ctor === "Just") {
+            return $Array.toList(A3($Array.set,
+            i,
+            update(_p2._0),
+            asArray));
+         } else {
+            return items;
+         }
+   });
+   var removeAt = F2(function (i,items) {
+      return A2($Basics._op["++"],
+      A2($List.take,i,items),
+      A2($List.drop,i + 1,items));
+   });
+   var isNothing = function (m) {
+      var _p3 = m;
+      if (_p3.ctor === "Nothing") {
+            return true;
+         } else {
+            return false;
+         }
+   };
+   var isJust = function (m) {
+      return $Basics.not(isNothing(m));
+   };
+   return _elm.CoreExtra.values = {_op: _op
+                                  ,isNothing: isNothing
+                                  ,isJust: isJust
+                                  ,removeAt: removeAt
+                                  ,updateAt: updateAt
+                                  ,within: within};
+};
+Elm.Model = Elm.Model || {};
+Elm.Model.Shared = Elm.Model.Shared || {};
+Elm.Model.Shared.make = function (_elm) {
+   "use strict";
+   _elm.Model = _elm.Model || {};
+   _elm.Model.Shared = _elm.Model.Shared || {};
+   if (_elm.Model.Shared.values) return _elm.Model.Shared.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var AdminData = F2(function (a,b) {
+      return {tracks: a,users: b};
+   });
+   var Rock = {ctor: "Rock"};
+   var Grass = {ctor: "Grass"};
+   var Water = {ctor: "Water"};
+   var Range = F2(function (a,b) {    return {start: a,end: b};});
+   var GustGenerator = F5(function (a,b,c,d,e) {
+      return {interval: a
+             ,radiusBase: b
+             ,radiusVariation: c
+             ,speedVariation: d
+             ,originVariation: e};
+   });
+   var WindGenerator = F4(function (a,b,c,d) {
+      return {wavelength1: a
+             ,amplitude1: b
+             ,wavelength2: c
+             ,amplitude2: d};
+   });
+   var StartLine = {ctor: "StartLine"};
+   var UpwindGate = {ctor: "UpwindGate"};
+   var DownwindGate = {ctor: "DownwindGate"};
+   var RaceArea = F2(function (a,b) {
+      return {rightTop: a,leftBottom: b};
+   });
+   var Gate = F2(function (a,b) {    return {y: a,width: b};});
+   var Course = F8(function (a,b,c,d,e,f,g,h) {
+      return {upwind: a
+             ,downwind: b
+             ,grid: c
+             ,laps: d
+             ,area: e
+             ,windSpeed: f
+             ,windGenerator: g
+             ,gustGenerator: h};
+   });
+   var Message = F3(function (a,b,c) {
+      return {content: a,player: b,time: c};
+   });
+   var Ranking = F3(function (a,b,c) {
+      return {rank: a,player: b,finishTime: c};
+   });
+   var PlayerTally = F3(function (a,b,c) {
+      return {player: a,gates: b,finished: c};
+   });
+   var Race = F5(function (a,b,c,d,e) {
+      return {id: a,trackId: b,startTime: c,players: d,tallies: e};
+   });
+   var Deleted = {ctor: "Deleted"};
+   var Archived = {ctor: "Archived"};
+   var Open = {ctor: "Open"};
+   var Draft = {ctor: "Draft"};
+   var TrackMeta = F3(function (a,b,c) {
+      return {creator: a,rankings: b,runsCount: c};
+   });
+   var Track = F5(function (a,b,c,d,e) {
+      return {id: a,name: b,creatorId: c,course: d,status: e};
+   });
+   var LiveTrack = F4(function (a,b,c,d) {
+      return {track: a,meta: b,players: c,races: d};
+   });
+   var LiveStatus = F2(function (a,b) {
+      return {liveTracks: a,onlinePlayers: b};
+   });
+   var isAdmin = function (player) {
+      var _p0 = player.handle;
+      if (_p0.ctor === "Just") {
+            return A2($List.member,_p0._0,$Constants.admins);
+         } else {
+            return false;
+         }
+   };
+   var canUpdateDraft = F2(function (player,track) {
+      return _U.eq(track.status,Draft) && _U.eq(player.id,
+      track.creatorId) || isAdmin(player);
+   });
+   var User = F7(function (a,b,c,d,e,f,g) {
+      return {id: a
+             ,email: b
+             ,handle: c
+             ,status: d
+             ,avatarId: e
+             ,vmgMagnet: f
+             ,creationTime: g};
+   });
+   var Player = F7(function (a,b,c,d,e,f,g) {
+      return {id: a
+             ,handle: b
+             ,status: c
+             ,avatarId: d
+             ,vmgMagnet: e
+             ,guest: f
+             ,user: g};
+   });
+   return _elm.Model.Shared.values = {_op: _op
+                                     ,Player: Player
+                                     ,User: User
+                                     ,isAdmin: isAdmin
+                                     ,canUpdateDraft: canUpdateDraft
+                                     ,LiveStatus: LiveStatus
+                                     ,LiveTrack: LiveTrack
+                                     ,Track: Track
+                                     ,TrackMeta: TrackMeta
+                                     ,Draft: Draft
+                                     ,Open: Open
+                                     ,Archived: Archived
+                                     ,Deleted: Deleted
+                                     ,Race: Race
+                                     ,PlayerTally: PlayerTally
+                                     ,Ranking: Ranking
+                                     ,Message: Message
+                                     ,Course: Course
+                                     ,Gate: Gate
+                                     ,RaceArea: RaceArea
+                                     ,DownwindGate: DownwindGate
+                                     ,UpwindGate: UpwindGate
+                                     ,StartLine: StartLine
+                                     ,WindGenerator: WindGenerator
+                                     ,GustGenerator: GustGenerator
+                                     ,Range: Range
+                                     ,Water: Water
+                                     ,Grass: Grass
+                                     ,Rock: Rock
+                                     ,AdminData: AdminData};
+};
+Elm.Decoders = Elm.Decoders || {};
+Elm.Decoders.make = function (_elm) {
+   "use strict";
+   _elm.Decoders = _elm.Decoders || {};
+   if (_elm.Decoders.values) return _elm.Decoders.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var rangeDecoder = A3($Json$Decode.object2,
+   $Model$Shared.Range,
+   A2($Json$Decode._op[":="],"start",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"end",$Json$Decode.$int));
+   var gustGeneratorDecoder = A6($Json$Decode.object5,
+   $Model$Shared.GustGenerator,
+   A2($Json$Decode._op[":="],"interval",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"radiusBase",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"radiusVariation",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"speedVariation",rangeDecoder),
+   A2($Json$Decode._op[":="],"originVariation",rangeDecoder));
+   var windGeneratorDecoder = A5($Json$Decode.object4,
+   $Model$Shared.WindGenerator,
+   A2($Json$Decode._op[":="],"wavelength1",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"amplitude1",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"wavelength2",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"amplitude2",$Json$Decode.$int));
+   var tileKindDecoder = function (s) {
+      var _p0 = s;
+      switch (_p0)
+      {case "W": return $Json$Decode.succeed($Model$Shared.Water);
+         case "G": return $Json$Decode.succeed($Model$Shared.Grass);
+         case "R": return $Json$Decode.succeed($Model$Shared.Rock);
+         default: return $Json$Decode.fail(A2($Basics._op["++"],
+           s,
+           " is not a TileKind"));}
+   };
+   var gridRowDecoder = A2($Json$Decode.map,
+   $Dict.fromList,
+   $Json$Decode.list(A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   }),
+   $Json$Decode.$int,
+   A2($Json$Decode.andThen,$Json$Decode.string,tileKindDecoder))));
+   var gridDecoder = A2($Json$Decode.map,
+   $Dict.fromList,
+   $Json$Decode.list(A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   }),
+   $Json$Decode.$int,
+   gridRowDecoder)));
+   var gateDecoder = A3($Json$Decode.object2,
+   $Model$Shared.Gate,
+   A2($Json$Decode._op[":="],"y",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"width",$Json$Decode.$float));
+   var pointDecoder = A3($Json$Decode.tuple2,
+   F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   }),
+   $Json$Decode.$float,
+   $Json$Decode.$float);
+   var raceAreaDecoder = A3($Json$Decode.object2,
+   $Model$Shared.RaceArea,
+   A2($Json$Decode._op[":="],"rightTop",pointDecoder),
+   A2($Json$Decode._op[":="],"leftBottom",pointDecoder));
+   var courseDecoder = A9($Json$Decode.object8,
+   $Model$Shared.Course,
+   A2($Json$Decode._op[":="],"upwind",gateDecoder),
+   A2($Json$Decode._op[":="],"downwind",gateDecoder),
+   A2($Json$Decode._op[":="],"grid",gridDecoder),
+   A2($Json$Decode._op[":="],"laps",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"area",raceAreaDecoder),
+   A2($Json$Decode._op[":="],"windSpeed",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"windGenerator",windGeneratorDecoder),
+   A2($Json$Decode._op[":="],
+   "gustGenerator",
+   gustGeneratorDecoder));
+   var userDecoder = A8($Json$Decode.object7,
+   $Model$Shared.User,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"email",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"handle",$Json$Decode.string),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "status",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "avatarId",
+   $Json$Decode.string)),
+   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float));
+   var playerDecoder = A8($Json$Decode.object7,
+   $Model$Shared.Player,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "handle",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "status",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "avatarId",
+   $Json$Decode.string)),
+   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"guest",$Json$Decode.bool),
+   A2($Json$Decode._op[":="],"user",$Json$Decode.bool));
+   var messageDecoder = A4($Json$Decode.object3,
+   $Model$Shared.Message,
+   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],"time",$Json$Decode.$float));
+   var trackStatusDecoder = function (s) {
+      var _p1 = s;
+      switch (_p1)
+      {case "draft": return $Json$Decode.succeed($Model$Shared.Draft);
+         case "open": return $Json$Decode.succeed($Model$Shared.Open);
+         case "archived":
+         return $Json$Decode.succeed($Model$Shared.Archived);
+         case "deleted":
+         return $Json$Decode.succeed($Model$Shared.Deleted);
+         default: return $Json$Decode.fail(A2($Basics._op["++"],
+           s,
+           " is not a TrackStatus"));}
+   };
+   var trackDecoder = A6($Json$Decode.object5,
+   $Model$Shared.Track,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"name",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"creatorId",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"course",courseDecoder),
+   A2($Json$Decode._op[":="],
+   "status",
+   A2($Json$Decode.andThen,
+   $Json$Decode.string,
+   trackStatusDecoder)));
+   var adminDataDecoder = A3($Json$Decode.object2,
+   $Model$Shared.AdminData,
+   A2($Json$Decode._op[":="],
+   "tracks",
+   $Json$Decode.list(trackDecoder)),
+   A2($Json$Decode._op[":="],
+   "users",
+   $Json$Decode.list(userDecoder)));
+   var playerTallyDecoder = A4($Json$Decode.object3,
+   $Model$Shared.PlayerTally,
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],
+   "gates",
+   $Json$Decode.list($Json$Decode.$float)),
+   A2($Json$Decode._op[":="],"finished",$Json$Decode.bool));
+   var rankingDecoder = A4($Json$Decode.object3,
+   $Model$Shared.Ranking,
+   A2($Json$Decode._op[":="],"rank",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],"finishTime",$Json$Decode.$float));
+   var raceDecoder = A6($Json$Decode.object5,
+   $Model$Shared.Race,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"trackId",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"startTime",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],
+   "players",
+   $Json$Decode.list(playerDecoder)),
+   A2($Json$Decode._op[":="],
+   "tallies",
+   $Json$Decode.list(playerTallyDecoder)));
+   var trackMetaDecoder = A4($Json$Decode.object3,
+   $Model$Shared.TrackMeta,
+   A2($Json$Decode._op[":="],"creator",playerDecoder),
+   A2($Json$Decode._op[":="],
+   "rankings",
+   $Json$Decode.list(rankingDecoder)),
+   A2($Json$Decode._op[":="],"runsCount",$Json$Decode.$int));
+   var liveTrackDecoder = A5($Json$Decode.object4,
+   $Model$Shared.LiveTrack,
+   A2($Json$Decode._op[":="],"track",trackDecoder),
+   A2($Json$Decode._op[":="],"meta",trackMetaDecoder),
+   A2($Json$Decode._op[":="],
+   "players",
+   $Json$Decode.list(playerDecoder)),
+   A2($Json$Decode._op[":="],
+   "races",
+   $Json$Decode.list(raceDecoder)));
+   var liveStatusDecoder = A3($Json$Decode.object2,
+   $Model$Shared.LiveStatus,
+   A2($Json$Decode._op[":="],
+   "liveTracks",
+   $Json$Decode.list(liveTrackDecoder)),
+   A2($Json$Decode._op[":="],
+   "onlinePlayers",
+   $Json$Decode.list(playerDecoder)));
+   return _elm.Decoders.values = {_op: _op
+                                 ,liveStatusDecoder: liveStatusDecoder
+                                 ,liveTrackDecoder: liveTrackDecoder
+                                 ,trackMetaDecoder: trackMetaDecoder
+                                 ,raceDecoder: raceDecoder
+                                 ,rankingDecoder: rankingDecoder
+                                 ,playerTallyDecoder: playerTallyDecoder
+                                 ,trackDecoder: trackDecoder
+                                 ,trackStatusDecoder: trackStatusDecoder
+                                 ,playerDecoder: playerDecoder
+                                 ,userDecoder: userDecoder
+                                 ,messageDecoder: messageDecoder
+                                 ,pointDecoder: pointDecoder
+                                 ,courseDecoder: courseDecoder
+                                 ,gateDecoder: gateDecoder
+                                 ,gridDecoder: gridDecoder
+                                 ,gridRowDecoder: gridRowDecoder
+                                 ,tileKindDecoder: tileKindDecoder
+                                 ,raceAreaDecoder: raceAreaDecoder
+                                 ,windGeneratorDecoder: windGeneratorDecoder
+                                 ,gustGeneratorDecoder: gustGeneratorDecoder
+                                 ,rangeDecoder: rangeDecoder
+                                 ,adminDataDecoder: adminDataDecoder};
+};
+Elm.Encoders = Elm.Encoders || {};
+Elm.Encoders.make = function (_elm) {
+   "use strict";
+   _elm.Encoders = _elm.Encoders || {};
+   if (_elm.Encoders.values) return _elm.Encoders.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var dictEncoder = F3(function (encodeKey,encodeValue,dict) {
+      var encodeField = function (_p0) {
+         var _p1 = _p0;
+         return $Json$Encode.list(_U.list([encodeKey(_p1._0)
+                                          ,encodeValue(_p1._1)]));
+      };
+      var fields = A2($List.map,encodeField,$Dict.toList(dict));
+      return $Json$Encode.list(fields);
+   });
+   var pointEncoder = function (_p2) {
+      var _p3 = _p2;
+      return $Json$Encode.list(A2($List.map,
+      $Json$Encode.$float,
+      _U.list([_p3._0,_p3._1])));
+   };
+   var tileKindEncoder = function (kind) {
+      return $Json$Encode.string(function () {
+         var _p4 = kind;
+         switch (_p4.ctor)
+         {case "Water": return "W";
+            case "Grass": return "G";
+            default: return "R";}
+      }());
+   };
+   var gridRowEncoder = function (row) {
+      return A3(dictEncoder,$Json$Encode.$int,tileKindEncoder,row);
+   };
+   var gridEncoder = function (grid) {
+      return A3(dictEncoder,$Json$Encode.$int,gridRowEncoder,grid);
+   };
+   _op["=>"] = F2(function (v0,v1) {
+      return {ctor: "_Tuple2",_0: v0,_1: v1};
+   });
+   var gateEncoder = function (gate) {
+      return $Json$Encode.object(_U.list([A2(_op["=>"],
+                                         "y",
+                                         $Json$Encode.$float(gate.y))
+                                         ,A2(_op["=>"],"width",$Json$Encode.$float(gate.width))]));
+   };
+   var areaEncoder = function (a) {
+      return $Json$Encode.object(_U.list([A2(_op["=>"],
+                                         "rightTop",
+                                         pointEncoder(a.rightTop))
+                                         ,A2(_op["=>"],"leftBottom",pointEncoder(a.leftBottom))]));
+   };
+   var windGeneratorEncoder = function (g) {
+      return $Json$Encode.object(_U.list([A2(_op["=>"],
+                                         "wavelength1",
+                                         $Json$Encode.$int(g.wavelength1))
+                                         ,A2(_op["=>"],"amplitude1",$Json$Encode.$int(g.amplitude1))
+                                         ,A2(_op["=>"],"wavelength2",$Json$Encode.$int(g.wavelength2))
+                                         ,A2(_op["=>"],"amplitude2",$Json$Encode.$int(g.amplitude2))]));
+   };
+   var rangeEncoder = function (r) {
+      return $Json$Encode.object(_U.list([A2(_op["=>"],
+                                         "start",
+                                         $Json$Encode.$int(r.start))
+                                         ,A2(_op["=>"],"end",$Json$Encode.$int(r.end))]));
+   };
+   var gustGeneratorEncoder = function (g) {
+      return $Json$Encode.object(_U.list([A2(_op["=>"],
+                                         "interval",
+                                         $Json$Encode.$int(g.interval))
+                                         ,A2(_op["=>"],"radiusBase",$Json$Encode.$int(g.radiusBase))
+                                         ,A2(_op["=>"],
+                                         "radiusVariation",
+                                         $Json$Encode.$int(g.radiusVariation))
+                                         ,A2(_op["=>"],"speedVariation",rangeEncoder(g.speedVariation))
+                                         ,A2(_op["=>"],
+                                         "originVariation",
+                                         rangeEncoder(g.originVariation))]));
+   };
+   var courseEncoder = function (course) {
+      return $Json$Encode.object(_U.list([A2(_op["=>"],
+                                         "upwind",
+                                         gateEncoder(course.upwind))
+                                         ,A2(_op["=>"],"downwind",gateEncoder(course.downwind))
+                                         ,A2(_op["=>"],"grid",gridEncoder(course.grid))
+                                         ,A2(_op["=>"],"laps",$Json$Encode.$int(course.laps))
+                                         ,A2(_op["=>"],"area",areaEncoder(course.area))
+                                         ,A2(_op["=>"],"windSpeed",$Json$Encode.$int(course.windSpeed))
+                                         ,A2(_op["=>"],
+                                         "windGenerator",
+                                         windGeneratorEncoder(course.windGenerator))
+                                         ,A2(_op["=>"],
+                                         "gustGenerator",
+                                         gustGeneratorEncoder(course.gustGenerator))]));
+   };
+   return _elm.Encoders.values = {_op: _op
+                                 ,courseEncoder: courseEncoder
+                                 ,gateEncoder: gateEncoder
+                                 ,gridEncoder: gridEncoder
+                                 ,gridRowEncoder: gridRowEncoder
+                                 ,tileKindEncoder: tileKindEncoder
+                                 ,areaEncoder: areaEncoder
+                                 ,pointEncoder: pointEncoder
+                                 ,windGeneratorEncoder: windGeneratorEncoder
+                                 ,gustGeneratorEncoder: gustGeneratorEncoder
+                                 ,rangeEncoder: rangeEncoder
+                                 ,dictEncoder: dictEncoder};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Core = Elm.Game.Core || {};
+Elm.Game.Core.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Core = _elm.Game.Core || {};
+   if (_elm.Game.Core.values) return _elm.Game.Core.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var isNothing = function (m) {
+      var _p0 = m;
+      if (_p0.ctor === "Nothing") {
+            return true;
+         } else {
+            return false;
+         }
+   };
+   var isJust = function (m) {
+      return $Basics.not(isNothing(m));
+   };
+   var floatRange = F2(function (from,to) {
+      return A2($List.map,$Basics.toFloat,_U.range(from,to));
+   });
+   var find = F2(function (f,list) {
+      return $List.head(A2($List.filter,f,list));
+   });
+   var exists = F2(function (f,list) {
+      return isJust(A2(find,f,list));
+   });
+   var lift = F2(function (n,items) {
+      return $List.head(A2($List.drop,n,items));
+   });
+   var average = function (items) {
+      return $List.sum(items) / $Basics.toFloat($List.length(items));
+   };
+   var compact = function (maybes) {
+      var folder = F2(function (m,list) {
+         var _p1 = m;
+         if (_p1.ctor === "Just") {
+               return A2($List._op["::"],_p1._0,list);
+            } else {
+               return list;
+            }
+      });
+      return A3($List.foldl,folder,_U.list([]),maybes);
+   };
+   var getCountdown = function (maybeCountdown) {
+      return A2($Maybe.withDefault,0,maybeCountdown);
+   };
+   var floatMod = F2(function (val,div) {
+      var flooredQuotient = $Basics.toFloat($Basics.floor(val / div));
+      return val - flooredQuotient * div;
+   });
+   var toDegrees = function (rad) {
+      return (0 - rad) * 180 / $Basics.pi + 90;
+   };
+   var toRadians = function (deg) {
+      return $Basics.radians((90 - deg) * $Basics.pi / 180);
+   };
+   return _elm.Game.Core.values = {_op: _op
+                                  ,toRadians: toRadians
+                                  ,toDegrees: toDegrees
+                                  ,floatMod: floatMod
+                                  ,getCountdown: getCountdown
+                                  ,compact: compact
+                                  ,average: average
+                                  ,lift: lift
+                                  ,find: find
+                                  ,exists: exists
+                                  ,floatRange: floatRange
+                                  ,isNothing: isNothing
+                                  ,isJust: isJust};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Geo = Elm.Game.Geo || {};
+Elm.Game.Geo.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Geo = _elm.Game.Geo || {};
+   if (_elm.Game.Geo.values) return _elm.Game.Geo.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Core = Elm.Game.Core.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var angleDelta = F2(function (a1,a2) {
+      var delta = a1 - a2;
+      return _U.cmp(delta,180) > 0 ? delta - 360 : _U.cmp(delta,
+      -180) < 1 ? delta + 360 : delta;
+   });
+   var inSector = F3(function (b1,b2,angle) {
+      var a2 = 0 - A2(angleDelta,angle,b2);
+      var a1 = 0 - A2(angleDelta,b1,angle);
+      return _U.cmp(a1,0) > -1 && _U.cmp(a2,0) > -1;
+   });
+   var ensure360 = function (val) {
+      var rounded = $Basics.round(val);
+      var excess = val - $Basics.toFloat(rounded);
+      return $Basics.toFloat(A2($Basics._op["%"],
+      rounded + 360,
+      360)) + excess;
+   };
+   var angleBetween = F2(function (_p1,_p0) {
+      var _p2 = _p1;
+      var _p3 = _p0;
+      var yDelta = _p3._1 - _p2._1;
+      var xDelta = _p3._0 - _p2._0;
+      var rad = A2($Basics.atan2,yDelta,xDelta);
+      return ensure360($Game$Core.toDegrees(rad));
+   });
+   var rotateDeg = F2(function (deg,radius) {
+      var a = $Game$Core.toRadians(deg);
+      return {ctor: "_Tuple2"
+             ,_0: radius * $Basics.cos(a)
+             ,_1: radius * $Basics.sin(a)};
+   });
+   var movePoint = F4(function (_p4,delta,velocity,direction) {
+      var _p5 = _p4;
+      var angle = $Game$Core.toRadians(direction);
+      var x$ = _p5._0 + delta * 1.0e-3 * velocity * $Basics.cos(angle);
+      var y$ = _p5._1 + delta * 1.0e-3 * velocity * $Basics.sin(angle);
+      return {ctor: "_Tuple2",_0: x$,_1: y$};
+   });
+   var toBox = F3(function (_p6,w,h) {
+      var _p7 = _p6;
+      var _p9 = _p7._1;
+      var _p8 = _p7._0;
+      return {ctor: "_Tuple2"
+             ,_0: {ctor: "_Tuple2",_0: _p8 + w / 2,_1: _p9 + h / 2}
+             ,_1: {ctor: "_Tuple2",_0: _p8 - w / 2,_1: _p9 - h / 2}};
+   });
+   var inBox = F2(function (_p11,_p10) {
+      var _p12 = _p11;
+      var _p15 = _p12._1;
+      var _p14 = _p12._0;
+      var _p13 = _p10;
+      return _U.cmp(_p14,_p13._1._0) > 0 && (_U.cmp(_p14,
+      _p13._0._0) < 0 && (_U.cmp(_p15,_p13._1._1) > 0 && _U.cmp(_p15,
+      _p13._0._1) < 0));
+   });
+   var distance = F2(function (_p17,_p16) {
+      var _p18 = _p17;
+      var _p19 = _p16;
+      return $Basics.sqrt(Math.pow(_p18._0 - _p19._0,
+      2) + Math.pow(_p18._1 - _p19._1,2));
+   });
+   var scale = F2(function (s,_p20) {
+      var _p21 = _p20;
+      return {ctor: "_Tuple2",_0: _p21._0 * s,_1: _p21._1 * s};
+   });
+   var neg = function (_p22) {
+      var _p23 = _p22;
+      return {ctor: "_Tuple2",_0: 0 - _p23._0,_1: 0 - _p23._1};
+   };
+   var sub = F2(function (_p25,_p24) {
+      var _p26 = _p25;
+      var _p27 = _p24;
+      return {ctor: "_Tuple2"
+             ,_0: _p27._0 - _p26._0
+             ,_1: _p27._1 - _p26._1};
+   });
+   var add = F2(function (_p29,_p28) {
+      var _p30 = _p29;
+      var _p31 = _p28;
+      return {ctor: "_Tuple2"
+             ,_0: _p31._0 + _p30._0
+             ,_1: _p31._1 + _p30._1};
+   });
+   var floatify = function (_p32) {
+      var _p33 = _p32;
+      return {ctor: "_Tuple2"
+             ,_0: $Basics.toFloat(_p33._0)
+             ,_1: $Basics.toFloat(_p33._1)};
+   };
+   return _elm.Game.Geo.values = {_op: _op
+                                 ,floatify: floatify
+                                 ,add: add
+                                 ,sub: sub
+                                 ,neg: neg
+                                 ,scale: scale
+                                 ,distance: distance
+                                 ,inBox: inBox
+                                 ,toBox: toBox
+                                 ,movePoint: movePoint
+                                 ,rotateDeg: rotateDeg
+                                 ,ensure360: ensure360
+                                 ,angleDelta: angleDelta
+                                 ,angleBetween: angleBetween
+                                 ,inSector: inSector};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Models = Elm.Game.Models || {};
+Elm.Game.Models.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Models = _elm.Game.Models || {};
+   if (_elm.Game.Models.values) return _elm.Game.Models.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Game$Core = Elm.Game.Core.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var isStarted = function (_p0) {
+      var _p1 = _p0;
+      var _p3 = _p1.timers;
+      var _p2 = _p3.startTime;
+      if (_p2.ctor === "Just") {
+            return _U.cmp(_p3.now,_p2._0) > -1;
+         } else {
+            return false;
+         }
+   };
+   var raceTime = function (_p4) {
+      var _p5 = _p4;
+      var _p7 = _p5.timers;
+      var _p6 = _p7.startTime;
+      if (_p6.ctor === "Just") {
+            return _p7.now - _p6._0;
+         } else {
+            return 0;
+         }
+   };
+   var findOpponent = F2(function (opponents,id) {
+      return A2($Game$Core.find,
+      function (ps) {
+         return _U.eq(ps.player.id,id);
+      },
+      opponents);
+   });
+   var findPlayerGhost = F2(function (playerId,ghosts) {
+      return A2($Game$Core.find,
+      function (g) {
+         return _U.eq(g.id,playerId);
+      },
+      ghosts);
+   });
+   var getGateMarks = function (gate) {
+      return {ctor: "_Tuple2"
+             ,_0: {ctor: "_Tuple2",_0: (0 - gate.width) / 2,_1: gate.y}
+             ,_1: {ctor: "_Tuple2",_0: gate.width / 2,_1: gate.y}};
+   };
+   var emptyWindHistory = function (now) {
+      return {samples: _U.list([]),lastSample: 0,init: now};
+   };
+   var defaultWind = {origin: 0
+                     ,speed: 0
+                     ,gusts: _U.list([])
+                     ,gustCounter: 0};
+   var defaultGate = {y: 0,width: 0};
+   var defaultVmg = {angle: 0,speed: 0,value: 0};
+   var asOpponentState = function (_p8) {
+      var _p9 = _p8;
+      return {time: _p9.time
+             ,position: _p9.position
+             ,heading: _p9.heading
+             ,velocity: _p9.velocity
+             ,windAngle: _p9.windAngle
+             ,windOrigin: _p9.windOrigin
+             ,shadowDirection: _p9.shadowDirection
+             ,crossedGates: _p9.crossedGates};
+   };
+   var upwind = function (s) {
+      return _U.cmp($Basics.abs(s.windAngle),90) < 0;
+   };
+   var closestVmgAngle = function (s) {
+      return upwind(s) ? s.upwindVmg.angle : s.downwindVmg.angle;
+   };
+   var windAngleOnVmg = function (s) {
+      return _U.cmp(s.windAngle,
+      0) < 0 ? 0 - closestVmgAngle(s) : closestVmgAngle(s);
+   };
+   var deltaToVmg = function (s) {
+      return s.windAngle - windAngleOnVmg(s);
+   };
+   var areaCenters = function (_p10) {
+      var _p11 = _p10;
+      var _p12 = _p11.leftBottom;
+      var l = _p12._0;
+      var b = _p12._1;
+      var _p13 = _p11.rightTop;
+      var r = _p13._0;
+      var t = _p13._1;
+      var cx = (r + l) / 2;
+      var cy = (t + b) / 2;
+      return {ctor: "_Tuple2",_0: cx,_1: cy};
+   };
+   var areaBottom = function (_p14) {
+      var _p15 = _p14;
+      return $Basics.snd(_p15.leftBottom);
+   };
+   var areaTop = function (_p16) {
+      var _p17 = _p16;
+      return $Basics.snd(_p17.rightTop);
+   };
+   var areaDims = function (_p18) {
+      var _p19 = _p18;
+      var _p20 = _p19.leftBottom;
+      var l = _p20._0;
+      var b = _p20._1;
+      var _p21 = _p19.rightTop;
+      var r = _p21._0;
+      var t = _p21._1;
+      return {ctor: "_Tuple2",_0: r - l,_1: t - b};
+   };
+   var areaWidth = function (_p22) {
+      return $Basics.fst(areaDims(_p22));
+   };
+   var genX = F3(function (seed,margin,area) {
+      var _p23 = areaCenters(area);
+      var cx = _p23._0;
+      var effectiveWidth = areaWidth(area) - margin * 2;
+      return A2($Game$Core.floatMod,
+      seed,
+      effectiveWidth) - effectiveWidth / 2 + cx;
+   });
+   var areaHeight = function (_p24) {
+      return $Basics.snd(areaDims(_p24));
+   };
+   var areaBox = function (_p25) {
+      var _p26 = _p25;
+      return {ctor: "_Tuple2",_0: _p26.rightTop,_1: _p26.leftBottom};
+   };
+   var GhostState = F5(function (a,b,c,d,e) {
+      return {position: a,heading: b,id: c,handle: d,gates: e};
+   });
+   var OpponentState = F8(function (a,b,c,d,e,f,g,h) {
+      return {time: a
+             ,position: b
+             ,heading: c
+             ,velocity: d
+             ,windAngle: e
+             ,windOrigin: f
+             ,shadowDirection: g
+             ,crossedGates: h};
+   });
+   var Opponent = F2(function (a,b) {
+      return {player: a,state: b};
+   });
+   var Vmg = F3(function (a,b,c) {
+      return {angle: a,speed: b,value: c};
+   });
+   var FixedHeading = {ctor: "FixedHeading"};
+   var defaultPlayerState = F2(function (player,now) {
+      return {player: player
+             ,time: now
+             ,position: {ctor: "_Tuple2",_0: 0,_1: 0}
+             ,isGrounded: false
+             ,isTurning: false
+             ,heading: 0
+             ,velocity: 0
+             ,vmgValue: 0
+             ,windAngle: 0
+             ,windOrigin: 0
+             ,windSpeed: 0
+             ,downwindVmg: defaultVmg
+             ,upwindVmg: defaultVmg
+             ,shadowDirection: 0
+             ,trail: _U.list([])
+             ,controlMode: FixedHeading
+             ,tackTarget: $Maybe.Nothing
+             ,crossedGates: _U.list([])
+             ,nextGate: $Maybe.Just($Model$Shared.StartLine)};
+   });
+   var FixedAngle = {ctor: "FixedAngle"};
+   var PlayerState = function (a) {
+      return function (b) {
+         return function (c) {
+            return function (d) {
+               return function (e) {
+                  return function (f) {
+                     return function (g) {
+                        return function (h) {
+                           return function (i) {
+                              return function (j) {
+                                 return function (k) {
+                                    return function (l) {
+                                       return function (m) {
+                                          return function (n) {
+                                             return function (o) {
+                                                return function (p) {
+                                                   return function (q) {
+                                                      return function (r) {
+                                                         return function (s) {
+                                                            return {player: a
+                                                                   ,time: b
+                                                                   ,position: c
+                                                                   ,isGrounded: d
+                                                                   ,isTurning: e
+                                                                   ,heading: f
+                                                                   ,velocity: g
+                                                                   ,vmgValue: h
+                                                                   ,windAngle: i
+                                                                   ,windOrigin: j
+                                                                   ,windSpeed: k
+                                                                   ,downwindVmg: l
+                                                                   ,upwindVmg: m
+                                                                   ,shadowDirection: n
+                                                                   ,trail: o
+                                                                   ,controlMode: p
+                                                                   ,tackTarget: q
+                                                                   ,crossedGates: r
+                                                                   ,nextGate: s};
+                                                         };
+                                                      };
+                                                   };
+                                                };
+                                             };
+                                          };
+                                       };
+                                    };
+                                 };
+                              };
+                           };
+                        };
+                     };
+                  };
+               };
+            };
+         };
+      };
+   };
+   var GustTile = F2(function (a,b) {
+      return {angle: a,speed: b};
+   });
+   var TiledGust = F3(function (a,b,c) {
+      return {position: a,radius: b,tiles: c};
+   });
+   var TiledGusts = F2(function (a,b) {
+      return {genTime: a,gusts: b};
+   });
+   var defaultGame = F3(function (now,course,player) {
+      return {wind: defaultWind
+             ,windHistory: emptyWindHistory(now)
+             ,gusts: A2(TiledGusts,now,_U.list([]))
+             ,playerState: A2(defaultPlayerState,player,now)
+             ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
+             ,wake: _U.list([])
+             ,opponents: _U.list([])
+             ,ghosts: _U.list([])
+             ,course: course
+             ,tallies: _U.list([])
+             ,timers: {now: now
+                      ,serverNow: $Maybe.Nothing
+                      ,rtd: $Maybe.Nothing
+                      ,countdown: 0
+                      ,startTime: $Maybe.Nothing
+                      ,localTime: now}
+             ,live: false
+             ,chatting: false};
+   });
+   var Gust = F6(function (a,b,c,d,e,f) {
+      return {position: a
+             ,angle: b
+             ,speed: c
+             ,radius: d
+             ,maxRadius: e
+             ,spawnedAt: f};
+   });
+   var WindSample = F3(function (a,b,c) {
+      return {origin: a,speed: b,time: c};
+   });
+   var WindHistory = F3(function (a,b,c) {
+      return {samples: a,lastSample: b,init: c};
+   });
+   var Wind = F4(function (a,b,c,d) {
+      return {origin: a,speed: b,gusts: c,gustCounter: d};
+   });
+   var Timers = F6(function (a,b,c,d,e,f) {
+      return {now: a
+             ,serverNow: b
+             ,rtd: c
+             ,countdown: d
+             ,startTime: e
+             ,localTime: f};
+   });
+   var GameState = function (a) {
+      return function (b) {
+         return function (c) {
+            return function (d) {
+               return function (e) {
+                  return function (f) {
+                     return function (g) {
+                        return function (h) {
+                           return function (i) {
+                              return function (j) {
+                                 return function (k) {
+                                    return function (l) {
+                                       return function (m) {
+                                          return {wind: a
+                                                 ,windHistory: b
+                                                 ,gusts: c
+                                                 ,playerState: d
+                                                 ,wake: e
+                                                 ,center: f
+                                                 ,opponents: g
+                                                 ,ghosts: h
+                                                 ,course: i
+                                                 ,tallies: j
+                                                 ,timers: k
+                                                 ,live: l
+                                                 ,chatting: m};
+                                       };
+                                    };
+                                 };
+                              };
+                           };
+                        };
+                     };
+                  };
+               };
+            };
+         };
+      };
+   };
+   var windHistorySampling = 2000;
+   var windHistoryLength = windHistorySampling * 30;
+   var windShadowLength = 120;
+   var boatWidth = 3;
+   var markRadius = 5;
+   return _elm.Game.Models.values = {_op: _op
+                                    ,markRadius: markRadius
+                                    ,boatWidth: boatWidth
+                                    ,windShadowLength: windShadowLength
+                                    ,windHistorySampling: windHistorySampling
+                                    ,windHistoryLength: windHistoryLength
+                                    ,GameState: GameState
+                                    ,Timers: Timers
+                                    ,Wind: Wind
+                                    ,WindHistory: WindHistory
+                                    ,WindSample: WindSample
+                                    ,Gust: Gust
+                                    ,TiledGusts: TiledGusts
+                                    ,TiledGust: TiledGust
+                                    ,GustTile: GustTile
+                                    ,PlayerState: PlayerState
+                                    ,FixedAngle: FixedAngle
+                                    ,FixedHeading: FixedHeading
+                                    ,Vmg: Vmg
+                                    ,Opponent: Opponent
+                                    ,OpponentState: OpponentState
+                                    ,GhostState: GhostState
+                                    ,areaBox: areaBox
+                                    ,areaDims: areaDims
+                                    ,areaTop: areaTop
+                                    ,areaBottom: areaBottom
+                                    ,areaWidth: areaWidth
+                                    ,areaHeight: areaHeight
+                                    ,areaCenters: areaCenters
+                                    ,genX: genX
+                                    ,upwind: upwind
+                                    ,closestVmgAngle: closestVmgAngle
+                                    ,windAngleOnVmg: windAngleOnVmg
+                                    ,deltaToVmg: deltaToVmg
+                                    ,asOpponentState: asOpponentState
+                                    ,defaultVmg: defaultVmg
+                                    ,defaultPlayerState: defaultPlayerState
+                                    ,defaultGate: defaultGate
+                                    ,defaultWind: defaultWind
+                                    ,emptyWindHistory: emptyWindHistory
+                                    ,defaultGame: defaultGame
+                                    ,getGateMarks: getGateMarks
+                                    ,findPlayerGhost: findPlayerGhost
+                                    ,findOpponent: findOpponent
+                                    ,raceTime: raceTime
+                                    ,isStarted: isStarted};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Inputs = Elm.Game.Inputs || {};
+Elm.Game.Inputs.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Inputs = _elm.Game.Inputs || {};
+   if (_elm.Game.Inputs.values) return _elm.Game.Inputs.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Char = Elm.Char.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Keyboard = Elm.Keyboard.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Set = Elm.Set.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var toKeyboardInput = F2(function (arrows,keys) {
+      return {arrows: arrows
+             ,lock: A2($Set.member,13,keys)
+             ,tack: A2($Set.member,32,keys)
+             ,subtleTurn: A2($Set.member,16,keys)
+             ,startCountdown: A2($Set.member,$Char.toCode(_U.chr("C")),keys)
+             ,escapeRace: A2($Set.member,27,keys)};
+   });
+   var keyboardInput = A3($Signal.map2,
+   toKeyboardInput,
+   $Keyboard.arrows,
+   $Keyboard.keysDown);
+   var isLocking = function (ki) {
+      return _U.cmp(ki.arrows.y,0) > 0 || ki.lock;
+   };
+   var manualTurn = function (ki) {
+      return !_U.eq(ki.arrows.x,0);
+   };
+   var isTurning = function (ki) {
+      return manualTurn(ki) && $Basics.not(ki.subtleTurn);
+   };
+   var isSubtleTurning = function (ki) {
+      return manualTurn(ki) && ki.subtleTurn;
+   };
+   var initialRaceInput = {serverNow: 0
+                          ,startTime: $Maybe.Nothing
+                          ,wind: $Game$Models.defaultWind
+                          ,opponents: _U.list([])
+                          ,ghosts: _U.list([])
+                          ,tallies: _U.list([])
+                          ,initial: true
+                          ,clientTime: 0};
+   var RaceInput = F8(function (a,b,c,d,e,f,g,h) {
+      return {serverNow: a
+             ,startTime: b
+             ,wind: c
+             ,opponents: d
+             ,ghosts: e
+             ,tallies: f
+             ,initial: g
+             ,clientTime: h};
+   });
+   var UserArrows = F2(function (a,b) {    return {x: a,y: b};});
+   var emptyKeyboardInput = {arrows: {x: 0,y: 0}
+                            ,lock: false
+                            ,tack: false
+                            ,subtleTurn: false
+                            ,startCountdown: false
+                            ,escapeRace: false};
+   var KeyboardInput = F6(function (a,b,c,d,e,f) {
+      return {arrows: a
+             ,lock: b
+             ,tack: c
+             ,subtleTurn: d
+             ,startCountdown: e
+             ,escapeRace: f};
+   });
+   var Clock = F2(function (a,b) {    return {delta: a,time: b};});
+   var GameInput = F4(function (a,b,c,d) {
+      return {keyboardInput: a
+             ,windowInput: b
+             ,clock: c
+             ,raceInput: d};
+   });
+   var buildGameInput = F2(function (_p0,clock) {
+      var _p1 = _p0;
+      return A2($Maybe.map,A3(GameInput,_p1._0,_p1._1,clock),_p1._2);
+   });
+   return _elm.Game.Inputs.values = {_op: _op
+                                    ,buildGameInput: buildGameInput
+                                    ,GameInput: GameInput
+                                    ,Clock: Clock
+                                    ,KeyboardInput: KeyboardInput
+                                    ,emptyKeyboardInput: emptyKeyboardInput
+                                    ,UserArrows: UserArrows
+                                    ,RaceInput: RaceInput
+                                    ,initialRaceInput: initialRaceInput
+                                    ,manualTurn: manualTurn
+                                    ,isTurning: isTurning
+                                    ,isSubtleTurning: isSubtleTurning
+                                    ,isLocking: isLocking
+                                    ,toKeyboardInput: toKeyboardInput
+                                    ,keyboardInput: keyboardInput};
+};
 Elm.Automaton = Elm.Automaton || {};
 Elm.Automaton.make = function (_elm) {
    "use strict";
@@ -16006,183 +17269,6 @@ Elm.DragAndDrop.make = function (_elm) {
                                     ,Mouse: Mouse
                                     ,Hover: Hover};
 };
-Elm.Constants = Elm.Constants || {};
-Elm.Constants.make = function (_elm) {
-   "use strict";
-   _elm.Constants = _elm.Constants || {};
-   if (_elm.Constants.values) return _elm.Constants.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var admins = _U.list(["milox"]);
-   var hexRadius = 50;
-   var colors = {water: "rgb(33, 148, 206)"
-                ,sand: "rgb(226, 219, 190)"
-                ,grass: "rgb(200, 230, 180)"
-                ,rock: "rgb(171, 196, 198)"
-                ,green: "rgb(100, 180, 106)"};
-   var transitionDuration = 100;
-   var gutterWidth = 30;
-   var containerWidth = 940;
-   var sidebarWidth = 280;
-   return _elm.Constants.values = {_op: _op
-                                  ,sidebarWidth: sidebarWidth
-                                  ,containerWidth: containerWidth
-                                  ,gutterWidth: gutterWidth
-                                  ,transitionDuration: transitionDuration
-                                  ,colors: colors
-                                  ,hexRadius: hexRadius
-                                  ,admins: admins};
-};
-Elm.Models = Elm.Models || {};
-Elm.Models.make = function (_elm) {
-   "use strict";
-   _elm.Models = _elm.Models || {};
-   if (_elm.Models.values) return _elm.Models.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Hexagons = Elm.Hexagons.make(_elm),
-   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var AdminData = F2(function (a,b) {
-      return {tracks: a,users: b};
-   });
-   var Rock = {ctor: "Rock"};
-   var Grass = {ctor: "Grass"};
-   var Water = {ctor: "Water"};
-   var Range = F2(function (a,b) {    return {start: a,end: b};});
-   var GustGenerator = F5(function (a,b,c,d,e) {
-      return {interval: a
-             ,radiusBase: b
-             ,radiusVariation: c
-             ,speedVariation: d
-             ,originVariation: e};
-   });
-   var WindGenerator = F4(function (a,b,c,d) {
-      return {wavelength1: a
-             ,amplitude1: b
-             ,wavelength2: c
-             ,amplitude2: d};
-   });
-   var StartLine = {ctor: "StartLine"};
-   var UpwindGate = {ctor: "UpwindGate"};
-   var DownwindGate = {ctor: "DownwindGate"};
-   var RaceArea = F2(function (a,b) {
-      return {rightTop: a,leftBottom: b};
-   });
-   var Gate = F2(function (a,b) {    return {y: a,width: b};});
-   var Course = F8(function (a,b,c,d,e,f,g,h) {
-      return {upwind: a
-             ,downwind: b
-             ,grid: c
-             ,laps: d
-             ,area: e
-             ,windSpeed: f
-             ,windGenerator: g
-             ,gustGenerator: h};
-   });
-   var Message = F3(function (a,b,c) {
-      return {content: a,player: b,time: c};
-   });
-   var Ranking = F3(function (a,b,c) {
-      return {rank: a,player: b,finishTime: c};
-   });
-   var PlayerTally = F3(function (a,b,c) {
-      return {player: a,gates: b,finished: c};
-   });
-   var Race = F5(function (a,b,c,d,e) {
-      return {id: a,trackId: b,startTime: c,players: d,tallies: e};
-   });
-   var Deleted = {ctor: "Deleted"};
-   var Archived = {ctor: "Archived"};
-   var Open = {ctor: "Open"};
-   var Draft = {ctor: "Draft"};
-   var TrackMeta = F3(function (a,b,c) {
-      return {creator: a,rankings: b,runsCount: c};
-   });
-   var Track = F5(function (a,b,c,d,e) {
-      return {id: a,name: b,creatorId: c,course: d,status: e};
-   });
-   var LiveTrack = F4(function (a,b,c,d) {
-      return {track: a,meta: b,players: c,races: d};
-   });
-   var LiveStatus = F2(function (a,b) {
-      return {liveTracks: a,onlinePlayers: b};
-   });
-   var isAdmin = function (player) {
-      var _p0 = player.handle;
-      if (_p0.ctor === "Just") {
-            return A2($List.member,_p0._0,$Constants.admins);
-         } else {
-            return false;
-         }
-   };
-   var canUpdateDraft = F2(function (player,track) {
-      return _U.eq(track.status,Draft) && _U.eq(player.id,
-      track.creatorId) || isAdmin(player);
-   });
-   var User = F7(function (a,b,c,d,e,f,g) {
-      return {id: a
-             ,email: b
-             ,handle: c
-             ,status: d
-             ,avatarId: e
-             ,vmgMagnet: f
-             ,creationTime: g};
-   });
-   var Player = F7(function (a,b,c,d,e,f,g) {
-      return {id: a
-             ,handle: b
-             ,status: c
-             ,avatarId: d
-             ,vmgMagnet: e
-             ,guest: f
-             ,user: g};
-   });
-   return _elm.Models.values = {_op: _op
-                               ,Player: Player
-                               ,User: User
-                               ,isAdmin: isAdmin
-                               ,canUpdateDraft: canUpdateDraft
-                               ,LiveStatus: LiveStatus
-                               ,LiveTrack: LiveTrack
-                               ,Track: Track
-                               ,TrackMeta: TrackMeta
-                               ,Draft: Draft
-                               ,Open: Open
-                               ,Archived: Archived
-                               ,Deleted: Deleted
-                               ,Race: Race
-                               ,PlayerTally: PlayerTally
-                               ,Ranking: Ranking
-                               ,Message: Message
-                               ,Course: Course
-                               ,Gate: Gate
-                               ,RaceArea: RaceArea
-                               ,DownwindGate: DownwindGate
-                               ,UpwindGate: UpwindGate
-                               ,StartLine: StartLine
-                               ,WindGenerator: WindGenerator
-                               ,GustGenerator: GustGenerator
-                               ,Range: Range
-                               ,Water: Water
-                               ,Grass: Grass
-                               ,Rock: Rock
-                               ,AdminData: AdminData};
-};
 Elm.Page = Elm.Page || {};
 Elm.Page.Home = Elm.Page.Home || {};
 Elm.Page.Home.Model = Elm.Page.Home.Model || {};
@@ -16198,7 +17284,7 @@ Elm.Page.Home.Model.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -16250,7 +17336,7 @@ Elm.Page.Login.Model.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -16299,7 +17385,7 @@ Elm.Page.Register.Model.make = function (_elm) {
    $Form$Validate = Elm.Form.Validate.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Regex = Elm.Regex.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -16364,7 +17450,7 @@ Elm.Page.ShowTrack.Model.make = function (_elm) {
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -16416,7 +17502,7 @@ Elm.Page.EditTrack.Model.make = function (_elm) {
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -16598,7 +17684,7 @@ Elm.Page.ShowProfile.Model.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -16609,574 +17695,6 @@ Elm.Page.ShowProfile.Model.make = function (_elm) {
                                                ,Screen: Screen
                                                ,initial: initial
                                                ,NoOp: NoOp};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Core = Elm.Game.Core || {};
-Elm.Game.Core.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Core = _elm.Game.Core || {};
-   if (_elm.Game.Core.values) return _elm.Game.Core.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var isNothing = function (m) {
-      var _p0 = m;
-      if (_p0.ctor === "Nothing") {
-            return true;
-         } else {
-            return false;
-         }
-   };
-   var isJust = function (m) {
-      return $Basics.not(isNothing(m));
-   };
-   var floatRange = F2(function (from,to) {
-      return A2($List.map,$Basics.toFloat,_U.range(from,to));
-   });
-   var find = F2(function (f,list) {
-      return $List.head(A2($List.filter,f,list));
-   });
-   var exists = F2(function (f,list) {
-      return isJust(A2(find,f,list));
-   });
-   var lift = F2(function (n,items) {
-      return $List.head(A2($List.drop,n,items));
-   });
-   var average = function (items) {
-      return $List.sum(items) / $Basics.toFloat($List.length(items));
-   };
-   var compact = function (maybes) {
-      var folder = F2(function (m,list) {
-         var _p1 = m;
-         if (_p1.ctor === "Just") {
-               return A2($List._op["::"],_p1._0,list);
-            } else {
-               return list;
-            }
-      });
-      return A3($List.foldl,folder,_U.list([]),maybes);
-   };
-   var getCountdown = function (maybeCountdown) {
-      return A2($Maybe.withDefault,0,maybeCountdown);
-   };
-   var floatMod = F2(function (val,div) {
-      var flooredQuotient = $Basics.toFloat($Basics.floor(val / div));
-      return val - flooredQuotient * div;
-   });
-   var toDegrees = function (rad) {
-      return (0 - rad) * 180 / $Basics.pi + 90;
-   };
-   var toRadians = function (deg) {
-      return $Basics.radians((90 - deg) * $Basics.pi / 180);
-   };
-   return _elm.Game.Core.values = {_op: _op
-                                  ,toRadians: toRadians
-                                  ,toDegrees: toDegrees
-                                  ,floatMod: floatMod
-                                  ,getCountdown: getCountdown
-                                  ,compact: compact
-                                  ,average: average
-                                  ,lift: lift
-                                  ,find: find
-                                  ,exists: exists
-                                  ,floatRange: floatRange
-                                  ,isNothing: isNothing
-                                  ,isJust: isJust};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Models = Elm.Game.Models || {};
-Elm.Game.Models.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Models = _elm.Game.Models || {};
-   if (_elm.Game.Models.values) return _elm.Game.Models.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var isStarted = function (_p0) {
-      var _p1 = _p0;
-      var _p3 = _p1.timers;
-      var _p2 = _p3.startTime;
-      if (_p2.ctor === "Just") {
-            return _U.cmp(_p3.now,_p2._0) > -1;
-         } else {
-            return false;
-         }
-   };
-   var raceTime = function (_p4) {
-      var _p5 = _p4;
-      var _p7 = _p5.timers;
-      var _p6 = _p7.startTime;
-      if (_p6.ctor === "Just") {
-            return _p7.now - _p6._0;
-         } else {
-            return 0;
-         }
-   };
-   var findOpponent = F2(function (opponents,id) {
-      return A2($Game$Core.find,
-      function (ps) {
-         return _U.eq(ps.player.id,id);
-      },
-      opponents);
-   });
-   var findPlayerGhost = F2(function (playerId,ghosts) {
-      return A2($Game$Core.find,
-      function (g) {
-         return _U.eq(g.id,playerId);
-      },
-      ghosts);
-   });
-   var getGateMarks = function (gate) {
-      return {ctor: "_Tuple2"
-             ,_0: {ctor: "_Tuple2",_0: (0 - gate.width) / 2,_1: gate.y}
-             ,_1: {ctor: "_Tuple2",_0: gate.width / 2,_1: gate.y}};
-   };
-   var emptyWindHistory = function (now) {
-      return {samples: _U.list([]),lastSample: 0,init: now};
-   };
-   var defaultWind = {origin: 0
-                     ,speed: 0
-                     ,gusts: _U.list([])
-                     ,gustCounter: 0};
-   var defaultGate = {y: 0,width: 0};
-   var defaultVmg = {angle: 0,speed: 0,value: 0};
-   var asOpponentState = function (_p8) {
-      var _p9 = _p8;
-      return {time: _p9.time
-             ,position: _p9.position
-             ,heading: _p9.heading
-             ,velocity: _p9.velocity
-             ,windAngle: _p9.windAngle
-             ,windOrigin: _p9.windOrigin
-             ,shadowDirection: _p9.shadowDirection
-             ,crossedGates: _p9.crossedGates};
-   };
-   var upwind = function (s) {
-      return _U.cmp($Basics.abs(s.windAngle),90) < 0;
-   };
-   var closestVmgAngle = function (s) {
-      return upwind(s) ? s.upwindVmg.angle : s.downwindVmg.angle;
-   };
-   var windAngleOnVmg = function (s) {
-      return _U.cmp(s.windAngle,
-      0) < 0 ? 0 - closestVmgAngle(s) : closestVmgAngle(s);
-   };
-   var deltaToVmg = function (s) {
-      return s.windAngle - windAngleOnVmg(s);
-   };
-   var areaCenters = function (_p10) {
-      var _p11 = _p10;
-      var _p12 = _p11.leftBottom;
-      var l = _p12._0;
-      var b = _p12._1;
-      var _p13 = _p11.rightTop;
-      var r = _p13._0;
-      var t = _p13._1;
-      var cx = (r + l) / 2;
-      var cy = (t + b) / 2;
-      return {ctor: "_Tuple2",_0: cx,_1: cy};
-   };
-   var areaBottom = function (_p14) {
-      var _p15 = _p14;
-      return $Basics.snd(_p15.leftBottom);
-   };
-   var areaTop = function (_p16) {
-      var _p17 = _p16;
-      return $Basics.snd(_p17.rightTop);
-   };
-   var areaDims = function (_p18) {
-      var _p19 = _p18;
-      var _p20 = _p19.leftBottom;
-      var l = _p20._0;
-      var b = _p20._1;
-      var _p21 = _p19.rightTop;
-      var r = _p21._0;
-      var t = _p21._1;
-      return {ctor: "_Tuple2",_0: r - l,_1: t - b};
-   };
-   var areaWidth = function (_p22) {
-      return $Basics.fst(areaDims(_p22));
-   };
-   var genX = F3(function (seed,margin,area) {
-      var _p23 = areaCenters(area);
-      var cx = _p23._0;
-      var effectiveWidth = areaWidth(area) - margin * 2;
-      return A2($Game$Core.floatMod,
-      seed,
-      effectiveWidth) - effectiveWidth / 2 + cx;
-   });
-   var areaHeight = function (_p24) {
-      return $Basics.snd(areaDims(_p24));
-   };
-   var areaBox = function (_p25) {
-      var _p26 = _p25;
-      return {ctor: "_Tuple2",_0: _p26.rightTop,_1: _p26.leftBottom};
-   };
-   var GhostState = F5(function (a,b,c,d,e) {
-      return {position: a,heading: b,id: c,handle: d,gates: e};
-   });
-   var OpponentState = F8(function (a,b,c,d,e,f,g,h) {
-      return {time: a
-             ,position: b
-             ,heading: c
-             ,velocity: d
-             ,windAngle: e
-             ,windOrigin: f
-             ,shadowDirection: g
-             ,crossedGates: h};
-   });
-   var Opponent = F2(function (a,b) {
-      return {player: a,state: b};
-   });
-   var Vmg = F3(function (a,b,c) {
-      return {angle: a,speed: b,value: c};
-   });
-   var FixedHeading = {ctor: "FixedHeading"};
-   var defaultPlayerState = F2(function (player,now) {
-      return {player: player
-             ,time: now
-             ,position: {ctor: "_Tuple2",_0: 0,_1: 0}
-             ,isGrounded: false
-             ,isTurning: false
-             ,heading: 0
-             ,velocity: 0
-             ,vmgValue: 0
-             ,windAngle: 0
-             ,windOrigin: 0
-             ,windSpeed: 0
-             ,downwindVmg: defaultVmg
-             ,upwindVmg: defaultVmg
-             ,shadowDirection: 0
-             ,trail: _U.list([])
-             ,controlMode: FixedHeading
-             ,tackTarget: $Maybe.Nothing
-             ,crossedGates: _U.list([])
-             ,nextGate: $Maybe.Just($Models.StartLine)};
-   });
-   var FixedAngle = {ctor: "FixedAngle"};
-   var PlayerState = function (a) {
-      return function (b) {
-         return function (c) {
-            return function (d) {
-               return function (e) {
-                  return function (f) {
-                     return function (g) {
-                        return function (h) {
-                           return function (i) {
-                              return function (j) {
-                                 return function (k) {
-                                    return function (l) {
-                                       return function (m) {
-                                          return function (n) {
-                                             return function (o) {
-                                                return function (p) {
-                                                   return function (q) {
-                                                      return function (r) {
-                                                         return function (s) {
-                                                            return {player: a
-                                                                   ,time: b
-                                                                   ,position: c
-                                                                   ,isGrounded: d
-                                                                   ,isTurning: e
-                                                                   ,heading: f
-                                                                   ,velocity: g
-                                                                   ,vmgValue: h
-                                                                   ,windAngle: i
-                                                                   ,windOrigin: j
-                                                                   ,windSpeed: k
-                                                                   ,downwindVmg: l
-                                                                   ,upwindVmg: m
-                                                                   ,shadowDirection: n
-                                                                   ,trail: o
-                                                                   ,controlMode: p
-                                                                   ,tackTarget: q
-                                                                   ,crossedGates: r
-                                                                   ,nextGate: s};
-                                                         };
-                                                      };
-                                                   };
-                                                };
-                                             };
-                                          };
-                                       };
-                                    };
-                                 };
-                              };
-                           };
-                        };
-                     };
-                  };
-               };
-            };
-         };
-      };
-   };
-   var GustTile = F2(function (a,b) {
-      return {angle: a,speed: b};
-   });
-   var TiledGust = F3(function (a,b,c) {
-      return {position: a,radius: b,tiles: c};
-   });
-   var TiledGusts = F2(function (a,b) {
-      return {genTime: a,gusts: b};
-   });
-   var defaultGame = F3(function (now,course,player) {
-      return {wind: defaultWind
-             ,windHistory: emptyWindHistory(now)
-             ,gusts: A2(TiledGusts,now,_U.list([]))
-             ,playerState: A2(defaultPlayerState,player,now)
-             ,center: {ctor: "_Tuple2",_0: 0,_1: 0}
-             ,wake: _U.list([])
-             ,opponents: _U.list([])
-             ,ghosts: _U.list([])
-             ,course: course
-             ,tallies: _U.list([])
-             ,timers: {now: now
-                      ,serverNow: $Maybe.Nothing
-                      ,rtd: $Maybe.Nothing
-                      ,countdown: 0
-                      ,startTime: $Maybe.Nothing
-                      ,localTime: now}
-             ,live: false
-             ,chatting: false};
-   });
-   var Gust = F6(function (a,b,c,d,e,f) {
-      return {position: a
-             ,angle: b
-             ,speed: c
-             ,radius: d
-             ,maxRadius: e
-             ,spawnedAt: f};
-   });
-   var WindSample = F3(function (a,b,c) {
-      return {origin: a,speed: b,time: c};
-   });
-   var WindHistory = F3(function (a,b,c) {
-      return {samples: a,lastSample: b,init: c};
-   });
-   var Wind = F4(function (a,b,c,d) {
-      return {origin: a,speed: b,gusts: c,gustCounter: d};
-   });
-   var Timers = F6(function (a,b,c,d,e,f) {
-      return {now: a
-             ,serverNow: b
-             ,rtd: c
-             ,countdown: d
-             ,startTime: e
-             ,localTime: f};
-   });
-   var GameState = function (a) {
-      return function (b) {
-         return function (c) {
-            return function (d) {
-               return function (e) {
-                  return function (f) {
-                     return function (g) {
-                        return function (h) {
-                           return function (i) {
-                              return function (j) {
-                                 return function (k) {
-                                    return function (l) {
-                                       return function (m) {
-                                          return {wind: a
-                                                 ,windHistory: b
-                                                 ,gusts: c
-                                                 ,playerState: d
-                                                 ,wake: e
-                                                 ,center: f
-                                                 ,opponents: g
-                                                 ,ghosts: h
-                                                 ,course: i
-                                                 ,tallies: j
-                                                 ,timers: k
-                                                 ,live: l
-                                                 ,chatting: m};
-                                       };
-                                    };
-                                 };
-                              };
-                           };
-                        };
-                     };
-                  };
-               };
-            };
-         };
-      };
-   };
-   var windHistorySampling = 2000;
-   var windHistoryLength = windHistorySampling * 30;
-   var windShadowLength = 120;
-   var boatWidth = 3;
-   var markRadius = 5;
-   return _elm.Game.Models.values = {_op: _op
-                                    ,markRadius: markRadius
-                                    ,boatWidth: boatWidth
-                                    ,windShadowLength: windShadowLength
-                                    ,windHistorySampling: windHistorySampling
-                                    ,windHistoryLength: windHistoryLength
-                                    ,GameState: GameState
-                                    ,Timers: Timers
-                                    ,Wind: Wind
-                                    ,WindHistory: WindHistory
-                                    ,WindSample: WindSample
-                                    ,Gust: Gust
-                                    ,TiledGusts: TiledGusts
-                                    ,TiledGust: TiledGust
-                                    ,GustTile: GustTile
-                                    ,PlayerState: PlayerState
-                                    ,FixedAngle: FixedAngle
-                                    ,FixedHeading: FixedHeading
-                                    ,Vmg: Vmg
-                                    ,Opponent: Opponent
-                                    ,OpponentState: OpponentState
-                                    ,GhostState: GhostState
-                                    ,areaBox: areaBox
-                                    ,areaDims: areaDims
-                                    ,areaTop: areaTop
-                                    ,areaBottom: areaBottom
-                                    ,areaWidth: areaWidth
-                                    ,areaHeight: areaHeight
-                                    ,areaCenters: areaCenters
-                                    ,genX: genX
-                                    ,upwind: upwind
-                                    ,closestVmgAngle: closestVmgAngle
-                                    ,windAngleOnVmg: windAngleOnVmg
-                                    ,deltaToVmg: deltaToVmg
-                                    ,asOpponentState: asOpponentState
-                                    ,defaultVmg: defaultVmg
-                                    ,defaultPlayerState: defaultPlayerState
-                                    ,defaultGate: defaultGate
-                                    ,defaultWind: defaultWind
-                                    ,emptyWindHistory: emptyWindHistory
-                                    ,defaultGame: defaultGame
-                                    ,getGateMarks: getGateMarks
-                                    ,findPlayerGhost: findPlayerGhost
-                                    ,findOpponent: findOpponent
-                                    ,raceTime: raceTime
-                                    ,isStarted: isStarted};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Inputs = Elm.Game.Inputs || {};
-Elm.Game.Inputs.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Inputs = _elm.Game.Inputs || {};
-   if (_elm.Game.Inputs.values) return _elm.Game.Inputs.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Char = Elm.Char.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Keyboard = Elm.Keyboard.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Set = Elm.Set.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var toKeyboardInput = F2(function (arrows,keys) {
-      return {arrows: arrows
-             ,lock: A2($Set.member,13,keys)
-             ,tack: A2($Set.member,32,keys)
-             ,subtleTurn: A2($Set.member,16,keys)
-             ,startCountdown: A2($Set.member,$Char.toCode(_U.chr("C")),keys)
-             ,escapeRace: A2($Set.member,27,keys)};
-   });
-   var keyboardInput = A3($Signal.map2,
-   toKeyboardInput,
-   $Keyboard.arrows,
-   $Keyboard.keysDown);
-   var isLocking = function (ki) {
-      return _U.cmp(ki.arrows.y,0) > 0 || ki.lock;
-   };
-   var manualTurn = function (ki) {
-      return !_U.eq(ki.arrows.x,0);
-   };
-   var isTurning = function (ki) {
-      return manualTurn(ki) && $Basics.not(ki.subtleTurn);
-   };
-   var isSubtleTurning = function (ki) {
-      return manualTurn(ki) && ki.subtleTurn;
-   };
-   var initialRaceInput = {serverNow: 0
-                          ,startTime: $Maybe.Nothing
-                          ,wind: $Game$Models.defaultWind
-                          ,opponents: _U.list([])
-                          ,ghosts: _U.list([])
-                          ,tallies: _U.list([])
-                          ,initial: true
-                          ,clientTime: 0};
-   var RaceInput = F8(function (a,b,c,d,e,f,g,h) {
-      return {serverNow: a
-             ,startTime: b
-             ,wind: c
-             ,opponents: d
-             ,ghosts: e
-             ,tallies: f
-             ,initial: g
-             ,clientTime: h};
-   });
-   var UserArrows = F2(function (a,b) {    return {x: a,y: b};});
-   var emptyKeyboardInput = {arrows: {x: 0,y: 0}
-                            ,lock: false
-                            ,tack: false
-                            ,subtleTurn: false
-                            ,startCountdown: false
-                            ,escapeRace: false};
-   var KeyboardInput = F6(function (a,b,c,d,e,f) {
-      return {arrows: a
-             ,lock: b
-             ,tack: c
-             ,subtleTurn: d
-             ,startCountdown: e
-             ,escapeRace: f};
-   });
-   var Clock = F2(function (a,b) {    return {delta: a,time: b};});
-   var GameInput = F4(function (a,b,c,d) {
-      return {keyboardInput: a
-             ,windowInput: b
-             ,clock: c
-             ,raceInput: d};
-   });
-   var buildGameInput = F2(function (_p0,clock) {
-      var _p1 = _p0;
-      return A2($Maybe.map,A3(GameInput,_p1._0,_p1._1,clock),_p1._2);
-   });
-   return _elm.Game.Inputs.values = {_op: _op
-                                    ,buildGameInput: buildGameInput
-                                    ,GameInput: GameInput
-                                    ,Clock: Clock
-                                    ,KeyboardInput: KeyboardInput
-                                    ,emptyKeyboardInput: emptyKeyboardInput
-                                    ,UserArrows: UserArrows
-                                    ,RaceInput: RaceInput
-                                    ,initialRaceInput: initialRaceInput
-                                    ,manualTurn: manualTurn
-                                    ,isTurning: isTurning
-                                    ,isSubtleTurning: isSubtleTurning
-                                    ,isLocking: isLocking
-                                    ,toKeyboardInput: toKeyboardInput
-                                    ,keyboardInput: keyboardInput};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Game = Elm.Page.Game || {};
@@ -17195,7 +17713,7 @@ Elm.Page.Game.Model.make = function (_elm) {
    $Game$Models = Elm.Game.Models.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
@@ -17273,7 +17791,7 @@ Elm.Page.ListDrafts.Model.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -17412,7 +17930,7 @@ Elm.Page.Admin.Model.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -17547,11 +18065,11 @@ Elm.Route.make = function (_elm) {
                               ,toPath: toPath
                               ,detectTransition: detectTransition};
 };
-Elm.AppTypes = Elm.AppTypes || {};
-Elm.AppTypes.make = function (_elm) {
+Elm.Model = Elm.Model || {};
+Elm.Model.make = function (_elm) {
    "use strict";
-   _elm.AppTypes = _elm.AppTypes || {};
-   if (_elm.AppTypes.values) return _elm.AppTypes.values;
+   _elm.Model = _elm.Model || {};
+   if (_elm.Model.values) return _elm.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -17559,7 +18077,7 @@ Elm.AppTypes.make = function (_elm) {
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
@@ -17663,544 +18181,30 @@ Elm.AppTypes.make = function (_elm) {
    });
    var appActionsMailbox = $Signal.mailbox(AppNoOp);
    var appActionsAddress = appActionsMailbox.address;
-   return _elm.AppTypes.values = {_op: _op
-                                 ,appActionsMailbox: appActionsMailbox
-                                 ,appActionsAddress: appActionsAddress
-                                 ,AppSetup: AppSetup
-                                 ,effect: effect
-                                 ,SetPlayer: SetPlayer
-                                 ,RouterAction: RouterAction
-                                 ,UpdateDims: UpdateDims
-                                 ,MouseEvent: MouseEvent
-                                 ,ScreenAction: ScreenAction
-                                 ,Logout: Logout
-                                 ,AppNoOp: AppNoOp
-                                 ,HomeAction: HomeAction
-                                 ,LoginAction: LoginAction
-                                 ,RegisterAction: RegisterAction
-                                 ,ShowTrackAction: ShowTrackAction
-                                 ,EditTrackAction: EditTrackAction
-                                 ,ShowProfileAction: ShowProfileAction
-                                 ,GameAction: GameAction
-                                 ,ListDraftsAction: ListDraftsAction
-                                 ,AdminAction: AdminAction
-                                 ,Context: Context
-                                 ,Screens: Screens
-                                 ,initialAppState: initialAppState};
-};
-Elm.CoreExtra = Elm.CoreExtra || {};
-Elm.CoreExtra.make = function (_elm) {
-   "use strict";
-   _elm.CoreExtra = _elm.CoreExtra || {};
-   if (_elm.CoreExtra.values) return _elm.CoreExtra.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Array = Elm.Array.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var within = F2(function (_p0,c) {
-      var _p1 = _p0;
-      return _U.cmp(c,_p1._0) > -1 && _U.cmp(c,_p1._1) < 1;
-   });
-   var updateAt = F3(function (i,update,items) {
-      var asArray = $Array.fromList(items);
-      var _p2 = A2($Array.get,i,asArray);
-      if (_p2.ctor === "Just") {
-            return $Array.toList(A3($Array.set,
-            i,
-            update(_p2._0),
-            asArray));
-         } else {
-            return items;
-         }
-   });
-   var removeAt = F2(function (i,items) {
-      return A2($Basics._op["++"],
-      A2($List.take,i,items),
-      A2($List.drop,i + 1,items));
-   });
-   var isNothing = function (m) {
-      var _p3 = m;
-      if (_p3.ctor === "Nothing") {
-            return true;
-         } else {
-            return false;
-         }
-   };
-   var isJust = function (m) {
-      return $Basics.not(isNothing(m));
-   };
-   return _elm.CoreExtra.values = {_op: _op
-                                  ,isNothing: isNothing
-                                  ,isJust: isJust
-                                  ,removeAt: removeAt
-                                  ,updateAt: updateAt
-                                  ,within: within};
-};
-Elm.Decoders = Elm.Decoders || {};
-Elm.Decoders.make = function (_elm) {
-   "use strict";
-   _elm.Decoders = _elm.Decoders || {};
-   if (_elm.Decoders.values) return _elm.Decoders.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var rangeDecoder = A3($Json$Decode.object2,
-   $Models.Range,
-   A2($Json$Decode._op[":="],"start",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"end",$Json$Decode.$int));
-   var gustGeneratorDecoder = A6($Json$Decode.object5,
-   $Models.GustGenerator,
-   A2($Json$Decode._op[":="],"interval",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"radiusBase",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"radiusVariation",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"speedVariation",rangeDecoder),
-   A2($Json$Decode._op[":="],"originVariation",rangeDecoder));
-   var windGeneratorDecoder = A5($Json$Decode.object4,
-   $Models.WindGenerator,
-   A2($Json$Decode._op[":="],"wavelength1",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"amplitude1",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"wavelength2",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"amplitude2",$Json$Decode.$int));
-   var tileKindDecoder = function (s) {
-      var _p0 = s;
-      switch (_p0)
-      {case "W": return $Json$Decode.succeed($Models.Water);
-         case "G": return $Json$Decode.succeed($Models.Grass);
-         case "R": return $Json$Decode.succeed($Models.Rock);
-         default: return $Json$Decode.fail(A2($Basics._op["++"],
-           s,
-           " is not a TileKind"));}
-   };
-   var gridRowDecoder = A2($Json$Decode.map,
-   $Dict.fromList,
-   $Json$Decode.list(A3($Json$Decode.tuple2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }),
-   $Json$Decode.$int,
-   A2($Json$Decode.andThen,$Json$Decode.string,tileKindDecoder))));
-   var gridDecoder = A2($Json$Decode.map,
-   $Dict.fromList,
-   $Json$Decode.list(A3($Json$Decode.tuple2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }),
-   $Json$Decode.$int,
-   gridRowDecoder)));
-   var gateDecoder = A3($Json$Decode.object2,
-   $Models.Gate,
-   A2($Json$Decode._op[":="],"y",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],"width",$Json$Decode.$float));
-   var pointDecoder = A3($Json$Decode.tuple2,
-   F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   }),
-   $Json$Decode.$float,
-   $Json$Decode.$float);
-   var raceAreaDecoder = A3($Json$Decode.object2,
-   $Models.RaceArea,
-   A2($Json$Decode._op[":="],"rightTop",pointDecoder),
-   A2($Json$Decode._op[":="],"leftBottom",pointDecoder));
-   var courseDecoder = A9($Json$Decode.object8,
-   $Models.Course,
-   A2($Json$Decode._op[":="],"upwind",gateDecoder),
-   A2($Json$Decode._op[":="],"downwind",gateDecoder),
-   A2($Json$Decode._op[":="],"grid",gridDecoder),
-   A2($Json$Decode._op[":="],"laps",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"area",raceAreaDecoder),
-   A2($Json$Decode._op[":="],"windSpeed",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"windGenerator",windGeneratorDecoder),
-   A2($Json$Decode._op[":="],
-   "gustGenerator",
-   gustGeneratorDecoder));
-   var userDecoder = A8($Json$Decode.object7,
-   $Models.User,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"email",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"handle",$Json$Decode.string),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "status",
-   $Json$Decode.string)),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "avatarId",
-   $Json$Decode.string)),
-   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float));
-   var playerDecoder = A8($Json$Decode.object7,
-   $Models.Player,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "handle",
-   $Json$Decode.string)),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "status",
-   $Json$Decode.string)),
-   $Json$Decode.maybe(A2($Json$Decode._op[":="],
-   "avatarId",
-   $Json$Decode.string)),
-   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"guest",$Json$Decode.bool),
-   A2($Json$Decode._op[":="],"user",$Json$Decode.bool));
-   var messageDecoder = A4($Json$Decode.object3,
-   $Models.Message,
-   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],"time",$Json$Decode.$float));
-   var trackStatusDecoder = function (s) {
-      var _p1 = s;
-      switch (_p1)
-      {case "draft": return $Json$Decode.succeed($Models.Draft);
-         case "open": return $Json$Decode.succeed($Models.Open);
-         case "archived": return $Json$Decode.succeed($Models.Archived);
-         case "deleted": return $Json$Decode.succeed($Models.Deleted);
-         default: return $Json$Decode.fail(A2($Basics._op["++"],
-           s,
-           " is not a TrackStatus"));}
-   };
-   var trackDecoder = A6($Json$Decode.object5,
-   $Models.Track,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"name",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"creatorId",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"course",courseDecoder),
-   A2($Json$Decode._op[":="],
-   "status",
-   A2($Json$Decode.andThen,
-   $Json$Decode.string,
-   trackStatusDecoder)));
-   var adminDataDecoder = A3($Json$Decode.object2,
-   $Models.AdminData,
-   A2($Json$Decode._op[":="],
-   "tracks",
-   $Json$Decode.list(trackDecoder)),
-   A2($Json$Decode._op[":="],
-   "users",
-   $Json$Decode.list(userDecoder)));
-   var playerTallyDecoder = A4($Json$Decode.object3,
-   $Models.PlayerTally,
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],
-   "gates",
-   $Json$Decode.list($Json$Decode.$float)),
-   A2($Json$Decode._op[":="],"finished",$Json$Decode.bool));
-   var rankingDecoder = A4($Json$Decode.object3,
-   $Models.Ranking,
-   A2($Json$Decode._op[":="],"rank",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],"finishTime",$Json$Decode.$float));
-   var raceDecoder = A6($Json$Decode.object5,
-   $Models.Race,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"trackId",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"startTime",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],
-   "players",
-   $Json$Decode.list(playerDecoder)),
-   A2($Json$Decode._op[":="],
-   "tallies",
-   $Json$Decode.list(playerTallyDecoder)));
-   var trackMetaDecoder = A4($Json$Decode.object3,
-   $Models.TrackMeta,
-   A2($Json$Decode._op[":="],"creator",playerDecoder),
-   A2($Json$Decode._op[":="],
-   "rankings",
-   $Json$Decode.list(rankingDecoder)),
-   A2($Json$Decode._op[":="],"runsCount",$Json$Decode.$int));
-   var liveTrackDecoder = A5($Json$Decode.object4,
-   $Models.LiveTrack,
-   A2($Json$Decode._op[":="],"track",trackDecoder),
-   A2($Json$Decode._op[":="],"meta",trackMetaDecoder),
-   A2($Json$Decode._op[":="],
-   "players",
-   $Json$Decode.list(playerDecoder)),
-   A2($Json$Decode._op[":="],
-   "races",
-   $Json$Decode.list(raceDecoder)));
-   var liveStatusDecoder = A3($Json$Decode.object2,
-   $Models.LiveStatus,
-   A2($Json$Decode._op[":="],
-   "liveTracks",
-   $Json$Decode.list(liveTrackDecoder)),
-   A2($Json$Decode._op[":="],
-   "onlinePlayers",
-   $Json$Decode.list(playerDecoder)));
-   return _elm.Decoders.values = {_op: _op
-                                 ,liveStatusDecoder: liveStatusDecoder
-                                 ,liveTrackDecoder: liveTrackDecoder
-                                 ,trackMetaDecoder: trackMetaDecoder
-                                 ,raceDecoder: raceDecoder
-                                 ,rankingDecoder: rankingDecoder
-                                 ,playerTallyDecoder: playerTallyDecoder
-                                 ,trackDecoder: trackDecoder
-                                 ,trackStatusDecoder: trackStatusDecoder
-                                 ,playerDecoder: playerDecoder
-                                 ,userDecoder: userDecoder
-                                 ,messageDecoder: messageDecoder
-                                 ,pointDecoder: pointDecoder
-                                 ,courseDecoder: courseDecoder
-                                 ,gateDecoder: gateDecoder
-                                 ,gridDecoder: gridDecoder
-                                 ,gridRowDecoder: gridRowDecoder
-                                 ,tileKindDecoder: tileKindDecoder
-                                 ,raceAreaDecoder: raceAreaDecoder
-                                 ,windGeneratorDecoder: windGeneratorDecoder
-                                 ,gustGeneratorDecoder: gustGeneratorDecoder
-                                 ,rangeDecoder: rangeDecoder
-                                 ,adminDataDecoder: adminDataDecoder};
-};
-Elm.Encoders = Elm.Encoders || {};
-Elm.Encoders.make = function (_elm) {
-   "use strict";
-   _elm.Encoders = _elm.Encoders || {};
-   if (_elm.Encoders.values) return _elm.Encoders.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $Json$Encode = Elm.Json.Encode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var dictEncoder = F3(function (encodeKey,encodeValue,dict) {
-      var encodeField = function (_p0) {
-         var _p1 = _p0;
-         return $Json$Encode.list(_U.list([encodeKey(_p1._0)
-                                          ,encodeValue(_p1._1)]));
-      };
-      var fields = A2($List.map,encodeField,$Dict.toList(dict));
-      return $Json$Encode.list(fields);
-   });
-   var pointEncoder = function (_p2) {
-      var _p3 = _p2;
-      return $Json$Encode.list(A2($List.map,
-      $Json$Encode.$float,
-      _U.list([_p3._0,_p3._1])));
-   };
-   var tileKindEncoder = function (kind) {
-      return $Json$Encode.string(function () {
-         var _p4 = kind;
-         switch (_p4.ctor)
-         {case "Water": return "W";
-            case "Grass": return "G";
-            default: return "R";}
-      }());
-   };
-   var gridRowEncoder = function (row) {
-      return A3(dictEncoder,$Json$Encode.$int,tileKindEncoder,row);
-   };
-   var gridEncoder = function (grid) {
-      return A3(dictEncoder,$Json$Encode.$int,gridRowEncoder,grid);
-   };
-   _op["=>"] = F2(function (v0,v1) {
-      return {ctor: "_Tuple2",_0: v0,_1: v1};
-   });
-   var gateEncoder = function (gate) {
-      return $Json$Encode.object(_U.list([A2(_op["=>"],
-                                         "y",
-                                         $Json$Encode.$float(gate.y))
-                                         ,A2(_op["=>"],"width",$Json$Encode.$float(gate.width))]));
-   };
-   var areaEncoder = function (a) {
-      return $Json$Encode.object(_U.list([A2(_op["=>"],
-                                         "rightTop",
-                                         pointEncoder(a.rightTop))
-                                         ,A2(_op["=>"],"leftBottom",pointEncoder(a.leftBottom))]));
-   };
-   var windGeneratorEncoder = function (g) {
-      return $Json$Encode.object(_U.list([A2(_op["=>"],
-                                         "wavelength1",
-                                         $Json$Encode.$int(g.wavelength1))
-                                         ,A2(_op["=>"],"amplitude1",$Json$Encode.$int(g.amplitude1))
-                                         ,A2(_op["=>"],"wavelength2",$Json$Encode.$int(g.wavelength2))
-                                         ,A2(_op["=>"],"amplitude2",$Json$Encode.$int(g.amplitude2))]));
-   };
-   var rangeEncoder = function (r) {
-      return $Json$Encode.object(_U.list([A2(_op["=>"],
-                                         "start",
-                                         $Json$Encode.$int(r.start))
-                                         ,A2(_op["=>"],"end",$Json$Encode.$int(r.end))]));
-   };
-   var gustGeneratorEncoder = function (g) {
-      return $Json$Encode.object(_U.list([A2(_op["=>"],
-                                         "interval",
-                                         $Json$Encode.$int(g.interval))
-                                         ,A2(_op["=>"],"radiusBase",$Json$Encode.$int(g.radiusBase))
-                                         ,A2(_op["=>"],
-                                         "radiusVariation",
-                                         $Json$Encode.$int(g.radiusVariation))
-                                         ,A2(_op["=>"],"speedVariation",rangeEncoder(g.speedVariation))
-                                         ,A2(_op["=>"],
-                                         "originVariation",
-                                         rangeEncoder(g.originVariation))]));
-   };
-   var courseEncoder = function (course) {
-      return $Json$Encode.object(_U.list([A2(_op["=>"],
-                                         "upwind",
-                                         gateEncoder(course.upwind))
-                                         ,A2(_op["=>"],"downwind",gateEncoder(course.downwind))
-                                         ,A2(_op["=>"],"grid",gridEncoder(course.grid))
-                                         ,A2(_op["=>"],"laps",$Json$Encode.$int(course.laps))
-                                         ,A2(_op["=>"],"area",areaEncoder(course.area))
-                                         ,A2(_op["=>"],"windSpeed",$Json$Encode.$int(course.windSpeed))
-                                         ,A2(_op["=>"],
-                                         "windGenerator",
-                                         windGeneratorEncoder(course.windGenerator))
-                                         ,A2(_op["=>"],
-                                         "gustGenerator",
-                                         gustGeneratorEncoder(course.gustGenerator))]));
-   };
-   return _elm.Encoders.values = {_op: _op
-                                 ,courseEncoder: courseEncoder
-                                 ,gateEncoder: gateEncoder
-                                 ,gridEncoder: gridEncoder
-                                 ,gridRowEncoder: gridRowEncoder
-                                 ,tileKindEncoder: tileKindEncoder
-                                 ,areaEncoder: areaEncoder
-                                 ,pointEncoder: pointEncoder
-                                 ,windGeneratorEncoder: windGeneratorEncoder
-                                 ,gustGeneratorEncoder: gustGeneratorEncoder
-                                 ,rangeEncoder: rangeEncoder
-                                 ,dictEncoder: dictEncoder};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Geo = Elm.Game.Geo || {};
-Elm.Game.Geo.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Geo = _elm.Game.Geo || {};
-   if (_elm.Game.Geo.values) return _elm.Game.Geo.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var angleDelta = F2(function (a1,a2) {
-      var delta = a1 - a2;
-      return _U.cmp(delta,180) > 0 ? delta - 360 : _U.cmp(delta,
-      -180) < 1 ? delta + 360 : delta;
-   });
-   var inSector = F3(function (b1,b2,angle) {
-      var a2 = 0 - A2(angleDelta,angle,b2);
-      var a1 = 0 - A2(angleDelta,b1,angle);
-      return _U.cmp(a1,0) > -1 && _U.cmp(a2,0) > -1;
-   });
-   var ensure360 = function (val) {
-      var rounded = $Basics.round(val);
-      var excess = val - $Basics.toFloat(rounded);
-      return $Basics.toFloat(A2($Basics._op["%"],
-      rounded + 360,
-      360)) + excess;
-   };
-   var angleBetween = F2(function (_p1,_p0) {
-      var _p2 = _p1;
-      var _p3 = _p0;
-      var yDelta = _p3._1 - _p2._1;
-      var xDelta = _p3._0 - _p2._0;
-      var rad = A2($Basics.atan2,yDelta,xDelta);
-      return ensure360($Game$Core.toDegrees(rad));
-   });
-   var rotateDeg = F2(function (deg,radius) {
-      var a = $Game$Core.toRadians(deg);
-      return {ctor: "_Tuple2"
-             ,_0: radius * $Basics.cos(a)
-             ,_1: radius * $Basics.sin(a)};
-   });
-   var movePoint = F4(function (_p4,delta,velocity,direction) {
-      var _p5 = _p4;
-      var angle = $Game$Core.toRadians(direction);
-      var x$ = _p5._0 + delta * 1.0e-3 * velocity * $Basics.cos(angle);
-      var y$ = _p5._1 + delta * 1.0e-3 * velocity * $Basics.sin(angle);
-      return {ctor: "_Tuple2",_0: x$,_1: y$};
-   });
-   var toBox = F3(function (_p6,w,h) {
-      var _p7 = _p6;
-      var _p9 = _p7._1;
-      var _p8 = _p7._0;
-      return {ctor: "_Tuple2"
-             ,_0: {ctor: "_Tuple2",_0: _p8 + w / 2,_1: _p9 + h / 2}
-             ,_1: {ctor: "_Tuple2",_0: _p8 - w / 2,_1: _p9 - h / 2}};
-   });
-   var inBox = F2(function (_p11,_p10) {
-      var _p12 = _p11;
-      var _p15 = _p12._1;
-      var _p14 = _p12._0;
-      var _p13 = _p10;
-      return _U.cmp(_p14,_p13._1._0) > 0 && (_U.cmp(_p14,
-      _p13._0._0) < 0 && (_U.cmp(_p15,_p13._1._1) > 0 && _U.cmp(_p15,
-      _p13._0._1) < 0));
-   });
-   var distance = F2(function (_p17,_p16) {
-      var _p18 = _p17;
-      var _p19 = _p16;
-      return $Basics.sqrt(Math.pow(_p18._0 - _p19._0,
-      2) + Math.pow(_p18._1 - _p19._1,2));
-   });
-   var scale = F2(function (s,_p20) {
-      var _p21 = _p20;
-      return {ctor: "_Tuple2",_0: _p21._0 * s,_1: _p21._1 * s};
-   });
-   var neg = function (_p22) {
-      var _p23 = _p22;
-      return {ctor: "_Tuple2",_0: 0 - _p23._0,_1: 0 - _p23._1};
-   };
-   var sub = F2(function (_p25,_p24) {
-      var _p26 = _p25;
-      var _p27 = _p24;
-      return {ctor: "_Tuple2"
-             ,_0: _p27._0 - _p26._0
-             ,_1: _p27._1 - _p26._1};
-   });
-   var add = F2(function (_p29,_p28) {
-      var _p30 = _p29;
-      var _p31 = _p28;
-      return {ctor: "_Tuple2"
-             ,_0: _p31._0 + _p30._0
-             ,_1: _p31._1 + _p30._1};
-   });
-   var floatify = function (_p32) {
-      var _p33 = _p32;
-      return {ctor: "_Tuple2"
-             ,_0: $Basics.toFloat(_p33._0)
-             ,_1: $Basics.toFloat(_p33._1)};
-   };
-   return _elm.Game.Geo.values = {_op: _op
-                                 ,floatify: floatify
-                                 ,add: add
-                                 ,sub: sub
-                                 ,neg: neg
-                                 ,scale: scale
-                                 ,distance: distance
-                                 ,inBox: inBox
-                                 ,toBox: toBox
-                                 ,movePoint: movePoint
-                                 ,rotateDeg: rotateDeg
-                                 ,ensure360: ensure360
-                                 ,angleDelta: angleDelta
-                                 ,angleBetween: angleBetween
-                                 ,inSector: inSector};
+   return _elm.Model.values = {_op: _op
+                              ,appActionsMailbox: appActionsMailbox
+                              ,appActionsAddress: appActionsAddress
+                              ,AppSetup: AppSetup
+                              ,effect: effect
+                              ,SetPlayer: SetPlayer
+                              ,RouterAction: RouterAction
+                              ,UpdateDims: UpdateDims
+                              ,MouseEvent: MouseEvent
+                              ,ScreenAction: ScreenAction
+                              ,Logout: Logout
+                              ,AppNoOp: AppNoOp
+                              ,HomeAction: HomeAction
+                              ,LoginAction: LoginAction
+                              ,RegisterAction: RegisterAction
+                              ,ShowTrackAction: ShowTrackAction
+                              ,EditTrackAction: EditTrackAction
+                              ,ShowProfileAction: ShowProfileAction
+                              ,GameAction: GameAction
+                              ,ListDraftsAction: ListDraftsAction
+                              ,AdminAction: AdminAction
+                              ,Context: Context
+                              ,Screens: Screens
+                              ,initialAppState: initialAppState};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Outputs = Elm.Game.Outputs || {};
@@ -18210,13 +18214,13 @@ Elm.Game.Outputs.make = function (_elm) {
    _elm.Game.Outputs = _elm.Game.Outputs || {};
    if (_elm.Game.Outputs.values) return _elm.Game.Outputs.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game$Inputs = Elm.Game.Inputs.make(_elm),
    $Game$Models = Elm.Game.Models.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
@@ -19061,7 +19065,7 @@ Elm.Game.Render.SvgUtils.make = function (_elm) {
    $Game$Geo = Elm.Game.Geo.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm),
@@ -19289,7 +19293,7 @@ Elm.Game.Render.Gates.make = function (_elm) {
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
@@ -19391,7 +19395,7 @@ Elm.Game.Render.Tiles.make = function (_elm) {
    $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm),
@@ -19495,7 +19499,7 @@ Elm.Game.Render.Course.make = function (_elm) {
    $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
@@ -19594,7 +19598,7 @@ Elm.Game.Render.Players.make = function (_elm) {
    $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
@@ -20447,7 +20451,7 @@ Elm.Game.Steps.GateCrossing.make = function (_elm) {
    $Game$Models = Elm.Game.Models.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -20483,10 +20487,10 @@ Elm.Game.Steps.GateCrossing.make = function (_elm) {
    var getNextGate = F2(function (course,crossedGates) {
       return _U.eq(crossedGates,
       course.laps * 2 + 1) ? $Maybe.Nothing : _U.eq(crossedGates,
-      0) ? $Maybe.Just($Models.StartLine) : _U.eq(A2($Basics._op["%"],
+      0) ? $Maybe.Just($Model$Shared.StartLine) : _U.eq(A2($Basics._op["%"],
       crossedGates,
       2),
-      0) ? $Maybe.Just($Models.DownwindGate) : $Maybe.Just($Models.UpwindGate);
+      0) ? $Maybe.Just($Model$Shared.DownwindGate) : $Maybe.Just($Model$Shared.UpwindGate);
    });
    var gateCrossingStep = F3(function (previousState,_p13,_p12) {
       var _p14 = _p13;
@@ -20603,7 +20607,7 @@ Elm.Game.Steps.Moving.make = function (_elm) {
    $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -20612,7 +20616,7 @@ Elm.Game.Steps.Moving.make = function (_elm) {
       $Constants.hexRadius,
       course.grid,
       p),
-      $Maybe.Just($Models.Water));
+      $Maybe.Just($Model$Shared.Water));
       var halfBoatWidth = $Game$Models.boatWidth / 2;
       var _p0 = $Game$Models.getGateMarks(course.upwind);
       var ul = _p0._0;
@@ -20863,7 +20867,7 @@ Elm.Game.Steps.PlayerWind.make = function (_elm) {
    $Hexagons = Elm.Hexagons.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21023,7 +21027,7 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
    $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21040,9 +21044,9 @@ Elm.Game.Steps.Gusts.make = function (_elm) {
             _p1.angle * factor,
             _p1.speed * factor);
             return _U.eq(A2($Hexagons$Grid.get,grid,coords),
-            $Maybe.Just($Models.Water)) ? $Maybe.Just({ctor: "_Tuple2"
-                                                      ,_0: coords
-                                                      ,_1: gustTile}) : $Maybe.Nothing;
+            $Maybe.Just($Model$Shared.Water)) ? $Maybe.Just({ctor: "_Tuple2"
+                                                            ,_0: coords
+                                                            ,_1: gustTile}) : $Maybe.Nothing;
          } else return $Maybe.Nothing;
    });
    var genTiledGust = F2(function (grid,_p3) {
@@ -21110,7 +21114,7 @@ Elm.Game.Steps.make = function (_elm) {
    $Game$Steps$WindHistory = Elm.Game.Steps.WindHistory.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
@@ -21743,7 +21747,7 @@ Elm.ServerApi.make = function (_elm) {
    $Json$Encode = Elm.Json.Encode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
@@ -21935,13 +21939,13 @@ Elm.Update.Utils.make = function (_elm) {
    _elm.Update.Utils = _elm.Update.Utils || {};
    if (_elm.Update.Utils.values) return _elm.Update.Utils.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -21949,9 +21953,9 @@ Elm.Update.Utils.make = function (_elm) {
    var _op = {};
    var screenAddr = function (toScreenAction) {
       return A2($Signal.forwardTo,
-      $AppTypes.appActionsAddress,
+      $Model.appActionsAddress,
       function (_p0) {
-         return $AppTypes.ScreenAction(toScreenAction(_p0));
+         return $Model.ScreenAction(toScreenAction(_p0));
       });
    };
    var always = F2(function (action,effect) {
@@ -21963,8 +21967,8 @@ Elm.Update.Utils.make = function (_elm) {
    });
    var setPlayer = function (player) {
       return $Effects.task(A2($Signal.send,
-      $AppTypes.appActionsAddress,
-      $AppTypes.SetPlayer(player)));
+      $Model.appActionsAddress,
+      $Model.SetPlayer(player)));
    };
    var redirect = function (route) {
       return $Effects.task(A2($Signal.send,
@@ -21988,13 +21992,13 @@ Elm.Page.Home.Update.make = function (_elm) {
    if (_elm.Page.Home.Update.values)
    return _elm.Page.Home.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22042,7 +22046,7 @@ Elm.Page.Home.Update.make = function (_elm) {
       $Page$Home$Model.initial(player),
       refreshLiveStatus);
    };
-   var addr = $Update$Utils.screenAddr($AppTypes.HomeAction);
+   var addr = $Update$Utils.screenAddr($Model.HomeAction);
    return _elm.Page.Home.Update.values = {_op: _op
                                          ,addr: addr
                                          ,mount: mount
@@ -22060,13 +22064,13 @@ Elm.Page.Register.Update.make = function (_elm) {
    if (_elm.Page.Register.Update.values)
    return _elm.Page.Register.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $Form = Elm.Form.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22109,7 +22113,7 @@ Elm.Page.Register.Update.make = function (_elm) {
    var mount = A2($Response.res,
    $Page$Register$Model.initial,
    $Effects.none);
-   var addr = $Update$Utils.screenAddr($AppTypes.RegisterAction);
+   var addr = $Update$Utils.screenAddr($Model.RegisterAction);
    return _elm.Page.Register.Update.values = {_op: _op
                                              ,addr: addr
                                              ,mount: mount
@@ -22127,12 +22131,12 @@ Elm.Page.Login.Update.make = function (_elm) {
    if (_elm.Page.Login.Update.values)
    return _elm.Page.Login.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22175,7 +22179,7 @@ Elm.Page.Login.Update.make = function (_elm) {
    var mount = A2($Response.res,
    $Page$Login$Model.initial,
    $Effects.none);
-   var addr = $Update$Utils.screenAddr($AppTypes.LoginAction);
+   var addr = $Update$Utils.screenAddr($Model.LoginAction);
    return _elm.Page.Login.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
@@ -22193,14 +22197,14 @@ Elm.Page.ShowTrack.Update.make = function (_elm) {
    if (_elm.Page.ShowTrack.Update.values)
    return _elm.Page.ShowTrack.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22271,7 +22275,7 @@ Elm.Page.ShowTrack.Update.make = function (_elm) {
       $Page$ShowTrack$Model.initial,
       loadLiveTrack(slug));
    };
-   var addr = $Update$Utils.screenAddr($AppTypes.ShowTrackAction);
+   var addr = $Update$Utils.screenAddr($Model.ShowTrackAction);
    return _elm.Page.ShowTrack.Update.values = {_op: _op
                                               ,addr: addr
                                               ,mount: mount
@@ -22294,7 +22298,7 @@ Elm.Page.EditTrack.FormUpdate.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -22384,7 +22388,7 @@ Elm.Page.EditTrack.GridUpdate.make = function (_elm) {
    $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -22541,7 +22545,6 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
    if (_elm.Page.EditTrack.Update.values)
    return _elm.Page.EditTrack.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
@@ -22553,7 +22556,8 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
    $Keyboard = Elm.Keyboard.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$EditTrack$FormUpdate = Elm.Page.EditTrack.FormUpdate.make(_elm),
    $Page$EditTrack$GridUpdate = Elm.Page.EditTrack.GridUpdate.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
@@ -22586,7 +22590,7 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
       },
       A2($List.filter,
       function (t) {
-         return _U.eq(t.content,$Models.Water);
+         return _U.eq(t.content,$Model$Shared.Water);
       },
       $Hexagons$Grid.list(grid)));
       var xVals = $Array.fromList($List.sort(A2($List.map,
@@ -22599,7 +22603,7 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
       waterPoints)));
       var top = getLast(yVals) + $Constants.hexRadius;
       var bottom = getFirst(yVals) - $Constants.hexRadius;
-      return A2($Models.RaceArea,
+      return A2($Model$Shared.RaceArea,
       {ctor: "_Tuple2",_0: right,_1: top},
       {ctor: "_Tuple2",_0: left,_1: bottom});
    };
@@ -22777,7 +22781,7 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
    var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
    $Page$EditTrack$Model.AltMoveMode,
    $Keyboard.shift)]));
-   var addr = $Update$Utils.screenAddr($AppTypes.EditTrackAction);
+   var addr = $Update$Utils.screenAddr($Model.EditTrackAction);
    return _elm.Page.EditTrack.Update.values = {_op: _op
                                               ,addr: addr
                                               ,inputs: inputs
@@ -22809,13 +22813,13 @@ Elm.Page.ShowProfile.Update.make = function (_elm) {
    if (_elm.Page.ShowProfile.Update.values)
    return _elm.Page.ShowProfile.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22831,7 +22835,7 @@ Elm.Page.ShowProfile.Update.make = function (_elm) {
       $Page$ShowProfile$Model.initial(player),
       $Effects.none);
    };
-   var addr = $Update$Utils.screenAddr($AppTypes.ShowProfileAction);
+   var addr = $Update$Utils.screenAddr($Model.ShowProfileAction);
    return _elm.Page.ShowProfile.Update.values = {_op: _op
                                                 ,addr: addr
                                                 ,mount: mount
@@ -22848,7 +22852,6 @@ Elm.Page.Game.Update.make = function (_elm) {
    if (_elm.Page.Game.Update.values)
    return _elm.Page.Game.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
@@ -22856,7 +22859,8 @@ Elm.Page.Game.Update.make = function (_elm) {
    $Game$Steps = Elm.Game.Steps.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -22984,7 +22988,7 @@ Elm.Page.Game.Update.make = function (_elm) {
            $Effects.none);
          default: return A2($Response.res,screen,$Effects.none);}
    });
-   var addr = $Update$Utils.screenAddr($AppTypes.GameAction);
+   var addr = $Update$Utils.screenAddr($Model.GameAction);
    return _elm.Page.Game.Update.values = {_op: _op
                                          ,addr: addr
                                          ,chat: chat
@@ -23007,12 +23011,12 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
    if (_elm.Page.ListDrafts.Update.values)
    return _elm.Page.ListDrafts.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -23086,7 +23090,7 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
    var mount = A2($Response.taskRes,
    $Page$ListDrafts$Model.initial,
    loadDrafts);
-   var addr = $Update$Utils.screenAddr($AppTypes.ListDraftsAction);
+   var addr = $Update$Utils.screenAddr($Model.ListDraftsAction);
    return _elm.Page.ListDrafts.Update.values = {_op: _op
                                                ,addr: addr
                                                ,mount: mount
@@ -23105,13 +23109,13 @@ Elm.Page.Admin.Update.make = function (_elm) {
    if (_elm.Page.Admin.Update.values)
    return _elm.Page.Admin.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -23130,7 +23134,7 @@ Elm.Page.Admin.Update.make = function (_elm) {
            screen,
            refreshData);
          case "RefreshDataResult": var _p1 = A2($Result.withDefault,
-           A2($Models.AdminData,_U.list([]),_U.list([])),
+           A2($Model$Shared.AdminData,_U.list([]),_U.list([])),
            _p0._0);
            var tracks = _p1.tracks;
            var users = _p1.users;
@@ -23160,7 +23164,7 @@ Elm.Page.Admin.Update.make = function (_elm) {
    var mount = A2($Response.taskRes,
    $Page$Admin$Model.initial,
    refreshData);
-   var addr = $Update$Utils.screenAddr($AppTypes.AdminAction);
+   var addr = $Update$Utils.screenAddr($Model.AdminAction);
    return _elm.Page.Admin.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
@@ -23173,12 +23177,12 @@ Elm.Update.make = function (_elm) {
    _elm.Update = _elm.Update || {};
    if (_elm.Update.values) return _elm.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Admin$Update = Elm.Page.Admin.Update.make(_elm),
    $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
    $Page$Game$Update = Elm.Page.Game.Update.make(_elm),
@@ -23203,7 +23207,7 @@ Elm.Update.make = function (_elm) {
    appState) {
       return A2($Response.mapEffects,
       function (_p0) {
-         return $AppTypes.ScreenAction(actionWrapper(_p0));
+         return $Model.ScreenAction(actionWrapper(_p0));
       },
       A2($Response.mapModel,
       function (screen) {
@@ -23216,52 +23220,52 @@ Elm.Update.make = function (_elm) {
    F2(function (s,screens) {
       return _U.update(screens,{admin: s});
    }),
-   $AppTypes.AdminAction);
+   $Model.AdminAction);
    var applyListDrafts = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{listDrafts: s});
    }),
-   $AppTypes.ListDraftsAction);
+   $Model.ListDraftsAction);
    var applyGame = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{game: s});
    }),
-   $AppTypes.GameAction);
+   $Model.GameAction);
    var applyEditTrack = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{editTrack: s});
    }),
-   $AppTypes.EditTrackAction);
+   $Model.EditTrackAction);
    var applyShowTrack = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{showTrack: s});
    }),
-   $AppTypes.ShowTrackAction);
+   $Model.ShowTrackAction);
    var applyShowProfile = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{showProfile: s});
    }),
-   $AppTypes.ShowProfileAction);
+   $Model.ShowProfileAction);
    var applyRegister = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{register: s});
    }),
-   $AppTypes.RegisterAction);
+   $Model.RegisterAction);
    var applyLogin = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{login: s});
    }),
-   $AppTypes.LoginAction);
+   $Model.LoginAction);
    var applyHome = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{home: s});
    }),
-   $AppTypes.HomeAction);
+   $Model.HomeAction);
    var logoutTask = A2($Task.map,
    function (r) {
       return A2($Result.withDefault,
-      $AppTypes.AppNoOp,
-      A2($Result.map,$AppTypes.SetPlayer,r));
+      $Model.AppNoOp,
+      A2($Result.map,$Model.SetPlayer,r));
    },
    $ServerApi.postLogout);
    var updateScreen = F2(function (screenAction,_p1) {
@@ -23344,13 +23348,13 @@ Elm.Update.make = function (_elm) {
                       ,getDurations: F3(function (_p12,_p11,_p10) {
                          return {ctor: "_Tuple2",_0: 50,_1: 200};
                       })
-                      ,actionWrapper: $AppTypes.RouterAction
+                      ,actionWrapper: $Model.RouterAction
                       ,routeDecoder: $Route.fromPath};
    var init = function (setup) {
       return A3($TransitRouter.init,
       routerConfig,
       setup.path,
-      $AppTypes.initialAppState(setup));
+      $Model.initialAppState(setup));
    };
    var update = F2(function (appAction,_p13) {
       var _p14 = _p13;
@@ -23363,7 +23367,7 @@ Elm.Update.make = function (_elm) {
            _p21);
          case "SetPlayer": return A2($Response.mapEffects,
            function (_p16) {
-              return $AppTypes.AppNoOp;
+              return $Model.AppNoOp;
            },
            A2($Response.res,
            _U.update(_p21,{player: _p15._0}),
@@ -23375,10 +23379,10 @@ Elm.Update.make = function (_elm) {
               var _p17 = $TransitRouter.getRoute(_p21);
               switch (_p17.ctor)
               {case "EditTrack": return $Maybe.Just(function (_p18) {
-                      return $AppTypes.EditTrackAction($Page$EditTrack$Update.mouseAction(_p18));
+                      return $Model.EditTrackAction($Page$EditTrack$Update.mouseAction(_p18));
                    });
                  case "ShowTrack": return $Maybe.Just(function (_p19) {
-                      return $AppTypes.ShowTrackAction($Page$ShowTrack$Update.mouseAction(_p19));
+                      return $Model.ShowTrackAction($Page$ShowTrack$Update.mouseAction(_p19));
                    });
                  default: return $Maybe.Nothing;}
            }();
@@ -23482,7 +23486,7 @@ Elm.View.Utils.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -23787,7 +23791,6 @@ Elm.View.Sidebar.make = function (_elm) {
    _elm.View.Sidebar = _elm.View.Sidebar || {};
    if (_elm.View.Sidebar.values) return _elm.View.Sidebar.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -23795,7 +23798,8 @@ Elm.View.Sidebar.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
@@ -23826,13 +23830,13 @@ Elm.View.Sidebar.make = function (_elm) {
                      _U.list([$Html.text("Home")]))])),
                      A2($List._op["::"],
                      draftsLink,
-                     $Models.isAdmin(player) ? _U.list([adminLink]) : _U.list([]))))
+                     $Model$Shared.isAdmin(player) ? _U.list([adminLink]) : _U.list([]))))
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("logout")]),
                      _U.list([A2($Html.a,
                      _U.list([A2($Html$Events.onClick,
-                     $AppTypes.appActionsAddress,
-                     $AppTypes.Logout)]),
+                     $Model.appActionsAddress,
+                     $Model.Logout)]),
                      _U.list([$Html.text("Logout")]))]))]);
    };
    var guestContent = _U.list([A2($Html.ul,
@@ -23891,7 +23895,6 @@ Elm.View.Layout.make = function (_elm) {
    _elm.View.Layout = _elm.View.Layout || {};
    if (_elm.View.Layout.values) return _elm.View.Layout.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -23899,6 +23902,7 @@ Elm.View.Layout.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -23951,7 +23955,6 @@ Elm.Page.Home.View.make = function (_elm) {
    if (_elm.Page.Home.View.values)
    return _elm.Page.Home.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -23959,7 +23962,8 @@ Elm.Page.Home.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
    $Page$Home$Update = Elm.Page.Home.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24157,7 +24161,6 @@ Elm.Page.Login.View.make = function (_elm) {
    if (_elm.Page.Login.View.values)
    return _elm.Page.Login.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -24165,6 +24168,7 @@ Elm.Page.Login.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
    $Page$Login$Update = Elm.Page.Login.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24239,7 +24243,6 @@ Elm.Page.Register.View.make = function (_elm) {
    if (_elm.Page.Register.View.values)
    return _elm.Page.Register.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Dict = Elm.Dict.make(_elm),
@@ -24250,6 +24253,7 @@ Elm.Page.Register.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
    $Page$Register$Update = Elm.Page.Register.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24350,7 +24354,6 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
    if (_elm.Page.ShowTrack.View.values)
    return _elm.Page.ShowTrack.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
@@ -24362,7 +24365,8 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
    $Page$ShowTrack$Update = Elm.Page.ShowTrack.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24563,7 +24567,7 @@ Elm.Page.EditTrack.SideView.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24632,9 +24636,9 @@ Elm.Page.EditTrack.SideView.make = function (_elm) {
    var surfaceBlock = function (editor) {
       var currentMode = $Page$EditTrack$Model.realMode(editor);
       var modes = _U.list([$Page$EditTrack$Model.Watch
-                          ,$Page$EditTrack$Model.CreateTile($Models.Water)
-                          ,$Page$EditTrack$Model.CreateTile($Models.Rock)
-                          ,$Page$EditTrack$Model.CreateTile($Models.Grass)
+                          ,$Page$EditTrack$Model.CreateTile($Model$Shared.Water)
+                          ,$Page$EditTrack$Model.CreateTile($Model$Shared.Rock)
+                          ,$Page$EditTrack$Model.CreateTile($Model$Shared.Grass)
                           ,$Page$EditTrack$Model.Erase]);
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("surface-modes")]),
@@ -24863,7 +24867,7 @@ Elm.Page.EditTrack.SideView.make = function (_elm) {
                                      ,$Html$Attributes.$class("btn btn-default btn-save-and-try")
                                      ,$Html$Attributes.disabled(_p13)]),
                              _U.list([$Html.text("Save and try")]))]))
-                     ,_U.eq(track.status,$Models.Draft) ? A2($Html.div,
+                     ,_U.eq(track.status,$Model$Shared.Draft) ? A2($Html.div,
                      _U.list([$Html$Attributes.$class("btn-group-vertical")]),
                      _U.list([A2($Html.button,
                              _U.list([A2($Html$Events.onClick,
@@ -24896,7 +24900,6 @@ Elm.Page.EditTrack.View.make = function (_elm) {
    if (_elm.Page.EditTrack.View.values)
    return _elm.Page.EditTrack.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Game$Geo = Elm.Game.Geo.make(_elm),
@@ -24907,7 +24910,8 @@ Elm.Page.EditTrack.View.make = function (_elm) {
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Page$EditTrack$SideView = Elm.Page.EditTrack.SideView.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24947,7 +24951,7 @@ Elm.Page.EditTrack.View.make = function (_elm) {
       {
             var _p9 = _p7._0._0;
             var _p8 = _p7._1._0;
-            return A2($Models.canUpdateDraft,
+            return A2($Model$Shared.canUpdateDraft,
             _p6.player,
             _p9) ? A3($View$Layout.layout,
             "editor",
@@ -24974,13 +24978,13 @@ Elm.Page.ShowProfile.View.make = function (_elm) {
    if (_elm.Page.ShowProfile.View.values)
    return _elm.Page.ShowProfile.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -25026,7 +25030,7 @@ Elm.Page.Game.ChatView.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Game$Update = Elm.Page.Game.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -25233,7 +25237,7 @@ Elm.Page.Game.PlayersView.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -25338,7 +25342,7 @@ Elm.Page.Game.SideView.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Game$PlayersView = Elm.Page.Game.PlayersView.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -25402,7 +25406,7 @@ Elm.Page.Game.SideView.make = function (_elm) {
    };
    var view = F3(function (screen,liveTrack,gameState) {
       var blocks = _U.eq(liveTrack.track.status,
-      $Models.Draft) ? draftBlocks(liveTrack) : A2(liveBlocks,
+      $Model$Shared.Draft) ? draftBlocks(liveTrack) : A2(liveBlocks,
       screen,
       liveTrack);
       return A2($List._op["::"],
@@ -25430,7 +25434,6 @@ Elm.Page.Game.View.make = function (_elm) {
    if (_elm.Page.Game.View.values)
    return _elm.Page.Game.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -25439,6 +25442,7 @@ Elm.Page.Game.View.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Game$ChatView = Elm.Page.Game.ChatView.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Game$SideView = Elm.Page.Game.SideView.make(_elm),
@@ -25484,7 +25488,6 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
    if (_elm.Page.ListDrafts.View.values)
    return _elm.Page.ListDrafts.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -25492,7 +25495,8 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
    $Page$ListDrafts$Update = Elm.Page.ListDrafts.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -25587,7 +25591,6 @@ Elm.Page.Admin.View.make = function (_elm) {
    if (_elm.Page.Admin.View.values)
    return _elm.Page.Admin.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
@@ -25595,7 +25598,8 @@ Elm.Page.Admin.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
    $Page$Admin$Update = Elm.Page.Admin.Update.make(_elm),
@@ -25798,12 +25802,12 @@ Elm.View.make = function (_elm) {
    _elm.View = _elm.View || {};
    if (_elm.View.values) return _elm.View.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$Admin$View = Elm.Page.Admin.View.make(_elm),
    $Page$EditTrack$View = Elm.Page.EditTrack.View.make(_elm),
    $Page$Game$View = Elm.Page.Game.View.make(_elm),
@@ -25822,7 +25826,7 @@ Elm.View.make = function (_elm) {
       var _p2 = _p0;
       var _p5 = _p2.screens;
       var _p4 = _p2;
-      var ctx = A4($AppTypes.Context,
+      var ctx = A4($Model.Context,
       _p2.player,
       _p2.dims,
       $TransitRouter.getTransition(_p4),
@@ -25862,7 +25866,6 @@ Elm.Main.make = function (_elm) {
    _elm.Main = _elm.Main || {};
    if (_elm.Main.values) return _elm.Main.values;
    var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
@@ -25873,6 +25876,7 @@ Elm.Main.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
    $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
    $Page$Game$Decoders = Elm.Page.Game.Decoders.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
@@ -25905,7 +25909,7 @@ Elm.Main.make = function (_elm) {
    });
    var gameActions = A2($Signal.map,
    function (_p2) {
-      return $AppTypes.ScreenAction($AppTypes.GameAction($Page$Game$Decoders.decodeAction(_p2)));
+      return $Model.ScreenAction($Model.GameAction($Page$Game$Decoders.decodeAction(_p2)));
    },
    gameActionsInput);
    var chatScrollDown = Elm.Native.Port.make(_elm).outboundSignal("chatScrollDown",
@@ -26066,15 +26070,15 @@ Elm.Main.make = function (_elm) {
    clock,
    A3($Signal.filterMap,
    $Maybe.map(function (_p3) {
-      return $AppTypes.ScreenAction($AppTypes.GameAction($Page$Game$Model.GameUpdate(_p3)));
+      return $Model.ScreenAction($Model.GameAction($Page$Game$Model.GameUpdate(_p3)));
    }),
-   $AppTypes.AppNoOp,
+   $Model.AppNoOp,
    A3($Signal.map2,
    $Game$Inputs.buildGameInput,
    rawInput,
    A2($Signal.sampleOn,rawInput,clock)))));
    var appSetup = Elm.Native.Port.make(_elm).inbound("appSetup",
-   "AppTypes.AppSetup",
+   "Model.AppSetup",
    function (v) {
       return typeof v === "object" && "player" in v && "path" in v && "dims" in v ? {_: {}
                                                                                     ,player: typeof v.player === "object" && "id" in v.player && "handle" in v.player && "status" in v.player && "avatarId" in v.player && "vmgMagnet" in v.player && "guest" in v.player && "user" in v.player ? {_: {}
@@ -26107,16 +26111,16 @@ Elm.Main.make = function (_elm) {
                              ,update: $Update.update
                              ,view: $View.view
                              ,inputs: _U.list([A2($Signal.map,
-                                              $AppTypes.RouterAction,
+                                              $Model.RouterAction,
                                               $TransitRouter.actions)
-                                              ,A2($Signal.map,$AppTypes.UpdateDims,$Window.dimensions)
-                                              ,A2($Signal.map,$AppTypes.MouseEvent,$DragAndDrop.mouseEvents)
-                                              ,$AppTypes.appActionsMailbox.signal
+                                              ,A2($Signal.map,$Model.UpdateDims,$Window.dimensions)
+                                              ,A2($Signal.map,$Model.MouseEvent,$DragAndDrop.mouseEvents)
+                                              ,$Model.appActionsMailbox.signal
                                               ,raceUpdateActions
                                               ,gameActions
                                               ,A2($Signal.map,
                                               function (_p4) {
-                                                 return $AppTypes.ScreenAction($AppTypes.EditTrackAction(_p4));
+                                                 return $Model.ScreenAction($Model.EditTrackAction(_p4));
                                               },
                                               $Page$EditTrack$Update.inputs)])});
    var main = app.html;

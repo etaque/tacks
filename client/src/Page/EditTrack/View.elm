@@ -5,8 +5,8 @@ import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.SideView as SideView

@@ -1,6 +1,6 @@
 module Encoders where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Dict exposing (Dict)
 import Json.Decode exposing (..)

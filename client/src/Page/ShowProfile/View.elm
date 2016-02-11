@@ -3,8 +3,8 @@ module Page.ShowProfile.View where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 
 import Page.ShowProfile.Model exposing (..)
 

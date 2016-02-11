@@ -2,7 +2,7 @@ module Game.Render.Course where
 
 import Constants
 import Game.Models exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Hexagons
 import Hexagons.Grid as Grid

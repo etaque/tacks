@@ -5,7 +5,7 @@ import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none)
 import Response exposing (..)
 
-import AppTypes exposing (..)
+import Model exposing (..)
 import Page.Login.Model exposing (..)
 import ServerApi
 import Update.Utils as Utils

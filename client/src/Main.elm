@@ -12,7 +12,7 @@ import DragAndDrop exposing (mouseEvents)
 import TransitRouter
 
 import Update
-import AppTypes exposing (..)
+import Model exposing (..)
 import Game.Inputs exposing (..)
 import Game.Outputs exposing (PlayerOutput)
 import Game.Outputs exposing (PlayerOutput)
@@ -67,7 +67,7 @@ raceUpdateActions : Signal AppAction
 raceUpdateActions =
   Signal.sampleOn rawInput clock
     |> Signal.map2 buildGameInput rawInput
-    |> Signal.filterMap (Maybe.map (GameTypes.GameUpdate >> GameAction >> ScreenAction)) AppTypes.AppNoOp
+    |> Signal.filterMap (Maybe.map (GameTypes.GameUpdate >> GameAction >> ScreenAction)) Model.AppNoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 

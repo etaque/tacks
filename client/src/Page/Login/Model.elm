@@ -1,6 +1,6 @@
 module Page.Login.Model where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 
 type alias Screen =

@@ -3,8 +3,8 @@ module Page.Game.View where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 
 import Page.Game.Model exposing (..)
 import Page.Game.ChatView as ChatView

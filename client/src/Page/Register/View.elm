@@ -8,8 +8,8 @@ import Html.Events exposing (..)
 import Form.Input as Input
 import Form
 
-import Models exposing (..)
-import AppTypes exposing (..)
+import Model.Shared exposing (..)
+import Model exposing (..)
 import CoreExtra exposing (..)
 
 import Page.Register.Model exposing (..)

@@ -2,7 +2,7 @@ module Page.Game.Model where
 
 import Time exposing (Time)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs exposing (GameInput)
 

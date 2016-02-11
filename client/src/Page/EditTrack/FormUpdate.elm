@@ -1,6 +1,6 @@
 module Page.EditTrack.FormUpdate where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 
 

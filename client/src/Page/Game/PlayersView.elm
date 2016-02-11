@@ -6,7 +6,7 @@ import Html.Attributes exposing (..)
 import Date exposing (..)
 import Date.Format exposing (format)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Page.Game.Model exposing (..)
 

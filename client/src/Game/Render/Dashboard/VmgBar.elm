@@ -2,7 +2,7 @@ module Game.Render.Dashboard.VmgBar where
 
 import Game.Models exposing (..)
 import Game.Core exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Gates exposing (..)

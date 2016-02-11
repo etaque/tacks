@@ -1,4 +1,4 @@
-module Models where
+module Model.Shared where
 
 import Time exposing (Time)
 import Dict exposing (Dict)

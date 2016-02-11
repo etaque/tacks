@@ -5,7 +5,7 @@ import Html.Attributes exposing (..)
 
 import View.Sidebar as Sidebar
 import Constants exposing (..)
-import AppTypes exposing (..)
+import Model exposing (..)
 import Route
 
 import TransitStyle exposing (fadeSlideLeft)

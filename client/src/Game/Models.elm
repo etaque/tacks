@@ -1,6 +1,6 @@
 module Game.Models where
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Game.Core as Core
 
 import Maybe as M

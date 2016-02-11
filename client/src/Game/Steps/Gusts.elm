@@ -1,7 +1,7 @@
 module Game.Steps.Gusts where
 
 import Constants exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Game.Models exposing (..)
 
 import Game.Geo as Geo

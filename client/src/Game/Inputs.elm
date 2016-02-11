@@ -7,7 +7,7 @@ import Keyboard
 import Char
 
 import Game.Models exposing (..)
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 
 buildGameInput : (KeyboardInput, (Int,Int), Maybe RaceInput) -> Clock -> Maybe GameInput

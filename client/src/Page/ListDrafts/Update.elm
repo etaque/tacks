@@ -4,8 +4,8 @@ import Effects exposing (Effects, Never, none)
 import Task exposing (Task)
 import Response exposing (..)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 import ServerApi
 import Route
 

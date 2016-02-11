@@ -5,7 +5,7 @@ import Form exposing (Form)
 import Form.Validate exposing (..)
 import Dict exposing (Dict)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 
 
 type alias Screen =

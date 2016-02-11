@@ -8,7 +8,7 @@ import Response exposing (..)
 
 import Form
 
-import AppTypes exposing (..)
+import Model exposing (..)
 import Page.Register.Model exposing (..)
 import ServerApi
 import Update.Utils as Utils

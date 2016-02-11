@@ -1,7 +1,7 @@
 module Game.Geo where
 
 import Game.Core as Core
-import Models exposing (Point, Segment)
+import Model.Shared exposing (Point, Segment)
 
 import Time exposing (..)
 

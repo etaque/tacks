@@ -9,8 +9,8 @@ import Array
 import Response exposing (..)
 import DragAndDrop exposing (MouseEvent)
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.FormUpdate as FormUpdate

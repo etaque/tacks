@@ -8,7 +8,7 @@ import Dict exposing (Dict)
 import Result exposing (Result(Ok,Err))
 import Effects exposing (Never)
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Decoders exposing (..)
 import Encoders exposing (..)
 

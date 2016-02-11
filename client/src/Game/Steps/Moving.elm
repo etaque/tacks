@@ -2,7 +2,7 @@ module Game.Steps.Moving where
 
 import List as L
 
-import Models exposing (..)
+import Model.Shared exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Core exposing (..)

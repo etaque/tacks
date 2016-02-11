@@ -6,8 +6,8 @@ import Html.Events exposing (..)
 import Svg
 import Svg.Attributes as SvgAttr
 
-import AppTypes exposing (..)
-import Models exposing (..)
+import Model exposing (..)
+import Model.Shared exposing (..)
 import Route exposing (..)
 
 import Page.ShowTrack.Model exposing (..)
