@@ -16183,16 +16183,16 @@ Elm.Models.make = function (_elm) {
                                ,Rock: Rock
                                ,AdminData: AdminData};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Home = Elm.Screens.Home || {};
-Elm.Screens.Home.Model = Elm.Screens.Home.Model || {};
-Elm.Screens.Home.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Home = Elm.Page.Home || {};
+Elm.Page.Home.Model = Elm.Page.Home.Model || {};
+Elm.Page.Home.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Home = _elm.Screens.Home || {};
-   _elm.Screens.Home.Model = _elm.Screens.Home.Model || {};
-   if (_elm.Screens.Home.Model.values)
-   return _elm.Screens.Home.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Home = _elm.Page.Home || {};
+   _elm.Page.Home.Model = _elm.Page.Home.Model || {};
+   if (_elm.Page.Home.Model.values)
+   return _elm.Page.Home.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16225,26 +16225,26 @@ Elm.Screens.Home.Model.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {handle: a,liveStatus: b,trackFocus: c};
    });
-   return _elm.Screens.Home.Model.values = {_op: _op
-                                           ,Screen: Screen
-                                           ,initial: initial
-                                           ,SetLiveStatus: SetLiveStatus
-                                           ,SetHandle: SetHandle
-                                           ,FocusTrack: FocusTrack
-                                           ,SubmitHandle: SubmitHandle
-                                           ,SubmitHandleResult: SubmitHandleResult
-                                           ,NoOp: NoOp};
+   return _elm.Page.Home.Model.values = {_op: _op
+                                        ,Screen: Screen
+                                        ,initial: initial
+                                        ,SetLiveStatus: SetLiveStatus
+                                        ,SetHandle: SetHandle
+                                        ,FocusTrack: FocusTrack
+                                        ,SubmitHandle: SubmitHandle
+                                        ,SubmitHandleResult: SubmitHandleResult
+                                        ,NoOp: NoOp};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Login = Elm.Screens.Login || {};
-Elm.Screens.Login.Model = Elm.Screens.Login.Model || {};
-Elm.Screens.Login.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Login = Elm.Page.Login || {};
+Elm.Page.Login.Model = Elm.Page.Login.Model || {};
+Elm.Page.Login.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Login = _elm.Screens.Login || {};
-   _elm.Screens.Login.Model = _elm.Screens.Login.Model || {};
-   if (_elm.Screens.Login.Model.values)
-   return _elm.Screens.Login.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Login = _elm.Page.Login || {};
+   _elm.Page.Login.Model = _elm.Page.Login.Model || {};
+   if (_elm.Page.Login.Model.values)
+   return _elm.Page.Login.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16272,25 +16272,25 @@ Elm.Screens.Login.Model.make = function (_elm) {
    var Screen = F4(function (a,b,c,d) {
       return {email: a,password: b,loading: c,error: d};
    });
-   return _elm.Screens.Login.Model.values = {_op: _op
-                                            ,Screen: Screen
-                                            ,initial: initial
-                                            ,SetEmail: SetEmail
-                                            ,SetPassword: SetPassword
-                                            ,Submit: Submit
-                                            ,SubmitResult: SubmitResult
-                                            ,NoOp: NoOp};
+   return _elm.Page.Login.Model.values = {_op: _op
+                                         ,Screen: Screen
+                                         ,initial: initial
+                                         ,SetEmail: SetEmail
+                                         ,SetPassword: SetPassword
+                                         ,Submit: Submit
+                                         ,SubmitResult: SubmitResult
+                                         ,NoOp: NoOp};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Register = Elm.Screens.Register || {};
-Elm.Screens.Register.Model = Elm.Screens.Register.Model || {};
-Elm.Screens.Register.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Register = Elm.Page.Register || {};
+Elm.Page.Register.Model = Elm.Page.Register.Model || {};
+Elm.Page.Register.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Register = _elm.Screens.Register || {};
-   _elm.Screens.Register.Model = _elm.Screens.Register.Model || {};
-   if (_elm.Screens.Register.Model.values)
-   return _elm.Screens.Register.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Register = _elm.Page.Register || {};
+   _elm.Page.Register.Model = _elm.Page.Register.Model || {};
+   if (_elm.Page.Register.Model.values)
+   return _elm.Page.Register.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16337,27 +16337,27 @@ Elm.Screens.Register.Model.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {form: a,loading: b,serverErrors: c};
    });
-   return _elm.Screens.Register.Model.values = {_op: _op
-                                               ,Screen: Screen
-                                               ,NewPlayer: NewPlayer
-                                               ,validation: validation
-                                               ,handleFormat: handleFormat
-                                               ,initial: initial
-                                               ,FormAction: FormAction
-                                               ,Submit: Submit
-                                               ,SubmitResult: SubmitResult
-                                               ,NoOp: NoOp};
+   return _elm.Page.Register.Model.values = {_op: _op
+                                            ,Screen: Screen
+                                            ,NewPlayer: NewPlayer
+                                            ,validation: validation
+                                            ,handleFormat: handleFormat
+                                            ,initial: initial
+                                            ,FormAction: FormAction
+                                            ,Submit: Submit
+                                            ,SubmitResult: SubmitResult
+                                            ,NoOp: NoOp};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
-Elm.Screens.ShowTrack.Model = Elm.Screens.ShowTrack.Model || {};
-Elm.Screens.ShowTrack.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.ShowTrack = Elm.Page.ShowTrack || {};
+Elm.Page.ShowTrack.Model = Elm.Page.ShowTrack.Model || {};
+Elm.Page.ShowTrack.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
-   _elm.Screens.ShowTrack.Model = _elm.Screens.ShowTrack.Model || {};
-   if (_elm.Screens.ShowTrack.Model.values)
-   return _elm.Screens.ShowTrack.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ShowTrack = _elm.Page.ShowTrack || {};
+   _elm.Page.ShowTrack.Model = _elm.Page.ShowTrack.Model || {};
+   if (_elm.Page.ShowTrack.Model.values)
+   return _elm.Page.ShowTrack.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16390,25 +16390,25 @@ Elm.Screens.ShowTrack.Model.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {liveTrack: a,notFound: b,courseControl: c};
    });
-   return _elm.Screens.ShowTrack.Model.values = {_op: _op
-                                                ,Screen: Screen
-                                                ,CourseControl: CourseControl
-                                                ,initial: initial
-                                                ,LiveTrackResult: LiveTrackResult
-                                                ,SetOverCourse: SetOverCourse
-                                                ,MouseAction: MouseAction
-                                                ,NoOp: NoOp};
+   return _elm.Page.ShowTrack.Model.values = {_op: _op
+                                             ,Screen: Screen
+                                             ,CourseControl: CourseControl
+                                             ,initial: initial
+                                             ,LiveTrackResult: LiveTrackResult
+                                             ,SetOverCourse: SetOverCourse
+                                             ,MouseAction: MouseAction
+                                             ,NoOp: NoOp};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.Model = Elm.Screens.EditTrack.Model || {};
-Elm.Screens.EditTrack.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.EditTrack = Elm.Page.EditTrack || {};
+Elm.Page.EditTrack.Model = Elm.Page.EditTrack.Model || {};
+Elm.Page.EditTrack.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.Model = _elm.Screens.EditTrack.Model || {};
-   if (_elm.Screens.EditTrack.Model.values)
-   return _elm.Screens.EditTrack.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.EditTrack = _elm.Page.EditTrack || {};
+   _elm.Page.EditTrack.Model = _elm.Page.EditTrack.Model || {};
+   if (_elm.Page.EditTrack.Model.values)
+   return _elm.Page.EditTrack.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
@@ -16543,56 +16543,56 @@ Elm.Screens.EditTrack.Model.make = function (_elm) {
    var Screen = F3(function (a,b,c) {
       return {track: a,editor: b,notFound: c};
    });
-   return _elm.Screens.EditTrack.Model.values = {_op: _op
-                                                ,Screen: Screen
-                                                ,initial: initial
-                                                ,Editor: Editor
-                                                ,initialEditor: initialEditor
-                                                ,SideBlocks: SideBlocks
-                                                ,CreateTile: CreateTile
-                                                ,Erase: Erase
-                                                ,Watch: Watch
-                                                ,realMode: realMode
-                                                ,LoadTrack: LoadTrack
-                                                ,MouseAction: MouseAction
-                                                ,SetMode: SetMode
-                                                ,AltMoveMode: AltMoveMode
-                                                ,FormAction: FormAction
-                                                ,ToggleBlock: ToggleBlock
-                                                ,SetName: SetName
-                                                ,Save: Save
-                                                ,SaveResult: SaveResult
-                                                ,ConfirmPublish: ConfirmPublish
-                                                ,Publish: Publish
-                                                ,NoOp: NoOp
-                                                ,Name: Name
-                                                ,Surface: Surface
-                                                ,Gates: Gates
-                                                ,Wind: Wind
-                                                ,Gusts: Gusts
-                                                ,SetDownwindY: SetDownwindY
-                                                ,SetUpwindY: SetUpwindY
-                                                ,SetGateWidth: SetGateWidth
-                                                ,SetLaps: SetLaps
-                                                ,UpdateGustGen: UpdateGustGen
-                                                ,SetWindSpeed: SetWindSpeed
-                                                ,SetWindW1: SetWindW1
-                                                ,SetWindA1: SetWindA1
-                                                ,SetWindW2: SetWindW2
-                                                ,SetWindA2: SetWindA2
-                                                ,modeName: modeName
-                                                ,getCourseDims: getCourseDims};
+   return _elm.Page.EditTrack.Model.values = {_op: _op
+                                             ,Screen: Screen
+                                             ,initial: initial
+                                             ,Editor: Editor
+                                             ,initialEditor: initialEditor
+                                             ,SideBlocks: SideBlocks
+                                             ,CreateTile: CreateTile
+                                             ,Erase: Erase
+                                             ,Watch: Watch
+                                             ,realMode: realMode
+                                             ,LoadTrack: LoadTrack
+                                             ,MouseAction: MouseAction
+                                             ,SetMode: SetMode
+                                             ,AltMoveMode: AltMoveMode
+                                             ,FormAction: FormAction
+                                             ,ToggleBlock: ToggleBlock
+                                             ,SetName: SetName
+                                             ,Save: Save
+                                             ,SaveResult: SaveResult
+                                             ,ConfirmPublish: ConfirmPublish
+                                             ,Publish: Publish
+                                             ,NoOp: NoOp
+                                             ,Name: Name
+                                             ,Surface: Surface
+                                             ,Gates: Gates
+                                             ,Wind: Wind
+                                             ,Gusts: Gusts
+                                             ,SetDownwindY: SetDownwindY
+                                             ,SetUpwindY: SetUpwindY
+                                             ,SetGateWidth: SetGateWidth
+                                             ,SetLaps: SetLaps
+                                             ,UpdateGustGen: UpdateGustGen
+                                             ,SetWindSpeed: SetWindSpeed
+                                             ,SetWindW1: SetWindW1
+                                             ,SetWindA1: SetWindA1
+                                             ,SetWindW2: SetWindW2
+                                             ,SetWindA2: SetWindA2
+                                             ,modeName: modeName
+                                             ,getCourseDims: getCourseDims};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowProfile = Elm.Screens.ShowProfile || {};
-Elm.Screens.ShowProfile.Model = Elm.Screens.ShowProfile.Model || {};
-Elm.Screens.ShowProfile.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.ShowProfile = Elm.Page.ShowProfile || {};
+Elm.Page.ShowProfile.Model = Elm.Page.ShowProfile.Model || {};
+Elm.Page.ShowProfile.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowProfile = _elm.Screens.ShowProfile || {};
-   _elm.Screens.ShowProfile.Model = _elm.Screens.ShowProfile.Model || {};
-   if (_elm.Screens.ShowProfile.Model.values)
-   return _elm.Screens.ShowProfile.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ShowProfile = _elm.Page.ShowProfile || {};
+   _elm.Page.ShowProfile.Model = _elm.Page.ShowProfile.Model || {};
+   if (_elm.Page.ShowProfile.Model.values)
+   return _elm.Page.ShowProfile.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -16605,10 +16605,10 @@ Elm.Screens.ShowProfile.Model.make = function (_elm) {
    var NoOp = {ctor: "NoOp"};
    var initial = function (player) {    return {player: player};};
    var Screen = function (a) {    return {player: a};};
-   return _elm.Screens.ShowProfile.Model.values = {_op: _op
-                                                  ,Screen: Screen
-                                                  ,initial: initial
-                                                  ,NoOp: NoOp};
+   return _elm.Page.ShowProfile.Model.values = {_op: _op
+                                               ,Screen: Screen
+                                               ,initial: initial
+                                               ,NoOp: NoOp};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Core = Elm.Game.Core || {};
@@ -17178,16 +17178,16 @@ Elm.Game.Inputs.make = function (_elm) {
                                     ,toKeyboardInput: toKeyboardInput
                                     ,keyboardInput: keyboardInput};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.Model = Elm.Screens.Game.Model || {};
-Elm.Screens.Game.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Game = Elm.Page.Game || {};
+Elm.Page.Game.Model = Elm.Page.Game.Model || {};
+Elm.Page.Game.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.Model = _elm.Screens.Game.Model || {};
-   if (_elm.Screens.Game.Model.values)
-   return _elm.Screens.Game.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Game = _elm.Page.Game || {};
+   _elm.Page.Game.Model = _elm.Page.Game.Model || {};
+   if (_elm.Page.Game.Model.values)
+   return _elm.Page.Game.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -17243,31 +17243,31 @@ Elm.Screens.Game.Model.make = function (_elm) {
              ,messageField: g
              ,notFound: h};
    });
-   return _elm.Screens.Game.Model.values = {_op: _op
-                                           ,Screen: Screen
-                                           ,initial: initial
-                                           ,LoadLiveTrack: LoadLiveTrack
-                                           ,InitGameState: InitGameState
-                                           ,UpdateLiveTrack: UpdateLiveTrack
-                                           ,PingServer: PingServer
-                                           ,GameUpdate: GameUpdate
-                                           ,EnterChat: EnterChat
-                                           ,LeaveChat: LeaveChat
-                                           ,UpdateMessageField: UpdateMessageField
-                                           ,SubmitMessage: SubmitMessage
-                                           ,NewMessage: NewMessage
-                                           ,NoOp: NoOp};
+   return _elm.Page.Game.Model.values = {_op: _op
+                                        ,Screen: Screen
+                                        ,initial: initial
+                                        ,LoadLiveTrack: LoadLiveTrack
+                                        ,InitGameState: InitGameState
+                                        ,UpdateLiveTrack: UpdateLiveTrack
+                                        ,PingServer: PingServer
+                                        ,GameUpdate: GameUpdate
+                                        ,EnterChat: EnterChat
+                                        ,LeaveChat: LeaveChat
+                                        ,UpdateMessageField: UpdateMessageField
+                                        ,SubmitMessage: SubmitMessage
+                                        ,NewMessage: NewMessage
+                                        ,NoOp: NoOp};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ListDrafts = Elm.Screens.ListDrafts || {};
-Elm.Screens.ListDrafts.Model = Elm.Screens.ListDrafts.Model || {};
-Elm.Screens.ListDrafts.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.ListDrafts = Elm.Page.ListDrafts || {};
+Elm.Page.ListDrafts.Model = Elm.Page.ListDrafts.Model || {};
+Elm.Page.ListDrafts.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ListDrafts = _elm.Screens.ListDrafts || {};
-   _elm.Screens.ListDrafts.Model = _elm.Screens.ListDrafts.Model || {};
-   if (_elm.Screens.ListDrafts.Model.values)
-   return _elm.Screens.ListDrafts.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ListDrafts = _elm.Page.ListDrafts || {};
+   _elm.Page.ListDrafts.Model = _elm.Page.ListDrafts.Model || {};
+   if (_elm.Page.ListDrafts.Model.values)
+   return _elm.Page.ListDrafts.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -17307,28 +17307,28 @@ Elm.Screens.ListDrafts.Model.make = function (_elm) {
              ,confirmDelete: c
              ,confirmPublish: d};
    });
-   return _elm.Screens.ListDrafts.Model.values = {_op: _op
-                                                 ,Screen: Screen
-                                                 ,initial: initial
-                                                 ,DraftsResult: DraftsResult
-                                                 ,SetDraftName: SetDraftName
-                                                 ,CreateDraft: CreateDraft
-                                                 ,CreateDraftResult: CreateDraftResult
-                                                 ,ConfirmDeleteDraft: ConfirmDeleteDraft
-                                                 ,DeleteDraft: DeleteDraft
-                                                 ,DeleteDraftResult: DeleteDraftResult
-                                                 ,NoOp: NoOp};
+   return _elm.Page.ListDrafts.Model.values = {_op: _op
+                                              ,Screen: Screen
+                                              ,initial: initial
+                                              ,DraftsResult: DraftsResult
+                                              ,SetDraftName: SetDraftName
+                                              ,CreateDraft: CreateDraft
+                                              ,CreateDraftResult: CreateDraftResult
+                                              ,ConfirmDeleteDraft: ConfirmDeleteDraft
+                                              ,DeleteDraft: DeleteDraft
+                                              ,DeleteDraftResult: DeleteDraftResult
+                                              ,NoOp: NoOp};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Admin = Elm.Screens.Admin || {};
-Elm.Screens.Admin.Routes = Elm.Screens.Admin.Routes || {};
-Elm.Screens.Admin.Routes.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Admin = Elm.Page.Admin || {};
+Elm.Page.Admin.Route = Elm.Page.Admin.Route || {};
+Elm.Page.Admin.Route.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Admin = _elm.Screens.Admin || {};
-   _elm.Screens.Admin.Routes = _elm.Screens.Admin.Routes || {};
-   if (_elm.Screens.Admin.Routes.values)
-   return _elm.Screens.Admin.Routes.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Admin = _elm.Page.Admin || {};
+   _elm.Page.Admin.Route = _elm.Page.Admin.Route || {};
+   if (_elm.Page.Admin.Route.values)
+   return _elm.Page.Admin.Route.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -17390,31 +17390,31 @@ Elm.Screens.Admin.Routes.make = function (_elm) {
                           $RouteParser.string,
                           "")]);
    var router = A2($RouteParser.router,matchers,toPath);
-   return _elm.Screens.Admin.Routes.values = {_op: _op
-                                             ,matchers: matchers
-                                             ,toPath: toPath
-                                             ,Dashboard: Dashboard
-                                             ,ListTracks: ListTracks
-                                             ,ListUsers: ListUsers};
+   return _elm.Page.Admin.Route.values = {_op: _op
+                                         ,matchers: matchers
+                                         ,toPath: toPath
+                                         ,Dashboard: Dashboard
+                                         ,ListTracks: ListTracks
+                                         ,ListUsers: ListUsers};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Admin = Elm.Screens.Admin || {};
-Elm.Screens.Admin.Model = Elm.Screens.Admin.Model || {};
-Elm.Screens.Admin.Model.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Admin = Elm.Page.Admin || {};
+Elm.Page.Admin.Model = Elm.Page.Admin.Model || {};
+Elm.Page.Admin.Model.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Admin = _elm.Screens.Admin || {};
-   _elm.Screens.Admin.Model = _elm.Screens.Admin.Model || {};
-   if (_elm.Screens.Admin.Model.values)
-   return _elm.Screens.Admin.Model.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Admin = _elm.Page.Admin || {};
+   _elm.Page.Admin.Model = _elm.Page.Admin.Model || {};
+   if (_elm.Page.Admin.Model.values)
+   return _elm.Page.Admin.Model.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var NoOp = {ctor: "NoOp"};
@@ -17429,33 +17429,33 @@ Elm.Screens.Admin.Model.make = function (_elm) {
    };
    var RefreshData = {ctor: "RefreshData"};
    var initial = {tracks: _U.list([]),users: _U.list([])};
-   var initialRoute = $Screens$Admin$Routes.Dashboard;
+   var initialRoute = $Page$Admin$Route.Dashboard;
    var Screen = F2(function (a,b) {
       return {tracks: a,users: b};
    });
-   return _elm.Screens.Admin.Model.values = {_op: _op
-                                            ,Screen: Screen
-                                            ,initialRoute: initialRoute
-                                            ,initial: initial
-                                            ,RefreshData: RefreshData
-                                            ,RefreshDataResult: RefreshDataResult
-                                            ,DeleteTrack: DeleteTrack
-                                            ,DeleteTrackResult: DeleteTrackResult
-                                            ,NoOp: NoOp};
+   return _elm.Page.Admin.Model.values = {_op: _op
+                                         ,Screen: Screen
+                                         ,initialRoute: initialRoute
+                                         ,initial: initial
+                                         ,RefreshData: RefreshData
+                                         ,RefreshDataResult: RefreshDataResult
+                                         ,DeleteTrack: DeleteTrack
+                                         ,DeleteTrackResult: DeleteTrackResult
+                                         ,NoOp: NoOp};
 };
-Elm.Routes = Elm.Routes || {};
-Elm.Routes.make = function (_elm) {
+Elm.Route = Elm.Route || {};
+Elm.Route.make = function (_elm) {
    "use strict";
-   _elm.Routes = _elm.Routes || {};
-   if (_elm.Routes.values) return _elm.Routes.values;
+   _elm.Route = _elm.Route || {};
+   if (_elm.Route.values) return _elm.Route.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
    $RouteParser = Elm.RouteParser.make(_elm),
-   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var toPath = function (route) {
@@ -17469,7 +17469,7 @@ Elm.Routes.make = function (_elm) {
          case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
          case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
          case "PlayTrack": return A2($Basics._op["++"],"/play/",_p0._0);
-         case "Admin": return $Screens$Admin$Routes.toPath(_p0._0);
+         case "Admin": return $Page$Admin$Route.toPath(_p0._0);
          case "EmptyRoute": return "/";
          default: return "/404";}
    };
@@ -17521,33 +17521,31 @@ Elm.Routes.make = function (_elm) {
            "/play/",
            $RouteParser.string,
            "")]),
-   A2($RouteParser.mapMatchers,
-   Admin,
-   $Screens$Admin$Routes.matchers));
+   A2($RouteParser.mapMatchers,Admin,$Page$Admin$Route.matchers));
    var fromPath = function (path) {
       return A2($Maybe.withDefault,
       NotFound,
       A2($RouteParser.match,matchers,path));
    };
-   return _elm.Routes.values = {_op: _op
-                               ,Home: Home
-                               ,Login: Login
-                               ,Register: Register
-                               ,ShowProfile: ShowProfile
-                               ,ShowTrack: ShowTrack
-                               ,ListDrafts: ListDrafts
-                               ,EditTrack: EditTrack
-                               ,PlayTrack: PlayTrack
-                               ,Admin: Admin
-                               ,NotFound: NotFound
-                               ,EmptyRoute: EmptyRoute
-                               ,ForMain: ForMain
-                               ,ForAdmin: ForAdmin
-                               ,None: None
-                               ,fromPath: fromPath
-                               ,matchers: matchers
-                               ,toPath: toPath
-                               ,detectTransition: detectTransition};
+   return _elm.Route.values = {_op: _op
+                              ,Home: Home
+                              ,Login: Login
+                              ,Register: Register
+                              ,ShowProfile: ShowProfile
+                              ,ShowTrack: ShowTrack
+                              ,ListDrafts: ListDrafts
+                              ,EditTrack: EditTrack
+                              ,PlayTrack: PlayTrack
+                              ,Admin: Admin
+                              ,NotFound: NotFound
+                              ,EmptyRoute: EmptyRoute
+                              ,ForMain: ForMain
+                              ,ForAdmin: ForAdmin
+                              ,None: None
+                              ,fromPath: fromPath
+                              ,matchers: matchers
+                              ,toPath: toPath
+                              ,detectTransition: detectTransition};
 };
 Elm.AppTypes = Elm.AppTypes || {};
 Elm.AppTypes.make = function (_elm) {
@@ -17562,18 +17560,18 @@ Elm.AppTypes.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
+   $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
+   $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
+   $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
+   $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
+   $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
+   $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
-   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Screens$Home$Model = Elm.Screens.Home.Model.make(_elm),
-   $Screens$ListDrafts$Model = Elm.Screens.ListDrafts.Model.make(_elm),
-   $Screens$Login$Model = Elm.Screens.Login.Model.make(_elm),
-   $Screens$Register$Model = Elm.Screens.Register.Model.make(_elm),
-   $Screens$ShowProfile$Model = Elm.Screens.ShowProfile.Model.make(_elm),
-   $Screens$ShowTrack$Model = Elm.Screens.ShowTrack.Model.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Transit = Elm.Transit.make(_elm),
@@ -17584,17 +17582,17 @@ Elm.AppTypes.make = function (_elm) {
       var _p2 = _p1.player;
       return {player: _p2
              ,dims: _p1.dims
-             ,transitRouter: $TransitRouter.empty($Routes.EmptyRoute)
-             ,routeTransition: $Routes.None
-             ,screens: {home: $Screens$Home$Model.initial(_p2)
-                       ,login: $Screens$Login$Model.initial
-                       ,register: $Screens$Register$Model.initial
-                       ,showTrack: $Screens$ShowTrack$Model.initial
-                       ,editTrack: $Screens$EditTrack$Model.initial
-                       ,showProfile: $Screens$ShowProfile$Model.initial(_p2)
-                       ,game: $Screens$Game$Model.initial
-                       ,listDrafts: $Screens$ListDrafts$Model.initial
-                       ,admin: $Screens$Admin$Model.initial}};
+             ,transitRouter: $TransitRouter.empty($Route.EmptyRoute)
+             ,routeTransition: $Route.None
+             ,screens: {home: $Page$Home$Model.initial(_p2)
+                       ,login: $Page$Login$Model.initial
+                       ,register: $Page$Register$Model.initial
+                       ,showTrack: $Page$ShowTrack$Model.initial
+                       ,editTrack: $Page$EditTrack$Model.initial
+                       ,showProfile: $Page$ShowProfile$Model.initial(_p2)
+                       ,game: $Page$Game$Model.initial
+                       ,listDrafts: $Page$ListDrafts$Model.initial
+                       ,admin: $Page$Admin$Model.initial}};
    };
    var Screens = F9(function (a,b,c,d,e,f,g,h,i) {
       return {home: a
@@ -17690,375 +17688,58 @@ Elm.AppTypes.make = function (_elm) {
                                  ,Screens: Screens
                                  ,initialAppState: initialAppState};
 };
-Elm.Native.Http = {};
-Elm.Native.Http.make = function(localRuntime) {
-
-	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.Http = localRuntime.Native.Http || {};
-	if (localRuntime.Native.Http.values)
-	{
-		return localRuntime.Native.Http.values;
-	}
-
-	var Dict = Elm.Dict.make(localRuntime);
-	var List = Elm.List.make(localRuntime);
-	var Maybe = Elm.Maybe.make(localRuntime);
-	var Task = Elm.Native.Task.make(localRuntime);
-
-
-	function send(settings, request)
-	{
-		return Task.asyncFunction(function(callback) {
-			var req = new XMLHttpRequest();
-
-			// start
-			if (settings.onStart.ctor === 'Just')
-			{
-				req.addEventListener('loadStart', function() {
-					var task = settings.onStart._0;
-					Task.spawn(task);
-				});
-			}
-
-			// progress
-			if (settings.onProgress.ctor === 'Just')
-			{
-				req.addEventListener('progress', function(event) {
-					var progress = !event.lengthComputable
-						? Maybe.Nothing
-						: Maybe.Just({
-							_: {},
-							loaded: event.loaded,
-							total: event.total
-						});
-					var task = settings.onProgress._0(progress);
-					Task.spawn(task);
-				});
-			}
-
-			// end
-			req.addEventListener('error', function() {
-				return callback(Task.fail({ ctor: 'RawNetworkError' }));
-			});
-
-			req.addEventListener('timeout', function() {
-				return callback(Task.fail({ ctor: 'RawTimeout' }));
-			});
-
-			req.addEventListener('load', function() {
-				return callback(Task.succeed(toResponse(req)));
-			});
-
-			req.open(request.verb, request.url, true);
-
-			// set all the headers
-			function setHeader(pair) {
-				req.setRequestHeader(pair._0, pair._1);
-			}
-			A2(List.map, setHeader, request.headers);
-
-			// set the timeout
-			req.timeout = settings.timeout;
-
-			// enable this withCredentials thing
-			req.withCredentials = settings.withCredentials;
-
-			// ask for a specific MIME type for the response
-			if (settings.desiredResponseType.ctor === 'Just')
-			{
-				req.overrideMimeType(settings.desiredResponseType._0);
-			}
-
-			// actuall send the request
-			if(request.body.ctor === "BodyFormData")
-			{
-				req.send(request.body.formData)
-			}
-			else
-			{
-				req.send(request.body._0);
-			}
-		});
-	}
-
-
-	// deal with responses
-
-	function toResponse(req)
-	{
-		var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
-		var response = tag === 'Blob' ? req.response : req.responseText;
-		return {
-			_: {},
-			status: req.status,
-			statusText: req.statusText,
-			headers: parseHeaders(req.getAllResponseHeaders()),
-			url: req.responseURL,
-			value: { ctor: tag, _0: response }
-		};
-	}
-
-
-	function parseHeaders(rawHeaders)
-	{
-		var headers = Dict.empty;
-
-		if (!rawHeaders)
-		{
-			return headers;
-		}
-
-		var headerPairs = rawHeaders.split('\u000d\u000a');
-		for (var i = headerPairs.length; i--; )
-		{
-			var headerPair = headerPairs[i];
-			var index = headerPair.indexOf('\u003a\u0020');
-			if (index > 0)
-			{
-				var key = headerPair.substring(0, index);
-				var value = headerPair.substring(index + 2);
-
-				headers = A3(Dict.update, key, function(oldValue) {
-					if (oldValue.ctor === 'Just')
-					{
-						return Maybe.Just(value + ', ' + oldValue._0);
-					}
-					return Maybe.Just(value);
-				}, headers);
-			}
-		}
-
-		return headers;
-	}
-
-
-	function multipart(dataList)
-	{
-		var formData = new FormData();
-
-		while (dataList.ctor !== '[]')
-		{
-			var data = dataList._0;
-			if (data.ctor === 'StringData')
-			{
-				formData.append(data._0, data._1);
-			}
-			else
-			{
-				var fileName = data._1.ctor === 'Nothing'
-					? undefined
-					: data._1._0;
-				formData.append(data._0, data._2, fileName);
-			}
-			dataList = dataList._1;
-		}
-
-		return { ctor: 'BodyFormData', formData: formData };
-	}
-
-
-	function uriEncode(string)
-	{
-		return encodeURIComponent(string);
-	}
-
-	function uriDecode(string)
-	{
-		return decodeURIComponent(string);
-	}
-
-	return localRuntime.Native.Http.values = {
-		send: F2(send),
-		multipart: multipart,
-		uriEncode: uriEncode,
-		uriDecode: uriDecode
-	};
-};
-
-Elm.Http = Elm.Http || {};
-Elm.Http.make = function (_elm) {
+Elm.CoreExtra = Elm.CoreExtra || {};
+Elm.CoreExtra.make = function (_elm) {
    "use strict";
-   _elm.Http = _elm.Http || {};
-   if (_elm.Http.values) return _elm.Http.values;
+   _elm.CoreExtra = _elm.CoreExtra || {};
+   if (_elm.CoreExtra.values) return _elm.CoreExtra.values;
    var _U = Elm.Native.Utils.make(_elm),
+   $Array = Elm.Array.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Native$Http = Elm.Native.Http.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Task = Elm.Task.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var send = $Native$Http.send;
-   var BadResponse = F2(function (a,b) {
-      return {ctor: "BadResponse",_0: a,_1: b};
+   var within = F2(function (_p0,c) {
+      var _p1 = _p0;
+      return _U.cmp(c,_p1._0) > -1 && _U.cmp(c,_p1._1) < 1;
    });
-   var UnexpectedPayload = function (a) {
-      return {ctor: "UnexpectedPayload",_0: a};
-   };
-   var handleResponse = F2(function (handle,response) {
-      if (_U.cmp(200,
-      response.status) < 1 && _U.cmp(response.status,300) < 0) {
-            var _p0 = response.value;
-            if (_p0.ctor === "Text") {
-                  return handle(_p0._0);
-               } else {
-                  return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
-               }
-         } else return $Task.fail(A2(BadResponse,
-         response.status,
-         response.statusText));
-   });
-   var NetworkError = {ctor: "NetworkError"};
-   var Timeout = {ctor: "Timeout"};
-   var promoteError = function (rawError) {
-      var _p1 = rawError;
-      if (_p1.ctor === "RawTimeout") {
-            return Timeout;
+   var updateAt = F3(function (i,update,items) {
+      var asArray = $Array.fromList(items);
+      var _p2 = A2($Array.get,i,asArray);
+      if (_p2.ctor === "Just") {
+            return $Array.toList(A3($Array.set,
+            i,
+            update(_p2._0),
+            asArray));
          } else {
-            return NetworkError;
+            return items;
          }
-   };
-   var fromJson = F2(function (decoder,response) {
-      var decode = function (str) {
-         var _p2 = A2($Json$Decode.decodeString,decoder,str);
-         if (_p2.ctor === "Ok") {
-               return $Task.succeed(_p2._0);
-            } else {
-               return $Task.fail(UnexpectedPayload(_p2._0));
-            }
-      };
-      return A2($Task.andThen,
-      A2($Task.mapError,promoteError,response),
-      handleResponse(decode));
    });
-   var RawNetworkError = {ctor: "RawNetworkError"};
-   var RawTimeout = {ctor: "RawTimeout"};
-   var Blob = function (a) {    return {ctor: "Blob",_0: a};};
-   var Text = function (a) {    return {ctor: "Text",_0: a};};
-   var Response = F5(function (a,b,c,d,e) {
-      return {status: a,statusText: b,headers: c,url: d,value: e};
-   });
-   var defaultSettings = {timeout: 0
-                         ,onStart: $Maybe.Nothing
-                         ,onProgress: $Maybe.Nothing
-                         ,desiredResponseType: $Maybe.Nothing
-                         ,withCredentials: false};
-   var post = F3(function (decoder,url,body) {
-      var request = {verb: "POST"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: body};
-      return A2(fromJson,decoder,A2(send,defaultSettings,request));
-   });
-   var Settings = F5(function (a,b,c,d,e) {
-      return {timeout: a
-             ,onStart: b
-             ,onProgress: c
-             ,desiredResponseType: d
-             ,withCredentials: e};
-   });
-   var multipart = $Native$Http.multipart;
-   var FileData = F3(function (a,b,c) {
-      return {ctor: "FileData",_0: a,_1: b,_2: c};
-   });
-   var BlobData = F3(function (a,b,c) {
-      return {ctor: "BlobData",_0: a,_1: b,_2: c};
-   });
-   var blobData = BlobData;
-   var StringData = F2(function (a,b) {
-      return {ctor: "StringData",_0: a,_1: b};
-   });
-   var stringData = StringData;
-   var BodyBlob = function (a) {
-      return {ctor: "BodyBlob",_0: a};
-   };
-   var BodyFormData = {ctor: "BodyFormData"};
-   var ArrayBuffer = {ctor: "ArrayBuffer"};
-   var BodyString = function (a) {
-      return {ctor: "BodyString",_0: a};
-   };
-   var string = BodyString;
-   var Empty = {ctor: "Empty"};
-   var empty = Empty;
-   var getString = function (url) {
-      var request = {verb: "GET"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: empty};
-      return A2($Task.andThen,
-      A2($Task.mapError,
-      promoteError,
-      A2(send,defaultSettings,request)),
-      handleResponse($Task.succeed));
-   };
-   var get = F2(function (decoder,url) {
-      var request = {verb: "GET"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: empty};
-      return A2(fromJson,decoder,A2(send,defaultSettings,request));
-   });
-   var Request = F4(function (a,b,c,d) {
-      return {verb: a,headers: b,url: c,body: d};
-   });
-   var uriDecode = $Native$Http.uriDecode;
-   var uriEncode = $Native$Http.uriEncode;
-   var queryEscape = function (string) {
-      return A2($String.join,
-      "+",
-      A2($String.split,"%20",uriEncode(string)));
-   };
-   var queryPair = function (_p3) {
-      var _p4 = _p3;
+   var removeAt = F2(function (i,items) {
       return A2($Basics._op["++"],
-      queryEscape(_p4._0),
-      A2($Basics._op["++"],"=",queryEscape(_p4._1)));
-   };
-   var url = F2(function (baseUrl,args) {
-      var _p5 = args;
-      if (_p5.ctor === "[]") {
-            return baseUrl;
-         } else {
-            return A2($Basics._op["++"],
-            baseUrl,
-            A2($Basics._op["++"],
-            "?",
-            A2($String.join,"&",A2($List.map,queryPair,args))));
-         }
+      A2($List.take,i,items),
+      A2($List.drop,i + 1,items));
    });
-   var TODO_implement_file_in_another_library = {ctor: "TODO_implement_file_in_another_library"};
-   var TODO_implement_blob_in_another_library = {ctor: "TODO_implement_blob_in_another_library"};
-   return _elm.Http.values = {_op: _op
-                             ,getString: getString
-                             ,get: get
-                             ,post: post
-                             ,send: send
-                             ,url: url
-                             ,uriEncode: uriEncode
-                             ,uriDecode: uriDecode
-                             ,empty: empty
-                             ,string: string
-                             ,multipart: multipart
-                             ,stringData: stringData
-                             ,defaultSettings: defaultSettings
-                             ,fromJson: fromJson
-                             ,Request: Request
-                             ,Settings: Settings
-                             ,Response: Response
-                             ,Text: Text
-                             ,Blob: Blob
-                             ,Timeout: Timeout
-                             ,NetworkError: NetworkError
-                             ,UnexpectedPayload: UnexpectedPayload
-                             ,BadResponse: BadResponse
-                             ,RawTimeout: RawTimeout
-                             ,RawNetworkError: RawNetworkError};
+   var isNothing = function (m) {
+      var _p3 = m;
+      if (_p3.ctor === "Nothing") {
+            return true;
+         } else {
+            return false;
+         }
+   };
+   var isJust = function (m) {
+      return $Basics.not(isNothing(m));
+   };
+   return _elm.CoreExtra.values = {_op: _op
+                                  ,isNothing: isNothing
+                                  ,isJust: isJust
+                                  ,removeAt: removeAt
+                                  ,updateAt: updateAt
+                                  ,within: within};
 };
 Elm.Decoders = Elm.Decoders || {};
 Elm.Decoders.make = function (_elm) {
@@ -18398,1171 +18079,6 @@ Elm.Encoders.make = function (_elm) {
                                  ,rangeEncoder: rangeEncoder
                                  ,dictEncoder: dictEncoder};
 };
-Elm.ServerApi = Elm.ServerApi || {};
-Elm.ServerApi.make = function (_elm) {
-   "use strict";
-   _elm.ServerApi = _elm.ServerApi || {};
-   if (_elm.ServerApi.values) return _elm.ServerApi.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Decoders = Elm.Decoders.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Encoders = Elm.Encoders.make(_elm),
-   $Http = Elm.Http.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $Json$Encode = Elm.Json.Encode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var serverError = A2($Dict.singleton,
-   "global",
-   _U.list(["Unexpected server response."]));
-   var errorsDecoder = $Json$Decode.dict($Json$Decode.list($Json$Decode.string));
-   var handleResponse = F2(function (decoder,response) {
-      var _p0 = _U.cmp(200,
-      response.status) < 1 && _U.cmp(response.status,300) < 0;
-      if (_p0 === false) {
-            var _p1 = {ctor: "_Tuple2"
-                      ,_0: response.status
-                      ,_1: response.value};
-            if (_p1.ctor === "_Tuple2" && _p1._0 === 400 && _p1._1.ctor === "Text")
-            {
-                  var _p2 = A2($Json$Decode.decodeString,
-                  errorsDecoder,
-                  _p1._1._0);
-                  if (_p2.ctor === "Ok") {
-                        return $Result.Err(_p2._0);
-                     } else {
-                        return $Result.Err(serverError);
-                     }
-               } else {
-                  return $Result.Err(serverError);
-               }
-         } else {
-            var _p3 = response.value;
-            if (_p3.ctor === "Text") {
-                  return A2($Result.formatError,
-                  function (_p4) {
-                     return serverError;
-                  },
-                  A2($Json$Decode.decodeString,decoder,_p3._0));
-               } else {
-                  return $Result.Err(serverError);
-               }
-         }
-   });
-   var handleResult = F2(function (decoder,result) {
-      var _p5 = result;
-      if (_p5.ctor === "Ok") {
-            return A2(handleResponse,decoder,_p5._0);
-         } else {
-            return $Result.Err(serverError);
-         }
-   });
-   var jsonRequest = F2(function (url,jsonBody) {
-      return {verb: "POST"
-             ,headers: _U.list([{ctor: "_Tuple2"
-                                ,_0: "Content-Type"
-                                ,_1: "application/json"}])
-             ,url: url
-             ,body: $Http.string(A2($Json$Encode.encode,0,jsonBody))};
-   });
-   var postJson = F3(function (decoder,url,jsonBody) {
-      return A2($Task.map,
-      handleResult(decoder),
-      $Task.toResult(A2($Http.send,
-      $Http.defaultSettings,
-      A2(jsonRequest,url,jsonBody))));
-   });
-   var getJson = F2(function (decoder,path) {
-      return A2($Task.map,
-      $Result.formatError(function (e) {
-         return A2($Debug.log,$Basics.toString(e),{ctor: "_Tuple0"});
-      }),
-      $Task.toResult(A2($Http.get,decoder,path)));
-   });
-   var deleteDraft = function (id) {
-      return A3(postJson,
-      $Json$Decode.succeed(id),
-      A2($Basics._op["++"],
-      "/api/track/",
-      A2($Basics._op["++"],id,"/delete")),
-      $Json$Encode.$null);
-   };
-   var publishTrack = function (id) {
-      return A3(postJson,
-      $Decoders.trackDecoder,
-      A2($Basics._op["++"],
-      "/api/track/",
-      A2($Basics._op["++"],id,"/publish")),
-      $Json$Encode.$null);
-   };
-   var saveTrack = F3(function (id,name,course) {
-      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                              ,_0: "course"
-                                              ,_1: $Encoders.courseEncoder(course)}
-                                             ,{ctor: "_Tuple2",_0: "name",_1: $Json$Encode.string(name)}]));
-      return A3(postJson,
-      $Decoders.trackDecoder,
-      A2($Basics._op["++"],"/api/track/",id),
-      body);
-   });
-   var createTrack = function (name) {
-      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                              ,_0: "name"
-                                              ,_1: $Json$Encode.string(name)}]));
-      return A3(postJson,$Decoders.trackDecoder,"/api/track",body);
-   };
-   var postLogout = A3(postJson,
-   $Decoders.playerDecoder,
-   "/api/logout",
-   $Json$Encode.$null);
-   var postLogin = F2(function (email,password) {
-      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                              ,_0: "email"
-                                              ,_1: $Json$Encode.string(email)}
-                                             ,{ctor: "_Tuple2"
-                                              ,_0: "password"
-                                              ,_1: $Json$Encode.string(password)}]));
-      return A3(postJson,$Decoders.playerDecoder,"/api/login",body);
-   });
-   var postRegister = F3(function (email,handle,password) {
-      return A3(postJson,
-      $Decoders.playerDecoder,
-      "/api/register",
-      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                   ,_0: "email"
-                                   ,_1: $Json$Encode.string(email)}
-                                  ,{ctor: "_Tuple2",_0: "handle",_1: $Json$Encode.string(handle)}
-                                  ,{ctor: "_Tuple2"
-                                   ,_0: "password"
-                                   ,_1: $Json$Encode.string(password)}])));
-   });
-   var postHandle = function (handle) {
-      return A3(postJson,
-      $Decoders.playerDecoder,
-      "/api/setHandle",
-      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                   ,_0: "handle"
-                                   ,_1: $Json$Encode.string(handle)}])));
-   };
-   var loadAdminData = A2(getJson,
-   $Decoders.adminDataDecoder,
-   "/api/admin");
-   var getDrafts = A2(getJson,
-   $Json$Decode.list($Decoders.trackDecoder),
-   "/api/drafts");
-   var getLiveTrack = function (id) {
-      return A2(getJson,
-      $Decoders.liveTrackDecoder,
-      A2($Basics._op["++"],"/api/liveTrack/",id));
-   };
-   var getTrack = function (id) {
-      return A2(getJson,
-      $Decoders.trackDecoder,
-      A2($Basics._op["++"],"/api/track/",id));
-   };
-   var getLiveStatus = A2(getJson,
-   $Decoders.liveStatusDecoder,
-   "/api/liveStatus");
-   var getPlayer = function (handle) {
-      return A2(getJson,
-      $Decoders.playerDecoder,
-      A2($Basics._op["++"],"/api/players/",handle));
-   };
-   return _elm.ServerApi.values = {_op: _op
-                                  ,getPlayer: getPlayer
-                                  ,getLiveStatus: getLiveStatus
-                                  ,getTrack: getTrack
-                                  ,getLiveTrack: getLiveTrack
-                                  ,getDrafts: getDrafts
-                                  ,loadAdminData: loadAdminData
-                                  ,postHandle: postHandle
-                                  ,postRegister: postRegister
-                                  ,postLogin: postLogin
-                                  ,postLogout: postLogout
-                                  ,createTrack: createTrack
-                                  ,saveTrack: saveTrack
-                                  ,publishTrack: publishTrack
-                                  ,deleteDraft: deleteDraft
-                                  ,getJson: getJson
-                                  ,postJson: postJson
-                                  ,jsonRequest: jsonRequest
-                                  ,handleResult: handleResult
-                                  ,handleResponse: handleResponse
-                                  ,errorsDecoder: errorsDecoder
-                                  ,serverError: serverError};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.UpdateUtils = Elm.Screens.UpdateUtils || {};
-Elm.Screens.UpdateUtils.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.UpdateUtils = _elm.Screens.UpdateUtils || {};
-   if (_elm.Screens.UpdateUtils.values)
-   return _elm.Screens.UpdateUtils.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $TransitRouter = Elm.TransitRouter.make(_elm);
-   var _op = {};
-   var screenAddr = function (toScreenAction) {
-      return A2($Signal.forwardTo,
-      $AppTypes.appActionsAddress,
-      function (_p0) {
-         return $AppTypes.ScreenAction(toScreenAction(_p0));
-      });
-   };
-   var always = F2(function (action,effect) {
-      return A2($Effects.map,
-      function (_p1) {
-         return action;
-      },
-      effect);
-   });
-   var setPlayer = function (player) {
-      return $Effects.task(A2($Signal.send,
-      $AppTypes.appActionsAddress,
-      $AppTypes.SetPlayer(player)));
-   };
-   var redirect = function (route) {
-      return $Effects.task(A2($Signal.send,
-      $TransitRouter.pushPathAddress,
-      $Routes.toPath(route)));
-   };
-   return _elm.Screens.UpdateUtils.values = {_op: _op
-                                            ,redirect: redirect
-                                            ,setPlayer: setPlayer
-                                            ,always: always
-                                            ,screenAddr: screenAddr};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Home = Elm.Screens.Home || {};
-Elm.Screens.Home.Update = Elm.Screens.Home.Update || {};
-Elm.Screens.Home.Update.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Home = _elm.Screens.Home || {};
-   _elm.Screens.Home.Update = _elm.Screens.Home.Update || {};
-   if (_elm.Screens.Home.Update.values)
-   return _elm.Screens.Home.Update.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Response = Elm.Response.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$Home$Model = Elm.Screens.Home.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
-   $ServerApi = Elm.ServerApi.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm),
-   $Task$Extra = Elm.Task.Extra.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var refreshLiveStatus = A2($Task.map,
-   $Screens$Home$Model.SetLiveStatus,
-   $ServerApi.getLiveStatus);
-   var update = F2(function (action,screen) {
-      var _p0 = action;
-      switch (_p0.ctor)
-      {case "SetLiveStatus": var liveStatus = A2($Result.withDefault,
-           screen.liveStatus,
-           _p0._0);
-           return A2($Response.taskRes,
-           _U.update(screen,{liveStatus: liveStatus}),
-           A2($Task$Extra.delay,5 * $Time.second,refreshLiveStatus));
-         case "SetHandle": return A2($Response.res,
-           _U.update(screen,{handle: _p0._0}),
-           $Effects.none);
-         case "SubmitHandle": return A2($Response.taskRes,
-           screen,
-           A2($Task.map,
-           $Screens$Home$Model.SubmitHandleResult,
-           $ServerApi.postHandle(screen.handle)));
-         case "SubmitHandleResult": return A2($Response.res,
-           screen,
-           A2($Screens$UpdateUtils.always,
-           $Screens$Home$Model.NoOp,
-           A2($Result.withDefault,
-           $Effects.none,
-           A2($Result.map,$Screens$UpdateUtils.setPlayer,_p0._0))));
-         case "FocusTrack": return A2($Response.res,
-           _U.update(screen,{trackFocus: _p0._0}),
-           $Effects.none);
-         default: return A2($Response.res,screen,$Effects.none);}
-   });
-   var mount = function (player) {
-      return A2($Response.taskRes,
-      $Screens$Home$Model.initial(player),
-      refreshLiveStatus);
-   };
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.HomeAction);
-   return _elm.Screens.Home.Update.values = {_op: _op
-                                            ,addr: addr
-                                            ,mount: mount
-                                            ,update: update
-                                            ,refreshLiveStatus: refreshLiveStatus};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Register = Elm.Screens.Register || {};
-Elm.Screens.Register.Update = Elm.Screens.Register.Update || {};
-Elm.Screens.Register.Update.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Register = _elm.Screens.Register || {};
-   _elm.Screens.Register.Update = _elm.Screens.Register.Update || {};
-   if (_elm.Screens.Register.Update.values)
-   return _elm.Screens.Register.Update.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Form = Elm.Form.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Response = Elm.Response.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$Register$Model = Elm.Screens.Register.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
-   $ServerApi = Elm.ServerApi.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var submitTask = function (np) {
-      return A2($Task.map,
-      $Screens$Register$Model.SubmitResult,
-      A3($ServerApi.postRegister,np.email,np.handle,np.password));
-   };
-   var update = F2(function (action,screen) {
-      var _p0 = action;
-      switch (_p0.ctor)
-      {case "FormAction": var newForm = A2($Form.update,
-           _p0._0,
-           screen.form);
-           return A2($Response.res,
-           _U.update(screen,{form: newForm}),
-           $Effects.none);
-         case "Submit": return A2($Response.taskRes,
-           _U.update(screen,{loading: true}),
-           submitTask(_p0._0));
-         case "SubmitResult": var _p1 = _p0._0;
-           if (_p1.ctor === "Ok") {
-                 var effect = A2($Screens$UpdateUtils.always,
-                 $Screens$Register$Model.NoOp,
-                 $Screens$UpdateUtils.setPlayer(_p1._0));
-                 var newScreen = _U.update(screen,{loading: false});
-                 return A2($Response.res,newScreen,effect);
-              } else {
-                 return A2($Response.res,
-                 _U.update(screen,{loading: false,serverErrors: _p1._0}),
-                 $Effects.none);
-              }
-         default: return A2($Response.res,screen,$Effects.none);}
-   });
-   var mount = A2($Response.res,
-   $Screens$Register$Model.initial,
-   $Effects.none);
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.RegisterAction);
-   return _elm.Screens.Register.Update.values = {_op: _op
-                                                ,addr: addr
-                                                ,mount: mount
-                                                ,update: update
-                                                ,submitTask: submitTask};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Login = Elm.Screens.Login || {};
-Elm.Screens.Login.Update = Elm.Screens.Login.Update || {};
-Elm.Screens.Login.Update.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Login = _elm.Screens.Login || {};
-   _elm.Screens.Login.Update = _elm.Screens.Login.Update || {};
-   if (_elm.Screens.Login.Update.values)
-   return _elm.Screens.Login.Update.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Response = Elm.Response.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$Login$Model = Elm.Screens.Login.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
-   $ServerApi = Elm.ServerApi.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var submitTask = function (screen) {
-      return A2($Task.map,
-      $Screens$Login$Model.SubmitResult,
-      A2($ServerApi.postLogin,screen.email,screen.password));
-   };
-   var update = F2(function (action,screen) {
-      var _p0 = action;
-      switch (_p0.ctor)
-      {case "SetEmail": return A2($Response.res,
-           _U.update(screen,{email: _p0._0}),
-           $Effects.none);
-         case "SetPassword": return A2($Response.res,
-           _U.update(screen,{password: _p0._0}),
-           $Effects.none);
-         case "Submit": return A2($Response.taskRes,
-           _U.update(screen,{loading: true}),
-           submitTask(screen));
-         case "SubmitResult": var _p1 = _p0._0;
-           if (_p1.ctor === "Ok") {
-                 var effect = A2($Screens$UpdateUtils.always,
-                 $Screens$Login$Model.NoOp,
-                 $Screens$UpdateUtils.setPlayer(_p1._0));
-                 var newScreen = _U.update(screen,{loading: false,error: false});
-                 return A2($Response.res,newScreen,effect);
-              } else {
-                 return A2($Response.res,
-                 _U.update(screen,{loading: false,error: true}),
-                 $Effects.none);
-              }
-         default: return A2($Response.res,screen,$Effects.none);}
-   });
-   var mount = A2($Response.res,
-   $Screens$Login$Model.initial,
-   $Effects.none);
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.LoginAction);
-   return _elm.Screens.Login.Update.values = {_op: _op
-                                             ,addr: addr
-                                             ,mount: mount
-                                             ,update: update
-                                             ,submitTask: submitTask};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
-Elm.Screens.ShowTrack.Update = Elm.Screens.ShowTrack.Update || {};
-Elm.Screens.ShowTrack.Update.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
-   _elm.Screens.ShowTrack.Update = _elm.Screens.ShowTrack.Update || {};
-   if (_elm.Screens.ShowTrack.Update.values)
-   return _elm.Screens.ShowTrack.Update.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $DragAndDrop = Elm.DragAndDrop.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Response = Elm.Response.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$ShowTrack$Model = Elm.Screens.ShowTrack.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
-   $ServerApi = Elm.ServerApi.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var loadLiveTrack = function (id) {
-      return A2($Task.map,
-      $Screens$ShowTrack$Model.LiveTrackResult,
-      $ServerApi.getLiveTrack(id));
-   };
-   var update = F2(function (action,_p0) {
-      var _p1 = _p0;
-      var _p10 = _p1;
-      var _p9 = _p1.courseControl;
-      var _p2 = action;
-      switch (_p2.ctor)
-      {case "LiveTrackResult": var _p3 = _p2._0;
-           if (_p3.ctor === "Ok") {
-                 return A2($Response.res,
-                 _U.update(_p10,{liveTrack: $Maybe.Just(_p3._0)}),
-                 $Effects.none);
-              } else {
-                 return A2($Response.res,
-                 _U.update(_p10,{notFound: true}),
-                 $Effects.none);
-              }
-         case "SetOverCourse": return A2($Response.res,
-           _U.update(_p10,{courseControl: _U.update(_p9,{over: _p2._0})}),
-           $Effects.none);
-         case "MouseAction": var _p8 = _p2._0;
-           var _p4 = _p9.center;
-           var x = _p4._0;
-           var y = _p4._1;
-           var _p5 = function () {
-              var _p6 = _p8;
-              switch (_p6.ctor)
-              {case "StartAt": return {ctor: "_Tuple2",_0: 0,_1: 0};
-                 case "MoveFromTo": return _p9.dragging ? {ctor: "_Tuple2"
-                                                          ,_0: $Basics.toFloat(_p6._1._0 - _p6._0._0) / _p9.scale
-                                                          ,_1: $Basics.toFloat(_p6._0._1 - _p6._1._1) / _p9.scale} : {ctor: "_Tuple2"
-                                                                                                                     ,_0: 0
-                                                                                                                     ,_1: 0};
-                 default: return {ctor: "_Tuple2",_0: 0,_1: 0};}
-           }();
-           var dx = _p5._0;
-           var dy = _p5._1;
-           var newCenter = {ctor: "_Tuple2",_0: x + dx,_1: y + dy};
-           var dragging = function () {
-              var _p7 = _p8;
-              switch (_p7.ctor)
-              {case "StartAt": return _p9.over;
-                 case "MoveFromTo": return _p9.dragging;
-                 default: return false;}
-           }();
-           var newControl = _U.update(_p9,
-           {center: newCenter,dragging: dragging});
-           return A2($Response.res,
-           _U.update(_p10,{courseControl: newControl}),
-           $Effects.none);
-         default: return A2($Response.res,_p10,$Effects.none);}
-   });
-   var mouseAction = $Screens$ShowTrack$Model.MouseAction;
-   var mount = function (slug) {
-      return A2($Response.taskRes,
-      $Screens$ShowTrack$Model.initial,
-      loadLiveTrack(slug));
-   };
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowTrackAction);
-   return _elm.Screens.ShowTrack.Update.values = {_op: _op
-                                                 ,addr: addr
-                                                 ,mount: mount
-                                                 ,mouseAction: mouseAction
-                                                 ,update: update
-                                                 ,loadLiveTrack: loadLiveTrack};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.FormUpdate = Elm.Screens.EditTrack.FormUpdate || {};
-Elm.Screens.EditTrack.FormUpdate.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.FormUpdate = _elm.Screens.EditTrack.FormUpdate || {};
-   if (_elm.Screens.EditTrack.FormUpdate.values)
-   return _elm.Screens.EditTrack.FormUpdate.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var updateWindGen = F2(function (update,course) {
-      return _U.update(course,
-      {windGenerator: update(course.windGenerator)});
-   });
-   var updateGustGen = F2(function (update,course) {
-      return _U.update(course,
-      {gustGenerator: update(course.gustGenerator)});
-   });
-   var updateGateWidth = F2(function (w,_p0) {
-      var _p1 = _p0;
-      var newUpwind = _U.update(_p1.upwind,
-      {width: $Basics.toFloat(w)});
-      var newDownwind = _U.update(_p1.downwind,
-      {width: $Basics.toFloat(w)});
-      return _U.update(_p1,{downwind: newDownwind,upwind: newUpwind});
-   });
-   var updateDownwindY = F2(function (y,_p2) {
-      var _p3 = _p2;
-      return _U.update(_p3,
-      {downwind: _U.update(_p3.downwind,{y: $Basics.toFloat(y)})});
-   });
-   var updateUpwindY = F2(function (y,_p4) {
-      var _p5 = _p4;
-      return _U.update(_p5,
-      {upwind: _U.update(_p5.upwind,{y: $Basics.toFloat(y)})});
-   });
-   var update = F2(function (fu,course) {
-      var _p6 = fu;
-      switch (_p6.ctor)
-      {case "SetUpwindY": return A2(updateUpwindY,_p6._0,course);
-         case "SetDownwindY": return A2(updateDownwindY,_p6._0,course);
-         case "SetGateWidth": return A2(updateGateWidth,_p6._0,course);
-         case "SetLaps": return _U.update(course,{laps: _p6._0});
-         case "UpdateGustGen": return A2(updateGustGen,_p6._0,course);
-         case "SetWindSpeed": return _U.update(course,
-           {windSpeed: _p6._0});
-         case "SetWindW1": return A2(updateWindGen,
-           function (g) {
-              return _U.update(g,{wavelength1: _p6._0});
-           },
-           course);
-         case "SetWindA1": return A2(updateWindGen,
-           function (g) {
-              return _U.update(g,{amplitude1: _p6._0});
-           },
-           course);
-         case "SetWindW2": return A2(updateWindGen,
-           function (g) {
-              return _U.update(g,{wavelength2: _p6._0});
-           },
-           course);
-         default: return A2(updateWindGen,
-           function (g) {
-              return _U.update(g,{amplitude2: _p6._0});
-           },
-           course);}
-   });
-   return _elm.Screens.EditTrack.FormUpdate.values = {_op: _op
-                                                     ,update: update
-                                                     ,updateUpwindY: updateUpwindY
-                                                     ,updateDownwindY: updateDownwindY
-                                                     ,updateGateWidth: updateGateWidth
-                                                     ,updateGustGen: updateGustGen
-                                                     ,updateWindGen: updateWindGen};
-};
-Elm.CoreExtra = Elm.CoreExtra || {};
-Elm.CoreExtra.make = function (_elm) {
-   "use strict";
-   _elm.CoreExtra = _elm.CoreExtra || {};
-   if (_elm.CoreExtra.values) return _elm.CoreExtra.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Array = Elm.Array.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var within = F2(function (_p0,c) {
-      var _p1 = _p0;
-      return _U.cmp(c,_p1._0) > -1 && _U.cmp(c,_p1._1) < 1;
-   });
-   var updateAt = F3(function (i,update,items) {
-      var asArray = $Array.fromList(items);
-      var _p2 = A2($Array.get,i,asArray);
-      if (_p2.ctor === "Just") {
-            return $Array.toList(A3($Array.set,
-            i,
-            update(_p2._0),
-            asArray));
-         } else {
-            return items;
-         }
-   });
-   var removeAt = F2(function (i,items) {
-      return A2($Basics._op["++"],
-      A2($List.take,i,items),
-      A2($List.drop,i + 1,items));
-   });
-   var isNothing = function (m) {
-      var _p3 = m;
-      if (_p3.ctor === "Nothing") {
-            return true;
-         } else {
-            return false;
-         }
-   };
-   var isJust = function (m) {
-      return $Basics.not(isNothing(m));
-   };
-   return _elm.CoreExtra.values = {_op: _op
-                                  ,isNothing: isNothing
-                                  ,isJust: isJust
-                                  ,removeAt: removeAt
-                                  ,updateAt: updateAt
-                                  ,within: within};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.GridUpdate = Elm.Screens.EditTrack.GridUpdate || {};
-Elm.Screens.EditTrack.GridUpdate.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.GridUpdate = _elm.Screens.EditTrack.GridUpdate || {};
-   if (_elm.Screens.EditTrack.GridUpdate.values)
-   return _elm.Screens.EditTrack.GridUpdate.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $CoreExtra = Elm.CoreExtra.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $DragAndDrop = Elm.DragAndDrop.make(_elm),
-   $Hexagons = Elm.Hexagons.make(_elm),
-   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var withinWindow = F2(function (_p1,_p0) {
-      var _p2 = _p1;
-      var _p3 = _p0;
-      var _p4 = _p3._1;
-      var yWindow = {ctor: "_Tuple2",_0: 0,_1: _p4};
-      var xWindow = {ctor: "_Tuple2"
-                    ,_0: $Constants.sidebarWidth
-                    ,_1: _p2._0 + $Constants.sidebarWidth};
-      return A2($CoreExtra.within,
-      xWindow,
-      _p3._0) && A2($CoreExtra.within,yWindow,_p4);
-   });
-   var updateCenter = F3(function (event,courseDims,_p5) {
-      var _p6 = _p5;
-      var _p13 = _p6.center;
-      var _p7 = function () {
-         var _p8 = event;
-         switch (_p8.ctor)
-         {case "StartAt": return {ctor: "_Tuple2",_0: 0,_1: 0};
-            case "MoveFromTo": var _p12 = _p8._1._1;
-              var _p11 = _p8._0._1;
-              var _p10 = _p8._1._0;
-              var _p9 = _p8._0._0;
-              return A2(withinWindow,
-              courseDims,
-              {ctor: "_Tuple2",_0: _p9,_1: _p11}) && A2(withinWindow,
-              courseDims,
-              {ctor: "_Tuple2",_0: _p10,_1: _p12}) ? {ctor: "_Tuple2"
-                                                     ,_0: _p10 - _p9
-                                                     ,_1: _p11 - _p12} : {ctor: "_Tuple2",_0: 0,_1: 0};
-            default: return {ctor: "_Tuple2",_0: 0,_1: 0};}
-      }();
-      var dx = _p7._0;
-      var dy = _p7._1;
-      var newCenter = {ctor: "_Tuple2"
-                      ,_0: $Basics.fst(_p13) + $Basics.toFloat(dx)
-                      ,_1: $Basics.snd(_p13) + $Basics.toFloat(dy)};
-      return _U.update(_p6,{center: newCenter});
-   });
-   var clickPoint = F3(function (_p15,courseDims,_p14) {
-      var _p16 = _p15;
-      var _p17 = _p14;
-      var _p21 = _p17._1;
-      var _p20 = _p17._0;
-      if (A2(withinWindow,
-      courseDims,
-      {ctor: "_Tuple2",_0: _p20,_1: _p21})) {
-            var _p18 = _p16.center;
-            var cx = _p18._0;
-            var cy = _p18._1;
-            var _p19 = courseDims;
-            var w = _p19._0;
-            var h = _p19._1;
-            var x$ = $Basics.toFloat(_p20 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
-            var y$ = $Basics.toFloat(0 - _p21) - cy + $Basics.toFloat(h) / 2;
-            return $Maybe.Just({ctor: "_Tuple2",_0: x$,_1: y$});
-         } else return $Maybe.Nothing;
-   });
-   var getMouseEventTiles = F3(function (editor,courseDims,event) {
-      var tileCoords = function (_p22) {
-         return A2($Maybe.map,
-         $Hexagons.pointToAxial($Constants.hexRadius),
-         A3(clickPoint,editor,courseDims,_p22));
-      };
-      var _p23 = event;
-      switch (_p23.ctor)
-      {case "StartAt": var _p24 = tileCoords(_p23._0);
-           if (_p24.ctor === "Just") {
-                 return _U.list([_p24._0]);
-              } else {
-                 return _U.list([]);
-              }
-         case "MoveFromTo": var _p25 = {ctor: "_Tuple2"
-                                       ,_0: tileCoords(_p23._0)
-                                       ,_1: tileCoords(_p23._1)};
-           if (_p25.ctor === "_Tuple2" && _p25._0.ctor === "Just" && _p25._1.ctor === "Just")
-           {
-                 var _p27 = _p25._1._0;
-                 var _p26 = _p25._0._0;
-                 return _U.eq(_p26,
-                 _p27) ? _U.list([_p26]) : A2($Hexagons.axialLine,_p26,_p27);
-              } else {
-                 return _U.list([]);
-              }
-         default: return _U.list([]);}
-   });
-   var withGrid = F2(function (grid,_p28) {
-      var _p29 = _p28;
-      var newCourse = _U.update(_p29.course,{grid: grid});
-      return _U.update(_p29,{course: newCourse});
-   });
-   var updateTileAction = F4(function (kind,
-   event,
-   courseDims,
-   editor) {
-      var coordsList = A3(getMouseEventTiles,
-      editor,
-      courseDims,
-      event);
-      var newGrid = A3($List.foldl,
-      $Hexagons$Grid.set(kind),
-      editor.course.grid,
-      coordsList);
-      return A2(withGrid,newGrid,editor);
-   });
-   var deleteTileAction = F3(function (event,courseDims,editor) {
-      var coordsList = A3(getMouseEventTiles,
-      editor,
-      courseDims,
-      event);
-      var newGrid = A3($List.foldl,
-      $Hexagons$Grid.$delete,
-      editor.course.grid,
-      coordsList);
-      return A2(withGrid,newGrid,editor);
-   });
-   var mouseAction = F3(function (event,dims,editor) {
-      var courseDims = $Screens$EditTrack$Model.getCourseDims(dims);
-      var _p30 = $Screens$EditTrack$Model.realMode(editor);
-      switch (_p30.ctor)
-      {case "CreateTile": return A4(updateTileAction,
-           _p30._0,
-           event,
-           courseDims,
-           editor);
-         case "Erase": return A3(deleteTileAction,
-           event,
-           courseDims,
-           editor);
-         default: return A3(updateCenter,event,courseDims,editor);}
-   });
-   return _elm.Screens.EditTrack.GridUpdate.values = {_op: _op
-                                                     ,mouseAction: mouseAction
-                                                     ,deleteTileAction: deleteTileAction
-                                                     ,updateTileAction: updateTileAction
-                                                     ,withGrid: withGrid
-                                                     ,getMouseEventTiles: getMouseEventTiles
-                                                     ,clickPoint: clickPoint
-                                                     ,updateCenter: updateCenter
-                                                     ,withinWindow: withinWindow};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.Update = Elm.Screens.EditTrack.Update || {};
-Elm.Screens.EditTrack.Update.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.Update = _elm.Screens.EditTrack.Update || {};
-   if (_elm.Screens.EditTrack.Update.values)
-   return _elm.Screens.EditTrack.Update.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Array = Elm.Array.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $DragAndDrop = Elm.DragAndDrop.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Hexagons = Elm.Hexagons.make(_elm),
-   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
-   $Keyboard = Elm.Keyboard.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Response = Elm.Response.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$EditTrack$FormUpdate = Elm.Screens.EditTrack.FormUpdate.make(_elm),
-   $Screens$EditTrack$GridUpdate = Elm.Screens.EditTrack.GridUpdate.make(_elm),
-   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
-   $ServerApi = Elm.ServerApi.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm),
-   $Task$Extra = Elm.Task.Extra.make(_elm);
-   var _op = {};
-   var staticRes = function (m) {
-      return A2($Response.res,m,$Effects.none);
-   };
-   var getRaceArea = function (grid) {
-      var getLast = function (arr) {
-         return A2($Maybe.withDefault,
-         0,
-         A2($Array.get,$Array.length(arr) - 1,arr));
-      };
-      var getFirst = function (arr) {
-         return A2($Maybe.withDefault,0,A2($Array.get,0,arr));
-      };
-      var waterPoints = A2($List.map,
-      function (t) {
-         return A2($Hexagons.axialToPoint,
-         $Constants.hexRadius,
-         t.coords);
-      },
-      A2($List.filter,
-      function (t) {
-         return _U.eq(t.content,$Models.Water);
-      },
-      $Hexagons$Grid.list(grid)));
-      var xVals = $Array.fromList($List.sort(A2($List.map,
-      $Basics.fst,
-      waterPoints)));
-      var right = getLast(xVals) + $Constants.hexRadius;
-      var left = getFirst(xVals) - $Constants.hexRadius;
-      var yVals = $Array.fromList($List.sort(A2($List.map,
-      $Basics.snd,
-      waterPoints)));
-      var top = getLast(yVals) + $Constants.hexRadius;
-      var bottom = getFirst(yVals) - $Constants.hexRadius;
-      return A2($Models.RaceArea,
-      {ctor: "_Tuple2",_0: right,_1: top},
-      {ctor: "_Tuple2",_0: left,_1: bottom});
-   };
-   var saveEditor = F2(function (id,_p0) {
-      var _p1 = _p0;
-      var _p2 = _p1.course;
-      return A3($ServerApi.saveTrack,
-      id,
-      _p1.name,
-      _U.update(_p2,{area: getRaceArea(_p2.grid)}));
-   });
-   var save = F3(function ($try,id,editor) {
-      return A2($Task.map,
-      $Screens$EditTrack$Model.SaveResult($try),
-      A2($Task$Extra.delay,500,A2(saveEditor,id,editor)));
-   });
-   var publish = F2(function (id,_p3) {
-      var _p4 = _p3;
-      return A2($Task.map,
-      $Screens$EditTrack$Model.SaveResult(true),
-      A2($Task.andThen,
-      A2($Task$Extra.delay,500,A2(saveEditor,id,_p4)),
-      function (_p5) {
-         return $ServerApi.publishTrack(id);
-      }));
-   });
-   var loadTrack = function (id) {
-      return A2($Task.map,
-      $Screens$EditTrack$Model.LoadTrack,
-      $ServerApi.getTrack(id));
-   };
-   var updateBlocks = F2(function (b,_p6) {
-      var _p7 = _p6;
-      var _p9 = _p7.blocks;
-      var newBlocks = function () {
-         var _p8 = b;
-         switch (_p8.ctor)
-         {case "Name": return _U.update(_p9,
-              {name: $Basics.not(_p9.name)});
-            case "Surface": return _U.update(_p9,
-              {surface: $Basics.not(_p9.surface)});
-            case "Gates": return _U.update(_p9,
-              {gates: $Basics.not(_p9.gates)});
-            case "Wind": return _U.update(_p9,
-              {wind: $Basics.not(_p9.wind)});
-            default: return _U.update(_p9,{gusts: $Basics.not(_p9.gusts)});}
-      }();
-      return _U.update(_p7,{blocks: newBlocks});
-   });
-   var updateRangeEnd = F2(function (end,range) {
-      return _U.update(range,{end: end});
-   });
-   var updateRangeStart = F2(function (start,range) {
-      return _U.update(range,{start: start});
-   });
-   var updateOriginVariation = F2(function (updateRange,_p10) {
-      var _p11 = _p10;
-      return _U.update(_p11,
-      {originVariation: updateRange(_p11.originVariation)});
-   });
-   var updateSpeedVariation = F2(function (updateRange,_p12) {
-      var _p13 = _p12;
-      return _U.update(_p13,
-      {speedVariation: updateRange(_p13.speedVariation)});
-   });
-   var updateCourse = F2(function (update,editor) {
-      return _U.update(editor,{course: update(editor.course)});
-   });
-   var updateEditor = F2(function (update,screen) {
-      var newEditor = A2($Maybe.map,update,screen.editor);
-      return _U.update(screen,{editor: newEditor});
-   });
-   var update = F3(function (dims,action,screen) {
-      var _p14 = action;
-      switch (_p14.ctor)
-      {case "LoadTrack": var _p15 = _p14._0;
-           if (_p15.ctor === "Ok") {
-                 var _p16 = _p15._0;
-                 return staticRes(_U.update(screen,
-                 {track: $Maybe.Just(_p16)
-                 ,editor: $Maybe.Just($Screens$EditTrack$Model.initialEditor(_p16))}));
-              } else {
-                 return staticRes(_U.update(screen,{notFound: true}));
-              }
-         case "ToggleBlock": return staticRes(A2(function (_p17) {
-              return updateEditor(updateBlocks(_p17));
-           },
-           _p14._0,
-           screen));
-         case "SetName": return staticRes(A2(updateEditor,
-           function (e) {
-              return _U.update(e,{name: _p14._0});
-           },
-           screen));
-         case "MouseAction": return staticRes(A2(updateEditor,
-           A2($Screens$EditTrack$GridUpdate.mouseAction,_p14._0,dims),
-           screen));
-         case "SetMode": return staticRes(A2(updateEditor,
-           function (e) {
-              return _U.update(e,{mode: _p14._0});
-           },
-           screen));
-         case "AltMoveMode": return staticRes(A2(updateEditor,
-           function (e) {
-              return _U.update(e,{altMove: _p14._0});
-           },
-           screen));
-         case "FormAction": return staticRes(A2(function (_p18) {
-              return updateEditor(updateCourse($Screens$EditTrack$FormUpdate.update(_p18)));
-           },
-           _p14._0,
-           screen));
-         case "Save": var _p19 = {ctor: "_Tuple2"
-                                 ,_0: screen.track
-                                 ,_1: screen.editor};
-           if (_p19.ctor === "_Tuple2" && _p19._0.ctor === "Just" && _p19._1.ctor === "Just")
-           {
-                 return A2($Response.taskRes,
-                 A2(updateEditor,
-                 function (e) {
-                    return _U.update(e,{saving: true});
-                 },
-                 screen),
-                 A3(save,_p14._0,_p19._0._0.id,_p19._1._0));
-              } else {
-                 return A2($Response.res,screen,$Effects.none);
-              }
-         case "SaveResult": var _p20 = _p14._1;
-           if (_p20.ctor === "Ok") {
-                 var effect = _p14._0 ? A2($Effects.map,
-                 function (_p21) {
-                    return $Screens$EditTrack$Model.NoOp;
-                 },
-                 $Screens$UpdateUtils.redirect($Routes.PlayTrack(_p20._0.id))) : $Effects.none;
-                 var newScreen = A2(updateEditor,
-                 function (e) {
-                    return _U.update(e,{saving: false});
-                 },
-                 screen);
-                 return A2($Response.res,newScreen,effect);
-              } else {
-                 return A2($Response.res,screen,$Effects.none);
-              }
-         case "ConfirmPublish": return A2($Response.res,
-           A2(updateEditor,
-           function (e) {
-              return _U.update(e,
-              {confirmPublish: $Basics.not(e.confirmPublish)});
-           },
-           screen),
-           $Effects.none);
-         case "Publish": var _p22 = {ctor: "_Tuple2"
-                                    ,_0: screen.track
-                                    ,_1: screen.editor};
-           if (_p22.ctor === "_Tuple2" && _p22._0.ctor === "Just" && _p22._1.ctor === "Just")
-           {
-                 return A2($Response.taskRes,
-                 A2(updateEditor,
-                 function (e) {
-                    return _U.update(e,{saving: true});
-                 },
-                 screen),
-                 A2(publish,_p22._0._0.id,_p22._1._0));
-              } else {
-                 return A2($Response.res,screen,$Effects.none);
-              }
-         default: return A2($Response.res,screen,$Effects.none);}
-   });
-   var mount = function (id) {
-      return A2($Response.taskRes,
-      $Screens$EditTrack$Model.initial,
-      loadTrack(id));
-   };
-   var mouseAction = $Screens$EditTrack$Model.MouseAction;
-   var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
-   $Screens$EditTrack$Model.AltMoveMode,
-   $Keyboard.shift)]));
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.EditTrackAction);
-   return _elm.Screens.EditTrack.Update.values = {_op: _op
-                                                 ,addr: addr
-                                                 ,inputs: inputs
-                                                 ,mouseAction: mouseAction
-                                                 ,mount: mount
-                                                 ,update: update
-                                                 ,updateEditor: updateEditor
-                                                 ,updateCourse: updateCourse
-                                                 ,updateSpeedVariation: updateSpeedVariation
-                                                 ,updateOriginVariation: updateOriginVariation
-                                                 ,updateRangeStart: updateRangeStart
-                                                 ,updateRangeEnd: updateRangeEnd
-                                                 ,updateBlocks: updateBlocks
-                                                 ,loadTrack: loadTrack
-                                                 ,saveEditor: saveEditor
-                                                 ,save: save
-                                                 ,publish: publish
-                                                 ,getRaceArea: getRaceArea
-                                                 ,staticRes: staticRes};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowProfile = Elm.Screens.ShowProfile || {};
-Elm.Screens.ShowProfile.Update = Elm.Screens.ShowProfile.Update || {};
-Elm.Screens.ShowProfile.Update.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowProfile = _elm.Screens.ShowProfile || {};
-   _elm.Screens.ShowProfile.Update = _elm.Screens.ShowProfile.Update || {};
-   if (_elm.Screens.ShowProfile.Update.values)
-   return _elm.Screens.ShowProfile.Update.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Response = Elm.Response.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$ShowProfile$Model = Elm.Screens.ShowProfile.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var update = F2(function (action,screen) {
-      var _p0 = action;
-      return A2($Response.res,screen,$Effects.none);
-   });
-   var mount = function (player) {
-      return A2($Response.res,
-      $Screens$ShowProfile$Model.initial(player),
-      $Effects.none);
-   };
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ShowProfileAction);
-   return _elm.Screens.ShowProfile.Update.values = {_op: _op
-                                                   ,addr: addr
-                                                   ,mount: mount
-                                                   ,update: update};
-};
 Elm.Game = Elm.Game || {};
 Elm.Game.Geo = Elm.Game.Geo || {};
 Elm.Game.Geo.make = function (_elm) {
@@ -19685,6 +18201,2235 @@ Elm.Game.Geo.make = function (_elm) {
                                  ,angleDelta: angleDelta
                                  ,angleBetween: angleBetween
                                  ,inSector: inSector};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Outputs = Elm.Game.Outputs || {};
+Elm.Game.Outputs.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Outputs = _elm.Game.Outputs || {};
+   if (_elm.Game.Outputs.values) return _elm.Game.Outputs.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Inputs = Elm.Game.Inputs.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Route = Elm.Route.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $TransitRouter = Elm.TransitRouter.make(_elm);
+   var _op = {};
+   var needChatScrollDown = function (action) {
+      var _p0 = action;
+      if (_p0.ctor === "ScreenAction" && _p0._0.ctor === "GameAction" && _p0._0._0.ctor === "NewMessage")
+      {
+            return $Maybe.Just({ctor: "_Tuple0"});
+         } else {
+            return $Maybe.Nothing;
+         }
+   };
+   var getActiveTrack = function (appState) {
+      var _p1 = $TransitRouter.getRoute(appState);
+      if (_p1.ctor === "PlayTrack") {
+            return A2($Maybe.map,
+            function (_p2) {
+               return function (_) {
+                  return _.id;
+               }(function (_) {    return _.track;}(_p2));
+            },
+            appState.screens.game.liveTrack);
+         } else {
+            return $Maybe.Nothing;
+         }
+   };
+   var makePlayerOutput = F2(function (keyboardInput,gameState) {
+      var realKeyboardInput = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : A2($Maybe.withDefault,
+      $Game$Inputs.emptyKeyboardInput,
+      keyboardInput);
+      return {state: $Game$Models.asOpponentState(gameState.playerState)
+             ,input: realKeyboardInput
+             ,localTime: gameState.timers.localTime};
+   });
+   var extractPlayerOutput = F2(function (appState,action) {
+      var gameState = function () {
+         var _p3 = $TransitRouter.getRoute(appState);
+         if (_p3.ctor === "PlayTrack") {
+               return appState.screens.game.gameState;
+            } else {
+               return $Maybe.Nothing;
+            }
+      }();
+      var keyboardInput = function () {
+         var _p4 = action;
+         if (_p4.ctor === "ScreenAction" && _p4._0.ctor === "GameAction" && _p4._0._0.ctor === "GameUpdate")
+         {
+               return $Maybe.Just(_p4._0._0._0.keyboardInput);
+            } else {
+               return $Maybe.Nothing;
+            }
+      }();
+      return A2($Maybe.map,makePlayerOutput(keyboardInput),gameState);
+   });
+   var PlayerOutput = F3(function (a,b,c) {
+      return {state: a,input: b,localTime: c};
+   });
+   return _elm.Game.Outputs.values = {_op: _op
+                                     ,PlayerOutput: PlayerOutput
+                                     ,extractPlayerOutput: extractPlayerOutput
+                                     ,makePlayerOutput: makePlayerOutput
+                                     ,getActiveTrack: getActiveTrack
+                                     ,needChatScrollDown: needChatScrollDown};
+};
+Elm.Svg = Elm.Svg || {};
+Elm.Svg.make = function (_elm) {
+   "use strict";
+   _elm.Svg = _elm.Svg || {};
+   if (_elm.Svg.values) return _elm.Svg.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var text = $VirtualDom.text;
+   var svgNamespace = A2($VirtualDom.property,
+   "namespace",
+   $Json$Encode.string("http://www.w3.org/2000/svg"));
+   var node = F3(function (name,attributes,children) {
+      return A3($VirtualDom.node,
+      name,
+      A2($List._op["::"],svgNamespace,attributes),
+      children);
+   });
+   var svg = node("svg");
+   var foreignObject = node("foreignObject");
+   var animate = node("animate");
+   var animateColor = node("animateColor");
+   var animateMotion = node("animateMotion");
+   var animateTransform = node("animateTransform");
+   var mpath = node("mpath");
+   var set = node("set");
+   var a = node("a");
+   var defs = node("defs");
+   var g = node("g");
+   var marker = node("marker");
+   var mask = node("mask");
+   var missingGlyph = node("missingGlyph");
+   var pattern = node("pattern");
+   var $switch = node("switch");
+   var symbol = node("symbol");
+   var desc = node("desc");
+   var metadata = node("metadata");
+   var title = node("title");
+   var feBlend = node("feBlend");
+   var feColorMatrix = node("feColorMatrix");
+   var feComponentTransfer = node("feComponentTransfer");
+   var feComposite = node("feComposite");
+   var feConvolveMatrix = node("feConvolveMatrix");
+   var feDiffuseLighting = node("feDiffuseLighting");
+   var feDisplacementMap = node("feDisplacementMap");
+   var feFlood = node("feFlood");
+   var feFuncA = node("feFuncA");
+   var feFuncB = node("feFuncB");
+   var feFuncG = node("feFuncG");
+   var feFuncR = node("feFuncR");
+   var feGaussianBlur = node("feGaussianBlur");
+   var feImage = node("feImage");
+   var feMerge = node("feMerge");
+   var feMergeNode = node("feMergeNode");
+   var feMorphology = node("feMorphology");
+   var feOffset = node("feOffset");
+   var feSpecularLighting = node("feSpecularLighting");
+   var feTile = node("feTile");
+   var feTurbulence = node("feTurbulence");
+   var font = node("font");
+   var fontFace = node("fontFace");
+   var fontFaceFormat = node("fontFaceFormat");
+   var fontFaceName = node("fontFaceName");
+   var fontFaceSrc = node("fontFaceSrc");
+   var fontFaceUri = node("fontFaceUri");
+   var hkern = node("hkern");
+   var vkern = node("vkern");
+   var linearGradient = node("linearGradient");
+   var radialGradient = node("radialGradient");
+   var stop = node("stop");
+   var circle = node("circle");
+   var ellipse = node("ellipse");
+   var image = node("image");
+   var line = node("line");
+   var path = node("path");
+   var polygon = node("polygon");
+   var polyline = node("polyline");
+   var rect = node("rect");
+   var use = node("use");
+   var feDistantLight = node("feDistantLight");
+   var fePointLight = node("fePointLight");
+   var feSpotLight = node("feSpotLight");
+   var altGlyph = node("altGlyph");
+   var altGlyphDef = node("altGlyphDef");
+   var altGlyphItem = node("altGlyphItem");
+   var glyph = node("glyph");
+   var glyphRef = node("glyphRef");
+   var textPath = node("textPath");
+   var text$ = node("text");
+   var tref = node("tref");
+   var tspan = node("tspan");
+   var clipPath = node("clipPath");
+   var colorProfile = node("colorProfile");
+   var cursor = node("cursor");
+   var filter = node("filter");
+   var script = node("script");
+   var style = node("style");
+   var view = node("view");
+   return _elm.Svg.values = {_op: _op
+                            ,text: text
+                            ,node: node
+                            ,svg: svg
+                            ,foreignObject: foreignObject
+                            ,circle: circle
+                            ,ellipse: ellipse
+                            ,image: image
+                            ,line: line
+                            ,path: path
+                            ,polygon: polygon
+                            ,polyline: polyline
+                            ,rect: rect
+                            ,use: use
+                            ,animate: animate
+                            ,animateColor: animateColor
+                            ,animateMotion: animateMotion
+                            ,animateTransform: animateTransform
+                            ,mpath: mpath
+                            ,set: set
+                            ,desc: desc
+                            ,metadata: metadata
+                            ,title: title
+                            ,a: a
+                            ,defs: defs
+                            ,g: g
+                            ,marker: marker
+                            ,mask: mask
+                            ,missingGlyph: missingGlyph
+                            ,pattern: pattern
+                            ,$switch: $switch
+                            ,symbol: symbol
+                            ,altGlyph: altGlyph
+                            ,altGlyphDef: altGlyphDef
+                            ,altGlyphItem: altGlyphItem
+                            ,glyph: glyph
+                            ,glyphRef: glyphRef
+                            ,textPath: textPath
+                            ,text$: text$
+                            ,tref: tref
+                            ,tspan: tspan
+                            ,font: font
+                            ,fontFace: fontFace
+                            ,fontFaceFormat: fontFaceFormat
+                            ,fontFaceName: fontFaceName
+                            ,fontFaceSrc: fontFaceSrc
+                            ,fontFaceUri: fontFaceUri
+                            ,hkern: hkern
+                            ,vkern: vkern
+                            ,linearGradient: linearGradient
+                            ,radialGradient: radialGradient
+                            ,stop: stop
+                            ,feBlend: feBlend
+                            ,feColorMatrix: feColorMatrix
+                            ,feComponentTransfer: feComponentTransfer
+                            ,feComposite: feComposite
+                            ,feConvolveMatrix: feConvolveMatrix
+                            ,feDiffuseLighting: feDiffuseLighting
+                            ,feDisplacementMap: feDisplacementMap
+                            ,feFlood: feFlood
+                            ,feFuncA: feFuncA
+                            ,feFuncB: feFuncB
+                            ,feFuncG: feFuncG
+                            ,feFuncR: feFuncR
+                            ,feGaussianBlur: feGaussianBlur
+                            ,feImage: feImage
+                            ,feMerge: feMerge
+                            ,feMergeNode: feMergeNode
+                            ,feMorphology: feMorphology
+                            ,feOffset: feOffset
+                            ,feSpecularLighting: feSpecularLighting
+                            ,feTile: feTile
+                            ,feTurbulence: feTurbulence
+                            ,feDistantLight: feDistantLight
+                            ,fePointLight: fePointLight
+                            ,feSpotLight: feSpotLight
+                            ,clipPath: clipPath
+                            ,colorProfile: colorProfile
+                            ,cursor: cursor
+                            ,filter: filter
+                            ,script: script
+                            ,style: style
+                            ,view: view};
+};
+Elm.Svg = Elm.Svg || {};
+Elm.Svg.Attributes = Elm.Svg.Attributes || {};
+Elm.Svg.Attributes.make = function (_elm) {
+   "use strict";
+   _elm.Svg = _elm.Svg || {};
+   _elm.Svg.Attributes = _elm.Svg.Attributes || {};
+   if (_elm.Svg.Attributes.values)
+   return _elm.Svg.Attributes.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var writingMode = $VirtualDom.attribute("writing-mode");
+   var wordSpacing = $VirtualDom.attribute("word-spacing");
+   var visibility = $VirtualDom.attribute("visibility");
+   var unicodeBidi = $VirtualDom.attribute("unicode-bidi");
+   var textRendering = $VirtualDom.attribute("text-rendering");
+   var textDecoration = $VirtualDom.attribute("text-decoration");
+   var textAnchor = $VirtualDom.attribute("text-anchor");
+   var stroke = $VirtualDom.attribute("stroke");
+   var strokeWidth = $VirtualDom.attribute("stroke-width");
+   var strokeOpacity = $VirtualDom.attribute("stroke-opacity");
+   var strokeMiterlimit = $VirtualDom.attribute("stroke-miterlimit");
+   var strokeLinejoin = $VirtualDom.attribute("stroke-linejoin");
+   var strokeLinecap = $VirtualDom.attribute("stroke-linecap");
+   var strokeDashoffset = $VirtualDom.attribute("stroke-dashoffset");
+   var strokeDasharray = $VirtualDom.attribute("stroke-dasharray");
+   var stopOpacity = $VirtualDom.attribute("stop-opacity");
+   var stopColor = $VirtualDom.attribute("stop-color");
+   var shapeRendering = $VirtualDom.attribute("shape-rendering");
+   var pointerEvents = $VirtualDom.attribute("pointer-events");
+   var overflow = $VirtualDom.attribute("overflow");
+   var opacity = $VirtualDom.attribute("opacity");
+   var mask = $VirtualDom.attribute("mask");
+   var markerStart = $VirtualDom.attribute("marker-start");
+   var markerMid = $VirtualDom.attribute("marker-mid");
+   var markerEnd = $VirtualDom.attribute("marker-end");
+   var lightingColor = $VirtualDom.attribute("lighting-color");
+   var letterSpacing = $VirtualDom.attribute("letter-spacing");
+   var kerning = $VirtualDom.attribute("kerning");
+   var imageRendering = $VirtualDom.attribute("image-rendering");
+   var glyphOrientationVertical = $VirtualDom.attribute("glyph-orientation-vertical");
+   var glyphOrientationHorizontal = $VirtualDom.attribute("glyph-orientation-horizontal");
+   var fontWeight = $VirtualDom.attribute("font-weight");
+   var fontVariant = $VirtualDom.attribute("font-variant");
+   var fontStyle = $VirtualDom.attribute("font-style");
+   var fontStretch = $VirtualDom.attribute("font-stretch");
+   var fontSize = $VirtualDom.attribute("font-size");
+   var fontSizeAdjust = $VirtualDom.attribute("font-size-adjust");
+   var fontFamily = $VirtualDom.attribute("font-family");
+   var floodOpacity = $VirtualDom.attribute("flood-opacity");
+   var floodColor = $VirtualDom.attribute("flood-color");
+   var filter = $VirtualDom.attribute("filter");
+   var fill = $VirtualDom.attribute("fill");
+   var fillRule = $VirtualDom.attribute("fill-rule");
+   var fillOpacity = $VirtualDom.attribute("fill-opacity");
+   var enableBackground = $VirtualDom.attribute("enable-background");
+   var dominantBaseline = $VirtualDom.attribute("dominant-baseline");
+   var display = $VirtualDom.attribute("display");
+   var direction = $VirtualDom.attribute("direction");
+   var cursor = $VirtualDom.attribute("cursor");
+   var color = $VirtualDom.attribute("color");
+   var colorRendering = $VirtualDom.attribute("color-rendering");
+   var colorProfile = $VirtualDom.attribute("color-profile");
+   var colorInterpolation = $VirtualDom.attribute("color-interpolation");
+   var colorInterpolationFilters = $VirtualDom.attribute("color-interpolation-filters");
+   var clip = $VirtualDom.attribute("clip");
+   var clipRule = $VirtualDom.attribute("clip-rule");
+   var clipPath = $VirtualDom.attribute("clip-path");
+   var baselineShift = $VirtualDom.attribute("baseline-shift");
+   var alignmentBaseline = $VirtualDom.attribute("alignment-baseline");
+   var zoomAndPan = $VirtualDom.attribute("zoomAndPan");
+   var z = $VirtualDom.attribute("z");
+   var yChannelSelector = $VirtualDom.attribute("yChannelSelector");
+   var y2 = $VirtualDom.attribute("y2");
+   var y1 = $VirtualDom.attribute("y1");
+   var y = $VirtualDom.attribute("y");
+   var xmlSpace = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/XML/1998/namespace",
+   "xml:space");
+   var xmlLang = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/XML/1998/namespace",
+   "xml:lang");
+   var xmlBase = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/XML/1998/namespace",
+   "xml:base");
+   var xlinkType = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:type");
+   var xlinkTitle = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:title");
+   var xlinkShow = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:show");
+   var xlinkRole = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:role");
+   var xlinkHref = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:href");
+   var xlinkArcrole = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:arcrole");
+   var xlinkActuate = A2($VirtualDom.attributeNS,
+   "http://www.w3.org/1999/xlink",
+   "xlink:actuate");
+   var xChannelSelector = $VirtualDom.attribute("xChannelSelector");
+   var x2 = $VirtualDom.attribute("x2");
+   var x1 = $VirtualDom.attribute("x1");
+   var xHeight = $VirtualDom.attribute("x-height");
+   var x = $VirtualDom.attribute("x");
+   var widths = $VirtualDom.attribute("widths");
+   var width = $VirtualDom.attribute("width");
+   var viewTarget = $VirtualDom.attribute("viewTarget");
+   var viewBox = $VirtualDom.attribute("viewBox");
+   var vertOriginY = $VirtualDom.attribute("vert-origin-y");
+   var vertOriginX = $VirtualDom.attribute("vert-origin-x");
+   var vertAdvY = $VirtualDom.attribute("vert-adv-y");
+   var version = $VirtualDom.attribute("version");
+   var values = $VirtualDom.attribute("values");
+   var vMathematical = $VirtualDom.attribute("v-mathematical");
+   var vIdeographic = $VirtualDom.attribute("v-ideographic");
+   var vHanging = $VirtualDom.attribute("v-hanging");
+   var vAlphabetic = $VirtualDom.attribute("v-alphabetic");
+   var unitsPerEm = $VirtualDom.attribute("units-per-em");
+   var unicodeRange = $VirtualDom.attribute("unicode-range");
+   var unicode = $VirtualDom.attribute("unicode");
+   var underlineThickness = $VirtualDom.attribute("underline-thickness");
+   var underlinePosition = $VirtualDom.attribute("underline-position");
+   var u2 = $VirtualDom.attribute("u2");
+   var u1 = $VirtualDom.attribute("u1");
+   var type$ = $VirtualDom.attribute("type");
+   var transform = $VirtualDom.attribute("transform");
+   var to = $VirtualDom.attribute("to");
+   var title = $VirtualDom.attribute("title");
+   var textLength = $VirtualDom.attribute("textLength");
+   var targetY = $VirtualDom.attribute("targetY");
+   var targetX = $VirtualDom.attribute("targetX");
+   var target = $VirtualDom.attribute("target");
+   var tableValues = $VirtualDom.attribute("tableValues");
+   var systemLanguage = $VirtualDom.attribute("systemLanguage");
+   var surfaceScale = $VirtualDom.attribute("surfaceScale");
+   var style = $VirtualDom.attribute("style");
+   var string = $VirtualDom.attribute("string");
+   var strikethroughThickness = $VirtualDom.attribute("strikethrough-thickness");
+   var strikethroughPosition = $VirtualDom.attribute("strikethrough-position");
+   var stitchTiles = $VirtualDom.attribute("stitchTiles");
+   var stemv = $VirtualDom.attribute("stemv");
+   var stemh = $VirtualDom.attribute("stemh");
+   var stdDeviation = $VirtualDom.attribute("stdDeviation");
+   var startOffset = $VirtualDom.attribute("startOffset");
+   var spreadMethod = $VirtualDom.attribute("spreadMethod");
+   var speed = $VirtualDom.attribute("speed");
+   var specularExponent = $VirtualDom.attribute("specularExponent");
+   var specularConstant = $VirtualDom.attribute("specularConstant");
+   var spacing = $VirtualDom.attribute("spacing");
+   var slope = $VirtualDom.attribute("slope");
+   var seed = $VirtualDom.attribute("seed");
+   var scale = $VirtualDom.attribute("scale");
+   var ry = $VirtualDom.attribute("ry");
+   var rx = $VirtualDom.attribute("rx");
+   var rotate = $VirtualDom.attribute("rotate");
+   var result = $VirtualDom.attribute("result");
+   var restart = $VirtualDom.attribute("restart");
+   var requiredFeatures = $VirtualDom.attribute("requiredFeatures");
+   var requiredExtensions = $VirtualDom.attribute("requiredExtensions");
+   var repeatDur = $VirtualDom.attribute("repeatDur");
+   var repeatCount = $VirtualDom.attribute("repeatCount");
+   var renderingIntent = $VirtualDom.attribute("rendering-intent");
+   var refY = $VirtualDom.attribute("refY");
+   var refX = $VirtualDom.attribute("refX");
+   var radius = $VirtualDom.attribute("radius");
+   var r = $VirtualDom.attribute("r");
+   var primitiveUnits = $VirtualDom.attribute("primitiveUnits");
+   var preserveAspectRatio = $VirtualDom.attribute("preserveAspectRatio");
+   var preserveAlpha = $VirtualDom.attribute("preserveAlpha");
+   var pointsAtZ = $VirtualDom.attribute("pointsAtZ");
+   var pointsAtY = $VirtualDom.attribute("pointsAtY");
+   var pointsAtX = $VirtualDom.attribute("pointsAtX");
+   var points = $VirtualDom.attribute("points");
+   var pointOrder = $VirtualDom.attribute("point-order");
+   var patternUnits = $VirtualDom.attribute("patternUnits");
+   var patternTransform = $VirtualDom.attribute("patternTransform");
+   var patternContentUnits = $VirtualDom.attribute("patternContentUnits");
+   var pathLength = $VirtualDom.attribute("pathLength");
+   var path = $VirtualDom.attribute("path");
+   var panose1 = $VirtualDom.attribute("panose-1");
+   var overlineThickness = $VirtualDom.attribute("overline-thickness");
+   var overlinePosition = $VirtualDom.attribute("overline-position");
+   var origin = $VirtualDom.attribute("origin");
+   var orientation = $VirtualDom.attribute("orientation");
+   var orient = $VirtualDom.attribute("orient");
+   var order = $VirtualDom.attribute("order");
+   var operator = $VirtualDom.attribute("operator");
+   var offset = $VirtualDom.attribute("offset");
+   var numOctaves = $VirtualDom.attribute("numOctaves");
+   var name = $VirtualDom.attribute("name");
+   var mode = $VirtualDom.attribute("mode");
+   var min = $VirtualDom.attribute("min");
+   var method = $VirtualDom.attribute("method");
+   var media = $VirtualDom.attribute("media");
+   var max = $VirtualDom.attribute("max");
+   var mathematical = $VirtualDom.attribute("mathematical");
+   var maskUnits = $VirtualDom.attribute("maskUnits");
+   var maskContentUnits = $VirtualDom.attribute("maskContentUnits");
+   var markerWidth = $VirtualDom.attribute("markerWidth");
+   var markerUnits = $VirtualDom.attribute("markerUnits");
+   var markerHeight = $VirtualDom.attribute("markerHeight");
+   var local = $VirtualDom.attribute("local");
+   var limitingConeAngle = $VirtualDom.attribute("limitingConeAngle");
+   var lengthAdjust = $VirtualDom.attribute("lengthAdjust");
+   var lang = $VirtualDom.attribute("lang");
+   var keyTimes = $VirtualDom.attribute("keyTimes");
+   var keySplines = $VirtualDom.attribute("keySplines");
+   var keyPoints = $VirtualDom.attribute("keyPoints");
+   var kernelUnitLength = $VirtualDom.attribute("kernelUnitLength");
+   var kernelMatrix = $VirtualDom.attribute("kernelMatrix");
+   var k4 = $VirtualDom.attribute("k4");
+   var k3 = $VirtualDom.attribute("k3");
+   var k2 = $VirtualDom.attribute("k2");
+   var k1 = $VirtualDom.attribute("k1");
+   var k = $VirtualDom.attribute("k");
+   var intercept = $VirtualDom.attribute("intercept");
+   var in2 = $VirtualDom.attribute("in2");
+   var in$ = $VirtualDom.attribute("in");
+   var ideographic = $VirtualDom.attribute("ideographic");
+   var id = $VirtualDom.attribute("id");
+   var horizOriginY = $VirtualDom.attribute("horiz-origin-y");
+   var horizOriginX = $VirtualDom.attribute("horiz-origin-x");
+   var horizAdvX = $VirtualDom.attribute("horiz-adv-x");
+   var height = $VirtualDom.attribute("height");
+   var hanging = $VirtualDom.attribute("hanging");
+   var gradientUnits = $VirtualDom.attribute("gradientUnits");
+   var gradientTransform = $VirtualDom.attribute("gradientTransform");
+   var glyphRef = $VirtualDom.attribute("glyphRef");
+   var glyphName = $VirtualDom.attribute("glyph-name");
+   var g2 = $VirtualDom.attribute("g2");
+   var g1 = $VirtualDom.attribute("g1");
+   var fy = $VirtualDom.attribute("fy");
+   var fx = $VirtualDom.attribute("fx");
+   var from = $VirtualDom.attribute("from");
+   var format = $VirtualDom.attribute("format");
+   var filterUnits = $VirtualDom.attribute("filterUnits");
+   var filterRes = $VirtualDom.attribute("filterRes");
+   var externalResourcesRequired = $VirtualDom.attribute("externalResourcesRequired");
+   var exponent = $VirtualDom.attribute("exponent");
+   var end = $VirtualDom.attribute("end");
+   var elevation = $VirtualDom.attribute("elevation");
+   var edgeMode = $VirtualDom.attribute("edgeMode");
+   var dy = $VirtualDom.attribute("dy");
+   var dx = $VirtualDom.attribute("dx");
+   var dur = $VirtualDom.attribute("dur");
+   var divisor = $VirtualDom.attribute("divisor");
+   var diffuseConstant = $VirtualDom.attribute("diffuseConstant");
+   var descent = $VirtualDom.attribute("descent");
+   var decelerate = $VirtualDom.attribute("decelerate");
+   var d = $VirtualDom.attribute("d");
+   var cy = $VirtualDom.attribute("cy");
+   var cx = $VirtualDom.attribute("cx");
+   var contentStyleType = $VirtualDom.attribute("contentStyleType");
+   var contentScriptType = $VirtualDom.attribute("contentScriptType");
+   var clipPathUnits = $VirtualDom.attribute("clipPathUnits");
+   var $class = $VirtualDom.attribute("class");
+   var capHeight = $VirtualDom.attribute("cap-height");
+   var calcMode = $VirtualDom.attribute("calcMode");
+   var by = $VirtualDom.attribute("by");
+   var bias = $VirtualDom.attribute("bias");
+   var begin = $VirtualDom.attribute("begin");
+   var bbox = $VirtualDom.attribute("bbox");
+   var baseProfile = $VirtualDom.attribute("baseProfile");
+   var baseFrequency = $VirtualDom.attribute("baseFrequency");
+   var azimuth = $VirtualDom.attribute("azimuth");
+   var autoReverse = $VirtualDom.attribute("autoReverse");
+   var attributeType = $VirtualDom.attribute("attributeType");
+   var attributeName = $VirtualDom.attribute("attributeName");
+   var ascent = $VirtualDom.attribute("ascent");
+   var arabicForm = $VirtualDom.attribute("arabic-form");
+   var amplitude = $VirtualDom.attribute("amplitude");
+   var allowReorder = $VirtualDom.attribute("allowReorder");
+   var alphabetic = $VirtualDom.attribute("alphabetic");
+   var additive = $VirtualDom.attribute("additive");
+   var accumulate = $VirtualDom.attribute("accumulate");
+   var accelerate = $VirtualDom.attribute("accelerate");
+   var accentHeight = $VirtualDom.attribute("accent-height");
+   return _elm.Svg.Attributes.values = {_op: _op
+                                       ,accentHeight: accentHeight
+                                       ,accelerate: accelerate
+                                       ,accumulate: accumulate
+                                       ,additive: additive
+                                       ,alphabetic: alphabetic
+                                       ,allowReorder: allowReorder
+                                       ,amplitude: amplitude
+                                       ,arabicForm: arabicForm
+                                       ,ascent: ascent
+                                       ,attributeName: attributeName
+                                       ,attributeType: attributeType
+                                       ,autoReverse: autoReverse
+                                       ,azimuth: azimuth
+                                       ,baseFrequency: baseFrequency
+                                       ,baseProfile: baseProfile
+                                       ,bbox: bbox
+                                       ,begin: begin
+                                       ,bias: bias
+                                       ,by: by
+                                       ,calcMode: calcMode
+                                       ,capHeight: capHeight
+                                       ,$class: $class
+                                       ,clipPathUnits: clipPathUnits
+                                       ,contentScriptType: contentScriptType
+                                       ,contentStyleType: contentStyleType
+                                       ,cx: cx
+                                       ,cy: cy
+                                       ,d: d
+                                       ,decelerate: decelerate
+                                       ,descent: descent
+                                       ,diffuseConstant: diffuseConstant
+                                       ,divisor: divisor
+                                       ,dur: dur
+                                       ,dx: dx
+                                       ,dy: dy
+                                       ,edgeMode: edgeMode
+                                       ,elevation: elevation
+                                       ,end: end
+                                       ,exponent: exponent
+                                       ,externalResourcesRequired: externalResourcesRequired
+                                       ,filterRes: filterRes
+                                       ,filterUnits: filterUnits
+                                       ,format: format
+                                       ,from: from
+                                       ,fx: fx
+                                       ,fy: fy
+                                       ,g1: g1
+                                       ,g2: g2
+                                       ,glyphName: glyphName
+                                       ,glyphRef: glyphRef
+                                       ,gradientTransform: gradientTransform
+                                       ,gradientUnits: gradientUnits
+                                       ,hanging: hanging
+                                       ,height: height
+                                       ,horizAdvX: horizAdvX
+                                       ,horizOriginX: horizOriginX
+                                       ,horizOriginY: horizOriginY
+                                       ,id: id
+                                       ,ideographic: ideographic
+                                       ,in$: in$
+                                       ,in2: in2
+                                       ,intercept: intercept
+                                       ,k: k
+                                       ,k1: k1
+                                       ,k2: k2
+                                       ,k3: k3
+                                       ,k4: k4
+                                       ,kernelMatrix: kernelMatrix
+                                       ,kernelUnitLength: kernelUnitLength
+                                       ,keyPoints: keyPoints
+                                       ,keySplines: keySplines
+                                       ,keyTimes: keyTimes
+                                       ,lang: lang
+                                       ,lengthAdjust: lengthAdjust
+                                       ,limitingConeAngle: limitingConeAngle
+                                       ,local: local
+                                       ,markerHeight: markerHeight
+                                       ,markerUnits: markerUnits
+                                       ,markerWidth: markerWidth
+                                       ,maskContentUnits: maskContentUnits
+                                       ,maskUnits: maskUnits
+                                       ,mathematical: mathematical
+                                       ,max: max
+                                       ,media: media
+                                       ,method: method
+                                       ,min: min
+                                       ,mode: mode
+                                       ,name: name
+                                       ,numOctaves: numOctaves
+                                       ,offset: offset
+                                       ,operator: operator
+                                       ,order: order
+                                       ,orient: orient
+                                       ,orientation: orientation
+                                       ,origin: origin
+                                       ,overlinePosition: overlinePosition
+                                       ,overlineThickness: overlineThickness
+                                       ,panose1: panose1
+                                       ,path: path
+                                       ,pathLength: pathLength
+                                       ,patternContentUnits: patternContentUnits
+                                       ,patternTransform: patternTransform
+                                       ,patternUnits: patternUnits
+                                       ,pointOrder: pointOrder
+                                       ,points: points
+                                       ,pointsAtX: pointsAtX
+                                       ,pointsAtY: pointsAtY
+                                       ,pointsAtZ: pointsAtZ
+                                       ,preserveAlpha: preserveAlpha
+                                       ,preserveAspectRatio: preserveAspectRatio
+                                       ,primitiveUnits: primitiveUnits
+                                       ,r: r
+                                       ,radius: radius
+                                       ,refX: refX
+                                       ,refY: refY
+                                       ,renderingIntent: renderingIntent
+                                       ,repeatCount: repeatCount
+                                       ,repeatDur: repeatDur
+                                       ,requiredExtensions: requiredExtensions
+                                       ,requiredFeatures: requiredFeatures
+                                       ,restart: restart
+                                       ,result: result
+                                       ,rotate: rotate
+                                       ,rx: rx
+                                       ,ry: ry
+                                       ,scale: scale
+                                       ,seed: seed
+                                       ,slope: slope
+                                       ,spacing: spacing
+                                       ,specularConstant: specularConstant
+                                       ,specularExponent: specularExponent
+                                       ,speed: speed
+                                       ,spreadMethod: spreadMethod
+                                       ,startOffset: startOffset
+                                       ,stdDeviation: stdDeviation
+                                       ,stemh: stemh
+                                       ,stemv: stemv
+                                       ,stitchTiles: stitchTiles
+                                       ,strikethroughPosition: strikethroughPosition
+                                       ,strikethroughThickness: strikethroughThickness
+                                       ,string: string
+                                       ,style: style
+                                       ,surfaceScale: surfaceScale
+                                       ,systemLanguage: systemLanguage
+                                       ,tableValues: tableValues
+                                       ,target: target
+                                       ,targetX: targetX
+                                       ,targetY: targetY
+                                       ,textLength: textLength
+                                       ,title: title
+                                       ,to: to
+                                       ,transform: transform
+                                       ,type$: type$
+                                       ,u1: u1
+                                       ,u2: u2
+                                       ,underlinePosition: underlinePosition
+                                       ,underlineThickness: underlineThickness
+                                       ,unicode: unicode
+                                       ,unicodeRange: unicodeRange
+                                       ,unitsPerEm: unitsPerEm
+                                       ,vAlphabetic: vAlphabetic
+                                       ,vHanging: vHanging
+                                       ,vIdeographic: vIdeographic
+                                       ,vMathematical: vMathematical
+                                       ,values: values
+                                       ,version: version
+                                       ,vertAdvY: vertAdvY
+                                       ,vertOriginX: vertOriginX
+                                       ,vertOriginY: vertOriginY
+                                       ,viewBox: viewBox
+                                       ,viewTarget: viewTarget
+                                       ,width: width
+                                       ,widths: widths
+                                       ,x: x
+                                       ,xHeight: xHeight
+                                       ,x1: x1
+                                       ,x2: x2
+                                       ,xChannelSelector: xChannelSelector
+                                       ,xlinkActuate: xlinkActuate
+                                       ,xlinkArcrole: xlinkArcrole
+                                       ,xlinkHref: xlinkHref
+                                       ,xlinkRole: xlinkRole
+                                       ,xlinkShow: xlinkShow
+                                       ,xlinkTitle: xlinkTitle
+                                       ,xlinkType: xlinkType
+                                       ,xmlBase: xmlBase
+                                       ,xmlLang: xmlLang
+                                       ,xmlSpace: xmlSpace
+                                       ,y: y
+                                       ,y1: y1
+                                       ,y2: y2
+                                       ,yChannelSelector: yChannelSelector
+                                       ,z: z
+                                       ,zoomAndPan: zoomAndPan
+                                       ,alignmentBaseline: alignmentBaseline
+                                       ,baselineShift: baselineShift
+                                       ,clipPath: clipPath
+                                       ,clipRule: clipRule
+                                       ,clip: clip
+                                       ,colorInterpolationFilters: colorInterpolationFilters
+                                       ,colorInterpolation: colorInterpolation
+                                       ,colorProfile: colorProfile
+                                       ,colorRendering: colorRendering
+                                       ,color: color
+                                       ,cursor: cursor
+                                       ,direction: direction
+                                       ,display: display
+                                       ,dominantBaseline: dominantBaseline
+                                       ,enableBackground: enableBackground
+                                       ,fillOpacity: fillOpacity
+                                       ,fillRule: fillRule
+                                       ,fill: fill
+                                       ,filter: filter
+                                       ,floodColor: floodColor
+                                       ,floodOpacity: floodOpacity
+                                       ,fontFamily: fontFamily
+                                       ,fontSizeAdjust: fontSizeAdjust
+                                       ,fontSize: fontSize
+                                       ,fontStretch: fontStretch
+                                       ,fontStyle: fontStyle
+                                       ,fontVariant: fontVariant
+                                       ,fontWeight: fontWeight
+                                       ,glyphOrientationHorizontal: glyphOrientationHorizontal
+                                       ,glyphOrientationVertical: glyphOrientationVertical
+                                       ,imageRendering: imageRendering
+                                       ,kerning: kerning
+                                       ,letterSpacing: letterSpacing
+                                       ,lightingColor: lightingColor
+                                       ,markerEnd: markerEnd
+                                       ,markerMid: markerMid
+                                       ,markerStart: markerStart
+                                       ,mask: mask
+                                       ,opacity: opacity
+                                       ,overflow: overflow
+                                       ,pointerEvents: pointerEvents
+                                       ,shapeRendering: shapeRendering
+                                       ,stopColor: stopColor
+                                       ,stopOpacity: stopOpacity
+                                       ,strokeDasharray: strokeDasharray
+                                       ,strokeDashoffset: strokeDashoffset
+                                       ,strokeLinecap: strokeLinecap
+                                       ,strokeLinejoin: strokeLinejoin
+                                       ,strokeMiterlimit: strokeMiterlimit
+                                       ,strokeOpacity: strokeOpacity
+                                       ,strokeWidth: strokeWidth
+                                       ,stroke: stroke
+                                       ,textAnchor: textAnchor
+                                       ,textDecoration: textDecoration
+                                       ,textRendering: textRendering
+                                       ,unicodeBidi: unicodeBidi
+                                       ,visibility: visibility
+                                       ,wordSpacing: wordSpacing
+                                       ,writingMode: writingMode};
+};
+Elm.Svg = Elm.Svg || {};
+Elm.Svg.Lazy = Elm.Svg.Lazy || {};
+Elm.Svg.Lazy.make = function (_elm) {
+   "use strict";
+   _elm.Svg = _elm.Svg || {};
+   _elm.Svg.Lazy = _elm.Svg.Lazy || {};
+   if (_elm.Svg.Lazy.values) return _elm.Svg.Lazy.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $VirtualDom = Elm.VirtualDom.make(_elm);
+   var _op = {};
+   var lazy3 = $VirtualDom.lazy3;
+   var lazy2 = $VirtualDom.lazy2;
+   var lazy = $VirtualDom.lazy;
+   return _elm.Svg.Lazy.values = {_op: _op
+                                 ,lazy: lazy
+                                 ,lazy2: lazy2
+                                 ,lazy3: lazy3};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.SvgUtils = Elm.Game.Render.SvgUtils || {};
+Elm.Game.Render.SvgUtils.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.SvgUtils = _elm.Game.Render.SvgUtils || {};
+   if (_elm.Game.Render.SvgUtils.values)
+   return _elm.Game.Render.SvgUtils.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Geo = Elm.Game.Geo.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var empty = A2($Svg.g,_U.list([]),_U.list([]));
+   var buildCmd = F2(function (cmd,numbers) {
+      return A2($String.join,
+      " ",
+      A2($List._op["::"],cmd,A2($List.map,$Basics.toString,numbers)));
+   });
+   var arc = F2(function (attrs,_p0) {
+      var _p1 = _p0;
+      var _p5 = _p1.radius;
+      var _p4 = _p1.center;
+      var _p2 = A2($Game$Geo.sub,
+      A2($Game$Geo.rotateDeg,_p1.toAngle,_p5),
+      _p4);
+      var x2 = _p2._0;
+      var y2 = _p2._1;
+      var arcCmd = A2(buildCmd,"A",_U.list([_p5,_p5,0,0,0,x2,y2]));
+      var _p3 = A2($Game$Geo.sub,
+      A2($Game$Geo.rotateDeg,_p1.fromAngle,_p5),
+      _p4);
+      var x1 = _p3._0;
+      var y1 = _p3._1;
+      var moveCmd = A2(buildCmd,"M",_U.list([x1,y1]));
+      var cmd = A2($Basics._op["++"],moveCmd,arcCmd);
+      return A2($Svg.path,
+      A2($List._op["::"],$Svg$Attributes.d(cmd),attrs),
+      _U.list([]));
+   });
+   var ArcDef = F4(function (a,b,c,d) {
+      return {center: a,radius: b,fromAngle: c,toAngle: d};
+   });
+   var lineCoords = F2(function (p1,p2) {
+      var y = function (_p6) {
+         return $Basics.toString($Basics.snd(_p6));
+      };
+      var x = function (_p7) {
+         return $Basics.toString($Basics.fst(_p7));
+      };
+      return _U.list([$Svg$Attributes.x1(x(p1))
+                     ,$Svg$Attributes.y1(y(p1))
+                     ,$Svg$Attributes.x2(x(p2))
+                     ,$Svg$Attributes.y2(y(p2))]);
+   });
+   var pathPoints = function (pointsList) {
+      var coords = A2($String.join,
+      " ",
+      A2($List.map,
+      function (_p8) {
+         var _p9 = _p8;
+         return A2($Basics._op["++"],
+         $Basics.toString(_p9._0),
+         A2($Basics._op["++"],",",$Basics.toString(_p9._1)));
+      },
+      pointsList));
+      return $Svg$Attributes.d(A2($Basics._op["++"],"M ",coords));
+   };
+   var polygonPoints = function (pointsList) {
+      return $Svg$Attributes.points(A2($String.join,
+      " ",
+      A2($List.map,
+      function (_p10) {
+         var _p11 = _p10;
+         return A2($Basics._op["++"],
+         $Basics.toString(_p11._0),
+         A2($Basics._op["++"],",",$Basics.toString(_p11._1)));
+      },
+      pointsList)));
+   };
+   var segment = F2(function (attrs,_p12) {
+      var _p13 = _p12;
+      return A2($Svg.line,
+      A2($Basics._op["++"],attrs,A2(lineCoords,_p13._0,_p13._1)),
+      _U.list([]));
+   });
+   var rotate_ = F3(function (a,cx,cy) {
+      return A2($Basics._op["++"],
+      "rotate(",
+      A2($Basics._op["++"],
+      $Basics.toString(a),
+      A2($Basics._op["++"],
+      ", ",
+      A2($Basics._op["++"],
+      $Basics.toString(cx),
+      A2($Basics._op["++"],
+      ", ",
+      A2($Basics._op["++"],$Basics.toString(cy),")"))))));
+   });
+   var translate = F2(function (x,y) {
+      return A2($Basics._op["++"],
+      "translate(",
+      A2($Basics._op["++"],
+      $Basics.toString(x),
+      A2($Basics._op["++"],
+      ", ",
+      A2($Basics._op["++"],$Basics.toString(y),")"))));
+   });
+   var translatePoint = function (_p14) {
+      var _p15 = _p14;
+      return A2(translate,_p15._0,_p15._1);
+   };
+   return _elm.Game.Render.SvgUtils.values = {_op: _op
+                                             ,translate: translate
+                                             ,translatePoint: translatePoint
+                                             ,rotate_: rotate_
+                                             ,segment: segment
+                                             ,polygonPoints: polygonPoints
+                                             ,pathPoints: pathPoints
+                                             ,lineCoords: lineCoords
+                                             ,ArcDef: ArcDef
+                                             ,arc: arc
+                                             ,buildCmd: buildCmd
+                                             ,empty: empty};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Defs = Elm.Game.Render.Defs || {};
+Elm.Game.Render.Defs.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Defs = _elm.Game.Render.Defs || {};
+   if (_elm.Game.Render.Defs.values)
+   return _elm.Game.Render.Defs.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var renderDefs = A2($Svg.defs,
+   _U.list([]),
+   _U.list([A2($Svg.pattern,
+           _U.list([$Svg$Attributes.id("seaPattern")
+                   ,$Svg$Attributes.x("0")
+                   ,$Svg$Attributes.y("0")
+                   ,$Svg$Attributes.width("50")
+                   ,$Svg$Attributes.height("120")
+                   ,$Svg$Attributes.patternUnits("userSpaceOnUse")]),
+           _U.list([A2($Svg.rect,
+                   _U.list([$Svg$Attributes.x("0")
+                           ,$Svg$Attributes.y("0")
+                           ,$Svg$Attributes.width("50")
+                           ,$Svg$Attributes.height("30")
+                           ,$Svg$Attributes.fill("grey")
+                           ,$Svg$Attributes.opacity("0.05")]),
+                   _U.list([]))
+                   ,A2($Svg.rect,
+                   _U.list([$Svg$Attributes.x("0")
+                           ,$Svg$Attributes.y("30")
+                           ,$Svg$Attributes.width("50")
+                           ,$Svg$Attributes.height("30")
+                           ,$Svg$Attributes.fill("grey")
+                           ,$Svg$Attributes.opacity("0.1")]),
+                   _U.list([]))
+                   ,A2($Svg.rect,
+                   _U.list([$Svg$Attributes.x("0")
+                           ,$Svg$Attributes.y("60")
+                           ,$Svg$Attributes.width("50")
+                           ,$Svg$Attributes.height("30")
+                           ,$Svg$Attributes.fill("grey")
+                           ,$Svg$Attributes.opacity("0.05")]),
+                   _U.list([]))]))
+           ,A2($Svg.marker,
+           _U.list([$Svg$Attributes.id("whiteFullArrow")
+                   ,$Svg$Attributes.markerWidth("6")
+                   ,$Svg$Attributes.markerHeight("6")
+                   ,$Svg$Attributes.refX("0")
+                   ,$Svg$Attributes.refY("3")
+                   ,$Svg$Attributes.orient("auto")]),
+           _U.list([A2($Svg.path,
+           _U.list([$Svg$Attributes.d("M0,0 L0,6 L6,3 L0,0")
+                   ,$Svg$Attributes.fill("white")]),
+           _U.list([]))]))
+           ,A2($Svg.linearGradient,
+           _U.list([$Svg$Attributes.id("transparentToBlack")]),
+           _U.list([A2($Svg.stop,
+                   _U.list([$Svg$Attributes.offset("0%")
+                           ,$Svg$Attributes.stopColor("black")
+                           ,$Svg$Attributes.stopOpacity("0")]),
+                   _U.list([]))
+                   ,A2($Svg.stop,
+                   _U.list([$Svg$Attributes.offset("100%")
+                           ,$Svg$Attributes.stopColor("black")
+                           ,$Svg$Attributes.stopOpacity("1")]),
+                   _U.list([]))]))
+           ,A2($Svg.linearGradient,
+           _U.list([$Svg$Attributes.id("midBlack")]),
+           _U.list([A2($Svg.stop,
+                   _U.list([$Svg$Attributes.offset("0%")
+                           ,$Svg$Attributes.stopColor("black")
+                           ,$Svg$Attributes.stopOpacity("0.5")]),
+                   _U.list([]))
+                   ,A2($Svg.stop,
+                   _U.list([$Svg$Attributes.offset("100%")
+                           ,$Svg$Attributes.stopColor("black")
+                           ,$Svg$Attributes.stopOpacity("1")]),
+                   _U.list([]))]))]));
+   return _elm.Game.Render.Defs.values = {_op: _op
+                                         ,renderDefs: renderDefs};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Gates = Elm.Game.Render.Gates || {};
+Elm.Game.Render.Gates.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Gates = _elm.Game.Render.Gates || {};
+   if (_elm.Game.Render.Gates.values)
+   return _elm.Game.Render.Gates.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var gateLineOpacity = function (timer) {
+      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
+   };
+   var renderGateMark = F2(function (color,p) {
+      return A2($Svg.circle,
+      _U.list([$Svg$Attributes.r($Basics.toString($Game$Models.markRadius))
+              ,$Svg$Attributes.stroke("white")
+              ,$Svg$Attributes.strokeWidth("2")
+              ,$Svg$Attributes.fill(color)
+              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(p))]),
+      _U.list([]));
+   });
+   var renderGateMarks = F2(function (color,gate) {
+      var _p0 = $Game$Models.getGateMarks(gate);
+      var left = _p0._0;
+      var right = _p0._1;
+      return A2($Svg.g,
+      _U.list([]),
+      A2($List.map,renderGateMark(color),_U.list([left,right])));
+   });
+   var renderGate = F3(function (gate,lineStyle,color) {
+      var marks = A2(renderGateMarks,color,gate);
+      var l = A2($Game$Render$SvgUtils.segment,
+      lineStyle,
+      $Game$Models.getGateMarks(gate));
+      return A2($Svg.g,_U.list([]),_U.list([l,marks]));
+   });
+   var renderClosedGate = F2(function (gate,timer) {
+      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
+                              ,$Svg$Attributes.strokeWidth("2")]);
+      return A3(renderGate,gate,lineStyle,"black");
+   });
+   var renderOpenGate = F2(function (gate,timer) {
+      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
+                              ,$Svg$Attributes.strokeWidth("2")
+                              ,$Svg$Attributes.strokeDasharray("5,3")
+                              ,$Svg$Attributes.opacity($Basics.toString(gateLineOpacity(timer)))]);
+      return A3(renderGate,gate,lineStyle,$Constants.colors.green);
+   });
+   var renderUpwind = F3(function (playerState,course,now) {
+      var _p1 = playerState.nextGate;
+      if (_p1.ctor === "Just" && _p1._0.ctor === "UpwindGate") {
+            return A2(renderOpenGate,course.upwind,now);
+         } else {
+            return A2(renderClosedGate,course.upwind,now);
+         }
+   });
+   var renderDownwind = F4(function (playerState,
+   course,
+   now,
+   started) {
+      var _p2 = playerState.nextGate;
+      _v1_2: do {
+         if (_p2.ctor === "Just") {
+               switch (_p2._0.ctor)
+               {case "StartLine": return started ? A2(renderOpenGate,
+                    course.downwind,
+                    now) : A2(renderClosedGate,course.downwind,now);
+                  case "DownwindGate": return A2(renderOpenGate,
+                    course.downwind,
+                    now);
+                  default: break _v1_2;}
+            } else {
+               break _v1_2;
+            }
+      } while (false);
+      return A2(renderClosedGate,course.downwind,now);
+   });
+   return _elm.Game.Render.Gates.values = {_op: _op
+                                          ,renderDownwind: renderDownwind
+                                          ,renderUpwind: renderUpwind
+                                          ,renderOpenGate: renderOpenGate
+                                          ,renderClosedGate: renderClosedGate
+                                          ,renderGate: renderGate
+                                          ,renderGateMarks: renderGateMarks
+                                          ,renderGateMark: renderGateMark
+                                          ,gateLineOpacity: gateLineOpacity};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Tiles = Elm.Game.Render.Tiles || {};
+Elm.Game.Render.Tiles.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Tiles = _elm.Game.Render.Tiles || {};
+   if (_elm.Game.Render.Tiles.values)
+   return _elm.Game.Render.Tiles.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $Svg$Lazy = Elm.Svg.Lazy.make(_elm);
+   var _op = {};
+   var toSvgPoints = function (points) {
+      return A2($String.join,
+      " ",
+      A2($List.map,
+      function (_p0) {
+         var _p1 = _p0;
+         return A2($Basics._op["++"],
+         $Basics.toString(_p1._0),
+         A2($Basics._op["++"],",",$Basics.toString(_p1._1)));
+      },
+      points));
+   };
+   var vertices = function () {
+      var _p2 = $Hexagons.dims($Constants.hexRadius);
+      var w = _p2._0;
+      var h = _p2._1;
+      var w2 = w / 2;
+      var h2 = h / 2;
+      var h4 = h / 4;
+      return _U.list([{ctor: "_Tuple2",_0: 0 - w2,_1: 0 - h4}
+                     ,{ctor: "_Tuple2",_0: 0,_1: 0 - h2}
+                     ,{ctor: "_Tuple2",_0: w2,_1: 0 - h4}
+                     ,{ctor: "_Tuple2",_0: w2,_1: h4}
+                     ,{ctor: "_Tuple2",_0: 0,_1: h2}
+                     ,{ctor: "_Tuple2",_0: 0 - w2,_1: h4}]);
+   }();
+   var verticesPoints = toSvgPoints(vertices);
+   var tileKindColor = function (kind) {
+      var _p3 = kind;
+      switch (_p3.ctor)
+      {case "Water": return $Constants.colors.water;
+         case "Grass": return $Constants.colors.grass;
+         default: return $Constants.colors.rock;}
+   };
+   var renderTile = function (_p4) {
+      var _p5 = _p4;
+      var color = tileKindColor(_p5.content);
+      var _p6 = A2($Hexagons.axialToPoint,
+      $Constants.hexRadius,
+      _p5.coords);
+      var x = _p6._0;
+      var y = _p6._1;
+      return A2($Svg.polygon,
+      _U.list([$Svg$Attributes.points(verticesPoints)
+              ,$Svg$Attributes.fill(color)
+              ,$Svg$Attributes.stroke(color)
+              ,$Svg$Attributes.strokeWidth("1")
+              ,$Svg$Attributes.transform(A2($Basics._op["++"],
+              "translate(",
+              A2($Basics._op["++"],
+              $Basics.toString(x),
+              A2($Basics._op["++"],
+              ", ",
+              A2($Basics._op["++"],$Basics.toString(y),")")))))]),
+      _U.list([]));
+   };
+   var renderTiles = function (grid) {
+      var tiles = A2($List.map,
+      renderTile,
+      $Hexagons$Grid.list(grid));
+      return A2($Svg.g,_U.list([]),tiles);
+   };
+   var lazyRenderTiles = function (grid) {
+      return A2($Svg$Lazy.lazy,renderTiles,grid);
+   };
+   return _elm.Game.Render.Tiles.values = {_op: _op
+                                          ,lazyRenderTiles: lazyRenderTiles
+                                          ,renderTiles: renderTiles
+                                          ,renderTile: renderTile
+                                          ,tileKindColor: tileKindColor
+                                          ,verticesPoints: verticesPoints
+                                          ,vertices: vertices
+                                          ,toSvgPoints: toSvgPoints};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Course = Elm.Game.Render.Course || {};
+Elm.Game.Render.Course.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Course = _elm.Game.Render.Course || {};
+   if (_elm.Game.Render.Course.values)
+   return _elm.Game.Render.Course.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $Game$Render$Tiles = Elm.Game.Render.Tiles.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var renderGust = function (gust) {
+      var color = _U.cmp(gust.speed,0) > 0 ? "black" : "white";
+      var a = 0.3 * $Basics.abs(gust.speed) / 10;
+      return A2($Svg.circle,
+      _U.list([$Svg$Attributes.r($Basics.toString(gust.radius))
+              ,$Svg$Attributes.fill(color)
+              ,$Svg$Attributes.fillOpacity($Basics.toString(a))
+              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(gust.position))]),
+      _U.list([]));
+   };
+   var renderGusts = function (wind) {
+      return A2($Svg.g,
+      _U.list([]),
+      A2($List.map,renderGust,wind.gusts));
+   };
+   var renderGustTile = function (_p0) {
+      var _p1 = _p0;
+      var _p3 = _p1._1.speed;
+      var color = _U.cmp(_p3,0) > 0 ? "black" : "white";
+      var a = 0.3 * $Basics.abs(_p3) / 10;
+      var _p2 = A2($Hexagons.axialToPoint,
+      $Constants.hexRadius,
+      _p1._0);
+      var x = _p2._0;
+      var y = _p2._1;
+      return A2($Svg.polygon,
+      _U.list([$Svg$Attributes.points($Game$Render$Tiles.verticesPoints)
+              ,$Svg$Attributes.fill(color)
+              ,$Svg$Attributes.opacity($Basics.toString(a))
+              ,$Svg$Attributes.transform(A2($Basics._op["++"],
+              "translate(",
+              A2($Basics._op["++"],
+              $Basics.toString(x),
+              A2($Basics._op["++"],
+              ", ",
+              A2($Basics._op["++"],$Basics.toString(y),")")))))]),
+      _U.list([]));
+   };
+   var renderTiledGust = function (_p4) {
+      var _p5 = _p4;
+      return A2($Svg.g,
+      _U.list([]),
+      A2($List.map,renderGustTile,$Dict.toList(_p5.tiles)));
+   };
+   var renderTiledGusts = function (_p6) {
+      var _p7 = _p6;
+      return A2($Svg.g,
+      _U.list([]),
+      A2($List.map,renderTiledGust,_p7.gusts));
+   };
+   var renderCourse = function (_p8) {
+      var _p9 = _p8;
+      var _p12 = _p9.timers;
+      var _p11 = _p9.playerState;
+      var _p10 = _p9.course;
+      return A2($Svg.g,
+      _U.list([]),
+      _U.list([$Game$Render$Tiles.lazyRenderTiles(_p10.grid)
+              ,renderTiledGusts(_p9.gusts)
+              ,A4($Game$Render$Gates.renderDownwind,
+              _p11,
+              _p10,
+              _p12.now,
+              $Game$Models.isStarted(_p9))
+              ,A3($Game$Render$Gates.renderUpwind,_p11,_p10,_p12.now)]));
+   };
+   return _elm.Game.Render.Course.values = {_op: _op
+                                           ,renderCourse: renderCourse
+                                           ,renderTiledGusts: renderTiledGusts
+                                           ,renderTiledGust: renderTiledGust
+                                           ,renderGustTile: renderGustTile
+                                           ,renderGusts: renderGusts
+                                           ,renderGust: renderGust};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Players = Elm.Game.Render.Players || {};
+Elm.Game.Render.Players.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Players = _elm.Game.Render.Players || {};
+   if (_elm.Game.Render.Players.values)
+   return _elm.Game.Render.Players.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Core = Elm.Game.Core.make(_elm),
+   $Game$Geo = Elm.Game.Geo.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var warnVmg = A2($Svg.polygon,
+   _U.list([$Svg$Attributes.fill("orange")
+           ,$Svg$Attributes.stroke("white")
+           ,$Svg$Attributes.points("-4,-4 4,-4 0,4")]),
+   _U.list([]));
+   var goodVmg = A2($Svg.circle,
+   _U.list([$Svg$Attributes.fill("green")
+           ,$Svg$Attributes.stroke("white")
+           ,$Svg$Attributes.cx("0")
+           ,$Svg$Attributes.cy("0")
+           ,$Svg$Attributes.r("5")]),
+   _U.list([]));
+   var badVmg = A2($Svg.rect,
+   _U.list([$Svg$Attributes.fill("red")
+           ,$Svg$Attributes.stroke("white")
+           ,$Svg$Attributes.x("-4")
+           ,$Svg$Attributes.y("-4")
+           ,$Svg$Attributes.width("8")
+           ,$Svg$Attributes.height("8")]),
+   _U.list([]));
+   var vmgIcon = function (player) {
+      var margin = 3;
+      var a = $Basics.abs(player.windAngle);
+      return _U.cmp(a,90) < 0 ? _U.cmp(a,
+      player.upwindVmg.angle - margin) < 0 ? badVmg : _U.cmp(a,
+      player.upwindVmg.angle + margin) > 0 ? warnVmg : goodVmg : _U.cmp(a,
+      player.downwindVmg.angle + margin) > 0 ? badVmg : _U.cmp(a,
+      player.downwindVmg.angle - margin) < 0 ? warnVmg : goodVmg;
+   };
+   var renderVmgSign = function (player) {
+      var icon = vmgIcon(player);
+      var windOriginRadians = $Game$Core.toRadians(player.heading - player.windAngle);
+      var pt = $Basics.fromPolar({ctor: "_Tuple2"
+                                 ,_0: 30
+                                 ,_1: windOriginRadians + $Basics.pi / 2});
+      return A2($Svg.g,
+      _U.list([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(pt))]),
+      _U.list([icon]));
+   };
+   var renderVmgLine = function (a) {
+      return A2($Game$Render$SvgUtils.segment,
+      _U.list([$Svg$Attributes.stroke("white")
+              ,$Svg$Attributes.opacity("0.8")]),
+      {ctor: "_Tuple2"
+      ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
+      ,_1: A2($Game$Geo.rotateDeg,a,30)});
+   };
+   var renderWindArrow = A2($Svg.path,
+   _U.list([$Svg$Attributes.d("M 0,0 3,-12 0,-10 -3,-12 Z")
+           ,$Svg$Attributes.fill("white")]),
+   _U.list([]));
+   var renderPlayerAngles = function (player) {
+      var absWindAngle = $Basics.abs($Basics.round(player.windAngle));
+      var vmgLines = A2($Svg.g,
+      _U.list([$Svg$Attributes.opacity("0.5")]),
+      _U.list([renderVmgLine(0 - player.upwindVmg.angle)
+              ,renderVmgLine(player.upwindVmg.angle)
+              ,renderVmgLine(0 - player.downwindVmg.angle)
+              ,renderVmgLine(player.downwindVmg.angle)]));
+      var rightSide = $Basics.fromPolar({ctor: "_Tuple2"
+                                        ,_0: 60
+                                        ,_1: $Game$Core.toRadians(player.windOrigin + 90)});
+      var leftSide = $Basics.fromPolar({ctor: "_Tuple2"
+                                       ,_0: 60
+                                       ,_1: $Game$Core.toRadians(player.windOrigin - 90)});
+      var eqLine = A2($Game$Render$SvgUtils.segment,
+      _U.list([$Svg$Attributes.stroke("white")
+              ,$Svg$Attributes.strokeWidth("1")
+              ,$Svg$Attributes.opacity("0.5")]),
+      {ctor: "_Tuple2",_0: leftSide,_1: rightSide});
+      var windOrigin = player.heading - player.windAngle;
+      var windMarker = A2($Svg.g,
+      _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
+              A2($Game$Render$SvgUtils.translate,0,-40),
+              A3($Game$Render$SvgUtils.rotate_,180 - windOrigin,0,40)))
+              ,$Svg$Attributes.opacity("0.9")]),
+      _U.list([renderWindArrow]));
+      var windLine = A2($Game$Render$SvgUtils.segment,
+      _U.list([$Svg$Attributes.stroke("white")
+              ,$Svg$Attributes.opacity("0.5")]),
+      {ctor: "_Tuple2"
+      ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
+      ,_1: A2($Game$Geo.rotateDeg,windOrigin,35)});
+      var windAngleText = A2($Svg.text$,
+      _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
+              $Game$Render$SvgUtils.translatePoint(A2($Game$Geo.rotateDeg,
+              windOrigin + 180,
+              30)),
+              "scale(1,-1)"))
+              ,$Svg$Attributes.opacity("0.5")
+              ,$Svg$Attributes.fill("black")
+              ,$Svg$Attributes.textAnchor("middle")
+              ,$Svg$Attributes.style(_U.eq(player.controlMode,
+              $Game$Models.FixedAngle) ? "text-decoration: underline" : "")]),
+      _U.list([$Svg.text(A2($Basics._op["++"],
+      $Basics.toString(absWindAngle),
+      "°"))]));
+      return A2($Svg.g,
+      _U.list([]),
+      _U.list([eqLine,windLine,windMarker,vmgLines,windAngleText]));
+   };
+   var renderNextGateLine = F2(function (course,state) {
+      var renderLine = function (gatePos) {
+         var a = A2($Game$Geo.angleBetween,state.position,gatePos);
+         var p1 = A2($Game$Geo.add,
+         state.position,
+         A2($Game$Geo.rotateDeg,a,50));
+         var p2 = A2($Game$Geo.add,
+         state.position,
+         A2($Game$Geo.rotateDeg,a,150));
+         return A2($Game$Render$SvgUtils.segment,
+         _U.list([$Svg$Attributes.stroke("white")
+                 ,$Svg$Attributes.strokeDasharray("4,4")
+                 ,$Svg$Attributes.opacity("0.5")
+                 ,$Svg$Attributes.markerEnd("url(#whiteFullArrow)")]),
+         {ctor: "_Tuple2",_0: p1,_1: p2});
+      };
+      var maybeGatePos = function () {
+         var _p0 = state.nextGate;
+         if (_p0.ctor === "Just") {
+               switch (_p0._0.ctor)
+               {case "StartLine": return $Maybe.Nothing;
+                  case "UpwindGate": return $Maybe.Just({ctor: "_Tuple2"
+                                                        ,_0: 0
+                                                        ,_1: course.upwind.y});
+                  default: return $Maybe.Just({ctor: "_Tuple2"
+                                              ,_0: 0
+                                              ,_1: course.downwind.y});}
+            } else {
+               return $Maybe.Nothing;
+            }
+      }();
+      var length = 100;
+      var ifFarEnough = function (gatePos) {
+         return _U.cmp(A2($Game$Geo.distance,state.position,gatePos),
+         length * 2.5) > 0 ? $Maybe.Just(gatePos) : $Maybe.Nothing;
+      };
+      return A2($Maybe.withDefault,
+      $Game$Render$SvgUtils.empty,
+      A2($Maybe.map,
+      renderLine,
+      A2($Maybe.andThen,maybeGatePos,ifFarEnough)));
+   });
+   var renderWindShadow = function (_p1) {
+      var _p2 = _p1;
+      var _p3 = _p2.position;
+      var arcAngles = _U.list([-15,-10,-5,0,5,10,15]);
+      var endPoints = A2($List.map,
+      function (a) {
+         return A2($Game$Geo.add,
+         _p3,
+         $Basics.fromPolar({ctor: "_Tuple2"
+                           ,_0: $Game$Models.windShadowLength
+                           ,_1: $Game$Core.toRadians(_p2.shadowDirection + a)}));
+      },
+      arcAngles);
+      return A2($Svg.polygon,
+      _U.list([$Game$Render$SvgUtils.polygonPoints(A2($List._op["::"],
+              _p3,
+              endPoints))
+              ,$Svg$Attributes.fill("white")
+              ,$Svg$Attributes.opacity("0.2")]),
+      _U.list([]));
+   };
+   var renderWake = function (wake) {
+      var opacityForIndex = function (i) {
+         return $Basics.toString(0.3 - 0.3 * $Basics.toFloat(i) / $Basics.toFloat($List.length(wake)));
+      };
+      var style = _U.list([$Svg$Attributes.stroke("white")
+                          ,$Svg$Attributes.strokeWidth("3")]);
+      var renderSegment = function (_p4) {
+         var _p5 = _p4;
+         return A2($Game$Render$SvgUtils.segment,
+         A2($Basics._op["++"],
+         style,
+         _U.list([$Svg$Attributes.opacity(opacityForIndex(_p5._0))])),
+         _p5._1);
+      };
+      var pairs = $List.isEmpty(wake) ? _U.list([]) : A2($List.indexedMap,
+      F2(function (v0,v1) {
+         return {ctor: "_Tuple2",_0: v0,_1: v1};
+      }),
+      A3($List.map2,
+      F2(function (v0,v1) {
+         return {ctor: "_Tuple2",_0: v0,_1: v1};
+      }),
+      wake,
+      A2($Maybe.withDefault,_U.list([]),$List.tail(wake))));
+      return A2($Svg.g,
+      _U.list([$Svg$Attributes.id("playerWake")]),
+      A2($List.map,renderSegment,pairs));
+   };
+   var hull = A2($Svg.path,
+   _U.list([$Svg$Attributes.d("m 2.7225237,6.9495942 -0.3358523,0.4979016 -0.3358428,0.497892 -0.8877132,0.010001 -0.88771318,0.010001 -0.0728664,0.092583 c -0.0926785,0.1177674 -0.19146251,0.1177674 -0.28409337,0 L -0.15442399,7.9653906 -1.0421373,7.9553896 -1.9298505,7.9453886 -2.2657029,7.4474966 -2.6015457,6.949595 c -1.2875317,0 -2.7611997,-0.024876 -2.7611997,-0.2267544 0,-0.3138177 -0.027908,-6.29461975 0.019431,-6.45277326 0.078486,-0.26201436 0.5078457,-0.37736241 1.6640027,-0.44706653 0.6810011,-0.0410529 0.7200061,-0.0474346 0.7347889,-0.12089161 0.00857,-0.0426721 0.093345,-0.4805184 0.1882717,-0.9730479 0.5755019,-2.9850283 1.84813092,-7.6669491 2.3453944,-8.6285389 0.1651544,-0.3193744 0.77738486,-0.3193744 0.94253925,0 0.49725385,0.9615898 1.76989225,5.6435106 2.34539425,8.6285389 0.094965,0.4925295 0.17968,0.93040437 0.1882621,0.9730479 0.014764,0.0734379 0.053816,0.0798197 0.7347889,0.12089161 1.156157,0.0697232 1.585507,0.18505217 1.6640027,0.44706653 0.055055,0.18363295 0.0019,6.11500536 0.0019,6.50549426 0,0.1725651 -1.4358401,0.1740326 -2.7435068,0.1740326 z")
+           ,$Svg$Attributes.fill("white")
+           ,$Svg$Attributes.fillOpacity("0.9")
+           ,$Svg$Attributes.stroke("black")
+           ,$Svg$Attributes.strokeWidth("1")
+           ,$Svg$Attributes.strokeOpacity("0.9")]),
+   _U.list([]));
+   var mainSail = A2($Svg.path,
+   _U.list([$Svg$Attributes.d("M 0.0441942,-1.5917173 C -1.0614896,0.82852063 -0.8611396,3.8386594 -1.0385631,5.822069")
+           ,$Svg$Attributes.stroke("grey")
+           ,$Svg$Attributes.strokeWidth("1")
+           ,$Svg$Attributes.strokeLinecap("round")
+           ,$Svg$Attributes.strokeOpacity("0.9")]),
+   _U.list([]));
+   var kite = A2($Svg.path,
+   _U.list([$Svg$Attributes.d("m 0.10669417,-16.214054 c -6.38323627,2.777619 -8.55435517,11.509426 -7.26189907,14.9672275 0.5646828,1.51073708 4.2485734,2.932296 7.19890196,2.20273303 0,-5.20417853 0.06299711,-13.36391553 0.06299711,-17.16996053 z")
+           ,$Svg$Attributes.fill("white")
+           ,$Svg$Attributes.fillOpacity("0.9")
+           ,$Svg$Attributes.stroke("black")
+           ,$Svg$Attributes.strokeWidth("1")
+           ,$Svg$Attributes.strokeOpacity("0.9")]),
+   _U.list([]));
+   var hullRotation = function (heading) {
+      return A3($Game$Render$SvgUtils.rotate_,180 - heading,0,0);
+   };
+   var renderPlayerHull = F2(function (heading,windAngle) {
+      var flip = A2($Basics._op["++"],
+      "scale(",
+      A2($Basics._op["++"],
+      $Basics.toString($Basics.abs(windAngle) / windAngle),
+      ", 1)"));
+      var sails = _U.cmp($Basics.abs(windAngle),
+      130) > 0 ? _U.list([mainSail,kite]) : _U.list([mainSail]);
+      var adjustedSails = A2($Svg.g,
+      _U.list([$Svg$Attributes.transform(flip)]),
+      sails);
+      return A2($Svg.g,
+      _U.list([$Svg$Attributes.transform(hullRotation(heading))]),
+      _U.list([hull,adjustedSails]));
+   });
+   var renderPlayer = F2(function (course,state) {
+      var wake = renderWake(state.trail);
+      var vmgSign = renderVmgSign(state);
+      var nextGateLine = A2(renderNextGateLine,course,state);
+      var angles = renderPlayerAngles(state);
+      var windShadow = renderWindShadow($Game$Models.asOpponentState(state));
+      var playerHull = A2(renderPlayerHull,
+      state.heading,
+      state.windAngle);
+      var movingPart = A2($Svg.g,
+      _U.list([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(state.position))]),
+      _U.list([angles,playerHull]));
+      return A2($Svg.g,
+      _U.list([]),
+      _U.list([wake,windShadow,nextGateLine,movingPart]));
+   });
+   var renderOpponent = function (_p6) {
+      var _p7 = _p6;
+      var _p8 = _p7.state;
+      var name = A2($Svg.text$,
+      _U.list([$Svg$Attributes.textAnchor("middle")
+              ,$Svg$Attributes.transform(A2($Basics._op["++"],
+              $Game$Render$SvgUtils.translatePoint(A2($Game$Geo.add,
+              _p8.position,
+              {ctor: "_Tuple2",_0: 0,_1: -25})),
+              "scale(1,-1)"))
+              ,$Svg$Attributes.opacity("0.3")]),
+      _U.list([$Svg.text(A2($Maybe.withDefault,
+      "Anonymous",
+      _p7.player.handle))]));
+      var shadow = renderWindShadow(_p8);
+      var hull = A2($Svg.g,
+      _U.list([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_p8.position))
+              ,$Svg$Attributes.opacity("0.5")]),
+      _U.list([A2(renderPlayerHull,_p8.heading,_p8.windAngle)]));
+      return A2($Svg.g,_U.list([]),_U.list([shadow,hull,name]));
+   };
+   var renderOpponents = F2(function (course,opponents) {
+      return A2($Svg.g,
+      _U.list([]),
+      A2($List.map,renderOpponent,opponents));
+   });
+   var renderPlayers = function (_p9) {
+      var _p10 = _p9;
+      var _p11 = _p10.course;
+      return A2($Svg.g,
+      _U.list([]),
+      _U.list([A2(renderOpponents,_p11,_p10.opponents)
+              ,A2(renderPlayer,_p11,_p10.playerState)]));
+   };
+   return _elm.Game.Render.Players.values = {_op: _op
+                                            ,renderPlayers: renderPlayers
+                                            ,renderOpponents: renderOpponents
+                                            ,renderOpponent: renderOpponent
+                                            ,renderPlayer: renderPlayer
+                                            ,renderPlayerHull: renderPlayerHull
+                                            ,hullRotation: hullRotation
+                                            ,kite: kite
+                                            ,mainSail: mainSail
+                                            ,hull: hull
+                                            ,renderWake: renderWake
+                                            ,renderWindShadow: renderWindShadow
+                                            ,renderNextGateLine: renderNextGateLine
+                                            ,renderPlayerAngles: renderPlayerAngles
+                                            ,renderWindArrow: renderWindArrow
+                                            ,renderVmgLine: renderVmgLine
+                                            ,renderVmgSign: renderVmgSign
+                                            ,vmgIcon: vmgIcon
+                                            ,badVmg: badVmg
+                                            ,goodVmg: goodVmg
+                                            ,warnVmg: warnVmg};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
+Elm.Game.Render.Dashboard.WindSpeedGraph = Elm.Game.Render.Dashboard.WindSpeedGraph || {};
+Elm.Game.Render.Dashboard.WindSpeedGraph.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
+   _elm.Game.Render.Dashboard.WindSpeedGraph = _elm.Game.Render.Dashboard.WindSpeedGraph || {};
+   if (_elm.Game.Render.Dashboard.WindSpeedGraph.values)
+   return _elm.Game.Render.Dashboard.WindSpeedGraph.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var maxSpeed = 25;
+   var windCoef = 3;
+   var speedY = function (speed) {
+      return (maxSpeed - speed) * windCoef;
+   };
+   var graphWidth = 200;
+   var timeScale = graphWidth / $Game$Models.windHistoryLength;
+   var renderMark = F2(function (solid,speed) {
+      return A2($Game$Render$SvgUtils.segment,
+      _U.list([$Svg$Attributes.stroke("black")
+              ,$Svg$Attributes.strokeWidth("1")
+              ,$Svg$Attributes.strokeDasharray(solid ? "" : "3,3")]),
+      {ctor: "_Tuple2"
+      ,_0: {ctor: "_Tuple2",_0: 0,_1: speedY(speed)}
+      ,_1: {ctor: "_Tuple2"
+           ,_0: $Game$Models.windHistoryLength * timeScale
+           ,_1: speedY(speed)}});
+   });
+   var yMarks = A2($Svg.g,
+   _U.list([$Svg$Attributes.opacity("0.2")]),
+   _U.list([A2(renderMark,true,10)
+           ,A2(renderMark,false,15)
+           ,A2(renderMark,true,20)
+           ,A2(renderMark,false,25)]));
+   var timeX = F3(function (init,now,t) {
+      var nowX = A2($Basics.min,
+      $Game$Models.windHistoryLength,
+      now - init);
+      return timeScale * (nowX - (now - t));
+   });
+   var render = F3(function (now,windSpeed,_p0) {
+      var _p1 = _p0;
+      var _p4 = _p1.init;
+      var currentY = speedY(windSpeed);
+      var currentX = A3(timeX,_p4,now,now);
+      var currentCircle = A2($Svg.circle,
+      _U.list([$Svg$Attributes.cx("0")
+              ,$Svg$Attributes.cy("0")
+              ,$Svg$Attributes.r("2")
+              ,$Svg$Attributes.fill("black")
+              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint({ctor: "_Tuple2"
+                                                                              ,_0: currentX
+                                                                              ,_1: currentY}))]),
+      _U.list([]));
+      var currentText = A2($Svg.text$,
+      _U.list([$Svg$Attributes.textAnchor("left")
+              ,$Svg$Attributes.x($Basics.toString(currentX + 8))
+              ,$Svg$Attributes.y($Basics.toString(currentY + 3))
+              ,$Svg$Attributes.fontSize("12px")]),
+      _U.list([$Svg.text(A2($Basics._op["++"],
+      $Basics.toString($Basics.round(windSpeed)),
+      "kn"))]));
+      var xMark = A2($Game$Render$SvgUtils.segment,
+      _U.list([$Svg$Attributes.stroke("black")
+              ,$Svg$Attributes.opacity("0.5")]),
+      {ctor: "_Tuple2"
+      ,_0: {ctor: "_Tuple2",_0: currentX,_1: speedY(8)}
+      ,_1: {ctor: "_Tuple2",_0: currentX,_1: speedY(27)}});
+      var steps = A2($List.map,
+      function (_p2) {
+         var _p3 = _p2;
+         return {ctor: "_Tuple2"
+                ,_0: A3(timeX,_p4,now,_p3.time)
+                ,_1: speedY(_p3.speed)};
+      },
+      _p1.samples);
+      var historyPath = A2($Svg.path,
+      _U.list([$Game$Render$SvgUtils.pathPoints(A2($List._op["::"],
+              {ctor: "_Tuple2",_0: currentX,_1: currentY},
+              steps))
+              ,$Svg$Attributes.stroke("url(#transparentToBlack)")
+              ,$Svg$Attributes.strokeWidth("1")
+              ,$Svg$Attributes.strokeOpacity("0.8")
+              ,$Svg$Attributes.fillOpacity("0")]),
+      _U.list([]));
+      return A2($Svg.g,
+      _U.list([$Svg$Attributes.opacity("0.5")]),
+      _U.list([yMarks,xMark,historyPath,currentCircle,currentText]));
+   });
+   return _elm.Game.Render.Dashboard.WindSpeedGraph.values = {_op: _op
+                                                             ,graphWidth: graphWidth
+                                                             ,windCoef: windCoef
+                                                             ,maxSpeed: maxSpeed
+                                                             ,timeScale: timeScale
+                                                             ,render: render
+                                                             ,yMarks: yMarks
+                                                             ,renderMark: renderMark
+                                                             ,speedY: speedY
+                                                             ,timeX: timeX};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
+Elm.Game.Render.Dashboard.WindOriginGauge = Elm.Game.Render.Dashboard.WindOriginGauge || {};
+Elm.Game.Render.Dashboard.WindOriginGauge.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
+   _elm.Game.Render.Dashboard.WindOriginGauge = _elm.Game.Render.Dashboard.WindOriginGauge || {};
+   if (_elm.Game.Render.Dashboard.WindOriginGauge.values)
+   return _elm.Game.Render.Dashboard.WindOriginGauge.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var renderWindOriginText = function (origin) {
+      return A2($Svg.text$,
+      _U.list([$Svg$Attributes.textAnchor("middle")
+              ,$Svg$Attributes.x("0")
+              ,$Svg$Attributes.y("15")
+              ,$Svg$Attributes.fontSize("12px")]),
+      _U.list([$Svg.text(A2($Basics._op["++"],
+      $Basics.toString($Basics.round(origin)),
+      "°"))]));
+   };
+   var renderWindArrow = A2($Svg.path,
+   _U.list([$Svg$Attributes.d("M 0,0 4,-15 0,-12 -4,-15 Z")
+           ,$Svg$Attributes.fill("black")]),
+   _U.list([]));
+   var windGaugeCy = 500;
+   var renderWindArc = A2($Game$Render$SvgUtils.arc,
+   _U.list([$Svg$Attributes.stroke("black")
+           ,$Svg$Attributes.strokeWidth("1")
+           ,$Svg$Attributes.fillOpacity("0")]),
+   {center: {ctor: "_Tuple2",_0: 0,_1: 500}
+   ,radius: windGaugeCy
+   ,fromAngle: -17.5
+   ,toAngle: 17.5});
+   var renderRuledArc = function () {
+      var tick = F2(function (l,r) {
+         return A2($Game$Render$SvgUtils.segment,
+         _U.list([$Svg$Attributes.stroke("black")
+                 ,$Svg$Attributes.opacity("0.5")
+                 ,$Svg$Attributes.transform(A3($Game$Render$SvgUtils.rotate_,
+                 r,
+                 0,
+                 windGaugeCy))]),
+         {ctor: "_Tuple2"
+         ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
+         ,_1: {ctor: "_Tuple2",_0: 0,_1: 0 - l}});
+      });
+      var smallTick = tick(5);
+      var bigTick = tick(7.5);
+      return A2($Svg.g,
+      _U.list([]),
+      _U.list([renderWindArc
+              ,smallTick(-15)
+              ,bigTick(-10)
+              ,smallTick(-5)
+              ,bigTick(0)
+              ,smallTick(5)
+              ,bigTick(10)
+              ,smallTick(15)]));
+   }();
+   var render = F2(function (h,windOrigin) {
+      var cy = $Basics.toFloat(h) / 2;
+      return A2($Svg.g,
+      _U.list([$Svg$Attributes.opacity("0.5")]),
+      _U.list([renderRuledArc
+              ,A2($Svg.g,
+              _U.list([$Svg$Attributes.transform(A3($Game$Render$SvgUtils.rotate_,
+              windOrigin,
+              0,
+              windGaugeCy))]),
+              _U.list([renderWindArrow,renderWindOriginText(windOrigin)]))]));
+   });
+   return _elm.Game.Render.Dashboard.WindOriginGauge.values = {_op: _op
+                                                              ,windGaugeCy: windGaugeCy
+                                                              ,render: render
+                                                              ,renderWindArrow: renderWindArrow
+                                                              ,renderWindOriginText: renderWindOriginText
+                                                              ,renderRuledArc: renderRuledArc
+                                                              ,renderWindArc: renderWindArc};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
+Elm.Game.Render.Dashboard.VmgBar = Elm.Game.Render.Dashboard.VmgBar || {};
+Elm.Game.Render.Dashboard.VmgBar.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
+   _elm.Game.Render.Dashboard.VmgBar = _elm.Game.Render.Dashboard.VmgBar || {};
+   if (_elm.Game.Render.Dashboard.VmgBar.values)
+   return _elm.Game.Render.Dashboard.VmgBar.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var vmgCoef = function (_p0) {
+      var _p1 = _p0;
+      var _p2 = _p1.vmgValue;
+      var theoricVmgValue = _U.cmp($Basics.abs(_p1.windAngle),
+      90) < 0 ? _p1.upwindVmg.value : _p1.downwindVmg.value;
+      var boundedVmgValue = _U.cmp(_p2,
+      theoricVmgValue) > 0 ? theoricVmgValue : _U.cmp(_p2,
+      0) < 0 ? 0 : _p2;
+      return boundedVmgValue / theoricVmgValue;
+   };
+   var barHeight = 5;
+   var barWidth = 150;
+   var render = function (playerState) {
+      var contour = A2($Svg.g,
+      _U.list([$Svg$Attributes.stroke("black")]),
+      _U.list([A2($Game$Render$SvgUtils.segment,
+              _U.list([$Svg$Attributes.stroke("black")]),
+              {ctor: "_Tuple2"
+              ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
+              ,_1: {ctor: "_Tuple2",_0: barWidth,_1: 0}})
+              ,A2($Game$Render$SvgUtils.segment,
+              _U.list([$Svg$Attributes.stroke("black")]),
+              {ctor: "_Tuple2"
+              ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
+              ,_1: {ctor: "_Tuple2",_0: 0,_1: barHeight}})
+              ,A2($Game$Render$SvgUtils.segment,
+              _U.list([$Svg$Attributes.stroke("black")]),
+              {ctor: "_Tuple2"
+              ,_0: {ctor: "_Tuple2",_0: barWidth,_1: 0}
+              ,_1: {ctor: "_Tuple2",_0: barWidth,_1: barHeight}})
+              ,A2($Game$Render$SvgUtils.segment,
+              _U.list([$Svg$Attributes.stroke("black")]),
+              {ctor: "_Tuple2"
+              ,_0: {ctor: "_Tuple2",_0: -5,_1: barHeight}
+              ,_1: {ctor: "_Tuple2",_0: barWidth + 5,_1: barHeight}})]));
+      var coef = vmgCoef(playerState);
+      var bar = A2($Svg.rect,
+      _U.list([$Svg$Attributes.width($Basics.toString(barWidth * coef))
+              ,$Svg$Attributes.height($Basics.toString(barHeight))
+              ,$Svg$Attributes.fill("black")
+              ,$Svg$Attributes.opacity("1")]),
+      _U.list([]));
+      var label = A2($Svg.text$,
+      _U.list([$Svg$Attributes.textAnchor("middle")
+              ,$Svg$Attributes.x($Basics.toString(barWidth * coef))
+              ,$Svg$Attributes.y($Basics.toString(barHeight + 15))
+              ,$Svg$Attributes.fontSize("12px")]),
+      _U.list([$Svg.text(A2($Basics._op["++"],
+      $Basics.toString($Basics.floor(coef * 100)),
+      "%"))]));
+      return A2($Svg.g,
+      _U.list([$Svg$Attributes.opacity("0.5")]),
+      _U.list([contour,bar,label]));
+   };
+   return _elm.Game.Render.Dashboard.VmgBar.values = {_op: _op
+                                                     ,barWidth: barWidth
+                                                     ,barHeight: barHeight
+                                                     ,render: render
+                                                     ,vmgCoef: vmgCoef};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
+Elm.Game.Render.Dashboard.Status = Elm.Game.Render.Dashboard.Status || {};
+Elm.Game.Render.Dashboard.Status.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
+   _elm.Game.Render.Dashboard.Status = _elm.Game.Render.Dashboard.Status || {};
+   if (_elm.Game.Render.Dashboard.Status.values)
+   return _elm.Game.Render.Dashboard.Status.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Core = Elm.Game.Core.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var getSubStatus = function (gameState) {
+      if ($Game$Models.isStarted(gameState)) {
+            var total = gameState.course.laps * 2 + 1;
+            var counter = $List.length(gameState.playerState.crossedGates);
+            return _U.eq(counter,total) ? "FINISHED" : A2($Basics._op["++"],
+            "gate ",
+            A2($Basics._op["++"],
+            $Basics.toString(counter),
+            A2($Basics._op["++"]," on ",$Basics.toString(total))));
+         } else {
+            var _p0 = gameState.timers.startTime;
+            if (_p0.ctor === "Just") {
+                  return "";
+               } else {
+                  return "press C to start countdown";
+               }
+         }
+   };
+   var renderSubStatus = function (gameState) {
+      return A2($Svg.text$,
+      _U.list([$Svg$Attributes.textAnchor("middle")
+              ,$Svg$Attributes.fontSize("18px")
+              ,$Svg$Attributes.opacity("0.5")
+              ,$Svg$Attributes.y("24")]),
+      _U.list([$Svg.text(getSubStatus(gameState))]));
+   };
+   var formatTimer = F2(function (t,showMs) {
+      var t$ = $Basics.abs($Basics.ceiling(t));
+      var totalSeconds = t$ / 1000 | 0;
+      var minutes = totalSeconds / 60 | 0;
+      var sMinutes = $Basics.toString(minutes);
+      var seconds = showMs || _U.cmp(t,0) < 1 ? A2($Basics.rem,
+      totalSeconds,
+      60) : A2($Basics.rem,totalSeconds,60) + 1;
+      var sSeconds = A3($String.padLeft,
+      2,
+      _U.chr("0"),
+      $Basics.toString(seconds));
+      var millis = A2($Basics.rem,t$,1000);
+      var sMillis = showMs ? A2($Basics._op["++"],
+      ".",
+      A3($String.padLeft,
+      3,
+      _U.chr("0"),
+      $Basics.toString(millis))) : "";
+      return A2($Basics._op["++"],
+      sMinutes,
+      A2($Basics._op["++"],
+      ":",
+      A2($Basics._op["++"],sSeconds,sMillis)));
+   });
+   var getTimer = function (_p1) {
+      var _p2 = _p1;
+      var _p5 = _p2.timers;
+      var _p4 = _p2.playerState;
+      var _p3 = _p5.startTime;
+      if (_p3.ctor === "Just") {
+            var timer = $Game$Core.isNothing(_p4.nextGate) ? A2($Maybe.withDefault,
+            0,
+            $List.head(_p4.crossedGates)) : _p3._0 - _p5.now;
+            return A2(formatTimer,timer,$Game$Core.isNothing(_p4.nextGate));
+         } else {
+            return "START PENDING";
+         }
+   };
+   var timerOpacity = function (gameState) {
+      if ($Game$Models.isStarted(gameState)) return 0.2; else {
+            var ms = A2($Basics._op["%"],
+            $Basics.floor($Game$Models.raceTime(gameState)),
+            1000);
+            return _U.cmp(ms,
+            500) < 0 ? 0.5 : (1000 - $Basics.toFloat(ms)) / 500 * 0.5;
+         }
+   };
+   var renderTimer = function (gameState) {
+      return A2($Svg.text$,
+      _U.list([$Svg$Attributes.textAnchor("middle")
+              ,$Svg$Attributes.fontSize("42px")
+              ,$Svg$Attributes.opacity($Basics.toString(timerOpacity(gameState)))]),
+      _U.list([$Svg.text(getTimer(gameState))]));
+   };
+   var render = function (gameState) {
+      return A2($Svg.g,
+      _U.list([]),
+      _U.list([renderTimer(gameState),renderSubStatus(gameState)]));
+   };
+   return _elm.Game.Render.Dashboard.Status.values = {_op: _op
+                                                     ,render: render
+                                                     ,renderTimer: renderTimer
+                                                     ,timerOpacity: timerOpacity
+                                                     ,getTimer: getTimer
+                                                     ,formatTimer: formatTimer
+                                                     ,renderSubStatus: renderSubStatus
+                                                     ,getSubStatus: getSubStatus};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
+Elm.Game.Render.Dashboard.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
+   if (_elm.Game.Render.Dashboard.values)
+   return _elm.Game.Render.Dashboard.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$Dashboard$Status = Elm.Game.Render.Dashboard.Status.make(_elm),
+   $Game$Render$Dashboard$VmgBar = Elm.Game.Render.Dashboard.VmgBar.make(_elm),
+   $Game$Render$Dashboard$WindOriginGauge = Elm.Game.Render.Dashboard.WindOriginGauge.make(_elm),
+   $Game$Render$Dashboard$WindSpeedGraph = Elm.Game.Render.Dashboard.WindSpeedGraph.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var renderDashboard = F2(function (_p1,_p0) {
+      var _p2 = _p1;
+      var _p6 = _p2._0;
+      var _p3 = _p0;
+      var _p5 = _p3.playerState;
+      var _p4 = _p3;
+      return A2($Svg.g,
+      _U.list([]),
+      _U.list([A2($Svg.g,
+              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+              _p6 / 2 | 0,
+              120))]),
+              _U.list([$Game$Render$Dashboard$Status.render(_p4)]))
+              ,A2($Svg.g,
+              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+              $Basics.toFloat(_p6) / 2,
+              30))]),
+              _U.list([A2($Game$Render$Dashboard$WindOriginGauge.render,
+              _p2._1,
+              _p5.windOrigin)]))
+              ,A2($Svg.g,
+              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+              30,
+              30))]),
+              _U.list([A3($Game$Render$Dashboard$WindSpeedGraph.render,
+              _p4.timers.now,
+              _p5.windSpeed,
+              _p4.windHistory)]))
+              ,A2($Svg.g,
+              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
+              $Basics.toFloat(_p6) - $Game$Render$Dashboard$VmgBar.barWidth - 40,
+              40))]),
+              _U.list([$Game$Render$Dashboard$VmgBar.render(_p4.playerState)]))]));
+   });
+   return _elm.Game.Render.Dashboard.values = {_op: _op
+                                              ,renderDashboard: renderDashboard};
+};
+Elm.Game = Elm.Game || {};
+Elm.Game.Render = Elm.Game.Render || {};
+Elm.Game.Render.All = Elm.Game.Render.All || {};
+Elm.Game.Render.All.make = function (_elm) {
+   "use strict";
+   _elm.Game = _elm.Game || {};
+   _elm.Game.Render = _elm.Game.Render || {};
+   _elm.Game.Render.All = _elm.Game.Render.All || {};
+   if (_elm.Game.Render.All.values)
+   return _elm.Game.Render.All.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Game$Models = Elm.Game.Models.make(_elm),
+   $Game$Render$Course = Elm.Game.Render.Course.make(_elm),
+   $Game$Render$Dashboard = Elm.Game.Render.Dashboard.make(_elm),
+   $Game$Render$Defs = Elm.Game.Render.Defs.make(_elm),
+   $Game$Render$Players = Elm.Game.Render.Players.make(_elm),
+   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Svg = Elm.Svg.make(_elm),
+   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
+   var _op = {};
+   var render = F2(function (_p1,_p0) {
+      var _p2 = _p1;
+      var _p6 = _p2._0;
+      var _p5 = _p2._1;
+      var _p3 = _p0;
+      var _p4 = _p3;
+      var cy = $Basics.toFloat(_p5) / 2 - $Basics.toFloat(_p5) - $Basics.snd(_p4.center);
+      var cx = $Basics.toFloat(_p6) / 2 - $Basics.fst(_p4.center);
+      return A2($Svg.svg,
+      _U.list([$Svg$Attributes.width($Basics.toString(_p6))
+              ,$Svg$Attributes.height($Basics.toString(_p5))
+              ,$Svg$Attributes.version("1.1")]),
+      _U.list([$Game$Render$Defs.renderDefs
+              ,A2($Svg.g,
+              _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
+              "scale(1,-1)",
+              A2($Game$Render$SvgUtils.translate,cx,cy)))]),
+              _U.list([$Game$Render$Course.renderCourse(_p4)
+                      ,$Game$Render$Players.renderPlayers(_p4)]))
+              ,A2($Game$Render$Dashboard.renderDashboard,
+              {ctor: "_Tuple2",_0: _p6,_1: _p5},
+              _p4)]));
+   });
+   return _elm.Game.Render.All.values = {_op: _op,render: render};
 };
 Elm.Game = Elm.Game || {};
 Elm.Game.Steps = Elm.Game.Steps || {};
@@ -20546,16 +21291,1563 @@ Elm.Game.Steps.make = function (_elm) {
                                    ,playerTimeStep: playerTimeStep
                                    ,raceEscapeStep: raceEscapeStep};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.Update = Elm.Screens.Game.Update || {};
-Elm.Screens.Game.Update.make = function (_elm) {
+Elm.StartApp = Elm.StartApp || {};
+Elm.StartApp.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.Update = _elm.Screens.Game.Update || {};
-   if (_elm.Screens.Game.Update.values)
-   return _elm.Screens.Game.Update.values;
+   _elm.StartApp = _elm.StartApp || {};
+   if (_elm.StartApp.values) return _elm.StartApp.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var start = function (config) {
+      var updateStep = F2(function (action,_p0) {
+         var _p1 = _p0;
+         var _p2 = A2(config.update,action,_p1._0);
+         var newModel = _p2._0;
+         var additionalEffects = _p2._1;
+         return {ctor: "_Tuple2"
+                ,_0: newModel
+                ,_1: $Effects.batch(_U.list([_p1._1,additionalEffects]))};
+      });
+      var update = F2(function (actions,_p3) {
+         var _p4 = _p3;
+         return A3($List.foldl,
+         updateStep,
+         {ctor: "_Tuple2",_0: _p4._0,_1: $Effects.none},
+         actions);
+      });
+      var messages = $Signal.mailbox(_U.list([]));
+      var singleton = function (action) {
+         return _U.list([action]);
+      };
+      var address = A2($Signal.forwardTo,messages.address,singleton);
+      var inputs = $Signal.mergeMany(A2($List._op["::"],
+      messages.signal,
+      A2($List.map,$Signal.map(singleton),config.inputs)));
+      var effectsAndModel = A3($Signal.foldp,
+      update,
+      config.init,
+      inputs);
+      var model = A2($Signal.map,$Basics.fst,effectsAndModel);
+      return {html: A2($Signal.map,config.view(address),model)
+             ,model: model
+             ,tasks: A2($Signal.map,
+             function (_p5) {
+                return A2($Effects.toTask,messages.address,$Basics.snd(_p5));
+             },
+             effectsAndModel)};
+   };
+   var App = F3(function (a,b,c) {
+      return {html: a,model: b,tasks: c};
+   });
+   var Config = F4(function (a,b,c,d) {
+      return {init: a,update: b,view: c,inputs: d};
+   });
+   return _elm.StartApp.values = {_op: _op
+                                 ,start: start
+                                 ,Config: Config
+                                 ,App: App};
+};
+Elm.Native.Http = {};
+Elm.Native.Http.make = function(localRuntime) {
+
+	localRuntime.Native = localRuntime.Native || {};
+	localRuntime.Native.Http = localRuntime.Native.Http || {};
+	if (localRuntime.Native.Http.values)
+	{
+		return localRuntime.Native.Http.values;
+	}
+
+	var Dict = Elm.Dict.make(localRuntime);
+	var List = Elm.List.make(localRuntime);
+	var Maybe = Elm.Maybe.make(localRuntime);
+	var Task = Elm.Native.Task.make(localRuntime);
+
+
+	function send(settings, request)
+	{
+		return Task.asyncFunction(function(callback) {
+			var req = new XMLHttpRequest();
+
+			// start
+			if (settings.onStart.ctor === 'Just')
+			{
+				req.addEventListener('loadStart', function() {
+					var task = settings.onStart._0;
+					Task.spawn(task);
+				});
+			}
+
+			// progress
+			if (settings.onProgress.ctor === 'Just')
+			{
+				req.addEventListener('progress', function(event) {
+					var progress = !event.lengthComputable
+						? Maybe.Nothing
+						: Maybe.Just({
+							_: {},
+							loaded: event.loaded,
+							total: event.total
+						});
+					var task = settings.onProgress._0(progress);
+					Task.spawn(task);
+				});
+			}
+
+			// end
+			req.addEventListener('error', function() {
+				return callback(Task.fail({ ctor: 'RawNetworkError' }));
+			});
+
+			req.addEventListener('timeout', function() {
+				return callback(Task.fail({ ctor: 'RawTimeout' }));
+			});
+
+			req.addEventListener('load', function() {
+				return callback(Task.succeed(toResponse(req)));
+			});
+
+			req.open(request.verb, request.url, true);
+
+			// set all the headers
+			function setHeader(pair) {
+				req.setRequestHeader(pair._0, pair._1);
+			}
+			A2(List.map, setHeader, request.headers);
+
+			// set the timeout
+			req.timeout = settings.timeout;
+
+			// enable this withCredentials thing
+			req.withCredentials = settings.withCredentials;
+
+			// ask for a specific MIME type for the response
+			if (settings.desiredResponseType.ctor === 'Just')
+			{
+				req.overrideMimeType(settings.desiredResponseType._0);
+			}
+
+			// actuall send the request
+			if(request.body.ctor === "BodyFormData")
+			{
+				req.send(request.body.formData)
+			}
+			else
+			{
+				req.send(request.body._0);
+			}
+		});
+	}
+
+
+	// deal with responses
+
+	function toResponse(req)
+	{
+		var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
+		var response = tag === 'Blob' ? req.response : req.responseText;
+		return {
+			_: {},
+			status: req.status,
+			statusText: req.statusText,
+			headers: parseHeaders(req.getAllResponseHeaders()),
+			url: req.responseURL,
+			value: { ctor: tag, _0: response }
+		};
+	}
+
+
+	function parseHeaders(rawHeaders)
+	{
+		var headers = Dict.empty;
+
+		if (!rawHeaders)
+		{
+			return headers;
+		}
+
+		var headerPairs = rawHeaders.split('\u000d\u000a');
+		for (var i = headerPairs.length; i--; )
+		{
+			var headerPair = headerPairs[i];
+			var index = headerPair.indexOf('\u003a\u0020');
+			if (index > 0)
+			{
+				var key = headerPair.substring(0, index);
+				var value = headerPair.substring(index + 2);
+
+				headers = A3(Dict.update, key, function(oldValue) {
+					if (oldValue.ctor === 'Just')
+					{
+						return Maybe.Just(value + ', ' + oldValue._0);
+					}
+					return Maybe.Just(value);
+				}, headers);
+			}
+		}
+
+		return headers;
+	}
+
+
+	function multipart(dataList)
+	{
+		var formData = new FormData();
+
+		while (dataList.ctor !== '[]')
+		{
+			var data = dataList._0;
+			if (data.ctor === 'StringData')
+			{
+				formData.append(data._0, data._1);
+			}
+			else
+			{
+				var fileName = data._1.ctor === 'Nothing'
+					? undefined
+					: data._1._0;
+				formData.append(data._0, data._2, fileName);
+			}
+			dataList = dataList._1;
+		}
+
+		return { ctor: 'BodyFormData', formData: formData };
+	}
+
+
+	function uriEncode(string)
+	{
+		return encodeURIComponent(string);
+	}
+
+	function uriDecode(string)
+	{
+		return decodeURIComponent(string);
+	}
+
+	return localRuntime.Native.Http.values = {
+		send: F2(send),
+		multipart: multipart,
+		uriEncode: uriEncode,
+		uriDecode: uriDecode
+	};
+};
+
+Elm.Http = Elm.Http || {};
+Elm.Http.make = function (_elm) {
+   "use strict";
+   _elm.Http = _elm.Http || {};
+   if (_elm.Http.values) return _elm.Http.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Http = Elm.Native.Http.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var send = $Native$Http.send;
+   var BadResponse = F2(function (a,b) {
+      return {ctor: "BadResponse",_0: a,_1: b};
+   });
+   var UnexpectedPayload = function (a) {
+      return {ctor: "UnexpectedPayload",_0: a};
+   };
+   var handleResponse = F2(function (handle,response) {
+      if (_U.cmp(200,
+      response.status) < 1 && _U.cmp(response.status,300) < 0) {
+            var _p0 = response.value;
+            if (_p0.ctor === "Text") {
+                  return handle(_p0._0);
+               } else {
+                  return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
+               }
+         } else return $Task.fail(A2(BadResponse,
+         response.status,
+         response.statusText));
+   });
+   var NetworkError = {ctor: "NetworkError"};
+   var Timeout = {ctor: "Timeout"};
+   var promoteError = function (rawError) {
+      var _p1 = rawError;
+      if (_p1.ctor === "RawTimeout") {
+            return Timeout;
+         } else {
+            return NetworkError;
+         }
+   };
+   var fromJson = F2(function (decoder,response) {
+      var decode = function (str) {
+         var _p2 = A2($Json$Decode.decodeString,decoder,str);
+         if (_p2.ctor === "Ok") {
+               return $Task.succeed(_p2._0);
+            } else {
+               return $Task.fail(UnexpectedPayload(_p2._0));
+            }
+      };
+      return A2($Task.andThen,
+      A2($Task.mapError,promoteError,response),
+      handleResponse(decode));
+   });
+   var RawNetworkError = {ctor: "RawNetworkError"};
+   var RawTimeout = {ctor: "RawTimeout"};
+   var Blob = function (a) {    return {ctor: "Blob",_0: a};};
+   var Text = function (a) {    return {ctor: "Text",_0: a};};
+   var Response = F5(function (a,b,c,d,e) {
+      return {status: a,statusText: b,headers: c,url: d,value: e};
+   });
+   var defaultSettings = {timeout: 0
+                         ,onStart: $Maybe.Nothing
+                         ,onProgress: $Maybe.Nothing
+                         ,desiredResponseType: $Maybe.Nothing
+                         ,withCredentials: false};
+   var post = F3(function (decoder,url,body) {
+      var request = {verb: "POST"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: body};
+      return A2(fromJson,decoder,A2(send,defaultSettings,request));
+   });
+   var Settings = F5(function (a,b,c,d,e) {
+      return {timeout: a
+             ,onStart: b
+             ,onProgress: c
+             ,desiredResponseType: d
+             ,withCredentials: e};
+   });
+   var multipart = $Native$Http.multipart;
+   var FileData = F3(function (a,b,c) {
+      return {ctor: "FileData",_0: a,_1: b,_2: c};
+   });
+   var BlobData = F3(function (a,b,c) {
+      return {ctor: "BlobData",_0: a,_1: b,_2: c};
+   });
+   var blobData = BlobData;
+   var StringData = F2(function (a,b) {
+      return {ctor: "StringData",_0: a,_1: b};
+   });
+   var stringData = StringData;
+   var BodyBlob = function (a) {
+      return {ctor: "BodyBlob",_0: a};
+   };
+   var BodyFormData = {ctor: "BodyFormData"};
+   var ArrayBuffer = {ctor: "ArrayBuffer"};
+   var BodyString = function (a) {
+      return {ctor: "BodyString",_0: a};
+   };
+   var string = BodyString;
+   var Empty = {ctor: "Empty"};
+   var empty = Empty;
+   var getString = function (url) {
+      var request = {verb: "GET"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: empty};
+      return A2($Task.andThen,
+      A2($Task.mapError,
+      promoteError,
+      A2(send,defaultSettings,request)),
+      handleResponse($Task.succeed));
+   };
+   var get = F2(function (decoder,url) {
+      var request = {verb: "GET"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: empty};
+      return A2(fromJson,decoder,A2(send,defaultSettings,request));
+   });
+   var Request = F4(function (a,b,c,d) {
+      return {verb: a,headers: b,url: c,body: d};
+   });
+   var uriDecode = $Native$Http.uriDecode;
+   var uriEncode = $Native$Http.uriEncode;
+   var queryEscape = function (string) {
+      return A2($String.join,
+      "+",
+      A2($String.split,"%20",uriEncode(string)));
+   };
+   var queryPair = function (_p3) {
+      var _p4 = _p3;
+      return A2($Basics._op["++"],
+      queryEscape(_p4._0),
+      A2($Basics._op["++"],"=",queryEscape(_p4._1)));
+   };
+   var url = F2(function (baseUrl,args) {
+      var _p5 = args;
+      if (_p5.ctor === "[]") {
+            return baseUrl;
+         } else {
+            return A2($Basics._op["++"],
+            baseUrl,
+            A2($Basics._op["++"],
+            "?",
+            A2($String.join,"&",A2($List.map,queryPair,args))));
+         }
+   });
+   var TODO_implement_file_in_another_library = {ctor: "TODO_implement_file_in_another_library"};
+   var TODO_implement_blob_in_another_library = {ctor: "TODO_implement_blob_in_another_library"};
+   return _elm.Http.values = {_op: _op
+                             ,getString: getString
+                             ,get: get
+                             ,post: post
+                             ,send: send
+                             ,url: url
+                             ,uriEncode: uriEncode
+                             ,uriDecode: uriDecode
+                             ,empty: empty
+                             ,string: string
+                             ,multipart: multipart
+                             ,stringData: stringData
+                             ,defaultSettings: defaultSettings
+                             ,fromJson: fromJson
+                             ,Request: Request
+                             ,Settings: Settings
+                             ,Response: Response
+                             ,Text: Text
+                             ,Blob: Blob
+                             ,Timeout: Timeout
+                             ,NetworkError: NetworkError
+                             ,UnexpectedPayload: UnexpectedPayload
+                             ,BadResponse: BadResponse
+                             ,RawTimeout: RawTimeout
+                             ,RawNetworkError: RawNetworkError};
+};
+Elm.ServerApi = Elm.ServerApi || {};
+Elm.ServerApi.make = function (_elm) {
+   "use strict";
+   _elm.ServerApi = _elm.ServerApi || {};
+   if (_elm.ServerApi.values) return _elm.ServerApi.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Decoders = Elm.Decoders.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Encoders = Elm.Encoders.make(_elm),
+   $Http = Elm.Http.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var serverError = A2($Dict.singleton,
+   "global",
+   _U.list(["Unexpected server response."]));
+   var errorsDecoder = $Json$Decode.dict($Json$Decode.list($Json$Decode.string));
+   var handleResponse = F2(function (decoder,response) {
+      var _p0 = _U.cmp(200,
+      response.status) < 1 && _U.cmp(response.status,300) < 0;
+      if (_p0 === false) {
+            var _p1 = {ctor: "_Tuple2"
+                      ,_0: response.status
+                      ,_1: response.value};
+            if (_p1.ctor === "_Tuple2" && _p1._0 === 400 && _p1._1.ctor === "Text")
+            {
+                  var _p2 = A2($Json$Decode.decodeString,
+                  errorsDecoder,
+                  _p1._1._0);
+                  if (_p2.ctor === "Ok") {
+                        return $Result.Err(_p2._0);
+                     } else {
+                        return $Result.Err(serverError);
+                     }
+               } else {
+                  return $Result.Err(serverError);
+               }
+         } else {
+            var _p3 = response.value;
+            if (_p3.ctor === "Text") {
+                  return A2($Result.formatError,
+                  function (_p4) {
+                     return serverError;
+                  },
+                  A2($Json$Decode.decodeString,decoder,_p3._0));
+               } else {
+                  return $Result.Err(serverError);
+               }
+         }
+   });
+   var handleResult = F2(function (decoder,result) {
+      var _p5 = result;
+      if (_p5.ctor === "Ok") {
+            return A2(handleResponse,decoder,_p5._0);
+         } else {
+            return $Result.Err(serverError);
+         }
+   });
+   var jsonRequest = F2(function (url,jsonBody) {
+      return {verb: "POST"
+             ,headers: _U.list([{ctor: "_Tuple2"
+                                ,_0: "Content-Type"
+                                ,_1: "application/json"}])
+             ,url: url
+             ,body: $Http.string(A2($Json$Encode.encode,0,jsonBody))};
+   });
+   var postJson = F3(function (decoder,url,jsonBody) {
+      return A2($Task.map,
+      handleResult(decoder),
+      $Task.toResult(A2($Http.send,
+      $Http.defaultSettings,
+      A2(jsonRequest,url,jsonBody))));
+   });
+   var getJson = F2(function (decoder,path) {
+      return A2($Task.map,
+      $Result.formatError(function (e) {
+         return A2($Debug.log,$Basics.toString(e),{ctor: "_Tuple0"});
+      }),
+      $Task.toResult(A2($Http.get,decoder,path)));
+   });
+   var deleteDraft = function (id) {
+      return A3(postJson,
+      $Json$Decode.succeed(id),
+      A2($Basics._op["++"],
+      "/api/track/",
+      A2($Basics._op["++"],id,"/delete")),
+      $Json$Encode.$null);
+   };
+   var publishTrack = function (id) {
+      return A3(postJson,
+      $Decoders.trackDecoder,
+      A2($Basics._op["++"],
+      "/api/track/",
+      A2($Basics._op["++"],id,"/publish")),
+      $Json$Encode.$null);
+   };
+   var saveTrack = F3(function (id,name,course) {
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "course"
+                                              ,_1: $Encoders.courseEncoder(course)}
+                                             ,{ctor: "_Tuple2",_0: "name",_1: $Json$Encode.string(name)}]));
+      return A3(postJson,
+      $Decoders.trackDecoder,
+      A2($Basics._op["++"],"/api/track/",id),
+      body);
+   });
+   var createTrack = function (name) {
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "name"
+                                              ,_1: $Json$Encode.string(name)}]));
+      return A3(postJson,$Decoders.trackDecoder,"/api/track",body);
+   };
+   var postLogout = A3(postJson,
+   $Decoders.playerDecoder,
+   "/api/logout",
+   $Json$Encode.$null);
+   var postLogin = F2(function (email,password) {
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "email"
+                                              ,_1: $Json$Encode.string(email)}
+                                             ,{ctor: "_Tuple2"
+                                              ,_0: "password"
+                                              ,_1: $Json$Encode.string(password)}]));
+      return A3(postJson,$Decoders.playerDecoder,"/api/login",body);
+   });
+   var postRegister = F3(function (email,handle,password) {
+      return A3(postJson,
+      $Decoders.playerDecoder,
+      "/api/register",
+      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                   ,_0: "email"
+                                   ,_1: $Json$Encode.string(email)}
+                                  ,{ctor: "_Tuple2",_0: "handle",_1: $Json$Encode.string(handle)}
+                                  ,{ctor: "_Tuple2"
+                                   ,_0: "password"
+                                   ,_1: $Json$Encode.string(password)}])));
+   });
+   var postHandle = function (handle) {
+      return A3(postJson,
+      $Decoders.playerDecoder,
+      "/api/setHandle",
+      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                   ,_0: "handle"
+                                   ,_1: $Json$Encode.string(handle)}])));
+   };
+   var loadAdminData = A2(getJson,
+   $Decoders.adminDataDecoder,
+   "/api/admin");
+   var getDrafts = A2(getJson,
+   $Json$Decode.list($Decoders.trackDecoder),
+   "/api/drafts");
+   var getLiveTrack = function (id) {
+      return A2(getJson,
+      $Decoders.liveTrackDecoder,
+      A2($Basics._op["++"],"/api/liveTrack/",id));
+   };
+   var getTrack = function (id) {
+      return A2(getJson,
+      $Decoders.trackDecoder,
+      A2($Basics._op["++"],"/api/track/",id));
+   };
+   var getLiveStatus = A2(getJson,
+   $Decoders.liveStatusDecoder,
+   "/api/liveStatus");
+   var getPlayer = function (handle) {
+      return A2(getJson,
+      $Decoders.playerDecoder,
+      A2($Basics._op["++"],"/api/players/",handle));
+   };
+   return _elm.ServerApi.values = {_op: _op
+                                  ,getPlayer: getPlayer
+                                  ,getLiveStatus: getLiveStatus
+                                  ,getTrack: getTrack
+                                  ,getLiveTrack: getLiveTrack
+                                  ,getDrafts: getDrafts
+                                  ,loadAdminData: loadAdminData
+                                  ,postHandle: postHandle
+                                  ,postRegister: postRegister
+                                  ,postLogin: postLogin
+                                  ,postLogout: postLogout
+                                  ,createTrack: createTrack
+                                  ,saveTrack: saveTrack
+                                  ,publishTrack: publishTrack
+                                  ,deleteDraft: deleteDraft
+                                  ,getJson: getJson
+                                  ,postJson: postJson
+                                  ,jsonRequest: jsonRequest
+                                  ,handleResult: handleResult
+                                  ,handleResponse: handleResponse
+                                  ,errorsDecoder: errorsDecoder
+                                  ,serverError: serverError};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.UpdateUtils = Elm.Page.UpdateUtils || {};
+Elm.Page.UpdateUtils.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.UpdateUtils = _elm.Page.UpdateUtils || {};
+   if (_elm.Page.UpdateUtils.values)
+   return _elm.Page.UpdateUtils.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Route = Elm.Route.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $TransitRouter = Elm.TransitRouter.make(_elm);
+   var _op = {};
+   var screenAddr = function (toScreenAction) {
+      return A2($Signal.forwardTo,
+      $AppTypes.appActionsAddress,
+      function (_p0) {
+         return $AppTypes.ScreenAction(toScreenAction(_p0));
+      });
+   };
+   var always = F2(function (action,effect) {
+      return A2($Effects.map,
+      function (_p1) {
+         return action;
+      },
+      effect);
+   });
+   var setPlayer = function (player) {
+      return $Effects.task(A2($Signal.send,
+      $AppTypes.appActionsAddress,
+      $AppTypes.SetPlayer(player)));
+   };
+   var redirect = function (route) {
+      return $Effects.task(A2($Signal.send,
+      $TransitRouter.pushPathAddress,
+      $Route.toPath(route)));
+   };
+   return _elm.Page.UpdateUtils.values = {_op: _op
+                                         ,redirect: redirect
+                                         ,setPlayer: setPlayer
+                                         ,always: always
+                                         ,screenAddr: screenAddr};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Home = Elm.Page.Home || {};
+Elm.Page.Home.Update = Elm.Page.Home.Update || {};
+Elm.Page.Home.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Home = _elm.Page.Home || {};
+   _elm.Page.Home.Update = _elm.Page.Home.Update || {};
+   if (_elm.Page.Home.Update.values)
+   return _elm.Page.Home.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Task$Extra = Elm.Task.Extra.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var refreshLiveStatus = A2($Task.map,
+   $Page$Home$Model.SetLiveStatus,
+   $ServerApi.getLiveStatus);
+   var update = F2(function (action,screen) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "SetLiveStatus": var liveStatus = A2($Result.withDefault,
+           screen.liveStatus,
+           _p0._0);
+           return A2($Response.taskRes,
+           _U.update(screen,{liveStatus: liveStatus}),
+           A2($Task$Extra.delay,5 * $Time.second,refreshLiveStatus));
+         case "SetHandle": return A2($Response.res,
+           _U.update(screen,{handle: _p0._0}),
+           $Effects.none);
+         case "SubmitHandle": return A2($Response.taskRes,
+           screen,
+           A2($Task.map,
+           $Page$Home$Model.SubmitHandleResult,
+           $ServerApi.postHandle(screen.handle)));
+         case "SubmitHandleResult": return A2($Response.res,
+           screen,
+           A2($Page$UpdateUtils.always,
+           $Page$Home$Model.NoOp,
+           A2($Result.withDefault,
+           $Effects.none,
+           A2($Result.map,$Page$UpdateUtils.setPlayer,_p0._0))));
+         case "FocusTrack": return A2($Response.res,
+           _U.update(screen,{trackFocus: _p0._0}),
+           $Effects.none);
+         default: return A2($Response.res,screen,$Effects.none);}
+   });
+   var mount = function (player) {
+      return A2($Response.taskRes,
+      $Page$Home$Model.initial(player),
+      refreshLiveStatus);
+   };
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.HomeAction);
+   return _elm.Page.Home.Update.values = {_op: _op
+                                         ,addr: addr
+                                         ,mount: mount
+                                         ,update: update
+                                         ,refreshLiveStatus: refreshLiveStatus};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Register = Elm.Page.Register || {};
+Elm.Page.Register.Update = Elm.Page.Register.Update || {};
+Elm.Page.Register.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Register = _elm.Page.Register || {};
+   _elm.Page.Register.Update = _elm.Page.Register.Update || {};
+   if (_elm.Page.Register.Update.values)
+   return _elm.Page.Register.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Form = Elm.Form.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var submitTask = function (np) {
+      return A2($Task.map,
+      $Page$Register$Model.SubmitResult,
+      A3($ServerApi.postRegister,np.email,np.handle,np.password));
+   };
+   var update = F2(function (action,screen) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "FormAction": var newForm = A2($Form.update,
+           _p0._0,
+           screen.form);
+           return A2($Response.res,
+           _U.update(screen,{form: newForm}),
+           $Effects.none);
+         case "Submit": return A2($Response.taskRes,
+           _U.update(screen,{loading: true}),
+           submitTask(_p0._0));
+         case "SubmitResult": var _p1 = _p0._0;
+           if (_p1.ctor === "Ok") {
+                 var effect = A2($Page$UpdateUtils.always,
+                 $Page$Register$Model.NoOp,
+                 $Page$UpdateUtils.setPlayer(_p1._0));
+                 var newScreen = _U.update(screen,{loading: false});
+                 return A2($Response.res,newScreen,effect);
+              } else {
+                 return A2($Response.res,
+                 _U.update(screen,{loading: false,serverErrors: _p1._0}),
+                 $Effects.none);
+              }
+         default: return A2($Response.res,screen,$Effects.none);}
+   });
+   var mount = A2($Response.res,
+   $Page$Register$Model.initial,
+   $Effects.none);
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.RegisterAction);
+   return _elm.Page.Register.Update.values = {_op: _op
+                                             ,addr: addr
+                                             ,mount: mount
+                                             ,update: update
+                                             ,submitTask: submitTask};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Login = Elm.Page.Login || {};
+Elm.Page.Login.Update = Elm.Page.Login.Update || {};
+Elm.Page.Login.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Login = _elm.Page.Login || {};
+   _elm.Page.Login.Update = _elm.Page.Login.Update || {};
+   if (_elm.Page.Login.Update.values)
+   return _elm.Page.Login.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var submitTask = function (screen) {
+      return A2($Task.map,
+      $Page$Login$Model.SubmitResult,
+      A2($ServerApi.postLogin,screen.email,screen.password));
+   };
+   var update = F2(function (action,screen) {
+      var _p0 = action;
+      switch (_p0.ctor)
+      {case "SetEmail": return A2($Response.res,
+           _U.update(screen,{email: _p0._0}),
+           $Effects.none);
+         case "SetPassword": return A2($Response.res,
+           _U.update(screen,{password: _p0._0}),
+           $Effects.none);
+         case "Submit": return A2($Response.taskRes,
+           _U.update(screen,{loading: true}),
+           submitTask(screen));
+         case "SubmitResult": var _p1 = _p0._0;
+           if (_p1.ctor === "Ok") {
+                 var effect = A2($Page$UpdateUtils.always,
+                 $Page$Login$Model.NoOp,
+                 $Page$UpdateUtils.setPlayer(_p1._0));
+                 var newScreen = _U.update(screen,{loading: false,error: false});
+                 return A2($Response.res,newScreen,effect);
+              } else {
+                 return A2($Response.res,
+                 _U.update(screen,{loading: false,error: true}),
+                 $Effects.none);
+              }
+         default: return A2($Response.res,screen,$Effects.none);}
+   });
+   var mount = A2($Response.res,
+   $Page$Login$Model.initial,
+   $Effects.none);
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.LoginAction);
+   return _elm.Page.Login.Update.values = {_op: _op
+                                          ,addr: addr
+                                          ,mount: mount
+                                          ,update: update
+                                          ,submitTask: submitTask};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.ShowTrack = Elm.Page.ShowTrack || {};
+Elm.Page.ShowTrack.Update = Elm.Page.ShowTrack.Update || {};
+Elm.Page.ShowTrack.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ShowTrack = _elm.Page.ShowTrack || {};
+   _elm.Page.ShowTrack.Update = _elm.Page.ShowTrack.Update || {};
+   if (_elm.Page.ShowTrack.Update.values)
+   return _elm.Page.ShowTrack.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var loadLiveTrack = function (id) {
+      return A2($Task.map,
+      $Page$ShowTrack$Model.LiveTrackResult,
+      $ServerApi.getLiveTrack(id));
+   };
+   var update = F2(function (action,_p0) {
+      var _p1 = _p0;
+      var _p10 = _p1;
+      var _p9 = _p1.courseControl;
+      var _p2 = action;
+      switch (_p2.ctor)
+      {case "LiveTrackResult": var _p3 = _p2._0;
+           if (_p3.ctor === "Ok") {
+                 return A2($Response.res,
+                 _U.update(_p10,{liveTrack: $Maybe.Just(_p3._0)}),
+                 $Effects.none);
+              } else {
+                 return A2($Response.res,
+                 _U.update(_p10,{notFound: true}),
+                 $Effects.none);
+              }
+         case "SetOverCourse": return A2($Response.res,
+           _U.update(_p10,{courseControl: _U.update(_p9,{over: _p2._0})}),
+           $Effects.none);
+         case "MouseAction": var _p8 = _p2._0;
+           var _p4 = _p9.center;
+           var x = _p4._0;
+           var y = _p4._1;
+           var _p5 = function () {
+              var _p6 = _p8;
+              switch (_p6.ctor)
+              {case "StartAt": return {ctor: "_Tuple2",_0: 0,_1: 0};
+                 case "MoveFromTo": return _p9.dragging ? {ctor: "_Tuple2"
+                                                          ,_0: $Basics.toFloat(_p6._1._0 - _p6._0._0) / _p9.scale
+                                                          ,_1: $Basics.toFloat(_p6._0._1 - _p6._1._1) / _p9.scale} : {ctor: "_Tuple2"
+                                                                                                                     ,_0: 0
+                                                                                                                     ,_1: 0};
+                 default: return {ctor: "_Tuple2",_0: 0,_1: 0};}
+           }();
+           var dx = _p5._0;
+           var dy = _p5._1;
+           var newCenter = {ctor: "_Tuple2",_0: x + dx,_1: y + dy};
+           var dragging = function () {
+              var _p7 = _p8;
+              switch (_p7.ctor)
+              {case "StartAt": return _p9.over;
+                 case "MoveFromTo": return _p9.dragging;
+                 default: return false;}
+           }();
+           var newControl = _U.update(_p9,
+           {center: newCenter,dragging: dragging});
+           return A2($Response.res,
+           _U.update(_p10,{courseControl: newControl}),
+           $Effects.none);
+         default: return A2($Response.res,_p10,$Effects.none);}
+   });
+   var mouseAction = $Page$ShowTrack$Model.MouseAction;
+   var mount = function (slug) {
+      return A2($Response.taskRes,
+      $Page$ShowTrack$Model.initial,
+      loadLiveTrack(slug));
+   };
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.ShowTrackAction);
+   return _elm.Page.ShowTrack.Update.values = {_op: _op
+                                              ,addr: addr
+                                              ,mount: mount
+                                              ,mouseAction: mouseAction
+                                              ,update: update
+                                              ,loadLiveTrack: loadLiveTrack};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.EditTrack = Elm.Page.EditTrack || {};
+Elm.Page.EditTrack.FormUpdate = Elm.Page.EditTrack.FormUpdate || {};
+Elm.Page.EditTrack.FormUpdate.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.EditTrack = _elm.Page.EditTrack || {};
+   _elm.Page.EditTrack.FormUpdate = _elm.Page.EditTrack.FormUpdate || {};
+   if (_elm.Page.EditTrack.FormUpdate.values)
+   return _elm.Page.EditTrack.FormUpdate.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var updateWindGen = F2(function (update,course) {
+      return _U.update(course,
+      {windGenerator: update(course.windGenerator)});
+   });
+   var updateGustGen = F2(function (update,course) {
+      return _U.update(course,
+      {gustGenerator: update(course.gustGenerator)});
+   });
+   var updateGateWidth = F2(function (w,_p0) {
+      var _p1 = _p0;
+      var newUpwind = _U.update(_p1.upwind,
+      {width: $Basics.toFloat(w)});
+      var newDownwind = _U.update(_p1.downwind,
+      {width: $Basics.toFloat(w)});
+      return _U.update(_p1,{downwind: newDownwind,upwind: newUpwind});
+   });
+   var updateDownwindY = F2(function (y,_p2) {
+      var _p3 = _p2;
+      return _U.update(_p3,
+      {downwind: _U.update(_p3.downwind,{y: $Basics.toFloat(y)})});
+   });
+   var updateUpwindY = F2(function (y,_p4) {
+      var _p5 = _p4;
+      return _U.update(_p5,
+      {upwind: _U.update(_p5.upwind,{y: $Basics.toFloat(y)})});
+   });
+   var update = F2(function (fu,course) {
+      var _p6 = fu;
+      switch (_p6.ctor)
+      {case "SetUpwindY": return A2(updateUpwindY,_p6._0,course);
+         case "SetDownwindY": return A2(updateDownwindY,_p6._0,course);
+         case "SetGateWidth": return A2(updateGateWidth,_p6._0,course);
+         case "SetLaps": return _U.update(course,{laps: _p6._0});
+         case "UpdateGustGen": return A2(updateGustGen,_p6._0,course);
+         case "SetWindSpeed": return _U.update(course,
+           {windSpeed: _p6._0});
+         case "SetWindW1": return A2(updateWindGen,
+           function (g) {
+              return _U.update(g,{wavelength1: _p6._0});
+           },
+           course);
+         case "SetWindA1": return A2(updateWindGen,
+           function (g) {
+              return _U.update(g,{amplitude1: _p6._0});
+           },
+           course);
+         case "SetWindW2": return A2(updateWindGen,
+           function (g) {
+              return _U.update(g,{wavelength2: _p6._0});
+           },
+           course);
+         default: return A2(updateWindGen,
+           function (g) {
+              return _U.update(g,{amplitude2: _p6._0});
+           },
+           course);}
+   });
+   return _elm.Page.EditTrack.FormUpdate.values = {_op: _op
+                                                  ,update: update
+                                                  ,updateUpwindY: updateUpwindY
+                                                  ,updateDownwindY: updateDownwindY
+                                                  ,updateGateWidth: updateGateWidth
+                                                  ,updateGustGen: updateGustGen
+                                                  ,updateWindGen: updateWindGen};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.EditTrack = Elm.Page.EditTrack || {};
+Elm.Page.EditTrack.GridUpdate = Elm.Page.EditTrack.GridUpdate || {};
+Elm.Page.EditTrack.GridUpdate.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.EditTrack = _elm.Page.EditTrack || {};
+   _elm.Page.EditTrack.GridUpdate = _elm.Page.EditTrack.GridUpdate || {};
+   if (_elm.Page.EditTrack.GridUpdate.values)
+   return _elm.Page.EditTrack.GridUpdate.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $CoreExtra = Elm.CoreExtra.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var withinWindow = F2(function (_p1,_p0) {
+      var _p2 = _p1;
+      var _p3 = _p0;
+      var _p4 = _p3._1;
+      var yWindow = {ctor: "_Tuple2",_0: 0,_1: _p4};
+      var xWindow = {ctor: "_Tuple2"
+                    ,_0: $Constants.sidebarWidth
+                    ,_1: _p2._0 + $Constants.sidebarWidth};
+      return A2($CoreExtra.within,
+      xWindow,
+      _p3._0) && A2($CoreExtra.within,yWindow,_p4);
+   });
+   var updateCenter = F3(function (event,courseDims,_p5) {
+      var _p6 = _p5;
+      var _p13 = _p6.center;
+      var _p7 = function () {
+         var _p8 = event;
+         switch (_p8.ctor)
+         {case "StartAt": return {ctor: "_Tuple2",_0: 0,_1: 0};
+            case "MoveFromTo": var _p12 = _p8._1._1;
+              var _p11 = _p8._0._1;
+              var _p10 = _p8._1._0;
+              var _p9 = _p8._0._0;
+              return A2(withinWindow,
+              courseDims,
+              {ctor: "_Tuple2",_0: _p9,_1: _p11}) && A2(withinWindow,
+              courseDims,
+              {ctor: "_Tuple2",_0: _p10,_1: _p12}) ? {ctor: "_Tuple2"
+                                                     ,_0: _p10 - _p9
+                                                     ,_1: _p11 - _p12} : {ctor: "_Tuple2",_0: 0,_1: 0};
+            default: return {ctor: "_Tuple2",_0: 0,_1: 0};}
+      }();
+      var dx = _p7._0;
+      var dy = _p7._1;
+      var newCenter = {ctor: "_Tuple2"
+                      ,_0: $Basics.fst(_p13) + $Basics.toFloat(dx)
+                      ,_1: $Basics.snd(_p13) + $Basics.toFloat(dy)};
+      return _U.update(_p6,{center: newCenter});
+   });
+   var clickPoint = F3(function (_p15,courseDims,_p14) {
+      var _p16 = _p15;
+      var _p17 = _p14;
+      var _p21 = _p17._1;
+      var _p20 = _p17._0;
+      if (A2(withinWindow,
+      courseDims,
+      {ctor: "_Tuple2",_0: _p20,_1: _p21})) {
+            var _p18 = _p16.center;
+            var cx = _p18._0;
+            var cy = _p18._1;
+            var _p19 = courseDims;
+            var w = _p19._0;
+            var h = _p19._1;
+            var x$ = $Basics.toFloat(_p20 - $Constants.sidebarWidth) - cx - $Basics.toFloat(w) / 2;
+            var y$ = $Basics.toFloat(0 - _p21) - cy + $Basics.toFloat(h) / 2;
+            return $Maybe.Just({ctor: "_Tuple2",_0: x$,_1: y$});
+         } else return $Maybe.Nothing;
+   });
+   var getMouseEventTiles = F3(function (editor,courseDims,event) {
+      var tileCoords = function (_p22) {
+         return A2($Maybe.map,
+         $Hexagons.pointToAxial($Constants.hexRadius),
+         A3(clickPoint,editor,courseDims,_p22));
+      };
+      var _p23 = event;
+      switch (_p23.ctor)
+      {case "StartAt": var _p24 = tileCoords(_p23._0);
+           if (_p24.ctor === "Just") {
+                 return _U.list([_p24._0]);
+              } else {
+                 return _U.list([]);
+              }
+         case "MoveFromTo": var _p25 = {ctor: "_Tuple2"
+                                       ,_0: tileCoords(_p23._0)
+                                       ,_1: tileCoords(_p23._1)};
+           if (_p25.ctor === "_Tuple2" && _p25._0.ctor === "Just" && _p25._1.ctor === "Just")
+           {
+                 var _p27 = _p25._1._0;
+                 var _p26 = _p25._0._0;
+                 return _U.eq(_p26,
+                 _p27) ? _U.list([_p26]) : A2($Hexagons.axialLine,_p26,_p27);
+              } else {
+                 return _U.list([]);
+              }
+         default: return _U.list([]);}
+   });
+   var withGrid = F2(function (grid,_p28) {
+      var _p29 = _p28;
+      var newCourse = _U.update(_p29.course,{grid: grid});
+      return _U.update(_p29,{course: newCourse});
+   });
+   var updateTileAction = F4(function (kind,
+   event,
+   courseDims,
+   editor) {
+      var coordsList = A3(getMouseEventTiles,
+      editor,
+      courseDims,
+      event);
+      var newGrid = A3($List.foldl,
+      $Hexagons$Grid.set(kind),
+      editor.course.grid,
+      coordsList);
+      return A2(withGrid,newGrid,editor);
+   });
+   var deleteTileAction = F3(function (event,courseDims,editor) {
+      var coordsList = A3(getMouseEventTiles,
+      editor,
+      courseDims,
+      event);
+      var newGrid = A3($List.foldl,
+      $Hexagons$Grid.$delete,
+      editor.course.grid,
+      coordsList);
+      return A2(withGrid,newGrid,editor);
+   });
+   var mouseAction = F3(function (event,dims,editor) {
+      var courseDims = $Page$EditTrack$Model.getCourseDims(dims);
+      var _p30 = $Page$EditTrack$Model.realMode(editor);
+      switch (_p30.ctor)
+      {case "CreateTile": return A4(updateTileAction,
+           _p30._0,
+           event,
+           courseDims,
+           editor);
+         case "Erase": return A3(deleteTileAction,
+           event,
+           courseDims,
+           editor);
+         default: return A3(updateCenter,event,courseDims,editor);}
+   });
+   return _elm.Page.EditTrack.GridUpdate.values = {_op: _op
+                                                  ,mouseAction: mouseAction
+                                                  ,deleteTileAction: deleteTileAction
+                                                  ,updateTileAction: updateTileAction
+                                                  ,withGrid: withGrid
+                                                  ,getMouseEventTiles: getMouseEventTiles
+                                                  ,clickPoint: clickPoint
+                                                  ,updateCenter: updateCenter
+                                                  ,withinWindow: withinWindow};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.EditTrack = Elm.Page.EditTrack || {};
+Elm.Page.EditTrack.Update = Elm.Page.EditTrack.Update || {};
+Elm.Page.EditTrack.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.EditTrack = _elm.Page.EditTrack || {};
+   _elm.Page.EditTrack.Update = _elm.Page.EditTrack.Update || {};
+   if (_elm.Page.EditTrack.Update.values)
+   return _elm.Page.EditTrack.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Array = Elm.Array.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Constants = Elm.Constants.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $DragAndDrop = Elm.DragAndDrop.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Hexagons = Elm.Hexagons.make(_elm),
+   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
+   $Keyboard = Elm.Keyboard.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Page$EditTrack$FormUpdate = Elm.Page.EditTrack.FormUpdate.make(_elm),
+   $Page$EditTrack$GridUpdate = Elm.Page.EditTrack.GridUpdate.make(_elm),
+   $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Route = Elm.Route.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Task$Extra = Elm.Task.Extra.make(_elm);
+   var _op = {};
+   var staticRes = function (m) {
+      return A2($Response.res,m,$Effects.none);
+   };
+   var getRaceArea = function (grid) {
+      var getLast = function (arr) {
+         return A2($Maybe.withDefault,
+         0,
+         A2($Array.get,$Array.length(arr) - 1,arr));
+      };
+      var getFirst = function (arr) {
+         return A2($Maybe.withDefault,0,A2($Array.get,0,arr));
+      };
+      var waterPoints = A2($List.map,
+      function (t) {
+         return A2($Hexagons.axialToPoint,
+         $Constants.hexRadius,
+         t.coords);
+      },
+      A2($List.filter,
+      function (t) {
+         return _U.eq(t.content,$Models.Water);
+      },
+      $Hexagons$Grid.list(grid)));
+      var xVals = $Array.fromList($List.sort(A2($List.map,
+      $Basics.fst,
+      waterPoints)));
+      var right = getLast(xVals) + $Constants.hexRadius;
+      var left = getFirst(xVals) - $Constants.hexRadius;
+      var yVals = $Array.fromList($List.sort(A2($List.map,
+      $Basics.snd,
+      waterPoints)));
+      var top = getLast(yVals) + $Constants.hexRadius;
+      var bottom = getFirst(yVals) - $Constants.hexRadius;
+      return A2($Models.RaceArea,
+      {ctor: "_Tuple2",_0: right,_1: top},
+      {ctor: "_Tuple2",_0: left,_1: bottom});
+   };
+   var saveEditor = F2(function (id,_p0) {
+      var _p1 = _p0;
+      var _p2 = _p1.course;
+      return A3($ServerApi.saveTrack,
+      id,
+      _p1.name,
+      _U.update(_p2,{area: getRaceArea(_p2.grid)}));
+   });
+   var save = F3(function ($try,id,editor) {
+      return A2($Task.map,
+      $Page$EditTrack$Model.SaveResult($try),
+      A2($Task$Extra.delay,500,A2(saveEditor,id,editor)));
+   });
+   var publish = F2(function (id,_p3) {
+      var _p4 = _p3;
+      return A2($Task.map,
+      $Page$EditTrack$Model.SaveResult(true),
+      A2($Task.andThen,
+      A2($Task$Extra.delay,500,A2(saveEditor,id,_p4)),
+      function (_p5) {
+         return $ServerApi.publishTrack(id);
+      }));
+   });
+   var loadTrack = function (id) {
+      return A2($Task.map,
+      $Page$EditTrack$Model.LoadTrack,
+      $ServerApi.getTrack(id));
+   };
+   var updateBlocks = F2(function (b,_p6) {
+      var _p7 = _p6;
+      var _p9 = _p7.blocks;
+      var newBlocks = function () {
+         var _p8 = b;
+         switch (_p8.ctor)
+         {case "Name": return _U.update(_p9,
+              {name: $Basics.not(_p9.name)});
+            case "Surface": return _U.update(_p9,
+              {surface: $Basics.not(_p9.surface)});
+            case "Gates": return _U.update(_p9,
+              {gates: $Basics.not(_p9.gates)});
+            case "Wind": return _U.update(_p9,
+              {wind: $Basics.not(_p9.wind)});
+            default: return _U.update(_p9,{gusts: $Basics.not(_p9.gusts)});}
+      }();
+      return _U.update(_p7,{blocks: newBlocks});
+   });
+   var updateRangeEnd = F2(function (end,range) {
+      return _U.update(range,{end: end});
+   });
+   var updateRangeStart = F2(function (start,range) {
+      return _U.update(range,{start: start});
+   });
+   var updateOriginVariation = F2(function (updateRange,_p10) {
+      var _p11 = _p10;
+      return _U.update(_p11,
+      {originVariation: updateRange(_p11.originVariation)});
+   });
+   var updateSpeedVariation = F2(function (updateRange,_p12) {
+      var _p13 = _p12;
+      return _U.update(_p13,
+      {speedVariation: updateRange(_p13.speedVariation)});
+   });
+   var updateCourse = F2(function (update,editor) {
+      return _U.update(editor,{course: update(editor.course)});
+   });
+   var updateEditor = F2(function (update,screen) {
+      var newEditor = A2($Maybe.map,update,screen.editor);
+      return _U.update(screen,{editor: newEditor});
+   });
+   var update = F3(function (dims,action,screen) {
+      var _p14 = action;
+      switch (_p14.ctor)
+      {case "LoadTrack": var _p15 = _p14._0;
+           if (_p15.ctor === "Ok") {
+                 var _p16 = _p15._0;
+                 return staticRes(_U.update(screen,
+                 {track: $Maybe.Just(_p16)
+                 ,editor: $Maybe.Just($Page$EditTrack$Model.initialEditor(_p16))}));
+              } else {
+                 return staticRes(_U.update(screen,{notFound: true}));
+              }
+         case "ToggleBlock": return staticRes(A2(function (_p17) {
+              return updateEditor(updateBlocks(_p17));
+           },
+           _p14._0,
+           screen));
+         case "SetName": return staticRes(A2(updateEditor,
+           function (e) {
+              return _U.update(e,{name: _p14._0});
+           },
+           screen));
+         case "MouseAction": return staticRes(A2(updateEditor,
+           A2($Page$EditTrack$GridUpdate.mouseAction,_p14._0,dims),
+           screen));
+         case "SetMode": return staticRes(A2(updateEditor,
+           function (e) {
+              return _U.update(e,{mode: _p14._0});
+           },
+           screen));
+         case "AltMoveMode": return staticRes(A2(updateEditor,
+           function (e) {
+              return _U.update(e,{altMove: _p14._0});
+           },
+           screen));
+         case "FormAction": return staticRes(A2(function (_p18) {
+              return updateEditor(updateCourse($Page$EditTrack$FormUpdate.update(_p18)));
+           },
+           _p14._0,
+           screen));
+         case "Save": var _p19 = {ctor: "_Tuple2"
+                                 ,_0: screen.track
+                                 ,_1: screen.editor};
+           if (_p19.ctor === "_Tuple2" && _p19._0.ctor === "Just" && _p19._1.ctor === "Just")
+           {
+                 return A2($Response.taskRes,
+                 A2(updateEditor,
+                 function (e) {
+                    return _U.update(e,{saving: true});
+                 },
+                 screen),
+                 A3(save,_p14._0,_p19._0._0.id,_p19._1._0));
+              } else {
+                 return A2($Response.res,screen,$Effects.none);
+              }
+         case "SaveResult": var _p20 = _p14._1;
+           if (_p20.ctor === "Ok") {
+                 var effect = _p14._0 ? A2($Effects.map,
+                 function (_p21) {
+                    return $Page$EditTrack$Model.NoOp;
+                 },
+                 $Page$UpdateUtils.redirect($Route.PlayTrack(_p20._0.id))) : $Effects.none;
+                 var newScreen = A2(updateEditor,
+                 function (e) {
+                    return _U.update(e,{saving: false});
+                 },
+                 screen);
+                 return A2($Response.res,newScreen,effect);
+              } else {
+                 return A2($Response.res,screen,$Effects.none);
+              }
+         case "ConfirmPublish": return A2($Response.res,
+           A2(updateEditor,
+           function (e) {
+              return _U.update(e,
+              {confirmPublish: $Basics.not(e.confirmPublish)});
+           },
+           screen),
+           $Effects.none);
+         case "Publish": var _p22 = {ctor: "_Tuple2"
+                                    ,_0: screen.track
+                                    ,_1: screen.editor};
+           if (_p22.ctor === "_Tuple2" && _p22._0.ctor === "Just" && _p22._1.ctor === "Just")
+           {
+                 return A2($Response.taskRes,
+                 A2(updateEditor,
+                 function (e) {
+                    return _U.update(e,{saving: true});
+                 },
+                 screen),
+                 A2(publish,_p22._0._0.id,_p22._1._0));
+              } else {
+                 return A2($Response.res,screen,$Effects.none);
+              }
+         default: return A2($Response.res,screen,$Effects.none);}
+   });
+   var mount = function (id) {
+      return A2($Response.taskRes,
+      $Page$EditTrack$Model.initial,
+      loadTrack(id));
+   };
+   var mouseAction = $Page$EditTrack$Model.MouseAction;
+   var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
+   $Page$EditTrack$Model.AltMoveMode,
+   $Keyboard.shift)]));
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.EditTrackAction);
+   return _elm.Page.EditTrack.Update.values = {_op: _op
+                                              ,addr: addr
+                                              ,inputs: inputs
+                                              ,mouseAction: mouseAction
+                                              ,mount: mount
+                                              ,update: update
+                                              ,updateEditor: updateEditor
+                                              ,updateCourse: updateCourse
+                                              ,updateSpeedVariation: updateSpeedVariation
+                                              ,updateOriginVariation: updateOriginVariation
+                                              ,updateRangeStart: updateRangeStart
+                                              ,updateRangeEnd: updateRangeEnd
+                                              ,updateBlocks: updateBlocks
+                                              ,loadTrack: loadTrack
+                                              ,saveEditor: saveEditor
+                                              ,save: save
+                                              ,publish: publish
+                                              ,getRaceArea: getRaceArea
+                                              ,staticRes: staticRes};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.ShowProfile = Elm.Page.ShowProfile || {};
+Elm.Page.ShowProfile.Update = Elm.Page.ShowProfile.Update || {};
+Elm.Page.ShowProfile.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ShowProfile = _elm.Page.ShowProfile || {};
+   _elm.Page.ShowProfile.Update = _elm.Page.ShowProfile.Update || {};
+   if (_elm.Page.ShowProfile.Update.values)
+   return _elm.Page.ShowProfile.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $AppTypes = Elm.AppTypes.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Models = Elm.Models.make(_elm),
+   $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var update = F2(function (action,screen) {
+      var _p0 = action;
+      return A2($Response.res,screen,$Effects.none);
+   });
+   var mount = function (player) {
+      return A2($Response.res,
+      $Page$ShowProfile$Model.initial(player),
+      $Effects.none);
+   };
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.ShowProfileAction);
+   return _elm.Page.ShowProfile.Update.values = {_op: _op
+                                                ,addr: addr
+                                                ,mount: mount
+                                                ,update: update};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Game = Elm.Page.Game || {};
+Elm.Page.Game.Update = Elm.Page.Game.Update || {};
+Elm.Page.Game.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Game = _elm.Page.Game || {};
+   _elm.Page.Game.Update = _elm.Page.Game.Update || {};
+   if (_elm.Page.Game.Update.values)
+   return _elm.Page.Game.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -20566,10 +22858,10 @@ Elm.Screens.Game.Update.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm),
@@ -20584,10 +22876,10 @@ Elm.Screens.Game.Update.make = function (_elm) {
          return _U.update(gs,{timers: A2(updateTime,gs.timers,time)});
       });
    };
-   var pingServer = $Effects.tick($Screens$Game$Model.PingServer);
+   var pingServer = $Effects.tick($Page$Game$Model.PingServer);
    var loadLiveTrack = function (id) {
       return A2($Task.map,
-      $Screens$Game$Model.LoadLiveTrack,
+      $Page$Game$Model.LoadLiveTrack,
       $ServerApi.getLiveTrack(id));
    };
    var applyLiveTrack = F2(function (_p0,screen) {
@@ -20613,14 +22905,14 @@ Elm.Screens.Game.Update.make = function (_elm) {
    });
    var mount = function (id) {
       return A2($Response.taskRes,
-      $Screens$Game$Model.initial,
+      $Page$Game$Model.initial,
       loadLiveTrack(id));
    };
    var chat = $Signal.mailbox("");
    var sendMessage = function (content) {
-      return $String.isEmpty(content) ? $Task.succeed($Screens$Game$Model.NoOp) : A2($Task.map,
+      return $String.isEmpty(content) ? $Task.succeed($Page$Game$Model.NoOp) : A2($Task.map,
       function (_p4) {
-         return $Screens$Game$Model.NoOp;
+         return $Page$Game$Model.NoOp;
       },
       A2($Signal.send,chat.address,content));
    };
@@ -20631,7 +22923,7 @@ Elm.Screens.Game.Update.make = function (_elm) {
            if (_p6.ctor === "Ok") {
                  return A2($Response.res,
                  screen,
-                 $Effects.tick($Screens$Game$Model.InitGameState(_p6._0)));
+                 $Effects.tick($Page$Game$Model.InitGameState(_p6._0)));
               } else {
                  return A2($Response.res,
                  _U.update(screen,{notFound: true}),
@@ -20693,28 +22985,28 @@ Elm.Screens.Game.Update.make = function (_elm) {
            $Effects.none);
          default: return A2($Response.res,screen,$Effects.none);}
    });
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.GameAction);
-   return _elm.Screens.Game.Update.values = {_op: _op
-                                            ,addr: addr
-                                            ,chat: chat
-                                            ,mount: mount
-                                            ,update: update
-                                            ,applyLiveTrack: applyLiveTrack
-                                            ,loadLiveTrack: loadLiveTrack
-                                            ,pingServer: pingServer
-                                            ,sendMessage: sendMessage
-                                            ,updateTime: updateTime};
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.GameAction);
+   return _elm.Page.Game.Update.values = {_op: _op
+                                         ,addr: addr
+                                         ,chat: chat
+                                         ,mount: mount
+                                         ,update: update
+                                         ,applyLiveTrack: applyLiveTrack
+                                         ,loadLiveTrack: loadLiveTrack
+                                         ,pingServer: pingServer
+                                         ,sendMessage: sendMessage
+                                         ,updateTime: updateTime};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ListDrafts = Elm.Screens.ListDrafts || {};
-Elm.Screens.ListDrafts.Update = Elm.Screens.ListDrafts.Update || {};
-Elm.Screens.ListDrafts.Update.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.ListDrafts = Elm.Page.ListDrafts || {};
+Elm.Page.ListDrafts.Update = Elm.Page.ListDrafts.Update || {};
+Elm.Page.ListDrafts.Update.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ListDrafts = _elm.Screens.ListDrafts || {};
-   _elm.Screens.ListDrafts.Update = _elm.Screens.ListDrafts.Update || {};
-   if (_elm.Screens.ListDrafts.Update.values)
-   return _elm.Screens.ListDrafts.Update.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ListDrafts = _elm.Page.ListDrafts || {};
+   _elm.Page.ListDrafts.Update = _elm.Page.ListDrafts.Update || {};
+   if (_elm.Page.ListDrafts.Update.values)
+   return _elm.Page.ListDrafts.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -20722,22 +23014,22 @@ Elm.Screens.ListDrafts.Update.make = function (_elm) {
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$ListDrafts$Model = Elm.Screens.ListDrafts.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
    var deleteDraft = function (id) {
       return A2($Task.map,
-      $Screens$ListDrafts$Model.DeleteDraftResult,
+      $Page$ListDrafts$Model.DeleteDraftResult,
       $ServerApi.deleteDraft(id));
    };
    var loadDrafts = A2($Task.map,
-   $Screens$ListDrafts$Model.DraftsResult,
+   $Page$ListDrafts$Model.DraftsResult,
    $ServerApi.getDrafts);
    var update = F2(function (action,screen) {
       var _p0 = action;
@@ -20756,15 +23048,15 @@ Elm.Screens.ListDrafts.Update.make = function (_elm) {
          case "CreateDraft": return A2($Response.taskRes,
            screen,
            A2($Task.map,
-           $Screens$ListDrafts$Model.CreateDraftResult,
+           $Page$ListDrafts$Model.CreateDraftResult,
            $ServerApi.createTrack(screen.name)));
          case "CreateDraftResult": var _p2 = _p0._0;
            if (_p2.ctor === "Ok") {
                  return A2($Response.res,
                  screen,
-                 A2($Screens$UpdateUtils.always,
-                 $Screens$ListDrafts$Model.NoOp,
-                 $Screens$UpdateUtils.redirect($Routes.EditTrack(_p2._0.id))));
+                 A2($Page$UpdateUtils.always,
+                 $Page$ListDrafts$Model.NoOp,
+                 $Page$UpdateUtils.redirect($Route.EditTrack(_p2._0.id))));
               } else {
                  return A2($Response.res,screen,$Effects.none);
               }
@@ -20793,26 +23085,26 @@ Elm.Screens.ListDrafts.Update.make = function (_elm) {
          default: return A2($Response.res,screen,$Effects.none);}
    });
    var mount = A2($Response.taskRes,
-   $Screens$ListDrafts$Model.initial,
+   $Page$ListDrafts$Model.initial,
    loadDrafts);
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.ListDraftsAction);
-   return _elm.Screens.ListDrafts.Update.values = {_op: _op
-                                                  ,addr: addr
-                                                  ,mount: mount
-                                                  ,update: update
-                                                  ,loadDrafts: loadDrafts
-                                                  ,deleteDraft: deleteDraft};
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.ListDraftsAction);
+   return _elm.Page.ListDrafts.Update.values = {_op: _op
+                                               ,addr: addr
+                                               ,mount: mount
+                                               ,update: update
+                                               ,loadDrafts: loadDrafts
+                                               ,deleteDraft: deleteDraft};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Admin = Elm.Screens.Admin || {};
-Elm.Screens.Admin.Update = Elm.Screens.Admin.Update || {};
-Elm.Screens.Admin.Update.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Admin = Elm.Page.Admin || {};
+Elm.Page.Admin.Update = Elm.Page.Admin.Update || {};
+Elm.Page.Admin.Update.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Admin = _elm.Screens.Admin || {};
-   _elm.Screens.Admin.Update = _elm.Screens.Admin.Update || {};
-   if (_elm.Screens.Admin.Update.values)
-   return _elm.Screens.Admin.Update.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Admin = _elm.Page.Admin || {};
+   _elm.Page.Admin.Update = _elm.Page.Admin.Update || {};
+   if (_elm.Page.Admin.Update.values)
+   return _elm.Page.Admin.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -20821,16 +23113,16 @@ Elm.Screens.Admin.Update.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm);
    var _op = {};
    var refreshData = A2($Task.map,
-   $Screens$Admin$Model.RefreshDataResult,
+   $Page$Admin$Model.RefreshDataResult,
    $ServerApi.loadAdminData);
    var update = F2(function (action,screen) {
       var _p0 = action;
@@ -20849,7 +23141,7 @@ Elm.Screens.Admin.Update.make = function (_elm) {
          case "DeleteTrack": return A2($Response.taskRes,
            screen,
            A2($Task.map,
-           $Screens$Admin$Model.DeleteTrackResult,
+           $Page$Admin$Model.DeleteTrackResult,
            $ServerApi.deleteDraft(_p0._0)));
          case "DeleteTrackResult": var _p2 = _p0._0;
            if (_p2.ctor === "Ok") {
@@ -20867,20 +23159,20 @@ Elm.Screens.Admin.Update.make = function (_elm) {
          default: return A2($Response.res,screen,$Effects.none);}
    });
    var mount = A2($Response.taskRes,
-   $Screens$Admin$Model.initial,
+   $Page$Admin$Model.initial,
    refreshData);
-   var addr = $Screens$UpdateUtils.screenAddr($AppTypes.AdminAction);
-   return _elm.Screens.Admin.Update.values = {_op: _op
-                                             ,addr: addr
-                                             ,mount: mount
-                                             ,update: update
-                                             ,refreshData: refreshData};
+   var addr = $Page$UpdateUtils.screenAddr($AppTypes.AdminAction);
+   return _elm.Page.Admin.Update.values = {_op: _op
+                                          ,addr: addr
+                                          ,mount: mount
+                                          ,update: update
+                                          ,refreshData: refreshData};
 };
-Elm.AppUpdates = Elm.AppUpdates || {};
-Elm.AppUpdates.make = function (_elm) {
+Elm.Update = Elm.Update || {};
+Elm.Update.make = function (_elm) {
    "use strict";
-   _elm.AppUpdates = _elm.AppUpdates || {};
-   if (_elm.AppUpdates.values) return _elm.AppUpdates.values;
+   _elm.Update = _elm.Update || {};
+   if (_elm.Update.values) return _elm.Update.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -20888,19 +23180,19 @@ Elm.AppUpdates.make = function (_elm) {
    $Effects = Elm.Effects.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Admin$Update = Elm.Page.Admin.Update.make(_elm),
+   $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
+   $Page$Game$Update = Elm.Page.Game.Update.make(_elm),
+   $Page$Home$Update = Elm.Page.Home.Update.make(_elm),
+   $Page$ListDrafts$Update = Elm.Page.ListDrafts.Update.make(_elm),
+   $Page$Login$Update = Elm.Page.Login.Update.make(_elm),
+   $Page$Register$Update = Elm.Page.Register.Update.make(_elm),
+   $Page$ShowProfile$Update = Elm.Page.ShowProfile.Update.make(_elm),
+   $Page$ShowTrack$Update = Elm.Page.ShowTrack.Update.make(_elm),
+   $Page$UpdateUtils = Elm.Page.UpdateUtils.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Update = Elm.Screens.Admin.Update.make(_elm),
-   $Screens$EditTrack$Update = Elm.Screens.EditTrack.Update.make(_elm),
-   $Screens$Game$Update = Elm.Screens.Game.Update.make(_elm),
-   $Screens$Home$Update = Elm.Screens.Home.Update.make(_elm),
-   $Screens$ListDrafts$Update = Elm.Screens.ListDrafts.Update.make(_elm),
-   $Screens$Login$Update = Elm.Screens.Login.Update.make(_elm),
-   $Screens$Register$Update = Elm.Screens.Register.Update.make(_elm),
-   $Screens$ShowProfile$Update = Elm.Screens.ShowProfile.Update.make(_elm),
-   $Screens$ShowTrack$Update = Elm.Screens.ShowTrack.Update.make(_elm),
-   $Screens$UpdateUtils = Elm.Screens.UpdateUtils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
@@ -20980,40 +23272,37 @@ Elm.AppUpdates.make = function (_elm) {
       var _p3 = screenAction;
       switch (_p3.ctor)
       {case "HomeAction": return A2(applyHome,
-           A2($Screens$Home$Update.update,_p3._0,_p5.home),
+           A2($Page$Home$Update.update,_p3._0,_p5.home),
            _p4);
          case "LoginAction": return A2(applyLogin,
-           A2($Screens$Login$Update.update,_p3._0,_p5.login),
+           A2($Page$Login$Update.update,_p3._0,_p5.login),
            _p4);
          case "RegisterAction": return A2(applyRegister,
-           A2($Screens$Register$Update.update,_p3._0,_p5.register),
+           A2($Page$Register$Update.update,_p3._0,_p5.register),
            _p4);
          case "ShowTrackAction": return A2(applyShowTrack,
-           A2($Screens$ShowTrack$Update.update,_p3._0,_p5.showTrack),
+           A2($Page$ShowTrack$Update.update,_p3._0,_p5.showTrack),
            _p4);
          case "EditTrackAction": return A2(applyEditTrack,
-           A3($Screens$EditTrack$Update.update,
-           _p2.dims,
-           _p3._0,
-           _p5.editTrack),
+           A3($Page$EditTrack$Update.update,_p2.dims,_p3._0,_p5.editTrack),
            _p4);
          case "ShowProfileAction": return A2(applyShowProfile,
-           A2($Screens$ShowProfile$Update.update,_p3._0,_p5.showProfile),
+           A2($Page$ShowProfile$Update.update,_p3._0,_p5.showProfile),
            _p4);
          case "GameAction": return A2(applyGame,
-           A3($Screens$Game$Update.update,_p2.player,_p3._0,_p5.game),
+           A3($Page$Game$Update.update,_p2.player,_p3._0,_p5.game),
            _p4);
          case "ListDraftsAction": return A2(applyListDrafts,
-           A2($Screens$ListDrafts$Update.update,_p3._0,_p5.listDrafts),
+           A2($Page$ListDrafts$Update.update,_p3._0,_p5.listDrafts),
            _p4);
          default: return A2(applyAdmin,
-           A2($Screens$Admin$Update.update,_p3._0,_p5.admin),
+           A2($Page$Admin$Update.update,_p3._0,_p5.admin),
            _p4);}
    });
    var mountRoute = F3(function (prevRoute,newRoute,_p6) {
       var _p7 = _p6;
       var _p9 = _p7.player;
-      var routeTransition = A2($Routes.detectTransition,
+      var routeTransition = A2($Route.detectTransition,
       prevRoute,
       newRoute);
       var appState = _U.update(_p7,
@@ -21021,31 +23310,31 @@ Elm.AppUpdates.make = function (_elm) {
       var _p8 = newRoute;
       switch (_p8.ctor)
       {case "Home": return A2(applyHome,
-           $Screens$Home$Update.mount(_p9),
+           $Page$Home$Update.mount(_p9),
            appState);
          case "Login": return A2(applyLogin,
-           $Screens$Login$Update.mount,
+           $Page$Login$Update.mount,
            appState);
          case "Register": return A2(applyRegister,
-           $Screens$Register$Update.mount,
+           $Page$Register$Update.mount,
            appState);
          case "ShowProfile": return A2(applyShowProfile,
-           $Screens$ShowProfile$Update.mount(_p9),
+           $Page$ShowProfile$Update.mount(_p9),
            appState);
          case "ShowTrack": return A2(applyShowTrack,
-           $Screens$ShowTrack$Update.mount(_p8._0),
+           $Page$ShowTrack$Update.mount(_p8._0),
            appState);
          case "EditTrack": return A2(applyEditTrack,
-           $Screens$EditTrack$Update.mount(_p8._0),
+           $Page$EditTrack$Update.mount(_p8._0),
            appState);
          case "PlayTrack": return A2(applyGame,
-           $Screens$Game$Update.mount(_p8._0),
+           $Page$Game$Update.mount(_p8._0),
            appState);
          case "ListDrafts": return A2(applyListDrafts,
-           $Screens$ListDrafts$Update.mount,
+           $Page$ListDrafts$Update.mount,
            appState);
          case "Admin": return A2(applyAdmin,
-           $Screens$Admin$Update.mount,
+           $Page$Admin$Update.mount,
            appState);
          case "EmptyRoute": return A2($Response.res,
            appState,
@@ -21057,7 +23346,7 @@ Elm.AppUpdates.make = function (_elm) {
                          return {ctor: "_Tuple2",_0: 50,_1: 200};
                       })
                       ,actionWrapper: $AppTypes.RouterAction
-                      ,routeDecoder: $Routes.fromPath};
+                      ,routeDecoder: $Route.fromPath};
    var init = function (setup) {
       return A3($TransitRouter.init,
       routerConfig,
@@ -21079,7 +23368,7 @@ Elm.AppUpdates.make = function (_elm) {
            },
            A2($Response.res,
            _U.update(_p21,{player: _p15._0}),
-           $Screens$UpdateUtils.redirect($Routes.Home)));
+           $Page$UpdateUtils.redirect($Route.Home)));
          case "UpdateDims": return A2($Response.res,
            _U.update(_p21,{dims: _p15._0}),
            $Effects.none);
@@ -21087,10 +23376,10 @@ Elm.AppUpdates.make = function (_elm) {
               var _p17 = $TransitRouter.getRoute(_p21);
               switch (_p17.ctor)
               {case "EditTrack": return $Maybe.Just(function (_p18) {
-                      return $AppTypes.EditTrackAction($Screens$EditTrack$Update.mouseAction(_p18));
+                      return $AppTypes.EditTrackAction($Page$EditTrack$Update.mouseAction(_p18));
                    });
                  case "ShowTrack": return $Maybe.Just(function (_p19) {
-                      return $AppTypes.ShowTrackAction($Screens$ShowTrack$Update.mouseAction(_p19));
+                      return $AppTypes.ShowTrackAction($Page$ShowTrack$Update.mouseAction(_p19));
                    });
                  default: return $Maybe.Nothing;}
            }();
@@ -21104,31 +23393,85 @@ Elm.AppUpdates.make = function (_elm) {
          case "ScreenAction": return A2(updateScreen,_p15._0,_p21);
          default: return A2($Response.res,_p21,$Effects.none);}
    });
-   return _elm.AppUpdates.values = {_op: _op
-                                   ,routerConfig: routerConfig
-                                   ,init: init
-                                   ,update: update
-                                   ,mountRoute: mountRoute
-                                   ,updateScreen: updateScreen
-                                   ,logoutTask: logoutTask
-                                   ,applyHome: applyHome
-                                   ,applyLogin: applyLogin
-                                   ,applyRegister: applyRegister
-                                   ,applyShowProfile: applyShowProfile
-                                   ,applyShowTrack: applyShowTrack
-                                   ,applyEditTrack: applyEditTrack
-                                   ,applyGame: applyGame
-                                   ,applyListDrafts: applyListDrafts
-                                   ,applyAdmin: applyAdmin
-                                   ,applyScreen: applyScreen};
+   return _elm.Update.values = {_op: _op
+                               ,routerConfig: routerConfig
+                               ,init: init
+                               ,update: update
+                               ,mountRoute: mountRoute
+                               ,updateScreen: updateScreen
+                               ,logoutTask: logoutTask
+                               ,applyHome: applyHome
+                               ,applyLogin: applyLogin
+                               ,applyRegister: applyRegister
+                               ,applyShowProfile: applyShowProfile
+                               ,applyShowTrack: applyShowTrack
+                               ,applyEditTrack: applyEditTrack
+                               ,applyGame: applyGame
+                               ,applyListDrafts: applyListDrafts
+                               ,applyAdmin: applyAdmin
+                               ,applyScreen: applyScreen};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Utils = Elm.Screens.Utils || {};
-Elm.Screens.Utils.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Game = Elm.Page.Game || {};
+Elm.Page.Game.Decoders = Elm.Page.Game.Decoders || {};
+Elm.Page.Game.Decoders.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Utils = _elm.Screens.Utils || {};
-   if (_elm.Screens.Utils.values) return _elm.Screens.Utils.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Game = _elm.Page.Game || {};
+   _elm.Page.Game.Decoders = _elm.Page.Game.Decoders || {};
+   if (_elm.Page.Game.Decoders.values)
+   return _elm.Page.Game.Decoders.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Decoders = Elm.Decoders.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var specificActionDecoder = function (tag) {
+      var _p0 = tag;
+      switch (_p0)
+      {case "NoOp":
+         return $Json$Decode.succeed($Page$Game$Model.NoOp);
+         case "LiveTrack": return A2($Json$Decode.object1,
+           $Page$Game$Model.UpdateLiveTrack,
+           A2($Json$Decode._op[":="],
+           "liveTrack",
+           $Decoders.liveTrackDecoder));
+         case "Message": return A2($Json$Decode.object1,
+           $Page$Game$Model.NewMessage,
+           A2($Json$Decode._op[":="],"message",$Decoders.messageDecoder));
+         default: return $Json$Decode.fail(A2($Basics._op["++"],
+           tag,
+           " is not a recognized tag for actions"));}
+   };
+   var actionDecoder = A2($Json$Decode.andThen,
+   A2($Json$Decode._op[":="],"tag",$Json$Decode.string),
+   specificActionDecoder);
+   var decodeAction = function (value) {
+      var _p1 = A2($Json$Decode.decodeValue,actionDecoder,value);
+      if (_p1.ctor === "Err") {
+            return $Page$Game$Model.NoOp;
+         } else {
+            return _p1._0;
+         }
+   };
+   return _elm.Page.Game.Decoders.values = {_op: _op
+                                           ,decodeAction: decodeAction
+                                           ,actionDecoder: actionDecoder
+                                           ,specificActionDecoder: specificActionDecoder};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Utils = Elm.Page.Utils || {};
+Elm.Page.Utils.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Utils = _elm.Page.Utils || {};
+   if (_elm.Page.Utils.values) return _elm.Page.Utils.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
@@ -21142,7 +23485,7 @@ Elm.Screens.Utils.make = function (_elm) {
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $String = Elm.String.make(_elm),
    $TransitRouter = Elm.TransitRouter.make(_elm);
@@ -21398,53 +23741,52 @@ Elm.Screens.Utils.make = function (_elm) {
       });
    };
    var linkTo = F3(function (route,attrs,content) {
-      var path = $Routes.toPath(route);
+      var path = $Route.toPath(route);
       var linkAttrs = _U.list([$Html$Attributes.href(path)
                               ,onPathClick(path)]);
       return A2($Html.a,
       A2($Basics._op["++"],linkAttrs,attrs),
       content);
    });
-   return _elm.Screens.Utils.values = {_op: _op
-                                      ,linkTo: linkTo
-                                      ,onPathClick: onPathClick
-                                      ,onInput: onInput
-                                      ,onIntInput: onIntInput
-                                      ,intTargetValue: intTargetValue
-                                      ,onEnter: onEnter
-                                      ,eventOptions: eventOptions
-                                      ,isEnter: isEnter
-                                      ,container: container
-                                      ,containerFluid: containerFluid
-                                      ,row: row
-                                      ,col$: col$
-                                      ,fullWidth: fullWidth
-                                      ,hr$: hr$
-                                      ,dl$: dl$
-                                      ,abbr$: abbr$
-                                      ,fieldGroup: fieldGroup
-                                      ,actionGroup: actionGroup
-                                      ,formGroup: formGroup
-                                      ,textInput: textInput
-                                      ,passwordInput: passwordInput
-                                      ,playerWithAvatar: playerWithAvatar
-                                      ,avatarUrl: avatarUrl
-                                      ,playerHandle: playerHandle
-                                      ,rankingItem: rankingItem
-                                      ,moduleTitle: moduleTitle
-                                      ,formatTimer: formatTimer
-                                      ,colWidth: colWidth
-                                      ,errList: errList
-                                      ,errMsg: errMsg};
+   return _elm.Page.Utils.values = {_op: _op
+                                   ,linkTo: linkTo
+                                   ,onPathClick: onPathClick
+                                   ,onInput: onInput
+                                   ,onIntInput: onIntInput
+                                   ,intTargetValue: intTargetValue
+                                   ,onEnter: onEnter
+                                   ,eventOptions: eventOptions
+                                   ,isEnter: isEnter
+                                   ,container: container
+                                   ,containerFluid: containerFluid
+                                   ,row: row
+                                   ,col$: col$
+                                   ,fullWidth: fullWidth
+                                   ,hr$: hr$
+                                   ,dl$: dl$
+                                   ,abbr$: abbr$
+                                   ,fieldGroup: fieldGroup
+                                   ,actionGroup: actionGroup
+                                   ,formGroup: formGroup
+                                   ,textInput: textInput
+                                   ,passwordInput: passwordInput
+                                   ,playerWithAvatar: playerWithAvatar
+                                   ,avatarUrl: avatarUrl
+                                   ,playerHandle: playerHandle
+                                   ,rankingItem: rankingItem
+                                   ,moduleTitle: moduleTitle
+                                   ,formatTimer: formatTimer
+                                   ,colWidth: colWidth
+                                   ,errList: errList
+                                   ,errMsg: errMsg};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Sidebar = Elm.Screens.Sidebar || {};
-Elm.Screens.Sidebar.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Sidebar = Elm.Page.Sidebar || {};
+Elm.Page.Sidebar.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Sidebar = _elm.Screens.Sidebar || {};
-   if (_elm.Screens.Sidebar.values)
-   return _elm.Screens.Sidebar.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Sidebar = _elm.Page.Sidebar || {};
+   if (_elm.Page.Sidebar.values) return _elm.Page.Sidebar.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -21455,23 +23797,23 @@ Elm.Screens.Sidebar.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var userContent = function (player) {
       var adminLink = A2($Html.li,
       _U.list([]),
-      _U.list([A3($Screens$Utils.linkTo,
-      $Routes.Admin($Screens$Admin$Model.initialRoute),
+      _U.list([A3($Page$Utils.linkTo,
+      $Route.Admin($Page$Admin$Model.initialRoute),
       _U.list([]),
       _U.list([$Html.text("Admin")]))]));
       var draftsLink = A2($Html.li,
       _U.list([]),
-      _U.list([A3($Screens$Utils.linkTo,
-      $Routes.ListDrafts,
+      _U.list([A3($Page$Utils.linkTo,
+      $Route.ListDrafts,
       _U.list([]),
       _U.list([$Html.text("Your tracks")]))]));
       return _U.list([A2($Html.ul,
@@ -21479,8 +23821,8 @@ Elm.Screens.Sidebar.make = function (_elm) {
                      A2($List._op["::"],
                      A2($Html.li,
                      _U.list([]),
-                     _U.list([A3($Screens$Utils.linkTo,
-                     $Routes.Home,
+                     _U.list([A3($Page$Utils.linkTo,
+                     $Route.Home,
                      _U.list([]),
                      _U.list([$Html.text("Home")]))])),
                      A2($List._op["::"],
@@ -21498,26 +23840,26 @@ Elm.Screens.Sidebar.make = function (_elm) {
    _U.list([$Html$Attributes.$class("user-menu")]),
    _U.list([A2($Html.li,
            _U.list([]),
-           _U.list([A3($Screens$Utils.linkTo,
-           $Routes.Home,
+           _U.list([A3($Page$Utils.linkTo,
+           $Route.Home,
            _U.list([]),
            _U.list([$Html.text("Home")]))]))
            ,A2($Html.li,
            _U.list([]),
-           _U.list([A3($Screens$Utils.linkTo,
-           $Routes.Login,
+           _U.list([A3($Page$Utils.linkTo,
+           $Route.Login,
            _U.list([]),
            _U.list([$Html.text("Login")]))]))
            ,A2($Html.li,
            _U.list([]),
-           _U.list([A3($Screens$Utils.linkTo,
-           $Routes.Register,
+           _U.list([A3($Page$Utils.linkTo,
+           $Route.Register,
            _U.list([]),
            _U.list([$Html.text("Register")]))]))]))]);
    var logo = A2($Html.div,
    _U.list([$Html$Attributes.$class("logo")]),
-   _U.list([A3($Screens$Utils.linkTo,
-   $Routes.Home,
+   _U.list([A3($Page$Utils.linkTo,
+   $Route.Home,
    _U.list([]),
    _U.list([A2($Html.img,
    _U.list([$Html$Attributes.src("/assets/images/logo-header-2@2x.png")]),
@@ -21532,24 +23874,23 @@ Elm.Screens.Sidebar.make = function (_elm) {
               _U.list([$Html.text("Hello, ")
                       ,A2($Html.strong,
                       _U.list([]),
-                      _U.list([$Html.text($Screens$Utils.playerHandle(_p2))]))
+                      _U.list([$Html.text($Page$Utils.playerHandle(_p2))]))
                       ,$Html.text(".")]))]),
       _p2.guest ? guestContent : userContent(_p2));
    };
-   return _elm.Screens.Sidebar.values = {_op: _op
-                                        ,view: view
-                                        ,logo: logo
-                                        ,guestContent: guestContent
-                                        ,userContent: userContent};
+   return _elm.Page.Sidebar.values = {_op: _op
+                                     ,view: view
+                                     ,logo: logo
+                                     ,guestContent: guestContent
+                                     ,userContent: userContent};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Layout = Elm.Screens.Layout || {};
-Elm.Screens.Layout.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Layout = Elm.Page.Layout || {};
+Elm.Page.Layout.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Layout = _elm.Screens.Layout || {};
-   if (_elm.Screens.Layout.values)
-   return _elm.Screens.Layout.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Layout = _elm.Page.Layout || {};
+   if (_elm.Page.Layout.values) return _elm.Page.Layout.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -21559,9 +23900,9 @@ Elm.Screens.Layout.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Sidebar = Elm.Page.Sidebar.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $TransitStyle = Elm.TransitStyle.make(_elm);
    var _op = {};
@@ -21590,26 +23931,26 @@ Elm.Screens.Layout.make = function (_elm) {
       }();
       return A3(layout,
       name,
-      $Screens$Sidebar.view(ctx),
+      $Page$Sidebar.view(ctx),
       _U.list([A2($Html.div,
       _U.list([$Html$Attributes.$class("padded")
               ,$Html$Attributes.style(transitStyle)]),
       content)]));
    });
-   return _elm.Screens.Layout.values = {_op: _op
-                                       ,layoutWithNav: layoutWithNav
-                                       ,layout: layout};
+   return _elm.Page.Layout.values = {_op: _op
+                                    ,layoutWithNav: layoutWithNav
+                                    ,layout: layout};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Home = Elm.Screens.Home || {};
-Elm.Screens.Home.View = Elm.Screens.Home.View || {};
-Elm.Screens.Home.View.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Home = Elm.Page.Home || {};
+Elm.Page.Home.View = Elm.Page.Home.View || {};
+Elm.Page.Home.View.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Home = _elm.Screens.Home || {};
-   _elm.Screens.Home.View = _elm.Screens.Home.View || {};
-   if (_elm.Screens.Home.View.values)
-   return _elm.Screens.Home.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Home = _elm.Page.Home || {};
+   _elm.Page.Home.View = _elm.Page.Home.View || {};
+   if (_elm.Page.Home.View.values)
+   return _elm.Page.Home.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -21620,18 +23961,18 @@ Elm.Screens.Home.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
+   $Page$Home$Update = Elm.Page.Home.Update.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Home$Model = Elm.Screens.Home.Model.make(_elm),
-   $Screens$Home$Update = Elm.Screens.Home.Update.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var playerItem = function (player) {
       return A2($Html.li,
       _U.list([$Html$Attributes.$class("player")]),
-      _U.list([$Html.text($Screens$Utils.playerHandle(player))]));
+      _U.list([$Html.text($Page$Utils.playerHandle(player))]));
    };
    var playersList = function (players) {
       return A2($Html.ul,
@@ -21645,8 +23986,8 @@ Elm.Screens.Home.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("active-track-players")]),
       _U.list([A2($Html.h4,
               _U.list([]),
-              _U.list([A3($Screens$Utils.linkTo,
-              $Routes.PlayTrack(_p2.id),
+              _U.list([A3($Page$Utils.linkTo,
+              $Route.PlayTrack(_p2.id),
               _U.list([]),
               _U.list([$Html.text(_p2.name)]))]))
               ,playersList(_p1.players)]));
@@ -21677,7 +24018,7 @@ Elm.Screens.Home.View.make = function (_elm) {
    var rankingsExtract = function (rankings) {
       return A2($Html.ul,
       _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-      A2($List.map,$Screens$Utils.rankingItem,rankings));
+      A2($List.map,$Page$Utils.rankingItem,rankings));
    };
    var liveTrackBlock = F2(function (maybeTrackId,_p3) {
       var _p4 = _p3;
@@ -21698,8 +24039,8 @@ Elm.Screens.Home.View.make = function (_elm) {
               _U.list([$Html$Attributes.$class("info")]),
               _U.list([A2($Html.h3,
                       _U.list([]),
-                      _U.list([A3($Screens$Utils.linkTo,
-                      $Routes.ShowTrack(_p7.id),
+                      _U.list([A3($Page$Utils.linkTo,
+                      $Route.ShowTrack(_p7.id),
                       _U.list([$Html$Attributes.$class("name")]),
                       _U.list([$Html.text(_p7.name)]))]))
                       ,rankingsExtract(_p5.rankings)
@@ -21708,17 +24049,17 @@ Elm.Screens.Home.View.make = function (_elm) {
                       _U.list([$Html.text(A2($Basics._op["++"],
                       $Basics.toString($List.length(_p5.rankings)),
                       " entries"))]))]))
-              ,A3($Screens$Utils.linkTo,
-              $Routes.PlayTrack(_p7.id),
+              ,A3($Page$Utils.linkTo,
+              $Route.PlayTrack(_p7.id),
               _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
                       "btn btn-block btn-join btn-",
                       empty ? "primary" : "warning"))
                       ,A2($Html$Events.onMouseOver,
-                      $Screens$Home$Update.addr,
-                      $Screens$Home$Model.FocusTrack($Maybe.Just(_p7.id)))
+                      $Page$Home$Update.addr,
+                      $Page$Home$Model.FocusTrack($Maybe.Just(_p7.id)))
                       ,A2($Html$Events.onMouseOut,
-                      $Screens$Home$Update.addr,
-                      $Screens$Home$Model.FocusTrack($Maybe.Nothing))]),
+                      $Page$Home$Update.addr,
+                      $Page$Home$Model.FocusTrack($Maybe.Nothing))]),
               _U.list([$Html.text(A2($Basics._op["++"],
               "Join",
               empty ? "" : A2($Basics._op["++"],
@@ -21741,24 +24082,24 @@ Elm.Screens.Home.View.make = function (_elm) {
    var setHandleBlock = function (handle) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("form-inline form-set-handle")]),
-      _U.list([A2($Screens$Utils.formGroup,
+      _U.list([A2($Page$Utils.formGroup,
               false,
-              _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
-                                                        ,$Html$Attributes.value(handle)
-                                                        ,A2($Screens$Utils.onInput,
-                                                        $Screens$Home$Update.addr,
-                                                        $Screens$Home$Model.SetHandle)
-                                                        ,A2($Screens$Utils.onEnter,
-                                                        $Screens$Home$Update.addr,
-                                                        $Screens$Home$Model.SubmitHandle)]))]))
+              _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.placeholder("Got a nickname?")
+                                                     ,$Html$Attributes.value(handle)
+                                                     ,A2($Page$Utils.onInput,
+                                                     $Page$Home$Update.addr,
+                                                     $Page$Home$Model.SetHandle)
+                                                     ,A2($Page$Utils.onEnter,
+                                                     $Page$Home$Update.addr,
+                                                     $Page$Home$Model.SubmitHandle)]))]))
               ,A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,A2($Html$Events.onClick,
-                      $Screens$Home$Update.addr,
-                      $Screens$Home$Model.SubmitHandle)]),
+                      $Page$Home$Update.addr,
+                      $Page$Home$Model.SubmitHandle)]),
               _U.list([$Html.text("submit")]))
-              ,A3($Screens$Utils.linkTo,
-              $Routes.Login,
+              ,A3($Page$Utils.linkTo,
+              $Route.Login,
               _U.list([$Html$Attributes.$class("btn btn-default")]),
               _U.list([$Html.text("or log in")]))]));
    };
@@ -21767,17 +24108,17 @@ Elm.Screens.Home.View.make = function (_elm) {
       _U.list([]),
       _U.list([]));
    });
-   var intro = $Screens$Utils.fullWidth(_U.list([A2($Html.h1,
-                                                _U.list([]),
-                                                _U.list([$Html.text("Sailing tactics from the sofa")]))
-                                                ,A2($Html.p,
-                                                _U.list([]),
-                                                _U.list([$Html.text("Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings.")]))]));
+   var intro = $Page$Utils.fullWidth(_U.list([A2($Html.h1,
+                                             _U.list([]),
+                                             _U.list([$Html.text("Sailing tactics from the sofa")]))
+                                             ,A2($Html.p,
+                                             _U.list([]),
+                                             _U.list([$Html.text("Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings.")]))]));
    var view = F2(function (ctx,screen) {
-      return A3($Screens$Layout.layoutWithNav,
+      return A3($Page$Layout.layoutWithNav,
       "home",
       ctx,
-      _U.list([A2($Screens$Utils.container,
+      _U.list([A2($Page$Utils.container,
       "",
       _U.list([intro
               ,A2(welcomeForm,ctx.player,screen.handle)
@@ -21793,29 +24134,29 @@ Elm.Screens.Home.View.make = function (_elm) {
                       _U.list([$Html$Attributes.$class("col-md-3")]),
                       _U.list([activePlayers(screen.liveStatus.liveTracks)]))]))]))]));
    });
-   return _elm.Screens.Home.View.values = {_op: _op
-                                          ,view: view
-                                          ,intro: intro
-                                          ,welcomeForm: welcomeForm
-                                          ,setHandleBlock: setHandleBlock
-                                          ,liveTracks: liveTracks
-                                          ,liveTrackBlock: liveTrackBlock
-                                          ,rankingsExtract: rankingsExtract
-                                          ,activePlayers: activePlayers
-                                          ,activeTrackPlayers: activeTrackPlayers
-                                          ,playersList: playersList
-                                          ,playerItem: playerItem};
+   return _elm.Page.Home.View.values = {_op: _op
+                                       ,view: view
+                                       ,intro: intro
+                                       ,welcomeForm: welcomeForm
+                                       ,setHandleBlock: setHandleBlock
+                                       ,liveTracks: liveTracks
+                                       ,liveTrackBlock: liveTrackBlock
+                                       ,rankingsExtract: rankingsExtract
+                                       ,activePlayers: activePlayers
+                                       ,activeTrackPlayers: activeTrackPlayers
+                                       ,playersList: playersList
+                                       ,playerItem: playerItem};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Login = Elm.Screens.Login || {};
-Elm.Screens.Login.View = Elm.Screens.Login.View || {};
-Elm.Screens.Login.View.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Login = Elm.Page.Login || {};
+Elm.Page.Login.View = Elm.Page.Login.View || {};
+Elm.Page.Login.View.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Login = _elm.Screens.Login || {};
-   _elm.Screens.Login.View = _elm.Screens.Login.View || {};
-   if (_elm.Screens.Login.View.values)
-   return _elm.Screens.Login.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Login = _elm.Page.Login || {};
+   _elm.Page.Login.View = _elm.Page.Login.View || {};
+   if (_elm.Page.Login.View.values)
+   return _elm.Page.Login.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -21825,11 +24166,11 @@ Elm.Screens.Login.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
+   $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
+   $Page$Login$Update = Elm.Page.Login.Update.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$Login$Model = Elm.Screens.Login.Model.make(_elm),
-   $Screens$Login$Update = Elm.Screens.Login.Update.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var errorLine = function (error) {
@@ -21843,24 +24184,24 @@ Elm.Screens.Login.View.make = function (_elm) {
       _U.list([$Html$Attributes.$class("form-login form-vertical")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p1.email)
-                                                        ,A2($Screens$Utils.onInput,
-                                                        $Screens$Login$Update.addr,
-                                                        $Screens$Login$Model.SetEmail)
-                                                        ,A2($Screens$Utils.onEnter,
-                                                        $Screens$Login$Update.addr,
-                                                        $Screens$Login$Model.Submit)
-                                                        ,$Html$Attributes.placeholder("Email")]))]))
+              _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.value(_p1.email)
+                                                     ,A2($Page$Utils.onInput,
+                                                     $Page$Login$Update.addr,
+                                                     $Page$Login$Model.SetEmail)
+                                                     ,A2($Page$Utils.onEnter,
+                                                     $Page$Login$Update.addr,
+                                                     $Page$Login$Model.Submit)
+                                                     ,$Html$Attributes.placeholder("Email")]))]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([$Screens$Utils.passwordInput(_U.list([$Html$Attributes.value(_p1.password)
-                                                            ,A2($Screens$Utils.onInput,
-                                                            $Screens$Login$Update.addr,
-                                                            $Screens$Login$Model.SetPassword)
-                                                            ,A2($Screens$Utils.onEnter,
-                                                            $Screens$Login$Update.addr,
-                                                            $Screens$Login$Model.Submit)
-                                                            ,$Html$Attributes.placeholder("Password")]))]))
+              _U.list([$Page$Utils.passwordInput(_U.list([$Html$Attributes.value(_p1.password)
+                                                         ,A2($Page$Utils.onInput,
+                                                         $Page$Login$Update.addr,
+                                                         $Page$Login$Model.SetPassword)
+                                                         ,A2($Page$Utils.onEnter,
+                                                         $Page$Login$Update.addr,
+                                                         $Page$Login$Model.Submit)
+                                                         ,$Html$Attributes.placeholder("Password")]))]))
               ,errorLine(_p1.error)
               ,A2($Html.div,
               _U.list([]),
@@ -21868,36 +24209,36 @@ Elm.Screens.Login.View.make = function (_elm) {
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,$Html$Attributes.disabled(_p1.loading)
                       ,A2($Html$Events.onClick,
-                      $Screens$Login$Update.addr,
-                      $Screens$Login$Model.Submit)]),
+                      $Page$Login$Update.addr,
+                      $Page$Login$Model.Submit)]),
               _U.list([$Html.text("Submit")]))]))]));
    };
    var view = F2(function (ctx,screen) {
-      return A3($Screens$Layout.layoutWithNav,
+      return A3($Page$Layout.layoutWithNav,
       "login",
       ctx,
-      _U.list([A2($Screens$Utils.container,
+      _U.list([A2($Page$Utils.container,
       "",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Login")]))
-              ,$Screens$Utils.row(_U.list([A2($Screens$Utils.col$,
+              ,$Page$Utils.row(_U.list([A2($Page$Utils.col$,
               6,
               _U.list([loginForm(screen)]))]))]))]));
    });
-   return _elm.Screens.Login.View.values = {_op: _op
-                                           ,view: view
-                                           ,loginForm: loginForm
-                                           ,errorLine: errorLine};
+   return _elm.Page.Login.View.values = {_op: _op
+                                        ,view: view
+                                        ,loginForm: loginForm
+                                        ,errorLine: errorLine};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Register = Elm.Screens.Register || {};
-Elm.Screens.Register.View = Elm.Screens.Register.View || {};
-Elm.Screens.Register.View.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Register = Elm.Page.Register || {};
+Elm.Page.Register.View = Elm.Page.Register.View || {};
+Elm.Page.Register.View.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Register = _elm.Screens.Register || {};
-   _elm.Screens.Register.View = _elm.Screens.Register.View || {};
-   if (_elm.Screens.Register.View.values)
-   return _elm.Screens.Register.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Register = _elm.Page.Register || {};
+   _elm.Page.Register.View = _elm.Page.Register.View || {};
+   if (_elm.Page.Register.View.values)
+   return _elm.Page.Register.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -21910,11 +24251,11 @@ Elm.Screens.Register.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
+   $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
+   $Page$Register$Update = Elm.Page.Register.Update.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$Register$Model = Elm.Screens.Register.Model.make(_elm),
-   $Screens$Register$Update = Elm.Screens.Register.Update.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var registerForm = function (_p0) {
@@ -21929,15 +24270,15 @@ Elm.Screens.Register.View.make = function (_elm) {
       var email = A2($Form.getFieldAsString,"email",_p4);
       var handle = A2($Form.getFieldAsString,"handle",_p4);
       var formAddr = A2($Signal.forwardTo,
-      $Screens$Register$Update.addr,
-      $Screens$Register$Model.FormAction);
+      $Page$Register$Update.addr,
+      $Page$Register$Model.FormAction);
       var _p2 = function () {
          var _p3 = $Form.getOutput(_p4);
          if (_p3.ctor === "Just") {
                return {ctor: "_Tuple2"
                       ,_0: A2($Html$Events.onClick,
-                      $Screens$Register$Update.addr,
-                      $Screens$Register$Model.Submit(_p3._0))
+                      $Page$Register$Update.addr,
+                      $Page$Register$Model.Submit(_p3._0))
                       ,_1: $Basics.not(_p1.loading)};
             } else {
                return {ctor: "_Tuple2"
@@ -21949,1494 +24290,66 @@ Elm.Screens.Register.View.make = function (_elm) {
       var submitDisabled = _p2._1;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("form-login form-horizontal")]),
-      _U.list([A4($Screens$Utils.fieldGroup,
+      _U.list([A4($Page$Utils.fieldGroup,
               "Handle",
               "Alphanumeric, at least 4 chars",
               A2($Basics._op["++"],
-              $Screens$Utils.errList(handle.liveError),
+              $Page$Utils.errList(handle.liveError),
               getServerErrors("handle")),
               _U.list([A3($Form$Input.textInput,
               handle,
               formAddr,
               _U.list([$Html$Attributes.$class("form-control")]))]))
-              ,A4($Screens$Utils.fieldGroup,
+              ,A4($Page$Utils.fieldGroup,
               "Email",
               "",
               A2($Basics._op["++"],
-              $Screens$Utils.errList(email.liveError),
+              $Page$Utils.errList(email.liveError),
               getServerErrors("email")),
               _U.list([A3($Form$Input.textInput,
               email,
               formAddr,
               _U.list([$Html$Attributes.$class("form-control")]))]))
-              ,A4($Screens$Utils.fieldGroup,
+              ,A4($Page$Utils.fieldGroup,
               "Password",
               "",
-              $Screens$Utils.errList(password.liveError),
+              $Page$Utils.errList(password.liveError),
               _U.list([A3($Form$Input.passwordInput,
               password,
               formAddr,
               _U.list([$Html$Attributes.$class("form-control")]))]))
-              ,$Screens$Utils.actionGroup(_U.list([A2($Html.button,
+              ,$Page$Utils.actionGroup(_U.list([A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,submitClick]),
               _U.list([$Html.text("Submit")]))]))]));
    };
    var view = F2(function (ctx,screen) {
-      return A3($Screens$Layout.layoutWithNav,
+      return A3($Page$Layout.layoutWithNav,
       "register",
       ctx,
-      _U.list([A2($Screens$Utils.container,
+      _U.list([A2($Page$Utils.container,
       "",
       _U.list([A2($Html.h1,
               _U.list([]),
               _U.list([$Html.text("Register")]))
-              ,$Screens$Utils.row(_U.list([A2($Screens$Utils.col$,
+              ,$Page$Utils.row(_U.list([A2($Page$Utils.col$,
               6,
               _U.list([registerForm(screen)]))]))]))]));
    });
-   return _elm.Screens.Register.View.values = {_op: _op
-                                              ,view: view
-                                              ,registerForm: registerForm};
+   return _elm.Page.Register.View.values = {_op: _op
+                                           ,view: view
+                                           ,registerForm: registerForm};
 };
-Elm.Svg = Elm.Svg || {};
-Elm.Svg.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.ShowTrack = Elm.Page.ShowTrack || {};
+Elm.Page.ShowTrack.View = Elm.Page.ShowTrack.View || {};
+Elm.Page.ShowTrack.View.make = function (_elm) {
    "use strict";
-   _elm.Svg = _elm.Svg || {};
-   if (_elm.Svg.values) return _elm.Svg.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $Json$Encode = Elm.Json.Encode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $VirtualDom = Elm.VirtualDom.make(_elm);
-   var _op = {};
-   var text = $VirtualDom.text;
-   var svgNamespace = A2($VirtualDom.property,
-   "namespace",
-   $Json$Encode.string("http://www.w3.org/2000/svg"));
-   var node = F3(function (name,attributes,children) {
-      return A3($VirtualDom.node,
-      name,
-      A2($List._op["::"],svgNamespace,attributes),
-      children);
-   });
-   var svg = node("svg");
-   var foreignObject = node("foreignObject");
-   var animate = node("animate");
-   var animateColor = node("animateColor");
-   var animateMotion = node("animateMotion");
-   var animateTransform = node("animateTransform");
-   var mpath = node("mpath");
-   var set = node("set");
-   var a = node("a");
-   var defs = node("defs");
-   var g = node("g");
-   var marker = node("marker");
-   var mask = node("mask");
-   var missingGlyph = node("missingGlyph");
-   var pattern = node("pattern");
-   var $switch = node("switch");
-   var symbol = node("symbol");
-   var desc = node("desc");
-   var metadata = node("metadata");
-   var title = node("title");
-   var feBlend = node("feBlend");
-   var feColorMatrix = node("feColorMatrix");
-   var feComponentTransfer = node("feComponentTransfer");
-   var feComposite = node("feComposite");
-   var feConvolveMatrix = node("feConvolveMatrix");
-   var feDiffuseLighting = node("feDiffuseLighting");
-   var feDisplacementMap = node("feDisplacementMap");
-   var feFlood = node("feFlood");
-   var feFuncA = node("feFuncA");
-   var feFuncB = node("feFuncB");
-   var feFuncG = node("feFuncG");
-   var feFuncR = node("feFuncR");
-   var feGaussianBlur = node("feGaussianBlur");
-   var feImage = node("feImage");
-   var feMerge = node("feMerge");
-   var feMergeNode = node("feMergeNode");
-   var feMorphology = node("feMorphology");
-   var feOffset = node("feOffset");
-   var feSpecularLighting = node("feSpecularLighting");
-   var feTile = node("feTile");
-   var feTurbulence = node("feTurbulence");
-   var font = node("font");
-   var fontFace = node("fontFace");
-   var fontFaceFormat = node("fontFaceFormat");
-   var fontFaceName = node("fontFaceName");
-   var fontFaceSrc = node("fontFaceSrc");
-   var fontFaceUri = node("fontFaceUri");
-   var hkern = node("hkern");
-   var vkern = node("vkern");
-   var linearGradient = node("linearGradient");
-   var radialGradient = node("radialGradient");
-   var stop = node("stop");
-   var circle = node("circle");
-   var ellipse = node("ellipse");
-   var image = node("image");
-   var line = node("line");
-   var path = node("path");
-   var polygon = node("polygon");
-   var polyline = node("polyline");
-   var rect = node("rect");
-   var use = node("use");
-   var feDistantLight = node("feDistantLight");
-   var fePointLight = node("fePointLight");
-   var feSpotLight = node("feSpotLight");
-   var altGlyph = node("altGlyph");
-   var altGlyphDef = node("altGlyphDef");
-   var altGlyphItem = node("altGlyphItem");
-   var glyph = node("glyph");
-   var glyphRef = node("glyphRef");
-   var textPath = node("textPath");
-   var text$ = node("text");
-   var tref = node("tref");
-   var tspan = node("tspan");
-   var clipPath = node("clipPath");
-   var colorProfile = node("colorProfile");
-   var cursor = node("cursor");
-   var filter = node("filter");
-   var script = node("script");
-   var style = node("style");
-   var view = node("view");
-   return _elm.Svg.values = {_op: _op
-                            ,text: text
-                            ,node: node
-                            ,svg: svg
-                            ,foreignObject: foreignObject
-                            ,circle: circle
-                            ,ellipse: ellipse
-                            ,image: image
-                            ,line: line
-                            ,path: path
-                            ,polygon: polygon
-                            ,polyline: polyline
-                            ,rect: rect
-                            ,use: use
-                            ,animate: animate
-                            ,animateColor: animateColor
-                            ,animateMotion: animateMotion
-                            ,animateTransform: animateTransform
-                            ,mpath: mpath
-                            ,set: set
-                            ,desc: desc
-                            ,metadata: metadata
-                            ,title: title
-                            ,a: a
-                            ,defs: defs
-                            ,g: g
-                            ,marker: marker
-                            ,mask: mask
-                            ,missingGlyph: missingGlyph
-                            ,pattern: pattern
-                            ,$switch: $switch
-                            ,symbol: symbol
-                            ,altGlyph: altGlyph
-                            ,altGlyphDef: altGlyphDef
-                            ,altGlyphItem: altGlyphItem
-                            ,glyph: glyph
-                            ,glyphRef: glyphRef
-                            ,textPath: textPath
-                            ,text$: text$
-                            ,tref: tref
-                            ,tspan: tspan
-                            ,font: font
-                            ,fontFace: fontFace
-                            ,fontFaceFormat: fontFaceFormat
-                            ,fontFaceName: fontFaceName
-                            ,fontFaceSrc: fontFaceSrc
-                            ,fontFaceUri: fontFaceUri
-                            ,hkern: hkern
-                            ,vkern: vkern
-                            ,linearGradient: linearGradient
-                            ,radialGradient: radialGradient
-                            ,stop: stop
-                            ,feBlend: feBlend
-                            ,feColorMatrix: feColorMatrix
-                            ,feComponentTransfer: feComponentTransfer
-                            ,feComposite: feComposite
-                            ,feConvolveMatrix: feConvolveMatrix
-                            ,feDiffuseLighting: feDiffuseLighting
-                            ,feDisplacementMap: feDisplacementMap
-                            ,feFlood: feFlood
-                            ,feFuncA: feFuncA
-                            ,feFuncB: feFuncB
-                            ,feFuncG: feFuncG
-                            ,feFuncR: feFuncR
-                            ,feGaussianBlur: feGaussianBlur
-                            ,feImage: feImage
-                            ,feMerge: feMerge
-                            ,feMergeNode: feMergeNode
-                            ,feMorphology: feMorphology
-                            ,feOffset: feOffset
-                            ,feSpecularLighting: feSpecularLighting
-                            ,feTile: feTile
-                            ,feTurbulence: feTurbulence
-                            ,feDistantLight: feDistantLight
-                            ,fePointLight: fePointLight
-                            ,feSpotLight: feSpotLight
-                            ,clipPath: clipPath
-                            ,colorProfile: colorProfile
-                            ,cursor: cursor
-                            ,filter: filter
-                            ,script: script
-                            ,style: style
-                            ,view: view};
-};
-Elm.Svg = Elm.Svg || {};
-Elm.Svg.Attributes = Elm.Svg.Attributes || {};
-Elm.Svg.Attributes.make = function (_elm) {
-   "use strict";
-   _elm.Svg = _elm.Svg || {};
-   _elm.Svg.Attributes = _elm.Svg.Attributes || {};
-   if (_elm.Svg.Attributes.values)
-   return _elm.Svg.Attributes.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $VirtualDom = Elm.VirtualDom.make(_elm);
-   var _op = {};
-   var writingMode = $VirtualDom.attribute("writing-mode");
-   var wordSpacing = $VirtualDom.attribute("word-spacing");
-   var visibility = $VirtualDom.attribute("visibility");
-   var unicodeBidi = $VirtualDom.attribute("unicode-bidi");
-   var textRendering = $VirtualDom.attribute("text-rendering");
-   var textDecoration = $VirtualDom.attribute("text-decoration");
-   var textAnchor = $VirtualDom.attribute("text-anchor");
-   var stroke = $VirtualDom.attribute("stroke");
-   var strokeWidth = $VirtualDom.attribute("stroke-width");
-   var strokeOpacity = $VirtualDom.attribute("stroke-opacity");
-   var strokeMiterlimit = $VirtualDom.attribute("stroke-miterlimit");
-   var strokeLinejoin = $VirtualDom.attribute("stroke-linejoin");
-   var strokeLinecap = $VirtualDom.attribute("stroke-linecap");
-   var strokeDashoffset = $VirtualDom.attribute("stroke-dashoffset");
-   var strokeDasharray = $VirtualDom.attribute("stroke-dasharray");
-   var stopOpacity = $VirtualDom.attribute("stop-opacity");
-   var stopColor = $VirtualDom.attribute("stop-color");
-   var shapeRendering = $VirtualDom.attribute("shape-rendering");
-   var pointerEvents = $VirtualDom.attribute("pointer-events");
-   var overflow = $VirtualDom.attribute("overflow");
-   var opacity = $VirtualDom.attribute("opacity");
-   var mask = $VirtualDom.attribute("mask");
-   var markerStart = $VirtualDom.attribute("marker-start");
-   var markerMid = $VirtualDom.attribute("marker-mid");
-   var markerEnd = $VirtualDom.attribute("marker-end");
-   var lightingColor = $VirtualDom.attribute("lighting-color");
-   var letterSpacing = $VirtualDom.attribute("letter-spacing");
-   var kerning = $VirtualDom.attribute("kerning");
-   var imageRendering = $VirtualDom.attribute("image-rendering");
-   var glyphOrientationVertical = $VirtualDom.attribute("glyph-orientation-vertical");
-   var glyphOrientationHorizontal = $VirtualDom.attribute("glyph-orientation-horizontal");
-   var fontWeight = $VirtualDom.attribute("font-weight");
-   var fontVariant = $VirtualDom.attribute("font-variant");
-   var fontStyle = $VirtualDom.attribute("font-style");
-   var fontStretch = $VirtualDom.attribute("font-stretch");
-   var fontSize = $VirtualDom.attribute("font-size");
-   var fontSizeAdjust = $VirtualDom.attribute("font-size-adjust");
-   var fontFamily = $VirtualDom.attribute("font-family");
-   var floodOpacity = $VirtualDom.attribute("flood-opacity");
-   var floodColor = $VirtualDom.attribute("flood-color");
-   var filter = $VirtualDom.attribute("filter");
-   var fill = $VirtualDom.attribute("fill");
-   var fillRule = $VirtualDom.attribute("fill-rule");
-   var fillOpacity = $VirtualDom.attribute("fill-opacity");
-   var enableBackground = $VirtualDom.attribute("enable-background");
-   var dominantBaseline = $VirtualDom.attribute("dominant-baseline");
-   var display = $VirtualDom.attribute("display");
-   var direction = $VirtualDom.attribute("direction");
-   var cursor = $VirtualDom.attribute("cursor");
-   var color = $VirtualDom.attribute("color");
-   var colorRendering = $VirtualDom.attribute("color-rendering");
-   var colorProfile = $VirtualDom.attribute("color-profile");
-   var colorInterpolation = $VirtualDom.attribute("color-interpolation");
-   var colorInterpolationFilters = $VirtualDom.attribute("color-interpolation-filters");
-   var clip = $VirtualDom.attribute("clip");
-   var clipRule = $VirtualDom.attribute("clip-rule");
-   var clipPath = $VirtualDom.attribute("clip-path");
-   var baselineShift = $VirtualDom.attribute("baseline-shift");
-   var alignmentBaseline = $VirtualDom.attribute("alignment-baseline");
-   var zoomAndPan = $VirtualDom.attribute("zoomAndPan");
-   var z = $VirtualDom.attribute("z");
-   var yChannelSelector = $VirtualDom.attribute("yChannelSelector");
-   var y2 = $VirtualDom.attribute("y2");
-   var y1 = $VirtualDom.attribute("y1");
-   var y = $VirtualDom.attribute("y");
-   var xmlSpace = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/XML/1998/namespace",
-   "xml:space");
-   var xmlLang = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/XML/1998/namespace",
-   "xml:lang");
-   var xmlBase = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/XML/1998/namespace",
-   "xml:base");
-   var xlinkType = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/1999/xlink",
-   "xlink:type");
-   var xlinkTitle = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/1999/xlink",
-   "xlink:title");
-   var xlinkShow = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/1999/xlink",
-   "xlink:show");
-   var xlinkRole = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/1999/xlink",
-   "xlink:role");
-   var xlinkHref = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/1999/xlink",
-   "xlink:href");
-   var xlinkArcrole = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/1999/xlink",
-   "xlink:arcrole");
-   var xlinkActuate = A2($VirtualDom.attributeNS,
-   "http://www.w3.org/1999/xlink",
-   "xlink:actuate");
-   var xChannelSelector = $VirtualDom.attribute("xChannelSelector");
-   var x2 = $VirtualDom.attribute("x2");
-   var x1 = $VirtualDom.attribute("x1");
-   var xHeight = $VirtualDom.attribute("x-height");
-   var x = $VirtualDom.attribute("x");
-   var widths = $VirtualDom.attribute("widths");
-   var width = $VirtualDom.attribute("width");
-   var viewTarget = $VirtualDom.attribute("viewTarget");
-   var viewBox = $VirtualDom.attribute("viewBox");
-   var vertOriginY = $VirtualDom.attribute("vert-origin-y");
-   var vertOriginX = $VirtualDom.attribute("vert-origin-x");
-   var vertAdvY = $VirtualDom.attribute("vert-adv-y");
-   var version = $VirtualDom.attribute("version");
-   var values = $VirtualDom.attribute("values");
-   var vMathematical = $VirtualDom.attribute("v-mathematical");
-   var vIdeographic = $VirtualDom.attribute("v-ideographic");
-   var vHanging = $VirtualDom.attribute("v-hanging");
-   var vAlphabetic = $VirtualDom.attribute("v-alphabetic");
-   var unitsPerEm = $VirtualDom.attribute("units-per-em");
-   var unicodeRange = $VirtualDom.attribute("unicode-range");
-   var unicode = $VirtualDom.attribute("unicode");
-   var underlineThickness = $VirtualDom.attribute("underline-thickness");
-   var underlinePosition = $VirtualDom.attribute("underline-position");
-   var u2 = $VirtualDom.attribute("u2");
-   var u1 = $VirtualDom.attribute("u1");
-   var type$ = $VirtualDom.attribute("type");
-   var transform = $VirtualDom.attribute("transform");
-   var to = $VirtualDom.attribute("to");
-   var title = $VirtualDom.attribute("title");
-   var textLength = $VirtualDom.attribute("textLength");
-   var targetY = $VirtualDom.attribute("targetY");
-   var targetX = $VirtualDom.attribute("targetX");
-   var target = $VirtualDom.attribute("target");
-   var tableValues = $VirtualDom.attribute("tableValues");
-   var systemLanguage = $VirtualDom.attribute("systemLanguage");
-   var surfaceScale = $VirtualDom.attribute("surfaceScale");
-   var style = $VirtualDom.attribute("style");
-   var string = $VirtualDom.attribute("string");
-   var strikethroughThickness = $VirtualDom.attribute("strikethrough-thickness");
-   var strikethroughPosition = $VirtualDom.attribute("strikethrough-position");
-   var stitchTiles = $VirtualDom.attribute("stitchTiles");
-   var stemv = $VirtualDom.attribute("stemv");
-   var stemh = $VirtualDom.attribute("stemh");
-   var stdDeviation = $VirtualDom.attribute("stdDeviation");
-   var startOffset = $VirtualDom.attribute("startOffset");
-   var spreadMethod = $VirtualDom.attribute("spreadMethod");
-   var speed = $VirtualDom.attribute("speed");
-   var specularExponent = $VirtualDom.attribute("specularExponent");
-   var specularConstant = $VirtualDom.attribute("specularConstant");
-   var spacing = $VirtualDom.attribute("spacing");
-   var slope = $VirtualDom.attribute("slope");
-   var seed = $VirtualDom.attribute("seed");
-   var scale = $VirtualDom.attribute("scale");
-   var ry = $VirtualDom.attribute("ry");
-   var rx = $VirtualDom.attribute("rx");
-   var rotate = $VirtualDom.attribute("rotate");
-   var result = $VirtualDom.attribute("result");
-   var restart = $VirtualDom.attribute("restart");
-   var requiredFeatures = $VirtualDom.attribute("requiredFeatures");
-   var requiredExtensions = $VirtualDom.attribute("requiredExtensions");
-   var repeatDur = $VirtualDom.attribute("repeatDur");
-   var repeatCount = $VirtualDom.attribute("repeatCount");
-   var renderingIntent = $VirtualDom.attribute("rendering-intent");
-   var refY = $VirtualDom.attribute("refY");
-   var refX = $VirtualDom.attribute("refX");
-   var radius = $VirtualDom.attribute("radius");
-   var r = $VirtualDom.attribute("r");
-   var primitiveUnits = $VirtualDom.attribute("primitiveUnits");
-   var preserveAspectRatio = $VirtualDom.attribute("preserveAspectRatio");
-   var preserveAlpha = $VirtualDom.attribute("preserveAlpha");
-   var pointsAtZ = $VirtualDom.attribute("pointsAtZ");
-   var pointsAtY = $VirtualDom.attribute("pointsAtY");
-   var pointsAtX = $VirtualDom.attribute("pointsAtX");
-   var points = $VirtualDom.attribute("points");
-   var pointOrder = $VirtualDom.attribute("point-order");
-   var patternUnits = $VirtualDom.attribute("patternUnits");
-   var patternTransform = $VirtualDom.attribute("patternTransform");
-   var patternContentUnits = $VirtualDom.attribute("patternContentUnits");
-   var pathLength = $VirtualDom.attribute("pathLength");
-   var path = $VirtualDom.attribute("path");
-   var panose1 = $VirtualDom.attribute("panose-1");
-   var overlineThickness = $VirtualDom.attribute("overline-thickness");
-   var overlinePosition = $VirtualDom.attribute("overline-position");
-   var origin = $VirtualDom.attribute("origin");
-   var orientation = $VirtualDom.attribute("orientation");
-   var orient = $VirtualDom.attribute("orient");
-   var order = $VirtualDom.attribute("order");
-   var operator = $VirtualDom.attribute("operator");
-   var offset = $VirtualDom.attribute("offset");
-   var numOctaves = $VirtualDom.attribute("numOctaves");
-   var name = $VirtualDom.attribute("name");
-   var mode = $VirtualDom.attribute("mode");
-   var min = $VirtualDom.attribute("min");
-   var method = $VirtualDom.attribute("method");
-   var media = $VirtualDom.attribute("media");
-   var max = $VirtualDom.attribute("max");
-   var mathematical = $VirtualDom.attribute("mathematical");
-   var maskUnits = $VirtualDom.attribute("maskUnits");
-   var maskContentUnits = $VirtualDom.attribute("maskContentUnits");
-   var markerWidth = $VirtualDom.attribute("markerWidth");
-   var markerUnits = $VirtualDom.attribute("markerUnits");
-   var markerHeight = $VirtualDom.attribute("markerHeight");
-   var local = $VirtualDom.attribute("local");
-   var limitingConeAngle = $VirtualDom.attribute("limitingConeAngle");
-   var lengthAdjust = $VirtualDom.attribute("lengthAdjust");
-   var lang = $VirtualDom.attribute("lang");
-   var keyTimes = $VirtualDom.attribute("keyTimes");
-   var keySplines = $VirtualDom.attribute("keySplines");
-   var keyPoints = $VirtualDom.attribute("keyPoints");
-   var kernelUnitLength = $VirtualDom.attribute("kernelUnitLength");
-   var kernelMatrix = $VirtualDom.attribute("kernelMatrix");
-   var k4 = $VirtualDom.attribute("k4");
-   var k3 = $VirtualDom.attribute("k3");
-   var k2 = $VirtualDom.attribute("k2");
-   var k1 = $VirtualDom.attribute("k1");
-   var k = $VirtualDom.attribute("k");
-   var intercept = $VirtualDom.attribute("intercept");
-   var in2 = $VirtualDom.attribute("in2");
-   var in$ = $VirtualDom.attribute("in");
-   var ideographic = $VirtualDom.attribute("ideographic");
-   var id = $VirtualDom.attribute("id");
-   var horizOriginY = $VirtualDom.attribute("horiz-origin-y");
-   var horizOriginX = $VirtualDom.attribute("horiz-origin-x");
-   var horizAdvX = $VirtualDom.attribute("horiz-adv-x");
-   var height = $VirtualDom.attribute("height");
-   var hanging = $VirtualDom.attribute("hanging");
-   var gradientUnits = $VirtualDom.attribute("gradientUnits");
-   var gradientTransform = $VirtualDom.attribute("gradientTransform");
-   var glyphRef = $VirtualDom.attribute("glyphRef");
-   var glyphName = $VirtualDom.attribute("glyph-name");
-   var g2 = $VirtualDom.attribute("g2");
-   var g1 = $VirtualDom.attribute("g1");
-   var fy = $VirtualDom.attribute("fy");
-   var fx = $VirtualDom.attribute("fx");
-   var from = $VirtualDom.attribute("from");
-   var format = $VirtualDom.attribute("format");
-   var filterUnits = $VirtualDom.attribute("filterUnits");
-   var filterRes = $VirtualDom.attribute("filterRes");
-   var externalResourcesRequired = $VirtualDom.attribute("externalResourcesRequired");
-   var exponent = $VirtualDom.attribute("exponent");
-   var end = $VirtualDom.attribute("end");
-   var elevation = $VirtualDom.attribute("elevation");
-   var edgeMode = $VirtualDom.attribute("edgeMode");
-   var dy = $VirtualDom.attribute("dy");
-   var dx = $VirtualDom.attribute("dx");
-   var dur = $VirtualDom.attribute("dur");
-   var divisor = $VirtualDom.attribute("divisor");
-   var diffuseConstant = $VirtualDom.attribute("diffuseConstant");
-   var descent = $VirtualDom.attribute("descent");
-   var decelerate = $VirtualDom.attribute("decelerate");
-   var d = $VirtualDom.attribute("d");
-   var cy = $VirtualDom.attribute("cy");
-   var cx = $VirtualDom.attribute("cx");
-   var contentStyleType = $VirtualDom.attribute("contentStyleType");
-   var contentScriptType = $VirtualDom.attribute("contentScriptType");
-   var clipPathUnits = $VirtualDom.attribute("clipPathUnits");
-   var $class = $VirtualDom.attribute("class");
-   var capHeight = $VirtualDom.attribute("cap-height");
-   var calcMode = $VirtualDom.attribute("calcMode");
-   var by = $VirtualDom.attribute("by");
-   var bias = $VirtualDom.attribute("bias");
-   var begin = $VirtualDom.attribute("begin");
-   var bbox = $VirtualDom.attribute("bbox");
-   var baseProfile = $VirtualDom.attribute("baseProfile");
-   var baseFrequency = $VirtualDom.attribute("baseFrequency");
-   var azimuth = $VirtualDom.attribute("azimuth");
-   var autoReverse = $VirtualDom.attribute("autoReverse");
-   var attributeType = $VirtualDom.attribute("attributeType");
-   var attributeName = $VirtualDom.attribute("attributeName");
-   var ascent = $VirtualDom.attribute("ascent");
-   var arabicForm = $VirtualDom.attribute("arabic-form");
-   var amplitude = $VirtualDom.attribute("amplitude");
-   var allowReorder = $VirtualDom.attribute("allowReorder");
-   var alphabetic = $VirtualDom.attribute("alphabetic");
-   var additive = $VirtualDom.attribute("additive");
-   var accumulate = $VirtualDom.attribute("accumulate");
-   var accelerate = $VirtualDom.attribute("accelerate");
-   var accentHeight = $VirtualDom.attribute("accent-height");
-   return _elm.Svg.Attributes.values = {_op: _op
-                                       ,accentHeight: accentHeight
-                                       ,accelerate: accelerate
-                                       ,accumulate: accumulate
-                                       ,additive: additive
-                                       ,alphabetic: alphabetic
-                                       ,allowReorder: allowReorder
-                                       ,amplitude: amplitude
-                                       ,arabicForm: arabicForm
-                                       ,ascent: ascent
-                                       ,attributeName: attributeName
-                                       ,attributeType: attributeType
-                                       ,autoReverse: autoReverse
-                                       ,azimuth: azimuth
-                                       ,baseFrequency: baseFrequency
-                                       ,baseProfile: baseProfile
-                                       ,bbox: bbox
-                                       ,begin: begin
-                                       ,bias: bias
-                                       ,by: by
-                                       ,calcMode: calcMode
-                                       ,capHeight: capHeight
-                                       ,$class: $class
-                                       ,clipPathUnits: clipPathUnits
-                                       ,contentScriptType: contentScriptType
-                                       ,contentStyleType: contentStyleType
-                                       ,cx: cx
-                                       ,cy: cy
-                                       ,d: d
-                                       ,decelerate: decelerate
-                                       ,descent: descent
-                                       ,diffuseConstant: diffuseConstant
-                                       ,divisor: divisor
-                                       ,dur: dur
-                                       ,dx: dx
-                                       ,dy: dy
-                                       ,edgeMode: edgeMode
-                                       ,elevation: elevation
-                                       ,end: end
-                                       ,exponent: exponent
-                                       ,externalResourcesRequired: externalResourcesRequired
-                                       ,filterRes: filterRes
-                                       ,filterUnits: filterUnits
-                                       ,format: format
-                                       ,from: from
-                                       ,fx: fx
-                                       ,fy: fy
-                                       ,g1: g1
-                                       ,g2: g2
-                                       ,glyphName: glyphName
-                                       ,glyphRef: glyphRef
-                                       ,gradientTransform: gradientTransform
-                                       ,gradientUnits: gradientUnits
-                                       ,hanging: hanging
-                                       ,height: height
-                                       ,horizAdvX: horizAdvX
-                                       ,horizOriginX: horizOriginX
-                                       ,horizOriginY: horizOriginY
-                                       ,id: id
-                                       ,ideographic: ideographic
-                                       ,in$: in$
-                                       ,in2: in2
-                                       ,intercept: intercept
-                                       ,k: k
-                                       ,k1: k1
-                                       ,k2: k2
-                                       ,k3: k3
-                                       ,k4: k4
-                                       ,kernelMatrix: kernelMatrix
-                                       ,kernelUnitLength: kernelUnitLength
-                                       ,keyPoints: keyPoints
-                                       ,keySplines: keySplines
-                                       ,keyTimes: keyTimes
-                                       ,lang: lang
-                                       ,lengthAdjust: lengthAdjust
-                                       ,limitingConeAngle: limitingConeAngle
-                                       ,local: local
-                                       ,markerHeight: markerHeight
-                                       ,markerUnits: markerUnits
-                                       ,markerWidth: markerWidth
-                                       ,maskContentUnits: maskContentUnits
-                                       ,maskUnits: maskUnits
-                                       ,mathematical: mathematical
-                                       ,max: max
-                                       ,media: media
-                                       ,method: method
-                                       ,min: min
-                                       ,mode: mode
-                                       ,name: name
-                                       ,numOctaves: numOctaves
-                                       ,offset: offset
-                                       ,operator: operator
-                                       ,order: order
-                                       ,orient: orient
-                                       ,orientation: orientation
-                                       ,origin: origin
-                                       ,overlinePosition: overlinePosition
-                                       ,overlineThickness: overlineThickness
-                                       ,panose1: panose1
-                                       ,path: path
-                                       ,pathLength: pathLength
-                                       ,patternContentUnits: patternContentUnits
-                                       ,patternTransform: patternTransform
-                                       ,patternUnits: patternUnits
-                                       ,pointOrder: pointOrder
-                                       ,points: points
-                                       ,pointsAtX: pointsAtX
-                                       ,pointsAtY: pointsAtY
-                                       ,pointsAtZ: pointsAtZ
-                                       ,preserveAlpha: preserveAlpha
-                                       ,preserveAspectRatio: preserveAspectRatio
-                                       ,primitiveUnits: primitiveUnits
-                                       ,r: r
-                                       ,radius: radius
-                                       ,refX: refX
-                                       ,refY: refY
-                                       ,renderingIntent: renderingIntent
-                                       ,repeatCount: repeatCount
-                                       ,repeatDur: repeatDur
-                                       ,requiredExtensions: requiredExtensions
-                                       ,requiredFeatures: requiredFeatures
-                                       ,restart: restart
-                                       ,result: result
-                                       ,rotate: rotate
-                                       ,rx: rx
-                                       ,ry: ry
-                                       ,scale: scale
-                                       ,seed: seed
-                                       ,slope: slope
-                                       ,spacing: spacing
-                                       ,specularConstant: specularConstant
-                                       ,specularExponent: specularExponent
-                                       ,speed: speed
-                                       ,spreadMethod: spreadMethod
-                                       ,startOffset: startOffset
-                                       ,stdDeviation: stdDeviation
-                                       ,stemh: stemh
-                                       ,stemv: stemv
-                                       ,stitchTiles: stitchTiles
-                                       ,strikethroughPosition: strikethroughPosition
-                                       ,strikethroughThickness: strikethroughThickness
-                                       ,string: string
-                                       ,style: style
-                                       ,surfaceScale: surfaceScale
-                                       ,systemLanguage: systemLanguage
-                                       ,tableValues: tableValues
-                                       ,target: target
-                                       ,targetX: targetX
-                                       ,targetY: targetY
-                                       ,textLength: textLength
-                                       ,title: title
-                                       ,to: to
-                                       ,transform: transform
-                                       ,type$: type$
-                                       ,u1: u1
-                                       ,u2: u2
-                                       ,underlinePosition: underlinePosition
-                                       ,underlineThickness: underlineThickness
-                                       ,unicode: unicode
-                                       ,unicodeRange: unicodeRange
-                                       ,unitsPerEm: unitsPerEm
-                                       ,vAlphabetic: vAlphabetic
-                                       ,vHanging: vHanging
-                                       ,vIdeographic: vIdeographic
-                                       ,vMathematical: vMathematical
-                                       ,values: values
-                                       ,version: version
-                                       ,vertAdvY: vertAdvY
-                                       ,vertOriginX: vertOriginX
-                                       ,vertOriginY: vertOriginY
-                                       ,viewBox: viewBox
-                                       ,viewTarget: viewTarget
-                                       ,width: width
-                                       ,widths: widths
-                                       ,x: x
-                                       ,xHeight: xHeight
-                                       ,x1: x1
-                                       ,x2: x2
-                                       ,xChannelSelector: xChannelSelector
-                                       ,xlinkActuate: xlinkActuate
-                                       ,xlinkArcrole: xlinkArcrole
-                                       ,xlinkHref: xlinkHref
-                                       ,xlinkRole: xlinkRole
-                                       ,xlinkShow: xlinkShow
-                                       ,xlinkTitle: xlinkTitle
-                                       ,xlinkType: xlinkType
-                                       ,xmlBase: xmlBase
-                                       ,xmlLang: xmlLang
-                                       ,xmlSpace: xmlSpace
-                                       ,y: y
-                                       ,y1: y1
-                                       ,y2: y2
-                                       ,yChannelSelector: yChannelSelector
-                                       ,z: z
-                                       ,zoomAndPan: zoomAndPan
-                                       ,alignmentBaseline: alignmentBaseline
-                                       ,baselineShift: baselineShift
-                                       ,clipPath: clipPath
-                                       ,clipRule: clipRule
-                                       ,clip: clip
-                                       ,colorInterpolationFilters: colorInterpolationFilters
-                                       ,colorInterpolation: colorInterpolation
-                                       ,colorProfile: colorProfile
-                                       ,colorRendering: colorRendering
-                                       ,color: color
-                                       ,cursor: cursor
-                                       ,direction: direction
-                                       ,display: display
-                                       ,dominantBaseline: dominantBaseline
-                                       ,enableBackground: enableBackground
-                                       ,fillOpacity: fillOpacity
-                                       ,fillRule: fillRule
-                                       ,fill: fill
-                                       ,filter: filter
-                                       ,floodColor: floodColor
-                                       ,floodOpacity: floodOpacity
-                                       ,fontFamily: fontFamily
-                                       ,fontSizeAdjust: fontSizeAdjust
-                                       ,fontSize: fontSize
-                                       ,fontStretch: fontStretch
-                                       ,fontStyle: fontStyle
-                                       ,fontVariant: fontVariant
-                                       ,fontWeight: fontWeight
-                                       ,glyphOrientationHorizontal: glyphOrientationHorizontal
-                                       ,glyphOrientationVertical: glyphOrientationVertical
-                                       ,imageRendering: imageRendering
-                                       ,kerning: kerning
-                                       ,letterSpacing: letterSpacing
-                                       ,lightingColor: lightingColor
-                                       ,markerEnd: markerEnd
-                                       ,markerMid: markerMid
-                                       ,markerStart: markerStart
-                                       ,mask: mask
-                                       ,opacity: opacity
-                                       ,overflow: overflow
-                                       ,pointerEvents: pointerEvents
-                                       ,shapeRendering: shapeRendering
-                                       ,stopColor: stopColor
-                                       ,stopOpacity: stopOpacity
-                                       ,strokeDasharray: strokeDasharray
-                                       ,strokeDashoffset: strokeDashoffset
-                                       ,strokeLinecap: strokeLinecap
-                                       ,strokeLinejoin: strokeLinejoin
-                                       ,strokeMiterlimit: strokeMiterlimit
-                                       ,strokeOpacity: strokeOpacity
-                                       ,strokeWidth: strokeWidth
-                                       ,stroke: stroke
-                                       ,textAnchor: textAnchor
-                                       ,textDecoration: textDecoration
-                                       ,textRendering: textRendering
-                                       ,unicodeBidi: unicodeBidi
-                                       ,visibility: visibility
-                                       ,wordSpacing: wordSpacing
-                                       ,writingMode: writingMode};
-};
-Elm.Svg = Elm.Svg || {};
-Elm.Svg.Lazy = Elm.Svg.Lazy || {};
-Elm.Svg.Lazy.make = function (_elm) {
-   "use strict";
-   _elm.Svg = _elm.Svg || {};
-   _elm.Svg.Lazy = _elm.Svg.Lazy || {};
-   if (_elm.Svg.Lazy.values) return _elm.Svg.Lazy.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $VirtualDom = Elm.VirtualDom.make(_elm);
-   var _op = {};
-   var lazy3 = $VirtualDom.lazy3;
-   var lazy2 = $VirtualDom.lazy2;
-   var lazy = $VirtualDom.lazy;
-   return _elm.Svg.Lazy.values = {_op: _op
-                                 ,lazy: lazy
-                                 ,lazy2: lazy2
-                                 ,lazy3: lazy3};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Tiles = Elm.Game.Render.Tiles || {};
-Elm.Game.Render.Tiles.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Tiles = _elm.Game.Render.Tiles || {};
-   if (_elm.Game.Render.Tiles.values)
-   return _elm.Game.Render.Tiles.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Hexagons = Elm.Hexagons.make(_elm),
-   $Hexagons$Grid = Elm.Hexagons.Grid.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
-   $Svg$Lazy = Elm.Svg.Lazy.make(_elm);
-   var _op = {};
-   var toSvgPoints = function (points) {
-      return A2($String.join,
-      " ",
-      A2($List.map,
-      function (_p0) {
-         var _p1 = _p0;
-         return A2($Basics._op["++"],
-         $Basics.toString(_p1._0),
-         A2($Basics._op["++"],",",$Basics.toString(_p1._1)));
-      },
-      points));
-   };
-   var vertices = function () {
-      var _p2 = $Hexagons.dims($Constants.hexRadius);
-      var w = _p2._0;
-      var h = _p2._1;
-      var w2 = w / 2;
-      var h2 = h / 2;
-      var h4 = h / 4;
-      return _U.list([{ctor: "_Tuple2",_0: 0 - w2,_1: 0 - h4}
-                     ,{ctor: "_Tuple2",_0: 0,_1: 0 - h2}
-                     ,{ctor: "_Tuple2",_0: w2,_1: 0 - h4}
-                     ,{ctor: "_Tuple2",_0: w2,_1: h4}
-                     ,{ctor: "_Tuple2",_0: 0,_1: h2}
-                     ,{ctor: "_Tuple2",_0: 0 - w2,_1: h4}]);
-   }();
-   var verticesPoints = toSvgPoints(vertices);
-   var tileKindColor = function (kind) {
-      var _p3 = kind;
-      switch (_p3.ctor)
-      {case "Water": return $Constants.colors.water;
-         case "Grass": return $Constants.colors.grass;
-         default: return $Constants.colors.rock;}
-   };
-   var renderTile = function (_p4) {
-      var _p5 = _p4;
-      var color = tileKindColor(_p5.content);
-      var _p6 = A2($Hexagons.axialToPoint,
-      $Constants.hexRadius,
-      _p5.coords);
-      var x = _p6._0;
-      var y = _p6._1;
-      return A2($Svg.polygon,
-      _U.list([$Svg$Attributes.points(verticesPoints)
-              ,$Svg$Attributes.fill(color)
-              ,$Svg$Attributes.stroke(color)
-              ,$Svg$Attributes.strokeWidth("1")
-              ,$Svg$Attributes.transform(A2($Basics._op["++"],
-              "translate(",
-              A2($Basics._op["++"],
-              $Basics.toString(x),
-              A2($Basics._op["++"],
-              ", ",
-              A2($Basics._op["++"],$Basics.toString(y),")")))))]),
-      _U.list([]));
-   };
-   var renderTiles = function (grid) {
-      var tiles = A2($List.map,
-      renderTile,
-      $Hexagons$Grid.list(grid));
-      return A2($Svg.g,_U.list([]),tiles);
-   };
-   var lazyRenderTiles = function (grid) {
-      return A2($Svg$Lazy.lazy,renderTiles,grid);
-   };
-   return _elm.Game.Render.Tiles.values = {_op: _op
-                                          ,lazyRenderTiles: lazyRenderTiles
-                                          ,renderTiles: renderTiles
-                                          ,renderTile: renderTile
-                                          ,tileKindColor: tileKindColor
-                                          ,verticesPoints: verticesPoints
-                                          ,vertices: vertices
-                                          ,toSvgPoints: toSvgPoints};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.SvgUtils = Elm.Game.Render.SvgUtils || {};
-Elm.Game.Render.SvgUtils.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.SvgUtils = _elm.Game.Render.SvgUtils || {};
-   if (_elm.Game.Render.SvgUtils.values)
-   return _elm.Game.Render.SvgUtils.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Geo = Elm.Game.Geo.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var empty = A2($Svg.g,_U.list([]),_U.list([]));
-   var buildCmd = F2(function (cmd,numbers) {
-      return A2($String.join,
-      " ",
-      A2($List._op["::"],cmd,A2($List.map,$Basics.toString,numbers)));
-   });
-   var arc = F2(function (attrs,_p0) {
-      var _p1 = _p0;
-      var _p5 = _p1.radius;
-      var _p4 = _p1.center;
-      var _p2 = A2($Game$Geo.sub,
-      A2($Game$Geo.rotateDeg,_p1.toAngle,_p5),
-      _p4);
-      var x2 = _p2._0;
-      var y2 = _p2._1;
-      var arcCmd = A2(buildCmd,"A",_U.list([_p5,_p5,0,0,0,x2,y2]));
-      var _p3 = A2($Game$Geo.sub,
-      A2($Game$Geo.rotateDeg,_p1.fromAngle,_p5),
-      _p4);
-      var x1 = _p3._0;
-      var y1 = _p3._1;
-      var moveCmd = A2(buildCmd,"M",_U.list([x1,y1]));
-      var cmd = A2($Basics._op["++"],moveCmd,arcCmd);
-      return A2($Svg.path,
-      A2($List._op["::"],$Svg$Attributes.d(cmd),attrs),
-      _U.list([]));
-   });
-   var ArcDef = F4(function (a,b,c,d) {
-      return {center: a,radius: b,fromAngle: c,toAngle: d};
-   });
-   var lineCoords = F2(function (p1,p2) {
-      var y = function (_p6) {
-         return $Basics.toString($Basics.snd(_p6));
-      };
-      var x = function (_p7) {
-         return $Basics.toString($Basics.fst(_p7));
-      };
-      return _U.list([$Svg$Attributes.x1(x(p1))
-                     ,$Svg$Attributes.y1(y(p1))
-                     ,$Svg$Attributes.x2(x(p2))
-                     ,$Svg$Attributes.y2(y(p2))]);
-   });
-   var pathPoints = function (pointsList) {
-      var coords = A2($String.join,
-      " ",
-      A2($List.map,
-      function (_p8) {
-         var _p9 = _p8;
-         return A2($Basics._op["++"],
-         $Basics.toString(_p9._0),
-         A2($Basics._op["++"],",",$Basics.toString(_p9._1)));
-      },
-      pointsList));
-      return $Svg$Attributes.d(A2($Basics._op["++"],"M ",coords));
-   };
-   var polygonPoints = function (pointsList) {
-      return $Svg$Attributes.points(A2($String.join,
-      " ",
-      A2($List.map,
-      function (_p10) {
-         var _p11 = _p10;
-         return A2($Basics._op["++"],
-         $Basics.toString(_p11._0),
-         A2($Basics._op["++"],",",$Basics.toString(_p11._1)));
-      },
-      pointsList)));
-   };
-   var segment = F2(function (attrs,_p12) {
-      var _p13 = _p12;
-      return A2($Svg.line,
-      A2($Basics._op["++"],attrs,A2(lineCoords,_p13._0,_p13._1)),
-      _U.list([]));
-   });
-   var rotate_ = F3(function (a,cx,cy) {
-      return A2($Basics._op["++"],
-      "rotate(",
-      A2($Basics._op["++"],
-      $Basics.toString(a),
-      A2($Basics._op["++"],
-      ", ",
-      A2($Basics._op["++"],
-      $Basics.toString(cx),
-      A2($Basics._op["++"],
-      ", ",
-      A2($Basics._op["++"],$Basics.toString(cy),")"))))));
-   });
-   var translate = F2(function (x,y) {
-      return A2($Basics._op["++"],
-      "translate(",
-      A2($Basics._op["++"],
-      $Basics.toString(x),
-      A2($Basics._op["++"],
-      ", ",
-      A2($Basics._op["++"],$Basics.toString(y),")"))));
-   });
-   var translatePoint = function (_p14) {
-      var _p15 = _p14;
-      return A2(translate,_p15._0,_p15._1);
-   };
-   return _elm.Game.Render.SvgUtils.values = {_op: _op
-                                             ,translate: translate
-                                             ,translatePoint: translatePoint
-                                             ,rotate_: rotate_
-                                             ,segment: segment
-                                             ,polygonPoints: polygonPoints
-                                             ,pathPoints: pathPoints
-                                             ,lineCoords: lineCoords
-                                             ,ArcDef: ArcDef
-                                             ,arc: arc
-                                             ,buildCmd: buildCmd
-                                             ,empty: empty};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Gates = Elm.Game.Render.Gates || {};
-Elm.Game.Render.Gates.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Gates = _elm.Game.Render.Gates || {};
-   if (_elm.Game.Render.Gates.values)
-   return _elm.Game.Render.Gates.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var gateLineOpacity = function (timer) {
-      return 0.7 + 0.3 * $Basics.cos(timer * 5.0e-3);
-   };
-   var renderGateMark = F2(function (color,p) {
-      return A2($Svg.circle,
-      _U.list([$Svg$Attributes.r($Basics.toString($Game$Models.markRadius))
-              ,$Svg$Attributes.stroke("white")
-              ,$Svg$Attributes.strokeWidth("2")
-              ,$Svg$Attributes.fill(color)
-              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(p))]),
-      _U.list([]));
-   });
-   var renderGateMarks = F2(function (color,gate) {
-      var _p0 = $Game$Models.getGateMarks(gate);
-      var left = _p0._0;
-      var right = _p0._1;
-      return A2($Svg.g,
-      _U.list([]),
-      A2($List.map,renderGateMark(color),_U.list([left,right])));
-   });
-   var renderGate = F3(function (gate,lineStyle,color) {
-      var marks = A2(renderGateMarks,color,gate);
-      var l = A2($Game$Render$SvgUtils.segment,
-      lineStyle,
-      $Game$Models.getGateMarks(gate));
-      return A2($Svg.g,_U.list([]),_U.list([l,marks]));
-   });
-   var renderClosedGate = F2(function (gate,timer) {
-      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
-                              ,$Svg$Attributes.strokeWidth("2")]);
-      return A3(renderGate,gate,lineStyle,"black");
-   });
-   var renderOpenGate = F2(function (gate,timer) {
-      var lineStyle = _U.list([$Svg$Attributes.stroke("white")
-                              ,$Svg$Attributes.strokeWidth("2")
-                              ,$Svg$Attributes.strokeDasharray("5,3")
-                              ,$Svg$Attributes.opacity($Basics.toString(gateLineOpacity(timer)))]);
-      return A3(renderGate,gate,lineStyle,$Constants.colors.green);
-   });
-   var renderUpwind = F3(function (playerState,course,now) {
-      var _p1 = playerState.nextGate;
-      if (_p1.ctor === "Just" && _p1._0.ctor === "UpwindGate") {
-            return A2(renderOpenGate,course.upwind,now);
-         } else {
-            return A2(renderClosedGate,course.upwind,now);
-         }
-   });
-   var renderDownwind = F4(function (playerState,
-   course,
-   now,
-   started) {
-      var _p2 = playerState.nextGate;
-      _v1_2: do {
-         if (_p2.ctor === "Just") {
-               switch (_p2._0.ctor)
-               {case "StartLine": return started ? A2(renderOpenGate,
-                    course.downwind,
-                    now) : A2(renderClosedGate,course.downwind,now);
-                  case "DownwindGate": return A2(renderOpenGate,
-                    course.downwind,
-                    now);
-                  default: break _v1_2;}
-            } else {
-               break _v1_2;
-            }
-      } while (false);
-      return A2(renderClosedGate,course.downwind,now);
-   });
-   return _elm.Game.Render.Gates.values = {_op: _op
-                                          ,renderDownwind: renderDownwind
-                                          ,renderUpwind: renderUpwind
-                                          ,renderOpenGate: renderOpenGate
-                                          ,renderClosedGate: renderClosedGate
-                                          ,renderGate: renderGate
-                                          ,renderGateMarks: renderGateMarks
-                                          ,renderGateMark: renderGateMark
-                                          ,gateLineOpacity: gateLineOpacity};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Players = Elm.Game.Render.Players || {};
-Elm.Game.Render.Players.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Players = _elm.Game.Render.Players || {};
-   if (_elm.Game.Render.Players.values)
-   return _elm.Game.Render.Players.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $Game$Geo = Elm.Game.Geo.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var warnVmg = A2($Svg.polygon,
-   _U.list([$Svg$Attributes.fill("orange")
-           ,$Svg$Attributes.stroke("white")
-           ,$Svg$Attributes.points("-4,-4 4,-4 0,4")]),
-   _U.list([]));
-   var goodVmg = A2($Svg.circle,
-   _U.list([$Svg$Attributes.fill("green")
-           ,$Svg$Attributes.stroke("white")
-           ,$Svg$Attributes.cx("0")
-           ,$Svg$Attributes.cy("0")
-           ,$Svg$Attributes.r("5")]),
-   _U.list([]));
-   var badVmg = A2($Svg.rect,
-   _U.list([$Svg$Attributes.fill("red")
-           ,$Svg$Attributes.stroke("white")
-           ,$Svg$Attributes.x("-4")
-           ,$Svg$Attributes.y("-4")
-           ,$Svg$Attributes.width("8")
-           ,$Svg$Attributes.height("8")]),
-   _U.list([]));
-   var vmgIcon = function (player) {
-      var margin = 3;
-      var a = $Basics.abs(player.windAngle);
-      return _U.cmp(a,90) < 0 ? _U.cmp(a,
-      player.upwindVmg.angle - margin) < 0 ? badVmg : _U.cmp(a,
-      player.upwindVmg.angle + margin) > 0 ? warnVmg : goodVmg : _U.cmp(a,
-      player.downwindVmg.angle + margin) > 0 ? badVmg : _U.cmp(a,
-      player.downwindVmg.angle - margin) < 0 ? warnVmg : goodVmg;
-   };
-   var renderVmgSign = function (player) {
-      var icon = vmgIcon(player);
-      var windOriginRadians = $Game$Core.toRadians(player.heading - player.windAngle);
-      var pt = $Basics.fromPolar({ctor: "_Tuple2"
-                                 ,_0: 30
-                                 ,_1: windOriginRadians + $Basics.pi / 2});
-      return A2($Svg.g,
-      _U.list([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(pt))]),
-      _U.list([icon]));
-   };
-   var renderVmgLine = function (a) {
-      return A2($Game$Render$SvgUtils.segment,
-      _U.list([$Svg$Attributes.stroke("white")
-              ,$Svg$Attributes.opacity("0.8")]),
-      {ctor: "_Tuple2"
-      ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
-      ,_1: A2($Game$Geo.rotateDeg,a,30)});
-   };
-   var renderWindArrow = A2($Svg.path,
-   _U.list([$Svg$Attributes.d("M 0,0 3,-12 0,-10 -3,-12 Z")
-           ,$Svg$Attributes.fill("white")]),
-   _U.list([]));
-   var renderPlayerAngles = function (player) {
-      var absWindAngle = $Basics.abs($Basics.round(player.windAngle));
-      var vmgLines = A2($Svg.g,
-      _U.list([$Svg$Attributes.opacity("0.5")]),
-      _U.list([renderVmgLine(0 - player.upwindVmg.angle)
-              ,renderVmgLine(player.upwindVmg.angle)
-              ,renderVmgLine(0 - player.downwindVmg.angle)
-              ,renderVmgLine(player.downwindVmg.angle)]));
-      var rightSide = $Basics.fromPolar({ctor: "_Tuple2"
-                                        ,_0: 60
-                                        ,_1: $Game$Core.toRadians(player.windOrigin + 90)});
-      var leftSide = $Basics.fromPolar({ctor: "_Tuple2"
-                                       ,_0: 60
-                                       ,_1: $Game$Core.toRadians(player.windOrigin - 90)});
-      var eqLine = A2($Game$Render$SvgUtils.segment,
-      _U.list([$Svg$Attributes.stroke("white")
-              ,$Svg$Attributes.strokeWidth("1")
-              ,$Svg$Attributes.opacity("0.5")]),
-      {ctor: "_Tuple2",_0: leftSide,_1: rightSide});
-      var windOrigin = player.heading - player.windAngle;
-      var windMarker = A2($Svg.g,
-      _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
-              A2($Game$Render$SvgUtils.translate,0,-40),
-              A3($Game$Render$SvgUtils.rotate_,180 - windOrigin,0,40)))
-              ,$Svg$Attributes.opacity("0.9")]),
-      _U.list([renderWindArrow]));
-      var windLine = A2($Game$Render$SvgUtils.segment,
-      _U.list([$Svg$Attributes.stroke("white")
-              ,$Svg$Attributes.opacity("0.5")]),
-      {ctor: "_Tuple2"
-      ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
-      ,_1: A2($Game$Geo.rotateDeg,windOrigin,35)});
-      var windAngleText = A2($Svg.text$,
-      _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
-              $Game$Render$SvgUtils.translatePoint(A2($Game$Geo.rotateDeg,
-              windOrigin + 180,
-              30)),
-              "scale(1,-1)"))
-              ,$Svg$Attributes.opacity("0.5")
-              ,$Svg$Attributes.fill("black")
-              ,$Svg$Attributes.textAnchor("middle")
-              ,$Svg$Attributes.style(_U.eq(player.controlMode,
-              $Game$Models.FixedAngle) ? "text-decoration: underline" : "")]),
-      _U.list([$Svg.text(A2($Basics._op["++"],
-      $Basics.toString(absWindAngle),
-      "°"))]));
-      return A2($Svg.g,
-      _U.list([]),
-      _U.list([eqLine,windLine,windMarker,vmgLines,windAngleText]));
-   };
-   var renderNextGateLine = F2(function (course,state) {
-      var renderLine = function (gatePos) {
-         var a = A2($Game$Geo.angleBetween,state.position,gatePos);
-         var p1 = A2($Game$Geo.add,
-         state.position,
-         A2($Game$Geo.rotateDeg,a,50));
-         var p2 = A2($Game$Geo.add,
-         state.position,
-         A2($Game$Geo.rotateDeg,a,150));
-         return A2($Game$Render$SvgUtils.segment,
-         _U.list([$Svg$Attributes.stroke("white")
-                 ,$Svg$Attributes.strokeDasharray("4,4")
-                 ,$Svg$Attributes.opacity("0.5")
-                 ,$Svg$Attributes.markerEnd("url(#whiteFullArrow)")]),
-         {ctor: "_Tuple2",_0: p1,_1: p2});
-      };
-      var maybeGatePos = function () {
-         var _p0 = state.nextGate;
-         if (_p0.ctor === "Just") {
-               switch (_p0._0.ctor)
-               {case "StartLine": return $Maybe.Nothing;
-                  case "UpwindGate": return $Maybe.Just({ctor: "_Tuple2"
-                                                        ,_0: 0
-                                                        ,_1: course.upwind.y});
-                  default: return $Maybe.Just({ctor: "_Tuple2"
-                                              ,_0: 0
-                                              ,_1: course.downwind.y});}
-            } else {
-               return $Maybe.Nothing;
-            }
-      }();
-      var length = 100;
-      var ifFarEnough = function (gatePos) {
-         return _U.cmp(A2($Game$Geo.distance,state.position,gatePos),
-         length * 2.5) > 0 ? $Maybe.Just(gatePos) : $Maybe.Nothing;
-      };
-      return A2($Maybe.withDefault,
-      $Game$Render$SvgUtils.empty,
-      A2($Maybe.map,
-      renderLine,
-      A2($Maybe.andThen,maybeGatePos,ifFarEnough)));
-   });
-   var renderWindShadow = function (_p1) {
-      var _p2 = _p1;
-      var _p3 = _p2.position;
-      var arcAngles = _U.list([-15,-10,-5,0,5,10,15]);
-      var endPoints = A2($List.map,
-      function (a) {
-         return A2($Game$Geo.add,
-         _p3,
-         $Basics.fromPolar({ctor: "_Tuple2"
-                           ,_0: $Game$Models.windShadowLength
-                           ,_1: $Game$Core.toRadians(_p2.shadowDirection + a)}));
-      },
-      arcAngles);
-      return A2($Svg.polygon,
-      _U.list([$Game$Render$SvgUtils.polygonPoints(A2($List._op["::"],
-              _p3,
-              endPoints))
-              ,$Svg$Attributes.fill("white")
-              ,$Svg$Attributes.opacity("0.2")]),
-      _U.list([]));
-   };
-   var renderWake = function (wake) {
-      var opacityForIndex = function (i) {
-         return $Basics.toString(0.3 - 0.3 * $Basics.toFloat(i) / $Basics.toFloat($List.length(wake)));
-      };
-      var style = _U.list([$Svg$Attributes.stroke("white")
-                          ,$Svg$Attributes.strokeWidth("3")]);
-      var renderSegment = function (_p4) {
-         var _p5 = _p4;
-         return A2($Game$Render$SvgUtils.segment,
-         A2($Basics._op["++"],
-         style,
-         _U.list([$Svg$Attributes.opacity(opacityForIndex(_p5._0))])),
-         _p5._1);
-      };
-      var pairs = $List.isEmpty(wake) ? _U.list([]) : A2($List.indexedMap,
-      F2(function (v0,v1) {
-         return {ctor: "_Tuple2",_0: v0,_1: v1};
-      }),
-      A3($List.map2,
-      F2(function (v0,v1) {
-         return {ctor: "_Tuple2",_0: v0,_1: v1};
-      }),
-      wake,
-      A2($Maybe.withDefault,_U.list([]),$List.tail(wake))));
-      return A2($Svg.g,
-      _U.list([$Svg$Attributes.id("playerWake")]),
-      A2($List.map,renderSegment,pairs));
-   };
-   var hull = A2($Svg.path,
-   _U.list([$Svg$Attributes.d("m 2.7225237,6.9495942 -0.3358523,0.4979016 -0.3358428,0.497892 -0.8877132,0.010001 -0.88771318,0.010001 -0.0728664,0.092583 c -0.0926785,0.1177674 -0.19146251,0.1177674 -0.28409337,0 L -0.15442399,7.9653906 -1.0421373,7.9553896 -1.9298505,7.9453886 -2.2657029,7.4474966 -2.6015457,6.949595 c -1.2875317,0 -2.7611997,-0.024876 -2.7611997,-0.2267544 0,-0.3138177 -0.027908,-6.29461975 0.019431,-6.45277326 0.078486,-0.26201436 0.5078457,-0.37736241 1.6640027,-0.44706653 0.6810011,-0.0410529 0.7200061,-0.0474346 0.7347889,-0.12089161 0.00857,-0.0426721 0.093345,-0.4805184 0.1882717,-0.9730479 0.5755019,-2.9850283 1.84813092,-7.6669491 2.3453944,-8.6285389 0.1651544,-0.3193744 0.77738486,-0.3193744 0.94253925,0 0.49725385,0.9615898 1.76989225,5.6435106 2.34539425,8.6285389 0.094965,0.4925295 0.17968,0.93040437 0.1882621,0.9730479 0.014764,0.0734379 0.053816,0.0798197 0.7347889,0.12089161 1.156157,0.0697232 1.585507,0.18505217 1.6640027,0.44706653 0.055055,0.18363295 0.0019,6.11500536 0.0019,6.50549426 0,0.1725651 -1.4358401,0.1740326 -2.7435068,0.1740326 z")
-           ,$Svg$Attributes.fill("white")
-           ,$Svg$Attributes.fillOpacity("0.9")
-           ,$Svg$Attributes.stroke("black")
-           ,$Svg$Attributes.strokeWidth("1")
-           ,$Svg$Attributes.strokeOpacity("0.9")]),
-   _U.list([]));
-   var mainSail = A2($Svg.path,
-   _U.list([$Svg$Attributes.d("M 0.0441942,-1.5917173 C -1.0614896,0.82852063 -0.8611396,3.8386594 -1.0385631,5.822069")
-           ,$Svg$Attributes.stroke("grey")
-           ,$Svg$Attributes.strokeWidth("1")
-           ,$Svg$Attributes.strokeLinecap("round")
-           ,$Svg$Attributes.strokeOpacity("0.9")]),
-   _U.list([]));
-   var kite = A2($Svg.path,
-   _U.list([$Svg$Attributes.d("m 0.10669417,-16.214054 c -6.38323627,2.777619 -8.55435517,11.509426 -7.26189907,14.9672275 0.5646828,1.51073708 4.2485734,2.932296 7.19890196,2.20273303 0,-5.20417853 0.06299711,-13.36391553 0.06299711,-17.16996053 z")
-           ,$Svg$Attributes.fill("white")
-           ,$Svg$Attributes.fillOpacity("0.9")
-           ,$Svg$Attributes.stroke("black")
-           ,$Svg$Attributes.strokeWidth("1")
-           ,$Svg$Attributes.strokeOpacity("0.9")]),
-   _U.list([]));
-   var hullRotation = function (heading) {
-      return A3($Game$Render$SvgUtils.rotate_,180 - heading,0,0);
-   };
-   var renderPlayerHull = F2(function (heading,windAngle) {
-      var flip = A2($Basics._op["++"],
-      "scale(",
-      A2($Basics._op["++"],
-      $Basics.toString($Basics.abs(windAngle) / windAngle),
-      ", 1)"));
-      var sails = _U.cmp($Basics.abs(windAngle),
-      130) > 0 ? _U.list([mainSail,kite]) : _U.list([mainSail]);
-      var adjustedSails = A2($Svg.g,
-      _U.list([$Svg$Attributes.transform(flip)]),
-      sails);
-      return A2($Svg.g,
-      _U.list([$Svg$Attributes.transform(hullRotation(heading))]),
-      _U.list([hull,adjustedSails]));
-   });
-   var renderPlayer = F2(function (course,state) {
-      var wake = renderWake(state.trail);
-      var vmgSign = renderVmgSign(state);
-      var nextGateLine = A2(renderNextGateLine,course,state);
-      var angles = renderPlayerAngles(state);
-      var windShadow = renderWindShadow($Game$Models.asOpponentState(state));
-      var playerHull = A2(renderPlayerHull,
-      state.heading,
-      state.windAngle);
-      var movingPart = A2($Svg.g,
-      _U.list([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(state.position))]),
-      _U.list([angles,playerHull]));
-      return A2($Svg.g,
-      _U.list([]),
-      _U.list([wake,windShadow,nextGateLine,movingPart]));
-   });
-   var renderOpponent = function (_p6) {
-      var _p7 = _p6;
-      var _p8 = _p7.state;
-      var name = A2($Svg.text$,
-      _U.list([$Svg$Attributes.textAnchor("middle")
-              ,$Svg$Attributes.transform(A2($Basics._op["++"],
-              $Game$Render$SvgUtils.translatePoint(A2($Game$Geo.add,
-              _p8.position,
-              {ctor: "_Tuple2",_0: 0,_1: -25})),
-              "scale(1,-1)"))
-              ,$Svg$Attributes.opacity("0.3")]),
-      _U.list([$Svg.text(A2($Maybe.withDefault,
-      "Anonymous",
-      _p7.player.handle))]));
-      var shadow = renderWindShadow(_p8);
-      var hull = A2($Svg.g,
-      _U.list([$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(_p8.position))
-              ,$Svg$Attributes.opacity("0.5")]),
-      _U.list([A2(renderPlayerHull,_p8.heading,_p8.windAngle)]));
-      return A2($Svg.g,_U.list([]),_U.list([shadow,hull,name]));
-   };
-   var renderOpponents = F2(function (course,opponents) {
-      return A2($Svg.g,
-      _U.list([]),
-      A2($List.map,renderOpponent,opponents));
-   });
-   var renderPlayers = function (_p9) {
-      var _p10 = _p9;
-      var _p11 = _p10.course;
-      return A2($Svg.g,
-      _U.list([]),
-      _U.list([A2(renderOpponents,_p11,_p10.opponents)
-              ,A2(renderPlayer,_p11,_p10.playerState)]));
-   };
-   return _elm.Game.Render.Players.values = {_op: _op
-                                            ,renderPlayers: renderPlayers
-                                            ,renderOpponents: renderOpponents
-                                            ,renderOpponent: renderOpponent
-                                            ,renderPlayer: renderPlayer
-                                            ,renderPlayerHull: renderPlayerHull
-                                            ,hullRotation: hullRotation
-                                            ,kite: kite
-                                            ,mainSail: mainSail
-                                            ,hull: hull
-                                            ,renderWake: renderWake
-                                            ,renderWindShadow: renderWindShadow
-                                            ,renderNextGateLine: renderNextGateLine
-                                            ,renderPlayerAngles: renderPlayerAngles
-                                            ,renderWindArrow: renderWindArrow
-                                            ,renderVmgLine: renderVmgLine
-                                            ,renderVmgSign: renderVmgSign
-                                            ,vmgIcon: vmgIcon
-                                            ,badVmg: badVmg
-                                            ,goodVmg: goodVmg
-                                            ,warnVmg: warnVmg};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowTrack = Elm.Screens.ShowTrack || {};
-Elm.Screens.ShowTrack.View = Elm.Screens.ShowTrack.View || {};
-Elm.Screens.ShowTrack.View.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowTrack = _elm.Screens.ShowTrack || {};
-   _elm.Screens.ShowTrack.View = _elm.Screens.ShowTrack.View || {};
-   if (_elm.Screens.ShowTrack.View.values)
-   return _elm.Screens.ShowTrack.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ShowTrack = _elm.Page.ShowTrack || {};
+   _elm.Page.ShowTrack.View = _elm.Page.ShowTrack.View || {};
+   if (_elm.Page.ShowTrack.View.values)
+   return _elm.Page.ShowTrack.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -23451,20 +24364,20 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
+   $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
+   $Page$ShowTrack$Update = Elm.Page.ShowTrack.Update.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$ShowTrack$Model = Elm.Screens.ShowTrack.Model.make(_elm),
-   $Screens$ShowTrack$Update = Elm.Screens.ShowTrack.Update.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
    var _op = {};
    var br$ = A2($Html.br,_U.list([]),_U.list([]));
-   var deg = A2($Screens$Utils.abbr$,"°","Degrees");
-   var kn = A2($Screens$Utils.abbr$,"kn","Knots");
-   var np = A2($Screens$Utils.abbr$,"np","Nautic pixels");
+   var deg = A2($Page$Utils.abbr$,"°","Degrees");
+   var kn = A2($Page$Utils.abbr$,"kn","Knots");
+   var np = A2($Page$Utils.abbr$,"np","Nautic pixels");
    var renderCourse = F2(function (_p0,course) {
       var _p1 = _p0;
       var _p3 = _p1.scale;
@@ -23477,7 +24390,7 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       ",-",
       A2($Basics._op["++"],$Basics.toString(_p3),")"))));
       var h = 300;
-      var w = $Screens$Utils.colWidth(8);
+      var w = $Page$Utils.colWidth(8);
       var zoom = 0.5;
       var cx = w / 2 / zoom + $Basics.fst(_p2);
       var cy = (0 - h) / 2 / zoom + $Basics.snd(_p2);
@@ -23497,11 +24410,11 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("course")
               ,A2($Html$Events.onMouseOver,
-              $Screens$ShowTrack$Update.addr,
-              $Screens$ShowTrack$Model.SetOverCourse(true))
+              $Page$ShowTrack$Update.addr,
+              $Page$ShowTrack$Model.SetOverCourse(true))
               ,A2($Html$Events.onMouseOut,
-              $Screens$ShowTrack$Update.addr,
-              $Screens$ShowTrack$Model.SetOverCourse(false))]),
+              $Page$ShowTrack$Update.addr,
+              $Page$ShowTrack$Model.SetOverCourse(false))]),
       _U.list([A2(renderCourse,control,course)]));
    });
    var range = F2(function (_p4,unitAbbr) {
@@ -23534,36 +24447,36 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    var about = F2(function (_p8,meta) {
       var _p9 = _p8;
       var _p10 = _p9.course;
-      return $Screens$Utils.dl$(_U.list([{ctor: "_Tuple2"
-                                         ,_0: "Laps"
-                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.laps))])}
-                                        ,{ctor: "_Tuple2"
-                                         ,_0: "Distance"
-                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.upwind.y - _p10.downwind.y))
-                                                      ,np])}
-                                        ,{ctor: "_Tuple2"
-                                         ,_0: "Wind speed"
-                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.windSpeed))
-                                                      ,A2($Screens$Utils.abbr$,"kn","Knots")])}
-                                        ,{ctor: "_Tuple2"
-                                         ,_0: "Gusts interval"
-                                         ,_1: _U.list([$Html.text($Basics.toString(_p10.gustGenerator.interval))
-                                                      ,A2($Screens$Utils.abbr$,"s","Seconds")])}
-                                        ,{ctor: "_Tuple2"
-                                         ,_0: "Gusts radius"
-                                         ,_1: aboutGustRadius(_p10.gustGenerator)}
-                                        ,{ctor: "_Tuple2"
-                                         ,_0: "Gusts effect"
-                                         ,_1: aboutGustWind(_p10.gustGenerator)}]));
+      return $Page$Utils.dl$(_U.list([{ctor: "_Tuple2"
+                                      ,_0: "Laps"
+                                      ,_1: _U.list([$Html.text($Basics.toString(_p10.laps))])}
+                                     ,{ctor: "_Tuple2"
+                                      ,_0: "Distance"
+                                      ,_1: _U.list([$Html.text($Basics.toString(_p10.upwind.y - _p10.downwind.y))
+                                                   ,np])}
+                                     ,{ctor: "_Tuple2"
+                                      ,_0: "Wind speed"
+                                      ,_1: _U.list([$Html.text($Basics.toString(_p10.windSpeed))
+                                                   ,A2($Page$Utils.abbr$,"kn","Knots")])}
+                                     ,{ctor: "_Tuple2"
+                                      ,_0: "Gusts interval"
+                                      ,_1: _U.list([$Html.text($Basics.toString(_p10.gustGenerator.interval))
+                                                   ,A2($Page$Utils.abbr$,"s","Seconds")])}
+                                     ,{ctor: "_Tuple2"
+                                      ,_0: "Gusts radius"
+                                      ,_1: aboutGustRadius(_p10.gustGenerator)}
+                                     ,{ctor: "_Tuple2"
+                                      ,_0: "Gusts effect"
+                                      ,_1: aboutGustWind(_p10.gustGenerator)}]));
    });
    var rankingsList = function (rankings) {
       return A2($Html.ul,
       _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-      A2($List.map,$Screens$Utils.rankingItem,rankings));
+      A2($List.map,$Page$Utils.rankingItem,rankings));
    };
    var joinButton = function (track) {
-      return A3($Screens$Utils.linkTo,
-      $Routes.PlayTrack(track.id),
+      return A3($Page$Utils.linkTo,
+      $Route.PlayTrack(track.id),
       _U.list([$Html$Attributes.$class("btn btn-warning btn-sm btn-join")]),
       _U.list([$Html.text("Join")]));
    };
@@ -23586,16 +24499,16 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
                       _U.list([$Html.text("by ")
                               ,A2($Html.strong,
                               _U.list([]),
-                              _U.list([$Html.text($Screens$Utils.playerHandle(_p13.creator))]))]))
+                              _U.list([$Html.text($Page$Utils.playerHandle(_p13.creator))]))]))
                       ,joinButton(_p14)]))
-              ,$Screens$Utils.row(_U.list([A2($Html.div,
-                                          _U.list([$Html$Attributes.$class("col-md-8")]),
-                                          _U.list([A2(courseBlock,control,_p14.course)]))
-                                          ,A2($Html.div,
-                                          _U.list([$Html$Attributes.$class("col-md-4 about")]),
-                                          _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("About")]))
-                                                  ,A2(about,_p14,_p13)]))]))
-              ,$Screens$Utils.row(_U.list([A2($Html.div,
+              ,$Page$Utils.row(_U.list([A2($Html.div,
+                                       _U.list([$Html$Attributes.$class("col-md-8")]),
+                                       _U.list([A2(courseBlock,control,_p14.course)]))
+                                       ,A2($Html.div,
+                                       _U.list([$Html$Attributes.$class("col-md-4 about")]),
+                                       _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text("About")]))
+                                               ,A2(about,_p14,_p13)]))]))
+              ,$Page$Utils.row(_U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("col-md-5 rankings")]),
               _U.list([A2($Html.h2,
                       _U.list([]),
@@ -23604,10 +24517,10 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
    });
    var view = F2(function (ctx,_p15) {
       var _p16 = _p15;
-      return A3($Screens$Layout.layoutWithNav,
+      return A3($Page$Layout.layoutWithNav,
       "show-track",
       ctx,
-      _U.list([A2($Screens$Utils.container,
+      _U.list([A2($Page$Utils.container,
       "",
       _U.list([A2($Maybe.withDefault,
       $Html.text(""),
@@ -23615,32 +24528,32 @@ Elm.Screens.ShowTrack.View.make = function (_elm) {
       withLiveTrack(_p16.courseControl),
       _p16.liveTrack))]))]));
    });
-   return _elm.Screens.ShowTrack.View.values = {_op: _op
-                                               ,view: view
-                                               ,withLiveTrack: withLiveTrack
-                                               ,joinButton: joinButton
-                                               ,rankingsList: rankingsList
-                                               ,about: about
-                                               ,aboutGustRadius: aboutGustRadius
-                                               ,aboutGustWind: aboutGustWind
-                                               ,range: range
-                                               ,courseBlock: courseBlock
-                                               ,renderCourse: renderCourse
-                                               ,np: np
-                                               ,kn: kn
-                                               ,deg: deg
-                                               ,br$: br$};
+   return _elm.Page.ShowTrack.View.values = {_op: _op
+                                            ,view: view
+                                            ,withLiveTrack: withLiveTrack
+                                            ,joinButton: joinButton
+                                            ,rankingsList: rankingsList
+                                            ,about: about
+                                            ,aboutGustRadius: aboutGustRadius
+                                            ,aboutGustWind: aboutGustWind
+                                            ,range: range
+                                            ,courseBlock: courseBlock
+                                            ,renderCourse: renderCourse
+                                            ,np: np
+                                            ,kn: kn
+                                            ,deg: deg
+                                            ,br$: br$};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.SideView = Elm.Screens.EditTrack.SideView || {};
-Elm.Screens.EditTrack.SideView.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.EditTrack = Elm.Page.EditTrack || {};
+Elm.Page.EditTrack.SideView = Elm.Page.EditTrack.SideView || {};
+Elm.Page.EditTrack.SideView.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.SideView = _elm.Screens.EditTrack.SideView || {};
-   if (_elm.Screens.EditTrack.SideView.values)
-   return _elm.Screens.EditTrack.SideView.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.EditTrack = _elm.Page.EditTrack || {};
+   _elm.Page.EditTrack.SideView = _elm.Page.EditTrack.SideView || {};
+   if (_elm.Page.EditTrack.SideView.values)
+   return _elm.Page.EditTrack.SideView.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Constants = Elm.Constants.make(_elm),
@@ -23652,11 +24565,11 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
+   $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
+   $Page$Sidebar = Elm.Page.Sidebar.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
-   $Screens$EditTrack$Update = Elm.Screens.EditTrack.Update.make(_elm),
-   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var sideBlock = F4(function (title,open,action,content) {
@@ -23669,9 +24582,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
               _U.list([$Html$Attributes.$class("module-header")]),
               _U.list([A2($Html.a,
               _U.list([$Html$Attributes.$class("module-title")
-                      ,A2($Html$Events.onClick,
-                      $Screens$EditTrack$Update.addr,
-                      action)]),
+                      ,A2($Html$Events.onClick,$Page$EditTrack$Update.addr,action)]),
               _U.list([$Html.text(title)
                       ,A2($Html.span,
                       _U.list([$Html$Attributes.$class(A2($Basics._op["++"],
@@ -23683,18 +24594,18 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
               content)]));
    });
    var intInput = F3(function (val,formUpdate,attrs) {
-      return $Screens$Utils.textInput(A2($Basics._op["++"],
+      return $Page$Utils.textInput(A2($Basics._op["++"],
       _U.list([$Html$Attributes.value($Basics.toString(val))
-              ,A2($Screens$Utils.onIntInput,
-              $Screens$EditTrack$Update.addr,
+              ,A2($Page$Utils.onIntInput,
+              $Page$EditTrack$Update.addr,
               function (_p0) {
-                 return $Screens$EditTrack$Model.FormAction(formUpdate(_p0));
+                 return $Page$EditTrack$Model.FormAction(formUpdate(_p0));
               })
               ,$Html$Attributes.type$("number")]),
       attrs));
    });
    var renderSurfaceMode = F2(function (currentMode,mode) {
-      var _p1 = $Screens$EditTrack$Model.modeName(mode);
+      var _p1 = $Page$EditTrack$Model.modeName(mode);
       var abbr = _p1._0;
       var label = _p1._1;
       var color = function () {
@@ -23711,8 +24622,8 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                                    ,_1: _U.eq(currentMode,mode)}
                                                   ,{ctor: "_Tuple2",_0: abbr,_1: true}]))
               ,A2($Html$Events.onClick,
-              $Screens$EditTrack$Update.addr,
-              $Screens$EditTrack$Model.SetMode(mode))
+              $Page$EditTrack$Update.addr,
+              $Page$EditTrack$Model.SetMode(mode))
               ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2"
                                                ,_0: "background-color"
                                                ,_1: color}]))
@@ -23720,12 +24631,12 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
       _U.list([$Html.text(abbr)]));
    });
    var surfaceBlock = function (editor) {
-      var currentMode = $Screens$EditTrack$Model.realMode(editor);
-      var modes = _U.list([$Screens$EditTrack$Model.Watch
-                          ,$Screens$EditTrack$Model.CreateTile($Models.Water)
-                          ,$Screens$EditTrack$Model.CreateTile($Models.Rock)
-                          ,$Screens$EditTrack$Model.CreateTile($Models.Grass)
-                          ,$Screens$EditTrack$Model.Erase]);
+      var currentMode = $Page$EditTrack$Model.realMode(editor);
+      var modes = _U.list([$Page$EditTrack$Model.Watch
+                          ,$Page$EditTrack$Model.CreateTile($Models.Water)
+                          ,$Page$EditTrack$Model.CreateTile($Models.Rock)
+                          ,$Page$EditTrack$Model.CreateTile($Models.Grass)
+                          ,$Page$EditTrack$Model.Erase]);
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("surface-modes")]),
       A2($List.map,renderSurfaceMode(currentMode),modes));
@@ -23737,30 +24648,30 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
       var _p11 = _p4;
       var _p10 = _p4.course;
       var _p9 = _p4.blocks;
-      return _U.list([$Screens$Sidebar.logo
+      return _U.list([$Page$Sidebar.logo
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("track-menu")]),
                      _U.list([A2($Html.h2,_U.list([]),_U.list([$Html.text(_p12)]))]))
                      ,A4(sideBlock,
                      "Name",
                      _p9.name,
-                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Name),
+                     $Page$EditTrack$Model.ToggleBlock($Page$EditTrack$Model.Name),
                      _U.list([A2($Html.div,
                      _U.list([$Html$Attributes.$class("form-group")]),
-                     _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p12)
-                                                               ,A2($Screens$Utils.onInput,
-                                                               $Screens$EditTrack$Update.addr,
-                                                               $Screens$EditTrack$Model.SetName)
-                                                               ,$Html$Attributes.type$("text")]))]))]))
+                     _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.value(_p12)
+                                                            ,A2($Page$Utils.onInput,
+                                                            $Page$EditTrack$Update.addr,
+                                                            $Page$EditTrack$Model.SetName)
+                                                            ,$Html$Attributes.type$("text")]))]))]))
                      ,A4(sideBlock,
                      "Surface pencil",
                      _p9.surface,
-                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Surface),
+                     $Page$EditTrack$Model.ToggleBlock($Page$EditTrack$Model.Surface),
                      _U.list([surfaceBlock(_p11)]))
                      ,A4(sideBlock,
                      "Gates",
                      _p9.gates,
-                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Gates),
+                     $Page$EditTrack$Model.ToggleBlock($Page$EditTrack$Model.Gates),
                      _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
@@ -23768,7 +24679,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Downwind")]))
                                      ,A3(intInput,
                                      _p10.downwind.y,
-                                     $Screens$EditTrack$Model.SetDownwindY,
+                                     $Page$EditTrack$Model.SetDownwindY,
                                      _U.list([$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23777,7 +24688,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Upwind")]))
                                      ,A3(intInput,
                                      _p10.upwind.y,
-                                     $Screens$EditTrack$Model.SetUpwindY,
+                                     $Page$EditTrack$Model.SetUpwindY,
                                      _U.list([$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23786,7 +24697,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Width")]))
                                      ,A3(intInput,
                                      _p10.downwind.width,
-                                     $Screens$EditTrack$Model.SetGateWidth,
+                                     $Page$EditTrack$Model.SetGateWidth,
                                      _U.list([$Html$Attributes.min("50")
                                              ,$Html$Attributes.step("10")]))]))
                              ,A2($Html.div,
@@ -23796,12 +24707,12 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Laps")]))
                                      ,A3(intInput,
                                      _p10.laps,
-                                     $Screens$EditTrack$Model.SetLaps,
+                                     $Page$EditTrack$Model.SetLaps,
                                      _U.list([$Html$Attributes.min("1")]))]))]))
                      ,A4(sideBlock,
                      "Wind",
                      _p9.wind,
-                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Wind),
+                     $Page$EditTrack$Model.ToggleBlock($Page$EditTrack$Model.Wind),
                      _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
@@ -23809,7 +24720,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Speed")]))
                                      ,A3(intInput,
                                      _p10.windSpeed,
-                                     $Screens$EditTrack$Model.SetWindSpeed,
+                                     $Page$EditTrack$Model.SetWindSpeed,
                                      _U.list([$Html$Attributes.min("10")
                                              ,$Html$Attributes.max("20")]))]))
                              ,A2($Html.div,
@@ -23819,7 +24730,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Wavelength 1")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.wavelength1,
-                                     $Screens$EditTrack$Model.SetWindW1,
+                                     $Page$EditTrack$Model.SetWindW1,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23828,7 +24739,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Amplitude 1")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.amplitude1,
-                                     $Screens$EditTrack$Model.SetWindA1,
+                                     $Page$EditTrack$Model.SetWindA1,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23837,7 +24748,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Wavelength 2")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.wavelength2,
-                                     $Screens$EditTrack$Model.SetWindW2,
+                                     $Page$EditTrack$Model.SetWindW2,
                                      _U.list([$Html$Attributes.min("1")]))]))
                              ,A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
@@ -23846,12 +24757,12 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      _U.list([$Html.text("Amplitude 2")]))
                                      ,A3(intInput,
                                      _p10.windGenerator.amplitude2,
-                                     $Screens$EditTrack$Model.SetWindA2,
+                                     $Page$EditTrack$Model.SetWindA2,
                                      _U.list([$Html$Attributes.min("1")]))]))]))
                      ,A4(sideBlock,
                      "Gusts",
                      _p9.gusts,
-                     $Screens$EditTrack$Model.ToggleBlock($Screens$EditTrack$Model.Gusts),
+                     $Page$EditTrack$Model.ToggleBlock($Page$EditTrack$Model.Gusts),
                      _U.list([A2($Html.div,
                              _U.list([$Html$Attributes.$class("form-group")]),
                              _U.list([A2($Html.label,
@@ -23860,7 +24771,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.interval,
                                      function (i) {
-                                        return $Screens$EditTrack$Model.UpdateGustGen(function (gen) {
+                                        return $Page$EditTrack$Model.UpdateGustGen(function (gen) {
                                            return _U.update(gen,{interval: i});
                                         });
                                      },
@@ -23873,7 +24784,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.radiusBase,
                                      function (i) {
-                                        return $Screens$EditTrack$Model.UpdateGustGen(function (gen) {
+                                        return $Page$EditTrack$Model.UpdateGustGen(function (gen) {
                                            return _U.update(gen,{radiusBase: i});
                                         });
                                      },
@@ -23888,7 +24799,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.radiusVariation,
                                      function (i) {
-                                        return $Screens$EditTrack$Model.UpdateGustGen(function (gen) {
+                                        return $Page$EditTrack$Model.UpdateGustGen(function (gen) {
                                            return _U.update(gen,{radiusVariation: i});
                                         });
                                      },
@@ -23903,7 +24814,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.speedVariation.start,
                                      function (_p5) {
-                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateSpeedVariation($Screens$EditTrack$Update.updateRangeStart(_p5)));
+                                        return $Page$EditTrack$Model.UpdateGustGen($Page$EditTrack$Update.updateSpeedVariation($Page$EditTrack$Update.updateRangeStart(_p5)));
                                      },
                                      _U.list([$Html$Attributes.min("-10")
                                              ,$Html$Attributes.step("1")
@@ -23911,7 +24822,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.speedVariation.end,
                                      function (_p6) {
-                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateSpeedVariation($Screens$EditTrack$Update.updateRangeEnd(_p6)));
+                                        return $Page$EditTrack$Model.UpdateGustGen($Page$EditTrack$Update.updateSpeedVariation($Page$EditTrack$Update.updateRangeEnd(_p6)));
                                      },
                                      _U.list([$Html$Attributes.min("0")
                                              ,$Html$Attributes.step("1")
@@ -23924,7 +24835,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.originVariation.start,
                                      function (_p7) {
-                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateOriginVariation($Screens$EditTrack$Update.updateRangeStart(_p7)));
+                                        return $Page$EditTrack$Model.UpdateGustGen($Page$EditTrack$Update.updateOriginVariation($Page$EditTrack$Update.updateRangeStart(_p7)));
                                      },
                                      _U.list([$Html$Attributes.min("-20")
                                              ,$Html$Attributes.step("1")
@@ -23932,7 +24843,7 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                                      ,A3(intInput,
                                      _p10.gustGenerator.originVariation.end,
                                      function (_p8) {
-                                        return $Screens$EditTrack$Model.UpdateGustGen($Screens$EditTrack$Update.updateOriginVariation($Screens$EditTrack$Update.updateRangeEnd(_p8)));
+                                        return $Page$EditTrack$Model.UpdateGustGen($Page$EditTrack$Update.updateOriginVariation($Page$EditTrack$Update.updateRangeEnd(_p8)));
                                      },
                                      _U.list([$Html$Attributes.min("0")
                                              ,$Html$Attributes.step("1")
@@ -23941,15 +24852,15 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                      _U.list([$Html$Attributes.$class("form-actions btn-group btn-group-justified")]),
                      _U.list([A2($Html.a,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Update.addr,
-                                     $Screens$EditTrack$Model.Save(false))
+                                     $Page$EditTrack$Update.addr,
+                                     $Page$EditTrack$Model.Save(false))
                                      ,$Html$Attributes.$class("btn btn-primary btn-save")
                                      ,$Html$Attributes.disabled(_p13)]),
                              _U.list([$Html.text("Save")]))
                              ,A2($Html.a,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Update.addr,
-                                     $Screens$EditTrack$Model.Save(true))
+                                     $Page$EditTrack$Update.addr,
+                                     $Page$EditTrack$Model.Save(true))
                                      ,$Html$Attributes.$class("btn btn-default btn-save-and-try")
                                      ,$Html$Attributes.disabled(_p13)]),
                              _U.list([$Html.text("Save and try")]))]))
@@ -23957,34 +24868,34 @@ Elm.Screens.EditTrack.SideView.make = function (_elm) {
                      _U.list([$Html$Attributes.$class("btn-group-vertical")]),
                      _U.list([A2($Html.button,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Update.addr,
-                                     $Screens$EditTrack$Model.ConfirmPublish)
+                                     $Page$EditTrack$Update.addr,
+                                     $Page$EditTrack$Model.ConfirmPublish)
                                      ,$Html$Attributes.$class("btn btn-default btn-block btn-confirm-publish")]),
                              _U.list([$Html.text("Save and publish")]))
                              ,_p11.confirmPublish ? A2($Html.button,
                              _U.list([A2($Html$Events.onClick,
-                                     $Screens$EditTrack$Update.addr,
-                                     $Screens$EditTrack$Model.Publish)
+                                     $Page$EditTrack$Update.addr,
+                                     $Page$EditTrack$Model.Publish)
                                      ,$Html$Attributes.$class("btn btn-success btn-block btn-confirm-publish")]),
                              _U.list([$Html.text("Confirm? You can\'t go back!")])) : $Html.text("")])) : $Html.text("")]);
    });
-   return _elm.Screens.EditTrack.SideView.values = {_op: _op
-                                                   ,view: view
-                                                   ,surfaceBlock: surfaceBlock
-                                                   ,renderSurfaceMode: renderSurfaceMode
-                                                   ,intInput: intInput
-                                                   ,sideBlock: sideBlock};
+   return _elm.Page.EditTrack.SideView.values = {_op: _op
+                                                ,view: view
+                                                ,surfaceBlock: surfaceBlock
+                                                ,renderSurfaceMode: renderSurfaceMode
+                                                ,intInput: intInput
+                                                ,sideBlock: sideBlock};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.EditTrack = Elm.Screens.EditTrack || {};
-Elm.Screens.EditTrack.View = Elm.Screens.EditTrack.View || {};
-Elm.Screens.EditTrack.View.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.EditTrack = Elm.Page.EditTrack || {};
+Elm.Page.EditTrack.View = Elm.Page.EditTrack.View || {};
+Elm.Page.EditTrack.View.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.EditTrack = _elm.Screens.EditTrack || {};
-   _elm.Screens.EditTrack.View = _elm.Screens.EditTrack.View || {};
-   if (_elm.Screens.EditTrack.View.values)
-   return _elm.Screens.EditTrack.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.EditTrack = _elm.Page.EditTrack || {};
+   _elm.Page.EditTrack.View = _elm.Page.EditTrack.View || {};
+   if (_elm.Page.EditTrack.View.values)
+   return _elm.Page.EditTrack.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -23998,10 +24909,10 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
+   $Page$EditTrack$SideView = Elm.Page.EditTrack.SideView.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Model = Elm.Screens.EditTrack.Model.make(_elm),
-   $Screens$EditTrack$SideView = Elm.Screens.EditTrack.SideView.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Svg = Elm.Svg.make(_elm),
    $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
@@ -24010,7 +24921,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
       var _p1 = _p0;
       var _p4 = _p1.course;
       var _p3 = _p1.center;
-      var _p2 = $Game$Geo.floatify($Screens$EditTrack$Model.getCourseDims(dims));
+      var _p2 = $Game$Geo.floatify($Page$EditTrack$Model.getCourseDims(dims));
       var w = _p2._0;
       var h = _p2._1;
       var cx = w / 2 + $Basics.fst(_p3);
@@ -24020,7 +24931,7 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
               ,$Svg$Attributes.height($Basics.toString(h))
               ,$Svg$Attributes.$class(A2($Basics._op["++"],
               "mode-",
-              $Basics.fst($Screens$EditTrack$Model.modeName($Screens$EditTrack$Model.realMode(_p1)))))]),
+              $Basics.fst($Page$EditTrack$Model.modeName($Page$EditTrack$Model.realMode(_p1)))))]),
       _U.list([A2($Svg.g,
       _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
       "scale(1,-1)",
@@ -24039,9 +24950,9 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
             var _p8 = _p7._1._0;
             return A2($Models.canUpdateDraft,
             _p6.player,
-            _p9) ? A3($Screens$Layout.layout,
+            _p9) ? A3($Page$Layout.layout,
             "editor",
-            A2($Screens$EditTrack$SideView.view,_p9,_p8),
+            A2($Page$EditTrack$SideView.view,_p9,_p8),
             _U.list([A2(renderCourse,
             _p6.dims,
             _p8)])) : $Html.text("Access forbidden.");
@@ -24049,20 +24960,20 @@ Elm.Screens.EditTrack.View.make = function (_elm) {
             return $Html.text("loading");
          }
    });
-   return _elm.Screens.EditTrack.View.values = {_op: _op
-                                               ,view: view
-                                               ,renderCourse: renderCourse};
+   return _elm.Page.EditTrack.View.values = {_op: _op
+                                            ,view: view
+                                            ,renderCourse: renderCourse};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ShowProfile = Elm.Screens.ShowProfile || {};
-Elm.Screens.ShowProfile.View = Elm.Screens.ShowProfile.View || {};
-Elm.Screens.ShowProfile.View.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.ShowProfile = Elm.Page.ShowProfile || {};
+Elm.Page.ShowProfile.View = Elm.Page.ShowProfile.View || {};
+Elm.Page.ShowProfile.View.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ShowProfile = _elm.Screens.ShowProfile || {};
-   _elm.Screens.ShowProfile.View = _elm.Screens.ShowProfile.View || {};
-   if (_elm.Screens.ShowProfile.View.values)
-   return _elm.Screens.ShowProfile.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ShowProfile = _elm.Page.ShowProfile || {};
+   _elm.Page.ShowProfile.View = _elm.Page.ShowProfile.View || {};
+   if (_elm.Page.ShowProfile.View.values)
+   return _elm.Page.ShowProfile.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -24071,43 +24982,43 @@ Elm.Screens.ShowProfile.View.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
+   $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$ShowProfile$Model = Elm.Screens.ShowProfile.Model.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var view = F2(function (ctx,_p0) {
       var _p1 = _p0;
       var _p2 = _p1.player;
-      return A3($Screens$Layout.layoutWithNav,
+      return A3($Page$Layout.layoutWithNav,
       "show-profile",
       ctx,
-      _U.list([A2($Screens$Utils.container,
+      _U.list([A2($Page$Utils.container,
       "",
       _U.list([A2($Html.img,
               _U.list([$Html$Attributes.$class("avatar avatar-user")
-                      ,$Html$Attributes.src($Screens$Utils.avatarUrl(_p2))
+                      ,$Html$Attributes.src($Page$Utils.avatarUrl(_p2))
                       ,$Html$Attributes.width(160)
                       ,$Html$Attributes.height(160)]),
               _U.list([]))
               ,A2($Html.h1,
               _U.list([]),
-              _U.list([$Html.text($Screens$Utils.playerHandle(_p2))]))]))]));
+              _U.list([$Html.text($Page$Utils.playerHandle(_p2))]))]))]));
    });
-   return _elm.Screens.ShowProfile.View.values = {_op: _op
-                                                 ,view: view};
+   return _elm.Page.ShowProfile.View.values = {_op: _op
+                                              ,view: view};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.ChatView = Elm.Screens.Game.ChatView || {};
-Elm.Screens.Game.ChatView.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Game = Elm.Page.Game || {};
+Elm.Page.Game.ChatView = Elm.Page.Game.ChatView || {};
+Elm.Page.Game.ChatView.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.ChatView = _elm.Screens.Game.ChatView || {};
-   if (_elm.Screens.Game.ChatView.values)
-   return _elm.Screens.Game.ChatView.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Game = _elm.Page.Game || {};
+   _elm.Page.Game.ChatView = _elm.Page.Game.ChatView || {};
+   if (_elm.Page.Game.ChatView.values)
+   return _elm.Page.Game.ChatView.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -24117,27 +25028,27 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Page$Game$Update = Elm.Page.Game.Update.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Screens$Game$Update = Elm.Screens.Game.Update.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var chatField = function (field) {
-      return $Screens$Utils.textInput(_U.list([$Html$Attributes.value(field)
-                                              ,$Html$Attributes.placeholder("type in there...")
-                                              ,A2($Screens$Utils.onInput,
-                                              $Screens$Game$Update.addr,
-                                              $Screens$Game$Model.UpdateMessageField)
-                                              ,A2($Screens$Utils.onEnter,
-                                              $Screens$Game$Update.addr,
-                                              $Screens$Game$Model.SubmitMessage)
-                                              ,A2($Html$Events.onFocus,
-                                              $Screens$Game$Update.addr,
-                                              $Screens$Game$Model.EnterChat)
-                                              ,A2($Html$Events.onBlur,
-                                              $Screens$Game$Update.addr,
-                                              $Screens$Game$Model.LeaveChat)]));
+      return $Page$Utils.textInput(_U.list([$Html$Attributes.value(field)
+                                           ,$Html$Attributes.placeholder("type in there...")
+                                           ,A2($Page$Utils.onInput,
+                                           $Page$Game$Update.addr,
+                                           $Page$Game$Model.UpdateMessageField)
+                                           ,A2($Page$Utils.onEnter,
+                                           $Page$Game$Update.addr,
+                                           $Page$Game$Model.SubmitMessage)
+                                           ,A2($Html$Events.onFocus,
+                                           $Page$Game$Update.addr,
+                                           $Page$Game$Model.EnterChat)
+                                           ,A2($Html$Events.onBlur,
+                                           $Page$Game$Update.addr,
+                                           $Page$Game$Model.LeaveChat)]));
    };
    var messageItem = function (_p0) {
       var _p1 = _p0;
@@ -24145,7 +25056,7 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
       _U.list([]),
       _U.list([A2($Html.span,
               _U.list([$Html$Attributes.$class("message-handle")]),
-              _U.list([$Html.text($Screens$Utils.playerHandle(_p1.player))]))
+              _U.list([$Html.text($Page$Utils.playerHandle(_p1.player))]))
               ,A2($Html.span,
               _U.list([$Html$Attributes.$class("message-content")]),
               _U.list([$Html.text(_p1.content)]))]));
@@ -24174,11 +25085,11 @@ Elm.Screens.Game.ChatView.make = function (_elm) {
               ,messagesDiv
               ,chatField(_p3.messageField)]));
    });
-   return _elm.Screens.Game.ChatView.values = {_op: _op
-                                              ,view: view
-                                              ,messagesList: messagesList
-                                              ,messageItem: messageItem
-                                              ,chatField: chatField};
+   return _elm.Page.Game.ChatView.values = {_op: _op
+                                           ,view: view
+                                           ,messagesList: messagesList
+                                           ,messageItem: messageItem
+                                           ,chatField: chatField};
 };
 Elm.Date = Elm.Date || {};
 Elm.Date.Format = Elm.Date.Format || {};
@@ -24304,16 +25215,16 @@ Elm.Date.Format.make = function (_elm) {
                                     ,format: format
                                     ,formatISO8601: formatISO8601};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.PlayersView = Elm.Screens.Game.PlayersView || {};
-Elm.Screens.Game.PlayersView.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Game = Elm.Page.Game || {};
+Elm.Page.Game.PlayersView = Elm.Page.Game.PlayersView || {};
+Elm.Page.Game.PlayersView.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.PlayersView = _elm.Screens.Game.PlayersView || {};
-   if (_elm.Screens.Game.PlayersView.values)
-   return _elm.Screens.Game.PlayersView.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Game = _elm.Page.Game || {};
+   _elm.Page.Game.PlayersView = _elm.Page.Game.PlayersView || {};
+   if (_elm.Page.Game.PlayersView.values)
+   return _elm.Page.Game.PlayersView.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Date = Elm.Date.make(_elm),
@@ -24324,15 +25235,15 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var freePlayerItem = function (player) {
       return A2($Html.li,
       _U.list([$Html$Attributes.$class("player")]),
-      _U.list([$Screens$Utils.playerWithAvatar(player)]));
+      _U.list([$Page$Utils.playerWithAvatar(player)]));
    };
    var freePlayersBlock = function (players) {
       return A2($Html.div,
@@ -24349,9 +25260,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
       var _p2 = _p1.gates;
       var time = A2($Maybe.withDefault,
       "?",
-      A2($Maybe.map,
-      $Screens$Utils.formatTimer(true),
-      $List.head(_p2)));
+      A2($Maybe.map,$Page$Utils.formatTimer(true),$List.head(_p2)));
       var status = _p1.finished ? time : A2($Basics._op["++"],
       "gate ",
       $Basics.toString($List.length(_p2)));
@@ -24366,7 +25275,7 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
               _U.list([$Html.text(status)]))
               ,A2($Html.span,
               _U.list([$Html$Attributes.$class("handle")]),
-              _U.list([$Html.text($Screens$Utils.playerHandle(_p1.player))]))]));
+              _U.list([$Html.text($Page$Utils.playerHandle(_p1.player))]))]));
    });
    var raceItem = function (_p3) {
       var _p4 = _p3;
@@ -24398,30 +25307,30 @@ Elm.Screens.Game.PlayersView.make = function (_elm) {
       var _p7 = _p6.freePlayers;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("aside-module module-players")]),
-      _U.list([$Screens$Utils.moduleTitle("Online players")
+      _U.list([$Page$Utils.moduleTitle("Online players")
               ,racesBlock(_p6.races)
               ,$List.isEmpty(_p7) ? A2($Html.div,
               _U.list([]),
               _U.list([])) : freePlayersBlock(_p7)]));
    };
-   return _elm.Screens.Game.PlayersView.values = {_op: _op
-                                                 ,block: block
-                                                 ,racesBlock: racesBlock
-                                                 ,raceItem: raceItem
-                                                 ,tallyItem: tallyItem
-                                                 ,freePlayersBlock: freePlayersBlock
-                                                 ,freePlayerItem: freePlayerItem};
+   return _elm.Page.Game.PlayersView.values = {_op: _op
+                                              ,block: block
+                                              ,racesBlock: racesBlock
+                                              ,raceItem: raceItem
+                                              ,tallyItem: tallyItem
+                                              ,freePlayersBlock: freePlayersBlock
+                                              ,freePlayerItem: freePlayerItem};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.SideView = Elm.Screens.Game.SideView || {};
-Elm.Screens.Game.SideView.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Game = Elm.Page.Game || {};
+Elm.Page.Game.SideView = Elm.Page.Game.SideView || {};
+Elm.Page.Game.SideView.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.SideView = _elm.Screens.Game.SideView || {};
-   if (_elm.Screens.Game.SideView.values)
-   return _elm.Screens.Game.SideView.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Game = _elm.Page.Game || {};
+   _elm.Page.Game.SideView = _elm.Page.Game.SideView || {};
+   if (_elm.Page.Game.SideView.values)
+   return _elm.Page.Game.SideView.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
@@ -24431,12 +25340,12 @@ Elm.Screens.Game.SideView.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Page$Game$PlayersView = Elm.Page.Game.PlayersView.make(_elm),
+   $Page$Sidebar = Elm.Page.Sidebar.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Screens$Game$PlayersView = Elm.Screens.Game.PlayersView.make(_elm),
-   $Screens$Sidebar = Elm.Screens.Sidebar.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var helpItem = function (_p0) {
@@ -24455,19 +25364,19 @@ Elm.Screens.Game.SideView.make = function (_elm) {
            ,{ctor: "_Tuple2",_0: "ESC",_1: "quit race"}]));
    var helpBlock = A2($Html.div,
    _U.list([$Html$Attributes.$class("aside-module module-help")]),
-   _U.list([$Screens$Utils.moduleTitle("Help")
+   _U.list([$Page$Utils.moduleTitle("Help")
            ,A2($Html.dl,_U.list([]),helpItems)]));
    var rankingsBlock = function (_p2) {
       var _p3 = _p2;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("aside-module module-rankings")]),
-      _U.list([$Screens$Utils.moduleTitle("Best times")
+      _U.list([$Page$Utils.moduleTitle("Best times")
               ,A2($Html.ul,
               _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
-              A2($List.map,$Screens$Utils.rankingItem,_p3.meta.rankings))]));
+              A2($List.map,$Page$Utils.rankingItem,_p3.meta.rankings))]));
    };
    var liveBlocks = F2(function (screen,liveTrack) {
-      return _U.list([$Screens$Game$PlayersView.block(screen)
+      return _U.list([$Page$Game$PlayersView.block(screen)
                      ,rankingsBlock(liveTrack)
                      ,helpBlock]);
    });
@@ -24478,19 +25387,19 @@ Elm.Screens.Game.SideView.make = function (_elm) {
                      _U.list([$Html.text("This is a draft, you\'re the only one seeing this race track.")]))
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("form-actions")]),
-                     _U.list([A3($Screens$Utils.linkTo,
-                     $Routes.EditTrack(_p5.track.id),
+                     _U.list([A3($Page$Utils.linkTo,
+                     $Route.EditTrack(_p5.track.id),
                      _U.list([$Html$Attributes.$class("btn btn-block btn-primary")]),
                      _U.list([$Html.text("Edit draft")]))]))]);
    };
    var trackNav = function (liveTrack) {
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("track-menu")]),
-      _U.list([$Screens$Utils.hr$
+      _U.list([$Page$Utils.hr$
               ,A2($Html.h2,
               _U.list([]),
               _U.list([$Html.text(liveTrack.track.name)]))
-              ,$Screens$Utils.hr$]));
+              ,$Page$Utils.hr$]));
    };
    var view = F3(function (screen,liveTrack,gameState) {
       var blocks = _U.eq(liveTrack.track.status,
@@ -24498,748 +25407,29 @@ Elm.Screens.Game.SideView.make = function (_elm) {
       screen,
       liveTrack);
       return A2($List._op["::"],
-      $Screens$Sidebar.logo,
+      $Page$Sidebar.logo,
       A2($List._op["::"],trackNav(liveTrack),blocks));
    });
-   return _elm.Screens.Game.SideView.values = {_op: _op
-                                              ,view: view
-                                              ,trackNav: trackNav
-                                              ,draftBlocks: draftBlocks
-                                              ,liveBlocks: liveBlocks
-                                              ,rankingsBlock: rankingsBlock
-                                              ,helpBlock: helpBlock
-                                              ,helpItems: helpItems
-                                              ,helpItem: helpItem};
+   return _elm.Page.Game.SideView.values = {_op: _op
+                                           ,view: view
+                                           ,trackNav: trackNav
+                                           ,draftBlocks: draftBlocks
+                                           ,liveBlocks: liveBlocks
+                                           ,rankingsBlock: rankingsBlock
+                                           ,helpBlock: helpBlock
+                                           ,helpItems: helpItems
+                                           ,helpItem: helpItem};
 };
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Defs = Elm.Game.Render.Defs || {};
-Elm.Game.Render.Defs.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Game = Elm.Page.Game || {};
+Elm.Page.Game.View = Elm.Page.Game.View || {};
+Elm.Page.Game.View.make = function (_elm) {
    "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Defs = _elm.Game.Render.Defs || {};
-   if (_elm.Game.Render.Defs.values)
-   return _elm.Game.Render.Defs.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var renderDefs = A2($Svg.defs,
-   _U.list([]),
-   _U.list([A2($Svg.pattern,
-           _U.list([$Svg$Attributes.id("seaPattern")
-                   ,$Svg$Attributes.x("0")
-                   ,$Svg$Attributes.y("0")
-                   ,$Svg$Attributes.width("50")
-                   ,$Svg$Attributes.height("120")
-                   ,$Svg$Attributes.patternUnits("userSpaceOnUse")]),
-           _U.list([A2($Svg.rect,
-                   _U.list([$Svg$Attributes.x("0")
-                           ,$Svg$Attributes.y("0")
-                           ,$Svg$Attributes.width("50")
-                           ,$Svg$Attributes.height("30")
-                           ,$Svg$Attributes.fill("grey")
-                           ,$Svg$Attributes.opacity("0.05")]),
-                   _U.list([]))
-                   ,A2($Svg.rect,
-                   _U.list([$Svg$Attributes.x("0")
-                           ,$Svg$Attributes.y("30")
-                           ,$Svg$Attributes.width("50")
-                           ,$Svg$Attributes.height("30")
-                           ,$Svg$Attributes.fill("grey")
-                           ,$Svg$Attributes.opacity("0.1")]),
-                   _U.list([]))
-                   ,A2($Svg.rect,
-                   _U.list([$Svg$Attributes.x("0")
-                           ,$Svg$Attributes.y("60")
-                           ,$Svg$Attributes.width("50")
-                           ,$Svg$Attributes.height("30")
-                           ,$Svg$Attributes.fill("grey")
-                           ,$Svg$Attributes.opacity("0.05")]),
-                   _U.list([]))]))
-           ,A2($Svg.marker,
-           _U.list([$Svg$Attributes.id("whiteFullArrow")
-                   ,$Svg$Attributes.markerWidth("6")
-                   ,$Svg$Attributes.markerHeight("6")
-                   ,$Svg$Attributes.refX("0")
-                   ,$Svg$Attributes.refY("3")
-                   ,$Svg$Attributes.orient("auto")]),
-           _U.list([A2($Svg.path,
-           _U.list([$Svg$Attributes.d("M0,0 L0,6 L6,3 L0,0")
-                   ,$Svg$Attributes.fill("white")]),
-           _U.list([]))]))
-           ,A2($Svg.linearGradient,
-           _U.list([$Svg$Attributes.id("transparentToBlack")]),
-           _U.list([A2($Svg.stop,
-                   _U.list([$Svg$Attributes.offset("0%")
-                           ,$Svg$Attributes.stopColor("black")
-                           ,$Svg$Attributes.stopOpacity("0")]),
-                   _U.list([]))
-                   ,A2($Svg.stop,
-                   _U.list([$Svg$Attributes.offset("100%")
-                           ,$Svg$Attributes.stopColor("black")
-                           ,$Svg$Attributes.stopOpacity("1")]),
-                   _U.list([]))]))
-           ,A2($Svg.linearGradient,
-           _U.list([$Svg$Attributes.id("midBlack")]),
-           _U.list([A2($Svg.stop,
-                   _U.list([$Svg$Attributes.offset("0%")
-                           ,$Svg$Attributes.stopColor("black")
-                           ,$Svg$Attributes.stopOpacity("0.5")]),
-                   _U.list([]))
-                   ,A2($Svg.stop,
-                   _U.list([$Svg$Attributes.offset("100%")
-                           ,$Svg$Attributes.stopColor("black")
-                           ,$Svg$Attributes.stopOpacity("1")]),
-                   _U.list([]))]))]));
-   return _elm.Game.Render.Defs.values = {_op: _op
-                                         ,renderDefs: renderDefs};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Course = Elm.Game.Render.Course || {};
-Elm.Game.Render.Course.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Course = _elm.Game.Render.Course || {};
-   if (_elm.Game.Render.Course.values)
-   return _elm.Game.Render.Course.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Constants = Elm.Constants.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Gates = Elm.Game.Render.Gates.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Game$Render$Tiles = Elm.Game.Render.Tiles.make(_elm),
-   $Hexagons = Elm.Hexagons.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Models = Elm.Models.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var renderGust = function (gust) {
-      var color = _U.cmp(gust.speed,0) > 0 ? "black" : "white";
-      var a = 0.3 * $Basics.abs(gust.speed) / 10;
-      return A2($Svg.circle,
-      _U.list([$Svg$Attributes.r($Basics.toString(gust.radius))
-              ,$Svg$Attributes.fill(color)
-              ,$Svg$Attributes.fillOpacity($Basics.toString(a))
-              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint(gust.position))]),
-      _U.list([]));
-   };
-   var renderGusts = function (wind) {
-      return A2($Svg.g,
-      _U.list([]),
-      A2($List.map,renderGust,wind.gusts));
-   };
-   var renderGustTile = function (_p0) {
-      var _p1 = _p0;
-      var _p3 = _p1._1.speed;
-      var color = _U.cmp(_p3,0) > 0 ? "black" : "white";
-      var a = 0.3 * $Basics.abs(_p3) / 10;
-      var _p2 = A2($Hexagons.axialToPoint,
-      $Constants.hexRadius,
-      _p1._0);
-      var x = _p2._0;
-      var y = _p2._1;
-      return A2($Svg.polygon,
-      _U.list([$Svg$Attributes.points($Game$Render$Tiles.verticesPoints)
-              ,$Svg$Attributes.fill(color)
-              ,$Svg$Attributes.opacity($Basics.toString(a))
-              ,$Svg$Attributes.transform(A2($Basics._op["++"],
-              "translate(",
-              A2($Basics._op["++"],
-              $Basics.toString(x),
-              A2($Basics._op["++"],
-              ", ",
-              A2($Basics._op["++"],$Basics.toString(y),")")))))]),
-      _U.list([]));
-   };
-   var renderTiledGust = function (_p4) {
-      var _p5 = _p4;
-      return A2($Svg.g,
-      _U.list([]),
-      A2($List.map,renderGustTile,$Dict.toList(_p5.tiles)));
-   };
-   var renderTiledGusts = function (_p6) {
-      var _p7 = _p6;
-      return A2($Svg.g,
-      _U.list([]),
-      A2($List.map,renderTiledGust,_p7.gusts));
-   };
-   var renderCourse = function (_p8) {
-      var _p9 = _p8;
-      var _p12 = _p9.timers;
-      var _p11 = _p9.playerState;
-      var _p10 = _p9.course;
-      return A2($Svg.g,
-      _U.list([]),
-      _U.list([$Game$Render$Tiles.lazyRenderTiles(_p10.grid)
-              ,renderTiledGusts(_p9.gusts)
-              ,A4($Game$Render$Gates.renderDownwind,
-              _p11,
-              _p10,
-              _p12.now,
-              $Game$Models.isStarted(_p9))
-              ,A3($Game$Render$Gates.renderUpwind,_p11,_p10,_p12.now)]));
-   };
-   return _elm.Game.Render.Course.values = {_op: _op
-                                           ,renderCourse: renderCourse
-                                           ,renderTiledGusts: renderTiledGusts
-                                           ,renderTiledGust: renderTiledGust
-                                           ,renderGustTile: renderGustTile
-                                           ,renderGusts: renderGusts
-                                           ,renderGust: renderGust};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
-Elm.Game.Render.Dashboard.WindSpeedGraph = Elm.Game.Render.Dashboard.WindSpeedGraph || {};
-Elm.Game.Render.Dashboard.WindSpeedGraph.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
-   _elm.Game.Render.Dashboard.WindSpeedGraph = _elm.Game.Render.Dashboard.WindSpeedGraph || {};
-   if (_elm.Game.Render.Dashboard.WindSpeedGraph.values)
-   return _elm.Game.Render.Dashboard.WindSpeedGraph.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var maxSpeed = 25;
-   var windCoef = 3;
-   var speedY = function (speed) {
-      return (maxSpeed - speed) * windCoef;
-   };
-   var graphWidth = 200;
-   var timeScale = graphWidth / $Game$Models.windHistoryLength;
-   var renderMark = F2(function (solid,speed) {
-      return A2($Game$Render$SvgUtils.segment,
-      _U.list([$Svg$Attributes.stroke("black")
-              ,$Svg$Attributes.strokeWidth("1")
-              ,$Svg$Attributes.strokeDasharray(solid ? "" : "3,3")]),
-      {ctor: "_Tuple2"
-      ,_0: {ctor: "_Tuple2",_0: 0,_1: speedY(speed)}
-      ,_1: {ctor: "_Tuple2"
-           ,_0: $Game$Models.windHistoryLength * timeScale
-           ,_1: speedY(speed)}});
-   });
-   var yMarks = A2($Svg.g,
-   _U.list([$Svg$Attributes.opacity("0.2")]),
-   _U.list([A2(renderMark,true,10)
-           ,A2(renderMark,false,15)
-           ,A2(renderMark,true,20)
-           ,A2(renderMark,false,25)]));
-   var timeX = F3(function (init,now,t) {
-      var nowX = A2($Basics.min,
-      $Game$Models.windHistoryLength,
-      now - init);
-      return timeScale * (nowX - (now - t));
-   });
-   var render = F3(function (now,windSpeed,_p0) {
-      var _p1 = _p0;
-      var _p4 = _p1.init;
-      var currentY = speedY(windSpeed);
-      var currentX = A3(timeX,_p4,now,now);
-      var currentCircle = A2($Svg.circle,
-      _U.list([$Svg$Attributes.cx("0")
-              ,$Svg$Attributes.cy("0")
-              ,$Svg$Attributes.r("2")
-              ,$Svg$Attributes.fill("black")
-              ,$Svg$Attributes.transform($Game$Render$SvgUtils.translatePoint({ctor: "_Tuple2"
-                                                                              ,_0: currentX
-                                                                              ,_1: currentY}))]),
-      _U.list([]));
-      var currentText = A2($Svg.text$,
-      _U.list([$Svg$Attributes.textAnchor("left")
-              ,$Svg$Attributes.x($Basics.toString(currentX + 8))
-              ,$Svg$Attributes.y($Basics.toString(currentY + 3))
-              ,$Svg$Attributes.fontSize("12px")]),
-      _U.list([$Svg.text(A2($Basics._op["++"],
-      $Basics.toString($Basics.round(windSpeed)),
-      "kn"))]));
-      var xMark = A2($Game$Render$SvgUtils.segment,
-      _U.list([$Svg$Attributes.stroke("black")
-              ,$Svg$Attributes.opacity("0.5")]),
-      {ctor: "_Tuple2"
-      ,_0: {ctor: "_Tuple2",_0: currentX,_1: speedY(8)}
-      ,_1: {ctor: "_Tuple2",_0: currentX,_1: speedY(27)}});
-      var steps = A2($List.map,
-      function (_p2) {
-         var _p3 = _p2;
-         return {ctor: "_Tuple2"
-                ,_0: A3(timeX,_p4,now,_p3.time)
-                ,_1: speedY(_p3.speed)};
-      },
-      _p1.samples);
-      var historyPath = A2($Svg.path,
-      _U.list([$Game$Render$SvgUtils.pathPoints(A2($List._op["::"],
-              {ctor: "_Tuple2",_0: currentX,_1: currentY},
-              steps))
-              ,$Svg$Attributes.stroke("url(#transparentToBlack)")
-              ,$Svg$Attributes.strokeWidth("1")
-              ,$Svg$Attributes.strokeOpacity("0.8")
-              ,$Svg$Attributes.fillOpacity("0")]),
-      _U.list([]));
-      return A2($Svg.g,
-      _U.list([$Svg$Attributes.opacity("0.5")]),
-      _U.list([yMarks,xMark,historyPath,currentCircle,currentText]));
-   });
-   return _elm.Game.Render.Dashboard.WindSpeedGraph.values = {_op: _op
-                                                             ,graphWidth: graphWidth
-                                                             ,windCoef: windCoef
-                                                             ,maxSpeed: maxSpeed
-                                                             ,timeScale: timeScale
-                                                             ,render: render
-                                                             ,yMarks: yMarks
-                                                             ,renderMark: renderMark
-                                                             ,speedY: speedY
-                                                             ,timeX: timeX};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
-Elm.Game.Render.Dashboard.WindOriginGauge = Elm.Game.Render.Dashboard.WindOriginGauge || {};
-Elm.Game.Render.Dashboard.WindOriginGauge.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
-   _elm.Game.Render.Dashboard.WindOriginGauge = _elm.Game.Render.Dashboard.WindOriginGauge || {};
-   if (_elm.Game.Render.Dashboard.WindOriginGauge.values)
-   return _elm.Game.Render.Dashboard.WindOriginGauge.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var renderWindOriginText = function (origin) {
-      return A2($Svg.text$,
-      _U.list([$Svg$Attributes.textAnchor("middle")
-              ,$Svg$Attributes.x("0")
-              ,$Svg$Attributes.y("15")
-              ,$Svg$Attributes.fontSize("12px")]),
-      _U.list([$Svg.text(A2($Basics._op["++"],
-      $Basics.toString($Basics.round(origin)),
-      "°"))]));
-   };
-   var renderWindArrow = A2($Svg.path,
-   _U.list([$Svg$Attributes.d("M 0,0 4,-15 0,-12 -4,-15 Z")
-           ,$Svg$Attributes.fill("black")]),
-   _U.list([]));
-   var windGaugeCy = 500;
-   var renderWindArc = A2($Game$Render$SvgUtils.arc,
-   _U.list([$Svg$Attributes.stroke("black")
-           ,$Svg$Attributes.strokeWidth("1")
-           ,$Svg$Attributes.fillOpacity("0")]),
-   {center: {ctor: "_Tuple2",_0: 0,_1: 500}
-   ,radius: windGaugeCy
-   ,fromAngle: -17.5
-   ,toAngle: 17.5});
-   var renderRuledArc = function () {
-      var tick = F2(function (l,r) {
-         return A2($Game$Render$SvgUtils.segment,
-         _U.list([$Svg$Attributes.stroke("black")
-                 ,$Svg$Attributes.opacity("0.5")
-                 ,$Svg$Attributes.transform(A3($Game$Render$SvgUtils.rotate_,
-                 r,
-                 0,
-                 windGaugeCy))]),
-         {ctor: "_Tuple2"
-         ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
-         ,_1: {ctor: "_Tuple2",_0: 0,_1: 0 - l}});
-      });
-      var smallTick = tick(5);
-      var bigTick = tick(7.5);
-      return A2($Svg.g,
-      _U.list([]),
-      _U.list([renderWindArc
-              ,smallTick(-15)
-              ,bigTick(-10)
-              ,smallTick(-5)
-              ,bigTick(0)
-              ,smallTick(5)
-              ,bigTick(10)
-              ,smallTick(15)]));
-   }();
-   var render = F2(function (h,windOrigin) {
-      var cy = $Basics.toFloat(h) / 2;
-      return A2($Svg.g,
-      _U.list([$Svg$Attributes.opacity("0.5")]),
-      _U.list([renderRuledArc
-              ,A2($Svg.g,
-              _U.list([$Svg$Attributes.transform(A3($Game$Render$SvgUtils.rotate_,
-              windOrigin,
-              0,
-              windGaugeCy))]),
-              _U.list([renderWindArrow,renderWindOriginText(windOrigin)]))]));
-   });
-   return _elm.Game.Render.Dashboard.WindOriginGauge.values = {_op: _op
-                                                              ,windGaugeCy: windGaugeCy
-                                                              ,render: render
-                                                              ,renderWindArrow: renderWindArrow
-                                                              ,renderWindOriginText: renderWindOriginText
-                                                              ,renderRuledArc: renderRuledArc
-                                                              ,renderWindArc: renderWindArc};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
-Elm.Game.Render.Dashboard.VmgBar = Elm.Game.Render.Dashboard.VmgBar || {};
-Elm.Game.Render.Dashboard.VmgBar.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
-   _elm.Game.Render.Dashboard.VmgBar = _elm.Game.Render.Dashboard.VmgBar || {};
-   if (_elm.Game.Render.Dashboard.VmgBar.values)
-   return _elm.Game.Render.Dashboard.VmgBar.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var vmgCoef = function (_p0) {
-      var _p1 = _p0;
-      var _p2 = _p1.vmgValue;
-      var theoricVmgValue = _U.cmp($Basics.abs(_p1.windAngle),
-      90) < 0 ? _p1.upwindVmg.value : _p1.downwindVmg.value;
-      var boundedVmgValue = _U.cmp(_p2,
-      theoricVmgValue) > 0 ? theoricVmgValue : _U.cmp(_p2,
-      0) < 0 ? 0 : _p2;
-      return boundedVmgValue / theoricVmgValue;
-   };
-   var barHeight = 5;
-   var barWidth = 150;
-   var render = function (playerState) {
-      var contour = A2($Svg.g,
-      _U.list([$Svg$Attributes.stroke("black")]),
-      _U.list([A2($Game$Render$SvgUtils.segment,
-              _U.list([$Svg$Attributes.stroke("black")]),
-              {ctor: "_Tuple2"
-              ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
-              ,_1: {ctor: "_Tuple2",_0: barWidth,_1: 0}})
-              ,A2($Game$Render$SvgUtils.segment,
-              _U.list([$Svg$Attributes.stroke("black")]),
-              {ctor: "_Tuple2"
-              ,_0: {ctor: "_Tuple2",_0: 0,_1: 0}
-              ,_1: {ctor: "_Tuple2",_0: 0,_1: barHeight}})
-              ,A2($Game$Render$SvgUtils.segment,
-              _U.list([$Svg$Attributes.stroke("black")]),
-              {ctor: "_Tuple2"
-              ,_0: {ctor: "_Tuple2",_0: barWidth,_1: 0}
-              ,_1: {ctor: "_Tuple2",_0: barWidth,_1: barHeight}})
-              ,A2($Game$Render$SvgUtils.segment,
-              _U.list([$Svg$Attributes.stroke("black")]),
-              {ctor: "_Tuple2"
-              ,_0: {ctor: "_Tuple2",_0: -5,_1: barHeight}
-              ,_1: {ctor: "_Tuple2",_0: barWidth + 5,_1: barHeight}})]));
-      var coef = vmgCoef(playerState);
-      var bar = A2($Svg.rect,
-      _U.list([$Svg$Attributes.width($Basics.toString(barWidth * coef))
-              ,$Svg$Attributes.height($Basics.toString(barHeight))
-              ,$Svg$Attributes.fill("black")
-              ,$Svg$Attributes.opacity("1")]),
-      _U.list([]));
-      var label = A2($Svg.text$,
-      _U.list([$Svg$Attributes.textAnchor("middle")
-              ,$Svg$Attributes.x($Basics.toString(barWidth * coef))
-              ,$Svg$Attributes.y($Basics.toString(barHeight + 15))
-              ,$Svg$Attributes.fontSize("12px")]),
-      _U.list([$Svg.text(A2($Basics._op["++"],
-      $Basics.toString($Basics.floor(coef * 100)),
-      "%"))]));
-      return A2($Svg.g,
-      _U.list([$Svg$Attributes.opacity("0.5")]),
-      _U.list([contour,bar,label]));
-   };
-   return _elm.Game.Render.Dashboard.VmgBar.values = {_op: _op
-                                                     ,barWidth: barWidth
-                                                     ,barHeight: barHeight
-                                                     ,render: render
-                                                     ,vmgCoef: vmgCoef};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
-Elm.Game.Render.Dashboard.Status = Elm.Game.Render.Dashboard.Status || {};
-Elm.Game.Render.Dashboard.Status.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
-   _elm.Game.Render.Dashboard.Status = _elm.Game.Render.Dashboard.Status || {};
-   if (_elm.Game.Render.Dashboard.Status.values)
-   return _elm.Game.Render.Dashboard.Status.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Core = Elm.Game.Core.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var getSubStatus = function (gameState) {
-      if ($Game$Models.isStarted(gameState)) {
-            var total = gameState.course.laps * 2 + 1;
-            var counter = $List.length(gameState.playerState.crossedGates);
-            return _U.eq(counter,total) ? "FINISHED" : A2($Basics._op["++"],
-            "gate ",
-            A2($Basics._op["++"],
-            $Basics.toString(counter),
-            A2($Basics._op["++"]," on ",$Basics.toString(total))));
-         } else {
-            var _p0 = gameState.timers.startTime;
-            if (_p0.ctor === "Just") {
-                  return "";
-               } else {
-                  return "press C to start countdown";
-               }
-         }
-   };
-   var renderSubStatus = function (gameState) {
-      return A2($Svg.text$,
-      _U.list([$Svg$Attributes.textAnchor("middle")
-              ,$Svg$Attributes.fontSize("18px")
-              ,$Svg$Attributes.opacity("0.5")
-              ,$Svg$Attributes.y("24")]),
-      _U.list([$Svg.text(getSubStatus(gameState))]));
-   };
-   var formatTimer = F2(function (t,showMs) {
-      var t$ = $Basics.abs($Basics.ceiling(t));
-      var totalSeconds = t$ / 1000 | 0;
-      var minutes = totalSeconds / 60 | 0;
-      var sMinutes = $Basics.toString(minutes);
-      var seconds = showMs || _U.cmp(t,0) < 1 ? A2($Basics.rem,
-      totalSeconds,
-      60) : A2($Basics.rem,totalSeconds,60) + 1;
-      var sSeconds = A3($String.padLeft,
-      2,
-      _U.chr("0"),
-      $Basics.toString(seconds));
-      var millis = A2($Basics.rem,t$,1000);
-      var sMillis = showMs ? A2($Basics._op["++"],
-      ".",
-      A3($String.padLeft,
-      3,
-      _U.chr("0"),
-      $Basics.toString(millis))) : "";
-      return A2($Basics._op["++"],
-      sMinutes,
-      A2($Basics._op["++"],
-      ":",
-      A2($Basics._op["++"],sSeconds,sMillis)));
-   });
-   var getTimer = function (_p1) {
-      var _p2 = _p1;
-      var _p5 = _p2.timers;
-      var _p4 = _p2.playerState;
-      var _p3 = _p5.startTime;
-      if (_p3.ctor === "Just") {
-            var timer = $Game$Core.isNothing(_p4.nextGate) ? A2($Maybe.withDefault,
-            0,
-            $List.head(_p4.crossedGates)) : _p3._0 - _p5.now;
-            return A2(formatTimer,timer,$Game$Core.isNothing(_p4.nextGate));
-         } else {
-            return "START PENDING";
-         }
-   };
-   var timerOpacity = function (gameState) {
-      if ($Game$Models.isStarted(gameState)) return 0.2; else {
-            var ms = A2($Basics._op["%"],
-            $Basics.floor($Game$Models.raceTime(gameState)),
-            1000);
-            return _U.cmp(ms,
-            500) < 0 ? 0.5 : (1000 - $Basics.toFloat(ms)) / 500 * 0.5;
-         }
-   };
-   var renderTimer = function (gameState) {
-      return A2($Svg.text$,
-      _U.list([$Svg$Attributes.textAnchor("middle")
-              ,$Svg$Attributes.fontSize("42px")
-              ,$Svg$Attributes.opacity($Basics.toString(timerOpacity(gameState)))]),
-      _U.list([$Svg.text(getTimer(gameState))]));
-   };
-   var render = function (gameState) {
-      return A2($Svg.g,
-      _U.list([]),
-      _U.list([renderTimer(gameState),renderSubStatus(gameState)]));
-   };
-   return _elm.Game.Render.Dashboard.Status.values = {_op: _op
-                                                     ,render: render
-                                                     ,renderTimer: renderTimer
-                                                     ,timerOpacity: timerOpacity
-                                                     ,getTimer: getTimer
-                                                     ,formatTimer: formatTimer
-                                                     ,renderSubStatus: renderSubStatus
-                                                     ,getSubStatus: getSubStatus};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.Dashboard = Elm.Game.Render.Dashboard || {};
-Elm.Game.Render.Dashboard.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.Dashboard = _elm.Game.Render.Dashboard || {};
-   if (_elm.Game.Render.Dashboard.values)
-   return _elm.Game.Render.Dashboard.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Dashboard$Status = Elm.Game.Render.Dashboard.Status.make(_elm),
-   $Game$Render$Dashboard$VmgBar = Elm.Game.Render.Dashboard.VmgBar.make(_elm),
-   $Game$Render$Dashboard$WindOriginGauge = Elm.Game.Render.Dashboard.WindOriginGauge.make(_elm),
-   $Game$Render$Dashboard$WindSpeedGraph = Elm.Game.Render.Dashboard.WindSpeedGraph.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var renderDashboard = F2(function (_p1,_p0) {
-      var _p2 = _p1;
-      var _p6 = _p2._0;
-      var _p3 = _p0;
-      var _p5 = _p3.playerState;
-      var _p4 = _p3;
-      return A2($Svg.g,
-      _U.list([]),
-      _U.list([A2($Svg.g,
-              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-              _p6 / 2 | 0,
-              120))]),
-              _U.list([$Game$Render$Dashboard$Status.render(_p4)]))
-              ,A2($Svg.g,
-              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-              $Basics.toFloat(_p6) / 2,
-              30))]),
-              _U.list([A2($Game$Render$Dashboard$WindOriginGauge.render,
-              _p2._1,
-              _p5.windOrigin)]))
-              ,A2($Svg.g,
-              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-              30,
-              30))]),
-              _U.list([A3($Game$Render$Dashboard$WindSpeedGraph.render,
-              _p4.timers.now,
-              _p5.windSpeed,
-              _p4.windHistory)]))
-              ,A2($Svg.g,
-              _U.list([$Svg$Attributes.transform(A2($Game$Render$SvgUtils.translate,
-              $Basics.toFloat(_p6) - $Game$Render$Dashboard$VmgBar.barWidth - 40,
-              40))]),
-              _U.list([$Game$Render$Dashboard$VmgBar.render(_p4.playerState)]))]));
-   });
-   return _elm.Game.Render.Dashboard.values = {_op: _op
-                                              ,renderDashboard: renderDashboard};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Render = Elm.Game.Render || {};
-Elm.Game.Render.All = Elm.Game.Render.All || {};
-Elm.Game.Render.All.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Render = _elm.Game.Render || {};
-   _elm.Game.Render.All = _elm.Game.Render.All || {};
-   if (_elm.Game.Render.All.values)
-   return _elm.Game.Render.All.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $Game$Render$Course = Elm.Game.Render.Course.make(_elm),
-   $Game$Render$Dashboard = Elm.Game.Render.Dashboard.make(_elm),
-   $Game$Render$Defs = Elm.Game.Render.Defs.make(_elm),
-   $Game$Render$Players = Elm.Game.Render.Players.make(_elm),
-   $Game$Render$SvgUtils = Elm.Game.Render.SvgUtils.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Svg = Elm.Svg.make(_elm),
-   $Svg$Attributes = Elm.Svg.Attributes.make(_elm);
-   var _op = {};
-   var render = F2(function (_p1,_p0) {
-      var _p2 = _p1;
-      var _p6 = _p2._0;
-      var _p5 = _p2._1;
-      var _p3 = _p0;
-      var _p4 = _p3;
-      var cy = $Basics.toFloat(_p5) / 2 - $Basics.toFloat(_p5) - $Basics.snd(_p4.center);
-      var cx = $Basics.toFloat(_p6) / 2 - $Basics.fst(_p4.center);
-      return A2($Svg.svg,
-      _U.list([$Svg$Attributes.width($Basics.toString(_p6))
-              ,$Svg$Attributes.height($Basics.toString(_p5))
-              ,$Svg$Attributes.version("1.1")]),
-      _U.list([$Game$Render$Defs.renderDefs
-              ,A2($Svg.g,
-              _U.list([$Svg$Attributes.transform(A2($Basics._op["++"],
-              "scale(1,-1)",
-              A2($Game$Render$SvgUtils.translate,cx,cy)))]),
-              _U.list([$Game$Render$Course.renderCourse(_p4)
-                      ,$Game$Render$Players.renderPlayers(_p4)]))
-              ,A2($Game$Render$Dashboard.renderDashboard,
-              {ctor: "_Tuple2",_0: _p6,_1: _p5},
-              _p4)]));
-   });
-   return _elm.Game.Render.All.values = {_op: _op,render: render};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.View = Elm.Screens.Game.View || {};
-Elm.Screens.Game.View.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.View = _elm.Screens.Game.View || {};
-   if (_elm.Screens.Game.View.values)
-   return _elm.Screens.Game.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Game = _elm.Page.Game || {};
+   _elm.Page.Game.View = _elm.Page.Game.View || {};
+   if (_elm.Page.Game.View.values)
+   return _elm.Page.Game.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -25250,11 +25440,11 @@ Elm.Screens.Game.View.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Game$ChatView = Elm.Page.Game.ChatView.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Page$Game$SideView = Elm.Page.Game.SideView.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$Game$ChatView = Elm.Screens.Game.ChatView.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Screens$Game$SideView = Elm.Screens.Game.SideView.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var view = F2(function (ctx,screen) {
@@ -25267,33 +25457,33 @@ Elm.Screens.Game.View.make = function (_elm) {
             var _p1 = ctx.dims;
             var w = _p1._0;
             var h = _p1._1;
-            return A3($Screens$Layout.layout,
+            return A3($Page$Layout.layout,
             "play-track",
-            A3($Screens$Game$SideView.view,screen,_p0._0._0,_p2),
+            A3($Page$Game$SideView.view,screen,_p0._0._0,_p2),
             _U.list([A2($Html.div,
             _U.list([$Html$Attributes.$class("game")]),
             _U.list([A2($Game$Render$All.render,
                     {ctor: "_Tuple2",_0: w - $Constants.sidebarWidth,_1: h},
                     _p2)
-                    ,A2($Screens$Game$ChatView.view,h,screen)]))]));
+                    ,A2($Page$Game$ChatView.view,h,screen)]))]));
          } else {
             return A2($Html.div,
             _U.list([$Html$Attributes.$class("")]),
             _U.list([]));
          }
    });
-   return _elm.Screens.Game.View.values = {_op: _op,view: view};
+   return _elm.Page.Game.View.values = {_op: _op,view: view};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.ListDrafts = Elm.Screens.ListDrafts || {};
-Elm.Screens.ListDrafts.View = Elm.Screens.ListDrafts.View || {};
-Elm.Screens.ListDrafts.View.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.ListDrafts = Elm.Page.ListDrafts || {};
+Elm.Page.ListDrafts.View = Elm.Page.ListDrafts.View || {};
+Elm.Page.ListDrafts.View.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.ListDrafts = _elm.Screens.ListDrafts || {};
-   _elm.Screens.ListDrafts.View = _elm.Screens.ListDrafts.View || {};
-   if (_elm.Screens.ListDrafts.View.values)
-   return _elm.Screens.ListDrafts.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.ListDrafts = _elm.Page.ListDrafts || {};
+   _elm.Page.ListDrafts.View = _elm.Page.ListDrafts.View || {};
+   if (_elm.Page.ListDrafts.View.values)
+   return _elm.Page.ListDrafts.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -25304,12 +25494,12 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
+   $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
+   $Page$ListDrafts$Update = Elm.Page.ListDrafts.Update.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$ListDrafts$Model = Elm.Screens.ListDrafts.Model.make(_elm),
-   $Screens$ListDrafts$Update = Elm.Screens.ListDrafts.Update.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var createTrackForm = function (_p0) {
@@ -25319,23 +25509,23 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
       _U.list([A2($Html.h3,
               _U.list([]),
               _U.list([$Html.text("New draft")]))
-              ,A2($Screens$Utils.formGroup,
+              ,A2($Page$Utils.formGroup,
               false,
-              _U.list([$Screens$Utils.textInput(_U.list([$Html$Attributes.value(_p1.name)
-                                                        ,$Html$Attributes.placeholder("Track name")
-                                                        ,A2($Screens$Utils.onInput,
-                                                        $Screens$ListDrafts$Update.addr,
-                                                        $Screens$ListDrafts$Model.SetDraftName)
-                                                        ,A2($Screens$Utils.onEnter,
-                                                        $Screens$ListDrafts$Update.addr,
-                                                        $Screens$ListDrafts$Model.CreateDraft)]))]))
+              _U.list([$Page$Utils.textInput(_U.list([$Html$Attributes.value(_p1.name)
+                                                     ,$Html$Attributes.placeholder("Track name")
+                                                     ,A2($Page$Utils.onInput,
+                                                     $Page$ListDrafts$Update.addr,
+                                                     $Page$ListDrafts$Model.SetDraftName)
+                                                     ,A2($Page$Utils.onEnter,
+                                                     $Page$ListDrafts$Update.addr,
+                                                     $Page$ListDrafts$Model.CreateDraft)]))]))
               ,A2($Html.div,
               _U.list([]),
               _U.list([A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-primary")
                       ,A2($Html$Events.onClick,
-                      $Screens$ListDrafts$Update.addr,
-                      $Screens$ListDrafts$Model.CreateDraft)]),
+                      $Page$ListDrafts$Update.addr,
+                      $Page$ListDrafts$Model.CreateDraft)]),
               _U.list([$Html.text("Create draft")]))]))]));
    };
    var draftItem = F2(function (confirmDelete,draft) {
@@ -25343,30 +25533,30 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
       _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                    ,_0: "confirm-delete"
                                                    ,_1: confirmDelete}]))]),
-      _U.list([A3($Screens$Utils.linkTo,
-              $Routes.EditTrack(draft.id),
+      _U.list([A3($Page$Utils.linkTo,
+              $Route.EditTrack(draft.id),
               _U.list([$Html$Attributes.$class("")]),
               _U.list([$Html.text(draft.name)]))
               ,A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-default btn-xs pull-right")
                       ,A2($Html$Events.onClick,
-                      $Screens$ListDrafts$Update.addr,
-                      $Screens$ListDrafts$Model.ConfirmDeleteDraft(draft))]),
+                      $Page$ListDrafts$Update.addr,
+                      $Page$ListDrafts$Model.ConfirmDeleteDraft(draft))]),
               _U.list([$Html.text("Delete")]))
               ,A2($Html.button,
               _U.list([$Html$Attributes.$class("btn btn-danger btn-xs pull-right delete-draft")
                       ,A2($Html$Events.onClick,
-                      $Screens$ListDrafts$Update.addr,
-                      $Screens$ListDrafts$Model.DeleteDraft(draft.id))]),
+                      $Page$ListDrafts$Update.addr,
+                      $Page$ListDrafts$Model.DeleteDraft(draft.id))]),
               _U.list([$Html.text("Confirm?")]))]));
    });
    var view = F2(function (ctx,_p2) {
       var _p3 = _p2;
       var _p4 = _p3;
-      return A3($Screens$Layout.layoutWithNav,
+      return A3($Page$Layout.layoutWithNav,
       "list-drafts",
       ctx,
-      _U.list([A2($Screens$Utils.container,
+      _U.list([A2($Page$Utils.container,
       "",
       _U.list([A2($Html.h1,
               _U.list([]),
@@ -25382,21 +25572,21 @@ Elm.Screens.ListDrafts.View.make = function (_elm) {
               _p3.drafts))
               ,createTrackForm(_p4)]))]));
    });
-   return _elm.Screens.ListDrafts.View.values = {_op: _op
-                                                ,view: view
-                                                ,draftItem: draftItem
-                                                ,createTrackForm: createTrackForm};
+   return _elm.Page.ListDrafts.View.values = {_op: _op
+                                             ,view: view
+                                             ,draftItem: draftItem
+                                             ,createTrackForm: createTrackForm};
 };
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Admin = Elm.Screens.Admin || {};
-Elm.Screens.Admin.View = Elm.Screens.Admin.View || {};
-Elm.Screens.Admin.View.make = function (_elm) {
+Elm.Page = Elm.Page || {};
+Elm.Page.Admin = Elm.Page.Admin || {};
+Elm.Page.Admin.View = Elm.Page.Admin.View || {};
+Elm.Page.Admin.View.make = function (_elm) {
    "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Admin = _elm.Screens.Admin || {};
-   _elm.Screens.Admin.View = _elm.Screens.Admin.View || {};
-   if (_elm.Screens.Admin.View.values)
-   return _elm.Screens.Admin.View.values;
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Admin = _elm.Page.Admin || {};
+   _elm.Page.Admin.View = _elm.Page.Admin.View || {};
+   if (_elm.Page.Admin.View.values)
+   return _elm.Page.Admin.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -25407,13 +25597,13 @@ Elm.Screens.Admin.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Models = Elm.Models.make(_elm),
+   $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
+   $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
+   $Page$Admin$Update = Elm.Page.Admin.Update.make(_elm),
+   $Page$Layout = Elm.Page.Layout.make(_elm),
+   $Page$Utils = Elm.Page.Utils.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$Model = Elm.Screens.Admin.Model.make(_elm),
-   $Screens$Admin$Routes = Elm.Screens.Admin.Routes.make(_elm),
-   $Screens$Admin$Update = Elm.Screens.Admin.Update.make(_elm),
-   $Screens$Layout = Elm.Screens.Layout.make(_elm),
-   $Screens$Utils = Elm.Screens.Utils.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $TransitStyle = Elm.TransitStyle.make(_elm);
    var _op = {};
@@ -25435,8 +25625,8 @@ Elm.Screens.Admin.View.make = function (_elm) {
       _U.list([]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("excerpt")]),
-              _U.list([A3($Screens$Utils.linkTo,
-                      $Routes.Admin($Screens$Admin$Routes.ListUsers($Maybe.Just(user.id))),
+              _U.list([A3($Page$Utils.linkTo,
+                      $Route.Admin($Page$Admin$Route.ListUsers($Maybe.Just(user.id))),
                       _U.list([$Html$Attributes.$class("name")]),
                       _U.list([$Html.text(user.handle)]))
                       ,A2($Html.span,
@@ -25461,7 +25651,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
       A2($List.map,
       function (u) {
          return A2(userItem,
-         _U.eq(route,$Screens$Admin$Routes.ListUsers($Maybe.Just(u.id))),
+         _U.eq(route,$Page$Admin$Route.ListUsers($Maybe.Just(u.id))),
          u);
       },
       _p3.users))]);
@@ -25471,8 +25661,8 @@ Elm.Screens.Admin.View.make = function (_elm) {
       _U.list([]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("excerpt")]),
-              _U.list([A3($Screens$Utils.linkTo,
-                      $Routes.EditTrack(track.id),
+              _U.list([A3($Page$Utils.linkTo,
+                      $Route.EditTrack(track.id),
                       _U.list([$Html$Attributes.$class("name")]),
                       _U.list([$Html.text(track.name)]))
                       ,A2($Html.span,
@@ -25481,8 +25671,8 @@ Elm.Screens.Admin.View.make = function (_elm) {
                       ,A2($Html.button,
                       _U.list([$Html$Attributes.$class("btn btn-danger btn-xs pull-right")
                               ,A2($Html$Events.onClick,
-                              $Screens$Admin$Update.addr,
-                              $Screens$Admin$Model.DeleteTrack(track.id))]),
+                              $Page$Admin$Update.addr,
+                              $Page$Admin$Model.DeleteTrack(track.id))]),
                       _U.list([$Html.text("Delete")]))]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
@@ -25498,8 +25688,7 @@ Elm.Screens.Admin.View.make = function (_elm) {
       A2($List.map,
       function (t) {
          return A2(trackItem,
-         _U.eq(route,
-         $Screens$Admin$Routes.ListTracks($Maybe.Just(t.id))),
+         _U.eq(route,$Page$Admin$Route.ListTracks($Maybe.Just(t.id))),
          t);
       },
       _p5.tracks))]);
@@ -25550,24 +25739,24 @@ Elm.Screens.Admin.View.make = function (_elm) {
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,DashboardTab)}]))]),
-              _U.list([A3($Screens$Utils.linkTo,
-              $Routes.Admin($Screens$Admin$Routes.Dashboard),
+              _U.list([A3($Page$Utils.linkTo,
+              $Route.Admin($Page$Admin$Route.Dashboard),
               _U.list([]),
               _U.list([$Html.text("Dashboard")]))]))
               ,A2($Html.li,
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,TracksTab)}]))]),
-              _U.list([A3($Screens$Utils.linkTo,
-              $Routes.Admin($Screens$Admin$Routes.ListTracks($Maybe.Nothing)),
+              _U.list([A3($Page$Utils.linkTo,
+              $Route.Admin($Page$Admin$Route.ListTracks($Maybe.Nothing)),
               _U.list([]),
               _U.list([$Html.text("Tracks")]))]))
               ,A2($Html.li,
               _U.list([$Html$Attributes.classList(_U.list([{ctor: "_Tuple2"
                                                            ,_0: "active"
                                                            ,_1: _U.eq(item,UsersTab)}]))]),
-              _U.list([A3($Screens$Utils.linkTo,
-              $Routes.Admin($Screens$Admin$Routes.ListUsers($Maybe.Nothing)),
+              _U.list([A3($Page$Utils.linkTo,
+              $Route.Admin($Page$Admin$Route.ListUsers($Maybe.Nothing)),
               _U.list([]),
               _U.list([$Html.text("Users")]))]))]));
    };
@@ -25580,35 +25769,35 @@ Elm.Screens.Admin.View.make = function (_elm) {
    };
    var view = F3(function (ctx,route,screen) {
       var menuItem = routeMenuItem(route);
-      return A3($Screens$Layout.layoutWithNav,
+      return A3($Page$Layout.layoutWithNav,
       "admin",
       ctx,
-      _U.list([A2($Screens$Utils.container,
+      _U.list([A2($Page$Utils.container,
       "",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Admin")]))
               ,menu(menuItem)
               ,A4(content,route,ctx,menuItem,screen)]))]));
    });
-   return _elm.Screens.Admin.View.values = {_op: _op
-                                           ,DashboardTab: DashboardTab
-                                           ,TracksTab: TracksTab
-                                           ,UsersTab: UsersTab
-                                           ,view: view
-                                           ,menu: menu
-                                           ,routeMenuItem: routeMenuItem
-                                           ,content: content
-                                           ,dashboardContent: dashboardContent
-                                           ,tracksContent: tracksContent
-                                           ,trackItem: trackItem
-                                           ,usersContent: usersContent
-                                           ,userItem: userItem
-                                           ,dl$: dl$};
+   return _elm.Page.Admin.View.values = {_op: _op
+                                        ,DashboardTab: DashboardTab
+                                        ,TracksTab: TracksTab
+                                        ,UsersTab: UsersTab
+                                        ,view: view
+                                        ,menu: menu
+                                        ,routeMenuItem: routeMenuItem
+                                        ,content: content
+                                        ,dashboardContent: dashboardContent
+                                        ,tracksContent: tracksContent
+                                        ,trackItem: trackItem
+                                        ,usersContent: usersContent
+                                        ,userItem: userItem
+                                        ,dl$: dl$};
 };
-Elm.AppView = Elm.AppView || {};
-Elm.AppView.make = function (_elm) {
+Elm.View = Elm.View || {};
+Elm.View.make = function (_elm) {
    "use strict";
-   _elm.AppView = _elm.AppView || {};
-   if (_elm.AppView.values) return _elm.AppView.values;
+   _elm.View = _elm.View || {};
+   if (_elm.View.values) return _elm.View.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
    $Basics = Elm.Basics.make(_elm),
@@ -25616,17 +25805,17 @@ Elm.AppView.make = function (_elm) {
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$Admin$View = Elm.Page.Admin.View.make(_elm),
+   $Page$EditTrack$View = Elm.Page.EditTrack.View.make(_elm),
+   $Page$Game$View = Elm.Page.Game.View.make(_elm),
+   $Page$Home$View = Elm.Page.Home.View.make(_elm),
+   $Page$ListDrafts$View = Elm.Page.ListDrafts.View.make(_elm),
+   $Page$Login$View = Elm.Page.Login.View.make(_elm),
+   $Page$Register$View = Elm.Page.Register.View.make(_elm),
+   $Page$ShowProfile$View = Elm.Page.ShowProfile.View.make(_elm),
+   $Page$ShowTrack$View = Elm.Page.ShowTrack.View.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Admin$View = Elm.Screens.Admin.View.make(_elm),
-   $Screens$EditTrack$View = Elm.Screens.EditTrack.View.make(_elm),
-   $Screens$Game$View = Elm.Screens.Game.View.make(_elm),
-   $Screens$Home$View = Elm.Screens.Home.View.make(_elm),
-   $Screens$ListDrafts$View = Elm.Screens.ListDrafts.View.make(_elm),
-   $Screens$Login$View = Elm.Screens.Login.View.make(_elm),
-   $Screens$Register$View = Elm.Screens.Register.View.make(_elm),
-   $Screens$ShowProfile$View = Elm.Screens.ShowProfile.View.make(_elm),
-   $Screens$ShowTrack$View = Elm.Screens.ShowTrack.View.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $TransitRouter = Elm.TransitRouter.make(_elm);
    var _op = {};
@@ -25641,235 +25830,32 @@ Elm.AppView.make = function (_elm) {
       _p2.routeTransition);
       var _p3 = $TransitRouter.getRoute(_p4);
       switch (_p3.ctor)
-      {case "Home": return A2($Screens$Home$View.view,ctx,_p5.home);
-         case "Register": return A2($Screens$Register$View.view,
+      {case "Home": return A2($Page$Home$View.view,ctx,_p5.home);
+         case "Register": return A2($Page$Register$View.view,
            ctx,
            _p5.register);
-         case "Login": return A2($Screens$Login$View.view,ctx,_p5.login);
-         case "ShowTrack": return A2($Screens$ShowTrack$View.view,
+         case "Login": return A2($Page$Login$View.view,ctx,_p5.login);
+         case "ShowTrack": return A2($Page$ShowTrack$View.view,
            ctx,
            _p5.showTrack);
-         case "EditTrack": return A2($Screens$EditTrack$View.view,
+         case "EditTrack": return A2($Page$EditTrack$View.view,
            ctx,
            _p5.editTrack);
-         case "ShowProfile": return A2($Screens$ShowProfile$View.view,
+         case "ShowProfile": return A2($Page$ShowProfile$View.view,
            ctx,
            _p5.showProfile);
-         case "PlayTrack": return A2($Screens$Game$View.view,
-           ctx,
-           _p5.game);
-         case "ListDrafts": return A2($Screens$ListDrafts$View.view,
+         case "PlayTrack": return A2($Page$Game$View.view,ctx,_p5.game);
+         case "ListDrafts": return A2($Page$ListDrafts$View.view,
            ctx,
            _p5.listDrafts);
-         case "Admin": return A3($Screens$Admin$View.view,
+         case "Admin": return A3($Page$Admin$View.view,
            ctx,
            _p3._0,
            _p5.admin);
          case "NotFound": return $Html.text("Not found!");
          default: return $Html.text("");}
    });
-   return _elm.AppView.values = {_op: _op,view: view};
-};
-Elm.Game = Elm.Game || {};
-Elm.Game.Outputs = Elm.Game.Outputs || {};
-Elm.Game.Outputs.make = function (_elm) {
-   "use strict";
-   _elm.Game = _elm.Game || {};
-   _elm.Game.Outputs = _elm.Game.Outputs || {};
-   if (_elm.Game.Outputs.values) return _elm.Game.Outputs.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $AppTypes = Elm.AppTypes.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Game$Inputs = Elm.Game.Inputs.make(_elm),
-   $Game$Models = Elm.Game.Models.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Routes = Elm.Routes.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $TransitRouter = Elm.TransitRouter.make(_elm);
-   var _op = {};
-   var needChatScrollDown = function (action) {
-      var _p0 = action;
-      if (_p0.ctor === "ScreenAction" && _p0._0.ctor === "GameAction" && _p0._0._0.ctor === "NewMessage")
-      {
-            return $Maybe.Just({ctor: "_Tuple0"});
-         } else {
-            return $Maybe.Nothing;
-         }
-   };
-   var getActiveTrack = function (appState) {
-      var _p1 = $TransitRouter.getRoute(appState);
-      if (_p1.ctor === "PlayTrack") {
-            return A2($Maybe.map,
-            function (_p2) {
-               return function (_) {
-                  return _.id;
-               }(function (_) {    return _.track;}(_p2));
-            },
-            appState.screens.game.liveTrack);
-         } else {
-            return $Maybe.Nothing;
-         }
-   };
-   var makePlayerOutput = F2(function (keyboardInput,gameState) {
-      var realKeyboardInput = gameState.chatting ? $Game$Inputs.emptyKeyboardInput : A2($Maybe.withDefault,
-      $Game$Inputs.emptyKeyboardInput,
-      keyboardInput);
-      return {state: $Game$Models.asOpponentState(gameState.playerState)
-             ,input: realKeyboardInput
-             ,localTime: gameState.timers.localTime};
-   });
-   var extractPlayerOutput = F2(function (appState,action) {
-      var gameState = function () {
-         var _p3 = $TransitRouter.getRoute(appState);
-         if (_p3.ctor === "PlayTrack") {
-               return appState.screens.game.gameState;
-            } else {
-               return $Maybe.Nothing;
-            }
-      }();
-      var keyboardInput = function () {
-         var _p4 = action;
-         if (_p4.ctor === "ScreenAction" && _p4._0.ctor === "GameAction" && _p4._0._0.ctor === "GameUpdate")
-         {
-               return $Maybe.Just(_p4._0._0._0.keyboardInput);
-            } else {
-               return $Maybe.Nothing;
-            }
-      }();
-      return A2($Maybe.map,makePlayerOutput(keyboardInput),gameState);
-   });
-   var PlayerOutput = F3(function (a,b,c) {
-      return {state: a,input: b,localTime: c};
-   });
-   return _elm.Game.Outputs.values = {_op: _op
-                                     ,PlayerOutput: PlayerOutput
-                                     ,extractPlayerOutput: extractPlayerOutput
-                                     ,makePlayerOutput: makePlayerOutput
-                                     ,getActiveTrack: getActiveTrack
-                                     ,needChatScrollDown: needChatScrollDown};
-};
-Elm.StartApp = Elm.StartApp || {};
-Elm.StartApp.make = function (_elm) {
-   "use strict";
-   _elm.StartApp = _elm.StartApp || {};
-   if (_elm.StartApp.values) return _elm.StartApp.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Html = Elm.Html.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var start = function (config) {
-      var updateStep = F2(function (action,_p0) {
-         var _p1 = _p0;
-         var _p2 = A2(config.update,action,_p1._0);
-         var newModel = _p2._0;
-         var additionalEffects = _p2._1;
-         return {ctor: "_Tuple2"
-                ,_0: newModel
-                ,_1: $Effects.batch(_U.list([_p1._1,additionalEffects]))};
-      });
-      var update = F2(function (actions,_p3) {
-         var _p4 = _p3;
-         return A3($List.foldl,
-         updateStep,
-         {ctor: "_Tuple2",_0: _p4._0,_1: $Effects.none},
-         actions);
-      });
-      var messages = $Signal.mailbox(_U.list([]));
-      var singleton = function (action) {
-         return _U.list([action]);
-      };
-      var address = A2($Signal.forwardTo,messages.address,singleton);
-      var inputs = $Signal.mergeMany(A2($List._op["::"],
-      messages.signal,
-      A2($List.map,$Signal.map(singleton),config.inputs)));
-      var effectsAndModel = A3($Signal.foldp,
-      update,
-      config.init,
-      inputs);
-      var model = A2($Signal.map,$Basics.fst,effectsAndModel);
-      return {html: A2($Signal.map,config.view(address),model)
-             ,model: model
-             ,tasks: A2($Signal.map,
-             function (_p5) {
-                return A2($Effects.toTask,messages.address,$Basics.snd(_p5));
-             },
-             effectsAndModel)};
-   };
-   var App = F3(function (a,b,c) {
-      return {html: a,model: b,tasks: c};
-   });
-   var Config = F4(function (a,b,c,d) {
-      return {init: a,update: b,view: c,inputs: d};
-   });
-   return _elm.StartApp.values = {_op: _op
-                                 ,start: start
-                                 ,Config: Config
-                                 ,App: App};
-};
-Elm.Screens = Elm.Screens || {};
-Elm.Screens.Game = Elm.Screens.Game || {};
-Elm.Screens.Game.Decoders = Elm.Screens.Game.Decoders || {};
-Elm.Screens.Game.Decoders.make = function (_elm) {
-   "use strict";
-   _elm.Screens = _elm.Screens || {};
-   _elm.Screens.Game = _elm.Screens.Game || {};
-   _elm.Screens.Game.Decoders = _elm.Screens.Game.Decoders || {};
-   if (_elm.Screens.Game.Decoders.values)
-   return _elm.Screens.Game.Decoders.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Decoders = Elm.Decoders.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var specificActionDecoder = function (tag) {
-      var _p0 = tag;
-      switch (_p0)
-      {case "NoOp":
-         return $Json$Decode.succeed($Screens$Game$Model.NoOp);
-         case "LiveTrack": return A2($Json$Decode.object1,
-           $Screens$Game$Model.UpdateLiveTrack,
-           A2($Json$Decode._op[":="],
-           "liveTrack",
-           $Decoders.liveTrackDecoder));
-         case "Message": return A2($Json$Decode.object1,
-           $Screens$Game$Model.NewMessage,
-           A2($Json$Decode._op[":="],"message",$Decoders.messageDecoder));
-         default: return $Json$Decode.fail(A2($Basics._op["++"],
-           tag,
-           " is not a recognized tag for actions"));}
-   };
-   var actionDecoder = A2($Json$Decode.andThen,
-   A2($Json$Decode._op[":="],"tag",$Json$Decode.string),
-   specificActionDecoder);
-   var decodeAction = function (value) {
-      var _p1 = A2($Json$Decode.decodeValue,actionDecoder,value);
-      if (_p1.ctor === "Err") {
-            return $Screens$Game$Model.NoOp;
-         } else {
-            return _p1._0;
-         }
-   };
-   return _elm.Screens.Game.Decoders.values = {_op: _op
-                                              ,decodeAction: decodeAction
-                                              ,actionDecoder: actionDecoder
-                                              ,specificActionDecoder: specificActionDecoder};
+   return _elm.View.values = {_op: _op,view: view};
 };
 Elm.Main = Elm.Main || {};
 Elm.Main.make = function (_elm) {
@@ -25878,8 +25864,6 @@ Elm.Main.make = function (_elm) {
    if (_elm.Main.values) return _elm.Main.values;
    var _U = Elm.Native.Utils.make(_elm),
    $AppTypes = Elm.AppTypes.make(_elm),
-   $AppUpdates = Elm.AppUpdates.make(_elm),
-   $AppView = Elm.AppView.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $DragAndDrop = Elm.DragAndDrop.make(_elm),
@@ -25890,23 +25874,25 @@ Elm.Main.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
+   $Page$Game$Decoders = Elm.Page.Game.Decoders.make(_elm),
+   $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
+   $Page$Game$Update = Elm.Page.Game.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Screens$EditTrack$Update = Elm.Screens.EditTrack.Update.make(_elm),
-   $Screens$Game$Decoders = Elm.Screens.Game.Decoders.make(_elm),
-   $Screens$Game$Model = Elm.Screens.Game.Model.make(_elm),
-   $Screens$Game$Update = Elm.Screens.Game.Update.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp = Elm.StartApp.make(_elm),
    $Task = Elm.Task.make(_elm),
    $Time = Elm.Time.make(_elm),
    $TransitRouter = Elm.TransitRouter.make(_elm),
+   $Update = Elm.Update.make(_elm),
+   $View = Elm.View.make(_elm),
    $Window = Elm.Window.make(_elm);
    var _op = {};
    var chatOutput = Elm.Native.Port.make(_elm).outboundSignal("chatOutput",
    function (v) {
       return v;
    },
-   $Screens$Game$Update.chat.signal);
+   $Page$Game$Update.chat.signal);
    var clock = A2($Signal.map,
    function (_p0) {
       var _p1 = _p0;
@@ -25920,7 +25906,7 @@ Elm.Main.make = function (_elm) {
    });
    var gameActions = A2($Signal.map,
    function (_p2) {
-      return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Decoders.decodeAction(_p2)));
+      return $AppTypes.ScreenAction($AppTypes.GameAction($Page$Game$Decoders.decodeAction(_p2)));
    },
    gameActionsInput);
    var chatScrollDown = Elm.Native.Port.make(_elm).outboundSignal("chatScrollDown",
@@ -26081,7 +26067,7 @@ Elm.Main.make = function (_elm) {
    clock,
    A3($Signal.filterMap,
    $Maybe.map(function (_p3) {
-      return $AppTypes.ScreenAction($AppTypes.GameAction($Screens$Game$Model.GameUpdate(_p3)));
+      return $AppTypes.ScreenAction($AppTypes.GameAction($Page$Game$Model.GameUpdate(_p3)));
    }),
    $AppTypes.AppNoOp,
    A3($Signal.map2,
@@ -26118,9 +26104,9 @@ Elm.Main.make = function (_elm) {
                                                                                     v.dims)} : _U.badPort("an object with fields `player`, `path`, `dims`",
       v);
    });
-   var app = $StartApp.start({init: $AppUpdates.init(appSetup)
-                             ,update: $AppUpdates.update
-                             ,view: $AppView.view
+   var app = $StartApp.start({init: $Update.init(appSetup)
+                             ,update: $Update.update
+                             ,view: $View.view
                              ,inputs: _U.list([A2($Signal.map,
                                               $AppTypes.RouterAction,
                                               $TransitRouter.actions)
@@ -26133,7 +26119,7 @@ Elm.Main.make = function (_elm) {
                                               function (_p4) {
                                                  return $AppTypes.ScreenAction($AppTypes.EditTrackAction(_p4));
                                               },
-                                              $Screens$EditTrack$Update.inputs)])});
+                                              $Page$EditTrack$Update.inputs)])});
    var main = app.html;
    var tasks = Elm.Native.Task.make(_elm).performSignal("tasks",
    app.tasks);

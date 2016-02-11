@@ -7,17 +7,17 @@ import Response exposing (..)
 
 import Models exposing (..)
 
-import Screens.Home.Model as Home
-import Screens.Login.Model as Login
-import Screens.Register.Model as Register
-import Screens.ShowTrack.Model as ShowTrack
-import Screens.EditTrack.Model as EditTrack
-import Screens.ShowProfile.Model as ShowProfile
-import Screens.Game.Model as Game
-import Screens.ListDrafts.Model as ListDrafts
-import Screens.Admin.Model as Admin
+import Page.Home.Model as Home
+import Page.Login.Model as Login
+import Page.Register.Model as Register
+import Page.ShowTrack.Model as ShowTrack
+import Page.EditTrack.Model as EditTrack
+import Page.ShowProfile.Model as ShowProfile
+import Page.Game.Model as Game
+import Page.ListDrafts.Model as ListDrafts
+import Page.Admin.Model as Admin
 
-import Routes
+import Route
 import Transit
 import TransitRouter exposing (WithRoute)
 
@@ -52,7 +52,7 @@ effect =
 
 type AppAction
   = SetPlayer Player
-  | RouterAction (TransitRouter.Action Routes.Route)
+  | RouterAction (TransitRouter.Action Route.Route)
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
   | ScreenAction ScreenAction
@@ -72,10 +72,10 @@ type ScreenAction
   | AdminAction Admin.Action
 
 
-type alias AppState = WithRoute Routes.Route
+type alias AppState = WithRoute Route.Route
   { player : Player
   , dims : Dims
-  , routeTransition : Routes.RouteTransition
+  , routeTransition : Route.RouteTransition
   , screens : Screens
   }
 
@@ -83,7 +83,7 @@ type alias Context =
   { player : Player
   , dims : (Int, Int)
   , transition : Transit.Transition
-  , routeTransition : Routes.RouteTransition
+  , routeTransition : Route.RouteTransition
   }
 
 type alias Screens =
@@ -103,8 +103,8 @@ initialAppState : AppSetup -> AppState
 initialAppState { path, dims, player } =
   { player = player
   , dims = dims
-  , transitRouter = TransitRouter.empty Routes.EmptyRoute
-  , routeTransition = Routes.None
+  , transitRouter = TransitRouter.empty Route.EmptyRoute
+  , routeTransition = Route.None
   , screens =
     { home = Home.initial player
     , login = Login.initial

@@ -3,10 +3,10 @@ module Game.Outputs where
 import TransitRouter exposing (getRoute)
 
 import AppTypes exposing (..)
-import Screens.Game.Model exposing (..)
+import Page.Game.Model exposing (..)
 import Game.Models exposing (..)
 import Game.Inputs exposing (..)
-import Routes
+import Route
 
 
 type alias PlayerOutput =
@@ -26,7 +26,7 @@ extractPlayerOutput appState action =
           Nothing
     gameState =
       case getRoute appState of
-        Routes.PlayTrack _ ->
+        Route.PlayTrack _ ->
           appState.screens.game.gameState
         _ ->
           Nothing
@@ -49,7 +49,7 @@ makePlayerOutput keyboardInput gameState =
 getActiveTrack : AppState -> Maybe String
 getActiveTrack appState =
   case getRoute appState of
-    Routes.PlayTrack _ ->
+    Route.PlayTrack _ ->
       Maybe.map (.track >> .id) appState.screens.game.liveTrack
     _ ->
       Nothing

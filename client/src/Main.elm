@@ -11,16 +11,16 @@ import StartApp
 import DragAndDrop exposing (mouseEvents)
 import TransitRouter
 
-import AppUpdates
+import Update
 import AppTypes exposing (..)
 import Game.Inputs exposing (..)
 import Game.Outputs exposing (PlayerOutput)
 import Game.Outputs exposing (PlayerOutput)
-import Screens.Game.Update exposing (chat)
-import Screens.Game.Model as GameTypes
-import Screens.EditTrack.Update as EditTrack
-import Screens.Game.Decoders as GameDecoders
-import AppView
+import Page.Game.Update exposing (chat)
+import Page.Game.Model as GameTypes
+import Page.EditTrack.Update as EditTrack
+import Page.Game.Decoders as GameDecoders
+import View
 
 
 -- Inputs
@@ -36,9 +36,9 @@ port gameActionsInput : Signal Json.Value
 
 app : StartApp.App AppState
 app = StartApp.start
-  { init = AppUpdates.init appSetup
-  , update = AppUpdates.update
-  , view = AppView.view
+  { init = Update.init appSetup
+  , update = Update.update
+  , view = View.view
   , inputs =
     [ map RouterAction TransitRouter.actions
     , map UpdateDims Window.dimensions
