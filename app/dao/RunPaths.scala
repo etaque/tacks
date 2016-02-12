@@ -6,7 +6,6 @@ import org.joda.time.DateTime
 import play.api.libs.json._
 
 import DB.api._
-import DB.Implicits._
 import models._
 import models.JsonFormats.pathSliceFormat
 

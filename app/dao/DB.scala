@@ -25,6 +25,9 @@ trait DB extends ExPostgresDriver
     with DateTimeImplicits
     with ArrayImplicits
     with JsonImplicits {
+
+    implicit val longSeqTypeMapper =
+      new SimpleArrayJdbcType[Long]("BIGINT").to(_.toSeq)
   }
 }
 
@@ -33,15 +36,5 @@ object DB extends DB {
 
   def run[A](a: DBIO[A]): Future[A] = {
     dbConfig.db.run(a)
-  }
-
-  object Implicits {
-    implicit val longSeqTypeMapper =
-      new SimpleArrayJdbcType[Long]("BIGINT").to(_.toSeq)
-
-    // def enumColumn[E <: Enumeration](enum: E) = MappedColumnType.base[E, String](
-    //   _.toString,
-    //   enum.withName(_)
-    // )
   }
 }
