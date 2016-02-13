@@ -29,7 +29,7 @@ object WebSockets extends Controller with Security {
   def trackPlayer(trackId: UUID) = WebSocket.tryAcceptWithActor[InputFrame, OutputFrame] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
-      trackMaybe <- Tracks.findById(trackId)
+      trackMaybe <- dao.Tracks.findById(trackId)
       track = trackMaybe.getOrElse(sys.error("Track not found"))
       ref <- (RacesSupervisor.actorRef ? GetTrackActorRef(track)).mapTo[ActorRef]
     }
