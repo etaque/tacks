@@ -66,7 +66,7 @@ object Forum extends Controller with Security {
             id = UUID.randomUUID(),
             title = Some(title),
             parentId = None,
-            authorId = request.player.id,
+            userId = request.player.id,
             content = content,
             creationTime = DateTime.now,
             updateTime = DateTime.now
@@ -95,7 +95,7 @@ object Forum extends Controller with Security {
                 id = UUID.randomUUID(),
                 title = None,
                 parentId = Some(parentId),
-                authorId = request.player.id,
+                userId = request.player.id,
                 content = content,
                 creationTime = DateTime.now,
                 updateTime = DateTime.now

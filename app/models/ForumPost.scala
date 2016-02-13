@@ -8,7 +8,7 @@ case class ForumPost(
   id: UUID,
   title: Option[String],
   parentId: Option[UUID],
-  authorId: UUID,
+  userId: UUID,
   content: String,
   creationTime: DateTime,
   updateTime: DateTime

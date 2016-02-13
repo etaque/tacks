@@ -15,6 +15,7 @@ import Page.EditTrack.Model as EditTrack
 import Page.ShowProfile.Model as ShowProfile
 import Page.Game.Model as Game
 import Page.ListDrafts.Model as ListDrafts
+import Page.Forum.Model as Forum
 import Page.Admin.Model as Admin
 
 import Route
@@ -69,6 +70,7 @@ type ScreenAction
   | ShowProfileAction ShowProfile.Action
   | GameAction Game.Action
   | ListDraftsAction ListDrafts.Action
+  | ForumAction Forum.Action
   | AdminAction Admin.Action
 
 
@@ -94,8 +96,9 @@ type alias Screens =
   , editTrack : EditTrack.Screen
   , showProfile : ShowProfile.Screen
   , game : Game.Screen
-  , listDrafts: ListDrafts.Screen
-  , admin: Admin.Screen
+  , listDrafts : ListDrafts.Screen
+  , forum : Forum.Screen
+  , admin : Admin.Screen
   }
 
 
@@ -114,6 +117,7 @@ initialAppState { path, dims, player } =
     , showProfile = ShowProfile.initial player
     , game = Game.initial
     , listDrafts = ListDrafts.initial
+    , forum = Forum.initial
     , admin = Admin.initial
     }
   }

@@ -5,15 +5,16 @@ import TransitRouter exposing (getTransition)
 
 import Model exposing (..)
 
-import Page.Home.View as HomeScreen
-import Page.Login.View as LoginScreen
-import Page.Register.View as RegisterScreen
-import Page.ShowTrack.View as ShowTrackScreen
-import Page.EditTrack.View as EditTrackScreen
-import Page.ShowProfile.View as ShowProfileScreen
-import Page.Game.View as GameScreen
-import Page.ListDrafts.View as ListDraftsScreen
-import Page.Admin.View as AdminScreen
+import Page.Home.View as HomePage
+import Page.Login.View as LoginPage
+import Page.Register.View as RegisterPage
+import Page.ShowTrack.View as ShowTrackPage
+import Page.EditTrack.View as EditTrackPage
+import Page.ShowProfile.View as ShowProfilePage
+import Page.Game.View as GamePage
+import Page.ListDrafts.View as ListDraftsPage
+import Page.Forum.View as ForumPage
+import Page.Admin.View as AdminPage
 
 import Route exposing (..)
 
@@ -26,31 +27,34 @@ view _ ({screens, player, dims, routeTransition} as appState) =
     case (TransitRouter.getRoute appState) of
 
       Home ->
-        HomeScreen.view ctx screens.home
+        HomePage.view ctx screens.home
 
       Register ->
-        RegisterScreen.view ctx screens.register
+        RegisterPage.view ctx screens.register
 
       Login ->
-        LoginScreen.view ctx screens.login
+        LoginPage.view ctx screens.login
 
       ShowTrack _ ->
-        ShowTrackScreen.view ctx screens.showTrack
+        ShowTrackPage.view ctx screens.showTrack
 
       EditTrack _ ->
-        EditTrackScreen.view ctx screens.editTrack
+        EditTrackPage.view ctx screens.editTrack
 
       ShowProfile ->
-        ShowProfileScreen.view ctx screens.showProfile
+        ShowProfilePage.view ctx screens.showProfile
 
       PlayTrack _ ->
-        GameScreen.view ctx screens.game
+        GamePage.view ctx screens.game
 
       ListDrafts ->
-        ListDraftsScreen.view ctx screens.listDrafts
+        ListDraftsPage.view ctx screens.listDrafts
+
+      Forum forumRoute ->
+        ForumPage.view ctx forumRoute screens.forum
 
       Admin adminRoute ->
-        AdminScreen.view ctx adminRoute screens.admin
+        AdminPage.view ctx adminRoute screens.admin
 
       NotFound ->
         text "Not found!"

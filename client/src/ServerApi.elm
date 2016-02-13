@@ -9,6 +9,7 @@ import Result exposing (Result(Ok,Err))
 import Effects exposing (Never)
 
 import Model.Shared exposing (..)
+import Model.Forum exposing (..)
 import Decoders exposing (..)
 import Encoders exposing (..)
 
@@ -37,6 +38,14 @@ getLiveTrack id =
 getDrafts : GetJsonTask (List Track)
 getDrafts =
   getJson (Json.list trackDecoder) "/api/tracks/drafts"
+
+getForumTopics : GetJsonTask (List ForumPost)
+getForumTopics =
+  getJson (Json.list forumPostDecoder) "/api/forum/topics"
+
+getForumTopicPosts : String -> GetJsonTask (List ForumPost)
+getForumTopicPosts id =
+  getJson (Json.list forumPostDecoder) ("/api/forum/topics/" ++ id)
 
 loadAdminData : GetJsonTask AdminData
 loadAdminData =

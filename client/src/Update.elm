@@ -16,6 +16,7 @@ import Page.EditTrack.Update as EditTrack
 import Page.ShowProfile.Update as ShowProfile
 import Page.Game.Update as Game
 import Page.ListDrafts.Update as ListDrafts
+import Page.Forum.Update as Forum
 import Page.Admin.Update as Admin
 
 import ServerApi
@@ -106,6 +107,9 @@ mountRoute prevRoute newRoute ({screens, player} as prevAppState) =
       ListDrafts ->
         applyListDrafts ListDrafts.mount appState
 
+      Forum forumRoute ->
+        applyForum Forum.mount appState
+
       Admin adminRoute ->
         applyAdmin Admin.mount appState
 
@@ -144,6 +148,9 @@ updateScreen screenAction ({screens, player, dims} as appState) =
     ListDraftsAction a ->
       applyListDrafts (ListDrafts.update a screens.listDrafts) appState
 
+    ForumAction a ->
+      applyForum (Forum.update a screens.forum) appState
+
     AdminAction a ->
       applyAdmin (Admin.update a screens.admin) appState
 
@@ -162,6 +169,7 @@ applyShowTrack = applyScreen (\s screens -> { screens | showTrack = s }) ShowTra
 applyEditTrack = applyScreen (\s screens -> { screens | editTrack = s }) EditTrackAction
 applyGame = applyScreen (\s screens -> { screens | game = s }) GameAction
 applyListDrafts = applyScreen (\s screens -> { screens | listDrafts = s }) ListDraftsAction
+applyForum = applyScreen (\s screens -> { screens | forum = s }) ForumAction
 applyAdmin = applyScreen (\s screens -> { screens | admin = s }) AdminAction
 
 applyScreen : (screen -> Screens -> Screens) -> (a -> ScreenAction) -> Response screen a -> AppState -> AppResponse

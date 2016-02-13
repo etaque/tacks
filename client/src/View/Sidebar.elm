@@ -10,6 +10,7 @@ import Model.Shared exposing (..)
 import View.Utils exposing (..)
 import Route exposing (..)
 import Page.Admin.Model as Admin
+import Page.Forum.Model as Forum
 
 
 view : Context -> List Html
@@ -45,11 +46,13 @@ userContent : Player -> List Html
 userContent player =
   let
     draftsLink = li [ ] [ linkTo ListDrafts [ ] [ text "Your tracks" ] ]
+    forumLink = li [ ] [ linkTo (Forum Forum.initialRoute) [ ] [ text "Forum" ] ]
     adminLink = li [ ] [ linkTo (Admin Admin.initialRoute) [ ] [ text "Admin" ] ]
   in
     [ ul [ class "user-menu" ] <|
         li [] [ linkTo Home [ ] [ text "Home" ] ]
         :: draftsLink
+        :: forumLink
         :: (if isAdmin player then [ adminLink ] else [ ])
     , div [ class "logout" ]
       [ a [ onClick appActionsAddress Logout ] [ text "Logout" ] ]

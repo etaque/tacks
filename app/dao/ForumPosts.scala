@@ -15,12 +15,12 @@ class ForumPostTable(tag: Tag) extends Table[ForumPost](tag, "forumPosts") {
   def id = column[UUID]("id", O.PrimaryKey)
   def title = column[Option[String]]("title")
   def parentId = column[Option[UUID]]("parent_id")
-  def authorId = column[UUID]("author_id")
+  def userId = column[UUID]("user_id")
   def content = column[String]("content")
   def creationTime = column[DateTime]("creation_time")
   def updateTime = column[DateTime]("update_time")
 
-  def * = (id, title, parentId, authorId, content, creationTime, updateTime) <> (ForumPost.tupled, ForumPost.unapply)
+  def * = (id, title, parentId, userId, content, creationTime, updateTime) <> (ForumPost.tupled, ForumPost.unapply)
 }
 
 object ForumPosts extends TableQuery(new ForumPostTable(_)) {

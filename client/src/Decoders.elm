@@ -4,6 +4,7 @@ import Json.Decode as Json exposing (..)
 import Dict
 
 import Model.Shared exposing (..)
+import Model.Forum exposing (..)
 
 
 liveStatusDecoder : Decoder LiveStatus
@@ -191,3 +192,14 @@ adminDataDecoder =
   object2 AdminData
     ("tracks" := list trackDecoder)
     ("users" := list userDecoder)
+
+forumPostDecoder : Decoder ForumPost
+forumPostDecoder =
+  object7 ForumPost
+    ("id" := string)
+    ("title" := maybe string)
+    ("parentId" := maybe string)
+    ("userId" := string)
+    ("content" := string)
+    ("creationTime" := float)
+    ("updateTime" := float)

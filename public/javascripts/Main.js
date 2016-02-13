@@ -15817,6 +15817,34 @@ Elm.Model.Shared.make = function (_elm) {
                                      ,Rock: Rock
                                      ,AdminData: AdminData};
 };
+Elm.Model = Elm.Model || {};
+Elm.Model.Forum = Elm.Model.Forum || {};
+Elm.Model.Forum.make = function (_elm) {
+   "use strict";
+   _elm.Model = _elm.Model || {};
+   _elm.Model.Forum = _elm.Model.Forum || {};
+   if (_elm.Model.Forum.values) return _elm.Model.Forum.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var ForumPost = F7(function (a,b,c,d,e,f,g) {
+      return {id: a
+             ,title: b
+             ,parentId: c
+             ,userId: d
+             ,content: e
+             ,creationTime: f
+             ,updateTime: g};
+   });
+   return _elm.Model.Forum.values = {_op: _op
+                                    ,ForumPost: ForumPost};
+};
 Elm.Decoders = Elm.Decoders || {};
 Elm.Decoders.make = function (_elm) {
    "use strict";
@@ -15829,10 +15857,24 @@ Elm.Decoders.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model$Forum = Elm.Model.Forum.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
+   var forumPostDecoder = A8($Json$Decode.object7,
+   $Model$Forum.ForumPost,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],
+   "title",
+   $Json$Decode.maybe($Json$Decode.string)),
+   A2($Json$Decode._op[":="],
+   "parentId",
+   $Json$Decode.maybe($Json$Decode.string)),
+   A2($Json$Decode._op[":="],"userId",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
    var rangeDecoder = A3($Json$Decode.object2,
    $Model$Shared.Range,
    A2($Json$Decode._op[":="],"start",$Json$Decode.$int),
@@ -16037,7 +16079,8 @@ Elm.Decoders.make = function (_elm) {
                                  ,windGeneratorDecoder: windGeneratorDecoder
                                  ,gustGeneratorDecoder: gustGeneratorDecoder
                                  ,rangeDecoder: rangeDecoder
-                                 ,adminDataDecoder: adminDataDecoder};
+                                 ,adminDataDecoder: adminDataDecoder
+                                 ,forumPostDecoder: forumPostDecoder};
 };
 Elm.Encoders = Elm.Encoders || {};
 Elm.Encoders.make = function (_elm) {
@@ -17838,6 +17881,84 @@ Elm.Page.ListDrafts.Model.make = function (_elm) {
                                               ,NoOp: NoOp};
 };
 Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.Route = Elm.Page.Forum.Route || {};
+Elm.Page.Forum.Route.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.Route = _elm.Page.Forum.Route || {};
+   if (_elm.Page.Forum.Route.values)
+   return _elm.Page.Forum.Route.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var toPath = function (route) {
+      return A2($Basics._op["++"],
+      "/forum",
+      function () {
+         var _p0 = route;
+         if (_p0.ctor === "Index") {
+               return "";
+            } else {
+               return A2($Basics._op["++"],"/forum/",_p0._0);
+            }
+      }());
+   };
+   var Topic = function (a) {    return {ctor: "Topic",_0: a};};
+   var Index = {ctor: "Index"};
+   var matchers = _U.list([A2($RouteParser.$static,Index,"/forum")
+                          ,A4($RouteParser.dyn1,Topic,"/forum/",$RouteParser.string,"")]);
+   return _elm.Page.Forum.Route.values = {_op: _op
+                                         ,matchers: matchers
+                                         ,toPath: toPath
+                                         ,Index: Index
+                                         ,Topic: Topic};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.Model = Elm.Page.Forum.Model || {};
+Elm.Page.Forum.Model.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.Model = _elm.Page.Forum.Model || {};
+   if (_elm.Page.Forum.Model.values)
+   return _elm.Page.Forum.Model.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Forum = Elm.Model.Forum.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var NoOp = {ctor: "NoOp"};
+   var TopicsResult = function (a) {
+      return {ctor: "TopicsResult",_0: a};
+   };
+   var initial = {topics: _U.list([]),users: _U.list([])};
+   var initialRoute = $Page$Forum$Route.Index;
+   var Screen = F2(function (a,b) {
+      return {topics: a,users: b};
+   });
+   return _elm.Page.Forum.Model.values = {_op: _op
+                                         ,Screen: Screen
+                                         ,initialRoute: initialRoute
+                                         ,initial: initial
+                                         ,TopicsResult: TopicsResult
+                                         ,NoOp: NoOp};
+};
+Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
 Elm.Page.Admin.Route = Elm.Page.Admin.Route || {};
 Elm.Page.Admin.Route.make = function (_elm) {
@@ -17972,6 +18093,7 @@ Elm.Route.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
+   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
    $RouteParser = Elm.RouteParser.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -17987,6 +18109,7 @@ Elm.Route.make = function (_elm) {
          case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
          case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
          case "PlayTrack": return A2($Basics._op["++"],"/play/",_p0._0);
+         case "Forum": return $Page$Forum$Route.toPath(_p0._0);
          case "Admin": return $Page$Admin$Route.toPath(_p0._0);
          case "EmptyRoute": return "/";
          default: return "/404";}
@@ -18008,6 +18131,7 @@ Elm.Route.make = function (_elm) {
    var EmptyRoute = {ctor: "EmptyRoute"};
    var NotFound = {ctor: "NotFound"};
    var Admin = function (a) {    return {ctor: "Admin",_0: a};};
+   var Forum = function (a) {    return {ctor: "Forum",_0: a};};
    var PlayTrack = function (a) {
       return {ctor: "PlayTrack",_0: a};
    };
@@ -18039,7 +18163,9 @@ Elm.Route.make = function (_elm) {
            "/play/",
            $RouteParser.string,
            "")]),
-   A2($RouteParser.mapMatchers,Admin,$Page$Admin$Route.matchers));
+   A2($Basics._op["++"],
+   A2($RouteParser.mapMatchers,Admin,$Page$Admin$Route.matchers),
+   A2($RouteParser.mapMatchers,Forum,$Page$Forum$Route.matchers)));
    var fromPath = function (path) {
       return A2($Maybe.withDefault,
       NotFound,
@@ -18054,6 +18180,7 @@ Elm.Route.make = function (_elm) {
                               ,ListDrafts: ListDrafts
                               ,EditTrack: EditTrack
                               ,PlayTrack: PlayTrack
+                              ,Forum: Forum
                               ,Admin: Admin
                               ,NotFound: NotFound
                               ,EmptyRoute: EmptyRoute
@@ -18080,6 +18207,7 @@ Elm.Model.make = function (_elm) {
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
+   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
    $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
@@ -18110,24 +18238,47 @@ Elm.Model.make = function (_elm) {
                        ,showProfile: $Page$ShowProfile$Model.initial(_p2)
                        ,game: $Page$Game$Model.initial
                        ,listDrafts: $Page$ListDrafts$Model.initial
+                       ,forum: $Page$Forum$Model.initial
                        ,admin: $Page$Admin$Model.initial}};
    };
-   var Screens = F9(function (a,b,c,d,e,f,g,h,i) {
-      return {home: a
-             ,login: b
-             ,register: c
-             ,showTrack: d
-             ,editTrack: e
-             ,showProfile: f
-             ,game: g
-             ,listDrafts: h
-             ,admin: i};
-   });
+   var Screens = function (a) {
+      return function (b) {
+         return function (c) {
+            return function (d) {
+               return function (e) {
+                  return function (f) {
+                     return function (g) {
+                        return function (h) {
+                           return function (i) {
+                              return function (j) {
+                                 return {home: a
+                                        ,login: b
+                                        ,register: c
+                                        ,showTrack: d
+                                        ,editTrack: e
+                                        ,showProfile: f
+                                        ,game: g
+                                        ,listDrafts: h
+                                        ,forum: i
+                                        ,admin: j};
+                              };
+                           };
+                        };
+                     };
+                  };
+               };
+            };
+         };
+      };
+   };
    var Context = F4(function (a,b,c,d) {
       return {player: a,dims: b,transition: c,routeTransition: d};
    });
    var AdminAction = function (a) {
       return {ctor: "AdminAction",_0: a};
+   };
+   var ForumAction = function (a) {
+      return {ctor: "ForumAction",_0: a};
    };
    var ListDraftsAction = function (a) {
       return {ctor: "ListDraftsAction",_0: a};
@@ -18201,6 +18352,7 @@ Elm.Model.make = function (_elm) {
                               ,ShowProfileAction: ShowProfileAction
                               ,GameAction: GameAction
                               ,ListDraftsAction: ListDraftsAction
+                              ,ForumAction: ForumAction
                               ,AdminAction: AdminAction
                               ,Context: Context
                               ,Screens: Screens
@@ -21747,6 +21899,7 @@ Elm.ServerApi.make = function (_elm) {
    $Json$Encode = Elm.Json.Encode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model$Forum = Elm.Model.Forum.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -21887,6 +22040,14 @@ Elm.ServerApi.make = function (_elm) {
    var loadAdminData = A2(getJson,
    $Decoders.adminDataDecoder,
    "/api/admin");
+   var getForumTopicPosts = function (id) {
+      return A2(getJson,
+      $Json$Decode.list($Decoders.forumPostDecoder),
+      A2($Basics._op["++"],"/api/forum/topics/",id));
+   };
+   var getForumTopics = A2(getJson,
+   $Json$Decode.list($Decoders.forumPostDecoder),
+   "/api/forum/topics");
    var getDrafts = A2(getJson,
    $Json$Decode.list($Decoders.trackDecoder),
    "/api/tracks/drafts");
@@ -21914,6 +22075,8 @@ Elm.ServerApi.make = function (_elm) {
                                   ,getTrack: getTrack
                                   ,getLiveTrack: getLiveTrack
                                   ,getDrafts: getDrafts
+                                  ,getForumTopics: getForumTopics
+                                  ,getForumTopicPosts: getForumTopicPosts
                                   ,loadAdminData: loadAdminData
                                   ,postHandle: postHandle
                                   ,postRegister: postRegister
@@ -23099,6 +23262,55 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
                                                ,deleteDraft: deleteDraft};
 };
 Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.Update = Elm.Page.Forum.Update || {};
+Elm.Page.Forum.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.Update = _elm.Page.Forum.Update || {};
+   if (_elm.Page.Forum.Update.values)
+   return _elm.Page.Forum.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Update$Utils = Elm.Update.Utils.make(_elm);
+   var _op = {};
+   var loadTopics = A2($Task.map,
+   $Page$Forum$Model.TopicsResult,
+   $ServerApi.getForumTopics);
+   var update = F2(function (action,screen) {
+      var _p0 = action;
+      if (_p0.ctor === "TopicsResult") {
+            var topics = A2($Result.withDefault,_U.list([]),_p0._0);
+            return A2($Response.res,
+            _U.update(screen,{topics: topics}),
+            $Effects.none);
+         } else {
+            return A2($Response.res,screen,$Effects.none);
+         }
+   });
+   var mount = A2($Response.taskRes,
+   $Page$Forum$Model.initial,
+   loadTopics);
+   var addr = $Update$Utils.screenAddr($Model.ForumAction);
+   return _elm.Page.Forum.Update.values = {_op: _op
+                                          ,addr: addr
+                                          ,mount: mount
+                                          ,update: update
+                                          ,loadTopics: loadTopics};
+};
+Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
 Elm.Page.Admin.Update = Elm.Page.Admin.Update || {};
 Elm.Page.Admin.Update.make = function (_elm) {
@@ -23185,6 +23397,7 @@ Elm.Update.make = function (_elm) {
    $Model = Elm.Model.make(_elm),
    $Page$Admin$Update = Elm.Page.Admin.Update.make(_elm),
    $Page$EditTrack$Update = Elm.Page.EditTrack.Update.make(_elm),
+   $Page$Forum$Update = Elm.Page.Forum.Update.make(_elm),
    $Page$Game$Update = Elm.Page.Game.Update.make(_elm),
    $Page$Home$Update = Elm.Page.Home.Update.make(_elm),
    $Page$ListDrafts$Update = Elm.Page.ListDrafts.Update.make(_elm),
@@ -23221,6 +23434,11 @@ Elm.Update.make = function (_elm) {
       return _U.update(screens,{admin: s});
    }),
    $Model.AdminAction);
+   var applyForum = A2(applyScreen,
+   F2(function (s,screens) {
+      return _U.update(screens,{forum: s});
+   }),
+   $Model.ForumAction);
    var applyListDrafts = A2(applyScreen,
    F2(function (s,screens) {
       return _U.update(screens,{listDrafts: s});
@@ -23298,6 +23516,9 @@ Elm.Update.make = function (_elm) {
          case "ListDraftsAction": return A2(applyListDrafts,
            A2($Page$ListDrafts$Update.update,_p3._0,_p5.listDrafts),
            _p4);
+         case "ForumAction": return A2(applyForum,
+           A2($Page$Forum$Update.update,_p3._0,_p5.forum),
+           _p4);
          default: return A2(applyAdmin,
            A2($Page$Admin$Update.update,_p3._0,_p5.admin),
            _p4);}
@@ -23335,6 +23556,9 @@ Elm.Update.make = function (_elm) {
            appState);
          case "ListDrafts": return A2(applyListDrafts,
            $Page$ListDrafts$Update.mount,
+           appState);
+         case "Forum": return A2(applyForum,
+           $Page$Forum$Update.mount,
            appState);
          case "Admin": return A2(applyAdmin,
            $Page$Admin$Update.mount,
@@ -23411,6 +23635,7 @@ Elm.Update.make = function (_elm) {
                                ,applyEditTrack: applyEditTrack
                                ,applyGame: applyGame
                                ,applyListDrafts: applyListDrafts
+                               ,applyForum: applyForum
                                ,applyAdmin: applyAdmin
                                ,applyScreen: applyScreen};
 };
@@ -23801,6 +24026,7 @@ Elm.View.Sidebar.make = function (_elm) {
    $Model = Elm.Model.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
+   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -23813,6 +24039,12 @@ Elm.View.Sidebar.make = function (_elm) {
       $Route.Admin($Page$Admin$Model.initialRoute),
       _U.list([]),
       _U.list([$Html.text("Admin")]))]));
+      var forumLink = A2($Html.li,
+      _U.list([]),
+      _U.list([A3($View$Utils.linkTo,
+      $Route.Forum($Page$Forum$Model.initialRoute),
+      _U.list([]),
+      _U.list([$Html.text("Forum")]))]));
       var draftsLink = A2($Html.li,
       _U.list([]),
       _U.list([A3($View$Utils.linkTo,
@@ -23830,7 +24062,9 @@ Elm.View.Sidebar.make = function (_elm) {
                      _U.list([$Html.text("Home")]))])),
                      A2($List._op["::"],
                      draftsLink,
-                     $Model$Shared.isAdmin(player) ? _U.list([adminLink]) : _U.list([]))))
+                     A2($List._op["::"],
+                     forumLink,
+                     $Model$Shared.isAdmin(player) ? _U.list([adminLink]) : _U.list([])))))
                      ,A2($Html.div,
                      _U.list([$Html$Attributes.$class("logout")]),
                      _U.list([A2($Html.a,
@@ -25581,6 +25815,37 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
                                              ,createTrackForm: createTrackForm};
 };
 Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.View = Elm.Page.Forum.View || {};
+Elm.Page.Forum.View.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.View = _elm.Page.Forum.View || {};
+   if (_elm.Page.Forum.View.values)
+   return _elm.Page.Forum.View.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model = Elm.Model.make(_elm),
+   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $View$Layout = Elm.View.Layout.make(_elm);
+   var _op = {};
+   var view = F3(function (ctx,route,screen) {
+      return A3($View$Layout.layoutWithNav,
+      "forum",
+      ctx,
+      _U.list([$Html.text("TODO")]));
+   });
+   return _elm.Page.Forum.View.values = {_op: _op,view: view};
+};
+Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
 Elm.Page.Admin.View = Elm.Page.Admin.View || {};
 Elm.Page.Admin.View.make = function (_elm) {
@@ -25810,6 +26075,7 @@ Elm.View.make = function (_elm) {
    $Model = Elm.Model.make(_elm),
    $Page$Admin$View = Elm.Page.Admin.View.make(_elm),
    $Page$EditTrack$View = Elm.Page.EditTrack.View.make(_elm),
+   $Page$Forum$View = Elm.Page.Forum.View.make(_elm),
    $Page$Game$View = Elm.Page.Game.View.make(_elm),
    $Page$Home$View = Elm.Page.Home.View.make(_elm),
    $Page$ListDrafts$View = Elm.Page.ListDrafts.View.make(_elm),
@@ -25851,6 +26117,10 @@ Elm.View.make = function (_elm) {
          case "ListDrafts": return A2($Page$ListDrafts$View.view,
            ctx,
            _p5.listDrafts);
+         case "Forum": return A3($Page$Forum$View.view,
+           ctx,
+           _p3._0,
+           _p5.forum);
          case "Admin": return A3($Page$Admin$View.view,
            ctx,
            _p3._0,

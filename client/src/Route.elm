@@ -2,6 +2,7 @@ module Route (..) where
 
 import RouteParser exposing (..)
 import Page.Admin.Route as AdminRoute
+import Page.Forum.Route as ForumRoute
 
 
 type Route
@@ -13,6 +14,7 @@ type Route
   | ListDrafts
   | EditTrack String
   | PlayTrack String
+  | Forum ForumRoute.Route
   | Admin AdminRoute.Route
   | NotFound
   | EmptyRoute
@@ -39,7 +41,9 @@ matchers =
   , dyn1 ShowTrack "/track/" string ""
   , dyn1 EditTrack "/edit/" string ""
   , dyn1 PlayTrack "/play/" string ""
-  ] ++ (mapMatchers Admin AdminRoute.matchers)
+  ] ++
+  (mapMatchers Admin AdminRoute.matchers) ++
+  (mapMatchers Forum ForumRoute.matchers)
 
 toPath : Route -> String
 toPath route =
@@ -52,6 +56,7 @@ toPath route =
     ShowTrack id -> "/track/" ++ id
     EditTrack id -> "/edit/" ++ id
     PlayTrack id -> "/play/" ++ id
+    Forum forumRoute -> ForumRoute.toPath forumRoute
     Admin adminRoute -> AdminRoute.toPath adminRoute
     EmptyRoute -> "/"
     NotFound -> "/404"
