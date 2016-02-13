@@ -15,7 +15,7 @@ import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Route -> Screen -> Html
-view ctx route screen =
+view : Context -> Route -> Model -> Html
+view ctx route model =
   Layout.layoutWithNav "forum" ctx
     [ text "TODO" ]

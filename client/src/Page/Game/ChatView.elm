@@ -12,7 +12,7 @@ import Page.Game.Update exposing (addr)
 import View.Utils exposing (..)
 
 
-view : Int -> Screen -> Html
+view : Int -> Model -> Html
 view h {messages, messageField} =
   let
     messagesDiv =

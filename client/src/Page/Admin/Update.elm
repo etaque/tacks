@@ -14,39 +14,39 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr AdminAction
+  Utils.pageAddr AdminAction
 
 
-mount : (Screen, Effects Action)
+mount : (Model, Effects Action)
 mount =
   taskRes initial refreshData
 
 
-update : Action -> Screen -> (Screen, Effects Action)
-update action screen =
+update : Action -> Model -> (Model, Effects Action)
+update action model =
   case action of
 
     RefreshData ->
-      taskRes screen refreshData
+      taskRes model refreshData
 
     RefreshDataResult result ->
       let
         {tracks, users} = Result.withDefault (AdminData [] []) result
       in
-        res { screen | tracks = tracks, users = users } none
+        res { model | tracks = tracks, users = users } none
 
     DeleteTrack id ->
-      taskRes screen (Task.map DeleteTrackResult (ServerApi.deleteDraft id))
+      taskRes model (Task.map DeleteTrackResult (ServerApi.deleteDraft id))
 
     DeleteTrackResult result ->
       case result of
         Ok id ->
-          res { screen | tracks = List.filter (\t -> t.id /= id) screen.tracks } none
+          res { model | tracks = List.filter (\t -> t.id /= id) model.tracks } none
         Err _ ->
-          res screen none
+          res model none
 
     NoOp ->
-      res screen none
+      res model none
 
 
 -- startTransition : Route -> Route -> Effects Action

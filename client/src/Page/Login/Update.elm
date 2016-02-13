@@ -13,43 +13,43 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr LoginAction
+  Utils.pageAddr LoginAction
 
 
-mount : (Screen, Effects Action)
+mount : (Model, Effects Action)
 mount =
   res initial none
 
 
-update : Action -> Screen -> (Screen, Effects Action)
-update action screen =
+update : Action -> Model -> (Model, Effects Action)
+update action model =
   case action of
 
     SetEmail e ->
-      res { screen | email = e } none
+      res { model | email = e } none
 
     SetPassword p ->
-      res { screen | password = p } none
+      res { model | password = p } none
 
     Submit ->
-      taskRes { screen | loading = True } (submitTask screen)
+      taskRes { model | loading = True } (submitTask model)
 
     SubmitResult result ->
       case result of
         Ok player ->
           let
-            newScreen = { screen | loading = False, error = False }
+            newModel = { model | loading = False, error = False }
             effect = Utils.setPlayer player |> Utils.always NoOp
           in
-            res newScreen effect
+            res newModel effect
         Err formErrors ->
-          res { screen | loading = False, error = True } none
+          res { model | loading = False, error = True } none
 
     NoOp ->
-      res screen none
+      res model none
 
-submitTask : Screen -> Task Never Action
-submitTask screen =
-  ServerApi.postLogin screen.email screen.password
+submitTask : Model -> Task Never Action
+submitTask model =
+  ServerApi.postLogin model.email model.password
     |> Task.map SubmitResult
 

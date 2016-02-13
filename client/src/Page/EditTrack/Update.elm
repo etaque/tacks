@@ -27,7 +27,7 @@ import Hexagons.Grid as Grid
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr EditTrackAction
+  Utils.pageAddr EditTrackAction
 
 
 inputs : Signal Action
@@ -40,80 +40,80 @@ mouseAction : MouseEvent -> Action
 mouseAction =
   MouseAction
 
-mount : String -> (Screen, Effects Action)
+mount : String -> (Model, Effects Action)
 mount id =
   taskRes initial (loadTrack id)
 
 
-update : Dims -> Action -> Screen -> (Screen, Effects Action)
-update dims action screen =
+update : Dims -> Action -> Model -> (Model, Effects Action)
+update dims action model =
   case action of
 
     LoadTrack result ->
       case result of
         Ok track ->
-          staticRes { screen | track = Just track, editor = Just (initialEditor track) }
+          staticRes { model | track = Just track, editor = Just (initialEditor track) }
         Err _ ->
-          staticRes { screen | notFound = True }
+          staticRes { model | notFound = True }
 
     ToggleBlock b ->
-      staticRes ((updateBlocks >> updateEditor) b screen)
+      staticRes ((updateBlocks >> updateEditor) b model)
 
     SetName n ->
-      staticRes (updateEditor (\e -> { e | name = n }) screen)
+      staticRes (updateEditor (\e -> { e | name = n }) model)
 
     MouseAction event ->
-      staticRes (updateEditor (GridUpdate.mouseAction event dims) screen)
+      staticRes (updateEditor (GridUpdate.mouseAction event dims) model)
 
     SetMode mode ->
-      staticRes (updateEditor (\e -> { e | mode = mode }) screen)
+      staticRes (updateEditor (\e -> { e | mode = mode }) model)
 
     AltMoveMode b ->
-      staticRes (updateEditor (\e -> { e | altMove = b }) screen)
+      staticRes (updateEditor (\e -> { e | altMove = b }) model)
 
     FormAction a ->
-      staticRes ((FormUpdate.update >> updateCourse >> updateEditor) a screen)
+      staticRes ((FormUpdate.update >> updateCourse >> updateEditor) a model)
 
     Save try ->
-      case (screen.track, screen.editor) of
+      case (model.track, model.editor) of
         (Just track, Just editor) ->
-          taskRes (updateEditor (\e -> { e | saving = True}) screen) (save try track.id editor)
+          taskRes (updateEditor (\e -> { e | saving = True}) model) (save try track.id editor)
         _ ->
-          res screen none
+          res model none
 
     SaveResult try result ->
       case result of
         Ok track ->
           let
-            newScreen = updateEditor (\e -> { e | saving = False }) screen
+            newModel = updateEditor (\e -> { e | saving = False }) model
             effect = if try
               then Effects.map (\_ -> NoOp) (Utils.redirect (Route.PlayTrack track.id))
               else none
           in
-            res newScreen effect
+            res newModel effect
         Err _ ->
-          res screen none -- TODO
+          res model none -- TODO
 
     ConfirmPublish ->
-      res (updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) screen) none
+      res (updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) model) none
 
     Publish ->
-      case (screen.track, screen.editor) of
+      case (model.track, model.editor) of
         (Just track, Just editor) ->
-          taskRes (updateEditor (\e -> { e | saving = True}) screen) (publish track.id editor)
+          taskRes (updateEditor (\e -> { e | saving = True}) model) (publish track.id editor)
         _ ->
-          res screen none
+          res model none
 
     NoOp ->
-      res screen none
+      res model none
 
 
-updateEditor : (Editor -> Editor) -> Screen -> Screen
-updateEditor update screen =
+updateEditor : (Editor -> Editor) -> Model -> Model
+updateEditor update model =
   let
-    newEditor = Maybe.map update screen.editor
+    newEditor = Maybe.map update model.editor
   in
-    { screen | editor = newEditor }
+    { model | editor = newEditor }
 
 
 updateCourse : (Course -> Course) -> Editor -> Editor

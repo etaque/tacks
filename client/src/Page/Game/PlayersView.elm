@@ -13,7 +13,7 @@ import Page.Game.Model exposing (..)
 import View.Utils exposing (..)
 
 
-block : Screen -> Html
+block : Model -> Html
 block {races, freePlayers} =
   div [ class "aside-module module-players" ]
     [ moduleTitle "Online players"

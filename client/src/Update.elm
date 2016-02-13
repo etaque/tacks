@@ -61,15 +61,15 @@ update appAction ({pages} as appState) =
       in
         case handlerMaybe of
           Just handler ->
-            updateScreen (handler mouseEvent) appState
+            updateModel (handler mouseEvent) appState
           _ ->
             res appState none
 
     Logout ->
       taskRes appState logoutTask
 
-    ScreenAction screenAction ->
-      updateScreen screenAction appState
+    PageAction modelAction ->
+      updateModel modelAction appState
 
     AppNoOp ->
       res appState none
@@ -120,9 +120,9 @@ mountRoute prevRoute newRoute ({pages, player} as prevAppState) =
         res appState none
 
 
-updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
-updateScreen screenAction ({pages, player, dims} as appState) =
-  case screenAction of
+updateModel : PageAction -> AppState -> (AppState, Effects AppAction)
+updateModel modelAction ({pages, player, dims} as appState) =
+  case modelAction of
 
     HomeAction a ->
       applyHome (Home.update a pages.home) appState
@@ -161,19 +161,19 @@ logoutTask =
     |> Task.map (\r -> Result.map SetPlayer r |> Result.withDefault AppNoOp)
 
 
-applyHome = applyScreen (\s pages -> { pages | home = s }) HomeAction
-applyLogin = applyScreen (\s pages -> { pages | login = s }) LoginAction
-applyRegister = applyScreen (\s pages -> { pages | register = s }) RegisterAction
-applyShowProfile = applyScreen (\s pages -> { pages | showProfile = s }) ShowProfileAction
-applyShowTrack = applyScreen (\s pages -> { pages | showTrack = s }) ShowTrackAction
-applyEditTrack = applyScreen (\s pages -> { pages | editTrack = s }) EditTrackAction
-applyGame = applyScreen (\s pages -> { pages | game = s }) GameAction
-applyListDrafts = applyScreen (\s pages -> { pages | listDrafts = s }) ListDraftsAction
-applyForum = applyScreen (\s pages -> { pages | forum = s }) ForumAction
-applyAdmin = applyScreen (\s pages -> { pages | admin = s }) AdminAction
+applyHome = applyModel (\s pages -> { pages | home = s }) HomeAction
+applyLogin = applyModel (\s pages -> { pages | login = s }) LoginAction
+applyRegister = applyModel (\s pages -> { pages | register = s }) RegisterAction
+applyShowProfile = applyModel (\s pages -> { pages | showProfile = s }) ShowProfileAction
+applyShowTrack = applyModel (\s pages -> { pages | showTrack = s }) ShowTrackAction
+applyEditTrack = applyModel (\s pages -> { pages | editTrack = s }) EditTrackAction
+applyGame = applyModel (\s pages -> { pages | game = s }) GameAction
+applyListDrafts = applyModel (\s pages -> { pages | listDrafts = s }) ListDraftsAction
+applyForum = applyModel (\s pages -> { pages | forum = s }) ForumAction
+applyAdmin = applyModel (\s pages -> { pages | admin = s }) AdminAction
 
-applyScreen : (screen -> Pages -> Pages) -> (a -> ScreenAction) -> Response screen a -> AppState -> AppResponse
-applyScreen pagesUpdater actionWrapper response appState =
+applyModel : (model -> Pages -> Pages) -> (a -> PageAction) -> Response model a -> AppState -> AppResponse
+applyModel pagesUpdater actionWrapper response appState =
   response
-    |> mapModel (\screen -> { appState | pages = pagesUpdater screen appState.pages })
-    |> mapEffects (actionWrapper >> ScreenAction)
+    |> mapModel (\model -> { appState | pages = pagesUpdater model appState.pages })
+    |> mapEffects (actionWrapper >> PageAction)

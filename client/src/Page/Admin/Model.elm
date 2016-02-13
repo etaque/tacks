@@ -4,7 +4,7 @@ import Model.Shared exposing (..)
 import Page.Admin.Route exposing (..)
 
 
-type alias Screen =
+type alias Model =
   { tracks : List Track
   , users : List User
   }
@@ -13,7 +13,7 @@ initialRoute : Route
 initialRoute =
   Dashboard
 
-initial : Screen
+initial : Model
 initial =
   { tracks = []
   , users = []

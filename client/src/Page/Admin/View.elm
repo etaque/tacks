@@ -21,8 +21,8 @@ import View.Layout as Layout
 
 type Tab = DashboardTab | TracksTab | UsersTab
 
-view : Context -> Route -> Screen -> Html
-view ctx route screen =
+view : Context -> Route -> Model -> Html
+view ctx route model =
   let
     menuItem = routeMenuItem route
   in
@@ -30,7 +30,7 @@ view ctx route screen =
       [ container "" <|
         [ h1 [] [ text "Admin" ]
         , menu menuItem
-        , content route ctx menuItem screen
+        , content route ctx menuItem model
         ]
       ]
 
@@ -52,8 +52,8 @@ routeMenuItem r =
     ListTracks _ -> TracksTab
     ListUsers _ -> UsersTab
 
-content : Route -> Context -> Tab -> Screen -> Html
-content route ctx item ({tracks, users} as screen) =
+content : Route -> Context -> Tab -> Model -> Html
+content route ctx item ({tracks, users} as model) =
   let
     transitStyle =
       case ctx.routeTransition of
@@ -62,23 +62,23 @@ content route ctx item ({tracks, users} as screen) =
     tabContent =
       case item of
         DashboardTab ->
-          dashboardContent route screen
+          dashboardContent route model
         TracksTab ->
-          tracksContent route screen
+          tracksContent route model
         UsersTab ->
-          usersContent route screen
+          usersContent route model
   in
     div [ class "admin-content", style transitStyle ] tabContent
 
 
-dashboardContent : Route -> Screen -> List Html
-dashboardContent route ({tracks, users} as screen) =
+dashboardContent : Route -> Model -> List Html
+dashboardContent route ({tracks, users} as model) =
   [ div [ class "" ] [ text <| toString (List.length users) ++ " users" ]
   , div [ class "" ] [ text <| toString (List.length tracks) ++ " tracks" ]
   ]
 
-tracksContent : Route -> Screen -> List Html
-tracksContent route ({tracks, users} as screen) =
+tracksContent : Route -> Model -> List Html
+tracksContent route ({tracks, users} as model) =
   [ ul [ class "list-unstyled admin-tracks" ]
     (List.map (\t -> trackItem (route == ListTracks (Just t.id)) t) tracks)
   ]
@@ -96,8 +96,8 @@ trackItem open track =
     [ text "detail" ]
   ]
 
-usersContent : Route -> Screen -> List Html
-usersContent route ({tracks, users} as screen) =
+usersContent : Route -> Model -> List Html
+usersContent route ({tracks, users} as model) =
   [ ul [ class "list-unstyled admin-users" ]
     (List.map (\u -> userItem (route == ListUsers (Just u.id)) u) users)
   ]

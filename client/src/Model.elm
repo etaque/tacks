@@ -56,12 +56,12 @@ type AppAction
   | RouterAction (TransitRouter.Action Route.Route)
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
-  | ScreenAction ScreenAction
+  | PageAction PageAction
   | Logout
   | AppNoOp
 
 
-type ScreenAction
+type PageAction
   = HomeAction Home.Action
   | LoginAction Login.Action
   | RegisterAction Register.Action
@@ -89,16 +89,16 @@ type alias Context =
   }
 
 type alias Pages =
-  { home : Home.Screen
-  , login : Login.Screen
-  , register : Register.Screen
-  , showTrack : ShowTrack.Screen
-  , editTrack : EditTrack.Screen
-  , showProfile : ShowProfile.Screen
-  , game : Game.Screen
-  , listDrafts : ListDrafts.Screen
-  , forum : Forum.Screen
-  , admin : Admin.Screen
+  { home : Home.Model
+  , login : Login.Model
+  , register : Register.Model
+  , showTrack : ShowTrack.Model
+  , editTrack : EditTrack.Model
+  , showProfile : ShowProfile.Model
+  , game : Game.Model
+  , listDrafts : ListDrafts.Model
+  , forum : Forum.Model
+  , admin : Admin.Model
   }
 
 

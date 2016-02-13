@@ -22,7 +22,7 @@ import Game.Render.Players exposing (renderPlayerHull)
 import Game.Render.SvgUtils exposing (..)
 
 
-view : Context -> Screen -> Html
+view : Context -> Model -> Html
 view ctx {liveTrack, courseControl} =
   Layout.layoutWithNav "show-track" ctx
   [ container ""

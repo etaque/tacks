@@ -15,15 +15,15 @@ import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Screen -> Html
-view ctx screen =
+view : Context -> Model -> Html
+view ctx model =
   Layout.layoutWithNav "home" ctx
   [ container ""
     [ intro
-    , welcomeForm ctx.player screen.handle
+    , welcomeForm ctx.player model.handle
     , div [ class "row live-center"]
-      [ div [ class "col-md-9" ] [ liveTracks ctx.player screen.liveStatus screen.trackFocus ]
-      , div [ class "col-md-3" ] [ activePlayers screen.liveStatus.liveTracks ]
+      [ div [ class "col-md-9" ] [ liveTracks ctx.player model.liveStatus model.trackFocus ]
+      , div [ class "col-md-3" ] [ activePlayers model.liveStatus.liveTracks ]
       ]
     ]
   ]

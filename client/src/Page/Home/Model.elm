@@ -3,14 +3,14 @@ module Page.Home.Model where
 import Model.Shared exposing (..)
 
 
-type alias Screen =
+type alias Model =
   { handle : String
   , liveStatus : LiveStatus
   , trackFocus : Maybe TrackId
   }
 
 
-initial : Player -> Screen
+initial : Player -> Model
 initial player =
   { handle = Maybe.withDefault "" player.handle
   , liveStatus = { liveTracks = [], onlinePlayers = [] }

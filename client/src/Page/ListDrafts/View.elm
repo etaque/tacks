@@ -16,15 +16,15 @@ import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Screen -> Html
-view ctx ({drafts} as screen) =
+view : Context -> Model -> Html
+view ctx ({drafts} as model) =
   Layout.layoutWithNav "list-drafts" ctx
   [ container ""
     [ h1 [ ] [ text "Drafts" ]
-    -- , Maybe.map confirmDelete screen.confirmDelete |> Maybe.withDefault (text "")
+    -- , Maybe.map confirmDelete model.confirmDelete |> Maybe.withDefault (text "")
     , ul [ class "list-unstyled drafts" ]
-      (List.map (\t -> draftItem (Just t == screen.confirmDelete) t) drafts)
-    , createTrackForm screen
+      (List.map (\t -> draftItem (Just t == model.confirmDelete) t) drafts)
+    , createTrackForm model
     ]
   ]
 
@@ -50,7 +50,7 @@ draftItem confirmDelete draft =
   ]
 
 
-createTrackForm : Screen -> Html
+createTrackForm : Model -> Html
 createTrackForm {name} =
   div [ class "form-new-draft" ]
   [ h3 [] [ text "New draft" ]

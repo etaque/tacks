@@ -46,7 +46,7 @@ app = StartApp.start
     , appActionsMailbox.signal
     , raceUpdateActions
     , gameActions
-    , map (EditTrackAction >> ScreenAction) EditTrack.inputs
+    , map (EditTrackAction >> PageAction) EditTrack.inputs
     ]
   }
 
@@ -67,13 +67,13 @@ raceUpdateActions : Signal AppAction
 raceUpdateActions =
   Signal.sampleOn rawInput clock
     |> Signal.map2 buildGameInput rawInput
-    |> Signal.filterMap (Maybe.map (GameTypes.GameUpdate >> GameAction >> ScreenAction)) Model.AppNoOp
+    |> Signal.filterMap (Maybe.map (GameTypes.GameUpdate >> GameAction >> PageAction)) Model.AppNoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 
 gameActions : Signal AppAction
 gameActions =
-  Signal.map (GameDecoders.decodeAction >> GameAction >> ScreenAction) gameActionsInput
+  Signal.map (GameDecoders.decodeAction >> GameAction >> PageAction) gameActionsInput
 
 clock : Signal Clock
 clock =

@@ -20,7 +20,7 @@ extractPlayerOutput appState action =
   let
     keyboardInput =
       case action of
-        ScreenAction (GameAction (GameUpdate gameInput)) ->
+        PageAction (GameAction (GameUpdate gameInput)) ->
           Just gameInput.keyboardInput
         _ ->
           Nothing
@@ -57,7 +57,7 @@ getActiveTrack appState =
 needChatScrollDown : AppAction -> Maybe ()
 needChatScrollDown action =
   case action of
-    ScreenAction (GameAction (NewMessage _)) ->
+    PageAction (GameAction (NewMessage _)) ->
       Just ()
     _ ->
       Nothing

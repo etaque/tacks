@@ -4,7 +4,7 @@ import Model.Shared exposing (..)
 import DragAndDrop exposing (MouseEvent(..))
 
 
-type alias Screen =
+type alias Model =
   { liveTrack : Maybe LiveTrack
   , notFound : Bool
   , courseControl : CourseControl
@@ -17,7 +17,7 @@ type alias CourseControl =
   , scale : Float
   }
 
-initial : Screen
+initial : Model
 initial =
   { liveTrack = Nothing
   , notFound = False

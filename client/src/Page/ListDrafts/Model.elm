@@ -3,14 +3,14 @@ module Page.ListDrafts.Model where
 import Model.Shared exposing (..)
 
 
-type alias Screen =
+type alias Model =
   { drafts : List Track
   , name : String
   , confirmDelete : Maybe Track
   , confirmPublish : Maybe Track
   }
 
-initial : Screen
+initial : Model
 initial =
   { drafts = []
   , name = ""

@@ -3,11 +3,11 @@ module Page.ShowProfile.Model where
 import Model.Shared exposing (..)
 
 
-type alias Screen =
+type alias Model =
   { player : Player
   }
 
-initial : Player -> Screen
+initial : Player -> Model
 initial player =
   { player = player }
 

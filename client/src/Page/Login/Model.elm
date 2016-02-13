@@ -3,14 +3,14 @@ module Page.Login.Model where
 import Model.Shared exposing (..)
 
 
-type alias Screen =
+type alias Model =
   { email : String
   , password : String
   , loading : Bool
   , error : Bool
   }
 
-initial : Screen
+initial : Model
 initial =
   { email = ""
   , password = ""

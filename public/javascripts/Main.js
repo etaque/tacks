@@ -17351,11 +17351,11 @@ Elm.Page.Home.Model.make = function (_elm) {
                           ,onlinePlayers: _U.list([])}
              ,trackFocus: $Maybe.Nothing};
    };
-   var Screen = F3(function (a,b,c) {
+   var Model = F3(function (a,b,c) {
       return {handle: a,liveStatus: b,trackFocus: c};
    });
    return _elm.Page.Home.Model.values = {_op: _op
-                                        ,Screen: Screen
+                                        ,Model: Model
                                         ,initial: initial
                                         ,SetLiveStatus: SetLiveStatus
                                         ,SetHandle: SetHandle
@@ -17398,11 +17398,11 @@ Elm.Page.Login.Model.make = function (_elm) {
                  ,password: ""
                  ,loading: false
                  ,error: false};
-   var Screen = F4(function (a,b,c,d) {
+   var Model = F4(function (a,b,c,d) {
       return {email: a,password: b,loading: c,error: d};
    });
    return _elm.Page.Login.Model.values = {_op: _op
-                                         ,Screen: Screen
+                                         ,Model: Model
                                          ,initial: initial
                                          ,SetEmail: SetEmail
                                          ,SetPassword: SetPassword
@@ -17463,11 +17463,11 @@ Elm.Page.Register.Model.make = function (_elm) {
    var initial = {form: A2($Form.initial,_U.list([]),validation)
                  ,loading: false
                  ,serverErrors: $Dict.empty};
-   var Screen = F3(function (a,b,c) {
+   var Model = F3(function (a,b,c) {
       return {form: a,loading: b,serverErrors: c};
    });
    return _elm.Page.Register.Model.values = {_op: _op
-                                            ,Screen: Screen
+                                            ,Model: Model
                                             ,NewPlayer: NewPlayer
                                             ,validation: validation
                                             ,handleFormat: handleFormat
@@ -17516,11 +17516,11 @@ Elm.Page.ShowTrack.Model.make = function (_elm) {
    var CourseControl = F4(function (a,b,c,d) {
       return {over: a,dragging: b,center: c,scale: d};
    });
-   var Screen = F3(function (a,b,c) {
+   var Model = F3(function (a,b,c) {
       return {liveTrack: a,notFound: b,courseControl: c};
    });
    return _elm.Page.ShowTrack.Model.values = {_op: _op
-                                             ,Screen: Screen
+                                             ,Model: Model
                                              ,CourseControl: CourseControl
                                              ,initial: initial
                                              ,LiveTrackResult: LiveTrackResult
@@ -17669,11 +17669,11 @@ Elm.Page.EditTrack.Model.make = function (_elm) {
    var initial = {track: $Maybe.Nothing
                  ,editor: $Maybe.Nothing
                  ,notFound: false};
-   var Screen = F3(function (a,b,c) {
+   var Model = F3(function (a,b,c) {
       return {track: a,editor: b,notFound: c};
    });
    return _elm.Page.EditTrack.Model.values = {_op: _op
-                                             ,Screen: Screen
+                                             ,Model: Model
                                              ,initial: initial
                                              ,Editor: Editor
                                              ,initialEditor: initialEditor
@@ -17733,9 +17733,9 @@ Elm.Page.ShowProfile.Model.make = function (_elm) {
    var _op = {};
    var NoOp = {ctor: "NoOp"};
    var initial = function (player) {    return {player: player};};
-   var Screen = function (a) {    return {player: a};};
+   var Model = function (a) {    return {player: a};};
    return _elm.Page.ShowProfile.Model.values = {_op: _op
-                                               ,Screen: Screen
+                                               ,Model: Model
                                                ,initial: initial
                                                ,NoOp: NoOp};
 };
@@ -17794,7 +17794,7 @@ Elm.Page.Game.Model.make = function (_elm) {
                  ,messages: _U.list([])
                  ,messageField: ""
                  ,notFound: false};
-   var Screen = F8(function (a,b,c,d,e,f,g,h) {
+   var Model = F8(function (a,b,c,d,e,f,g,h) {
       return {liveTrack: a
              ,gameState: b
              ,races: c
@@ -17805,7 +17805,7 @@ Elm.Page.Game.Model.make = function (_elm) {
              ,notFound: h};
    });
    return _elm.Page.Game.Model.values = {_op: _op
-                                        ,Screen: Screen
+                                        ,Model: Model
                                         ,initial: initial
                                         ,LoadLiveTrack: LoadLiveTrack
                                         ,InitGameState: InitGameState
@@ -17862,14 +17862,14 @@ Elm.Page.ListDrafts.Model.make = function (_elm) {
                  ,name: ""
                  ,confirmDelete: $Maybe.Nothing
                  ,confirmPublish: $Maybe.Nothing};
-   var Screen = F4(function (a,b,c,d) {
+   var Model = F4(function (a,b,c,d) {
       return {drafts: a
              ,name: b
              ,confirmDelete: c
              ,confirmPublish: d};
    });
    return _elm.Page.ListDrafts.Model.values = {_op: _op
-                                              ,Screen: Screen
+                                              ,Model: Model
                                               ,initial: initial
                                               ,DraftsResult: DraftsResult
                                               ,SetDraftName: SetDraftName
@@ -17948,11 +17948,11 @@ Elm.Page.Forum.Model.make = function (_elm) {
    };
    var initial = {topics: _U.list([]),users: _U.list([])};
    var initialRoute = $Page$Forum$Route.Index;
-   var Screen = F2(function (a,b) {
+   var Model = F2(function (a,b) {
       return {topics: a,users: b};
    });
    return _elm.Page.Forum.Model.values = {_op: _op
-                                         ,Screen: Screen
+                                         ,Model: Model
                                          ,initialRoute: initialRoute
                                          ,initial: initial
                                          ,TopicsResult: TopicsResult
@@ -18069,11 +18069,11 @@ Elm.Page.Admin.Model.make = function (_elm) {
    var RefreshData = {ctor: "RefreshData"};
    var initial = {tracks: _U.list([]),users: _U.list([])};
    var initialRoute = $Page$Admin$Route.Dashboard;
-   var Screen = F2(function (a,b) {
+   var Model = F2(function (a,b) {
       return {tracks: a,users: b};
    });
    return _elm.Page.Admin.Model.values = {_op: _op
-                                         ,Screen: Screen
+                                         ,Model: Model
                                          ,initialRoute: initialRoute
                                          ,initial: initial
                                          ,RefreshData: RefreshData
@@ -18306,8 +18306,8 @@ Elm.Model.make = function (_elm) {
    };
    var AppNoOp = {ctor: "AppNoOp"};
    var Logout = {ctor: "Logout"};
-   var ScreenAction = function (a) {
-      return {ctor: "ScreenAction",_0: a};
+   var PageAction = function (a) {
+      return {ctor: "PageAction",_0: a};
    };
    var MouseEvent = function (a) {
       return {ctor: "MouseEvent",_0: a};
@@ -18341,7 +18341,7 @@ Elm.Model.make = function (_elm) {
                               ,RouterAction: RouterAction
                               ,UpdateDims: UpdateDims
                               ,MouseEvent: MouseEvent
-                              ,ScreenAction: ScreenAction
+                              ,PageAction: PageAction
                               ,Logout: Logout
                               ,AppNoOp: AppNoOp
                               ,HomeAction: HomeAction
@@ -18381,7 +18381,7 @@ Elm.Game.Outputs.make = function (_elm) {
    var _op = {};
    var needChatScrollDown = function (action) {
       var _p0 = action;
-      if (_p0.ctor === "ScreenAction" && _p0._0.ctor === "GameAction" && _p0._0._0.ctor === "NewMessage")
+      if (_p0.ctor === "PageAction" && _p0._0.ctor === "GameAction" && _p0._0._0.ctor === "NewMessage")
       {
             return $Maybe.Just({ctor: "_Tuple0"});
          } else {
@@ -18421,7 +18421,7 @@ Elm.Game.Outputs.make = function (_elm) {
       }();
       var keyboardInput = function () {
          var _p4 = action;
-         if (_p4.ctor === "ScreenAction" && _p4._0.ctor === "GameAction" && _p4._0._0.ctor === "GameUpdate")
+         if (_p4.ctor === "PageAction" && _p4._0.ctor === "GameAction" && _p4._0._0.ctor === "GameUpdate")
          {
                return $Maybe.Just(_p4._0._0._0.keyboardInput);
             } else {
@@ -22114,11 +22114,11 @@ Elm.Update.Utils.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $TransitRouter = Elm.TransitRouter.make(_elm);
    var _op = {};
-   var screenAddr = function (toScreenAction) {
+   var pageAddr = function (toPageAction) {
       return A2($Signal.forwardTo,
       $Model.appActionsAddress,
       function (_p0) {
-         return $Model.ScreenAction(toScreenAction(_p0));
+         return $Model.PageAction(toPageAction(_p0));
       });
    };
    var always = F2(function (action,effect) {
@@ -22142,7 +22142,7 @@ Elm.Update.Utils.make = function (_elm) {
                                      ,redirect: redirect
                                      ,setPlayer: setPlayer
                                      ,always: always
-                                     ,screenAddr: screenAddr};
+                                     ,pageAddr: pageAddr};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Home = Elm.Page.Home || {};
@@ -22175,41 +22175,41 @@ Elm.Page.Home.Update.make = function (_elm) {
    var refreshLiveStatus = A2($Task.map,
    $Page$Home$Model.SetLiveStatus,
    $ServerApi.getLiveStatus);
-   var update = F2(function (action,screen) {
+   var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
       {case "SetLiveStatus": var liveStatus = A2($Result.withDefault,
-           screen.liveStatus,
+           model.liveStatus,
            _p0._0);
            return A2($Response.taskRes,
-           _U.update(screen,{liveStatus: liveStatus}),
+           _U.update(model,{liveStatus: liveStatus}),
            A2($Task$Extra.delay,5 * $Time.second,refreshLiveStatus));
          case "SetHandle": return A2($Response.res,
-           _U.update(screen,{handle: _p0._0}),
+           _U.update(model,{handle: _p0._0}),
            $Effects.none);
          case "SubmitHandle": return A2($Response.taskRes,
-           screen,
+           model,
            A2($Task.map,
            $Page$Home$Model.SubmitHandleResult,
-           $ServerApi.postHandle(screen.handle)));
+           $ServerApi.postHandle(model.handle)));
          case "SubmitHandleResult": return A2($Response.res,
-           screen,
+           model,
            A2($Update$Utils.always,
            $Page$Home$Model.NoOp,
            A2($Result.withDefault,
            $Effects.none,
            A2($Result.map,$Update$Utils.setPlayer,_p0._0))));
          case "FocusTrack": return A2($Response.res,
-           _U.update(screen,{trackFocus: _p0._0}),
+           _U.update(model,{trackFocus: _p0._0}),
            $Effects.none);
-         default: return A2($Response.res,screen,$Effects.none);}
+         default: return A2($Response.res,model,$Effects.none);}
    });
    var mount = function (player) {
       return A2($Response.taskRes,
       $Page$Home$Model.initial(player),
       refreshLiveStatus);
    };
-   var addr = $Update$Utils.screenAddr($Model.HomeAction);
+   var addr = $Update$Utils.pageAddr($Model.HomeAction);
    return _elm.Page.Home.Update.values = {_op: _op
                                          ,addr: addr
                                          ,mount: mount
@@ -22247,36 +22247,36 @@ Elm.Page.Register.Update.make = function (_elm) {
       $Page$Register$Model.SubmitResult,
       A3($ServerApi.postRegister,np.email,np.handle,np.password));
    };
-   var update = F2(function (action,screen) {
+   var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
       {case "FormAction": var newForm = A2($Form.update,
            _p0._0,
-           screen.form);
+           model.form);
            return A2($Response.res,
-           _U.update(screen,{form: newForm}),
+           _U.update(model,{form: newForm}),
            $Effects.none);
          case "Submit": return A2($Response.taskRes,
-           _U.update(screen,{loading: true}),
+           _U.update(model,{loading: true}),
            submitTask(_p0._0));
          case "SubmitResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
                  var effect = A2($Update$Utils.always,
                  $Page$Register$Model.NoOp,
                  $Update$Utils.setPlayer(_p1._0));
-                 var newScreen = _U.update(screen,{loading: false});
-                 return A2($Response.res,newScreen,effect);
+                 var newModel = _U.update(model,{loading: false});
+                 return A2($Response.res,newModel,effect);
               } else {
                  return A2($Response.res,
-                 _U.update(screen,{loading: false,serverErrors: _p1._0}),
+                 _U.update(model,{loading: false,serverErrors: _p1._0}),
                  $Effects.none);
               }
-         default: return A2($Response.res,screen,$Effects.none);}
+         default: return A2($Response.res,model,$Effects.none);}
    });
    var mount = A2($Response.res,
    $Page$Register$Model.initial,
    $Effects.none);
-   var addr = $Update$Utils.screenAddr($Model.RegisterAction);
+   var addr = $Update$Utils.pageAddr($Model.RegisterAction);
    return _elm.Page.Register.Update.values = {_op: _op
                                              ,addr: addr
                                              ,mount: mount
@@ -22308,41 +22308,41 @@ Elm.Page.Login.Update.make = function (_elm) {
    $Task = Elm.Task.make(_elm),
    $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
-   var submitTask = function (screen) {
+   var submitTask = function (model) {
       return A2($Task.map,
       $Page$Login$Model.SubmitResult,
-      A2($ServerApi.postLogin,screen.email,screen.password));
+      A2($ServerApi.postLogin,model.email,model.password));
    };
-   var update = F2(function (action,screen) {
+   var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
       {case "SetEmail": return A2($Response.res,
-           _U.update(screen,{email: _p0._0}),
+           _U.update(model,{email: _p0._0}),
            $Effects.none);
          case "SetPassword": return A2($Response.res,
-           _U.update(screen,{password: _p0._0}),
+           _U.update(model,{password: _p0._0}),
            $Effects.none);
          case "Submit": return A2($Response.taskRes,
-           _U.update(screen,{loading: true}),
-           submitTask(screen));
+           _U.update(model,{loading: true}),
+           submitTask(model));
          case "SubmitResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
                  var effect = A2($Update$Utils.always,
                  $Page$Login$Model.NoOp,
                  $Update$Utils.setPlayer(_p1._0));
-                 var newScreen = _U.update(screen,{loading: false,error: false});
-                 return A2($Response.res,newScreen,effect);
+                 var newModel = _U.update(model,{loading: false,error: false});
+                 return A2($Response.res,newModel,effect);
               } else {
                  return A2($Response.res,
-                 _U.update(screen,{loading: false,error: true}),
+                 _U.update(model,{loading: false,error: true}),
                  $Effects.none);
               }
-         default: return A2($Response.res,screen,$Effects.none);}
+         default: return A2($Response.res,model,$Effects.none);}
    });
    var mount = A2($Response.res,
    $Page$Login$Model.initial,
    $Effects.none);
-   var addr = $Update$Utils.screenAddr($Model.LoginAction);
+   var addr = $Update$Utils.pageAddr($Model.LoginAction);
    return _elm.Page.Login.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
@@ -22438,7 +22438,7 @@ Elm.Page.ShowTrack.Update.make = function (_elm) {
       $Page$ShowTrack$Model.initial,
       loadLiveTrack(slug));
    };
-   var addr = $Update$Utils.screenAddr($Model.ShowTrackAction);
+   var addr = $Update$Utils.pageAddr($Model.ShowTrackAction);
    return _elm.Page.ShowTrack.Update.values = {_op: _op
                                               ,addr: addr
                                               ,mount: mount
@@ -22835,53 +22835,53 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
    var updateCourse = F2(function (update,editor) {
       return _U.update(editor,{course: update(editor.course)});
    });
-   var updateEditor = F2(function (update,screen) {
-      var newEditor = A2($Maybe.map,update,screen.editor);
-      return _U.update(screen,{editor: newEditor});
+   var updateEditor = F2(function (update,model) {
+      var newEditor = A2($Maybe.map,update,model.editor);
+      return _U.update(model,{editor: newEditor});
    });
-   var update = F3(function (dims,action,screen) {
+   var update = F3(function (dims,action,model) {
       var _p14 = action;
       switch (_p14.ctor)
       {case "LoadTrack": var _p15 = _p14._0;
            if (_p15.ctor === "Ok") {
                  var _p16 = _p15._0;
-                 return staticRes(_U.update(screen,
+                 return staticRes(_U.update(model,
                  {track: $Maybe.Just(_p16)
                  ,editor: $Maybe.Just($Page$EditTrack$Model.initialEditor(_p16))}));
               } else {
-                 return staticRes(_U.update(screen,{notFound: true}));
+                 return staticRes(_U.update(model,{notFound: true}));
               }
          case "ToggleBlock": return staticRes(A2(function (_p17) {
               return updateEditor(updateBlocks(_p17));
            },
            _p14._0,
-           screen));
+           model));
          case "SetName": return staticRes(A2(updateEditor,
            function (e) {
               return _U.update(e,{name: _p14._0});
            },
-           screen));
+           model));
          case "MouseAction": return staticRes(A2(updateEditor,
            A2($Page$EditTrack$GridUpdate.mouseAction,_p14._0,dims),
-           screen));
+           model));
          case "SetMode": return staticRes(A2(updateEditor,
            function (e) {
               return _U.update(e,{mode: _p14._0});
            },
-           screen));
+           model));
          case "AltMoveMode": return staticRes(A2(updateEditor,
            function (e) {
               return _U.update(e,{altMove: _p14._0});
            },
-           screen));
+           model));
          case "FormAction": return staticRes(A2(function (_p18) {
               return updateEditor(updateCourse($Page$EditTrack$FormUpdate.update(_p18)));
            },
            _p14._0,
-           screen));
+           model));
          case "Save": var _p19 = {ctor: "_Tuple2"
-                                 ,_0: screen.track
-                                 ,_1: screen.editor};
+                                 ,_0: model.track
+                                 ,_1: model.editor};
            if (_p19.ctor === "_Tuple2" && _p19._0.ctor === "Just" && _p19._1.ctor === "Just")
            {
                  return A2($Response.taskRes,
@@ -22889,10 +22889,10 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
                  function (e) {
                     return _U.update(e,{saving: true});
                  },
-                 screen),
+                 model),
                  A3(save,_p14._0,_p19._0._0.id,_p19._1._0));
               } else {
-                 return A2($Response.res,screen,$Effects.none);
+                 return A2($Response.res,model,$Effects.none);
               }
          case "SaveResult": var _p20 = _p14._1;
            if (_p20.ctor === "Ok") {
@@ -22901,14 +22901,14 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
                     return $Page$EditTrack$Model.NoOp;
                  },
                  $Update$Utils.redirect($Route.PlayTrack(_p20._0.id))) : $Effects.none;
-                 var newScreen = A2(updateEditor,
+                 var newModel = A2(updateEditor,
                  function (e) {
                     return _U.update(e,{saving: false});
                  },
-                 screen);
-                 return A2($Response.res,newScreen,effect);
+                 model);
+                 return A2($Response.res,newModel,effect);
               } else {
-                 return A2($Response.res,screen,$Effects.none);
+                 return A2($Response.res,model,$Effects.none);
               }
          case "ConfirmPublish": return A2($Response.res,
            A2(updateEditor,
@@ -22916,11 +22916,11 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
               return _U.update(e,
               {confirmPublish: $Basics.not(e.confirmPublish)});
            },
-           screen),
+           model),
            $Effects.none);
          case "Publish": var _p22 = {ctor: "_Tuple2"
-                                    ,_0: screen.track
-                                    ,_1: screen.editor};
+                                    ,_0: model.track
+                                    ,_1: model.editor};
            if (_p22.ctor === "_Tuple2" && _p22._0.ctor === "Just" && _p22._1.ctor === "Just")
            {
                  return A2($Response.taskRes,
@@ -22928,12 +22928,12 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
                  function (e) {
                     return _U.update(e,{saving: true});
                  },
-                 screen),
+                 model),
                  A2(publish,_p22._0._0.id,_p22._1._0));
               } else {
-                 return A2($Response.res,screen,$Effects.none);
+                 return A2($Response.res,model,$Effects.none);
               }
-         default: return A2($Response.res,screen,$Effects.none);}
+         default: return A2($Response.res,model,$Effects.none);}
    });
    var mount = function (id) {
       return A2($Response.taskRes,
@@ -22944,7 +22944,7 @@ Elm.Page.EditTrack.Update.make = function (_elm) {
    var inputs = $Signal.mergeMany(_U.list([A2($Signal.map,
    $Page$EditTrack$Model.AltMoveMode,
    $Keyboard.shift)]));
-   var addr = $Update$Utils.screenAddr($Model.EditTrackAction);
+   var addr = $Update$Utils.pageAddr($Model.EditTrackAction);
    return _elm.Page.EditTrack.Update.values = {_op: _op
                                               ,addr: addr
                                               ,inputs: inputs
@@ -22989,16 +22989,16 @@ Elm.Page.ShowProfile.Update.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
-   var update = F2(function (action,screen) {
+   var update = F2(function (action,model) {
       var _p0 = action;
-      return A2($Response.res,screen,$Effects.none);
+      return A2($Response.res,model,$Effects.none);
    });
    var mount = function (player) {
       return A2($Response.res,
       $Page$ShowProfile$Model.initial(player),
       $Effects.none);
    };
-   var addr = $Update$Utils.screenAddr($Model.ShowProfileAction);
+   var addr = $Update$Utils.pageAddr($Model.ShowProfileAction);
    return _elm.Page.ShowProfile.Update.values = {_op: _op
                                                 ,addr: addr
                                                 ,mount: mount
@@ -23048,7 +23048,7 @@ Elm.Page.Game.Update.make = function (_elm) {
       $Page$Game$Model.LoadLiveTrack,
       $ServerApi.getLiveTrack(id));
    };
-   var applyLiveTrack = F2(function (_p0,screen) {
+   var applyLiveTrack = F2(function (_p0,model) {
       var _p1 = _p0;
       var _p3 = _p1.races;
       var racePlayers = A2($List.concatMap,
@@ -23064,7 +23064,7 @@ Elm.Page.Game.Update.make = function (_elm) {
          return $Basics.not(inRace(_p2));
       },
       _p1.players);
-      return _U.update(screen,
+      return _U.update(model,
       {liveTrack: $Maybe.Just(_p1)
       ,races: _p3
       ,freePlayers: freePlayers});
@@ -23082,17 +23082,17 @@ Elm.Page.Game.Update.make = function (_elm) {
       },
       A2($Signal.send,chat.address,content));
    };
-   var update = F3(function (player,action,screen) {
+   var update = F3(function (player,action,model) {
       var _p5 = action;
       switch (_p5.ctor)
       {case "LoadLiveTrack": var _p6 = _p5._0;
            if (_p6.ctor === "Ok") {
                  return A2($Response.res,
-                 screen,
+                 model,
                  $Effects.tick($Page$Game$Model.InitGameState(_p6._0)));
               } else {
                  return A2($Response.res,
-                 _U.update(screen,{notFound: true}),
+                 _U.update(model,{notFound: true}),
                  $Effects.none);
               }
          case "InitGameState": var _p7 = _p5._0;
@@ -23100,58 +23100,58 @@ Elm.Page.Game.Update.make = function (_elm) {
            _p5._1,
            _p7.track.course,
            player);
-           var newScreen = A2(applyLiveTrack,
+           var newModel = A2(applyLiveTrack,
            _p7,
-           _U.update(screen,{gameState: $Maybe.Just(gameState)}));
-           return A2($Response.res,newScreen,pingServer);
-         case "PingServer": return screen.live ? A2($Response.res,
-           screen,
+           _U.update(model,{gameState: $Maybe.Just(gameState)}));
+           return A2($Response.res,newModel,pingServer);
+         case "PingServer": return model.live ? A2($Response.res,
+           model,
            $Effects.none) : A2($Response.res,
-           _U.update(screen,
-           {gameState: A2(updateTime,_p5._0,screen.gameState)}),
+           _U.update(model,
+           {gameState: A2(updateTime,_p5._0,model.gameState)}),
            pingServer);
          case "GameUpdate": var newGameState = A2($Maybe.map,
            $Game$Steps.gameStep(_p5._0),
-           screen.gameState);
+           model.gameState);
            return A2($Response.res,
-           _U.update(screen,{gameState: newGameState,live: true}),
+           _U.update(model,{gameState: newGameState,live: true}),
            $Effects.none);
          case "EnterChat": var newGameState = A2($Maybe.map,
            function (gs) {
               return _U.update(gs,{chatting: true});
            },
-           screen.gameState);
+           model.gameState);
            return A2($Response.res,
-           _U.update(screen,{gameState: newGameState}),
+           _U.update(model,{gameState: newGameState}),
            $Effects.none);
          case "LeaveChat": var newGameState = A2($Maybe.map,
            function (gs) {
               return _U.update(gs,{chatting: false});
            },
-           screen.gameState);
+           model.gameState);
            return A2($Response.res,
-           _U.update(screen,{gameState: newGameState}),
+           _U.update(model,{gameState: newGameState}),
            $Effects.none);
          case "UpdateMessageField": return A2($Response.res,
-           _U.update(screen,{messageField: _p5._0}),
+           _U.update(model,{messageField: _p5._0}),
            $Effects.none);
-         case "SubmitMessage": return screen.live ? A2($Response.taskRes,
-           _U.update(screen,{messageField: ""}),
-           sendMessage(screen.messageField)) : A2($Response.res,
-           screen,
+         case "SubmitMessage": return model.live ? A2($Response.taskRes,
+           _U.update(model,{messageField: ""}),
+           sendMessage(model.messageField)) : A2($Response.res,
+           model,
            $Effects.none);
          case "NewMessage": return A2($Response.res,
-           _U.update(screen,
+           _U.update(model,
            {messages: A2($List.take,
            30,
-           A2($List._op["::"],_p5._0,screen.messages))}),
+           A2($List._op["::"],_p5._0,model.messages))}),
            $Effects.none);
          case "UpdateLiveTrack": return A2($Response.res,
-           A2(applyLiveTrack,_p5._0,screen),
+           A2(applyLiveTrack,_p5._0,model),
            $Effects.none);
-         default: return A2($Response.res,screen,$Effects.none);}
+         default: return A2($Response.res,model,$Effects.none);}
    });
-   var addr = $Update$Utils.screenAddr($Model.GameAction);
+   var addr = $Update$Utils.pageAddr($Model.GameAction);
    return _elm.Page.Game.Update.values = {_op: _op
                                          ,addr: addr
                                          ,chat: chat
@@ -23197,63 +23197,63 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
    var loadDrafts = A2($Task.map,
    $Page$ListDrafts$Model.DraftsResult,
    $ServerApi.getDrafts);
-   var update = F2(function (action,screen) {
+   var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
       {case "DraftsResult": var _p1 = _p0._0;
            if (_p1.ctor === "Ok") {
                  return A2($Response.res,
-                 _U.update(screen,{drafts: _p1._0}),
+                 _U.update(model,{drafts: _p1._0}),
                  $Effects.none);
               } else {
-                 return A2($Response.res,screen,$Effects.none);
+                 return A2($Response.res,model,$Effects.none);
               }
          case "SetDraftName": return A2($Response.res,
-           _U.update(screen,{name: _p0._0}),
+           _U.update(model,{name: _p0._0}),
            $Effects.none);
          case "CreateDraft": return A2($Response.taskRes,
-           screen,
+           model,
            A2($Task.map,
            $Page$ListDrafts$Model.CreateDraftResult,
-           $ServerApi.createTrack(screen.name)));
+           $ServerApi.createTrack(model.name)));
          case "CreateDraftResult": var _p2 = _p0._0;
            if (_p2.ctor === "Ok") {
                  return A2($Response.res,
-                 screen,
+                 model,
                  A2($Update$Utils.always,
                  $Page$ListDrafts$Model.NoOp,
                  $Update$Utils.redirect($Route.EditTrack(_p2._0.id))));
               } else {
-                 return A2($Response.res,screen,$Effects.none);
+                 return A2($Response.res,model,$Effects.none);
               }
          case "ConfirmDeleteDraft": var _p3 = _p0._0;
            var newConfirm = _U.eq($Maybe.Just(_p3),
-           screen.confirmDelete) ? $Maybe.Nothing : $Maybe.Just(_p3);
+           model.confirmDelete) ? $Maybe.Nothing : $Maybe.Just(_p3);
            return A2($Response.res,
-           _U.update(screen,{confirmDelete: newConfirm}),
+           _U.update(model,{confirmDelete: newConfirm}),
            $Effects.none);
          case "DeleteDraft": return A2($Response.taskRes,
-           screen,
+           model,
            deleteDraft(_p0._0));
          case "DeleteDraftResult": var _p4 = _p0._0;
            if (_p4.ctor === "Ok") {
                  return A2($Response.res,
-                 _U.update(screen,
+                 _U.update(model,
                  {drafts: A2($List.filter,
                  function (t) {
                     return !_U.eq(t.id,_p4._0);
                  },
-                 screen.drafts)}),
+                 model.drafts)}),
                  $Effects.none);
               } else {
-                 return A2($Response.res,screen,$Effects.none);
+                 return A2($Response.res,model,$Effects.none);
               }
-         default: return A2($Response.res,screen,$Effects.none);}
+         default: return A2($Response.res,model,$Effects.none);}
    });
    var mount = A2($Response.taskRes,
    $Page$ListDrafts$Model.initial,
    loadDrafts);
-   var addr = $Update$Utils.screenAddr($Model.ListDraftsAction);
+   var addr = $Update$Utils.pageAddr($Model.ListDraftsAction);
    return _elm.Page.ListDrafts.Update.values = {_op: _op
                                                ,addr: addr
                                                ,mount: mount
@@ -23289,21 +23289,21 @@ Elm.Page.Forum.Update.make = function (_elm) {
    var loadTopics = A2($Task.map,
    $Page$Forum$Model.TopicsResult,
    $ServerApi.getForumTopics);
-   var update = F2(function (action,screen) {
+   var update = F2(function (action,model) {
       var _p0 = action;
       if (_p0.ctor === "TopicsResult") {
             var topics = A2($Result.withDefault,_U.list([]),_p0._0);
             return A2($Response.res,
-            _U.update(screen,{topics: topics}),
+            _U.update(model,{topics: topics}),
             $Effects.none);
          } else {
-            return A2($Response.res,screen,$Effects.none);
+            return A2($Response.res,model,$Effects.none);
          }
    });
    var mount = A2($Response.taskRes,
    $Page$Forum$Model.initial,
    loadTopics);
-   var addr = $Update$Utils.screenAddr($Model.ForumAction);
+   var addr = $Update$Utils.pageAddr($Model.ForumAction);
    return _elm.Page.Forum.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
@@ -23339,11 +23339,11 @@ Elm.Page.Admin.Update.make = function (_elm) {
    var refreshData = A2($Task.map,
    $Page$Admin$Model.RefreshDataResult,
    $ServerApi.loadAdminData);
-   var update = F2(function (action,screen) {
+   var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
       {case "RefreshData": return A2($Response.taskRes,
-           screen,
+           model,
            refreshData);
          case "RefreshDataResult": var _p1 = A2($Result.withDefault,
            A2($Model$Shared.AdminData,_U.list([]),_U.list([])),
@@ -23351,32 +23351,32 @@ Elm.Page.Admin.Update.make = function (_elm) {
            var tracks = _p1.tracks;
            var users = _p1.users;
            return A2($Response.res,
-           _U.update(screen,{tracks: tracks,users: users}),
+           _U.update(model,{tracks: tracks,users: users}),
            $Effects.none);
          case "DeleteTrack": return A2($Response.taskRes,
-           screen,
+           model,
            A2($Task.map,
            $Page$Admin$Model.DeleteTrackResult,
            $ServerApi.deleteDraft(_p0._0)));
          case "DeleteTrackResult": var _p2 = _p0._0;
            if (_p2.ctor === "Ok") {
                  return A2($Response.res,
-                 _U.update(screen,
+                 _U.update(model,
                  {tracks: A2($List.filter,
                  function (t) {
                     return !_U.eq(t.id,_p2._0);
                  },
-                 screen.tracks)}),
+                 model.tracks)}),
                  $Effects.none);
               } else {
-                 return A2($Response.res,screen,$Effects.none);
+                 return A2($Response.res,model,$Effects.none);
               }
-         default: return A2($Response.res,screen,$Effects.none);}
+         default: return A2($Response.res,model,$Effects.none);}
    });
    var mount = A2($Response.taskRes,
    $Page$Admin$Model.initial,
    refreshData);
-   var addr = $Update$Utils.screenAddr($Model.AdminAction);
+   var addr = $Update$Utils.pageAddr($Model.AdminAction);
    return _elm.Page.Admin.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
@@ -23414,65 +23414,65 @@ Elm.Update.make = function (_elm) {
    $TransitRouter = Elm.TransitRouter.make(_elm),
    $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
-   var applyScreen = F4(function (pagesUpdater,
+   var applyModel = F4(function (pagesUpdater,
    actionWrapper,
    response,
    appState) {
       return A2($Response.mapEffects,
       function (_p0) {
-         return $Model.ScreenAction(actionWrapper(_p0));
+         return $Model.PageAction(actionWrapper(_p0));
       },
       A2($Response.mapModel,
-      function (screen) {
+      function (model) {
          return _U.update(appState,
-         {pages: A2(pagesUpdater,screen,appState.pages)});
+         {pages: A2(pagesUpdater,model,appState.pages)});
       },
       response));
    });
-   var applyAdmin = A2(applyScreen,
+   var applyAdmin = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{admin: s});
    }),
    $Model.AdminAction);
-   var applyForum = A2(applyScreen,
+   var applyForum = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{forum: s});
    }),
    $Model.ForumAction);
-   var applyListDrafts = A2(applyScreen,
+   var applyListDrafts = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{listDrafts: s});
    }),
    $Model.ListDraftsAction);
-   var applyGame = A2(applyScreen,
+   var applyGame = A2(applyModel,
    F2(function (s,pages) {    return _U.update(pages,{game: s});}),
    $Model.GameAction);
-   var applyEditTrack = A2(applyScreen,
+   var applyEditTrack = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{editTrack: s});
    }),
    $Model.EditTrackAction);
-   var applyShowTrack = A2(applyScreen,
+   var applyShowTrack = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{showTrack: s});
    }),
    $Model.ShowTrackAction);
-   var applyShowProfile = A2(applyScreen,
+   var applyShowProfile = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{showProfile: s});
    }),
    $Model.ShowProfileAction);
-   var applyRegister = A2(applyScreen,
+   var applyRegister = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{register: s});
    }),
    $Model.RegisterAction);
-   var applyLogin = A2(applyScreen,
+   var applyLogin = A2(applyModel,
    F2(function (s,pages) {
       return _U.update(pages,{login: s});
    }),
    $Model.LoginAction);
-   var applyHome = A2(applyScreen,
+   var applyHome = A2(applyModel,
    F2(function (s,pages) {    return _U.update(pages,{home: s});}),
    $Model.HomeAction);
    var logoutTask = A2($Task.map,
@@ -23482,11 +23482,11 @@ Elm.Update.make = function (_elm) {
       A2($Result.map,$Model.SetPlayer,r));
    },
    $ServerApi.postLogout);
-   var updateScreen = F2(function (screenAction,_p1) {
+   var updateModel = F2(function (modelAction,_p1) {
       var _p2 = _p1;
       var _p5 = _p2.pages;
       var _p4 = _p2;
-      var _p3 = screenAction;
+      var _p3 = modelAction;
       switch (_p3.ctor)
       {case "HomeAction": return A2(applyHome,
            A2($Page$Home$Update.update,_p3._0,_p5.home),
@@ -23608,12 +23608,12 @@ Elm.Update.make = function (_elm) {
            }();
            var _p20 = handlerMaybe;
            if (_p20.ctor === "Just") {
-                 return A2(updateScreen,_p20._0(_p15._0),_p21);
+                 return A2(updateModel,_p20._0(_p15._0),_p21);
               } else {
                  return A2($Response.res,_p21,$Effects.none);
               }
          case "Logout": return A2($Response.taskRes,_p21,logoutTask);
-         case "ScreenAction": return A2(updateScreen,_p15._0,_p21);
+         case "PageAction": return A2(updateModel,_p15._0,_p21);
          default: return A2($Response.res,_p21,$Effects.none);}
    });
    return _elm.Update.values = {_op: _op
@@ -23621,7 +23621,7 @@ Elm.Update.make = function (_elm) {
                                ,init: init
                                ,update: update
                                ,mountRoute: mountRoute
-                               ,updateScreen: updateScreen
+                               ,updateModel: updateModel
                                ,logoutTask: logoutTask
                                ,applyHome: applyHome
                                ,applyLogin: applyLogin
@@ -23633,7 +23633,7 @@ Elm.Update.make = function (_elm) {
                                ,applyListDrafts: applyListDrafts
                                ,applyForum: applyForum
                                ,applyAdmin: applyAdmin
-                               ,applyScreen: applyScreen};
+                               ,applyModel: applyModel};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Game = Elm.Page.Game || {};
@@ -24347,25 +24347,25 @@ Elm.Page.Home.View.make = function (_elm) {
                                              ,A2($Html.p,
                                              _U.list([]),
                                              _U.list([$Html.text("Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings.")]))]));
-   var view = F2(function (ctx,screen) {
+   var view = F2(function (ctx,model) {
       return A3($View$Layout.layoutWithNav,
       "home",
       ctx,
       _U.list([A2($View$Utils.container,
       "",
       _U.list([intro
-              ,A2(welcomeForm,ctx.player,screen.handle)
+              ,A2(welcomeForm,ctx.player,model.handle)
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("row live-center")]),
               _U.list([A2($Html.div,
                       _U.list([$Html$Attributes.$class("col-md-9")]),
                       _U.list([A3(liveTracks,
                       ctx.player,
-                      screen.liveStatus,
-                      screen.trackFocus)]))
+                      model.liveStatus,
+                      model.trackFocus)]))
                       ,A2($Html.div,
                       _U.list([$Html$Attributes.$class("col-md-3")]),
-                      _U.list([activePlayers(screen.liveStatus.liveTracks)]))]))]))]));
+                      _U.list([activePlayers(model.liveStatus.liveTracks)]))]))]))]));
    });
    return _elm.Page.Home.View.values = {_op: _op
                                        ,view: view
@@ -24446,7 +24446,7 @@ Elm.Page.Login.View.make = function (_elm) {
                       $Page$Login$Model.Submit)]),
               _U.list([$Html.text("Submit")]))]))]));
    };
-   var view = F2(function (ctx,screen) {
+   var view = F2(function (ctx,model) {
       return A3($View$Layout.layoutWithNav,
       "login",
       ctx,
@@ -24455,7 +24455,7 @@ Elm.Page.Login.View.make = function (_elm) {
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Login")]))
               ,$View$Utils.row(_U.list([A2($View$Utils.col$,
               6,
-              _U.list([loginForm(screen)]))]))]))]));
+              _U.list([loginForm(model)]))]))]))]));
    });
    return _elm.Page.Login.View.values = {_op: _op
                                         ,view: view
@@ -24556,7 +24556,7 @@ Elm.Page.Register.View.make = function (_elm) {
                       ,submitClick]),
               _U.list([$Html.text("Submit")]))]))]));
    };
-   var view = F2(function (ctx,screen) {
+   var view = F2(function (ctx,model) {
       return A3($View$Layout.layoutWithNav,
       "register",
       ctx,
@@ -24567,7 +24567,7 @@ Elm.Page.Register.View.make = function (_elm) {
               _U.list([$Html.text("Register")]))
               ,$View$Utils.row(_U.list([A2($View$Utils.col$,
               6,
-              _U.list([registerForm(screen)]))]))]))]));
+              _U.list([registerForm(model)]))]))]))]));
    });
    return _elm.Page.Register.View.values = {_op: _op
                                            ,view: view
@@ -25174,9 +25174,9 @@ Elm.Page.EditTrack.View.make = function (_elm) {
               ,A2($Game$Render$Gates.renderOpenGate,_p4.downwind,0)
               ,A2($Game$Render$Players.renderPlayerHull,0,0)]))]));
    });
-   var view = F2(function (_p5,screen) {
+   var view = F2(function (_p5,model) {
       var _p6 = _p5;
-      var _p7 = {ctor: "_Tuple2",_0: screen.track,_1: screen.editor};
+      var _p7 = {ctor: "_Tuple2",_0: model.track,_1: model.editor};
       if (_p7.ctor === "_Tuple2" && _p7._0.ctor === "Just" && _p7._1.ctor === "Just")
       {
             var _p9 = _p7._0._0;
@@ -25608,8 +25608,8 @@ Elm.Page.Game.SideView.make = function (_elm) {
               _U.list([$Html$Attributes.$class("list-unstyled list-rankings")]),
               A2($List.map,$View$Utils.rankingItem,_p3.meta.rankings))]));
    };
-   var liveBlocks = F2(function (screen,liveTrack) {
-      return _U.list([$Page$Game$PlayersView.block(screen)
+   var liveBlocks = F2(function (model,liveTrack) {
+      return _U.list([$Page$Game$PlayersView.block(model)
                      ,rankingsBlock(liveTrack)
                      ,helpBlock]);
    });
@@ -25634,10 +25634,10 @@ Elm.Page.Game.SideView.make = function (_elm) {
               _U.list([$Html.text(liveTrack.track.name)]))
               ,$View$Utils.hr$]));
    };
-   var view = F3(function (screen,liveTrack,gameState) {
+   var view = F3(function (model,liveTrack,gameState) {
       var blocks = _U.eq(liveTrack.track.status,
       $Model$Shared.Draft) ? draftBlocks(liveTrack) : A2(liveBlocks,
-      screen,
+      model,
       liveTrack);
       return A2($List._op["::"],
       $View$Sidebar.logo,
@@ -25680,10 +25680,10 @@ Elm.Page.Game.View.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $View$Layout = Elm.View.Layout.make(_elm);
    var _op = {};
-   var view = F2(function (ctx,screen) {
+   var view = F2(function (ctx,model) {
       var _p0 = {ctor: "_Tuple2"
-                ,_0: screen.liveTrack
-                ,_1: screen.gameState};
+                ,_0: model.liveTrack
+                ,_1: model.gameState};
       if (_p0.ctor === "_Tuple2" && _p0._0.ctor === "Just" && _p0._1.ctor === "Just")
       {
             var _p2 = _p0._1._0;
@@ -25692,13 +25692,13 @@ Elm.Page.Game.View.make = function (_elm) {
             var h = _p1._1;
             return A3($View$Layout.layout,
             "play-track",
-            A3($Page$Game$SideView.view,screen,_p0._0._0,_p2),
+            A3($Page$Game$SideView.view,model,_p0._0._0,_p2),
             _U.list([A2($Html.div,
             _U.list([$Html$Attributes.$class("game")]),
             _U.list([A2($Game$Render$All.render,
                     {ctor: "_Tuple2",_0: w - $Constants.sidebarWidth,_1: h},
                     _p2)
-                    ,A2($Page$Game$ChatView.view,h,screen)]))]));
+                    ,A2($Page$Game$ChatView.view,h,model)]))]));
          } else {
             return A2($Html.div,
             _U.list([$Html$Attributes.$class("")]),
@@ -25833,7 +25833,7 @@ Elm.Page.Forum.View.make = function (_elm) {
    $Signal = Elm.Signal.make(_elm),
    $View$Layout = Elm.View.Layout.make(_elm);
    var _op = {};
-   var view = F3(function (ctx,route,screen) {
+   var view = F3(function (ctx,route,model) {
       return A3($View$Layout.layoutWithNav,
       "forum",
       ctx,
@@ -26031,7 +26031,7 @@ Elm.Page.Admin.View.make = function (_elm) {
          case "ListTracks": return TracksTab;
          default: return UsersTab;}
    };
-   var view = F3(function (ctx,route,screen) {
+   var view = F3(function (ctx,route,model) {
       var menuItem = routeMenuItem(route);
       return A3($View$Layout.layoutWithNav,
       "admin",
@@ -26040,7 +26040,7 @@ Elm.Page.Admin.View.make = function (_elm) {
       "",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Admin")]))
               ,menu(menuItem)
-              ,A4(content,route,ctx,menuItem,screen)]))]));
+              ,A4(content,route,ctx,menuItem,model)]))]));
    });
    return _elm.Page.Admin.View.values = {_op: _op
                                         ,DashboardTab: DashboardTab
@@ -26175,7 +26175,7 @@ Elm.Main.make = function (_elm) {
    });
    var gameActions = A2($Signal.map,
    function (_p2) {
-      return $Model.ScreenAction($Model.GameAction($Page$Game$Decoders.decodeAction(_p2)));
+      return $Model.PageAction($Model.GameAction($Page$Game$Decoders.decodeAction(_p2)));
    },
    gameActionsInput);
    var chatScrollDown = Elm.Native.Port.make(_elm).outboundSignal("chatScrollDown",
@@ -26336,7 +26336,7 @@ Elm.Main.make = function (_elm) {
    clock,
    A3($Signal.filterMap,
    $Maybe.map(function (_p3) {
-      return $Model.ScreenAction($Model.GameAction($Page$Game$Model.GameUpdate(_p3)));
+      return $Model.PageAction($Model.GameAction($Page$Game$Model.GameUpdate(_p3)));
    }),
    $Model.AppNoOp,
    A3($Signal.map2,
@@ -26386,7 +26386,7 @@ Elm.Main.make = function (_elm) {
                                               ,gameActions
                                               ,A2($Signal.map,
                                               function (_p4) {
-                                                 return $Model.ScreenAction($Model.EditTrackAction(_p4));
+                                                 return $Model.PageAction($Model.EditTrackAction(_p4));
                                               },
                                               $Page$EditTrack$Update.inputs)])});
    var main = app.html;

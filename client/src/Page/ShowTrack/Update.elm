@@ -15,9 +15,9 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr ShowTrackAction
+  Utils.pageAddr ShowTrackAction
 
-mount : String -> Response Screen Action
+mount : String -> Response Model Action
 mount slug =
   taskRes initial (loadLiveTrack slug)
 
@@ -25,19 +25,19 @@ mouseAction : MouseEvent -> Action
 mouseAction =
   MouseAction
 
-update : Action -> Screen -> Response Screen Action
-update action ({courseControl} as screen) =
+update : Action -> Model -> Response Model Action
+update action ({courseControl} as model) =
   case action of
 
     LiveTrackResult result ->
       case result of
         Ok liveTrack ->
-          res { screen | liveTrack = Just liveTrack } none
+          res { model | liveTrack = Just liveTrack } none
         Err _ ->
-          res { screen | notFound = True } none
+          res { model | notFound = True } none
 
     SetOverCourse b ->
-      res { screen | courseControl = { courseControl | over = b } } none
+      res { model | courseControl = { courseControl | over = b } } none
 
     MouseAction event ->
       let
@@ -61,10 +61,10 @@ update action ({courseControl} as screen) =
         newCenter = (x + dx, y + dy)
         newControl = { courseControl | center = newCenter, dragging = dragging }
       in
-        res { screen | courseControl = newControl } none
+        res { model | courseControl = newControl } none
 
     NoOp ->
-      res screen none
+      res model none
 
 
 loadLiveTrack : TrackId -> Task Never Action

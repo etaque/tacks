@@ -20,9 +20,9 @@ import Game.Render.Gates exposing (renderOpenGate)
 import Game.Render.Players exposing (renderPlayerHull)
 
 
-view : Context -> Screen -> Html
-view {player, dims} screen =
-  case (screen.track, screen.editor) of
+view : Context -> Model -> Html
+view {player, dims} model =
+  case (model.track, model.editor) of
     (Just track, Just editor) ->
       if canUpdateDraft player track then
         Layout.layout "editor"

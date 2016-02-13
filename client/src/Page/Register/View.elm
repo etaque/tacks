@@ -19,16 +19,16 @@ import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Screen -> Html
-view ctx screen =
+view : Context -> Model -> Html
+view ctx model =
   Layout.layoutWithNav "register" ctx
     [ container ""
       [ h1 [] [ text "Register" ]
-      , row [ col' 6 [ registerForm screen ] ]
+      , row [ col' 6 [ registerForm model ] ]
       ]
     ]
 
-registerForm : Screen -> Html
+registerForm : Model -> Html
 registerForm {form, loading, serverErrors} =
   let
     formAddr = Signal.forwardTo addr FormAction

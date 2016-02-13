@@ -16,40 +16,40 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr RegisterAction
+  Utils.pageAddr RegisterAction
 
 
-mount : (Screen, Effects Action)
+mount : (Model, Effects Action)
 mount =
   res initial none
 
 
-update : Action -> Screen -> (Screen, Effects Action)
-update action screen =
+update : Action -> Model -> (Model, Effects Action)
+update action model =
   case action of
 
     FormAction fa ->
       let
-        newForm = Form.update fa screen.form
+        newForm = Form.update fa model.form
       in
-        res { screen | form = newForm } none
+        res { model | form = newForm } none
 
     Submit newPlayer ->
-      taskRes { screen | loading = True } (submitTask newPlayer)
+      taskRes { model | loading = True } (submitTask newPlayer)
 
     SubmitResult result ->
       case result of
         Ok player ->
           let
-            newScreen = { screen | loading = False }
+            newModel = { model | loading = False }
             effect = Utils.setPlayer player |> Utils.always NoOp
           in
-            res newScreen effect
+            res newModel effect
         Err errors ->
-          res { screen | loading = False, serverErrors = errors } none
+          res { model | loading = False, serverErrors = errors } none
 
     NoOp ->
-      res screen none
+      res model none
 
 
 submitTask : NewPlayer -> Task Never Action

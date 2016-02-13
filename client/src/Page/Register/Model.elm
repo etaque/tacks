@@ -8,7 +8,7 @@ import Dict exposing (Dict)
 import Model.Shared exposing (..)
 
 
-type alias Screen =
+type alias Model =
   { form : Form () NewPlayer
   , loading : Bool
   , serverErrors : Dict String (List String)
@@ -33,7 +33,7 @@ handleFormat =
   Regex.regex "^\\w{3,20}$"
 
 
-initial : Screen
+initial : Model
 initial =
   { form = Form.initial [] validation
   , loading = False

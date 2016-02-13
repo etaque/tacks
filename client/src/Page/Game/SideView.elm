@@ -14,14 +14,14 @@ import View.Utils exposing (..)
 import Route exposing (..)
 
 
-view : Screen -> LiveTrack -> GameState -> List Html
-view screen liveTrack gameState =
+view : Model -> LiveTrack -> GameState -> List Html
+view model liveTrack gameState =
   let
     blocks =
       if liveTrack.track.status == Draft then
         draftBlocks liveTrack
       else
-        liveBlocks screen liveTrack
+        liveBlocks model liveTrack
   in
     Sidebar.logo :: (trackNav liveTrack) :: blocks
 
@@ -46,9 +46,9 @@ draftBlocks {track} =
   ]
 
 
-liveBlocks : Screen -> LiveTrack -> List Html
-liveBlocks screen liveTrack =
-  [ PlayersView.block screen
+liveBlocks : Model -> LiveTrack -> List Html
+liveBlocks model liveTrack =
+  [ PlayersView.block model
   , rankingsBlock liveTrack
   , helpBlock
   ]

@@ -12,7 +12,7 @@ import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Screen -> Html
+view : Context -> Model -> Html
 view ctx {player} =
   Layout.layoutWithNav "show-profile" ctx
     [ container ""

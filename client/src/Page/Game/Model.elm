@@ -6,7 +6,7 @@ import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs exposing (GameInput)
 
-type alias Screen =
+type alias Model =
   { liveTrack : Maybe LiveTrack
   , gameState : Maybe GameState
   , races : List Race
@@ -17,7 +17,7 @@ type alias Screen =
   , notFound : Bool
   }
 
-initial : Screen
+initial : Model
 initial =
   { liveTrack = Nothing
   , gameState = Nothing

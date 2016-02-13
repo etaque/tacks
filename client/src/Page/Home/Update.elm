@@ -17,43 +17,43 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr HomeAction
+  Utils.pageAddr HomeAction
 
 
-mount : Player -> (Screen, Effects Action)
+mount : Player -> (Model, Effects Action)
 mount player =
   taskRes (initial player) refreshLiveStatus
 
 
-update : Action -> Screen -> (Screen, Effects Action)
-update action screen =
+update : Action -> Model -> (Model, Effects Action)
+update action model =
   case action of
 
     SetLiveStatus result ->
       let
-        liveStatus = Result.withDefault screen.liveStatus result
+        liveStatus = Result.withDefault model.liveStatus result
       in
         delay (5 * second) refreshLiveStatus
-          |> taskRes { screen | liveStatus = liveStatus }
+          |> taskRes { model | liveStatus = liveStatus }
 
     SetHandle handle ->
-      res { screen | handle = handle } none
+      res { model | handle = handle } none
 
     SubmitHandle ->
-      Task.map SubmitHandleResult (ServerApi.postHandle screen.handle)
-        |> taskRes screen
+      Task.map SubmitHandleResult (ServerApi.postHandle model.handle)
+        |> taskRes model
 
     SubmitHandleResult result ->
       Result.map (Utils.setPlayer) result
         |> Result.withDefault none
         |> Utils.always NoOp
-        |> res screen
+        |> res model
 
     FocusTrack maybeTrackId ->
-      res { screen | trackFocus = maybeTrackId } none
+      res { model | trackFocus = maybeTrackId } none
 
     NoOp ->
-      res screen none
+      res model none
 
 
 refreshLiveStatus : Task Never Action

@@ -14,16 +14,16 @@ import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Screen -> Html
-view ctx screen =
+view : Context -> Model -> Html
+view ctx model =
   Layout.layoutWithNav "login" ctx
     [ container ""
       [ h1 [] [ text "Login" ]
-      , row [ col' 6 [ loginForm screen ] ]
+      , row [ col' 6 [ loginForm model ] ]
       ]
     ]
 
-loginForm : Screen -> Html
+loginForm : Model -> Html
 loginForm {email, password, loading, error} =
   div [ class "form-login form-vertical" ]
 

@@ -23,7 +23,7 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr GameAction
+  Utils.pageAddr GameAction
 
 
 chat : Signal.Mailbox String
@@ -31,81 +31,81 @@ chat =
   Signal.mailbox ""
 
 
-mount : String -> (Screen, Effects Action)
+mount : String -> (Model, Effects Action)
 mount id =
   taskRes initial (loadLiveTrack id)
 
 
-update : Player -> Action -> Screen -> (Screen, Effects Action)
-update player action screen =
+update : Player -> Action -> Model -> (Model, Effects Action)
+update player action model =
   case action of
 
     LoadLiveTrack result ->
       case result of
         Ok liveTrack ->
-          res screen (tick <| InitGameState liveTrack)
+          res model (tick <| InitGameState liveTrack)
         Err _ ->
-          res { screen | notFound = True } none
+          res { model | notFound = True } none
 
     InitGameState liveTrack time ->
       let
         gameState = defaultGame time liveTrack.track.course player
-        newScreen = { screen | gameState = Just gameState }
+        newModel = { model | gameState = Just gameState }
           |> applyLiveTrack liveTrack
       in
-        res newScreen pingServer
+        res newModel pingServer
 
     PingServer time ->
-      if screen.live then
-        res screen none
+      if model.live then
+        res model none
       else
-        res { screen | gameState = updateTime time screen.gameState } pingServer
+        res { model | gameState = updateTime time model.gameState } pingServer
 
     GameUpdate gameInput ->
       let
-        newGameState = Maybe.map (gameStep gameInput) screen.gameState
+        newGameState = Maybe.map (gameStep gameInput) model.gameState
       in
-        res { screen | gameState = newGameState, live = True } none
+        res { model | gameState = newGameState, live = True } none
 
     EnterChat ->
       let
-        newGameState = Maybe.map (\gs -> { gs | chatting = True }) screen.gameState
+        newGameState = Maybe.map (\gs -> { gs | chatting = True }) model.gameState
       in
-        res { screen | gameState = newGameState } none
+        res { model | gameState = newGameState } none
 
     LeaveChat ->
       let
-        newGameState = Maybe.map (\gs -> { gs | chatting = False }) screen.gameState
+        newGameState = Maybe.map (\gs -> { gs | chatting = False }) model.gameState
       in
-        res { screen | gameState = newGameState } none
+        res { model | gameState = newGameState } none
 
     UpdateMessageField s ->
-      res { screen | messageField = s } none
+      res { model | messageField = s } none
 
     SubmitMessage ->
-      if screen.live then
-        taskRes { screen | messageField = "" } (sendMessage screen.messageField)
+      if model.live then
+        taskRes { model | messageField = "" } (sendMessage model.messageField)
       else
-        res screen none
+        res model none
 
     NewMessage msg ->
-      res { screen | messages = take 30 (msg :: screen.messages) } none
+      res { model | messages = take 30 (msg :: model.messages) } none
 
     UpdateLiveTrack liveTrack ->
-      res (applyLiveTrack liveTrack screen) none
+      res (applyLiveTrack liveTrack model) none
 
     NoOp ->
-      res screen none
+      res model none
 
 
-applyLiveTrack : LiveTrack -> Screen -> Screen
-applyLiveTrack ({track, players, races} as liveTrack) screen =
+applyLiveTrack : LiveTrack -> Model -> Model
+applyLiveTrack ({track, players, races} as liveTrack) model =
   let
     racePlayers = List.concatMap .players races
     inRace p = List.member p racePlayers
     freePlayers = List.filter (not << inRace) players
   in
-    { screen | liveTrack = Just liveTrack, races = races, freePlayers = freePlayers }
+    { model | liveTrack = Just liveTrack, races = races, freePlayers = freePlayers }
 
 loadLiveTrack : String -> Task Never Action
 loadLiveTrack id =

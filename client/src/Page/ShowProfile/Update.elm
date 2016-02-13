@@ -11,17 +11,17 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr ShowProfileAction
+  Utils.pageAddr ShowProfileAction
 
 
-mount : Player -> Response Screen Action
+mount : Player -> Response Model Action
 mount player =
   res (initial player) none
 
 
-update : Action -> Screen -> Response Screen Action
-update action screen =
+update : Action -> Model -> Response Model Action
+update action model =
   case action of
 
     NoOp ->
-      res screen none
+      res model none

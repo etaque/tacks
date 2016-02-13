@@ -16,18 +16,18 @@ import Game.Render.All exposing (render)
 import Constants exposing (..)
 
 
-view : Context -> Screen -> Html
-view ctx screen =
-  case (screen.liveTrack, screen.gameState) of
+view : Context -> Model -> Html
+view ctx model =
+  case (model.liveTrack, model.gameState) of
     (Just liveTrack, Just gameState) ->
       let
         (w, h) = ctx.dims
       in
         Layout.layout "play-track"
-          (SideView.view screen liveTrack gameState)
+          (SideView.view model liveTrack gameState)
           [ div [ class "game" ]
               [ render (w - sidebarWidth, h) gameState
-              , ChatView.view h screen
+              , ChatView.view h model
               ]
           ]
     _ ->

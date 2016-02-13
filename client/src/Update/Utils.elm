@@ -24,6 +24,6 @@ always : action -> Effects a -> Effects action
 always action effect =
   Effects.map (\_ -> action) effect
 
-screenAddr : (action -> Model.ScreenAction) -> Signal.Address action
-screenAddr toScreenAction =
-  Signal.forwardTo appActionsAddress (toScreenAction >> Model.ScreenAction)
+pageAddr : (action -> Model.PageAction) -> Signal.Address action
+pageAddr toPageAction =
+  Signal.forwardTo appActionsAddress (toPageAction >> Model.PageAction)

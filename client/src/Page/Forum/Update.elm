@@ -14,26 +14,26 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr ForumAction
+  Utils.pageAddr ForumAction
 
 
-mount : (Screen, Effects Action)
+mount : (Model, Effects Action)
 mount =
   taskRes initial loadTopics
 
 
-update : Action -> Screen -> (Screen, Effects Action)
-update action screen =
+update : Action -> Model -> (Model, Effects Action)
+update action model =
   case action of
 
     TopicsResult result ->
       let
         topics = Result.withDefault [] result
       in
-        res { screen | topics = topics } none
+        res { model | topics = topics } none
 
     NoOp ->
-      res screen none
+      res model none
 
 
 loadTopics : Task Never Action

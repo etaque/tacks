@@ -6,13 +6,13 @@ import Constants exposing (sidebarWidth)
 import DragAndDrop exposing (MouseEvent(..))
 
 
-type alias Screen =
+type alias Model =
   { track : Maybe Track
   , editor : Maybe Editor
   , notFound : Bool
   }
 
-initial : Screen
+initial : Model
 initial =
   { track = Nothing
   , editor = Nothing

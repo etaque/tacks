@@ -15,57 +15,57 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.screenAddr ListDraftsAction
+  Utils.pageAddr ListDraftsAction
 
 
-mount : (Screen, Effects Action)
+mount : (Model, Effects Action)
 mount =
   taskRes initial loadDrafts
 
 
-update : Action -> Screen -> (Screen, Effects Action)
-update action screen =
+update : Action -> Model -> (Model, Effects Action)
+update action model =
   case action of
 
     DraftsResult result ->
       case result of
         Ok drafts ->
-          res { screen | drafts = drafts} none
+          res { model | drafts = drafts} none
         Err _ ->
-          res screen none
+          res model none
 
     SetDraftName name ->
-      res { screen | name = name } none
+      res { model | name = name } none
 
     CreateDraft ->
-      taskRes screen (Task.map CreateDraftResult (ServerApi.createTrack screen.name))
+      taskRes model (Task.map CreateDraftResult (ServerApi.createTrack model.name))
 
     CreateDraftResult result ->
       case result of
         Ok track ->
-          res screen (Utils.redirect (Route.EditTrack track.id) |> Utils.always NoOp)
+          res model (Utils.redirect (Route.EditTrack track.id) |> Utils.always NoOp)
         Err formErrors ->
           -- TODO
-          res screen none
+          res model none
 
     ConfirmDeleteDraft track ->
       let
-        newConfirm = if Just track == screen.confirmDelete then Nothing else Just track
+        newConfirm = if Just track == model.confirmDelete then Nothing else Just track
       in
-        res { screen | confirmDelete = newConfirm } none
+        res { model | confirmDelete = newConfirm } none
 
     DeleteDraft id ->
-      taskRes screen (deleteDraft id)
+      taskRes model (deleteDraft id)
 
     DeleteDraftResult result ->
       case result of
         Ok id ->
-          res { screen | drafts = List.filter (\t -> t.id /= id) screen.drafts } none
+          res { model | drafts = List.filter (\t -> t.id /= id) model.drafts } none
         Err _ ->
-          res screen none
+          res model none
 
     NoOp ->
-      res screen none
+      res model none
 
 loadDrafts : Task Never Action
 loadDrafts =
