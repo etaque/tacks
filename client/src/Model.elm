@@ -78,7 +78,7 @@ type alias AppState = WithRoute Route.Route
   { player : Player
   , dims : Dims
   , routeTransition : Route.RouteTransition
-  , screens : Screens
+  , pages : Pages
   }
 
 type alias Context =
@@ -88,7 +88,7 @@ type alias Context =
   , routeTransition : Route.RouteTransition
   }
 
-type alias Screens =
+type alias Pages =
   { home : Home.Screen
   , login : Login.Screen
   , register : Register.Screen
@@ -108,7 +108,7 @@ initialAppState { path, dims, player } =
   , dims = dims
   , transitRouter = TransitRouter.empty Route.EmptyRoute
   , routeTransition = Route.None
-  , screens =
+  , pages =
     { home = Home.initial player
     , login = Login.initial
     , register = Register.initial

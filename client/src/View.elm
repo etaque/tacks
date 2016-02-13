@@ -20,41 +20,41 @@ import Route exposing (..)
 
 
 view : Signal.Address AppAction -> AppState -> Html
-view _ ({screens, player, dims, routeTransition} as appState) =
+view _ ({pages, player, dims, routeTransition} as appState) =
   let
     ctx = Context player dims (getTransition appState) routeTransition
   in
     case (TransitRouter.getRoute appState) of
 
       Home ->
-        HomePage.view ctx screens.home
+        HomePage.view ctx pages.home
 
       Register ->
-        RegisterPage.view ctx screens.register
+        RegisterPage.view ctx pages.register
 
       Login ->
-        LoginPage.view ctx screens.login
+        LoginPage.view ctx pages.login
 
       ShowTrack _ ->
-        ShowTrackPage.view ctx screens.showTrack
+        ShowTrackPage.view ctx pages.showTrack
 
       EditTrack _ ->
-        EditTrackPage.view ctx screens.editTrack
+        EditTrackPage.view ctx pages.editTrack
 
       ShowProfile ->
-        ShowProfilePage.view ctx screens.showProfile
+        ShowProfilePage.view ctx pages.showProfile
 
       PlayTrack _ ->
-        GamePage.view ctx screens.game
+        GamePage.view ctx pages.game
 
       ListDrafts ->
-        ListDraftsPage.view ctx screens.listDrafts
+        ListDraftsPage.view ctx pages.listDrafts
 
       Forum forumRoute ->
-        ForumPage.view ctx forumRoute screens.forum
+        ForumPage.view ctx forumRoute pages.forum
 
       Admin adminRoute ->
-        AdminPage.view ctx adminRoute screens.admin
+        AdminPage.view ctx adminRoute pages.admin
 
       NotFound ->
         text "Not found!"

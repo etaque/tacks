@@ -18230,18 +18230,18 @@ Elm.Model.make = function (_elm) {
              ,dims: _p1.dims
              ,transitRouter: $TransitRouter.empty($Route.EmptyRoute)
              ,routeTransition: $Route.None
-             ,screens: {home: $Page$Home$Model.initial(_p2)
-                       ,login: $Page$Login$Model.initial
-                       ,register: $Page$Register$Model.initial
-                       ,showTrack: $Page$ShowTrack$Model.initial
-                       ,editTrack: $Page$EditTrack$Model.initial
-                       ,showProfile: $Page$ShowProfile$Model.initial(_p2)
-                       ,game: $Page$Game$Model.initial
-                       ,listDrafts: $Page$ListDrafts$Model.initial
-                       ,forum: $Page$Forum$Model.initial
-                       ,admin: $Page$Admin$Model.initial}};
+             ,pages: {home: $Page$Home$Model.initial(_p2)
+                     ,login: $Page$Login$Model.initial
+                     ,register: $Page$Register$Model.initial
+                     ,showTrack: $Page$ShowTrack$Model.initial
+                     ,editTrack: $Page$EditTrack$Model.initial
+                     ,showProfile: $Page$ShowProfile$Model.initial(_p2)
+                     ,game: $Page$Game$Model.initial
+                     ,listDrafts: $Page$ListDrafts$Model.initial
+                     ,forum: $Page$Forum$Model.initial
+                     ,admin: $Page$Admin$Model.initial}};
    };
-   var Screens = function (a) {
+   var Pages = function (a) {
       return function (b) {
          return function (c) {
             return function (d) {
@@ -18355,7 +18355,7 @@ Elm.Model.make = function (_elm) {
                               ,ForumAction: ForumAction
                               ,AdminAction: AdminAction
                               ,Context: Context
-                              ,Screens: Screens
+                              ,Pages: Pages
                               ,initialAppState: initialAppState};
 };
 Elm.Game = Elm.Game || {};
@@ -18397,7 +18397,7 @@ Elm.Game.Outputs.make = function (_elm) {
                   return _.id;
                }(function (_) {    return _.track;}(_p2));
             },
-            appState.screens.game.liveTrack);
+            appState.pages.game.liveTrack);
          } else {
             return $Maybe.Nothing;
          }
@@ -18414,7 +18414,7 @@ Elm.Game.Outputs.make = function (_elm) {
       var gameState = function () {
          var _p3 = $TransitRouter.getRoute(appState);
          if (_p3.ctor === "PlayTrack") {
-               return appState.screens.game.gameState;
+               return appState.pages.game.gameState;
             } else {
                return $Maybe.Nothing;
             }
@@ -23414,7 +23414,7 @@ Elm.Update.make = function (_elm) {
    $TransitRouter = Elm.TransitRouter.make(_elm),
    $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
-   var applyScreen = F4(function (screensUpdater,
+   var applyScreen = F4(function (pagesUpdater,
    actionWrapper,
    response,
    appState) {
@@ -23425,59 +23425,55 @@ Elm.Update.make = function (_elm) {
       A2($Response.mapModel,
       function (screen) {
          return _U.update(appState,
-         {screens: A2(screensUpdater,screen,appState.screens)});
+         {pages: A2(pagesUpdater,screen,appState.pages)});
       },
       response));
    });
    var applyAdmin = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{admin: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{admin: s});
    }),
    $Model.AdminAction);
    var applyForum = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{forum: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{forum: s});
    }),
    $Model.ForumAction);
    var applyListDrafts = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{listDrafts: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{listDrafts: s});
    }),
    $Model.ListDraftsAction);
    var applyGame = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{game: s});
-   }),
+   F2(function (s,pages) {    return _U.update(pages,{game: s});}),
    $Model.GameAction);
    var applyEditTrack = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{editTrack: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{editTrack: s});
    }),
    $Model.EditTrackAction);
    var applyShowTrack = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{showTrack: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{showTrack: s});
    }),
    $Model.ShowTrackAction);
    var applyShowProfile = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{showProfile: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{showProfile: s});
    }),
    $Model.ShowProfileAction);
    var applyRegister = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{register: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{register: s});
    }),
    $Model.RegisterAction);
    var applyLogin = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{login: s});
+   F2(function (s,pages) {
+      return _U.update(pages,{login: s});
    }),
    $Model.LoginAction);
    var applyHome = A2(applyScreen,
-   F2(function (s,screens) {
-      return _U.update(screens,{home: s});
-   }),
+   F2(function (s,pages) {    return _U.update(pages,{home: s});}),
    $Model.HomeAction);
    var logoutTask = A2($Task.map,
    function (r) {
@@ -23488,7 +23484,7 @@ Elm.Update.make = function (_elm) {
    $ServerApi.postLogout);
    var updateScreen = F2(function (screenAction,_p1) {
       var _p2 = _p1;
-      var _p5 = _p2.screens;
+      var _p5 = _p2.pages;
       var _p4 = _p2;
       var _p3 = screenAction;
       switch (_p3.ctor)
@@ -26090,7 +26086,7 @@ Elm.View.make = function (_elm) {
    var _op = {};
    var view = F2(function (_p1,_p0) {
       var _p2 = _p0;
-      var _p5 = _p2.screens;
+      var _p5 = _p2.pages;
       var _p4 = _p2;
       var ctx = A4($Model.Context,
       _p2.player,

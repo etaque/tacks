@@ -39,7 +39,7 @@ init setup =
 
 
 update : AppAction -> AppState -> AppResponse
-update appAction ({screens} as appState) =
+update appAction ({pages} as appState) =
   case appAction of
 
     RouterAction routerAction ->
@@ -76,7 +76,7 @@ update appAction ({screens} as appState) =
 
 
 mountRoute : Route -> Route -> AppState -> AppResponse
-mountRoute prevRoute newRoute ({screens, player} as prevAppState) =
+mountRoute prevRoute newRoute ({pages, player} as prevAppState) =
   let
     routeTransition = Route.detectTransition prevRoute newRoute
     appState = { prevAppState | routeTransition = routeTransition }
@@ -121,38 +121,38 @@ mountRoute prevRoute newRoute ({screens, player} as prevAppState) =
 
 
 updateScreen : ScreenAction -> AppState -> (AppState, Effects AppAction)
-updateScreen screenAction ({screens, player, dims} as appState) =
+updateScreen screenAction ({pages, player, dims} as appState) =
   case screenAction of
 
     HomeAction a ->
-      applyHome (Home.update a screens.home) appState
+      applyHome (Home.update a pages.home) appState
 
     LoginAction a ->
-      applyLogin (Login.update a screens.login) appState
+      applyLogin (Login.update a pages.login) appState
 
     RegisterAction a ->
-      applyRegister (Register.update a screens.register) appState
+      applyRegister (Register.update a pages.register) appState
 
     ShowTrackAction a ->
-      applyShowTrack (ShowTrack.update a screens.showTrack) appState
+      applyShowTrack (ShowTrack.update a pages.showTrack) appState
 
     EditTrackAction a ->
-      applyEditTrack (EditTrack.update dims a screens.editTrack) appState
+      applyEditTrack (EditTrack.update dims a pages.editTrack) appState
 
     ShowProfileAction a ->
-      applyShowProfile (ShowProfile.update a screens.showProfile) appState
+      applyShowProfile (ShowProfile.update a pages.showProfile) appState
 
     GameAction a ->
-      applyGame (Game.update player a screens.game) appState
+      applyGame (Game.update player a pages.game) appState
 
     ListDraftsAction a ->
-      applyListDrafts (ListDrafts.update a screens.listDrafts) appState
+      applyListDrafts (ListDrafts.update a pages.listDrafts) appState
 
     ForumAction a ->
-      applyForum (Forum.update a screens.forum) appState
+      applyForum (Forum.update a pages.forum) appState
 
     AdminAction a ->
-      applyAdmin (Admin.update a screens.admin) appState
+      applyAdmin (Admin.update a pages.admin) appState
 
 
 logoutTask : Task Effects.Never AppAction
@@ -161,19 +161,19 @@ logoutTask =
     |> Task.map (\r -> Result.map SetPlayer r |> Result.withDefault AppNoOp)
 
 
-applyHome = applyScreen (\s screens -> { screens | home = s }) HomeAction
-applyLogin = applyScreen (\s screens -> { screens | login = s }) LoginAction
-applyRegister = applyScreen (\s screens -> { screens | register = s }) RegisterAction
-applyShowProfile = applyScreen (\s screens -> { screens | showProfile = s }) ShowProfileAction
-applyShowTrack = applyScreen (\s screens -> { screens | showTrack = s }) ShowTrackAction
-applyEditTrack = applyScreen (\s screens -> { screens | editTrack = s }) EditTrackAction
-applyGame = applyScreen (\s screens -> { screens | game = s }) GameAction
-applyListDrafts = applyScreen (\s screens -> { screens | listDrafts = s }) ListDraftsAction
-applyForum = applyScreen (\s screens -> { screens | forum = s }) ForumAction
-applyAdmin = applyScreen (\s screens -> { screens | admin = s }) AdminAction
+applyHome = applyScreen (\s pages -> { pages | home = s }) HomeAction
+applyLogin = applyScreen (\s pages -> { pages | login = s }) LoginAction
+applyRegister = applyScreen (\s pages -> { pages | register = s }) RegisterAction
+applyShowProfile = applyScreen (\s pages -> { pages | showProfile = s }) ShowProfileAction
+applyShowTrack = applyScreen (\s pages -> { pages | showTrack = s }) ShowTrackAction
+applyEditTrack = applyScreen (\s pages -> { pages | editTrack = s }) EditTrackAction
+applyGame = applyScreen (\s pages -> { pages | game = s }) GameAction
+applyListDrafts = applyScreen (\s pages -> { pages | listDrafts = s }) ListDraftsAction
+applyForum = applyScreen (\s pages -> { pages | forum = s }) ForumAction
+applyAdmin = applyScreen (\s pages -> { pages | admin = s }) AdminAction
 
-applyScreen : (screen -> Screens -> Screens) -> (a -> ScreenAction) -> Response screen a -> AppState -> AppResponse
-applyScreen screensUpdater actionWrapper response appState =
+applyScreen : (screen -> Pages -> Pages) -> (a -> ScreenAction) -> Response screen a -> AppState -> AppResponse
+applyScreen pagesUpdater actionWrapper response appState =
   response
-    |> mapModel (\screen -> { appState | screens = screensUpdater screen appState.screens })
+    |> mapModel (\screen -> { appState | pages = pagesUpdater screen appState.pages })
     |> mapEffects (actionWrapper >> ScreenAction)

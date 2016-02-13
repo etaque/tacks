@@ -27,7 +27,7 @@ extractPlayerOutput appState action =
     gameState =
       case getRoute appState of
         Route.PlayTrack _ ->
-          appState.screens.game.gameState
+          appState.pages.game.gameState
         _ ->
           Nothing
   in
@@ -50,7 +50,7 @@ getActiveTrack : AppState -> Maybe String
 getActiveTrack appState =
   case getRoute appState of
     Route.PlayTrack _ ->
-      Maybe.map (.track >> .id) appState.screens.game.liveTrack
+      Maybe.map (.track >> .id) appState.pages.game.liveTrack
     _ ->
       Nothing
 
