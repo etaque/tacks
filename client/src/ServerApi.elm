@@ -28,15 +28,15 @@ getLiveStatus =
 
 getTrack : String -> GetJsonTask Track
 getTrack id =
-  getJson trackDecoder ("/api/track/" ++ id)
+  getJson trackDecoder ("/api/tracks/" ++ id)
 
 getLiveTrack : String -> GetJsonTask LiveTrack
 getLiveTrack id =
-  getJson liveTrackDecoder ("/api/liveTrack/" ++ id)
+  getJson liveTrackDecoder ("/api/live/" ++ id)
 
 getDrafts : GetJsonTask (List Track)
 getDrafts =
-  getJson (Json.list trackDecoder) "/api/drafts"
+  getJson (Json.list trackDecoder) "/api/tracks/drafts"
 
 loadAdminData : GetJsonTask AdminData
 loadAdminData =
@@ -78,7 +78,7 @@ createTrack name =
   let
     body = JsEncode.object [ ("name", JsEncode.string name) ]
   in
-    postJson trackDecoder "/api/track" body
+    postJson trackDecoder "/api/tracks" body
 
 saveTrack : String -> String -> Course -> Task Never (FormResult Track)
 saveTrack id name course =
@@ -88,15 +88,15 @@ saveTrack id name course =
       , ("name", JsEncode.string name)
       ]
   in
-    postJson trackDecoder ("/api/track/" ++ id) body
+    postJson trackDecoder ("/api/tracks/" ++ id) body
 
 publishTrack : String -> Task Never (FormResult Track)
 publishTrack id =
-  postJson trackDecoder ("/api/track/" ++ id ++ "/publish") JsEncode.null
+  postJson trackDecoder ("/api/tracks/" ++ id ++ "/publish") JsEncode.null
 
 deleteDraft : String -> Task Never (FormResult String)
 deleteDraft id =
-  postJson (Json.succeed id) ("/api/track/" ++ id ++ "/delete") JsEncode.null
+  postJson (Json.succeed id) ("/api/tracks/" ++ id ++ "/delete") JsEncode.null
 
 -- Tooling
 

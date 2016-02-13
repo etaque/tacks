@@ -43,7 +43,7 @@ trait Security { this: Controller =>
 
     def getPlayer(implicit request: RequestHeader): Future[Player] = {
       request.session.get("playerId").flatMap(id => Try(UUID.fromString(id)).toOption) match {
-        case Some(id) => Users.findById(id).map {
+        case Some(id) => dao.Users.findById(id).map {
           case Some(user) => user
           case None => Guest(id, request.session.get("playerHandle"))
         }

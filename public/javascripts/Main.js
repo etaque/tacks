@@ -21823,7 +21823,7 @@ Elm.ServerApi.make = function (_elm) {
       return A3(postJson,
       $Json$Decode.succeed(id),
       A2($Basics._op["++"],
-      "/api/track/",
+      "/api/tracks/",
       A2($Basics._op["++"],id,"/delete")),
       $Json$Encode.$null);
    };
@@ -21831,7 +21831,7 @@ Elm.ServerApi.make = function (_elm) {
       return A3(postJson,
       $Decoders.trackDecoder,
       A2($Basics._op["++"],
-      "/api/track/",
+      "/api/tracks/",
       A2($Basics._op["++"],id,"/publish")),
       $Json$Encode.$null);
    };
@@ -21842,14 +21842,14 @@ Elm.ServerApi.make = function (_elm) {
                                              ,{ctor: "_Tuple2",_0: "name",_1: $Json$Encode.string(name)}]));
       return A3(postJson,
       $Decoders.trackDecoder,
-      A2($Basics._op["++"],"/api/track/",id),
+      A2($Basics._op["++"],"/api/tracks/",id),
       body);
    });
    var createTrack = function (name) {
       var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
                                               ,_0: "name"
                                               ,_1: $Json$Encode.string(name)}]));
-      return A3(postJson,$Decoders.trackDecoder,"/api/track",body);
+      return A3(postJson,$Decoders.trackDecoder,"/api/tracks",body);
    };
    var postLogout = A3(postJson,
    $Decoders.playerDecoder,
@@ -21889,16 +21889,16 @@ Elm.ServerApi.make = function (_elm) {
    "/api/admin");
    var getDrafts = A2(getJson,
    $Json$Decode.list($Decoders.trackDecoder),
-   "/api/drafts");
+   "/api/tracks/drafts");
    var getLiveTrack = function (id) {
       return A2(getJson,
       $Decoders.liveTrackDecoder,
-      A2($Basics._op["++"],"/api/liveTrack/",id));
+      A2($Basics._op["++"],"/api/live/",id));
    };
    var getTrack = function (id) {
       return A2(getJson,
       $Decoders.trackDecoder,
-      A2($Basics._op["++"],"/api/track/",id));
+      A2($Basics._op["++"],"/api/tracks/",id));
    };
    var getLiveStatus = A2(getJson,
    $Decoders.liveStatusDecoder,

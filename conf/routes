@@ -3,20 +3,23 @@ GET         /                                                  controllers.Appli
 
 #GET         /avatars/:id                                       controllers.Application.showAvatar(id)
 
-POST        /api/login                                         controllers.Api.login
-POST        /api/logout                                        controllers.Api.logout
-POST        /api/register                                      controllers.Api.register
-GET         /api/currentPlayer                                 controllers.Api.currentPlayer
-GET         /api/liveStatus                                    controllers.Api.liveStatus
-GET         /api/track/:id                                     controllers.Api.track(id: java.util.UUID)
-GET         /api/liveTrack/:id                                 controllers.Api.liveTrack(id: java.util.UUID)
-POST        /api/setHandle                                     controllers.Api.setHandle
-POST        /api/track                                         controllers.Api.createDraftTrack()
-GET         /api/drafts                                        controllers.Api.drafts()
-POST        /api/track/:id                                     controllers.Api.updateTrack(id: java.util.UUID)
-POST        /api/track/:id/delete                              controllers.Api.deleteTrack(id: java.util.UUID)
-POST        /api/track/:id/publish                             controllers.Api.publishTrack(id: java.util.UUID)
-GET         /api/admin                                         controllers.Api.admin
+POST        /api/login                                         controllers.Users.login
+POST        /api/logout                                        controllers.Users.logout
+POST        /api/register                                      controllers.Users.register
+GET         /api/currentPlayer                                 controllers.Users.currentPlayer
+POST        /api/setHandle                                     controllers.Users.setHandle
+
+GET         /api/live                                          controllers.Live.status
+GET         /api/live/:id                                      controllers.Live.track(id: java.util.UUID)
+
+GET         /api/tracks/:id                                    controllers.Tracks.show(id: java.util.UUID)
+POST        /api/tracks                                        controllers.Tracks.createDraft()
+GET         /api/tracks/drafts                                 controllers.Tracks.drafts()
+POST        /api/tracks/:id                                    controllers.Tracks.update(id: java.util.UUID)
+POST        /api/tracks/:id/delete                             controllers.Tracks.delete(id: java.util.UUID)
+POST        /api/tracks/:id/publish                            controllers.Tracks.publish(id: java.util.UUID)
+
+GET         /api/admin                                         controllers.Admin.index
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId: java.util.UUID)
 GET         /ws/notifications                                  controllers.WebSockets.notifications
