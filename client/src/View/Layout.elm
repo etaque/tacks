@@ -4,8 +4,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 
 import View.Sidebar as Sidebar
-import Constants exposing (..)
-import Model exposing (..)
+import Constants
+import Model.Shared exposing (Context)
 import Route
 
 import TransitStyle exposing (fadeSlideLeft)
@@ -34,7 +34,7 @@ layout name sideContent mainContent =
   div
     [ class ("layout " ++ name) ]
     [ aside
-        [ style [ ("width", toString sidebarWidth ++ "px") ] ]
+        [ style [ ("width", toString Constants.sidebarWidth ++ "px") ] ]
         sideContent
     , main' [ ] mainContent
     ]

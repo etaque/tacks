@@ -15,7 +15,7 @@ case class Post(
   updateTime: DateTime
 )
 
-case class PostWithUser(
+case class UiPost(
   post: Post,
   user: User
 )

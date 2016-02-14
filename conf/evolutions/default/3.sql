@@ -3,7 +3,10 @@
 CREATE TABLE forum_topics (
   id                UUID        NOT NULL PRIMARY KEY,
   title             TEXT        NOT NULL,
-  post_id           UUID        NULL
+  post_id           UUID        NULL,
+  posts_count       INT         NOT NULL,
+  creation_time     TIMESTAMPTZ NOT NULL,
+  activity_time     TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE forum_posts (
@@ -22,7 +25,7 @@ ADD FOREIGN KEY(post_id) REFERENCES forum_posts(id);
 # --- !Downs
 
 ALTER TABLE forum_topics
-DROP CONSTRAINT forum_topics_post_id_fk;
+DROP CONSTRAINT forum_topics_post_id_fkey;
 
 DROP TABLE forum_posts;
 

@@ -16,38 +16,35 @@ class TopicTable(tag: Tag) extends Table[Topic](tag, "forum_topics") {
   def id = column[UUID]("id", O.PrimaryKey)
   def title = column[String]("title")
   def postId = column[Option[UUID]]("post_id")
+  def postsCount = column[Int]("posts_count")
+  def creationTime = column[DateTime]("creation_time")
+  def activityTime = column[DateTime]("activity_time")
 
-  def post = foreignKey("post_fk", postId, Posts)(_.id.?)
+  def post = foreignKey(tableName + "_post_fk", postId, Posts)(_.id.?)
 
-  def * = (id, title, postId) <> (Topic.tupled, Topic.unapply)
+  def * = (id, title, postId, postsCount, creationTime, activityTime) <> (Topic.tupled, Topic.unapply)
 }
 
 object Topics extends TableQuery(new TopicTable(_)) {
 
-  def list(): Future[Seq[Topic]] = DB.run {
-    all.result
-  }
-
-  def listWithOriginal(): Future[Seq[(Topic, Post, User)]] = DB.run {
+  def listWithUser(): Future[Seq[(Topic, User)]] = DB.run {
     (for {
       topic <- all
       post <- Posts if topic.postId === post.id
       user <- Users if post.userId === user.id
-    } yield (topic, post, user)).result
+    } yield (topic, user)).result
   }
 
   def find(id: UUID): Future[Option[Topic]] = DB.run {
     onId(id).result.headOption
   }
 
-  def save(topic: Topic): Future[Int] = DB.run {
-    all += topic
-  }
-
-  def createWithOriginal(topic: Topic, post: Post): Future[(Int, Int)] = DB.run {
-    val saveTopic = dao.Topics.all += topic
+  def createWithPost(topic: Topic, post: Post): Future[Seq[Int]] = DB.run {
+    val saveTopic = all += topic
     val savePost = dao.Posts.all += post
-    saveTopic.zip(savePost).transactionally
+    val updateTopicPostId =
+      onId(topic.id).map(_.postId).update(Some(post.id))
+    DBIO.sequence(Seq(saveTopic, savePost, updateTopicPostId)).transactionally
   }
 
   def onId(id: UUID) =
@@ -55,6 +52,9 @@ object Topics extends TableQuery(new TopicTable(_)) {
 
   def all =
     map(identity)
+
+  def name =
+    baseTableRow.tableName
 }
 
 

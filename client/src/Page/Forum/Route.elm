@@ -5,18 +5,13 @@ import RouteParser exposing (..)
 
 type Route
   = Index
-  | Topic String
-
-
--- router : Router Route
--- router =
---   RouteParser.router matchers toPath
+  | ShowTopic String
 
 
 matchers : List (Matcher Route)
 matchers =
   [ static Index "/forum"
-  , dyn1 Topic "/forum/" string ""
+  , dyn1 ShowTopic "/forum/t/" string ""
   ]
 
 
@@ -24,5 +19,5 @@ toPath : Route -> String
 toPath route =
   "/forum" ++ case route of
     Index -> ""
-    Topic id -> "/forum/" ++ id
+    ShowTopic id -> "/t/" ++ id
 

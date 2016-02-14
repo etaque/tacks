@@ -23,7 +23,7 @@ import models._
 import models.forum._
 import dao._
 import dao.DB.api._
-import models.JsonFormats._
+// import models.JsonFormats._
 import tools.future.Implicits._
 import tools.JsonErrors
 
@@ -31,29 +31,29 @@ import scala.util.Try
 
 object Forum extends Controller with Security {
 
+  implicit val userWrites = JsonFormats.userWrites
   implicit val topicFormat: Format[Topic] = Json.format[Topic]
-
-  implicit val topicWithOriginalFormat: Format[TopicWithOriginal] =
-    Json.format[TopicWithOriginal]
-
   implicit val postFormat: Format[Post] = Json.format[Post]
 
-  implicit val postWithUserFormat: Format[PostWithUser] =
-    Json.format[PostWithUser]
+  implicit val uiTopicWrites: Writes[UiTopic] =
+    Json.writes[UiTopic]
+
+  implicit val uiPostWrites: Writes[UiPost] =
+    Json.writes[UiPost]
 
 
   def topics = PlayerAction.async() { implicit request =>
-    dao.Topics.listWithOriginal().map { topics =>
-      Ok(Json.toJson(topics.map(TopicWithOriginal.tupled)))
+    dao.Topics.listWithUser().map { topics =>
+      Ok(Json.toJson(topics.map(UiTopic.tupled)))
     }
   }
 
   def topic(id: UUID) = PlayerAction.async() { implicit request =>
     onTopic(id) { topic =>
-      dao.Posts.listByTopicIdWithUsers(id).map { postsWithUsers =>
+      dao.Posts.listByTopicIdWithUser(id).map { postsWithUsers =>
         val json = Json.obj(
           "topic" -> Json.toJson(topic),
-          "postsWithUsers" -> Json.toJson(postsWithUsers.map(PostWithUser.tupled))
+          "postsWithUsers" -> Json.toJson(postsWithUsers.map(UiPost.tupled))
         )
         Ok(json)
       }
@@ -67,7 +67,7 @@ object Forum extends Controller with Security {
 
   implicit val createTopicReads = (
     (__ \ "title").read[String] and
-      (__ \ "password").read[String]
+      (__ \ "content").read[String]
   )(CreateTopic.apply _)
 
   def createTopic = PlayerAction.async(parse.json) { implicit request =>
@@ -76,20 +76,24 @@ object Forum extends Controller with Security {
       {
         case form @ CreateTopic(title, content) => {
           val postId = UUID.randomUUID()
+          val now = DateTime.now()
           val topic = Topic(
             id = UUID.randomUUID(),
             title = title,
-            postId = Some(postId)
+            postId = None,
+            postsCount = 1,
+            creationTime = now,
+            activityTime = now
           )
           val post = Post(
             id = postId,
             topicId = topic.id,
             userId = request.player.id,
             content = content,
-            creationTime = DateTime.now,
-            updateTime = DateTime.now
+            creationTime = now,
+            updateTime = now
           )
-          Topics.createWithOriginal(topic, post).map { _ =>
+          Topics.createWithPost(topic, post).map { _ =>
             Ok(Json.toJson(topic))
           }
         }
@@ -118,7 +122,9 @@ object Forum extends Controller with Security {
               creationTime = DateTime.now,
               updateTime = DateTime.now
             )
-            Posts.save(post).map { _ => Ok(Json.toJson(post)) }
+            Posts.createOnTopic(post, topic).map { _ =>
+              Ok(Json.toJson(post))
+            }
           }
         }
       )

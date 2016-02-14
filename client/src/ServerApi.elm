@@ -9,10 +9,8 @@ import Result exposing (Result(Ok,Err))
 import Effects exposing (Never)
 
 import Model.Shared exposing (..)
-import Model.Forum exposing (..)
 import Decoders exposing (..)
 import Encoders exposing (..)
-
 
 
 -- GET
@@ -38,18 +36,6 @@ getLiveTrack id =
 getDrafts : GetJsonTask (List Track)
 getDrafts =
   getJson (Json.list trackDecoder) "/api/tracks/drafts"
-
-listForumTopics : GetJsonTask (List Topic)
-listForumTopics =
-  getJson (Json.list forumTopicDecoder) "/api/forum/topics"
-
-getForumTopic : String -> GetJsonTask TopicWithMessages
-getForumTopic id =
-  getJson forumTopicWithMessagesDecoder ("/api/forum/topics/" ++ id)
-
-loadAdminData : GetJsonTask AdminData
-loadAdminData =
-  getJson adminDataDecoder "/api/admin"
 
 -- POST
 
@@ -107,6 +93,7 @@ deleteDraft : String -> Task Never (FormResult String)
 deleteDraft id =
   postJson (Json.succeed id) ("/api/tracks/" ++ id ++ "/delete") JsEncode.null
 
+
 -- Tooling
 
 getJson : Json.Decoder a -> String -> GetJsonTask a
@@ -159,7 +146,7 @@ handleResponse decoder response =
       case response.value of
         Text body ->
           Json.decodeString decoder body
-            |> Result.formatError (\_ -> serverError)
+            |> Result.formatError (\e -> Debug.log e serverError)
         _ ->
           Err serverError
 

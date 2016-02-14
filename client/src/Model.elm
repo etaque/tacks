@@ -19,7 +19,6 @@ import Page.Forum.Model as Forum
 import Page.Admin.Model as Admin
 
 import Route
-import Transit
 import TransitRouter exposing (WithRoute)
 
 
@@ -79,13 +78,6 @@ type alias AppState = WithRoute Route.Route
   , dims : Dims
   , routeTransition : Route.RouteTransition
   , pages : Pages
-  }
-
-type alias Context =
-  { player : Player
-  , dims : (Int, Int)
-  , transition : Transit.Transition
-  , routeTransition : Route.RouteTransition
   }
 
 type alias Pages =

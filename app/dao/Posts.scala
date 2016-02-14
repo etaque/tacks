@@ -20,7 +20,7 @@ class PostTable(tag: Tag) extends Table[Post](tag, "forum_posts") {
   def creationTime = column[DateTime]("creation_time")
   def updateTime = column[DateTime]("update_time")
 
-  def user = foreignKey("user_fk", userId, Users)(_.id)
+  def user = foreignKey(tableName + "_user_fk", userId, Users)(_.id)
 
   def * = (id, topicId, userId, content, creationTime, updateTime) <> (Post.tupled, Post.unapply)
 }
@@ -28,26 +28,40 @@ class PostTable(tag: Tag) extends Table[Post](tag, "forum_posts") {
 
 object Posts extends TableQuery(new PostTable(_)) {
 
-  def list(): Future[Seq[Post]] = DB.run {
-    all.result
-  }
+  // def list(): Future[Seq[Post]] = DB.run {
+  //   all.result
+  // }
 
   def find(id: UUID): Future[Option[Post]] = DB.run {
     onId(id).result.headOption
   }
 
-  def listByTopicId(id: UUID): Future[Seq[Post]] = DB.run {
-    filter(_.topicId === id).result
-  }
+  // def listByTopicId(id: UUID): Future[Seq[Post]] = DB.run {
+  //   filter(_.topicId === id).result
+  // }
 
-  def listByTopicIdWithUsers(topicId: UUID): Future[Seq[(Post, User)]] = DB.run {
+  def listByTopicIdWithUser(topicId: UUID): Future[Seq[(Post, User)]] = DB.run {
     filter(_.topicId === topicId)
       .join(Users).on(_.userId === _.id)
       .result
   }
-  def save(post: Post): Future[Int] = DB.run {
-    all += post
+
+  def createOnTopic(post: Post, topic: Topic): Future[(Int, Int)] = DB.run {
+    val savePost = dao.Posts.all += post
+    val updateTopic = sqlu"""
+      UPDATE #${Topics.name}
+      SET
+        posts_count = (SELECT COUNT FROM $name WHERE id = ${topic.id}),
+        activity_time = ${post.creationTime.getMillis}
+      WHERE id = ${topic.id}
+      """
+    savePost.zip(updateTopic).transactionally
+
   }
+
+  // def save(post: Post): Future[Int] = DB.run {
+  //   all += post
+  // }
 
   def remove(id: UUID): Future[Int] = DB.run {
     onId(id).delete
@@ -56,6 +70,12 @@ object Posts extends TableQuery(new PostTable(_)) {
   def onId(id: UUID) =
     filter(_.id === id)
 
+  def onTopicId(id: UUID) =
+    filter(_.topicId === id)
+
   def all =
     map(identity)
+
+  def name =
+    baseTableRow.tableName
 }

@@ -8,7 +8,7 @@ import Response exposing (..)
 import Model exposing (..)
 import Model.Shared exposing (..)
 import Page.Admin.Model as Types exposing (..)
-import ServerApi
+import ServerApi exposing (getJson, postJson)
 import Update.Utils as Utils
 
 
@@ -62,6 +62,6 @@ update action model =
 
 refreshData : Task Never Action
 refreshData =
-  ServerApi.loadAdminData
+  getJson adminDataDecoder "/api/admin"
     |> Task.map RefreshDataResult
 

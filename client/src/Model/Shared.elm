@@ -2,14 +2,26 @@ module Model.Shared where
 
 import Time exposing (Time)
 import Dict exposing (Dict)
+import Transit
 import Hexagons
 import Hexagons.Grid as HexGrid
 
-import Constants exposing (..)
+import Constants
+import Route
+
+
+type alias Context =
+  { player : Player
+  , dims : (Int, Int)
+  , transition : Transit.Transition
+  , routeTransition : Route.RouteTransition
+  }
+
 
 type alias FormResult a = Result FormErrors a
 
 type alias FormErrors = Dict String (List String)
+
 
 type alias Id = String
 
@@ -25,18 +37,16 @@ type alias Player =
 
 type alias User =
   { id : Id
-  , email : String
   , handle: String
   , status: Maybe String
   , avatarId: Maybe String
   , vmgMagnet: Int
-  , creationTime : Float
   }
 
 isAdmin : Player -> Bool
 isAdmin player =
   case player.handle of
-    Just h -> List.member h admins
+    Just h -> List.member h Constants.admins
     Nothing -> False
 
 canUpdateDraft : Player -> Track -> Bool
@@ -165,10 +175,3 @@ type alias Tile = HexGrid.Tile TileKind
 
 type TileKind = Water | Grass | Rock
 
-
--- Admin
-
-type alias AdminData =
-  { tracks : List Track
-  , users : List User
-  }

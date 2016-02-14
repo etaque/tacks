@@ -108,7 +108,7 @@ mountRoute prevRoute newRoute ({pages, player} as prevAppState) =
         applyListDrafts ListDrafts.mount appState
 
       Forum forumRoute ->
-        applyForum Forum.mount appState
+        applyForum (Forum.mount forumRoute) appState
 
       Admin adminRoute ->
         applyAdmin Admin.mount appState

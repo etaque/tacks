@@ -60,7 +60,7 @@ object Tracks extends TableQuery(new TrackTable(_)) {
   }
 
   def updateFromEditor(id: UUID, name: String, course: Course): Future[Int] = DB.run {
-    onId(id).map(t => (t.name, t.course)).update(name, course)
+    onId(id).map(t => (t.name, t.course)).update((name, course))
   }
 
   private def onId(id: UUID) =

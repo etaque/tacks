@@ -1,6 +1,7 @@
 module Page.ListDrafts.Model where
 
 import Model.Shared exposing (..)
+import ServerApi
 
 
 type alias Model =

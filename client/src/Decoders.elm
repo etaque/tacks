@@ -4,7 +4,6 @@ import Json.Decode as Json exposing (..)
 import Dict
 
 import Model.Shared exposing (..)
-import Model.Forum as Forum
 
 
 liveStatusDecoder : Decoder LiveStatus
@@ -82,14 +81,12 @@ playerDecoder =
 
 userDecoder : Decoder User
 userDecoder =
-  object7 User
+  object5 User
     ("id" := string)
-    ("email" := string)
     ("handle" := string)
     (maybe ("status" := string))
     (maybe ("avatarId" := string))
     ("vmgMagnet" := int)
-    ("creationTime" := float)
 
 messageDecoder : Decoder Message
 messageDecoder =
@@ -187,40 +184,4 @@ rangeDecoder =
     ("start" := int)
     ("end" := int)
 
-adminDataDecoder : Decoder AdminData
-adminDataDecoder =
-  object2 AdminData
-    ("tracks" := list trackDecoder)
-    ("users" := list userDecoder)
 
-forumTopicDecoder : Decoder Forum.Topic
-forumTopicDecoder =
-  object4 Forum.Topic
-    ("initial" := forumMessageDecoder)
-    ("title" := string)
-    ("messagesCount" := int)
-    ("activityTime" := float)
-
-forumMessageDecoder : Decoder Forum.Message
-forumMessageDecoder =
-  object5 Forum.Message
-    ("id" := string)
-    ("content" := string)
-    ("player" := playerDecoder)
-    ("creationTime" := float)
-    ("updateTime" := float)
-
-forumTopicWithMessagesDecoder : Decoder Forum.TopicWithMessages
-forumTopicWithMessagesDecoder =
-  object2 Forum.TopicWithMessages
-    ("topic" := forumTopicDecoder)
-    ("messages" := list forumMessageDecoder)
-
-  -- object7 ForumPost
-  --   ("id" := string)
-  --   ("title" := maybe string)
-  --   ("parentId" := maybe string)
-  --   ("userId" := string)
-  --   ("content" := string)
-  --   ("creationTime" := float)
-  --   ("updateTime" := float)

@@ -1,16 +1,22 @@
 package models.forum
 
 import java.util.UUID
+import org.joda.time.DateTime
+import org.joda.time.DateTime
+
+import models.User
 
 
 case class Topic(
   id: UUID,
   title: String,
-  postId: Option[UUID]
+  postId: Option[UUID],
+  postsCount: Int,
+  creationTime: DateTime,
+  activityTime: DateTime
 )
 
-case class TopicWithOriginal(
+case class UiTopic(
   topic: Topic,
-  post: Post,
-  user: models.User
+  user: User
 )

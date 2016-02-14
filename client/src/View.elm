@@ -4,6 +4,7 @@ import Html exposing (..)
 import TransitRouter exposing (getTransition)
 
 import Model exposing (..)
+import Model.Shared exposing (Context)
 
 import Page.Home.View as HomePage
 import Page.Login.View as LoginPage

@@ -15671,6 +15671,241 @@ Elm.CoreExtra.make = function (_elm) {
                                   ,updateAt: updateAt
                                   ,within: within};
 };
+Elm.Page = Elm.Page || {};
+Elm.Page.Admin = Elm.Page.Admin || {};
+Elm.Page.Admin.Route = Elm.Page.Admin.Route || {};
+Elm.Page.Admin.Route.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Admin = _elm.Page.Admin || {};
+   _elm.Page.Admin.Route = _elm.Page.Admin.Route || {};
+   if (_elm.Page.Admin.Route.values)
+   return _elm.Page.Admin.Route.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var maybe = function (ms) {
+      var _p0 = ms;
+      if (_p0.ctor === "Just") {
+            return A2($Basics._op["++"],"/",_p0._0);
+         } else {
+            return "";
+         }
+   };
+   var toPath = function (route) {
+      return A2($Basics._op["++"],
+      "/admin",
+      function () {
+         var _p1 = route;
+         switch (_p1.ctor)
+         {case "Dashboard": return "";
+            case "ListTracks": return A2($Basics._op["++"],
+              "/tracks",
+              maybe(_p1._0));
+            default: return A2($Basics._op["++"],"/users",maybe(_p1._0));}
+      }());
+   };
+   var ListUsers = function (a) {
+      return {ctor: "ListUsers",_0: a};
+   };
+   var ListTracks = function (a) {
+      return {ctor: "ListTracks",_0: a};
+   };
+   var Dashboard = {ctor: "Dashboard"};
+   var matchers = _U.list([A2($RouteParser.$static,
+                          Dashboard,
+                          "/admin")
+                          ,A2($RouteParser.$static,
+                          ListTracks($Maybe.Nothing),
+                          "/admin/tracks")
+                          ,A4($RouteParser.dyn1,
+                          function (_p2) {
+                             return ListTracks($Maybe.Just(_p2));
+                          },
+                          "/admin/tracks/",
+                          $RouteParser.string,
+                          "")
+                          ,A2($RouteParser.$static,
+                          ListUsers($Maybe.Nothing),
+                          "/admin/users")
+                          ,A4($RouteParser.dyn1,
+                          function (_p3) {
+                             return ListUsers($Maybe.Just(_p3));
+                          },
+                          "/admin/users/",
+                          $RouteParser.string,
+                          "")]);
+   var router = A2($RouteParser.router,matchers,toPath);
+   return _elm.Page.Admin.Route.values = {_op: _op
+                                         ,matchers: matchers
+                                         ,toPath: toPath
+                                         ,Dashboard: Dashboard
+                                         ,ListTracks: ListTracks
+                                         ,ListUsers: ListUsers};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.Route = Elm.Page.Forum.Route || {};
+Elm.Page.Forum.Route.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.Route = _elm.Page.Forum.Route || {};
+   if (_elm.Page.Forum.Route.values)
+   return _elm.Page.Forum.Route.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var toPath = function (route) {
+      return A2($Basics._op["++"],
+      "/forum",
+      function () {
+         var _p0 = route;
+         if (_p0.ctor === "Index") {
+               return "";
+            } else {
+               return A2($Basics._op["++"],"/t/",_p0._0);
+            }
+      }());
+   };
+   var ShowTopic = function (a) {
+      return {ctor: "ShowTopic",_0: a};
+   };
+   var Index = {ctor: "Index"};
+   var matchers = _U.list([A2($RouteParser.$static,Index,"/forum")
+                          ,A4($RouteParser.dyn1,
+                          ShowTopic,
+                          "/forum/t/",
+                          $RouteParser.string,
+                          "")]);
+   return _elm.Page.Forum.Route.values = {_op: _op
+                                         ,matchers: matchers
+                                         ,toPath: toPath
+                                         ,Index: Index
+                                         ,ShowTopic: ShowTopic};
+};
+Elm.Route = Elm.Route || {};
+Elm.Route.make = function (_elm) {
+   "use strict";
+   _elm.Route = _elm.Route || {};
+   if (_elm.Route.values) return _elm.Route.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
+   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $RouteParser = Elm.RouteParser.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var toPath = function (route) {
+      var _p0 = route;
+      switch (_p0.ctor)
+      {case "Home": return "/";
+         case "Login": return "/login";
+         case "Register": return "/register";
+         case "ShowProfile": return "/me";
+         case "ListDrafts": return "/drafts";
+         case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
+         case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
+         case "PlayTrack": return A2($Basics._op["++"],"/play/",_p0._0);
+         case "Forum": return $Page$Forum$Route.toPath(_p0._0);
+         case "Admin": return $Page$Admin$Route.toPath(_p0._0);
+         case "EmptyRoute": return "/";
+         default: return "/404";}
+   };
+   var None = {ctor: "None"};
+   var ForAdmin = F2(function (a,b) {
+      return {ctor: "ForAdmin",_0: a,_1: b};
+   });
+   var ForMain = {ctor: "ForMain"};
+   var detectTransition = F2(function (prevRoute,route) {
+      var _p1 = {ctor: "_Tuple2",_0: prevRoute,_1: route};
+      if (_p1.ctor === "_Tuple2" && _p1._0.ctor === "Admin" && _p1._1.ctor === "Admin")
+      {
+            return A2(ForAdmin,_p1._0._0,_p1._1._0);
+         } else {
+            return !_U.eq(prevRoute,route) ? ForMain : None;
+         }
+   });
+   var EmptyRoute = {ctor: "EmptyRoute"};
+   var NotFound = {ctor: "NotFound"};
+   var Admin = function (a) {    return {ctor: "Admin",_0: a};};
+   var Forum = function (a) {    return {ctor: "Forum",_0: a};};
+   var PlayTrack = function (a) {
+      return {ctor: "PlayTrack",_0: a};
+   };
+   var EditTrack = function (a) {
+      return {ctor: "EditTrack",_0: a};
+   };
+   var ListDrafts = {ctor: "ListDrafts"};
+   var ShowTrack = function (a) {
+      return {ctor: "ShowTrack",_0: a};
+   };
+   var ShowProfile = {ctor: "ShowProfile"};
+   var Register = {ctor: "Register"};
+   var Login = {ctor: "Login"};
+   var Home = {ctor: "Home"};
+   var matchers = A2($Basics._op["++"],
+   _U.list([A2($RouteParser.$static,Home,"/")
+           ,A2($RouteParser.$static,Login,"/login")
+           ,A2($RouteParser.$static,Register,"/register")
+           ,A2($RouteParser.$static,ShowProfile,"/me")
+           ,A2($RouteParser.$static,ListDrafts,"/drafts")
+           ,A4($RouteParser.dyn1,
+           ShowTrack,
+           "/track/",
+           $RouteParser.string,
+           "")
+           ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
+           ,A4($RouteParser.dyn1,
+           PlayTrack,
+           "/play/",
+           $RouteParser.string,
+           "")]),
+   A2($Basics._op["++"],
+   A2($RouteParser.mapMatchers,Admin,$Page$Admin$Route.matchers),
+   A2($RouteParser.mapMatchers,Forum,$Page$Forum$Route.matchers)));
+   var fromPath = function (path) {
+      return A2($Maybe.withDefault,
+      NotFound,
+      A2($RouteParser.match,matchers,path));
+   };
+   return _elm.Route.values = {_op: _op
+                              ,Home: Home
+                              ,Login: Login
+                              ,Register: Register
+                              ,ShowProfile: ShowProfile
+                              ,ShowTrack: ShowTrack
+                              ,ListDrafts: ListDrafts
+                              ,EditTrack: EditTrack
+                              ,PlayTrack: PlayTrack
+                              ,Forum: Forum
+                              ,Admin: Admin
+                              ,NotFound: NotFound
+                              ,EmptyRoute: EmptyRoute
+                              ,ForMain: ForMain
+                              ,ForAdmin: ForAdmin
+                              ,None: None
+                              ,fromPath: fromPath
+                              ,matchers: matchers
+                              ,toPath: toPath
+                              ,detectTransition: detectTransition};
+};
 Elm.Model = Elm.Model || {};
 Elm.Model.Shared = Elm.Model.Shared || {};
 Elm.Model.Shared.make = function (_elm) {
@@ -15688,12 +15923,11 @@ Elm.Model.Shared.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
+   $Time = Elm.Time.make(_elm),
+   $Transit = Elm.Transit.make(_elm);
    var _op = {};
-   var AdminData = F2(function (a,b) {
-      return {tracks: a,users: b};
-   });
    var Rock = {ctor: "Rock"};
    var Grass = {ctor: "Grass"};
    var Water = {ctor: "Water"};
@@ -15768,14 +16002,8 @@ Elm.Model.Shared.make = function (_elm) {
       return _U.eq(track.status,Draft) && _U.eq(player.id,
       track.creatorId) || isAdmin(player);
    });
-   var User = F7(function (a,b,c,d,e,f,g) {
-      return {id: a
-             ,email: b
-             ,handle: c
-             ,status: d
-             ,avatarId: e
-             ,vmgMagnet: f
-             ,creationTime: g};
+   var User = F5(function (a,b,c,d,e) {
+      return {id: a,handle: b,status: c,avatarId: d,vmgMagnet: e};
    });
    var Player = F7(function (a,b,c,d,e,f,g) {
       return {id: a
@@ -15786,7 +16014,11 @@ Elm.Model.Shared.make = function (_elm) {
              ,guest: f
              ,user: g};
    });
+   var Context = F4(function (a,b,c,d) {
+      return {player: a,dims: b,transition: c,routeTransition: d};
+   });
    return _elm.Model.Shared.values = {_op: _op
+                                     ,Context: Context
                                      ,Player: Player
                                      ,User: User
                                      ,isAdmin: isAdmin
@@ -15814,44 +16046,7 @@ Elm.Model.Shared.make = function (_elm) {
                                      ,Range: Range
                                      ,Water: Water
                                      ,Grass: Grass
-                                     ,Rock: Rock
-                                     ,AdminData: AdminData};
-};
-Elm.Model = Elm.Model || {};
-Elm.Model.Forum = Elm.Model.Forum || {};
-Elm.Model.Forum.make = function (_elm) {
-   "use strict";
-   _elm.Model = _elm.Model || {};
-   _elm.Model.Forum = _elm.Model.Forum || {};
-   if (_elm.Model.Forum.values) return _elm.Model.Forum.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Model$Shared = Elm.Model.Shared.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var Post = F5(function (a,b,c,d,e) {
-      return {id: a
-             ,content: b
-             ,player: c
-             ,creationTime: d
-             ,updateTime: e};
-   });
-   var Topic = F6(function (a,b,c,d,e,f) {
-      return {id: a
-             ,title: b
-             ,player: c
-             ,postsCount: d
-             ,creationTime: e
-             ,updateTime: f};
-   });
-   return _elm.Model.Forum.values = {_op: _op
-                                    ,Topic: Topic
-                                    ,Post: Post};
+                                     ,Rock: Rock};
 };
 Elm.Decoders = Elm.Decoders || {};
 Elm.Decoders.make = function (_elm) {
@@ -15865,7 +16060,6 @@ Elm.Decoders.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model$Forum = Elm.Model.Forum.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -15939,10 +16133,9 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],
    "gustGenerator",
    gustGeneratorDecoder));
-   var userDecoder = A8($Json$Decode.object7,
+   var userDecoder = A6($Json$Decode.object5,
    $Model$Shared.User,
    A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"email",$Json$Decode.string),
    A2($Json$Decode._op[":="],"handle",$Json$Decode.string),
    $Json$Decode.maybe(A2($Json$Decode._op[":="],
    "status",
@@ -15950,8 +16143,7 @@ Elm.Decoders.make = function (_elm) {
    $Json$Decode.maybe(A2($Json$Decode._op[":="],
    "avatarId",
    $Json$Decode.string)),
-   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float));
+   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int));
    var playerDecoder = A8($Json$Decode.object7,
    $Model$Shared.Player,
    A2($Json$Decode._op[":="],"id",$Json$Decode.string),
@@ -15972,21 +16164,6 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],"content",$Json$Decode.string),
    A2($Json$Decode._op[":="],"player",playerDecoder),
    A2($Json$Decode._op[":="],"time",$Json$Decode.$float));
-   var forumTopicDecoder = A7($Json$Decode.object6,
-   $Model$Forum.Topic,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"title",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],"postsCount",$Json$Decode.$int),
-   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
-   var forumPostDecoder = A6($Json$Decode.object5,
-   $Model$Forum.Post,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"player",playerDecoder),
-   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
    var trackStatusDecoder = function (s) {
       var _p1 = s;
       switch (_p1)
@@ -16011,14 +16188,6 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode.andThen,
    $Json$Decode.string,
    trackStatusDecoder)));
-   var adminDataDecoder = A3($Json$Decode.object2,
-   $Model$Shared.AdminData,
-   A2($Json$Decode._op[":="],
-   "tracks",
-   $Json$Decode.list(trackDecoder)),
-   A2($Json$Decode._op[":="],
-   "users",
-   $Json$Decode.list(userDecoder)));
    var playerTallyDecoder = A4($Json$Decode.object3,
    $Model$Shared.PlayerTally,
    A2($Json$Decode._op[":="],"player",playerDecoder),
@@ -16088,10 +16257,7 @@ Elm.Decoders.make = function (_elm) {
                                  ,raceAreaDecoder: raceAreaDecoder
                                  ,windGeneratorDecoder: windGeneratorDecoder
                                  ,gustGeneratorDecoder: gustGeneratorDecoder
-                                 ,rangeDecoder: rangeDecoder
-                                 ,adminDataDecoder: adminDataDecoder
-                                 ,forumTopicDecoder: forumTopicDecoder
-                                 ,forumPostDecoder: forumPostDecoder};
+                                 ,rangeDecoder: rangeDecoder};
 };
 Elm.Encoders = Elm.Encoders || {};
 Elm.Encoders.make = function (_elm) {
@@ -17830,6 +17996,573 @@ Elm.Page.Game.Model.make = function (_elm) {
                                         ,NewMessage: NewMessage
                                         ,NoOp: NoOp};
 };
+Elm.Native.Http = {};
+Elm.Native.Http.make = function(localRuntime) {
+
+	localRuntime.Native = localRuntime.Native || {};
+	localRuntime.Native.Http = localRuntime.Native.Http || {};
+	if (localRuntime.Native.Http.values)
+	{
+		return localRuntime.Native.Http.values;
+	}
+
+	var Dict = Elm.Dict.make(localRuntime);
+	var List = Elm.List.make(localRuntime);
+	var Maybe = Elm.Maybe.make(localRuntime);
+	var Task = Elm.Native.Task.make(localRuntime);
+
+
+	function send(settings, request)
+	{
+		return Task.asyncFunction(function(callback) {
+			var req = new XMLHttpRequest();
+
+			// start
+			if (settings.onStart.ctor === 'Just')
+			{
+				req.addEventListener('loadStart', function() {
+					var task = settings.onStart._0;
+					Task.spawn(task);
+				});
+			}
+
+			// progress
+			if (settings.onProgress.ctor === 'Just')
+			{
+				req.addEventListener('progress', function(event) {
+					var progress = !event.lengthComputable
+						? Maybe.Nothing
+						: Maybe.Just({
+							_: {},
+							loaded: event.loaded,
+							total: event.total
+						});
+					var task = settings.onProgress._0(progress);
+					Task.spawn(task);
+				});
+			}
+
+			// end
+			req.addEventListener('error', function() {
+				return callback(Task.fail({ ctor: 'RawNetworkError' }));
+			});
+
+			req.addEventListener('timeout', function() {
+				return callback(Task.fail({ ctor: 'RawTimeout' }));
+			});
+
+			req.addEventListener('load', function() {
+				return callback(Task.succeed(toResponse(req)));
+			});
+
+			req.open(request.verb, request.url, true);
+
+			// set all the headers
+			function setHeader(pair) {
+				req.setRequestHeader(pair._0, pair._1);
+			}
+			A2(List.map, setHeader, request.headers);
+
+			// set the timeout
+			req.timeout = settings.timeout;
+
+			// enable this withCredentials thing
+			req.withCredentials = settings.withCredentials;
+
+			// ask for a specific MIME type for the response
+			if (settings.desiredResponseType.ctor === 'Just')
+			{
+				req.overrideMimeType(settings.desiredResponseType._0);
+			}
+
+			// actuall send the request
+			if(request.body.ctor === "BodyFormData")
+			{
+				req.send(request.body.formData)
+			}
+			else
+			{
+				req.send(request.body._0);
+			}
+		});
+	}
+
+
+	// deal with responses
+
+	function toResponse(req)
+	{
+		var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
+		var response = tag === 'Blob' ? req.response : req.responseText;
+		return {
+			_: {},
+			status: req.status,
+			statusText: req.statusText,
+			headers: parseHeaders(req.getAllResponseHeaders()),
+			url: req.responseURL,
+			value: { ctor: tag, _0: response }
+		};
+	}
+
+
+	function parseHeaders(rawHeaders)
+	{
+		var headers = Dict.empty;
+
+		if (!rawHeaders)
+		{
+			return headers;
+		}
+
+		var headerPairs = rawHeaders.split('\u000d\u000a');
+		for (var i = headerPairs.length; i--; )
+		{
+			var headerPair = headerPairs[i];
+			var index = headerPair.indexOf('\u003a\u0020');
+			if (index > 0)
+			{
+				var key = headerPair.substring(0, index);
+				var value = headerPair.substring(index + 2);
+
+				headers = A3(Dict.update, key, function(oldValue) {
+					if (oldValue.ctor === 'Just')
+					{
+						return Maybe.Just(value + ', ' + oldValue._0);
+					}
+					return Maybe.Just(value);
+				}, headers);
+			}
+		}
+
+		return headers;
+	}
+
+
+	function multipart(dataList)
+	{
+		var formData = new FormData();
+
+		while (dataList.ctor !== '[]')
+		{
+			var data = dataList._0;
+			if (data.ctor === 'StringData')
+			{
+				formData.append(data._0, data._1);
+			}
+			else
+			{
+				var fileName = data._1.ctor === 'Nothing'
+					? undefined
+					: data._1._0;
+				formData.append(data._0, data._2, fileName);
+			}
+			dataList = dataList._1;
+		}
+
+		return { ctor: 'BodyFormData', formData: formData };
+	}
+
+
+	function uriEncode(string)
+	{
+		return encodeURIComponent(string);
+	}
+
+	function uriDecode(string)
+	{
+		return decodeURIComponent(string);
+	}
+
+	return localRuntime.Native.Http.values = {
+		send: F2(send),
+		multipart: multipart,
+		uriEncode: uriEncode,
+		uriDecode: uriDecode
+	};
+};
+
+Elm.Http = Elm.Http || {};
+Elm.Http.make = function (_elm) {
+   "use strict";
+   _elm.Http = _elm.Http || {};
+   if (_elm.Http.values) return _elm.Http.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Native$Http = Elm.Native.Http.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $String = Elm.String.make(_elm),
+   $Task = Elm.Task.make(_elm),
+   $Time = Elm.Time.make(_elm);
+   var _op = {};
+   var send = $Native$Http.send;
+   var BadResponse = F2(function (a,b) {
+      return {ctor: "BadResponse",_0: a,_1: b};
+   });
+   var UnexpectedPayload = function (a) {
+      return {ctor: "UnexpectedPayload",_0: a};
+   };
+   var handleResponse = F2(function (handle,response) {
+      if (_U.cmp(200,
+      response.status) < 1 && _U.cmp(response.status,300) < 0) {
+            var _p0 = response.value;
+            if (_p0.ctor === "Text") {
+                  return handle(_p0._0);
+               } else {
+                  return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
+               }
+         } else return $Task.fail(A2(BadResponse,
+         response.status,
+         response.statusText));
+   });
+   var NetworkError = {ctor: "NetworkError"};
+   var Timeout = {ctor: "Timeout"};
+   var promoteError = function (rawError) {
+      var _p1 = rawError;
+      if (_p1.ctor === "RawTimeout") {
+            return Timeout;
+         } else {
+            return NetworkError;
+         }
+   };
+   var fromJson = F2(function (decoder,response) {
+      var decode = function (str) {
+         var _p2 = A2($Json$Decode.decodeString,decoder,str);
+         if (_p2.ctor === "Ok") {
+               return $Task.succeed(_p2._0);
+            } else {
+               return $Task.fail(UnexpectedPayload(_p2._0));
+            }
+      };
+      return A2($Task.andThen,
+      A2($Task.mapError,promoteError,response),
+      handleResponse(decode));
+   });
+   var RawNetworkError = {ctor: "RawNetworkError"};
+   var RawTimeout = {ctor: "RawTimeout"};
+   var Blob = function (a) {    return {ctor: "Blob",_0: a};};
+   var Text = function (a) {    return {ctor: "Text",_0: a};};
+   var Response = F5(function (a,b,c,d,e) {
+      return {status: a,statusText: b,headers: c,url: d,value: e};
+   });
+   var defaultSettings = {timeout: 0
+                         ,onStart: $Maybe.Nothing
+                         ,onProgress: $Maybe.Nothing
+                         ,desiredResponseType: $Maybe.Nothing
+                         ,withCredentials: false};
+   var post = F3(function (decoder,url,body) {
+      var request = {verb: "POST"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: body};
+      return A2(fromJson,decoder,A2(send,defaultSettings,request));
+   });
+   var Settings = F5(function (a,b,c,d,e) {
+      return {timeout: a
+             ,onStart: b
+             ,onProgress: c
+             ,desiredResponseType: d
+             ,withCredentials: e};
+   });
+   var multipart = $Native$Http.multipart;
+   var FileData = F3(function (a,b,c) {
+      return {ctor: "FileData",_0: a,_1: b,_2: c};
+   });
+   var BlobData = F3(function (a,b,c) {
+      return {ctor: "BlobData",_0: a,_1: b,_2: c};
+   });
+   var blobData = BlobData;
+   var StringData = F2(function (a,b) {
+      return {ctor: "StringData",_0: a,_1: b};
+   });
+   var stringData = StringData;
+   var BodyBlob = function (a) {
+      return {ctor: "BodyBlob",_0: a};
+   };
+   var BodyFormData = {ctor: "BodyFormData"};
+   var ArrayBuffer = {ctor: "ArrayBuffer"};
+   var BodyString = function (a) {
+      return {ctor: "BodyString",_0: a};
+   };
+   var string = BodyString;
+   var Empty = {ctor: "Empty"};
+   var empty = Empty;
+   var getString = function (url) {
+      var request = {verb: "GET"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: empty};
+      return A2($Task.andThen,
+      A2($Task.mapError,
+      promoteError,
+      A2(send,defaultSettings,request)),
+      handleResponse($Task.succeed));
+   };
+   var get = F2(function (decoder,url) {
+      var request = {verb: "GET"
+                    ,headers: _U.list([])
+                    ,url: url
+                    ,body: empty};
+      return A2(fromJson,decoder,A2(send,defaultSettings,request));
+   });
+   var Request = F4(function (a,b,c,d) {
+      return {verb: a,headers: b,url: c,body: d};
+   });
+   var uriDecode = $Native$Http.uriDecode;
+   var uriEncode = $Native$Http.uriEncode;
+   var queryEscape = function (string) {
+      return A2($String.join,
+      "+",
+      A2($String.split,"%20",uriEncode(string)));
+   };
+   var queryPair = function (_p3) {
+      var _p4 = _p3;
+      return A2($Basics._op["++"],
+      queryEscape(_p4._0),
+      A2($Basics._op["++"],"=",queryEscape(_p4._1)));
+   };
+   var url = F2(function (baseUrl,args) {
+      var _p5 = args;
+      if (_p5.ctor === "[]") {
+            return baseUrl;
+         } else {
+            return A2($Basics._op["++"],
+            baseUrl,
+            A2($Basics._op["++"],
+            "?",
+            A2($String.join,"&",A2($List.map,queryPair,args))));
+         }
+   });
+   var TODO_implement_file_in_another_library = {ctor: "TODO_implement_file_in_another_library"};
+   var TODO_implement_blob_in_another_library = {ctor: "TODO_implement_blob_in_another_library"};
+   return _elm.Http.values = {_op: _op
+                             ,getString: getString
+                             ,get: get
+                             ,post: post
+                             ,send: send
+                             ,url: url
+                             ,uriEncode: uriEncode
+                             ,uriDecode: uriDecode
+                             ,empty: empty
+                             ,string: string
+                             ,multipart: multipart
+                             ,stringData: stringData
+                             ,defaultSettings: defaultSettings
+                             ,fromJson: fromJson
+                             ,Request: Request
+                             ,Settings: Settings
+                             ,Response: Response
+                             ,Text: Text
+                             ,Blob: Blob
+                             ,Timeout: Timeout
+                             ,NetworkError: NetworkError
+                             ,UnexpectedPayload: UnexpectedPayload
+                             ,BadResponse: BadResponse
+                             ,RawTimeout: RawTimeout
+                             ,RawNetworkError: RawNetworkError};
+};
+Elm.ServerApi = Elm.ServerApi || {};
+Elm.ServerApi.make = function (_elm) {
+   "use strict";
+   _elm.ServerApi = _elm.ServerApi || {};
+   if (_elm.ServerApi.values) return _elm.ServerApi.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Decoders = Elm.Decoders.make(_elm),
+   $Dict = Elm.Dict.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Encoders = Elm.Encoders.make(_elm),
+   $Http = Elm.Http.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var serverError = A2($Dict.singleton,
+   "global",
+   _U.list(["Unexpected server response."]));
+   var errorsDecoder = $Json$Decode.dict($Json$Decode.list($Json$Decode.string));
+   var handleResponse = F2(function (decoder,response) {
+      var _p0 = _U.cmp(200,
+      response.status) < 1 && _U.cmp(response.status,300) < 0;
+      if (_p0 === false) {
+            var _p1 = {ctor: "_Tuple2"
+                      ,_0: response.status
+                      ,_1: response.value};
+            if (_p1.ctor === "_Tuple2" && _p1._0 === 400 && _p1._1.ctor === "Text")
+            {
+                  var _p2 = A2($Json$Decode.decodeString,
+                  errorsDecoder,
+                  _p1._1._0);
+                  if (_p2.ctor === "Ok") {
+                        return $Result.Err(_p2._0);
+                     } else {
+                        return $Result.Err(serverError);
+                     }
+               } else {
+                  return $Result.Err(serverError);
+               }
+         } else {
+            var _p3 = response.value;
+            if (_p3.ctor === "Text") {
+                  return A2($Result.formatError,
+                  function (e) {
+                     return A2($Debug.log,e,serverError);
+                  },
+                  A2($Json$Decode.decodeString,decoder,_p3._0));
+               } else {
+                  return $Result.Err(serverError);
+               }
+         }
+   });
+   var handleResult = F2(function (decoder,result) {
+      var _p4 = result;
+      if (_p4.ctor === "Ok") {
+            return A2(handleResponse,decoder,_p4._0);
+         } else {
+            return $Result.Err(serverError);
+         }
+   });
+   var jsonRequest = F2(function (url,jsonBody) {
+      return {verb: "POST"
+             ,headers: _U.list([{ctor: "_Tuple2"
+                                ,_0: "Content-Type"
+                                ,_1: "application/json"}])
+             ,url: url
+             ,body: $Http.string(A2($Json$Encode.encode,0,jsonBody))};
+   });
+   var postJson = F3(function (decoder,url,jsonBody) {
+      return A2($Task.map,
+      handleResult(decoder),
+      $Task.toResult(A2($Http.send,
+      $Http.defaultSettings,
+      A2(jsonRequest,url,jsonBody))));
+   });
+   var getJson = F2(function (decoder,path) {
+      return A2($Task.map,
+      $Result.formatError(function (e) {
+         return A2($Debug.log,$Basics.toString(e),{ctor: "_Tuple0"});
+      }),
+      $Task.toResult(A2($Http.get,decoder,path)));
+   });
+   var deleteDraft = function (id) {
+      return A3(postJson,
+      $Json$Decode.succeed(id),
+      A2($Basics._op["++"],
+      "/api/tracks/",
+      A2($Basics._op["++"],id,"/delete")),
+      $Json$Encode.$null);
+   };
+   var publishTrack = function (id) {
+      return A3(postJson,
+      $Decoders.trackDecoder,
+      A2($Basics._op["++"],
+      "/api/tracks/",
+      A2($Basics._op["++"],id,"/publish")),
+      $Json$Encode.$null);
+   };
+   var saveTrack = F3(function (id,name,course) {
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "course"
+                                              ,_1: $Encoders.courseEncoder(course)}
+                                             ,{ctor: "_Tuple2",_0: "name",_1: $Json$Encode.string(name)}]));
+      return A3(postJson,
+      $Decoders.trackDecoder,
+      A2($Basics._op["++"],"/api/tracks/",id),
+      body);
+   });
+   var createTrack = function (name) {
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "name"
+                                              ,_1: $Json$Encode.string(name)}]));
+      return A3(postJson,$Decoders.trackDecoder,"/api/tracks",body);
+   };
+   var postLogout = A3(postJson,
+   $Decoders.playerDecoder,
+   "/api/logout",
+   $Json$Encode.$null);
+   var postLogin = F2(function (email,password) {
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "email"
+                                              ,_1: $Json$Encode.string(email)}
+                                             ,{ctor: "_Tuple2"
+                                              ,_0: "password"
+                                              ,_1: $Json$Encode.string(password)}]));
+      return A3(postJson,$Decoders.playerDecoder,"/api/login",body);
+   });
+   var postRegister = F3(function (email,handle,password) {
+      return A3(postJson,
+      $Decoders.playerDecoder,
+      "/api/register",
+      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                   ,_0: "email"
+                                   ,_1: $Json$Encode.string(email)}
+                                  ,{ctor: "_Tuple2",_0: "handle",_1: $Json$Encode.string(handle)}
+                                  ,{ctor: "_Tuple2"
+                                   ,_0: "password"
+                                   ,_1: $Json$Encode.string(password)}])));
+   });
+   var postHandle = function (handle) {
+      return A3(postJson,
+      $Decoders.playerDecoder,
+      "/api/setHandle",
+      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                   ,_0: "handle"
+                                   ,_1: $Json$Encode.string(handle)}])));
+   };
+   var getDrafts = A2(getJson,
+   $Json$Decode.list($Decoders.trackDecoder),
+   "/api/tracks/drafts");
+   var getLiveTrack = function (id) {
+      return A2(getJson,
+      $Decoders.liveTrackDecoder,
+      A2($Basics._op["++"],"/api/live/",id));
+   };
+   var getTrack = function (id) {
+      return A2(getJson,
+      $Decoders.trackDecoder,
+      A2($Basics._op["++"],"/api/tracks/",id));
+   };
+   var getLiveStatus = A2(getJson,
+   $Decoders.liveStatusDecoder,
+   "/api/liveStatus");
+   var getPlayer = function (handle) {
+      return A2(getJson,
+      $Decoders.playerDecoder,
+      A2($Basics._op["++"],"/api/players/",handle));
+   };
+   return _elm.ServerApi.values = {_op: _op
+                                  ,getPlayer: getPlayer
+                                  ,getLiveStatus: getLiveStatus
+                                  ,getTrack: getTrack
+                                  ,getLiveTrack: getLiveTrack
+                                  ,getDrafts: getDrafts
+                                  ,postHandle: postHandle
+                                  ,postRegister: postRegister
+                                  ,postLogin: postLogin
+                                  ,postLogout: postLogout
+                                  ,createTrack: createTrack
+                                  ,saveTrack: saveTrack
+                                  ,publishTrack: publishTrack
+                                  ,deleteDraft: deleteDraft
+                                  ,getJson: getJson
+                                  ,postJson: postJson
+                                  ,jsonRequest: jsonRequest
+                                  ,handleResult: handleResult
+                                  ,handleResponse: handleResponse
+                                  ,errorsDecoder: errorsDecoder
+                                  ,serverError: serverError};
+};
 Elm.Page = Elm.Page || {};
 Elm.Page.ListDrafts = Elm.Page.ListDrafts || {};
 Elm.Page.ListDrafts.Model = Elm.Page.ListDrafts.Model || {};
@@ -17893,47 +18626,6 @@ Elm.Page.ListDrafts.Model.make = function (_elm) {
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Forum = Elm.Page.Forum || {};
-Elm.Page.Forum.Route = Elm.Page.Forum.Route || {};
-Elm.Page.Forum.Route.make = function (_elm) {
-   "use strict";
-   _elm.Page = _elm.Page || {};
-   _elm.Page.Forum = _elm.Page.Forum || {};
-   _elm.Page.Forum.Route = _elm.Page.Forum.Route || {};
-   if (_elm.Page.Forum.Route.values)
-   return _elm.Page.Forum.Route.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $RouteParser = Elm.RouteParser.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var toPath = function (route) {
-      return A2($Basics._op["++"],
-      "/forum",
-      function () {
-         var _p0 = route;
-         if (_p0.ctor === "Index") {
-               return "";
-            } else {
-               return A2($Basics._op["++"],"/forum/",_p0._0);
-            }
-      }());
-   };
-   var Topic = function (a) {    return {ctor: "Topic",_0: a};};
-   var Index = {ctor: "Index"};
-   var matchers = _U.list([A2($RouteParser.$static,Index,"/forum")
-                          ,A4($RouteParser.dyn1,Topic,"/forum/",$RouteParser.string,"")]);
-   return _elm.Page.Forum.Route.values = {_op: _op
-                                         ,matchers: matchers
-                                         ,toPath: toPath
-                                         ,Index: Index
-                                         ,Topic: Topic};
-};
-Elm.Page = Elm.Page || {};
-Elm.Page.Forum = Elm.Page.Forum || {};
 Elm.Page.Forum.Model = Elm.Page.Forum.Model || {};
 Elm.Page.Forum.Model.make = function (_elm) {
    "use strict";
@@ -17947,105 +18639,85 @@ Elm.Page.Forum.Model.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model$Forum = Elm.Model.Forum.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
+   $Signal = Elm.Signal.make(_elm),
+   $Time = Elm.Time.make(_elm);
    var _op = {};
+   var SubmitResult = function (a) {
+      return {ctor: "SubmitResult",_0: a};
+   };
+   var Submit = {ctor: "Submit"};
+   var SetContent = function (a) {
+      return {ctor: "SetContent",_0: a};
+   };
+   var SetTitle = function (a) {
+      return {ctor: "SetTitle",_0: a};
+   };
    var NoOp = {ctor: "NoOp"};
-   var TopicsResult = function (a) {
-      return {ctor: "TopicsResult",_0: a};
+   var NewTopicAction = function (a) {
+      return {ctor: "NewTopicAction",_0: a};
+   };
+   var HideNewTopic = {ctor: "HideNewTopic"};
+   var ShowNewTopic = {ctor: "ShowNewTopic"};
+   var RefreshList = {ctor: "RefreshList"};
+   var ShowResult = function (a) {
+      return {ctor: "ShowResult",_0: a};
+   };
+   var ListResult = function (a) {
+      return {ctor: "ListResult",_0: a};
    };
    var initial = {topics: _U.list([])
-                 ,currentTopic: $Maybe.Nothing};
+                 ,currentTopic: $Maybe.Nothing
+                 ,newTopic: $Maybe.Nothing};
    var initialRoute = $Page$Forum$Route.Index;
-   var Model = F2(function (a,b) {
-      return {topics: a,currentTopic: b};
+   var NewTopic = F2(function (a,b) {
+      return {title: a,content: b};
+   });
+   var TopicWithPosts = F2(function (a,b) {
+      return {topic: a,postsWithUsers: b};
+   });
+   var Post = F4(function (a,b,c,d) {
+      return {id: a,content: b,creationTime: c,updateTime: d};
+   });
+   var PostWithUser = F2(function (a,b) {
+      return {post: a,user: b};
+   });
+   var Topic = F5(function (a,b,c,d,e) {
+      return {id: a
+             ,title: b
+             ,postsCount: c
+             ,creationTime: d
+             ,activityTime: e};
+   });
+   var TopicWithUser = F2(function (a,b) {
+      return {topic: a,user: b};
+   });
+   var Model = F3(function (a,b,c) {
+      return {topics: a,currentTopic: b,newTopic: c};
    });
    return _elm.Page.Forum.Model.values = {_op: _op
                                          ,Model: Model
+                                         ,TopicWithUser: TopicWithUser
+                                         ,Topic: Topic
+                                         ,PostWithUser: PostWithUser
+                                         ,Post: Post
+                                         ,TopicWithPosts: TopicWithPosts
+                                         ,NewTopic: NewTopic
                                          ,initialRoute: initialRoute
                                          ,initial: initial
-                                         ,TopicsResult: TopicsResult
-                                         ,NoOp: NoOp};
-};
-Elm.Page = Elm.Page || {};
-Elm.Page.Admin = Elm.Page.Admin || {};
-Elm.Page.Admin.Route = Elm.Page.Admin.Route || {};
-Elm.Page.Admin.Route.make = function (_elm) {
-   "use strict";
-   _elm.Page = _elm.Page || {};
-   _elm.Page.Admin = _elm.Page.Admin || {};
-   _elm.Page.Admin.Route = _elm.Page.Admin.Route || {};
-   if (_elm.Page.Admin.Route.values)
-   return _elm.Page.Admin.Route.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $RouteParser = Elm.RouteParser.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var maybe = function (ms) {
-      var _p0 = ms;
-      if (_p0.ctor === "Just") {
-            return A2($Basics._op["++"],"/",_p0._0);
-         } else {
-            return "";
-         }
-   };
-   var toPath = function (route) {
-      return A2($Basics._op["++"],
-      "/admin",
-      function () {
-         var _p1 = route;
-         switch (_p1.ctor)
-         {case "Dashboard": return "";
-            case "ListTracks": return A2($Basics._op["++"],
-              "/tracks",
-              maybe(_p1._0));
-            default: return A2($Basics._op["++"],"/users",maybe(_p1._0));}
-      }());
-   };
-   var ListUsers = function (a) {
-      return {ctor: "ListUsers",_0: a};
-   };
-   var ListTracks = function (a) {
-      return {ctor: "ListTracks",_0: a};
-   };
-   var Dashboard = {ctor: "Dashboard"};
-   var matchers = _U.list([A2($RouteParser.$static,
-                          Dashboard,
-                          "/admin")
-                          ,A2($RouteParser.$static,
-                          ListTracks($Maybe.Nothing),
-                          "/admin/tracks")
-                          ,A4($RouteParser.dyn1,
-                          function (_p2) {
-                             return ListTracks($Maybe.Just(_p2));
-                          },
-                          "/admin/tracks/",
-                          $RouteParser.string,
-                          "")
-                          ,A2($RouteParser.$static,
-                          ListUsers($Maybe.Nothing),
-                          "/admin/users")
-                          ,A4($RouteParser.dyn1,
-                          function (_p3) {
-                             return ListUsers($Maybe.Just(_p3));
-                          },
-                          "/admin/users/",
-                          $RouteParser.string,
-                          "")]);
-   var router = A2($RouteParser.router,matchers,toPath);
-   return _elm.Page.Admin.Route.values = {_op: _op
-                                         ,matchers: matchers
-                                         ,toPath: toPath
-                                         ,Dashboard: Dashboard
-                                         ,ListTracks: ListTracks
-                                         ,ListUsers: ListUsers};
+                                         ,ListResult: ListResult
+                                         ,ShowResult: ShowResult
+                                         ,RefreshList: RefreshList
+                                         ,ShowNewTopic: ShowNewTopic
+                                         ,HideNewTopic: HideNewTopic
+                                         ,NewTopicAction: NewTopicAction
+                                         ,NoOp: NoOp
+                                         ,SetTitle: SetTitle
+                                         ,SetContent: SetContent
+                                         ,Submit: Submit
+                                         ,SubmitResult: SubmitResult};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
@@ -18060,6 +18732,8 @@ Elm.Page.Admin.Model.make = function (_elm) {
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
+   $Decoders = Elm.Decoders.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
@@ -18080,11 +18754,48 @@ Elm.Page.Admin.Model.make = function (_elm) {
    var RefreshData = {ctor: "RefreshData"};
    var initial = {tracks: _U.list([]),users: _U.list([])};
    var initialRoute = $Page$Admin$Route.Dashboard;
+   var AdminData = F2(function (a,b) {
+      return {tracks: a,users: b};
+   });
+   var User = F7(function (a,b,c,d,e,f,g) {
+      return {id: a
+             ,email: b
+             ,handle: c
+             ,status: d
+             ,avatarId: e
+             ,vmgMagnet: f
+             ,creationTime: g};
+   });
+   var userDecoder = A8($Json$Decode.object7,
+   User,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"email",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"handle",$Json$Decode.string),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "status",
+   $Json$Decode.string)),
+   $Json$Decode.maybe(A2($Json$Decode._op[":="],
+   "avatarId",
+   $Json$Decode.string)),
+   A2($Json$Decode._op[":="],"vmgMagnet",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float));
+   var adminDataDecoder = A3($Json$Decode.object2,
+   AdminData,
+   A2($Json$Decode._op[":="],
+   "tracks",
+   $Json$Decode.list($Decoders.trackDecoder)),
+   A2($Json$Decode._op[":="],
+   "users",
+   $Json$Decode.list(userDecoder)));
    var Model = F2(function (a,b) {
       return {tracks: a,users: b};
    });
    return _elm.Page.Admin.Model.values = {_op: _op
                                          ,Model: Model
+                                         ,User: User
+                                         ,AdminData: AdminData
+                                         ,adminDataDecoder: adminDataDecoder
+                                         ,userDecoder: userDecoder
                                          ,initialRoute: initialRoute
                                          ,initial: initial
                                          ,RefreshData: RefreshData
@@ -18092,116 +18803,6 @@ Elm.Page.Admin.Model.make = function (_elm) {
                                          ,DeleteTrack: DeleteTrack
                                          ,DeleteTrackResult: DeleteTrackResult
                                          ,NoOp: NoOp};
-};
-Elm.Route = Elm.Route || {};
-Elm.Route.make = function (_elm) {
-   "use strict";
-   _elm.Route = _elm.Route || {};
-   if (_elm.Route.values) return _elm.Route.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
-   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $RouteParser = Elm.RouteParser.make(_elm),
-   $Signal = Elm.Signal.make(_elm);
-   var _op = {};
-   var toPath = function (route) {
-      var _p0 = route;
-      switch (_p0.ctor)
-      {case "Home": return "/";
-         case "Login": return "/login";
-         case "Register": return "/register";
-         case "ShowProfile": return "/me";
-         case "ListDrafts": return "/drafts";
-         case "ShowTrack": return A2($Basics._op["++"],"/track/",_p0._0);
-         case "EditTrack": return A2($Basics._op["++"],"/edit/",_p0._0);
-         case "PlayTrack": return A2($Basics._op["++"],"/play/",_p0._0);
-         case "Forum": return $Page$Forum$Route.toPath(_p0._0);
-         case "Admin": return $Page$Admin$Route.toPath(_p0._0);
-         case "EmptyRoute": return "/";
-         default: return "/404";}
-   };
-   var None = {ctor: "None"};
-   var ForAdmin = F2(function (a,b) {
-      return {ctor: "ForAdmin",_0: a,_1: b};
-   });
-   var ForMain = {ctor: "ForMain"};
-   var detectTransition = F2(function (prevRoute,route) {
-      var _p1 = {ctor: "_Tuple2",_0: prevRoute,_1: route};
-      if (_p1.ctor === "_Tuple2" && _p1._0.ctor === "Admin" && _p1._1.ctor === "Admin")
-      {
-            return A2(ForAdmin,_p1._0._0,_p1._1._0);
-         } else {
-            return !_U.eq(prevRoute,route) ? ForMain : None;
-         }
-   });
-   var EmptyRoute = {ctor: "EmptyRoute"};
-   var NotFound = {ctor: "NotFound"};
-   var Admin = function (a) {    return {ctor: "Admin",_0: a};};
-   var Forum = function (a) {    return {ctor: "Forum",_0: a};};
-   var PlayTrack = function (a) {
-      return {ctor: "PlayTrack",_0: a};
-   };
-   var EditTrack = function (a) {
-      return {ctor: "EditTrack",_0: a};
-   };
-   var ListDrafts = {ctor: "ListDrafts"};
-   var ShowTrack = function (a) {
-      return {ctor: "ShowTrack",_0: a};
-   };
-   var ShowProfile = {ctor: "ShowProfile"};
-   var Register = {ctor: "Register"};
-   var Login = {ctor: "Login"};
-   var Home = {ctor: "Home"};
-   var matchers = A2($Basics._op["++"],
-   _U.list([A2($RouteParser.$static,Home,"/")
-           ,A2($RouteParser.$static,Login,"/login")
-           ,A2($RouteParser.$static,Register,"/register")
-           ,A2($RouteParser.$static,ShowProfile,"/me")
-           ,A2($RouteParser.$static,ListDrafts,"/drafts")
-           ,A4($RouteParser.dyn1,
-           ShowTrack,
-           "/track/",
-           $RouteParser.string,
-           "")
-           ,A4($RouteParser.dyn1,EditTrack,"/edit/",$RouteParser.string,"")
-           ,A4($RouteParser.dyn1,
-           PlayTrack,
-           "/play/",
-           $RouteParser.string,
-           "")]),
-   A2($Basics._op["++"],
-   A2($RouteParser.mapMatchers,Admin,$Page$Admin$Route.matchers),
-   A2($RouteParser.mapMatchers,Forum,$Page$Forum$Route.matchers)));
-   var fromPath = function (path) {
-      return A2($Maybe.withDefault,
-      NotFound,
-      A2($RouteParser.match,matchers,path));
-   };
-   return _elm.Route.values = {_op: _op
-                              ,Home: Home
-                              ,Login: Login
-                              ,Register: Register
-                              ,ShowProfile: ShowProfile
-                              ,ShowTrack: ShowTrack
-                              ,ListDrafts: ListDrafts
-                              ,EditTrack: EditTrack
-                              ,PlayTrack: PlayTrack
-                              ,Forum: Forum
-                              ,Admin: Admin
-                              ,NotFound: NotFound
-                              ,EmptyRoute: EmptyRoute
-                              ,ForMain: ForMain
-                              ,ForAdmin: ForAdmin
-                              ,None: None
-                              ,fromPath: fromPath
-                              ,matchers: matchers
-                              ,toPath: toPath
-                              ,detectTransition: detectTransition};
 };
 Elm.Model = Elm.Model || {};
 Elm.Model.make = function (_elm) {
@@ -18231,7 +18832,6 @@ Elm.Model.make = function (_elm) {
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Task = Elm.Task.make(_elm),
-   $Transit = Elm.Transit.make(_elm),
    $TransitRouter = Elm.TransitRouter.make(_elm);
    var _op = {};
    var initialAppState = function (_p0) {
@@ -18282,9 +18882,6 @@ Elm.Model.make = function (_elm) {
          };
       };
    };
-   var Context = F4(function (a,b,c,d) {
-      return {player: a,dims: b,transition: c,routeTransition: d};
-   });
    var AdminAction = function (a) {
       return {ctor: "AdminAction",_0: a};
    };
@@ -18365,7 +18962,6 @@ Elm.Model.make = function (_elm) {
                               ,ListDraftsAction: ListDraftsAction
                               ,ForumAction: ForumAction
                               ,AdminAction: AdminAction
-                              ,Context: Context
                               ,Pages: Pages
                               ,initialAppState: initialAppState};
 };
@@ -21523,588 +22119,6 @@ Elm.StartApp.make = function (_elm) {
                                  ,Config: Config
                                  ,App: App};
 };
-Elm.Native.Http = {};
-Elm.Native.Http.make = function(localRuntime) {
-
-	localRuntime.Native = localRuntime.Native || {};
-	localRuntime.Native.Http = localRuntime.Native.Http || {};
-	if (localRuntime.Native.Http.values)
-	{
-		return localRuntime.Native.Http.values;
-	}
-
-	var Dict = Elm.Dict.make(localRuntime);
-	var List = Elm.List.make(localRuntime);
-	var Maybe = Elm.Maybe.make(localRuntime);
-	var Task = Elm.Native.Task.make(localRuntime);
-
-
-	function send(settings, request)
-	{
-		return Task.asyncFunction(function(callback) {
-			var req = new XMLHttpRequest();
-
-			// start
-			if (settings.onStart.ctor === 'Just')
-			{
-				req.addEventListener('loadStart', function() {
-					var task = settings.onStart._0;
-					Task.spawn(task);
-				});
-			}
-
-			// progress
-			if (settings.onProgress.ctor === 'Just')
-			{
-				req.addEventListener('progress', function(event) {
-					var progress = !event.lengthComputable
-						? Maybe.Nothing
-						: Maybe.Just({
-							_: {},
-							loaded: event.loaded,
-							total: event.total
-						});
-					var task = settings.onProgress._0(progress);
-					Task.spawn(task);
-				});
-			}
-
-			// end
-			req.addEventListener('error', function() {
-				return callback(Task.fail({ ctor: 'RawNetworkError' }));
-			});
-
-			req.addEventListener('timeout', function() {
-				return callback(Task.fail({ ctor: 'RawTimeout' }));
-			});
-
-			req.addEventListener('load', function() {
-				return callback(Task.succeed(toResponse(req)));
-			});
-
-			req.open(request.verb, request.url, true);
-
-			// set all the headers
-			function setHeader(pair) {
-				req.setRequestHeader(pair._0, pair._1);
-			}
-			A2(List.map, setHeader, request.headers);
-
-			// set the timeout
-			req.timeout = settings.timeout;
-
-			// enable this withCredentials thing
-			req.withCredentials = settings.withCredentials;
-
-			// ask for a specific MIME type for the response
-			if (settings.desiredResponseType.ctor === 'Just')
-			{
-				req.overrideMimeType(settings.desiredResponseType._0);
-			}
-
-			// actuall send the request
-			if(request.body.ctor === "BodyFormData")
-			{
-				req.send(request.body.formData)
-			}
-			else
-			{
-				req.send(request.body._0);
-			}
-		});
-	}
-
-
-	// deal with responses
-
-	function toResponse(req)
-	{
-		var tag = req.responseType === 'blob' ? 'Blob' : 'Text'
-		var response = tag === 'Blob' ? req.response : req.responseText;
-		return {
-			_: {},
-			status: req.status,
-			statusText: req.statusText,
-			headers: parseHeaders(req.getAllResponseHeaders()),
-			url: req.responseURL,
-			value: { ctor: tag, _0: response }
-		};
-	}
-
-
-	function parseHeaders(rawHeaders)
-	{
-		var headers = Dict.empty;
-
-		if (!rawHeaders)
-		{
-			return headers;
-		}
-
-		var headerPairs = rawHeaders.split('\u000d\u000a');
-		for (var i = headerPairs.length; i--; )
-		{
-			var headerPair = headerPairs[i];
-			var index = headerPair.indexOf('\u003a\u0020');
-			if (index > 0)
-			{
-				var key = headerPair.substring(0, index);
-				var value = headerPair.substring(index + 2);
-
-				headers = A3(Dict.update, key, function(oldValue) {
-					if (oldValue.ctor === 'Just')
-					{
-						return Maybe.Just(value + ', ' + oldValue._0);
-					}
-					return Maybe.Just(value);
-				}, headers);
-			}
-		}
-
-		return headers;
-	}
-
-
-	function multipart(dataList)
-	{
-		var formData = new FormData();
-
-		while (dataList.ctor !== '[]')
-		{
-			var data = dataList._0;
-			if (data.ctor === 'StringData')
-			{
-				formData.append(data._0, data._1);
-			}
-			else
-			{
-				var fileName = data._1.ctor === 'Nothing'
-					? undefined
-					: data._1._0;
-				formData.append(data._0, data._2, fileName);
-			}
-			dataList = dataList._1;
-		}
-
-		return { ctor: 'BodyFormData', formData: formData };
-	}
-
-
-	function uriEncode(string)
-	{
-		return encodeURIComponent(string);
-	}
-
-	function uriDecode(string)
-	{
-		return decodeURIComponent(string);
-	}
-
-	return localRuntime.Native.Http.values = {
-		send: F2(send),
-		multipart: multipart,
-		uriEncode: uriEncode,
-		uriDecode: uriDecode
-	};
-};
-
-Elm.Http = Elm.Http || {};
-Elm.Http.make = function (_elm) {
-   "use strict";
-   _elm.Http = _elm.Http || {};
-   if (_elm.Http.values) return _elm.Http.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Native$Http = Elm.Native.Http.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $String = Elm.String.make(_elm),
-   $Task = Elm.Task.make(_elm),
-   $Time = Elm.Time.make(_elm);
-   var _op = {};
-   var send = $Native$Http.send;
-   var BadResponse = F2(function (a,b) {
-      return {ctor: "BadResponse",_0: a,_1: b};
-   });
-   var UnexpectedPayload = function (a) {
-      return {ctor: "UnexpectedPayload",_0: a};
-   };
-   var handleResponse = F2(function (handle,response) {
-      if (_U.cmp(200,
-      response.status) < 1 && _U.cmp(response.status,300) < 0) {
-            var _p0 = response.value;
-            if (_p0.ctor === "Text") {
-                  return handle(_p0._0);
-               } else {
-                  return $Task.fail(UnexpectedPayload("Response body is a blob, expecting a string."));
-               }
-         } else return $Task.fail(A2(BadResponse,
-         response.status,
-         response.statusText));
-   });
-   var NetworkError = {ctor: "NetworkError"};
-   var Timeout = {ctor: "Timeout"};
-   var promoteError = function (rawError) {
-      var _p1 = rawError;
-      if (_p1.ctor === "RawTimeout") {
-            return Timeout;
-         } else {
-            return NetworkError;
-         }
-   };
-   var fromJson = F2(function (decoder,response) {
-      var decode = function (str) {
-         var _p2 = A2($Json$Decode.decodeString,decoder,str);
-         if (_p2.ctor === "Ok") {
-               return $Task.succeed(_p2._0);
-            } else {
-               return $Task.fail(UnexpectedPayload(_p2._0));
-            }
-      };
-      return A2($Task.andThen,
-      A2($Task.mapError,promoteError,response),
-      handleResponse(decode));
-   });
-   var RawNetworkError = {ctor: "RawNetworkError"};
-   var RawTimeout = {ctor: "RawTimeout"};
-   var Blob = function (a) {    return {ctor: "Blob",_0: a};};
-   var Text = function (a) {    return {ctor: "Text",_0: a};};
-   var Response = F5(function (a,b,c,d,e) {
-      return {status: a,statusText: b,headers: c,url: d,value: e};
-   });
-   var defaultSettings = {timeout: 0
-                         ,onStart: $Maybe.Nothing
-                         ,onProgress: $Maybe.Nothing
-                         ,desiredResponseType: $Maybe.Nothing
-                         ,withCredentials: false};
-   var post = F3(function (decoder,url,body) {
-      var request = {verb: "POST"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: body};
-      return A2(fromJson,decoder,A2(send,defaultSettings,request));
-   });
-   var Settings = F5(function (a,b,c,d,e) {
-      return {timeout: a
-             ,onStart: b
-             ,onProgress: c
-             ,desiredResponseType: d
-             ,withCredentials: e};
-   });
-   var multipart = $Native$Http.multipart;
-   var FileData = F3(function (a,b,c) {
-      return {ctor: "FileData",_0: a,_1: b,_2: c};
-   });
-   var BlobData = F3(function (a,b,c) {
-      return {ctor: "BlobData",_0: a,_1: b,_2: c};
-   });
-   var blobData = BlobData;
-   var StringData = F2(function (a,b) {
-      return {ctor: "StringData",_0: a,_1: b};
-   });
-   var stringData = StringData;
-   var BodyBlob = function (a) {
-      return {ctor: "BodyBlob",_0: a};
-   };
-   var BodyFormData = {ctor: "BodyFormData"};
-   var ArrayBuffer = {ctor: "ArrayBuffer"};
-   var BodyString = function (a) {
-      return {ctor: "BodyString",_0: a};
-   };
-   var string = BodyString;
-   var Empty = {ctor: "Empty"};
-   var empty = Empty;
-   var getString = function (url) {
-      var request = {verb: "GET"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: empty};
-      return A2($Task.andThen,
-      A2($Task.mapError,
-      promoteError,
-      A2(send,defaultSettings,request)),
-      handleResponse($Task.succeed));
-   };
-   var get = F2(function (decoder,url) {
-      var request = {verb: "GET"
-                    ,headers: _U.list([])
-                    ,url: url
-                    ,body: empty};
-      return A2(fromJson,decoder,A2(send,defaultSettings,request));
-   });
-   var Request = F4(function (a,b,c,d) {
-      return {verb: a,headers: b,url: c,body: d};
-   });
-   var uriDecode = $Native$Http.uriDecode;
-   var uriEncode = $Native$Http.uriEncode;
-   var queryEscape = function (string) {
-      return A2($String.join,
-      "+",
-      A2($String.split,"%20",uriEncode(string)));
-   };
-   var queryPair = function (_p3) {
-      var _p4 = _p3;
-      return A2($Basics._op["++"],
-      queryEscape(_p4._0),
-      A2($Basics._op["++"],"=",queryEscape(_p4._1)));
-   };
-   var url = F2(function (baseUrl,args) {
-      var _p5 = args;
-      if (_p5.ctor === "[]") {
-            return baseUrl;
-         } else {
-            return A2($Basics._op["++"],
-            baseUrl,
-            A2($Basics._op["++"],
-            "?",
-            A2($String.join,"&",A2($List.map,queryPair,args))));
-         }
-   });
-   var TODO_implement_file_in_another_library = {ctor: "TODO_implement_file_in_another_library"};
-   var TODO_implement_blob_in_another_library = {ctor: "TODO_implement_blob_in_another_library"};
-   return _elm.Http.values = {_op: _op
-                             ,getString: getString
-                             ,get: get
-                             ,post: post
-                             ,send: send
-                             ,url: url
-                             ,uriEncode: uriEncode
-                             ,uriDecode: uriDecode
-                             ,empty: empty
-                             ,string: string
-                             ,multipart: multipart
-                             ,stringData: stringData
-                             ,defaultSettings: defaultSettings
-                             ,fromJson: fromJson
-                             ,Request: Request
-                             ,Settings: Settings
-                             ,Response: Response
-                             ,Text: Text
-                             ,Blob: Blob
-                             ,Timeout: Timeout
-                             ,NetworkError: NetworkError
-                             ,UnexpectedPayload: UnexpectedPayload
-                             ,BadResponse: BadResponse
-                             ,RawTimeout: RawTimeout
-                             ,RawNetworkError: RawNetworkError};
-};
-Elm.ServerApi = Elm.ServerApi || {};
-Elm.ServerApi.make = function (_elm) {
-   "use strict";
-   _elm.ServerApi = _elm.ServerApi || {};
-   if (_elm.ServerApi.values) return _elm.ServerApi.values;
-   var _U = Elm.Native.Utils.make(_elm),
-   $Basics = Elm.Basics.make(_elm),
-   $Debug = Elm.Debug.make(_elm),
-   $Decoders = Elm.Decoders.make(_elm),
-   $Dict = Elm.Dict.make(_elm),
-   $Effects = Elm.Effects.make(_elm),
-   $Encoders = Elm.Encoders.make(_elm),
-   $Http = Elm.Http.make(_elm),
-   $Json$Decode = Elm.Json.Decode.make(_elm),
-   $Json$Encode = Elm.Json.Encode.make(_elm),
-   $List = Elm.List.make(_elm),
-   $Maybe = Elm.Maybe.make(_elm),
-   $Model$Forum = Elm.Model.Forum.make(_elm),
-   $Model$Shared = Elm.Model.Shared.make(_elm),
-   $Result = Elm.Result.make(_elm),
-   $Signal = Elm.Signal.make(_elm),
-   $Task = Elm.Task.make(_elm);
-   var _op = {};
-   var serverError = A2($Dict.singleton,
-   "global",
-   _U.list(["Unexpected server response."]));
-   var errorsDecoder = $Json$Decode.dict($Json$Decode.list($Json$Decode.string));
-   var handleResponse = F2(function (decoder,response) {
-      var _p0 = _U.cmp(200,
-      response.status) < 1 && _U.cmp(response.status,300) < 0;
-      if (_p0 === false) {
-            var _p1 = {ctor: "_Tuple2"
-                      ,_0: response.status
-                      ,_1: response.value};
-            if (_p1.ctor === "_Tuple2" && _p1._0 === 400 && _p1._1.ctor === "Text")
-            {
-                  var _p2 = A2($Json$Decode.decodeString,
-                  errorsDecoder,
-                  _p1._1._0);
-                  if (_p2.ctor === "Ok") {
-                        return $Result.Err(_p2._0);
-                     } else {
-                        return $Result.Err(serverError);
-                     }
-               } else {
-                  return $Result.Err(serverError);
-               }
-         } else {
-            var _p3 = response.value;
-            if (_p3.ctor === "Text") {
-                  return A2($Result.formatError,
-                  function (_p4) {
-                     return serverError;
-                  },
-                  A2($Json$Decode.decodeString,decoder,_p3._0));
-               } else {
-                  return $Result.Err(serverError);
-               }
-         }
-   });
-   var handleResult = F2(function (decoder,result) {
-      var _p5 = result;
-      if (_p5.ctor === "Ok") {
-            return A2(handleResponse,decoder,_p5._0);
-         } else {
-            return $Result.Err(serverError);
-         }
-   });
-   var jsonRequest = F2(function (url,jsonBody) {
-      return {verb: "POST"
-             ,headers: _U.list([{ctor: "_Tuple2"
-                                ,_0: "Content-Type"
-                                ,_1: "application/json"}])
-             ,url: url
-             ,body: $Http.string(A2($Json$Encode.encode,0,jsonBody))};
-   });
-   var postJson = F3(function (decoder,url,jsonBody) {
-      return A2($Task.map,
-      handleResult(decoder),
-      $Task.toResult(A2($Http.send,
-      $Http.defaultSettings,
-      A2(jsonRequest,url,jsonBody))));
-   });
-   var getJson = F2(function (decoder,path) {
-      return A2($Task.map,
-      $Result.formatError(function (e) {
-         return A2($Debug.log,$Basics.toString(e),{ctor: "_Tuple0"});
-      }),
-      $Task.toResult(A2($Http.get,decoder,path)));
-   });
-   var deleteDraft = function (id) {
-      return A3(postJson,
-      $Json$Decode.succeed(id),
-      A2($Basics._op["++"],
-      "/api/tracks/",
-      A2($Basics._op["++"],id,"/delete")),
-      $Json$Encode.$null);
-   };
-   var publishTrack = function (id) {
-      return A3(postJson,
-      $Decoders.trackDecoder,
-      A2($Basics._op["++"],
-      "/api/tracks/",
-      A2($Basics._op["++"],id,"/publish")),
-      $Json$Encode.$null);
-   };
-   var saveTrack = F3(function (id,name,course) {
-      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                              ,_0: "course"
-                                              ,_1: $Encoders.courseEncoder(course)}
-                                             ,{ctor: "_Tuple2",_0: "name",_1: $Json$Encode.string(name)}]));
-      return A3(postJson,
-      $Decoders.trackDecoder,
-      A2($Basics._op["++"],"/api/tracks/",id),
-      body);
-   });
-   var createTrack = function (name) {
-      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                              ,_0: "name"
-                                              ,_1: $Json$Encode.string(name)}]));
-      return A3(postJson,$Decoders.trackDecoder,"/api/tracks",body);
-   };
-   var postLogout = A3(postJson,
-   $Decoders.playerDecoder,
-   "/api/logout",
-   $Json$Encode.$null);
-   var postLogin = F2(function (email,password) {
-      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                              ,_0: "email"
-                                              ,_1: $Json$Encode.string(email)}
-                                             ,{ctor: "_Tuple2"
-                                              ,_0: "password"
-                                              ,_1: $Json$Encode.string(password)}]));
-      return A3(postJson,$Decoders.playerDecoder,"/api/login",body);
-   });
-   var postRegister = F3(function (email,handle,password) {
-      return A3(postJson,
-      $Decoders.playerDecoder,
-      "/api/register",
-      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                   ,_0: "email"
-                                   ,_1: $Json$Encode.string(email)}
-                                  ,{ctor: "_Tuple2",_0: "handle",_1: $Json$Encode.string(handle)}
-                                  ,{ctor: "_Tuple2"
-                                   ,_0: "password"
-                                   ,_1: $Json$Encode.string(password)}])));
-   });
-   var postHandle = function (handle) {
-      return A3(postJson,
-      $Decoders.playerDecoder,
-      "/api/setHandle",
-      $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                   ,_0: "handle"
-                                   ,_1: $Json$Encode.string(handle)}])));
-   };
-   var loadAdminData = A2(getJson,
-   $Decoders.adminDataDecoder,
-   "/api/admin");
-   var getForumTopic = function (id) {
-      return A2(getJson,
-      $Decoders.forumTopicDecoder,
-      A2($Basics._op["++"],"/api/forum/topics/",id));
-   };
-   var getForumTopics = A2(getJson,
-   $Json$Decode.list($Decoders.forumTopicDecoder),
-   "/api/forum/topics");
-   var getDrafts = A2(getJson,
-   $Json$Decode.list($Decoders.trackDecoder),
-   "/api/tracks/drafts");
-   var getLiveTrack = function (id) {
-      return A2(getJson,
-      $Decoders.liveTrackDecoder,
-      A2($Basics._op["++"],"/api/live/",id));
-   };
-   var getTrack = function (id) {
-      return A2(getJson,
-      $Decoders.trackDecoder,
-      A2($Basics._op["++"],"/api/tracks/",id));
-   };
-   var getLiveStatus = A2(getJson,
-   $Decoders.liveStatusDecoder,
-   "/api/liveStatus");
-   var getPlayer = function (handle) {
-      return A2(getJson,
-      $Decoders.playerDecoder,
-      A2($Basics._op["++"],"/api/players/",handle));
-   };
-   return _elm.ServerApi.values = {_op: _op
-                                  ,getPlayer: getPlayer
-                                  ,getLiveStatus: getLiveStatus
-                                  ,getTrack: getTrack
-                                  ,getLiveTrack: getLiveTrack
-                                  ,getDrafts: getDrafts
-                                  ,getForumTopics: getForumTopics
-                                  ,getForumTopic: getForumTopic
-                                  ,loadAdminData: loadAdminData
-                                  ,postHandle: postHandle
-                                  ,postRegister: postRegister
-                                  ,postLogin: postLogin
-                                  ,postLogout: postLogout
-                                  ,createTrack: createTrack
-                                  ,saveTrack: saveTrack
-                                  ,publishTrack: publishTrack
-                                  ,deleteDraft: deleteDraft
-                                  ,getJson: getJson
-                                  ,postJson: postJson
-                                  ,jsonRequest: jsonRequest
-                                  ,handleResult: handleResult
-                                  ,handleResponse: handleResponse
-                                  ,errorsDecoder: errorsDecoder
-                                  ,serverError: serverError};
-};
 Elm.Update = Elm.Update || {};
 Elm.Update.Utils = Elm.Update.Utils || {};
 Elm.Update.Utils.make = function (_elm) {
@@ -23274,6 +23288,61 @@ Elm.Page.ListDrafts.Update.make = function (_elm) {
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.Decoders = Elm.Page.Forum.Decoders || {};
+Elm.Page.Forum.Decoders.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.Decoders = _elm.Page.Forum.Decoders || {};
+   if (_elm.Page.Forum.Decoders.values)
+   return _elm.Page.Forum.Decoders.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Decoders = Elm.Decoders.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var postDecoder = A5($Json$Decode.object4,
+   $Page$Forum$Model.Post,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
+   var postWithUserDecoder = A3($Json$Decode.object2,
+   $Page$Forum$Model.PostWithUser,
+   A2($Json$Decode._op[":="],"post",postDecoder),
+   A2($Json$Decode._op[":="],"user",$Decoders.userDecoder));
+   var topicDecoder = A6($Json$Decode.object5,
+   $Page$Forum$Model.Topic,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"title",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"postsCount",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"activityTime",$Json$Decode.$float));
+   var topicWithPostsDecoder = A3($Json$Decode.object2,
+   $Page$Forum$Model.TopicWithPosts,
+   A2($Json$Decode._op[":="],"topic",topicDecoder),
+   A2($Json$Decode._op[":="],
+   "postsWithUsers",
+   $Json$Decode.list(postWithUserDecoder)));
+   var topicWithUserDecoder = A3($Json$Decode.object2,
+   $Page$Forum$Model.TopicWithUser,
+   A2($Json$Decode._op[":="],"topic",topicDecoder),
+   A2($Json$Decode._op[":="],"user",$Decoders.userDecoder));
+   return _elm.Page.Forum.Decoders.values = {_op: _op
+                                            ,topicWithUserDecoder: topicWithUserDecoder
+                                            ,topicDecoder: topicDecoder
+                                            ,postWithUserDecoder: postWithUserDecoder
+                                            ,postDecoder: postDecoder
+                                            ,topicWithPostsDecoder: topicWithPostsDecoder};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
 Elm.Page.Forum.Update = Elm.Page.Forum.Update || {};
 Elm.Page.Forum.Update.make = function (_elm) {
    "use strict";
@@ -23286,10 +23355,15 @@ Elm.Page.Forum.Update.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
+   $Json$Decode = Elm.Json.Decode.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Page$Forum$Decoders = Elm.Page.Forum.Decoders.make(_elm),
    $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
    $ServerApi = Elm.ServerApi.make(_elm),
@@ -23297,29 +23371,111 @@ Elm.Page.Forum.Update.make = function (_elm) {
    $Task = Elm.Task.make(_elm),
    $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
-   var loadTopics = A2($Task.map,
-   $Page$Forum$Model.TopicsResult,
-   $ServerApi.getForumTopics);
-   var update = F2(function (action,model) {
-      var _p0 = action;
-      if (_p0.ctor === "TopicsResult") {
-            var topics = A2($Result.withDefault,_U.list([]),_p0._0);
-            return A2($Response.res,
-            _U.update(model,{topics: topics}),
-            $Effects.none);
-         } else {
-            return A2($Response.res,model,$Effects.none);
-         }
+   var createTopic = function (_p0) {
+      var _p1 = _p0;
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "title"
+                                              ,_1: $Json$Encode.string(_p1.title)}
+                                             ,{ctor: "_Tuple2"
+                                              ,_0: "content"
+                                              ,_1: $Json$Encode.string(_p1.content)}]));
+      return A2($Task.map,
+      $Page$Forum$Model.SubmitResult,
+      A3($ServerApi.postJson,
+      $Page$Forum$Decoders.topicDecoder,
+      "/api/forum/topics",
+      body));
+   };
+   var showTopic = function (id) {
+      return A2($Task.map,
+      $Page$Forum$Model.ShowResult,
+      A2($ServerApi.getJson,
+      $Page$Forum$Decoders.topicWithPostsDecoder,
+      A2($Basics._op["++"],"/api/forum/topics/",id)));
+   };
+   var listTopics = A2($Task.map,
+   $Page$Forum$Model.ListResult,
+   A2($ServerApi.getJson,
+   $Json$Decode.list($Page$Forum$Decoders.topicWithUserDecoder),
+   "/api/forum/topics"));
+   var updateNewTopic = F2(function (action,_p2) {
+      var _p3 = _p2;
+      var _p5 = _p3;
+      var _p4 = action;
+      switch (_p4.ctor)
+      {case "SetTitle": return A2($Response.res,
+           _U.update(_p5,{title: _p4._0}),
+           $Effects.none);
+         case "SetContent": return A2($Response.res,
+           _U.update(_p5,{content: _p4._0}),
+           $Effects.none);
+         case "Submit": return A2($Response.taskRes,
+           _p5,
+           createTopic(_p5));
+         default: return A2($Response.res,_p5,$Effects.none);}
    });
-   var mount = A2($Response.taskRes,
-   $Page$Forum$Model.initial,
-   loadTopics);
+   var update = F2(function (action,model) {
+      var _p6 = action;
+      switch (_p6.ctor)
+      {case "RefreshList": return A2($Response.taskRes,
+           model,
+           listTopics);
+         case "ListResult": var topics = A2($Result.withDefault,
+           _U.list([]),
+           _p6._0);
+           return A2($Response.res,
+           _U.update(model,{topics: topics}),
+           $Effects.none);
+         case "ShowResult": var _p7 = _p6._0;
+           if (_p7.ctor === "Ok") {
+                 return A2($Response.res,
+                 _U.update(model,{currentTopic: $Maybe.Just(_p7._0)}),
+                 $Effects.none);
+              } else {
+                 return A2($Response.res,model,$Effects.none);
+              }
+         case "ShowNewTopic": var newTopic = {title: "",content: ""};
+           return A2($Response.res,
+           _U.update(model,{newTopic: $Maybe.Just(newTopic)}),
+           $Effects.none);
+         case "HideNewTopic": return A2($Response.res,
+           _U.update(model,{newTopic: $Maybe.Nothing}),
+           $Effects.none);
+         case "NewTopicAction": var _p8 = model.newTopic;
+           if (_p8.ctor === "Just") {
+                 return A2($Response.mapEffects,
+                 $Page$Forum$Model.NewTopicAction,
+                 A2($Response.mapModel,
+                 function (t) {
+                    return _U.update(model,{newTopic: $Maybe.Just(t)});
+                 },
+                 A2(updateNewTopic,_p6._0,_p8._0)));
+              } else {
+                 return A2($Response.res,model,$Effects.none);
+              }
+         default: return A2($Response.res,model,$Effects.none);}
+   });
+   var mount = function (route) {
+      var _p9 = route;
+      if (_p9.ctor === "Index") {
+            return A2($Response.taskRes,
+            $Page$Forum$Model.initial,
+            listTopics);
+         } else {
+            return A2($Response.taskRes,
+            $Page$Forum$Model.initial,
+            showTopic(_p9._0));
+         }
+   };
    var addr = $Update$Utils.pageAddr($Model.ForumAction);
    return _elm.Page.Forum.Update.values = {_op: _op
                                           ,addr: addr
                                           ,mount: mount
                                           ,update: update
-                                          ,loadTopics: loadTopics};
+                                          ,updateNewTopic: updateNewTopic
+                                          ,listTopics: listTopics
+                                          ,showTopic: showTopic
+                                          ,createTopic: createTopic};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
@@ -23338,7 +23494,6 @@ Elm.Page.Admin.Update.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model = Elm.Model.make(_elm),
-   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -23349,7 +23504,9 @@ Elm.Page.Admin.Update.make = function (_elm) {
    var _op = {};
    var refreshData = A2($Task.map,
    $Page$Admin$Model.RefreshDataResult,
-   $ServerApi.loadAdminData);
+   A2($ServerApi.getJson,
+   $Page$Admin$Model.adminDataDecoder,
+   "/api/admin"));
    var update = F2(function (action,model) {
       var _p0 = action;
       switch (_p0.ctor)
@@ -23357,7 +23514,7 @@ Elm.Page.Admin.Update.make = function (_elm) {
            model,
            refreshData);
          case "RefreshDataResult": var _p1 = A2($Result.withDefault,
-           A2($Model$Shared.AdminData,_U.list([]),_U.list([])),
+           A2($Page$Admin$Model.AdminData,_U.list([]),_U.list([])),
            _p0._0);
            var tracks = _p1.tracks;
            var users = _p1.users;
@@ -23565,7 +23722,7 @@ Elm.Update.make = function (_elm) {
            $Page$ListDrafts$Update.mount,
            appState);
          case "Forum": return A2(applyForum,
-           $Page$Forum$Update.mount,
+           $Page$Forum$Update.mount(_p8._0),
            appState);
          case "Admin": return A2(applyAdmin,
            $Page$Admin$Update.mount,
@@ -24143,7 +24300,7 @@ Elm.View.Layout.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Route = Elm.Route.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -24203,7 +24360,6 @@ Elm.Page.Home.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Home$Model = Elm.Page.Home.Model.make(_elm),
    $Page$Home$Update = Elm.Page.Home.Update.make(_elm),
@@ -24409,7 +24565,7 @@ Elm.Page.Login.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Login$Model = Elm.Page.Login.Model.make(_elm),
    $Page$Login$Update = Elm.Page.Login.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24494,7 +24650,7 @@ Elm.Page.Register.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Register$Model = Elm.Page.Register.Model.make(_elm),
    $Page$Register$Update = Elm.Page.Register.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -24606,7 +24762,6 @@ Elm.Page.ShowTrack.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$ShowTrack$Model = Elm.Page.ShowTrack.Model.make(_elm),
    $Page$ShowTrack$Update = Elm.Page.ShowTrack.Update.make(_elm),
@@ -25151,7 +25306,6 @@ Elm.Page.EditTrack.View.make = function (_elm) {
    $Html = Elm.Html.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$EditTrack$Model = Elm.Page.EditTrack.Model.make(_elm),
    $Page$EditTrack$SideView = Elm.Page.EditTrack.SideView.make(_elm),
@@ -25225,7 +25379,7 @@ Elm.Page.ShowProfile.View.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$ShowProfile$Model = Elm.Page.ShowProfile.Model.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
@@ -25683,7 +25837,7 @@ Elm.Page.Game.View.make = function (_elm) {
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Game$ChatView = Elm.Page.Game.ChatView.make(_elm),
    $Page$Game$Model = Elm.Page.Game.Model.make(_elm),
    $Page$Game$SideView = Elm.Page.Game.SideView.make(_elm),
@@ -25736,7 +25890,6 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$ListDrafts$Model = Elm.Page.ListDrafts.Model.make(_elm),
    $Page$ListDrafts$Update = Elm.Page.ListDrafts.Update.make(_elm),
@@ -25824,6 +25977,178 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
 Elm.Page = Elm.Page || {};
 Elm.Page.Forum = Elm.Page.Forum || {};
 Elm.Page.Forum.View = Elm.Page.Forum.View || {};
+Elm.Page.Forum.View.Index = Elm.Page.Forum.View.Index || {};
+Elm.Page.Forum.View.Index.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.View = _elm.Page.Forum.View || {};
+   _elm.Page.Forum.View.Index = _elm.Page.Forum.View.Index || {};
+   if (_elm.Page.Forum.View.Index.values)
+   return _elm.Page.Forum.View.Index.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
+   $Page$Forum$Update = Elm.Page.Forum.Update.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Route = Elm.Route.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
+   var _op = {};
+   var topicRow = function (_p0) {
+      var _p1 = _p0;
+      var _p2 = _p1.topic;
+      return A2($Html.tr,
+      _U.list([]),
+      _U.list([A2($Html.td,
+              _U.list([$Html$Attributes.$class("title")]),
+              _U.list([A3($View$Utils.linkTo,
+              $Route.Forum($Page$Forum$Route.ShowTopic(_p2.id)),
+              _U.list([]),
+              _U.list([$Html.text(_p2.title)]))]))
+              ,A2($Html.td,
+              _U.list([$Html$Attributes.$class("replies")]),
+              _U.list([$Html.text($Basics.toString(_p2.postsCount))]))
+              ,A2($Html.td,
+              _U.list([$Html$Attributes.$class("activity")]),
+              _U.list([$Html.text($Basics.toString(_p2.activityTime))]))]));
+   };
+   var topicsTable = function (topics) {
+      return A2($Html.table,
+      _U.list([$Html$Attributes.$class("table")]),
+      _U.list([A2($Html.thead,
+              _U.list([]),
+              _U.list([A2($Html.tr,
+              _U.list([]),
+              _U.list([A2($Html.th,_U.list([]),_U.list([$Html.text("Topic")]))
+                      ,A2($Html.th,_U.list([]),_U.list([$Html.text("Replies")]))
+                      ,A2($Html.th,
+                      _U.list([]),
+                      _U.list([$Html.text("Activity")]))]))]))
+              ,A2($Html.tbody,_U.list([]),A2($List.map,topicRow,topics))]));
+   };
+   var newTopicForm = F2(function (addr,_p3) {
+      var _p4 = _p3;
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("form-new-topic form-vertical")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("form-group")]),
+              _U.list([$View$Utils.textInput(_U.list([$Html$Attributes.value(_p4.title)
+                                                     ,A2($View$Utils.onInput,addr,$Page$Forum$Model.SetTitle)
+                                                     ,A2($View$Utils.onEnter,addr,$Page$Forum$Model.Submit)
+                                                     ,$Html$Attributes.placeholder("Title")]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("form-group")]),
+              _U.list([A2($Html.textarea,
+              _U.list([$Html$Attributes.$class("form-control")
+                      ,$Html$Attributes.value(_p4.content)
+                      ,A2($View$Utils.onInput,addr,$Page$Forum$Model.SetContent)]),
+              _U.list([]))]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-primary")
+                      ,A2($Html$Events.onClick,addr,$Page$Forum$Model.Submit)]),
+              _U.list([$Html.text("Submit")]))]))]));
+   });
+   var view = function (_p5) {
+      var _p6 = _p5;
+      return A2($View$Utils.container,
+      "forum-index",
+      _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Forum")]))
+              ,A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-primary")
+                      ,A2($Html$Events.onClick,
+                      $Page$Forum$Update.addr,
+                      $Page$Forum$Model.ShowNewTopic)]),
+              _U.list([$Html.text("New topic")]))
+              ,function () {
+                 var _p7 = _p6.newTopic;
+                 if (_p7.ctor === "Just") {
+                       return A2(newTopicForm,
+                       A2($Signal.forwardTo,
+                       $Page$Forum$Update.addr,
+                       $Page$Forum$Model.NewTopicAction),
+                       _p7._0);
+                    } else {
+                       return topicsTable(_p6.topics);
+                    }
+              }()]));
+   };
+   return _elm.Page.Forum.View.Index.values = {_op: _op
+                                              ,view: view
+                                              ,newTopicForm: newTopicForm
+                                              ,topicsTable: topicsTable
+                                              ,topicRow: topicRow};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.View = Elm.Page.Forum.View || {};
+Elm.Page.Forum.View.ShowTopic = Elm.Page.Forum.View.ShowTopic || {};
+Elm.Page.Forum.View.ShowTopic.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.View = _elm.Page.Forum.View || {};
+   _elm.Page.Forum.View.ShowTopic = _elm.Page.Forum.View.ShowTopic || {};
+   if (_elm.Page.Forum.View.ShowTopic.values)
+   return _elm.Page.Forum.View.ShowTopic.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
+   var _op = {};
+   var renderPost = function (_p0) {
+      var _p1 = _p0;
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("forum-post")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("post-meta")]),
+              _U.list([$Html.text(_p1.user.handle)]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("post-content")]),
+              _U.list([$Html.text(_p1.post.content)]))]));
+   };
+   var view = function (model) {
+      var _p2 = model.currentTopic;
+      if (_p2.ctor === "Nothing") {
+            return A2($View$Utils.container,
+            "forum-show-topic",
+            _U.list([A2($Html.h1,
+            _U.list([]),
+            _U.list([$Html.text("Loading topic...")]))]));
+         } else {
+            return A2($View$Utils.container,
+            "forum-show-topic",
+            _U.list([A2($Html.h1,
+                    _U.list([]),
+                    _U.list([$Html.text(_p2._0.topic.title)]))
+                    ,A2($Html.div,
+                    _U.list([$Html$Attributes.$class("forum-topic-posts")]),
+                    A2($List.map,renderPost,_p2._0.postsWithUsers))]));
+         }
+   };
+   return _elm.Page.Forum.View.ShowTopic.values = {_op: _op
+                                                  ,view: view
+                                                  ,renderPost: renderPost};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.View = Elm.Page.Forum.View || {};
 Elm.Page.Forum.View.make = function (_elm) {
    "use strict";
    _elm.Page = _elm.Page || {};
@@ -25835,55 +26160,32 @@ Elm.Page.Forum.View.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
-   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
-   $Model$Forum = Elm.Model.Forum.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
    $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
+   $Page$Forum$View$Index = Elm.Page.Forum.View.Index.make(_elm),
+   $Page$Forum$View$ShowTopic = Elm.Page.Forum.View.ShowTopic.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $View$Layout = Elm.View.Layout.make(_elm);
    var _op = {};
-   var topicRow = function (topic) {
-      return A2($Html.tr,
-      _U.list([]),
-      _U.list([A2($Html.td,
-              _U.list([$Html$Attributes.$class("title")]),
-              _U.list([$Html.text(topic.title)]))
-              ,A2($Html.td,
-              _U.list([$Html$Attributes.$class("replies")]),
-              _U.list([$Html.text("?")]))
-              ,A2($Html.td,
-              _U.list([$Html$Attributes.$class("activity")]),
-              _U.list([$Html.text("?")]))]));
-   };
-   var topicsTable = function (posts) {
-      return A2($Html.table,
-      _U.list([]),
-      _U.list([A2($Html.thead,
-              _U.list([]),
-              _U.list([A2($Html.tr,
-              _U.list([]),
-              _U.list([A2($Html.th,_U.list([]),_U.list([$Html.text("Topic")]))
-                      ,A2($Html.th,_U.list([]),_U.list([$Html.text("Replies")]))
-                      ,A2($Html.th,
-                      _U.list([]),
-                      _U.list([$Html.text("Activity")]))]))]))
-              ,A2($Html.tbody,_U.list([]),A2($List.map,topicRow,posts))]));
-   };
-   var view = F3(function (ctx,route,_p0) {
-      var _p1 = _p0;
+   var view = F3(function (ctx,route,model) {
+      var subView = function () {
+         var _p0 = route;
+         if (_p0.ctor === "Index") {
+               return $Page$Forum$View$Index.view(model);
+            } else {
+               return $Page$Forum$View$ShowTopic.view(model);
+            }
+      }();
       return A3($View$Layout.layoutWithNav,
       "forum",
       ctx,
-      _U.list([$Html.text("TODO")]));
+      _U.list([subView]));
    });
-   return _elm.Page.Forum.View.values = {_op: _op
-                                        ,view: view
-                                        ,topicsTable: topicsTable
-                                        ,topicRow: topicRow};
+   return _elm.Page.Forum.View.values = {_op: _op,view: view};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
@@ -25903,7 +26205,6 @@ Elm.Page.Admin.View.make = function (_elm) {
    $Html$Events = Elm.Html.Events.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Model = Elm.Model.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$Model = Elm.Page.Admin.Model.make(_elm),
    $Page$Admin$Route = Elm.Page.Admin.Route.make(_elm),
@@ -26113,6 +26414,7 @@ Elm.View.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model = Elm.Model.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Admin$View = Elm.Page.Admin.View.make(_elm),
    $Page$EditTrack$View = Elm.Page.EditTrack.View.make(_elm),
    $Page$Forum$View = Elm.Page.Forum.View.make(_elm),
@@ -26132,7 +26434,7 @@ Elm.View.make = function (_elm) {
       var _p2 = _p0;
       var _p5 = _p2.pages;
       var _p4 = _p2;
-      var ctx = A4($Model.Context,
+      var ctx = A4($Model$Shared.Context,
       _p2.player,
       _p2.dims,
       $TransitRouter.getTransition(_p4),

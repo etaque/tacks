@@ -4,18 +4,16 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import TransitRouter exposing (getRoute)
 import TransitStyle exposing (fadeSlideLeft)
 
-import Model exposing (..)
-import Model.Shared exposing (..)
+import Model.Shared exposing (Track, Context)
 import Route
 
 import Page.Admin.Route exposing (..)
 import Page.Admin.Model exposing (..)
 import Page.Admin.Update exposing (addr)
 
-import View.Utils exposing (..)
+import View.Utils exposing (container, linkTo)
 import View.Layout as Layout
 
 
