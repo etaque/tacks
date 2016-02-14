@@ -11,18 +11,20 @@ type alias FormResult a = Result FormErrors a
 
 type alias FormErrors = Dict String (List String)
 
+type alias Id = String
+
 type alias Player =
-  { id:     String
-  , handle: Maybe String
-  , status: Maybe String
-  , avatarId: Maybe String
-  , vmgMagnet: Int
-  , guest: Bool
-  , user: Bool
+  { id : Id
+  , handle : Maybe String
+  , status : Maybe String
+  , avatarId : Maybe String
+  , vmgMagnet : Int
+  , guest : Bool
+  , user : Bool
   }
 
 type alias User =
-  { id : String
+  { id : Id
   , email : String
   , handle: String
   , status: Maybe String
@@ -62,7 +64,7 @@ type alias Track =
   , status: TrackStatus
   }
 
-type alias TrackId = String
+type alias TrackId = Id
 
 type alias TrackMeta =
   { creator : Player
@@ -79,7 +81,6 @@ type alias Race =
   , players : List Player
   , tallies : List PlayerTally
   }
-
 type alias PlayerTally =
   { player : Player
   , gates : List Time

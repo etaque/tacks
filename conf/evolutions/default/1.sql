@@ -17,7 +17,7 @@ CREATE TABLE tracks (
   course            JSONB       NOT NULL,
   status            TEXT        NOT NULL,
   creation_time     TIMESTAMPTZ NOT NULL,
-  update_time       TEXT        NOT NULL
+  update_time       TIMESTAMPTZ NOT NULL
 );
 
 CREATE TABLE runs (

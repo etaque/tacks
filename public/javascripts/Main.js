@@ -15829,21 +15829,29 @@ Elm.Model.Forum.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
-   var ForumPost = F7(function (a,b,c,d,e,f,g) {
+   var Post = F5(function (a,b,c,d,e) {
+      return {id: a
+             ,content: b
+             ,player: c
+             ,creationTime: d
+             ,updateTime: e};
+   });
+   var Topic = F6(function (a,b,c,d,e,f) {
       return {id: a
              ,title: b
-             ,parentId: c
-             ,userId: d
-             ,content: e
-             ,creationTime: f
-             ,updateTime: g};
+             ,player: c
+             ,postsCount: d
+             ,creationTime: e
+             ,updateTime: f};
    });
    return _elm.Model.Forum.values = {_op: _op
-                                    ,ForumPost: ForumPost};
+                                    ,Topic: Topic
+                                    ,Post: Post};
 };
 Elm.Decoders = Elm.Decoders || {};
 Elm.Decoders.make = function (_elm) {
@@ -15862,19 +15870,6 @@ Elm.Decoders.make = function (_elm) {
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
-   var forumPostDecoder = A8($Json$Decode.object7,
-   $Model$Forum.ForumPost,
-   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
-   A2($Json$Decode._op[":="],
-   "title",
-   $Json$Decode.maybe($Json$Decode.string)),
-   A2($Json$Decode._op[":="],
-   "parentId",
-   $Json$Decode.maybe($Json$Decode.string)),
-   A2($Json$Decode._op[":="],"userId",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
-   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
-   A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
    var rangeDecoder = A3($Json$Decode.object2,
    $Model$Shared.Range,
    A2($Json$Decode._op[":="],"start",$Json$Decode.$int),
@@ -15977,6 +15972,21 @@ Elm.Decoders.make = function (_elm) {
    A2($Json$Decode._op[":="],"content",$Json$Decode.string),
    A2($Json$Decode._op[":="],"player",playerDecoder),
    A2($Json$Decode._op[":="],"time",$Json$Decode.$float));
+   var forumTopicDecoder = A7($Json$Decode.object6,
+   $Model$Forum.Topic,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"title",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],"postsCount",$Json$Decode.$int),
+   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
+   var forumPostDecoder = A6($Json$Decode.object5,
+   $Model$Forum.Post,
+   A2($Json$Decode._op[":="],"id",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"content",$Json$Decode.string),
+   A2($Json$Decode._op[":="],"player",playerDecoder),
+   A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
+   A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
    var trackStatusDecoder = function (s) {
       var _p1 = s;
       switch (_p1)
@@ -16080,6 +16090,7 @@ Elm.Decoders.make = function (_elm) {
                                  ,gustGeneratorDecoder: gustGeneratorDecoder
                                  ,rangeDecoder: rangeDecoder
                                  ,adminDataDecoder: adminDataDecoder
+                                 ,forumTopicDecoder: forumTopicDecoder
                                  ,forumPostDecoder: forumPostDecoder};
 };
 Elm.Encoders = Elm.Encoders || {};
@@ -17937,7 +17948,6 @@ Elm.Page.Forum.Model.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model$Forum = Elm.Model.Forum.make(_elm),
-   $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
@@ -17946,10 +17956,11 @@ Elm.Page.Forum.Model.make = function (_elm) {
    var TopicsResult = function (a) {
       return {ctor: "TopicsResult",_0: a};
    };
-   var initial = {topics: _U.list([]),users: _U.list([])};
+   var initial = {topics: _U.list([])
+                 ,currentTopic: $Maybe.Nothing};
    var initialRoute = $Page$Forum$Route.Index;
    var Model = F2(function (a,b) {
-      return {topics: a,users: b};
+      return {topics: a,currentTopic: b};
    });
    return _elm.Page.Forum.Model.values = {_op: _op
                                          ,Model: Model
@@ -22040,13 +22051,13 @@ Elm.ServerApi.make = function (_elm) {
    var loadAdminData = A2(getJson,
    $Decoders.adminDataDecoder,
    "/api/admin");
-   var getForumTopicPosts = function (id) {
+   var getForumTopic = function (id) {
       return A2(getJson,
-      $Json$Decode.list($Decoders.forumPostDecoder),
+      $Decoders.forumTopicDecoder,
       A2($Basics._op["++"],"/api/forum/topics/",id));
    };
    var getForumTopics = A2(getJson,
-   $Json$Decode.list($Decoders.forumPostDecoder),
+   $Json$Decode.list($Decoders.forumTopicDecoder),
    "/api/forum/topics");
    var getDrafts = A2(getJson,
    $Json$Decode.list($Decoders.trackDecoder),
@@ -22076,7 +22087,7 @@ Elm.ServerApi.make = function (_elm) {
                                   ,getLiveTrack: getLiveTrack
                                   ,getDrafts: getDrafts
                                   ,getForumTopics: getForumTopics
-                                  ,getForumTopicPosts: getForumTopicPosts
+                                  ,getForumTopic: getForumTopic
                                   ,loadAdminData: loadAdminData
                                   ,postHandle: postHandle
                                   ,postRegister: postRegister
@@ -25824,22 +25835,55 @@ Elm.Page.Forum.View.make = function (_elm) {
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model = Elm.Model.make(_elm),
+   $Model$Forum = Elm.Model.Forum.make(_elm),
    $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
    $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $View$Layout = Elm.View.Layout.make(_elm);
    var _op = {};
-   var view = F3(function (ctx,route,model) {
+   var topicRow = function (topic) {
+      return A2($Html.tr,
+      _U.list([]),
+      _U.list([A2($Html.td,
+              _U.list([$Html$Attributes.$class("title")]),
+              _U.list([$Html.text(topic.title)]))
+              ,A2($Html.td,
+              _U.list([$Html$Attributes.$class("replies")]),
+              _U.list([$Html.text("?")]))
+              ,A2($Html.td,
+              _U.list([$Html$Attributes.$class("activity")]),
+              _U.list([$Html.text("?")]))]));
+   };
+   var topicsTable = function (posts) {
+      return A2($Html.table,
+      _U.list([]),
+      _U.list([A2($Html.thead,
+              _U.list([]),
+              _U.list([A2($Html.tr,
+              _U.list([]),
+              _U.list([A2($Html.th,_U.list([]),_U.list([$Html.text("Topic")]))
+                      ,A2($Html.th,_U.list([]),_U.list([$Html.text("Replies")]))
+                      ,A2($Html.th,
+                      _U.list([]),
+                      _U.list([$Html.text("Activity")]))]))]))
+              ,A2($Html.tbody,_U.list([]),A2($List.map,topicRow,posts))]));
+   };
+   var view = F3(function (ctx,route,_p0) {
+      var _p1 = _p0;
       return A3($View$Layout.layoutWithNav,
       "forum",
       ctx,
       _U.list([$Html.text("TODO")]));
    });
-   return _elm.Page.Forum.View.values = {_op: _op,view: view};
+   return _elm.Page.Forum.View.values = {_op: _op
+                                        ,view: view
+                                        ,topicsTable: topicsTable
+                                        ,topicRow: topicRow};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};

@@ -39,13 +39,13 @@ getDrafts : GetJsonTask (List Track)
 getDrafts =
   getJson (Json.list trackDecoder) "/api/tracks/drafts"
 
-getForumTopics : GetJsonTask (List ForumPost)
-getForumTopics =
-  getJson (Json.list forumPostDecoder) "/api/forum/topics"
+listForumTopics : GetJsonTask (List Topic)
+listForumTopics =
+  getJson (Json.list forumTopicDecoder) "/api/forum/topics"
 
-getForumTopicPosts : String -> GetJsonTask (List ForumPost)
-getForumTopicPosts id =
-  getJson (Json.list forumPostDecoder) ("/api/forum/topics/" ++ id)
+getForumTopic : String -> GetJsonTask TopicWithMessages
+getForumTopic id =
+  getJson forumTopicWithMessagesDecoder ("/api/forum/topics/" ++ id)
 
 loadAdminData : GetJsonTask AdminData
 loadAdminData =

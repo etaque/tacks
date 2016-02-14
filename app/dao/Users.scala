@@ -59,16 +59,16 @@ object Users extends TableQuery(new UserTable(_)) {
     sql"SELECT password FROM #${baseTableRow.tableName} WHERE email=$email".as[String].headOption
   }
 
-  def create(user: User, password: String): Future[_] = DB.run {
+  def create(user: User, password: String): Future[Int] = DB.run {
     val insert = all += user
     val setPassword = sqlu"""
       UPDATE #${baseTableRow.tableName}
       SET password=${makePasswordHash(password)}
       WHERE email=${user.email}"""
 
-    DBIO.sequence(Seq(insert, setPassword))
+    insert.andThen(setPassword).transactionally
   }
 
-  private def all =
+  def all =
     map(identity)
 }

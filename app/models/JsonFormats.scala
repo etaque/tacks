@@ -193,6 +193,5 @@ object JsonFormats {
 
   implicit val messageFormat: Format[Message] = Json.format[Message]
 
-  implicit val forumPostFormat: Format[ForumPost] = Json.format[ForumPost]
 }
 

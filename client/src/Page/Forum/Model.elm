@@ -6,8 +6,8 @@ import Page.Forum.Route exposing (..)
 
 
 type alias Model =
-  { topics : List ForumPost
-  , users : List User
+  { topics : List Topic
+  , currentTopic : Maybe Topic
   }
 
 initialRoute : Route
@@ -17,10 +17,10 @@ initialRoute =
 initial : Model
 initial =
   { topics = []
-  , users = []
+  , currentTopic = Nothing
   }
 
 type Action
-  = TopicsResult (Result () (List ForumPost))
+  = TopicsResult (Result () (List Topic))
   | NoOp
 

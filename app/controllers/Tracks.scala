@@ -30,9 +30,8 @@ object Tracks extends Controller with Security {
   implicit val timeout = Timeout(5.seconds)
 
   def show(id: UUID) = PlayerAction.async() { implicit request =>
-    dao.Tracks.findById(id).map {
-      case Some(track) => Ok(Json.toJson(track))
-      case None => NotFound
+    onTrack(id) { track =>
+      Future.successful(Ok(Json.toJson(track)))
     }
   }
 
@@ -69,8 +68,8 @@ object Tracks extends Controller with Security {
   implicit val updateTrackFormat: Format[UpdateTrack] = Json.format[UpdateTrack]
 
   def update(id: UUID) = PlayerAction.async(parse.json) { implicit request =>
-    dao.Tracks.findById(id).flatMap {
-      _.filter(canUpdate).map { track =>
+    onTrack(id) { implicit track =>
+      forUpdate {
         request.body.validate(updateTrackFormat).fold(
           errors => Future.successful(BadRequest(JsonErrors.format(errors))),
           {
@@ -85,34 +84,50 @@ object Tracks extends Controller with Security {
             }
           }
         )
-      }.getOrElse(Future.successful(BadRequest))
+      }
     }
   }
 
   def publish(id: UUID) = PlayerAction.async(parse.json) { implicit request =>
-    dao.Tracks.findById(id).flatMap {
-      _.filter(canUpdate).map { track =>
+    onTrack(id) { implicit track =>
+      forUpdate {
         dao.Tracks.publish(id).map { _ =>
           val newTrack = track.copy(status = TrackStatus.open)
           RacesSupervisor.actorRef ! ReloadTrack(newTrack)
           Ok(Json.toJson(newTrack))
         }
-      }.getOrElse(Future.successful(BadRequest))
+      }
     }
   }
 
   def delete(id: UUID) = PlayerAction.async(parse.json) { implicit request =>
-    dao.Tracks.findById(id).flatMap {
-      _.filter(canUpdate).map { track =>
+    onTrack(id) { implicit track =>
+      forUpdate {
         dao.Tracks.remove(id).map { _ =>
           Ok(Json.obj())
         }
-      }.getOrElse(Future.successful(BadRequest))
+      }
     }
+  }
+
+  def forUpdate(f: => Future[Result])(implicit track: Track, request: PlayerRequest[_]): Future[Result] = {
+    if(canUpdate(track)) {
+      f
+    } else {
+      Future.successful(BadRequest)
+    }
+
   }
 
   private def canUpdate(track: Track)(implicit request: PlayerRequest[_]) = {
     request.player.isAdmin || (track.isDraft && request.player.id == track.creatorId)
+  }
+
+  private def onTrack[A](id: UUID)(f: Track => Future[Result])(implicit req: PlayerRequest[A]): Future[Result] = {
+    dao.Tracks.findById(id).flatMap {
+      case Some(track) => f(track)
+      case None => Future.successful(NotFound)
+    }
   }
 
 }

@@ -20,9 +20,9 @@ POST        /api/tracks/:id/delete                             controllers.Track
 POST        /api/tracks/:id/publish                            controllers.Tracks.publish(id: java.util.UUID)
 
 GET         /api/forum/topics                                  controllers.Forum.topics
-GET         /api/forum/topics/:id                              controllers.Forum.topicPosts(id: java.util.UUID)
+GET         /api/forum/topics/:id                              controllers.Forum.topic(id: java.util.UUID)
 POST        /api/forum/topics                                  controllers.Forum.createTopic
-POST        /api/forum/topics/:id                              controllers.Forum.addPost(id: java.util.UUID)
+POST        /api/forum/topics/:id                              controllers.Forum.createPost(id: java.util.UUID)
 
 GET         /api/admin                                         controllers.Admin.index
 
