@@ -1,7 +1,7 @@
 module Page.ShowTrack.Model where
 
 import Model.Shared exposing (..)
-import DragAndDrop exposing (MouseEvent(..))
+import Drag exposing (MouseEvent(..))
 
 
 type alias Model =

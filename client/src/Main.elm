@@ -8,7 +8,7 @@ import Window
 import Json.Decode as Json
 import Effects exposing (Effects, Never)
 import StartApp
-import DragAndDrop exposing (mouseEvents)
+import Drag exposing (mouseEvents)
 import TransitRouter
 
 import Update

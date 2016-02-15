@@ -3,7 +3,7 @@ module Page.EditTrack.Model where
 import Model.Shared exposing (..)
 import Constants exposing (sidebarWidth)
 
-import DragAndDrop exposing (MouseEvent(..))
+import Drag exposing (MouseEvent(..))
 
 
 type alias Model =

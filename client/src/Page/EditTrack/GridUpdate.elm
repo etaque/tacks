@@ -1,6 +1,6 @@
 module Page.EditTrack.GridUpdate where
 
-import DragAndDrop exposing (mouseEvents, MouseEvent(..))
+import Drag exposing (mouseEvents, MouseEvent(..))
 
 import Constants exposing (sidebarWidth, hexRadius)
 import Model.Shared exposing (..)

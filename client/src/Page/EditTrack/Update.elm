@@ -7,7 +7,7 @@ import Task.Extra exposing (delay)
 import Keyboard
 import Array
 import Response exposing (..)
-import DragAndDrop exposing (MouseEvent)
+import Drag exposing (MouseEvent)
 
 import Model exposing (..)
 import Model.Shared exposing (..)

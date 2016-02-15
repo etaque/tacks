@@ -3,7 +3,7 @@ module Page.ShowTrack.Update where
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none)
-import DragAndDrop exposing (mouseEvents, MouseEvent(..))
+import Drag exposing (mouseEvents, MouseEvent(..))
 import Response exposing (..)
 
 import Model.Shared exposing (..)

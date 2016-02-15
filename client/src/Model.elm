@@ -2,7 +2,7 @@ module Model where
 
 import Task exposing (Task)
 import Effects exposing (Effects)
-import DragAndDrop exposing (MouseEvent)
+import Drag exposing (MouseEvent)
 import Response exposing (..)
 
 import Model.Shared exposing (..)
