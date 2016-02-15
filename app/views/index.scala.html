@@ -9,7 +9,6 @@
 <html>
   <head>
     <title>Tacks</title>
-    <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 
     <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-192x192.png")" sizes="192x192">
@@ -30,15 +29,10 @@
       routes.javascript.WebSockets.trackPlayer
     )
 
-    <script src="@routes.Assets.at("javascripts/Main.js")" type="text/javascript"></script>
-    <script type="text/javascript">
-     window.Elm = Elm
-    </script>
-
     @if(play.api.Play.isProd) {
       <script src="@routes.Assets.at("javascripts/dist/setup.js")" type="text/javascript"></script>
     } else {
-      <script src="@routes.Assets.at("javascripts/setup.js")" type="text/javascript"></script>
+      <script src="@routes.Assets.at("javascripts/bundle.js")" type="text/javascript"></script>
     }
   </body>
 </html>

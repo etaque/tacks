@@ -1,34 +1,26 @@
 {
   "name": "tacks-client",
   "devDependencies": {
-    "node-sass": "3.3.3",
-    "browserify": "10.2.3",
-    "uglifyify": "3.0.1",
-    "watchify": "3.2.1",
-    "watch": "0.16.0"
+    "babel-core": "^6.5.2",
+    "babel-loader": "^6.2.2",
+    "babel-preset-es2015": "^6.5.0",
+    "bootstrap-sass": "~3.3.6",
+    "css-loader": "^0.23.1",
+    "elm": "0.16.0",
+    "elm-webpack-loader": "^2.0.0",
+    "file-loader": "^0.8.5",
+    "node-sass": "3.4.2",
+    "sass-loader": "3.1.2",
+    "style-loader": "^0.13.0",
+    "webpack": "^1.12.0"
   },
   "engines": {
     "node": ">=0.10.0"
   },
   "private": true,
   "scripts": {
-    "start": "npm run watch",
-
-    "watch": "npm run watch-elm & npm run watch-js & npm run watch-sass",
-    "watch-elm": "watch 'npm run build-elm --silent' src",
-    "watch-js": "dev=true watchify scripts/setup.js -o ../public/javascripts/setup.js -dv",
-    "watch-sass": "watch 'npm run build-sass --silent' styles",
-
-    "build": "npm run build-elm & npm run build-js & npm run build-sass",
-    "build-elm": "elm make src/Main.elm --output ../public/javascripts/Main.js",
-    "build-js": "browserify scripts/setup.js -o ../public/javascripts/setup.js -g uglifyify",
-    "build-sass": "node-sass -o ../public/stylesheets styles/main.scss",
-
-    "clean-elm": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/"
-  },
-  "dependencies": {
-    "bootstrap-sass": "~3.3.6",
-    "jquery": "~2.1.4"
-  },
-  "browserify-shim": {}
+    "build": "webpack",
+    "watch": "webpack --watch",
+    "clean": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/"
+  }
 }
