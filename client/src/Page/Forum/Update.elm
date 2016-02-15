@@ -12,6 +12,8 @@ import Model.Shared exposing (..)
 import Page.Forum.Model exposing (..)
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Route exposing (..)
+import Page.Forum.NewPost.Update as NewPost
+import Page.Forum.NewTopic.Update as NewTopic
 import ServerApi exposing (getJson, postJson)
 import Update.Utils as Utils
 
@@ -63,31 +65,24 @@ update action model =
     NewTopicAction a ->
       case model.newTopic of
         Just newTopic ->
-          updateNewTopic a newTopic
+          NewTopic.update a newTopic
             |> mapModel (\t -> { model | newTopic = Just t })
             |> mapEffects NewTopicAction
+        Nothing ->
+          res model none
+
+    NewPostAction a ->
+      case model.newPost of
+        Just newPost ->
+          NewPost.update a newPost
+            |> mapModel (\p -> { model | newPost = Just p })
+            |> mapEffects NewPostAction
         Nothing ->
           res model none
 
     NoOp ->
       res model none
 
-
-updateNewTopic : NewTopicAction -> NewTopic -> (NewTopic, Effects NewTopicAction)
-updateNewTopic action ({title, content} as newTopic) =
-  case action of
-
-    SetTitle t ->
-      res { newTopic | title = t } none
-
-    SetContent c ->
-      res { newTopic | content = c } none
-
-    Submit ->
-      taskRes newTopic (createTopic newTopic)
-
-    SubmitResult result ->
-      res newTopic none
 
 
 listTopics : Task Never Action
@@ -101,14 +96,3 @@ showTopic id =
   getJson topicWithPostsDecoder ("/api/forum/topics/" ++ id)
     |> Task.map ShowResult
 
-
-createTopic : NewTopic -> Task Never NewTopicAction
-createTopic {title, content} =
-  let
-    body = JsEncode.object
-      [ ("title", JsEncode.string title)
-      , ("content", JsEncode.string content)
-      ]
-  in
-    postJson topicDecoder "/api/forum/topics" body
-      |> Task.map SubmitResult

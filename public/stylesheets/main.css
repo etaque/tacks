@@ -6910,6 +6910,68 @@ aside .module-help {
   font-family: "Proxima Nova Light";
   src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
 
+.forum .forum-topics-table thead th {
+  border-bottom: 2px solid #30a3de; }
+
+.forum .forum-topics-table thead .title {
+  width: 50%; }
+
+.forum .forum-topics-table thead .original {
+  width: 25%; }
+
+.forum .forum-topics-table tbody td {
+  border-bottom: 1px solid #30a3de; }
+
+.forum .forum-topics-table tbody .title {
+  font-family: "Museo Slab";
+  font-weight: bold;
+  font-size: 18px;
+  color: white; }
+
+.forum .forum-topics-table tbody .original {
+  color: white; }
+
+.forum .forum-topics-table tbody .count {
+  text-align: center; }
+
+.forum .forum-post .post-meta {
+  padding: 10px;
+  background-color: #30a3de;
+  border-bottom: 2px solid #4aafe2; }
+  .forum .forum-post .post-meta .handle {
+    float: left;
+    color: white;
+    font-weight: bold; }
+  .forum .forum-post .post-meta .time {
+    float: right; }
+  .forum .forum-post .post-meta:after {
+    content: "";
+    display: table;
+    clear: both; }
+
+.forum .forum-post .post-content {
+  padding: 10px; }
+
+@font-face {
+  font-family: "Proxima Nova Regular";
+  src: url("/assets/fonts/Proxima Nova Regular.otf"); }
+
+@font-face {
+  font-family: "Bangers";
+  src: url("/assets/fonts/Bangers.ttf"); }
+
+@font-face {
+  font-family: "Museo Slab";
+  src: url("/assets/fonts/Museo Slab.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Thin";
+  src: url("/assets/fonts/Proxima Nova Alt Thin.otf"); }
+
+@font-face {
+  font-family: "Proxima Nova Light";
+  src: url("/assets/fonts/Proxima Nova Alt Light.otf"); }
+
 .admin .admin-tabs {
   margin-bottom: 30px;
   border-bottom: 3px solid #99d2ef; }

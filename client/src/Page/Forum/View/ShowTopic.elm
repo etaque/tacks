@@ -6,11 +6,10 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import Route
-
-import Page.Forum.Route exposing (..)
 import Page.Forum.Model exposing (..)
+import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Update exposing (addr)
+import Page.Forum.NewPost.View as NewPost
 
 import View.Utils exposing (..)
 
@@ -26,7 +25,13 @@ view model =
       container "forum-show-topic"
         [ h1 [] [ text topic.title ]
         , div [ class "forum-topic-posts" ] (List.map renderPost postsWithUsers)
+        , case model.newPost of
+            Nothing ->
+              text ""
+            Just newPost ->
+              NewPost.view (Signal.forwardTo addr NewPostAction) newPost
         ]
+
 
 renderPost : PostWithUser -> Html
 renderPost {post, user} =
@@ -34,8 +39,11 @@ renderPost {post, user} =
     [ class "forum-post"]
     [ div
         [ class "post-meta" ]
-        [ text user.handle ]
+        [ div [ class "handle" ] [ text user.handle ]
+        , div [ class "time" ] [ text (toString post.creationTime) ]
+        ]
     , div
         [ class "post-content" ]
         [ text post.content ]
     ]
+

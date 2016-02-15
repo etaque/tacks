@@ -18535,7 +18535,7 @@ Elm.ServerApi.make = function (_elm) {
    };
    var getLiveStatus = A2(getJson,
    $Decoders.liveStatusDecoder,
-   "/api/liveStatus");
+   "/api/live");
    var getPlayer = function (handle) {
       return A2(getJson,
       $Decoders.playerDecoder,
@@ -18627,54 +18627,25 @@ Elm.Page.ListDrafts.Model.make = function (_elm) {
 Elm.Page = Elm.Page || {};
 Elm.Page.Forum = Elm.Page.Forum || {};
 Elm.Page.Forum.Model = Elm.Page.Forum.Model || {};
-Elm.Page.Forum.Model.make = function (_elm) {
+Elm.Page.Forum.Model.Shared = Elm.Page.Forum.Model.Shared || {};
+Elm.Page.Forum.Model.Shared.make = function (_elm) {
    "use strict";
    _elm.Page = _elm.Page || {};
    _elm.Page.Forum = _elm.Page.Forum || {};
    _elm.Page.Forum.Model = _elm.Page.Forum.Model || {};
-   if (_elm.Page.Forum.Model.values)
-   return _elm.Page.Forum.Model.values;
+   _elm.Page.Forum.Model.Shared = _elm.Page.Forum.Model.Shared || {};
+   if (_elm.Page.Forum.Model.Shared.values)
+   return _elm.Page.Forum.Model.Shared.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
-   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $Time = Elm.Time.make(_elm);
    var _op = {};
-   var SubmitResult = function (a) {
-      return {ctor: "SubmitResult",_0: a};
-   };
-   var Submit = {ctor: "Submit"};
-   var SetContent = function (a) {
-      return {ctor: "SetContent",_0: a};
-   };
-   var SetTitle = function (a) {
-      return {ctor: "SetTitle",_0: a};
-   };
-   var NoOp = {ctor: "NoOp"};
-   var NewTopicAction = function (a) {
-      return {ctor: "NewTopicAction",_0: a};
-   };
-   var HideNewTopic = {ctor: "HideNewTopic"};
-   var ShowNewTopic = {ctor: "ShowNewTopic"};
-   var RefreshList = {ctor: "RefreshList"};
-   var ShowResult = function (a) {
-      return {ctor: "ShowResult",_0: a};
-   };
-   var ListResult = function (a) {
-      return {ctor: "ListResult",_0: a};
-   };
-   var initial = {topics: _U.list([])
-                 ,currentTopic: $Maybe.Nothing
-                 ,newTopic: $Maybe.Nothing};
-   var initialRoute = $Page$Forum$Route.Index;
-   var NewTopic = F2(function (a,b) {
-      return {title: a,content: b};
-   });
    var TopicWithPosts = F2(function (a,b) {
       return {topic: a,postsWithUsers: b};
    });
@@ -18694,17 +18665,141 @@ Elm.Page.Forum.Model.make = function (_elm) {
    var TopicWithUser = F2(function (a,b) {
       return {topic: a,user: b};
    });
-   var Model = F3(function (a,b,c) {
-      return {topics: a,currentTopic: b,newTopic: c};
+   return _elm.Page.Forum.Model.Shared.values = {_op: _op
+                                                ,TopicWithUser: TopicWithUser
+                                                ,Topic: Topic
+                                                ,PostWithUser: PostWithUser
+                                                ,Post: Post
+                                                ,TopicWithPosts: TopicWithPosts};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.NewTopic = Elm.Page.Forum.NewTopic || {};
+Elm.Page.Forum.NewTopic.Model = Elm.Page.Forum.NewTopic.Model || {};
+Elm.Page.Forum.NewTopic.Model.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.NewTopic = _elm.Page.Forum.NewTopic || {};
+   _elm.Page.Forum.NewTopic.Model = _elm.Page.Forum.NewTopic.Model || {};
+   if (_elm.Page.Forum.NewTopic.Model.values)
+   return _elm.Page.Forum.NewTopic.Model.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Page$Forum$Model$Shared = Elm.Page.Forum.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var SubmitResult = function (a) {
+      return {ctor: "SubmitResult",_0: a};
+   };
+   var Submit = {ctor: "Submit"};
+   var SetContent = function (a) {
+      return {ctor: "SetContent",_0: a};
+   };
+   var SetTitle = function (a) {
+      return {ctor: "SetTitle",_0: a};
+   };
+   var Model = F2(function (a,b) {
+      return {title: a,content: b};
+   });
+   return _elm.Page.Forum.NewTopic.Model.values = {_op: _op
+                                                  ,Model: Model
+                                                  ,SetTitle: SetTitle
+                                                  ,SetContent: SetContent
+                                                  ,Submit: Submit
+                                                  ,SubmitResult: SubmitResult};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.NewPost = Elm.Page.Forum.NewPost || {};
+Elm.Page.Forum.NewPost.Model = Elm.Page.Forum.NewPost.Model || {};
+Elm.Page.Forum.NewPost.Model.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.NewPost = _elm.Page.Forum.NewPost || {};
+   _elm.Page.Forum.NewPost.Model = _elm.Page.Forum.NewPost.Model || {};
+   if (_elm.Page.Forum.NewPost.Model.values)
+   return _elm.Page.Forum.NewPost.Model.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Model$Shared = Elm.Model.Shared.make(_elm),
+   $Page$Forum$Model$Shared = Elm.Page.Forum.Model.Shared.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var SubmitResult = function (a) {
+      return {ctor: "SubmitResult",_0: a};
+   };
+   var Submit = {ctor: "Submit"};
+   var SetContent = function (a) {
+      return {ctor: "SetContent",_0: a};
+   };
+   var Model = F2(function (a,b) {
+      return {topic: a,content: b};
+   });
+   return _elm.Page.Forum.NewPost.Model.values = {_op: _op
+                                                 ,Model: Model
+                                                 ,SetContent: SetContent
+                                                 ,Submit: Submit
+                                                 ,SubmitResult: SubmitResult};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.Model = Elm.Page.Forum.Model || {};
+Elm.Page.Forum.Model.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.Model = _elm.Page.Forum.Model || {};
+   if (_elm.Page.Forum.Model.values)
+   return _elm.Page.Forum.Model.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$Model$Shared = Elm.Page.Forum.Model.Shared.make(_elm),
+   $Page$Forum$NewPost$Model = Elm.Page.Forum.NewPost.Model.make(_elm),
+   $Page$Forum$NewTopic$Model = Elm.Page.Forum.NewTopic.Model.make(_elm),
+   $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm);
+   var _op = {};
+   var NoOp = {ctor: "NoOp"};
+   var NewPostAction = function (a) {
+      return {ctor: "NewPostAction",_0: a};
+   };
+   var NewTopicAction = function (a) {
+      return {ctor: "NewTopicAction",_0: a};
+   };
+   var HideNewTopic = {ctor: "HideNewTopic"};
+   var ShowNewTopic = {ctor: "ShowNewTopic"};
+   var RefreshList = {ctor: "RefreshList"};
+   var ShowResult = function (a) {
+      return {ctor: "ShowResult",_0: a};
+   };
+   var ListResult = function (a) {
+      return {ctor: "ListResult",_0: a};
+   };
+   var initial = {topics: _U.list([])
+                 ,currentTopic: $Maybe.Nothing
+                 ,newTopic: $Maybe.Nothing
+                 ,newPost: $Maybe.Nothing};
+   var initialRoute = $Page$Forum$Route.Index;
+   var Model = F4(function (a,b,c,d) {
+      return {topics: a,currentTopic: b,newTopic: c,newPost: d};
    });
    return _elm.Page.Forum.Model.values = {_op: _op
                                          ,Model: Model
-                                         ,TopicWithUser: TopicWithUser
-                                         ,Topic: Topic
-                                         ,PostWithUser: PostWithUser
-                                         ,Post: Post
-                                         ,TopicWithPosts: TopicWithPosts
-                                         ,NewTopic: NewTopic
                                          ,initialRoute: initialRoute
                                          ,initial: initial
                                          ,ListResult: ListResult
@@ -18713,11 +18808,8 @@ Elm.Page.Forum.Model.make = function (_elm) {
                                          ,ShowNewTopic: ShowNewTopic
                                          ,HideNewTopic: HideNewTopic
                                          ,NewTopicAction: NewTopicAction
-                                         ,NoOp: NoOp
-                                         ,SetTitle: SetTitle
-                                         ,SetContent: SetContent
-                                         ,Submit: Submit
-                                         ,SubmitResult: SubmitResult};
+                                         ,NewPostAction: NewPostAction
+                                         ,NoOp: NoOp};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
@@ -23303,35 +23395,35 @@ Elm.Page.Forum.Decoders.make = function (_elm) {
    $Json$Decode = Elm.Json.Decode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
-   $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Page$Forum$Model$Shared = Elm.Page.Forum.Model.Shared.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm);
    var _op = {};
    var postDecoder = A5($Json$Decode.object4,
-   $Page$Forum$Model.Post,
+   $Page$Forum$Model$Shared.Post,
    A2($Json$Decode._op[":="],"id",$Json$Decode.string),
    A2($Json$Decode._op[":="],"content",$Json$Decode.string),
    A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
    A2($Json$Decode._op[":="],"updateTime",$Json$Decode.$float));
    var postWithUserDecoder = A3($Json$Decode.object2,
-   $Page$Forum$Model.PostWithUser,
+   $Page$Forum$Model$Shared.PostWithUser,
    A2($Json$Decode._op[":="],"post",postDecoder),
    A2($Json$Decode._op[":="],"user",$Decoders.userDecoder));
    var topicDecoder = A6($Json$Decode.object5,
-   $Page$Forum$Model.Topic,
+   $Page$Forum$Model$Shared.Topic,
    A2($Json$Decode._op[":="],"id",$Json$Decode.string),
    A2($Json$Decode._op[":="],"title",$Json$Decode.string),
    A2($Json$Decode._op[":="],"postsCount",$Json$Decode.$int),
    A2($Json$Decode._op[":="],"creationTime",$Json$Decode.$float),
    A2($Json$Decode._op[":="],"activityTime",$Json$Decode.$float));
    var topicWithPostsDecoder = A3($Json$Decode.object2,
-   $Page$Forum$Model.TopicWithPosts,
+   $Page$Forum$Model$Shared.TopicWithPosts,
    A2($Json$Decode._op[":="],"topic",topicDecoder),
    A2($Json$Decode._op[":="],
    "postsWithUsers",
    $Json$Decode.list(postWithUserDecoder)));
    var topicWithUserDecoder = A3($Json$Decode.object2,
-   $Page$Forum$Model.TopicWithUser,
+   $Page$Forum$Model$Shared.TopicWithUser,
    A2($Json$Decode._op[":="],"topic",topicDecoder),
    A2($Json$Decode._op[":="],"user",$Decoders.userDecoder));
    return _elm.Page.Forum.Decoders.values = {_op: _op
@@ -23340,6 +23432,122 @@ Elm.Page.Forum.Decoders.make = function (_elm) {
                                             ,postWithUserDecoder: postWithUserDecoder
                                             ,postDecoder: postDecoder
                                             ,topicWithPostsDecoder: topicWithPostsDecoder};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.NewPost = Elm.Page.Forum.NewPost || {};
+Elm.Page.Forum.NewPost.Update = Elm.Page.Forum.NewPost.Update || {};
+Elm.Page.Forum.NewPost.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.NewPost = _elm.Page.Forum.NewPost || {};
+   _elm.Page.Forum.NewPost.Update = _elm.Page.Forum.NewPost.Update || {};
+   if (_elm.Page.Forum.NewPost.Update.values)
+   return _elm.Page.Forum.NewPost.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$Decoders = Elm.Page.Forum.Decoders.make(_elm),
+   $Page$Forum$NewPost$Model = Elm.Page.Forum.NewPost.Model.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var createPost = function (_p0) {
+      var _p1 = _p0;
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "content"
+                                              ,_1: $Json$Encode.string(_p1.content)}]));
+      return A2($Task.map,
+      $Page$Forum$NewPost$Model.SubmitResult,
+      A3($ServerApi.postJson,
+      $Page$Forum$Decoders.postWithUserDecoder,
+      A2($Basics._op["++"],"/api/forum/topics/",_p1.topic.id),
+      body));
+   };
+   var update = F2(function (action,_p2) {
+      var _p3 = _p2;
+      var _p5 = _p3;
+      var _p4 = action;
+      switch (_p4.ctor)
+      {case "SetContent": return A2($Response.res,
+           _U.update(_p5,{content: _p4._0}),
+           $Effects.none);
+         case "Submit": return A2($Response.taskRes,_p5,createPost(_p5));
+         default: return A2($Response.res,_p5,$Effects.none);}
+   });
+   return _elm.Page.Forum.NewPost.Update.values = {_op: _op
+                                                  ,update: update
+                                                  ,createPost: createPost};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.NewTopic = Elm.Page.Forum.NewTopic || {};
+Elm.Page.Forum.NewTopic.Update = Elm.Page.Forum.NewTopic.Update || {};
+Elm.Page.Forum.NewTopic.Update.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.NewTopic = _elm.Page.Forum.NewTopic || {};
+   _elm.Page.Forum.NewTopic.Update = _elm.Page.Forum.NewTopic.Update || {};
+   if (_elm.Page.Forum.NewTopic.Update.values)
+   return _elm.Page.Forum.NewTopic.Update.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Effects = Elm.Effects.make(_elm),
+   $Json$Encode = Elm.Json.Encode.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$Decoders = Elm.Page.Forum.Decoders.make(_elm),
+   $Page$Forum$NewTopic$Model = Elm.Page.Forum.NewTopic.Model.make(_elm),
+   $Response = Elm.Response.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $ServerApi = Elm.ServerApi.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $Task = Elm.Task.make(_elm);
+   var _op = {};
+   var createTopic = function (_p0) {
+      var _p1 = _p0;
+      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
+                                              ,_0: "title"
+                                              ,_1: $Json$Encode.string(_p1.title)}
+                                             ,{ctor: "_Tuple2"
+                                              ,_0: "content"
+                                              ,_1: $Json$Encode.string(_p1.content)}]));
+      return A2($Task.map,
+      $Page$Forum$NewTopic$Model.SubmitResult,
+      A3($ServerApi.postJson,
+      $Page$Forum$Decoders.topicDecoder,
+      "/api/forum/topics",
+      body));
+   };
+   var update = F2(function (action,_p2) {
+      var _p3 = _p2;
+      var _p5 = _p3;
+      var _p4 = action;
+      switch (_p4.ctor)
+      {case "SetTitle": return A2($Response.res,
+           _U.update(_p5,{title: _p4._0}),
+           $Effects.none);
+         case "SetContent": return A2($Response.res,
+           _U.update(_p5,{content: _p4._0}),
+           $Effects.none);
+         case "Submit": return A2($Response.taskRes,
+           _p5,
+           createTopic(_p5));
+         default: return A2($Response.res,_p5,$Effects.none);}
+   });
+   return _elm.Page.Forum.NewTopic.Update.values = {_op: _op
+                                                   ,update: update
+                                                   ,createTopic: createTopic};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Forum = Elm.Page.Forum || {};
@@ -23356,13 +23564,14 @@ Elm.Page.Forum.Update.make = function (_elm) {
    $Debug = Elm.Debug.make(_elm),
    $Effects = Elm.Effects.make(_elm),
    $Json$Decode = Elm.Json.Decode.make(_elm),
-   $Json$Encode = Elm.Json.Encode.make(_elm),
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Model = Elm.Model.make(_elm),
    $Model$Shared = Elm.Model.Shared.make(_elm),
    $Page$Forum$Decoders = Elm.Page.Forum.Decoders.make(_elm),
    $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Page$Forum$NewPost$Update = Elm.Page.Forum.NewPost.Update.make(_elm),
+   $Page$Forum$NewTopic$Update = Elm.Page.Forum.NewTopic.Update.make(_elm),
    $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Response = Elm.Response.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -23371,21 +23580,6 @@ Elm.Page.Forum.Update.make = function (_elm) {
    $Task = Elm.Task.make(_elm),
    $Update$Utils = Elm.Update.Utils.make(_elm);
    var _op = {};
-   var createTopic = function (_p0) {
-      var _p1 = _p0;
-      var body = $Json$Encode.object(_U.list([{ctor: "_Tuple2"
-                                              ,_0: "title"
-                                              ,_1: $Json$Encode.string(_p1.title)}
-                                             ,{ctor: "_Tuple2"
-                                              ,_0: "content"
-                                              ,_1: $Json$Encode.string(_p1.content)}]));
-      return A2($Task.map,
-      $Page$Forum$Model.SubmitResult,
-      A3($ServerApi.postJson,
-      $Page$Forum$Decoders.topicDecoder,
-      "/api/forum/topics",
-      body));
-   };
    var showTopic = function (id) {
       return A2($Task.map,
       $Page$Forum$Model.ShowResult,
@@ -23398,38 +23592,22 @@ Elm.Page.Forum.Update.make = function (_elm) {
    A2($ServerApi.getJson,
    $Json$Decode.list($Page$Forum$Decoders.topicWithUserDecoder),
    "/api/forum/topics"));
-   var updateNewTopic = F2(function (action,_p2) {
-      var _p3 = _p2;
-      var _p5 = _p3;
-      var _p4 = action;
-      switch (_p4.ctor)
-      {case "SetTitle": return A2($Response.res,
-           _U.update(_p5,{title: _p4._0}),
-           $Effects.none);
-         case "SetContent": return A2($Response.res,
-           _U.update(_p5,{content: _p4._0}),
-           $Effects.none);
-         case "Submit": return A2($Response.taskRes,
-           _p5,
-           createTopic(_p5));
-         default: return A2($Response.res,_p5,$Effects.none);}
-   });
    var update = F2(function (action,model) {
-      var _p6 = action;
-      switch (_p6.ctor)
+      var _p0 = action;
+      switch (_p0.ctor)
       {case "RefreshList": return A2($Response.taskRes,
            model,
            listTopics);
          case "ListResult": var topics = A2($Result.withDefault,
            _U.list([]),
-           _p6._0);
+           _p0._0);
            return A2($Response.res,
            _U.update(model,{topics: topics}),
            $Effects.none);
-         case "ShowResult": var _p7 = _p6._0;
-           if (_p7.ctor === "Ok") {
+         case "ShowResult": var _p1 = _p0._0;
+           if (_p1.ctor === "Ok") {
                  return A2($Response.res,
-                 _U.update(model,{currentTopic: $Maybe.Just(_p7._0)}),
+                 _U.update(model,{currentTopic: $Maybe.Just(_p1._0)}),
                  $Effects.none);
               } else {
                  return A2($Response.res,model,$Effects.none);
@@ -23441,30 +23619,42 @@ Elm.Page.Forum.Update.make = function (_elm) {
          case "HideNewTopic": return A2($Response.res,
            _U.update(model,{newTopic: $Maybe.Nothing}),
            $Effects.none);
-         case "NewTopicAction": var _p8 = model.newTopic;
-           if (_p8.ctor === "Just") {
+         case "NewTopicAction": var _p2 = model.newTopic;
+           if (_p2.ctor === "Just") {
                  return A2($Response.mapEffects,
                  $Page$Forum$Model.NewTopicAction,
                  A2($Response.mapModel,
                  function (t) {
                     return _U.update(model,{newTopic: $Maybe.Just(t)});
                  },
-                 A2(updateNewTopic,_p6._0,_p8._0)));
+                 A2($Page$Forum$NewTopic$Update.update,_p0._0,_p2._0)));
+              } else {
+                 return A2($Response.res,model,$Effects.none);
+              }
+         case "NewPostAction": var _p3 = model.newPost;
+           if (_p3.ctor === "Just") {
+                 return A2($Response.mapEffects,
+                 $Page$Forum$Model.NewPostAction,
+                 A2($Response.mapModel,
+                 function (p) {
+                    return _U.update(model,{newPost: $Maybe.Just(p)});
+                 },
+                 A2($Page$Forum$NewPost$Update.update,_p0._0,_p3._0)));
               } else {
                  return A2($Response.res,model,$Effects.none);
               }
          default: return A2($Response.res,model,$Effects.none);}
    });
    var mount = function (route) {
-      var _p9 = route;
-      if (_p9.ctor === "Index") {
+      var _p4 = route;
+      if (_p4.ctor === "Index") {
             return A2($Response.taskRes,
             $Page$Forum$Model.initial,
             listTopics);
          } else {
             return A2($Response.taskRes,
             $Page$Forum$Model.initial,
-            showTopic(_p9._0));
+            showTopic(_p4._0));
          }
    };
    var addr = $Update$Utils.pageAddr($Model.ForumAction);
@@ -23472,10 +23662,8 @@ Elm.Page.Forum.Update.make = function (_elm) {
                                           ,addr: addr
                                           ,mount: mount
                                           ,update: update
-                                          ,updateNewTopic: updateNewTopic
                                           ,listTopics: listTopics
-                                          ,showTopic: showTopic
-                                          ,createTopic: createTopic};
+                                          ,showTopic: showTopic};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Admin = Elm.Page.Admin || {};
@@ -25976,6 +26164,64 @@ Elm.Page.ListDrafts.View.make = function (_elm) {
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.NewTopic = Elm.Page.Forum.NewTopic || {};
+Elm.Page.Forum.NewTopic.View = Elm.Page.Forum.NewTopic.View || {};
+Elm.Page.Forum.NewTopic.View.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.NewTopic = _elm.Page.Forum.NewTopic || {};
+   _elm.Page.Forum.NewTopic.View = _elm.Page.Forum.NewTopic.View || {};
+   if (_elm.Page.Forum.NewTopic.View.values)
+   return _elm.Page.Forum.NewTopic.View.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$NewTopic$Model = Elm.Page.Forum.NewTopic.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
+   var _op = {};
+   var view = F2(function (addr,_p0) {
+      var _p1 = _p0;
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("form-new-topic form-vertical")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("form-group")]),
+              _U.list([$View$Utils.textInput(_U.list([$Html$Attributes.value(_p1.title)
+                                                     ,A2($View$Utils.onInput,
+                                                     addr,
+                                                     $Page$Forum$NewTopic$Model.SetTitle)
+                                                     ,A2($View$Utils.onEnter,addr,$Page$Forum$NewTopic$Model.Submit)
+                                                     ,$Html$Attributes.placeholder("Title")]))]))
+              ,A2($Html.div,
+              _U.list([$Html$Attributes.$class("form-group")]),
+              _U.list([A2($Html.textarea,
+              _U.list([$Html$Attributes.$class("form-control")
+                      ,$Html$Attributes.value(_p1.content)
+                      ,A2($View$Utils.onInput,
+                      addr,
+                      $Page$Forum$NewTopic$Model.SetContent)]),
+              _U.list([]))]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-primary")
+                      ,A2($Html$Events.onClick,
+                      addr,
+                      $Page$Forum$NewTopic$Model.Submit)]),
+              _U.list([$Html.text("Submit")]))]))]));
+   });
+   return _elm.Page.Forum.NewTopic.View.values = {_op: _op
+                                                 ,view: view};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
 Elm.Page.Forum.View = Elm.Page.Forum.View || {};
 Elm.Page.Forum.View.Index = Elm.Page.Forum.View.Index || {};
 Elm.Page.Forum.View.Index.make = function (_elm) {
@@ -25988,6 +26234,8 @@ Elm.Page.Forum.View.Index.make = function (_elm) {
    return _elm.Page.Forum.View.Index.values;
    var _U = Elm.Native.Utils.make(_elm),
    $Basics = Elm.Basics.make(_elm),
+   $Date = Elm.Date.make(_elm),
+   $Date$Format = Elm.Date.Format.make(_elm),
    $Debug = Elm.Debug.make(_elm),
    $Html = Elm.Html.make(_elm),
    $Html$Attributes = Elm.Html.Attributes.make(_elm),
@@ -25995,6 +26243,8 @@ Elm.Page.Forum.View.Index.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Page$Forum$Model$Shared = Elm.Page.Forum.Model.Shared.make(_elm),
+   $Page$Forum$NewTopic$View = Elm.Page.Forum.NewTopic.View.make(_elm),
    $Page$Forum$Route = Elm.Page.Forum.Route.make(_elm),
    $Page$Forum$Update = Elm.Page.Forum.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
@@ -26004,62 +26254,52 @@ Elm.Page.Forum.View.Index.make = function (_elm) {
    var _op = {};
    var topicRow = function (_p0) {
       var _p1 = _p0;
-      var _p2 = _p1.topic;
+      var _p3 = _p1.topic;
       return A2($Html.tr,
       _U.list([]),
       _U.list([A2($Html.td,
               _U.list([$Html$Attributes.$class("title")]),
               _U.list([A3($View$Utils.linkTo,
-              $Route.Forum($Page$Forum$Route.ShowTopic(_p2.id)),
+              $Route.Forum($Page$Forum$Route.ShowTopic(_p3.id)),
               _U.list([]),
-              _U.list([$Html.text(_p2.title)]))]))
+              _U.list([$Html.text(_p3.title)]))]))
               ,A2($Html.td,
-              _U.list([$Html$Attributes.$class("replies")]),
-              _U.list([$Html.text($Basics.toString(_p2.postsCount))]))
+              _U.list([$Html$Attributes.$class("original")]),
+              _U.list([$Html.text(_p1.user.handle)]))
+              ,A2($Html.td,
+              _U.list([$Html$Attributes.$class("count")]),
+              _U.list([$Html.text($Basics.toString(_p3.postsCount))]))
               ,A2($Html.td,
               _U.list([$Html$Attributes.$class("activity")]),
-              _U.list([$Html.text($Basics.toString(_p2.activityTime))]))]));
+              _U.list([$Html.text(function (_p2) {
+                 return A2($Date$Format.format,
+                 "%B %d %H:%M",
+                 $Date.fromTime(_p2));
+              }(_p3.activityTime))]))]));
    };
    var topicsTable = function (topics) {
       return A2($Html.table,
-      _U.list([$Html$Attributes.$class("table")]),
+      _U.list([$Html$Attributes.$class("table forum-topics-table")]),
       _U.list([A2($Html.thead,
               _U.list([]),
               _U.list([A2($Html.tr,
               _U.list([]),
-              _U.list([A2($Html.th,_U.list([]),_U.list([$Html.text("Topic")]))
-                      ,A2($Html.th,_U.list([]),_U.list([$Html.text("Replies")]))
+              _U.list([A2($Html.th,
+                      _U.list([$Html$Attributes.$class("title")]),
+                      _U.list([$Html.text("Topic")]))
                       ,A2($Html.th,
-                      _U.list([]),
-                      _U.list([$Html.text("Activity")]))]))]))
+                      _U.list([$Html$Attributes.$class("original")]),
+                      _U.list([$Html.text("Started by")]))
+                      ,A2($Html.th,
+                      _U.list([$Html$Attributes.$class("count")]),
+                      _U.list([$Html.text("Replies")]))
+                      ,A2($Html.th,
+                      _U.list([$Html$Attributes.$class("activity")]),
+                      _U.list([$Html.text("Most recent")]))]))]))
               ,A2($Html.tbody,_U.list([]),A2($List.map,topicRow,topics))]));
    };
-   var newTopicForm = F2(function (addr,_p3) {
-      var _p4 = _p3;
-      return A2($Html.div,
-      _U.list([$Html$Attributes.$class("form-new-topic form-vertical")]),
-      _U.list([A2($Html.div,
-              _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([$View$Utils.textInput(_U.list([$Html$Attributes.value(_p4.title)
-                                                     ,A2($View$Utils.onInput,addr,$Page$Forum$Model.SetTitle)
-                                                     ,A2($View$Utils.onEnter,addr,$Page$Forum$Model.Submit)
-                                                     ,$Html$Attributes.placeholder("Title")]))]))
-              ,A2($Html.div,
-              _U.list([$Html$Attributes.$class("form-group")]),
-              _U.list([A2($Html.textarea,
-              _U.list([$Html$Attributes.$class("form-control")
-                      ,$Html$Attributes.value(_p4.content)
-                      ,A2($View$Utils.onInput,addr,$Page$Forum$Model.SetContent)]),
-              _U.list([]))]))
-              ,A2($Html.div,
-              _U.list([]),
-              _U.list([A2($Html.button,
-              _U.list([$Html$Attributes.$class("btn btn-primary")
-                      ,A2($Html$Events.onClick,addr,$Page$Forum$Model.Submit)]),
-              _U.list([$Html.text("Submit")]))]))]));
-   });
-   var view = function (_p5) {
-      var _p6 = _p5;
+   var view = function (_p4) {
+      var _p5 = _p4;
       return A2($View$Utils.container,
       "forum-index",
       _U.list([A2($Html.h1,_U.list([]),_U.list([$Html.text("Forum")]))
@@ -26070,23 +26310,72 @@ Elm.Page.Forum.View.Index.make = function (_elm) {
                       $Page$Forum$Model.ShowNewTopic)]),
               _U.list([$Html.text("New topic")]))
               ,function () {
-                 var _p7 = _p6.newTopic;
-                 if (_p7.ctor === "Just") {
-                       return A2(newTopicForm,
+                 var _p6 = _p5.newTopic;
+                 if (_p6.ctor === "Just") {
+                       return A2($Page$Forum$NewTopic$View.view,
                        A2($Signal.forwardTo,
                        $Page$Forum$Update.addr,
                        $Page$Forum$Model.NewTopicAction),
-                       _p7._0);
+                       _p6._0);
                     } else {
-                       return topicsTable(_p6.topics);
+                       return topicsTable(_p5.topics);
                     }
               }()]));
    };
    return _elm.Page.Forum.View.Index.values = {_op: _op
                                               ,view: view
-                                              ,newTopicForm: newTopicForm
                                               ,topicsTable: topicsTable
                                               ,topicRow: topicRow};
+};
+Elm.Page = Elm.Page || {};
+Elm.Page.Forum = Elm.Page.Forum || {};
+Elm.Page.Forum.NewPost = Elm.Page.Forum.NewPost || {};
+Elm.Page.Forum.NewPost.View = Elm.Page.Forum.NewPost.View || {};
+Elm.Page.Forum.NewPost.View.make = function (_elm) {
+   "use strict";
+   _elm.Page = _elm.Page || {};
+   _elm.Page.Forum = _elm.Page.Forum || {};
+   _elm.Page.Forum.NewPost = _elm.Page.Forum.NewPost || {};
+   _elm.Page.Forum.NewPost.View = _elm.Page.Forum.NewPost.View || {};
+   if (_elm.Page.Forum.NewPost.View.values)
+   return _elm.Page.Forum.NewPost.View.values;
+   var _U = Elm.Native.Utils.make(_elm),
+   $Basics = Elm.Basics.make(_elm),
+   $Debug = Elm.Debug.make(_elm),
+   $Html = Elm.Html.make(_elm),
+   $Html$Attributes = Elm.Html.Attributes.make(_elm),
+   $Html$Events = Elm.Html.Events.make(_elm),
+   $List = Elm.List.make(_elm),
+   $Maybe = Elm.Maybe.make(_elm),
+   $Page$Forum$NewPost$Model = Elm.Page.Forum.NewPost.Model.make(_elm),
+   $Result = Elm.Result.make(_elm),
+   $Signal = Elm.Signal.make(_elm),
+   $View$Utils = Elm.View.Utils.make(_elm);
+   var _op = {};
+   var view = F2(function (addr,_p0) {
+      var _p1 = _p0;
+      return A2($Html.div,
+      _U.list([$Html$Attributes.$class("form-new-post form-vertical")]),
+      _U.list([A2($Html.div,
+              _U.list([$Html$Attributes.$class("form-group")]),
+              _U.list([A2($Html.textarea,
+              _U.list([$Html$Attributes.$class("form-control")
+                      ,$Html$Attributes.value(_p1.content)
+                      ,A2($View$Utils.onInput,
+                      addr,
+                      $Page$Forum$NewPost$Model.SetContent)]),
+              _U.list([]))]))
+              ,A2($Html.div,
+              _U.list([]),
+              _U.list([A2($Html.button,
+              _U.list([$Html$Attributes.$class("btn btn-primary")
+                      ,A2($Html$Events.onClick,
+                      addr,
+                      $Page$Forum$NewPost$Model.Submit)]),
+              _U.list([$Html.text("Submit")]))]))]));
+   });
+   return _elm.Page.Forum.NewPost.View.values = {_op: _op
+                                                ,view: view};
 };
 Elm.Page = Elm.Page || {};
 Elm.Page.Forum = Elm.Page.Forum || {};
@@ -26108,24 +26397,33 @@ Elm.Page.Forum.View.ShowTopic.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Page$Forum$Model = Elm.Page.Forum.Model.make(_elm),
+   $Page$Forum$Model$Shared = Elm.Page.Forum.Model.Shared.make(_elm),
+   $Page$Forum$NewPost$View = Elm.Page.Forum.NewPost.View.make(_elm),
+   $Page$Forum$Update = Elm.Page.Forum.Update.make(_elm),
    $Result = Elm.Result.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $View$Utils = Elm.View.Utils.make(_elm);
    var _op = {};
    var renderPost = function (_p0) {
       var _p1 = _p0;
+      var _p2 = _p1.post;
       return A2($Html.div,
       _U.list([$Html$Attributes.$class("forum-post")]),
       _U.list([A2($Html.div,
               _U.list([$Html$Attributes.$class("post-meta")]),
-              _U.list([$Html.text(_p1.user.handle)]))
+              _U.list([A2($Html.div,
+                      _U.list([$Html$Attributes.$class("handle")]),
+                      _U.list([$Html.text(_p1.user.handle)]))
+                      ,A2($Html.div,
+                      _U.list([$Html$Attributes.$class("time")]),
+                      _U.list([$Html.text($Basics.toString(_p2.creationTime))]))]))
               ,A2($Html.div,
               _U.list([$Html$Attributes.$class("post-content")]),
-              _U.list([$Html.text(_p1.post.content)]))]));
+              _U.list([$Html.text(_p2.content)]))]));
    };
    var view = function (model) {
-      var _p2 = model.currentTopic;
-      if (_p2.ctor === "Nothing") {
+      var _p3 = model.currentTopic;
+      if (_p3.ctor === "Nothing") {
             return A2($View$Utils.container,
             "forum-show-topic",
             _U.list([A2($Html.h1,
@@ -26136,10 +26434,22 @@ Elm.Page.Forum.View.ShowTopic.make = function (_elm) {
             "forum-show-topic",
             _U.list([A2($Html.h1,
                     _U.list([]),
-                    _U.list([$Html.text(_p2._0.topic.title)]))
+                    _U.list([$Html.text(_p3._0.topic.title)]))
                     ,A2($Html.div,
                     _U.list([$Html$Attributes.$class("forum-topic-posts")]),
-                    A2($List.map,renderPost,_p2._0.postsWithUsers))]));
+                    A2($List.map,renderPost,_p3._0.postsWithUsers))
+                    ,function () {
+                       var _p4 = model.newPost;
+                       if (_p4.ctor === "Nothing") {
+                             return $Html.text("");
+                          } else {
+                             return A2($Page$Forum$NewPost$View.view,
+                             A2($Signal.forwardTo,
+                             $Page$Forum$Update.addr,
+                             $Page$Forum$Model.NewPostAction),
+                             _p4._0);
+                          }
+                    }()]));
          }
    };
    return _elm.Page.Forum.View.ShowTopic.values = {_op: _op

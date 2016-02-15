@@ -29,7 +29,7 @@ object Topics extends TableQuery(new TopicTable(_)) {
 
   def listWithUser(): Future[Seq[(Topic, User)]] = DB.run {
     (for {
-      topic <- all
+      topic <- all.sortBy(_.activityTime.desc)
       post <- Posts if topic.postId === post.id
       user <- Users if post.userId === user.id
     } yield (topic, user)).result

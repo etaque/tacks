@@ -3,7 +3,7 @@ module Page.Forum.Decoders where
 import Json.Decode as Json exposing (..)
 
 import Decoders exposing (userDecoder)
-import Page.Forum.Model exposing (..)
+import Page.Forum.Model.Shared exposing (..)
 
 
 topicWithUserDecoder =

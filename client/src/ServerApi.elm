@@ -23,7 +23,7 @@ getPlayer handle =
 
 getLiveStatus : GetJsonTask LiveStatus
 getLiveStatus =
-  getJson liveStatusDecoder "/api/liveStatus"
+  getJson liveStatusDecoder "/api/live"
 
 getTrack : String -> GetJsonTask Track
 getTrack id =

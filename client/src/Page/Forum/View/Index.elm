@@ -6,11 +6,16 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
+import Date
+import Date.Format as DateFormat
+
 import Route
 
 import Page.Forum.Route exposing (..)
 import Page.Forum.Model exposing (..)
+import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Update exposing (addr)
+import Page.Forum.NewTopic.View as NewTopic
 
 import View.Utils exposing (..)
 
@@ -26,52 +31,24 @@ view ({topics} as model) =
         [ text "New topic" ]
     , case model.newTopic of
         Just newTopic ->
-          newTopicForm (Signal.forwardTo addr NewTopicAction) newTopic
+          NewTopic.view (Signal.forwardTo addr NewTopicAction) newTopic
         Nothing ->
           topicsTable topics
-    ]
-
-newTopicForm : Address NewTopicAction -> NewTopic -> Html
-newTopicForm addr {title, content} =
-  div [ class "form-new-topic form-vertical" ]
-    [ div [ class "form-group" ]
-      [ textInput
-        [ value title
-        , onInput addr SetTitle
-        , onEnter addr Submit
-        , placeholder "Title"
-        ]
-      ]
-    , div [ class "form-group" ]
-      [ textarea
-        [ class "form-control"
-        , value content
-        , onInput addr SetContent
-        ]
-        [  ]
-      ]
-    , div []
-      [ button
-        [ class "btn btn-primary"
-        -- , disabled loading
-        , onClick addr Submit
-        ]
-        [ text "Submit" ]
-      ]
     ]
 
 
 topicsTable : List TopicWithUser -> Html
 topicsTable topics =
   table
-    [ class "table" ]
+    [ class "table forum-topics-table" ]
     [ thead
         []
         [ tr
             []
-            [ th [] [ text "Topic" ]
-            , th [] [ text "Replies" ]
-            , th [] [ text "Activity" ]
+            [ th [ class "title" ] [ text "Topic" ]
+            , th [ class "original" ] [ text "Started by" ]
+            , th [ class "count" ] [ text "Replies" ]
+            , th [ class "activity" ] [ text "Most recent" ]
             ]
         ]
      , tbody
@@ -83,7 +60,16 @@ topicRow : TopicWithUser -> Html
 topicRow {topic, user} =
   tr
     []
-    [ td [ class "title" ] [ linkTo (Route.Forum (ShowTopic topic.id)) [] [ text topic.title ] ]
-    , td [ class "replies" ] [ text (toString topic.postsCount) ]
-    , td [ class "activity" ] [ text (toString topic.activityTime) ]
+    [ td
+        [ class "title" ]
+        [ linkTo (Route.Forum (ShowTopic topic.id)) [] [ text topic.title ] ]
+    , td
+        [ class "original" ]
+        [ text user.handle ]
+    , td
+        [ class "count" ]
+        [ text (toString topic.postsCount) ]
+    , td
+        [ class "activity" ]
+        [ text <| (Date.fromTime >> DateFormat.format "%B %d %H:%M") topic.activityTime ]
     ]
