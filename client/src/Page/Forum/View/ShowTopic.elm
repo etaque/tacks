@@ -27,7 +27,11 @@ view model =
         , div [ class "forum-topic-posts" ] (List.map renderPost postsWithUsers)
         , case model.newPost of
             Nothing ->
-              text ""
+              button
+                [ class "btn btn-primary"
+                , onClick addr ToggleNewPost
+                ]
+                [ text "Response" ]
             Just newPost ->
               NewPost.view (Signal.forwardTo addr NewPostAction) newPost
         ]

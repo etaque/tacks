@@ -3,6 +3,7 @@ package dao
 import java.sql.JDBCType
 import java.sql.Timestamp
 import java.util.UUID
+import org.joda.time.DateTime
 import scala.concurrent.Future
 import play.api.Play
 import play.api.db.slick.DatabaseConfigProvider
@@ -40,6 +41,12 @@ trait DB extends ExPostgresDriver
     implicit object SetUUID extends SetParameter[UUID] {
       def apply(v: UUID, pp: PositionedParameters) {
         pp.setObject(v, JDBCType.BINARY.getVendorTypeNumber)
+      }
+    }
+
+    implicit object SetJodaDateTime extends SetParameter[DateTime] {
+      def apply(v: DateTime, pp: PositionedParameters) {
+        pp.setObject(new java.sql.Timestamp(v.getMillis), java.sql.Types.TIMESTAMP)
       }
     }
   }

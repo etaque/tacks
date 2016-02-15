@@ -26,7 +26,7 @@ view ({topics} as model) =
     [ h1 [] [ text "Forum"]
     , button
         [ class "btn btn-primary"
-        , onClick addr ShowNewTopic
+        , onClick addr ToggleNewTopic
         ]
         [ text "New topic" ]
     , case model.newTopic of
@@ -55,6 +55,7 @@ topicsTable topics =
         []
         (List.map topicRow topics)
     ]
+
 
 topicRow : TopicWithUser -> Html
 topicRow {topic, user} =

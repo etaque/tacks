@@ -32,8 +32,8 @@ type Action
   = ListResult (Result () (List TopicWithUser))
   | ShowResult (Result () (TopicWithPosts))
   | RefreshList
-  | ShowNewTopic
-  | HideNewTopic
+  | ToggleNewTopic
+  | ToggleNewPost
   | NewTopicAction NewTopic.Action
   | NewPostAction NewPost.Action
   | NoOp

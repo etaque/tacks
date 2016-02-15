@@ -5,7 +5,6 @@ import Signal
 import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 import Json.Decode as Json
-import Json.Encode as JsEncode
 
 import Model exposing (..)
 import Model.Shared exposing (..)
@@ -53,14 +52,15 @@ update action model =
           -- TODO
           res model none
 
-    ShowNewTopic ->
-      let
-        newTopic = { title = "", content = "" }
-      in
-        res { model | newTopic = Just newTopic } none
-
-    HideNewTopic ->
-      res { model | newTopic = Nothing } none
+    ToggleNewTopic ->
+      case model.newTopic of
+        Just _ ->
+          res { model | newTopic = Nothing } none
+        Nothing ->
+          let
+            newTopic = { title = "", content = "" }
+          in
+            res { model | newTopic = Just newTopic } none
 
     NewTopicAction a ->
       case model.newTopic of
@@ -70,6 +70,16 @@ update action model =
             |> mapEffects NewTopicAction
         Nothing ->
           res model none
+
+    ToggleNewPost ->
+      case (model.currentTopic, model.newPost) of
+        (Just topicWithUser, Nothing) ->
+          let
+            newPost = { topic = topicWithUser.topic, content = "" }
+          in
+            res { model | newPost = Just newPost } none
+        _ ->
+          res { model | newPost = Nothing } none
 
     NewPostAction a ->
       case model.newPost of
