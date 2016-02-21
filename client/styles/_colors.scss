@@ -27,11 +27,12 @@ $lightOrange: lighten($orange, 12%);
 $lighterOrange: lighten($orange, 25%);
 $darkOrange: darken($orange, 25%);
 
-$darkGray: #51585E;
-$gray: #888;
-$mediumGray: lighten($gray, 20%);
-$lightGray: lighten($gray, 35%);
+$darkGrey: #51585E;
+$grey: #888;
+$mediumGrey: lighten($grey, 20%);
+$lightGrey: lighten($grey, 35%);
 $smokeWhite: #FAFAFA;
+$whiteSmoke: $smokeWhite;
 
 $shadow: rgba(0, 0, 0, 0.075);
 $strongShadow: rgba(0, 0, 0, 0.2);

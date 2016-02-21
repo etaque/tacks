@@ -40,7 +40,7 @@ draftItem confirmDelete draft =
   li [ classList [ ( "confirm-delete", confirmDelete) ] ]
   [ linkTo (EditTrack draft.id) [ class "" ] [ text draft.name ]
   , button
-      [ class "btn btn-default btn-xs pull-right"
+      [ class "btn btn-danger btn-xs pull-right"
       , onClick addr (ConfirmDeleteDraft draft)
       -- , disabled confirmDelete
       ]

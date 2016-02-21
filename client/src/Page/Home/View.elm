@@ -79,15 +79,15 @@ liveTrackBlock maybeTrackId ({track, meta, players} as lt) =
     div [ class "col-md-6" ]
       [ div
           [ classList [ ("live-track", True), ("has-focus", hasFocus), ("is-empty", empty) ] ]
-        [ div [ class "info"]
-          [ h3 []
-            [ linkTo (ShowTrack track.id) [ class "name" ] [ text track.name ]
-            ]
-          ,  rankingsExtract meta.rankings
+        [ h3 []
+          [ linkTo (ShowTrack track.id) [ class "name", title track.name ] [ text track.name ]
+          ]
+        , div [ class "info"]
+          [ rankingsExtract meta.rankings
           , div [ class "rankings-size"] [ text <| toString (List.length meta.rankings) ++ " entries" ]
           ]
         , linkTo (PlayTrack track.id)
-            [ class <| "btn btn-block btn-join btn-" ++ if empty then "primary" else "warning"
+            [ class <| "btn btn-block btn-join btn-" ++ if empty then "default" else "warning"
             , onMouseOver addr (FocusTrack (Just track.id))
             , onMouseOut addr (FocusTrack Nothing)
             ]

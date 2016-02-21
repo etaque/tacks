@@ -23,12 +23,12 @@ import View.Utils exposing (..)
 view : Model -> Html
 view ({topics} as model) =
   container "forum-index"
-    [ h1 [] [ text "Forum"]
-    , button
-        [ class "btn btn-primary"
+    [ button
+        [ class "pull-right btn btn-primary"
         , onClick addr ToggleNewTopic
         ]
         [ text "New topic" ]
+    , h1 [] [ text "Forum"]
     , case model.newTopic of
         Just newTopic ->
           NewTopic.view (Signal.forwardTo addr NewTopicAction) newTopic

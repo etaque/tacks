@@ -3,11 +3,13 @@
 
 .list-drafts {
   ul.drafts {
+    border: 1px solid $lightGrey;
+    border-radius: 3px;
+    background-color: $white;
 
     li {
       clear: both;
-      border-bottom: 2px solid $lightSeaBlue;
-      margin-bottom: 10px;
+      border-bottom: 1px solid $lightGrey;
 
       .delete-draft {
         display: none;
@@ -19,24 +21,29 @@
           display: block;
         }
       }
+
+      &:last-child {
+        border-bottom: none;
+      }
     }
 
     a {
       display: inline-block;
       padding: 10px 10px 8px 10px;
-      font-size: 21px;
+      font-size: 19px;
       font-weight: bold;
       font-family: $serif;
       transition: background .2s ease-in;
       
       &:hover {
-        background-color: $lightSeaBlue;
-        color: $white;
+        /* background-color: $lightSeaBlue; */
+        /* color: $white; */
       }
     }
 
     button {
-      margin-top: 3px;
+      margin-top: 8px;
+      margin-right: 8px;
     }
   }
 

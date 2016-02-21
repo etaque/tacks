@@ -37,7 +37,7 @@ view addr {title, content} =
         [ Markdown.toHtml content ]
     , div []
       [ button
-        [ class "btn btn-primary"
+        [ class "btn btn-primary pull-right"
         -- , disabled loading
         , onClick addr Submit
         ]

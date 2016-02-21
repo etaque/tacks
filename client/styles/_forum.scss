@@ -4,9 +4,12 @@
 
 .forum {
   .forum-topics-table {
+
     thead {
       th {
-        border-bottom: 2px solid $lightSeaBlue;
+        border-bottom: none;
+        color: $grey;
+        /* border-bottom: 2px solid $lightSeaBlue; */
       }
 
       .title {
@@ -25,36 +28,56 @@
     }
       
     tbody {
+      border: 1px solid $lightGrey;
+      border-radius: 3px;
+      background-color: $white;
+
       td {
-        border-bottom: 1px solid $lightSeaBlue;
+        padding: 8px;
+        border-bottom: 1px solid $lightGrey;
+        color: $grey;
       }
 
       .title {
+        /* display: inline-block; */
+        padding-left: 12px;
         font-family: $serif;
         font-weight: bold;
-        font-size: 18px;
-        color: $white;
+        /* font-size: 18px; */
+
+        a {
+          /* color: $darkGrey; */
+        }
       }
 
       .original {
-        color: $white;
+        /* color: $white; */
       }
 
       .count {
         text-align: center;
       }
+
+      tr:last-child td {
+        border-bottom: 1px solid $lightGrey;
+      }
+
+      tr:hover td {
+        background-color: $white;
+      }
+
     } 
   }
 
   .forum-post {
     .post-meta {
       padding: 10px;
-      background-color: $lightSeaBlue;
-      border-bottom: 2px solid $lighterSeaBlue;
+      /* background-color: $lightSeaBlue; */
+      /* border-bottom: 2px solid $lighterSeaBlue; */
 
       .handle {
         float: left;
-        color: $white;
+        /* color: $white; */
         font-weight: bold;
       }
 

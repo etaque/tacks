@@ -17,20 +17,25 @@
   position: relative;
 
   h3 {
+    padding: 10px;
     margin-top: 0;
     margin-bottom: 0;
-    border-bottom: 2px solid $lighterSeaBlue;
+    background-color: $lightSeaBlue;
+    /* border-top-left-radius: 3px; */
+    /* border-top-right-radius: 3px; */
 
     .name {
       display: block;
-      padding: 10px;
-      color: $white;
+      padding-bottom: 8px;
+      border-bottom: 3px solid $lighterSeaBlue;
+      color: $whiteSeaBlue;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
 
       &:hover {
-        background-color: $lighterSeaBlue;
+        color: $white;
+        /* background-color: $seaBlue; */
       }
     }
   }
@@ -39,24 +44,29 @@
     height: 150px;
     overflow-y: auto;
     font-size: 16px;
-    box-shadow: 1px 1px 1px $shadow;
+    /* box-shadow: 2px 1px 1px $shadow; */
+    /* border: 1px solid $lightGrey; */
+    /* border-bottom: none; */
     background-color: $lightSeaBlue;
-    /* border-top-left-radius: 3px; */
-    /* border-top-right-radius: 3px; */
+    /* border-bottom-left-radius: 3px; */
+    /* border-bottom-right-radius: 3px; */
+    /* color: $white; */
 
     .list-rankings {
       padding: 10px 15px;
     }
 
     .rankings-size {
-      text-align: center;
+      padding: 0 15px;
+      /* text-align: center; */
+      color: white;
     }
   }
 
   .btn-join {
     margin-top: 5px;
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
+    /* border-top-left-radius: 0; */
+    /* border-top-right-radius: 0; */
   }
 }
 

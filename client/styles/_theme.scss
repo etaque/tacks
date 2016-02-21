@@ -5,11 +5,12 @@
 
 
 h1 {
-  font-family: $thin;
-  font-size: 42px;
+  font-family: $serif;
+  /* font-size: 42px; */
   margin-top: 0;
   margin-bottom: 20px;
-  color: $white;
+  /* color: $white; */
+  /* color: $mainBlue; */
 }
 
 h2 {
@@ -17,7 +18,7 @@ h2 {
   font-family: $thin;
   margin-top: 0;
   margin-bottom: 20px;
-  color: $white;
+  /* color: $white; */
 }
 
 h3, h4, h5, h6 {
@@ -32,12 +33,12 @@ h3 {
 }
 
 a {
-  color: $white;
+  color: $seaBlue;
   transition: all .1s ease-in;
   cursor: pointer;
 
   &:hover, &:active {
-    color: $whiteSeaBlue;
+    color: $mainBlue;
     text-decoration: none;
   }
 }
@@ -80,14 +81,14 @@ hr {
 }
 
 .btn-default {
-  background-color: $lightGray;
-  border-color: darken($lightGray, 5%);
-  color: $gray;
+  background-color: $lightGrey;
+  border-color: darken($lightGrey, 5%);
+  color: $grey;
 
   &:hover {
-    background-color: darken($lightGray, 5%);
-    border-color: darken($lightGray, 10%);
-    color: $darkGray;
+    background-color: darken($lightGrey, 5%);
+    border-color: darken($lightGrey, 10%);
+    color: $darkGrey;
   }
 }
 
@@ -113,18 +114,18 @@ hr {
 
 .btn-danger {
   background-color: $white;
-  border-color: darken($lightGray, 5%);
+  border-color: darken($lightGrey, 5%);
   color: $red;
-  /* background-color: $red; */
-  /* border-color: desat-dark($red); */
 
   &:hover {
     background-color: $red;
     border-color: desat-dark($red);
-    /* color: desat-dark($red); */
-    /* background-color: $whiteRed; */
-    /* border-color: darken($lightGray, 10%); */
   }
+}
+
+.btn-link {
+  border-color: transparent;
+  box-shadow: none;
 }
 
 .alert {
@@ -147,23 +148,26 @@ hr {
 .form-control {
   /* padding-left: 0; */
   /* padding-right: 0; */
-  border: none;
-  border-radius: 0px;
-  border-left: 3px solid $lighterSeaBlue;
-  background-color: $lightSeaBlue;
+  /* border: 1px solid $lightGrey; */
+  /* box-shadow: 0px 0px 3px $shadow; */
+  border: 1px solid $lightGrey;
+  border-radius: 2px;
+  /* border-left: 3px solid $lightGrey; */
+  background-color: $white;
   font-family: $regular;
   /* font-weight: bold; */
   font-size: 16px;
-  box-shadow: none;
-  color: white;
+  /* color: white; */
 
-  @include placeholder-color($whiteSeaBlue);
+  /* @include placeholder-color($whiteSeaBlue); */
 
   &:focus {
     outline: none;
-    box-shadow: none;
+    box-shadow: 0px 0px 3px $lightGrey;
+    /* box-shadow: none; */
+    /* box-shadow-color: $whiteSeaBlue; */
     border-color: $whiteSeaBlue;
-    background-color: $lighterSeaBlue;
+    /* background-color: $lighterSeaBlue; */
   }
 }
 
@@ -176,7 +180,7 @@ hr {
 
 .form-group {
   .control-label {
-    color: $whiteSeaBlue;
+    /* color: $whiteSeaBlue; */
     font-family: $thin;
   }
 
@@ -195,23 +199,23 @@ hr {
     }
 
     .form-control {
-      box-shadow: none;
-      border-color: $orange;
+      /* box-shadow: none; */
+      border-color: $lightOrange;
     }
 
     .feedback {
-      color: $lightOrange;
+      color: $orange;
     }
   }
 }
 
 .form-error-global {
-  color: $lightOrange;
+  color: $orange;
   padding: 10px 0;
 }
 
 label {
-  color: $white;
+  /* color: $white; */
   font-size: 16px;
 }
 

@@ -9,12 +9,12 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  color: $whiteSeaBlue;
+  color: $gray;
   font-family: $baseFont;
   font-size: 17px;
   line-height: 20px;
 
-  background-color: $seaBlue;
+  background-color: $smokeWhite;
 }
 
 body > div {
@@ -29,24 +29,9 @@ body > div {
 }
 
 main {
-  /* flex: 1; */
-
   & > .padded {
-    /* width: 800px; */
     padding: 40px;
-    /* opacity: 1; */
-    /* transition: opacity 0.1s ease-in-out; */
-
-    &.exit {
-      /* opacity: 0; */
-    }
-
-    &.enter {
-      
-    }
   }
-
-  
 }
 
 aside {
@@ -54,7 +39,9 @@ aside {
   display: flex;
   flex-direction: column;
   overflow-y: auto;
-  background-color: $darkerSeaBlue;
+  padding: 0 15px 15px 15px;
+  background-color: $seaBlue;
+  border-right: 5px solid $mainBlue;
 
   .logo {
     text-align: center;

@@ -3,13 +3,12 @@
 @import 'fonts';
 
 aside {
-  padding: 0 15px 15px 15px;
 
   .user-info {
     padding: 10px;
     font-size: 14px;
     text-align: center;
-    color: $seaBlue;
+    color: $whiteSmoke;
   }
 
   h2 {
@@ -20,8 +19,6 @@ aside {
     font-family: $serif;
     font-size: 21px;
     font-weight: normal;
-    /* padding: 10px; */
-    /* background-color: $darkSeaBlue; */
   }
 
   hr {
@@ -45,7 +42,7 @@ aside {
 
   .user-menu a, .logout a {
     display: block;
-    color: $whiteSeaBlue;
+    color: $whiteSmoke;
     text-transform: uppercase;
     text-decoration: none;
     font-family: $thin;
@@ -59,7 +56,7 @@ aside {
 
     &:hover {
       color: $white;
-      background-color: $darkSeaBlue;
+      background-color: $lightSeaBlue;
       border-color: $seaBlue;
     }
   }

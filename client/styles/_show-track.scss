@@ -8,7 +8,7 @@
     @include clearfix;
     margin-bottom: 30px;
     padding-bottom: 5px;
-    border-bottom: 2px solid $lightSeaBlue;
+    border-bottom: 2px solid $lightGrey;
 
     .track-name,
     .track-creator {
@@ -21,12 +21,13 @@
       font-family: $serif;
       font-weight: bold;
       font-size: 18px;
-      color: $white;
+      /* color: $white; */
     }
 
     .track-creator {
       margin-left: 5px;
       font-size: 18px;
+      color: $grey;
     }
 
     .btn-join {
@@ -78,6 +79,7 @@
 
       dt {
         width: 120px;
+        color: $whiteSeaBlue;
       }
 
       dd {
