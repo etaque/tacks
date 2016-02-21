@@ -29,6 +29,8 @@ mount route =
       taskRes initial listTopics
     ShowTopic id ->
       taskRes initial (showTopic id)
+    NewTopic ->
+      res initial none
 
 
 update : Action -> Model -> (Model, Effects Action)
@@ -52,24 +54,11 @@ update action model =
           -- TODO
           res model none
 
-    ToggleNewTopic ->
-      case model.newTopic of
-        Just _ ->
-          res { model | newTopic = Nothing } none
-        Nothing ->
-          let
-            newTopic = { title = "", content = "" }
-          in
-            res { model | newTopic = Just newTopic } none
 
     NewTopicAction a ->
-      case model.newTopic of
-        Just newTopic ->
-          NewTopic.update a newTopic
-            |> mapModel (\t -> { model | newTopic = Just t })
-            |> mapEffects NewTopicAction
-        Nothing ->
-          res model none
+      NewTopic.update a model.newTopic
+        |> mapModel (\t -> { model | newTopic = t })
+        |> mapEffects NewTopicAction
 
     ToggleNewPost ->
       case (model.currentTopic, model.newPost) of

@@ -9,7 +9,7 @@ import Page.Forum.NewPost.Model as NewPost
 type alias Model =
   { topics : List TopicWithUser
   , currentTopic : Maybe TopicWithPosts
-  , newTopic : Maybe NewTopic.Model
+  , newTopic : NewTopic.Model
   , newPost : Maybe NewPost.Model
   }
 
@@ -23,7 +23,7 @@ initial : Model
 initial =
   { topics = []
   , currentTopic = Nothing
-  , newTopic = Nothing
+  , newTopic = { title = "", content = "" }
   , newPost = Nothing
   }
 
@@ -32,7 +32,6 @@ type Action
   = ListResult (Result () (List TopicWithUser))
   | ShowResult (Result () (TopicWithPosts))
   | RefreshList
-  | ToggleNewTopic
   | ToggleNewPost
   | NewTopicAction NewTopic.Action
   | NewPostAction NewPost.Action

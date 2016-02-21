@@ -70,9 +70,14 @@
   }
 
   .forum-post {
+    margin-bottom: 10px;
+    background-color: $white;
+    border: 1px solid $lightGrey;
+
     .post-meta {
       padding: 10px;
-      /* background-color: $lightSeaBlue; */
+      background-color: $lightGrey;
+      color: $grey;
       /* border-bottom: 2px solid $lighterSeaBlue; */
 
       .handle {

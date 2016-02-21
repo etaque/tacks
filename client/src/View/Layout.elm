@@ -8,7 +8,7 @@ import Constants
 import Model.Shared exposing (Context)
 import Route
 
-import TransitStyle exposing (fadeSlideLeft)
+import TransitStyle
 
 
 layoutWithNav : String -> Context -> List Html -> Html
@@ -16,7 +16,7 @@ layoutWithNav name ctx content =
   let
     transitStyle =
       case ctx.routeTransition of
-        Route.ForMain -> (fadeSlideLeft 40 ctx.transition)
+        Route.ForMain -> (TransitStyle.fade ctx.transition)
         _ -> []
   in
     layout name
