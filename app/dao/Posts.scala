@@ -44,7 +44,7 @@ object Posts extends TableQuery(new PostTable(_)) {
     val updateTopic = sqlu"""
       UPDATE #${Topics.name}
       SET
-        posts_count = (SELECT COUNT(id) FROM #$name WHERE id = ${topic.id}),
+        posts_count = (SELECT COUNT(id) FROM #$name WHERE topic_id = ${topic.id}),
         activity_time = ${post.creationTime}
       WHERE id = ${topic.id}
       """
