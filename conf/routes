@@ -12,9 +12,9 @@ POST        /api/setHandle                                     controllers.Users
 GET         /api/live                                          controllers.Live.status
 GET         /api/live/:id                                      controllers.Live.track(id: java.util.UUID)
 
+GET         /api/tracks/drafts                                 controllers.Tracks.drafts()
 GET         /api/tracks/:id                                    controllers.Tracks.show(id: java.util.UUID)
 POST        /api/tracks                                        controllers.Tracks.createDraft()
-GET         /api/tracks/drafts                                 controllers.Tracks.drafts()
 POST        /api/tracks/:id                                    controllers.Tracks.update(id: java.util.UUID)
 POST        /api/tracks/:id/delete                             controllers.Tracks.delete(id: java.util.UUID)
 POST        /api/tracks/:id/publish                            controllers.Tracks.publish(id: java.util.UUID)
