@@ -73,9 +73,9 @@ update action model =
 
     ToggleNewPost ->
       case (model.currentTopic, model.newPost) of
-        (Just topicWithUser, Nothing) ->
+        (Just {topic}, Nothing) ->
           let
-            newPost = { topic = topicWithUser.topic, content = "" }
+            newPost = { topic = topic, content = "", loading = False }
           in
             res { model | newPost = Just newPost } none
         _ ->
@@ -84,9 +84,19 @@ update action model =
     NewPostAction a ->
       case model.newPost of
         Just newPost ->
-          NewPost.update a newPost
+          NewPost.update a addr newPost
             |> mapModel (\p -> { model | newPost = Just p })
             |> mapEffects NewPostAction
+        Nothing ->
+          res model none
+
+    AppendPost postWithUser ->
+      case model.currentTopic of
+        Just ({topic, postsWithUsers} as topicWithPosts) ->
+          let
+            newTopicWithPosts = { topicWithPosts | postsWithUsers = postsWithUsers ++ [ postWithUser ] }
+          in
+            res { model | currentTopic = Just newTopicWithPosts, newPost = Nothing } none
         Nothing ->
           res model none
 

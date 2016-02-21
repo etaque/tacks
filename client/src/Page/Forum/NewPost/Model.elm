@@ -7,6 +7,7 @@ import Page.Forum.Model.Shared exposing (..)
 type alias Model =
   { topic : Topic
   , content : String
+  , loading : Bool
   }
 
 
@@ -14,4 +15,5 @@ type Action
   = SetContent String
   | Submit
   | SubmitResult (FormResult PostWithUser)
+  | NoOp
 

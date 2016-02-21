@@ -6,6 +6,8 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
+import Markdown
+
 import Page.Forum.Model exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Update exposing (addr)
@@ -24,16 +26,20 @@ view model =
     Just {topic, postsWithUsers} ->
       container "forum-show-topic"
         [ h1 [] [ text topic.title ]
-        , div [ class "forum-topic-posts" ] (List.map renderPost postsWithUsers)
+        , div
+            [ class "forum-topic-posts" ]
+            (List.map renderPost postsWithUsers)
+        , hr [] []
+        , button
+            [ class "btn btn-primary toggle-new-post"
+            , onClick addr ToggleNewPost
+            ]
+            [ text "Reply" ]
         , case model.newPost of
-            Nothing ->
-              button
-                [ class "btn btn-primary"
-                , onClick addr ToggleNewPost
-                ]
-                [ text "Response" ]
             Just newPost ->
               NewPost.view (Signal.forwardTo addr NewPostAction) newPost
+            Nothing ->
+              text ""
         ]
 
 
@@ -48,6 +54,6 @@ renderPost {post, user} =
         ]
     , div
         [ class "post-content" ]
-        [ text post.content ]
+        [ Markdown.toHtml post.content ]
     ]
 

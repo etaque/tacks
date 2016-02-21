@@ -15,4 +15,5 @@ type Action
   | SetContent String
   | Submit
   | SubmitResult (FormResult Topic)
+  | NoOp
 

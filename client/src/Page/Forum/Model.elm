@@ -36,5 +36,6 @@ type Action
   | ToggleNewPost
   | NewTopicAction NewTopic.Action
   | NewPostAction NewPost.Action
+  | AppendPost PostWithUser
   | NoOp
 

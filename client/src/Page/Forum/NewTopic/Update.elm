@@ -4,8 +4,7 @@ import Task exposing (Task, succeed, andThen)
 import Signal
 import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
-import Json.Decode as Json
-import Json.Encode as JsEncode
+import Json.Encode as Json
 
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
@@ -13,28 +12,31 @@ import ServerApi exposing (getJson, postJson)
 
 
 update : Action -> Model -> Response Model Action
-update action ({title, content} as newTopic) =
+update action ({title, content} as model) =
   case action of
 
     SetTitle t ->
-      res { newTopic | title = t } none
+      res { model | title = t } none
 
     SetContent c ->
-      res { newTopic | content = c } none
+      res { model | content = c } none
 
     Submit ->
-      taskRes newTopic (createTopic newTopic)
+      taskRes model (createTopic model)
 
     SubmitResult result ->
-      res newTopic none
+      res model none
+
+    NoOp ->
+      res model none
 
 
 createTopic : Model -> Task Never Action
 createTopic {title, content} =
   let
-    body = JsEncode.object
-      [ ("title", JsEncode.string title)
-      , ("content", JsEncode.string content)
+    body = Json.object
+      [ ("title", Json.string title)
+      , ("content", Json.string content)
       ]
   in
     postJson topicDecoder "/api/forum/topics" body

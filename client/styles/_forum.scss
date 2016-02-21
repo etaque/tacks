@@ -68,6 +68,27 @@
     .post-content {
       padding: 10px;
     }
-    
+  }
+
+  .toggle-new-post {
+
+    &.active {
+    }
+  }
+
+  .form-new-post,
+  .form-new-topic {
+    margin: 20px 0;
+
+    textarea {
+      /* background-color: $lightSeaBlue; */
+      /* border: 2px solid $lighterSeaBlue; */
+      /* padding: 10px; */
+      height: 200px;
+    }
+
+    .preview {
+      /* min-height: 50px; */
+    }
   }
 }

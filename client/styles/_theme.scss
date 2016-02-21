@@ -42,6 +42,10 @@ a {
   }
 }
 
+hr {
+  border-top: 2px solid $lightSeaBlue;
+}
+
 .align-center {
   text-align: center;
 }
@@ -141,14 +145,14 @@ a {
 }
 
 .form-control {
-  padding-left: 0;
-  padding-right: 0;
+  /* padding-left: 0; */
+  /* padding-right: 0; */
   border: none;
-  border-radius: 0;
-  border-bottom: 2px solid $lighterSeaBlue;
-  background-color: transparent;
+  border-radius: 0px;
+  border-left: 3px solid $lighterSeaBlue;
+  background-color: $lightSeaBlue;
   font-family: $regular;
-  font-weight: bold;
+  /* font-weight: bold; */
   font-size: 16px;
   box-shadow: none;
   color: white;
@@ -159,6 +163,7 @@ a {
     outline: none;
     box-shadow: none;
     border-color: $whiteSeaBlue;
+    background-color: $lighterSeaBlue;
   }
 }
 

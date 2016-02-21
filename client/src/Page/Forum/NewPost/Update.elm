@@ -1,26 +1,40 @@
 module Page.Forum.NewPost.Update where
 
+import Signal exposing (Address)
 import Task exposing (Task, succeed, andThen)
 import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 import Json.Encode as JsEncode
 
 import Page.Forum.Decoders exposing (..)
+import Page.Forum.Model as Forum
 import Page.Forum.NewPost.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
 
 
-update : Action -> Model -> Response Model Action
-update action ({topic, content} as model) =
+update : Action -> Address Forum.Action -> Model -> Response Model Action
+update action forumAddr ({topic, content} as model) =
   case action of
 
     SetContent c ->
       res { model | content = c } none
 
     Submit ->
-      taskRes model (createPost model)
+      taskRes { model | loading = True } (createPost model)
 
     SubmitResult result ->
+      case result of
+        Ok postWithUser ->
+          let
+            task = Signal.send forumAddr (Forum.AppendPost postWithUser)
+              |> Task.map (\_ -> NoOp)
+          in
+            taskRes { model | loading = False, content = "" } task
+        Err _ ->
+          -- TODO tell error
+          res { model | loading = False } none
+
+    NoOp ->
       res model none
 
 

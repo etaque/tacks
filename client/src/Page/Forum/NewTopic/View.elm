@@ -6,14 +6,9 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
-import Date
-import Date.Format as DateFormat
+import Markdown
 
-import Route
-
-import Page.Forum.Route exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
--- import Page.Forum.Update exposing (addr)
 
 import View.Utils exposing (..)
 
@@ -37,6 +32,9 @@ view addr {title, content} =
         ]
         [  ]
       ]
+    , div
+        [ class "preview" ]
+        [ Markdown.toHtml content ]
     , div []
       [ button
         [ class "btn btn-primary"
