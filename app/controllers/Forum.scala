@@ -42,13 +42,13 @@ object Forum extends Controller with Security {
     Json.writes[UiPost]
 
 
-  def topics = PlayerAction.async() { implicit request =>
+  def topics = UserAction.async() { implicit request =>
     dao.Topics.listWithUser().map { topics =>
       Ok(Json.toJson(topics.map(UiTopic.tupled)))
     }
   }
 
-  def topic(id: UUID) = PlayerAction.async() { implicit request =>
+  def topic(id: UUID) = UserAction.async() { implicit request =>
     onTopic(id) { topic =>
       dao.Posts.listByTopicIdWithUser(id).map { postsWithUsers =>
         val json = Json.obj(
@@ -70,7 +70,7 @@ object Forum extends Controller with Security {
       (__ \ "content").read[String]
   )(CreateTopic.apply _)
 
-  def createTopic = PlayerAction.async(parse.json) { implicit request =>
+  def createTopic = UserAction.async(parse.json) { implicit request =>
     request.body.validate(createTopicReads).fold(
       errors => Future.successful(BadRequest(JsonErrors.format(errors))),
       {
@@ -88,7 +88,7 @@ object Forum extends Controller with Security {
           val post = Post(
             id = postId,
             topicId = topic.id,
-            userId = request.player.id,
+            userId = request.user.id,
             content = content,
             creationTime = now,
             updateTime = now
@@ -108,7 +108,7 @@ object Forum extends Controller with Security {
   implicit val createPostReads =
     (__ \ "content").read[String].map(CreatePost.apply _)
 
-  def createPost(topicId: UUID) = PlayerAction.async(parse.json) { implicit request =>
+  def createPost(topicId: UUID) = UserAction.async(parse.json) { implicit request =>
     onTopic(topicId) { topic =>
       request.body.validate(createPostReads).fold(
         errors => Future.successful(BadRequest(JsonErrors.format(errors))),
@@ -117,13 +117,13 @@ object Forum extends Controller with Security {
             val post = Post(
               id = UUID.randomUUID(),
               topicId = topicId,
-              userId = request.player.id,
+              userId = request.user.id,
               content = content,
               creationTime = DateTime.now,
               updateTime = DateTime.now
             )
             Posts.createOnTopic(post, topic).map { _ =>
-              Ok(Json.toJson(post))
+              Ok(Json.toJson(UiPost(post, request.user)))
             }
           }
         }
@@ -131,7 +131,7 @@ object Forum extends Controller with Security {
     }
   }
 
-  private def onTopic[A](id: UUID)(f: Topic => Future[Result])(implicit req: PlayerRequest[A]): Future[Result] = {
+  private def onTopic[A](id: UUID)(f: Topic => Future[Result])(implicit req: UserRequest[A]): Future[Result] = {
     dao.Topics.find(id).flatMap {
       case Some(topic) => f(topic)
       case None => Future.successful(NotFound)

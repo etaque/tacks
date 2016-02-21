@@ -15,6 +15,11 @@ case class PlayerRequest[A](
   request: Request[A]
 ) extends WrappedRequest(request)
 
+case class UserRequest[A](
+  user: User,
+  request: Request[A]
+) extends WrappedRequest(request)
+
 case class PlayerTrackRequest[A](
   player: Player,
   track: Track,
@@ -37,6 +42,27 @@ trait Security { this: Controller =>
       case u: User if u.isAdmin => f(u)
       case _ => Future.successful(Forbidden)
     }
+  }
+
+  object UserAction {
+    def getUser(implicit request: RequestHeader): Future[Option[User]] = {
+      request.session.get("playerId").flatMap(id => Try(UUID.fromString(id)).toOption) match {
+        case Some(id) => dao.Users.findById(id)
+        case None => Future.successful(None)
+      }
+    }
+
+    def async[A](bp: BodyParser[A] = parse.anyContent)(f: UserRequest[A] => Future[Result]): Action[A] =
+      Action.async(bp) { implicit request =>
+        getUser.flatMap {
+          case Some(user) => {
+            implicit val userRequest = UserRequest(user, request)
+            f(userRequest)
+          }
+          case None => Future.successful(Forbidden)
+        }
+      }
+
   }
 
   object PlayerAction {
