@@ -66,8 +66,8 @@ object Forum extends Controller with Security {
   )
 
   implicit val createTopicReads = (
-    (__ \ "title").read[String] and
-      (__ \ "content").read[String]
+    (__ \ "title").read[String](minLength[String](2)) and
+      (__ \ "content").read[String](minLength[String](2))
   )(CreateTopic.apply _)
 
   def createTopic = UserAction.async(parse.json) { implicit request =>
@@ -106,7 +106,7 @@ object Forum extends Controller with Security {
   )
 
   implicit val createPostReads =
-    (__ \ "content").read[String].map(CreatePost.apply _)
+    (__ \ "content").read[String](minLength[String](2)).map(CreatePost.apply _)
 
   def createPost(topicId: UUID) = UserAction.async(parse.json) { implicit request =>
     onTopic(topicId) { topic =>
