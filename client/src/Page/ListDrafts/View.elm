@@ -5,7 +5,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Maybe
 
-import Model exposing (..)
 import Model.Shared exposing (..)
 import Route exposing (..)
 

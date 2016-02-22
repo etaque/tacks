@@ -3,7 +3,7 @@ module Game.Outputs where
 import TransitRouter exposing (getRoute)
 
 import Model exposing (..)
-import Page.Game.Model exposing (..)
+import Page.Game.Model as GamePage
 import Game.Models exposing (..)
 import Game.Inputs exposing (..)
 import Route
@@ -15,19 +15,19 @@ type alias PlayerOutput =
   , localTime: Float
   }
 
-extractPlayerOutput : AppState -> AppAction -> Maybe PlayerOutput
-extractPlayerOutput appState action =
+extractPlayerOutput : Model -> Action -> Maybe PlayerOutput
+extractPlayerOutput model action =
   let
     keyboardInput =
       case action of
-        PageAction (GameAction (GameUpdate gameInput)) ->
+        PageAction (GameAction (GamePage.GameUpdate gameInput)) ->
           Just gameInput.keyboardInput
         _ ->
           Nothing
     gameState =
-      case getRoute appState of
+      case getRoute model of
         Route.PlayTrack _ ->
-          appState.pages.game.gameState
+          model.pages.game.gameState
         _ ->
           Nothing
   in
@@ -46,18 +46,18 @@ makePlayerOutput keyboardInput gameState =
     , localTime = gameState.timers.localTime
     }
 
-getActiveTrack : AppState -> Maybe String
-getActiveTrack appState =
-  case getRoute appState of
+getActiveTrack : Model -> Maybe String
+getActiveTrack model =
+  case getRoute model of
     Route.PlayTrack _ ->
-      Maybe.map (.track >> .id) appState.pages.game.liveTrack
+      Maybe.map (.track >> .id) model.pages.game.liveTrack
     _ ->
       Nothing
 
-needChatScrollDown : AppAction -> Maybe ()
+needChatScrollDown : Action -> Maybe ()
 needChatScrollDown action =
   case action of
-    PageAction (GameAction (NewMessage _)) ->
+    PageAction (GameAction (GamePage.NewMessage _)) ->
       Just ()
     _ ->
       Nothing

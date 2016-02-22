@@ -13,11 +13,10 @@ import TransitRouter
 
 import Update
 import Model exposing (..)
-import Game.Inputs exposing (..)
-import Game.Outputs exposing (PlayerOutput)
-import Game.Outputs exposing (PlayerOutput)
+import Game.Inputs as GameInputs
+import Game.Outputs as GameOutputs
 import Page.Game.Update exposing (chat)
-import Page.Game.Model as GameTypes
+import Page.Game.Model as GameModel
 import Page.EditTrack.Update as EditTrack
 import Page.Game.Decoders as GameDecoders
 import View
@@ -27,14 +26,14 @@ import View
 
 port appSetup : AppSetup
 
-port raceInput : Signal (Maybe RaceInput)
+port raceInput : Signal (Maybe GameInputs.RaceInput)
 
 port gameActionsInput : Signal Json.Value
 
 
 -- Wiring
 
-app : StartApp.App AppState
+app : StartApp.App Model
 app = StartApp.start
   { init = Update.init appSetup
   , update = Update.update
@@ -59,37 +58,37 @@ port tasks = app.tasks
 
 -- Complex signals
 
-rawInput : Signal (KeyboardInput, (Int, Int), Maybe RaceInput)
+rawInput : Signal (GameInputs.KeyboardInput, (Int, Int), Maybe GameInputs.RaceInput)
 rawInput =
-  Signal.map3 (,,) Game.Inputs.keyboardInput Window.dimensions raceInput
+  Signal.map3 (,,) GameInputs.keyboardInput Window.dimensions raceInput
 
-raceUpdateActions : Signal AppAction
+raceUpdateActions : Signal Action
 raceUpdateActions =
   Signal.sampleOn rawInput clock
-    |> Signal.map2 buildGameInput rawInput
-    |> Signal.filterMap (Maybe.map (GameTypes.GameUpdate >> GameAction >> PageAction)) Model.AppNoOp
+    |> Signal.map2 GameInputs.buildGameInput rawInput
+    |> Signal.filterMap (Maybe.map (GameModel.GameUpdate >> GameAction >> PageAction)) Model.NoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
 
-gameActions : Signal AppAction
+gameActions : Signal Action
 gameActions =
   Signal.map (GameDecoders.decodeAction >> GameAction >> PageAction) gameActionsInput
 
-clock : Signal Clock
+clock : Signal GameInputs.Clock
 clock =
   Signal.map (\ (time,delta) -> { time = time, delta = delta }) (timestamp (fps 30))
 
 
 -- Outputs
 
-port playerOutput : Signal (Maybe PlayerOutput)
+port playerOutput : Signal (Maybe GameOutputs.PlayerOutput)
 port playerOutput =
-  Signal.map2 Game.Outputs.extractPlayerOutput app.model raceUpdateActions
+  Signal.map2 GameOutputs.extractPlayerOutput app.model raceUpdateActions
     |> Signal.dropRepeats
 
 port activeTrack : Signal (Maybe String)
 port activeTrack =
-  Signal.map Game.Outputs.getActiveTrack app.model
+  Signal.map GameOutputs.getActiveTrack app.model
     |> Signal.dropRepeats
 
 port chatOutput : Signal String
@@ -98,4 +97,4 @@ port chatOutput =
 
 port chatScrollDown : Signal ()
 port chatScrollDown =
-  Signal.filterMap Game.Outputs.needChatScrollDown () gameActions
+  Signal.filterMap GameOutputs.needChatScrollDown () gameActions

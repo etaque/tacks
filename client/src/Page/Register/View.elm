@@ -9,7 +9,6 @@ import Form.Input as Input
 import Form
 
 import Model.Shared exposing (..)
-import Model exposing (..)
 import CoreExtra exposing (..)
 
 import Page.Register.Model exposing (..)

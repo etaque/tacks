@@ -5,16 +5,16 @@ import Signal
 import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 
-import Model exposing (..)
+import Model
 import Model.Shared exposing (..)
-import Page.Admin.Model as Types exposing (..)
+import Page.Admin.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
 import Update.Utils as Utils
 
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr AdminAction
+  Utils.pageAddr Model.AdminAction
 
 
 mount : (Model, Effects Action)

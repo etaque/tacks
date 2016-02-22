@@ -9,7 +9,7 @@ import Array
 import Response exposing (..)
 import Drag exposing (MouseEvent)
 
-import Model exposing (..)
+import Model
 import Model.Shared exposing (..)
 
 import Page.EditTrack.Model exposing (..)
@@ -27,7 +27,7 @@ import Hexagons.Grid as Grid
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr EditTrackAction
+  Utils.pageAddr Model.EditTrackAction
 
 
 inputs : Signal Action

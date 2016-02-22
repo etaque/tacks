@@ -8,7 +8,7 @@ import Response exposing (..)
 
 import Form
 
-import Model exposing (..)
+import Model
 import Page.Register.Model exposing (..)
 import ServerApi
 import Update.Utils as Utils
@@ -16,7 +16,7 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr RegisterAction
+  Utils.pageAddr Model.RegisterAction
 
 
 mount : (Model, Effects Action)

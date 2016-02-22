@@ -5,7 +5,7 @@ import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none)
 import Response exposing (..)
 
-import Model exposing (..)
+import Model
 import Page.Login.Model exposing (..)
 import ServerApi
 import Update.Utils as Utils
@@ -13,7 +13,7 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr LoginAction
+  Utils.pageAddr Model.LoginAction
 
 
 mount : (Model, Effects Action)

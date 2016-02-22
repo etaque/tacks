@@ -20,12 +20,12 @@ import Page.Admin.View as AdminPage
 import Route exposing (..)
 
 
-view : Signal.Address AppAction -> AppState -> Html
-view _ ({pages, player, dims, routeTransition} as appState) =
+view : Signal.Address Action -> Model -> Html
+view _ ({pages, player, dims, routeTransition} as model) =
   let
-    ctx = Context player dims (getTransition appState) routeTransition
+    ctx = Context player dims (getTransition model) routeTransition
   in
-    case (TransitRouter.getRoute appState) of
+    case (TransitRouter.getRoute model) of
 
       Home ->
         HomePage.view ctx pages.home

@@ -6,7 +6,6 @@ import Html.Events exposing (..)
 import Svg
 import Svg.Attributes as SvgAttr
 
-import Model exposing (..)
 import Model.Shared exposing (..)
 import Route exposing (..)
 

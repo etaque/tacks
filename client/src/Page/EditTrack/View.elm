@@ -5,7 +5,6 @@ import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
-import Model exposing (..)
 import Model.Shared exposing (..)
 
 import Page.EditTrack.Model exposing (..)

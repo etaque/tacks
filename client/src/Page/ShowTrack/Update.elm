@@ -7,7 +7,7 @@ import Drag exposing (mouseEvents, MouseEvent(..))
 import Response exposing (..)
 
 import Model.Shared exposing (..)
-import Model exposing (..)
+import Model
 import Page.ShowTrack.Model exposing (..)
 import ServerApi
 import Update.Utils as Utils
@@ -15,7 +15,7 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr ShowTrackAction
+  Utils.pageAddr Model.ShowTrackAction
 
 mount : String -> Response Model Action
 mount slug =

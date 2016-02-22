@@ -4,7 +4,7 @@ import Effects exposing (Effects, Never, none)
 import Task exposing (Task)
 import Response exposing (..)
 
-import Model exposing (..)
+import Model
 import Model.Shared exposing (..)
 import ServerApi
 import Route
@@ -15,7 +15,7 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr ListDraftsAction
+  Utils.pageAddr Model.ListDraftsAction
 
 
 mount : (Model, Effects Action)

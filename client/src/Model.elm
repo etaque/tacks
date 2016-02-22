@@ -22,11 +22,11 @@ import Route
 import TransitRouter exposing (WithRoute)
 
 
-appActionsMailbox : Signal.Mailbox AppAction
+appActionsMailbox : Signal.Mailbox Action
 appActionsMailbox =
-  Signal.mailbox AppNoOp
+  Signal.mailbox NoOp
 
-appActionsAddress : Signal.Address AppAction
+appActionsAddress : Signal.Address Action
 appActionsAddress =
   appActionsMailbox.address
 
@@ -44,20 +44,18 @@ type alias AppSetup =
   , dims : (Int, Int)
   }
 
-type alias AppResponse = Response AppState AppAction
-
 effect : a -> Effects a
 effect =
   Task.succeed >> Effects.task
 
-type AppAction
+type Action
   = SetPlayer Player
   | RouterAction (TransitRouter.Action Route.Route)
   | UpdateDims (Int, Int)
   | MouseEvent MouseEvent
   | PageAction PageAction
   | Logout
-  | AppNoOp
+  | NoOp
 
 
 type PageAction
@@ -73,7 +71,7 @@ type PageAction
   | AdminAction Admin.Action
 
 
-type alias AppState = WithRoute Route.Route
+type alias Model = WithRoute Route.Route
   { player : Player
   , dims : Dims
   , routeTransition : Route.RouteTransition
@@ -94,8 +92,8 @@ type alias Pages =
   }
 
 
-initialAppState : AppSetup -> AppState
-initialAppState { path, dims, player } =
+initialModel : AppSetup -> Model
+initialModel { path, dims, player } =
   { player = player
   , dims = dims
   , transitRouter = TransitRouter.empty Route.EmptyRoute

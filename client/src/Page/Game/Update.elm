@@ -11,7 +11,7 @@ import Result exposing (Result(Ok, Err))
 import Effects exposing (Effects, Never, none, tick)
 import Response exposing (..)
 
-import Model exposing (..)
+import Model
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
 import ServerApi
@@ -23,7 +23,7 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr GameAction
+  Utils.pageAddr Model.GameAction
 
 
 chat : Signal.Mailbox String

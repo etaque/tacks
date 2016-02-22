@@ -3,7 +3,7 @@ module Page.Forum.Update where
 import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 
-import Model exposing (..)
+import Model
 import Page.Forum.Model exposing (..)
 import Page.Forum.Route exposing (..)
 import Page.Forum.Index.Update as Index
@@ -14,7 +14,7 @@ import Update.Utils as Utils
 
 addr : Signal.Address Action
 addr =
-  Utils.pageAddr ForumAction
+  Utils.pageAddr Model.ForumAction
 
 
 mount : Route -> (Model, Effects Action)
