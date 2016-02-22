@@ -7,20 +7,20 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import Markdown
+import Date
+import Date.Format as DateFormat
 
 import Route
 
 import Page.Forum.Route exposing (..)
-import Page.Forum.Model exposing (..)
 import Page.Forum.Model.Shared exposing (..)
-import Page.Forum.Update exposing (addr)
-import Page.Forum.NewPost.View as NewPost
+import Page.Forum.ShowTopic.Model exposing (..)
 
 import View.Utils exposing (..)
 
 
-view : Model -> Html
-view model =
+view : Address Action -> Model -> Html
+view addr model =
   case model.currentTopic of
     Nothing ->
       container "forum-show-topic"
@@ -39,9 +39,9 @@ view model =
             , onClick addr ToggleNewPost
             ]
             [ text "Reply" ]
-        , case model.newPost of
-            Just newPost ->
-              NewPost.view (Signal.forwardTo addr NewPostAction) newPost
+        , case model.newPostContent of
+            Just content ->
+              newPost addr content model.loading
             Nothing ->
               text ""
         ]
@@ -62,10 +62,36 @@ renderPost {post, user} =
     [ div
         [ class "post-meta" ]
         [ div [ class "handle" ] [ text user.handle ]
-        , div [ class "time" ] [ text (toString post.creationTime) ]
+        , div [ class "time" ] [ text (DateFormat.format "%d %B %Y - %H:%I" (Date.fromTime post.creationTime)) ]
         ]
     , div
         [ class "post-content" ]
         [ Markdown.toHtml post.content ]
     ]
 
+
+newPost : Address Action ->  String -> Bool -> Html
+newPost addr content loading =
+  div [ class "form-new-post form-vertical" ]
+    [ div
+        [ class "form-group" ]
+        [ textarea
+          [ class "form-control"
+          , value content
+          , onInput addr SetContent
+          ]
+          [  ]
+        ]
+    , div
+        [ class "preview" ]
+        [ Markdown.toHtml content ]
+    , div
+        []
+        [ button
+          [ class "btn btn-default pull-right"
+          , disabled loading
+          , onClick addr Submit
+          ]
+          [ text "Submit" ]
+        ]
+    ]

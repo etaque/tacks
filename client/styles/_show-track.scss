@@ -7,7 +7,7 @@
   .track-header {
     @include clearfix;
     margin-bottom: 30px;
-    padding-bottom: 5px;
+    padding-bottom: 3px;
     border-bottom: 2px solid $lightGrey;
 
     .track-name,
@@ -42,7 +42,8 @@
       user-select: none;
       -moz-user-select: none;
       background-color: $sand;
-      border: 5px solid $whiteSeaBlue;
+      border: 5px solid $white;
+      box-shadow: 1px 1px 2px $shadow;
     }
   }
 
@@ -66,7 +67,11 @@
     dl {
       padding: 8px 12px;
       background-color: $lightSeaBlue;
-      font-size: 15px;
+      @include gradient-directional($seaBlue, $lightSeaBlue, -30deg);
+      border: 5px solid $white;
+      box-shadow: 1px 1px 2px $shadow;
+      /* border-radius: 5px; */
+      /* font-size: 15px; */
       font-family: $mono;
 
       abbr {

@@ -12,15 +12,14 @@ import Date.Format as DateFormat
 import Route
 
 import Page.Forum.Route exposing (..)
-import Page.Forum.Model exposing (..)
 import Page.Forum.Model.Shared exposing (..)
-import Page.Forum.Update exposing (addr)
+import Page.Forum.Index.Model exposing (..)
 
 import View.Utils exposing (..)
 
 
-view : Model -> Html
-view ({topics} as model) =
+view : Address Action -> Model -> Html
+view addr ({topics} as model) =
   container "forum-index"
     [ linkTo
         (Route.Forum NewTopic)

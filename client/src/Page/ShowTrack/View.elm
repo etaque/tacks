@@ -37,13 +37,12 @@ withLiveTrack control {track, meta, players} =
   , div [ class "track-header" ]
     [ h2 [ class "track-name" ] [ text track.name ]
     , div [ class "track-creator" ] [ text "by ", strong [] [ text <| playerHandle meta.creator ] ]
-    , joinButton track
     ]
   , row
     [ div [ class "col-md-8" ] [ courseBlock control track.course ]
     , div [ class "col-md-4 about" ]
-      [ h2 [] [ text "About" ]
-      , about track meta
+      [ about track meta
+      , joinButton track
       ]
     ]
   , row
@@ -56,7 +55,7 @@ withLiveTrack control {track, meta, players} =
 
 joinButton : Track -> Html
 joinButton track =
-  linkTo (PlayTrack track.id) [ class "btn btn-warning btn-sm btn-join" ]
+  linkTo (PlayTrack track.id) [ class "btn btn-warning btn-block btn-join" ]
   [ text "Join" ]
 
 rankingsList : List Ranking -> Html

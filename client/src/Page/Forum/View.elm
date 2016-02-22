@@ -7,7 +7,6 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 
 import Model.Shared exposing (Context)
-import Route
 
 import Page.Forum.Route exposing (..)
 import Page.Forum.Model exposing (..)
@@ -26,9 +25,9 @@ view ctx route model =
     subView =
       case route of
         Index ->
-          Index.view model
+          Index.view (Signal.forwardTo addr IndexAction) model.index
         ShowTopic _ ->
-          ShowTopic.view model
+          ShowTopic.view (Signal.forwardTo addr ShowTopicAction) model.showTopic
         NewTopic ->
           NewTopic.view (Signal.forwardTo addr NewTopicAction) model.newTopic
   in

@@ -1,16 +1,15 @@
 module Page.Forum.Model where
 
 import Page.Forum.Route exposing (..)
-import Page.Forum.Model.Shared exposing (..)
+import Page.Forum.Index.Model as Index
 import Page.Forum.NewTopic.Model as NewTopic
-import Page.Forum.NewPost.Model as NewPost
+import Page.Forum.ShowTopic.Model as ShowTopic
 
 
 type alias Model =
-  { topics : List TopicWithUser
-  , currentTopic : Maybe TopicWithPosts
+  { index : Index.Model
+  , showTopic : ShowTopic.Model
   , newTopic : NewTopic.Model
-  , newPost : Maybe NewPost.Model
   }
 
 
@@ -21,20 +20,15 @@ initialRoute =
 
 initial : Model
 initial =
-  { topics = []
-  , currentTopic = Nothing
-  , newTopic = { title = "", content = "" }
-  , newPost = Nothing
+  { index = Index.initial
+  , newTopic = NewTopic.initial
+  , showTopic = ShowTopic.initial
   }
 
 
 type Action
-  = ListResult (Result () (List TopicWithUser))
-  | ShowResult (Result () (TopicWithPosts))
-  | RefreshList
-  | ToggleNewPost
+  = IndexAction Index.Action
   | NewTopicAction NewTopic.Action
-  | NewPostAction NewPost.Action
-  | AppendPost PostWithUser
+  | ShowTopicAction ShowTopic.Action
   | NoOp
 

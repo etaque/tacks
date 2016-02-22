@@ -6,19 +6,16 @@
 
 h1 {
   font-family: $serif;
-  /* font-size: 42px; */
   margin-top: 0;
   margin-bottom: 20px;
-  /* color: $white; */
-  /* color: $mainBlue; */
 }
 
 h2 {
   font-size: 24px;
-  font-family: $thin;
+  /* font-family: $thin; */
+  font-family: $serif;
   margin-top: 0;
   margin-bottom: 20px;
-  /* color: $white; */
 }
 
 h3, h4, h5, h6 {
@@ -29,7 +26,7 @@ h3, h4, h5, h6 {
 }
 
 h3 {
-  font-size: 18px;
+  font-size: 16px;
 }
 
 a {
@@ -146,28 +143,16 @@ hr {
 }
 
 .form-control {
-  /* padding-left: 0; */
-  /* padding-right: 0; */
-  /* border: 1px solid $lightGrey; */
-  /* box-shadow: 0px 0px 3px $shadow; */
-  border: 1px solid $lightGrey;
+  border: 1px solid #ccc;
   border-radius: 2px;
-  /* border-left: 3px solid $lightGrey; */
   background-color: $white;
   font-family: $regular;
-  /* font-weight: bold; */
-  font-size: 16px;
-  /* color: white; */
-
-  /* @include placeholder-color($whiteSeaBlue); */
+  font-size: 15px;
 
   &:focus {
     outline: none;
     box-shadow: 0px 0px 3px $lightGrey;
-    /* box-shadow: none; */
-    /* box-shadow-color: $whiteSeaBlue; */
-    border-color: $whiteSeaBlue;
-    /* background-color: $lighterSeaBlue; */
+    border-color: $mainBlue;
   }
 }
 
@@ -180,7 +165,6 @@ hr {
 
 .form-group {
   .control-label {
-    /* color: $whiteSeaBlue; */
     font-family: $thin;
   }
 
@@ -214,10 +198,7 @@ hr {
   padding: 10px 0;
 }
 
-label {
-  /* color: $white; */
-  font-size: 16px;
-}
+label {}
 
 .label {
   font-family: $thin;
@@ -261,8 +242,3 @@ label {
   @include players-list;
 }
 
-.form-login {
-  .form-group {
-    /* width: 250px; */
-  }
-}

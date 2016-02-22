@@ -1,10 +1,11 @@
 module Page.Forum.NewTopic.Update where
 
 import Task exposing (Task, succeed, andThen)
-import Signal
 import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 import Json.Encode as Json
+
+import Form
 
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
@@ -12,26 +13,26 @@ import ServerApi exposing (getJson, postJson)
 
 
 update : Action -> Model -> Response Model Action
-update action ({title, content} as model) =
+update action ({form, loading} as model) =
   case action of
 
-    SetTitle t ->
-      res { model | title = t } none
+    FormAction fa ->
+      let
+        newForm = Form.update fa model.form
+      in
+        res { model | form = newForm } none
 
-    SetContent c ->
-      res { model | content = c } none
-
-    Submit ->
-      taskRes model (createTopic model)
+    Submit newTopic ->
+      taskRes { model | loading = True } (createTopic newTopic)
 
     SubmitResult result ->
-      res model none
+      res { model | loading = False } none
 
     NoOp ->
       res model none
 
 
-createTopic : Model -> Task Never Action
+createTopic : NewTopic -> Task Never Action
 createTopic {title, content} =
   let
     body = Json.object

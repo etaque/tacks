@@ -18,15 +18,15 @@ import View.Layout as Layout
 view : Context -> Model -> Html
 view ctx model =
   Layout.layoutWithNav "home" ctx
-  [ container ""
-    [ intro
-    , welcomeForm ctx.player model.handle
-    , div [ class "row live-center"]
-      [ div [ class "col-md-9" ] [ liveTracks ctx.player model.liveStatus model.trackFocus ]
-      , div [ class "col-md-3" ] [ activePlayers model.liveStatus.liveTracks ]
-      ]
+    [ container ""
+        [ intro
+        , welcomeForm ctx.player model.handle
+        , div [ class "row live-center"]
+            [ div [ class "col-md-9" ] [ liveTracks ctx.player model.liveStatus model.trackFocus ]
+            , div [ class "col-md-3" ] [ activePlayers model.liveStatus.liveTracks ]
+            ]
+        ]
     ]
-  ]
 
 intro : Html
 intro =
@@ -79,20 +79,22 @@ liveTrackBlock maybeTrackId ({track, meta, players} as lt) =
     div [ class "col-md-6" ]
       [ div
           [ classList [ ("live-track", True), ("has-focus", hasFocus), ("is-empty", empty) ] ]
-        [ h3 []
-          [ linkTo (ShowTrack track.id) [ class "name", title track.name ] [ text track.name ]
+          [ div [ class "info"]
+              [ h3 []
+                  [ linkTo (ShowTrack track.id) [ class "name", title track.name ] [ text track.name ]
+                  ]
+              , rankingsExtract meta.rankings
+              , div
+                  [ class "rankings-size"]
+                  [ text <| toString (List.length meta.rankings) ++ " entries" ]
+              ]
+          , linkTo (PlayTrack track.id)
+              [ class <| "btn btn-block btn-join btn-" ++ if empty then "default" else "warning"
+              , onMouseOver addr (FocusTrack (Just track.id))
+              , onMouseOut addr (FocusTrack Nothing)
+              ]
+              [ text <| "Play" ++ if empty then "" else " (" ++ toString (List.length players) ++ ")" ]
           ]
-        , div [ class "info"]
-          [ rankingsExtract meta.rankings
-          , div [ class "rankings-size"] [ text <| toString (List.length meta.rankings) ++ " entries" ]
-          ]
-        , linkTo (PlayTrack track.id)
-            [ class <| "btn btn-block btn-join btn-" ++ if empty then "default" else "warning"
-            , onMouseOver addr (FocusTrack (Just track.id))
-            , onMouseOut addr (FocusTrack Nothing)
-            ]
-          [ text <| "Join" ++ if empty then "" else " (" ++ toString (List.length players) ++ ")" ]
-        ]
       ]
 
 rankingsExtract : List Ranking -> Html
@@ -118,10 +120,11 @@ activePlayers liveTracks =
 
 activeTrackPlayers : LiveTrack -> Html
 activeTrackPlayers {track, players} =
-  div [ class "active-track-players" ]
-  [ h4 [] [ linkTo (PlayTrack track.id) [] [ text track.name ] ]
-  , playersList players
-  ]
+  div
+    [ class "active-track-players" ]
+    [ h4 [] [ linkTo (PlayTrack track.id) [] [ text track.name ] ]
+    , playersList players
+    ]
 
 playersList : List Player -> Html
 playersList players =

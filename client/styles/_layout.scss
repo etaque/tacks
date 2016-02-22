@@ -9,9 +9,9 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
-  color: $gray;
+  color: $grey;
   font-family: $baseFont;
-  font-size: 17px;
+  font-size: 15px;
   line-height: 20px;
 
   background-color: $smokeWhite;
@@ -26,6 +26,7 @@ body > div {
   flex: 1;
   display: flex;
   flex-direction: row;
+  @include gradient-directional($smokeWhite, #EEE, -30deg);
 }
 
 main {
@@ -40,7 +41,8 @@ aside {
   flex-direction: column;
   overflow-y: auto;
   padding: 0 15px 15px 15px;
-  background-color: $seaBlue;
+  /* background-color: $seaBlue; */
+  @include gradient-directional($darkSeaBlue, $seaBlue, -30deg);
   border-right: 5px solid $mainBlue;
 
   .logo {

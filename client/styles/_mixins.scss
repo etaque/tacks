@@ -49,6 +49,18 @@
   filter: progid:DXImageTransform.Microsoft.gradient(GradientType=0,StartColorStr='#{$fromColor}', EndColorStr='#{$toColor}');
 }
 
+@mixin gradient-directional($start-color, $end-color, $deg) {
+  background-repeat: repeat-x;
+  background-image: -webkit-linear-gradient($deg, $start-color, $end-color); // Safari 5.1-6, Chrome 10+
+  background-image: -o-linear-gradient($deg, $start-color, $end-color); // Opera 12
+  background-image: linear-gradient($deg, $start-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
+}
+
+@mixin blue-box {
+  background-color: $lightSeaBlue;
+  border: 5px solid white;
+  box-shadow: 1px 1px 1px $shadow inset;
+}
 
 @mixin players-list {
   /* padding: 5px; */
