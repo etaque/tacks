@@ -1,15 +1,17 @@
 module Game.Render.Tiles where
 
-import Constants exposing (..)
-import Model.Shared exposing (..)
+import String
+import Color
+import Color.Mixing as Mix
+import Svg exposing (..)
+import Svg.Attributes exposing (..)
+import Svg.Lazy exposing (..)
 
 import Hexagons
 import Hexagons.Grid as Grid
 
-import String
-import Svg exposing (..)
-import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
+import Constants exposing (..)
+import Model.Shared exposing (..)
 
 
 lazyRenderTiles : Grid -> Svg
@@ -27,7 +29,7 @@ renderTile : Tile -> Svg
 renderTile {content, coords} =
   let
     (x,y) = Hexagons.axialToPoint hexRadius coords
-    color = tileKindColor content
+    color = tileKindColor content coords
   in
     polygon
       [ points verticesPoints
@@ -38,12 +40,21 @@ renderTile {content, coords} =
       ]
       []
 
-tileKindColor : TileKind -> String
-tileKindColor kind =
+tileKindColor : TileKind -> Coords -> String
+tileKindColor kind (x,y) =
   case kind of
-    Water -> colors.water
     Grass -> colors.grass
     Rock -> colors.rock
+    Water ->
+      let
+        pseudoRandom = (toFloat (x*y + x*2 + y*2)) * pi |> round
+        factor = toFloat (pseudoRandom % 20 - 10) / 200
+        {red, green, blue} = seaBlue
+          |> Mix.spin factor
+          |> Color.toRgb
+        colors = List.map toString [ red, green, blue ] |> String.join(",")
+      in
+        "rgb(" ++ colors ++ ")"
 
 verticesPoints : String
 verticesPoints =

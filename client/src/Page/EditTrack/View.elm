@@ -14,7 +14,7 @@ import View.Layout as Layout
 import Game.Geo exposing (floatify)
 import Game.Render.SvgUtils exposing (..)
 
-import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles, tileKindColor)
+import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles)
 import Game.Render.Gates exposing (renderOpenGate)
 import Game.Render.Players exposing (renderPlayerHull)
 

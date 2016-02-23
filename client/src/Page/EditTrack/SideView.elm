@@ -174,7 +174,7 @@ renderSurfaceMode currentMode mode =
   let
     color = case mode of
       CreateTile kind ->
-        tileKindColor kind
+        tileKindColor kind (0,0)
       Erase ->
         colors.sand
       Watch ->

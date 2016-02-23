@@ -26,6 +26,7 @@
         "evancz/elm-svg": "2.0.1 <= v < 3.0.0",
         "evancz/start-app": "2.0.2 <= v < 3.0.0",
         "jvoigtlaender/elm-drag": "1.0.0 <= v < 2.0.0",
+        "mdgriffith/elm-color-mixing": "1.0.2 <= v < 2.0.0",
         "mgold/elm-date-format": "1.0.2 <= v < 2.0.0"
     },
     "elm-version": "0.16.0 <= v < 0.17.0"

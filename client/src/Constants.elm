@@ -1,5 +1,8 @@
 module Constants where
 
+import Color exposing (Color)
+
+
 sidebarWidth = 280
 
 containerWidth = 940
@@ -14,6 +17,10 @@ colors =
   , rock = "rgb(171, 196, 198)"
   , green = "rgb(100, 180, 106)"
   }
+
+seaBlue : Color
+seaBlue =
+  Color.rgb 33 148 206
 
 hexRadius : Float
 hexRadius = 50
