@@ -16,10 +16,8 @@ trait ManageWind {
 
   def generateGust() = {
     val gen = course.gustGenerator
-    val c = clock
-    val cs = c / 1000
     val gust = Gust(
-      position = (course.area.genX(cs * creationTime.getMillis + creationTime.getMillis, 100), course.area.top),
+      position = (course.area.genX(creationTime.getMillis, 100), course.area.top),
       angle = gen.generateOrigin(),
       speed = gen.generateSpeed(),
       radius = 0,
