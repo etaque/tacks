@@ -19,7 +19,7 @@ import Svg.Attributes exposing (..)
 
 renderCourse : GameState -> Svg
 renderCourse ({playerState,course,gusts,timers,wind} as gameState) =
-  g [ ]
+  g [ class "course" ]
     [ lazyRenderTiles course.grid
     , renderTiledGusts gusts
     -- , renderGusts wind
@@ -30,14 +30,14 @@ renderCourse ({playerState,course,gusts,timers,wind} as gameState) =
 
 renderTiledGusts : TiledGusts -> Svg
 renderTiledGusts {gusts} =
-  g [] (List.map renderTiledGust gusts)
+  g [ class "tiled-gusts" ] (List.map renderTiledGust gusts)
 
 renderTiledGust : TiledGust -> Svg
 renderTiledGust {tiles} =
   tiles
     |> Dict.toList
     |> List.map renderGustTile
-    |> g []
+    |> g [ class "tiled-gust" ]
 
 renderGustTile : (Coords, GustTile) -> Svg
 renderGustTile (coords, {angle, speed}) =
@@ -57,21 +57,21 @@ renderGustTile (coords, {angle, speed}) =
       []
 
 
-renderGusts : Wind -> Svg
-renderGusts wind =
-  g [] (List.map renderGust wind.gusts)
+-- renderGusts : Wind -> Svg
+-- renderGusts wind =
+--   g [ class "circle-gusts" ] (List.map renderGust wind.gusts)
 
-renderGust : Gust -> Svg
-renderGust gust =
-  let
-    a = 0.3 * (abs gust.speed) / 10
-    color = if gust.speed > 0 then "black" else "white"
-  in
-    circle
-      [ r (toString gust.radius)
-      , fill color
-      , fillOpacity (toString a)
-      , transform (translatePoint gust.position)
-      ] []
+-- renderGust : Gust -> Svg
+-- renderGust gust =
+--   let
+--     a = 0.3 * (abs gust.speed) / 10
+--     color = if gust.speed > 0 then "black" else "white"
+--   in
+--     circle
+--       [ r (toString gust.radius)
+--       , fill color
+--       , fillOpacity (toString a)
+--       , transform (translatePoint gust.position)
+--       ] []
 
 

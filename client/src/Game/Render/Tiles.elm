@@ -23,7 +23,7 @@ renderTiles grid =
   let
     tiles = List.map renderTile (Grid.list grid)
   in
-    g [ ] tiles
+    g [ class "tiles" ] tiles
 
 renderTile : Tile -> Svg
 renderTile {content, coords} =

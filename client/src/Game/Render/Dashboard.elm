@@ -15,18 +15,24 @@ import Svg.Attributes exposing (..)
 
 renderDashboard : (Int,Int) -> GameState -> Svg
 renderDashboard (w,h) ({playerState} as gameState) =
-  g [ ]
-    [ g [ transform (translate (w // 2) 120)]
+  g [ class "dashboard" ]
+    [ g [ class "status"
+        , transform (translate (w // 2) 120)
+        ]
         [ Status.render gameState ]
 
-    , g [ transform (translate (toFloat w / 2) 30) ]
+    , g [ class "wind-origin"
+        , transform (translate (toFloat w / 2) 30)
+        ]
         [ WindOriginGauge.render h playerState.windOrigin ]
 
-    , g [ transform (translate 30 30)]
+    , g [ class "wind-speed"
+        , transform (translate 30 30)
+        ]
         [ WindSpeedGraph.render gameState.timers.now playerState.windSpeed gameState.windHistory ]
 
-    , g [ transform (translate (toFloat w - VmgBar.barWidth - 40) 40)]
+    , g [ class "vmg"
+        , transform (translate (toFloat w - VmgBar.barWidth - 40) 40)
+        ]
         [ VmgBar.render gameState.playerState ]
     ]
-
-

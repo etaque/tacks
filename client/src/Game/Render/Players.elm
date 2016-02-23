@@ -16,7 +16,7 @@ import List exposing (..)
 
 renderPlayers : GameState -> Svg
 renderPlayers ({playerState,opponents,ghosts,course,center} as gameState) =
-  g [ ]
+  g [ class "players" ]
     [ renderOpponents course opponents
     -- , renderGhosts ghosts
     , renderPlayer course playerState
@@ -24,7 +24,7 @@ renderPlayers ({playerState,opponents,ghosts,course,center} as gameState) =
 
 renderOpponents : Course -> List Opponent -> Svg
 renderOpponents course opponents =
-  g [ ] (map renderOpponent opponents)
+  g [ class "opponents" ] (map renderOpponent opponents)
 
 
 renderOpponent : Opponent -> Svg
@@ -39,7 +39,7 @@ renderOpponent {state,player} =
       ]
       [ text (Maybe.withDefault "Anonymous" player.handle) ]
   in
-    g [ ] [ shadow, hull, name ]
+    g [ class "opponent" ] [ shadow, hull, name ]
 
 renderPlayer : Course -> PlayerState -> Svg
 renderPlayer course state =
@@ -55,7 +55,7 @@ renderPlayer course state =
     wake = renderWake state.trail
   in
     g
-      [ ]
+      [ class "player" ]
       [ wake, windShadow, nextGateLine, movingPart ]
 
 renderPlayerHull : Float -> Float -> Svg
