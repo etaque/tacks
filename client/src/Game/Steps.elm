@@ -51,13 +51,16 @@ raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
       Nothing ->
         time - clientTime
 
-    compensedServerNow = serverNow - (rtd / 2)
+    now = serverNow
 
-    now = case timers.serverNow of
-      Just previousServerNow ->
-        min (previousServerNow + delta) compensedServerNow
-      Nothing ->
-        compensedServerNow
+    -- compensedServerNow = serverNow - (rtd / 2)
+
+    -- now = case timers.serverNow of
+    --   Just previousServerNow ->
+    --     min (previousServerNow + delta) compensedServerNow
+    --   Nothing ->
+    --     compensedServerNow
+    -- _ = Debug.log "now" now
 
     updatedOpponents = updateOpponents gameState.opponents delta opponents
 
