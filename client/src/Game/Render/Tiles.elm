@@ -48,7 +48,7 @@ tileKindColor kind (x,y) =
     Water ->
       let
         pseudoRandom = (toFloat (x*y + x*2 + y*2)) * pi |> round
-        factor = toFloat (pseudoRandom % 20 - 10) / 200
+        factor = toFloat (pseudoRandom % 20 - 10) / 400
         {red, green, blue} = seaBlue
           |> Mix.spin factor
           |> Color.toRgb
