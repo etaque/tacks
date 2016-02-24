@@ -16,12 +16,14 @@ trait ManageWind {
 
   def generateGust() = {
     val gen = course.gustGenerator
+    val maxRadius = gen.generateRadius()
+    val xSeed = Math.abs(clock * creationTime.getMillis * Math.PI)
     val gust = Gust(
-      position = (course.area.genX(creationTime.getMillis, 100), course.area.top),
+      position = (course.area.genX(xSeed), course.area.top),
       angle = gen.generateOrigin(),
       speed = gen.generateSpeed(),
-      radius = 0,
-      maxRadius = gen.generateRadius(),
+      radius = maxRadius,
+      maxRadius = maxRadius,
       spawnedAt = clock
     )
     wind = wind.copy(gusts = wind.gusts :+ gust, gustCounter = wind.gustCounter + 1)

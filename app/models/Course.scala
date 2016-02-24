@@ -54,13 +54,9 @@ case class RaceArea(rightTop: Point, leftBottom: Point) {
   lazy val cy = (top + bottom) / 2
   lazy val center = (cx, cy)
 
-  def genX(seed: Double, margin: Double): Double = {
+  def genX(seed: Double, margin: Double = 0): Double = {
     val effectiveWidth = width - margin * 2
     seed % effectiveWidth - effectiveWidth / 2 + cx
-  }
-  def genY(seed: Double, margin: Double): Double = {
-    val effectiveHeight = height - margin * 2
-    seed % effectiveHeight - effectiveHeight / 2 + cy
   }
 }
 
@@ -98,7 +94,7 @@ case class GustGenerator(
 ) {
   def generateSpeed() = Random.shuffle(speedVariation.toList).headOption.getOrElse(0)
   def generateOrigin() = Random.shuffle(originVariation.toList).headOption.getOrElse(0)
-  def generateRadius() = min(radiusBase + Random.nextInt(radiusVariation) - radiusVariation / 2, GustGenerator.minRadius)
+  def generateRadius() = max(radiusBase + Random.nextInt(radiusVariation) - radiusVariation / 2, GustGenerator.minRadius)
 }
 
 object GustGenerator {
