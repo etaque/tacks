@@ -25,9 +25,9 @@ CREATE TABLE runs (
   track_id          UUID        NOT NULL,
   race_id           UUID        NOT NULL,
   player_id         UUID        NOT NULL,
-  player_handle     UUID        NOT NULL,
+  player_handle     TEXT        NULL,
   start_time        TIMESTAMPTZ NOT NULL,
-  tally             BIGINT[]    NOT NULL,
+  tally             JSONB       NOT NULL,
   duration          BIGINT      NOT NULL
 );
 

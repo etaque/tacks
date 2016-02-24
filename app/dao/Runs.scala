@@ -9,8 +9,14 @@ import DB.api._
 import models._
 import models.JsonFormats.courseFormat
 
+object RunMappings {
+  implicit val tallyColumn =
+    MappedColumnType.base[Seq[Long], JsValue](Json.toJson(_), _.as[Seq[Long]])
+}
 
 class RunTable(tag: Tag) extends Table[Run](tag, "runs") {
+  import RunMappings._
+
   def id = column[UUID]("id", O.PrimaryKey)
   def trackId = column[UUID]("track_id")
   def raceId = column[UUID]("race_id")
@@ -24,6 +30,7 @@ class RunTable(tag: Tag) extends Table[Run](tag, "runs") {
 }
 
 object Runs extends TableQuery(new RunTable(_)) {
+  import RunMappings._
 
   def listRecent(trackId: UUID, count: Int): Future[Seq[Run]] = DB.run {
     onTrack(trackId).sortBy(_.startTime.desc).take(count).result
