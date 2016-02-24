@@ -58,7 +58,7 @@
 
 @mixin blue-box {
   background-color: $lightSeaBlue;
-  border: 5px solid white;
+  border: 5px solid $whiteSeaBlue;
   box-shadow: 1px 1px 1px $shadow inset;
 }
 

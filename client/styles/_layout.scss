@@ -26,7 +26,7 @@ body > div {
   flex: 1;
   display: flex;
   flex-direction: row;
-  @include gradient-directional($smokeWhite, #EEE, -30deg);
+  /* @include gradient-directional($smokeWhite, #EEE, -30deg); */
 }
 
 main {
@@ -44,6 +44,7 @@ aside {
   /* background-color: $seaBlue; */
   @include gradient-directional($darkSeaBlue, $seaBlue, -30deg);
   border-right: 5px solid $mainBlue;
+  color: $white;
 
   .logo {
     text-align: center;
@@ -54,10 +55,6 @@ aside {
         height: auto;
       }
     }
-  }
-
-  .aside-module {
-    width: 250px;
   }
 
 }

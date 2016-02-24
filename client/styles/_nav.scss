@@ -13,12 +13,13 @@ aside {
 
   h2 {
     margin: 0;
+    margin-bottom: 10px;
+    padding: 5px 10px;
+    background-color: $lightSeaBlue;
+    color: $white;
+    box-shadow: 1px 1px 1px $shadow;
     text-align: center;
-    color: $whiteSeaBlue;
-    text-decoration: none;
-    font-family: $serif;
-    font-size: 21px;
-    font-weight: normal;
+    font-size: 18px;
   }
 
   hr {
@@ -31,11 +32,9 @@ aside {
     padding: 0;
     padding-top: 10px;
     margin: 30px 0 5px 0;
-    /* border-top: 2px solid $darkSeaBlue; */
   }
 
   .logout {
-    /* border-top: 2px solid $darkSeaBlue; */
     margin: 0 0 5px 0;
     padding-top: 10px;
   }
@@ -45,7 +44,6 @@ aside {
     padding: 10px 15px;
     margin-bottom: 5px;
     color: $whiteSmoke;
-    /* border-radius: 5px; */
     text-transform: uppercase;
     text-decoration: none;
     font-family: $thin;
@@ -53,12 +51,10 @@ aside {
     line-height: 24px;
     font-weight: bold;
     letter-spacing: 1px;
-    /* border-left: 3px solid transparent; */
 
     &:hover {
       color: $white;
       background-color: $shadow;
-      /* border-color: $seaBlue; */
       box-shadow: 1px 1px 1px $shadow inset;
     }
   }

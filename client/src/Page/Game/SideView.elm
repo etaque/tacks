@@ -28,21 +28,21 @@ view model liveTrack gameState =
 
 trackNav : LiveTrack -> Html
 trackNav liveTrack =
-  div [ class "track-menu" ]
-    [ hr'
-    , h2 [] [ text liveTrack.track.name ]
-    , hr'
-    ]
+  div
+    [ class "track-menu" ]
+    [ h2 [] [ text liveTrack.track.name ] ]
 
 
 draftBlocks : LiveTrack -> List Html
 draftBlocks {track} =
-  [ p [ class "draft-warning" ]
-    [ text "This is a draft, you're the only one seeing this race track." ]
-  , div [ class "form-actions" ]
-    [ linkTo (EditTrack track.id) [ class "btn btn-block btn-primary" ]
-      [ text "Edit draft" ]
-    ]
+  [ p
+      [ class "draft-warning" ]
+      [ text "This is a draft, you're the only one seeing this race track." ]
+  , div
+      [ class "form-actions" ]
+      [ linkTo (EditTrack track.id) [ class "btn btn-block btn-primary" ]
+          [ text "Edit draft" ]
+      ]
   ]
 
 
@@ -56,7 +56,8 @@ liveBlocks model liveTrack =
 
 rankingsBlock : LiveTrack -> Html
 rankingsBlock {meta} =
-  div [ class "aside-module module-rankings" ]
+  div
+    [ class "aside-module module-rankings" ]
     [ moduleTitle "Best times"
     , ul [ class "list-unstyled list-rankings" ] (List.map rankingItem meta.rankings)
     ]
@@ -64,7 +65,8 @@ rankingsBlock {meta} =
 
 helpBlock : Html
 helpBlock =
-  div [ class "aside-module module-help" ]
+  div
+    [ class "aside-module module-help" ]
     [ moduleTitle "Help"
     , dl [ ] helpItems
     ]

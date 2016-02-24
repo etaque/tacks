@@ -180,7 +180,7 @@ playerHandle p =
 rankingItem : Ranking -> Html
 rankingItem ranking =
   li [ class "ranking" ]
-    [ span [ class "rank" ] [ text (toString ranking.rank)]
+    [ span [ class "rank" ] [ text (toString (ranking.rank + 1))]
     , span [ class "status" ] [ text (formatTimer True ranking.finishTime) ]
     , span [ class "handle" ] [ text (playerHandle ranking.player) ]
     -- , playerWithAvatar ranking.player

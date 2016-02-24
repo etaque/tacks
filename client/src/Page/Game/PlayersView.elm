@@ -73,7 +73,7 @@ freePlayersBlock players =
 
 freePlayerItem : Player -> Html
 freePlayerItem player =
-  li [ class "player" ]
-    [ playerWithAvatar player
-    ]
+  li
+    [ class "player" ]
+    [ span [ class "handle" ] [ text (playerHandle player) ] ]
 
