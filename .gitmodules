@@ -1,3 +1,0 @@
-[submodule "client/vendor/elm-history"]
-	path = client/vendor/elm-history
-	url = git@github.com:elm-community/elm-history.git
