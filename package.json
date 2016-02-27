@@ -21,6 +21,7 @@
   "scripts": {
     "build": "webpack",
     "watch": "webpack --watch",
-    "clean": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/"
+    "clean": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/",
+    "postinstall": "npm run build"
   }
 }
