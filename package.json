@@ -12,15 +12,16 @@
     "node-sass": "3.4.2",
     "sass-loader": "3.1.2",
     "style-loader": "^0.13.0",
-    "webpack": "^1.12.0"
+    "webpack": "^1.12.0",
+    "extract-text-webpack-plugin": "0.9.1"
   },
   "engines": {
     "node": "^5.6.0"
   },
   "private": true,
   "scripts": {
-    "build": "./node_modules/webpack/bin/webpack.js -p",
-    "watch": "webpack --watch",
+    "build": "./node_modules/webpack/bin/webpack.js --config webpack.build.js -p",
+    "watch": "webpack --watch --config webpack.watch.js",
     "clean": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/",
     "postinstall": "npm run build"
   }
