@@ -1,0 +1,5 @@
+{
+  "deploy":{
+    "goal": "-Dconfig.file=conf/clever.conf"
+  }
+}
