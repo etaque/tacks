@@ -5,7 +5,7 @@ module.exports = {
   entry: './client/src/index.js',
 
   output: {
-    path: './public/javascripts',
+    path: './public/dist',
     filename: 'main.js'
   },
 

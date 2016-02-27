@@ -11,7 +11,7 @@
     <title>Tacks</title>
 
     @if(play.api.Play.isProd) {
-    <link href="@routes.Assets.at("stylesheets/main.css")" rel="stylesheet">
+    <link href="@routes.Assets.at("dist/main.css")" rel="stylesheet">
     }
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
 
@@ -34,7 +34,7 @@
     )
 
     @if(play.api.Play.isProd) {
-      <script src="@routes.Assets.at("javascripts/main.js")" type="text/javascript"></script>
+      <script src="@routes.Assets.at("dist/main.js")" type="text/javascript"></script>
     } else {
       <script src="@routes.Assets.at("javascripts/bundle.js")" type="text/javascript"></script>
     }
