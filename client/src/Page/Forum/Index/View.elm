@@ -1,32 +1,28 @@
-module Page.Forum.Index.View where
+module Page.Forum.Index.View (..) where
 
 import Signal exposing (Address)
-
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-
 import Date
 import Date.Format as DateFormat
-
 import Route
-
 import Page.Forum.Route exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Index.Model exposing (..)
-
 import View.Utils exposing (..)
 
 
 view : Address Action -> Model -> Html
-view addr ({topics} as model) =
-  container "forum-index"
+view addr ({ topics } as model) =
+  container
+    "forum-index"
     [ linkTo
         (Route.Forum NewTopic)
         [ class "pull-right btn btn-primary"
         ]
         [ text "New topic" ]
-    , h1 [] [ text "Forum"]
+    , h1 [] [ text "Forum" ]
     , topicsTable topics
     ]
 
@@ -45,14 +41,14 @@ topicsTable topics =
             , th [ class "activity" ] [ text "Most recent" ]
             ]
         ]
-     , tbody
+    , tbody
         []
         (List.map topicRow topics)
     ]
 
 
 topicRow : TopicWithUser -> Html
-topicRow {topic, user} =
+topicRow { topic, user } =
   tr
     []
     [ td
@@ -66,5 +62,5 @@ topicRow {topic, user} =
         [ text (toString topic.postsCount) ]
     , td
         [ class "activity" ]
-        [ text <| (Date.fromTime >> DateFormat.format "%B %d %H:%M") topic.activityTime ]
+        [ text <| (Date.fromTime >> DateFormat.format "%d %B %Y %H:%I") topic.activityTime ]
     ]

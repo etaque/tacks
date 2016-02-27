@@ -27,7 +27,7 @@ view addr {form, loading} =
     (submitClick, submitDisabled) =
       case Form.getOutput form of
         Just newTopic ->
-          (onClick addr (Submit newTopic), not loading)
+          (onClick addr (Submit newTopic), loading)
         Nothing ->
           (onClick formAddr Form.submit, Form.isSubmitted form)
   in
