@@ -20,7 +20,7 @@
   },
   "private": true,
   "scripts": {
-    "build": "./node_modules/webpack/bin/webpack.js --config webpack.build.js -p",
+    "build": "./node_modules/webpack/bin/webpack.js --config webpack.build.js",
     "watch": "webpack --watch --config webpack.watch.js",
     "clean": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/",
     "postinstall": "npm run build"
