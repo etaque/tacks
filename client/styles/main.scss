@@ -4,7 +4,7 @@ $grid-gutter-width: 30px;
 $container-large-desktop: (940px + $grid-gutter-width);
 $icon-font-path: "/assets/fonts/bootstrap/";
 
-@import '../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
 @import 'mixins';
 

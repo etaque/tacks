@@ -4,7 +4,7 @@
     "repository": "https://github.com/etaque/tacks.git",
     "license": "BSD3",
     "source-directories": [
-        "src"
+        "client/src"
     ],
     "exposed-modules": [],
     "native-modules": true,

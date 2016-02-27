@@ -1,4 +1,4 @@
-client/elm-stuff/
+elm-stuff/
 public/javascripts/
 public/stylesheets/
 logs
@@ -16,8 +16,8 @@ dist
 /.project
 /RUNNING_PID
 /.settings
-client/.sass-cache
-client/node_modules
-client/index.html
+.sass-cache
+node_modules
+index.html
 .ensime
 .ensime_cache
