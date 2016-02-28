@@ -21,3 +21,4 @@ node_modules
 index.html
 .ensime
 .ensime_cache
+conf/local.conf
