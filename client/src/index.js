@@ -64,6 +64,8 @@ game.ports.activeTrack.subscribe((id) => {
         game.ports.gameActionsInput.send(frame);
       }
     };
+
+    ws.onclose = () => game.ports.raceInput.send(null);
   } else {
     game.ports.raceInput.send(null);
   }

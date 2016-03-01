@@ -64,8 +64,7 @@ rawInput =
 
 raceUpdateActions : Signal Action
 raceUpdateActions =
-  Signal.sampleOn rawInput clock
-    |> Signal.map2 GameInputs.buildGameInput rawInput
+  Signal.map2 GameInputs.buildGameInput rawInput clock
     |> Signal.filterMap (Maybe.map (GameModel.GameUpdate >> GameAction >> PageAction)) Model.NoOp
     |> Signal.sampleOn clock
     |> Signal.dropRepeats
