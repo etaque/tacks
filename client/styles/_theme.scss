@@ -5,15 +5,18 @@
 
 
 h1 {
-  font-family: $serif;
+  /* font-family: $serif; */
+  font-family: $thin;
+  color: $darkGrey;
   margin-top: 0;
   margin-bottom: 20px;
 }
 
 h2 {
   font-size: 24px;
-  /* font-family: $thin; */
-  font-family: $serif;
+  font-family: $thin;
+  color: $darkGrey;
+  /* font-family: $serif; */
   margin-top: 0;
   margin-bottom: 20px;
 }

@@ -88,7 +88,7 @@ liveTrackBlock maybeTrackId ({track, meta, players} as lt) =
                   [ text <| toString (List.length meta.rankings) ++ " entries" ]
               ]
           , linkTo (PlayTrack track.id)
-              [ class <| "btn btn-block btn-join btn-" ++ if empty then "default" else "warning"
+              [ class <| "btn btn-block btn-join btn-" ++ if empty then "primary" else "warning"
               , onMouseOver addr (FocusTrack (Just track.id))
               , onMouseOut addr (FocusTrack Nothing)
               ]

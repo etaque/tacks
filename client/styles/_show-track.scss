@@ -55,7 +55,7 @@
   .rankings {
     .list-rankings {
       padding: 8px 12px;
-      background-color: $lightSeaBlue;
+      @include panel;
     }
   }
 

@@ -1,3 +1,5 @@
+@import 'colors';
+
 @mixin placeholder {
   &::-webkit-input-placeholder {@content}
   &:-moz-placeholder           {@content}
@@ -56,10 +58,17 @@
   background-image: linear-gradient($deg, $start-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
 }
 
-@mixin blue-box {
-  background-color: $lightSeaBlue;
-  border: 5px solid $whiteSeaBlue;
-  box-shadow: 1px 1px 1px $shadow inset;
+@mixin panel {
+  /* background-color: $lightSeaBlue; */
+  /* border: 5px solid $whiteSeaBlue; */
+  box-shadow: 0px 2px 2px $shadow;
+  background-color: $white;
+  color: $darkGrey;
+  /* @include gradient-directional($darkSeaBlue, $seaBlue, -10deg); */
+}
+
+.panel {
+  @include panel;
 }
 
 @mixin players-list {
@@ -72,12 +81,14 @@
     margin-bottom: 3px;
 
     .handle {
-      color: white;
+      /* color: $darkGrey; */
     }
 
     .rank {
       margin-right: 10px;
       font-weight: bold;
+      /* color: $whiteSeaBlue; */
+      /* color: $mediumGrey; */
 
       &:before {
         content: "#";
@@ -90,7 +101,7 @@
 
     .status {
       float: right;
-      color: white;
+      /* color: white; */
     }
   }
 }
