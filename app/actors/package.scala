@@ -38,18 +38,12 @@ package object actors {
 
   def playerRankings(trackId: UUID): Future[Seq[PlayerRanking]] = {
     for {
-      runRankings <- Runs.extractRankings(trackId).map(_.map(RunRanking.tupled))
+      runRankings <- Runs.extractRankings(trackId)
       players <- Users.listByIds(runRankings.map(_.playerId))
-      playerRankings = runRankings.flatMap { r => players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.duration)) }
+      playerRankings = runRankings.flatMap { r =>
+        players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.duration))
+      }
     }
     yield playerRankings
   }
-  // def playerRankings(trackId: UUID): Future[Seq[PlayerRanking]] = {
-  //   for {
-  //     runRankings <- RunDAO.extractRankings(trackId)
-  //     players <- UserDAO.listByIds(runRankings.map(_.playerId))
-  //     playerRankings = runRankings.flatMap(r => players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.finishTime)))
-  //   }
-  //   yield playerRankings
-  // }
 }

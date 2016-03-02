@@ -47,10 +47,5 @@ case class PathPoint(
 case class RunRanking(
   rank: Long,
   playerId: UUID,
-  playerHandle: Option[String],
-  runId: UUID,
-  startTime: DateTime,
   duration: Long
-) extends WithPlayer {
-  def isRecent = startTime.plusDays(1).isAfterNow
-}
+)

@@ -4,6 +4,7 @@ import java.util.UUID
 import scala.concurrent.Future
 import org.joda.time.DateTime
 import play.api.libs.json._
+import slick.jdbc.GetResult
 
 import DB.api._
 import models._
@@ -12,6 +13,8 @@ import models.JsonFormats.courseFormat
 object RunMappings {
   implicit val tallyColumn =
     MappedColumnType.base[Seq[Long], JsValue](Json.toJson(_), _.as[Seq[Long]])
+
+  implicit val getRankings = GetResult(r => RunRanking(r.nextLong, r.nextUUID, r.nextLong))
 }
 
 class RunTable(tag: Tag) extends Table[Run](tag, "runs") {
@@ -49,13 +52,18 @@ object Runs extends TableQuery(new RunTable(_)) {
   }
 
   def extractRankings(trackId: UUID) = DB.run {
-    onTrack(trackId)
-      .sortBy(_.duration.desc)
-      .distinctOn(_.playerId)
-      .zipWithIndex
-      .map { case (run, i) =>
-        (i, run.playerId, run.playerHandle, run.id, run.startTime, run.duration)
-      }.result
+    sql"""
+      SELECT row_number() OVER (order by duration), player_id, duration
+      FROM (SELECT DISTINCT ON (player_id) * FROM runs ORDER BY player_id, duration) AS r
+      ORDER BY duration ASC
+    """.as[RunRanking]
+    // onTrack(trackId)
+    //   .sortBy(_.duration.asc)
+    //   .distinctOn(_.playerId)
+    //   .zipWithIndex
+    //   .map { case (run, i) =>
+    //     (i, run.playerId, run.playerHandle, run.id, run.startTime, run.duration)
+    //   }.result
   }
 
   def save(run: Run): Future[Int] = DB.run {

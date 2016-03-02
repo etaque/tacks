@@ -9,7 +9,7 @@ import play.api.Play
 import play.api.db.slick.DatabaseConfigProvider
 import slick.dbio.DBIO
 import slick.driver.JdbcProfile
-import slick.jdbc.{SetParameter, PositionedParameters}
+import slick.jdbc.{ PositionedParameters, PositionedResult, SetParameter }
 import com.github.tminglei.slickpg._
 import org.joda.time.DateTime
 
@@ -26,10 +26,10 @@ trait DB extends ExPostgresDriver
     with DateTimeImplicits
     with PlayJsonImplicits {
 
-    // implicit class PgPositionedResult(val r: PositionedResult) {
-    //   def nextUUID: UUID = UUID.fromString(r.nextString)
-    //   def nextUUIDOption: Option[UUID] = r.nextStringOption().map(UUID.fromString)
-    // }
+    implicit class PgPositionedResult(val r: PositionedResult) {
+      def nextUUID: UUID = UUID.fromString(r.nextString)
+      def nextUUIDOption: Option[UUID] = r.nextStringOption().map(UUID.fromString)
+    }
 
     implicit object SetUUID extends SetParameter[UUID] {
       def apply(v: UUID, pp: PositionedParameters) {
