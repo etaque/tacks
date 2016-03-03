@@ -46,18 +46,17 @@
 
       a {
         flex: 1;
-        opacity: 0.5;
+        opacity: 0.8;
         display: inline-block;
         margin-right: 10px;
         height: 30px;
 
         line-height: 26px;
-        font-family: $thin;
+        font-family: $serif;
         font-size: 14px;
-        font-weight: bold;
         text-align: center;
         color: $dark;
-        border: 2px solid $darkerSeaBlue;
+        border: 2px solid transparent;
         text-transform: uppercase;
 
         &:last-child {
@@ -81,7 +80,7 @@
 
     label {
       display: inline-block;
-      width: 165px;
+      width: 160px;
       line-height: 25px;
       padding-left: 10px;
       margin: 0;

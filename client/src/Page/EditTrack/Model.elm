@@ -1,8 +1,7 @@
-module Page.EditTrack.Model where
+module Page.EditTrack.Model (..) where
 
 import Model.Shared exposing (..)
 import Constants exposing (sidebarWidth)
-
 import Drag exposing (MouseEvent(..))
 
 
@@ -12,12 +11,14 @@ type alias Model =
   , notFound : Bool
   }
 
+
 initial : Model
 initial =
   { track = Nothing
   , editor = Nothing
   , notFound = False
   }
+
 
 type alias Editor =
   { blocks : SideBlocks
@@ -30,23 +31,25 @@ type alias Editor =
   , confirmPublish : Bool
   }
 
+
 initialEditor : Track -> Editor
 initialEditor track =
   { blocks =
-    { name = False
-    , surface = False
-    , gates = False
-    , wind = False
-    , gusts = False
-    }
+      { name = True
+      , surface = True
+      , gates = False
+      , wind = False
+      , gusts = False
+      }
   , course = track.course
-  , center = (0, 0)
-  , mode = Watch
+  , center = ( 0, 0 )
+  , mode = CreateTile Water
   , altMove = False
   , name = track.name
   , saving = False
   , confirmPublish = False
   }
+
 
 type alias SideBlocks =
   { name : Bool
@@ -56,14 +59,20 @@ type alias SideBlocks =
   , gusts : Bool
   }
 
+
 type Mode
   = CreateTile TileKind
   | Erase
   | Watch
 
+
 realMode : Editor -> Mode
-realMode {mode, altMove} =
-  if altMove then Watch else mode
+realMode { mode, altMove } =
+  if altMove then
+    Watch
+  else
+    mode
+
 
 type Action
   = LoadTrack (Result () Track)
@@ -79,12 +88,14 @@ type Action
   | Publish
   | NoOp
 
+
 type SideBlock
   = Name
   | Surface
   | Gates
   | Wind
   | Gusts
+
 
 type FormUpdate
   = SetDownwindY Int
@@ -98,15 +109,26 @@ type FormUpdate
   | SetWindW2 Int
   | SetWindA2 Int
 
-modeName : Mode -> (String, String)
+
+modeName : Mode -> ( String, String )
 modeName mode =
   case mode of
-    CreateTile Water -> ("w", "Water")
-    CreateTile Grass -> ("g", "Grass")
-    CreateTile Rock -> ("r", "Rock")
-    Erase -> ("s", "Sand")
-    Watch -> ("m", "Move (press SHIFT for temporary move mode)")
+    CreateTile Water ->
+      ( "w", "Water" )
+
+    CreateTile Grass ->
+      ( "g", "Grass" )
+
+    CreateTile Rock ->
+      ( "r", "Rock" )
+
+    Erase ->
+      ( "s", "Sand" )
+
+    Watch ->
+      ( "m", "Move" )
+
 
 getCourseDims : Dims -> Dims
-getCourseDims (w, h) =
-  (w - sidebarWidth, h)
+getCourseDims ( w, h ) =
+  ( w - sidebarWidth, h )
