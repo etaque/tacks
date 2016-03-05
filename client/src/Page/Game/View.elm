@@ -22,7 +22,7 @@ view ctx model =
       let
         (w, h) = ctx.dims
       in
-        Layout.layout "play-track"
+        Layout.layoutWithSidebar "play-track"
           (SideView.view model liveTrack gameState)
           [ div [ class "game" ]
               [ render (w - sidebarWidth, h) gameState

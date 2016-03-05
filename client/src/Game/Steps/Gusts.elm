@@ -1,23 +1,20 @@
-module Game.Steps.Gusts where
+module Game.Steps.Gusts (..) where
 
 import Constants exposing (..)
 import Model.Shared exposing (..)
 import Game.Models exposing (..)
-
 import Game.Geo as Geo
-
 import Hexagons
-import Hexagons.Grid as Grid
-
 import Dict
 
 
 interval : Float
-interval = 500
+interval =
+  500
 
 
 gustsStep : GameState -> GameState
-gustsStep ({timers, wind, gusts, course} as gameState) =
+gustsStep ({ timers, wind, gusts, course } as gameState) =
   if gusts.genTime + interval < timers.now then
     { gameState | gusts = genTiledGusts course.grid timers.now wind }
   else
@@ -25,41 +22,54 @@ gustsStep ({timers, wind, gusts, course} as gameState) =
 
 
 genTiledGusts : Grid -> Float -> Wind -> TiledGusts
-genTiledGusts grid now {gusts} =
+genTiledGusts grid now { gusts } =
   { genTime = now
   , gusts = List.map (genTiledGust grid) gusts
   }
 
 
 genTiledGust : Grid -> Gust -> TiledGust
-genTiledGust grid ({position, angle, speed, radius} as gust) =
+genTiledGust grid ({ position, angle, speed, radius } as gust) =
   let
-    centerTile = Hexagons.pointToAxial hexRadius position
-    southTile = Hexagons.pointToAxial hexRadius (Geo.add position (0, -radius))
+    centerTile =
+      Hexagons.pointToAxial hexRadius position
 
-    distance = Hexagons.axialDistance centerTile southTile
-    coordsList = Hexagons.axialRange centerTile distance
+    southTile =
+      Hexagons.pointToAxial hexRadius (Geo.add position ( 0, -radius ))
 
-    tiles = coordsList
-      |> List.filterMap (genGustTile grid gust)
-      |> Dict.fromList
+    distance =
+      Hexagons.axialDistance centerTile southTile
+
+    coordsList =
+      Hexagons.axialRange centerTile distance
+
+    tiles =
+      coordsList
+        |> List.filterMap (genGustTile grid gust)
+        |> Dict.fromList
   in
     TiledGust position radius tiles
 
 
-genGustTile : Grid -> Gust -> Coords -> Maybe (Coords, GustTile)
-genGustTile grid {position, angle, speed, radius} coords =
+genGustTile : Grid -> Gust -> Coords -> Maybe ( Coords, GustTile )
+genGustTile grid { position, angle, speed, radius } coords =
   let
-    distance = Geo.distance position (Hexagons.axialToPoint hexRadius coords)
+    distance =
+      Geo.distance position (Hexagons.axialToPoint hexRadius coords)
   in
     if distance <= radius then
       let
-        fromEdge = radius - distance
-        factor = min (fromEdge / (radius * 0.2)) 1
-        gustTile = GustTile (angle * factor) (speed * factor)
+        fromEdge =
+          radius - distance
+
+        factor =
+          min (fromEdge / (radius * 0.2)) 1
+
+        gustTile =
+          GustTile (angle * factor) (speed * factor)
       in
-        if Grid.get grid coords == Just Water then
-          Just (coords, gustTile)
+        if Dict.get coords grid == Just Water then
+          Just ( coords, gustTile )
         else
           Nothing
     else

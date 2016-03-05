@@ -31,7 +31,7 @@ intro : Html
 intro =
   fullWidth
     [ h1 [ ] [ text "Sailing tactics from the sofa" ]
-    , p [ ] [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings."]
+    , p [ class "subtitle" ] [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings."]
     ]
 
 welcomeForm : Player -> String -> Html

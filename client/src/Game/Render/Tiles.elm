@@ -8,7 +8,6 @@ import Svg.Attributes exposing (..)
 import Svg.Lazy exposing (..)
 
 import Hexagons
-import Hexagons.Grid as Grid
 
 import Constants exposing (..)
 import Model.Shared exposing (..)
@@ -21,15 +20,15 @@ lazyRenderTiles grid =
 renderTiles : Grid -> Svg
 renderTiles grid =
   let
-    tiles = List.map renderTile (Grid.list grid)
+    tiles = List.map renderTile (listGridTiles grid)
   in
     g [ class "tiles" ] tiles
 
 renderTile : Tile -> Svg
-renderTile {content, coords} =
+renderTile {kind, coords} =
   let
     (x,y) = Hexagons.axialToPoint hexRadius coords
-    color = tileKindColor content coords
+    color = tileKindColor kind coords
   in
     polygon
       [ points verticesPoints

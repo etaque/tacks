@@ -1,13 +1,14 @@
-module Encoders where
+module Encoders (..) where
 
 import Model.Shared exposing (..)
-
 import Dict exposing (Dict)
 import Json.Decode exposing (..)
 import Json.Encode as Js
 
 
-(=>) = (,)
+(=>) =
+  (,)
+
 
 courseEncoder : Course -> Value
 courseEncoder course =
@@ -22,6 +23,7 @@ courseEncoder course =
     , "gustGenerator" => gustGeneratorEncoder course.gustGenerator
     ]
 
+
 gateEncoder : Gate -> Value
 gateEncoder gate =
   Js.object
@@ -29,20 +31,25 @@ gateEncoder gate =
     , "width" => Js.float gate.width
     ]
 
+
 gridEncoder : Grid -> Value
 gridEncoder grid =
-  dictEncoder Js.int gridRowEncoder grid
+  dictEncoder (\( i, j ) -> Js.list [ Js.int i, Js.int j ]) tileKindEncoder grid
 
-gridRowEncoder : GridRow -> Value
-gridRowEncoder row =
-  dictEncoder Js.int tileKindEncoder row
 
 tileKindEncoder : TileKind -> Value
 tileKindEncoder kind =
-  Js.string <| case kind of
-    Water -> "W"
-    Grass -> "G"
-    Rock -> "R"
+  Js.string
+    <| case kind of
+        Water ->
+          "W"
+
+        Grass ->
+          "G"
+
+        Rock ->
+          "R"
+
 
 areaEncoder : RaceArea -> Value
 areaEncoder a =
@@ -51,9 +58,11 @@ areaEncoder a =
     , "leftBottom" => pointEncoder a.leftBottom
     ]
 
+
 pointEncoder : Point -> Value
-pointEncoder (x, y) =
+pointEncoder ( x, y ) =
   Js.list <| List.map Js.float [ x, y ]
+
 
 windGeneratorEncoder : WindGenerator -> Value
 windGeneratorEncoder g =
@@ -63,6 +72,7 @@ windGeneratorEncoder g =
     , "wavelength2" => Js.int g.wavelength2
     , "amplitude2" => Js.int g.amplitude2
     ]
+
 
 gustGeneratorEncoder : GustGenerator -> Value
 gustGeneratorEncoder g =
@@ -74,17 +84,21 @@ gustGeneratorEncoder g =
     , "originVariation" => rangeEncoder g.originVariation
     ]
 
+
 rangeEncoder : Range -> Value
 rangeEncoder r =
   Js.object [ "start" => Js.int r.start, "end" => Js.int r.end ]
 
+
 dictEncoder : (comparable -> Value) -> (v -> Value) -> Dict comparable v -> Value
 dictEncoder encodeKey encodeValue dict =
   let
-    encodeField (k, v) = Js.list [ encodeKey k, encodeValue v ]
-    fields = dict
-      |> Dict.toList
-      |> List.map encodeField
+    encodeField ( k, v ) =
+      Js.list [ encodeKey k, encodeValue v ]
+
+    fields =
+      dict
+        |> Dict.toList
+        |> List.map encodeField
   in
     Js.list fields
-

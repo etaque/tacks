@@ -1,19 +1,19 @@
-module Game.Steps.Moving where
+module Game.Steps.Moving (..) where
 
-import List as L
-
+import List
+import Dict
 import Model.Shared exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Core exposing (..)
 import Game.Steps.Util exposing (..)
 import Constants exposing (hexRadius)
-
-import Hexagons.Grid as Grid
+import Hexagons
 
 
 maxAccel : Float
-maxAccel = 0.03
+maxAccel =
+  0.03
 
 
 movingStep : Float -> Course -> PlayerState -> PlayerState
@@ -22,17 +22,32 @@ movingStep elapsed course state =
     state
   else
     let
-      baseSpeed = polarSpeed state.windSpeed state.windAngle
-      nextVelocity = withInertia elapsed state.velocity baseSpeed
+      baseSpeed =
+        polarSpeed state.windSpeed state.windAngle
 
-      nextPosition = movePoint state.position elapsed nextVelocity state.heading
+      nextVelocity =
+        withInertia elapsed state.velocity baseSpeed
 
-      grounded = isGrounded nextPosition course
+      nextPosition =
+        movePoint state.position elapsed nextVelocity state.heading
 
-      velocity = if grounded then 0 else nextVelocity
-      position = if grounded then state.position else nextPosition
+      grounded =
+        isGrounded nextPosition course
 
-      trail = L.take 20 (position :: state.trail)
+      velocity =
+        if grounded then
+          0
+        else
+          nextVelocity
+
+      position =
+        if grounded then
+          state.position
+        else
+          nextPosition
+
+      trail =
+        List.take 20 (position :: state.trail)
     in
       { state
         | isGrounded = grounded
@@ -45,11 +60,17 @@ movingStep elapsed course state =
 withInertia : Float -> Float -> Float -> Float
 withInertia elapsed previousVelocity targetVelocity =
   let
-    velocityDelta = targetVelocity - previousVelocity
-    accel = velocityDelta / elapsed
-    realAccel = if accel > 0
-      then min accel maxAccel
-      else max accel -maxAccel
+    velocityDelta =
+      targetVelocity - previousVelocity
+
+    accel =
+      velocityDelta / elapsed
+
+    realAccel =
+      if accel > 0 then
+        min accel maxAccel
+      else
+        max accel -maxAccel
   in
     previousVelocity + realAccel * elapsed
 
@@ -57,12 +78,25 @@ withInertia elapsed previousVelocity targetVelocity =
 isGrounded : Point -> Course -> Bool
 isGrounded p course =
   let
-    (dl, dr) = getGateMarks course.downwind
-    (ul, ur) = getGateMarks course.upwind
-    marks = [dl, dr, ul, ur]
-    halfBoatWidth = boatWidth / 2
+    ( dl, dr ) =
+      getGateMarks course.downwind
 
-    stuckOnMark = exists (\m -> (distance p m) <= markRadius + halfBoatWidth) marks
-    onGround = (Grid.getPoint hexRadius course.grid p) /= Just Water
+    ( ul, ur ) =
+      getGateMarks course.upwind
+
+    marks =
+      [ dl, dr, ul, ur ]
+
+    halfBoatWidth =
+      boatWidth / 2
+
+    stuckOnMark =
+      exists (\m -> (distance p m) <= markRadius + halfBoatWidth) marks
+
+    currentTile =
+      Dict.get (Hexagons.pointToAxial hexRadius p) course.grid
+
+    onGround =
+      currentTile /= Just Water
   in
     stuckOnMark || onGround

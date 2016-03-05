@@ -35,8 +35,7 @@ object Course {
     )
   }
 
-  type Grid = Seq[(Int, GridRow)]
-  type GridRow = Seq[(Int, String)]
+  type Grid = Seq[((Int, Int), String)]
 }
 
 sealed trait GateLocation

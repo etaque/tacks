@@ -20,6 +20,45 @@ body {
 body > div {
   height: 100%;
 }
+
+.new-layout {
+  position: relative;
+  height: 100%;
+
+  .hex-bg {
+    position: absolute;
+    background-color: $seaBlue;
+    @include gradient-directional($seaBlue, $darkSeaBlue, -30deg);
+
+    .tiles {
+      opacity: 0.9;
+    }
+  }
+
+  .fixed {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow-y: auto;
+
+    .header {
+      margin-top: 20px;
+    }
+
+    .content {
+      .container {
+        margin-top: 10px;
+        padding: 30px;
+        background-color: $white;
+        @include gradient-directional($smokeWhite, $white, -30deg);
+        box-shadow: 0 5px 5px $shadow;
+        border-radius: 8px;
+      }
+    }
+  }
+}
     
 .layout {
   min-height: 100%;

@@ -24,7 +24,7 @@ view {player, dims} model =
   case (model.track, model.editor) of
     (Just track, Just editor) ->
       if canUpdateDraft player track then
-        Layout.layout "editor"
+        Layout.layoutWithSidebar "editor"
           (SideView.view track editor)
           [ renderCourse dims editor ]
       else
