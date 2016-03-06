@@ -31,9 +31,14 @@ layoutWithNav name ctx content =
       [ class "new-layout" ]
       [ Html.Lazy.lazy HexBg.render ctx.dims
       , div
-          [ class "fixed" ]
+          [ class "fixed"
+          ]
           [ header ctx.player
-          , div [ class ("content " ++ name) ] content
+          , div
+              [ id name
+              , class "content"
+              ]
+              content
           , footer ctx.player
           ]
       ]
@@ -65,8 +70,8 @@ guestMenu : List Html
 guestMenu =
   [ ul
       [ class "user-menu" ]
-      [ li [] [ Utils.linkTo Route.Login [] [ text "Login" ] ]
-      , li [] [ Utils.linkTo Route.Register [] [ text "Register" ] ]
+      [ li [] [ Utils.linkTo Route.Login [] [ text "login" ] ]
+      , li [] [ Utils.linkTo Route.Register [] [ text "register" ] ]
       ]
   ]
 
@@ -81,7 +86,7 @@ userMenu player =
           [ text (Utils.playerHandle player) ]
       , li
           []
-          [ a [ onClick appActionsAddress Logout ] [ text "Logout" ] ]
+          [ a [ onClick appActionsAddress Logout ] [ text "logout" ] ]
       ]
   ]
 

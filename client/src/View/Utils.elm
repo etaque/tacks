@@ -135,13 +135,13 @@ fieldGroup label' hint errors inputs =
   in
     div
       [ classList
-          [ ( "row form-group", True )
+          [ ( "form-group", True )
           , ( "with-error", not (List.isEmpty errors) )
           ]
       ]
-      [ col' 3 [ label [ class "control-label" ] [ text label' ] ]
-      , col' 9 (inputs ++ [ feedbacksEl ])
-      ]
+      <| [ label [ class "control-label" ] [ text label' ] ]
+      ++ inputs
+      ++ [ feedbacksEl ]
 
 
 

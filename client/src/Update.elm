@@ -27,7 +27,7 @@ import Update.Utils as Utils
 routerConfig : TransitRouter.Config Route Action Model
 routerConfig =
   { mountRoute = mountRoute
-  , getDurations = (\_ _ _ -> (50, 200))
+  , getDurations = (\_ _ _ -> (0, 0))
   , actionWrapper = RouterAction
   , routeDecoder = Route.fromPath
   }

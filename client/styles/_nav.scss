@@ -13,19 +13,20 @@
 
   .user-menu {
     float: right;
-    margin-top: 10px;
+    margin-top: 15px;
     padding: 0;
     list-style: none;
-    color: $white;
+    color: $whiteSeaBlue;
     font-family: $serif;
     text-align: right;
 
     li {
-      margin-bottom: 8px;
+      margin-bottom: 5px;
     }
 
     a {
-      color: $whiteSeaBlue;
+      color: $white;
+      text-shadow: 1px 1px 1px $shadow;
     }
   }
 }

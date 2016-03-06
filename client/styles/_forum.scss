@@ -2,7 +2,7 @@
 @import 'fonts';
 @import 'mixins';
 
-.forum {
+#forum {
   .forum-topics-table {
 
     thead {
@@ -27,8 +27,8 @@
     }
       
     tbody {
-      border: 1px solid $lightGrey;
-      background-color: $white;
+      /* border: 1px solid $lightGrey; */
+      /* background-color: $white; */
 
       td {
         padding: 8px;
@@ -63,11 +63,11 @@
 
   .forum-post {
     margin-bottom: 10px;
-    background-color: $white;
-    border: 1px solid $lightGrey;
+    /* background-color: $white; */
+    /* border: 1px solid $lightGrey; */
 
     .post-meta {
-      margin: 10px;
+      margin: 10px 0;
       padding-bottom: 5px;
       /* background-color: $lightGrey; */
       border-bottom: 1px solid $lightGrey;
@@ -86,7 +86,7 @@
     }
 
     .post-content {
-      padding: 10px;
+      padding: 10px 0;
     }
   }
 

@@ -44,11 +44,12 @@ body > div {
     overflow-y: auto;
 
     .header {
-      margin-top: 20px;
+      margin-top: 10px;
     }
 
     .content {
       .container {
+        /* min-height: 300px; */
         margin-top: 10px;
         padding: 30px;
         background-color: $white;

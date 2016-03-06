@@ -15,37 +15,45 @@
   margin-bottom: 30px;
   transition: background .1s ease-in;
   position: relative;
+  box-shadow: 1px 2px 2px $shadow;
+  border-radius: 5px;
 
-  .info {
-    height: 200px;
-    overflow-y: auto;
-    @include panel;
-    @include gradient-directional($whiteSmoke, $white, -30deg);
-    border: 2px solid $white;
+  h3 {
+    /* padding: 10px; */
+    margin-top: 0;
+    margin-bottom: 0;
 
-    h3 {
+    .name {
+      display: block;
       padding: 10px;
-      margin-top: 0;
-      margin-bottom: 0;
+      background-color: $white;
+      @include linear-gradient($white, $whiteSmoke);
+      border: 1px solid $lightGrey;
+      border-bottom: none;
+      border-radius: 5px 5px 0 0;
+      font-family: $serif;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
 
-      .name {
-        display: block;
-        padding-bottom: 8px;
-        border-bottom: 2px solid $lightGrey;
-        /* color: $whiteSeaBlue; */
-        font-family: $thin;
-        /* font-size: 18px; */
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        text-transform: uppercase;
-        text-align: center;
-
-        &:hover {
-          /* color: $white; */
-        }
+      &:hover {
+        color: $darkSeaBlue;
+        @include linear-gradient($whiteSmoke, $whiteSmoke);
       }
     }
+  }
+
+  .info {
+    position: relative;
+    height: 210px;
+    padding-bottom: 55px;
+    overflow-y: auto;
+    @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
+    border: 1px solid $lightSeaBlue;
+    border-radius: 0 0 5px 5px;
+    color: $white;
+    /* border: 2px solid $white; */
 
     .list-rankings {
       padding: 10px 15px;
@@ -53,12 +61,18 @@
 
     .rankings-size {
       padding: 0 15px;
-      color: $mediumGrey;
     }
   }
 
   .btn-join {
-    margin-top: 10px;
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    width: auto;
+    /* border-top-left-radius: 0; */
+    /* border-top-right-radius: 0; */
+    /* margin-top: 10px; */
   }
 }
 
@@ -75,25 +89,28 @@
   }
 
   .active-track-players {
+    display: block;
     margin-bottom: 20px;
     padding: 10px;
-    @include panel;
+    box-shadow: 1px 2px 2px $shadow;
+    @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
+    border: 1px solid $seaBlue;
+    border-radius: 5px;
+    cursor: pointer;
+    color: $whiteSeaBlue;
+
+    &:hover {
+      @include gradient-directional($seaBlue, $mainBlue, -30deg);
+      /* border-color: $darkSeaBlue; */
+    }
   }
 
   h4 {
     margin: 0 0 5px 0;
-    padding-bottom: 8px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    border-bottom: 2px solid $lighterSeaBlue;
-
-    /* a { */
-    /*   color: $whiteSeaBlue; */
-    /*   &:hover { */
-    /*     color: $white; */
-    /*   } */
-    /* } */
+    color: $white;
   }
 
   .live-players {
