@@ -39,31 +39,31 @@ view track ({ course, name, saving, mode, blocks } as editor) =
       [ surfaceBlock editor
       , p [] [ text "Press SHIFT for temporary move mode" ]
       ]
-  , sideBlock
-      "Gates"
-      blocks.gates
-      (ToggleBlock Gates)
-      [ div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Downwind" ]
-          , intInput course.downwind.y SetDownwindY [ step "10" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Upwind" ]
-          , intInput course.upwind.y SetUpwindY [ step "10" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Width" ]
-          , intInput course.downwind.width SetGateWidth [ HtmlAttr.min "50", step "10" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Laps" ]
-          , intInput course.laps SetLaps [ HtmlAttr.min "1" ]
-          ]
-      ]
+  -- , sideBlock
+  --     "Gates"
+  --     blocks.gates
+  --     (ToggleBlock Gates)
+  --     [ div
+  --         [ class "form-group" ]
+  --         [ label [ class "" ] [ text "Downwind" ]
+  --         , intInput course.downwind.y SetDownwindY [ step "10" ]
+  --         ]
+  --     , div
+  --         [ class "form-group" ]
+  --         [ label [ class "" ] [ text "Upwind" ]
+  --         , intInput course.upwind.y SetUpwindY [ step "10" ]
+  --         ]
+  --     , div
+  --         [ class "form-group" ]
+  --         [ label [ class "" ] [ text "Width" ]
+  --         , intInput course.downwind.width SetGateWidth [ HtmlAttr.min "50", step "10" ]
+  --         ]
+  --     , div
+  --         [ class "form-group" ]
+  --         [ label [ class "" ] [ text "Laps" ]
+  --         , intInput course.laps SetLaps [ HtmlAttr.min "1" ]
+  --         ]
+  --     ]
   , sideBlock
       "Wind"
       blocks.wind

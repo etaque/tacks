@@ -1,48 +1,26 @@
-module Game.Steps.GateCrossing where
+module Game.Steps.GateCrossing (..) where
 
-import Maybe as M
-import List as L
-
+import CoreExtra
 import Model.Shared exposing (..)
 import Game.Models exposing (..)
-import Game.Geo exposing (..)
-import Game.Core exposing (..)
 
 
 gateCrossingStep : PlayerState -> GameState -> PlayerState -> PlayerState
-gateCrossingStep previousState ({course} as gameState) ({crossedGates,position} as state) =
+gateCrossingStep previousState ({ course } as gameState) ({ crossedGates, position } as state) =
   let
-    step = (previousState.position, position)
-    started = isStarted gameState
-    t = raceTime gameState
+    newCrossedGates =
+      case getNextGate (isStarted gameState) course (List.length crossedGates) of
+        Just gate ->
+          if gateCrossed gate previousState.position position then
+            (raceTime gameState) :: crossedGates
+          else
+            crossedGates
 
-    newCrossedGates = case getNextGate course (L.length crossedGates) of
+        Nothing ->
+          crossedGates
 
-      Just StartLine ->
-        if started && gateCrossedFromSouth course.downwind step
-        then t :: crossedGates
-        else crossedGates
-
-      Just UpwindGate ->
-        if gateCrossedFromSouth course.upwind step
-        then t :: crossedGates
-        else
-          if gateCrossedFromSouth course.downwind step
-          then L.tail crossedGates |> M.withDefault []
-          else crossedGates
-
-      Just DownwindGate ->
-        if gateCrossedFromNorth course.downwind step
-        then t :: crossedGates
-        else
-          if gateCrossedFromNorth course.upwind step
-          then L.tail crossedGates |> M.withDefault []
-          else crossedGates
-
-      Nothing ->
-        crossedGates
-
-    nextGate = getNextGate course (L.length newCrossedGates)
+    nextGate =
+      getNextGate (isStarted gameState) course (List.length newCrossedGates)
   in
     { state
       | crossedGates = newCrossedGates
@@ -50,32 +28,49 @@ gateCrossingStep previousState ({course} as gameState) ({crossedGates,position} 
     }
 
 
-
-getNextGate : Course -> Int -> Maybe GateLocation
-getNextGate course crossedGates =
-  if crossedGates == course.laps * 2 + 1
-  then Nothing
-  else
-    if crossedGates == 0
-    then Just StartLine
+getNextGate : Bool -> Course -> Int -> Maybe Gate
+getNextGate started course crossedGates =
+  if crossedGates == List.length course.gates + 1 then
+    Nothing
+  else if crossedGates == 0 then
+    if started then
+      Just course.start
     else
-      if crossedGates % 2 == 0
-      then Just DownwindGate
-      else Just UpwindGate
+      Nothing
+  else
+    CoreExtra.getAt (crossedGates - 1) course.gates
+
+
+gateCrossed : Gate -> Point -> Point -> Bool
+gateCrossed gate p1 p2 =
+  case gate.orientation of
+    North ->
+      gateCrossedFromSouth gate ( p1, p2 )
+
+    South ->
+      gateCrossedFromNorth gate ( p1, p2 )
+
+
+gateCrossedFromNorth : Gate -> Segment -> Bool
+gateCrossedFromNorth gate ( p, p' ) =
+  (snd p) > (snd gate.center) && (snd p') <= (snd gate.center) && (gateCrossedInX gate ( p, p' ))
+
+
+gateCrossedFromSouth : Gate -> Segment -> Bool
+gateCrossedFromSouth gate ( p, p' ) =
+  (snd p) < (snd gate.center) && (snd p') >= (snd gate.center) && (gateCrossedInX gate ( p, p' ))
 
 
 gateCrossedInX : Gate -> Segment -> Bool
-gateCrossedInX gate ((x,y),(x',y')) =
-  let a = (y - y') / (x - x')
-      b = y - a * x
-      xGate = (gate.y - b) / a
+gateCrossedInX gate ( ( x, y ), ( x', y' ) ) =
+  let
+    a =
+      (y - y') / (x - x')
+
+    b =
+      y - a * x
+
+    xGate =
+      (snd gate.center - b) / a
   in
     (abs xGate) <= gate.width / 2
-
-gateCrossedFromNorth : Gate -> Segment -> Bool
-gateCrossedFromNorth gate (p,p') =
-  (snd p) > gate.y && (snd p') <= gate.y && (gateCrossedInX gate (p,p'))
-
-gateCrossedFromSouth : Gate -> Segment -> Bool
-gateCrossedFromSouth gate (p,p') =
-  (snd p) < gate.y && (snd p') >= gate.y && (gateCrossedInX gate (p,p'))

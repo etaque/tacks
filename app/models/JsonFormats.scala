@@ -15,20 +15,6 @@ object JsonFormats {
   def readsValueError(expectedClass: String, value: String) =
     JsError(Seq(JsPath() -> Seq(ValidationError(s"Expected $expectedClass value, got: " + value.toString))))
 
-  implicit val gateLocationFormat: Format[GateLocation] = new Format[GateLocation] {
-    override def reads(json: JsValue): JsResult[GateLocation] = json match {
-      case JsString("StartLine") => JsSuccess(StartLine)
-      case JsString("DownwindGate") => JsSuccess(DownwindGate)
-      case JsString("UpwindGate") => JsSuccess(UpwindGate)
-      case _ @ v => readsValueError("GateLocation", v.toString())
-    }
-    override def writes(o: GateLocation): JsValue = JsString(o match {
-      case StartLine => "StartLine"
-      case DownwindGate => "DownwindGate"
-      case UpwindGate => "UpwindGate"
-    })
-  }
-
   implicit val controlModeFormat: Format[ControlMode] = new Format[ControlMode] {
     override def reads(json: JsValue): JsResult[ControlMode] = json match {
       case JsString("FixedAngle") => JsSuccess(FixedAngle)
@@ -42,6 +28,19 @@ object JsonFormats {
   }
 
   implicit val gridKeyFormat: Format[(Int, Int)] = tuple2Format[Int, Int]
+
+  implicit val orientationFormat = new Format[Orientation] {
+    override def reads(json: JsValue): JsResult[Orientation] = json match {
+      case JsString("N") => JsSuccess(North)
+      case JsString("S") => JsSuccess(South)
+      case _ @ v => readsValueError("Orientation", v.toString())
+    }
+    override def writes(o: Orientation): JsValue = JsString(
+      o match {
+        case North => "N"
+        case South => "S"
+      })
+  }
 
   implicit val raceAreaFormat: Format[RaceArea] = Json.format[RaceArea]
   implicit val gustSpecFormat: Format[GustDef] = Json.format[GustDef]
@@ -138,7 +137,7 @@ object JsonFormats {
     //   (__ \ 'gates).format[Seq[Long]]
     // )(GhostState.apply _, unlift(GhostState.unapply _))
 
-  implicit val optionGateLocationFormat = Format.optionWithNull[GateLocation]
+  implicit val optionGateFormat = Format.optionWithNull[Gate]
 
   implicit val playerStateFormat: Format[PlayerState] = (
     (__ \ 'player).format[Player] and
@@ -159,7 +158,7 @@ object JsonFormats {
       (__ \ 'controlMode).format[ControlMode] and
       (__ \ 'tackTarget).format[Option[Double]] and
       (__ \ 'crossedGates).format[Seq[Long]] and
-      (__ \ 'nextGate).format[Option[GateLocation]]
+      (__ \ 'nextGate).format[Option[Gate]]
     )(PlayerState.apply _, unlift(PlayerState.unapply _))
 
   implicit val optionDateTimeFormat = Format.optionWithNull[DateTime]
@@ -193,4 +192,3 @@ object JsonFormats {
   implicit val messageFormat: Format[Message] = Json.format[Message]
 
 }
-

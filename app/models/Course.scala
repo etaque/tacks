@@ -11,10 +11,9 @@ import models.Geo._
 
 
 case class Course(
-  upwind: Gate,
-  downwind: Gate,
-  laps: Int,
   grid: Course.Grid = Nil,
+  start: Gate,
+  gates: Seq[Gate],
   area: RaceArea,
   windSpeed: Int,
   windGenerator: WindGenerator,
@@ -24,10 +23,9 @@ case class Course(
 object Course {
   def spawn = {
     Course(
-      upwind = Gate(800, 200),
-      downwind = Gate(0, 200),
-      laps = 2,
       grid = Nil,
+      start = Gate(Some("Start"), (0, 0), 100, North),
+      gates = Nil,
       area = RaceArea((0, 0), (0, 0)),
       windSpeed = 15,
       windGenerator = WindGenerator.spawn(),
@@ -38,10 +36,16 @@ object Course {
   type Grid = Seq[((Int, Int), String)]
 }
 
-sealed trait GateLocation
-case object StartLine extends GateLocation
-case object UpwindGate extends GateLocation
-case object DownwindGate extends GateLocation
+case class Gate(
+  label: Option[String],
+  center: Point,
+  width: Float,
+  orientation: Orientation
+)
+
+sealed trait Orientation
+case object North extends Orientation
+case object South extends Orientation
 
 case class RaceArea(rightTop: Point, leftBottom: Point) {
   lazy val ((right, top), (left, bottom)) = (rightTop, leftBottom)
@@ -58,11 +62,6 @@ case class RaceArea(rightTop: Point, leftBottom: Point) {
     seed % effectiveWidth - effectiveWidth / 2 + cx
   }
 }
-
-case class Gate(
-  y: Double,
-  width: Double
-)
 
 case class WindGenerator(
   wavelength1: Int,

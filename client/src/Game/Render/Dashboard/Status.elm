@@ -90,7 +90,7 @@ getSubStatus gameState =
   if isStarted gameState then
     let
       counter = List.length gameState.playerState.crossedGates
-      total = gameState.course.laps * 2 + 1
+      total = List.length gameState.course.gates + 1
     in
       if counter == total then
         "FINISHED"

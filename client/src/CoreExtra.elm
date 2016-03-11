@@ -1,4 +1,4 @@
-module CoreExtra where
+module CoreExtra (..) where
 
 import Maybe
 import Array
@@ -7,8 +7,11 @@ import Array
 isNothing : Maybe a -> Bool
 isNothing m =
   case m of
-    Nothing -> True
-    _ -> False
+    Nothing ->
+      True
+
+    _ ->
+      False
 
 
 isJust : Maybe a -> Bool
@@ -21,20 +24,28 @@ removeAt i items =
   (List.take i items) ++ (List.drop (i + 1) items)
 
 
+getAt : Int -> List a -> Maybe a
+getAt i items =
+  List.take i items
+    |> List.head
+
+
 updateAt : Int -> (a -> a) -> List a -> List a
 updateAt i update items =
   let
-    asArray = Array.fromList items
+    asArray =
+      Array.fromList items
   in
     case Array.get i asArray of
       Just item ->
         asArray
           |> Array.set i (update item)
           |> Array.toList
+
       Nothing ->
         items
 
-within : (comparable, comparable) -> comparable -> Bool
-within (a, b) c =
-  c >= a && c <= b
 
+within : ( comparable, comparable ) -> comparable -> Bool
+within ( a, b ) c =
+  c >= a && c <= b

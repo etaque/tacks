@@ -47,8 +47,8 @@ renderCourse dims ({center, course, mode} as editor) =
       ]
       [ g [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
         [ (lazyRenderTiles course.grid)
-        , renderOpenGate course.upwind 0
-        , renderOpenGate course.downwind 0
+        -- , renderOpenGate course.upwind 0
+        -- , renderOpenGate course.downwind 0
         , renderPlayerHull 0 0
         ]
       ]

@@ -4,7 +4,6 @@ import Time exposing (Time)
 import Dict exposing (Dict)
 import Transit
 import Hexagons
-import Hexagons.Grid as HexGrid
 import Constants
 import Route
 
@@ -140,10 +139,9 @@ type alias Message =
 
 
 type alias Course =
-  { upwind : Gate
-  , downwind : Gate
+  { start : Gate
+  , gates : List Gate
   , grid : Grid
-  , laps : Int
   , area : RaceArea
   , windSpeed : Int
   , windGenerator : WindGenerator
@@ -152,21 +150,22 @@ type alias Course =
 
 
 type alias Gate =
-  { y : Float
+  { label : Maybe String
+  , center : Point
   , width : Float
+  , orientation : Orientation
   }
+
+
+type Orientation
+  = North
+  | South
 
 
 type alias RaceArea =
   { rightTop : Point
   , leftBottom : Point
   }
-
-
-type GateLocation
-  = DownwindGate
-  | UpwindGate
-  | StartLine
 
 
 type alias WindGenerator =

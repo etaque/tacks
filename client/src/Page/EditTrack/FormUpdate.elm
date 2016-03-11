@@ -8,17 +8,17 @@ update : FormUpdate -> Course -> Course
 update fu course =
   case fu of
 
-    SetUpwindY y ->
-      updateUpwindY y course
+    -- SetUpwindY y ->
+    --   updateUpwindY y course
 
-    SetDownwindY y ->
-      updateDownwindY y course
+    -- SetDownwindY y ->
+    --   updateDownwindY y course
 
-    SetGateWidth w ->
-      updateGateWidth w course
+    -- SetGateWidth w ->
+    --   updateGateWidth w course
 
-    SetLaps laps ->
-      { course | laps = laps }
+    -- SetLaps laps ->
+    --   { course | laps = laps }
 
     UpdateGustGen fn ->
       updateGustGen fn course
@@ -39,23 +39,23 @@ update fu course =
       updateWindGen (\g -> { g | amplitude2 = i }) course
 
 
-updateUpwindY : Int -> Course -> Course
-updateUpwindY y ({upwind} as course) =
-  { course | upwind = { upwind | y = toFloat y } }
+-- updateUpwindY : Int -> Course -> Course
+-- updateUpwindY y ({upwind} as course) =
+--   { course | upwind = { upwind | y = toFloat y } }
 
 
-updateDownwindY : Int -> Course -> Course
-updateDownwindY y ({downwind} as course) =
-  { course | downwind = { downwind | y = toFloat y } }
+-- updateDownwindY : Int -> Course -> Course
+-- updateDownwindY y ({downwind} as course) =
+--   { course | downwind = { downwind | y = toFloat y } }
 
 
-updateGateWidth : Int -> Course -> Course
-updateGateWidth w ({upwind, downwind} as course) =
-  let
-    newDownwind = { downwind | width = toFloat w }
-    newUpwind = { upwind | width = toFloat w }
-  in
-    { course | downwind = newDownwind, upwind = newUpwind }
+-- updateGateWidth : Int -> Course -> Course
+-- updateGateWidth w ({upwind, downwind} as course) =
+--   let
+--     newDownwind = { downwind | width = toFloat w }
+--     newUpwind = { upwind | width = toFloat w }
+--   in
+--     { course | downwind = newDownwind, upwind = newUpwind }
 
 
 updateGustGen : (GustGenerator -> GustGenerator) -> Course -> Course

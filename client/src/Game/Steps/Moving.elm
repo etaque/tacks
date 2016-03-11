@@ -78,14 +78,13 @@ withInertia elapsed previousVelocity targetVelocity =
 isGrounded : Point -> Course -> Bool
 isGrounded p course =
   let
-    ( dl, dr ) =
-      getGateMarks course.downwind
-
-    ( ul, ur ) =
-      getGateMarks course.upwind
+    gates =
+      course.start :: course.gates
 
     marks =
-      [ dl, dr, ul, ur ]
+      gates
+        |> List.map getGateMarks
+        |> List.concatMap (\m -> [ fst m, snd m ])
 
     halfBoatWidth =
       boatWidth / 2

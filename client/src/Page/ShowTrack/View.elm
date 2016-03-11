@@ -64,9 +64,9 @@ rankingsList rankings =
 about : Track -> TrackMeta -> Html
 about {course} meta =
   dl'
-  [ ( "Laps", [ text <| toString course.laps ] )
-  , ( "Distance", [ text <| toString (course.upwind.y - course.downwind.y), np ] )
-  , ( "Wind speed", [ text <| toString course.windSpeed, abbr' "kn" "Knots" ] )
+  -- [ ( "Laps", [ text <| toString course.laps ] )
+  -- , ( "Distance", [ text <| toString (course.upwind.y - course.downwind.y), np ] )
+  [ ( "Wind speed", [ text <| toString course.windSpeed, abbr' "kn" "Knots" ] )
   , ( "Gusts interval", [ text <| toString course.gustGenerator.interval, abbr' "s" "Seconds" ] )
   , ( "Gusts radius", aboutGustRadius course.gustGenerator )
   , ( "Gusts effect", aboutGustWind course.gustGenerator )
@@ -116,8 +116,8 @@ renderCourse {center, scale} course =
       ]
       [ Svg.g [ SvgAttr.transform (scaleTr ++ (translate cx cy)) ]
         [ (lazyRenderTiles course.grid)
-        , renderOpenGate course.upwind 0
-        , renderOpenGate course.downwind 0
+        -- , renderOpenGate course.upwind 0
+        -- , renderOpenGate course.downwind 0
         , renderPlayerHull 0 0
         ]
       ]

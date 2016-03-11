@@ -1,26 +1,26 @@
-module Game.Render.Players where
+module Game.Render.Players (..) where
 
 import Game.Core exposing (..)
 import Game.Geo as Geo
 import Game.Models exposing (..)
 import Model.Shared exposing (..)
-
 import Game.Render.SvgUtils exposing (..)
-
 import String
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Lazy exposing (..)
-
 import List exposing (..)
 
+
 renderPlayers : GameState -> Svg
-renderPlayers ({playerState,opponents,ghosts,course,center} as gameState) =
-  g [ class "players" ]
+renderPlayers ({ playerState, opponents, ghosts, course, center } as gameState) =
+  g
+    [ class "players" ]
     [ renderOpponents course opponents
-    -- , renderGhosts ghosts
+      -- , renderGhosts ghosts
     , renderPlayer course playerState
     ]
+
 
 renderOpponents : Course -> List Opponent -> Svg
 renderOpponents course opponents =
@@ -28,48 +28,78 @@ renderOpponents course opponents =
 
 
 renderOpponent : Opponent -> Svg
-renderOpponent {state,player} =
+renderOpponent { state, player } =
   let
-    hull = g [ transform (translatePoint state.position), opacity "0.5" ] [ renderPlayerHull state.heading state.windAngle ]
-    shadow = renderWindShadow state
-    name = text'
-      [ textAnchor "middle"
-      , transform <| (translatePoint (Geo.add state.position (0,-25))) ++ "scale(1,-1)"
-      , opacity "0.3"
-      ]
-      [ text (Maybe.withDefault "Anonymous" player.handle) ]
+    hull =
+      g [ transform (translatePoint state.position), opacity "0.5" ] [ renderPlayerHull state.heading state.windAngle ]
+
+    shadow =
+      renderWindShadow state
+
+    name =
+      text'
+        [ textAnchor "middle"
+        , transform <| (translatePoint (Geo.add state.position ( 0, -25 ))) ++ "scale(1,-1)"
+        , opacity "0.3"
+        ]
+        [ text (Maybe.withDefault "Anonymous" player.handle) ]
   in
     g [ class "opponent" ] [ shadow, hull, name ]
+
 
 renderPlayer : Course -> PlayerState -> Svg
 renderPlayer course state =
   let
-    playerHull = renderPlayerHull state.heading state.windAngle
-    windShadow = renderWindShadow (asOpponentState state)
-    angles = renderPlayerAngles state
-    nextGateLine = renderNextGateLine course state
-    vmgSign = renderVmgSign state
+    playerHull =
+      renderPlayerHull state.heading state.windAngle
+
+    windShadow =
+      renderWindShadow (asOpponentState state)
+
+    angles =
+      renderPlayerAngles state
+
+    nextGateLine =
+      renderNextGateLine course state
+
+    vmgSign =
+      renderVmgSign state
+
     movingPart =
-      g [ transform (translatePoint state.position) ]
+      g
+        [ transform (translatePoint state.position) ]
         [ angles, playerHull ]
-    wake = renderWake state.trail
+
+    wake =
+      renderWake state.trail
   in
     g
       [ class "player" ]
       [ wake, windShadow, nextGateLine, movingPart ]
 
+
 renderPlayerHull : Float -> Float -> Svg
 renderPlayerHull heading windAngle =
   let
-    sails = if (abs windAngle) > 130 then [ mainSail, kite ] else [ mainSail ]
-    flip = "scale(" ++ toString (abs windAngle / windAngle) ++ ", 1)"
-    adjustedSails = g [ transform flip ] sails
+    sails =
+      if (abs windAngle) > 130 then
+        [ mainSail, kite ]
+      else
+        [ mainSail ]
+
+    flip =
+      "scale(" ++ toString (abs windAngle / windAngle) ++ ", 1)"
+
+    adjustedSails =
+      g [ transform flip ] sails
   in
     g [ transform (hullRotation heading) ] [ hull, adjustedSails ]
+
 
 hullRotation : Float -> String
 hullRotation heading =
   rotate_ (180 - heading) 0 0
+
 
 kite : Svg
 kite =
@@ -80,7 +110,9 @@ kite =
     , stroke "black"
     , strokeWidth "1"
     , strokeOpacity "0.9"
-    ] []
+    ]
+    []
+
 
 mainSail : Svg
 mainSail =
@@ -90,7 +122,9 @@ mainSail =
     , strokeWidth "1"
     , strokeLinecap "round"
     , strokeOpacity "0.9"
-    ] []
+    ]
+    []
+
 
 hull : Svg
 hull =
@@ -101,55 +135,73 @@ hull =
     , stroke "black"
     , strokeWidth "1"
     , strokeOpacity "0.9"
-    ] []
+    ]
+    []
+
 
 renderWake : List Point -> Svg
 renderWake wake =
   let
-    pairs = if (isEmpty wake)
-      then []
-      else map2 (,) wake (tail wake |> Maybe.withDefault []) |> indexedMap (,)
-    style = [ stroke "white", strokeWidth "3" ]
+    pairs =
+      if (isEmpty wake) then
+        []
+      else
+        map2 (,) wake (tail wake |> Maybe.withDefault []) |> indexedMap (,)
+
+    style =
+      [ stroke "white", strokeWidth "3" ]
+
     opacityForIndex i =
       0.3 - 0.3 * (toFloat i) / (toFloat (length wake)) |> toString
-    renderSegment (i, ab) =
+
+    renderSegment ( i, ab ) =
       segment (style ++ [ opacity (opacityForIndex i) ]) ab
   in
     g [ id "playerWake" ] (map renderSegment pairs)
 
+
 renderWindShadow : OpponentState -> Svg
-renderWindShadow {windAngle, windOrigin, position, shadowDirection} =
+renderWindShadow { windAngle, windOrigin, position, shadowDirection } =
   let
-    arcAngles = [-15, -10, -5, 0, 5, 10, 15]
-    endPoints = map (\a -> Geo.add position (fromPolar (windShadowLength, toRadians (shadowDirection + a)))) arcAngles
+    arcAngles =
+      [ -15, -10, -5, 0, 5, 10, 15 ]
+
+    endPoints =
+      map (\a -> Geo.add position (fromPolar ( windShadowLength, toRadians (shadowDirection + a) ))) arcAngles
   in
     polygon
       [ polygonPoints (position :: endPoints)
       , fill "white"
       , opacity "0.2"
       ]
-      [ ]
+      []
+
 
 renderNextGateLine : Course -> PlayerState -> Svg
 renderNextGateLine course state =
   let
-    length = 100
-    maybeGatePos = case state.nextGate of
-      Just StartLine ->
-        Nothing
-      Just UpwindGate ->
-        Just (0, course.upwind.y)
-      Just DownwindGate ->
-        Just (0, course.downwind.y)
-      _ ->
-        Nothing
+    length =
+      100
+
+    maybeGatePos =
+      Maybe.map .center state.nextGate
+
     ifFarEnough gatePos =
-      if (Geo.distance state.position gatePos) > length * 2.5 then Just gatePos else Nothing
+      if (Geo.distance state.position gatePos) > length * 2.5 then
+        Just gatePos
+      else
+        Nothing
+
     renderLine gatePos =
       let
-        a = Geo.angleBetween state.position gatePos
-        p1 = Geo.add state.position (Geo.rotateDeg a 50)
-        p2 = Geo.add state.position (Geo.rotateDeg a 150)
+        a =
+          Geo.angleBetween state.position gatePos
+
+        p1 =
+          Geo.add state.position (Geo.rotateDeg a 50)
+
+        p2 =
+          Geo.add state.position (Geo.rotateDeg a 150)
       in
         segment
           [ stroke "white"
@@ -157,55 +209,73 @@ renderNextGateLine course state =
           , opacity "0.5"
           , markerEnd "url(#whiteFullArrow)"
           ]
-          (p1, p2)
+          ( p1, p2 )
   in
     Maybe.map renderLine (maybeGatePos `Maybe.andThen` ifFarEnough)
       |> Maybe.withDefault empty
 
+
 renderPlayerAngles : PlayerState -> Svg
 renderPlayerAngles player =
   let
-    windOrigin = player.heading - player.windAngle
+    windOrigin =
+      player.heading - player.windAngle
 
-    windMarker = g
-      [ transform <| translate 0 -40 ++ rotate_ ( 180 - windOrigin ) 0 40
-      , opacity "0.9"
-      ]
-      [ renderWindArrow ]
+    windMarker =
+      g
+        [ transform <| translate 0 -40 ++ rotate_ (180 - windOrigin) 0 40
+        , opacity "0.9"
+        ]
+        [ renderWindArrow ]
 
-    leftSide = (fromPolar (60, toRadians (player.windOrigin - 90)))
-    rightSide = (fromPolar (60, toRadians (player.windOrigin + 90)))
-    eqLine = segment
-      [ stroke "white"
-      , strokeWidth "1"
-      , opacity "0.5"
-      ]
-      (leftSide, rightSide)
+    leftSide =
+      (fromPolar ( 60, toRadians (player.windOrigin - 90) ))
 
-    vmgLines = g
-      [ opacity "0.5" ]
-      [ renderVmgLine -player.upwindVmg.angle
-      , renderVmgLine player.upwindVmg.angle
-      , renderVmgLine -player.downwindVmg.angle
-      , renderVmgLine player.downwindVmg.angle
-      ]
+    rightSide =
+      (fromPolar ( 60, toRadians (player.windOrigin + 90) ))
 
-    windLine = segment
-      [ stroke "white", opacity "0.5" ]
-      ((0,0), Geo.rotateDeg windOrigin 35)
+    eqLine =
+      segment
+        [ stroke "white"
+        , strokeWidth "1"
+        , opacity "0.5"
+        ]
+        ( leftSide, rightSide )
 
-    absWindAngle = abs (round player.windAngle)
+    vmgLines =
+      g
+        [ opacity "0.5" ]
+        [ renderVmgLine -player.upwindVmg.angle
+        , renderVmgLine player.upwindVmg.angle
+        , renderVmgLine -player.downwindVmg.angle
+        , renderVmgLine player.downwindVmg.angle
+        ]
 
-    windAngleText = text'
-      [ transform <| (translatePoint (Geo.rotateDeg (windOrigin + 180) 30)) ++ "scale(1,-1)"
-      , opacity "0.5"
-      , fill "black"
-      , textAnchor "middle"
-      , Svg.Attributes.style (if player.controlMode == FixedAngle then "text-decoration: underline" else "")
-      ]
-      [ text (toString absWindAngle ++ "°") ]
+    windLine =
+      segment
+        [ stroke "white", opacity "0.5" ]
+        ( ( 0, 0 ), Geo.rotateDeg windOrigin 35 )
+
+    absWindAngle =
+      abs (round player.windAngle)
+
+    windAngleText =
+      text'
+        [ transform <| (translatePoint (Geo.rotateDeg (windOrigin + 180) 30)) ++ "scale(1,-1)"
+        , opacity "0.5"
+        , fill "black"
+        , textAnchor "middle"
+        , Svg.Attributes.style
+            (if player.controlMode == FixedAngle then
+              "text-decoration: underline"
+             else
+              ""
+            )
+        ]
+        [ text (toString absWindAngle ++ "°") ]
   in
-    g [ ]
+    g
+      []
       [ eqLine
       , windLine
       , windMarker
@@ -213,61 +283,74 @@ renderPlayerAngles player =
       , windAngleText
       ]
 
+
 renderWindArrow : Svg
 renderWindArrow =
   Svg.path
     [ d "M 0,0 3,-12 0,-10 -3,-12 Z"
     , fill "white"
-    ] []
+    ]
+    []
+
 
 renderVmgLine : Float -> Svg
 renderVmgLine a =
   segment
     [ stroke "white", opacity "0.8" ]
-    ((0, 0), (Geo.rotateDeg a 30))
+    ( ( 0, 0 ), (Geo.rotateDeg a 30) )
 
 
 renderVmgSign : PlayerState -> Svg
 renderVmgSign player =
   let
-    windOriginRadians = toRadians (player.heading - player.windAngle)
-    icon = vmgIcon player
-    pt = fromPolar (30, windOriginRadians + pi/2)
+    windOriginRadians =
+      toRadians (player.heading - player.windAngle)
+
+    icon =
+      vmgIcon player
+
+    pt =
+      fromPolar ( 30, windOriginRadians + pi / 2 )
   in
-    g [ transform (translatePoint pt) ]
+    g
+      [ transform (translatePoint pt) ]
       [ icon ]
 
 
 vmgIcon : PlayerState -> Svg
 vmgIcon player =
   let
-    a = (abs player.windAngle)
-    margin = 3
+    a =
+      (abs player.windAngle)
+
+    margin =
+      3
   in
-    if a < 90
-    then
-      if a < player.upwindVmg.angle - margin
-      then badVmg
+    if a < 90 then
+      if a < player.upwindVmg.angle - margin then
+        badVmg
+      else if a > player.upwindVmg.angle + margin then
+        warnVmg
       else
-        if a > player.upwindVmg.angle + margin
-        then warnVmg
-        else goodVmg
+        goodVmg
+    else if a > player.downwindVmg.angle + margin then
+      badVmg
+    else if a < player.downwindVmg.angle - margin then
+      warnVmg
     else
-      if a > player.downwindVmg.angle + margin
-      then badVmg
-      else
-        if a < player.downwindVmg.angle - margin
-        then warnVmg
-        else goodVmg
+      goodVmg
+
 
 badVmg : Svg
 badVmg =
-  rect [ fill "red", stroke "white", x "-4", y "-4", width "8", height "8" ] [ ]
+  rect [ fill "red", stroke "white", x "-4", y "-4", width "8", height "8" ] []
+
 
 goodVmg : Svg
 goodVmg =
-  circle [ fill "green", stroke "white", cx "0", cy "0", r "5" ] [ ]
+  circle [ fill "green", stroke "white", cx "0", cy "0", r "5" ] []
+
 
 warnVmg : Svg
 warnVmg =
-  polygon [ fill "orange", stroke "white", points "-4,-4 4,-4 0,4" ] [ ]
+  polygon [ fill "orange", stroke "white", points "-4,-4 4,-4 0,4" ] []

@@ -13,10 +13,9 @@ import Json.Encode as Js
 courseEncoder : Course -> Value
 courseEncoder course =
   Js.object
-    [ "upwind" => gateEncoder course.upwind
-    , "downwind" => gateEncoder course.downwind
+    [ "start" => gateEncoder course.start
+    , "gates" => Js.list (List.map gateEncoder course.gates)
     , "grid" => gridEncoder course.grid
-    , "laps" => Js.int course.laps
     , "area" => areaEncoder course.area
     , "windSpeed" => Js.int course.windSpeed
     , "windGenerator" => windGeneratorEncoder course.windGenerator
@@ -27,9 +26,23 @@ courseEncoder course =
 gateEncoder : Gate -> Value
 gateEncoder gate =
   Js.object
-    [ "y" => Js.float gate.y
+    [ "label" => (Maybe.map Js.string gate.label |> Maybe.withDefault Js.null)
+    , "center" => pointEncoder gate.center
     , "width" => Js.float gate.width
+    , "orientation" => orientationEncoder gate.orientation
     ]
+
+
+orientationEncoder : Orientation -> Value
+orientationEncoder o =
+  Js.string
+    (case o of
+      North ->
+        "N"
+
+      South ->
+        "S"
+    )
 
 
 gridEncoder : Grid -> Value
@@ -40,15 +53,16 @@ gridEncoder grid =
 tileKindEncoder : TileKind -> Value
 tileKindEncoder kind =
   Js.string
-    <| case kind of
-        Water ->
-          "W"
+    (case kind of
+      Water ->
+        "W"
 
-        Grass ->
-          "G"
+      Grass ->
+        "G"
 
-        Rock ->
-          "R"
+      Rock ->
+        "R"
+    )
 
 
 areaEncoder : RaceArea -> Value

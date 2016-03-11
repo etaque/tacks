@@ -58,13 +58,13 @@ case class PlayerState(
   controlMode: ControlMode,
   tackTarget: Option[Double],
   crossedGates: Seq[Long],
-  nextGate: Option[GateLocation]
+  nextGate: Option[Gate]
 )
 
 object PlayerState {
   def initial(player: Player) = PlayerState(
     player, DateTime.now.getMillis, (0,0), false, false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
-    FixedHeading, None, Seq(), Some(StartLine))
+    FixedHeading, None, Seq(), None)
 }
 
 case class OpponentState(
@@ -78,7 +78,7 @@ case class OpponentState(
   crossedGates: Seq[Long]
 ) {
   def hasFinished(course: Course): Boolean =
-    crossedGates.length == course.laps * 2 + 1
+    crossedGates.length == course.gates.length + 1
 }
 
 object OpponentState {

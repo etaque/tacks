@@ -98,11 +98,11 @@ type SideBlock
 
 
 type FormUpdate
-  = SetDownwindY Int
-  | SetUpwindY Int
-  | SetGateWidth Int
-  | SetLaps Int
-  | UpdateGustGen (GustGenerator -> GustGenerator)
+  -- = SetDownwindY Int
+  -- | SetUpwindY Int
+  -- | SetGateWidth Int
+  -- | SetLaps Int
+  = UpdateGustGen (GustGenerator -> GustGenerator)
   | SetWindSpeed Int
   | SetWindW1 Int
   | SetWindA1 Int

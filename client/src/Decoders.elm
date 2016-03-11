@@ -150,12 +150,11 @@ pointDecoder =
 
 courseDecoder : Decoder Course
 courseDecoder =
-  object8
+  object7
     Course
-    ("upwind" := gateDecoder)
-    ("downwind" := gateDecoder)
+    ("start" := gateDecoder)
+    ("gates" := list gateDecoder)
     ("grid" := gridDecoder)
-    ("laps" := int)
     ("area" := raceAreaDecoder)
     ("windSpeed" := int)
     ("windGenerator" := windGeneratorDecoder)
@@ -164,10 +163,23 @@ courseDecoder =
 
 gateDecoder : Decoder Gate
 gateDecoder =
-  object2
+  object4
     Gate
-    ("y" := float)
+    (maybe ("label" := string))
+    ("center" := pointDecoder)
     ("width" := float)
+    ("orientation" := (string `andThen` orientationDecoder))
+
+
+orientationDecoder : String -> Decoder Orientation
+orientationDecoder s =
+  case s of
+    "N" ->
+      succeed North
+    "S" ->
+      succeed South
+    _ ->
+      fail (s ++ " is not an Orientation")
 
 
 gridDecoder : Decoder Grid
