@@ -23,9 +23,9 @@ type alias NewPlayer =
 validation : Validation () NewPlayer
 validation =
   form3 NewPlayer
-    ("handle" := string `andThen` (\s -> format s handleFormat))
-    ("email" := email)
-    ("password" := string `andThen` minLength 4)
+    (get "handle" (string `andThen` (format handleFormat)))
+    (get "email" email)
+    (get "password" (string `andThen` minLength 4))
 
 
 handleFormat : Regex

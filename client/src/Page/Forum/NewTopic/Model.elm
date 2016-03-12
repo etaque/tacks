@@ -21,8 +21,8 @@ type alias NewTopic =
 validation : Validation () NewTopic
 validation =
   form2 NewTopic
-    ("title" := string `andThen` minLength 2)
-    ("content" := string `andThen` minLength 2)
+    (get "title" (string `andThen` minLength 2))
+    (get "content" (string `andThen` minLength 2))
 
 
 initial : Model

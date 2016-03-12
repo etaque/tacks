@@ -39,7 +39,7 @@ registerForm { form, loading, serverErrors } =
           ( onClick addr (Submit newPlayer), not loading )
 
         Nothing ->
-          ( onClick formAddr Form.submit, Form.isSubmitted form )
+          ( onClick formAddr Form.Submit, Form.isSubmitted form )
 
     handle =
       Form.getFieldAsString "handle" form

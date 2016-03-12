@@ -15,7 +15,7 @@
         "etaque/elm-hexagons": "1.0.0 <= v < 2.0.0",
         "etaque/elm-response": "1.0.0 <= v < 2.0.0",
         "etaque/elm-route-parser": "2.0.0 <= v < 3.0.0",
-        "etaque/elm-simple-form": "1.0.1 <= v < 2.0.0",
+        "etaque/elm-simple-form": "2.0.0 <= v < 3.0.0",
         "etaque/elm-transit": "5.0.0 <= v < 6.0.0",
         "etaque/elm-transit-router": "1.0.1 <= v < 2.0.0",
         "etaque/elm-transit-style": "1.0.1 <= v < 2.0.0",
