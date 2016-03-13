@@ -26,7 +26,7 @@ removeAt i items =
 
 getAt : Int -> List a -> Maybe a
 getAt i items =
-  List.take i items
+  List.drop i items
     |> List.head
 
 
