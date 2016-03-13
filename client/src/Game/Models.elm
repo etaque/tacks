@@ -373,8 +373,14 @@ defaultGame now course player =
 getGateMarks : Gate -> ( Point, Point )
 getGateMarks { center, width, orientation } =
   case orientation of
-    _ ->
+    North ->
       ( ( fst center - width / 2, snd center ), ( fst center + width / 2, snd center ) )
+    South ->
+      ( ( fst center + width / 2, snd center ), ( fst center - width / 2, snd center ) )
+    East ->
+      ( ( fst center, snd center - width / 2 ), ( fst center, snd center + width / 2 ) )
+    West ->
+      ( ( fst center, snd center + width / 2 ), ( fst center, snd center - width / 2 ) )
 
 
 findPlayerGhost : String -> List GhostState -> Maybe GhostState

@@ -33,12 +33,16 @@ object JsonFormats {
     override def reads(json: JsValue): JsResult[Orientation] = json match {
       case JsString("N") => JsSuccess(North)
       case JsString("S") => JsSuccess(South)
+      case JsString("E") => JsSuccess(East)
+      case JsString("W") => JsSuccess(West)
       case _ @ v => readsValueError("Orientation", v.toString())
     }
     override def writes(o: Orientation): JsValue = JsString(
       o match {
         case North => "N"
         case South => "S"
+        case East => "E"
+        case West => "W"
       })
   }
 

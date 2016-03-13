@@ -5,6 +5,10 @@ import Constants exposing (sidebarWidth)
 import Drag exposing (MouseEvent(..))
 
 
+-- import Form exposing (Form)
+-- import Form.Validate exposing (..)
+
+
 type alias Model =
   { track : Maybe Track
   , editor : Maybe Editor
@@ -22,7 +26,9 @@ initial =
 
 type alias Editor =
   { blocks : SideBlocks
-  , course : Course
+  , course :
+      Course
+      -- , courseForm : Form () Course
   , center : Point
   , mode : Mode
   , altMove : Bool
@@ -41,7 +47,9 @@ initialEditor track =
       , wind = False
       , gusts = False
       }
-  , course = track.course
+  , course =
+      track.course
+      -- , courseForm = initialCourseForm track.course
   , center = ( 0, 0 )
   , mode = CreateTile Water
   , altMove = False
@@ -49,6 +57,22 @@ initialEditor track =
   , saving = False
   , confirmPublish = False
   }
+
+
+
+-- initialCourseForm : Form () Course
+-- initialCourseForm =
+--   let
+--     fields = []
+--   in
+--     Form.initial fields validate
+-- validate : Course -> Validation () Course
+-- validate course =
+--   form7
+--     Course
+--     (get "start" validateGate)
+--     (get "gates" (list validateGate))
+--     (get "grid")
 
 
 type alias SideBlocks =
@@ -98,11 +122,17 @@ type SideBlock
 
 
 type FormUpdate
-  -- = SetDownwindY Int
-  -- | SetUpwindY Int
-  -- | SetGateWidth Int
-  -- | SetLaps Int
-  = UpdateGustGen (GustGenerator -> GustGenerator)
+  = SetStartCenterX Int
+  | SetStartCenterY Int
+  | SetStartWidth Int
+  | SetStartOrientation Orientation
+  | AddGate
+  | SetGateCenterX Int Int
+  | SetGateCenterY Int Int
+  | SetGateWidth Int Int
+  | SetGateOrientation Int Orientation
+  | RemoveGate Int
+  | UpdateGustGen (GustGenerator -> GustGenerator)
   | SetWindSpeed Int
   | SetWindW1 Int
   | SetWindA1 Int

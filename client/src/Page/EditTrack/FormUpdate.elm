@@ -1,24 +1,45 @@
-module Page.EditTrack.FormUpdate where
+module Page.EditTrack.FormUpdate (..) where
 
+import String
+import Result
+import CoreExtra
 import Model.Shared exposing (..)
+import Game.Models exposing (defaultGate)
 import Page.EditTrack.Model exposing (..)
 
 
 update : FormUpdate -> Course -> Course
-update fu course =
+update fu ({ start, gates } as course) =
   case fu of
+    SetStartCenterX x ->
+      { course | start = { start | center = ( toFloat x, snd start.center ) } }
 
-    -- SetUpwindY y ->
-    --   updateUpwindY y course
+    SetStartCenterY y ->
+      { course | start = { start | center = ( fst start.center, toFloat y ) } }
 
-    -- SetDownwindY y ->
-    --   updateDownwindY y course
+    SetStartWidth w ->
+      { course | start = { start | width = toFloat w } }
 
-    -- SetGateWidth w ->
-    --   updateGateWidth w course
+    SetStartOrientation o ->
+      { course | start = { start | orientation = o } }
 
-    -- SetLaps laps ->
-    --   { course | laps = laps }
+    AddGate ->
+      { course | gates = gates ++ [ defaultGate ] }
+
+    SetGateCenterX i x ->
+      { course | gates = CoreExtra.updateAt i (\g -> { g | center = ( toFloat x, snd g.center ) }) gates }
+
+    SetGateCenterY i y ->
+      { course | gates = CoreExtra.updateAt i (\g -> { g | center = ( fst g.center, toFloat y ) }) gates }
+
+    SetGateWidth i w ->
+      { course | gates = CoreExtra.updateAt i (\g -> { g | width = toFloat w }) gates }
+
+    SetGateOrientation i o ->
+      { course | gates = CoreExtra.updateAt i (\g -> { g | orientation = o }) gates }
+
+    RemoveGate i ->
+      { course | gates = CoreExtra.removeAt i gates }
 
     UpdateGustGen fn ->
       updateGustGen fn course
@@ -37,25 +58,6 @@ update fu course =
 
     SetWindA2 i ->
       updateWindGen (\g -> { g | amplitude2 = i }) course
-
-
--- updateUpwindY : Int -> Course -> Course
--- updateUpwindY y ({upwind} as course) =
---   { course | upwind = { upwind | y = toFloat y } }
-
-
--- updateDownwindY : Int -> Course -> Course
--- updateDownwindY y ({downwind} as course) =
---   { course | downwind = { downwind | y = toFloat y } }
-
-
--- updateGateWidth : Int -> Course -> Course
--- updateGateWidth w ({upwind, downwind} as course) =
---   let
---     newDownwind = { downwind | width = toFloat w }
---     newUpwind = { upwind | width = toFloat w }
---   in
---     { course | downwind = newDownwind, upwind = newUpwind }
 
 
 updateGustGen : (GustGenerator -> GustGenerator) -> Course -> Course

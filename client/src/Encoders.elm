@@ -42,6 +42,12 @@ orientationEncoder o =
 
       South ->
         "S"
+
+      East ->
+        "E"
+
+      West ->
+        "W"
     )
 
 

@@ -176,8 +176,16 @@ orientationDecoder s =
   case s of
     "N" ->
       succeed North
+
     "S" ->
       succeed South
+
+    "E" ->
+      succeed East
+
+    "W" ->
+      succeed West
+
     _ ->
       fail (s ++ " is not an Orientation")
 

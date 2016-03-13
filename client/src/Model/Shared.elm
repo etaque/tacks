@@ -160,6 +160,24 @@ type alias Gate =
 type Orientation
   = North
   | South
+  | East
+  | West
+
+
+orientationAbbr : Orientation -> String
+orientationAbbr o =
+  case o of
+    North ->
+      "N"
+
+    South ->
+      "S"
+
+    East ->
+      "E"
+
+    West ->
+      "W"
 
 
 type alias RaceArea =

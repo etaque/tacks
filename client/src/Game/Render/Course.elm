@@ -4,8 +4,8 @@ import Constants
 import Game.Models exposing (..)
 import Model.Shared exposing (..)
 import Hexagons
-import Game.Render.Gates exposing (..)
-import Game.Render.Tiles exposing (..)
+import Game.Render.Gates as Gates
+import Game.Render.Tiles as Tiles
 import Dict
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -15,7 +15,7 @@ renderCourse : GameState -> Svg
 renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
   g
     [ class "course" ]
-    [ lazyRenderTiles course.grid
+    [ Tiles.lazyRenderTiles course.grid
     , renderTiledGusts gusts
       -- , renderGusts wind
     , renderGates playerState course timers.now (isStarted gameState)
@@ -51,10 +51,8 @@ renderGustTile ( coords, { angle, speed } ) =
         "white"
   in
     polygon
-      [ points verticesPoints
+      [ points Tiles.verticesPoints
       , fill color
-        -- , stroke color
-        -- , strokeWidth "0.5"
       , opacity (toString a)
       , transform ("translate(" ++ toString x ++ ", " ++ toString y ++ ")")
       ]
@@ -62,24 +60,12 @@ renderGustTile ( coords, { angle, speed } ) =
 
 
 renderGates : PlayerState -> Course -> Float -> Bool -> Svg
-renderGates playerState course now started =
-  -- TODO
-  g [ class "gates" ] []
-
-
-
--- renderGusts : Wind -> Svg
--- renderGusts wind =
---   g [ class "circle-gusts" ] (List.map renderGust wind.gusts)
--- renderGust : Gust -> Svg
--- renderGust gust =
---   let
---     a = 0.3 * (abs gust.speed) / 10
---     color = if gust.speed > 0 then "black" else "white"
---   in
---     circle
---       [ r (toString gust.radius)
---       , fill color
---       , fillOpacity (toString a)
---       , transform (translatePoint gust.position)
---       ] []
+renderGates {crossedGates} { start, gates } now started =
+  g
+    [ class "gates" ]
+    (List.indexedMap
+      (\i g ->
+        Gates.render (started && i == List.length crossedGates) now g
+      )
+      (start :: gates)
+    )

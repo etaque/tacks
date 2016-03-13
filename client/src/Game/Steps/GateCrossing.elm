@@ -29,36 +29,49 @@ gateCrossingStep previousState ({ course } as gameState) ({ crossedGates, positi
 
 
 getNextGate : Bool -> Course -> Int -> Maybe Gate
-getNextGate started course crossedGates =
-  if crossedGates == List.length course.gates + 1 then
+getNextGate started course crossedGatesCount =
+  if crossedGatesCount == List.length course.gates + 1 then
     Nothing
-  else if crossedGates == 0 then
-    if started then
-      Just course.start
-    else
-      Nothing
+  else if crossedGatesCount == 0 then
+    Just course.start
   else
-    CoreExtra.getAt (crossedGates - 1) course.gates
+    CoreExtra.getAt (crossedGatesCount - 1) course.gates
 
 
 gateCrossed : Gate -> Point -> Point -> Bool
 gateCrossed gate p1 p2 =
   case gate.orientation of
     North ->
-      gateCrossedFromSouth gate ( p1, p2 )
+      toNorth gate ( p1, p2 )
 
     South ->
-      gateCrossedFromNorth gate ( p1, p2 )
+      toSouth gate ( p1, p2 )
+
+    East ->
+      toEast gate ( p1, p2 )
+
+    West ->
+      toWest gate ( p1, p2 )
 
 
-gateCrossedFromNorth : Gate -> Segment -> Bool
-gateCrossedFromNorth gate ( p, p' ) =
+toSouth : Gate -> Segment -> Bool
+toSouth gate ( p, p' ) =
   (snd p) > (snd gate.center) && (snd p') <= (snd gate.center) && (gateCrossedInX gate ( p, p' ))
 
 
-gateCrossedFromSouth : Gate -> Segment -> Bool
-gateCrossedFromSouth gate ( p, p' ) =
+toNorth : Gate -> Segment -> Bool
+toNorth gate ( p, p' ) =
   (snd p) < (snd gate.center) && (snd p') >= (snd gate.center) && (gateCrossedInX gate ( p, p' ))
+
+
+toEast : Gate -> Segment -> Bool
+toEast gate ( p1, p2 ) =
+  (fst p1) < (fst gate.center) && (fst p2) >= (fst gate.center) && (gateCrossedInY) gate ( p1, p2 )
+
+
+toWest : Gate -> Segment -> Bool
+toWest gate ( p1, p2 ) =
+  (fst p1) > (fst gate.center) && (fst p2) <= (fst gate.center) && (gateCrossedInY) gate ( p1, p2 )
 
 
 gateCrossedInX : Gate -> Segment -> Bool
@@ -74,3 +87,8 @@ gateCrossedInX gate ( ( x, y ), ( x', y' ) ) =
       (snd gate.center - b) / a
   in
     (abs xGate) <= gate.width / 2
+
+
+gateCrossedInY : Gate -> Segment -> Bool
+gateCrossedInY gate ( ( x, y ), ( x', y' ) ) =
+  False

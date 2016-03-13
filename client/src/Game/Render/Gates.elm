@@ -8,34 +8,16 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 
--- renderDownwind : PlayerState -> Course -> Float -> Bool -> Svg
--- renderDownwind playerState course now started =
---   case playerState.nextGate of
---     Just StartLine ->
---       if started then
---         renderOpenGate course.downwind now
---       else
---         renderClosedGate course.downwind now
---
---     Just DownwindGate ->
---       renderOpenGate course.downwind now
---
---     _ ->
---       renderClosedGate course.downwind now
---
---
--- renderUpwind : PlayerState -> Course -> Float -> Svg
--- renderUpwind playerState course now =
---   case playerState.nextGate of
---     Just UpwindGate ->
---       renderOpenGate course.upwind now
---
---     _ ->
---       renderClosedGate course.upwind now
+render : Bool -> Float -> Gate -> Svg
+render open timer gate =
+  if open then
+    renderOpenGate timer gate
+  else
+    renderClosedGate timer gate
 
 
-renderOpenGate : Gate -> Float -> Svg
-renderOpenGate gate timer =
+renderOpenGate : Float -> Gate -> Svg
+renderOpenGate timer gate =
   let
     lineStyle =
       [ stroke "white"
@@ -47,8 +29,8 @@ renderOpenGate gate timer =
     renderGate gate lineStyle colors.green
 
 
-renderClosedGate : Gate -> Float -> Svg
-renderClosedGate gate timer =
+renderClosedGate : Float -> Gate -> Svg
+renderClosedGate timer gate =
   let
     lineStyle =
       [ stroke "white"

@@ -1,5 +1,6 @@
 module Page.EditTrack.SideView (..) where
 
+import Signal
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
@@ -10,6 +11,11 @@ import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
 import View.Sidebar as Sidebar
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
+
+
+formAddr : Signal.Address FormUpdate
+formAddr =
+  Signal.forwardTo addr FormAction
 
 
 view : Track -> Editor -> List Html
@@ -39,32 +45,12 @@ view track ({ course, name, saving, mode, blocks } as editor) =
       [ surfaceBlock editor
       , p [] [ text "Press SHIFT for temporary move mode" ]
       ]
-  -- , sideBlock
-  --     "Gates"
-  --     blocks.gates
-  --     (ToggleBlock Gates)
-  --     [ div
-  --         [ class "form-group" ]
-  --         [ label [ class "" ] [ text "Downwind" ]
-  --         , intInput course.downwind.y SetDownwindY [ step "10" ]
-  --         ]
-  --     , div
-  --         [ class "form-group" ]
-  --         [ label [ class "" ] [ text "Upwind" ]
-  --         , intInput course.upwind.y SetUpwindY [ step "10" ]
-  --         ]
-  --     , div
-  --         [ class "form-group" ]
-  --         [ label [ class "" ] [ text "Width" ]
-  --         , intInput course.downwind.width SetGateWidth [ HtmlAttr.min "50", step "10" ]
-  --         ]
-  --     , div
-  --         [ class "form-group" ]
-  --         [ label [ class "" ] [ text "Laps" ]
-  --         , intInput course.laps SetLaps [ HtmlAttr.min "1" ]
-  --         ]
-  --     ]
   , sideBlock
+      "Gates"
+      blocks.gates
+      (ToggleBlock Gates)
+      (renderGatesGroups course)
+ , sideBlock
       "Wind"
       blocks.wind
       (ToggleBlock Wind)
@@ -222,11 +208,80 @@ renderSurfaceMode currentMode mode =
       [ text abbr ]
 
 
+renderGatesGroups : Course -> List Html
+renderGatesGroups { start, gates } =
+  [ table
+      [ class "" ]
+      [ thead
+          []
+          [ tr
+              []
+              [ th [] []
+              , th [] [ text "Cx" ]
+              , th [] [ text "Cy" ]
+              , th [] [ text "W" ]
+              , th [] [ text "Or." ]
+              , th [] []
+              ]
+          ]
+      , tbody
+          []
+          (tr
+            []
+            [ th [] [ text "S" ]
+            , td [] [ intInput ((round << fst) start.center) SetStartCenterX [ step "10" ] ]
+            , td [] [ intInput ((round << snd) start.center) SetStartCenterY [ step "10" ] ]
+            , td [] [ intInput (round start.width) SetStartWidth [ step "10" ] ]
+            , td [] [ orientationOptions SetStartOrientation start.orientation ]
+            , td [] []
+            ]
+            :: List.indexedMap
+                (\i gate ->
+                  tr
+                    []
+                    [ th [] [ text ("G" ++ toString (i + 1)) ]
+                    , th [] [ intInput ((round << fst) gate.center) (SetGateCenterX i) [ step "10" ] ]
+                    , th [] [ intInput ((round << snd) gate.center) (SetGateCenterY i) [ step "10" ] ]
+                    , th [] [ intInput (round gate.width) (SetGateWidth i) [ step "10" ] ]
+                    , td [] [ orientationOptions (SetGateOrientation i) gate.orientation ]
+                    , td [ onClick formAddr (RemoveGate i) ] [ text "X" ]
+                    ]
+                )
+                gates
+          )
+      ]
+  , button
+      [ onClick formAddr AddGate
+      , class "btn btn-sm btn-primary btn-block"
+      ]
+      [ text "Add gate" ]
+  ]
+
+
+orientationOptions : (Orientation -> FormUpdate) -> Orientation -> Html
+orientationOptions toMsg current =
+  div
+    [ class "btn-group btn-group-xs orientations" ]
+    (List.map
+      (\o ->
+        span
+          [ onClick formAddr (toMsg o)
+          , classList
+              [ ( "btn btn-default", True )
+              , ( "active", o == current )
+              ]
+          ]
+          [ text (orientationAbbr o) ]
+      )
+      [ North, South, East, West ]
+    )
+
+
 intInput : number -> (Int -> FormUpdate) -> List Attribute -> Html
 intInput val formUpdate attrs =
   textInput
     ([ value (toString val)
-     , onIntInput addr (formUpdate >> FormAction)
+     , onIntInput formAddr formUpdate
      , type' "number"
      ]
       ++ attrs

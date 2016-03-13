@@ -99,11 +99,43 @@
       height: 25px;
       font-size: 13px;
       border-radius: 0;
-
     }
 
     .range {
       .form-control {
+        width: 40px;
+      }
+    }
+
+    table {
+      font-size: 12px;
+      width: 100%;
+      margin-bottom: 5px;
+
+      th, td {
+        padding: 2px;
+      }
+
+      thead th {
+        text-align: center;
+      }
+
+      tbody th {
+        text-align: center;
+      }
+
+      .form-control {
+        /* width: 40px; */
+        padding: 2px 4px;
+        box-shadow: none;
+        border: none;
+        border-radius: 0;
+        text-align: center;
+        font-size: 12px;
+        -moz-appearance:textfield;
+      }
+
+      .orientations {
         width: 40px;
       }
     }

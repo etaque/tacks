@@ -30,6 +30,11 @@ getAt i items =
     |> List.head
 
 
+setAt : Int -> a -> List a -> List a
+setAt i item items =
+  updateAt i (\_ -> item) items
+
+
 updateAt : Int -> (a -> a) -> List a -> List a
 updateAt i update items =
   let
