@@ -60,12 +60,9 @@ renderGustTile ( coords, { angle, speed } ) =
 
 
 renderGates : PlayerState -> Course -> Float -> Bool -> Svg
-renderGates {crossedGates} { start, gates } now started =
-  g
-    [ class "gates" ]
-    (List.indexedMap
-      (\i g ->
-        Gates.render (started && i == List.length crossedGates) now g
-      )
-      (start :: gates)
-    )
+renderGates { crossedGates } { start, gates } now started =
+  start :: gates
+    |> List.indexedMap (\i g -> Gates.render now started (i - List.length crossedGates) g)
+    |> List.filterMap identity
+    |> g [ class "gates" ]
+

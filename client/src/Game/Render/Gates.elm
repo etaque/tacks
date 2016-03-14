@@ -8,12 +8,17 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 
-render : Bool -> Float -> Gate -> Svg
-render open timer gate =
-  if open then
-    renderOpenGate timer gate
+render : Float -> Bool -> Int -> Gate -> Maybe Svg
+render timer started index gate =
+  if index == 0 then
+    if started then
+      Just (renderOpenGate timer gate)
+    else
+      Just (renderStartGate timer gate)
+  else if index == -1 || index == 1 then
+    Just (renderClosedGate timer gate)
   else
-    renderClosedGate timer gate
+    Nothing
 
 
 renderOpenGate : Float -> Gate -> Svg
@@ -26,7 +31,18 @@ renderOpenGate timer gate =
       , opacity (toString (gateLineOpacity timer))
       ]
   in
-    renderGate gate lineStyle colors.green
+    renderGate gate lineStyle 1 colors.green
+
+
+renderStartGate : Float -> Gate -> Svg
+renderStartGate timer gate =
+  let
+    lineStyle =
+      [ stroke "white"
+      , strokeWidth "2"
+      ]
+  in
+    renderGate gate lineStyle 1 colors.green
 
 
 renderClosedGate : Float -> Gate -> Svg
@@ -37,11 +53,11 @@ renderClosedGate timer gate =
       , strokeWidth "2"
       ]
   in
-    renderGate gate lineStyle "black"
+    renderGate gate lineStyle 0.4 "black"
 
 
-renderGate : Gate -> List Attribute -> String -> Svg
-renderGate gate lineStyle color =
+renderGate : Gate -> List Attribute -> Float -> String -> Svg
+renderGate gate lineStyle op color =
   let
     l =
       segment lineStyle (getGateMarks gate)
@@ -49,7 +65,7 @@ renderGate gate lineStyle color =
     marks =
       renderGateMarks color gate
   in
-    g [] [ l, marks ]
+    g [ opacity (toString op) ] [ l, marks ]
 
 
 renderGateMarks : String -> Gate -> Svg
