@@ -54,7 +54,7 @@ type alias RaceInput =
   , startTime:   Maybe Time
   , wind:        Wind
   , opponents:   List Opponent
-  , ghosts:      List GhostState
+  , ghosts:      List Ghost
   , tallies: List PlayerTally
   , initial:     Bool
   , clientTime:  Time

@@ -63,7 +63,7 @@ case class PlayerState(
 
 object PlayerState {
   def initial(player: Player) = PlayerState(
-    player, DateTime.now.getMillis, (0,0), false, false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
+    player, DateTime.now.getMillis.toFloat, (0,0), false, false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
     FixedHeading, None, Seq(), None)
 }
 
@@ -102,32 +102,14 @@ case class Opponent(
 case class PlayerInput(state: OpponentState, input: KeyboardInput, localTime: Long)
 case class PlayerUpdate(player: Player, playerInput: PlayerInput)
 
-// case class GhostRun(
-//   run: TimeTrialRun,
-//   tracks: Seq[RunTrack],
-//   playerId: BSONObjectID,
-//   playerHandle: Option[String]
-// )
-
-case class GhostState(
-  position: Point,
-  heading: Double,
-  id: UUID,
-  handle: Option[String],
-  gates: Seq[Long]
-)
-
-object GhostState {
-  def initial(id: UUID, handle: Option[String], gates: Seq[Long]) = GhostState((0,0), 0, id, handle, gates)
-}
 
 case class RaceUpdate(
   serverNow: DateTime,
   startTime: Option[DateTime],
   wind: Wind,
-  opponents: Seq[Opponent] = Nil,
-  ghosts: Seq[GhostState] = Nil,
-  tallies: Seq[PlayerTally] = Nil,
+  opponents: Seq[Opponent],
+  ghosts: Seq[GhostState],
+  tallies: Seq[PlayerTally],
   isMaster: Boolean = false,
   initial: Boolean = false,
   clientTime: Float = 0
@@ -139,6 +121,9 @@ object RaceUpdate {
       DateTime.now,
       startTime = None,
       wind = Wind.default,
+      opponents = Nil,
+      ghosts = Nil,
+      tallies = Nil,
       initial = true
     )
 }

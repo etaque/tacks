@@ -30,7 +30,14 @@ object RunPaths extends TableQuery(new RunPathTable(_)) {
     map(identity) += runPath
   }
 
-  def deleteByRunId(runId: UUID) = DB.run {
-    filter(_.runId === runId).delete
+  def findByRunId(runId: UUID): Future[Option[RunPath]] = DB.run {
+    onRunId(runId).result.headOption
   }
+
+  def deleteByRunId(runId: UUID) = DB.run {
+    onRunId(runId).delete
+  }
+
+  private def onRunId(runId: UUID) =
+    filter(_.runId === runId)
 }

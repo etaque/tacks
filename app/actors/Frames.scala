@@ -1,5 +1,6 @@
 package actors
 
+import java.util.UUID
 import play.api.libs.json._
 
 import models._
@@ -13,6 +14,8 @@ object Frames {
   sealed trait InputFrame
   case class PlayerInputFrame(raceInput: PlayerInput) extends InputFrame
   case class NewMessageFrame(content: String) extends InputFrame
+  case class AddGhostFrame(runId: UUID) extends InputFrame
+  case class RemoveGhostFrame(runId: UUID) extends InputFrame
 
   implicit val inputFrameFormat: Format[InputFrame] = new Format[InputFrame] {
 
@@ -24,6 +27,12 @@ object Frames {
       }
       case JsDefined(JsString("NewMessage")) => {
         JsSuccess(NewMessageFrame((json \ "content").as[String]))
+      }
+      case JsDefined(JsString("AddGhostRun")) => {
+        JsSuccess(AddGhostFrame((json \ "runId").as[UUID]))
+      }
+      case JsDefined(JsString("RemoveGhostRun")) => {
+        JsSuccess(RemoveGhostFrame((json \ "runId").as[UUID]))
       }
       case _ =>
         JsError("Unkown InputFrame tag")

@@ -35,6 +35,10 @@ class RunTable(tag: Tag) extends Table[Run](tag, "runs") {
 object Runs extends TableQuery(new RunTable(_)) {
   import RunMappings._
 
+  def findById(id: UUID): Future[Option[Run]] = DB.run {
+    onId(id).result.headOption
+  }
+
   def listRecent(trackId: UUID, count: Int): Future[Seq[Run]] = DB.run {
     onTrack(trackId).sortBy(_.startTime.desc).take(count).result
   }
@@ -53,22 +57,21 @@ object Runs extends TableQuery(new RunTable(_)) {
 
   def extractRankings(trackId: UUID) = DB.run {
     sql"""
-      SELECT row_number() OVER (order by duration), player_id, duration
-      FROM (SELECT DISTINCT ON (player_id) * FROM runs ORDER BY player_id, duration) AS r
+      SELECT row_number() OVER (order by duration), player_id, duration FROM (
+        SELECT DISTINCT ON (player_id) * FROM runs
+        WHERE track_id = $trackId
+        ORDER BY player_id, duration
+      ) AS r
       ORDER BY duration ASC
     """.as[RunRanking]
-    // onTrack(trackId)
-    //   .sortBy(_.duration.asc)
-    //   .distinctOn(_.playerId)
-    //   .zipWithIndex
-    //   .map { case (run, i) =>
-    //     (i, run.playerId, run.playerHandle, run.id, run.startTime, run.duration)
-    //   }.result
   }
 
   def save(run: Run): Future[Int] = DB.run {
     map(identity) += run
   }
+
+  private def onId(id: UUID) =
+    filter(_.id === id)
 
   private def onTrack(trackId: UUID) =
     filter(_.trackId === trackId)

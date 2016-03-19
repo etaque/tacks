@@ -14,6 +14,7 @@ import models._
 import dao._
 import tools.Conf
 
+
 case class TrackState(
   track: Track,
   races: Seq[Race]
@@ -40,7 +41,28 @@ case class TrackState(
   }
 }
 
+case class PlayerContext(
+  player: Player,
+  input: KeyboardInput,
+  state: OpponentState,
+  ref: ActorRef
+) {
+  def asOpponent = Opponent(state, player)
+}
+
+case class PlayerJoin(player: Player)
+case class PlayerQuit(player: Player)
+
+case class AddGhost(player: Player, runId: UUID)
+case class InitGhost(player: Player, run: Run, path: RunPath)
+case class RemoveGhost(player: Player, runId: UUID)
+
+case object FrameTick
+case object SpawnGust
+case object GetStatus
+case object AutoClean
 case object RotateNextRace
+case object NoOp
 
 class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
@@ -54,8 +76,13 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
   def track = state.track
   def course = track.course
 
-  val players = scala.collection.mutable.Map[UUID, PlayerContext]()
-  val paths = scala.collection.mutable.Map[UUID, RunPath]()
+  type PlayerId = UUID
+  type RunId = UUID
+
+  val players = scala.collection.mutable.Map[PlayerId, PlayerContext]()
+  val paths = scala.collection.mutable.Map[PlayerId, RunPath]()
+  val playersGhosts = scala.collection.mutable.Map[PlayerId, Map[RunId, GhostState]]()
+  val ghostRuns = scala.collection.mutable.Map[RunId, (Run, RunPath)]()
 
   def clock: Long = DateTime.now.getMillis
 
@@ -142,6 +169,32 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
       }
     }
 
+    case AddGhost(player, runId) =>
+      ghostRuns.get(runId) match {
+        case Some((run, path)) =>
+          self ! InitGhost(player, run, path)
+        case None =>
+          val initMaybeFu = for {
+            runOpt <- Runs.findById(runId)
+            pathOpt <- RunPaths.findByRunId(runId)
+          } yield for {
+            run <- runOpt
+            path <- pathOpt
+          } yield InitGhost(player, run, path)
+          initMaybeFu.map(_.getOrElse(NoOp)) pipeTo self
+      }
+
+    case InitGhost(player, run, path) =>
+      val all = playersGhosts.getOrElse(player.id, Map.empty)
+      val g = GhostState.initial(run.playerId, run.playerHandle, run.tally)
+      playersGhosts += player.id -> (all + (run.id -> g))
+      ghostRuns += run.id -> (run, path)
+
+    case RemoveGhost(player, runId) =>
+      playersGhosts.get(player.id).foreach { runIds =>
+        playersGhosts += (player.id -> (runIds - runId))
+      }
+
     /**
      * new gust
      */
@@ -159,6 +212,8 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
     case ReloadTrack(newTrack) => {
       state = state.copy(track = newTrack)
     }
+
+    case NoOp =>
   }
 
   def broadcastLiveTrackUpdate(): Future[LiveTrackUpdate] = {
@@ -171,18 +226,32 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
     players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
   }
 
+  def playerGhosts(playerId: UUID)(ts: Long): Seq[GhostState] = {
+    playersGhosts.get(playerId).map { runIds =>
+      runIds.toSeq.flatMap { case (runId, ghostState) =>
+        ghostRuns.get(runId).map { case (_, path) =>
+          GhostState.at(ts, path)(ghostState)
+        }
+      }
+    }.getOrElse(Nil)
+  }
+
   def playerTallies(playerId: UUID): Seq[PlayerTally] = {
     state.playerRace(playerId).map(_.id).map(state.raceTallies).getOrElse(Nil)
   }
 
   def raceUpdateForPlayer(player: Player, clientTime: Long) = {
+    val now = DateTime.now
+    val startTimeOpt = TrackActor.playerStartTime(state, player)
+    val raceTimeOpt = startTimeOpt.map(now.getMillis - _.getMillis)
     RaceUpdate(
-      serverNow = DateTime.now,
-      startTime = TrackActor.playerStartTime(state, player),
+      serverNow = now,
+      startTime = startTimeOpt,
       wind = wind,
       opponents = playerOpponents(player.id),
+      ghosts = raceTimeOpt.map(playerGhosts(player.id)).getOrElse(Nil),
       tallies = playerTallies(player.id),
-      clientTime = clientTime
+      clientTime = clientTime.toFloat
     )
   }
 
@@ -201,14 +270,9 @@ object TrackActor {
 
     val p = PathPoint((elapsedMillis % 1000).toInt, ctx.state.position, ctx.state.heading)
 
-    paths.lift(playerId) match {
-      case Some(path) => {
-        path.addPoint(currentSecond, p)
-      }
-      case None => {
-        RunPath.init(currentSecond, p)
-      }
-    }
+    paths.get(playerId)
+      .map(_.addPoint(currentSecond, p))
+      .getOrElse(RunPath.init(currentSecond, p))
   }
 
   def cleanStaleRaces(state: TrackState): TrackState = {

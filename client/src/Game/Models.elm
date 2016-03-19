@@ -40,7 +40,7 @@ type alias GameState =
   , wake : List Point
   , center : Point
   , opponents : List Opponent
-  , ghosts : List GhostState
+  , ghosts : List Ghost
   , course : Course
   , tallies : List PlayerTally
   , timers : Timers
@@ -171,7 +171,7 @@ type alias OpponentState =
   }
 
 
-type alias GhostState =
+type alias Ghost =
   { position : Point
   , heading : Float
   , id : String
@@ -383,7 +383,7 @@ getGateMarks { center, width, orientation } =
       ( ( fst center, snd center + width / 2 ), ( fst center, snd center - width / 2 ) )
 
 
-findPlayerGhost : String -> List GhostState -> Maybe GhostState
+findPlayerGhost : String -> List Ghost -> Maybe Ghost
 findPlayerGhost playerId ghosts =
   Core.find (\g -> g.id == playerId) ghosts
 

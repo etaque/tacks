@@ -18,6 +18,12 @@ class PlayerActor(player: Player, trackActor: ActorRef, out: ActorRef) extends A
     case NewMessageFrame(content) =>
       trackActor ! Message(player, content, DateTime.now)
 
+    case AddGhostFrame(runId) =>
+      trackActor ! AddGhost(player, runId)
+
+    case RemoveGhostFrame(runId) =>
+      trackActor ! RemoveGhost(player, runId)
+
     case raceUpdate: RaceUpdate =>
       out ! RaceUpdateFrame(raceUpdate)
 

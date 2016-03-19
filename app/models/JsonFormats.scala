@@ -139,7 +139,7 @@ object JsonFormats {
     //   (__ \ 'id).format[BSONObjectID] and
     //   (__ \ 'handle).format[Option[String]] and
     //   (__ \ 'gates).format[Seq[Long]]
-    // )(GhostState.apply _, unlift(GhostState.unapply _))
+    // )(Ghost.apply _, unlift(Ghost.unapply _))
 
   implicit val optionGateFormat = Format.optionWithNull[Gate]
 
