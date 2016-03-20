@@ -22,12 +22,12 @@ h2 {
 h3, h4, h5, h6 {
   font-family: $serif;
   font-weight: bold;
-  font-size: 15px;
+  font-size: 13px;
   margin-bottom: 15px;
 }
 
 h3 {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 a {
@@ -57,7 +57,7 @@ hr {
   border-bottom: 3px solid transparent;
   border-radius: 3px;
   font-family: $serif;
-  font-size: 15px;
+  font-size: 14px;
   text-transform: lowercase;
 
   &:hover {
@@ -68,14 +68,14 @@ hr {
   padding: 3px 8px 3px 8px;
   border-bottom-width: 2px;
   border-radius: 2px;
-  font-size: 14px;
+  font-size: 13px;
 }
 
 .btn-xs {
   padding: 2px 5px 0px 5px;
   border-bottom-width: 1px;
   border-radius: 1px;
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .btn-default {
@@ -148,7 +148,7 @@ hr {
   border-radius: 2px;
   background-color: $white;
   font-family: $regular;
-  font-size: 15px;
+  font-size: 14px;
 
   &:focus {
     outline: none;

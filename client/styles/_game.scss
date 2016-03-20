@@ -35,6 +35,37 @@ aside {
 
   .module-rankings {
     flex: 0.5;
+
+    .add-ghost, .remove-ghost {
+      cursor: pointer;
+    }
+
+    .add-ghost {
+      &:hover {
+        opacity: 0.75;
+      }
+    }
+
+    .remove-ghost {
+      color: $orange;
+      /* opacity: 0.5; */
+      &:hover {
+        /* opacity: 0.75; */
+      }
+    }
+  }
+
+  .module-ghosts {
+    .empty {
+      font-size: 12px;
+      margin: 0 10px;
+      line-height: 1.3em;
+    }
+
+    ul {
+      font-family: $mono;
+      font-weight: bold;
+    }
   }
 
   .module-help {

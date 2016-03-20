@@ -125,6 +125,11 @@ abbr' short long =
   abbr [ title long ] [ text short ]
 
 
+icon : String -> Html
+icon name =
+  span [ class ("glyphicon glyphicon-" ++ name) ] []
+
+
 fieldGroup : String -> String -> List String -> List Html -> Html
 fieldGroup label' hint errors inputs =
   let

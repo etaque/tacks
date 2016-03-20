@@ -51,8 +51,8 @@ draftBlocks { track } =
 liveBlocks : Model -> LiveTrack -> List Html
 liveBlocks model liveTrack =
   [ PlayersView.block model
-  , ghostsBlock model.ghostRuns
-  , rankingsBlock liveTrack
+  -- , ghostsBlock model.ghostRuns
+  , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
   , helpBlock
   ]
 
@@ -62,9 +62,14 @@ ghostsBlock ghostRuns =
   div
     [ class "aside-module module-ghosts" ]
     [ moduleTitle "Ghosts"
-    , ul
-        [ class "list-unstyled list-ghosts" ]
-        (List.map ghostItem (Dict.toList ghostRuns))
+    , if Dict.isEmpty ghostRuns then
+        div
+          [ class "empty" ]
+          [ text "Click on some of the players below to add ghosts on the track" ]
+      else
+        ul
+          [ class "list-unstyled list-ghosts" ]
+          (List.map ghostItem (Dict.toList ghostRuns))
     ]
 
 
@@ -75,26 +80,38 @@ ghostItem ( runId, player ) =
     [ span [ class "handle" ] [ text (playerHandle player) ] ]
 
 
-rankingsBlock : LiveTrack -> Html
-rankingsBlock { meta } =
+rankingsBlock : (String -> Bool) -> LiveTrack -> Html
+rankingsBlock isGhost { meta } =
   div
     [ class "aside-module module-rankings" ]
     [ moduleTitle "Best times"
-    , ul [ class "list-unstyled list-rankings" ] (List.map rankingItem meta.rankings)
+    , ul
+        [ class "list-unstyled list-rankings" ]
+        (List.map (rankingItem isGhost) meta.rankings)
     ]
 
 
-rankingItem : Ranking -> Html
-rankingItem ranking =
-  li
-    [ class "ranking"
-    , onClick addr (AddGhost ranking.runId ranking.player)
-    ]
-    [ span [ class "rank" ] [ text (toString ranking.rank) ]
-    , span [ class "status" ] [ text (formatTimer True ranking.finishTime) ]
-    , span [ class "handle" ] [ text (playerHandle ranking.player) ]
-      -- , playerWithAvatar ranking.player
-    ]
+rankingItem : (String -> Bool) -> Ranking -> Html
+rankingItem isGhost ranking =
+  let
+    attrs =
+      if isGhost ranking.runId then
+        [ class "ranking remove-ghost"
+        , onClick addr (RemoveGhost ranking.runId)
+        , title "Remove from ghosts"
+        ]
+      else
+        [ class "ranking add-ghost"
+        , onClick addr (AddGhost ranking.runId ranking.player)
+        , title "Add to ghosts"
+        ]
+  in
+    li
+      attrs
+      [ span [ class "rank" ] [ text (toString ranking.rank) ]
+      , span [ class "status" ] [ text (formatTimer True ranking.finishTime) ]
+      , span [ class "handle" ] [ text (playerHandle ranking.player) ]
+      ]
 
 
 helpBlock : Html
