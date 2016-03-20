@@ -60,6 +60,7 @@ case class RemoveGhost(player: Player, runId: UUID)
 case object FrameTick
 case object SpawnGust
 case object GetStatus
+case class SaveRun(race: Race, ctx: PlayerContext, path: Option[RunPath])
 case object AutoClean
 case object RotateNextRace
 case object NoOp
@@ -147,15 +148,22 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
         if (context.state.crossedGates != newContext.state.crossedGates) {
           state = TrackActor.gateCrossedUpdate(state, newContext, players.toMap)
           state.playerRace(player.id).foreach { race =>
-            TrackActor.saveIfFinished(track, race, newContext, paths.lift(newContext.player.id))
+            if (newContext.state.hasFinished(track.course)) {
+              val saveRun = SaveRun(race, newContext, paths.lift(newContext.player.id))
+              Akka.system.scheduler.scheduleOnce(5.second, self, saveRun)
+            }
           }
-
           broadcastLiveTrackUpdate()
         }
 
         context.ref ! raceUpdateForPlayer(player, clientTime)
       }
     }
+
+    case SaveRun(race, ctx, maybePath) =>
+      val lastKnownPath = paths.lift(ctx.player.id).orElse(maybePath)
+      TrackActor.saveRun(track, race, ctx, lastKnownPath)
+
 
     case LiveTrackUpdate(liveTrack) => {
       players.foreach { case (_, ctx) =>
@@ -332,25 +340,23 @@ object TrackActor {
     race.startTime.plusSeconds(Conf.countdown).isBeforeNow
 
 
-  def saveIfFinished(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
-    if (ctx.state.hasFinished(track.course)) {
-      val runId = pathMaybe.map(_.runId).getOrElse(UUID.randomUUID())
-      val run = Run(
-        id = runId,
-        trackId = track.id,
-        raceId = race.id,
-        playerId = ctx.player.id,
-        playerHandle = ctx.player.handleOpt,
-        startTime = race.startTime,
-        tally = ctx.state.crossedGates,
-        duration = ctx.state.crossedGates.headOption.getOrElse(0)
-      )
-      for {
-        _ <- pathMaybe.map(savePathIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
-        _ <- Runs.save(run)
-      }
-      yield ()
+  def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
+    val runId = pathMaybe.map(_.runId).getOrElse(UUID.randomUUID())
+    val run = Run(
+      id = runId,
+      trackId = track.id,
+      raceId = race.id,
+      playerId = ctx.player.id,
+      playerHandle = ctx.player.handleOpt,
+      startTime = race.startTime,
+      tally = ctx.state.crossedGates,
+      duration = ctx.state.crossedGates.headOption.getOrElse(0)
+    )
+    for {
+      _ <- pathMaybe.map(savePathIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
+      _ <- Runs.save(run)
     }
+    yield ()
   }
 
   def savePathIfBest(trackId: UUID, playerId: UUID)(path: RunPath): Future[Unit] = {
