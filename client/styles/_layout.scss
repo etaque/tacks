@@ -55,7 +55,7 @@ body > div {
         background-color: $white;
         @include gradient-directional($smokeWhite, $white, -30deg);
         box-shadow: 0 5px 5px $shadow;
-        border-radius: 8px;
+        border-radius: 5px;
       }
     }
   }

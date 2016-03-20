@@ -12,11 +12,13 @@
 }
 
 .live-track {
+  $borderRadius: 2px;
+
   margin-bottom: 30px;
   transition: background .1s ease-in;
   position: relative;
   box-shadow: 1px 2px 2px $shadow;
-  border-radius: 5px;
+  border-radius: $borderRadius;
 
   h3 {
     /* padding: 10px; */
@@ -30,7 +32,7 @@
       @include linear-gradient($white, $whiteSmoke);
       border: 1px solid $lightGrey;
       border-bottom: none;
-      border-radius: 5px 5px 0 0;
+      border-radius: $borderRadius $borderRadius 0 0;
       font-family: $serif;
       white-space: nowrap;
       overflow: hidden;
@@ -51,7 +53,7 @@
     overflow-y: auto;
     @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
     border: 1px solid $lightSeaBlue;
-    border-radius: 0 0 5px 5px;
+    border-radius: 0 0 $borderRadius $borderRadius;
     color: $white;
     /* border: 2px solid $white; */
 
