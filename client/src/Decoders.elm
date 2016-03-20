@@ -45,9 +45,10 @@ raceDecoder =
 
 rankingDecoder : Decoder Ranking
 rankingDecoder =
-  object3
+  object4
     Ranking
     ("rank" := int)
+    ("runId" := string)
     ("player" := playerDecoder)
     ("finishTime" := float)
 

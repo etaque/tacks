@@ -244,12 +244,13 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
     val now = DateTime.now
     val startTimeOpt = TrackActor.playerStartTime(state, player)
     val raceTimeOpt = startTimeOpt.map(now.getMillis - _.getMillis)
+    val ghosts = raceTimeOpt.map(playerGhosts(player.id)).getOrElse(Nil)
     RaceUpdate(
       serverNow = now,
       startTime = startTimeOpt,
       wind = wind,
       opponents = playerOpponents(player.id),
-      ghosts = raceTimeOpt.map(playerGhosts(player.id)).getOrElse(Nil),
+      ghosts = ghosts,
       tallies = playerTallies(player.id),
       clientTime = clientTime.toFloat
     )

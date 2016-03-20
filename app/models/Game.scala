@@ -145,6 +145,7 @@ case class TrackMeta(
 
 case class PlayerRanking(
   rank: Long,
+  runId: UUID,
   player: Player,
   finishTime: Long
 )

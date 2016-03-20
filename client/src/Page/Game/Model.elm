@@ -1,10 +1,11 @@
-module Page.Game.Model where
+module Page.Game.Model (..) where
 
 import Time exposing (Time)
-
+import Dict exposing (Dict)
 import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs exposing (GameInput)
+
 
 type alias Model =
   { liveTrack : Maybe LiveTrack
@@ -14,8 +15,10 @@ type alias Model =
   , live : Bool
   , messages : List Message
   , messageField : String
+  , ghostRuns : Dict String Player
   , notFound : Bool
   }
+
 
 initial : Model
 initial =
@@ -26,8 +29,10 @@ initial =
   , live = False
   , messages = []
   , messageField = ""
+  , ghostRuns = Dict.empty
   , notFound = False
   }
+
 
 type Action
   = LoadLiveTrack (Result () LiveTrack)
@@ -40,4 +45,6 @@ type Action
   | UpdateMessageField String
   | SubmitMessage
   | NewMessage Message
+  | AddGhost String Player
+  | RemoveGhost String
   | NoOp

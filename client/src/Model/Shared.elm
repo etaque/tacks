@@ -122,6 +122,7 @@ type alias PlayerTally =
 
 type alias Ranking =
   { rank : Int
+  , runId : String
   , player : Player
   , finishTime : Time
   }

@@ -16,7 +16,7 @@ package object actors {
       rankings <- playerRankings(track.id)
       runsCount <- Runs.countForTrack(track.id)
     }
-    yield TrackMeta(creator.getOrElse(sys.error("TODO join")), rankings, runsCount)
+    yield TrackMeta(creator.getOrElse(sys.error("TODO join")), rankings, runsCount.toLong)
   }
 
   def playerRankings(trackId: UUID): Future[Seq[PlayerRanking]] = {
@@ -24,7 +24,7 @@ package object actors {
       runRankings <- Runs.extractRankings(trackId)
       players <- Users.listByIds(runRankings.map(_.playerId))
       playerRankings = runRankings.flatMap { r =>
-        players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, p, r.duration))
+        players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, r.runId, p, r.duration))
       }
     }
     yield playerRankings

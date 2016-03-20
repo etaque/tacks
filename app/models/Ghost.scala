@@ -4,16 +4,6 @@ import java.util.UUID
 import Geo._
 
 
-// case class GhostRunContext(
-//   currentSecond: Long,
-//   currentSlice: Seq[PathPoint]
-// )
-
-// case class GhostRunDef(
-//   run: Run,
-//   path: RunPath
-// )
-
 case class GhostState(
   position: Point,
   heading: Double,

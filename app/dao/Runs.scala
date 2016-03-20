@@ -14,7 +14,7 @@ object RunMappings {
   implicit val tallyColumn =
     MappedColumnType.base[Seq[Long], JsValue](Json.toJson(_), _.as[Seq[Long]])
 
-  implicit val getRankings = GetResult(r => RunRanking(r.nextLong, r.nextUUID, r.nextLong))
+  implicit val getRankings = GetResult(r => RunRanking(r.nextLong, r.nextUUID, r.nextUUID, r.nextLong))
 }
 
 class RunTable(tag: Tag) extends Table[Run](tag, "runs") {
@@ -57,7 +57,7 @@ object Runs extends TableQuery(new RunTable(_)) {
 
   def extractRankings(trackId: UUID) = DB.run {
     sql"""
-      SELECT row_number() OVER (order by duration), player_id, duration FROM (
+      SELECT row_number() OVER (order by duration), id, player_id, duration FROM (
         SELECT DISTINCT ON (player_id) * FROM runs
         WHERE track_id = $trackId
         ORDER BY player_id, duration

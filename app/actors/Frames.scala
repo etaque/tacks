@@ -28,14 +28,14 @@ object Frames {
       case JsDefined(JsString("NewMessage")) => {
         JsSuccess(NewMessageFrame((json \ "content").as[String]))
       }
-      case JsDefined(JsString("AddGhostRun")) => {
+      case JsDefined(JsString("AddGhost")) => {
         JsSuccess(AddGhostFrame((json \ "runId").as[UUID]))
       }
-      case JsDefined(JsString("RemoveGhostRun")) => {
+      case JsDefined(JsString("RemoveGhost")) => {
         JsSuccess(RemoveGhostFrame((json \ "runId").as[UUID]))
       }
       case _ =>
-        JsError("Unkown InputFrame tag")
+        JsError("Unkown InputFrame tag: " + json)
     }
 
   }

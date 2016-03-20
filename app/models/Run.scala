@@ -46,6 +46,7 @@ case class PathPoint(
 
 case class RunRanking(
   rank: Long,
+  runId: UUID,
   playerId: UUID,
   duration: Long
 )

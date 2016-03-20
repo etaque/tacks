@@ -26,16 +26,23 @@ const game = Elm.fullscreen(Elm.Main, {
   appSetup
 });
 
-game.ports.playerOutput.subscribe((output) => {
-  if (ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ tag: 'PlayerInput', playerInput: output }));
+const sendMessage = (msg) => {
+  if (msg && ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify(msg));
   }
+};
+
+
+game.ports.playerOutput.subscribe((output) => {
+  sendMessage({ tag: 'PlayerInput', playerInput: output });
+});
+
+game.ports.ghostMessages.subscribe((msg) => {
+  sendMessage(msg);
 });
 
 game.ports.chatOutput.subscribe((output) => {
-  if (output && ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify({ tag: 'NewMessage', content: output }));
-  }
+  sendMessage({ tag: 'NewMessage', content: output });
 });
 
 game.ports.chatScrollDown.subscribe(() => {

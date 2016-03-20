@@ -19,6 +19,7 @@ type Route
   | NotFound
   | EmptyRoute
 
+
 type RouteTransition
   = ForMain
   | ForAdmin AdminRoute.Route AdminRoute.Route
@@ -41,31 +42,57 @@ matchers =
   , dyn1 ShowTrack "/track/" string ""
   , dyn1 EditTrack "/edit/" string ""
   , dyn1 PlayTrack "/play/" string ""
-  ] ++
-  (mapMatchers Admin AdminRoute.matchers) ++
-  (mapMatchers Forum ForumRoute.matchers)
+  ]
+    ++ (mapMatchers Admin AdminRoute.matchers)
+    ++ (mapMatchers Forum ForumRoute.matchers)
+
 
 toPath : Route -> String
 toPath route =
   case route of
-    Home -> "/"
-    Login -> "/login"
-    Register -> "/register"
-    ShowProfile -> "/me"
-    ListDrafts -> "/drafts"
-    ShowTrack id -> "/track/" ++ id
-    EditTrack id -> "/edit/" ++ id
-    PlayTrack id -> "/play/" ++ id
-    Forum forumRoute -> ForumRoute.toPath forumRoute
-    Admin adminRoute -> AdminRoute.toPath adminRoute
-    EmptyRoute -> "/"
-    NotFound -> "/404"
+    Home ->
+      "/"
+
+    Login ->
+      "/login"
+
+    Register ->
+      "/register"
+
+    ShowProfile ->
+      "/me"
+
+    ListDrafts ->
+      "/drafts"
+
+    ShowTrack id ->
+      "/track/" ++ id
+
+    EditTrack id ->
+      "/edit/" ++ id
+
+    PlayTrack id ->
+      "/play/" ++ id
+
+    Forum forumRoute ->
+      ForumRoute.toPath forumRoute
+
+    Admin adminRoute ->
+      AdminRoute.toPath adminRoute
+
+    EmptyRoute ->
+      "/"
+
+    NotFound ->
+      "/404"
+
 
 detectTransition : Route -> Route -> RouteTransition
 detectTransition prevRoute route =
-  case (prevRoute, route) of
-    (Admin from, Admin to) ->
+  case ( prevRoute, route ) of
+    ( Admin from, Admin to ) ->
       ForAdmin from to
+
     _ ->
       if prevRoute /= route then
         ForMain

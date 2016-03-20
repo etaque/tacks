@@ -16,14 +16,14 @@ renderPlayers : GameState -> Svg
 renderPlayers ({ playerState, opponents, ghosts, course, center } as gameState) =
   g
     [ class "players" ]
-    [ renderOpponents course opponents
-      -- , renderGhosts ghosts
+    [ renderOpponents opponents
+    , renderGhosts ghosts
     , renderPlayer course playerState
     ]
 
 
-renderOpponents : Course -> List Opponent -> Svg
-renderOpponents course opponents =
+renderOpponents : List Opponent -> Svg
+renderOpponents opponents =
   g [ class "opponents" ] (map renderOpponent opponents)
 
 
@@ -31,7 +31,11 @@ renderOpponent : Opponent -> Svg
 renderOpponent { state, player } =
   let
     hull =
-      g [ transform (translatePoint state.position), opacity "0.5" ] [ renderPlayerHull state.heading state.windAngle ]
+      g
+        [ transform (translatePoint state.position)
+        , opacity "0.6"
+        ]
+        [ renderPlayerHull state.heading state.windAngle ]
 
     shadow =
       renderWindShadow state
@@ -45,6 +49,32 @@ renderOpponent { state, player } =
         [ text (Maybe.withDefault "Anonymous" player.handle) ]
   in
     g [ class "opponent" ] [ shadow, hull, name ]
+
+
+renderGhosts : List Ghost -> Svg
+renderGhosts ghosts =
+  g [ class "ghosts" ] (map renderGhost ghosts)
+
+
+renderGhost : Ghost -> Svg
+renderGhost ghost =
+  let
+    hull =
+      g
+        [ transform (translatePoint ghost.position)
+        , opacity "0.4"
+        ]
+        [ renderPlayerHull ghost.heading 0 ]
+
+    name =
+      text'
+        [ textAnchor "middle"
+        , transform <| (translatePoint (Geo.add ghost.position ( 0, -25 ))) ++ "scale(1,-1)"
+        , opacity "0.2"
+        ]
+        [ text (Maybe.withDefault "Anonymous" ghost.handle) ]
+  in
+    g [ class "ghost" ] [ hull, name ]
 
 
 renderPlayer : Course -> PlayerState -> Svg
