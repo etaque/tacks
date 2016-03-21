@@ -7,6 +7,7 @@ import Game.Models exposing (..)
 import Game.Geo exposing (..)
 import Game.Core exposing (..)
 import Game.Steps.Util exposing (..)
+import Game.Steps.GateCrossing as GateCrossing
 import Constants exposing (hexRadius)
 import Hexagons
 
@@ -16,8 +17,8 @@ maxAccel =
   0.03
 
 
-movingStep : Float -> Course -> PlayerState -> PlayerState
-movingStep elapsed course state =
+movingStep : Float -> Bool -> Course -> PlayerState -> PlayerState
+movingStep elapsed started course state =
   if elapsed == 0 then
     state
   else
@@ -32,7 +33,7 @@ movingStep elapsed course state =
         movePoint state.position elapsed nextVelocity state.heading
 
       grounded =
-        isGrounded nextPosition course state.nextGate
+        isGrounded started state.position nextPosition course state.nextGate
 
       velocity =
         if grounded then
@@ -75,8 +76,8 @@ withInertia elapsed previousVelocity targetVelocity =
     previousVelocity + realAccel * elapsed
 
 
-isGrounded : Point -> Course -> Maybe Gate -> Bool
-isGrounded p course nextGate =
+isGrounded : Bool -> Point -> Point -> Course -> Maybe Gate -> Bool
+isGrounded started oldPosition newPosition course nextGate =
   let
     gates =
       course.start :: course.gates
@@ -91,12 +92,15 @@ isGrounded p course nextGate =
       boatWidth / 2
 
     stuckOnMark =
-      exists (\m -> (distance p m) <= markRadius + halfBoatWidth) marks
+      exists (\m -> (distance newPosition m) <= markRadius + halfBoatWidth) marks
+
+    stuckOnStartLine =
+      not started && GateCrossing.gateCrossed course.start oldPosition newPosition
 
     currentTile =
-      Dict.get (Hexagons.pointToAxial hexRadius p) course.grid
+      Dict.get (Hexagons.pointToAxial hexRadius newPosition) course.grid
 
     onGround =
       currentTile /= Just Water
   in
-    stuckOnMark || onGround
+    stuckOnMark || stuckOnStartLine || onGround

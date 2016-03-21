@@ -93,7 +93,7 @@ playerStep keyboardInput elapsed gameState =
       turningStep elapsed keyboardInput gameState.playerState
         |> playerWindStep gameState
         |> vmgStep
-        |> movingStep elapsed gameState.course
+        |> movingStep elapsed (isStarted gameState) gameState.course
         |> gateCrossingStep gameState.playerState gameState
         |> playerTimeStep elapsed
         |> raceEscapeStep keyboardInput.escapeRace
