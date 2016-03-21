@@ -11,7 +11,7 @@ gateCrossingStep previousState ({ course } as gameState) ({ crossedGates, positi
     newCrossedGates =
       case getNextGate (isStarted gameState) course (List.length crossedGates) of
         Just gate ->
-          if gateCrossed gate previousState.position position then
+          if isStarted gameState && gateCrossed gate previousState.position position then
             (raceTime gameState) :: crossedGates
           else
             crossedGates
