@@ -1,4 +1,4 @@
-module Game.Steps where
+module Game.Steps (..) where
 
 import Model exposing (..)
 import Model.Shared exposing (..)
@@ -8,7 +8,6 @@ import Game.Geo exposing (..)
 import Game.Core exposing (..)
 import Constants exposing (..)
 import Hexagons.Grid as Grid
-
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving exposing (movingStep)
 import Game.Steps.Turning exposing (turningStep)
@@ -18,14 +17,15 @@ import Game.Steps.WindHistory exposing (windHistoryStep)
 import Game.Steps.Gusts exposing (gustsStep)
 
 
-
 gameStep : GameInput -> GameState -> GameState
-gameStep {raceInput, windowInput, keyboardInput, clock} gameState =
+gameStep { raceInput, windowInput, keyboardInput, clock } gameState =
   let
     keyboardInputWithFocus =
-      if gameState.chatting
-        then emptyKeyboardInput
-        else keyboardInput
+      if gameState.chatting then
+        emptyKeyboardInput
+      else
+        keyboardInput
+
     gameDims =
       ( fst windowInput - sidebarWidth
       , snd windowInput
@@ -38,33 +38,28 @@ gameStep {raceInput, windowInput, keyboardInput, clock} gameState =
       |> centerStep gameState.playerState.position gameDims
 
 
---
-
 raceInputStep : RaceInput -> Clock -> GameState -> GameState
-raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
+raceInputStep raceInput { delta, time } ({ playerState, timers } as gameState) =
   let
-    { serverNow, startTime, opponents, ghosts, tallies, initial, clientTime } = raceInput
+    { serverNow, startTime, opponents, ghosts, tallies, initial, clientTime } =
+      raceInput
 
-    rtd = case timers.rtd of
-      Just previousRtd ->
-        min previousRtd (time - clientTime)
-      Nothing ->
-        time - clientTime
+    rtd =
+      case timers.rtd of
+        Just previousRtd ->
+          min previousRtd (time - clientTime)
 
-    now = serverNow
+        Nothing ->
+          time - clientTime
 
-    -- compensedServerNow = serverNow - (rtd / 2)
+    now =
+      serverNow
 
-    -- now = case timers.serverNow of
-    --   Just previousServerNow ->
-    --     min (previousServerNow + delta) compensedServerNow
-    --   Nothing ->
-    --     compensedServerNow
-    -- _ = Debug.log "now" now
+    updatedOpponents =
+      updateOpponents gameState.opponents delta opponents
 
-    updatedOpponents = updateOpponents gameState.opponents delta opponents
-
-    newPlayerState = { playerState | time = now }
+    newPlayerState =
+      { playerState | time = now }
 
     newTimers =
       { timers
@@ -74,7 +69,6 @@ raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
         , localTime = time
         , rtd = Just rtd
       }
-
   in
     { gameState
       | opponents = updatedOpponents
@@ -85,6 +79,7 @@ raceInputStep raceInput {delta,time} ({playerState, timers} as gameState) =
       , live = not initial
       , timers = newTimers
     }
+
 
 playerStep : KeyboardInput -> Float -> GameState -> GameState
 playerStep keyboardInput elapsed gameState =
@@ -101,13 +96,21 @@ playerStep keyboardInput elapsed gameState =
     { gameState | playerState = playerState }
 
 
-centerStep : Point -> (Int, Int) -> GameState -> GameState
-centerStep (px, py) dims ({center, playerState, course} as gameState) =
+centerStep : Point -> ( Int, Int ) -> GameState -> GameState
+centerStep ( px, py ) dims ({ center, playerState, course } as gameState) =
   let
-    (cx, cy) = center
-    (px', py') = playerState.position
-    (w, h) = floatify dims
-    ((xMax, yMax), (xMin, yMin)) = areaBox course.area
+    ( cx, cy ) =
+      center
+
+    ( px', py' ) =
+      playerState.position
+
+    ( w, h ) =
+      floatify dims
+
+    ( ( xMax, yMax ), ( xMin, yMin ) ) =
+      areaBox course.area
+
     newCenter =
       ( axisCenter px px' cx w xMin xMax
       , axisCenter py py' cy h yMin yMax
@@ -115,28 +118,44 @@ centerStep (px, py) dims ({center, playerState, course} as gameState) =
   in
     { gameState | center = newCenter }
 
+
 axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
 axisCenter p p' c window areaMin areaMax =
   let
-    offset = (window / 2) - (window * 0.48)
-    outOffset = (window / 2) - Constants.hexRadius
-    delta = p' - p
-    minExit = delta < 0 && p' < c - offset
-    maxExit = delta > 0 && p' > c + offset
+    offset =
+      (window / 2) - (window * 0.48)
+
+    outOffset =
+      (window / 2) - Constants.hexRadius
+
+    delta =
+      p' - p
+
+    minExit =
+      delta < 0 && p' < c - offset
+
+    maxExit =
+      delta > 0 && p' > c + offset
   in
-    if minExit
-    then
-      if areaMin > c - outOffset then c else c + delta
+    if minExit then
+      if areaMin > c - outOffset then
+        c
+      else
+        c + delta
+    else if maxExit then
+      if areaMax < c + outOffset then
+        c
+      else
+        c + delta
     else
-       if maxExit
-       then
-         if areaMax < c + outOffset then c else c + delta
-       else c
+      c
+
 
 moveOpponentState : OpponentState -> Float -> OpponentState
 moveOpponentState state delta =
   let
-    position = movePoint state.position delta state.velocity state.heading
+    position =
+      movePoint state.position delta state.velocity state.heading
   in
     { state | position = position }
 
@@ -149,23 +168,32 @@ updateOpponent previousMaybe delta opponent =
         { opponent | state = moveOpponentState opponent.state delta }
       else
         opponent
+
     Nothing ->
       opponent
+
 
 updateOpponents : List Opponent -> Float -> List Opponent -> List Opponent
 updateOpponents previousOpponents delta newOpponents =
   let
-    findPrevious o = find (\po -> po.player.id == o.player.id) previousOpponents
+    findPrevious o =
+      find (\po -> po.player.id == o.player.id) previousOpponents
   in
     List.map (\o -> updateOpponent (findPrevious o) delta o) newOpponents
+
 
 playerTimeStep : Float -> PlayerState -> PlayerState
 playerTimeStep elapsed state =
   { state | time = state.time + elapsed }
 
+
 raceEscapeStep : Bool -> PlayerState -> PlayerState
 raceEscapeStep doEscape playerState =
   let
-    crossedGates = if doEscape then [] else playerState.crossedGates
+    crossedGates =
+      if doEscape then
+        []
+      else
+        playerState.crossedGates
   in
     { playerState | crossedGates = crossedGates }
