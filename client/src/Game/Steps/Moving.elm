@@ -32,7 +32,7 @@ movingStep elapsed course state =
         movePoint state.position elapsed nextVelocity state.heading
 
       grounded =
-        isGrounded nextPosition course
+        isGrounded nextPosition course state.nextGate
 
       velocity =
         if grounded then
@@ -75,16 +75,17 @@ withInertia elapsed previousVelocity targetVelocity =
     previousVelocity + realAccel * elapsed
 
 
-isGrounded : Point -> Course -> Bool
-isGrounded p course =
+isGrounded : Point -> Course -> Maybe Gate -> Bool
+isGrounded p course nextGate =
   let
     gates =
       course.start :: course.gates
 
     marks =
-      gates
-        |> List.map getGateMarks
-        |> List.concatMap (\m -> [ fst m, snd m ])
+      nextGate
+        |> Maybe.map getGateMarks
+        |> Maybe.map (\m -> [ fst m, snd m ])
+        |> Maybe.withDefault []
 
     halfBoatWidth =
       boatWidth / 2
