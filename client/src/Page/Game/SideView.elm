@@ -6,6 +6,7 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
+import Game.Outputs as Outputs
 import Page.Game.Model exposing (..)
 import Page.Game.Update exposing (addr)
 import Page.Game.PlayersView as PlayersView
@@ -51,6 +52,7 @@ draftBlocks { track } =
 liveBlocks : Model -> LiveTrack -> List Html
 liveBlocks model liveTrack =
   [ PlayersView.block model
+  , a [ onClick Outputs.serverAddress Outputs.StartRace ] [ text "Start race" ]
   -- , ghostsBlock model.ghostRuns
   , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
   , helpBlock

@@ -13,9 +13,7 @@ case class KeyboardInput(
   tack: Boolean,
   arrows: Arrows,
   subtleTurn: Boolean,
-  lock: Boolean,
-  startCountdown: Boolean,
-  escapeRace: Boolean
+  lock: Boolean
 )
 
 object KeyboardInput {
@@ -23,9 +21,7 @@ object KeyboardInput {
     tack = false,
     arrows = Arrows(0, 0),
     subtleTurn = false,
-    lock = false,
-    startCountdown = false,
-    escapeRace = false
+    lock = false
   )
 }
 
@@ -127,8 +123,6 @@ object RaceUpdate {
       initial = true
     )
 }
-
-case class LiveTrackUpdate(liveTrack: LiveTrack)
 
 case class LiveTrack(
   track: Track,

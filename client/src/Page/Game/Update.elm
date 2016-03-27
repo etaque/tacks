@@ -17,18 +17,14 @@ import Page.Game.Model exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps exposing (gameStep)
-import Game.Inputs exposing (..)
+import Game.Inputs as Input
+import Game.Outputs as Output
 import Update.Utils as Utils
 
 
 addr : Signal.Address Action
 addr =
   Utils.pageAddr Model.GameAction
-
-
-chat : Signal.Mailbox String
-chat =
-  Signal.mailbox ""
 
 
 mount : String -> ( Model, Effects Action )
@@ -102,14 +98,14 @@ update player action model =
         newGhostRuns =
           Dict.insert runId player model.ghostRuns
       in
-        res { model | ghostRuns = newGhostRuns } none
+        taskRes { model | ghostRuns = newGhostRuns } (addGhost runId player)
 
     RemoveGhost runId ->
       let
         newGhostRuns =
           Dict.remove runId model.ghostRuns
       in
-        res { model | ghostRuns = newGhostRuns } none
+        taskRes { model | ghostRuns = newGhostRuns } (removeGhost runId)
 
     UpdateLiveTrack liveTrack ->
       res (applyLiveTrack liveTrack model) none
@@ -149,8 +145,20 @@ sendMessage content =
   if String.isEmpty content then
     Task.succeed NoOp
   else
-    Signal.send chat.address content
+    Signal.send Output.serverAddress (Output.SendMessage content)
       |> Task.map (\_ -> NoOp)
+
+
+addGhost : String -> Player -> Task error Action
+addGhost runId player =
+  Signal.send Output.serverAddress (Output.AddGhost runId player)
+    |> Task.map (\_ -> NoOp)
+
+
+removeGhost : String -> Task error Action
+removeGhost runId =
+  Signal.send Output.serverAddress (Output.RemoveGhost runId)
+    |> Task.map (\_ -> NoOp)
 
 
 updateTime : Time -> Maybe GameState -> Maybe GameState

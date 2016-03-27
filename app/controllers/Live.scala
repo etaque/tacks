@@ -30,7 +30,7 @@ object Live extends Controller with Security {
   implicit val timeout = Timeout(5.seconds)
 
   def status = PlayerAction.async() { implicit request =>
-    val tracksFu = (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]]
+    val tracksFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
     val draftsFu = dao.Tracks.listByCreatorId(request.player.id).map(_.filter(_.isDraft))
     val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     for {
@@ -47,7 +47,7 @@ object Live extends Controller with Security {
   }
 
   def track(id: UUID) = PlayerAction.async() { implicit request =>
-    (RacesSupervisor.actorRef ? GetTracks).mapTo[Seq[LiveTrack]].map { liveTracks =>
+    (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]].map { liveTracks =>
       liveTracks.find(_.track.id == id) match {
         case Some(rcs) => Ok(Json.toJson(rcs))
         case None => NotFound

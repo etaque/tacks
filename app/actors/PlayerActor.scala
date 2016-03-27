@@ -4,39 +4,27 @@ import akka.actor.{Props, Actor, ActorRef}
 import org.joda.time.DateTime
 import models._
 
-import Frames._
 
 class PlayerActor(player: Player, trackActor: ActorRef, out: ActorRef) extends Actor {
 
-  trackActor ! PlayerJoin(player)
+  trackActor ! PlayerAction(player, PlayerAction.Join)
 
   def receive = {
-
-    case PlayerInputFrame(input) =>
-      trackActor ! PlayerUpdate(player, input)
-
-    case NewMessageFrame(content) =>
-      trackActor ! Message(player, content, DateTime.now)
-
-    case AddGhostFrame(runId) =>
-      trackActor ! AddGhost(player, runId)
-
-    case RemoveGhostFrame(runId) =>
-      trackActor ! RemoveGhost(player, runId)
+    case action: PlayerAction.Action =>
+      trackActor ! PlayerAction(player, action)
 
     case raceUpdate: RaceUpdate =>
-      out ! RaceUpdateFrame(raceUpdate)
+      out ! ServerAction.PushRaceUpdate(raceUpdate)
 
     case message: Message =>
-      out ! BroadcastMessageFrame(message)
+      out ! ServerAction.BroadcastMessage(message)
 
     case liveTrack: LiveTrack =>
-      out ! BroadcastLiveTrackFrame(liveTrack)
-
+      out ! ServerAction.BroadcastLiveTrack(liveTrack)
   }
 
   override def postStop() = {
-    trackActor ! PlayerQuit(player)
+    trackActor ! PlayerAction(player, PlayerAction.Quit)
   }
 }
 

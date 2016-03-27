@@ -78,7 +78,7 @@ object Tracks extends Controller with Security {
                 _ <- dao.Tracks.updateFromEditor(track.id, name, course)
               } yield {
                 val newTrack = track.copy(course = course, name = name)
-                RacesSupervisor.actorRef ! ReloadTrack(newTrack)
+                RacesSupervisor.actorRef ! SupervisorAction.ReloadTrack(newTrack)
                 Ok(Json.toJson(newTrack))
               }
             }
@@ -93,7 +93,7 @@ object Tracks extends Controller with Security {
       forUpdate {
         dao.Tracks.publish(id).map { _ =>
           val newTrack = track.copy(status = TrackStatus.open)
-          RacesSupervisor.actorRef ! ReloadTrack(newTrack)
+          RacesSupervisor.actorRef ! SupervisorAction.ReloadTrack(newTrack)
           Ok(Json.toJson(newTrack))
         }
       }
@@ -116,7 +116,6 @@ object Tracks extends Controller with Security {
     } else {
       Future.successful(BadRequest)
     }
-
   }
 
   private def canUpdate(track: Track)(implicit request: PlayerRequest[_]) = {

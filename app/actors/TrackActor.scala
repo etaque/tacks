@@ -15,55 +15,20 @@ import dao._
 import tools.Conf
 
 
-case class TrackState(
-  track: Track,
-  races: Seq[Race]
-) {
-  def raceTallies(raceId: UUID): Seq[PlayerTally] = {
-    races.find(_.id == raceId).map(_.tallies).getOrElse(Nil)
-  }
+object TrackAction {
+  sealed trait Action
 
-  def playerRace(playerId: UUID): Option[Race] = {
-    races.find(_.hasPlayer(playerId)).orElse(races.headOption)
-  }
+  case class InitGhost(player: Player, run: Run, path: RunPath) extends Action
 
-  def withUpdatedRace(race: Race): TrackState = {
-    races.indexWhere(_.id == race.id) match {
-      case -1 => this
-      case i => copy(races = races.updated(i, race))
-    }
-  }
-
-  def escapePlayer(playerId: UUID): TrackState = {
-    copy(
-      races = races.map(_.removePlayerId(playerId))
-    )
-  }
+  case object FrameTick extends Action
+  case object SpawnGust extends Action
+  case class SaveRun(race: Race, ctx: PlayerContext, path: Option[RunPath]) extends Action
+  case object RotateNextRace extends Action
+  case object GetStatus extends Action
+  case class LiveTrackUpdate(liveTrack: LiveTrack) extends Action
+  case class ReloadTrack(track: Track) extends Action
+  case object NoOp extends Action
 }
-
-case class PlayerContext(
-  player: Player,
-  input: KeyboardInput,
-  state: OpponentState,
-  ref: ActorRef
-) {
-  def asOpponent = Opponent(state, player)
-}
-
-case class PlayerJoin(player: Player)
-case class PlayerQuit(player: Player)
-
-case class AddGhost(player: Player, runId: UUID)
-case class InitGhost(player: Player, run: Run, path: RunPath)
-case class RemoveGhost(player: Player, runId: UUID)
-
-case object FrameTick
-case object SpawnGust
-case object GetStatus
-case class SaveRun(race: Race, ctx: PlayerContext, path: Option[RunPath])
-case object AutoClean
-case object RotateNextRace
-case object NoOp
 
 class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
@@ -71,195 +36,149 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
   var state = TrackState(
     track = trackInit,
-    races = Nil
+    races = Nil,
+    players = Map.empty,
+    paths = Map.empty,
+    playersGhosts = Map.empty,
+    ghostRuns = Map.empty
   )
 
   def track = state.track
   def course = track.course
 
-  type PlayerId = UUID
-  type RunId = UUID
-
-  val players = scala.collection.mutable.Map[PlayerId, PlayerContext]()
-  val paths = scala.collection.mutable.Map[PlayerId, RunPath]()
-  val playersGhosts = scala.collection.mutable.Map[PlayerId, Map[RunId, GhostState]]()
-  val ghostRuns = scala.collection.mutable.Map[RunId, (Run, RunPath)]()
-
   def clock: Long = DateTime.now.getMillis
 
   val ticks = Seq(
-    Akka.system.scheduler.schedule(1.second, 5.second, self, RotateNextRace),
-    Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, SpawnGust),
-    Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, FrameTick)
+    Akka.system.scheduler.schedule(1.second, 5.second, self, TrackAction.RotateNextRace),
+    Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, TrackAction.SpawnGust),
+    Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, TrackAction.FrameTick)
   )
 
   def receive = {
 
-    /**
-     * player join => added to context Map
-     */
-    case PlayerJoin(player) => {
-      players += player.id -> PlayerContext(player, KeyboardInput.initial, OpponentState.initial, sender())
-      broadcastLiveTrackUpdate()
-    }
+    case PlayerAction(player, action) =>
+      import PlayerAction._
+      action match {
 
-    /**
-     * player quit => removed from context Map
-     */
-    case PlayerQuit(player) => {
-      players -= player.id
-      paths -= player.id
-      broadcastLiveTrackUpdate()
-    }
+        case NoOp =>
+          // do nothing
 
-    /**
-     * game heartbeat:
-     * update wind (origin, speed and gusts positions)
-     */
-    case FrameTick => {
-      updateWind()
-    }
-
-    /**
-     * player update coming from websocket through player actor
-     * context is updated, race started if requested
-     */
-    case PlayerUpdate(player, PlayerInput(opState, input, clientTime)) => {
-
-      players.get(player.id).foreach { context =>
-        val newContext = context.copy(input = input, state = opState)
-        players += (player.id -> newContext)
-
-        state.playerRace(player.id).foreach { race =>
-          if (track.status == TrackStatus.open && race.startTime.plusMinutes(10).isAfterNow) { // max 10min de trace
-            paths += player.id -> TrackActor.tracePlayer(newContext, race, paths.toMap, clock)
-          }
-        }
-
-        if (input.startCountdown) {
-          state = TrackActor.startCountdown(state, byPlayerId = player.id)
-        }
-
-        if (input.escapeRace) {
-          state = state.escapePlayer(player.id)
-          paths -= player.id
-        }
-
-        if (context.state.crossedGates != newContext.state.crossedGates) {
-          state = TrackActor.gateCrossedUpdate(state, newContext, players.toMap)
-          state.playerRace(player.id).foreach { race =>
-            if (newContext.state.hasFinished(track.course)) {
-              val saveRun = SaveRun(race, newContext, paths.lift(newContext.player.id))
-              Akka.system.scheduler.scheduleOnce(5.second, self, saveRun)
-            }
-          }
+        case Join =>
+          state = state.addPlayer(player, sender)
           broadcastLiveTrackUpdate()
-        }
 
-        context.ref ! raceUpdateForPlayer(player, clientTime)
+        case Input(PlayerInput(opState, _, clientTime)) =>
+          state.players.get(player.id).foreach { context =>
+            val newContext = context.copy(state = opState)
+
+            state = state.updatePlayer(player.id, newContext, clock)
+
+            if (context.state.crossedGates != newContext.state.crossedGates) {
+              state = state.gateCrossedUpdate(newContext)
+              state.playerRace(player.id).foreach { race =>
+                if (newContext.state.hasFinished(track.course)) {
+                  val saveRun = TrackAction.SaveRun(race, newContext, state.paths.lift(newContext.player.id))
+                  Akka.system.scheduler.scheduleOnce(5.second, self, saveRun)
+                }
+              }
+              broadcastLiveTrackUpdate()
+            }
+
+            context.ref ! raceUpdateForPlayer(player, clientTime)
+          }
+
+        case Quit =>
+          state = state.removePlayer(player)
+          broadcastLiveTrackUpdate()
+
+        case StartRace =>
+          state = state.startCountdown(player.id)
+
+        case ExitRace =>
+          state = state.escapePlayer(player.id)
+
+        case NewMessage(content) =>
+          val msg = Message(player, content, DateTime.now)
+          state.players.foreach { case (_, ctx) =>
+            ctx.ref ! msg
+          }
+
+        case AddGhost(runId) =>
+          state.ghostRuns.get(runId) match {
+            case Some((run, path)) =>
+              self ! TrackAction.InitGhost(player, run, path)
+            case None =>
+              val initMaybeFu = for {
+                runOpt <- Runs.findById(runId)
+                pathOpt <- RunPaths.findByRunId(runId)
+              } yield for {
+                run <- runOpt
+                path <- pathOpt
+              } yield TrackAction.InitGhost(player, run, path)
+              initMaybeFu.map(_.getOrElse(NoOp)).pipeTo(self)
+          }
+
+        case RemoveGhost(runId) =>
+          state = state.removeGhost(player, runId)
+      }
+
+    case trackAction: TrackAction.Action => {
+      import TrackAction._
+
+      trackAction match {
+
+        case FrameTick =>
+          updateWind()
+
+        case SaveRun(race, ctx, maybePath) =>
+          val lastKnownPath = state.paths.lift(ctx.player.id).orElse(maybePath)
+          TrackActor.saveRun(track, race, ctx, lastKnownPath)
+
+        case InitGhost(player, run, path) =>
+          state = state.addGhost(player, run, path)
+
+        case SpawnGust =>
+          generateGust()
+
+        case RotateNextRace =>
+          state = state.cleanStaleRaces()
+          broadcastLiveTrackUpdate()
+
+        case GetStatus =>
+          (sender ! (state.races, state.players.values.map(_.asOpponent)))
+
+        case LiveTrackUpdate(liveTrack) =>
+          state.players.foreach { case (_, ctx) =>
+            ctx.ref ! liveTrack
+          }
+
+        case ReloadTrack(newTrack) =>
+          state = state.reloadTrack(newTrack)
+
+        case NoOp =>
       }
     }
-
-    case SaveRun(race, ctx, maybePath) =>
-      val lastKnownPath = paths.lift(ctx.player.id).orElse(maybePath)
-      TrackActor.saveRun(track, race, ctx, lastKnownPath)
-
-
-    case LiveTrackUpdate(liveTrack) => {
-      players.foreach { case (_, ctx) =>
-        ctx.ref ! liveTrack
-      }
-    }
-
-    case msg: Message => {
-      players.foreach { case (_, ctx) =>
-        ctx.ref ! msg
-      }
-    }
-
-    case AddGhost(player, runId) =>
-      ghostRuns.get(runId) match {
-        case Some((run, path)) =>
-          self ! InitGhost(player, run, path)
-        case None =>
-          val initMaybeFu = for {
-            runOpt <- Runs.findById(runId)
-            pathOpt <- RunPaths.findByRunId(runId)
-          } yield for {
-            run <- runOpt
-            path <- pathOpt
-          } yield InitGhost(player, run, path)
-          initMaybeFu.map(_.getOrElse(NoOp)) pipeTo self
-      }
-
-    case InitGhost(player, run, path) =>
-      val all = playersGhosts.getOrElse(player.id, Map.empty)
-      val g = GhostState.initial(run.playerId, run.playerHandle, run.tally)
-      playersGhosts += player.id -> (all + (run.id -> g))
-      ghostRuns += run.id -> (run, path)
-
-    case RemoveGhost(player, runId) =>
-      playersGhosts.get(player.id).foreach { runIds =>
-        playersGhosts += (player.id -> (runIds - runId))
-      }
-
-    /**
-     * new gust
-     */
-    case SpawnGust => generateGust()
-
-    case RotateNextRace => {
-      state = TrackActor.cleanStaleRaces(state)
-      broadcastLiveTrackUpdate()
-    }
-
-    case GetStatus => {
-      sender ! (state.races, players.values.map(_.asOpponent))
-    }
-
-    case ReloadTrack(newTrack) => {
-      state = state.copy(track = newTrack)
-    }
-
-    case NoOp =>
   }
 
-  def broadcastLiveTrackUpdate(): Future[LiveTrackUpdate] = {
+  private def broadcastLiveTrackUpdate(): Future[TrackAction.LiveTrackUpdate] = {
     trackMeta(track).map { meta =>
-      LiveTrackUpdate(LiveTrack(track, meta, state.races, players.values.map(_.player).toSeq))
-    } pipeTo self
-  }
-
-  def playerOpponents(playerId: UUID): Seq[Opponent] = {
-    players.toSeq.filterNot(_._1 == playerId).map(_._2.asOpponent)
-  }
-
-  def playerGhosts(playerId: UUID)(ts: Long): Seq[GhostState] = {
-    playersGhosts.get(playerId).map { runIds =>
-      runIds.toSeq.flatMap { case (runId, ghostState) =>
-        ghostRuns.get(runId).map { case (_, path) =>
-          GhostState.at(ts, path)(ghostState)
-        }
-      }
-    }.getOrElse(Nil)
-  }
-
-  def playerTallies(playerId: UUID): Seq[PlayerTally] = {
-    state.playerRace(playerId).map(_.id).map(state.raceTallies).getOrElse(Nil)
+      val liveTrack = LiveTrack(track, meta, state.races, state.listPlayers)
+      TrackAction.LiveTrackUpdate(liveTrack)
+    }.pipeTo(self)
   }
 
   def raceUpdateForPlayer(player: Player, clientTime: Long) = {
     val now = DateTime.now
-    val startTimeOpt = TrackActor.playerStartTime(state, player)
+    val startTimeOpt = state.playerStartTime(player)
     val raceTimeOpt = startTimeOpt.map(now.getMillis - _.getMillis)
-    val ghosts = raceTimeOpt.map(playerGhosts(player.id)).getOrElse(Nil)
+    val ghosts = raceTimeOpt.map(state.playerGhosts(player.id)).getOrElse(Nil)
     RaceUpdate(
       serverNow = now,
       startTime = startTimeOpt,
       wind = wind,
-      opponents = playerOpponents(player.id),
+      opponents = state.playerOpponents(player.id),
       ghosts = ghosts,
-      tallies = playerTallies(player.id),
+      tallies = state.playerTallies(player.id),
       clientTime = clientTime.toFloat
     )
   }
@@ -271,74 +190,6 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
 object TrackActor {
   def props(track: Track) = Props(new TrackActor(track))
-
-  def tracePlayer(ctx: PlayerContext, race: Race, paths: Map[UUID, RunPath], clock: Long): RunPath = {
-    val playerId = ctx.player.id
-    val elapsedMillis = clock - race.startTime.getMillis
-    val currentSecond = elapsedMillis / 1000
-
-    val p = PathPoint((elapsedMillis % 1000).toInt, ctx.state.position, ctx.state.heading)
-
-    paths.get(playerId)
-      .map(_.addPoint(currentSecond, p))
-      .getOrElse(RunPath.init(currentSecond, p))
-  }
-
-  def cleanStaleRaces(state: TrackState): TrackState = {
-    state.copy(
-      races = state.races.filterNot { r =>
-        raceIsClosed(r, state.track) && r.players.isEmpty
-      }
-    )
-  }
-
-  def playerStartTime(state: TrackState, player: Player): Option[DateTime] = {
-    state.playerRace(player.id).map(_.startTime)
-  }
-
-  def gateCrossedUpdate(state: TrackState, context: PlayerContext, playerContexts: Map[UUID, PlayerContext]): TrackState = {
-    state.playerRace(context.player.id).map { race =>
-
-      val players = race.players + context.player
-
-      val finished = context.state.hasFinished(state.track.course)
-      val newTally = PlayerTally(context.player, context.state.crossedGates, finished)
-
-      val tallies = race.tallies
-        .filter(_.player.id != context.player.id) :+ newTally
-
-      val sortedTallies = tallies.sortBy { t =>
-        (-t.gates.length, t.gates.headOption)
-      }
-
-      val updatedRace = race.copy(players = players, tallies = tallies)
-
-      state.withUpdatedRace(updatedRace)
-
-    }.getOrElse(state)
-  }
-
-  def startCountdown(state: TrackState, byPlayerId: UUID): TrackState = {
-    state.races.headOption match {
-      case Some(race) if !raceIsClosed(race, state.track) => {
-        state
-      }
-      case _ => {
-        val newRace = Race(
-          id = UUID.randomUUID(),
-          trackId = state.track.id,
-          startTime = DateTime.now.plusSeconds(Conf.countdown),
-          players = Set.empty,
-          tallies = Nil
-        )
-        state.copy(races = newRace +: state.races)
-      }
-    }
-  }
-
-  def raceIsClosed(race: Race, track: Track): Boolean =
-    race.startTime.plusSeconds(Conf.countdown).isBeforeNow
-
 
   def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
     val runId = pathMaybe.map(_.runId).getOrElse(UUID.randomUUID())

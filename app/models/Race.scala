@@ -19,6 +19,12 @@ case class Race(
       players = players.filterNot(_.id == id),
       tallies = tallies.filterNot(t => t.player.id == id && !t.finished)
     )
+
+  def isClosed(): Boolean =
+    startTime.plusSeconds(tools.Conf.countdown).isBeforeNow
+
+  def isStale(): Boolean =
+    isClosed() && players.isEmpty
 }
 
 case class PlayerTally(

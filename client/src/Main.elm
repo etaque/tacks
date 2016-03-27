@@ -14,8 +14,7 @@ import TransitRouter
 import Update
 import Model exposing (..)
 import Game.Inputs as GameInputs
-import Game.Outputs as GameOutputs
-import Page.Game.Update exposing (chat)
+import Game.Outputs as GameOutputs exposing (serverMailbox)
 import Page.Game.Model as GameModel
 import Page.EditTrack.Update as EditTrack
 import Page.Game.Decoders as GameDecoders
@@ -109,16 +108,20 @@ port activeTrack =
     |> Signal.dropRepeats
 
 
-port ghostMessages : Signal Json.Value
-port ghostMessages =
-  Signal.filterMap GameOutputs.ghosts JsonEncode.null appActionsMailbox.signal
+port serverActions : Signal Json.Value
+port serverActions =
+  Signal.map GameOutputs.encodeServerAction serverMailbox.signal
+
+-- port ghostMessages : Signal Json.Value
+-- port ghostMessages =
+--   Signal.filterMap GameOutputs.ghosts JsonEncode.null appActionsMailbox.signal
 
 
-port chatOutput : Signal String
-port chatOutput =
-  chat.signal
+-- port chatOutput : Signal String
+-- port chatOutput =
+--   chat.signal
 
 
-port chatScrollDown : Signal ()
-port chatScrollDown =
-  Signal.filterMap GameOutputs.needChatScrollDown () gameActions
+-- port chatScrollDown : Signal ()
+-- port chatScrollDown =
+--   Signal.filterMap GameOutputs.needChatScrollDown () gameActions

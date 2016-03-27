@@ -32,29 +32,29 @@ class LiveCenter extends Actor {
 
   def receive = {
 
-    case Subscribe(player, ref) => {
-      state = state.copy(subscribers = state.subscribers :+ (player, ref))
-      Logger.debug("Player ref subscribed to notifications: " + player.toString)
-      LiveCenter.sendPlayersUpdate(state)
-    }
+    // case Subscribe(player, ref) => {
+    //   state = state.copy(subscribers = state.subscribers :+ (player, ref))
+    //   Logger.debug("Player ref subscribed to notifications: " + player.toString)
+    //   LiveCenter.sendPlayersUpdate(state)
+    // }
 
-    case Unsubscribe(player, ref) => {
-      state = state.copy(subscribers = state.subscribers.filterNot(_._2 == ref))
-      Logger.debug("Player ref unsubscribed from notifications: " + player.toString)
-      LiveCenter.sendPlayersUpdate(state)
-    }
+    // case Unsubscribe(player, ref) => {
+    //   state = state.copy(subscribers = state.subscribers.filterNot(_._2 == ref))
+    //   Logger.debug("Player ref unsubscribed from notifications: " + player.toString)
+    //   LiveCenter.sendPlayersUpdate(state)
+    // }
 
-    case PlayerJoin(player) => {
-      state = state.copy(chatRoom = state.chatRoom :+ (player, sender))
-      Logger.debug("Player ref joined chat room: " + player.toString)
-      LiveCenter.sendPlayersUpdate(state)
-    }
+    // case PlayerJoin(player) => {
+    //   state = state.copy(chatRoom = state.chatRoom :+ (player, sender))
+    //   Logger.debug("Player ref joined chat room: " + player.toString)
+    //   LiveCenter.sendPlayersUpdate(state)
+    // }
 
-    case PlayerQuit(player) => {
-      state = state.copy(chatRoom = state.chatRoom.filterNot(_._2 == sender))
-      Logger.debug("Player ref left chat room: " + player.toString)
-      LiveCenter.sendPlayersUpdate(state)
-    }
+    // case PlayerQuit(player) => {
+    //   state = state.copy(chatRoom = state.chatRoom.filterNot(_._2 == sender))
+    //   Logger.debug("Player ref left chat room: " + player.toString)
+    //   LiveCenter.sendPlayersUpdate(state)
+    // }
 
     // case m: Chat.NewMessage => {
     //   state.chatRoom.foreach(_._2 ! m)

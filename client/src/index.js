@@ -37,22 +37,22 @@ game.ports.playerOutput.subscribe((output) => {
   sendMessage({ tag: 'PlayerInput', playerInput: output });
 });
 
-game.ports.ghostMessages.subscribe((msg) => {
+game.ports.serverActions.subscribe((msg) => {
   sendMessage(msg);
 });
 
-game.ports.chatOutput.subscribe((output) => {
-  sendMessage({ tag: 'NewMessage', content: output });
-});
+// game.ports.chatOutput.subscribe((output) => {
+//   sendMessage({ tag: 'NewMessage', content: output });
+// });
 
-game.ports.chatScrollDown.subscribe(() => {
-  const el = document.getElementsByClassName('messages')[0];
-  if (el) {
-    setTimeout(() => {
-      el.scrollTop = el.scrollHeight;
-    }, 30);
-  }
-});
+// game.ports.chatScrollDown.subscribe(() => {
+//   const el = document.getElementsByClassName('messages')[0];
+//   if (el) {
+//     setTimeout(() => {
+//       el.scrollTop = el.scrollHeight;
+//     }, 30);
+//   }
+// });
 
 game.ports.activeTrack.subscribe((id) => {
   if (ws) {

@@ -2,11 +2,36 @@ module Game.Outputs (..) where
 
 import Json.Encode as Js
 import TransitRouter exposing (getRoute)
-import Model exposing (..)
+import Model
+import Model.Shared exposing (..)
 import Page.Game.Model as GamePage
 import Game.Models exposing (..)
 import Game.Inputs exposing (..)
 import Route
+
+
+type ServerAction
+  = ServerNoOp
+  | SendMessage String
+  | AddGhost String Player
+  | RemoveGhost String
+  | StartRace
+  | EscapeRace
+
+
+type LocalAction
+  = LocalNoOp
+  | ChatScrollDown
+
+
+serverMailbox : Signal.Mailbox ServerAction
+serverMailbox =
+  Signal.mailbox ServerNoOp
+
+
+serverAddress : Signal.Address ServerAction
+serverAddress =
+  serverMailbox.address
 
 
 type alias PlayerOutput =
@@ -16,12 +41,12 @@ type alias PlayerOutput =
   }
 
 
-extractPlayerOutput : Model -> Action -> Maybe PlayerOutput
+extractPlayerOutput : Model.Model -> Model.Action -> Maybe PlayerOutput
 extractPlayerOutput model action =
   let
     keyboardInput =
       case action of
-        PageAction (GameAction (GamePage.GameUpdate gameInput)) ->
+        Model.PageAction (Model.GameAction (GamePage.GameUpdate gameInput)) ->
           Just gameInput.keyboardInput
 
         _ ->
@@ -53,7 +78,7 @@ makePlayerOutput keyboardInput gameState =
     }
 
 
-getActiveTrack : Model -> Maybe String
+getActiveTrack : Model.Model -> Maybe String
 getActiveTrack model =
   case getRoute model of
     Route.PlayTrack _ ->
@@ -63,37 +88,62 @@ getActiveTrack model =
       Nothing
 
 
-needChatScrollDown : Action -> Maybe ()
-needChatScrollDown action =
+
+-- needChatScrollDown : Model.Action -> Maybe ()
+-- needChatScrollDown action =
+--   case action of
+--     Model.PageAction (Model.GameAction (GamePage.NewMessage _)) ->
+--       Just ()
+--     _ ->
+--       Nothing
+
+
+encodeServerAction : ServerAction -> Js.Value
+encodeServerAction action =
   case action of
-    PageAction (GameAction (GamePage.NewMessage _)) ->
-      Just ()
+    ServerNoOp ->
+      tag "ServerNoOp" []
 
-    _ ->
-      Nothing
+    SendMessage s ->
+      tag "SendMessage" [ ( "content", Js.string s ) ]
+
+    AddGhost runId _ ->
+      tag "AddGhost" [ ( "runId", Js.string runId ) ]
+
+    RemoveGhost runId ->
+      tag "RemoveGhost" [ ( "runId", Js.string runId ) ]
+
+    StartRace ->
+      tag "StartRace" []
+
+    EscapeRace ->
+      tag "EscapeRace" []
 
 
-ghosts : Action -> Maybe Js.Value
-ghosts action =
-  case action of
-    PageAction (GameAction ga) ->
-      case ga of
-        GamePage.AddGhost runId _ ->
-          Just
-            <| Js.object
-                [ ( "tag", Js.string "AddGhost" )
-                , ( "runId", Js.string runId )
-                ]
+tag : String -> List ( String, Js.Value ) -> Js.Value
+tag name fields =
+  Js.object <| ( "tag", Js.string name ) :: fields
 
-        GamePage.RemoveGhost runId ->
-          Just
-            <| Js.object
-                [ ( "tag", Js.string "RemoveGhost" )
-                , ( "runId", Js.string runId )
-                ]
 
-        _ ->
-          Nothing
 
-    _ ->
-      Nothing
+-- ghosts : Action -> Maybe Js.Value
+-- ghosts action =
+--   case action of
+--     PageAction (GameAction ga) ->
+--       case ga of
+--         GamePage.AddGhost runId _ ->
+--           Just
+--             <| Js.object
+--                 [ ( "tag", Js.string "AddGhost" )
+--                 , ( "runId", Js.string runId )
+--                 ]
+--         GamePage.RemoveGhost runId ->
+--           Just
+--             <| Js.object
+--                 [ ( "tag", Js.string "RemoveGhost" )
+--                 , ( "runId", Js.string runId )
+--                 ]
+--         _ ->
+--           Nothing
+--     _ ->
+--       Nothing

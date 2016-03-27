@@ -22,28 +22,28 @@ object WebSockets extends Controller with Security {
 
   implicit val timeout = Timeout(5.seconds)
 
-  import Frames._
-  implicit val inputFrameFormatter = FrameFormatter.jsonFrame[InputFrame]
-  implicit val outputFrameFormatter = FrameFormatter.jsonFrame[OutputFrame]
+  import actors.PlayerAction.actionFormat
+  implicit val inputFrameFormatter = FrameFormatter.jsonFrame[actors.PlayerAction.Action]
+  implicit val outputFrameFormatter = FrameFormatter.jsonFrame[actors.ServerAction.Action]
 
-  def trackPlayer(trackId: UUID) = WebSocket.tryAcceptWithActor[InputFrame, OutputFrame] { implicit request =>
+  def trackPlayer(trackId: UUID) = WebSocket.tryAcceptWithActor[actors.PlayerAction.Action, actors.ServerAction.Action] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
       trackMaybe <- dao.Tracks.findById(trackId)
       track = trackMaybe.getOrElse(sys.error("Track not found"))
-      ref <- (RacesSupervisor.actorRef ? GetTrackActorRef(track)).mapTo[ActorRef]
+      ref <- (RacesSupervisor.actorRef ? SupervisorAction.GetTrackActorRef(track)).mapTo[ActorRef]
     }
     yield Right(PlayerActor.props(ref, player)(_))
   }
 
-  implicit val notifEventFormat: Format[NotificationEvent] = Json.format[NotificationEvent]
-  implicit val notifEventFrameFormatter = FrameFormatter.jsonFrame[NotificationEvent]
+  // implicit val notifEventFormat: Format[NotificationEvent] = Json.format[NotificationEvent]
+  // implicit val notifEventFrameFormatter = FrameFormatter.jsonFrame[NotificationEvent]
 
-  def notifications = WebSocket.tryAcceptWithActor[JsValue, NotificationEvent] { implicit request =>
-    for {
-      player <- PlayerAction.getPlayer(request)
-    }
-    yield Right(NotifiableActor.props(player)(_))
-  }
+  // def notifications = WebSocket.tryAcceptWithActor[JsValue, NotificationEvent] { implicit request =>
+  //   for {
+  //     player <- PlayerAction.getPlayer(request)
+  //   }
+  //   yield Right(NotifiableActor.props(player)(_))
+  // }
 
 }

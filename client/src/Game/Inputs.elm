@@ -37,8 +37,6 @@ type alias KeyboardInput =
   , lock : Bool
   , tack : Bool
   , subtleTurn : Bool
-  , startCountdown : Bool
-  , escapeRace : Bool
   }
 
 
@@ -48,8 +46,6 @@ emptyKeyboardInput =
   , lock = False
   , tack = False
   , subtleTurn = False
-  , startCountdown = False
-  , escapeRace = False
   }
 
 
@@ -104,8 +100,6 @@ toKeyboardInput arrows keys =
   , lock = S.member 13 keys
   , tack = S.member 32 keys
   , subtleTurn = S.member 16 keys
-  , startCountdown = S.member (Char.toCode 'C') keys
-  , escapeRace = S.member 27 keys
   }
 
 
