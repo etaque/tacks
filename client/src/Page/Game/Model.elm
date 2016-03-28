@@ -40,6 +40,8 @@ type Action
   | UpdateLiveTrack LiveTrack
   | PingServer Time
   | GameUpdate GameInput
+  | StartRace
+  | ExitRace
   | EnterChat
   | LeaveChat
   | UpdateMessageField String

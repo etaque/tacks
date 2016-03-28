@@ -49,7 +49,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
   def clock: Long = DateTime.now.getMillis
 
   val ticks = Seq(
-    Akka.system.scheduler.schedule(1.second, 5.second, self, TrackAction.RotateNextRace),
+    Akka.system.scheduler.schedule(1.second, 1.second, self, TrackAction.RotateNextRace),
     Akka.system.scheduler.schedule(0.seconds, course.gustGenerator.interval.seconds, self, TrackAction.SpawnGust),
     Akka.system.scheduler.schedule(0.seconds, Conf.frameMillis.milliseconds, self, TrackAction.FrameTick)
   )

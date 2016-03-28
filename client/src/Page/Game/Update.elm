@@ -60,6 +60,24 @@ update player action model =
       else
         res { model | gameState = updateTime time model.gameState } pingServer
 
+    StartRace ->
+      let
+        startTask =
+          Signal.send Output.serverAddress Output.StartRace
+            |> Task.map (\_ -> NoOp)
+      in
+        taskRes model startTask
+
+    ExitRace ->
+      let
+        newModel =
+          { model | gameState = Maybe.map clearCrossedGates model.gameState }
+        exitTask =
+          Signal.send Output.serverAddress Output.EscapeRace
+            |> Task.map (\_ -> NoOp)
+      in
+        taskRes newModel exitTask
+
     GameUpdate gameInput ->
       let
         newGameState =
@@ -159,6 +177,11 @@ removeGhost : String -> Task error Action
 removeGhost runId =
   Signal.send Output.serverAddress (Output.RemoveGhost runId)
     |> Task.map (\_ -> NoOp)
+
+
+clearCrossedGates : GameState -> GameState
+clearCrossedGates ({ playerState } as gameState) =
+  { gameState | playerState = { playerState | crossedGates = [] } }
 
 
 updateTime : Time -> Maybe GameState -> Maybe GameState

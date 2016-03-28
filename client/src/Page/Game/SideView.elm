@@ -5,8 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
-import Game.Models exposing (GameState)
-import Game.Outputs as Outputs
+import Game.Models exposing (GameState, Timers)
 import Page.Game.Model exposing (..)
 import Page.Game.Update exposing (addr)
 import Page.Game.PlayersView as PlayersView
@@ -22,7 +21,7 @@ view model liveTrack gameState =
       if liveTrack.track.status == Draft then
         draftBlocks liveTrack
       else
-        liveBlocks model liveTrack
+        liveBlocks gameState model liveTrack
   in
     Sidebar.logo :: (trackNav liveTrack) :: blocks
 
@@ -49,14 +48,38 @@ draftBlocks { track } =
   ]
 
 
-liveBlocks : Model -> LiveTrack -> List Html
-liveBlocks model liveTrack =
-  [ PlayersView.block model
-  , a [ onClick Outputs.serverAddress Outputs.StartRace ] [ text "Start race" ]
-  -- , ghostsBlock model.ghostRuns
+liveBlocks : GameState -> Model -> LiveTrack -> List Html
+liveBlocks gameState model liveTrack =
+  [ raceActions gameState
+  , PlayersView.block model
+    -- , ghostsBlock model.ghostRuns
   , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
   , helpBlock
   ]
+
+
+raceActions : GameState -> Html
+raceActions { timers, playerState } =
+  div
+    [ class "race-actions" ]
+    [ case timers.startTime of
+        Just startTime ->
+          if List.isEmpty playerState.crossedGates then
+            text ""
+          else
+            a
+              [ onClick addr ExitRace
+              , class "btn btn-danger btn-block"
+              ]
+              [ text "Exit race" ]
+
+        Nothing ->
+          a
+            [ onClick addr StartRace
+            , class "btn btn-default btn-block"
+            ]
+            [ text "Start race" ]
+    ]
 
 
 ghostsBlock : Dict String Player -> Html
