@@ -154,7 +154,6 @@ helpItems =
   , ( "LEFT/RIGHT + SHIFT", "adjust" )
   , ( "ENTER", "lock angle to wind" )
   , ( "SPACE", "tack or jibe" )
-  , ( "ESC", "quit race" )
   ]
     |> List.concatMap helpItem
 

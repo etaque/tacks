@@ -52,7 +52,6 @@ getTimer { timers, playerState } =
     Just t ->
       let
         ( timer, showMs ) =
-          -- 
           case playerState.nextGate of
             Just _ ->
               -- countdown, in sec
@@ -130,9 +129,4 @@ getSubStatus gameState =
       else
         "gate " ++ toString counter ++ " on " ++ toString total
   else
-    case gameState.timers.startTime of
-      Just _ ->
-        ""
-
-      Nothing ->
-        "press C to start countdown"
+    ""
