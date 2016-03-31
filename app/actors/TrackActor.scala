@@ -191,7 +191,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 object TrackActor {
   def props(track: Track) = Props(new TrackActor(track))
 
-  def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Unit = {
+  def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Future[Unit] = {
     val runId = pathMaybe.map(_.runId).getOrElse(UUID.randomUUID())
     val run = Run(
       id = runId,
