@@ -10,7 +10,7 @@ import Page.Game.Model exposing (..)
 import Page.Game.Update exposing (addr)
 import Page.Game.PlayersView as PlayersView
 import View.Sidebar as Sidebar
-import View.Utils exposing (..)
+import View.Utils as Utils
 import Route exposing (..)
 
 
@@ -40,7 +40,7 @@ draftBlocks { track } =
       [ text "This is a draft, you're the only one seeing this race track." ]
   , div
       [ class "form-actions" ]
-      [ linkTo
+      [ Utils.linkTo
           (EditTrack track.id)
           [ class "btn btn-block btn-primary" ]
           [ text "Edit draft" ]
@@ -52,7 +52,7 @@ liveBlocks : GameState -> Model -> LiveTrack -> List Html
 liveBlocks gameState model liveTrack =
   [ raceActions gameState
   , PlayersView.block model
-    -- , ghostsBlock model.ghostRuns
+  , ghostsBlock model.ghostRuns
   , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
   , helpBlock
   ]
@@ -86,7 +86,7 @@ ghostsBlock : Dict String Player -> Html
 ghostsBlock ghostRuns =
   div
     [ class "aside-module module-ghosts" ]
-    [ moduleTitle "Ghosts"
+    [ Utils.moduleTitle "Ghosts"
     , if Dict.isEmpty ghostRuns then
         div
           [ class "empty" ]
@@ -101,15 +101,24 @@ ghostsBlock ghostRuns =
 ghostItem : ( String, Player ) -> Html
 ghostItem ( runId, player ) =
   li
-    [ onClick addr (RemoveGhost runId) ]
-    [ span [ class "handle" ] [ text (playerHandle player) ] ]
+    [ onClick addr (RemoveGhost runId)
+    ]
+    [ span
+        [ class "handle"
+        ]
+        [ text (Utils.playerHandle player)
+        ]
+    , span
+        [ class "remove" ]
+        [ Utils.icon "remove" ]
+    ]
 
 
 rankingsBlock : (String -> Bool) -> LiveTrack -> Html
 rankingsBlock isGhost { meta } =
   div
     [ class "aside-module module-rankings" ]
-    [ moduleTitle "Best times"
+    [ Utils.moduleTitle "Best times"
     , ul
         [ class "list-unstyled list-rankings" ]
         (List.map (rankingItem isGhost) meta.rankings)
@@ -134,8 +143,8 @@ rankingItem isGhost ranking =
     li
       attrs
       [ span [ class "rank" ] [ text (toString ranking.rank) ]
-      , span [ class "status" ] [ text (formatTimer True ranking.finishTime) ]
-      , span [ class "handle" ] [ text (playerHandle ranking.player) ]
+      , span [ class "status" ] [ text (Utils.formatTimer True ranking.finishTime) ]
+      , span [ class "handle" ] [ text (Utils.playerHandle ranking.player) ]
       ]
 
 
@@ -143,7 +152,7 @@ helpBlock : Html
 helpBlock =
   div
     [ class "aside-module module-help" ]
-    [ moduleTitle "Help"
+    [ Utils.moduleTitle "Help"
     , dl [] helpItems
     ]
 

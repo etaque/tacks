@@ -60,6 +60,8 @@ aside {
   }
 
   .module-ghosts {
+    flex: 0.5;
+
     .empty {
       font-size: 12px;
       margin: 0 10px;
@@ -67,8 +69,31 @@ aside {
     }
 
     ul {
+      padding: 0;
       font-family: $mono;
       font-weight: bold;
+    }
+
+    li {
+      padding: 2px 8px;
+      position: relative;
+      cursor: pointer;
+
+      &:hover {
+        /* background-color: $whiteRed; */
+        color: $whiteSeaBlue;
+
+        .remove {
+          /* color: $red; */
+        }
+      }
+    }
+
+    .remove {
+      position: absolute;
+      right: 8px;
+      top: 2px;
+      /* color: $whiteSeaBlue; */
     }
   }
 
