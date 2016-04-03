@@ -15,14 +15,10 @@ view ctx model =
   Layout.layoutWithNav
     "login"
     ctx
-    [ container
-        ""
+    [ Layout.section
+        "blue"
         [ h1 [] [ text "Login" ]
-        , loginForm model
-        -- , row
-        --     [ col' 4 []
-        --     , col' 4 [ loginForm model ]
-        --     ]
+        , div [ class "panel" ] [ loginForm model ]
         ]
     ]
 

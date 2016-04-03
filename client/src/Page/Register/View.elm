@@ -19,10 +19,10 @@ view ctx model =
   Layout.layoutWithNav
     "register"
     ctx
-    [ container
-        ""
-        [ h1 [ class "align-center" ] [ text "Register" ]
-        , registerForm model
+    [ Layout.section
+        "blue"
+        [ h1 [] [ text "Register" ]
+        , div [ class "panel" ] [ registerForm model ]
         ]
     ]
 

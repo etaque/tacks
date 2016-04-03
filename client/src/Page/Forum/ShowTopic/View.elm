@@ -13,37 +13,43 @@ import Page.Forum.Route exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.ShowTopic.Model exposing (..)
 import View.Utils exposing (..)
+import View.Layout as Layout
 
 
-view : Address Action -> Model -> Html
+view : Address Action -> Model -> List Html
 view addr model =
   case model.currentTopic of
     Nothing ->
-      container
-        "forum-show-topic"
-        [ back
-        , h1 [] [ text "Loading topic..." ]
-        ]
+      [ Layout.section
+          "blue"
+          [ back
+          , h1 [] [ text "Loading topic..." ]
+          ]
+      ]
 
     Just { topic, postsWithUsers } ->
-      container
-        "forum-show-topic"
-        [ back
-        , h1 [] [ text topic.title ]
-        , div
-            [ class "forum-topic-posts" ]
-            (List.map renderPost postsWithUsers)
-        , case model.newPostContent of
-            Just content ->
-              newPost addr content model.loading
+      [ Layout.section
+          "blue"
+          [ back
+          , h1 [] [ text topic.title ]
+          ]
+      , Layout.section
+          "white"
+          [ div
+              [ class "forum-topic-posts" ]
+              (List.map renderPost postsWithUsers)
+          , case model.newPostContent of
+              Just content ->
+                newPost addr content model.loading
 
-            Nothing ->
-              button
-                [ class "btn btn-primary pull-right toggle-new-post"
-                , onClick addr ToggleNewPost
-                ]
-                [ text "Reply" ]
-        ]
+              Nothing ->
+                button
+                  [ class "btn btn-primary pull-right toggle-new-post"
+                  , onClick addr ToggleNewPost
+                  ]
+                  [ text "Reply" ]
+          ]
+      ]
 
 
 back : Html

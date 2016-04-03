@@ -31,4 +31,4 @@ view ctx route model =
         NewTopic ->
           NewTopic.view (Signal.forwardTo addr NewTopicAction) model.newTopic
   in
-    Layout.layoutWithNav "forum" ctx [ subView ]
+    Layout.layoutWithNav "forum" ctx subView

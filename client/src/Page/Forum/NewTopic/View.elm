@@ -11,9 +11,10 @@ import Route
 import Page.Forum.Route exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
 import View.Utils exposing (..)
+import View.Layout as Layout
 
 
-view : Address Action -> Model -> Html
+view : Address Action -> Model -> List Html
 view addr { form, loading } =
   let
     formAddr =
@@ -33,41 +34,45 @@ view addr { form, loading } =
         Nothing ->
           ( onClick formAddr Form.Submit, Form.isSubmitted form )
   in
-    container
-      "forum-new-topic"
-      [ linkTo
-          (Route.Forum Index)
-          [ class "pull-right btn btn-link"
-          ]
-          [ text "Cancel" ]
-      , h1 [] [ text "New topic" ]
-      , div
-          [ class "form-new-topic form-vertical" ]
-          [ div
-              [ class "form-group" ]
-              [ Input.textInput
-                  title
-                  formAddr
-                  [ class "form-control", placeholder "Title" ]
-              ]
-          , div
-              [ class "form-group" ]
-              [ Input.textArea
-                  content
-                  formAddr
-                  [ class "form-control" ]
-              ]
-          , div
-              [ class "preview" ]
-              [ Markdown.toHtml (content.value |> Maybe.withDefault "") ]
-          , div
-              []
-              [ button
-                  [ class "btn btn-primary pull-right"
-                  , disabled submitDisabled
-                  , submitClick
-                  ]
-                  [ text "Submit" ]
-              ]
-          ]
-      ]
+    [ Layout.section
+        "blue"
+        [ linkTo
+            (Route.Forum Index)
+            [ class "pull-right btn btn-link"
+            ]
+            [ text "Cancel" ]
+        , h1 [] [ text "New topic" ]
+        ]
+    , Layout.section
+        "white"
+        [ div
+            [ class "form-new-topic form-vertical" ]
+            [ div
+                [ class "form-group" ]
+                [ Input.textInput
+                    title
+                    formAddr
+                    [ class "form-control", placeholder "Title" ]
+                ]
+            , div
+                [ class "form-group" ]
+                [ Input.textArea
+                    content
+                    formAddr
+                    [ class "form-control" ]
+                ]
+            , div
+                [ class "preview" ]
+                [ Markdown.toHtml (content.value |> Maybe.withDefault "") ]
+            , div
+                []
+                [ button
+                    [ class "btn btn-primary pull-right"
+                    , disabled submitDisabled
+                    , submitClick
+                    ]
+                    [ text "Submit" ]
+                ]
+            ]
+        ]
+    ]

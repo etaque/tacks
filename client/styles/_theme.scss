@@ -3,7 +3,6 @@
 @import 'mixins';
 @import 'fonts';
 
-
 h1 {
   font-family: $thin;
   color: $darkGrey;
@@ -38,6 +37,19 @@ a {
   &:hover, &:active {
     color: $mainBlue;
     text-decoration: none;
+  }
+}
+
+section.blue {
+  color: $white;
+
+  h1, h2, h3, h4, h5 {
+    color: $white;
+  }
+
+  .form-control {
+    box-shadow: none;
+    border-width: 0;
   }
 }
 
@@ -143,12 +155,14 @@ hr {
   color: $darkOrange;
 }
 
-.form-control {
+.form-control,
+section.blue .panel .form-control {
   border: 1px solid #ccc;
   border-radius: 2px;
   background-color: $white;
   font-family: $regular;
   font-size: 14px;
+  box-shadow: inset 0 1px 1px $shadow;
 
   &:focus {
     outline: none;

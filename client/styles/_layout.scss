@@ -31,7 +31,7 @@ body > div {
     @include gradient-directional($seaBlue, $darkSeaBlue, -30deg);
 
     .tiles {
-      opacity: 0.9;
+      /* opacity: 0.9; */
     }
   }
 
@@ -43,24 +43,34 @@ body > div {
     right: 0;
     overflow-y: auto;
 
-    .header {
+  }
+
+  .header {
+    background-color: $smokeWhite;
+    /* @include gradient-directional($lightGrey, $smokeWhite, 180deg); */
+    box-shadow: 0 5px 5px $shadow;
+    margin-bottom: 10px;
+  }
+
+  .content {
+
+    .container {
       margin-top: 10px;
+      padding: 30px 0;
     }
 
-    .content {
-      .container {
-        /* min-height: 300px; */
-        margin-top: 10px;
-        padding: 30px;
-        background-color: $white;
-        @include gradient-directional($smokeWhite, $white, -30deg);
-        box-shadow: 0 5px 5px $shadow;
-        border-radius: 5px;
-      }
+    .blue {
+      color: $white;
+    }
+
+    .white {
+      background-color: $white;
+      @include gradient-directional($smokeWhite, $white, -30deg);
+      box-shadow: 0 5px 5px $shadow;
     }
   }
 }
-    
+
 .layout {
   min-height: 100%;
   flex: 1;

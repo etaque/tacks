@@ -2,16 +2,17 @@
 @import 'mixins';
 @import 'fonts';
 
-#login {
-  .container {
-    width: 400px;
-    margin-top: 50px;
+#login,
+#register {
+  h1 {
     text-align: center;
   }
-}
 
-#register {
-  .container {
+  .panel {
     width: 400px;
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
   }
 }

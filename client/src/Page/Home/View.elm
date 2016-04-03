@@ -7,7 +7,7 @@ import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
 import Page.Home.Update exposing (addr)
-import View.Utils exposing (..)
+import View.Utils as Utils exposing (..)
 import View.Layout as Layout
 
 
@@ -16,24 +16,20 @@ view ctx model =
   Layout.layoutWithNav
     "home"
     ctx
-    [ container
-        ""
-        [ intro
+    [ Layout.section
+        "blue"
+        [ h1 [ class "align-center" ] [ text "Sailing tactics from the sofa" ]
+        , p [ class "subtitle align-center" ] [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
         , welcomeForm ctx.player model.handle
-        , div
+        ]
+    , Layout.section
+        "white"
+        [ div
             [ class "row live-center" ]
             [ div [ class "col-md-9" ] [ liveTracks ctx.player model.liveStatus model.trackFocus ]
             , div [ class "col-md-3" ] [ activePlayers model.liveStatus.liveTracks ]
             ]
         ]
-    ]
-
-
-intro : Html
-intro =
-  fullWidth
-    [ h1 [ class "align-center" ] [ text "Sailing tactics from the sofa" ]
-    , p [ class "subtitle align-center" ] [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
     ]
 
 

@@ -11,20 +11,24 @@ import Page.Forum.Route exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Index.Model exposing (..)
 import View.Utils exposing (..)
+import View.Layout as Layout
 
 
-view : Address Action -> Model -> Html
+view : Address Action -> Model -> List Html
 view addr ({ topics } as model) =
-  container
-    "forum-index"
-    [ linkTo
-        (Route.Forum NewTopic)
-        [ class "pull-right btn btn-primary"
-        ]
-        [ text "New topic" ]
-    , h1 [] [ text "Forum" ]
-    , topicsTable topics
-    ]
+  [ Layout.section
+      "blue"
+      [ linkTo
+          (Route.Forum NewTopic)
+          [ class "pull-right btn btn-primary"
+          ]
+          [ text "New topic" ]
+      , h1 [] [ text "Forum" ]
+      ]
+  , Layout.section
+      "white"
+      [ topicsTable topics ]
+  ]
 
 
 topicsTable : List TopicWithUser -> Html

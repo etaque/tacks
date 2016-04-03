@@ -4,41 +4,21 @@
 
 #show-track {
 
-  .track-header {
-    @include clearfix;
-    margin-bottom: 30px;
-    padding-bottom: 3px;
-    border-bottom: 2px solid $lightGrey;
+  .btn-join {
+    margin-top: 5px;
+  }
 
-    .track-name,
-    .track-creator {
-      float: left;
-      padding-top: 10px;
-    }
+  .track-name {
+  }
 
-    .track-name {
-      margin: 0;
-      font-family: $serif;
-      font-weight: bold;
-      font-size: 18px;
-      /* color: $white; */
-    }
-
-    .track-creator {
-      margin-left: 5px;
-      font-size: 18px;
-      color: $grey;
-    }
-
-    .btn-join {
-      float: right;
-    }
+  .track-creator {
+    color: $whiteSeaBlue;
   }
 
   .course {
     svg {
       display: block;
-      cursor: grab;
+      cursor: move;
       user-select: none;
       -moz-user-select: none;
       background-color: $sand;
