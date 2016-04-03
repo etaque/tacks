@@ -4,8 +4,11 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy
+import Svg
+import Svg.Attributes as SvgAttr
 import View.Sidebar as Sidebar
 import View.HexBg as HexBg
+import View.Logo as Logo
 import View.Utils as Utils
 import Constants
 import Model exposing (appActionsAddress, Action(Logout))
@@ -14,6 +17,7 @@ import Route
 import TransitStyle
 import Page.Admin.Model as Admin
 import Page.Forum.Model as Forum
+import Game.Render.Players as Players
 
 
 layoutWithNav : String -> Context -> List Html -> Html
@@ -60,10 +64,8 @@ logo : Html
 logo =
   div
     [ class "logo" ]
-    [ Utils.linkTo
-        Route.Home
-        []
-        [ img [ src "/assets/images/logo-header-2@2x.png" ] [] ]
+    [ Logo.render
+    , Utils.linkTo Route.Home [] [ text "Tacks" ]
     ]
 
 

@@ -1,4 +1,4 @@
-module Game.Render.Tiles where
+module Game.Render.Tiles (..) where
 
 import String
 import Color
@@ -6,9 +6,7 @@ import Color.Mixing as Mix
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Lazy exposing (..)
-
 import Hexagons
-
 import Constants exposing (..)
 import Model.Shared exposing (..)
 
@@ -17,18 +15,24 @@ lazyRenderTiles : Grid -> Svg
 lazyRenderTiles grid =
   lazy renderTiles grid
 
+
 renderTiles : Grid -> Svg
 renderTiles grid =
   let
-    tiles = List.map renderTile (listGridTiles grid)
+    tiles =
+      List.map renderTile (listGridTiles grid)
   in
     g [ class "tiles" ] tiles
 
+
 renderTile : Tile -> Svg
-renderTile {kind, coords} =
+renderTile { kind, coords } =
   let
-    (x,y) = Hexagons.axialToPoint hexRadius coords
-    color = tileKindColor kind coords
+    ( x, y ) =
+      Hexagons.axialToPoint hexRadius coords
+
+    color =
+      tileKindColor kind coords
   in
     polygon
       [ points verticesPoints
@@ -39,45 +43,66 @@ renderTile {kind, coords} =
       ]
       []
 
+
 tileKindColor : TileKind -> Coords -> String
-tileKindColor kind (x,y) =
+tileKindColor kind ( x, y ) =
   case kind of
-    Grass -> colors.grass
-    Rock -> colors.rock
+    Grass ->
+      colors.grass
+
+    Rock ->
+      colors.rock
+
     Water ->
       let
-        pseudoRandom = (toFloat (x*y + x*2 + y*2)) * pi |> round
-        factor = toFloat (pseudoRandom % 20 - 10) / 400
-        {red, green, blue} = seaBlue
-          |> Mix.spin factor
-          |> Color.toRgb
-        colors = List.map toString [ red, green, blue ] |> String.join(",")
+        pseudoRandom =
+          (toFloat (x * y + x * 2 + y * 2)) * pi |> round
+
+        factor =
+          toFloat (pseudoRandom % 20 - 10) / 400
+
+        { red, green, blue } =
+          seaBlue
+            |> Mix.spin factor
+            |> Color.toRgb
+
+        colors =
+          List.map toString [ red, green, blue ] |> String.join (",")
       in
         "rgb(" ++ colors ++ ")"
 
+
 verticesPoints : String
 verticesPoints =
-  toSvgPoints vertices
+  toSvgPoints (vertices Constants.hexRadius)
 
-vertices : List Point
-vertices =
+
+vertices : Float -> List Point
+vertices r =
   let
-    (w,h) = Hexagons.dims Constants.hexRadius
-    w2 = w / 2
-    h2 = h / 2
-    h4 = h / 4
+    ( w, h ) =
+      Hexagons.dims r
+
+    w2 =
+      w / 2
+
+    h2 =
+      h / 2
+
+    h4 =
+      h / 4
   in
-    [ (-w2, -h4)
-    , (0, -h2)
-    , (w2, -h4)
-    , (w2, h4)
-    , (0, h2)
-    , (-w2, h4)
+    [ ( -w2, -h4 )
+    , ( 0, -h2 )
+    , ( w2, -h4 )
+    , ( w2, h4 )
+    , ( 0, h2 )
+    , ( -w2, h4 )
     ]
+
 
 toSvgPoints : List Point -> String
 toSvgPoints points =
   points
-    |> List.map (\(x, y) -> toString x ++ "," ++ toString y)
+    |> List.map (\( x, y ) -> toString x ++ "," ++ toString y)
     |> String.join " "
-
