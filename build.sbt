@@ -1,6 +1,8 @@
 name := "tacks"
 
-version := "1.0-SNAPSHOT"
+val timestamp = new java.text.SimpleDateFormat("yyyyMMdd-HHmm").format(new java.util.Date)
+
+version := s"$timestamp"
 
 resolvers += "Sonatype Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
