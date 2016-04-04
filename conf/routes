@@ -10,6 +10,7 @@ GET         /api/currentPlayer                                 controllers.Users
 POST        /api/setHandle                                     controllers.Users.setHandle
 
 GET         /api/live                                          controllers.Live.status
+GET         /api/live/races                                    controllers.Live.lastRaces(trackId: Option[java.util.UUID])
 GET         /api/live/:id                                      controllers.Live.track(id: java.util.UUID)
 
 GET         /api/tracks/drafts                                 controllers.Tracks.drafts()

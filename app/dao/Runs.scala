@@ -14,7 +14,11 @@ object RunMappings {
   implicit val tallyColumn =
     MappedColumnType.base[Seq[Long], JsValue](Json.toJson(_), _.as[Seq[Long]])
 
-  implicit val getRankings = GetResult(r => RunRanking(r.nextLong, r.nextUUID, r.nextUUID, r.nextLong))
+  implicit val getRankings =
+    GetResult(r => RunRanking(r.nextLong, r.nextUUID, r.nextUUID, r.nextLong))
+
+  implicit val getRaceIds =
+    GetResult(_.nextUUID)
 }
 
 class RunTable(tag: Tag) extends Table[Run](tag, "runs") {
@@ -66,6 +70,21 @@ object Runs extends TableQuery(new RunTable(_)) {
     """.as[RunRanking]
   }
 
+  def lastRaceIds(limit: Int, trackId: Option[UUID]): Future[Seq[UUID]] = DB.run {
+    trackId.map(onTrack).getOrElse(all)
+      .sortBy(r => (r.startTime.desc, r.duration.asc))
+      .groupBy(_.raceId)
+      .map { case (raceId, group) => (raceId, group.size) }
+      .filter(_._2 > 1)
+      .map(_._1)
+      .take(limit)
+      .result
+  }
+
+  def listForRaces(raceIds: Seq[UUID]): Future[Seq[Run]] = DB.run {
+    filter(_.raceId.inSet(raceIds)).result
+  }
+
   def save(run: Run): Future[Int] = DB.run {
     map(identity) += run
   }
@@ -75,4 +94,7 @@ object Runs extends TableQuery(new RunTable(_)) {
 
   private def onTrack(trackId: UUID) =
     filter(_.trackId === trackId)
+
+  private def all =
+    map(identity)
 }

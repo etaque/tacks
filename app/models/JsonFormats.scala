@@ -186,6 +186,7 @@ object JsonFormats {
   implicit val trackFormat: Format[Track] = Json.format[Track]
   implicit val runFormat: Format[Run] = Json.format[Run]
   implicit val runRankingFormat: Format[RunRanking] = Json.format[RunRanking]
+  implicit val raceReportFormat: Format[RaceReport] = Json.format[RaceReport]
   implicit val playerRankingFormat: Format[PlayerRanking] = Json.format[PlayerRanking]
   implicit val pathPointFormat: Format[PathPoint] = Json.format[PathPoint]
   implicit val pathSliceFormat: Format[(Long, Seq[PathPoint])] = tuple2Format[Long, Seq[PathPoint]]

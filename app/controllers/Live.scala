@@ -47,11 +47,30 @@ object Live extends Controller with Security {
   }
 
   def track(id: UUID) = PlayerAction.async() { implicit request =>
-    (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]].map { liveTracks =>
+    val allFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
+    allFu.map { liveTracks =>
       liveTracks.find(_.track.id == id) match {
-        case Some(rcs) => Ok(Json.toJson(rcs))
-        case None => NotFound
+        case Some(rcs) =>
+          Ok(Json.toJson(rcs))
+        case None =>
+          NotFound
       }
+    }
+  }
+
+  def lastRaces(trackId: Option[UUID]) = PlayerAction.async() { implicit request =>
+    for {
+      raceIds <- dao.Runs.lastRaceIds(10, trackId)
+      runs <- dao.Runs.listForRaces(raceIds)
+      tracks <- dao.Tracks.list()
+      reports = runs.groupBy(_.raceId).flatMap { case (raceId, runs) =>
+        for {
+          firstRun <- runs.headOption
+          track <- tracks.find(_.id == firstRun.trackId)
+        } yield RaceReport(raceId, firstRun.startTime, track.id, track.name, runs)
+      }
+    } yield {
+      Ok(Json.toJson(reports))
     }
   }
 }

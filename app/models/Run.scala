@@ -50,3 +50,11 @@ case class RunRanking(
   playerId: UUID,
   duration: Long
 )
+
+case class RaceReport(
+  id: UUID,
+  startTime: DateTime,
+  trackId: UUID,
+  trackName: String,
+  runs: Seq[Run]
+)
