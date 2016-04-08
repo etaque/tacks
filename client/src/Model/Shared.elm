@@ -113,6 +113,27 @@ type alias Race =
   }
 
 
+type alias Run =
+  { id : String
+  , trackId : String
+  , raceId : String
+  , playerId : String
+  , playerHandle : Maybe String
+  , startTime : Time
+  , tally : List Time
+  , duration : Time
+  }
+
+
+type alias RaceReport =
+  { id : String
+  , startTime : Time
+  , trackId : String
+  , trackName : String
+  , runs : List Run
+  }
+
+
 type alias PlayerTally =
   { player : Player
   , gates : List Time

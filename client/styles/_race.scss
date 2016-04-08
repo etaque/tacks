@@ -1,0 +1,56 @@
+@import 'colors';
+@import 'fonts';
+@import 'mixins';
+
+.race-reports {
+  .notice {
+    text-align: center;
+  }
+}
+
+.race-report-excerpt {
+  $br: 2px;
+
+  color: $darkGrey;
+  box-shadow: 1px 2px 2px $shadow;
+  border-radius: $br;
+
+  .meta {
+    display: block;
+    padding: 6px 10px;
+    background-color: $lightGrey;
+    color: $grey;
+    border-radius: $br $br 0 0;
+    box-shadow: inset 0px -1px 2px $shadow;
+    font-family: $serif;
+    text-align: center;
+
+    &:hover {
+      background-color: $lightGrey;
+      box-shadow: inset 0px -1px 2px $strongShadow;
+      color: $darkGrey;
+    }
+  }
+
+  .track-name {
+    font-weight: bold;
+
+    &:before {
+      content: " @ ";
+      color: $mediumGrey;
+    }
+  }
+
+  .start-time {
+  }
+
+  ul {
+    @include players-list;
+    height: 80px;
+    margin-bottom: 0;
+    padding: 10px;
+    overflow-y: auto;
+    @include linear-gradient($white, $whiteSmoke);
+    border-radius: 0 0 $br $br;
+  }
+}

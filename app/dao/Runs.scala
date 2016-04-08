@@ -70,12 +70,12 @@ object Runs extends TableQuery(new RunTable(_)) {
     """.as[RunRanking]
   }
 
-  def lastRaceIds(limit: Int, trackId: Option[UUID]): Future[Seq[UUID]] = DB.run {
+  def lastRaceIds(limit: Int, minPlayers: Option[Int], trackId: Option[UUID]): Future[Seq[UUID]] = DB.run {
     trackId.map(onTrack).getOrElse(all)
       .sortBy(r => (r.startTime.desc, r.duration.asc))
       .groupBy(_.raceId)
       .map { case (raceId, group) => (raceId, group.size) }
-      .filter(_._2 > 1)
+      .filter(_._2 >= minPlayers.getOrElse(2))
       .map(_._1)
       .take(limit)
       .result

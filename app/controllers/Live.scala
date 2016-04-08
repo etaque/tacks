@@ -58,9 +58,15 @@ object Live extends Controller with Security {
     }
   }
 
-  def lastRaces(trackId: Option[UUID]) = PlayerAction.async() { implicit request =>
+  def allRaceReports(minPlayers: Option[Int]) =
+    raceReports(minPlayers, None)
+
+  def trackRaceReports(id: UUID, minPlayers: Option[Int]) =
+    raceReports(minPlayers, Some(id))
+
+  private def raceReports(minPlayers : Option[Int], trackId: Option[UUID]) = PlayerAction.async() { implicit request =>
     for {
-      raceIds <- dao.Runs.lastRaceIds(10, trackId)
+      raceIds <- dao.Runs.lastRaceIds(10, minPlayers, trackId)
       runs <- dao.Runs.listForRaces(raceIds)
       tracks <- dao.Tracks.list()
       reports = runs.groupBy(_.raceId).flatMap { case (raceId, runs) =>

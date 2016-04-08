@@ -9,6 +9,7 @@ import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.ListDrafts.Model exposing (..)
 import Page.ListDrafts.Update exposing (addr)
+import Page.ShowTrack.View as ShowTrack
 import View.Utils exposing (..)
 import View.Layout as Layout
 
@@ -18,12 +19,14 @@ view ctx ({ drafts } as model) =
   Layout.layoutWithNav
     "list-drafts"
     ctx
-    [ container
-        ""
-        [ h1 [] [ text "Drafts" ]
-          -- , Maybe.map confirmDelete model.confirmDelete |> Maybe.withDefault (text "")
-        , ul
-            [ class "list-unstyled drafts" ]
+    [ Layout.section
+        "blue"
+        [ h1 [] [ text "Tracks editor" ]
+        ]
+    , Layout.section
+        "white"
+        [ div
+            [ class "row drafts" ]
             (List.map (\t -> draftItem (Just t == model.confirmDelete) t) drafts)
         , createTrackForm model
         ]
@@ -41,42 +44,55 @@ view ctx ({ drafts } as model) =
 
 draftItem : Bool -> Track -> Html
 draftItem confirmDelete draft =
-  li
-    [ classList [ ( "confirm-delete", confirmDelete ) ] ]
-    [ linkTo (EditTrack draft.id) [ class "" ] [ text draft.name ]
-    , button
-        [ class "btn btn-danger btn-xs pull-right"
-        , onClick addr (ConfirmDeleteDraft draft)
-          -- , disabled confirmDelete
+  div
+    [ class "col-md-4" ]
+    [ div
+        [ classList
+            [ ( "live-track", True )
+            , ( "confirm-delete", confirmDelete )
+            ]
         ]
-        [ text "Delete" ]
-    , button
-        [ class "btn btn-danger btn-xs pull-right delete-draft", onClick addr (DeleteDraft draft.id) ]
-        [ text "Confirm?" ]
+        [ h3
+            []
+            [ linkTo
+                (EditTrack draft.id)
+                [ class "name" ]
+                [ text draft.name ]
+            ]
+        , div
+            [ class "info" ]
+            [ ShowTrack.about draft
+            , button
+                [ class "btn btn-danger btn-xs pull-right"
+                , onClick addr (ConfirmDeleteDraft draft)
+                  -- , disabled confirmDelete
+                ]
+                [ text "Delete" ]
+            , button
+                [ class "btn btn-danger btn-xs pull-right delete-draft", onClick addr (DeleteDraft draft.id) ]
+                [ text "Confirm?" ]
+            ]
+        ]
     ]
 
 
 createTrackForm : Model -> Html
 createTrackForm { name } =
   div
-    [ class "form-new-draft" ]
-    [ h3 [] [ text "New draft" ]
-    , formGroup
+    [ class "form-inline form-new-draft" ]
+    [ formGroup
         False
         [ textInput
             [ value name
-            , placeholder "Track name"
+            , placeholder "New track name"
             , onInput addr SetDraftName
             , onEnter addr CreateDraft
             ]
         ]
-    , div
-        []
-        [ button
-            [ class "btn btn-primary"
-            , onClick addr CreateDraft
-            , disabled (String.isEmpty name)
-            ]
-            [ text "Create draft" ]
+    , button
+        [ class "btn btn-primary"
+        , onClick addr CreateDraft
+        , disabled (String.isEmpty name)
         ]
+        [ text "Create draft" ]
     ]

@@ -1,11 +1,10 @@
-module Page.ShowTrack.Update where
+module Page.ShowTrack.Update (..) where
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
-import Effects exposing (Effects, Never, none)
+import Effects exposing (Effects, Never, none, task)
 import Drag exposing (mouseEvents, MouseEvent(..))
 import Response exposing (..)
-
 import Model.Shared exposing (..)
 import Model
 import Page.ShowTrack.Model exposing (..)
@@ -17,49 +16,81 @@ addr : Signal.Address Action
 addr =
   Utils.pageAddr Model.ShowTrackAction
 
+
 mount : String -> Response Model Action
-mount slug =
-  taskRes initial (loadLiveTrack slug)
+mount id =
+  let
+    fx =
+      Effects.batch
+        [ task (loadLiveTrack id)
+        , task (loadRaceReports id)
+        ]
+  in
+    res initial fx
+
 
 mouseAction : MouseEvent -> Action
 mouseAction =
   MouseAction
 
-update : Action -> Model -> Response Model Action
-update action ({courseControl} as model) =
-  case action of
 
+update : Action -> Model -> Response Model Action
+update action ({ courseControl } as model) =
+  case action of
     LiveTrackResult result ->
       case result of
         Ok liveTrack ->
           res { model | liveTrack = Just liveTrack } none
+
         Err _ ->
           res { model | notFound = True } none
+
+    RaceReportsResult result ->
+      case result of
+        Ok reports ->
+          res { model | raceReports = reports } none
+
+        Err _ ->
+          res { model | raceReports = [] } none
 
     SetOverCourse b ->
       res { model | courseControl = { courseControl | over = b } } none
 
     MouseAction event ->
       let
-        dragging = case event of
-          StartAt _ -> courseControl.over
-          MoveFromTo _ _ -> courseControl.dragging
-          EndAt _ -> False
+        dragging =
+          case event of
+            StartAt _ ->
+              courseControl.over
 
-        (dx, dy) = case event of
-          StartAt _ ->
-            (0, 0)
-          MoveFromTo (xa, ya) (xb, yb) ->
-            if courseControl.dragging then
-              (toFloat (xb - xa) / courseControl.scale, toFloat (ya - yb) / courseControl.scale)
-            else
-              (0, 0)
-          EndAt _ ->
-            (0, 0)
+            MoveFromTo _ _ ->
+              courseControl.dragging
 
-        (x, y) = courseControl.center
-        newCenter = (x + dx, y + dy)
-        newControl = { courseControl | center = newCenter, dragging = dragging }
+            EndAt _ ->
+              False
+
+        ( dx, dy ) =
+          case event of
+            StartAt _ ->
+              ( 0, 0 )
+
+            MoveFromTo ( xa, ya ) ( xb, yb ) ->
+              if courseControl.dragging then
+                ( toFloat (xb - xa) / courseControl.scale, toFloat (ya - yb) / courseControl.scale )
+              else
+                ( 0, 0 )
+
+            EndAt _ ->
+              ( 0, 0 )
+
+        ( x, y ) =
+          courseControl.center
+
+        newCenter =
+          ( x + dx, y + dy )
+
+        newControl =
+          { courseControl | center = newCenter, dragging = dragging }
       in
         res { model | courseControl = newControl } none
 
@@ -71,3 +102,9 @@ loadLiveTrack : TrackId -> Task Never Action
 loadLiveTrack id =
   ServerApi.getLiveTrack id
     |> Task.map LiveTrackResult
+
+
+loadRaceReports : String -> Task Never Action
+loadRaceReports id =
+  ServerApi.getRaceReports (Just id)
+    |> Task.map RaceReportsResult

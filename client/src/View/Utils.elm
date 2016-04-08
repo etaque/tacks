@@ -224,7 +224,7 @@ rankingItem ranking =
   li
     [ class "ranking" ]
     [ span [ class "rank" ] [ text (toString ranking.rank) ]
-    , span [ class "status" ] [ text (formatTimer True ranking.finishTime) ]
+    , span [ class "time" ] [ text (formatTimer True ranking.finishTime) ]
     , span [ class "handle" ] [ text (playerHandle ranking.player) ]
       -- , playerWithAvatar ranking.player
     ]

@@ -3,12 +3,15 @@ module Page.Home.View (..) where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Date
+import Date.Format as DateFormat
 import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
 import Page.Home.Update exposing (addr)
 import View.Utils as Utils exposing (..)
 import View.Layout as Layout
+import View.Race as Race
 
 
 view : Context -> Model -> Html
@@ -29,6 +32,11 @@ view ctx model =
             [ div [ class "col-md-9" ] [ liveTracks ctx.player model.liveStatus model.trackFocus ]
             , div [ class "col-md-3" ] [ activePlayers model.liveStatus.liveTracks ]
             ]
+        ]
+    , Layout.section
+        "blue"
+        [ h1 [ class "align-center" ] [ text "Recent races" ]
+        , Race.reports True model.raceReports
         ]
     ]
 
@@ -84,10 +92,18 @@ liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
     div
       [ class "col-md-6" ]
       [ div
-          [ classList [ ( "live-track", True ), ( "has-focus", hasFocus ), ( "is-empty", empty ) ] ]
+          [ classList
+              [ ( "live-track", True )
+              , ( "has-focus", hasFocus )
+              , ( "is-empty", empty )
+              ]
+          ]
           [ h3
               []
-              [ linkTo (ShowTrack track.id) [ class "name", title track.name ] [ text track.name ]
+              [ linkTo
+                  (ShowTrack track.id)
+                  [ class "name", title track.name ]
+                  [ text track.name ]
               ]
           , div
               [ class "info" ]
@@ -161,3 +177,4 @@ playersList players =
 playerItem : Player -> Html
 playerItem player =
   li [ class "player" ] [ text (playerHandle player) ]
+

@@ -248,3 +248,27 @@ rangeDecoder =
     Range
     ("start" := int)
     ("end" := int)
+
+
+runDecoder : Decoder Run
+runDecoder =
+  object8
+    Run
+    ("id" := string)
+    ("trackId" := string)
+    ("raceId" := string)
+    ("playerId" := string)
+    (maybe ("playerHandle" := string))
+    ("startTime" := float)
+    ("tally" := list float)
+    ("duration" := float)
+
+raceReportDecoder : Decoder RaceReport
+raceReportDecoder =
+  object5
+    RaceReport
+    ("id" := string)
+    ("startTime" := float)
+    ("trackId" := string)
+    ("trackName" := string)
+    ("runs" := list runDecoder)

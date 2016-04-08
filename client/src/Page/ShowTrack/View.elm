@@ -11,6 +11,7 @@ import Page.ShowTrack.Model exposing (..)
 import Page.ShowTrack.Update exposing (addr)
 import View.Utils exposing (..)
 import View.Layout as Layout
+import View.Race as Race
 import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles)
 import Game.Render.Gates exposing (renderOpenGate)
 import Game.Render.Players exposing (renderPlayerHull)
@@ -18,17 +19,17 @@ import Game.Render.SvgUtils exposing (..)
 
 
 view : Context -> Model -> Html
-view ctx { liveTrack, courseControl } =
+view ctx model =
   Layout.layoutWithNav
     "show-track"
     ctx
     <| Maybe.withDefault
         [ text "" ]
-        (Maybe.map (withLiveTrack courseControl) liveTrack)
+        (Maybe.map (withLiveTrack model) model.liveTrack)
 
 
-withLiveTrack : CourseControl -> LiveTrack -> List Html
-withLiveTrack control ({ track, meta, players } as liveTrack) =
+withLiveTrack : Model -> LiveTrack -> List Html
+withLiveTrack model ({ track, meta, players } as liveTrack) =
   [ Layout.section
       "blue"
       [ header liveTrack
@@ -36,10 +37,10 @@ withLiveTrack control ({ track, meta, players } as liveTrack) =
   , Layout.section
       "white"
       [ row
-          [ div [ class "col-md-8" ] [ courseBlock control track.course ]
+          [ div [ class "col-md-8" ] [ courseBlock model.courseControl track.course ]
           , div
               [ class "col-md-4 about" ]
-              [ about track meta
+              [ about track
               ]
           ]
       , row
@@ -49,6 +50,11 @@ withLiveTrack control ({ track, meta, players } as liveTrack) =
               , rankingsList meta.rankings
               ]
           ]
+      ]
+  , Layout.section
+      "blue"
+      [ h1 [ class "align-center" ] [ text "Recent races" ]
+      , Race.reports False model.raceReports
       ]
   ]
 
@@ -89,8 +95,8 @@ rankingsList rankings =
   ul [ class "list-unstyled list-rankings" ] (List.map rankingItem rankings)
 
 
-about : Track -> TrackMeta -> Html
-about { course } meta =
+about : Track -> Html
+about { course } =
   dl'
     -- [ ( "Laps", [ text <| toString course.laps ] )
     -- , ( "Distance", [ text <| toString (course.upwind.y - course.downwind.y), np ] )
