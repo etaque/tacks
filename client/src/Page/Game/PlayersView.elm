@@ -70,7 +70,7 @@ tallyItem i { player, gates, finished } =
     li
       [ class "player" ]
       [ span [ class "rank" ] [ text rank ]
-      , span [ class "status" ] [ text status ]
+      , span [ class "time" ] [ text status ]
       , span [ class "handle" ] [ text (playerHandle player) ]
         -- , playerWithAvatar player
       ]

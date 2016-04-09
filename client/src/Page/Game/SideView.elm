@@ -143,7 +143,7 @@ rankingItem isGhost ranking =
     li
       attrs
       [ span [ class "rank" ] [ text (toString ranking.rank) ]
-      , span [ class "status" ] [ text (Utils.formatTimer True ranking.finishTime) ]
+      , span [ class "time" ] [ text (Utils.formatTimer True ranking.finishTime) ]
       , span [ class "handle" ] [ text (Utils.playerHandle ranking.player) ]
       ]
 
