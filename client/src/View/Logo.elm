@@ -19,8 +19,5 @@ render =
         , class "hexagon"
         ]
         []
-    , g
-        [ class "hull"
-        ]
-        [ Players.hull ]
+    , Players.hull
     ]

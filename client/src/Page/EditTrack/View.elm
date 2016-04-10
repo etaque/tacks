@@ -15,12 +15,14 @@ import Game.Render.Players as Players
 
 
 view : Context -> Model -> Html
-view { player, dims } model =
+view ({ player, dims } as ctx) model =
   case ( model.track, model.editor ) of
     ( Just track, Just editor ) ->
       if canUpdateDraft player track then
         Layout.layoutWithSidebar
           "editor"
+          ctx
+          []
           (SideView.view track editor)
           [ renderCourse dims editor ]
       else

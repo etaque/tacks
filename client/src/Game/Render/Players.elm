@@ -140,6 +140,7 @@ kite =
     , stroke "black"
     , strokeWidth "1"
     , strokeOpacity "0.9"
+    , class "kite"
     ]
     []
 
@@ -152,6 +153,7 @@ mainSail =
     , strokeWidth "1"
     , strokeLinecap "round"
     , strokeOpacity "0.9"
+    , class "main-sail"
     ]
     []
 
@@ -165,6 +167,7 @@ hull =
     , stroke "black"
     , strokeWidth "1"
     , strokeOpacity "0.9"
+    , class "hull"
     ]
     []
 

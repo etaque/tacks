@@ -2,6 +2,39 @@
 @import 'mixins';
 @import 'fonts';
 
+.logo {
+  .hexagon {
+    fill: $seaBlue;
+    stroke: $seaBlue;
+    stroke-width: 10px;
+    stroke-linejoin: round;
+  }
+
+  .hull path {
+    fill: $whiteSmoke;
+    fill-opacity: 1;
+    stroke: $whiteSmoke;
+    stroke-opacity: 1;
+  }
+
+  span {
+    margin-top: 20px;
+    color: $darkGrey;
+    font-family: "Luckiest Guy";
+    font-size: 32px;
+
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  &:hover {
+    a {
+      color: $grey;
+    }
+  }
+}
+
 .header {
   .logo {
     float: left;
@@ -16,36 +49,6 @@
     svg {
     }
 
-    .hexagon {
-      fill: $seaBlue;
-      stroke: $seaBlue;
-      stroke-width: 10px;
-      stroke-linejoin: round;
-    }
-
-    .hull path {
-      fill: $whiteSmoke;
-      fill-opacity: 1;
-      stroke: $whiteSmoke;
-      stroke-opacity: 1;
-    }
-
-    a {
-      margin-top: 20px;
-      color: $darkGrey;
-      font-family: "Luckiest Guy";
-      font-size: 32px;
-
-      &:focus {
-        text-decoration: none;
-      }
-    }
-
-    &:hover {
-      a {
-        color: $grey;
-      }
-    }
   }
 
   .user-menu {
@@ -92,6 +95,9 @@
 }
 
 aside {
+  .logo {
+    
+  }
 
   .user-info {
     padding: 10px;

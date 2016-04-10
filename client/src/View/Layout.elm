@@ -32,40 +32,43 @@ layoutWithNav name ctx content =
           []
   in
     div
-      [ class "new-layout"
+      [ class "layout-vertical"
       , id name
       ]
       [ Html.Lazy.lazy HexBg.render ctx.dims
+      , header ctx.player []
       , div
           [ class "fixed"
           ]
-          [ header ctx.player
-          , div [ class "content" ] content
+          [ div [ class "content" ] content
           , footer ctx.player
           ]
       ]
 
 
-header : Player -> Html
-header player =
+header : Player -> List Html -> Html
+header player navContent =
   let
     menu =
       if player.guest then
         guestMenu
       else
         userMenu player
+    navBlock =
+      div [ class "page-nav" ] navContent
   in
     nav
       [ class "header" ]
-      [ div [ class "container" ] (logo :: menu) ]
+      [ div [ class "container" ] (logo :: navBlock :: menu) ]
 
 
 logo : Html
 logo =
-  div
+  Utils.linkTo
+    Route.Home
     [ class "logo" ]
     [ Logo.render
-    , Utils.linkTo Route.Home [] [ text "Tacks" ]
+    , span [] [ text "Tacks" ]
     ]
 
 
@@ -119,11 +122,14 @@ footer player =
     ]
 
 
-layoutWithSidebar : String -> List Html -> List Html -> Html
-layoutWithSidebar name sideContent mainContent =
+layoutWithSidebar : String -> Context -> List Html -> List Html -> List Html -> Html
+layoutWithSidebar name ctx navContent sideContent mainContent =
   div
-    [ class ("layout " ++ name) ]
-    [ aside
+    [ class "layout-fullscreen"
+    , id name
+    ]
+    [ header ctx.player navContent
+    , aside
         [ style [ ( "width", toString Constants.sidebarWidth ++ "px" ) ] ]
         sideContent
     , main' [] mainContent

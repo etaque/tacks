@@ -1,18 +1,19 @@
 @import 'colors';
 @import 'fonts';
 
-.editor {
+#editor {
 
-  svg {
-    background-color: $sand;
-    user-select: none;
-    -moz-user-select: none;
+  main {
+    svg {
+      user-select: none;
+      -moz-user-select: none;
 
-    cursor: cell;
+      cursor: cell;
 
-    &.mode-m {
-      cursor: move
-      ;
+      &.mode-m {
+        cursor: move
+        ;
+      }
     }
   }
 
@@ -23,7 +24,6 @@
   }
 
   aside {
-
     .aside-module {
       .module-title .glyphicon {
         float: right;        

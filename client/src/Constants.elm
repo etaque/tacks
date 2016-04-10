@@ -7,6 +7,10 @@ sidebarWidth =
   280
 
 
+headerHeight =
+  50
+
+
 containerWidth =
   940
 

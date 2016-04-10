@@ -20,8 +20,7 @@ formAddr =
 
 view : Track -> Editor -> List Html
 view track ({ course, name, saving, mode, blocks } as editor) =
-  [ Sidebar.logo
-  , div
+  [ div
       [ class "track-menu" ]
       [ h2 [] [ text name ]
       ]

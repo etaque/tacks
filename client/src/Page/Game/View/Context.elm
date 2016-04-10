@@ -1,4 +1,4 @@
-module Page.Game.SideView (..) where
+module Page.Game.View.Context (..) where
 
 import Dict exposing (Dict)
 import Html exposing (..)
@@ -9,13 +9,25 @@ import Game.Models exposing (GameState, Timers)
 import Page.Game.Model exposing (..)
 import Page.Game.Update exposing (addr)
 import Page.Game.PlayersView as PlayersView
-import View.Sidebar as Sidebar
 import View.Utils as Utils
 import Route exposing (..)
 
 
-view : Model -> LiveTrack -> GameState -> List Html
-view model liveTrack gameState =
+nav : Model -> LiveTrack -> GameState -> List Html
+nav model liveTrack gameState =
+  [ h2
+      []
+      [ Utils.linkTo
+          (ShowTrack liveTrack.track.id)
+          []
+          [ text liveTrack.track.name ]
+      ]
+    -- , raceActions gameState
+  ]
+
+
+sidebar : Model -> LiveTrack -> GameState -> List Html
+sidebar model liveTrack gameState =
   let
     blocks =
       if liveTrack.track.status == Draft then
@@ -23,7 +35,7 @@ view model liveTrack gameState =
       else
         liveBlocks gameState model liveTrack
   in
-    Sidebar.logo :: (trackNav liveTrack) :: blocks
+    blocks
 
 
 trackNav : LiveTrack -> Html
