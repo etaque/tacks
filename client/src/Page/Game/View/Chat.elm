@@ -1,4 +1,4 @@
-module Page.Game.ChatView where
+module Page.Game.View.Chat where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

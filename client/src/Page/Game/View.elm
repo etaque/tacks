@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
-import Page.Game.ChatView as ChatView
+import Page.Game.View.Chat as Chat
 import Page.Game.View.Context as Context
 import View.Layout as Layout
 import Game.Render.All exposing (render)
@@ -27,7 +27,7 @@ view ctx model =
           [ div
               [ class "game" ]
               [ render ( w - sidebarWidth, h ) gameState
-              , ChatView.view h model
+              , Chat.view h model
               ]
           ]
 

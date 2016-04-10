@@ -8,7 +8,7 @@ import Model.Shared exposing (..)
 import Game.Models exposing (GameState, Timers)
 import Page.Game.Model exposing (..)
 import Page.Game.Update exposing (addr)
-import Page.Game.PlayersView as PlayersView
+import Page.Game.View.Players as PlayersView
 import View.Utils as Utils
 import Route exposing (..)
 

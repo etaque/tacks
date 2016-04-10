@@ -1,4 +1,4 @@
-module Page.Game.PlayersView (..) where
+module Page.Game.View.Players (..) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
