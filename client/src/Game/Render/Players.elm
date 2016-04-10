@@ -117,8 +117,14 @@ renderPlayerHull heading windAngle =
       else
         [ mainSail ]
 
+    xScale =
+      if windAngle /= 0 then
+        abs windAngle / windAngle
+      else
+        1
+
     flip =
-      "scale(" ++ toString (abs windAngle / windAngle) ++ ", 1)"
+      "scale(" ++ toString xScale ++ ", 1)"
 
     adjustedSails =
       g [ transform flip ] sails
