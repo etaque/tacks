@@ -34,7 +34,7 @@ const sendMessage = (msg) => {
 
 
 game.ports.playerOutput.subscribe((output) => {
-  sendMessage({ tag: 'PlayerInput', playerInput: output });
+  if (output) sendMessage({ tag: 'PlayerInput', playerInput: output });
 });
 
 game.ports.serverActions.subscribe((msg) => {
