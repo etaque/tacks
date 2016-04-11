@@ -70,6 +70,7 @@ case class TrackState(
   def removePlayer(player: Player): TrackState = {
     escapePlayer(player.id).copy(
       players = players - player.id,
+      playersGhosts = playersGhosts - player.id,
       paths = paths - player.id
     )
   }
