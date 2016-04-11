@@ -62,7 +62,7 @@ raceReportRun i run =
         [ text (toString (i + 1)) ]
     , span
         [ class "handle" ]
-        [ text (Maybe.withDefault "?" run.playerHandle)
+        [ text (Maybe.withDefault "anonymous" run.playerHandle)
         ]
     , span
         [ class "time" ]
