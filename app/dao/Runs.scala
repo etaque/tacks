@@ -61,11 +61,12 @@ object Runs extends TableQuery(new RunTable(_)) {
 
   def extractRankings(trackId: UUID) = DB.run {
     sql"""
-      SELECT row_number() OVER (order by duration), id, player_id, duration FROM (
+      SELECT row_number() OVER (order by duration), r.id, player_id, duration FROM (
         SELECT DISTINCT ON (player_id) * FROM runs
         WHERE track_id = $trackId
         ORDER BY player_id, duration
       ) AS r
+      JOIN users ON users.id = player_id
       ORDER BY duration ASC
     """.as[RunRanking]
   }
