@@ -34,7 +34,7 @@ object Users extends TableQuery(new UserTable(_)) {
   }
 
   def findByEmail(email: String): Future[Option[User]] = DB.run {
-    filter(_.email === email).result.headOption
+    filter(_.email.toLowerCase === email.toLowerCase).result.headOption
   }
 
   def findByHandle(handle: String): Future[Option[User]] = DB.run {

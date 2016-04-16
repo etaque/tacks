@@ -72,7 +72,7 @@ object Users extends Controller with Security {
 
   implicit val registerReads = (
     (__ \ "handle").read[String](minLength[String](3)) and
-      (__ \ "email").read[String](email) and
+      (__ \ "email").read[String](email).map(_.toLowerCase) and
       (__ \ "password").read[String](minLength[String](3))
   )(RegisterForm.apply _)
 
