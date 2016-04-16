@@ -98,7 +98,7 @@ renderPlayer course state =
     movingPart =
       g
         [ transform (translatePoint state.position) ]
-        [ angles, playerHull ]
+        [ angles, playerHull, vmgSign ]
 
     wake =
       renderWake state.trail
