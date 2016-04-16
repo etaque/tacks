@@ -8,11 +8,28 @@ import Game.Models exposing (..)
 gateCrossingStep : PlayerState -> GameState -> PlayerState -> PlayerState
 gateCrossingStep previousState ({ course } as gameState) ({ crossedGates, position } as state) =
   let
+    prevGateMaybe =
+      getNextGate course (List.length crossedGates - 1)
+
+    nextGateMaybe =
+      getNextGate course (List.length crossedGates)
+
     newCrossedGates =
-      case getNextGate (isStarted gameState) course (List.length crossedGates) of
-        Just gate ->
-          if isStarted gameState && gateCrossed gate previousState.position position then
-            (raceTime gameState) :: crossedGates
+      case nextGateMaybe of
+        Just nextGate ->
+          if isStarted gameState then
+            if gateCrossed nextGate previousState.position position then
+              (raceTime gameState) :: crossedGates
+            else
+              case prevGateMaybe of
+                Just prevGate ->
+                  if gateCrossed (revertGate prevGate) previousState.position position then
+                    List.tail crossedGates |> Maybe.withDefault []
+                  else
+                    crossedGates
+
+                Nothing ->
+                  crossedGates
           else
             crossedGates
 
@@ -20,7 +37,7 @@ gateCrossingStep previousState ({ course } as gameState) ({ crossedGates, positi
           crossedGates
 
     nextGate =
-      getNextGate (isStarted gameState) course (List.length newCrossedGates)
+      getNextGate course (List.length newCrossedGates)
   in
     { state
       | crossedGates = newCrossedGates
@@ -28,14 +45,34 @@ gateCrossingStep previousState ({ course } as gameState) ({ crossedGates, positi
     }
 
 
-getNextGate : Bool -> Course -> Int -> Maybe Gate
-getNextGate started course crossedGatesCount =
+getNextGate : Course -> Int -> Maybe Gate
+getNextGate course crossedGatesCount =
   if crossedGatesCount == List.length course.gates + 1 then
     Nothing
   else if crossedGatesCount == 0 then
     Just course.start
   else
     CoreExtra.getAt (crossedGatesCount - 1) course.gates
+
+
+revertGate : Gate -> Gate
+revertGate gate =
+  let
+    newOrientation =
+      case gate.orientation of
+        North ->
+          South
+
+        South ->
+          North
+
+        East ->
+          West
+
+        West ->
+          East
+  in
+    { gate | orientation = newOrientation }
 
 
 gateCrossed : Gate -> Point -> Point -> Bool
