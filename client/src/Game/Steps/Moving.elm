@@ -105,7 +105,7 @@ isGrounded started oldPosition newPosition course crossedGatesCount =
       exists (\m -> (distance newPosition m) <= markRadius + halfBoatWidth) marks
 
     stuckOnStartLine =
-      not started && GateCrossing.gateCrossed course.start oldPosition newPosition
+      not started && startLineCrossed oldPosition newPosition course.start
 
     currentTile =
       Dict.get (Hexagons.pointToAxial hexRadius newPosition) course.grid
@@ -114,3 +114,9 @@ isGrounded started oldPosition newPosition course crossedGatesCount =
       currentTile /= Just Water
   in
     stuckOnMark || stuckOnStartLine || onGround
+
+
+startLineCrossed : Point -> Point -> Gate -> Bool
+startLineCrossed oldPosition newPosition gate =
+  GateCrossing.gateCrossed gate oldPosition newPosition
+    || GateCrossing.gateCrossed (GateCrossing.revertGate gate) oldPosition newPosition
