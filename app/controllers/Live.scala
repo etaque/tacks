@@ -66,7 +66,7 @@ object Live extends Controller with Security {
 
   private def raceReports(minPlayers : Option[Int], trackId: Option[UUID]) = PlayerAction.async() { implicit request =>
     for {
-      raceIds <- dao.Runs.lastRaceIds(10, minPlayers, trackId)
+      raceIds <- dao.Runs.lastRaceIds(12, minPlayers, trackId)
       runs <- dao.Runs.listForRaces(raceIds)
       tracks <- dao.Tracks.list()
       reports = runs.groupBy(_.raceId).flatMap { case (raceId, runs) =>
@@ -74,7 +74,7 @@ object Live extends Controller with Security {
           firstRun <- runs.headOption
           track <- tracks.find(_.id == firstRun.trackId)
         } yield RaceReport(raceId, firstRun.startTime, track.id, track.name, runs)
-      }
+      }.toSeq.sortBy(_.startTime.getMillis * -1)
     } yield {
       Ok(Json.toJson(reports))
     }
