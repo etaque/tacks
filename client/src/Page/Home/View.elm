@@ -108,9 +108,9 @@ liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
           , div
               [ class "info" ]
               [ rankingsExtract meta.rankings
-              , div
-                  [ class "rankings-size" ]
-                  [ text <| toString (List.length meta.rankings) ++ " entries" ]
+              -- , div
+              --     [ class "rankings-size" ]
+              --     [ text <| toString (List.length meta.rankings) ++ " entries" ]
               , linkTo
                   (PlayTrack track.id)
                   [ class

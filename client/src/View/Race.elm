@@ -35,13 +35,15 @@ raceReportItem showName report =
                 [ class "start-time" ]
                 [ text
                     (DateFormat.format
-                      "%d %B - %H:%I"
+                      "%e %b. %k:%I"
                       (Date.fromTime report.startTime)
                     )
                 ]
             , if showName then
                 span
-                  [ class "track-name" ]
+                  [ class "track-name"
+                  , title report.trackName
+                  ]
                   [ text report.trackName ]
               else
                 text ""

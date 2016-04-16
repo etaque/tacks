@@ -14,6 +14,7 @@
   color: $darkGrey;
   box-shadow: 1px 2px 2px $shadow;
   border-radius: $br;
+  margin-bottom: 20px;
 
   .meta {
     display: block;
@@ -24,6 +25,9 @@
     box-shadow: inset 0px -1px 2px $shadow;
     font-family: $serif;
     text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover {
       background-color: $lightGrey;
