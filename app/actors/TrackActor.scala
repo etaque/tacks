@@ -192,9 +192,8 @@ object TrackActor {
   def props(track: Track) = Props(new TrackActor(track))
 
   def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Future[Unit] = {
-    val runId = pathMaybe.map(_.runId).getOrElse(UUID.randomUUID())
     val run = Run(
-      id = runId,
+      id = UUID.randomUUID(),
       trackId = track.id,
       raceId = race.id,
       playerId = ctx.player.id,
@@ -204,7 +203,9 @@ object TrackActor {
       duration = ctx.state.crossedGates.headOption.getOrElse(0)
     )
     for {
-      _ <- pathMaybe.map(savePathIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
+      userMaybe <- Users.findById(ctx.player.id)
+      if userMaybe.isDefined
+      _ <- pathMaybe.map(_.copy(runId = run.id)).map(savePathIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
       _ <- Runs.save(run)
     }
     yield ()

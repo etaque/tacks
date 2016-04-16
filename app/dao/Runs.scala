@@ -87,7 +87,7 @@ object Runs extends TableQuery(new RunTable(_)) {
   }
 
   def save(run: Run): Future[Int] = DB.run {
-    map(identity) += run
+    all += run
   }
 
   private def onId(id: UUID) =
