@@ -38,6 +38,10 @@ object RunPaths extends TableQuery(new RunPathTable(_)) {
     onRunId(runId).delete
   }
 
+  def listWithRun() = DB.run {
+    map(identity).join(Runs).on(_.runId === _.id).join(Users).on(_._2.playerId === _.id).result
+  }
+
   private def onRunId(runId: UUID) =
     filter(_.runId === runId)
 }

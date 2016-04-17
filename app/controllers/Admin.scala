@@ -1,8 +1,9 @@
 package controllers
 
 import java.util.UUID
-import play.api.Play
+import play.api.{ Logger, Play }
 import play.api.db.slick.DatabaseConfigProvider
+import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -38,6 +39,20 @@ object Admin extends Controller with Security {
         "tracks" -> Json.toJson(tracks),
         "users" -> Json.toJson(users)(fullUserSeqFormat)
       ))
+    }
+  }
+
+  def s3 = PlayerAction.async(parse.anyContent) { implicit request =>
+    asAdmin { _ =>
+      RunPaths.listWithRun().map { pathsWithRun =>
+        pathsWithRun.zipWithIndex.map { case (((path, run), user), i) =>
+          Akka.system.scheduler.scheduleOnce(i.second * 10) {
+            Logger.info(s"S3 $i/${pathsWithRun.length}: $run")
+            actors.PathStore.actorRef ! actors.PathStoreAction.Save(run, path.slices)
+          }
+        }
+        Ok("S3 sync started")
+      }
     }
   }
 }

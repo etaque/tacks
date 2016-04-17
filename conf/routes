@@ -27,6 +27,7 @@ POST        /api/forum/topics                                  controllers.Forum
 POST        /api/forum/topics/:id                              controllers.Forum.createPost(id: java.util.UUID)
 
 GET         /api/admin                                         controllers.Admin.index
+GET         /api/admin/s3                                      controllers.Admin.s3
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId: java.util.UUID)
 #GET         /ws/notifications                                  controllers.WebSockets.notifications
