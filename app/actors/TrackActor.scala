@@ -1,13 +1,15 @@
 package actors
 
+import akka.util.Timeout
 import java.util.UUID
+import play.api.Logger
 import scala.concurrent.duration._
 import scala.concurrent.Future
 import play.api.Play.current
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import akka.actor._
-import akka.pattern.pipe
+import akka.pattern._
 import org.joda.time.DateTime
 
 import models._
@@ -18,11 +20,11 @@ import tools.Conf
 object TrackAction {
   sealed trait Action
 
-  case class InitGhost(player: Player, run: Run, path: RunPath) extends Action
+  case class InitGhost(player: Player, run: Run, path: RunPath.Slices) extends Action
 
   case object FrameTick extends Action
   case object SpawnGust extends Action
-  case class SaveRun(race: Race, ctx: PlayerContext, path: Option[RunPath]) extends Action
+  case class SaveRun(race: Race, ctx: PlayerContext, path: Option[RunPath.Slices]) extends Action
   case object RotateNextRace extends Action
   case object GetStatus extends Action
   case class LiveTrackUpdate(liveTrack: LiveTrack) extends Action
@@ -77,8 +79,10 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
               state = state.gateCrossedUpdate(newContext)
               state.playerRace(player.id).foreach { race =>
                 if (newContext.state.hasFinished(track.course)) {
-                  val saveRun = TrackAction.SaveRun(race, newContext, state.paths.lift(newContext.player.id))
-                  Akka.system.scheduler.scheduleOnce(5.second, self, saveRun)
+                  val currentPath = state.paths.lift(newContext.player.id)
+                  Akka.system.scheduler.scheduleOnce(5.second) {
+                    self ! TrackAction.SaveRun(race, newContext, currentPath)
+                  }
                 }
               }
               broadcastLiveTrackUpdate()
@@ -110,7 +114,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
             case None =>
               val initMaybeFu = for {
                 runOpt <- Runs.findById(runId)
-                pathOpt <- RunPaths.findByRunId(runId)
+                pathOpt <- runOpt.map(TrackActor.getPath).getOrElse(Future.successful(None))
               } yield for {
                 run <- runOpt
                 path <- pathOpt
@@ -191,7 +195,12 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 object TrackActor {
   def props(track: Track) = Props(new TrackActor(track))
 
-  def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath]): Future[Unit] = {
+  def getPath(run: Run): Future[Option[RunPath.Slices]] = {
+    implicit val timeout = Timeout(1.second)
+    (PathStore.actorRef ? PathStoreAction.Get(run)).mapTo[Option[RunPath.Slices]]
+  }
+
+  def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath.Slices]): Future[Unit] = {
     val run = Run(
       id = UUID.randomUUID(),
       trackId = track.id,
@@ -202,21 +211,24 @@ object TrackActor {
       tally = ctx.state.crossedGates,
       duration = ctx.state.crossedGates.headOption.getOrElse(0)
     )
+    Logger.info(s"Saving run: $run")
     for {
       userMaybe <- Users.findById(ctx.player.id)
       if userMaybe.isDefined
-      _ <- pathMaybe.map(_.copy(runId = run.id)).map(savePathIfBest(track.id, ctx.player.id)).getOrElse(Future.successful(()))
+      _ = Logger.debug(s"User exists, proceeding")
+      previousBestRun <- Runs.listBestOnTrackForPlayer(track.id, ctx.player.id).map(_.headOption)
+      _ = Logger.debug(s"Previous best run: $previousBestRun")
+      _ = pathMaybe.map(path => savePathIfBetter(previousBestRun, run, path))
       _ <- Runs.save(run)
     }
     yield ()
   }
 
-  def savePathIfBest(trackId: UUID, playerId: UUID)(path: RunPath): Future[Unit] = {
-    for {
-      bestMaybe <- Runs.findBestOnTrackForPlayer(trackId, playerId).map(_.headOption)
-      _ <- bestMaybe.map(r => RunPaths.deleteByRunId(r.id)).getOrElse(Future.successful(()))
-      _ <- RunPaths.save(path)
+  def savePathIfBetter(previousOpt: Option[Run], run: Run, slices: RunPath.Slices): Unit = {
+    if (!previousOpt.exists(_.duration < run.duration)) {
+      Logger.info("This run is the new best, pushing to store.")
+      PathStore.actorRef ! PathStoreAction.Save(run, slices)
+      previousOpt.map(PathStore.actorRef ! PathStoreAction.Delete(_))
     }
-    yield ()
   }
 }

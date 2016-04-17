@@ -19,11 +19,11 @@ object GhostState {
   def initial(id: UUID, handle: Option[String], gates: Seq[Long]) =
   GhostState((0,0), 0, id, handle, gates)
 
-  def at(ts: Long, path: RunPath)(state: GhostState): GhostState = {
+  def at(ts: Long, path: RunPath.Slices)(state: GhostState): GhostState = {
     val second = ts / 1000
     val ms = (ts % 1000).toInt
     val pointMaybe = for {
-      slice <- path.slices.get(second)
+      slice <- path.get(second)
       point <- slice.sortBy(p => math.abs(p.ms - ms)).headOption
     } yield point
     pointMaybe.map(state.withPathPoint).getOrElse(state)

@@ -18,6 +18,12 @@ object Conf {
 
   val disqus = getString("disqus")
 
+  object s3 {
+    val accessKeyId = getString("aws.accessKeyId")
+    val secretKey = getString("aws.secretKey")
+    val bucket = getString("s3.bucket")
+  }
+
   private def getValue[A](getter: String => Option[A], key: String): A = getter(key).getOrElse(sys.error(s"Missing config key: $key"))
 
   private def getString(key: String) = getValue(conf.getString(_), key)

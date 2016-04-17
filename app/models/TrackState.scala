@@ -11,9 +11,9 @@ case class TrackState(
   track: Track,
   races: Seq[Race],
   players: Map[PlayerId, PlayerContext],
-  paths: Map[PlayerId, RunPath],
+  paths: Map[PlayerId, RunPath.Slices],
   playersGhosts: Map[PlayerId, Map[RunId, GhostState]],
-  ghostRuns: Map[RunId, (Run, RunPath)]
+  ghostRuns: Map[RunId, (Run, RunPath.Slices)]
 ) {
 
   def reloadTrack(track: Track): TrackState = {
@@ -33,11 +33,11 @@ case class TrackState(
         val elapsedMillis = clock - race.startTime.getMillis
         val currentSecond = elapsedMillis / 1000
 
-        val p = PathPoint((elapsedMillis % 1000).toInt, ctx.state.position, ctx.state.heading)
+        val point = PathPoint((elapsedMillis % 1000).toInt, ctx.state.position, ctx.state.heading)
 
         val newPath = paths.get(playerId)
-          .map(_.addPoint(currentSecond, p))
-          .getOrElse(RunPath.init(currentSecond, p))
+          .map(path => RunPath.addPoint(path, currentSecond, point))
+          .getOrElse(RunPath.init(currentSecond, point))
 
         withCtx.copy(paths = paths + (playerId -> newPath))
       } else {
@@ -92,7 +92,7 @@ case class TrackState(
     }
   }
 
-  def addGhost(player: Player, run: Run, path: RunPath): TrackState = {
+  def addGhost(player: Player, run: Run, path: RunPath.Slices): TrackState = {
     val all = playersGhosts.getOrElse(player.id, Map.empty)
     val g = GhostState.initial(run.playerId, run.playerHandle, run.tally)
     copy(

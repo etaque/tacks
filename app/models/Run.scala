@@ -20,21 +20,22 @@ case class Run(
 case class RunPath(
   id: UUID = UUID.randomUUID(),
   runId: UUID,
-  slices: Map[Long,Seq[PathPoint]]
-) {
-  def addPoint(second: Long, point: PathPoint): RunPath = {
-    copy(
-      slices = slices.lift(second) match {
-        case Some(points) => slices + (second -> (points :+ point))
-        case None => slices + (second -> Seq(point))
-      }
-    )
-  }
-}
+  slices: RunPath.Slices
+)
+
 
 object RunPath {
-  def init(s: Long, p: PathPoint): RunPath = {
-    RunPath(UUID.randomUUID(), UUID.randomUUID(), Map(s -> Seq(p)))
+  type Slices = Map[Long,Seq[PathPoint]]
+
+  def addPoint(slices: RunPath.Slices, second: Long, point: PathPoint): RunPath.Slices = {
+    slices.lift(second) match {
+      case Some(points) => slices + (second -> (points :+ point))
+      case None => slices + (second -> Seq(point))
+    }
+  }
+
+  def init(s: Long, p: PathPoint): RunPath.Slices = {
+    Map(s -> Seq(p))
   }
 }
 
