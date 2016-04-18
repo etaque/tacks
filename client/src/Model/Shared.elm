@@ -106,7 +106,6 @@ type TrackStatus
 
 type alias Race =
   { id : String
-  , trackId : String
   , startTime : Time
   , players : List Player
   , tallies : List PlayerTally

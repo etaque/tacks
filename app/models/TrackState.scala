@@ -92,7 +92,6 @@ case class TrackState(
       case _ =>
         val newRace = Race(
           id = UUID.randomUUID(),
-          trackId = track.id,
           startTime = DateTime.now.plusSeconds(Conf.countdown),
           players = Set.empty,
           tallies = Nil
@@ -136,7 +135,7 @@ case class TrackState(
   }
 
   def playerRace(playerId: PlayerId): Option[Race] = {
-    races.find(_.hasPlayer(playerId)).orElse(races.headOption)
+    races.find(_.hasPlayer(playerId)).orElse(races.headOption.filterNot(_.isClosed))
   }
 
   def playerStartTime(player: Player): Option[DateTime] = {
@@ -180,7 +179,6 @@ case class PlayerContext(
 
 case class Race(
   id: UUID,
-  trackId: UUID,
   startTime: DateTime,
   players: Set[Player],
   tallies: Seq[PlayerTally]

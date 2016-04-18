@@ -34,10 +34,9 @@ trackMetaDecoder =
 
 raceDecoder : Decoder Race
 raceDecoder =
-  object5
+  object4
     Race
     ("id" := string)
-    ("trackId" := string)
     ("startTime" := float)
     ("players" := list playerDecoder)
     ("tallies" := list playerTallyDecoder)
