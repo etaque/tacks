@@ -35,9 +35,18 @@ case class TrackState(
 
         val point = PathPoint((elapsedMillis % 1000).toInt, ctx.state.position, ctx.state.heading)
 
-        val newPath = paths.get(playerId)
-          .map(path => RunPath.addPoint(path, currentSecond, point))
-          .getOrElse(RunPath.init(currentSecond, point))
+        val newPath = paths.get(playerId) match {
+          case Some(rawPath) =>
+            val cleanedPath = if (ctx.state.crossedGates.isEmpty) {
+              rawPath.filter {  case (second, _) =>
+                second > currentSecond - tools.Conf.countdown * 2
+              }
+            } else rawPath
+
+            RunPath.addPoint(cleanedPath, currentSecond, point)
+          case None =>
+            RunPath.init(currentSecond, point)
+        }
 
         withCtx.copy(paths = paths + (playerId -> newPath))
       } else {
