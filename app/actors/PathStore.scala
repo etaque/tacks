@@ -49,9 +49,8 @@ object PathStore {
   }
 
   def save(run: Run, slices: RunPath.Slices): Try[Future[Unit]] = {
-    Logger.info("Preparing path for save...")
+    Logger.info("Uploading to S3...")
     Gzip.deflate(Json.stringify(Json.toJson(slices))).map { content =>
-      Logger.info("Path deflated, uploading to S3...")
       val file = BucketFile(filename(run), "gzip", content.getBytes)
       bucket.add(file).map { _ =>
         Logger.info(s"S3 upload success for file ${file.name}.")
@@ -74,6 +73,7 @@ object PathStore {
   }
 
   def delete(run: Run): Future[Unit] = {
+    Logger.info("Deleting from S3: " + filename(run))
     bucket.remove(filename(run))
   }
 

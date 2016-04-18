@@ -56,7 +56,7 @@ object Runs extends TableQuery(new RunTable(_)) {
   }
 
   def listBestOnTrackForPlayer(trackId: UUID, playerId: UUID): Future[Seq[Run]] = DB.run {
-    onTrack(trackId).filter(_.playerId === playerId).sortBy(_.duration.desc).result
+    onTrack(trackId).filter(_.playerId === playerId).sortBy(_.duration.asc).result
   }
 
   def extractRankings(trackId: UUID) = DB.run {
