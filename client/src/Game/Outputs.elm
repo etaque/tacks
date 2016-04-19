@@ -88,12 +88,12 @@ getActiveTrack model =
       Nothing
 
 
-
 needChatScrollDown : Model.Action -> Maybe ()
 needChatScrollDown action =
   case action of
     Model.PageAction (Model.GameAction (GamePage.NewMessage _)) ->
       Just ()
+
     _ ->
       Nothing
 

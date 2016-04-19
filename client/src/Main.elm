@@ -126,3 +126,6 @@ port chatScrollDown : Signal ()
 port chatScrollDown =
   Signal.filterMap GameOutputs.needChatScrollDown () gameActions
 
+port title : Signal String
+port title =
+  Signal.map View.pageTitle app.model

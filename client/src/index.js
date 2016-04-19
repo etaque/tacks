@@ -54,6 +54,10 @@ game.ports.chatScrollDown.subscribe(() => {
   }
 });
 
+game.ports.title.subscribe(title => {
+  document.title = title;
+});
+
 game.ports.activeTrack.subscribe((id) => {
   if (ws) {
     ws.close();

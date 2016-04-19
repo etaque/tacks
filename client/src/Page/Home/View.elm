@@ -14,6 +14,18 @@ import View.Layout as Layout
 import View.Race as Race
 
 
+pageTitle : Model -> String
+pageTitle model =
+  let
+    playersCount =
+      List.concatMap liveTrackPlayers model.liveStatus.liveTracks |> List.length
+  in
+    if playersCount > 0 then
+      "(" ++ toString playersCount ++ ") Home"
+    else
+      "Home"
+
+
 view : Context -> Model -> Html
 view ctx model =
   Layout.layoutWithNav
@@ -108,9 +120,9 @@ liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
           , div
               [ class "info" ]
               [ rankingsExtract meta.rankings
-              -- , div
-              --     [ class "rankings-size" ]
-              --     [ text <| toString (List.length meta.rankings) ++ " entries" ]
+                -- , div
+                --     [ class "rankings-size" ]
+                --     [ text <| toString (List.length meta.rankings) ++ " entries" ]
               , linkTo
                   (PlayTrack track.id)
                   [ class
@@ -177,4 +189,3 @@ playersList players =
 playerItem : Player -> Html
 playerItem player =
   li [ class "player" ] [ text (playerHandle player) ]
-

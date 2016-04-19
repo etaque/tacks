@@ -77,6 +77,11 @@ type alias LiveTrack =
   }
 
 
+liveTrackPlayers : LiveTrack -> List Player
+liveTrackPlayers liveTrack =
+  liveTrack.players ++ (List.concatMap .players liveTrack.races)
+
+
 type alias Track =
   { id : TrackId
   , name : String

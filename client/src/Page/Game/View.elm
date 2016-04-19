@@ -11,6 +11,18 @@ import Game.Render.All exposing (render)
 import Constants exposing (..)
 
 
+pageTitle : Model -> String
+pageTitle model =
+  let
+    playersCount =
+      List.length model.freePlayers + (List.concatMap .players model.races |> List.length)
+
+    trackName =
+      model.liveTrack |> Maybe.map (.track >> .name) |> Maybe.withDefault ""
+  in
+    "(" ++ toString playersCount ++ ") " ++ trackName
+
+
 view : Context -> Model -> Html
 view ctx model =
   case ( model.liveTrack, model.gameState ) of

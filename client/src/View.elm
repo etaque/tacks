@@ -66,3 +66,17 @@ view _ ({ pages, player, dims, routeTransition } as model) =
 
       EmptyRoute ->
         text ""
+
+
+
+pageTitle : Model -> String
+pageTitle model =
+  case TransitRouter.getRoute model of
+    PlayTrack _ ->
+      GamePage.pageTitle model.pages.game ++ " - Tacks"
+
+    Home ->
+      HomePage.pageTitle model.pages.home ++ " - Tacks"
+
+    _ ->
+      "Tacks"

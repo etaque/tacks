@@ -1,12 +1,10 @@
-module Model where
+module Model (..) where
 
 import Task exposing (Task)
 import Effects exposing (Effects)
 import Drag exposing (MouseEvent)
 import Response exposing (..)
-
 import Model.Shared exposing (..)
-
 import Page.Home.Model as Home
 import Page.Login.Model as Login
 import Page.Register.Model as Register
@@ -17,7 +15,6 @@ import Page.Game.Model as Game
 import Page.ListDrafts.Model as ListDrafts
 import Page.Forum.Model as Forum
 import Page.Admin.Model as Admin
-
 import Route
 import TransitRouter exposing (WithRoute)
 
@@ -25,6 +22,7 @@ import TransitRouter exposing (WithRoute)
 appActionsMailbox : Signal.Mailbox Action
 appActionsMailbox =
   Signal.mailbox NoOp
+
 
 appActionsAddress : Signal.Address Action
 appActionsAddress =
@@ -34,24 +32,25 @@ appActionsAddress =
 (?) : Maybe a -> a -> a
 (?) maybe default =
   Maybe.withDefault default maybe
-
 infixr 9 ?
 
 
 type alias AppSetup =
   { player : Player
   , path : String
-  , dims : (Int, Int)
+  , dims : ( Int, Int )
   }
+
 
 effect : a -> Effects a
 effect =
   Task.succeed >> Effects.task
 
+
 type Action
   = SetPlayer Player
   | RouterAction (TransitRouter.Action Route.Route)
-  | UpdateDims (Int, Int)
+  | UpdateDims ( Int, Int )
   | MouseEvent MouseEvent
   | PageAction PageAction
   | Logout
@@ -71,12 +70,15 @@ type PageAction
   | AdminAction Admin.Action
 
 
-type alias Model = WithRoute Route.Route
-  { player : Player
-  , dims : Dims
-  , routeTransition : Route.RouteTransition
-  , pages : Pages
-  }
+type alias Model =
+  WithRoute
+    Route.Route
+    { player : Player
+    , dims : Dims
+    , routeTransition : Route.RouteTransition
+    , pages : Pages
+    }
+
 
 type alias Pages =
   { home : Home.Model
@@ -99,15 +101,15 @@ initialModel { path, dims, player } =
   , transitRouter = TransitRouter.empty Route.EmptyRoute
   , routeTransition = Route.None
   , pages =
-    { home = Home.initial player
-    , login = Login.initial
-    , register = Register.initial
-    , showTrack = ShowTrack.initial
-    , editTrack = EditTrack.initial
-    , showProfile = ShowProfile.initial player
-    , game = Game.initial
-    , listDrafts = ListDrafts.initial
-    , forum = Forum.initial
-    , admin = Admin.initial
-    }
+      { home = Home.initial player
+      , login = Login.initial
+      , register = Register.initial
+      , showTrack = ShowTrack.initial
+      , editTrack = EditTrack.initial
+      , showProfile = ShowProfile.initial player
+      , game = Game.initial
+      , listDrafts = ListDrafts.initial
+      , forum = Forum.initial
+      , admin = Admin.initial
+      }
   }
