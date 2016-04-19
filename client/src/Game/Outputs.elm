@@ -89,13 +89,13 @@ getActiveTrack model =
 
 
 
--- needChatScrollDown : Model.Action -> Maybe ()
--- needChatScrollDown action =
---   case action of
---     Model.PageAction (Model.GameAction (GamePage.NewMessage _)) ->
---       Just ()
---     _ ->
---       Nothing
+needChatScrollDown : Model.Action -> Maybe ()
+needChatScrollDown action =
+  case action of
+    Model.PageAction (Model.GameAction (GamePage.NewMessage _)) ->
+      Just ()
+    _ ->
+      Nothing
 
 
 encodeServerAction : ServerAction -> Js.Value

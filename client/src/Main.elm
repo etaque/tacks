@@ -122,6 +122,7 @@ port serverActions =
 --   chat.signal
 
 
--- port chatScrollDown : Signal ()
--- port chatScrollDown =
---   Signal.filterMap GameOutputs.needChatScrollDown () gameActions
+port chatScrollDown : Signal ()
+port chatScrollDown =
+  Signal.filterMap GameOutputs.needChatScrollDown () gameActions
+

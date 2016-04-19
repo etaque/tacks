@@ -45,14 +45,14 @@ game.ports.serverActions.subscribe((msg) => {
 //   sendMessage({ tag: 'NewMessage', content: output });
 // });
 
-// game.ports.chatScrollDown.subscribe(() => {
-//   const el = document.getElementsByClassName('messages')[0];
-//   if (el) {
-//     setTimeout(() => {
-//       el.scrollTop = el.scrollHeight;
-//     }, 30);
-//   }
-// });
+game.ports.chatScrollDown.subscribe(() => {
+  const el = document.getElementsByClassName('messages')[0];
+  if (el) {
+    requestAnimationFrame(() => {
+      el.scrollTop = el.scrollHeight;
+    });
+  }
+});
 
 game.ports.activeTrack.subscribe((id) => {
   if (ws) {
