@@ -35,7 +35,7 @@ raceReportItem showName report =
                 [ class "start-time" ]
                 [ text
                     (DateFormat.format
-                      "%e %b. %k:%I"
+                      "%e %b. %k:%M"
                       (Date.fromTime report.startTime)
                     )
                 ]
