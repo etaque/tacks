@@ -24,13 +24,13 @@ body > div {
 $header: 50px;
 
 .header {
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
   height: $header;
-  z-index: 50;
-  background-color: $white;
+  z-index: 1;
+  background-color: $smokeWhite;
   /* @include gradient-directional($smokeWhite, $white, 0deg); */
   box-shadow: 0 2px 2px $shadow;
 
@@ -103,7 +103,7 @@ $header: 50px;
 .layout-vertical {
 
   .hex-bg {
-    position: absolute;
+    position: fixed;
     top: $header;
     background-color: $seaBlue;
     @include gradient-directional($seaBlue, $darkSeaBlue, -30deg);
@@ -119,8 +119,6 @@ $header: 50px;
     bottom: 0;
     left: 0;
     right: 0;
-    overflow-y: auto;
-
   }
 
   .content {
