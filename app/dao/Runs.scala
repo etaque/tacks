@@ -51,10 +51,6 @@ object Runs extends TableQuery(new RunTable(_)) {
     onTrack(trackId).countDistinct.result
   }
 
-  def listBestForTrack(trackId: UUID): Future[Seq[Run]] = DB.run {
-    onTrack(trackId).sortBy(_.duration.desc).result
-  }
-
   def listBestOnTrackForPlayer(trackId: UUID, playerId: UUID): Future[Seq[Run]] = DB.run {
     onTrack(trackId).filter(_.playerId === playerId).sortBy(_.duration.asc).result
   }
@@ -71,16 +67,28 @@ object Runs extends TableQuery(new RunTable(_)) {
     """.as[RunRanking]
   }
 
+
   def lastRaceIds(limit: Int, minPlayers: Option[Int], trackId: Option[UUID]): Future[Seq[UUID]] = DB.run {
-    trackId.map(onTrack).getOrElse(all)
-      .sortBy(r => (r.startTime.desc, r.duration.asc))
-      .groupBy(_.raceId)
-      .map { case (raceId, group) => (raceId, group.size) }
-      .filter(_._2 >= minPlayers.getOrElse(2))
-      .map(_._1)
-      .take(limit)
-      .result
+    val whereTrack = trackId.map(id => s"WHERE track_id = '$id'").getOrElse("")
+    sql"""
+      SELECT race_id, min(start_time) as t FROM runs #$whereTrack
+      GROUP BY race_id
+      HAVING COUNT(player_id) >= ${minPlayers.getOrElse(2)}
+      ORDER BY t DESC LIMIT $limit
+    """.as[UUID]
   }
+
+  // def lastRaceIds(limit: Int, minPlayers: Option[Int], trackId: Option[UUID]): Future[Seq[UUID]] = DB.run {
+  //   val q = trackId.map(onTrack).getOrElse(all)
+  //     .sortBy(r => (r.startTime.desc, r.duration.asc))
+  //     .groupBy(_.raceId)
+  //     .map { case (raceId, group) => (raceId, group.size) }
+  //     .filter(_._2 >= minPlayers.getOrElse(2))
+  //     .map(_._1)
+  //     .take(limit)
+  //   println(q.result.statements)
+  //     q.result
+  // }
 
   def listForRaces(raceIds: Seq[UUID]): Future[Seq[Run]] = DB.run {
     filter(_.raceId.inSet(raceIds)).result
