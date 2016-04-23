@@ -47,29 +47,32 @@ draftItem confirmDelete draft =
   div
     [ class "col-md-4" ]
     [ div
-        [ classList
+        ([ classList
             [ ( "live-track", True )
             , ( "confirm-delete", confirmDelete )
             ]
-        ]
-        [ h3
-            []
-            [ linkTo
-                (EditTrack draft.id)
+         ]
+          ++ (linkAttrs (EditTrack draft.id))
+        )
+        [ div
+            [ class "live-track-header" ]
+            [ h3
                 [ class "name" ]
                 [ text draft.name ]
             ]
         , div
-            [ class "info" ]
-            [ ShowTrack.about draft
-            , button
-                [ class "btn btn-danger btn-xs pull-right"
-                , onClick addr (ConfirmDeleteDraft draft)
+            [ class "live-track-body" ]
+            []
+        , div
+            [ class "live-track-actions" ]
+            [ button
+                [ class "flat-button"
+                , onButtonClick addr (ConfirmDeleteDraft draft)
                   -- , disabled confirmDelete
                 ]
                 [ text "Delete" ]
             , button
-                [ class "btn btn-danger btn-xs pull-right delete-draft", onClick addr (DeleteDraft draft.id) ]
+                [ class "flat-button", onButtonClick addr (DeleteDraft draft.id) ]
                 [ text "Confirm?" ]
             ]
         ]

@@ -25,7 +25,8 @@ view _ ({ pages, player, dims, routeTransition } as model) =
       dims
 
     h' =
-      h - Constants.headerHeight
+      h
+      -- h - Constants.headerHeight
 
     ctx =
       Context player ( w, h' ) (getTransition model) routeTransition

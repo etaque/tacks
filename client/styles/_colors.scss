@@ -11,7 +11,7 @@ $seaBlue: rgb(33, 148, 206);
 
 $lightSeaBlue: lighten($seaBlue, 6%);
 $lighterSeaBlue: lighten($seaBlue, 12%);
-$whiteSeaBlue: lighten($seaBlue, 30%);
+$whiteSeaBlue: lighten($seaBlue, 50%);
 
 $darkSeaBlue: little-desat-dark($seaBlue);
 $darkerSeaBlue: little-desat-dark($darkSeaBlue);
@@ -34,13 +34,15 @@ $lightGrey: #ddd;
 $smokeWhite: #FAFAFA;
 $whiteSmoke: $smokeWhite;
 
-$shadow: rgba(0, 0, 0, 0.075);
-$strongShadow: rgba(0, 0, 0, 0.2);
+$shadow: rgba(0, 0, 0, 0.12);
+$strongShadow: rgba(0, 0, 0, 0.37);
 $dark: rgba(0, 0, 0, 0.5);
 $veryDark: rgba(0, 0, 0, 0.7);
 
 $light: rgba(255, 255, 255, 0.2);
 $strongLight: rgba(255, 255, 255, 0.5);
+$light-medium: rgba(255, 255, 255, 0.5);
+$light-hard: rgba(255, 255, 255, 0.8);
 
 $red: #CC1426;
 $lightRed: #FF5640;

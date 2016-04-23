@@ -95,69 +95,6 @@
 }
 
 aside {
-  .logo {
-    
-  }
-
-  .user-info {
-    padding: 10px;
-    font-size: 14px;
-    text-align: center;
-    color: $whiteSmoke;
-  }
-
-  h2 {
-    margin: 0;
-    margin-bottom: 10px;
-    padding: 5px 10px;
-    background-color: $lightSeaBlue;
-    color: $white;
-    box-shadow: 1px 1px 1px $shadow;
-    text-align: center;
-    font-size: 18px;
-  }
-
-  hr {
-    border-top: 2px solid $darkSeaBlue;
-    margin: 10px 0;
-  }
-
-  .user-menu {
-    list-style: none;
-    padding: 0;
-    padding-top: 10px;
-    margin: 30px 0 5px 0;
-  }
-
-  .logout {
-    margin: 0 0 5px 0;
-    padding-top: 10px;
-  }
-
-  .user-menu a, .logout a {
-    display: block;
-    padding: 10px 15px;
-    margin-bottom: 5px;
-    color: $whiteSmoke;
-    text-transform: uppercase;
-    text-decoration: none;
-    font-family: $thin;
-    font-size: 16px;
-    line-height: 24px;
-    font-weight: bold;
-    letter-spacing: 1px;
-
-    &:hover {
-      color: $white;
-      background-color: $shadow;
-      box-shadow: 1px 1px 1px $shadow inset;
-    }
-  }
-
-  .track-menu {
-    margin: 0;
-  }
-
   .form-actions {
     margin: 10px 0;
   }
@@ -166,19 +103,19 @@ aside {
     margin-top: 10px;
 
     .module-header {
-      background-color: $darkSeaBlue;
+      /* background-color: $darkSeaBlue; */
       margin: 0 0 10px 0;
       padding: 0;
 
       h3, a.module-title {
-        font-family: $regular;
+        /* font-family: $regular; */
         font-weight: bold;
-        color: $white;
-        padding: 5px 10px;
+        /* color: $white; */
+        /* padding: 5px 10px; */
         margin: 0;
         display: block;
-        text-transform: lowercase;
-        font-size: 13px;
+        /* text-transform: lowercase; */
+        /* font-size: 13px; */
       }
 
       a.module-title {

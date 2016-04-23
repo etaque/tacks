@@ -11,6 +11,8 @@ import Page.Game.Update exposing (addr)
 import Page.Game.View.Players as PlayersView
 import View.Utils as Utils
 import Route exposing (..)
+import Material.Icons.Av as Av
+import Color
 
 
 nav : Model -> LiveTrack -> GameState -> List Html
@@ -22,8 +24,32 @@ nav model liveTrack gameState =
           []
           [ text liveTrack.track.name ]
       ]
-    -- , raceActions gameState
   ]
+
+
+raceAction : GameState -> Html
+raceAction { timers, playerState } =
+  case timers.startTime of
+    Just startTime ->
+      if List.isEmpty playerState.crossedGates then
+        text ""
+      else
+        a
+          [ onClick addr ExitRace
+          , class "floating-button exit-race"
+          , title "Exit race"
+          ]
+          [ Av.stop Color.white 42
+          ]
+
+    Nothing ->
+      a
+        [ onClick addr StartRace
+        , class "floating-button start-race"
+        , title "Start race"
+        ]
+        [ Av.play_arrow Color.white 42
+        ]
 
 
 sidebar : Model -> LiveTrack -> GameState -> List Html
@@ -62,36 +88,11 @@ draftBlocks { track } =
 
 liveBlocks : GameState -> Model -> LiveTrack -> List Html
 liveBlocks gameState model liveTrack =
-  [ raceActions gameState
-  , PlayersView.block model
+  [ PlayersView.block model
   , ghostsBlock model.ghostRuns
   , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
   , helpBlock
   ]
-
-
-raceActions : GameState -> Html
-raceActions { timers, playerState } =
-  div
-    [ class "race-actions" ]
-    [ case timers.startTime of
-        Just startTime ->
-          if List.isEmpty playerState.crossedGates then
-            text ""
-          else
-            a
-              [ onClick addr ExitRace
-              , class "btn btn-danger btn-block"
-              ]
-              [ text "Exit race" ]
-
-        Nothing ->
-          a
-            [ onClick addr StartRace
-            , class "btn btn-default btn-block"
-            ]
-            [ text "Start race" ]
-    ]
 
 
 ghostsBlock : Dict String Player -> Html

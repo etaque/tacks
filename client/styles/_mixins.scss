@@ -58,12 +58,32 @@
   background-image: linear-gradient($deg, $start-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
 }
 
+@mixin sheet {
+  background-color: $white;
+  border-radius: 2px;
+
+  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@mixin shadow-light {
+  box-shadow: 0px 1px 4px $shadow;
+}
+
+@mixin shadow-medium {
+  box-shadow: 0px 1px 8px rgba(0, 0, 0, 0.23);
+}
+
+@mixin shadow-strong {
+  box-shadow: 0px 1px 12px $strongShadow;
+}
+
 @mixin panel {
   /* background-color: $lightSeaBlue; */
   /* border: 5px solid $whiteSeaBlue; */
   box-shadow: 0px 2px 2px $shadow;
   background-color: $white;
   color: $grey;
+
   /* @include gradient-directional($darkSeaBlue, $seaBlue, -10deg); */
 }
 
@@ -75,23 +95,24 @@
   /* padding: 5px; */
   margin-bottom: 10px;
   /* font-size: 14px; */
-  font-family: $mono;
 
   li {
-    margin-bottom: 3px;
+    line-height: 24px;
 
     .handle {
-      /* color: $darkGrey; */
+      color: $darkGrey;
     }
 
     .rank {
-      margin-right: 10px;
+      display: inline-block;
+      margin-right: 8px;
       font-weight: bold;
-      /* color: $whiteSeaBlue; */
-      /* color: $mediumGrey; */
+      font-family: $mono;
+      color: $mediumGrey;
+      text-align: right;
 
-      &:before {
-        content: "#";
+      &:after {
+        content: ".";
       }
     }
 
@@ -100,7 +121,9 @@
     }
 
     .time {
+      font-family: $mono;
       float: right;
+      color: $grey;
       /* color: white; */
     }
   }

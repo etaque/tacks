@@ -12,19 +12,22 @@ import Hexagons.Grid as Grid
 
 mouseAction : MouseEvent -> Dims -> Editor -> Editor
 mouseAction event dims editor =
-  let
-    courseDims =
-      getCourseDims dims
-  in
-    case realMode editor of
-      CreateTile kind ->
-        updateTileAction kind event courseDims editor
+  if editor.hoverToolbar then
+    editor
+  else
+    let
+      courseDims =
+        getCourseDims dims
+    in
+      case realMode editor of
+        CreateTile kind ->
+          updateTileAction kind event courseDims editor
 
-      Erase ->
-        deleteTileAction event courseDims editor
+        Erase ->
+          deleteTileAction event courseDims editor
 
-      Watch ->
-        updateCenter event courseDims editor
+        Watch ->
+          updateCenter event courseDims editor
 
 
 deleteTileAction : MouseEvent -> Dims -> Editor -> Editor

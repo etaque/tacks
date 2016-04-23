@@ -104,42 +104,40 @@ liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
     div
       [ class "col-md-6" ]
       [ div
-          [ classList
+          ([ classList
               [ ( "live-track", True )
               , ( "has-focus", hasFocus )
               , ( "is-empty", empty )
               ]
-          ]
-          [ h3
-              []
-              [ linkTo
-                  (ShowTrack track.id)
+           , onMouseOver addr (FocusTrack (Just track.id))
+           , onMouseOut addr (FocusTrack Nothing)
+           ]
+            ++ (linkAttrs (PlayTrack track.id))
+          )
+          [ div
+              [ class "live-track-header" ]
+              [ h3
                   [ class "name", title track.name ]
                   [ text track.name ]
+              , div
+                  [ class "creator" ]
+                  [ text ("by " ++ (Maybe.withDefault "" meta.creator.handle)) ]
+              , if empty then
+                  text ""
+                else
+                  span [ class "live-players" ] [ text (toString (List.length players)) ]
               ]
           , div
-              [ class "info" ]
+              [ class "live-track-body"
+              ]
               [ rankingsExtract meta.rankings
-                -- , div
-                --     [ class "rankings-size" ]
-                --     [ text <| toString (List.length meta.rankings) ++ " entries" ]
-              , linkTo
-                  (PlayTrack track.id)
-                  [ class
-                      <| "btn btn-block btn-join btn-"
-                      ++ if empty then
-                          "default"
-                         else
-                          "warning"
-                  , onMouseOver addr (FocusTrack (Just track.id))
-                  , onMouseOut addr (FocusTrack Nothing)
-                  ]
-                  [ text
-                      (if empty then
-                        "play"
-                       else
-                        "join (" ++ toString (List.length players) ++ ")"
-                      )
+              ]
+          , div
+              [ class "live-track-actions" ]
+              [ linkTo
+                  (ShowTrack track.id)
+                  [ class "flat-button" ]
+                  [ text <| "See " ++ toString (List.length meta.rankings) ++ " entries"
                   ]
               ]
           ]
@@ -148,7 +146,10 @@ liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
 
 rankingsExtract : List Ranking -> Html
 rankingsExtract rankings =
-  ul [ class "list-unstyled list-rankings" ] (List.map rankingItem rankings)
+  ul
+    [ class "list-unstyled list-rankings"
+    ]
+    (List.take 3 rankings |> List.map rankingItem)
 
 
 activePlayers : List LiveTrack -> Html

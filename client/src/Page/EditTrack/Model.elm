@@ -26,9 +26,8 @@ initial =
 
 type alias Editor =
   { blocks : SideBlocks
-  , course :
-      Course
-      -- , courseForm : Form () Course
+  , hoverToolbar : Bool
+  , course : Course
   , center : Point
   , mode : Mode
   , altMove : Bool
@@ -47,6 +46,7 @@ initialEditor track =
       , wind = False
       , gusts = False
       }
+  , hoverToolbar = False
   , course =
       track.course
       -- , courseForm = initialCourseForm track.course
@@ -101,6 +101,7 @@ realMode { mode, altMove } =
 type Action
   = LoadTrack (Result () Track)
   | MouseAction MouseEvent
+  | HoverToolbar Bool
   | SetMode Mode
   | AltMoveMode Bool
   | FormAction FormUpdate

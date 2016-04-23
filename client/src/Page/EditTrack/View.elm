@@ -22,9 +22,11 @@ view ({ player, dims } as ctx) model =
         Layout.layoutWithSidebar
           "editor"
           ctx
-          []
+          (SideView.nav track editor)
           (SideView.view track editor)
-          [ renderCourse dims editor ]
+          [ renderCourse dims editor
+          , SideView.toolbar track editor
+          ]
       else
         Html.text "Access forbidden."
 

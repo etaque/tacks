@@ -11,8 +11,49 @@
       cursor: cell;
 
       &.mode-m {
-        cursor: move
-        ;
+        cursor: move;
+      }
+    }
+
+    .toolbar {
+      position: fixed;
+      top: 70px;
+      margin-left: 20px;
+      background-color: $whiteSmoke;
+      padding: 10px;
+      box-shadow: 2px 2px 2px $shadow;
+
+      .surface-modes {
+
+        a {
+          width: 30px;
+          display: inline-block;
+          margin-right: 10px;
+          height: 30px;
+
+          /* box-shadow: 1px 1px 1px $strongShadow; */
+          line-height: 30px;
+          font-family: $serif;
+          font-size: 14px;
+          text-align: center;
+          color: $white;
+          text-shadow: 1px 1px 1px $shadow;
+          /* border: 2px solid transparent; */
+          text-transform: uppercase;
+          border-radius: 2px;
+
+          &:last-child {
+            margin-right: 0;
+          }
+
+          &.current {
+            opacity: 1;
+            box-shadow: inset 1px 1px 1px $strongShadow;
+            /* border: 2px solid black; */
+            /* border-radius: 2px; */
+            color: black;
+          }
+        }
       }
     }
   }

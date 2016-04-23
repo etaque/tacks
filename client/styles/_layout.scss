@@ -32,7 +32,7 @@ $header: 50px;
   z-index: 1;
   background-color: $smokeWhite;
   /* @include gradient-directional($smokeWhite, $white, 0deg); */
-  box-shadow: 0 2px 2px $shadow;
+  box-shadow: 1px 2px 4px $shadow;
 
   .user-menu {
     float: right;
@@ -93,11 +93,7 @@ $header: 50px;
     stroke-opacity: 1;
   }
 
-  &:hover {
-    span {
-      color: $grey;
-    }
-  }
+  &:hover {}
 }
 
 .layout-vertical {
@@ -122,22 +118,12 @@ $header: 50px;
   }
 
   .content {
-    margin-top: 50px;
+    margin-top: $header;
 
     .container {
       margin-top: 10px;
-      padding-top: 30px;
-      padding-bottom: 30px;
-    }
-
-    .blue {
-      color: $white;
-    }
-
-    .white {
-      background-color: $white;
-      @include gradient-directional($smokeWhite, $white, -30deg);
-      box-shadow: 0 5px 5px $shadow;
+      padding-top: 36px;
+      padding-bottom: 36px;
     }
   }
 
@@ -172,8 +158,9 @@ $header: 50px;
   $side: 280px;
 
   .header {
-    /* @include gradient-directional(lighten($whiteSeaBlue, 10%), #F6F6F6, -90deg); */
-    @include gradient-directional(#f6f6f6, #eee, 90deg);
+    background-color: $strongShadow;
+    color: $white;
+    box-shadow: none;
 
     .container {
       width: 100%;
@@ -182,8 +169,7 @@ $header: 50px;
 
     .logo {
       width: 280px;
-      background-color: $darkerSeaBlue;
-      border-right: 5px solid $altBlue;
+      background-color: #eee;
 
       svg {
         left: 50px;
@@ -191,7 +177,6 @@ $header: 50px;
 
       span {
         left: 100px;
-        color: $white;
       }
     }
 
@@ -203,36 +188,20 @@ $header: 50px;
       bottom: 0;
 
       h2 {
-        $bg: $lightGrey;
-        @include gradient-directional(#eee, $bg, 90deg);
-        /* width: 210px; */
         display: inline-block;
         margin: 0;
-        padding: 0 15px 0 25px;
-        font-family: $serif;
-        font-size: 18px;
+        padding: 0 16px 0 24px;
+        font-size: 21px;
         line-height: $header;
-        background-color: $bg;
+        font-weight: bold;
         position: relative;
 
         a {
-          color: $grey;
+          color: $white;
 
           &:hover {
             text-decoration: underline;
           }
-        }
-
-        &:after {
-          content: '';
-          display: block;
-          position: absolute;
-          left: 100%;
-          top: 0;
-          width: 0;
-          height: 0;
-          border: $header/2 solid transparent;
-          border-left-color: $bg;
         }
       }
     }
@@ -251,16 +220,15 @@ $header: 50px;
     display: flex;
     flex-direction: column;
     overflow-y: auto;
-    padding: 15px;
-    /* background-color: $seaBlue; */
-    @include gradient-directional($darkSeaBlue, $seaBlue, -30deg);
-    border-right: 5px solid $mainBlue;
-    color: $white;
+    padding: 16px;
+    @include shadow-medium;
+    z-index: 1;
+    background-color: $smokeWhite;
   }
 
   main {
     position: absolute;
-    top: $header;
+    top: 0;
     left: $side;
     bottom: 0;
     background-color: $sand;

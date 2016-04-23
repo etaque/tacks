@@ -63,6 +63,9 @@ update dims action model =
     MouseAction event ->
       staticRes (updateEditor (GridUpdate.mouseAction event dims) model)
 
+    HoverToolbar isOver ->
+      res (updateEditor (\e -> { e | hoverToolbar = isOver }) model) none
+
     SetMode mode ->
       staticRes (updateEditor (\e -> { e | mode = mode }) model)
 

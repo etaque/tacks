@@ -20,21 +20,28 @@ import Route
 
 linkTo : Route.Route -> List Attribute -> List Html -> Html
 linkTo route attrs content =
+  a ((linkAttrs route) ++ attrs) content
+
+
+linkAttrs : Route.Route -> List Attribute
+linkAttrs route =
   let
     path =
       Route.toPath route
-
-    linkAttrs =
-      [ href path
-      , onPathClick path
-      ]
   in
-    a (linkAttrs ++ attrs) content
+    [ href path
+    , onPathClick path
+    ]
 
 
 onPathClick : String -> Attribute
 onPathClick path =
   onWithOptions "click" eventOptions Json.value (\_ -> Signal.message TransitRouter.pushPathAddress path)
+
+
+onButtonClick : Signal.Address a -> a -> Attribute
+onButtonClick address action =
+  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message address action)
 
 
 onInput : Signal.Address a -> (String -> a) -> Attribute

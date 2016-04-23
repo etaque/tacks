@@ -9,19 +9,22 @@
 }
 
 .race-report-excerpt {
-  $br: 2px;
+  @include sheet;
+  @include shadow-light;
 
   color: $darkGrey;
-  box-shadow: 1px 2px 2px $shadow;
-  border-radius: $br;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+
+  &:hover {
+    @include shadow-medium;
+    cursor: pointer;
+  }
 
   .meta {
     display: block;
     padding: 6px 10px;
     background-color: $lightGrey;
     color: $grey;
-    border-radius: $br $br 0 0;
     box-shadow: inset 0px -1px 2px $shadow;
     font-family: $serif;
     text-align: center;
@@ -55,6 +58,5 @@
     padding: 10px;
     overflow-y: auto;
     @include linear-gradient($white, $whiteSmoke);
-    border-radius: 0 0 $br $br;
   }
 }

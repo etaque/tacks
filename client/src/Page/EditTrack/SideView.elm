@@ -11,6 +11,7 @@ import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
 import View.Sidebar as Sidebar
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
+import Route
 
 
 formAddr : Signal.Address FormUpdate
@@ -18,13 +19,32 @@ formAddr =
   Signal.forwardTo addr FormAction
 
 
+nav : Track -> Editor -> List Html
+nav track editor =
+  [ h2
+      []
+      [ linkTo
+          (Route.ShowTrack track.id)
+          []
+          [ text track.name ]
+      ]
+  ]
+
+
+toolbar : Track -> Editor -> Html
+toolbar track editor =
+  div
+    [ class "toolbar"
+    , onMouseOver addr (HoverToolbar True)
+    , onMouseOut addr (HoverToolbar False)
+    ]
+    [ surfaceBlock editor
+    ]
+
+
 view : Track -> Editor -> List Html
 view track ({ course, name, saving, mode, blocks } as editor) =
-  [ div
-      [ class "track-menu" ]
-      [ h2 [] [ text name ]
-      ]
-  , sideBlock
+  [ sideBlock
       "Name"
       blocks.name
       (ToggleBlock Name)
@@ -49,7 +69,7 @@ view track ({ course, name, saving, mode, blocks } as editor) =
       blocks.gates
       (ToggleBlock Gates)
       (renderGatesGroups course)
- , sideBlock
+  , sideBlock
       "Wind"
       blocks.wind
       (ToggleBlock Wind)
@@ -201,7 +221,7 @@ renderSurfaceMode currentMode mode =
     a
       [ classList [ ( "current", currentMode == mode ), ( abbr, True ) ]
       , onClick addr (SetMode mode)
-      , style [ ( "background-color", color ) ]
+      , style [ ( "background-color", color ), ( "border-color", color ) ]
       , title label
       ]
       [ text abbr ]

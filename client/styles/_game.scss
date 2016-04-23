@@ -10,6 +10,25 @@
   }
 }
 
+
+
+.exit-race,
+.start-race {
+  position: absolute;
+  bottom: 36px;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.start-race {
+}
+
+.exit-race {
+  background-color: $strongShadow;
+}
+
 aside {
 
   .draft-warning {
@@ -98,22 +117,25 @@ aside {
   }
 
   .module-help {
-    font-size: 12px;
 
     dl {
-      padding: 5px;
-      color: white;
+      padding: 8px 0;
+
+      & > * {
+        padding-bottom: 8px;
+      }
     }
 
     dt {
       font-weight: bold;
       clear: both;
       float: left;
-      opacity: 0.8;
+      color: $darkGrey;
+      margin-right: 8px;
     }
 
     dd {
-      float: right;
+      float: left;
     }
   }
 

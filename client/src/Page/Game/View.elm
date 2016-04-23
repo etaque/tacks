@@ -41,6 +41,7 @@ view ctx model =
               [ render ( w - sidebarWidth, h ) gameState
               , Chat.view h model
               ]
+          , Context.raceAction gameState
           ]
 
     _ ->
