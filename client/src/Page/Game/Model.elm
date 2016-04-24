@@ -10,6 +10,7 @@ import Game.Inputs exposing (GameInput)
 type alias Model =
   { liveTrack : Maybe LiveTrack
   , gameState : Maybe GameState
+  , tab : Tab
   , races : List Race
   , freePlayers : List Player
   , live : Bool
@@ -20,10 +21,17 @@ type alias Model =
   }
 
 
+type Tab
+  = LiveTab
+  | RankingsTab
+  | HelpTab
+
+
 initial : Model
 initial =
   { liveTrack = Nothing
   , gameState = Nothing
+  , tab = LiveTab
   , races = []
   , freePlayers = []
   , live = False
@@ -40,6 +48,7 @@ type Action
   | UpdateLiveTrack LiveTrack
   | PingServer Time
   | GameUpdate GameInput
+  | SetTab Tab
   | StartRace
   | ExitRace
   | EnterChat

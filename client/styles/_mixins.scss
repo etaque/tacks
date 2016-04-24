@@ -58,11 +58,15 @@
   background-image: linear-gradient($deg, $start-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
 }
 
+@mixin bezier($target) {
+  transition: $target 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 @mixin sheet {
   background-color: $white;
   border-radius: 2px;
-
-  transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+  @include bezier(box-shadow);
 }
 
 @mixin shadow-light {
@@ -75,6 +79,10 @@
 
 @mixin shadow-strong {
   box-shadow: 0px 1px 12px $strongShadow;
+}
+
+@mixin shadow-inset-light {
+  box-shadow: inset 0px 1px 2px $shadow;
 }
 
 @mixin panel {

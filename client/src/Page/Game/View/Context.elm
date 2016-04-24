@@ -11,7 +11,8 @@ import Page.Game.Update exposing (addr)
 import Page.Game.View.Players as PlayersView
 import View.Utils as Utils
 import Route exposing (..)
-import Material.Icons.Av as Av
+import Material.Icons.Av as AvIcons
+import Material.Icons.Navigation as NavIcons
 import Color
 
 
@@ -39,7 +40,7 @@ raceAction { timers, playerState } =
           , class "floating-button exit-race"
           , title "Exit race"
           ]
-          [ Av.stop Color.white 42
+          [ NavIcons.cancel Color.grey 42
           ]
 
     Nothing ->
@@ -48,7 +49,7 @@ raceAction { timers, playerState } =
         , class "floating-button start-race"
         , title "Start race"
         ]
-        [ Av.play_arrow Color.white 42
+        [ AvIcons.play_arrow Color.white 42
         ]
 
 
@@ -88,11 +89,47 @@ draftBlocks { track } =
 
 liveBlocks : GameState -> Model -> LiveTrack -> List Html
 liveBlocks gameState model liveTrack =
-  [ PlayersView.block model
-  , ghostsBlock model.ghostRuns
-  , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
-  , helpBlock
-  ]
+  (tabs model)
+    :: case model.tab of
+        LiveTab ->
+          [ PlayersView.block model ]
+
+        RankingsTab ->
+          [ ghostsBlock model.ghostRuns
+          , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
+          ]
+
+        HelpTab ->
+          [ helpBlock ]
+
+
+tabs : Model -> Html
+tabs { tab } =
+  let
+    items =
+      [ ( "Live", LiveTab )
+      , ( "Rankings", RankingsTab )
+      , ( "Help", HelpTab )
+      ]
+  in
+    div
+      [ class "tabs-container" ]
+      [ div
+          [ class "tabs-content" ]
+          (List.map (tabItem tab) items)
+      ]
+
+
+tabItem : Tab -> ( String, Tab ) -> Html
+tabItem selectedTab ( title, tab ) =
+  div
+    [ classList
+        [ ( "tab", True )
+        , ( "tab-selected", selectedTab == tab )
+        ]
+    , onClick addr (SetTab tab)
+    ]
+    [ text title ]
 
 
 ghostsBlock : Dict String Player -> Html

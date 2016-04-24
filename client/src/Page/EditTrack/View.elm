@@ -5,7 +5,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
-import Page.EditTrack.SideView as SideView
+import Page.EditTrack.View.Context as Context
 import View.Layout as Layout
 import Game.Geo exposing (floatify)
 import Game.Render.SvgUtils exposing (..)
@@ -22,10 +22,9 @@ view ({ player, dims } as ctx) model =
         Layout.layoutWithSidebar
           "editor"
           ctx
-          (SideView.nav track editor)
-          (SideView.view track editor)
+          (Context.toolbar track editor)
+          (Context.view track editor)
           [ renderCourse dims editor
-          , SideView.toolbar track editor
           ]
       else
         Html.text "Access forbidden."

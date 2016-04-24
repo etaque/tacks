@@ -4,11 +4,11 @@ import Color exposing (Color)
 
 
 sidebarWidth =
-  280
+  270
 
 
 headerHeight =
-  50
+  52
 
 
 containerWidth =

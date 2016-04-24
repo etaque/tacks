@@ -14,8 +14,9 @@
 
 .exit-race,
 .start-race {
+  z-index: 2;
   position: absolute;
-  bottom: 36px;
+  top: 24px;
   left: 0;
   right: 0;
   margin-left: auto;
@@ -26,7 +27,7 @@
 }
 
 .exit-race {
-  background-color: $strongShadow;
+  background-color: $charcoal;
 }
 
 aside {

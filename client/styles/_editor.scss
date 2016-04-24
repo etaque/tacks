@@ -1,5 +1,6 @@
 @import 'colors';
 @import 'fonts';
+@import 'mixins';
 
 #editor {
 
@@ -15,43 +16,65 @@
       }
     }
 
-    .toolbar {
-      position: fixed;
-      top: 70px;
-      margin-left: 20px;
-      background-color: $whiteSmoke;
-      padding: 10px;
-      box-shadow: 2px 2px 2px $shadow;
+  }
 
-      .surface-modes {
+  .toolbar {
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
 
-        a {
-          width: 30px;
+
+    .surface-modes {
+      padding: 8px 24px;
+
+      a {
+        display: inline-block;
+        color: $mediumGrey; 
+        padding: 4px 16px 4px 8px;
+        margin-right: 4px;
+        line-height: 24px;
+        min-width: 64px;
+        border-radius: 2px;
+        border: 1px solid transparent;
+        vertical-align: middle;
+
+        &:last {
+          border-right: none;
+        }
+
+        &.m span {
+          border-radius: 0;
+          background-color: $darkGrey;
+        }
+
+        span {
           display: inline-block;
-          margin-right: 10px;
-          height: 30px;
+          width: 16px;
+          height: 16px;
+          opacity: 0.8;
+          vertical-align: middle;
+          margin-right: 8px;
+          border-radius: 24px;
+        }
 
-          /* box-shadow: 1px 1px 1px $strongShadow; */
-          line-height: 30px;
-          font-family: $serif;
-          font-size: 14px;
-          text-align: center;
+        &:hover,
+        &.currrent:hover {
           color: $white;
-          text-shadow: 1px 1px 1px $shadow;
-          /* border: 2px solid transparent; */
-          text-transform: uppercase;
-          border-radius: 2px;
+          $bg: lighten($charcoal, 12%);
+          background-color: $bg;
+          border-color: lighten($bg, 8%);
+          @include shadow-light;
+        }
 
-          &:last-child {
-            margin-right: 0;
-          }
+        &.current {
+          $bg: darken($charcoal, 12%);
+          color: $whiteSmoke;
+          background-color: $bg;
+          border-color: darken($bg, 8%);
+          @include shadow-inset-light;
 
-          &.current {
+          span {
             opacity: 1;
-            box-shadow: inset 1px 1px 1px $strongShadow;
-            /* border: 2px solid black; */
-            /* border-radius: 2px; */
-            color: black;
           }
         }
       }

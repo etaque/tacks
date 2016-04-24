@@ -60,6 +60,9 @@ update player action model =
       else
         res { model | gameState = updateTime time model.gameState } pingServer
 
+    SetTab tab ->
+      res { model | tab = tab } none
+
     StartRace ->
       let
         startTask =
@@ -72,6 +75,7 @@ update player action model =
       let
         newModel =
           { model | gameState = Maybe.map clearCrossedGates model.gameState }
+
         exitTask =
           Signal.send Output.serverAddress Output.EscapeRace
             |> Task.map (\_ -> NoOp)

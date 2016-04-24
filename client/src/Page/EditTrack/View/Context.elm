@@ -1,4 +1,4 @@
-module Page.EditTrack.SideView (..) where
+module Page.EditTrack.View.Context (..) where
 
 import Signal
 import Html exposing (..)
@@ -31,15 +31,16 @@ nav track editor =
   ]
 
 
-toolbar : Track -> Editor -> Html
+toolbar : Track -> Editor -> List Html
 toolbar track editor =
-  div
-    [ class "toolbar"
-    , onMouseOver addr (HoverToolbar True)
-    , onMouseOut addr (HoverToolbar False)
-    ]
-    [ surfaceBlock editor
-    ]
+  [ div
+      [ class ""
+      , onMouseOver addr (HoverToolbar True)
+      , onMouseOut addr (HoverToolbar False)
+      ]
+      [ surfaceBlock editor
+      ]
+  ]
 
 
 view : Track -> Editor -> List Html
@@ -57,13 +58,13 @@ view track ({ course, name, saving, mode, blocks } as editor) =
               ]
           ]
       ]
-  , sideBlock
-      "Surface pencil"
-      blocks.surface
-      (ToggleBlock Surface)
-      [ surfaceBlock editor
-      , p [] [ text "Press SHIFT for temporary move mode" ]
-      ]
+    -- , sideBlock
+    --     "Surface pencil"
+    --     blocks.surface
+    --     (ToggleBlock Surface)
+    --     [ surfaceBlock editor
+    --     , p [] [ text "Press SHIFT for temporary move mode" ]
+    --     ]
   , sideBlock
       "Gates"
       blocks.gates
@@ -221,10 +222,14 @@ renderSurfaceMode currentMode mode =
     a
       [ classList [ ( "current", currentMode == mode ), ( abbr, True ) ]
       , onClick addr (SetMode mode)
-      , style [ ( "background-color", color ), ( "border-color", color ) ]
       , title label
       ]
-      [ text abbr ]
+      [ span
+          [ style [ ( "background-color", color ), ( "border-color", color ) ]
+          ]
+          []
+      , text label
+      ]
 
 
 renderGatesGroups : Course -> List Html

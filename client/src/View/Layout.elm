@@ -54,6 +54,7 @@ header player navContent =
         guestMenu
       else
         userMenu player
+
     navBlock =
       div [ class "page-nav" ] navContent
   in
@@ -128,9 +129,21 @@ layoutWithSidebar name ctx navContent sideContent mainContent =
     [ class "layout-fullscreen"
     , id name
     ]
-    [ header ctx.player navContent
-    , aside
+    [ aside
         [ style [ ( "width", toString Constants.sidebarWidth ++ "px" ) ] ]
-        sideContent
+        (logo :: sideContent)
+    , if List.isEmpty navContent then
+        text ""
+      else
+        subHeader
+          ctx.player
+          navContent
     , main' [] mainContent
     ]
+
+
+subHeader : Player -> List Html -> Html
+subHeader player content =
+  nav
+    [ class "toolbar" ]
+    content
