@@ -61,7 +61,7 @@ object JsonFormats {
       "guest" -> false,
       "handle" -> u.handle,
       "status" -> u.status,
-      "avatarId" -> JsNull,
+      "avatarId" -> u.gravatarHash,
       "vmgMagnet" -> u.vmgMagnet
     )
   }

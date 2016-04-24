@@ -145,6 +145,17 @@ hr {
   }
 }
 
+aside {
+  
+  h3 {
+    margin: 16px 16px 8px 16px;
+    font-weight: bold;
+    font-family: $regular;
+    font-size: 14px;
+    color: $grey;
+  }
+
+}
 
 
 /* .btn { */
@@ -328,10 +339,10 @@ label {}
   .avatar {
     display: inline-block;
     vertical-align: none;
-    height: 19px;
-    width: 19px;
-    border-radius: 10px;
-    margin-right: -2px;
+    height: 32px;
+    width: 32px;
+    border-radius: 16px;
+    margin-right: 8px;
   }
 
   .handle {
@@ -339,7 +350,14 @@ label {}
   }
 }
 
+
+.list-players {
+  @include players-list;
+}
+
+
 .list-rankings {
   @include players-list;
+  @include rankings;
 }
 

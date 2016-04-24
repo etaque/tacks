@@ -86,53 +86,54 @@
 }
 
 @mixin panel {
-  /* background-color: $lightSeaBlue; */
-  /* border: 5px solid $whiteSeaBlue; */
   box-shadow: 0px 2px 2px $shadow;
   background-color: $white;
   color: $grey;
-
-  /* @include gradient-directional($darkSeaBlue, $seaBlue, -10deg); */
 }
 
-.panel {
-  @include panel;
-}
 
 @mixin players-list {
-  /* padding: 5px; */
-  margin-bottom: 10px;
-  /* font-size: 14px; */
+  margin-bottom: 8px;
 
   li {
-    line-height: 24px;
+    line-height: 48px;
 
     .handle {
       color: $darkGrey;
     }
 
+    .handle {
+      font-weight: bold;
+    }
+  }
+}
+
+@mixin rankings {
+  li {
+    border-bottom: 1px solid #eee;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
     .rank {
       display: inline-block;
-      margin-right: 8px;
+      margin-right: 16px;
       font-weight: bold;
       font-family: $mono;
       color: $mediumGrey;
-      text-align: right;
-
-      &:after {
-        content: ".";
-      }
-    }
-
-    .handle {
-      font-weight: bold;
+      text-align: center;
+      width: 48px;
+      background-color: $whiteSmoke;
     }
 
     .time {
       font-family: $mono;
       float: right;
       color: $grey;
-      /* color: white; */
+      padding-right: 16px;
     }
-  }
+  } 
 }
+
+$border: 1px solid #eee;

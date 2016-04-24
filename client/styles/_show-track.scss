@@ -34,8 +34,8 @@
 
   .rankings {
     .list-rankings {
-      padding: 8px 12px;
-      @include panel;
+      @include sheet;
+      @include shadow-light;
     }
   }
 

@@ -3,8 +3,6 @@ module Page.Home.View (..) where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Date
-import Date.Format as DateFormat
 import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
@@ -184,9 +182,13 @@ activeTrackPlayers { track, players } =
 
 playersList : List Player -> Html
 playersList players =
-  ul [ class "list-unstyled live-players" ] (List.map playerItem players)
+  ul
+    [ class "list-unstyled live-players" ]
+    (List.map playerItem players)
 
 
 playerItem : Player -> Html
 playerItem player =
-  li [ class "player" ] [ text (playerHandle player) ]
+  li
+    [ class "player" ]
+    [ Utils.playerWithAvatar player ]

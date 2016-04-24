@@ -208,11 +208,12 @@ playerWithAvatar player =
       span [ class "player-avatar" ] [ avatarImg, text " ", handleSpan ]
 
 
+
 avatarUrl : Player -> String
 avatarUrl p =
   case p.avatarId of
     Just id ->
-      "/avatars/" ++ id
+      "http://www.gravatar.com/avatar/" ++ id ++ "?s=32&d=http://www.playtacks.com/assets/images/avatar-guest.png"
 
     Nothing ->
       if p.user then
@@ -232,14 +233,36 @@ rankingItem ranking =
     [ class "ranking" ]
     [ span [ class "rank" ] [ text (toString ranking.rank) ]
     , span [ class "time" ] [ text (formatTimer True ranking.finishTime) ]
-    , span [ class "handle" ] [ text (playerHandle ranking.player) ]
-      -- , playerWithAvatar ranking.player
+    -- , span [ class "handle" ] [ text (playerHandle ranking.player) ]
+    , playerWithAvatar ranking.player
     ]
 
 
 moduleTitle : String -> Html
 moduleTitle title =
   div [ class "module-header" ] [ h3 [] [ text title ] ]
+
+
+tabsRow : List ( String, tab ) -> (tab -> Attribute) -> (tab -> Bool) -> Html
+tabsRow items toAttr isSelected =
+  div
+    [ class "tabs-container" ]
+    [ div
+        [ class "tabs-content" ]
+        (List.map (tabItem toAttr isSelected) items)
+    ]
+
+
+tabItem : (tab -> Attribute) -> (tab -> Bool) -> ( String, tab ) -> Html
+tabItem toAttr isSelected ( title, tab ) =
+  div
+    [ classList
+        [ ( "tab", True )
+        , ( "tab-selected", isSelected tab )
+        ]
+    , toAttr tab
+    ]
+    [ text title ]
 
 
 

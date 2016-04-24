@@ -6,7 +6,7 @@ import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Constants exposing (..)
-import View.Utils exposing (..)
+import View.Utils as Utils exposing (..)
 import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
 import View.Sidebar as Sidebar
@@ -44,148 +44,149 @@ toolbar track editor =
 
 
 view : Track -> Editor -> List Html
-view track ({ course, name, saving, mode, blocks } as editor) =
-  [ sideBlock
-      "Name"
-      blocks.name
-      (ToggleBlock Name)
-      [ div
-          [ class "form-group" ]
-          [ textInput
-              [ value name
-              , onInput addr SetName
-              , type' "text"
+view track ({ tab, course, name, saving, mode } as editor) =
+  (tabs editor.tab)
+    :: case tab of
+        GatesTab ->
+          renderGatesGroups course
+
+        WindTab ->
+          [ div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Speed" ]
+              , intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
+              ]
+          , div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Wavelength 1" ]
+              , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
+              ]
+          , div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Amplitude 1" ]
+              , intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
+              ]
+          , div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Wavelength 2" ]
+              , intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
+              ]
+          , div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Amplitude 2" ]
+              , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
               ]
           ]
+
+        GustsTab ->
+          [ div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Spawn interval (s)" ]
+              , intInput
+                  course.gustGenerator.interval
+                  (\i -> UpdateGustGen (\gen -> { gen | interval = i }))
+                  [ HtmlAttr.min "10" ]
+              ]
+          , div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Average radius" ]
+              , intInput
+                  course.gustGenerator.radiusBase
+                  (\i -> UpdateGustGen (\gen -> { gen | radiusBase = i }))
+                  [ HtmlAttr.min "50", HtmlAttr.step "10", HtmlAttr.max "1000" ]
+              ]
+          , div
+              [ class "form-group" ]
+              [ label [ class "" ] [ text "Radius variation (+/-)" ]
+              , intInput
+                  course.gustGenerator.radiusVariation
+                  (\i -> UpdateGustGen (\gen -> { gen | radiusVariation = i }))
+                  [ HtmlAttr.min "0", HtmlAttr.step "10", HtmlAttr.max "500" ]
+              ]
+          , div
+              [ class "form-group range" ]
+              [ label [ class "" ] [ text "Wind speed variation" ]
+              , intInput
+                  course.gustGenerator.speedVariation.start
+                  (UpdateGustGen << updateSpeedVariation << updateRangeStart)
+                  [ HtmlAttr.min "-10", HtmlAttr.step "1", HtmlAttr.max "0" ]
+              , intInput
+                  course.gustGenerator.speedVariation.end
+                  (UpdateGustGen << updateSpeedVariation << updateRangeEnd)
+                  [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "10" ]
+              ]
+          , div
+              [ class "form-group range" ]
+              [ label [ class "" ] [ text "Wind origin variation" ]
+              , intInput
+                  course.gustGenerator.originVariation.start
+                  (UpdateGustGen << updateOriginVariation << updateRangeStart)
+                  [ HtmlAttr.min "-20", HtmlAttr.step "1", HtmlAttr.max "0" ]
+              , intInput
+                  course.gustGenerator.originVariation.end
+                  (UpdateGustGen << updateOriginVariation << updateRangeEnd)
+                  [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "20" ]
+              ]
+          ]
+
+
+
+-- [  div
+--     [ class "form-group" ]
+--     [ textInput
+--         [ value name
+--         , onInput addr SetName
+--         , type' "text"
+--         ]
+--     ]
+-- , div
+--     [ class "form-actions btn-group btn-group-justified" ]
+--     [ a
+--         [ onClick addr (Save False)
+--         , class "btn btn-primary btn-save"
+--         , disabled saving
+--         ]
+--         [ text "Save" ]
+--     , a
+--         [ onClick addr (Save True)
+--         , class "btn btn-default btn-save-and-try"
+--         , disabled saving
+--         ]
+--         [ text "Save and try" ]
+--     ]
+-- , if track.status == Draft then
+--     div
+--       [ class "btn-group-vertical" ]
+--       [ button
+--           [ onClick addr ConfirmPublish
+--           , class "btn btn-default btn-block btn-confirm-publish"
+--           ]
+--           [ text "Save and publish" ]
+--       , if editor.confirmPublish then
+--           button
+--             [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
+--             [ text "Confirm? You can't go back!" ]
+--         else
+--           text ""
+--       ]
+--   else
+--     text ""
+-- ]
+
+
+tabs : Tab -> Html
+tabs tab =
+  let
+    items =
+      [ ( "Gates", GatesTab )
+      , ( "Wind", WindTab )
+      , ( "Gusts", GustsTab )
       ]
-    -- , sideBlock
-    --     "Surface pencil"
-    --     blocks.surface
-    --     (ToggleBlock Surface)
-    --     [ surfaceBlock editor
-    --     , p [] [ text "Press SHIFT for temporary move mode" ]
-    --     ]
-  , sideBlock
-      "Gates"
-      blocks.gates
-      (ToggleBlock Gates)
-      (renderGatesGroups course)
-  , sideBlock
-      "Wind"
-      blocks.wind
-      (ToggleBlock Wind)
-      [ div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Speed" ]
-          , intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Wavelength 1" ]
-          , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Amplitude 1" ]
-          , intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Wavelength 2" ]
-          , intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Amplitude 2" ]
-          , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
-          ]
-      ]
-  , sideBlock
-      "Gusts"
-      blocks.gusts
-      (ToggleBlock Gusts)
-      [ div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Spawn interval (s)" ]
-          , intInput
-              course.gustGenerator.interval
-              (\i -> UpdateGustGen (\gen -> { gen | interval = i }))
-              [ HtmlAttr.min "10" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Average radius" ]
-          , intInput
-              course.gustGenerator.radiusBase
-              (\i -> UpdateGustGen (\gen -> { gen | radiusBase = i }))
-              [ HtmlAttr.min "50", HtmlAttr.step "10", HtmlAttr.max "1000" ]
-          ]
-      , div
-          [ class "form-group" ]
-          [ label [ class "" ] [ text "Radius variation (+/-)" ]
-          , intInput
-              course.gustGenerator.radiusVariation
-              (\i -> UpdateGustGen (\gen -> { gen | radiusVariation = i }))
-              [ HtmlAttr.min "0", HtmlAttr.step "10", HtmlAttr.max "500" ]
-          ]
-      , div
-          [ class "form-group range" ]
-          [ label [ class "" ] [ text "Wind speed variation" ]
-          , intInput
-              course.gustGenerator.speedVariation.start
-              (UpdateGustGen << updateSpeedVariation << updateRangeStart)
-              [ HtmlAttr.min "-10", HtmlAttr.step "1", HtmlAttr.max "0" ]
-          , intInput
-              course.gustGenerator.speedVariation.end
-              (UpdateGustGen << updateSpeedVariation << updateRangeEnd)
-              [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "10" ]
-          ]
-      , div
-          [ class "form-group range" ]
-          [ label [ class "" ] [ text "Wind origin variation" ]
-          , intInput
-              course.gustGenerator.originVariation.start
-              (UpdateGustGen << updateOriginVariation << updateRangeStart)
-              [ HtmlAttr.min "-20", HtmlAttr.step "1", HtmlAttr.max "0" ]
-          , intInput
-              course.gustGenerator.originVariation.end
-              (UpdateGustGen << updateOriginVariation << updateRangeEnd)
-              [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "20" ]
-          ]
-      ]
-  , div
-      [ class "form-actions btn-group btn-group-justified" ]
-      [ a
-          [ onClick addr (Save False)
-          , class "btn btn-primary btn-save"
-          , disabled saving
-          ]
-          [ text "Save" ]
-      , a
-          [ onClick addr (Save True)
-          , class "btn btn-default btn-save-and-try"
-          , disabled saving
-          ]
-          [ text "Save and try" ]
-      ]
-  , if track.status == Draft then
-      div
-        [ class "btn-group-vertical" ]
-        [ button
-            [ onClick addr ConfirmPublish
-            , class "btn btn-default btn-block btn-confirm-publish"
-            ]
-            [ text "Save and publish" ]
-        , if editor.confirmPublish then
-            button
-              [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
-              [ text "Confirm? You can't go back!" ]
-          else
-            text ""
-        ]
-    else
-      text ""
-  ]
+  in
+    Utils.tabsRow
+      items
+      (\t -> onClick addr (SetTab t))
+      ((==) tab)
 
 
 surfaceBlock : Editor -> Html

@@ -95,9 +95,7 @@ liveBlocks gameState model liveTrack =
           [ PlayersView.block model ]
 
         RankingsTab ->
-          [ ghostsBlock model.ghostRuns
-          , rankingsBlock (\runId -> Dict.member runId model.ghostRuns) liveTrack
-          ]
+          [ rankingsBlock model.ghostRuns liveTrack ]
 
         HelpTab ->
           [ helpBlock ]
@@ -108,70 +106,29 @@ tabs { tab } =
   let
     items =
       [ ( "Live", LiveTab )
-      , ( "Rankings", RankingsTab )
+      , ( "Runs", RankingsTab )
       , ( "Help", HelpTab )
       ]
   in
-    div
-      [ class "tabs-container" ]
-      [ div
-          [ class "tabs-content" ]
-          (List.map (tabItem tab) items)
-      ]
+    Utils.tabsRow
+      items
+      (\t -> onClick addr (SetTab t))
+      ((==) tab)
 
 
-tabItem : Tab -> ( String, Tab ) -> Html
-tabItem selectedTab ( title, tab ) =
+rankingsBlock : Dict String Player -> LiveTrack -> Html
+rankingsBlock ghostRuns { meta } =
   div
-    [ classList
-        [ ( "tab", True )
-        , ( "tab-selected", selectedTab == tab )
-        ]
-    , onClick addr (SetTab tab)
-    ]
-    [ text title ]
-
-
-ghostsBlock : Dict String Player -> Html
-ghostsBlock ghostRuns =
-  div
-    [ class "aside-module module-ghosts" ]
-    [ Utils.moduleTitle "Ghosts"
+    [ class "aside-module module-rankings" ]
+    [ ul
+        [ class "list-unstyled list-rankings" ]
+        (List.map (rankingItem (\runId -> Dict.member runId ghostRuns)) meta.rankings)
     , if Dict.isEmpty ghostRuns then
         div
           [ class "empty" ]
-          [ text "Click on some of the players below to add ghosts on the track" ]
+          [ text "Click on a player to add its ghost run." ]
       else
-        ul
-          [ class "list-unstyled list-ghosts" ]
-          (List.map ghostItem (Dict.toList ghostRuns))
-    ]
-
-
-ghostItem : ( String, Player ) -> Html
-ghostItem ( runId, player ) =
-  li
-    [ onClick addr (RemoveGhost runId)
-    ]
-    [ span
-        [ class "handle"
-        ]
-        [ text (Utils.playerHandle player)
-        ]
-    , span
-        [ class "remove" ]
-        [ Utils.icon "remove" ]
-    ]
-
-
-rankingsBlock : (String -> Bool) -> LiveTrack -> Html
-rankingsBlock isGhost { meta } =
-  div
-    [ class "aside-module module-rankings" ]
-    [ Utils.moduleTitle "Best times"
-    , ul
-        [ class "list-unstyled list-rankings" ]
-        (List.map (rankingItem isGhost) meta.rankings)
+        text ""
     ]
 
 
@@ -194,7 +151,7 @@ rankingItem isGhost ranking =
       attrs
       [ span [ class "rank" ] [ text (toString ranking.rank) ]
       , span [ class "time" ] [ text (Utils.formatTimer True ranking.finishTime) ]
-      , span [ class "handle" ] [ text (Utils.playerHandle ranking.player) ]
+      , Utils.playerWithAvatar ranking.player
       ]
 
 
@@ -202,21 +159,22 @@ helpBlock : Html
 helpBlock =
   div
     [ class "aside-module module-help" ]
-    [ Utils.moduleTitle "Help"
-    , dl [] helpItems
-    ]
+    [ dl [] helpItems ]
 
 
 helpItems : List Html
 helpItems =
-  [ ( "LEFT/RIGHT", "turn" )
-  , ( "LEFT/RIGHT + SHIFT", "adjust" )
-  , ( "ENTER", "lock angle to wind" )
-  , ( "SPACE", "tack or jibe" )
-  ]
-    |> List.concatMap helpItem
+  let
+    items =
+      [ ( "left/right", "turn" )
+      , ( "left/right + shift", "adjust" )
+      , ( "enter", "lock angle to wind" )
+      , ( "space", "tack or jibe" )
+      ]
+  in
+    List.concatMap helpItem items
 
 
 helpItem : ( String, String ) -> List Html
 helpItem ( keys, role ) =
-  [ dt [] [ text keys ], dd [] [ text role ] ]
+  [ dt [] [ text role ], dd [] [ text keys ] ]

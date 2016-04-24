@@ -38,56 +38,81 @@ aside {
     margin: 10px;
   }
 
-  .race-actions {
-    margin: 10px 0;
-  }
-
   .module-players {
-    flex: 0.5;
-
-    h4 {
-      font-size: 13px;
+    .race-legend {
       margin: 0;
-      padding: 5px;
-      color: $lighterSeaBlue;
+      padding: 16px 16px 8px 16px;
+      font-weight: bold;
+      border-top: $border;
     }
 
-    .list-players, .list-tallies {
-      @include players-list;
+    .list-players {
+      margin: 8px 16px;
     }
+
   }
 
   .module-rankings {
-    flex: 0.5;
+    margin-top: 8px;
+
+    .empty {
+      font-size: 13px;
+      margin: 16px;
+    }
+
+    li {
+      line-height: 36px;
+
+      .avatar {
+        height: 24px;
+        width: 24px;
+      }
+
+      .rank {
+        width: 36px;
+        margin-right: 12px;
+      }
+
+      .time {
+        padding-right: 12px;
+      }
+    }
 
     .add-ghost, .remove-ghost {
       cursor: pointer;
+
+      &:hover {
+        background-color: $whiteSmoke;
+      }
     }
 
     .add-ghost {
       &:hover {
-        opacity: 0.75;
+        .rank {
+          background-color: $green;
+          color: $white;
+        }
       }
     }
 
     .remove-ghost {
-      color: $orange;
-      /* opacity: 0.5; */
+      background-color: $whiteSmoke;
+
+      .rank {
+        background-color: $lightGrey;
+        color: $grey;
+      }
+
       &:hover {
-        /* opacity: 0.75; */
+        .rank {
+          background-color: $red;
+          color: $white;
+        }
       }
     }
   }
 
   .module-ghosts {
-    flex: 0.5;
-
-    .empty {
-      font-size: 12px;
-      margin: 0 10px;
-      line-height: 1.3em;
-    }
-
     ul {
       padding: 0;
       font-family: $mono;
@@ -120,10 +145,11 @@ aside {
   .module-help {
 
     dl {
-      padding: 8px 0;
+      padding: 16px;
+      @include clearfix; 
 
       & > * {
-        padding-bottom: 8px;
+        padding: 8px 0;
       }
     }
 
@@ -136,7 +162,12 @@ aside {
     }
 
     dd {
-      float: left;
+      text-align: right;
+      border-bottom: 1px solid #eee;
+
+      &:last-child {
+        border-bottom-color: transparent;
+      }
     }
   }
 

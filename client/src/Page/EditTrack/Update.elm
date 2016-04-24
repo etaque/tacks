@@ -54,8 +54,8 @@ update dims action model =
         Err _ ->
           staticRes { model | notFound = True }
 
-    ToggleBlock b ->
-      staticRes ((updateBlocks >> updateEditor) b model)
+    SetTab tab ->
+      staticRes (updateEditor (\e -> { e | tab = tab }) model)
 
     SetName n ->
       staticRes (updateEditor (\e -> { e | name = n }) model)
@@ -147,29 +147,6 @@ updateRangeStart start range =
 
 updateRangeEnd end range =
   { range | end = end }
-
-
-updateBlocks : SideBlock -> Editor -> Editor
-updateBlocks b ({ blocks } as editor) =
-  let
-    newBlocks =
-      case b of
-        Name ->
-          { blocks | name = not blocks.name }
-
-        Surface ->
-          { blocks | surface = not blocks.surface }
-
-        Gates ->
-          { blocks | gates = not blocks.gates }
-
-        Wind ->
-          { blocks | wind = not blocks.wind }
-
-        Gusts ->
-          { blocks | gusts = not blocks.gusts }
-  in
-    { editor | blocks = newBlocks }
 
 
 loadTrack : String -> Task Never Action

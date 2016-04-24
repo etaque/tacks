@@ -38,6 +38,11 @@ case class User(
 ) extends Player {
   def handleOpt = Some(handle)
   def isAdmin = Conf.adminHandles.contains(handle)
+
+  def gravatarHash: String = {
+    val md5 = java.security.MessageDigest.getInstance("md5")
+    md5.digest(email.toLowerCase.trim.getBytes).map("%02x".format(_)).mkString
+  }
 }
 
 case class Guest(

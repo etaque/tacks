@@ -7,21 +7,18 @@ import Date exposing (..)
 import Date.Format exposing (format)
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
-import Game.Models exposing (GameState, Timers)
-import Game.Outputs as Outputs
-import View.Utils exposing (..)
+import View.Utils as Utils
 
 
 block : Model -> Html
 block { races, freePlayers } =
   div
     [ class "aside-module module-players" ]
-    [ moduleTitle "Online players"
-    , racesBlock races
-    , if (List.isEmpty freePlayers) then
+    [ if (List.isEmpty freePlayers) then
         div [] []
       else
         freePlayersBlock freePlayers
+    , racesBlock races
     ]
 
 
@@ -46,8 +43,8 @@ raceItem { startTime, tallies } =
   in
     div
       [ class "race" ]
-      [ h4 [] [ text ("on race started at " ++ formatted) ]
-      , ul [ class "list-unstyled list-tallies" ] (List.indexedMap tallyItem tallies)
+      [ div [ class "race-legend" ] [ text ("Race started at " ++ formatted) ]
+      , ul [ class "list-unstyled list-rankings" ] (List.indexedMap tallyItem tallies)
       ]
 
 
@@ -58,7 +55,7 @@ tallyItem i { player, gates, finished } =
       toString (i + 1)
 
     time =
-      Maybe.map (formatTimer True) (List.head gates)
+      Maybe.map (Utils.formatTimer True) (List.head gates)
         |> Maybe.withDefault "?"
 
     status =
@@ -71,8 +68,7 @@ tallyItem i { player, gates, finished } =
       [ class "player" ]
       [ span [ class "rank" ] [ text rank ]
       , span [ class "time" ] [ text status ]
-      , span [ class "handle" ] [ text (playerHandle player) ]
-        -- , playerWithAvatar player
+      , Utils.playerWithAvatar player
       ]
 
 
@@ -80,8 +76,7 @@ freePlayersBlock : List Player -> Html
 freePlayersBlock players =
   div
     [ class "free-players" ]
-    [ h4 [] [ text "not racing" ]
-    , ul [ class "list-unstyled list-players" ] (List.map freePlayerItem players)
+    [ ul [ class "list-unstyled list-players" ] (List.map freePlayerItem players)
     ]
 
 
@@ -89,4 +84,4 @@ freePlayerItem : Player -> Html
 freePlayerItem player =
   li
     [ class "player" ]
-    [ span [ class "handle" ] [ text (playerHandle player) ] ]
+    [ Utils.playerWithAvatar player ]

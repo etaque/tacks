@@ -5,10 +5,6 @@ import Constants exposing (sidebarWidth)
 import Drag exposing (MouseEvent(..))
 
 
--- import Form exposing (Form)
--- import Form.Validate exposing (..)
-
-
 type alias Model =
   { track : Maybe Track
   , editor : Maybe Editor
@@ -25,7 +21,7 @@ initial =
 
 
 type alias Editor =
-  { blocks : SideBlocks
+  { tab : Tab
   , hoverToolbar : Bool
   , course : Course
   , center : Point
@@ -37,19 +33,18 @@ type alias Editor =
   }
 
 
+type Tab
+  = GatesTab
+  | WindTab
+  | GustsTab
+
+
 initialEditor : Track -> Editor
 initialEditor track =
-  { blocks =
-      { name = True
-      , surface = True
-      , gates = False
-      , wind = False
-      , gusts = False
-      }
+  { tab = GatesTab
   , hoverToolbar = False
   , course =
       track.course
-      -- , courseForm = initialCourseForm track.course
   , center = ( 0, 0 )
   , mode = CreateTile Water
   , altMove = False
@@ -57,22 +52,6 @@ initialEditor track =
   , saving = False
   , confirmPublish = False
   }
-
-
-
--- initialCourseForm : Form () Course
--- initialCourseForm =
---   let
---     fields = []
---   in
---     Form.initial fields validate
--- validate : Course -> Validation () Course
--- validate course =
---   form7
---     Course
---     (get "start" validateGate)
---     (get "gates" (list validateGate))
---     (get "grid")
 
 
 type alias SideBlocks =
@@ -105,21 +84,13 @@ type Action
   | SetMode Mode
   | AltMoveMode Bool
   | FormAction FormUpdate
-  | ToggleBlock SideBlock
+  | SetTab Tab
   | SetName String
   | Save Bool
   | SaveResult Bool (FormResult Track)
   | ConfirmPublish
   | Publish
   | NoOp
-
-
-type SideBlock
-  = Name
-  | Surface
-  | Gates
-  | Wind
-  | Gusts
 
 
 type FormUpdate
