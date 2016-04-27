@@ -1,5 +1,4 @@
-const Elm = require('./Main');
-require('../styles/main.scss');
+const Elm = window.Elm;
 
 
 function readData(id, el) {

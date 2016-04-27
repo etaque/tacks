@@ -1,5 +1,0 @@
-{
-  "deploy":{
-    "goal": "-Dconfig.file=conf/clever.conf -Dplay.evolutions.db.default.autoApply=true"
-  }
-}

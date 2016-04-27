@@ -1,13 +1,12 @@
 elm-stuff/
-public/javascripts/
-public/stylesheets/
+/public/dev
+/public/dist
 logs
 project/project
 project/target
 target
 tmp
 .history
-dist
 /.idea
 /*.iml
 /out
