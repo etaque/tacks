@@ -44,6 +44,12 @@ renderCourse dims ({ center, course, mode } as editor) =
 
     cy =
       -h / 2 + snd center
+
+    renderGate i gate =
+      if editor.currentGate == Just i then
+        Gates.renderOpenGate 0 gate
+      else
+        Gates.renderClosedGate 0 gate
   in
     Svg.svg
       [ width (toString w)
@@ -53,8 +59,7 @@ renderCourse dims ({ center, course, mode } as editor) =
       [ g
           [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
           [ Tiles.lazyRenderTiles course.grid
-          , Gates.renderOpenGate 0 course.start
-          , g [] (List.map (Gates.renderClosedGate 0) course.gates)
+          , g [] (List.indexedMap renderGate (course.start :: course.gates))
           , Players.renderPlayerHull 0 0
           ]
       ]

@@ -88,120 +88,139 @@
   }
 
   aside {
-    .aside-module {
-      .module-title .glyphicon {
-        float: right;        
-        top: 3px;
-      }
 
-      &.closed {
-        .module-title {
-          color: $whiteSeaBlue;
-        }
-        .module-body {
-          display: none;
-        }
-      }
+    .add-gate {
+      position: fixed;
+      bottom: 24px;
+
     }
 
-    .surface-modes {
-      margin-bottom: 10px;
-      display: flex;
+    .list-gates {
+      margin-top: 16px;
 
-      a {
-        flex: 1;
-        opacity: 0.8;
-        display: inline-block;
-        margin-right: 10px;
-        height: 30px;
+      .gate {
+        position: relative;
+        cursor: pointer;
+        padding: 0 24px;
 
-        line-height: 26px;
-        font-family: $serif;
-        font-size: 14px;
-        text-align: center;
-        color: $dark;
-        border: 2px solid transparent;
-        text-transform: uppercase;
+        &.selected, &.selected:hover {
+          background-color: #F3F3F3;
 
-        &:last-child {
-          margin-right: 0;
+          .name {
+            color: $seaBlue;
+          }
+
+          .remove {
+            visibility: visible;
+          }
         }
 
-        &.current {
-          opacity: 1;
-          box-shadow: 1px 1px 1px $strongShadow;
-          border: 2px solid $strongLight;
-          border-radius: 2px;
-          color: $veryDark;
+        &:hover {
+          background-color: $whiteSmoke;
+        }
+
+        .gate-header {
+          display: flex;
+          margin: 0;
+          padding-top: 8px;
+        }
+
+        .name, .orientation {
+          vertical-align: bottom;
+        }
+
+        .name {
+          flex: 1;
+          margin-top: 2px;
+          line-height: 30px;
+          font-size: 16px;
+          font-weight: bold;
+          color: $darkGrey;
+        }
+        
+
+        .orientations {
+          padding: 4px;
+        }
+
+        .orientation {
+          display: inline-block;
+          cursor: pointer;
+          height: 24px;
+          width: 24px;
+          text-align: center;
+          /* border-radius: 12px; */
+          overflow: hidden;
+          color: $mediumGrey;
+
+          i {
+            font-size: 18px;
+            line-height: 24px;
+          }
+
+          &.current, &.current:hover {
+            background-color: #eee;
+            color: $charcoal;
+          }
+
+          &:hover {
+            background-color: $whiteSeaBlue;
+            color: $mainBlue;
+          }
+
+          & + .orientation {
+            margin-left: 4px;
+          }
+        }
+
+        .gate-fields {
+          clear: both;
+          display: flex;
+          padding: 16px 0 8px 0;
+
+          .x, .y {
+            margin-right: 16px;
+          }
+
+          .width {
+          }
+        }
+
+        .remove {
+          visibility: hidden;
+          @include shadow-light;
+          position: absolute;
+          z-index: 3;
+          bottom: -20px;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          width: 40px;
+          border-radius: 20px;
+          background-color: white;
+          text-align: center;
+
+          i {
+            line-height: 40px;
+          }
+
+          &:hover {
+            background-color: $whiteSeaBlue;
+            color: $seaBlue;
+          }
         }
       }
     }
 
-    .form-group {
-      margin-bottom: 5px;
-      border-radius: 0;
+    .wind-fields {
+      padding: 24px;
+
+
     }
 
-    label {
-      display: inline-block;
-      width: 160px;
-      line-height: 25px;
-      padding-left: 10px;
-      margin: 0;
-      margin-right: 5px;
-      text-transform: lowercase;
-      font-size: 13px;
-      background-color: $lightSeaBlue;
-      color: $whiteSeaBlue;
-    }
+    .gusts-fields {
+      padding: 24px;
 
-    label + .form-control,
-    .range .form-control {
-      display: inline-block;
-      width: 80px;
-      padding: 2px 2px 2px 6px;
-      height: 25px;
-      font-size: 13px;
-      border-radius: 0;
-    }
-
-    .range {
-      .form-control {
-        width: 40px;
-      }
-    }
-
-    table {
-      font-size: 12px;
-      width: 100%;
-      margin-bottom: 5px;
-
-      th, td {
-        padding: 2px;
-      }
-
-      thead th {
-        text-align: center;
-      }
-
-      tbody th {
-        text-align: center;
-      }
-
-      .form-control {
-        /* width: 40px; */
-        padding: 2px 4px;
-        box-shadow: none;
-        border: none;
-        border-radius: 0;
-        text-align: center;
-        font-size: 12px;
-        -moz-appearance:textfield;
-      }
-
-      .orientations {
-        width: 40px;
-      }
     }
   }
 }

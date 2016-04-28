@@ -1,70 +1,73 @@
 module Page.EditTrack.FormUpdate (..) where
 
-import String
-import Result
 import CoreExtra
-import Model.Shared exposing (..)
 import Game.Models exposing (defaultGate)
 import Page.EditTrack.Model exposing (..)
 
 
-update : FormUpdate -> Course -> Course
-update fu ({ start, gates } as course) =
-  case fu of
-    SetStartCenterX x ->
-      { course | start = { start | center = ( toFloat x, snd start.center ) } }
+update : FormUpdate -> Editor -> Editor
+update formUpdate ({ course } as editor) =
+  let
+    { start, gates, windGenerator } =
+      course
 
-    SetStartCenterY y ->
-      { course | start = { start | center = ( fst start.center, toFloat y ) } }
+    updateGate i f =
+      if i == 0 then
+        { course | start = f start }
+      else
+        { course | gates = CoreExtra.updateAt (i - 1) f gates }
 
-    SetStartWidth w ->
-      { course | start = { start | width = toFloat w } }
+    updateEditorGates newCurrentGate newCourse =
+      { editor | course = newCourse, currentGate = newCurrentGate }
 
-    SetStartOrientation o ->
-      { course | start = { start | orientation = o } }
+    updateWindGen g =
+      { editor | course = { course | windGenerator = g } }
+  in
+    case formUpdate of
+      AddGate ->
+        updateEditorGates
+          (Just (List.length gates + 1))
+          { course | gates = gates ++ [ defaultGate ] }
 
-    AddGate ->
-      { course | gates = gates ++ [ defaultGate ] }
+      SetGateCenterX i x ->
+        updateEditorGates
+          (Just i)
+          (updateGate i (\g -> { g | center = ( toFloat x, snd g.center ) }))
 
-    SetGateCenterX i x ->
-      { course | gates = CoreExtra.updateAt i (\g -> { g | center = ( toFloat x, snd g.center ) }) gates }
+      SetGateCenterY i y ->
+        updateEditorGates
+          (Just i)
+          (updateGate i (\g -> { g | center = ( fst g.center, toFloat y ) }))
 
-    SetGateCenterY i y ->
-      { course | gates = CoreExtra.updateAt i (\g -> { g | center = ( fst g.center, toFloat y ) }) gates }
+      SetGateWidth i w ->
+        updateEditorGates
+          (Just i)
+          (updateGate i (\g -> { g | width = toFloat w }))
 
-    SetGateWidth i w ->
-      { course | gates = CoreExtra.updateAt i (\g -> { g | width = toFloat w }) gates }
+      SetGateOrientation i o ->
+        updateEditorGates
+          (Just i)
+          (updateGate i (\g -> { g | orientation = o }))
 
-    SetGateOrientation i o ->
-      { course | gates = CoreExtra.updateAt i (\g -> { g | orientation = o }) gates }
+      RemoveGate i ->
+        updateEditorGates
+          Nothing
+          { course | gates = CoreExtra.removeAt (i - 1) gates }
 
-    RemoveGate i ->
-      { course | gates = CoreExtra.removeAt i gates }
+      UpdateGustGen fn ->
+        { editor | course = { course | gustGenerator = fn course.gustGenerator } }
 
-    UpdateGustGen fn ->
-      updateGustGen fn course
+      SetWindSpeed s ->
+        { editor | course = { course | windSpeed = s } }
 
-    SetWindSpeed s ->
-      { course | windSpeed = s }
+      SetWindW1 i ->
+        updateWindGen { windGenerator | wavelength1 = i }
 
-    SetWindW1 i ->
-      updateWindGen (\g -> { g | wavelength1 = i }) course
+      SetWindA1 i ->
+        updateWindGen { windGenerator | amplitude1 = i }
 
-    SetWindA1 i ->
-      updateWindGen (\g -> { g | amplitude1 = i }) course
+      SetWindW2 i ->
+        updateWindGen { windGenerator | wavelength2 = i }
 
-    SetWindW2 i ->
-      updateWindGen (\g -> { g | wavelength2 = i }) course
-
-    SetWindA2 i ->
-      updateWindGen (\g -> { g | amplitude2 = i }) course
-
-
-updateGustGen : (GustGenerator -> GustGenerator) -> Course -> Course
-updateGustGen update course =
-  { course | gustGenerator = update course.gustGenerator }
-
-
-updateWindGen : (WindGenerator -> WindGenerator) -> Course -> Course
-updateWindGen update course =
-  { course | windGenerator = update course.windGenerator }
+      SetWindA2 i ->
+        updateWindGen { windGenerator | amplitude2 = i }

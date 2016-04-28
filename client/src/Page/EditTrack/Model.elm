@@ -22,6 +22,7 @@ initial =
 
 type alias Editor =
   { tab : Tab
+  , currentGate : Maybe Int
   , hoverToolbar : Bool
   , course : Course
   , center : Point
@@ -42,9 +43,9 @@ type Tab
 initialEditor : Track -> Editor
 initialEditor track =
   { tab = GatesTab
+  , currentGate = Nothing
   , hoverToolbar = False
-  , course =
-      track.course
+  , course = track.course
   , center = ( 0, 0 )
   , mode = CreateTile Water
   , altMove = False
@@ -81,6 +82,7 @@ type Action
   = LoadTrack (Result () Track)
   | MouseAction MouseEvent
   | HoverToolbar Bool
+  | SelectGate (Maybe Int)
   | SetMode Mode
   | AltMoveMode Bool
   | FormAction FormUpdate
@@ -94,11 +96,7 @@ type Action
 
 
 type FormUpdate
-  = SetStartCenterX Int
-  | SetStartCenterY Int
-  | SetStartWidth Int
-  | SetStartOrientation Orientation
-  | AddGate
+  = AddGate
   | SetGateCenterX Int Int
   | SetGateCenterY Int Int
   | SetGateWidth Int Int

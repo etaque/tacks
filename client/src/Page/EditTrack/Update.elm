@@ -2,7 +2,6 @@ module Page.EditTrack.Update (..) where
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
-import Dict
 import Effects exposing (Effects, Never, none)
 import Task.Extra exposing (delay)
 import Keyboard
@@ -49,13 +48,20 @@ update dims action model =
     LoadTrack result ->
       case result of
         Ok track ->
-          staticRes { model | track = Just track, editor = Just (initialEditor track) }
+          staticRes
+            { model
+              | track = Just track
+              , editor = Just (initialEditor track)
+            }
 
         Err _ ->
           staticRes { model | notFound = True }
 
     SetTab tab ->
       staticRes (updateEditor (\e -> { e | tab = tab }) model)
+
+    SelectGate mi ->
+      staticRes (updateEditor (\e -> { e | currentGate = mi }) model)
 
     SetName n ->
       staticRes (updateEditor (\e -> { e | name = n }) model)
@@ -73,7 +79,7 @@ update dims action model =
       staticRes (updateEditor (\e -> { e | altMove = b }) model)
 
     FormAction a ->
-      staticRes ((FormUpdate.update >> updateCourse >> updateEditor) a model)
+      staticRes ((FormUpdate.update >> updateEditor) a model)
 
     Save try ->
       case ( model.track, model.editor ) of
@@ -108,7 +114,9 @@ update dims action model =
     Publish ->
       case ( model.track, model.editor ) of
         ( Just track, Just editor ) ->
-          taskRes (updateEditor (\e -> { e | saving = True }) model) (publish track.id editor)
+          taskRes
+            (updateEditor (\e -> { e | saving = True }) model)
+            (publish track.id editor)
 
         _ ->
           res model none
@@ -124,29 +132,6 @@ updateEditor update model =
       Maybe.map update model.editor
   in
     { model | editor = newEditor }
-
-
-updateCourse : (Course -> Course) -> Editor -> Editor
-updateCourse update editor =
-  { editor | course = update editor.course }
-
-
-updateSpeedVariation : (Range -> Range) -> GustGenerator -> GustGenerator
-updateSpeedVariation updateRange ({ speedVariation } as gen) =
-  { gen | speedVariation = updateRange speedVariation }
-
-
-updateOriginVariation : (Range -> Range) -> GustGenerator -> GustGenerator
-updateOriginVariation updateRange ({ originVariation } as gen) =
-  { gen | originVariation = updateRange originVariation }
-
-
-updateRangeStart start range =
-  { range | start = start }
-
-
-updateRangeEnd end range =
-  { range | end = end }
 
 
 loadTrack : String -> Task Never Action

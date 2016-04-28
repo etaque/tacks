@@ -73,7 +73,6 @@ hr {
 
 .floating-button {
   background-color: $white;
-  border-radius: 28px;
   height: 56px;
   width: 56px;
   text-align: center;
@@ -81,12 +80,10 @@ hr {
   @include shadow-medium;
   position: relative;
   background-color: $orange;
-
-  svg {
-    position: absolute;
-    top: 7px;
-    left: 7px;
-  }
+  border: none;
+  border-radius: 28px;
+  color: $white;
+  font-size: 24px;
 
   &:hover {
     @include shadow-strong;
@@ -252,35 +249,47 @@ aside {
   color: $darkOrange;
 }
 
-.form-control,
-section.blue .panel .form-control {
-  border: 1px solid #ccc;
-  border-radius: 2px;
-  background-color: $white;
-  font-family: $regular;
-  font-size: 14px;
-  box-shadow: inset 0 1px 1px $shadow;
-
-  &:focus {
-    outline: none;
-    box-shadow: 0px 0px 3px $lightGrey;
-    border-color: $mainBlue;
-  }
-}
-
-.form-inline {
-  .form-group + .btn,
-  .btn + .btn {
-    margin-left: 10px;
-  }
-}
-
 .form-group {
-  .control-label {
-    font-family: $thin;
-  }
+  position: relative;
+  padding-top: 16px;
+  margin-bottom: 24px;
 
   .form-control {
+    /* margin: 8px 16px; */
+    width: 100%;
+    height: auto;
+    margin: 0;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px solid #ddd;
+    display: block;
+    padding: 4px 0 5px 0;
+    box-shadow: none;
+    background-color: transparent;
+
+    &:focus {
+      outline: none;
+      box-shadow: none;
+      border-width: 2px;
+      padding-bottom: 4px;
+      border-color: $mainBlue;
+    }
+  }
+
+  label {
+    display: block;
+    position: absolute;
+    top: 0;
+    font-size: 13px;
+  }
+
+  .inline-fields {
+    display: flex;
+    flex-direction: row;
+
+    .form-control + .form-control {
+      margin-left: 16px;
+    }
   }
 
   .feedback {
@@ -295,7 +304,6 @@ section.blue .panel .form-control {
     }
 
     .form-control {
-      /* box-shadow: none; */
       border-color: $lightOrange;
     }
 
@@ -305,12 +313,17 @@ section.blue .panel .form-control {
   }
 }
 
+.form-inline {
+  .form-group + .btn,
+  .btn + .btn {
+    margin-left: 8px;
+  }
+}
+
 .form-error-global {
   color: $orange;
   padding: 10px 0;
 }
-
-label {}
 
 .label {
   font-family: $thin;
@@ -361,3 +374,22 @@ label {}
   @include rankings;
 }
 
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}

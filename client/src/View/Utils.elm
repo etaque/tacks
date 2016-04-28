@@ -137,6 +137,13 @@ icon name =
   span [ class ("glyphicon glyphicon-" ++ name) ] []
 
 
+mIcon : String -> List String -> Html
+mIcon name classes =
+  i
+    [ class ("material-icons" :: classes |> String.join " ") ]
+    [ text name ]
+
+
 fieldGroup : String -> String -> List String -> List Html -> Html
 fieldGroup label' hint errors inputs =
   let
@@ -208,7 +215,6 @@ playerWithAvatar player =
       span [ class "player-avatar" ] [ avatarImg, text " ", handleSpan ]
 
 
-
 avatarUrl : Player -> String
 avatarUrl p =
   case p.avatarId of
@@ -233,7 +239,7 @@ rankingItem ranking =
     [ class "ranking" ]
     [ span [ class "rank" ] [ text (toString ranking.rank) ]
     , span [ class "time" ] [ text (formatTimer True ranking.finishTime) ]
-    -- , span [ class "handle" ] [ text (playerHandle ranking.player) ]
+      -- , span [ class "handle" ] [ text (playerHandle ranking.player) ]
     , playerWithAvatar ranking.player
     ]
 

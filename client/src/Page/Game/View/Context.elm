@@ -11,9 +11,6 @@ import Page.Game.Update exposing (addr)
 import Page.Game.View.Players as PlayersView
 import View.Utils as Utils
 import Route exposing (..)
-import Material.Icons.Av as AvIcons
-import Material.Icons.Navigation as NavIcons
-import Color
 
 
 nav : Model -> LiveTrack -> GameState -> List Html
@@ -40,7 +37,7 @@ raceAction { timers, playerState } =
           , class "floating-button exit-race"
           , title "Exit race"
           ]
-          [ NavIcons.cancel Color.grey 42
+          [ Utils.mIcon "cancel" []
           ]
 
     Nothing ->
@@ -49,7 +46,7 @@ raceAction { timers, playerState } =
         , class "floating-button start-race"
         , title "Start race"
         ]
-        [ AvIcons.play_arrow Color.white 42
+        [ Utils.mIcon "play arrow" []
         ]
 
 

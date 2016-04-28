@@ -9,14 +9,12 @@ import Constants exposing (..)
 import View.Utils as Utils exposing (..)
 import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
+import Page.EditTrack.View.Utils exposing (..)
+import Page.EditTrack.View.Gates as Gates
+import Page.EditTrack.View.Gusts as Gusts
 import View.Sidebar as Sidebar
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 import Route
-
-
-formAddr : Signal.Address FormUpdate
-formAddr =
-  Signal.forwardTo addr FormAction
 
 
 nav : Track -> Editor -> List Html
@@ -48,86 +46,41 @@ view track ({ tab, course, name, saving, mode } as editor) =
   (tabs editor.tab)
     :: case tab of
         GatesTab ->
-          renderGatesGroups course
+          Gates.view editor.currentGate course
 
         WindTab ->
           [ div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Speed" ]
-              , intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
-              ]
-          , div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Wavelength 1" ]
-              , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
-              ]
-          , div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Amplitude 1" ]
-              , intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
-              ]
-          , div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Wavelength 2" ]
-              , intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
-              ]
-          , div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Amplitude 2" ]
-              , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
+              [ class "wind-fields" ]
+              [ div
+                  [ class "form-group" ]
+                  [ label [ class "" ] [ text "Speed" ]
+                  , intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
+                  ]
+              , div
+                  [ class "form-group" ]
+                  [ label [ class "" ] [ text "Wavelength 1" ]
+                  , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
+                  ]
+              , div
+                  [ class "form-group" ]
+                  [ label [ class "" ] [ text "Amplitude 1" ]
+                  , intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
+                  ]
+              , div
+                  [ class "form-group" ]
+                  [ label [ class "" ] [ text "Wavelength 2" ]
+                  , intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
+                  ]
+              , div
+                  [ class "form-group" ]
+                  [ label [ class "" ] [ text "Amplitude 2" ]
+                  , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
+                  ]
               ]
           ]
 
         GustsTab ->
-          [ div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Spawn interval (s)" ]
-              , intInput
-                  course.gustGenerator.interval
-                  (\i -> UpdateGustGen (\gen -> { gen | interval = i }))
-                  [ HtmlAttr.min "10" ]
-              ]
-          , div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Average radius" ]
-              , intInput
-                  course.gustGenerator.radiusBase
-                  (\i -> UpdateGustGen (\gen -> { gen | radiusBase = i }))
-                  [ HtmlAttr.min "50", HtmlAttr.step "10", HtmlAttr.max "1000" ]
-              ]
-          , div
-              [ class "form-group" ]
-              [ label [ class "" ] [ text "Radius variation (+/-)" ]
-              , intInput
-                  course.gustGenerator.radiusVariation
-                  (\i -> UpdateGustGen (\gen -> { gen | radiusVariation = i }))
-                  [ HtmlAttr.min "0", HtmlAttr.step "10", HtmlAttr.max "500" ]
-              ]
-          , div
-              [ class "form-group range" ]
-              [ label [ class "" ] [ text "Wind speed variation" ]
-              , intInput
-                  course.gustGenerator.speedVariation.start
-                  (UpdateGustGen << updateSpeedVariation << updateRangeStart)
-                  [ HtmlAttr.min "-10", HtmlAttr.step "1", HtmlAttr.max "0" ]
-              , intInput
-                  course.gustGenerator.speedVariation.end
-                  (UpdateGustGen << updateSpeedVariation << updateRangeEnd)
-                  [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "10" ]
-              ]
-          , div
-              [ class "form-group range" ]
-              [ label [ class "" ] [ text "Wind origin variation" ]
-              , intInput
-                  course.gustGenerator.originVariation.start
-                  (UpdateGustGen << updateOriginVariation << updateRangeStart)
-                  [ HtmlAttr.min "-20", HtmlAttr.step "1", HtmlAttr.max "0" ]
-              , intInput
-                  course.gustGenerator.originVariation.end
-                  (UpdateGustGen << updateOriginVariation << updateRangeEnd)
-                  [ HtmlAttr.min "0", HtmlAttr.step "1", HtmlAttr.max "20" ]
-              ]
-          ]
+          Gusts.view track editor
 
 
 
@@ -231,106 +184,3 @@ renderSurfaceMode currentMode mode =
           []
       , text label
       ]
-
-
-renderGatesGroups : Course -> List Html
-renderGatesGroups { start, gates } =
-  [ table
-      [ class "" ]
-      [ thead
-          []
-          [ tr
-              []
-              [ th [] []
-              , th [] [ text "Cx" ]
-              , th [] [ text "Cy" ]
-              , th [] [ text "W" ]
-              , th [] [ text "Or." ]
-              , th [] []
-              ]
-          ]
-      , tbody
-          []
-          (tr
-            []
-            [ th [] [ text "S" ]
-            , td [] [ intInput ((round << fst) start.center) SetStartCenterX [ step "10" ] ]
-            , td [] [ intInput ((round << snd) start.center) SetStartCenterY [ step "10" ] ]
-            , td [] [ intInput (round start.width) SetStartWidth [ step "10" ] ]
-            , td [] [ orientationOptions SetStartOrientation start.orientation ]
-            , td [] []
-            ]
-            :: List.indexedMap
-                (\i gate ->
-                  tr
-                    []
-                    [ th [] [ text ("G" ++ toString (i + 1)) ]
-                    , th [] [ intInput ((round << fst) gate.center) (SetGateCenterX i) [ step "10" ] ]
-                    , th [] [ intInput ((round << snd) gate.center) (SetGateCenterY i) [ step "10" ] ]
-                    , th [] [ intInput (round gate.width) (SetGateWidth i) [ step "10" ] ]
-                    , td [] [ orientationOptions (SetGateOrientation i) gate.orientation ]
-                    , td [ onClick formAddr (RemoveGate i) ] [ text "X" ]
-                    ]
-                )
-                gates
-          )
-      ]
-  , button
-      [ onClick formAddr AddGate
-      , class "btn btn-sm btn-primary btn-block"
-      ]
-      [ text "Add gate" ]
-  ]
-
-
-orientationOptions : (Orientation -> FormUpdate) -> Orientation -> Html
-orientationOptions toMsg current =
-  div
-    [ class "btn-group btn-group-xs orientations" ]
-    (List.map
-      (\o ->
-        span
-          [ onClick formAddr (toMsg o)
-          , classList
-              [ ( "btn btn-default", True )
-              , ( "active", o == current )
-              ]
-          ]
-          [ text (orientationAbbr o) ]
-      )
-      [ North, South, East, West ]
-    )
-
-
-intInput : number -> (Int -> FormUpdate) -> List Attribute -> Html
-intInput val formUpdate attrs =
-  textInput
-    ([ value (toString val)
-     , onIntInput formAddr formUpdate
-     , type' "number"
-     ]
-      ++ attrs
-    )
-
-
-sideBlock : String -> Bool -> Action -> List Html -> Html
-sideBlock title open action content =
-  div [ classList [ ( "aside-module", True ), ( "closed", not open ) ] ]
-    <| [ div
-          [ class "module-header" ]
-          [ a
-              [ class "module-title", onClick addr action ]
-              [ text title
-              , span
-                  [ class
-                      <| "glyphicon glyphicon-"
-                      ++ if open then
-                          "chevron-down"
-                         else
-                          "chevron-right"
-                  ]
-                  []
-              ]
-          ]
-       , div [ class "module-body" ] content
-       ]
