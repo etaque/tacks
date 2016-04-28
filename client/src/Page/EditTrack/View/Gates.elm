@@ -18,9 +18,9 @@ view currentGate { start, gates } =
   [ div
       [ class "list-gates" ]
       (List.indexedMap (gateItem (List.length gates) currentGate) (start :: gates))
-  , button
+  , div
       [ onClick formAddr AddGate
-      , class "floating-button add-gate"
+      , class "btn-floating btn-condensed btn-primary add-gate"
       ]
       [ Utils.mIcon "add" [] ]
   ]
@@ -29,24 +29,15 @@ view currentGate { start, gates } =
 gateItem : Int -> Maybe Int -> Int -> Gate -> Html
 gateItem count currentGate i gate =
   let
-    isStart =
-      i == 0
-
-    selectAction =
-      -- if currentGate == Just i then
-      --   SelectGate Nothing
-      -- else
-      SelectGate (Just i)
-
     name =
-      if isStart then
+      if i == 0 then
         "Start"
       else
         "Gate " ++ toString i
   in
     div
       [ classList [ ( "gate", True ), ( "selected", currentGate == Just i ) ]
-      , onClick addr selectAction
+      , onClick addr (SelectGate (Just i))
       ]
       [ div
           [ class "gate-header" ]
@@ -74,7 +65,7 @@ gateItem count currentGate i gate =
       , if i == count && i /= 0 then
           div
             [ onClick formAddr (RemoveGate i)
-            , class "remove"
+            , class "btn-floating btn-condensed btn-white remove-gate"
             , title "Remove gate"
             ]
             [ mIcon "delete" [] ]

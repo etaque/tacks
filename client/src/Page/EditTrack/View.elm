@@ -1,12 +1,14 @@
 module Page.EditTrack.View (..) where
 
 import Html exposing (Html)
+import Html.Lazy
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Context as Context
 import View.Layout as Layout
+import View.HexBg as HexBg
 import Game.Geo exposing (floatify)
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Tiles as Tiles
@@ -30,7 +32,12 @@ view ({ player, dims } as ctx) model =
         Html.text "Access forbidden."
 
     _ ->
-      Html.text "loading"
+      Layout.layoutWithSidebar
+        "editor loading"
+        ctx
+        [ text "" ]
+        []
+        [ Html.Lazy.lazy HexBg.render ctx.dims ]
 
 
 renderCourse : Dims -> Editor -> Html

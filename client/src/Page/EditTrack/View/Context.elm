@@ -42,9 +42,10 @@ toolbar track editor =
 
 
 view : Track -> Editor -> List Html
-view track ({ tab, course, name, saving, mode } as editor) =
-  (tabs editor.tab)
-    :: case tab of
+view track ({ course } as editor) =
+  (actions track editor)
+    :: (tabs editor.tab)
+    :: case editor.tab of
         GatesTab ->
           Gates.view editor.currentGate course
 
@@ -83,7 +84,40 @@ view track ({ tab, course, name, saving, mode } as editor) =
           Gusts.view track editor
 
 
+actions : Track -> Editor -> Html
+actions track editor =
+  div
+    [ class "actions" ]
+    [ a
+        [ onClick addr (Save False)
+        , class "btn-raised btn-primary btn-save"
+        , disabled editor.saving
+        ]
+        [ Utils.mIcon (if editor.saving then "cached" else "save") [], text "Save" ]
+    , a
+        [ onClick addr (Save True)
+        , class "btn-raised btn-white btn-save-and-try"
+        , disabled editor.saving
+        ]
+        [ Utils.mIcon "gamepad" [], text "Test" ]
+      -- , if track.status == Draft then
+      --     button
+      --       [ onClick addr ConfirmPublish
+      --       , class "btn-raised btn-raised btn-white btn-confirm-publish"
+      --       ]
+      --       [ text "Publish..." ]
+      --   else
+      --     text ""
+    ]
 
+
+
+-- , if editor.confirmPublish then
+--     button
+--       [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
+--       [ text "Confirm? You can't go back!" ]
+--   else
+--     text ""
 -- [  div
 --     [ class "form-group" ]
 --     [ textInput
@@ -92,38 +126,7 @@ view track ({ tab, course, name, saving, mode } as editor) =
 --         , type' "text"
 --         ]
 --     ]
--- , div
---     [ class "form-actions btn-group btn-group-justified" ]
---     [ a
---         [ onClick addr (Save False)
---         , class "btn btn-primary btn-save"
---         , disabled saving
---         ]
---         [ text "Save" ]
---     , a
---         [ onClick addr (Save True)
---         , class "btn btn-default btn-save-and-try"
---         , disabled saving
---         ]
---         [ text "Save and try" ]
 --     ]
--- , if track.status == Draft then
---     div
---       [ class "btn-group-vertical" ]
---       [ button
---           [ onClick addr ConfirmPublish
---           , class "btn btn-default btn-block btn-confirm-publish"
---           ]
---           [ text "Save and publish" ]
---       , if editor.confirmPublish then
---           button
---             [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
---             [ text "Confirm? You can't go back!" ]
---         else
---           text ""
---       ]
---   else
---     text ""
 -- ]
 
 

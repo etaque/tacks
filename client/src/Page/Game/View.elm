@@ -1,12 +1,14 @@
 module Page.Game.View (..) where
 
 import Html exposing (..)
+import Html.Lazy
 import Html.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
 import Page.Game.View.Chat as Chat
 import Page.Game.View.Context as Context
 import View.Layout as Layout
+import View.HexBg as HexBg
 import Game.Render.All exposing (render)
 import Constants exposing (..)
 
@@ -45,4 +47,9 @@ view ctx model =
           ]
 
     _ ->
-      div [ class "" ] []
+      Layout.layoutWithSidebar
+        "play-track loading"
+        ctx
+        [ text "" ]
+        []
+        [ Html.Lazy.lazy HexBg.render ctx.dims ]

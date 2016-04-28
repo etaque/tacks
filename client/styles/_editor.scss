@@ -81,19 +81,24 @@
     }
   }
 
-  .form-actions {
-    .btn[disabled] {
-      cursor: progress;
-    }
-  }
-
   aside {
 
-    .add-gate {
-      position: fixed;
-      bottom: 24px;
+    .actions {
+      padding: 16px;
+      padding-bottom: 8px;
+      background-color: #eee;
+      display: flex;
+      flex-direction: row;
 
+      .btn[disabled] {
+        cursor: progress;
+      }
+
+      > a {
+        flex: 1;
+      }
     }
+
 
     .list-gates {
       margin-top: 16px;
@@ -110,7 +115,7 @@
             color: $seaBlue;
           }
 
-          .remove {
+          .remove-gate {
             visibility: visible;
           }
         }
@@ -186,41 +191,32 @@
           }
         }
 
-        .remove {
+        .remove-gate {
           visibility: hidden;
-          @include shadow-light;
           position: absolute;
           z-index: 3;
           bottom: -20px;
           left: 0;
           right: 0;
           margin: 0 auto;
-          width: 40px;
-          border-radius: 20px;
           background-color: white;
-          text-align: center;
-
-          i {
-            line-height: 40px;
-          }
-
-          &:hover {
-            background-color: $whiteSeaBlue;
-            color: $seaBlue;
-          }
         }
       }
     }
 
+    .add-gate {
+      margin: -20px 16px 24px 16px;
+      float: right;
+      @include clearfix;
+    }
+
+
     .wind-fields {
       padding: 24px;
-
-
     }
 
     .gusts-fields {
       padding: 24px;
-
     }
   }
 }

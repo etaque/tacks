@@ -134,7 +134,7 @@ liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
               [ class "live-track-actions" ]
               [ linkTo
                   (ShowTrack track.id)
-                  [ class "flat-button" ]
+                  [ class "btn-flat" ]
                   [ text <| "See " ++ toString (List.length meta.rankings) ++ " entries"
                   ]
               ]

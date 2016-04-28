@@ -66,13 +66,13 @@ draftItem confirmDelete draft =
         , div
             [ class "live-track-actions" ]
             [ button
-                [ class "flat-button"
+                [ class "btn-flat"
                 , onButtonClick addr (ConfirmDeleteDraft draft)
                   -- , disabled confirmDelete
                 ]
                 [ text "Delete" ]
             , button
-                [ class "flat-button", onButtonClick addr (DeleteDraft draft.id) ]
+                [ class "btn-flat", onButtonClick addr (DeleteDraft draft.id) ]
                 [ text "Confirm?" ]
             ]
         ]

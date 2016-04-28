@@ -4,9 +4,6 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy
-import Svg
-import Svg.Attributes as SvgAttr
-import View.Sidebar as Sidebar
 import View.HexBg as HexBg
 import View.Logo as Logo
 import View.Utils as Utils
@@ -17,7 +14,6 @@ import Route
 import TransitStyle
 import Page.Admin.Model as Admin
 import Page.Forum.Model as Forum
-import Game.Render.Players as Players
 
 
 layoutWithNav : String -> Context -> List Html -> Html

@@ -2,6 +2,7 @@ module Page.EditTrack.FormUpdate (..) where
 
 import CoreExtra
 import Game.Models exposing (defaultGate)
+import Game.Geo as Geo
 import Page.EditTrack.Model exposing (..)
 
 
@@ -18,7 +19,15 @@ update formUpdate ({ course } as editor) =
         { course | gates = CoreExtra.updateAt (i - 1) f gates }
 
     updateEditorGates newCurrentGate newCourse =
-      { editor | course = newCourse, currentGate = newCurrentGate }
+      { editor
+        | course = newCourse
+        , currentGate = newCurrentGate
+        , center =
+            newCurrentGate
+              |> (flip Maybe.andThen) (\i -> CoreExtra.getAt i (newCourse.start :: newCourse.gates))
+              |> Maybe.map (.center >> Geo.neg)
+              |> Maybe.withDefault editor.center
+      }
 
     updateWindGen g =
       { editor | course = { course | windGenerator = g } }
@@ -51,7 +60,7 @@ update formUpdate ({ course } as editor) =
 
       RemoveGate i ->
         updateEditorGates
-          Nothing
+          (Just (i - 1))
           { course | gates = CoreExtra.removeAt (i - 1) gates }
 
       UpdateGustGen fn ->

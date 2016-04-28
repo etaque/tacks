@@ -34,7 +34,7 @@ raceAction { timers, playerState } =
       else
         a
           [ onClick addr ExitRace
-          , class "floating-button exit-race"
+          , class "btn-floating btn-warn btn-black exit-race"
           , title "Exit race"
           ]
           [ Utils.mIcon "cancel" []
@@ -43,10 +43,10 @@ raceAction { timers, playerState } =
     Nothing ->
       a
         [ onClick addr StartRace
-        , class "floating-button start-race"
+        , class "btn-floating btn-warn start-race"
         , title "Start race"
         ]
-        [ Utils.mIcon "play arrow" []
+        [ Utils.mIcon "play_arrow" []
         ]
 
 
@@ -71,15 +71,18 @@ trackNav liveTrack =
 
 draftBlocks : LiveTrack -> List Html
 draftBlocks { track } =
-  [ p
-      [ class "draft-warning" ]
-      [ text "This is a draft, you're the only one seeing this race track." ]
-  , div
-      [ class "form-actions" ]
-      [ Utils.linkTo
-          (EditTrack track.id)
-          [ class "btn btn-block btn-primary" ]
-          [ text "Edit draft" ]
+  [ div
+      [ class "draft" ]
+      [ div
+          [ class "actions" ]
+          [ Utils.linkTo
+              (EditTrack track.id)
+              [ class "btn-raised btn-primary" ]
+              [ Utils.mIcon "edit" [], text "Edit draft" ]
+          ]
+      , p
+          [ ]
+          [ text "This is a draft, you're the only one seeing this race track." ]
       ]
   ]
 

@@ -58,6 +58,10 @@
   background-image: linear-gradient($deg, $start-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
 }
 
+@function bezier($target) {
+  @return $target 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 @mixin bezier($target) {
   transition: $target 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }

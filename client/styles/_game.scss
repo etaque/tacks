@@ -32,10 +32,16 @@
 
 aside {
 
-  .draft-warning {
-    font-size: 14px;
-    padding: 10px;
-    margin: 10px;
+  .draft {
+    .actions {
+      background-color: #eee;
+      padding: 16px;
+      text-align: center;
+    }
+
+    p {
+      padding: 16px;
+    }
   }
 
   .module-players {
