@@ -15,21 +15,13 @@ import Page.ListDrafts.View as ListDraftsPage
 import Page.Forum.View as ForumPage
 import Page.Admin.View as AdminPage
 import Route exposing (..)
-import Constants
 
 
 view : Signal.Address Action -> Model -> Html
 view _ ({ pages, player, dims, routeTransition } as model) =
   let
-    ( w, h ) =
-      dims
-
-    h' =
-      h
-      -- h - Constants.headerHeight
-
     ctx =
-      Context player ( w, h' ) (getTransition model) routeTransition
+      Context player dims (getTransition model) routeTransition
   in
     case (TransitRouter.getRoute model) of
       Home ->
@@ -67,7 +59,6 @@ view _ ({ pages, player, dims, routeTransition } as model) =
 
       EmptyRoute ->
         text ""
-
 
 
 pageTitle : Model -> String

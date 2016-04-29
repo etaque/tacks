@@ -36,20 +36,16 @@ view ctx model =
         Layout.layoutWithSidebar
           "play-track"
           ctx
-          (Context.nav model liveTrack gameState)
+          (Context.toolbar model liveTrack gameState)
           (Context.sidebar model liveTrack gameState)
-          [ div
-              [ class "game" ]
-              [ render ( w - sidebarWidth, h ) gameState
-              , Chat.view h model
-              ]
-          , Context.raceAction gameState
+          [ render ( w - sidebarWidth, h ) gameState
+          , Chat.view h model
           ]
 
     _ ->
       Layout.layoutWithSidebar
         "play-track loading"
         ctx
-        [ text "" ]
+        []
         []
         [ Html.Lazy.lazy HexBg.render ctx.dims ]

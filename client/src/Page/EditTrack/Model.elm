@@ -1,7 +1,7 @@
 module Page.EditTrack.Model (..) where
 
 import Model.Shared exposing (..)
-import Constants exposing (sidebarWidth)
+import Constants
 import Drag exposing (MouseEvent(..))
 
 
@@ -23,7 +23,6 @@ initial =
 type alias Editor =
   { tab : Tab
   , currentGate : Maybe Int
-  , hoverToolbar : Bool
   , course : Course
   , center : Point
   , mode : Mode
@@ -44,7 +43,6 @@ initialEditor : Track -> Editor
 initialEditor track =
   { tab = GatesTab
   , currentGate = Nothing
-  , hoverToolbar = False
   , course = track.course
   , center = ( 0, 0 )
   , mode = CreateTile Water
@@ -81,11 +79,9 @@ realMode { mode, altMove } =
 type Action
   = LoadTrack (Result () Track)
   | MouseAction MouseEvent
-  | HoverToolbar Bool
-  | SelectGate (Maybe Int)
   | SetMode Mode
   | AltMoveMode Bool
-  | FormAction FormUpdate
+  | FormAction FormAction
   | SetTab Tab
   | SetName String
   | Save Bool
@@ -95,13 +91,14 @@ type Action
   | NoOp
 
 
-type FormUpdate
+type FormAction
   = AddGate
   | SetGateCenterX Int Int
   | SetGateCenterY Int Int
   | SetGateWidth Int Int
   | SetGateOrientation Int Orientation
   | RemoveGate Int
+  | SelectGate Int
   | UpdateGustGen (GustGenerator -> GustGenerator)
   | SetWindSpeed Int
   | SetWindW1 Int
@@ -131,4 +128,4 @@ modeName mode =
 
 getCourseDims : Dims -> Dims
 getCourseDims ( w, h ) =
-  ( w - sidebarWidth, h )
+  ( w - Constants.sidebarWidth, h - Constants.headerHeight )

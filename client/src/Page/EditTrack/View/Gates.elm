@@ -37,7 +37,7 @@ gateItem count currentGate i gate =
   in
     div
       [ classList [ ( "gate", True ), ( "selected", currentGate == Just i ) ]
-      , onClick addr (SelectGate (Just i))
+      , onClick formAddr (SelectGate i)
       ]
       [ div
           [ class "gate-header" ]
@@ -74,7 +74,7 @@ gateItem count currentGate i gate =
       ]
 
 
-orientationOptions : (Orientation -> FormUpdate) -> Orientation -> Html
+orientationOptions : (Orientation -> FormAction) -> Orientation -> Html
 orientationOptions toMsg current =
   let
     item o =

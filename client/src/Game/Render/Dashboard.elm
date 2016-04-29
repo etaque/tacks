@@ -14,16 +14,15 @@ renderDashboard : ( Int, Int ) -> GameState -> Svg
 renderDashboard ( w, h ) ({ playerState } as gameState) =
   g
     [ class "dashboard"
-    , transform (translate 0 50)
     ]
+    -- [ g
+    --     [ class "status"
+    --     , transform (translate (w // 2) 120)
+    --     ]
+    --     [ Status.render gameState ]
     [ g
-        [ class "status"
-        , transform (translate (w // 2) 120)
-        ]
-        [ Status.render gameState ]
-    , g
         [ class "wind-origin"
-        , transform (translate (toFloat w / 2) 30)
+        , transform (translate (toFloat w / 2) 50)
         ]
         [ WindOriginGauge.render h playerState.windOrigin ]
     , g

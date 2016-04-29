@@ -186,41 +186,63 @@ $header: 52px;
   }
 
   .toolbar {
-    height: 52px;
-    z-index: 2;
     position: absolute;
+    height: 52px;
     left: $side;
     right: 0;
+    display: flex;
+    z-index: 2;
     background-color: $charcoal;
     @include shadow-light;
 
+    .toolbar-left, .toolbar-right {
+      flex: 1;
+    }
+
+    .toolbar-center {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .toolbar-right {
+      text-align: right;
+    }
+
     h2 {
       display: inline-block;
-      padding: 8px;
-      margin: 0 16px 0 24px;
-      position: relative;
+      margin: 0;
+      line-height: 52px;
+      padding: 0 16px;
+      color: $lightGrey;
+      font-family: $regular;
+      font-size: 21px;
+      @include ellipsis;
+    }
 
-      a {
-        display: inline-block;
-        padding: 8px;
+    .exit {
+      display: inline-block;
+      vertical-align: top;
+      color: $grey;
+      width: 52px;
+      text-align: center;
+      transition: bezier(background-color), bezier(color);
+      background-color: lighten($charcoal, 4%);
+
+      i {
+        line-height: 52px; 
+      }
+
+      &:hover {
+        background-color: lighten($charcoal, 8%);
         color: $lightGrey;
-        font-size: 21px;
-        line-height: $header - 32px;
-        font-weight: bold;
-        border: 1px solid transparent;
-        border-radius: 2px;
-
-        &:hover {
-          border-color: $grey;
-          /* background-color: $darkGrey; */
-        }
       }
     }
+
   }
 
   main {
     position: absolute;
-    top: 0;
+    top: $header;
     left: $side;
     bottom: 0;
     background-color: $sand;

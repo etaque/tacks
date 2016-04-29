@@ -60,17 +60,11 @@ update dims action model =
     SetTab tab ->
       staticRes (updateEditor (\e -> { e | tab = tab }) model)
 
-    SelectGate mi ->
-      staticRes (updateEditor (\e -> { e | currentGate = mi }) model)
-
     SetName n ->
       staticRes (updateEditor (\e -> { e | name = n }) model)
 
     MouseAction event ->
       staticRes (updateEditor (GridUpdate.mouseAction event dims) model)
-
-    HoverToolbar isOver ->
-      res (updateEditor (\e -> { e | hoverToolbar = isOver }) model) none
 
     SetMode mode ->
       staticRes (updateEditor (\e -> { e | mode = mode }) model)
@@ -107,7 +101,6 @@ update dims action model =
         Err _ ->
           res model none
 
-    -- TODO
     ConfirmPublish ->
       res (updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) model) none
 

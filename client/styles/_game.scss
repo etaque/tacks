@@ -2,182 +2,193 @@
 @import 'fonts';
 @import 'mixins';
 
-.game {
-  background-color: $sand;
+#play-track {
 
-  svg {
-    display: block;
-  }
-}
+  main {
+    background-color: $sand;
 
-
-
-.exit-race,
-.start-race {
-  z-index: 2;
-  position: absolute;
-  top: 24px;
-  left: 0;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.start-race {
-}
-
-.exit-race {
-  background-color: $charcoal;
-}
-
-aside {
-
-  .draft {
-    .actions {
-      background-color: #eee;
-      padding: 16px;
-      text-align: center;
-    }
-
-    p {
-      padding: 16px;
+    > svg {
+      display: block;
     }
   }
-
-  .module-players {
-    .race-legend {
-      margin: 0;
-      padding: 16px 16px 8px 16px;
-      font-weight: bold;
-      border-top: $border;
+  
+  .toolbar {
+    .start-race {
+      margin-top: 24px;
     }
 
-    .list-players {
-      margin: 8px 16px;
-    }
-
-  }
-
-  .module-rankings {
-    margin-top: 8px;
-
-    .empty {
-      font-size: 13px;
-      margin: 16px;
-    }
-
-    li {
-      line-height: 36px;
-
-      .avatar {
-        height: 24px;
-        width: 24px;
-      }
-
-      .rank {
-        width: 36px;
-        margin-right: 12px;
-      }
-
-      .time {
-        padding-right: 12px;
-      }
-    }
-
-    .add-ghost, .remove-ghost {
-      cursor: pointer;
-
-      &:hover {
-        background-color: $whiteSmoke;
-      }
-    }
-
-    .add-ghost {
-      &:hover {
-        .rank {
-          background-color: $green;
-          color: $white;
-        }
-      }
-    }
-
-    .remove-ghost {
-      background-color: $whiteSmoke;
-
-      .rank {
-        background-color: $lightGrey;
-        color: $grey;
-      }
-
-      &:hover {
-        .rank {
-          background-color: $red;
-          color: $white;
-        }
-      }
-    }
-  }
-
-  .module-ghosts {
-    ul {
-      padding: 0;
-      font-family: $mono;
-      font-weight: bold;
-    }
-
-    li {
-      padding: 2px 8px;
+    .timer {
       position: relative;
-      cursor: pointer;
+      display: inline-block;
+      font-family: $mono;
+      font-size: 21px;
+      margin: 8px 0;
+      padding: 0 12px;
+      color: $whiteSmoke;
+      background-color: darken($charcoal, 8%);
+      border-radius: 2px;
+      line-height: 36px;
+      @include shadow-inset-light;
+    }
 
-      &:hover {
-        /* background-color: $whiteRed; */
-        color: $whiteSeaBlue;
+    .exit-race {
+      position: absolute;
+      right: -32px;
+      top: 4px;
+      color: $mediumGrey;
+    }
+  }
 
-        .remove {
-          /* color: $red; */
+  aside {
+
+    .draft {
+      .actions {
+        background-color: #eee;
+        padding: 16px;
+        text-align: center;
+      }
+
+      p {
+        padding: 16px;
+      }
+    }
+
+    .module-players {
+      .race-legend {
+        margin: 0;
+        padding: 16px 16px 8px 16px;
+        font-weight: bold;
+        border-top: $border;
+      }
+
+      .list-players {
+        margin: 8px 16px;
+      }
+
+    }
+
+    .module-rankings {
+      margin-top: 8px;
+
+      .empty {
+        font-size: 13px;
+        margin: 16px;
+      }
+
+      li {
+        line-height: 36px;
+
+        .avatar {
+          height: 24px;
+          width: 24px;
+        }
+
+        .rank {
+          width: 36px;
+          margin-right: 12px;
+        }
+
+        .time {
+          padding-right: 12px;
+        }
+      }
+
+      .add-ghost, .remove-ghost {
+        cursor: pointer;
+
+        &:hover {
+          background-color: $whiteSmoke;
+        }
+      }
+
+      .add-ghost {
+        &:hover {
+          .rank {
+            background-color: $green;
+            color: $white;
+          }
+        }
+      }
+
+      .remove-ghost {
+        background-color: $whiteSmoke;
+
+        .rank {
+          background-color: $lightGrey;
+          color: $grey;
+        }
+
+        &:hover {
+          .rank {
+            background-color: $red;
+            color: $white;
+          }
         }
       }
     }
 
-    .remove {
-      position: absolute;
-      right: 8px;
-      top: 2px;
-      /* color: $whiteSeaBlue; */
-    }
-  }
+    .module-ghosts {
+      ul {
+        padding: 0;
+        font-family: $mono;
+        font-weight: bold;
+      }
 
-  .module-help {
+      li {
+        padding: 2px 8px;
+        position: relative;
+        cursor: pointer;
 
-    dl {
-      padding: 16px;
-      @include clearfix; 
+        &:hover {
+          /* background-color: $whiteRed; */
+          color: $whiteSeaBlue;
 
-      & > * {
-        padding: 8px 0;
+          .remove {
+            /* color: $red; */
+          }
+        }
+      }
+
+      .remove {
+        position: absolute;
+        right: 8px;
+        top: 2px;
+        /* color: $whiteSeaBlue; */
       }
     }
 
-    dt {
-      font-weight: bold;
-      clear: both;
-      float: left;
-      color: $darkGrey;
-      margin-right: 8px;
-    }
+    .module-help {
 
-    dd {
-      text-align: right;
-      border-bottom: 1px solid #eee;
+      dl {
+        padding: 16px;
+        @include clearfix; 
 
-      &:last-child {
-        border-bottom-color: transparent;
+        & > * {
+          padding: 8px 0;
+        }
+      }
+
+      dt {
+        font-weight: bold;
+        clear: both;
+        float: left;
+        color: $darkGrey;
+        margin-right: 8px;
+      }
+
+      dd {
+        text-align: right;
+        border-bottom: 1px solid #eee;
+
+        &:last-child {
+          border-bottom-color: transparent;
+        }
       }
     }
-  }
 
+  }
 }
+
 
 .module-chat {
   position: absolute;

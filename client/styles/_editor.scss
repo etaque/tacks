@@ -6,76 +6,65 @@
 
   main {
     svg {
-      user-select: none;
-      -moz-user-select: none;
-
+      display: block;
+      @include no-select;
       cursor: cell;
 
       &.mode-m {
         cursor: move;
       }
     }
-
   }
 
   .toolbar {
-    user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-
+    @include no-select;
 
     .surface-modes {
-      padding: 8px 24px;
+      padding: 8px;
 
       a {
         display: inline-block;
         color: $mediumGrey; 
         padding: 4px 16px 4px 8px;
-        margin-right: 4px;
-        line-height: 24px;
+        line-height: 26px;
         min-width: 64px;
-        border-radius: 2px;
-        border: 1px solid transparent;
         vertical-align: middle;
+        background-color: lighten($charcoal, 8%);
+        transition: bezier(background-color), bezier(color);
 
-        &:last {
-          border-right: none;
+        &:first-child {
+          border-top-left-radius: 2px;
+          border-bottom-left-radius: 2px;
         }
 
-        &.m span {
-          border-radius: 0;
-          background-color: $darkGrey;
+        &:last-child {
+          border-top-right-radius: 2px;
+          border-bottom-right-radius: 2px;
         }
 
         span {
           display: inline-block;
-          width: 16px;
-          height: 16px;
-          opacity: 0.8;
-          vertical-align: middle;
+          width: 18px;
+          height: 18px;
           margin-right: 8px;
-          border-radius: 24px;
+          margin-top: 4px;
+          vertical-align: top;
         }
 
-        &:hover,
-        &.currrent:hover {
+        i {
+          font-size: 18px;
+        }
+
+
+        &:hover {
           color: $white;
-          $bg: lighten($charcoal, 12%);
-          background-color: $bg;
-          border-color: lighten($bg, 8%);
-          @include shadow-light;
+          background-color: lighten($charcoal, 12%);
         }
 
-        &.current {
-          $bg: darken($charcoal, 12%);
+        &.current, &.current:hover {
           color: $whiteSmoke;
-          background-color: $bg;
-          border-color: darken($bg, 8%);
+          background-color: darken($charcoal, 8%);
           @include shadow-inset-light;
-
-          span {
-            opacity: 1;
-          }
         }
       }
     }

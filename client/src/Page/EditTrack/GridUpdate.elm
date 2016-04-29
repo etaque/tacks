@@ -2,32 +2,28 @@ module Page.EditTrack.GridUpdate (..) where
 
 import Drag exposing (mouseEvents, MouseEvent(..))
 import Dict
-import Constants exposing (sidebarWidth, hexRadius)
+import Constants exposing (sidebarWidth, headerHeight, hexRadius)
 import Model.Shared exposing (..)
 import CoreExtra exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Hexagons
-import Hexagons.Grid as Grid
 
 
 mouseAction : MouseEvent -> Dims -> Editor -> Editor
 mouseAction event dims editor =
-  if editor.hoverToolbar then
-    editor
-  else
-    let
-      courseDims =
-        getCourseDims dims
-    in
-      case realMode editor of
-        CreateTile kind ->
-          updateTileAction kind event courseDims editor
+  let
+    courseDims =
+      getCourseDims dims
+  in
+    case realMode editor of
+      CreateTile kind ->
+        updateTileAction kind event courseDims editor
 
-        Erase ->
-          deleteTileAction event courseDims editor
+      Erase ->
+        deleteTileAction event courseDims editor
 
-        Watch ->
-          updateCenter event courseDims editor
+      Watch ->
+        updateCenter event courseDims editor
 
 
 deleteTileAction : MouseEvent -> Dims -> Editor -> Editor
@@ -107,7 +103,7 @@ clickPoint { center } courseDims ( x, y ) =
         toFloat (x - sidebarWidth) - cx - toFloat w / 2
 
       y' =
-        toFloat -y - cy + toFloat h / 2
+        toFloat -(y - headerHeight) - cy + toFloat h / 2
     in
       Just ( x', y' )
   else
@@ -144,6 +140,6 @@ withinWindow ( w, h ) ( x, y ) =
       ( sidebarWidth, w + sidebarWidth )
 
     yWindow =
-      ( 0, y )
+      ( headerHeight, y + headerHeight )
   in
     within xWindow x && within yWindow y

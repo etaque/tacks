@@ -10,12 +10,12 @@ import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
 
 
-formAddr : Signal.Address FormUpdate
+formAddr : Signal.Address FormAction
 formAddr =
   Signal.forwardTo addr FormAction
 
 
-intInput : number -> (Int -> FormUpdate) -> List Attribute -> Html
+intInput : number -> (Int -> FormAction) -> List Attribute -> Html
 intInput val formUpdate attrs =
   textInput
     ([ value (toString val)

@@ -6,8 +6,8 @@ import Game.Geo as Geo
 import Page.EditTrack.Model exposing (..)
 
 
-update : FormUpdate -> Editor -> Editor
-update formUpdate ({ course } as editor) =
+update : FormAction -> Editor -> Editor
+update formAction ({ course } as editor) =
   let
     { start, gates, windGenerator } =
       course
@@ -18,13 +18,12 @@ update formUpdate ({ course } as editor) =
       else
         { course | gates = CoreExtra.updateAt (i - 1) f gates }
 
-    updateEditorGates newCurrentGate newCourse =
+    updateEditorGates i newCourse =
       { editor
         | course = newCourse
-        , currentGate = newCurrentGate
+        , currentGate = Just i
         , center =
-            newCurrentGate
-              |> (flip Maybe.andThen) (\i -> CoreExtra.getAt i (newCourse.start :: newCourse.gates))
+            CoreExtra.getAt i (newCourse.start :: newCourse.gates)
               |> Maybe.map (.center >> Geo.neg)
               |> Maybe.withDefault editor.center
       }
@@ -32,36 +31,27 @@ update formUpdate ({ course } as editor) =
     updateWindGen g =
       { editor | course = { course | windGenerator = g } }
   in
-    case formUpdate of
+    case formAction of
+      SelectGate i ->
+        updateEditorGates i course
+
       AddGate ->
-        updateEditorGates
-          (Just (List.length gates + 1))
-          { course | gates = gates ++ [ defaultGate ] }
+        updateEditorGates (List.length gates + 1) { course | gates = gates ++ [ defaultGate ] }
 
       SetGateCenterX i x ->
-        updateEditorGates
-          (Just i)
-          (updateGate i (\g -> { g | center = ( toFloat x, snd g.center ) }))
+        updateEditorGates i (updateGate i (\g -> { g | center = ( toFloat x, snd g.center ) }))
 
       SetGateCenterY i y ->
-        updateEditorGates
-          (Just i)
-          (updateGate i (\g -> { g | center = ( fst g.center, toFloat y ) }))
+        updateEditorGates i (updateGate i (\g -> { g | center = ( fst g.center, toFloat y ) }))
 
       SetGateWidth i w ->
-        updateEditorGates
-          (Just i)
-          (updateGate i (\g -> { g | width = toFloat w }))
+        updateEditorGates i (updateGate i (\g -> { g | width = toFloat w }))
 
       SetGateOrientation i o ->
-        updateEditorGates
-          (Just i)
-          (updateGate i (\g -> { g | orientation = o }))
+        updateEditorGates i (updateGate i (\g -> { g | orientation = o }))
 
       RemoveGate i ->
-        updateEditorGates
-          (Just (i - 1))
-          { course | gates = CoreExtra.removeAt (i - 1) gates }
+        updateEditorGates (i - 1) { course | gates = CoreExtra.removeAt (i - 1) gates }
 
       UpdateGustGen fn ->
         { editor | course = { course | gustGenerator = fn course.gustGenerator } }

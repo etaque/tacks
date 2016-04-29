@@ -66,6 +66,18 @@
   transition: $target 0.28s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+@mixin ellipsis {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@mixin no-select {
+  user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+}
+
 @mixin sheet {
   background-color: $white;
   border-radius: 2px;

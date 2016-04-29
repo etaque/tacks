@@ -72,6 +72,7 @@ hr {
 }
 
 .btn-floating {
+  display: block;
   height: 56px;
   width: 56px;
   transition: bezier(box-shadow), bezier(background-color);

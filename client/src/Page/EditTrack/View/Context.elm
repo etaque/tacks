@@ -1,6 +1,5 @@
 module Page.EditTrack.View.Context (..) where
 
-import Signal
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
@@ -12,7 +11,6 @@ import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Utils exposing (..)
 import Page.EditTrack.View.Gates as Gates
 import Page.EditTrack.View.Gusts as Gusts
-import View.Sidebar as Sidebar
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 import Route
 
@@ -32,12 +30,17 @@ nav track editor =
 toolbar : Track -> Editor -> List Html
 toolbar track editor =
   [ div
-      [ class ""
-      , onMouseOver addr (HoverToolbar True)
-      , onMouseOut addr (HoverToolbar False)
+      [ class "toolbar-left" ]
+      [ linkTo
+          Route.ListDrafts
+          [ class "exit"
+          , title "Back to drafts list"
+          ]
+          [ Utils.mIcon "arrow_back" [] ]
+      , h2 [] [ text track.name ]
       ]
-      [ surfaceBlock editor
-      ]
+  , surfaceBlock editor
+  , div [ class "toolbar-right" ] []
   ]
 
 
@@ -93,7 +96,15 @@ actions track editor =
         , class "btn-raised btn-primary btn-save"
         , disabled editor.saving
         ]
-        [ Utils.mIcon (if editor.saving then "cached" else "save") [], text "Save" ]
+        [ Utils.mIcon
+            (if editor.saving then
+              "cached"
+             else
+              "save"
+            )
+            []
+        , text "Save"
+        ]
     , a
         [ onClick addr (Save True)
         , class "btn-raised btn-white btn-save-and-try"
@@ -155,7 +166,7 @@ surfaceBlock editor =
       realMode editor
   in
     div
-      [ class "surface-modes" ]
+      [ class "toolbar-center surface-modes" ]
       (List.map (renderSurfaceMode currentMode) modes)
 
 
@@ -173,17 +184,23 @@ renderSurfaceMode currentMode mode =
         Watch ->
           "white"
 
+    icon =
+      if mode == Watch then
+        "pan_tool"
+      else
+        "lens"
+
     ( abbr, label ) =
       modeName mode
   in
     a
       [ classList [ ( "current", currentMode == mode ), ( abbr, True ) ]
-      , onClick addr (SetMode mode)
+      , onButtonClick addr (SetMode mode)
       , title label
       ]
       [ span
-          [ style [ ( "background-color", color ), ( "border-color", color ) ]
+          [ style [ ( "color", color ) ]
           ]
-          []
+          [ Utils.mIcon icon [] ]
       , text label
       ]
