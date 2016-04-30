@@ -144,6 +144,11 @@ mIcon name classes =
     [ text name ]
 
 
+nbsp : Html
+nbsp =
+  text " "
+
+
 fieldGroup : String -> String -> List String -> List Html -> Html
 fieldGroup label' hint errors inputs =
   let
@@ -202,17 +207,12 @@ passwordInput attributes =
 
 playerWithAvatar : Player -> Html
 playerWithAvatar player =
-  let
-    avatarImg =
-      img [ src (avatarUrl player), class "avatar" ] []
-
-    handleSpan =
-      span [ class "handle" ] [ text (playerHandle player) ]
-  in
-    if player.guest then
-      span [ class "player-avatar" ] [ avatarImg, text " ", handleSpan ]
-    else
-      span [ class "player-avatar" ] [ avatarImg, text " ", handleSpan ]
+  span
+    [ class "player-avatar" ]
+    [ img [ src (avatarUrl player), class "avatar" ] []
+    , text " "
+    , span [ class "handle" ] [ text (playerHandle player) ]
+    ]
 
 
 avatarUrl : Player -> String

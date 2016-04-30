@@ -8,11 +8,10 @@
   }
 }
 
-.race-report-excerpt {
+.race-card {
   @include sheet;
   @include shadow-light;
-
-  color: $darkGrey;
+  color: $grey;
   margin-bottom: 24px;
 
   &:hover {
@@ -20,43 +19,59 @@
     cursor: pointer;
   }
 
-  .meta {
-    display: block;
-    padding: 6px 10px;
-    background-color: $lightGrey;
-    color: $grey;
-    box-shadow: inset 0px -1px 2px $shadow;
-    font-family: $serif;
-    text-align: center;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .race-card-header {
+    padding: 12px 16px 8px 16px;
+    background-color: $darkGrey;
 
-    &:hover {
-      background-color: $lightGrey;
-      box-shadow: inset 0px -1px 2px $strongShadow;
-      color: $darkGrey;
+    .track-name {
+      font-weight: bold;
+      font-size: 16px;
+      color: $whiteSmoke;
     }
   }
 
-  .track-name {
-    font-weight: bold;
-
-    &:before {
-      content: " @ ";
-      color: $mediumGrey;
-    }
-  }
-
-  .start-time {
-  }
-
-  ul {
-    @include players-list;
-    height: 80px;
+  .list-rankings {
     margin-bottom: 0;
-    padding: 10px;
-    overflow-y: auto;
-    @include linear-gradient($white, $whiteSmoke);
+
+    li {
+      line-height: 36px;
+
+      .rank {
+        width: 36px;
+      }
+
+      .time {
+        padding-right: 12px;
+      }
+
+      &.empty {
+        height: 37px;
+      }
+    }
+  }
+
+  .race-card-footer {
+    border-top: $border;
+    @include clearfix;
+    height: 36px;
+    background-color: $whiteSmoke;
+
+    .start-time {
+      color: $grey;
+      float: right;
+      line-height: 36px;
+      padding: 0 8px;
+      font-family: $mono;
+    }
+
+    .see-more {
+      float: left;
+      line-height: 36px;
+      width: 36px;
+      font-family: $mono;
+      font-weight: bold;
+      text-align: center;
+      background-color: #eee;
+    }
   }
 }

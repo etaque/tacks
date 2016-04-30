@@ -7,8 +7,6 @@ import Date
 import Date.Format as DateFormat
 import Model.Shared exposing (..)
 import Route exposing (..)
-import Page.Home.Model exposing (..)
-import Page.Home.Update exposing (addr)
 import View.Utils as Utils exposing (..)
 
 
@@ -24,35 +22,52 @@ reports showName reports =
 
 raceReportItem : Bool -> RaceReport -> Html
 raceReportItem showName report =
-  div
-    [ class "col-sm-3" ]
-    [ div
-        [ class "race-report-excerpt" ]
-        [ linkTo
-            (ShowTrack report.trackId)
-            [ class "meta" ]
-            [ span
-                [ class "start-time" ]
-                [ text
-                    (DateFormat.format
-                      "%e %b. %k:%M"
-                      (Date.fromTime report.startTime)
-                    )
-                ]
-            , if showName then
-                span
-                  [ class "track-name"
-                  , title report.trackName
+  let
+    count =
+      List.length report.runs
+
+    runsList =
+      report.runs
+        |> List.take 3
+        |> List.indexedMap raceReportRun
+  in
+    div
+      [ class "col-sm-3" ]
+      [ div
+          ([ class "race-card" ] ++ Utils.linkAttrs (ShowTrack report.trackId))
+          [ div
+              [ class "race-card-header" ]
+              [ if showName then
+                  div
+                    [ class "track-name"
+                    , title report.trackName
+                    ]
+                    [ text report.trackName ]
+                else
+                  text ""
+              ]
+          , ul
+              [ class "list-unstyled list-rankings" ]
+              (runsList ++ (List.repeat (3 - count) emptyRun))
+          , div
+              [ class "race-card-footer" ]
+              [ span
+                  [ class "start-time" ]
+                  [ text
+                      (DateFormat.format
+                        "%e %b. %k:%M"
+                        (Date.fromTime report.startTime)
+                      )
                   ]
-                  [ text report.trackName ]
-              else
-                text ""
-            ]
-        , ul
-            [ class "list-unstyled" ]
-            (List.indexedMap raceReportRun report.runs)
-        ]
-    ]
+              , if List.length report.runs > 3 then
+                  span
+                    [ class "see-more" ]
+                    [ text ("+" ++ toString (count - 3)) ]
+                else
+                  text ""
+              ]
+          ]
+      ]
 
 
 raceReportRun : Int -> Run -> Html
@@ -69,4 +84,22 @@ raceReportRun i run =
     , span
         [ class "time" ]
         [ text (Utils.formatTimer True run.duration) ]
+      -- , playerWithAvatar run.player
+    ]
+
+
+emptyRun : Html
+emptyRun =
+  li
+    [ class "empty" ]
+    [ span
+        [ class "rank" ]
+        [ Utils.nbsp ]
+    , span
+        [ class "handle" ]
+        [ Utils.nbsp ]
+    , span
+        [ class "time" ]
+        [ Utils.nbsp ]
+      -- , playerWithAvatar run.player
     ]

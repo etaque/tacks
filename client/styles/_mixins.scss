@@ -126,10 +126,16 @@
 
 @mixin rankings {
   li {
-    border-bottom: 1px solid #eee;
+    background-color: $white;
 
-    &:last-child {
-      border-bottom: none;
+    &.empty {
+      height: 49px;
+    }
+
+    border-top: 1px solid transparent;
+
+    & + li:not(.empty) {
+      border-top: $border;
     }
 
     .rank {
