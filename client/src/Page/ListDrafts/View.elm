@@ -16,9 +16,10 @@ import View.Layout as Layout
 
 view : Context -> Model -> Html
 view ctx ({ drafts } as model) =
-  Layout.layoutWithNav
+  Layout.siteLayout
     "list-drafts"
     ctx
+    (Just Layout.Build)
     [ Layout.section
         "blue"
         [ h1 [] [ text "Tracks editor" ]

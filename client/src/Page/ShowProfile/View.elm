@@ -13,9 +13,9 @@ import View.Layout as Layout
 
 view : Context -> Model -> Html
 view ctx {player} =
-  Layout.layoutWithNav "show-profile" ctx
+  Layout.siteLayout "show-profile" ctx Nothing
     [ container ""
-      [ img [ class "avatar avatar-user", src (avatarUrl player), width 160, height 160 ] []
+      [ img [ class "avatar avatar-user", src (avatarUrl 128 player), width 160, height 160 ] []
       , h1 [ ] [ text <| playerHandle player ]
       ]
     ]

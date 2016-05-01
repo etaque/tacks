@@ -16,9 +16,10 @@ import View.Layout as Layout
 
 view : Context -> Model -> Html
 view ctx model =
-  Layout.layoutWithNav
+  Layout.siteLayout
     "register"
     ctx
+    (Just Layout.Register)
     [ Layout.section
         "blue"
         [ h1 [] [ text "Register" ]

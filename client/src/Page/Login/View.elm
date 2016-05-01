@@ -12,9 +12,10 @@ import View.Layout as Layout
 
 view : Context -> Model -> Html
 view ctx model =
-  Layout.layoutWithNav
+  Layout.siteLayout
     "login"
     ctx
+    (Just Layout.Login)
     [ Layout.section
         "blue"
         [ h1 [] [ text "Login" ]

@@ -24,7 +24,7 @@ view ctx route model =
   let
     menuItem = routeMenuItem route
   in
-    Layout.layoutWithNav "admin" ctx
+    Layout.siteLayout "admin" ctx Nothing
       [ container "" <|
         [ h1 [] [ text "Admin" ]
         , menu menuItem

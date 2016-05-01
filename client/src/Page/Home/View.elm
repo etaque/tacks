@@ -26,13 +26,16 @@ pageTitle model =
 
 view : Context -> Model -> Html
 view ctx model =
-  Layout.layoutWithNav
+  Layout.siteLayout
     "home"
     ctx
+    (Just Layout.Home)
     [ Layout.section
         "blue"
-        [ h1 [ class "align-center" ] [ text "Sailing tactics from the sofa" ]
-        , p [ class "subtitle align-center" ] [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
+        [ h1 [] [ text "Sailing tactics from the sofa" ]
+        , p
+            [ class "subtitle" ]
+            [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
         , welcomeForm ctx.player model.handle
         ]
     , Layout.section
@@ -45,7 +48,7 @@ view ctx model =
         ]
     , Layout.section
         "blue"
-        [ h1 [ class "align-center" ] [ text "Recent races" ]
+        [ h2 [] [ text "Recent races" ]
         , Race.reports True model.raceReports
         ]
     ]

@@ -56,7 +56,7 @@ section.blue {
 
 section.white {
   background-color: #fafafa;
-  box-shadow: 0 5px 5px $shadow;
+  @include shadow-light;
 }
 
 .sheet {

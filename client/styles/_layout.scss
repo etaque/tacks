@@ -14,7 +14,7 @@ body {
   font-size: 14px;
   line-height: 20px;
 
-  background-color: $smokeWhite;
+  background-color: $seaBlue;
 }
 
 body > div {
@@ -22,6 +22,7 @@ body > div {
 }
 
 $header: 52px;
+$aside: 270px;
 
 .header {
   position: fixed;
@@ -96,66 +97,12 @@ $header: 52px;
   &:hover {}
 }
 
-.layout-vertical {
-
-  .hex-bg {
-    position: fixed;
-    top: $header;
-    background-color: $seaBlue;
-    @include gradient-directional($seaBlue, $darkSeaBlue, -30deg);
-
-    .tiles {
-      /* opacity: 0.9; */
-    }
-  }
-
-  .fixed {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-  }
-
-  .content {
-    margin-top: $header;
-
-    .container {
-      margin-top: 10px;
-      padding-top: 36px;
-      padding-bottom: 36px;
-    }
-  }
-
-  .footer {
-    margin-top: 10px;
-    text-align: center;
-    color: $white;
-    font-family: $serif;
-
-    a {
-      color: $white;
-    }
-
-    ul {
-      list-style: none;
-      padding: 0;
-
-      li {
-        display: inline-block;
-        padding: 5px 10px;
-      }
-    }
-  }
-
-}
 
 .layout-fullscreen {
   height: 100%;
   width: 100%;
   position: relative;
 
-  $side: 270px;
 
   aside {
     z-index: 3;
@@ -163,15 +110,16 @@ $header: 52px;
     top: 0;
     bottom: 0;
     left: 0;
-    width: $side;
+    width: $aside;
     overflow-x: hidden;
     background-color: $white;
     @include shadow-medium;
+    transition: bezier(background-color);
 
     .logo {
       display: block;
       height: 52px;
-      width: $side;
+      width: $aside;
       background-color: #ddd;
 
       svg {
@@ -183,12 +131,73 @@ $header: 52px;
       }
     }
 
+    .menu {
+      /* margin-top: 16px; */
+    }
+
+    .menu-item {
+      a {
+        display: block;
+        padding: 10px 0 10px 18px;
+        line-height: 24px;
+        color: $darkGrey;
+        font-weight: bold;
+        transition: bezier(color), bezier(background-color);
+
+        i {
+          vertical-align: top;
+          font-size: 24px;
+          margin-right: 16px;
+          color: $grey;
+          transition: bezier(color);
+        }
+
+        &:hover {
+          background-color: #eee;
+        }
+
+        &:active, &:visited, &:focus {
+          text-decoration: none;
+          outline: none;
+        }
+      }
+
+      &.current {
+        a {
+          color: $seaBlue;
+          background-color: #f3f3f3;
+
+          i {
+            color: $seaBlue;
+          }
+        }
+      }
+    }
+
+    hr {
+      border-top: $border;
+      margin: 16px 0;
+    }
+
+    p {
+      margin: 16px;
+
+      a {
+        color: $mediumGrey;
+
+        &:hover {
+          color: $lightGrey;
+          background-color: lighten($charcoal, 4%);
+        }
+      }
+    }
+
   }
 
   .toolbar {
     position: absolute;
     height: 52px;
-    left: $side;
+    left: $aside;
     right: 0;
     display: flex;
     z-index: 2;
@@ -237,15 +246,128 @@ $header: 52px;
         color: $lightGrey;
       }
     }
-
   }
 
   main {
     position: absolute;
     top: $header;
-    left: $side;
+    left: $aside;
     bottom: 0;
-    background-color: $sand;
+    right: 0;
+    background-color: $seaBlue;
+    overflow-y: auto;
+
+    .container {
+      /* margin-top: 10px; */
+      padding-top: 36px;
+      padding-bottom: 36px;
+    }
   }
 }
 
+
+.layout-site {
+
+  main {
+    top: 0;
+
+    .hex-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      overflow: hidden;
+      background-color: $seaBlue;
+      @include gradient-directional($seaBlue, $darkSeaBlue, -30deg);
+    }
+
+    .scrollable {
+      overflow-y: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+
+
+    }
+  }
+  
+  aside {
+    background-color: $charcoal;
+
+    .logo {
+      background-color: darken($charcoal, 8%);
+
+      span {
+        color: $whiteSmoke;
+      }
+    }
+
+    .player {
+      background-color: darken($charcoal, 4%);
+      padding: 12px 16px;
+
+      .avatar {
+        width: 48px;
+        border-radius: 24px;
+        vertical-align: top;
+      }
+
+      .handle {
+        color: $white;
+        font-weight: bold;
+        font-size: 18px;
+        margin-left: 12px;
+        vertical-align: top;
+        line-height: 48px;
+        display: inline-block;
+      }
+
+      .logout {
+        float: right;
+        /* width: 54px; */
+        text-align: center;
+        color: $grey;
+        transition: bezier(color);
+
+        i {
+          line-height: 48px;
+        }
+
+        &:hover {
+          color: $mediumGrey;
+        }
+      }
+    }
+
+    .guest {
+      .player {
+        line-height: 54px;
+        padding: 0 16px;
+      }
+    }
+
+    .menu-item.current a {
+      background-color: lighten($charcoal, 8%);
+      color: $white;
+
+      i {
+        color: $white;
+      }
+    }
+
+    .menu-item a {
+      color: $mediumGrey;
+
+      &:hover {
+        background-color: lighten($charcoal, 4%);
+      }
+    }
+
+    hr {
+      border-color: lighten($charcoal, 8%);
+    }
+  }
+}

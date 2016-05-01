@@ -209,17 +209,21 @@ playerWithAvatar : Player -> Html
 playerWithAvatar player =
   span
     [ class "player-avatar" ]
-    [ img [ src (avatarUrl player), class "avatar" ] []
+    [ img [ src (avatarUrl 32 player), class "avatar" ] []
     , text " "
     , span [ class "handle" ] [ text (playerHandle player) ]
     ]
 
 
-avatarUrl : Player -> String
-avatarUrl p =
+avatarUrl : Int -> Player -> String
+avatarUrl size p =
   case p.avatarId of
     Just id ->
-      "http://www.gravatar.com/avatar/" ++ id ++ "?s=32&d=http://www.playtacks.com/assets/images/avatar-guest.png"
+      "http://www.gravatar.com/avatar/"
+        ++ id
+        ++ "?s="
+        ++ toString size
+        ++ "&d=http://www.playtacks.com/assets/images/avatar-guest.png"
 
     Nothing ->
       if p.user then

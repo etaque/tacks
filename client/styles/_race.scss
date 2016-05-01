@@ -21,10 +21,9 @@
 
   .race-card-header {
     padding: 12px 16px 8px 16px;
-    background-color: $darkGrey;
+    @include gradient-directional(lighten($charcoal, 8%), lighten($charcoal, 16%), -30deg);
 
     .track-name {
-      font-weight: bold;
       font-size: 16px;
       color: $whiteSmoke;
     }

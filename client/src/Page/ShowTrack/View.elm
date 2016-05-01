@@ -20,9 +20,10 @@ import Game.Render.SvgUtils exposing (..)
 
 view : Context -> Model -> Html
 view ctx model =
-  Layout.layoutWithNav
+  Layout.siteLayout
     "show-track"
     ctx
+    Nothing
     <| Maybe.withDefault
         [ text "" ]
         (Maybe.map (withLiveTrack model) model.liveTrack)

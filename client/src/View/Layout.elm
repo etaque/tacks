@@ -4,59 +4,17 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy
+import Markdown
 import View.HexBg as HexBg
 import View.Logo as Logo
 import View.Utils as Utils
-import Constants
 import Model exposing (appActionsAddress, Action(Logout))
 import Model.Shared exposing (Context, Player, isAdmin)
 import Route
 import TransitStyle
 import Page.Admin.Model as Admin
 import Page.Forum.Model as Forum
-
-
-layoutWithNav : String -> Context -> List Html -> Html
-layoutWithNav name ctx content =
-  let
-    transitStyle =
-      case ctx.routeTransition of
-        Route.ForMain ->
-          (TransitStyle.fade ctx.transition)
-
-        _ ->
-          []
-  in
-    div
-      [ class "layout-vertical"
-      , id name
-      ]
-      [ Html.Lazy.lazy HexBg.render ctx.dims
-      , header ctx.player []
-      , div
-          [ class "fixed"
-          ]
-          [ div [ class "content" ] content
-          , footer ctx.player
-          ]
-      ]
-
-
-header : Player -> List Html -> Html
-header player navContent =
-  let
-    menu =
-      if player.guest then
-        guestMenu
-      else
-        userMenu player
-
-    navBlock =
-      div [ class "page-nav" ] navContent
-  in
-    nav
-      [ class "header" ]
-      [ div [ class "container" ] (logo :: navBlock :: menu) ]
+import Constants
 
 
 logo : Html
@@ -67,31 +25,6 @@ logo =
     [ Logo.render
     , span [] [ text "Tacks" ]
     ]
-
-
-guestMenu : List Html
-guestMenu =
-  [ ul
-      [ class "user-menu" ]
-      [ li [] [ Utils.linkTo Route.Login [] [ text "login" ] ]
-      , li [] [ Utils.linkTo Route.Register [] [ text "register" ] ]
-      ]
-  ]
-
-
-userMenu : Player -> List Html
-userMenu player =
-  [ ul
-      [ class "user-menu"
-      ]
-      [ li
-          [ class "info" ]
-          [ text <| "[" ++ (Utils.playerHandle player) ++ "]" ]
-      , li
-          []
-          [ a [ onClick appActionsAddress Logout ] [ text "logout" ] ]
-      ]
-  ]
 
 
 section : String -> List Html -> Html
@@ -119,6 +52,45 @@ footer player =
     ]
 
 
+type Nav
+  = Home
+  | Explore
+  | Build
+  | Login
+  | Register
+
+
+siteLayout : String -> Context -> Maybe Nav -> List Html -> Html
+siteLayout name ctx maybeCurrentNav mainContent =
+  let
+    transitStyle =
+      case ctx.routeTransition of
+        Route.ForMain ->
+          (TransitStyle.fade ctx.transition)
+
+        _ ->
+          []
+
+    tiledBackground =
+      Html.Lazy.lazy HexBg.render ( fst ctx.dims - Constants.sidebarWidth, snd ctx.dims )
+  in
+    div
+      [ class "layout-fullscreen layout-site"
+      , id name
+      ]
+      [ aside
+          [ class "dark" ]
+          (logo :: (sideMenu ctx.player maybeCurrentNav))
+      , main'
+          []
+          [ tiledBackground
+          , div
+              [ class "scrollable", style transitStyle ]
+              mainContent
+          ]
+      ]
+
+
 layoutWithSidebar : String -> Context -> List Html -> List Html -> List Html -> Html
 layoutWithSidebar name ctx navContent sideContent mainContent =
   div
@@ -126,14 +98,11 @@ layoutWithSidebar name ctx navContent sideContent mainContent =
     , id name
     ]
     [ aside
-        [ style [ ( "width", toString Constants.sidebarWidth ++ "px" ) ] ]
+        []
         (logo :: sideContent)
-    , if List.isEmpty navContent then
-        text ""
-      else
-        subHeader
-          ctx.player
-          navContent
+    , subHeader
+        ctx.player
+        navContent
     , main' [] mainContent
     ]
 
@@ -143,3 +112,66 @@ subHeader player content =
   nav
     [ class "toolbar" ]
     content
+
+
+sideMenu : Player -> Maybe Nav -> List Html
+sideMenu player maybeCurrent =
+  [ if player.guest then
+      div
+        [ class "guest" ]
+        [ div
+            [ class "player" ]
+            [ text "Guest session" ]
+        , div
+            [ class "menu" ]
+            [ sideMenuItem Route.Login "face" "Login" (maybeCurrent == Just Login)
+            , sideMenuItem Route.Register "person_add" "Register" (maybeCurrent == Just Register)
+            ]
+        , hr [] []
+        ]
+    else
+      div
+        [ class "player" ]
+        [ img [ src (Utils.avatarUrl 48 player), class "avatar" ] []
+        , span [ class "handle" ] [ text (Utils.playerHandle player) ]
+        , a
+            [ class "logout"
+            , title "Logout"
+            , onClick appActionsAddress Logout
+            ]
+            [ Utils.mIcon "exit_to_app" [] ]
+        ]
+  , div
+      [ class "menu" ]
+      [ sideMenuItem Route.Home "home" "Home" (maybeCurrent == Just Home)
+      , sideMenuItem Route.Home "explore" "Explore tracks" (maybeCurrent == Just Explore)
+      , sideMenuItem Route.ListDrafts "palette" "Build tracks" (maybeCurrent == Just Build)
+      ]
+  , hr [] []
+  , div
+      [ class "made-by" ]
+      [ Markdown.toHtml """
+An [open source](http://github.com/etaque/tacks) game crafted with love
+by [@etaque](http://twitter.com/etaque).
+
+Written with [elm-lang](http://elm-lang.org).
+        """
+      ]
+  ]
+
+
+sideMenuItem : Route.Route -> String -> String -> Bool -> Html
+sideMenuItem route icon label current =
+  div
+    [ classList
+        [ ( "menu-item", True )
+        , ( "current", current )
+        ]
+    ]
+    [ Utils.linkTo
+        route
+        []
+        [ Utils.mIcon icon []
+        , text label
+        ]
+    ]
