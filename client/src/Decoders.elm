@@ -63,13 +63,14 @@ playerTallyDecoder =
 
 trackDecoder : Decoder Track
 trackDecoder =
-  object7
+  object8
     Track
     ("id" := string)
     ("name" := string)
     ("creatorId" := string)
     ("course" := courseDecoder)
     ("status" := string `andThen` trackStatusDecoder)
+    ("featured" := bool)
     ("creationTime" := float)
     ("updateTime" := float)
 

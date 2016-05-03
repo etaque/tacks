@@ -14,7 +14,7 @@ GET         /api/live/reports                                  controllers.Live.
 GET         /api/live/:id                                      controllers.Live.track(id: java.util.UUID)
 GET         /api/live/:id/reports                              controllers.Live.trackRaceReports(id: java.util.UUID, minPlayers : Option[Int])
 
-GET         /api/tracks/drafts                                 controllers.Tracks.drafts()
+GET         /api/tracks/user                                   controllers.Tracks.forUser()
 GET         /api/tracks/:id                                    controllers.Tracks.show(id: java.util.UUID)
 POST        /api/tracks                                        controllers.Tracks.createDraft()
 POST        /api/tracks/:id                                    controllers.Tracks.update(id: java.util.UUID)

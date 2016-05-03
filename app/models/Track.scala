@@ -10,6 +10,7 @@ case class Track(
   creatorId: UUID,
   course: Course,
   status: TrackStatus.Value,
+  featured: Boolean,
   creationTime: DateTime,
   updateTime: DateTime
 ) {

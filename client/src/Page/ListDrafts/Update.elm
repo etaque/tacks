@@ -93,7 +93,7 @@ update action model =
 
 loadDrafts : Task Never Action
 loadDrafts =
-  ServerApi.getDrafts
+  ServerApi.getUserTracks
     |> Task.map ListResult
 
 

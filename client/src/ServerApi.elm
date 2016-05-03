@@ -49,9 +49,9 @@ getLiveTrack id =
   getJson liveTrackDecoder ("/api/live/" ++ id)
 
 
-getDrafts : GetJsonTask (List Track)
-getDrafts =
-  getJson (Json.list trackDecoder) "/api/tracks/drafts"
+getUserTracks : GetJsonTask (List Track)
+getUserTracks =
+  getJson (Json.list trackDecoder) "/api/tracks/user"
 
 
 

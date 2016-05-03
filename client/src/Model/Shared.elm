@@ -88,6 +88,7 @@ type alias Track =
   , creatorId : String
   , course : Course
   , status : TrackStatus
+  , featured : Bool
   , creationTime : Time
   , updateTime : Time
   }
@@ -109,6 +110,16 @@ type TrackStatus
   | Open
   | Archived
   | Deleted
+
+
+trackStatusLabel : TrackStatus -> String
+trackStatusLabel status =
+  case status of
+    Open ->
+      "Published"
+    _ ->
+      toString status
+
 
 
 type alias Race =

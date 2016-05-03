@@ -86,11 +86,15 @@ setHandleBlock handle =
 
 liveTracks : Player -> LiveStatus -> Maybe TrackId -> Html
 liveTracks player { liveTracks } maybeTrackId =
-  div
-    [ class "live-tracks" ]
-    [ h2 [] [ text "Sailing tracks" ]
-    , div [ class "row" ] (List.map (liveTrackBlock maybeTrackId) liveTracks)
-    ]
+  let
+    featuredTracks =
+      List.filter (.track >> .featured) liveTracks
+  in
+    div
+      [ class "live-tracks" ]
+      [ h2 [] [ text "Featured tracks" ]
+      , div [ class "row" ] (List.map (liveTrackBlock maybeTrackId) featuredTracks)
+      ]
 
 
 liveTrackBlock : Maybe TrackId -> LiveTrack -> Html

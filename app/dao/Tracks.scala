@@ -26,10 +26,11 @@ class TrackTable(tag: Tag) extends Table[Track](tag, "tracks") {
   def creatorId = column[UUID]("creator_id")
   def course = column[Course]("course")
   def status = column[TrackStatus.Status]("status")
+  def featured = column[Boolean]("featured")
   def creationTime = column[DateTime]("creation_time")
   def updateTime = column[DateTime]("update_time")
 
-  def * = (id, name, creatorId, course, status, creationTime, updateTime) <> (Track.tupled, Track.unapply)
+  def * = (id, name, creatorId, course, status, featured, creationTime, updateTime) <> (Track.tupled, Track.unapply)
 }
 
 object Tracks extends TableQuery(new TrackTable(_)) {

@@ -19,6 +19,7 @@ $darkerSeaBlue: little-desat-dark($darkSeaBlue);
 $sand: rgb(242, 243, 196);
 
 $mainBlue: saturate(lighten($seaBlue, 15%), 10%);
+$lightMainBlue: lighten($mainBlue, 20%);
 
 $altBlue: #769FB6;
 
@@ -52,6 +53,7 @@ $whiteRed: #f2dede;
 
 $green: rgb(139, 195, 74);
 $darkGreen: rgb(104, 159, 56);
+$lightGreen: lighten($green, 30%);
 /* $green: #42c49b; */
 /* $darkGreen: darken($green, 10%); */
 

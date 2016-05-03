@@ -78,6 +78,7 @@
         background-color: $lightGrey;
         color: white;
         border-radius: $r / 2;
+        transition: bezier(background-color);
       }
     }
 
@@ -99,6 +100,21 @@
       }
     }
 
+    .status {
+      i {
+        vertical-align: top;
+        line-height: $h;
+        color: $mediumGrey;
+      }
+
+      span {
+        vertical-align: top;
+        display: inline-block;
+        line-height: $h;
+        margin-left: 4px;
+      }
+    }
+
     .toggle {
       width: $h;
       text-align: center;
@@ -109,11 +125,8 @@
     }
 
     &:hover {
-      .name {
-        color: $seaBlue;
-      }
-      .toggle {
-        color: $seaBlue;
+      .icon i {
+        background-color: lighten($mainBlue, 25%);
       }
     }
 
@@ -126,7 +139,7 @@
 
   .tracks-item + .tracks-item,
   .tracks-edit + .tracks-item {
-    .desc, .toggle {
+    > :not(.icon) {
       border-top: $border;
     }
   }

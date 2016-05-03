@@ -35,9 +35,9 @@ object Tracks extends Controller with Security {
     }
   }
 
-  def drafts = PlayerAction.async() { implicit request =>
+  def forUser = PlayerAction.async() { implicit request =>
     dao.Tracks.listByCreatorId(request.player.id).map { tracks =>
-      Ok(Json.toJson(tracks.filter(_.isDraft)))
+      Ok(Json.toJson(tracks))
     }
   }
 
@@ -51,6 +51,7 @@ object Tracks extends Controller with Security {
         creatorId = user.id,
         course = Course.spawn,
         status = TrackStatus.draft,
+        featured = false,
         creationTime = DateTime.now,
         updateTime = DateTime.now
       )

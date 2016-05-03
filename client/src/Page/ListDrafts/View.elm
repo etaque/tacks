@@ -23,7 +23,7 @@ view ctx ({ tracks } as model) =
     [ Layout.header
         ctx
         []
-        [ h1 [] [ text "Tracks editor" ]
+        [ h1 [] [ text "Your tracks" ]
         , div
             [ class "btn-floating btn-positive btn-new-track"
             , onClick addr ToggleCreationForm
@@ -54,7 +54,11 @@ draftItem model track =
       (Just track.id == model.selectedTrack)
   in
     [ div
-        [ classList [ ( "tracks-item", True ), ( "selected", isSelected ) ]
+        [ classList
+            [ ( "tracks-item", True )
+            , ( toString track.status |> String.toLower, True )
+            , ( "selected", isSelected )
+            ]
         , if isSelected then
             onClick addr (Select Nothing)
           else
@@ -79,6 +83,18 @@ draftItem model track =
                     )
                 ]
             ]
+        , case track.status of
+            Open ->
+              div
+                [ class "status" ]
+                [ Utils.mIcon "check" []
+                , span
+                    []
+                    [ text (trackStatusLabel track.status) ]
+                ]
+
+            _ ->
+              text ""
         , div
             [ class "toggle" ]
             [ if isSelected then
@@ -89,30 +105,49 @@ draftItem model track =
         ]
     , div
         [ classList [ ( "tracks-edit", True ), ( "selected", isSelected ) ] ]
-        [ if model.confirmPublish then
-            confirmPublish track
-          else if model.confirmDelete then
-            confirmDelete track
-          else
-            div
-              [ class "actions" ]
-              [ Utils.linkTo
-                  (Route.EditTrack track.id)
-                  [ class "btn-raised btn-primary" ]
-                  [ text " Open" ]
-              , button
-                  [ class "btn-flat"
-                  , Utils.onButtonClick addr (ConfirmPublish True)
-                  ]
-                  [ text "Publish" ]
-              , button
-                  [ class "btn-flat btn-danger pull-right"
-                  , Utils.onButtonClick addr (ConfirmDelete True)
-                  ]
-                  [ text "Delete" ]
-              ]
+        [ case track.status of
+            Draft ->
+              draftActions model track
+
+            Open ->
+              div
+                [ class "actions" ]
+                [ Utils.linkTo
+                    (Route.PlayTrack track.id)
+                    [ class "btn-raised btn-primary" ]
+                    [ text "Visit" ]
+                ]
+
+            _ ->
+              text ""
         ]
     ]
+
+
+draftActions : Model -> Track -> Html
+draftActions model track =
+  if model.confirmPublish then
+    confirmPublish track
+  else if model.confirmDelete then
+    confirmDelete track
+  else
+    div
+      [ class "actions" ]
+      [ Utils.linkTo
+          (Route.EditTrack track.id)
+          [ class "btn-raised btn-primary" ]
+          [ text "Open" ]
+      , button
+          [ class "btn-flat"
+          , Utils.onButtonClick addr (ConfirmPublish True)
+          ]
+          [ text "Publish" ]
+      , button
+          [ class "btn-flat btn-danger pull-right"
+          , Utils.onButtonClick addr (ConfirmDelete True)
+          ]
+          [ text "Delete" ]
+      ]
 
 
 confirmPublish : Track -> Html
@@ -129,7 +164,7 @@ confirmPublish track =
         , Utils.onButtonClick addr (ConfirmPublish False)
         ]
         [ text "Cancel" ]
-        , span [] [ text "Track will be frozen, no changes allowed anymore!"]
+    , span [] [ text "Track will be frozen, no changes allowed anymore!" ]
     ]
 
 
