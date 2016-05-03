@@ -42,7 +42,9 @@ p {
 }
 
 section.blue {
+  background-color: $mainBlue;
   color: $white;
+  /* @include gradient-directional($seaBlue, $mainBlue, 30deg); */
 
   h1, h2, h3, h4, h5 {
     color: $white;
@@ -55,8 +57,41 @@ section.blue {
 }
 
 section.white {
-  background-color: #fafafa;
-  @include shadow-light;
+  background-color: #eee;
+}
+
+section.grey {
+  background-color: $lightGrey;
+  @include shadow-inset-light;
+}
+
+header {
+  height: 140px;
+  background-color: $seaBlue;
+  color: white;
+
+  .hex-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+  }
+  .container {
+    position: relative;
+    height: 140px;
+
+    h1 {
+      color: white;
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+    }
+  }
+
 }
 
 .sheet {
@@ -149,12 +184,21 @@ hr {
   text-transform: uppercase;
   text-align: center;
   font-weight: bold;
-  @include bezier(background-color);
+  transition: bezier(background-color), bezier(color);
   border: none;
   background-color: transparent;
+  cursor: pointer;
 
   &:hover {
     background-color: $whiteSeaBlue;
+  }
+
+  &[disabled] {
+    color: $mediumGrey;
+
+    &:hover {
+      background-color: inherit !important;
+    }
   }
 
   &.condensed {
@@ -173,6 +217,16 @@ hr {
   }
 }
 
+.btn-flat {
+  &.btn-danger {
+    color: $red;
+
+    &:hover {
+      background-color: lighten($red, 52%);
+    }
+  }
+}
+
 
 .btn-raised {
   @include bezier(background-color);
@@ -183,6 +237,11 @@ hr {
     color: $white;
   }
 
+  &.btn-danger {
+    background-color: $red;
+    color: $white;
+  }
+
   &.btn-white {
     background-color: $white;
     color: $mainBlue;
@@ -190,6 +249,7 @@ hr {
     &:active {
       background-color: $lightGrey;
     }
+
   }
 
   & + .btn-flat {
@@ -198,6 +258,10 @@ hr {
 
   &.btn-raised {
     @include shadow-light;
+
+    &:hover {
+      @include shadow-medium;
+    }
   }
 }
 

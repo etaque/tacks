@@ -63,13 +63,15 @@ playerTallyDecoder =
 
 trackDecoder : Decoder Track
 trackDecoder =
-  object5
+  object7
     Track
     ("id" := string)
     ("name" := string)
     ("creatorId" := string)
     ("course" := courseDecoder)
     ("status" := string `andThen` trackStatusDecoder)
+    ("creationTime" := float)
+    ("updateTime" := float)
 
 
 trackStatusDecoder : String -> Decoder TrackStatus
@@ -261,6 +263,7 @@ runDecoder =
     ("startTime" := float)
     ("tally" := list float)
     ("duration" := float)
+
 
 raceReportDecoder : Decoder RaceReport
 raceReportDecoder =

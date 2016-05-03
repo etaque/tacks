@@ -58,8 +58,8 @@
   background-image: linear-gradient($deg, $start-color, $end-color); // Standard, IE10, Firefox 16+, Opera 12.10+, Safari 7+, Chrome 26+
 }
 
-@function bezier($target) {
-  @return $target 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+@function bezier($target, $duration: 0.28s) {
+  @return $target $duration cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @mixin bezier($target) {
@@ -99,6 +99,10 @@
 
 @mixin shadow-inset-light {
   box-shadow: inset 0px 1px 2px $shadow;
+}
+
+@mixin shadow-inset-medium {
+  box-shadow: inset 0px 1px 8px rgba(0, 0, 0, 0.23);
 }
 
 @mixin panel {

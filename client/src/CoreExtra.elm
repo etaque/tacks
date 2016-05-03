@@ -4,6 +4,11 @@ import Maybe
 import Array
 
 
+find : (a -> Bool) -> List a -> Maybe a
+find f items =
+  List.filter f items |> List.head
+
+
 isNothing : Maybe a -> Bool
 isNothing m =
   case m of

@@ -7,8 +7,12 @@ sidebarWidth =
   270
 
 
-headerHeight =
+toolbarHeight =
   52
+
+
+headerHeight =
+  140
 
 
 containerWidth =

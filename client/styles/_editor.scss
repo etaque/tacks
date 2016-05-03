@@ -19,6 +19,27 @@
   .toolbar {
     @include no-select;
 
+    .edit-name {
+      flex: 1;
+      height: 36px;
+      margin: 8px;
+      margin-right: 0;
+      padding: 8px;
+      font-size: 21px;
+      background-color: transparent;
+      color: #ddd;
+      border: none;
+      outline: none;
+
+      &:hover {
+        background-color: lighten($charcoal, 4%);
+      }
+
+      &:focus {
+        background-color: lighten($charcoal, 8%);
+      }
+    }
+
     .surface-modes {
       padding: 8px;
 

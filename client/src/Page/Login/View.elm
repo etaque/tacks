@@ -16,8 +16,9 @@ view ctx model =
     "login"
     ctx
     (Just Layout.Login)
-    [ Layout.section
-        "blue"
+    [ Layout.header
+        ""
+        ctx
         [ h1 [] [ text "Login" ]
         , div [ class "panel" ] [ loginForm model ]
         ]
@@ -50,7 +51,7 @@ loginForm { email, password, loading, error } =
     , div
         []
         [ button
-            [ class "btn btn-block btn-primary"
+            [ class "btn-raised btn-block btn-primary"
             , disabled loading
             , onClick addr Submit
             ]

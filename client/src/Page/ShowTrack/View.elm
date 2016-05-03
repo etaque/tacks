@@ -32,11 +32,11 @@ view ctx model =
 withLiveTrack : Model -> LiveTrack -> List Html
 withLiveTrack model ({ track, meta, players } as liveTrack) =
   [ Layout.section
-      "blue"
+      [ class "blue" ]
       [ header liveTrack
       ]
   , Layout.section
-      "white"
+      [ class "white" ]
       [ row
           [ div [ class "col-md-8" ] [ courseBlock model.courseControl track.course ]
           , div
@@ -53,7 +53,7 @@ withLiveTrack model ({ track, meta, players } as liveTrack) =
           ]
       ]
   , Layout.section
-      "blue"
+      [ class "blue" ]
       [ h1 [ class "align-center" ] [ text "Recent races" ]
       , Race.reports False model.raceReports
       ]

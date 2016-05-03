@@ -1,31 +1,44 @@
-module Page.ListDrafts.Model where
+module Page.ListDrafts.Model (..) where
 
+import CoreExtra
 import Model.Shared exposing (..)
-import ServerApi
 
 
 type alias Model =
-  { drafts : List Track
+  { tracks : List Track
+  , showCreationForm : Bool
   , name : String
-  , confirmDelete : Maybe Track
+  , selectedTrack : Maybe String
+  , confirmDelete : Maybe String
   , confirmPublish : Maybe Track
   }
 
+
 initial : Model
 initial =
-  { drafts = []
+  { tracks = []
+  , showCreationForm = False
   , name = ""
+  , selectedTrack = Nothing
   , confirmDelete = Nothing
   , confirmPublish = Nothing
   }
 
+
 type Action
   = DraftsResult (Result () (List Track))
   | SetDraftName String
+  | SelectTrack (Maybe String)
+  | ToggleCreationForm
   | CreateDraft
   | CreateDraftResult (FormResult Track)
-  | ConfirmDeleteDraft Track
+  | ConfirmDeleteDraft String
   | DeleteDraft String
   | DeleteDraftResult (FormResult String)
   | NoOp
 
+
+getSelectedTrack : Model -> Maybe Track
+getSelectedTrack { tracks, selectedTrack } =
+  selectedTrack
+    `Maybe.andThen` (\id -> CoreExtra.find (\t -> t.id == id) tracks)

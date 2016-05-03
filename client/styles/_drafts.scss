@@ -1,51 +1,149 @@
 @import 'colors';
 @import 'fonts';
+@import 'mixins';
 
-.list-drafts {
-  ul.drafts {
-    border: 1px solid $lightGrey;
-    border-radius: 3px;
-    background-color: $white;
+#list-drafts {
 
-    li {
-      clear: both;
-      border-bottom: 1px solid $lightGrey;
+  .container {
+    max-width: 750px;
+  }
 
-      .delete-draft {
-        display: none;
-        margin-right: 5px;
-      }
+  .empty-notice {
+    @include sheet;
+    @include shadow-light;
+    padding: 16px;
+  }
 
-      &.confirm-delete {
-        .delete-draft {
-          display: block;
-        }
-      }
+  .manage-tracks .container {
+    position: relative;
+  }
 
-      &:last-child {
-        border-bottom: none;
-      }
+  .btn-new-track {
+    position: absolute;
+    bottom: -28px;
+    left: -80px;
+  }
+
+  .new-track {
+    height: 0;
+    overflow-y: hidden;
+    transition: height 0.2s ease-in-out;
+
+    &.show {
+      height: 108px;
     }
 
-    a {
-      display: inline-block;
-      padding: 10px 10px 8px 10px;
-      font-size: 19px;
-      font-weight: bold;
-      font-family: $serif;
-      transition: background .2s ease-in;
-      
-      &:hover {
-        /* background-color: $lightSeaBlue; */
-        /* color: $white; */
-      }
+    .form-group {
+      padding-top: 0;
+      margin-right: 16px;
     }
 
-    button {
-      margin-top: 8px;
-      margin-right: 8px;
+    .form-control {
+      font-size: 16px;
+      border-color: #ccc;
+
+      &:focus {
+        border-color: $mainBlue;
+      }
     }
   }
+
+  .tracks-list {
+    @include sheet;
+    @include shadow-light;
+  }
+
+  .tracks-item {
+    $h: 72px;
+
+    display: flex;
+    cursor: pointer;
+    height: $h;
+
+    & > * {
+      vertical-align: top;
+    }
+
+    .icon {
+      $r: 42px;
+
+      width: $h;
+      padding: ($h - $r)/2;
+
+      i {
+        font-size: 24px;
+        width: $r;
+        line-height: $r;
+        text-align: center;
+        background-color: $lightGrey;
+        color: white;
+        border-radius: $r / 2;
+      }
+    }
+
+    .desc {
+      flex: 1;
+      padding: 16px 0;
+      /* line-height: $h; */
+
+      .name {
+        line-height: 20px;
+        font-size: 16px;
+        font-weight: bold;
+        color: $darkGrey;
+      }
+
+      .date {
+        line-height: 20px;
+        
+      }
+    }
+
+    .toggle {
+      width: $h;
+      text-align: center;
+
+      i {
+        line-height: $h;
+      }
+    }
+
+    &:hover {
+      .name {
+        color: $seaBlue;
+      }
+      .toggle {
+        color: $seaBlue;
+      }
+    }
+
+    &.selected {
+      .name {
+        /* color: $seaBlue; */
+      }
+    }
+  }
+
+  .tracks-item + .tracks-item,
+  .tracks-edit + .tracks-item {
+    .desc, .toggle {
+      border-top: $border;
+    }
+  }
+
+  .tracks-edit {
+    margin: 0 16px 16px 74px;
+    display: none;
+
+    &.selected {
+      display: block;
+    }
+
+    .form-control {
+      width: 140px;
+    }
+  }
+
 
   .form-new-draft {
     margin-top: 30px;

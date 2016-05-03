@@ -27,9 +27,27 @@ logo =
     ]
 
 
-section : String -> List Html -> Html
-section class' content =
-  Html.section [ class class' ] [ div [ class "container" ] content ]
+section : List Attribute -> List Html -> Html
+section attrs content =
+  Html.section
+    attrs
+    [ div [ class "container" ] content
+    ]
+
+
+header : Context -> List Attribute -> List Html -> Html
+header ctx attrs content =
+  let
+    tiledBackground =
+      Html.Lazy.lazy HexBg.render ( fst ctx.dims - Constants.sidebarWidth, Constants.headerHeight )
+  in
+    Html.header
+      attrs
+      [ tiledBackground
+      , div
+          [ class "container" ]
+          content
+      ]
 
 
 footer : Player -> Html
@@ -83,8 +101,7 @@ siteLayout name ctx maybeCurrentNav mainContent =
           (logo :: (sideMenu ctx.player maybeCurrentNav))
       , main'
           []
-          [ tiledBackground
-          , div
+          [ div
               [ class "scrollable", style transitStyle ]
               mainContent
           ]
@@ -132,7 +149,7 @@ sideMenu player maybeCurrent =
     else
       div
         [ class "player" ]
-        [ img [ src (Utils.avatarUrl 48 player), class "avatar" ] []
+        [ img [ src (Utils.avatarUrl 42 player), class "avatar" ] []
         , span [ class "handle" ] [ text (Utils.playerHandle player) ]
         , a
             [ class "logout"

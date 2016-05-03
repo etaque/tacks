@@ -128,4 +128,4 @@ modeName mode =
 
 getCourseDims : Dims -> Dims
 getCourseDims ( w, h ) =
-  ( w - Constants.sidebarWidth, h - Constants.headerHeight )
+  ( w - Constants.sidebarWidth, h - Constants.toolbarHeight )

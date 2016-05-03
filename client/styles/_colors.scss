@@ -50,8 +50,10 @@ $red: #CC1426;
 $lightRed: #FF5640;
 $whiteRed: #f2dede;
 
-$green: #42c49b;
-$darkGreen: darken($green, 10%);
+$green: rgb(139, 195, 74);
+$darkGreen: rgb(104, 159, 56);
+/* $green: #42c49b; */
+/* $darkGreen: darken($green, 10%); */
 
 $white: white;
 

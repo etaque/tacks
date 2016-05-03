@@ -2,6 +2,20 @@
 @import 'fonts';
 @import 'mixins';
 
+#home {
+
+  header {
+    h1 {
+      bottom: 48px;
+    }
+    .subtitle {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+    }
+  }
+}
+
 .form-set-handle {
   margin-top: 20px;
   margin-bottom: 20px;

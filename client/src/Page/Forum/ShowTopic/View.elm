@@ -21,7 +21,7 @@ view addr model =
   case model.currentTopic of
     Nothing ->
       [ Layout.section
-          "blue"
+          [ class "blue" ]
           [ back
           , h1 [] [ text "Loading topic..." ]
           ]
@@ -29,12 +29,12 @@ view addr model =
 
     Just { topic, postsWithUsers } ->
       [ Layout.section
-          "blue"
+          [ class "blue" ]
           [ back
           , h1 [] [ text topic.title ]
           ]
       , Layout.section
-          "white"
+          [ class "white" ]
           [ div
               [ class "forum-topic-posts" ]
               (List.map renderPost postsWithUsers)

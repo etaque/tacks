@@ -37,7 +37,13 @@ toolbar track editor =
           , title "Back to drafts list"
           ]
           [ Utils.mIcon "arrow_back" [] ]
-      , h2 [] [ text track.name ]
+      , input
+          [ type' "text"
+          , class "edit-name"
+          , value editor.name
+          , Utils.onInput addr SetName
+          ]
+          []
       ]
   , surfaceBlock editor
   , div [ class "toolbar-right" ] []

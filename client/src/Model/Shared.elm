@@ -88,6 +88,8 @@ type alias Track =
   , creatorId : String
   , course : Course
   , status : TrackStatus
+  , creationTime : Time
+  , updateTime : Time
   }
 
 

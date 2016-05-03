@@ -2,7 +2,7 @@ module Page.EditTrack.GridUpdate (..) where
 
 import Drag exposing (mouseEvents, MouseEvent(..))
 import Dict
-import Constants exposing (sidebarWidth, headerHeight, hexRadius)
+import Constants exposing (sidebarWidth, toolbarHeight, hexRadius)
 import Model.Shared exposing (..)
 import CoreExtra exposing (..)
 import Page.EditTrack.Model exposing (..)
@@ -103,7 +103,7 @@ clickPoint { center } courseDims ( x, y ) =
         toFloat (x - sidebarWidth) - cx - toFloat w / 2
 
       y' =
-        toFloat -(y - headerHeight) - cy + toFloat h / 2
+        toFloat -(y - toolbarHeight) - cy + toFloat h / 2
     in
       Just ( x', y' )
   else
@@ -140,6 +140,6 @@ withinWindow ( w, h ) ( x, y ) =
       ( sidebarWidth, w + sidebarWidth )
 
     yWindow =
-      ( headerHeight, y + headerHeight )
+      ( toolbarHeight, y + toolbarHeight )
   in
     within xWindow x && within yWindow y

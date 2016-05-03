@@ -30,16 +30,16 @@ view ctx model =
     "home"
     ctx
     (Just Layout.Home)
-    [ Layout.section
-        "blue"
+    [ Layout.header
+        ctx
+        []
         [ h1 [] [ text "Sailing tactics from the sofa" ]
         , p
             [ class "subtitle" ]
-            [ text "Tracks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
-        , welcomeForm ctx.player model.handle
+            [ text "Tacks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
         ]
     , Layout.section
-        "white"
+        [ class "white" ]
         [ div
             [ class "row live-center" ]
             [ div [ class "col-md-9" ] [ liveTracks ctx.player model.liveStatus model.trackFocus ]
@@ -47,7 +47,7 @@ view ctx model =
             ]
         ]
     , Layout.section
-        "blue"
+        [ class "grey" ]
         [ h2 [] [ text "Recent races" ]
         , Race.reports True model.raceReports
         ]

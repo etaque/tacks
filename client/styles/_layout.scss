@@ -208,6 +208,11 @@ $aside: 270px;
       flex: 1;
     }
 
+    .toolbar-left {
+      display: flex;
+      flex-direction: row;
+    }
+
     .toolbar-center {
       text-align: center;
       white-space: nowrap;
@@ -257,8 +262,7 @@ $aside: 270px;
     background-color: $seaBlue;
     overflow-y: auto;
 
-    .container {
-      /* margin-top: 10px; */
+    section .container {
       padding-top: 36px;
       padding-bottom: 36px;
     }
@@ -270,20 +274,23 @@ $aside: 270px;
 
   main {
     top: 0;
+    background-color: #eee;
 
-    .hex-bg {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      overflow: hidden;
-      background-color: $seaBlue;
-      @include gradient-directional($seaBlue, $darkSeaBlue, -30deg);
-    }
+    /* .hex-bg { */
+    /*   position: absolute; */
+    /*   top: 0; */
+    /*   left: 0; */
+    /*   right: 0; */
+    /*   bottom: 0; */
+    /*   overflow: hidden; */
+    /*   background-color: $seaBlue; */
+    /*   @include gradient-directional($seaBlue, $darkSeaBlue, -30deg); */
+    /*   display: none; */
+    /* } */
 
     .scrollable {
       overflow-y: auto;
+      overflow-x: hidden;
       position: absolute;
       top: 0;
       left: 0;
@@ -307,10 +314,10 @@ $aside: 270px;
 
     .player {
       background-color: darken($charcoal, 4%);
-      padding: 12px 16px;
+      padding: 16px 12px 16px 16px;
 
       .avatar {
-        width: 48px;
+        width: 42px;
         border-radius: 24px;
         vertical-align: top;
       }
@@ -321,19 +328,19 @@ $aside: 270px;
         font-size: 18px;
         margin-left: 12px;
         vertical-align: top;
-        line-height: 48px;
+        line-height: 42px;
         display: inline-block;
       }
 
       .logout {
         float: right;
-        /* width: 54px; */
+        width: 42px;
         text-align: center;
         color: $grey;
         transition: bezier(color);
 
         i {
-          line-height: 48px;
+          line-height: 42px;
         }
 
         &:hover {

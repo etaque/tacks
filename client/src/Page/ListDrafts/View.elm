@@ -3,78 +3,127 @@ module Page.ListDrafts.View (..) where
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Maybe
+import Date
+import Date.Format as DateFormat
 import String
 import Model.Shared exposing (..)
-import Route exposing (..)
+import Route
 import Page.ListDrafts.Model exposing (..)
 import Page.ListDrafts.Update exposing (addr)
-import Page.ShowTrack.View as ShowTrack
-import View.Utils exposing (..)
+import View.Utils as Utils
 import View.Layout as Layout
 
 
 view : Context -> Model -> Html
-view ctx ({ drafts } as model) =
+view ctx ({ tracks } as model) =
   Layout.siteLayout
     "list-drafts"
     ctx
     (Just Layout.Build)
-    [ Layout.section
-        "blue"
+    [ Layout.header
+        ctx
+        []
         [ h1 [] [ text "Tracks editor" ]
+        , div
+            [ class "btn-floating btn-positive btn-new-track"
+            , onClick addr ToggleCreationForm
+            ]
+            [ Utils.mIcon "add" [] ]
         ]
     , Layout.section
-        "white"
-        [ div
-            [ class "row drafts" ]
-            (List.map (\t -> draftItem (Just t == model.confirmDelete) t) drafts)
-        , createTrackForm model
+        [ classList [ ( "grey new-track", True ), ( "show", model.showCreationForm ) ] ]
+        [ createTrackForm model ]
+    , Layout.section
+        [ class "white manage-tracks" ]
+        [ if List.isEmpty tracks then
+            div
+            [ class "empty-notice"]
+            [ text "No track built yet!"]
+          else
+            div
+              [ class "tracks-list" ]
+              (List.concatMap (draftItem model) tracks)
         ]
     ]
 
 
+draftItem : Model -> Track -> List Html
+draftItem model track =
+  let
+    isSelected =
+      (Just track.id == model.selectedTrack)
 
--- confirmDelete : Track -> Html
--- confirmDelete track =
---   div [ class "alert alert-danger" ]
---   [ text <| "Confirm deletion of track \"" ++ track.name ++ "\"?"
---   , button [ class "btn btn-danger btn-xs pull-right" ] [ text "Yes" ]
---   ]
-
-
-draftItem : Bool -> Track -> Html
-draftItem confirmDelete draft =
-  div
-    [ class "col-md-4" ]
+    confirmDelete =
+      (Just track.id == model.confirmDelete)
+  in
     [ div
-        ([ classList
-            [ ( "live-track", True )
-            , ( "confirm-delete", confirmDelete )
-            ]
-         ]
-          ++ (linkAttrs (EditTrack draft.id))
-        )
+        [ classList [ ( "tracks-item", True ), ( "selected", isSelected ) ]
+        , if isSelected then
+            onClick addr (SelectTrack Nothing)
+          else
+            onClick addr (SelectTrack (Just track.id))
+        ]
         [ div
-            [ class "live-track-header" ]
-            [ h3
+            [ class "icon" ]
+            [ Utils.mIcon "palette" [] ]
+        , div
+            [ class "desc" ]
+            [ div
                 [ class "name" ]
-                [ text draft.name ]
+                [ text track.name
+                ]
+            , div
+                [ class "date" ]
+                [ text
+                    ((DateFormat.format
+                        "%e %b. %k:%M"
+                        (Date.fromTime track.updateTime)
+                     )
+                    )
+                ]
             ]
         , div
-            [ class "live-track-body" ]
-            []
-        , div
-            [ class "live-track-actions" ]
-            [ button
-                [ class "btn-flat"
-                , onButtonClick addr (ConfirmDeleteDraft draft)
-                  -- , disabled confirmDelete
-                ]
-                [ text "Delete" ]
+            [ class "toggle" ]
+            [ if isSelected then
+                Utils.mIcon "expand_less" []
+              else
+                Utils.mIcon "expand_more" []
+            ]
+        ]
+    , div
+        [ classList [ ( "tracks-edit", True ), ( "selected", isSelected ) ] ]
+        [ div
+            [ class "actions" ]
+            [ Utils.linkTo
+                (Route.EditTrack track.id)
+                [ class "btn-raised btn-primary" ]
+                [ text " Open" ]
             , button
-                [ class "btn-flat", onButtonClick addr (DeleteDraft draft.id) ]
-                [ text "Confirm?" ]
+                [ class "btn-flat"
+                  -- , Utils.onButtonClick addr (SetEditingName True)
+                ]
+                [ text "Publish" ]
+            , if confirmDelete then
+                button
+                  [ class "btn-flat pull-right"
+                  , Utils.onButtonClick addr (ConfirmDeleteDraft track.id)
+                  ]
+                  [ text "Cancel" ]
+              else
+                button
+                  [ class "btn-flat btn-danger pull-right"
+                  , Utils.onButtonClick addr (ConfirmDeleteDraft track.id)
+                  , disabled confirmDelete
+                  ]
+                  [ text "Delete" ]
+            , if confirmDelete then
+                button
+                  [ class "btn-raised btn-danger pull-right"
+                  , Utils.onButtonClick addr (DeleteDraft track.id)
+                  ]
+                  [ text "Confirm?" ]
+              else
+                text ""
             ]
         ]
     ]
@@ -83,20 +132,20 @@ draftItem confirmDelete draft =
 createTrackForm : Model -> Html
 createTrackForm { name } =
   div
-    [ class "form-inline form-new-draft" ]
-    [ formGroup
+    [ class "form-inline form-new-track" ]
+    [ Utils.formGroup
         False
-        [ textInput
+        [ Utils.textInput
             [ value name
             , placeholder "New track name"
-            , onInput addr SetDraftName
-            , onEnter addr CreateDraft
+            , Utils.onInput addr SetDraftName
+            , Utils.onEnter addr CreateDraft
             ]
         ]
     , button
-        [ class "btn btn-primary"
+        [ class "btn-raised btn-primary"
         , onClick addr CreateDraft
         , disabled (String.isEmpty name)
         ]
-        [ text "Create draft" ]
+        [ text "Create track" ]
     ]

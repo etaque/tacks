@@ -35,7 +35,7 @@ view addr { form, loading } =
           ( onClick formAddr Form.Submit, Form.isSubmitted form )
   in
     [ Layout.section
-        "blue"
+        [ class "blue" ]
         [ linkTo
             (Route.Forum Index)
             [ class "pull-right btn btn-link"
@@ -44,7 +44,7 @@ view addr { form, loading } =
         , h1 [] [ text "New topic" ]
         ]
     , Layout.section
-        "white"
+        [ class "white" ]
         [ div
             [ class "form-new-topic form-vertical" ]
             [ div

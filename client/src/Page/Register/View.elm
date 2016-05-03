@@ -20,8 +20,9 @@ view ctx model =
     "register"
     ctx
     (Just Layout.Register)
-    [ Layout.section
-        "blue"
+    [ Layout.header
+        ctx
+        []
         [ h1 [] [ text "Register" ]
         , div [ class "panel" ] [ registerForm model ]
         ]
@@ -72,7 +73,7 @@ registerForm { form, loading, serverErrors } =
           (errList password.liveError)
           [ Input.passwordInput password formAddr [ class "form-control" ] ]
       , button
-          [ class "btn btn-primary btn-block"
+          [ class "btn-raised btn-primary btn-block"
           , submitClick
             -- , disabled submitDisabled
           ]
