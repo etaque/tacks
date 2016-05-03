@@ -193,6 +193,10 @@ hr {
     background-color: $whiteSeaBlue;
   }
 
+  &:active {
+    outline: none;
+  }
+
   &[disabled] {
     color: $mediumGrey;
 
@@ -239,6 +243,11 @@ hr {
 
   &.btn-danger {
     background-color: $red;
+    color: $white;
+  }
+
+  &.btn-positive {
+    background-color: $green;
     color: $white;
   }
 

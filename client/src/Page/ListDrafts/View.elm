@@ -37,8 +37,8 @@ view ctx ({ tracks } as model) =
         [ class "white manage-tracks" ]
         [ if List.isEmpty tracks then
             div
-            [ class "empty-notice"]
-            [ text "No track built yet!"]
+              [ class "empty-notice" ]
+              [ text "No track built yet!" ]
           else
             div
               [ class "tracks-list" ]
@@ -52,16 +52,13 @@ draftItem model track =
   let
     isSelected =
       (Just track.id == model.selectedTrack)
-
-    confirmDelete =
-      (Just track.id == model.confirmDelete)
   in
     [ div
         [ classList [ ( "tracks-item", True ), ( "selected", isSelected ) ]
         , if isSelected then
-            onClick addr (SelectTrack Nothing)
+            onClick addr (Select Nothing)
           else
-            onClick addr (SelectTrack (Just track.id))
+            onClick addr (Select (Just track.id))
         ]
         [ div
             [ class "icon" ]
@@ -92,40 +89,64 @@ draftItem model track =
         ]
     , div
         [ classList [ ( "tracks-edit", True ), ( "selected", isSelected ) ] ]
-        [ div
-            [ class "actions" ]
-            [ Utils.linkTo
-                (Route.EditTrack track.id)
-                [ class "btn-raised btn-primary" ]
-                [ text " Open" ]
-            , button
-                [ class "btn-flat"
-                  -- , Utils.onButtonClick addr (SetEditingName True)
-                ]
-                [ text "Publish" ]
-            , if confirmDelete then
-                button
-                  [ class "btn-flat pull-right"
-                  , Utils.onButtonClick addr (ConfirmDeleteDraft track.id)
+        [ if model.confirmPublish then
+            confirmPublish track
+          else if model.confirmDelete then
+            confirmDelete track
+          else
+            div
+              [ class "actions" ]
+              [ Utils.linkTo
+                  (Route.EditTrack track.id)
+                  [ class "btn-raised btn-primary" ]
+                  [ text " Open" ]
+              , button
+                  [ class "btn-flat"
+                  , Utils.onButtonClick addr (ConfirmPublish True)
                   ]
-                  [ text "Cancel" ]
-              else
-                button
+                  [ text "Publish" ]
+              , button
                   [ class "btn-flat btn-danger pull-right"
-                  , Utils.onButtonClick addr (ConfirmDeleteDraft track.id)
-                  , disabled confirmDelete
+                  , Utils.onButtonClick addr (ConfirmDelete True)
                   ]
                   [ text "Delete" ]
-            , if confirmDelete then
-                button
-                  [ class "btn-raised btn-danger pull-right"
-                  , Utils.onButtonClick addr (DeleteDraft track.id)
-                  ]
-                  [ text "Confirm?" ]
-              else
-                text ""
-            ]
+              ]
         ]
+    ]
+
+
+confirmPublish : Track -> Html
+confirmPublish track =
+  div
+    [ class "actions" ]
+    [ button
+        [ class "btn-raised btn-positive"
+        , Utils.onButtonClick addr (Publish track.id)
+        ]
+        [ text "Publish!" ]
+    , button
+        [ class "btn-flat"
+        , Utils.onButtonClick addr (ConfirmPublish False)
+        ]
+        [ text "Cancel" ]
+        , span [] [ text "Track will be frozen, no changes allowed anymore!"]
+    ]
+
+
+confirmDelete : Track -> Html
+confirmDelete track =
+  div
+    [ class "actions right" ]
+    [ button
+        [ class "btn-raised btn-danger"
+        , Utils.onButtonClick addr (Delete track.id)
+        ]
+        [ text "Confirm?" ]
+    , button
+        [ class "btn-flat"
+        , Utils.onButtonClick addr (ConfirmDelete False)
+        ]
+        [ text "Cancel" ]
     ]
 
 
@@ -138,13 +159,13 @@ createTrackForm { name } =
         [ Utils.textInput
             [ value name
             , placeholder "New track name"
-            , Utils.onInput addr SetDraftName
-            , Utils.onEnter addr CreateDraft
+            , Utils.onInput addr SetName
+            , Utils.onEnter addr Create
             ]
         ]
     , button
         [ class "btn-raised btn-primary"
-        , onClick addr CreateDraft
+        , onClick addr Create
         , disabled (String.isEmpty name)
         ]
         [ text "Create track" ]

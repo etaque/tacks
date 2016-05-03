@@ -24,7 +24,7 @@ mount =
 update : Action -> Model -> ( Model, Effects Action )
 update action model =
   case action of
-    DraftsResult result ->
+    ListResult result ->
       case result of
         Ok tracks ->
           res { model | tracks = tracks } none
@@ -39,16 +39,16 @@ update action model =
       in
         res { model | showCreationForm = newShow } none
 
-    SetDraftName name ->
+    SetName name ->
       res { model | name = name } none
 
-    SelectTrack maybeTrack ->
+    Select maybeTrack ->
       res { model | selectedTrack = maybeTrack } none
 
-    CreateDraft ->
-      taskRes model (Task.map CreateDraftResult (ServerApi.createTrack model.name))
+    Create ->
+      taskRes model (Task.map CreateResult (ServerApi.createTrack model.name))
 
-    CreateDraftResult result ->
+    CreateResult result ->
       case result of
         Ok track ->
           res model (Utils.redirect (Route.EditTrack track.id) |> Utils.always NoOp)
@@ -57,20 +57,29 @@ update action model =
           -- TODO
           res model none
 
-    ConfirmDeleteDraft id ->
-      let
-        newConfirm =
-          if Just id == model.confirmDelete then
-            Nothing
-          else
-            Just id
-      in
-        res { model | confirmDelete = newConfirm } none
+    ConfirmPublish b ->
+      res { model | confirmPublish = b } none
 
-    DeleteDraft id ->
+    Publish id ->
+      taskRes model (publish id)
+
+    PublishResult result ->
+      case result of
+        Ok track ->
+          Effects.map (\_ -> NoOp) (Utils.redirect (Route.PlayTrack track.id))
+            |> res model
+
+        Err errors ->
+          -- TODO
+          res model none
+
+    ConfirmDelete b ->
+      res { model | confirmDelete = b } none
+
+    Delete id ->
       taskRes model (deleteDraft id)
 
-    DeleteDraftResult result ->
+    DeleteResult result ->
       case result of
         Ok id ->
           res { model | tracks = List.filter (\t -> t.id /= id) model.tracks } none
@@ -85,10 +94,16 @@ update action model =
 loadDrafts : Task Never Action
 loadDrafts =
   ServerApi.getDrafts
-    |> Task.map DraftsResult
+    |> Task.map ListResult
+
+
+publish : String -> Task Never Action
+publish id =
+  ServerApi.publishTrack id
+    |> Task.map PublishResult
 
 
 deleteDraft : String -> Task Never Action
 deleteDraft id =
   ServerApi.deleteDraft id
-    |> Task.map DeleteDraftResult
+    |> Task.map DeleteResult

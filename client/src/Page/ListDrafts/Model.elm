@@ -9,8 +9,8 @@ type alias Model =
   , showCreationForm : Bool
   , name : String
   , selectedTrack : Maybe String
-  , confirmDelete : Maybe String
-  , confirmPublish : Maybe Track
+  , confirmDelete : Bool
+  , confirmPublish : Bool
   }
 
 
@@ -20,21 +20,24 @@ initial =
   , showCreationForm = False
   , name = ""
   , selectedTrack = Nothing
-  , confirmDelete = Nothing
-  , confirmPublish = Nothing
+  , confirmDelete = False
+  , confirmPublish = False
   }
 
 
 type Action
-  = DraftsResult (Result () (List Track))
-  | SetDraftName String
-  | SelectTrack (Maybe String)
+  = ListResult (Result () (List Track))
+  | SetName String
+  | Select (Maybe String)
   | ToggleCreationForm
-  | CreateDraft
-  | CreateDraftResult (FormResult Track)
-  | ConfirmDeleteDraft String
-  | DeleteDraft String
-  | DeleteDraftResult (FormResult String)
+  | Create
+  | CreateResult (FormResult Track)
+  | ConfirmPublish Bool
+  | Publish String
+  | PublishResult (FormResult Track)
+  | ConfirmDelete Bool
+  | Delete String
+  | DeleteResult (FormResult String)
   | NoOp
 
 

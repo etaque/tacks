@@ -135,6 +135,14 @@
     margin: 0 16px 16px 74px;
     display: none;
 
+    .actions {
+      @include clearfix;
+
+      &.right {
+        text-align: right;
+      }
+    }
+
     &.selected {
       display: block;
     }
