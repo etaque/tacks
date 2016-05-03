@@ -17,7 +17,7 @@ import View.Layout as Layout
 view : Address Action -> Model -> List Html
 view addr ({ topics } as model) =
   [ Layout.section
-      "blue"
+      [ class "blue" ]
       [ linkTo
           (Route.Forum NewTopic)
           [ class "pull-right btn btn-primary"
@@ -26,7 +26,7 @@ view addr ({ topics } as model) =
       , h1 [] [ text "Forum" ]
       ]
   , Layout.section
-      "white"
+      [ class "white" ]
       [ topicsTable topics ]
   ]
 

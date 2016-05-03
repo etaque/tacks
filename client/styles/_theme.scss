@@ -418,6 +418,7 @@ aside {
     padding: 4px 0 5px 0;
     box-shadow: none;
     background-color: transparent;
+    font-size: 15px;
 
     &:focus {
       outline: none;
@@ -428,11 +429,19 @@ aside {
     }
   }
 
+  .form-control:focus ~ label,
+  .form-control.filled ~ label,
+  .inline-fields ~ label {
+    font-size: 13px;
+    top: 0;
+  }
+
   label {
     display: block;
     position: absolute;
-    top: 0;
-    font-size: 13px;
+    top: 20px;
+    transition: bezier(all);
+    font-size: 15px;
   }
 
   .inline-fields {
@@ -451,16 +460,18 @@ aside {
   }
 
   &.with-error {
-    .has-error .control-label {
-      color: $whiteSeaBlue;
+    transition: bezier(all);
+
+    label {
+      color: $red;
     }
 
     .form-control {
-      border-color: $lightOrange;
+      border-color: $red;
     }
 
     .feedback {
-      color: $orange;
+      color: $red;
     }
   }
 }

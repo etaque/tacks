@@ -38,7 +38,7 @@ view ctx model =
           ctx
           (Context.toolbar model liveTrack gameState)
           (Context.sidebar model liveTrack gameState)
-          [ render ( w - sidebarWidth, h ) gameState
+          [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
           , Chat.view h model
           ]
 

@@ -5,7 +5,10 @@
 #editor {
 
   main {
-    svg {
+    background-color: $sand;
+    overflow: hidden;
+
+    > svg {
       display: block;
       @include no-select;
       cursor: cell;

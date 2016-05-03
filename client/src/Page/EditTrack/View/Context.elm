@@ -62,29 +62,29 @@ view track ({ course } as editor) =
           [ div
               [ class "wind-fields" ]
               [ div
-                  [ class "form-group" ]
-                  [ label [ class "" ] [ text "Speed" ]
-                  , intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
+                  [ class "form-group filled" ]
+                  [ intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
+                  , label [ class "" ] [ text "Speed" ]
                   ]
               , div
                   [ class "form-group" ]
-                  [ label [ class "" ] [ text "Wavelength 1" ]
-                  , intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
+                  [ intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
+                  , label [ class "" ] [ text "Wavelength 1" ]
                   ]
               , div
                   [ class "form-group" ]
-                  [ label [ class "" ] [ text "Amplitude 1" ]
-                  , intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
+                  [ intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
+                  , label [ class "" ] [ text "Amplitude 1" ]
                   ]
               , div
                   [ class "form-group" ]
-                  [ label [ class "" ] [ text "Wavelength 2" ]
-                  , intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
+                  [ intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
+                  , label [ class "" ] [ text "Wavelength 2" ]
                   ]
               , div
                   [ class "form-group" ]
-                  [ label [ class "" ] [ text "Amplitude 2" ]
-                  , intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
+                  [ intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
+                  , label [ class "" ] [ text "Amplitude 2" ]
                   ]
               ]
           ]
@@ -117,34 +117,7 @@ actions track editor =
         , disabled editor.saving
         ]
         [ Utils.mIcon "gamepad" [], text "Test" ]
-      -- , if track.status == Draft then
-      --     button
-      --       [ onClick addr ConfirmPublish
-      --       , class "btn-raised btn-raised btn-white btn-confirm-publish"
-      --       ]
-      --       [ text "Publish..." ]
-      --   else
-      --     text ""
     ]
-
-
-
--- , if editor.confirmPublish then
---     button
---       [ onClick addr Publish, class "btn btn-success btn-block btn-confirm-publish" ]
---       [ text "Confirm? You can't go back!" ]
---   else
---     text ""
--- [  div
---     [ class "form-group" ]
---     [ textInput
---         [ value name
---         , onInput addr SetName
---         , type' "text"
---         ]
---     ]
---     ]
--- ]
 
 
 tabs : Tab -> Html

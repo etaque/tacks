@@ -6,6 +6,7 @@
 
   main {
     background-color: $sand;
+    overflow: hidden;
 
     > svg {
       display: block;

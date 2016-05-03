@@ -17,8 +17,8 @@ view ctx model =
     ctx
     (Just Layout.Login)
     [ Layout.header
-        ""
         ctx
+        []
         [ h1 [] [ text "Login" ]
         , div [ class "panel" ] [ loginForm model ]
         ]

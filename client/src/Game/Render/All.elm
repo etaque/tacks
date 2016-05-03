@@ -1,27 +1,24 @@
-module Game.Render.All where
+module Game.Render.All (..) where
 
 import Game.Models exposing (..)
-import Model.Shared exposing (..)
-
 import Game.Render.SvgUtils exposing (..)
-
 import Game.Render.Defs exposing (..)
 import Game.Render.Course exposing (..)
 import Game.Render.Players exposing (..)
 import Game.Render.Dashboard exposing (..)
-
 import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
 
 
-
-render : (Int, Int) -> GameState -> Html
-render (w, h) ({playerState,course,wind} as gameState) =
+render : ( Int, Int ) -> GameState -> Html
+render ( w, h ) ({ playerState, course, wind } as gameState) =
   let
-    cx = (toFloat w) / 2 - (fst gameState.center)
-    cy = (toFloat h) / 2 - (toFloat h) - (snd gameState.center)
+    cx =
+      (toFloat w) / 2 - (fst gameState.center)
+
+    cy =
+      (toFloat h) / 2 - (toFloat h) - (snd gameState.center)
   in
     svg
       [ width (toString w)
@@ -30,19 +27,9 @@ render (w, h) ({playerState,course,wind} as gameState) =
       ]
       [ renderDefs
       , g
-        [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
-        [ renderCourse gameState
-        , renderPlayers gameState
-        ]
-      , renderDashboard (w,h) gameState
+          [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
+          [ renderCourse gameState
+          , renderPlayers gameState
+          ]
+      , renderDashboard ( w, h ) gameState
       ]
-
-
-
-
-
-
-
-
-
-

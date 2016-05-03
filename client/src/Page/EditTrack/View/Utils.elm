@@ -17,10 +17,12 @@ formAddr =
 
 intInput : number -> (Int -> FormAction) -> List Attribute -> Html
 intInput val formUpdate attrs =
-  textInput
+  input
     ([ value (toString val)
      , onIntInput formAddr formUpdate
      , type' "number"
+     , class "form-control filled"
      ]
       ++ attrs
     )
+    []

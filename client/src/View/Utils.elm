@@ -163,9 +163,7 @@ fieldGroup label' hint errors inputs =
           , ( "with-error", not (List.isEmpty errors) )
           ]
       ]
-      <| [ label [ class "control-label" ] [ text label' ] ]
-      ++ inputs
-      ++ [ feedbacksEl ]
+      (inputs ++ [ label [ class "control-label" ] [ text label' ], feedbacksEl ])
 
 
 

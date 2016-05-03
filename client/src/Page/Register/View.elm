@@ -1,6 +1,7 @@
 module Page.Register.View (..) where
 
 import Dict exposing (Dict)
+import String
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -54,6 +55,9 @@ registerForm { form, loading, serverErrors } =
 
     getServerErrors field =
       Dict.get field serverErrors |> Maybe.withDefault []
+
+    isFilled field =
+      Maybe.map (String.isEmpty >> not) field.value |> Maybe.withDefault False
   in
     div
       [ class "form-login" ]
@@ -61,17 +65,41 @@ registerForm { form, loading, serverErrors } =
           "Handle"
           "Alphanumeric, at least 4 chars"
           (errList handle.liveError ++ (getServerErrors "handle"))
-          [ Input.textInput handle formAddr [ class "form-control" ] ]
+          [ Input.textInput
+              handle
+              formAddr
+              [ classList
+                  [ ( "form-control", True )
+                  , ( "filled", isFilled handle )
+                  ]
+              ]
+          ]
       , fieldGroup
           "Email"
           ""
           (errList email.liveError ++ (getServerErrors "email"))
-          [ Input.textInput email formAddr [ class "form-control" ] ]
+          [ Input.textInput
+              email
+              formAddr
+              [ classList
+                  [ ( "form-control", True )
+                  , ( "filled", isFilled email )
+                  ]
+              ]
+          ]
       , fieldGroup
           "Password"
           ""
           (errList password.liveError)
-          [ Input.passwordInput password formAddr [ class "form-control" ] ]
+          [ Input.passwordInput
+              password
+              formAddr
+              [ classList
+                  [ ( "form-control", True )
+                  , ( "filled", isFilled password )
+                  ]
+              ]
+          ]
       , button
           [ class "btn-raised btn-primary btn-block"
           , submitClick
