@@ -1,5 +1,6 @@
 module Page.Login.View (..) where
 
+import String
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -31,21 +32,29 @@ loginForm { email, password, loading, error } =
     [ class "form-login form-vertical" ]
     [ div
         [ class "form-group" ]
-        [ textInput
-            [ value email
+        [ input
+            [ type' "text"
+            , value email
+            , classList [ ( "form-control", True ), ( "filled", not (String.isEmpty email) ) ]
             , onInput addr SetEmail
             , onEnter addr Submit
-            , placeholder "Email"
+            , id "login_email"
             ]
+            []
+        , label [ for "login_email" ] [ text "Email" ]
         ]
     , div
         [ class "form-group" ]
-        [ passwordInput
-            [ value password
+        [ input
+            [ type' "password"
+            , value password
+            , classList [ ( "form-control", True ), ( "filled", not (String.isEmpty password) ) ]
             , onInput addr SetPassword
             , onEnter addr Submit
-            , placeholder "Password"
+            , id "login_password"
             ]
+            []
+        , label [ for "login_password" ] [ text "Password" ]
         ]
     , errorLine error
     , div

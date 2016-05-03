@@ -8,7 +8,6 @@ import Html.Events exposing (..)
 import Form.Input as Input
 import Form
 import Model.Shared exposing (..)
-import CoreExtra exposing (..)
 import Page.Register.Model exposing (..)
 import Page.Register.Update exposing (addr)
 import View.Utils exposing (..)
@@ -44,62 +43,50 @@ registerForm { form, loading, serverErrors } =
         Nothing ->
           ( onClick formAddr Form.Submit, Form.isSubmitted form )
 
-    handle =
-      Form.getFieldAsString "handle" form
-
-    email =
-      Form.getFieldAsString "email" form
-
-    password =
-      Form.getFieldAsString "password" form
-
     getServerErrors field =
       Dict.get field serverErrors |> Maybe.withDefault []
 
     isFilled field =
       Maybe.map (String.isEmpty >> not) field.value |> Maybe.withDefault False
+
+    group name label' hint renderer =
+      let
+        field =
+          Form.getFieldAsString name form
+      in
+        fieldGroup
+          ("register_" ++ name)
+          label'
+          hint
+          (errList field.liveError ++ (getServerErrors name))
+          [ renderer
+              field
+              formAddr
+              [ classList
+                  [ ( "form-control", True )
+                  , ( "filled", isFilled field )
+                  ]
+              , id ("register_" ++ name)
+              ]
+          ]
   in
     div
       [ class "form-login" ]
-      [ fieldGroup
+      [ group
+          "handle"
           "Handle"
           "Alphanumeric, at least 4 chars"
-          (errList handle.liveError ++ (getServerErrors "handle"))
-          [ Input.textInput
-              handle
-              formAddr
-              [ classList
-                  [ ( "form-control", True )
-                  , ( "filled", isFilled handle )
-                  ]
-              ]
-          ]
-      , fieldGroup
+          Input.textInput
+      , group
+          "email"
           "Email"
           ""
-          (errList email.liveError ++ (getServerErrors "email"))
-          [ Input.textInput
-              email
-              formAddr
-              [ classList
-                  [ ( "form-control", True )
-                  , ( "filled", isFilled email )
-                  ]
-              ]
-          ]
-      , fieldGroup
+          Input.textInput
+      , group
+          "password"
           "Password"
           ""
-          (errList password.liveError)
-          [ Input.passwordInput
-              password
-              formAddr
-              [ classList
-                  [ ( "form-control", True )
-                  , ( "filled", isFilled password )
-                  ]
-              ]
-          ]
+          Input.passwordInput
       , button
           [ class "btn-raised btn-primary btn-block"
           , submitClick

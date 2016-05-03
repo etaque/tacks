@@ -149,8 +149,8 @@ nbsp =
   text " "
 
 
-fieldGroup : String -> String -> List String -> List Html -> Html
-fieldGroup label' hint errors inputs =
+fieldGroup : String -> String -> String -> List String -> List Html -> Html
+fieldGroup id label' hint errors inputs =
   let
     feedbacksEl =
       div
@@ -163,7 +163,7 @@ fieldGroup label' hint errors inputs =
           , ( "with-error", not (List.isEmpty errors) )
           ]
       ]
-      (inputs ++ [ label [ class "control-label" ] [ text label' ], feedbacksEl ])
+      (inputs ++ [ label [ class "control-label", for id ] [ text label' ], feedbacksEl ])
 
 
 
