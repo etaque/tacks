@@ -5,17 +5,12 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Route exposing (..)
-import Page.Home.Model exposing (..)
-import Page.Home.Update exposing (addr)
 import View.Utils as Utils exposing (..)
 
 
-liveTrackBlock : Maybe TrackId -> LiveTrack -> Html
-liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
+liveTrackBlock : LiveTrack -> Html
+liveTrackBlock ({ track, meta, players } as lt) =
   let
-    hasFocus =
-      maybeTrackId == Just track.id
-
     empty =
       List.length players == 0
   in
@@ -24,11 +19,8 @@ liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
       [ div
           ([ classList
               [ ( "live-track", True )
-              , ( "has-focus", hasFocus )
               , ( "is-empty", empty )
               ]
-           , onMouseOver addr (FocusTrack (Just track.id))
-           , onMouseOut addr (FocusTrack Nothing)
            ]
             ++ (linkAttrs (PlayTrack track.id))
           )

@@ -65,8 +65,10 @@ section.grey {
   @include shadow-inset-light;
 }
 
+$header: 154px;
+
 header {
-  height: 140px;
+  height: $header;
   background-color: $seaBlue;
   color: white;
 
@@ -80,7 +82,7 @@ header {
   }
   .container {
     position: relative;
-    height: 140px;
+    height: $header;
 
     h1 {
       color: white;

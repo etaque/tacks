@@ -12,7 +12,7 @@ toolbarHeight =
 
 
 headerHeight =
-  140
+  154
 
 
 containerWidth =

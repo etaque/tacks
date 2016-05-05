@@ -31,9 +31,6 @@ update action model =
       in
         res { model | raceReports = raceReports } none
 
-    FocusTrack maybeTrackId ->
-      res { model | trackFocus = maybeTrackId } none
-
     NoOp ->
       res model none
 

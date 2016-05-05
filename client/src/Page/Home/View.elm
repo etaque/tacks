@@ -43,7 +43,7 @@ view ctx model =
         [ class "white" ]
         [ div
             [ class "row live-center" ]
-            [ div [ class "col-md-9" ] [ liveTracks ctx.player ctx.liveStatus model.trackFocus ]
+            [ div [ class "col-md-9" ] [ liveTracks ctx.player ctx.liveStatus ]
             , div [ class "col-md-3" ] [ activePlayers ctx.liveStatus.liveTracks ]
             ]
         ]
@@ -55,8 +55,8 @@ view ctx model =
     ]
 
 
-liveTracks : Player -> LiveStatus -> Maybe TrackId -> Html
-liveTracks player { liveTracks } maybeTrackId =
+liveTracks : Player -> LiveStatus -> Html
+liveTracks player { liveTracks } =
   let
     featuredTracks =
       List.filter (.track >> .featured) liveTracks
@@ -64,7 +64,7 @@ liveTracks player { liveTracks } maybeTrackId =
     div
       [ class "live-tracks" ]
       [ h2 [] [ text "Featured tracks" ]
-      , div [ class "row" ] (List.map (Track.liveTrackBlock maybeTrackId) featuredTracks)
+      , div [ class "row" ] (List.map Track.liveTrackBlock featuredTracks)
       ]
 
 

@@ -21,38 +21,9 @@ body > div {
   height: 100%;
 }
 
-$header: 52px;
+$toolbar: 52px;
 $aside: 270px;
 
-.header {
-  position: fixed;
-  left: 0;
-  right: 0;
-  top: 0;
-  height: $header;
-  z-index: 1;
-  background-color: $smokeWhite;
-  /* @include gradient-directional($smokeWhite, $white, 0deg); */
-  box-shadow: 1px 2px 4px $shadow;
-
-  .user-menu {
-    float: right;
-    margin-top: 16px;
-    padding: 0;
-    list-style: none;
-    font-family: $serif;
-    text-align: right;
-
-    li {
-      margin-left: 10px;
-      display: inline-block;
-    }
-
-    a {
-      display: inline-block;
-    }
-  }
-}
 
 .logo {
   position: relative;
@@ -255,7 +226,7 @@ $aside: 270px;
 
   main {
     position: absolute;
-    top: $header;
+    top: $toolbar;
     left: $aside;
     bottom: 0;
     right: 0;
@@ -276,18 +247,6 @@ $aside: 270px;
     top: 0;
     background-color: #eee;
 
-    /* .hex-bg { */
-    /*   position: absolute; */
-    /*   top: 0; */
-    /*   left: 0; */
-    /*   right: 0; */
-    /*   bottom: 0; */
-    /*   overflow: hidden; */
-    /*   background-color: $seaBlue; */
-    /*   @include gradient-directional($seaBlue, $darkSeaBlue, -30deg); */
-    /*   display: none; */
-    /* } */
-
     .scrollable {
       overflow-y: auto;
       overflow-x: hidden;
@@ -296,8 +255,6 @@ $aside: 270px;
       left: 0;
       right: 0;
       bottom: 0;
-
-
     }
   }
   

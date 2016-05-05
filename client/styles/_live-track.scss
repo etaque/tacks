@@ -1,0 +1,72 @@
+@import 'colors';
+@import 'fonts';
+@import 'mixins';
+
+.live-track {
+  @include sheet;
+  @include shadow-light;
+  margin-bottom: 24px;
+  cursor: pointer;
+  overflow: hidden;
+  display: block;
+
+  &:hover {
+    @include shadow-medium;
+  }
+
+  .live-track-header {
+    position: relative;
+    margin: 0;
+    padding: 24px 16px 16px 16px;
+    background-color: $lightSeaBlue;
+    @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
+    color: $white;
+    overflow: hidden;
+
+    h3 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: $thin;
+      font-size: 24px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .creator {
+      color: $light-hard;
+    }
+
+    .live-players {
+      position: absolute;
+      right: 14px;
+      top: 24px;
+      width: 32px;
+      line-height: 32px;
+      border-radius: 16px;
+      background-color: $orange;
+      color: white;
+      text-align: center;
+      font-family: $mono;
+      font-weight: bold;
+      font-size: 18px;
+      /* @include shadow-light; */
+    }
+
+  }
+
+  .live-track-body {
+    padding: 0;
+    position: relative;
+    overflow-y: hidden;
+
+    .list-rankings {
+      margin-bottom: 0;
+    }
+  }
+
+  .live-track-actions {
+    padding: 8px;
+  }
+
+}

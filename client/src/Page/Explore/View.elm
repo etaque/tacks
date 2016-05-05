@@ -21,17 +21,13 @@ view ctx model =
         [ h1 [] [ text "All tracks" ] ]
     , Layout.section
         [ class "white manage-tracks" ]
-        [ liveTracks ctx.liveStatus.liveTracks Nothing ]
+        [ liveTracks ctx.liveStatus.liveTracks ]
     ]
 
 
-liveTracks : List LiveTrack -> Maybe TrackId -> Html
-liveTracks liveTracks maybeTrackId =
-  let
-    featuredTracks =
-      List.filter (.track >> .featured) liveTracks
-  in
-    div
-      [ class "live-tracks" ]
-      [ div [ class "row" ] (List.map (Track.liveTrackBlock maybeTrackId) featuredTracks)
-      ]
+liveTracks : List LiveTrack -> Html
+liveTracks liveTracks =
+  div
+    [ class "live-tracks" ]
+    [ div [ class "row" ] (List.map Track.liveTrackBlock liveTracks)
+    ]
