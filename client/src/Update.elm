@@ -1,7 +1,9 @@
 module Update (..) where
 
 import Task exposing (Task)
-import Effects exposing (Effects, map, none, task)
+import Task.Extra exposing (delay)
+import Time exposing (second)
+import Effects exposing (Effects, Never, none, map, task)
 import Result
 import Response exposing (..)
 import TransitRouter exposing (getRoute)
@@ -9,6 +11,7 @@ import Model exposing (..)
 import Page.Home.Update as Home
 import Page.Register.Update as Register
 import Page.Login.Update as Login
+import Page.Explore.Update as Explore
 import Page.ShowTrack.Update as ShowTrack
 import Page.EditTrack.Update as EditTrack
 import Page.ShowProfile.Update as ShowProfile
@@ -32,7 +35,17 @@ routerConfig =
 
 init : AppSetup -> Response Model Action
 init setup =
-  TransitRouter.init routerConfig setup.path (initialModel setup)
+  let
+    ( model, routerEffects ) =
+      TransitRouter.init routerConfig setup.path (initialModel setup)
+
+    effects =
+      Effects.batch
+        [ routerEffects
+        , task refreshLiveStatus
+        ]
+  in
+    ( model, effects )
 
 
 update : Action -> Model -> Response Model Action
@@ -44,6 +57,15 @@ update action ({ pages } as model) =
     SetPlayer p ->
       res { model | player = p } (Utils.redirect Home)
         |> mapEffects (\_ -> NoOp)
+
+    SetLiveStatus result ->
+      let
+        liveStatus =
+          Result.withDefault model.liveStatus result
+      in
+        taskRes
+          { model | liveStatus = liveStatus }
+          (delay (5 * second) refreshLiveStatus)
 
     UpdateDims dims ->
       res { model | dims = dims } none
@@ -97,6 +119,9 @@ mountRoute prevRoute newRoute ({ pages, player } as prevModel) =
       Register ->
         applyRegister Register.mount model
 
+      Explore ->
+        applyExplore Explore.mount model
+
       ShowProfile ->
         applyShowProfile (ShowProfile.mount player) model
 
@@ -136,6 +161,9 @@ pageUpdate pageAction ({ pages, player, dims } as model) =
 
     RegisterAction a ->
       applyRegister (Register.update a pages.register) model
+
+    ExploreAction a ->
+      applyExplore (Explore.update a pages.explore) model
 
     ShowTrackAction a ->
       applyShowTrack (ShowTrack.update a pages.showTrack) model
@@ -177,6 +205,10 @@ applyRegister =
   applyPage (\s pages -> { pages | register = s }) RegisterAction
 
 
+applyExplore =
+  applyPage (\s pages -> { pages | explore = s }) ExploreAction
+
+
 applyShowProfile =
   applyPage (\s pages -> { pages | showProfile = s }) ShowProfileAction
 
@@ -210,3 +242,9 @@ applyPage pagesUpdater actionWrapper response model =
   response
     |> mapModel (\p -> { model | pages = pagesUpdater p model.pages })
     |> mapEffects (actionWrapper >> PageAction)
+
+
+refreshLiveStatus : Task Never Action
+refreshLiveStatus =
+  ServerApi.getLiveStatus
+    |> Task.map SetLiveStatus

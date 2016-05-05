@@ -39,11 +39,11 @@ type Tab
   | GustsTab
 
 
-initialEditor : Track -> Editor
-initialEditor track =
+initialEditor : Track -> Course -> Editor
+initialEditor track course =
   { tab = GatesTab
   , currentGate = Nothing
-  , course = track.course
+  , course = course
   , center = ( 0, 0 )
   , mode = CreateTile Water
   , altMove = False
@@ -77,7 +77,7 @@ realMode { mode, altMove } =
 
 
 type Action
-  = LoadTrack (Result () Track)
+  = LoadTrack (Result () Track) (Result () Course)
   | MouseAction MouseEvent
   | SetMode Mode
   | AltMoveMode Bool

@@ -10,6 +10,7 @@ import Route
 
 type alias Context =
   { player : Player
+  , liveStatus : LiveStatus
   , dims : ( Int, Int )
   , transition : Transit.Transition
   , routeTransition : Route.RouteTransition
@@ -86,7 +87,6 @@ type alias Track =
   { id : TrackId
   , name : String
   , creatorId : String
-  , course : Course
   , status : TrackStatus
   , featured : Bool
   , creationTime : Time
@@ -117,9 +117,9 @@ trackStatusLabel status =
   case status of
     Open ->
       "Published"
+
     _ ->
       toString status
-
 
 
 type alias Race =

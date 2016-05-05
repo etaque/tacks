@@ -46,6 +46,16 @@ object Live extends Controller with Security {
              ))
   }
 
+  def allTracks = PlayerAction.async() { implicit request =>
+    val tracksFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
+    for {
+      tracks <- tracksFu
+      openLiveTracks = tracks.filter(_.track.isOpen)
+    }
+    yield Ok(Json.toJson(openLiveTracks))
+  }
+
+
   def track(id: UUID) = PlayerAction.async() { implicit request =>
     val allFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
     allFu.map { liveTracks =>

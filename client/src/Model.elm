@@ -3,11 +3,11 @@ module Model (..) where
 import Task exposing (Task)
 import Effects exposing (Effects)
 import Drag exposing (MouseEvent)
-import Response exposing (..)
 import Model.Shared exposing (..)
 import Page.Home.Model as Home
 import Page.Login.Model as Login
 import Page.Register.Model as Register
+import Page.Explore.Model as Explore
 import Page.ShowTrack.Model as ShowTrack
 import Page.EditTrack.Model as EditTrack
 import Page.ShowProfile.Model as ShowProfile
@@ -49,6 +49,7 @@ effect =
 
 type Action
   = SetPlayer Player
+  | SetLiveStatus (Result () LiveStatus)
   | RouterAction (TransitRouter.Action Route.Route)
   | UpdateDims ( Int, Int )
   | MouseEvent MouseEvent
@@ -61,6 +62,7 @@ type PageAction
   = HomeAction Home.Action
   | LoginAction Login.Action
   | RegisterAction Register.Action
+  | ExploreAction Explore.Action
   | ShowTrackAction ShowTrack.Action
   | EditTrackAction EditTrack.Action
   | ShowProfileAction ShowProfile.Action
@@ -74,6 +76,7 @@ type alias Model =
   WithRoute
     Route.Route
     { player : Player
+    , liveStatus : LiveStatus
     , dims : Dims
     , routeTransition : Route.RouteTransition
     , pages : Pages
@@ -84,6 +87,7 @@ type alias Pages =
   { home : Home.Model
   , login : Login.Model
   , register : Register.Model
+  , explore : Explore.Model
   , showTrack : ShowTrack.Model
   , editTrack : EditTrack.Model
   , showProfile : ShowProfile.Model
@@ -97,6 +101,7 @@ type alias Pages =
 initialModel : AppSetup -> Model
 initialModel { path, dims, player } =
   { player = player
+  , liveStatus = { liveTracks = [], onlinePlayers = [] }
   , dims = dims
   , transitRouter = TransitRouter.empty Route.EmptyRoute
   , routeTransition = Route.None
@@ -104,6 +109,7 @@ initialModel { path, dims, player } =
       { home = Home.initial player
       , login = Login.initial
       , register = Register.initial
+      , explore = Explore.initial
       , showTrack = ShowTrack.initial
       , editTrack = EditTrack.initial
       , showProfile = ShowProfile.initial player

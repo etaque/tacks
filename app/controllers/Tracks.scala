@@ -35,6 +35,12 @@ object Tracks extends Controller with Security {
     }
   }
 
+  def showCourse(id: UUID) = PlayerAction.async() { implicit request =>
+    onTrack(id) { track =>
+      Future.successful(Ok(Json.toJson(track.course)))
+    }
+  }
+
   def forUser = PlayerAction.async() { implicit request =>
     dao.Tracks.listByCreatorId(request.player.id).map { tracks =>
       Ok(Json.toJson(tracks))
@@ -42,7 +48,7 @@ object Tracks extends Controller with Security {
   }
 
   def createDraft() = PlayerAction.async(parse.json) { implicit request =>
-    asUser {  user =>
+    asUser { user =>
       val id = UUID.randomUUID()
       val name = (request.body \ "name").asOpt[String].getOrElse(id.toString)
       val track = Track(

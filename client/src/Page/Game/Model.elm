@@ -43,8 +43,8 @@ initial =
 
 
 type Action
-  = LoadLiveTrack (Result () LiveTrack)
-  | InitGameState LiveTrack Time
+  = Load (Result () LiveTrack) (Result () Course)
+  | InitGameState LiveTrack Course Time
   | UpdateLiveTrack LiveTrack
   | PingServer Time
   | GameUpdate GameInput

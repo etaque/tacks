@@ -45,16 +45,16 @@ mount id =
 update : Dims -> Action -> Model -> ( Model, Effects Action )
 update dims action model =
   case action of
-    LoadTrack result ->
-      case result of
-        Ok track ->
+    LoadTrack trackResult courseResult ->
+      case ( trackResult, courseResult ) of
+        ( Ok track, Ok course ) ->
           staticRes
             { model
               | track = Just track
-              , editor = Just (initialEditor track)
+              , editor = Just (initialEditor track course)
             }
 
-        Err _ ->
+        _ ->
           staticRes { model | notFound = True }
 
     SetTab tab ->
@@ -129,8 +129,10 @@ updateEditor update model =
 
 loadTrack : String -> Task Never Action
 loadTrack id =
-  ServerApi.getTrack id
-    |> Task.map LoadTrack
+  Task.map2
+    LoadTrack
+    (ServerApi.getTrack id)
+    (ServerApi.getCourse id)
 
 
 saveEditor : String -> Editor -> Task Never (FormResult Track)

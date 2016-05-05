@@ -13,8 +13,8 @@ import Game.Render.All exposing (render)
 import Constants exposing (..)
 
 
-pageTitle : Model -> String
-pageTitle model =
+pageTitle : LiveStatus -> Model -> String
+pageTitle liveStatus model =
   let
     playersCount =
       List.length model.freePlayers + (List.concatMap .players model.races |> List.length)
@@ -33,7 +33,7 @@ view ctx model =
         ( w, h ) =
           ctx.dims
       in
-        Layout.layoutWithSidebar
+        Layout.gameLayout
           "play-track"
           ctx
           (Context.toolbar model liveTrack gameState)
@@ -43,7 +43,7 @@ view ctx model =
           ]
 
     _ ->
-      Layout.layoutWithSidebar
+      Layout.gameLayout
         "play-track loading"
         ctx
         []

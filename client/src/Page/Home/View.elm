@@ -10,13 +10,14 @@ import Page.Home.Update exposing (addr)
 import View.Utils as Utils exposing (..)
 import View.Layout as Layout
 import View.Race as Race
+import View.Track as Track
 
 
-pageTitle : Model -> String
-pageTitle model =
+pageTitle : LiveStatus -> Model -> String
+pageTitle liveStatus model =
   let
     playersCount =
-      List.concatMap liveTrackPlayers model.liveStatus.liveTracks |> List.length
+      List.concatMap liveTrackPlayers liveStatus.liveTracks |> List.length
   in
     if playersCount > 0 then
       "(" ++ toString playersCount ++ ") Home"
@@ -42,8 +43,8 @@ view ctx model =
         [ class "white" ]
         [ div
             [ class "row live-center" ]
-            [ div [ class "col-md-9" ] [ liveTracks ctx.player model.liveStatus model.trackFocus ]
-            , div [ class "col-md-3" ] [ activePlayers model.liveStatus.liveTracks ]
+            [ div [ class "col-md-9" ] [ liveTracks ctx.player ctx.liveStatus model.trackFocus ]
+            , div [ class "col-md-3" ] [ activePlayers ctx.liveStatus.liveTracks ]
             ]
         ]
     , Layout.section
@@ -93,68 +94,8 @@ liveTracks player { liveTracks } maybeTrackId =
     div
       [ class "live-tracks" ]
       [ h2 [] [ text "Featured tracks" ]
-      , div [ class "row" ] (List.map (liveTrackBlock maybeTrackId) featuredTracks)
+      , div [ class "row" ] (List.map (Track.liveTrackBlock maybeTrackId) featuredTracks)
       ]
-
-
-liveTrackBlock : Maybe TrackId -> LiveTrack -> Html
-liveTrackBlock maybeTrackId ({ track, meta, players } as lt) =
-  let
-    hasFocus =
-      maybeTrackId == Just track.id
-
-    empty =
-      List.length players == 0
-  in
-    div
-      [ class "col-md-6" ]
-      [ div
-          ([ classList
-              [ ( "live-track", True )
-              , ( "has-focus", hasFocus )
-              , ( "is-empty", empty )
-              ]
-           , onMouseOver addr (FocusTrack (Just track.id))
-           , onMouseOut addr (FocusTrack Nothing)
-           ]
-            ++ (linkAttrs (PlayTrack track.id))
-          )
-          [ div
-              [ class "live-track-header" ]
-              [ h3
-                  [ class "name", title track.name ]
-                  [ text track.name ]
-              , div
-                  [ class "creator" ]
-                  [ text ("by " ++ (Maybe.withDefault "" meta.creator.handle)) ]
-              , if empty then
-                  text ""
-                else
-                  span [ class "live-players" ] [ text (toString (List.length players)) ]
-              ]
-          , div
-              [ class "live-track-body"
-              ]
-              [ rankingsExtract meta.rankings
-              ]
-          , div
-              [ class "live-track-actions" ]
-              [ linkTo
-                  (ShowTrack track.id)
-                  [ class "btn-flat" ]
-                  [ text <| "See " ++ toString (List.length meta.rankings) ++ " entries"
-                  ]
-              ]
-          ]
-      ]
-
-
-rankingsExtract : List Ranking -> Html
-rankingsExtract rankings =
-  ul
-    [ class "list-unstyled list-rankings"
-    ]
-    (List.take 3 rankings |> List.map rankingItem)
 
 
 activePlayers : List LiveTrack -> Html

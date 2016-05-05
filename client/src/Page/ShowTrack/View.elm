@@ -38,10 +38,15 @@ withLiveTrack model ({ track, meta, players } as liveTrack) =
   , Layout.section
       [ class "white" ]
       [ row
-          [ div [ class "col-md-8" ] [ courseBlock model.courseControl track.course ]
+          [ div
+              [ class "col-md-8" ]
+              [ text "TODO"
+                --courseBlock model.courseControl track.course
+              ]
           , div
               [ class "col-md-4 about" ]
-              [ about track
+              [ text "TODO"
+              -- , about track
               ]
           ]
       , row
@@ -96,16 +101,17 @@ rankingsList rankings =
   ul [ class "list-unstyled list-rankings" ] (List.map rankingItem rankings)
 
 
-about : Track -> Html
-about { course } =
-  dl'
-    -- [ ( "Laps", [ text <| toString course.laps ] )
-    -- , ( "Distance", [ text <| toString (course.upwind.y - course.downwind.y), np ] )
-    [ ( "Wind speed", [ text <| toString course.windSpeed, abbr' "kn" "Knots" ] )
-    , ( "Gusts interval", [ text <| toString course.gustGenerator.interval, abbr' "s" "Seconds" ] )
-    , ( "Gusts radius", aboutGustRadius course.gustGenerator )
-    , ( "Gusts effect", aboutGustWind course.gustGenerator )
-    ]
+
+-- about : Track -> Html
+-- about { course } =
+--   dl'
+--     -- [ ( "Laps", [ text <| toString course.laps ] )
+--     -- , ( "Distance", [ text <| toString (course.upwind.y - course.downwind.y), np ] )
+--     [ ( "Wind speed", [ text <| toString course.windSpeed, abbr' "kn" "Knots" ] )
+--     , ( "Gusts interval", [ text <| toString course.gustGenerator.interval, abbr' "s" "Seconds" ] )
+--     , ( "Gusts radius", aboutGustRadius course.gustGenerator )
+--     , ( "Gusts effect", aboutGustWind course.gustGenerator )
+--     ]
 
 
 aboutGustRadius : GustGenerator -> List Html

@@ -21,7 +21,7 @@ view ({ player, dims } as ctx) model =
   case ( model.track, model.editor ) of
     ( Just track, Just editor ) ->
       if canUpdateDraft player track then
-        Layout.layoutWithSidebar
+        Layout.gameLayout
           "editor"
           ctx
           (Context.toolbar track editor)
@@ -32,7 +32,7 @@ view ({ player, dims } as ctx) model =
         Html.text "Access forbidden."
 
     _ ->
-      Layout.layoutWithSidebar
+      Layout.gameLayout
         "editor loading"
         ctx
         [ text "" ]

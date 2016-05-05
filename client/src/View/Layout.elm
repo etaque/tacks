@@ -12,8 +12,6 @@ import Model exposing (appActionsAddress, Action(Logout))
 import Model.Shared exposing (Context, Player, isAdmin)
 import Route
 import TransitStyle
-import Page.Admin.Model as Admin
-import Page.Forum.Model as Forum
 import Constants
 
 
@@ -50,26 +48,6 @@ header ctx attrs content =
       ]
 
 
-footer : Player -> Html
-footer player =
-  Html.footer
-    []
-    [ div
-        [ class "container footer" ]
-        (if isAdmin player then
-          [ ul
-              []
-              [ li [] [ Utils.linkTo Route.ListDrafts [] [ text "Track editor" ] ]
-              , li [] [ Utils.linkTo (Route.Forum Forum.initialRoute) [] [ text "Forum" ] ]
-              , li [] [ Utils.linkTo (Route.Admin Admin.initialRoute) [] [ text "Admin" ] ]
-              ]
-          ]
-         else
-          []
-        )
-    ]
-
-
 type Nav
   = Home
   | Explore
@@ -93,7 +71,7 @@ siteLayout name ctx maybeCurrentNav mainContent =
       Html.Lazy.lazy HexBg.render ( fst ctx.dims - Constants.sidebarWidth, snd ctx.dims )
   in
     div
-      [ class "layout-fullscreen layout-site"
+      [ class "layout-game layout-site"
       , id name
       ]
       [ aside
@@ -108,10 +86,10 @@ siteLayout name ctx maybeCurrentNav mainContent =
       ]
 
 
-layoutWithSidebar : String -> Context -> List Html -> List Html -> List Html -> Html
-layoutWithSidebar name ctx navContent sideContent mainContent =
+gameLayout : String -> Context -> List Html -> List Html -> List Html -> Html
+gameLayout name ctx navContent sideContent mainContent =
   div
-    [ class "layout-fullscreen"
+    [ class "layout-game"
     , id name
     ]
     [ aside
@@ -161,8 +139,8 @@ sideMenu player maybeCurrent =
   , div
       [ class "menu" ]
       [ sideMenuItem Route.Home "home" "Home" (maybeCurrent == Just Home)
-      , sideMenuItem Route.Home "explore" "Explore tracks" (maybeCurrent == Just Explore)
-      , sideMenuItem Route.ListDrafts "palette" "Build tracks" (maybeCurrent == Just Build)
+      , sideMenuItem Route.Explore "explore" "Explore" (maybeCurrent == Just Explore)
+      , sideMenuItem Route.ListDrafts "palette" "Build" (maybeCurrent == Just Build)
       ]
   , hr [] []
   , div

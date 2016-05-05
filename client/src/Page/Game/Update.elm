@@ -17,7 +17,6 @@ import Page.Game.Model exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps exposing (gameStep)
-import Game.Inputs as Input
 import Game.Outputs as Output
 import Update.Utils as Utils
 
@@ -29,24 +28,24 @@ addr =
 
 mount : String -> ( Model, Effects Action )
 mount id =
-  taskRes initial (loadLiveTrack id)
+  taskRes initial (load id)
 
 
 update : Player -> Action -> Model -> ( Model, Effects Action )
 update player action model =
   case action of
-    LoadLiveTrack result ->
-      case result of
-        Ok liveTrack ->
-          res model (tick <| InitGameState liveTrack)
+    Load liveTrackResult courseResult ->
+      case ( liveTrackResult, courseResult ) of
+        ( Ok liveTrack, Ok course ) ->
+          res model (tick <| InitGameState liveTrack course)
 
-        Err _ ->
+        _ ->
           res { model | notFound = True } none
 
-    InitGameState liveTrack time ->
+    InitGameState liveTrack course time ->
       let
         gameState =
-          defaultGame time liveTrack.track.course player
+          defaultGame time course player
 
         newModel =
           { model | gameState = Just gameState }
@@ -151,10 +150,12 @@ applyLiveTrack ({ track, players, races } as liveTrack) model =
     { model | liveTrack = Just liveTrack, races = races, freePlayers = freePlayers }
 
 
-loadLiveTrack : String -> Task Never Action
-loadLiveTrack id =
-  ServerApi.getLiveTrack id
-    |> Task.map LoadLiveTrack
+load : String -> Task Never Action
+load id =
+  Task.map2
+    Load
+    (ServerApi.getLiveTrack id)
+    (ServerApi.getCourse id)
 
 
 pingServer : Effects Action

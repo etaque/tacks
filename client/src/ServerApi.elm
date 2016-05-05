@@ -44,6 +44,11 @@ getTrack id =
   getJson trackDecoder ("/api/tracks/" ++ id)
 
 
+getCourse : String -> GetJsonTask Course
+getCourse id =
+  getJson courseDecoder ("/api/tracks/" ++ id ++ "/course")
+
+
 getLiveTrack : String -> GetJsonTask LiveTrack
 getLiveTrack id =
   getJson liveTrackDecoder ("/api/live/" ++ id)

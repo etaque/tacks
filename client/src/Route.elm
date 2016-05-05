@@ -9,6 +9,7 @@ type Route
   = Home
   | Login
   | Register
+  | Explore
   | ShowProfile
   | ShowTrack String
   | ListDrafts
@@ -37,6 +38,7 @@ matchers =
   [ static Home "/"
   , static Login "/login"
   , static Register "/register"
+  , static Explore "/explore"
   , static ShowProfile "/me"
   , static ListDrafts "/drafts"
   , dyn1 ShowTrack "/track/" string ""
@@ -58,6 +60,9 @@ toPath route =
 
     Register ->
       "/register"
+
+    Explore ->
+      "/explore"
 
     ShowProfile ->
       "/me"

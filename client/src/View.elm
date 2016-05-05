@@ -7,6 +7,7 @@ import Model.Shared exposing (Context)
 import Page.Home.View as HomePage
 import Page.Login.View as LoginPage
 import Page.Register.View as RegisterPage
+import Page.Explore.View as ExplorePage
 import Page.ShowTrack.View as ShowTrackPage
 import Page.EditTrack.View as EditTrackPage
 import Page.ShowProfile.View as ShowProfilePage
@@ -18,10 +19,10 @@ import Route exposing (..)
 
 
 view : Signal.Address Action -> Model -> Html
-view _ ({ pages, player, dims, routeTransition } as model) =
+view _ ({ pages, player, liveStatus, dims, routeTransition } as model) =
   let
     ctx =
-      Context player dims (getTransition model) routeTransition
+      Context player liveStatus dims (getTransition model) routeTransition
   in
     case (TransitRouter.getRoute model) of
       Home ->
@@ -32,6 +33,9 @@ view _ ({ pages, player, dims, routeTransition } as model) =
 
       Login ->
         LoginPage.view ctx pages.login
+
+      Explore ->
+        ExplorePage.view ctx pages.explore
 
       ShowTrack _ ->
         ShowTrackPage.view ctx pages.showTrack
@@ -65,10 +69,10 @@ pageTitle : Model -> String
 pageTitle model =
   case TransitRouter.getRoute model of
     PlayTrack _ ->
-      GamePage.pageTitle model.pages.game ++ " - Tacks"
+      GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
 
     Home ->
-      HomePage.pageTitle model.pages.home ++ " - Tacks"
+      HomePage.pageTitle model.liveStatus model.pages.home ++ " - Tacks"
 
     _ ->
       "Tacks"
