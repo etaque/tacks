@@ -16,9 +16,9 @@ addr =
   Utils.pageAddr Model.HomeAction
 
 
-mount : Player -> ( Model, Effects Action )
-mount player =
-  res (initial player) (task loadRaceReports)
+mount : Model -> ( Model, Effects Action )
+mount model =
+  res model (task loadRaceReports)
 
 
 update : Action -> Model -> ( Model, Effects Action )
@@ -30,19 +30,6 @@ update action model =
           Result.withDefault [] result
       in
         res { model | raceReports = raceReports } none
-
-    SetHandle handle ->
-      res { model | handle = handle } none
-
-    SubmitHandle ->
-      Task.map SubmitHandleResult (ServerApi.postHandle model.handle)
-        |> taskRes model
-
-    SubmitHandleResult result ->
-      Result.map (Utils.setPlayer) result
-        |> Result.withDefault none
-        |> Utils.always NoOp
-        |> res model
 
     FocusTrack maybeTrackId ->
       res { model | trackFocus = maybeTrackId } none

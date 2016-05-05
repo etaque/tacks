@@ -16,9 +16,9 @@ addr =
   Utils.pageAddr Model.ListDraftsAction
 
 
-mount : ( Model, Effects Action )
-mount =
-  taskRes initial loadDrafts
+mount : Model -> ( Model, Effects Action )
+mount model =
+  taskRes model loadDrafts
 
 
 update : Action -> Model -> ( Model, Effects Action )

@@ -55,36 +55,6 @@ view ctx model =
     ]
 
 
-welcomeForm : Player -> String -> Html
-welcomeForm player handle =
-  if player.guest then
-    setHandleBlock handle
-  else
-    div [] []
-
-
-setHandleBlock : String -> Html
-setHandleBlock handle =
-  div
-    [ class "form-inline form-set-handle align-center" ]
-    [ formGroup
-        False
-        [ textInput
-            [ placeholder "Got a nickname?"
-            , value handle
-            , onInput addr SetHandle
-            , onEnter addr SubmitHandle
-            ]
-        ]
-    , button
-        [ class "btn btn-primary"
-        , onClick addr SubmitHandle
-        ]
-        [ text "submit" ]
-    , linkTo Login [ class "btn btn-default" ] [ text "or log in" ]
-    ]
-
-
 liveTracks : Player -> LiveStatus -> Maybe TrackId -> Html
 liveTracks player { liveTracks } maybeTrackId =
   let

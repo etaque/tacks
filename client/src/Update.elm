@@ -111,7 +111,7 @@ mountRoute prevRoute newRoute ({ pages, player } as prevModel) =
   in
     case newRoute of
       Home ->
-        applyHome (Home.mount player) model
+        applyHome (Home.mount pages.home) model
 
       Login ->
         applyLogin Login.mount model
@@ -135,7 +135,7 @@ mountRoute prevRoute newRoute ({ pages, player } as prevModel) =
         applyGame (Game.mount id) model
 
       ListDrafts ->
-        applyListDrafts ListDrafts.mount model
+        applyListDrafts (ListDrafts.mount pages.listDrafts) model
 
       Forum forumRoute ->
         applyForum (Forum.mount forumRoute) model
@@ -143,10 +143,7 @@ mountRoute prevRoute newRoute ({ pages, player } as prevModel) =
       Admin adminRoute ->
         applyAdmin Admin.mount model
 
-      EmptyRoute ->
-        res model none
-
-      NotFound ->
+      _ ->
         res model none
 
 
