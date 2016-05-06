@@ -15,18 +15,6 @@ import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 import Route
 
 
-nav : Track -> Editor -> List Html
-nav track editor =
-  [ h2
-      []
-      [ linkTo
-          (Route.ShowTrack track.id)
-          []
-          [ text track.name ]
-      ]
-  ]
-
-
 toolbar : Track -> Editor -> List Html
 toolbar track editor =
   [ div

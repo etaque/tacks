@@ -6,22 +6,22 @@ import Html.Events exposing (..)
 import Date
 import Date.Format as DateFormat
 import Model.Shared exposing (..)
-import Route exposing (..)
 import View.Utils as Utils exposing (..)
+import Dialog
 
 
-reports : Bool -> List RaceReport -> Html
-reports showName reports =
+reports : Bool -> (RaceReport -> Attribute) -> List RaceReport -> Html
+reports showName clickHandler reports =
   div
     [ class "row race-reports" ]
     <| if List.isEmpty reports then
         [ div [ class "notice" ] [ text "No races yet!" ] ]
        else
-        List.map (raceReportItem showName) reports
+        List.map (raceReportItem showName clickHandler) reports
 
 
-raceReportItem : Bool -> RaceReport -> Html
-raceReportItem showName report =
+raceReportItem : Bool -> (RaceReport -> Attribute) -> RaceReport -> Html
+raceReportItem showName clickHandler report =
   let
     count =
       List.length report.runs
@@ -34,9 +34,12 @@ raceReportItem showName report =
     div
       [ class "col-sm-3" ]
       [ div
-          ([ class "race-card" ] ++ Utils.linkAttrs (ShowTrack report.trackId))
+          [ class "race-card"
+          , clickHandler report
+          ]
           [ div
-              [ class "race-card-header" ]
+              [ class "race-card-header"
+              ]
               [ if showName then
                   div
                     [ class "track-name"
@@ -103,3 +106,24 @@ emptyRun =
         [ Utils.nbsp ]
       -- , playerWithAvatar run.player
     ]
+
+
+reportDialog : RaceReport -> Dialog.Layout
+reportDialog report =
+  { header =
+      [ Dialog.title "Race report"
+      , Dialog.subtitle
+          (report.trackName
+            ++ " - "
+            ++ DateFormat.format
+                "%e %b. %k:%M"
+                (Date.fromTime report.startTime)
+          )
+      ]
+  , body =
+      [ ul
+          [ class "list-unstyled list-rankings" ]
+          (List.indexedMap raceReportRun report.runs)
+      ]
+  , footer = []
+  }

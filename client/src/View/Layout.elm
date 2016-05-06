@@ -140,7 +140,10 @@ sideMenu player maybeCurrent =
       [ class "menu" ]
       [ sideMenuItem Route.Home "home" "Home" (maybeCurrent == Just Home)
       , sideMenuItem Route.Explore "explore" "Explore" (maybeCurrent == Just Explore)
-      , sideMenuItem Route.ListDrafts "palette" "Build" (maybeCurrent == Just Build)
+      , if player.guest then
+          text ""
+        else
+          sideMenuItem Route.ListDrafts "palette" "Build" (maybeCurrent == Just Build)
       ]
   , hr [] []
   , div

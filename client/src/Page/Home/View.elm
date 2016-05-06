@@ -1,5 +1,6 @@
 module Page.Home.View (..) where
 
+import Signal
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -11,6 +12,7 @@ import View.Utils as Utils exposing (..)
 import View.Layout as Layout
 import View.Race as Race
 import View.Track as Track
+import Dialog
 
 
 pageTitle : LiveStatus -> Model -> String
@@ -50,9 +52,26 @@ view ctx model =
     , Layout.section
         [ class "grey" ]
         [ h2 [] [ text "Recent races" ]
-        , Race.reports True model.raceReports
+        , Race.reports True reportClickHandler model.raceReports
         ]
+    , Dialog.view
+        (Signal.forwardTo addr DialogAction)
+        model.dialog
+        (dialogContent model)
     ]
+
+
+dialogContent : Model -> Dialog.Layout
+dialogContent model =
+  case model.showDialog of
+    Empty ->
+      Dialog.emptyLayout
+
+    RankingDialog liveTrack ->
+      Track.rankingDialog liveTrack
+
+    ReportDialog raceReport ->
+      Race.reportDialog raceReport
 
 
 liveTracks : Player -> LiveStatus -> Html
@@ -64,8 +83,18 @@ liveTracks player { liveTracks } =
     div
       [ class "live-tracks" ]
       [ h2 [] [ text "Featured tracks" ]
-      , div [ class "row" ] (List.map Track.liveTrackBlock featuredTracks)
+      , div [ class "row" ] (List.map (Track.liveTrackBlock rankingClickHandler) featuredTracks)
       ]
+
+
+rankingClickHandler : LiveTrack -> Attribute
+rankingClickHandler liveTrack =
+  onButtonClick addr (ShowDialog (RankingDialog liveTrack))
+
+
+reportClickHandler : RaceReport -> Attribute
+reportClickHandler report =
+  onButtonClick addr (ShowDialog (ReportDialog report))
 
 
 activePlayers : List LiveTrack -> Html

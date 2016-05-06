@@ -8,9 +8,7 @@ import Page.Home.View as HomePage
 import Page.Login.View as LoginPage
 import Page.Register.View as RegisterPage
 import Page.Explore.View as ExplorePage
-import Page.ShowTrack.View as ShowTrackPage
 import Page.EditTrack.View as EditTrackPage
-import Page.ShowProfile.View as ShowProfilePage
 import Page.Game.View as GamePage
 import Page.ListDrafts.View as ListDraftsPage
 import Page.Forum.View as ForumPage
@@ -37,14 +35,8 @@ view _ ({ pages, player, liveStatus, dims, routeTransition } as model) =
       Explore ->
         ExplorePage.view ctx pages.explore
 
-      ShowTrack _ ->
-        ShowTrackPage.view ctx pages.showTrack
-
       EditTrack _ ->
         EditTrackPage.view ctx pages.editTrack
-
-      ShowProfile ->
-        ShowProfilePage.view ctx pages.showProfile
 
       PlayTrack _ ->
         GamePage.view ctx pages.game

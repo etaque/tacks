@@ -24,6 +24,16 @@ isJust m =
   not (isNothing m)
 
 
+maybeToList : Maybe a -> List a
+maybeToList ma =
+  case ma of
+    Just a ->
+      [ a ]
+
+    _ ->
+      []
+
+
 removeAt : Int -> List a -> List a
 removeAt i items =
   (List.take i items) ++ (List.drop (i + 1) items)

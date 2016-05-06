@@ -10,8 +10,6 @@ type Route
   | Login
   | Register
   | Explore
-  | ShowProfile
-  | ShowTrack String
   | ListDrafts
   | EditTrack String
   | PlayTrack String
@@ -39,9 +37,7 @@ matchers =
   , static Login "/login"
   , static Register "/register"
   , static Explore "/explore"
-  , static ShowProfile "/me"
   , static ListDrafts "/drafts"
-  , dyn1 ShowTrack "/track/" string ""
   , dyn1 EditTrack "/edit/" string ""
   , dyn1 PlayTrack "/play/" string ""
   ]
@@ -64,14 +60,8 @@ toPath route =
     Explore ->
       "/explore"
 
-    ShowProfile ->
-      "/me"
-
     ListDrafts ->
       "/drafts"
-
-    ShowTrack id ->
-      "/track/" ++ id
 
     EditTrack id ->
       "/edit/" ++ id

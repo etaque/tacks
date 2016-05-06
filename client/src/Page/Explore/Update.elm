@@ -1,15 +1,11 @@
 module Page.Explore.Update (..) where
 
 import Page.Explore.Model exposing (..)
-import Task exposing (Task, succeed, andThen)
-import Task.Extra exposing (delay)
-import Time exposing (second)
 import Response exposing (..)
+import Dialog
 import Effects exposing (Effects, Never, none, map, task)
 import Model
-import Model.Shared exposing (..)
 import Update.Utils as Utils
-import ServerApi
 
 
 addr : Signal.Address Action
@@ -25,5 +21,11 @@ mount =
 update : Action -> Model -> Response Model Action
 update action model =
   case action of
+    ShowTrackRanking liveTrack ->
+      Dialog.taggedOpen DialogAction { model | showTrackRanking = Just liveTrack }
+
+    DialogAction a ->
+      Dialog.taggedUpdate DialogAction a model
+
     NoOp ->
       res model none

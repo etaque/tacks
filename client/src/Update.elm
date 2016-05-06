@@ -12,9 +12,7 @@ import Page.Home.Update as Home
 import Page.Register.Update as Register
 import Page.Login.Update as Login
 import Page.Explore.Update as Explore
-import Page.ShowTrack.Update as ShowTrack
 import Page.EditTrack.Update as EditTrack
-import Page.ShowProfile.Update as ShowProfile
 import Page.Game.Update as Game
 import Page.ListDrafts.Update as ListDrafts
 import Page.Forum.Update as Forum
@@ -77,9 +75,6 @@ update action ({ pages } as model) =
             EditTrack _ ->
               Just (EditTrackAction << EditTrack.mouseAction)
 
-            ShowTrack _ ->
-              Just (ShowTrackAction << ShowTrack.mouseAction)
-
             _ ->
               Nothing
       in
@@ -122,12 +117,6 @@ mountRoute prevRoute newRoute ({ pages, player } as prevModel) =
       Explore ->
         applyExplore Explore.mount model
 
-      ShowProfile ->
-        applyShowProfile (ShowProfile.mount player) model
-
-      ShowTrack id ->
-        applyShowTrack (ShowTrack.mount id) model
-
       EditTrack id ->
         applyEditTrack (EditTrack.mount id) model
 
@@ -162,14 +151,8 @@ pageUpdate pageAction ({ pages, player, dims } as model) =
     ExploreAction a ->
       applyExplore (Explore.update a pages.explore) model
 
-    ShowTrackAction a ->
-      applyShowTrack (ShowTrack.update a pages.showTrack) model
-
     EditTrackAction a ->
       applyEditTrack (EditTrack.update dims a pages.editTrack) model
-
-    ShowProfileAction a ->
-      applyShowProfile (ShowProfile.update a pages.showProfile) model
 
     GameAction a ->
       applyGame (Game.update player a pages.game) model
@@ -204,14 +187,6 @@ applyRegister =
 
 applyExplore =
   applyPage (\s pages -> { pages | explore = s }) ExploreAction
-
-
-applyShowProfile =
-  applyPage (\s pages -> { pages | showProfile = s }) ShowProfileAction
-
-
-applyShowTrack =
-  applyPage (\s pages -> { pages | showTrack = s }) ShowTrackAction
 
 
 applyEditTrack =
