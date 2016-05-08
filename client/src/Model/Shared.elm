@@ -49,6 +49,11 @@ type alias User =
   }
 
 
+asPlayer : User -> Player
+asPlayer user =
+  Player user.id (Just user.handle) user.status user.avatarId user.vmgMagnet False True
+
+
 isAdmin : Player -> Bool
 isAdmin player =
   case player.handle of

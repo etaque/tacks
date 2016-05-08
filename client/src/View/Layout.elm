@@ -11,6 +11,7 @@ import View.Utils as Utils
 import Model exposing (appActionsAddress, Action(Logout))
 import Model.Shared exposing (Context, Player, isAdmin)
 import Route
+import Page.Forum.Route as Forum
 import TransitStyle
 import Constants
 
@@ -52,6 +53,7 @@ type Nav
   = Home
   | Explore
   | Build
+  | Discuss
   | Login
   | Register
 
@@ -144,6 +146,10 @@ sideMenu player maybeCurrent =
           text ""
         else
           sideMenuItem Route.ListDrafts "palette" "Build" (maybeCurrent == Just Build)
+      , if player.guest then
+          text ""
+        else
+          sideMenuItem (Route.Forum Forum.Index) "face" "Discuss" (maybeCurrent == Just Discuss)
       ]
   , hr [] []
   , div

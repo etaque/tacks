@@ -7,15 +7,16 @@ import Html.Events exposing (..)
 import Markdown
 import Form.Input as Input
 import Form
+import Model.Shared exposing (Context)
 import Route
 import Page.Forum.Route exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
-import View.Utils exposing (..)
+import View.Utils as Utils
 import View.Layout as Layout
 
 
-view : Address Action -> Model -> List Html
-view addr { form, loading } =
+view : Address Action -> Context -> Model -> List Html
+view addr ctx { form, loading } =
   let
     formAddr =
       Signal.forwardTo addr FormAction
@@ -34,19 +35,22 @@ view addr { form, loading } =
         Nothing ->
           ( onClick formAddr Form.Submit, Form.isSubmitted form )
   in
-    [ Layout.section
-        [ class "blue" ]
-        [ linkTo
+    [ Layout.header
+        ctx
+        []
+        [ Utils.linkTo
             (Route.Forum Index)
-            [ class "pull-right btn btn-link"
+            [ class "action-title"
+            , Html.Attributes.title "Back to forum index"
             ]
-            [ text "Cancel" ]
-        , h1 [] [ text "New topic" ]
+            [ Utils.mIcon "close" []
+            , h1 [] [ text "New topic" ]
+            ]
         ]
     , Layout.section
         [ class "white" ]
         [ div
-            [ class "form-new-topic form-vertical" ]
+            [ class "form-sheet form-new-topic" ]
             [ div
                 [ class "form-group" ]
                 [ Input.textInput
@@ -59,15 +63,15 @@ view addr { form, loading } =
                 [ Input.textArea
                     content
                     formAddr
-                    [ class "form-control" ]
+                    [ class "form-control", placeholder "Message body" ]
                 ]
+            -- , div
+            --     [ class "preview" ]
+            --     [ Markdown.toHtml (content.value |> Maybe.withDefault "") ]
             , div
-                [ class "preview" ]
-                [ Markdown.toHtml (content.value |> Maybe.withDefault "") ]
-            , div
-                []
+                [ class "form-actions"]
                 [ button
-                    [ class "btn btn-primary pull-right"
+                    [ class "btn-flat"
                     , disabled submitDisabled
                     , submitClick
                     ]

@@ -6,24 +6,26 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Date
 import Date.Format as DateFormat
+import Model.Shared exposing (Context, asPlayer)
 import Route
 import Page.Forum.Route exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Index.Model exposing (..)
-import View.Utils exposing (..)
+import View.Utils as Utils
 import View.Layout as Layout
 
 
-view : Address Action -> Model -> List Html
-view addr ({ topics } as model) =
-  [ Layout.section
-      [ class "blue" ]
-      [ linkTo
+view : Address Action -> Context -> Model -> List Html
+view addr ctx ({ topics } as model) =
+  [ Layout.header
+      ctx
+      []
+      [ h1 [] [ text "Forum" ]
+      , Utils.linkTo
           (Route.Forum NewTopic)
-          [ class "pull-right btn btn-primary"
+          [ class "btn-floating btn-positive btn-new-topic"
           ]
-          [ text "New topic" ]
-      , h1 [] [ text "Forum" ]
+          [ Utils.mIcon "edit" [] ]
       ]
   , Layout.section
       [ class "white" ]
@@ -39,8 +41,8 @@ topicsTable topics =
         []
         [ tr
             []
-            [ th [ class "title" ] [ text "Topic" ]
-            , th [ class "original" ] [ text "Started by" ]
+            [ th [ class "icon" ] [  ]
+            , th [ class "title-with-author" ] [ text "Topic" ]
             , th [ class "count" ] [ text "Replies" ]
             , th [ class "activity" ] [ text "Most recent" ]
             ]
@@ -54,13 +56,15 @@ topicsTable topics =
 topicRow : TopicWithUser -> Html
 topicRow { topic, user } =
   tr
-    []
+    (Utils.linkAttrs (Route.Forum (ShowTopic topic.id)))
     [ td
-        [ class "title" ]
-        [ linkTo (Route.Forum (ShowTopic topic.id)) [] [ text topic.title ] ]
+        [ class "icon" ]
+        [ img [ src (Utils.avatarUrl 32 (asPlayer user)), class "avatar" ] [] ]
     , td
-        [ class "original" ]
-        [ text user.handle ]
+        [ class "title-with-author" ]
+        [ div [ class "title" ] [ text topic.title ]
+        , div [ class "handle" ] [ text (Utils.playerHandle (asPlayer user)) ]
+        ]
     , td
         [ class "count" ]
         [ text (toString topic.postsCount) ]

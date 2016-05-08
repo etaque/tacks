@@ -3,20 +3,48 @@
 @import 'mixins';
 
 #forum {
+
+  .container {
+    max-width: 750px;
+  }
+
+  .btn-new-topic {
+    position: absolute;
+    bottom: -28px;
+    left: -80px;
+  }
+
   .forum-topics-table {
+    @include sheet;
+    @include shadow-light;
+
+    th, td {
+      padding: 0 16px;
+      vertical-align: middle;
+      border: 0;
+
+      &:first-child {
+        padding-left: 24px;
+      }
+
+      &:last-child {
+        padding-right: 24px;
+      }
+    }
 
     thead {
       th {
-        border-bottom: none;
         color: $grey;
+        line-height: 64px;
+        border-bottom: $border;
       }
 
-      .title {
-        width: 50%;
+      .icon {
+        width: 48px;
       }
 
-      .original {
-        width: 25%;
+      .title-with-author {
+        padding-left: 0;
       }
 
       .count {
@@ -27,22 +55,32 @@
     }
       
     tbody {
-      /* border: 1px solid $lightGrey; */
-      /* background-color: $white; */
 
       td {
-        padding: 8px;
-        border-bottom: 1px solid $lightGrey;
-        color: $grey;
+        color: $darkGrey;
+        cursor: pointer;
+        line-height: 64px;
+        transition: bezier(background-color);
+      }
+
+      .icon {
+        border-bottom: 0;
+        .avatar {
+          border-radius: 24px;
+        }
+      }
+
+      .title-with-author {
+        line-height: 20px;
+        width: 80%;
+        padding-left: 0;
       }
 
       .title {
-        padding-left: 12px;
-        font-family: $serif;
         font-weight: bold;
-
-        a {}
       }
+
+
 
       .original {}
 
@@ -50,72 +88,148 @@
         text-align: center;
       }
 
+      .activity {
+        white-space: nowrap;
+      }
+
       tr:last-child td {
-        border-bottom: 1px solid $lightGrey;
+        border-bottom: none;
       }
 
       tr:hover td {
-        background-color: $white;
+        background-color: #F3F3F3;
       }
 
     } 
   }
 
+  .forum-topic-posts {
+    @include sheet;
+    @include shadow-light;
+  }
+
   .forum-post {
-    margin-bottom: 10px;
-    /* background-color: $white; */
-    /* border: 1px solid $lightGrey; */
+    border-bottom: $border;
 
     .post-meta {
-      margin: 10px 0;
-      padding-bottom: 5px;
-      /* background-color: $lightGrey; */
-      border-bottom: 1px solid $lightGrey;
+      padding: 24px;
+      padding-bottom: 0;
       color: $grey;
 
-      .handle {
+      .player-avatar {
         float: left;
         font-weight: bold;
       }
 
       .time {
         float: right;
+        line-height: 32px;
       }
 
       @include clearfix;
     }
 
     .post-content {
-      padding: 10px 0;
+      padding: 24px;
+    }
+
+    &:last-child {
+      border-bottom: 0;
+      padding-bottom: 16px;
     }
   }
 
   .toggle-new-post {
+    margin: 0 auto;
+    margin-top: -24px;
 
     &.active {
     }
   }
 
-  .form-new-post,
-  .form-new-topic {
-    margin: 20px 0;
 
-    textarea {
-      height: 200px;
-    }
+  /* .form-new-post, */
+  /* .form-new-topic { */
+  /*   /\* padding: 24px; *\/ */
 
-    .preview {
-      margin-bottom: 10px;
-      padding: 10px 10px 0 10px;
-      background-color: $white;
-      border: 1px solid $lightGrey;
+  /*   textarea { */
+  /*   } */
 
-      .preview-legend {
+  /*   .preview { */
+  /*     margin-bottom: 16px; */
+
+  /*     .preview-legend { */
+  /*       font-weight: bold; */
+  /*       text-transform: italic; */
+  /*       margin-bottom: 10px; */
+  /*     } */
+
+  /*   } */
+  /* } */
+
+  .form-sheet {
+    @include sheet;
+    @include shadow-light;
+    margin-top: 24px;
+
+    .form-header {
+      padding: 16px 16px 16px 24px;
+      border-bottom: $border;
+      background-color: $whiteSmoke;
+      @include clearfix;
+
+      .cancel-new-post {
+        cursor: pointer;
+        display: inline-block;
+        vertical-align: top;
+        line-height: 24px;
+        height: 24px;
+        float: right;
+
+        &:hover {
+          color: $darkGrey;
+        }
+      }
+
+      h3 {
+        display: inline-block;
+        font-family: $regular;
         font-weight: bold;
-        text-transform: italic;
-        margin-bottom: 10px;
+        margin: 0;
+        vertical-align: top;
+        line-height: 24px;
       }
 
     }
+
+    .form-group {
+      clear: both;
+      padding: 0;
+      margin-bottom: 0;
+
+      .form-control {
+        padding: 16px 24px;
+        border-bottom: $border;
+
+        &:focus {
+          border-color: $mainBlue;
+        }
+      }
+
+      textarea {
+        height: 200px;
+      }
+    }
+
+    .form-actions {
+      margin: 0;
+
+      .btn-flat {
+        width: 100%;
+        display: block;
+        line-height: 48px;
+      }
+    }
+    
   }
 }

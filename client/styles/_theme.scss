@@ -94,6 +94,37 @@ header {
     }
   }
 
+  .action-title {
+    position: absolute;
+    bottom: 32px;
+    left: -36px;
+
+    &:hover {
+      color: $mainBlue;
+
+      i {
+        opacity: 0.8;
+      }
+    }
+
+    h1 {
+      position: initial;
+      display: inline-block;
+      margin-left: 16px;
+      vertical-align: top;
+      line-height: 36px;
+    }
+
+    i {
+      color: white;
+      opacity: 0.6;
+      font-size: 36px;
+      width: 36px;
+      text-align: center;
+      vertical-align: top;
+    }
+  }
+
 }
 
 .sheet {
@@ -605,7 +636,7 @@ aside {
     top: 0;
     left: 0;
     right: 0;
-    width: 520px;
+    width: 420px;
     margin-left: auto;
     margin-right: auto;
     margin-top: 52px;
@@ -650,8 +681,7 @@ aside {
 
     .list-rankings {
       border-top: $border;
-      border-bottom: $border;
-      /* margin-bottom: 16px; */
+      margin-bottom: 0;
     }
   }
   

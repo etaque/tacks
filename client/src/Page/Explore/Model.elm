@@ -5,9 +5,9 @@ import Dialog
 
 
 type alias Model =
-  { showTrackRanking : Maybe LiveTrack
-  , dialog : Dialog.Model
-  }
+  Dialog.WithDialog
+    { showTrackRanking : Maybe LiveTrack
+    }
 
 
 initial : Model

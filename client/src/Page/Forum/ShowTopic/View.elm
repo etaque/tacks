@@ -8,31 +8,23 @@ import Html.Events exposing (..)
 import Markdown
 import Date
 import Date.Format as DateFormat
+import Model.Shared exposing (Context, asPlayer)
 import Route
 import Page.Forum.Route exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.ShowTopic.Model exposing (..)
-import View.Utils exposing (..)
+import View.Utils as Utils
 import View.Layout as Layout
 
 
-view : Address Action -> Model -> List Html
-view addr model =
+view : Address Action -> Context -> Model -> List Html
+view addr ctx model =
   case model.currentTopic of
     Nothing ->
-      [ Layout.section
-          [ class "blue" ]
-          [ back
-          , h1 [] [ text "Loading topic..." ]
-          ]
-      ]
+      [ header ctx "Loading..." ]
 
     Just { topic, postsWithUsers } ->
-      [ Layout.section
-          [ class "blue" ]
-          [ back
-          , h1 [] [ text topic.title ]
-          ]
+      [ header ctx topic.title
       , Layout.section
           [ class "white" ]
           [ div
@@ -44,20 +36,28 @@ view addr model =
 
               Nothing ->
                 button
-                  [ class "btn btn-primary pull-right toggle-new-post"
+                  [ class "btn-floating btn-primary toggle-new-post"
                   , onClick addr ToggleNewPost
                   ]
-                  [ text "Reply" ]
+                  [ Utils.mIcon "add" [] ]
           ]
       ]
 
 
-back : Html
-back =
-  linkTo
-    (Route.Forum Index)
-    [ class "btn btn-link pull-right" ]
-    [ text "Back" ]
+header : Context -> String -> Html
+header ctx title =
+  Layout.header
+    ctx
+    []
+    [ Utils.linkTo
+        (Route.Forum Index)
+        [ class "action-title"
+        , Html.Attributes.title "Back to forum index"
+        ]
+        [ Utils.mIcon "arrow_back" []
+        , h1 [] [ text title ]
+        ]
+    ]
 
 
 renderPost : PostWithUser -> Html
@@ -66,7 +66,7 @@ renderPost { post, user } =
     [ class "forum-post" ]
     [ div
         [ class "post-meta" ]
-        [ div [ class "handle" ] [ text user.handle ]
+        [ Utils.playerWithAvatar (asPlayer user)
         , div [ class "time" ] [ text (DateFormat.format "%d %B %Y - %H:%I" (Date.fromTime post.creationTime)) ]
         ]
     , div
@@ -78,33 +78,38 @@ renderPost { post, user } =
 newPost : Address Action -> String -> Bool -> Html
 newPost addr content loading =
   div
-    [ class "form-new-post form-vertical" ]
-    [ button
-        [ class "btn btn-link pull-right"
-        , onClick addr ToggleNewPost
+    [ class "form-sheet" ]
+    [ div
+        [ class "form-header" ]
+        [ div
+            [ class "cancel-new-post"
+            , onClick addr ToggleNewPost
+            ]
+            [ Utils.mIcon "close" [] ]
+        , h3 [] [ text "New message" ]
         ]
-        [ text "Cancel" ]
     , div
         [ class "form-group" ]
         [ textarea
             [ class "form-control"
+            , placeholder "Message body"
             , value content
-            , onInput addr SetContent
+            , Utils.onInput addr SetContent
             ]
             []
         ]
-    , if String.isEmpty content then
-        text ""
-      else
-        div
-          [ class "preview" ]
-          [ div [ class "preview-legend" ] [ text "Preview" ]
-          , Markdown.toHtml content
-          ]
+      -- , if String.isEmpty content then
+      --     text ""
+      --   else
+      --     div
+      --       [ class "preview" ]
+      --       [ div [ class "preview-legend" ] [ text "Preview" ]
+      --       , Markdown.toHtml content
+      --       ]
     , div
-        []
+        [ class "form-actions" ]
         [ button
-            [ class "btn btn-primary pull-right"
+            [ class "btn-flat"
             , disabled (loading || String.isEmpty content)
             , onClick addr Submit
             ]
