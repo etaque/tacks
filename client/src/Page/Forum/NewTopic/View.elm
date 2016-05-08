@@ -4,8 +4,8 @@ import Signal exposing (Address)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Markdown
-import Form.Input as Input
+import Form.Input as Form
+import Form.Field as Form
 import Form
 import Model.Shared exposing (Context)
 import Route
@@ -53,23 +53,28 @@ view addr ctx { form, loading } =
             [ class "form-sheet form-new-topic" ]
             [ div
                 [ class "form-group" ]
-                [ Input.textInput
+                [ Form.textInput
                     title
                     formAddr
-                    [ class "form-control", placeholder "Title" ]
+                    [ class "form-control"
+                    , placeholder "Title"
+                    ]
                 ]
             , div
                 [ class "form-group" ]
-                [ Input.textArea
+                [ Form.baseInput
+                    "hidden"
+                    Form.Text
                     content
                     formAddr
-                    [ class "form-control", placeholder "Message body" ]
+                    [ id "new-topic-body" ]
+                , node
+                    "trix-editor"
+                    [ attribute "input" "new-topic-body" ]
+                    []
                 ]
-            -- , div
-            --     [ class "preview" ]
-            --     [ Markdown.toHtml (content.value |> Maybe.withDefault "") ]
             , div
-                [ class "form-actions"]
+                [ class "form-actions" ]
                 [ button
                     [ class "btn-flat"
                     , disabled submitDisabled

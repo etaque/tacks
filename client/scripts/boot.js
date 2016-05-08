@@ -80,3 +80,7 @@ game.ports.activeTrack.subscribe((id) => {
     game.ports.raceInput.send(null);
   }
 });
+
+document.addEventListener('trix-change', (event) => {
+  event.target.inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+});

@@ -15,7 +15,7 @@ import Update.Utils as Utils
 
 update : Action -> Model -> Response Model Action
 update action ({ form, loading } as model) =
-  case action of
+  case Debug.log "action" action of
     FormAction fa ->
       let
         newForm =

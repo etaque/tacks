@@ -53,7 +53,7 @@
       .activity {
       }
     }
-      
+    
     tbody {
 
       td {
@@ -168,6 +168,7 @@
   /* } */
 
   .form-sheet {
+    $border: 1px solid #ddd;
     @include sheet;
     @include shadow-light;
     margin-top: 24px;
@@ -208,16 +209,14 @@
       margin-bottom: 0;
 
       .form-control {
-        padding: 16px 24px;
+        padding: 16px 24px 17px 24px;
         border-bottom: $border;
 
         &:focus {
           border-color: $mainBlue;
+          border-width: 2px;
+          padding-bottom: 16px;
         }
-      }
-
-      textarea {
-        height: 200px;
       }
     }
 
@@ -231,5 +230,119 @@
       }
     }
     
+    trix-toolbar {
+      background-color: $whiteSmoke;
+      height: 49px;
+      border-bottom: $border;
+
+      .button_groups {
+        .button_group {
+          height: 48px;
+          border-right: $border;
+          display: block;
+          float: left;
+        }
+
+        button {
+          display: block;
+          float: left;
+          position: relative;
+          overflow: hidden;
+          white-space: nowrap;
+          width: 48px;
+          height: 48px;
+          padding: 0;
+          border: 0;
+          background-color: $whiteSmoke;
+          color: transparent;
+
+          &:hover {
+            background-color: white;
+          }
+
+          &::before {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 24px;
+            height: 24px;
+            color: $grey;
+            @include icon;
+            transition: bezier(all);
+          }
+
+          &.active {
+            background-color: #eee;
+
+            &::before {
+              color: $darkGrey;
+            }
+          }
+        }
+
+        .bold::before {
+          content: 'format_bold';
+        }
+
+        .italic::before {
+          content: 'format_italic';
+        }
+
+        .strike::before {
+          content: 'format_strikethrough';
+        }
+
+        .link::before {
+          content: 'insert_link';
+        }
+
+        .quote::before {
+          content: 'format_quote';
+        }
+
+        .code::before {
+          content: 'functions';
+        }
+
+        .bullets::before {
+          content: 'format_list_bulleted';
+        }
+
+        .numbers::before {
+          content: 'format_list_numbered';
+        }
+
+        .decrease::before {
+          content: 'format_indent_decrease';
+        }
+
+        .increase::before {
+          content: 'format_indent_increase';
+        }
+
+        .undo::before {
+          content: 'undo';
+        }
+
+        .redo::before {
+          content: 'redo';
+        }
+      }
+    }
+
+    trix-editor {
+      min-height: 240px;
+      padding: 16px 24px 17px 24px;
+      outline: none;
+      border: 0;
+      border-bottom: $border;
+      transition: bezier(all);
+
+      &:focus {
+        border-color: $mainBlue;
+        border-width: 2px;
+        padding-bottom: 16px;
+      }
+    }
   }
 }

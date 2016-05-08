@@ -90,22 +90,18 @@ newPost addr content loading =
         ]
     , div
         [ class "form-group" ]
-        [ textarea
-            [ class "form-control"
-            , placeholder "Message body"
+        [ input
+            [ type' "hidden"
+            , id "new-post-body"
             , value content
             , Utils.onInput addr SetContent
             ]
             []
+        , node
+            "trix-editor"
+            [ attribute "input" "new-post-body" ]
+            []
         ]
-      -- , if String.isEmpty content then
-      --     text ""
-      --   else
-      --     div
-      --       [ class "preview" ]
-      --       [ div [ class "preview-legend" ] [ text "Preview" ]
-      --       , Markdown.toHtml content
-      --       ]
     , div
         [ class "form-actions" ]
         [ button
