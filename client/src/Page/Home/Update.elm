@@ -6,7 +6,6 @@ import Effects exposing (Effects, Never, none, map, task)
 import Response exposing (..)
 import Dialog
 import Model
-import Model.Shared exposing (..)
 import Page.Home.Model exposing (..)
 import ServerApi
 import Update.Utils as Utils

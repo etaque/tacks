@@ -113,7 +113,7 @@ emptyLayout =
 view : Address Action -> Model -> Layout -> Html
 view addr model layout =
   div
-    [ class "dialog"
+    [ class "dialog-wrapper"
     , style
         [ ( "display", display model )
         , ( "opacity", toString (opacity model) )
