@@ -6,7 +6,7 @@
     "bootstrap-sass": "~3.3.6",
     "chokidar-cli": "^1.2.0",
     "elm": "0.16.0",
-    "node-sass": "^3.6.0"
+    "node-sass": "^3.7.0"
   },
   "engines": {
     "node": "^5.6.0"
