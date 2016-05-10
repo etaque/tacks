@@ -1,6 +1,7 @@
 package controllers
 
 import java.util.UUID
+import org.jsoup.safety.Whitelist
 import play.api.Play
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.concurrent.Execution.Implicits._
@@ -28,6 +29,7 @@ import tools.future.Implicits._
 import tools.JsonErrors
 
 import scala.util.Try
+import org.jsoup.Jsoup
 
 object Forum extends Controller with Security {
 
@@ -40,6 +42,10 @@ object Forum extends Controller with Security {
 
   implicit val uiPostWrites: Writes[UiPost] =
     Json.writes[UiPost]
+
+  private def sanitize(raw: String): String = {
+    Jsoup.clean(raw, Whitelist.basic)
+  }
 
 
   def topics = UserAction.async() { implicit request =>
@@ -67,7 +73,7 @@ object Forum extends Controller with Security {
 
   implicit val createTopicReads = (
     (__ \ "title").read[String](minLength[String](2)) and
-      (__ \ "content").read[String](minLength[String](2))
+      (__ \ "content").read[String](minLength[String](2).map(sanitize))
   )(CreateTopic.apply _)
 
   def createTopic = UserAction.async(parse.json) { implicit request =>
@@ -106,7 +112,7 @@ object Forum extends Controller with Security {
   )
 
   implicit val createPostReads =
-    (__ \ "content").read[String](minLength[String](2)).map(CreatePost.apply _)
+    (__ \ "content").read[String](minLength[String](2)).map(sanitize).map(CreatePost.apply _)
 
   def createPost(topicId: UUID) = UserAction.async(parse.json) { implicit request =>
     onTopic(topicId) { topic =>

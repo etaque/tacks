@@ -21,6 +21,7 @@ libraryDependencies ++= Seq(
   "io.prismic" %% "scala-kit" % "1.2.13",
   "com.sksamuel.scrimage" %% "scrimage-core" % "1.4.2",
   "net.kaliber" %% "play-s3" % "7.0.2",
+  "org.jsoup" % "jsoup" % "1.9.1",
   "org.scalacheck" %% "scalacheck" % "1.12.1" % "test",
   "org.scalatest" %% "scalatest" % "2.2.2" % "test"
 )
