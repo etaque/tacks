@@ -23,9 +23,9 @@ view addr ctx ({ topics } as model) =
       [ h1 [] [ text "Forum" ]
       , Utils.linkTo
           (Route.Forum NewTopic)
-          [ class "btn-floating btn-positive btn-new-topic"
+          [ class "btn-raised btn-positive btn-new-topic cta"
           ]
-          [ Utils.mIcon "edit" [] ]
+          [ text "New topic" ]
       ]
   , Layout.section
       [ class "white" ]

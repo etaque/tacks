@@ -41,45 +41,23 @@ p {
   }
 }
 
-section.blue {
-  background-color: $mainBlue;
-  color: $white;
-  /* @include gradient-directional($seaBlue, $mainBlue, 30deg); */
-
-  h1, h2, h3, h4, h5 {
-    color: $white;
-  }
-
-  .form-control {
-    box-shadow: none;
-    border-width: 0;
-  }
-}
-
-section.white {
-  background-color: #eee;
-}
-
-section.grey {
-  background-color: $lightGrey;
-  @include shadow-inset-light;
-}
-
 $header: 154px;
+
+.hex-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: $header;
+  /* bottom: 0; */
+  overflow: hidden;
+}
 
 header {
   height: $header;
-  background-color: $seaBlue;
+  /* background-color: $seaBlue; */
   color: white;
 
-  .hex-bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    overflow: hidden;
-  }
   .container {
     position: relative;
     height: $header;
@@ -90,14 +68,20 @@ header {
       padding: 0;
       position: absolute;
       bottom: 32px;
-      left: 16px;
+      left: 24px;
     }
+  }
+
+  .cta {
+    position: absolute;
+    bottom: 32px;
+    right: 24px;
   }
 
   .action-title {
     position: absolute;
     bottom: 32px;
-    left: -36px;
+    /* left: -36px; */
 
     &:hover {
       color: $mainBlue;
@@ -110,7 +94,7 @@ header {
     h1 {
       position: initial;
       display: inline-block;
-      margin-left: 16px;
+      margin-left: 8px;
       vertical-align: top;
       line-height: 36px;
     }
@@ -126,6 +110,50 @@ header {
   }
 
 }
+
+section {
+  .container {
+    padding-top: 36px;
+    padding-bottom: 36px;
+  }
+
+  &.white {
+    /* background-color: #eee; */
+  }
+
+  &.grey {
+    background-color: $lightGrey;
+    @include shadow-inset-light;
+  }
+}
+
+header + section.white:not(.inside), section.overlap {
+  margin-top: -16px;
+
+  .container {
+    padding-top: 0;
+    position: relative;
+  }
+
+}
+
+
+
+/* section.blue { */
+/*   background-color: $mainBlue; */
+/*   color: $white; */
+/*   /\* @include gradient-directional($seaBlue, $mainBlue, 30deg); *\/ */
+
+/*   h1, h2, h3, h4, h5 { */
+/*     color: $white; */
+/*   } */
+
+/*   .form-control { */
+/*     box-shadow: none; */
+/*     border-width: 0; */
+/*   } */
+/* } */
+
 
 .sheet {
   @include sheet;

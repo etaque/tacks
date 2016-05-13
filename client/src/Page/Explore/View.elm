@@ -23,7 +23,7 @@ view ctx model =
         []
         [ h1 [] [ text "All tracks" ] ]
     , Layout.section
-        [ class "white manage-tracks" ]
+        [ class "white inside manage-tracks" ]
         [ liveTracks ctx.liveStatus.liveTracks ]
     , Dialog.view
         (Signal.forwardTo addr DialogAction)

@@ -42,7 +42,7 @@ view ctx model =
             [ text "Tacks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
         ]
     , Layout.section
-        [ class "white" ]
+        [ class "white inside" ]
         [ div
             [ class "row live-center" ]
             [ div [ class "col-md-9" ] [ liveTracks ctx.player ctx.liveStatus ]

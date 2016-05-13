@@ -36,17 +36,12 @@ section attrs content =
 
 header : Context -> List Attribute -> List Html -> Html
 header ctx attrs content =
-  let
-    tiledBackground =
-      Html.Lazy.lazy HexBg.render ( fst ctx.dims - Constants.sidebarWidth, Constants.headerHeight )
-  in
-    Html.header
-      attrs
-      [ tiledBackground
-      , div
-          [ class "container" ]
-          content
-      ]
+  Html.header
+    attrs
+    [ div
+        [ class "container" ]
+        content
+    ]
 
 
 type Nav
@@ -82,8 +77,14 @@ siteLayout name ctx maybeCurrentNav mainContent =
       , main'
           []
           [ div
-              [ class "scrollable", style transitStyle ]
-              mainContent
+              [ class "scrollable" ]
+              [ tiledBackground
+              , div
+                  [ class "content"
+                  , style transitStyle
+                  ]
+                  mainContent
+              ]
           ]
       ]
 

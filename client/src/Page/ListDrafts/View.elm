@@ -25,16 +25,16 @@ view ctx ({ tracks } as model) =
         []
         [ h1 [] [ text "Your tracks" ]
         , div
-            [ class "btn-floating btn-positive btn-new-track"
+            [ class "btn-raised btn-positive btn-new-track cta"
             , onClick addr ToggleCreationForm
             ]
-            [ Utils.mIcon "add" [] ]
+            [ text "New track" ]
         ]
     , Layout.section
-        [ classList [ ( "grey new-track", True ), ( "show", model.showCreationForm ) ] ]
+        [ classList [ ( "grey new-track inside", True ), ( "show", model.showCreationForm ) ] ]
         [ createTrackForm model ]
     , Layout.section
-        [ class "white manage-tracks" ]
+        [ class "white manage-tracks overlap" ]
         [ if List.isEmpty tracks then
             div
               [ class "empty-notice" ]

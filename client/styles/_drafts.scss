@@ -14,23 +14,21 @@
     padding: 16px;
   }
 
-  .manage-tracks .container {
-    position: relative;
-  }
-
-  .btn-new-track {
-    position: absolute;
-    bottom: -28px;
-    left: -80px;
-  }
-
   .new-track {
     height: 0;
     overflow-y: hidden;
     transition: height 0.2s ease-in-out;
 
     &.show {
-      height: 108px;
+      height: 124px;
+    }
+
+    .container {
+      padding-bottom: 52px;
+    }
+
+    .form-new-track {
+      text-align: center;
     }
 
     .form-group {
@@ -166,11 +164,4 @@
   }
 
 
-  .form-new-draft {
-    margin-top: 30px;
-
-    .form-control {
-      width: 250px;
-    }
-  }
 }
