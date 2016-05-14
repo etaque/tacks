@@ -70,3 +70,6 @@ update formAction ({ course } as editor) =
 
       SetWindA2 i ->
         updateWindGen { windGenerator | amplitude2 = i }
+
+      SetWindSimDuration d ->
+        { editor | windSimDuration = d }

@@ -8,9 +8,9 @@ import Constants exposing (..)
 import View.Utils as Utils exposing (..)
 import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
-import Page.EditTrack.View.Utils exposing (..)
 import Page.EditTrack.View.Gates as Gates
 import Page.EditTrack.View.Gusts as Gusts
+import Page.EditTrack.View.Wind as Wind
 import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 import Route
 
@@ -47,35 +47,7 @@ view track ({ course } as editor) =
           Gates.view editor.currentGate course
 
         WindTab ->
-          [ div
-              [ class "wind-fields" ]
-              [ div
-                  [ class "form-group filled" ]
-                  [ intInput course.windSpeed SetWindSpeed [ HtmlAttr.min "10", HtmlAttr.max "20" ]
-                  , label [ class "" ] [ text "Speed" ]
-                  ]
-              , div
-                  [ class "form-group" ]
-                  [ intInput course.windGenerator.wavelength1 SetWindW1 [ HtmlAttr.min "1" ]
-                  , label [ class "" ] [ text "Wavelength 1" ]
-                  ]
-              , div
-                  [ class "form-group" ]
-                  [ intInput course.windGenerator.amplitude1 SetWindA1 [ HtmlAttr.min "1" ]
-                  , label [ class "" ] [ text "Amplitude 1" ]
-                  ]
-              , div
-                  [ class "form-group" ]
-                  [ intInput course.windGenerator.wavelength2 SetWindW2 [ HtmlAttr.min "1" ]
-                  , label [ class "" ] [ text "Wavelength 2" ]
-                  ]
-              , div
-                  [ class "form-group" ]
-                  [ intInput course.windGenerator.amplitude2 SetWindA2 [ HtmlAttr.min "1" ]
-                  , label [ class "" ] [ text "Amplitude 2" ]
-                  ]
-              ]
-          ]
+          Wind.view editor
 
         GustsTab ->
           Gusts.view track editor

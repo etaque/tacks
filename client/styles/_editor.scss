@@ -192,16 +192,7 @@
         }
 
         .gate-fields {
-          clear: both;
-          display: flex;
-          padding: 16px 0 8px 0;
-
-          .x, .y {
-            margin-right: 16px;
-          }
-
-          .width {
-          }
+          /* clear: both; */
         }
 
         .remove-gate {
@@ -226,10 +217,66 @@
 
     .wind-fields {
       padding: 24px;
+
+      .form-row .form-group {
+        margin-bottom: 8px;
+      }
     }
 
     .gusts-fields {
       padding: 24px;
+    }
+
+    .wind-graph {
+      margin: 0 24px;
+
+      h3 {
+        margin: 0;
+        line-height: 24px;
+      }
+      .wind-sim-duration {
+        span {
+          display: inline-block;
+          margin-left: 4px;
+          cursor: pointer;
+          padding: 0 8px;
+          line-height: 24px;
+          color: $mediumGrey;
+
+          &:hover {
+            color: $mainBlue;
+            background-color: $whiteSeaBlue;
+          }
+
+          &.selected {
+            color: $darkGrey;
+            background-color: #eee;
+          }
+        }
+      }
+
+      svg {
+        margin-top: 8px;
+        background-color: $whiteSmoke;
+        border: 1px solid $lightGrey;
+
+        text {
+          fill: $mediumGrey;
+        }
+      }
+
+      .curve {
+        stroke: $darkGrey;
+        fill: transparent;
+      }
+
+      .origin-axis {
+        stroke: $lightGrey;
+      }
+
+      .time-marks line {
+        stroke: $lightGrey;
+      }
     }
   }
 }

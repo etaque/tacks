@@ -45,7 +45,7 @@ gateItem count currentGate i gate =
           , orientationOptions (SetGateOrientation i) gate.orientation
           ]
       , div
-          [ class "gate-fields" ]
+          [ class "form-row" ]
           [ div
               [ class "form-group x" ]
               [ intInput ((round << fst) gate.center) (SetGateCenterX i) [ step "10" ]

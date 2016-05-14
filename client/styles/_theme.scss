@@ -367,11 +367,13 @@ hr {
 aside {
   
   h3 {
-    margin: 16px 16px 8px 16px;
+    /* margin: 16px 16px 8px 16px; */
+    margin: 0;
+    margin-bottom: 16px;
     font-weight: bold;
     font-family: $regular;
-    font-size: 14px;
-    color: $grey;
+    font-size: 16px;
+    color: $darkGrey;
   }
 
 }
@@ -543,6 +545,16 @@ aside {
     .feedback {
       color: $red;
     }
+  }
+}
+
+.form-row {
+  display: flex;
+  flex-direction: row;
+  margin: 16px 0 8px 0;
+
+  .form-group + .form-group {
+    margin-left: 16px;
   }
 }
 

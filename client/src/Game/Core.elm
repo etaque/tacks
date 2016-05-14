@@ -23,10 +23,6 @@ floatMod val div =
 --
 
 
-getCountdown : Maybe Time -> Float
-getCountdown maybeCountdown = M.withDefault 0 maybeCountdown
-
-
 -- List
 
 compact : List (Maybe a) -> List a

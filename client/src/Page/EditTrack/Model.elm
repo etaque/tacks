@@ -26,6 +26,7 @@ type alias Editor =
   , course : Course
   , center : Point
   , mode : Mode
+  , windSimDuration : WindSimDuration
   , altMove : Bool
   , name : String
   , saving : Bool
@@ -46,6 +47,7 @@ initialEditor track course =
   , course = course
   , center = ( 0, 0 )
   , mode = CreateTile Water
+  , windSimDuration = TenMin
   , altMove = False
   , name = track.name
   , saving = False
@@ -53,19 +55,15 @@ initialEditor track course =
   }
 
 
-type alias SideBlocks =
-  { name : Bool
-  , surface : Bool
-  , gates : Bool
-  , wind : Bool
-  , gusts : Bool
-  }
-
-
 type Mode
   = CreateTile TileKind
   | Erase
   | Watch
+
+
+type WindSimDuration
+  = TenMin
+  | OneHour
 
 
 realMode : Editor -> Mode
@@ -105,6 +103,7 @@ type FormAction
   | SetWindA1 Int
   | SetWindW2 Int
   | SetWindA2 Int
+  | SetWindSimDuration WindSimDuration
 
 
 modeName : Mode -> ( String, String )
