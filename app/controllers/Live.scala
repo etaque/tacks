@@ -31,19 +31,16 @@ object Live extends Controller with Security {
 
   def status = PlayerAction.async() { implicit request =>
     val tracksFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
-    val draftsFu = dao.Tracks.listByCreatorId(request.player.id).map(_.filter(_.isDraft))
     val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
     for {
       tracks <- tracksFu
       homeLiveTracks = tracks.filter(_.track.isOpen).sortBy(_.meta.rankings.length).reverse
-      drafts <- draftsFu
       onlinePlayers <- onlinePlayersFu
     }
     yield Ok(Json.obj(
-               "liveTracks" -> Json.toJson(homeLiveTracks),
-               "drafts" -> Json.toJson(drafts),
-               "onlinePlayers" -> Json.toJson(onlinePlayers)
-             ))
+      "liveTracks" -> Json.toJson(homeLiveTracks),
+      "onlinePlayers" -> Json.toJson(onlinePlayers)
+    ))
   }
 
   def allTracks = PlayerAction.async() { implicit request =>
