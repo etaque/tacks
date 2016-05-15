@@ -125,6 +125,7 @@
 
     .post-content {
       padding: 24px;
+      color: $darkGrey;
     }
 
     &:last-child {
@@ -140,26 +141,6 @@
     &.active {
     }
   }
-
-
-  /* .form-new-post, */
-  /* .form-new-topic { */
-  /*   /\* padding: 24px; *\/ */
-
-  /*   textarea { */
-  /*   } */
-
-  /*   .preview { */
-  /*     margin-bottom: 16px; */
-
-  /*     .preview-legend { */
-  /*       font-weight: bold; */
-  /*       text-transform: italic; */
-  /*       margin-bottom: 10px; */
-  /*     } */
-
-  /*   } */
-  /* } */
 
   .form-sheet {
     $border: 1px solid #ddd;
