@@ -67,7 +67,7 @@ topicRow { topic, user } =
         ]
     , td
         [ class "count" ]
-        [ text (toString topic.postsCount) ]
+        [ text (toString (topic.postsCount - 1)) ]
     , td
         [ class "activity" ]
         [ text <| (Date.fromTime >> DateFormat.format "%d %B %Y %H:%I") topic.activityTime ]
