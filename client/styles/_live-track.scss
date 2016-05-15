@@ -67,7 +67,12 @@
   }
 
   .live-track-actions {
-    padding: 8px;
+    border-top: $border;
+
+    .btn-flat {
+      display: block;
+      line-height: 42px;
+    }
   }
 
 }

@@ -1,15 +1,15 @@
-module Page.Admin.Model where
+module Page.Admin.Model (..) where
 
 import Json.Decode as Json exposing (..)
-
-import Model.Shared exposing (Id, Track, FormResult)
-import Decoders exposing (trackDecoder)
+import Model.Shared exposing (..)
+import Decoders exposing (..)
 import Page.Admin.Route exposing (..)
 
 
 type alias Model =
   { tracks : List Track
   , users : List User
+  , reports : List RaceReport
   }
 
 
@@ -27,19 +27,23 @@ type alias User =
 type alias AdminData =
   { tracks : List Track
   , users : List User
+  , reports : List RaceReport
   }
 
 
 adminDataDecoder : Decoder AdminData
 adminDataDecoder =
-  object2 AdminData
+  object3
+    AdminData
     ("tracks" := list trackDecoder)
     ("users" := list userDecoder)
+    ("reports" := list raceReportDecoder)
 
 
 userDecoder : Decoder User
 userDecoder =
-  object7 User
+  object7
+    User
     ("id" := string)
     ("email" := string)
     ("handle" := string)
@@ -58,6 +62,7 @@ initial : Model
 initial =
   { tracks = []
   , users = []
+  , reports = []
   }
 
 
@@ -67,4 +72,3 @@ type Action
   | DeleteTrack String
   | DeleteTrackResult (FormResult String)
   | NoOp
-

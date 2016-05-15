@@ -109,6 +109,34 @@ header {
     }
   }
 
+  &.with-tabs {
+    h1 {
+      bottom: 64px;
+    }
+    
+    .tabs-container {
+      position: absolute;
+      bottom: 0;
+      background-color: transparent;
+
+      .tab {
+        color: $whiteSeaBlue;
+        transition: bezier(all);
+        min-width: 160px;
+
+        &:hover {
+          background-color: transparent;
+          color: $white;
+          border-bottom-color: $mainBlue;
+        }
+
+        &.active {
+          border-bottom-color: $white;
+        }
+      }
+    }
+  }
+
 }
 
 section {
@@ -136,24 +164,6 @@ header + section.white:not(.inside), section.overlap {
   }
 
 }
-
-
-
-/* section.blue { */
-/*   background-color: $mainBlue; */
-/*   color: $white; */
-/*   /\* @include gradient-directional($seaBlue, $mainBlue, 30deg); *\/ */
-
-/*   h1, h2, h3, h4, h5 { */
-/*     color: $white; */
-/*   } */
-
-/*   .form-control { */
-/*     box-shadow: none; */
-/*     border-width: 0; */
-/*   } */
-/* } */
-
 
 .sheet {
   @include sheet;
@@ -359,6 +369,10 @@ hr {
 
       &:hover {
         background-color: #F3F3F3;
+      }
+
+      &:active, &:focus {
+        text-decoration: none;
       }
     }
   }
@@ -675,6 +689,7 @@ aside {
     padding-bottom: 16px;
     vertical-align: top;
     flex-shrink: 0;
+    border-bottom: $border;
 
     .dialog-title {
       font-weight: bold;
@@ -703,9 +718,10 @@ aside {
   .dialog-body {
     flex: 1;
     overflow-y: auto;
+    margin-bottom: 16px;
+    border-bottom: $border;
 
     .list-rankings {
-      border-top: $border;
       margin-bottom: 0;
     }
   }

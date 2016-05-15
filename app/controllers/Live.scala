@@ -65,25 +65,11 @@ object Live extends Controller with Security {
     }
   }
 
-  def allRaceReports(minPlayers: Option[Int]) =
-    raceReports(minPlayers, None)
+  def allRaceReports(minPlayers: Option[Int]) =PlayerAction.async() { implicit request =>
+    RaceReport.list(12, minPlayers, None).map(Json.toJson(_)).map(Ok(_))
+  }
 
-  def trackRaceReports(id: UUID, minPlayers: Option[Int]) =
-    raceReports(minPlayers, Some(id))
-
-  private def raceReports(minPlayers : Option[Int], trackId: Option[UUID]) = PlayerAction.async() { implicit request =>
-    for {
-      raceIds <- dao.Runs.lastRaceIds(12, minPlayers, trackId)
-      runs <- dao.Runs.listForRaces(raceIds)
-      tracks <- dao.Tracks.list()
-      reports = runs.groupBy(_.raceId).flatMap { case (raceId, runs) =>
-        for {
-          firstRun <- runs.headOption
-          track <- tracks.find(_.id == firstRun.trackId)
-        } yield RaceReport(raceId, firstRun.startTime, track.id, track.name, runs)
-      }.toSeq.sortBy(_.startTime.getMillis * -1)
-    } yield {
-      Ok(Json.toJson(reports))
-    }
+  def trackRaceReports(id: UUID, minPlayers: Option[Int]) = PlayerAction.async() { implicit request =>
+    RaceReport.list(12, minPlayers, Some(id)).map(Json.toJson(_)).map(Ok(_))
   }
 }

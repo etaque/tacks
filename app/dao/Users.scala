@@ -26,7 +26,7 @@ class UserTable(tag: Tag) extends Table[User](tag, "users") {
 object Users extends TableQuery(new UserTable(_)) {
 
   def list(): Future[Seq[User]] = DB.run {
-    all.result
+    all.sortBy(_.creationTime.desc).result
   }
 
   def findById(id: UUID): Future[Option[User]] = DB.run {

@@ -49,7 +49,7 @@ liveTrackBlock rankingClickHandler ({ track, meta, players } as lt) =
                   [ class "btn-flat"
                   , rankingClickHandler lt
                   ]
-                  [ text <| "See " ++ toString (List.length meta.rankings) ++ " entries"
+                  [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")"
                   ]
               ]
           ]

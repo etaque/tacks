@@ -1,120 +1,169 @@
-module Page.Admin.View where
+module Page.Admin.View (..) where
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-
-import TransitStyle exposing (fadeSlideLeft)
-
-import Model.Shared exposing (Track, Context)
+import TransitStyle
+import Model.Shared exposing (Track, Context, RaceReport)
 import Route
-
 import Page.Admin.Route exposing (..)
 import Page.Admin.Model exposing (..)
 import Page.Admin.Update exposing (addr)
-
-import View.Utils exposing (container, linkTo)
+import View.Utils as Utils exposing (container, linkTo)
 import View.Layout as Layout
+import View.Race as Race
 
 
-type Tab = DashboardTab | TracksTab | UsersTab
+type Tab
+  = DashboardTab
+  | TracksTab
+  | UsersTab
+  | ReportsTab
+
 
 view : Context -> Route -> Model -> Html
 view ctx route model =
   let
-    menuItem = routeMenuItem route
+    menuItem =
+      routeMenuItem route
   in
-    Layout.siteLayout "admin" ctx Nothing
-      [ container "" <|
-        [ h1 [] [ text "Admin" ]
-        , menu menuItem
-        , content route ctx menuItem model
-        ]
+    Layout.siteLayout
+      "admin"
+      ctx
+      (Just Layout.Admin)
+      [ Layout.header
+          ctx
+          [ class "with-tabs" ]
+          [ h1 [] [ text "Admin" ]
+          , menu menuItem
+          ]
+      , Layout.section
+          [ class "white inside" ]
+          [ content route ctx menuItem model
+          ]
       ]
+
 
 menu : Tab -> Html
 menu item =
-  ul [ class "nav nav-tabs admin-tabs" ]
-  [ li [ classList [ ("active", item == DashboardTab) ] ]
-    [ linkTo (Route.Admin Dashboard) [ ] [ text "Dashboard" ] ]
-  , li [ classList [ ("active", item == TracksTab) ] ]
-    [ linkTo (Route.Admin (ListTracks Nothing)) [ ] [ text "Tracks" ] ]
-  , li [ classList [ ("active", item == UsersTab) ] ]
-    [ linkTo (Route.Admin (ListUsers Nothing)) [ ] [ text "Users" ] ]
-  ]
+  div
+    [ class "tabs-container admin-tabs" ]
+    [ div
+        [ class "tabs-content" ]
+        [ linkTo
+            (Route.Admin Dashboard)
+            [ classList [ ( "tab", True ), ( "active", item == DashboardTab ) ] ]
+            [ text "Dashboard" ]
+        , linkTo
+            (Route.Admin ListReports)
+            [ classList [ ( "tab", True ), ( "active", item == ReportsTab ) ] ]
+            [ text "Reports" ]
+        , linkTo
+            (Route.Admin (ListUsers Nothing))
+            [ classList [ ( "tab", True ), ( "active", item == UsersTab ) ] ]
+            [ text "Users" ]
+        , linkTo
+            (Route.Admin (ListTracks Nothing))
+            [ classList [ ( "tab", True ), ( "active", item == TracksTab ) ] ]
+            [ text "Tracks" ]
+        ]
+    ]
+
 
 routeMenuItem : Route -> Tab
 routeMenuItem r =
   case r of
-    Dashboard -> DashboardTab
-    ListTracks _ -> TracksTab
-    ListUsers _ -> UsersTab
+    Dashboard ->
+      DashboardTab
+
+    ListUsers _ ->
+      UsersTab
+
+    ListReports ->
+      ReportsTab
+
+    ListTracks _ ->
+      TracksTab
+
 
 content : Route -> Context -> Tab -> Model -> Html
-content route ctx item ({tracks, users} as model) =
+content route ctx item ({ tracks, users } as model) =
   let
     transitStyle =
       case ctx.routeTransition of
-        Route.ForAdmin _ _  -> (fadeSlideLeft 40 ctx.transition)
-        _ -> []
+        Route.ForAdmin _ _ ->
+          (TransitStyle.fade ctx.transition)
+
+        _ ->
+          []
+
     tabContent =
       case item of
         DashboardTab ->
           dashboardContent route model
+
         TracksTab ->
           tracksContent route model
+
         UsersTab ->
           usersContent route model
+
+        ReportsTab ->
+          reportsContent model
   in
     div [ class "admin-content", style transitStyle ] tabContent
 
 
 dashboardContent : Route -> Model -> List Html
-dashboardContent route ({tracks, users} as model) =
+dashboardContent route ({ tracks, users } as model) =
   [ div [ class "" ] [ text <| toString (List.length users) ++ " users" ]
   , div [ class "" ] [ text <| toString (List.length tracks) ++ " tracks" ]
   ]
 
+
 tracksContent : Route -> Model -> List Html
-tracksContent route ({tracks, users} as model) =
-  [ ul [ class "list-unstyled admin-tracks" ]
-    (List.map (\t -> trackItem (route == ListTracks (Just t.id)) t) tracks)
+tracksContent route ({ tracks, users } as model) =
+  [ table
+      [ class "admin-table admin-tracks" ]
+      (List.map trackItem tracks)
   ]
 
-trackItem : Bool -> Track -> Html
-trackItem open track =
-  li [ ]
-  [ div [ class "excerpt" ]
-    [ linkTo (Route.EditTrack track.id) [ class "name" ] [ text track.name ]
-    , span [ class "label label-default" ] [ text <| toString track.status ]
-    , button [ class "btn btn-danger btn-xs pull-right", onClick addr (DeleteTrack track.id) ]
-      [ text "Delete" ]
+
+trackItem : Track -> Html
+trackItem track =
+  tr
+    []
+    [ th
+        []
+        [ linkTo (Route.EditTrack track.id) [ class "name" ] [ text track.name ]
+        ]
+    , td [] [ text (toString track.status) ]
+    , td [] [ text (Utils.formatDate track.creationTime) ]
     ]
-  , div [ classList [ ("detail", True), ("open", open) ] ]
-    [ text "detail" ]
-  ]
+
 
 usersContent : Route -> Model -> List Html
-usersContent route ({tracks, users} as model) =
-  [ ul [ class "list-unstyled admin-users" ]
-    (List.map (\u -> userItem (route == ListUsers (Just u.id)) u) users)
+usersContent route ({ tracks, users } as model) =
+  [ table
+      [ class "admin-table admin-users" ]
+      (List.map userItem users)
   ]
 
-userItem : Bool -> User -> Html
-userItem open user =
-  li [ ]
-  [ div [ class "excerpt" ]
-    [ linkTo (Route.Admin (ListUsers (Just user.id))) [ class "name" ] [ text user.handle ]
-    , span [ class "email" ] [ text user.email ]
-    ]
-  , div [ classList [ ("detail", True), ("open", open) ] ]
-    [ dl'
-      [ ("Email", user.email)
-      , ("VMG Magnet", toString user.vmgMagnet)
-      ]
-    ]
-  ]
 
-dl' : List (String, String) -> Html
-dl' items =
-  dl [ class "dl-horizontal" ] (List.concatMap (\(term, desc) -> [ dt [] [ text term ], dd [] [ text desc ] ]) items)
+userItem : User -> Html
+userItem user =
+  tr
+    []
+    [ th
+        []
+        [ linkTo (Route.Admin (ListUsers (Just user.id))) [ class "name" ] [ text user.handle ]
+        ]
+    , td [] [ text user.email ]
+    , td [] [ text (Utils.formatDate user.creationTime) ]
+    ]
+
+
+reportsContent : Model -> List Html
+reportsContent model =
+  [ Race.reports True (\_ -> onClick addr NoOp) model.reports
+  ]

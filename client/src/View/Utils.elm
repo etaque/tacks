@@ -7,12 +7,13 @@ import Json.Decode as Json
 import String
 import Signal
 import TransitRouter
-import Form
 import Form.Error exposing (..)
-import CoreExtra exposing (..)
 import Constants exposing (..)
 import Model.Shared exposing (..)
 import Route
+import Time exposing (Time)
+import Date
+import Date.Format as DateFormat
 
 
 -- Events
@@ -147,6 +148,11 @@ mIcon name classes =
 nbsp : Html
 nbsp =
   text " "
+
+
+formatDate : Time -> String
+formatDate time =
+  DateFormat.format "%e %b. %k:%M" (Date.fromTime time)
 
 
 fieldGroup : String -> String -> String -> List String -> List Html -> Html

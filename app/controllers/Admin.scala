@@ -34,10 +34,12 @@ object Admin extends Controller with Security {
       for {
         tracks <- dao.Tracks.list
         users <- dao.Users.list
+        reports <- models.RaceReport.list(32, Some(1), None)
       }
       yield Ok(Json.obj(
         "tracks" -> Json.toJson(tracks),
-        "users" -> Json.toJson(users)(fullUserSeqFormat)
+        "users" -> Json.toJson(users)(fullUserSeqFormat),
+        "reports" -> Json.toJson(reports)
       ))
     }
   }

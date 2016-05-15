@@ -7,6 +7,7 @@ type Route
   = Dashboard
   | ListTracks (Maybe String)
   | ListUsers (Maybe String)
+  | ListReports
 
 
 router : Router Route
@@ -21,20 +22,32 @@ matchers =
   , dyn1 (ListTracks << Just) "/admin/tracks/" string ""
   , static (ListUsers Nothing) "/admin/users"
   , dyn1 (ListUsers << Just) "/admin/users/" string ""
+  , static ListReports "/admin/reports"
   ]
 
 
 toPath : Route -> String
 toPath route =
-  "/admin" ++ case route of
-    Dashboard -> ""
-    ListTracks id -> "/tracks" ++ (maybe id)
-    ListUsers id -> "/users" ++ (maybe id)
+  "/admin"
+    ++ case route of
+        Dashboard ->
+          ""
+
+        ListTracks id ->
+          "/tracks" ++ (maybe id)
+
+        ListUsers id ->
+          "/users" ++ (maybe id)
+
+        ListReports ->
+          "/reports"
 
 
 maybe : Maybe String -> String
 maybe ms =
   case ms of
-    Just s -> "/" ++ s
-    Nothing -> ""
+    Just s ->
+      "/" ++ s
 
+    Nothing ->
+      ""

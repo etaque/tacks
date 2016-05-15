@@ -43,7 +43,11 @@ object Runs extends TableQuery(new RunTable(_)) {
     onId(id).result.headOption
   }
 
-  def listRecent(trackId: UUID, count: Int): Future[Seq[Run]] = DB.run {
+  def listRecent(count: Int): Future[Seq[Run]] = DB.run {
+    all.sortBy(_.startTime.desc).take(count).result
+  }
+
+  def listRecentOnTrack(trackId: UUID, count: Int): Future[Seq[Run]] = DB.run {
     onTrack(trackId).sortBy(_.startTime.desc).take(count).result
   }
 

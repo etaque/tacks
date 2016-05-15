@@ -37,7 +37,7 @@ object Tracks extends TableQuery(new TrackTable(_)) {
   import TrackMappings._
 
   def list(): Future[Seq[Track]] = DB.run {
-    all.result
+    all.sortBy(_.creationTime.desc).result
   }
 
   def findById(id: UUID): Future[Option[Track]] = DB.run {

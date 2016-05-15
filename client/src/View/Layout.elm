@@ -12,6 +12,7 @@ import Model exposing (appActionsAddress, Action(Logout))
 import Model.Shared exposing (Context, Player, isAdmin)
 import Route
 import Page.Forum.Route as Forum
+import Page.Admin.Route as Admin
 import TransitStyle
 import Constants
 
@@ -51,6 +52,7 @@ type Nav
   | Discuss
   | Login
   | Register
+  | Admin
 
 
 siteLayout : String -> Context -> Maybe Nav -> List Html -> Html
@@ -151,6 +153,10 @@ sideMenu player maybeCurrent =
           text ""
         else
           sideMenuItem (Route.Forum Forum.Index) "face" "Discuss" (maybeCurrent == Just Discuss)
+      , if isAdmin player then
+          sideMenuItem (Route.Admin Admin.Dashboard) "dashboard" "Admin" (maybeCurrent == Just Admin)
+        else
+          text ""
       ]
   , hr [] []
   , div
@@ -159,7 +165,7 @@ sideMenu player maybeCurrent =
 An [open source](http://github.com/etaque/tacks) game crafted with love
 by [@etaque](http://twitter.com/etaque).
 
-Written with [elm-lang](http://elm-lang.org).
+Written in [Elm](http://elm-lang.org).
         """
       ]
   ]

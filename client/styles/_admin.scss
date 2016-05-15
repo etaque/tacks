@@ -1,40 +1,35 @@
 @import 'colors';
 @import 'fonts';
+@import 'mixins';
 
-.admin {
+#admin {
 
-  .admin-tabs {
-    $bg: $whiteSeaBlue;
+  .admin-table {
+    @include sheet;
+    @include shadow-light;
+    width: 100%;
 
-    margin-bottom: 30px;
-    border-bottom: 3px solid $bg;
-
-    li {
-      /* font-weight: bold; */
-      margin-bottom: 0px;
-
-      a {
-        margin-right: 10px;
-        line-height: 18px;
-        color: $whiteSeaBlue;
-        font-family: $serif;
-        border-radius: 0;
-        transition: all .2s ease-in;
-      }
-
-      a:hover {
-        background-color: $lighterSeaBlue;
-        border-color: $lighterSeaBlue $lighterSeaBlue transparent;
-        color: $white;
-      }
+    td, th {
+      padding: 0 16px;
+      line-height: 42px;
+      border-bottom: $border;
     }
 
-    li.active a {
-      background-color: $bg;
-      color: $seaBlue;
-      border-color: $bg; 
+    th {
+      font-weight: bold;
+    }
+
+    tr:hover td, tr:hover th {
+      background-color: #F3F3F3;
+    }
+
+    tr:last-child {
+      th, td {
+        border-bottom-color: transparent;
+      }
     }
   }
+
 
   ul.admin-tracks,
   ul.admin-users {

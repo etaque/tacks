@@ -6,7 +6,7 @@ import Html.Events exposing (..)
 import Date
 import Date.Format as DateFormat
 import Model.Shared exposing (..)
-import View.Utils as Utils exposing (..)
+import View.Utils as Utils
 import Dialog
 
 
@@ -113,12 +113,7 @@ reportDialog report =
   { header =
       [ Dialog.title "Race report"
       , Dialog.subtitle
-          (report.trackName
-            ++ " - "
-            ++ DateFormat.format
-                "%e %b. %k:%M"
-                (Date.fromTime report.startTime)
-          )
+          (report.trackName ++ " - " ++ Utils.formatDate report.startTime)
       ]
   , body =
       [ ul
