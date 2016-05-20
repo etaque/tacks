@@ -1,4 +1,4 @@
-module Page.Forum.Decoders where
+module Page.Forum.Decoders exposing (..)
 
 import Json.Decode as Json exposing (..)
 

@@ -1,4 +1,4 @@
-module View.Track (..) where
+module View.Track exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -9,7 +9,7 @@ import View.Utils as Utils
 import Dialog
 
 
-liveTrackBlock : (LiveTrack -> Attribute) -> LiveTrack -> Html
+liveTrackBlock : (LiveTrack -> Attribute msg) -> LiveTrack -> Html msg
 liveTrackBlock rankingClickHandler ({ track, meta, players } as lt) =
   let
     empty =
@@ -56,7 +56,7 @@ liveTrackBlock rankingClickHandler ({ track, meta, players } as lt) =
       ]
 
 
-rankingsExtract : List Ranking -> Html
+rankingsExtract : List Ranking -> Html msg
 rankingsExtract rankings =
   ul
     [ class "list-unstyled list-rankings"

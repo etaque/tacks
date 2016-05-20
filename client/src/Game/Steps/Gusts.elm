@@ -1,4 +1,4 @@
-module Game.Steps.Gusts (..) where
+module Game.Steps.Gusts exposing (..)
 
 import Constants exposing (..)
 import Model.Shared exposing (..)

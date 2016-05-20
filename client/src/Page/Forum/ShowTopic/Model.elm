@@ -1,4 +1,4 @@
-module Page.Forum.ShowTopic.Model where
+module Page.Forum.ShowTopic.Model exposing (..)
 
 import Model.Shared exposing (Id, User, FormResult)
 import Page.Forum.Model.Shared exposing (..)
@@ -20,7 +20,7 @@ initial =
 
 
 
-type Action
+type Msg
   = LoadResult (Result () (TopicWithPosts))
   | SetContent String
   | ToggleNewPost

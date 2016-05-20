@@ -1,4 +1,4 @@
-module Game.Steps.PlayerWind where
+module Game.Steps.PlayerWind exposing (..)
 
 import Constants exposing (..)
 import Model.Shared exposing (..)

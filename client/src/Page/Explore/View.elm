@@ -1,22 +1,21 @@
-module Page.Explore.View (..) where
+module Page.Explore.View exposing (..)
 
+import Html.App exposing (map)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Dialog
 import Model.Shared exposing (..)
 import Page.Explore.Model exposing (..)
-import Page.Explore.Update exposing (addr)
 import View.Layout as Layout
 import View.Track as Track
 import View.Utils as Utils
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Site Msg
 view ctx model =
-  Layout.siteLayout
+  Layout.Site
     "explore"
-    ctx
     (Just Layout.Explore)
     [ Layout.header
         ctx
@@ -25,10 +24,9 @@ view ctx model =
     , Layout.section
         [ class "white inside manage-tracks" ]
         [ liveTracks ctx.liveStatus.liveTracks ]
-    , Dialog.view
-        (Signal.forwardTo addr DialogAction)
-        model.dialog
-        (dialogContent model)
+    , map
+        DialogMsg
+        (Dialog.view model.dialog (dialogContent model))
     ]
 
 
@@ -39,7 +37,7 @@ dialogContent model =
     |> Maybe.withDefault Dialog.emptyLayout
 
 
-liveTracks : List LiveTrack -> Html
+liveTracks : List LiveTrack -> Html Msg
 liveTracks liveTracks =
   div
     [ class "live-tracks" ]
@@ -47,6 +45,6 @@ liveTracks liveTracks =
     ]
 
 
-rankingClickHandler : LiveTrack -> Attribute
+rankingClickHandler : LiveTrack -> Attribute Msg
 rankingClickHandler liveTrack =
-  Utils.onButtonClick addr (ShowTrackRanking liveTrack)
+  Utils.onButtonClick (ShowTrackRanking liveTrack)

@@ -1,7 +1,6 @@
-module Game.Outputs (..) where
+module Game.Outputs exposing (..)
 
 import Json.Encode as Js
-import TransitRouter exposing (getRoute)
 import Model
 import Model.Shared exposing (..)
 import Page.Game.Model as GamePage
@@ -10,7 +9,7 @@ import Game.Inputs exposing (..)
 import Route
 
 
-type ServerAction
+type ServerMsg
   = ServerNoOp
   | SendMessage String
   | AddGhost String Player
@@ -19,19 +18,9 @@ type ServerAction
   | EscapeRace
 
 
-type LocalAction
+type LocalMsg
   = LocalNoOp
   | ChatScrollDown
-
-
-serverMailbox : Signal.Mailbox ServerAction
-serverMailbox =
-  Signal.mailbox ServerNoOp
-
-
-serverAddress : Signal.Address ServerAction
-serverAddress =
-  serverMailbox.address
 
 
 type alias PlayerOutput =
@@ -41,19 +30,19 @@ type alias PlayerOutput =
   }
 
 
-extractPlayerOutput : Model.Model -> Model.Action -> Maybe PlayerOutput
-extractPlayerOutput model action =
+extractPlayerOutput : Model.Model -> Model.Msg -> Maybe PlayerOutput
+extractPlayerOutput model msg =
   let
     keyboardInput =
-      case action of
-        Model.PageAction (Model.GameAction (GamePage.GameUpdate gameInput)) ->
+      case msg of
+        Model.PageMsg (Model.GameMsg (GamePage.GameUpdate gameInput)) ->
           Just gameInput.keyboardInput
 
         _ ->
           Nothing
 
     gameState =
-      case getRoute model of
+      case model.location.route of
         Route.PlayTrack _ ->
           model.pages.game.gameState
 
@@ -80,7 +69,7 @@ makePlayerOutput keyboardInput gameState =
 
 getActiveTrack : Model.Model -> Maybe String
 getActiveTrack model =
-  case getRoute model of
+  case model.location.route of
     Route.PlayTrack _ ->
       Maybe.map (.track >> .id) model.pages.game.liveTrack
 
@@ -88,19 +77,19 @@ getActiveTrack model =
       Nothing
 
 
-needChatScrollDown : Model.Action -> Maybe ()
-needChatScrollDown action =
-  case action of
-    Model.PageAction (Model.GameAction (GamePage.NewMessage _)) ->
+needChatScrollDown : Model.Msg -> Maybe ()
+needChatScrollDown msg =
+  case msg of
+    Model.PageMsg (Model.GameMsg (GamePage.NewMessage _)) ->
       Just ()
 
     _ ->
       Nothing
 
 
-encodeServerAction : ServerAction -> Js.Value
-encodeServerAction action =
-  case action of
+encodeServerMsg : ServerMsg -> Js.Value
+encodeServerMsg msg =
+  case msg of
     ServerNoOp ->
       tag "ServerNoOp" []
 
@@ -126,10 +115,10 @@ tag name fields =
 
 
 
--- ghosts : Action -> Maybe Js.Value
--- ghosts action =
---   case action of
---     PageAction (GameAction ga) ->
+-- ghosts : Msg -> Maybe Js.Value
+-- ghosts msg =
+--   case msg of
+--     PageMsg (GameMsg ga) ->
 --       case ga of
 --         GamePage.AddGhost runId _ ->
 --           Just

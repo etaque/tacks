@@ -1,7 +1,6 @@
-module Game.Render.Dashboard.WindOriginGauge where
+module Game.Render.Dashboard.WindOriginGauge exposing (..)
 
 import Game.Render.SvgUtils exposing (..)
-
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
@@ -9,7 +8,7 @@ import Svg.Attributes exposing (..)
 windGaugeCy : Float
 windGaugeCy = 500
 
-render : Int -> Float -> Svg
+render : Int -> Float -> Svg msg
 render h windOrigin =
   let
     cy = (toFloat h / 2)
@@ -23,14 +22,14 @@ render h windOrigin =
           ]
       ]
 
-renderWindArrow : Svg
+renderWindArrow : Svg msg
 renderWindArrow =
   Svg.path
     [ d "M 0,0 4,-15 0,-12 -4,-15 Z"
     , fill "black"
     ] []
 
-renderWindOriginText : Float -> Svg
+renderWindOriginText : Float -> Svg msg
 renderWindOriginText origin =
   text'
     [ textAnchor "middle"
@@ -41,7 +40,7 @@ renderWindOriginText origin =
     [ text <| toString (round origin) ++ "°" ]
 
 
-renderRuledArc : Svg
+renderRuledArc : Svg msg
 renderRuledArc =
   let
     tick l r = segment
@@ -57,7 +56,7 @@ renderRuledArc =
       , smallTick 5, bigTick 10, smallTick 15
       ]
 
-renderWindArc : Svg
+renderWindArc : Svg msg
 renderWindArc =
   arc
     [ stroke "black"

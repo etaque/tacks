@@ -1,109 +1,101 @@
-module Page.ListDrafts.Update (..) where
+module Page.ListDrafts.Update exposing (..)
 
-import Effects exposing (Effects, Never, none)
 import Task exposing (Task)
 import Response exposing (..)
-import Model
-import Model.Shared exposing (..)
 import ServerApi
 import Route
 import Page.ListDrafts.Model exposing (..)
-import Update.Utils as Utils
+import CoreExtra exposing (..)
+import Location
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.ListDraftsAction
-
-
-mount : Model -> ( Model, Effects Action )
+mount : Model -> Res Model Msg
 mount model =
-  taskRes model loadDrafts
+  res model loadDrafts
 
 
-update : Action -> Model -> ( Model, Effects Action )
-update action model =
-  case action of
+update : Msg -> Model -> Res Model Msg
+update msg model =
+  case msg of
     ListResult result ->
       case result of
         Ok tracks ->
-          res { model | tracks = tracks } none
+          res { model | tracks = tracks } Cmd.none
 
         Err _ ->
-          res model none
+          res model Cmd.none
 
     ToggleCreationForm ->
       let
         newShow =
           not model.showCreationForm
       in
-        res { model | showCreationForm = newShow } none
+        res { model | showCreationForm = newShow } Cmd.none
 
     SetName name ->
-      res { model | name = name } none
+      res { model | name = name } Cmd.none
 
     Select maybeTrack ->
-      res { model | selectedTrack = maybeTrack } none
+      res { model | selectedTrack = maybeTrack } Cmd.none
 
     Create ->
-      taskRes model (Task.map CreateResult (ServerApi.createTrack model.name))
+      res model (Task.perform never CreateResult (ServerApi.createTrack model.name))
 
     CreateResult result ->
       case result of
         Ok track ->
-          res model (Utils.redirect (Route.EditTrack track.id) |> Utils.always NoOp)
+          res model (Location.navigate (Route.EditTrack track.id))
 
         Err formErrors ->
           -- TODO
-          res model none
+          res model Cmd.none
 
     ConfirmPublish b ->
-      res { model | confirmPublish = b } none
+      res { model | confirmPublish = b } Cmd.none
 
     Publish id ->
-      taskRes model (publish id)
+      res model (publish id)
 
     PublishResult result ->
       case result of
         Ok track ->
-          Effects.map (\_ -> NoOp) (Utils.redirect (Route.PlayTrack track.id))
-            |> res model
+          res model (Location.navigate (Route.PlayTrack track.id))
 
         Err errors ->
           -- TODO
-          res model none
+          res model Cmd.none
 
     ConfirmDelete b ->
-      res { model | confirmDelete = b } none
+      res { model | confirmDelete = b } Cmd.none
 
     Delete id ->
-      taskRes model (deleteDraft id)
+      res model (deleteDraft id)
 
     DeleteResult result ->
       case result of
         Ok id ->
-          res { model | tracks = List.filter (\t -> t.id /= id) model.tracks } none
+          res { model | tracks = List.filter (\t -> t.id /= id) model.tracks } Cmd.none
 
         Err _ ->
-          res model none
+          res model Cmd.none
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
-loadDrafts : Task Never Action
+loadDrafts : Cmd Msg
 loadDrafts =
   ServerApi.getUserTracks
-    |> Task.map ListResult
+    |> Task.perform never ListResult
 
 
-publish : String -> Task Never Action
+publish : String -> Cmd Msg
 publish id =
   ServerApi.publishTrack id
-    |> Task.map PublishResult
+    |> Task.perform never PublishResult
 
 
-deleteDraft : String -> Task Never Action
+deleteDraft : String -> Cmd Msg
 deleteDraft id =
   ServerApi.deleteDraft id
-    |> Task.map DeleteResult
+    |> Task.perform never DeleteResult

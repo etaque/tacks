@@ -1,22 +1,19 @@
-module Dialog (..) where
+module Dialog exposing (..)
 
-import Signal exposing (Address, Message)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Transit exposing (Status(..), getValue, getStatus)
-import Task exposing (Task)
-import Effects exposing (Effects, Never, none)
-import CoreExtra
-import Response
+import Transit exposing (Step(..), getValue, getStep)
+import Response exposing (..)
 import View.Utils as Utils
+import CoreExtra
 
 
-type Action
+type Msg
   = NoOp
   | Open
   | Close
-  | TransitAction (Transit.Action Action)
+  | TransitMsg (Transit.Msg Msg)
 
 
 type alias Model =
@@ -32,7 +29,7 @@ type alias WithDialog a =
 
 initial : Model
 initial =
-  { transition = Transit.initial
+  { transition = Transit.empty
   , open = False
   , options = defaultOptions
   }
@@ -40,7 +37,7 @@ initial =
 
 type alias Options =
   { duration : Float
-  , onClose : Maybe Message
+  , onClose : Maybe Msg
   }
 
 
@@ -51,57 +48,54 @@ defaultOptions =
   }
 
 
-taggedOpen : (Action -> a) -> WithDialog m -> ( WithDialog m, Effects a )
+taggedOpen : (Msg -> msg) -> WithDialog model -> Response (WithDialog model) msg
 taggedOpen tagger model =
   open model.dialog
     |> Response.mapBoth (\newDialog -> { model | dialog = newDialog }) tagger
 
 
-open : Model -> ( Model, Effects Action )
+open : Model -> Response Model Msg
 open model =
-  Response.taskRes model (Task.succeed Open)
+  res model (CoreExtra.toCmd Open)
 
 
-taggedUpdate : (Action -> a) -> Action -> WithDialog m -> ( WithDialog m, Effects a )
-taggedUpdate tagger action model =
-  update action model.dialog
+taggedUpdate : (Msg -> msg) -> Msg -> WithDialog model -> Response (WithDialog model) msg
+taggedUpdate tagger msg model =
+  update msg model.dialog
     |> Response.mapBoth (\newDialog -> { model | dialog = newDialog }) tagger
 
 
-update : Action -> Model -> ( Model, Effects Action )
-update action model =
-  case action of
+update : Msg -> Model -> Response Model Msg
+update msg model =
+  case msg of
     NoOp ->
-      ( model, none )
+      res model Cmd.none
 
     Open ->
       let
-        timeline =
-          Transit.timeline 0 NoOp model.options.duration
-
         newModel =
           { model | open = True }
       in
-        Transit.init TransitAction timeline newModel
+        Transit.start TransitMsg NoOp (0, model.options.duration) newModel
+          |> pure
 
     Close ->
       let
-        timeline =
-          Transit.timeline model.options.duration NoOp 0
-
         newModel =
           { model | open = False }
       in
-        Transit.init TransitAction timeline newModel
+        Transit.start TransitMsg NoOp (model.options.duration, 0) newModel
+          |> pure
 
-    TransitAction transitAction ->
-      Transit.update TransitAction transitAction model
+    TransitMsg transitMsg ->
+      Transit.tick TransitMsg transitMsg model
+        |> pure
 
 
 type alias Layout =
-  { header : List Html
-  , body : List Html
-  , footer : List Html
+  { header : List (Html Msg)
+  , body : List (Html Msg)
+  , footer : List (Html Msg)
   }
 
 
@@ -110,15 +104,15 @@ emptyLayout =
   Layout [] [] []
 
 
-view : Address Action -> Model -> Layout -> Html
-view addr model layout =
+view : Model -> Layout -> Html Msg
+view model layout =
   div
     [ class "dialog-wrapper"
     , style
         [ ( "display", display model )
         , ( "opacity", toString (opacity model) )
         ]
-    , onClick addr Close
+    , onClick Close
     ]
     [ div
         [ class "dialog-sheet" ]
@@ -127,7 +121,7 @@ view addr model layout =
           else
             div
               [ class "dialog-header" ]
-              (closeButton addr :: layout.header)
+              (closeButton :: layout.header)
         , div
             [ class "dialog-body" ]
             layout.body
@@ -141,35 +135,34 @@ view addr model layout =
     ]
 
 
-closeButton : Address Action -> Html
-closeButton addr =
+closeButton : Html Msg
+closeButton =
   span
-    [ class
-        "dialog-close"
-    , onClick addr Close
+    [ class "dialog-close"
+    , onClick Close
     ]
     [ Utils.mIcon "close" [] ]
 
 
-title : String -> Html
+title : String -> Html Msg
 title s =
   div [ class "dialog-title" ] [ text s ]
 
 
-subtitle : String -> Html
+subtitle : String -> Html Msg
 subtitle s =
   div [ class "dialog-subtitle" ] [ text s ]
 
 
 isVisible : Model -> Bool
 isVisible { open, transition } =
-  open || Transit.getStatus transition == Exit
+  open || Transit.getStep transition == Exit
 
 
 opacity : Model -> Float
 opacity { open, transition } =
   if open then
-    case Transit.getStatus transition of
+    case Transit.getStep transition of
       Exit ->
         0
 
@@ -179,7 +172,7 @@ opacity { open, transition } =
       Done ->
         1
   else
-    case Transit.getStatus transition of
+    case Transit.getStep transition of
       Exit ->
         1 - Transit.getValue transition
 

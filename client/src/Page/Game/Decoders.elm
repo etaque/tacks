@@ -1,4 +1,4 @@
-module Page.Game.Decoders where
+module Page.Game.Decoders exposing (..)
 
 import Json.Decode as Json exposing (..)
 
@@ -6,18 +6,18 @@ import Decoders exposing (..)
 import Page.Game.Model exposing (..)
 
 
-decodeAction : Json.Value -> Action
-decodeAction value =
-  case Json.decodeValue actionDecoder value of
+decodeMsg : Json.Value -> Msg
+decodeMsg value =
+  case Json.decodeValue msgDecoder value of
     Err e -> NoOp
-    Ok action -> action
+    Ok msg -> msg
 
-actionDecoder : Decoder Action
-actionDecoder =
-  ("tag" := string) `andThen` specificActionDecoder
+msgDecoder : Decoder Msg
+msgDecoder =
+  ("tag" := string) `andThen` specificMsgDecoder
 
-specificActionDecoder : String -> Decoder Action
-specificActionDecoder tag =
+specificMsgDecoder : String -> Decoder Msg
+specificMsgDecoder tag =
   case tag of
 
     "NoOp" -> succeed NoOp
@@ -29,4 +29,4 @@ specificActionDecoder tag =
       object1 NewMessage ("message" := messageDecoder)
 
     _ ->
-        fail <| tag ++ " is not a recognized tag for actions"
+        fail <| tag ++ " is not a recognized tag for msgs"

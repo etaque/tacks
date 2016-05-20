@@ -1,4 +1,4 @@
-module Game.Render.All (..) where
+module Game.Render.All exposing (..)
 
 import Game.Models exposing (..)
 import Game.Render.SvgUtils exposing (..)
@@ -11,7 +11,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 
-render : ( Int, Int ) -> GameState -> Html
+render : ( Int, Int ) -> GameState -> Html msg
 render ( w, h ) ({ playerState, course, wind } as gameState) =
   let
     cx =

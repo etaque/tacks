@@ -1,51 +1,44 @@
-module Page.Forum.Update where
+module Page.Forum.Update exposing (..)
 
-import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
-
-import Model
 import Page.Forum.Model exposing (..)
 import Page.Forum.Route exposing (..)
 import Page.Forum.Index.Update as Index
 import Page.Forum.ShowTopic.Update as ShowTopic
 import Page.Forum.NewTopic.Update as NewTopic
-import Update.Utils as Utils
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.ForumAction
-
-
-mount : Route -> (Model, Effects Action)
+mount : Route -> Response Model Msg
 mount route =
   case route of
     Index ->
       Index.mount
-        |> mapBoth (\t -> { initial | index = t }) IndexAction
+        |> mapBoth (\t -> { initial | index = t }) IndexMsg
+
     ShowTopic id ->
       ShowTopic.mount id
-        |> mapBoth (\t -> { initial | showTopic = t }) ShowTopicAction
+        |> mapBoth (\t -> { initial | showTopic = t }) ShowTopicMsg
+
     NewTopic ->
-      res initial none
+      res initial Cmd.none
 
 
-update : Action -> Model -> (Model, Effects Action)
-update action model =
-  case action of
+update : Msg -> Model -> Response Model Msg
+update msg model =
+  case msg of
 
-    IndexAction a ->
+    IndexMsg a ->
       Index.update a model.index
-        |> mapBoth (\i -> { model | index = i }) IndexAction
+        |> mapBoth (\i -> { model | index = i }) IndexMsg
 
-    NewTopicAction a ->
+    NewTopicMsg a ->
       NewTopic.update a model.newTopic
-        |> mapBoth (\t -> { model | newTopic = t }) NewTopicAction
+        |> mapBoth (\t -> { model | newTopic = t }) NewTopicMsg
 
-    ShowTopicAction a ->
+    ShowTopicMsg a ->
       ShowTopic.update a model.showTopic
-        |> mapBoth (\t -> { model | showTopic = t }) ShowTopicAction
+        |> mapBoth (\t -> { model | showTopic = t }) ShowTopicMsg
 
     NoOp ->
-      res model none
+      res model Cmd.none
 

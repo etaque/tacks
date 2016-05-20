@@ -1,47 +1,38 @@
-module Page.Home.Update (..) where
+module Page.Home.Update exposing (..)
 
-import Task exposing (Task, succeed, andThen)
-import Signal
-import Effects exposing (Effects, Never, none, map, task)
 import Response exposing (..)
 import Dialog
-import Model
 import Page.Home.Model exposing (..)
 import ServerApi
-import Update.Utils as Utils
+import CoreExtra
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.HomeAction
-
-
-mount : Model -> ( Model, Effects Action )
+mount : Model -> Response Model Msg
 mount model =
-  res model (task loadRaceReports)
+  res model loadRaceReports
 
 
-update : Action -> Model -> ( Model, Effects Action )
-update action model =
-  case action of
+update : Msg -> Model -> Response Model Msg
+update msg model =
+  case msg of
     SetRaceReports result ->
       let
         raceReports =
           Result.withDefault [] result
       in
-        res { model | raceReports = raceReports } none
+        res { model | raceReports = raceReports } Cmd.none
 
     ShowDialog content ->
-      Dialog.taggedOpen DialogAction { model | showDialog = content }
+      Dialog.taggedOpen DialogMsg { model | showDialog = content }
 
-    DialogAction a ->
-      Dialog.taggedUpdate DialogAction a model
+    DialogMsg a ->
+      Dialog.taggedUpdate DialogMsg a model
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
-loadRaceReports : Task Never Action
+loadRaceReports : Cmd Msg
 loadRaceReports =
   ServerApi.getRaceReports Nothing
-    |> Task.map SetRaceReports
+    |> CoreExtra.performSucceed SetRaceReports

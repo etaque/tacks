@@ -1,10 +1,11 @@
-module Page.Game.Model (..) where
+module Page.Game.Model exposing (..)
 
 import Time exposing (Time)
 import Dict exposing (Dict)
 import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs exposing (GameInput)
+import Route exposing (Route)
 
 
 type alias Model =
@@ -42,7 +43,7 @@ initial =
   }
 
 
-type Action
+type Msg
   = Load (Result () LiveTrack) (Result () Course)
   | InitGameState LiveTrack Course Time
   | UpdateLiveTrack LiveTrack
@@ -58,4 +59,5 @@ type Action
   | NewMessage Message
   | AddGhost String Player
   | RemoveGhost String
+  | Route
   | NoOp

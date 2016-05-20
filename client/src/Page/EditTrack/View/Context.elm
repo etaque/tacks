@@ -1,12 +1,12 @@
-module Page.EditTrack.View.Context (..) where
+module Page.EditTrack.View.Context exposing (..)
 
 import Html exposing (..)
+import Html.App exposing (map)
 import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Constants exposing (..)
 import View.Utils as Utils exposing (..)
-import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Gates as Gates
 import Page.EditTrack.View.Gusts as Gusts
@@ -15,7 +15,7 @@ import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 import Route
 
 
-toolbar : Track -> Editor -> List Html
+toolbar : Track -> Editor -> List (Html Msg)
 toolbar track editor =
   [ div
       [ class "toolbar-left" ]
@@ -29,7 +29,7 @@ toolbar track editor =
           [ type' "text"
           , class "edit-name"
           , value editor.name
-          , Utils.onInput addr SetName
+          , onInput SetName
           ]
           []
       ]
@@ -38,27 +38,27 @@ toolbar track editor =
   ]
 
 
-view : Track -> Editor -> List Html
+view : Track -> Editor -> List (Html Msg)
 view track ({ course } as editor) =
   (actions track editor)
     :: (tabs editor.tab)
     :: case editor.tab of
         GatesTab ->
-          Gates.view editor.currentGate course
+          List.map (map FormMsg) (Gates.view editor.currentGate course)
 
         WindTab ->
-          Wind.view editor
+          List.map (map FormMsg) (Wind.view editor)
 
         GustsTab ->
-          Gusts.view track editor
+          List.map (map FormMsg) (Gusts.view track editor)
 
 
-actions : Track -> Editor -> Html
+actions : Track -> Editor -> Html Msg
 actions track editor =
   div
     [ class "actions" ]
     [ a
-        [ onClick addr (Save False)
+        [ onClick (Save False)
         , class "btn-raised btn-primary btn-save"
         , disabled editor.saving
         ]
@@ -72,7 +72,7 @@ actions track editor =
         , text "Save"
         ]
     , a
-        [ onClick addr (Save True)
+        [ onClick (Save True)
         , class "btn-raised btn-white btn-save-and-try"
         , disabled editor.saving
         ]
@@ -80,7 +80,7 @@ actions track editor =
     ]
 
 
-tabs : Tab -> Html
+tabs : Tab -> Html Msg
 tabs tab =
   let
     items =
@@ -91,11 +91,11 @@ tabs tab =
   in
     Utils.tabsRow
       items
-      (\t -> onClick addr (SetTab t))
+      (\t -> onClick (SetTab t))
       ((==) tab)
 
 
-surfaceBlock : Editor -> Html
+surfaceBlock : Editor -> Html Msg
 surfaceBlock editor =
   let
     modes =
@@ -109,7 +109,7 @@ surfaceBlock editor =
       (List.map (renderSurfaceMode currentMode) modes)
 
 
-renderSurfaceMode : Mode -> Mode -> Html
+renderSurfaceMode : Mode -> Mode -> Html Msg
 renderSurfaceMode currentMode mode =
   let
     color =
@@ -134,7 +134,7 @@ renderSurfaceMode currentMode mode =
   in
     a
       [ classList [ ( "current", currentMode == mode ), ( abbr, True ) ]
-      , onButtonClick addr (SetMode mode)
+      , onButtonClick (SetMode mode)
       , title label
       ]
       [ span

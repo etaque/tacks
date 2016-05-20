@@ -1,8 +1,7 @@
-module Game.Inputs (..) where
+module Game.Inputs exposing (..)
 
-import Signal exposing (..)
-import Time exposing (..)
-import Set as S exposing (..)
+import Time exposing (Time)
+import Set exposing (Set)
 import Keyboard
 import Char
 import Game.Models exposing (..)
@@ -97,15 +96,16 @@ isLocking ki =
 toKeyboardInput : UserArrows -> Set Int -> KeyboardInput
 toKeyboardInput arrows keys =
   { arrows = arrows
-  , lock = S.member 13 keys
-  , tack = S.member 32 keys
-  , subtleTurn = S.member 16 keys
+  , lock = Set.member 13 keys
+  , tack = Set.member 32 keys
+  , subtleTurn = Set.member 16 keys
   }
 
 
-keyboardInput : Signal KeyboardInput
-keyboardInput =
-  Signal.map2
-    toKeyboardInput
-    Keyboard.arrows
-    Keyboard.keysDown
+-- TODO
+-- keyboardInput : Signal KeyboardInput
+-- keyboardInput =
+--   Signal.map2
+--     toKeyboardInput
+--     Keyboard.arrows
+--     Keyboard.keysDown

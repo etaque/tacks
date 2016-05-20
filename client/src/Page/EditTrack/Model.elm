@@ -1,8 +1,8 @@
-module Page.EditTrack.Model (..) where
+module Page.EditTrack.Model exposing (..)
 
 import Model.Shared exposing (..)
 import Constants
-import Drag exposing (MouseEvent(..))
+import Route exposing (Route)
 
 
 type alias Model =
@@ -74,12 +74,11 @@ realMode { mode, altMove } =
     mode
 
 
-type Action
+type Msg
   = LoadTrack (Result () Track) (Result () Course)
-  | MouseAction MouseEvent
   | SetMode Mode
   | AltMoveMode Bool
-  | FormAction FormAction
+  | FormMsg FormMsg
   | SetTab Tab
   | SetName String
   | Save Bool
@@ -89,7 +88,7 @@ type Action
   | NoOp
 
 
-type FormAction
+type FormMsg
   = AddGate
   | SetGateCenterX Int Int
   | SetGateCenterY Int Int

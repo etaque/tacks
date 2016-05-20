@@ -1,31 +1,23 @@
-module Page.Explore.Update (..) where
+module Page.Explore.Update exposing (..)
 
 import Page.Explore.Model exposing (..)
 import Response exposing (..)
 import Dialog
-import Effects exposing (Effects, Never, none, map, task)
-import Model
-import Update.Utils as Utils
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.ExploreAction
-
-
-mount : ( Model, Effects Action )
+mount : Res Model Msg
 mount =
-  res initial none
+  res initial Cmd.none
 
 
-update : Action -> Model -> Response Model Action
-update action model =
-  case action of
+update : Msg -> Model -> Res Model Msg
+update msg model =
+  case msg of
     ShowTrackRanking liveTrack ->
-      Dialog.taggedOpen DialogAction { model | showTrackRanking = Just liveTrack }
+      Dialog.taggedOpen DialogMsg { model | showTrackRanking = Just liveTrack }
 
-    DialogAction a ->
-      Dialog.taggedUpdate DialogAction a model
+    DialogMsg a ->
+      Dialog.taggedUpdate DialogMsg a model
 
     NoOp ->
-      res model none
+      res model Cmd.none

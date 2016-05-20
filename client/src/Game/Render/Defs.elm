@@ -1,10 +1,10 @@
-module Game.Render.Defs where
+module Game.Render.Defs exposing (..)
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
 
-renderDefs : Svg
+
+renderDefs : Svg msg
 renderDefs =
   defs [ ]
     [ pattern

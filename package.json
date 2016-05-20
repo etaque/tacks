@@ -5,7 +5,7 @@
     "babel-preset-es2015": "^6.6.0",
     "bootstrap-sass": "~3.3.6",
     "chokidar-cli": "^1.2.0",
-    "elm": "0.16.0",
+    "elm": "0.17.0",
     "node-sass": "^3.7.0"
   },
   "engines": {
@@ -19,9 +19,10 @@
     "build-sass": "node-sass client/styles -o public/dist",
     "watch": "npm run watch-elm & npm run watch-sass & npm run watch-js",
     "watch-js": "babel client/scripts/boot.js -w --out-file public/dev/boot.js",
-    "watch-elm": "chokidar 'client/src/**/*.elm' -i '/#/' -c 'elm make client/src/Main.elm --output public/dev/main.js'",
+    "watch-elm": "chokidar 'client/src/**/*.elm' -i '/#/' -c 'npm run compile-elm --silent'",
+    "compile-elm": "elm make client/src/Main.elm --output public/dev/main.js",
     "watch-sass": "node-sass -w client/styles -o public/dev",
-    "clean": "rm -rf elm-stuff/build-artifacts/0.16.0/etaque/tacks/",
+    "clean": "rm -rf elm-stuff/build-artifacts/0.17.0/etaque/tacks/",
     "postinstall": "npm run build"
   }
 }

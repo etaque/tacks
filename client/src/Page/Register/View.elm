@@ -1,47 +1,38 @@
-module Page.Register.View (..) where
+module Page.Register.View exposing (..)
 
 import Dict exposing (Dict)
 import String
 import Html exposing (..)
+import Html.App exposing (map)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Form.Input as Input
 import Form
 import Model.Shared exposing (..)
 import Page.Register.Model exposing (..)
-import Page.Register.Update exposing (addr)
 import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Site Msg
 view ctx model =
-  Layout.siteLayout
+  Layout.Site
     "register"
-    ctx
     (Just Layout.Register)
     [ Layout.header
         ctx
         []
         [ h1 [] [ text "Register" ]
-        , div [ class "panel" ] [ registerForm model ]
+        , div [ class "panel" ] [ map FormMsg (registerForm model) ]
         ]
     ]
 
 
-registerForm : Model -> Html
+registerForm : Model -> Html Form.Msg
 registerForm { form, loading, serverErrors } =
   let
-    formAddr =
-      Signal.forwardTo addr FormAction
-
     ( submitClick, submitDisabled ) =
-      case Form.getOutput form of
-        Just newPlayer ->
-          ( onClick addr (Submit newPlayer), not loading )
-
-        Nothing ->
-          ( onClick formAddr Form.Submit, Form.isSubmitted form )
+      ( onClick Form.Submit, Form.isSubmitted form )
 
     getServerErrors field =
       Dict.get field serverErrors |> Maybe.withDefault []
@@ -61,7 +52,6 @@ registerForm { form, loading, serverErrors } =
           (errList field.liveError ++ (getServerErrors name))
           [ renderer
               field
-              formAddr
               [ classList
                   [ ( "form-control", True )
                   , ( "filled", isFilled field )
@@ -89,7 +79,7 @@ registerForm { form, loading, serverErrors } =
           Input.passwordInput
       , button
           [ class "btn-raised btn-primary btn-block"
-          , submitClick
+          , onClick Form.Submit
             -- , disabled submitDisabled
           ]
           [ text "Submit" ]

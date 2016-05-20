@@ -1,16 +1,14 @@
-module View.Utils (..) where
+module View.Utils exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Decode as Json
 import String
-import Signal
-import TransitRouter
 import Form.Error exposing (..)
 import Constants exposing (..)
 import Model.Shared exposing (..)
-import Route
+import Route exposing (Route)
 import Time exposing (Time)
 import Date
 import Date.Format as DateFormat
@@ -19,40 +17,36 @@ import Date.Format as DateFormat
 -- Events
 
 
-linkTo : Route.Route -> List Attribute -> List Html -> Html
+linkTo : Route -> List (Attribute msg) -> List (Html msg) -> Html msg
 linkTo route attrs content =
   a ((linkAttrs route) ++ attrs) content
 
 
-linkAttrs : Route.Route -> List Attribute
+linkAttrs : Route -> List (Attribute msg)
 linkAttrs route =
   let
     path =
       Route.toPath route
   in
     [ href path
-    , onPathClick path
+    , attribute "data-navigate" path
+    -- , onPathClick (toMsg route)
     ]
 
 
-onPathClick : String -> Attribute
-onPathClick path =
-  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message TransitRouter.pushPathAddress path)
+-- onPathClick : msg -> Attribute msg
+-- onPathClick msg =
+--   onWithOptions "click" eventOptions (Json.map (\_ -> msg) Json.value)
 
 
-onButtonClick : Signal.Address a -> a -> Attribute
-onButtonClick address action =
-  onWithOptions "click" eventOptions Json.value (\_ -> Signal.message address action)
+onButtonClick : msg -> Attribute msg
+onButtonClick msg =
+  onWithOptions "click" eventOptions (Json.map (\_ -> msg) Json.value)
 
 
-onInput : Signal.Address a -> (String -> a) -> Attribute
-onInput address contentToValue =
-  onWithOptions "input" eventOptions targetValue (\str -> Signal.message address (contentToValue str))
-
-
-onIntInput : Signal.Address a -> (Int -> a) -> Attribute
-onIntInput address contentToValue =
-  onWithOptions "input" eventOptions intTargetValue (\str -> Signal.message address (contentToValue str))
+onIntInput : (Int -> msg) -> Attribute msg
+onIntInput tagger =
+  onWithOptions "input" eventOptions (Json.map tagger intTargetValue)
 
 
 intTargetValue : Json.Decoder Int
@@ -60,12 +54,11 @@ intTargetValue =
   Json.at [ "target", "value" ] (Json.customDecoder Json.string String.toInt)
 
 
-onEnter : Signal.Address a -> a -> Attribute
-onEnter address value =
+onEnter : msg -> Attribute msg
+onEnter msg =
   on
     "keydown"
-    (Json.customDecoder keyCode isEnter)
-    (\_ -> Signal.message address value)
+    (Json.map (\_ -> msg) (Json.customDecoder keyCode isEnter))
 
 
 eventOptions : Options
@@ -87,65 +80,65 @@ isEnter code =
 -- Wrappers
 
 
-type alias Wrapper =
-  List Html -> Html
+type alias Wrapper msg =
+  List (Html msg) -> Html msg
 
 
-container : String -> Wrapper
+container : String -> Wrapper msg
 container className content =
   div [ class ("container " ++ className) ] content
 
 
-containerFluid : String -> Wrapper
-containerFluid className content =
-  div [ class ("container-fluid " ++ className) ] content
+-- containerFluid : String -> Wrapper msg
+-- containerFluid className content =
+--   div [ class ("container-fluid " ++ className) ] content
 
 
-row : Wrapper
-row content =
-  div [ class "row" ] content
+-- row : Wrapper
+-- row content =
+--   div [ class "row" ] content
 
 
-col' : Int -> List Html -> Html
-col' i content =
-  div [ class ("col-xs-" ++ toString i) ] content
+-- col' : Int -> List Html -> Html
+-- col' i content =
+--   div [ class ("col-xs-" ++ toString i) ] content
 
 
-fullWidth : Wrapper
-fullWidth content =
-  row [ div [ class "col-lg-12" ] content ]
+-- fullWidth : Wrapper
+-- fullWidth content =
+--   row [ div [ class "col-lg-12" ] content ]
 
 
-hr' : Html
+hr' : Html msg
 hr' =
   hr [] []
 
 
-dl' : List ( String, List Html ) -> Html
-dl' items =
-  dl
-    [ class "dl-horizontal" ]
-    (List.concatMap (\( term, desc ) -> [ dt [] [ text term ], dd [] desc ]) items)
+-- dl' : List ( String, List (Html msg) ) -> Html msg
+-- dl' items =
+--   dl
+--     [ class "dl-horizontal" ]
+--     (List.concatMap (\( term, desc ) -> [ dt [] [ text term ], dd [] desc ]) items)
 
 
-abbr' : String -> String -> Html
+abbr' : String -> String -> Html msg
 abbr' short long =
   abbr [ title long ] [ text short ]
 
 
-icon : String -> Html
-icon name =
-  span [ class ("glyphicon glyphicon-" ++ name) ] []
+-- icon : String -> Html msg
+-- icon name =
+--   span [ class ("glyphicon glyphicon-" ++ name) ] []
 
 
-mIcon : String -> List String -> Html
+mIcon : String -> List String -> Html msg
 mIcon name classes =
   i
     [ class ("material-icons" :: classes |> String.join " ") ]
     [ text name ]
 
 
-nbsp : Html
+nbsp : Html msg
 nbsp =
   text " "
 
@@ -155,7 +148,7 @@ formatDate time =
   DateFormat.format "%e %b. %k:%M" (Date.fromTime time)
 
 
-fieldGroup : String -> String -> String -> List String -> List Html -> Html
+fieldGroup : String -> String -> String -> List String -> List (Html msg) -> Html msg
 fieldGroup id label' hint errors inputs =
   let
     feedbacksEl =
@@ -182,25 +175,25 @@ fieldGroup id label' hint errors inputs =
 --       div [ class "error-message empty" ] [ text "nope" ]
 
 
-actionGroup : List Html -> Html
-actionGroup content =
-  row
-    [ div [ class "col-xs-offset-3 col-xs-9" ] content ]
+-- actionGroup : List (Html msg) -> Html msg
+-- actionGroup content =
+--   row
+--     [ div [ class "col-xs-offset-3 col-xs-9" ] content ]
 
 
-formGroup : Bool -> List Html -> Html
+formGroup : Bool -> List (Html msg) -> Html msg
 formGroup hasErr content =
   div
     [ classList [ ( "form-group", True ), ( "has-error", hasErr ) ] ]
     content
 
 
-textInput : List Attribute -> Html
+textInput : List (Attribute msg) -> Html msg
 textInput attributes =
   input (List.append [ type' "text", class "form-control" ] attributes) []
 
 
-passwordInput : List Attribute -> Html
+passwordInput : List (Attribute msg) -> Html msg
 passwordInput attributes =
   input (List.append [ type' "password", class "form-control" ] attributes) []
 
@@ -209,7 +202,7 @@ passwordInput attributes =
 -- Components
 
 
-playerWithAvatar : Player -> Html
+playerWithAvatar : Player -> Html msg
 playerWithAvatar player =
   span
     [ class "player-avatar" ]
@@ -241,7 +234,7 @@ playerHandle p =
   Maybe.withDefault "anonymous" p.handle
 
 
-rankingItem : Ranking -> Html
+rankingItem : Ranking -> Html msg
 rankingItem ranking =
   li
     [ class "ranking" ]
@@ -252,12 +245,12 @@ rankingItem ranking =
     ]
 
 
-moduleTitle : String -> Html
+moduleTitle : String -> Html msg
 moduleTitle title =
   div [ class "module-header" ] [ h3 [] [ text title ] ]
 
 
-tabsRow : List ( String, tab ) -> (tab -> Attribute) -> (tab -> Bool) -> Html
+tabsRow : List ( String, tab ) -> (tab -> (Attribute msg)) -> (tab -> Bool) -> Html msg
 tabsRow items toAttr isSelected =
   div
     [ class "tabs-container" ]
@@ -267,7 +260,7 @@ tabsRow items toAttr isSelected =
     ]
 
 
-tabItem : (tab -> Attribute) -> (tab -> Bool) -> ( String, tab ) -> Html
+tabItem : (tab -> Attribute msg) -> (tab -> Bool) -> ( String, tab ) -> Html msg
 tabItem toAttr isSelected ( title, tab ) =
   div
     [ classList

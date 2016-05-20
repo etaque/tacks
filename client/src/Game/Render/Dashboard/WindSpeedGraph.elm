@@ -1,4 +1,4 @@
-module Game.Render.Dashboard.WindSpeedGraph where
+module Game.Render.Dashboard.WindSpeedGraph exposing (..)
 
 import Game.Models exposing (..)
 import Game.Render.SvgUtils exposing (..)
@@ -18,7 +18,7 @@ timeScale : Float
 timeScale =
   graphWidth / windHistoryLength
 
-render : Float -> Float -> WindHistory -> Svg
+render : Float -> Float -> WindHistory -> Svg msg
 render now windSpeed {lastSample, samples, init} =
   let
     steps = map (\{time, speed} -> (timeX init now time, speedY speed)) samples
@@ -64,7 +64,7 @@ render now windSpeed {lastSample, samples, init} =
       , currentText
       ]
 
-yMarks : Svg
+yMarks : Svg msg
 yMarks = g
   [ opacity "0.2" ]
   [ renderMark True 10
@@ -73,7 +73,7 @@ yMarks = g
   , renderMark False 25
   ]
 
-renderMark : Bool -> Float -> Svg
+renderMark : Bool -> Float -> Svg msg
 renderMark solid speed =
   segment
     [ stroke "black"

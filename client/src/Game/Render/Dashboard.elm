@@ -1,4 +1,4 @@
-module Game.Render.Dashboard (..) where
+module Game.Render.Dashboard exposing (..)
 
 import Game.Models exposing (..)
 import Game.Render.SvgUtils exposing (..)
@@ -10,16 +10,11 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 
-renderDashboard : ( Int, Int ) -> GameState -> Svg
+renderDashboard : ( Int, Int ) -> GameState -> Svg msg
 renderDashboard ( w, h ) ({ playerState } as gameState) =
   g
     [ class "dashboard"
     ]
-    -- [ g
-    --     [ class "status"
-    --     , transform (translate (w // 2) 120)
-    --     ]
-    --     [ Status.render gameState ]
     [ g
         [ class "wind-origin"
         , transform (translate (toFloat w / 2) 50)

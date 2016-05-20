@@ -1,36 +1,30 @@
-module Page.Login.Update (..) where
+module Page.Login.Update exposing (..)
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
-import Effects exposing (Effects, Never, none)
 import Response exposing (..)
-import Model
 import Page.Login.Model exposing (..)
 import ServerApi
-import Update.Utils as Utils
+import CoreExtra
+import Model.Event as Event
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.LoginAction
-
-
-mount : ( Model, Effects Action )
+mount : Res Model Msg
 mount =
-  res initial none
+  res initial Cmd.none
 
 
-update : Action -> Model -> ( Model, Effects Action )
-update action model =
-  case action of
+update : Msg -> Model -> Res Model Msg
+update msg model =
+  case msg of
     SetEmail e ->
-      res { model | email = e } none
+      res { model | email = e } Cmd.none
 
     SetPassword p ->
-      res { model | password = p } none
+      res { model | password = p } Cmd.none
 
     Submit ->
-      taskRes { model | loading = True } (submitTask model)
+      res { model | loading = True } (submitCmd model)
 
     SubmitResult result ->
       case result of
@@ -38,20 +32,19 @@ update action model =
           let
             newModel =
               { model | loading = False, error = False }
-
-            effect =
-              Utils.setPlayer player |> Utils.always NoOp
           in
-            res newModel effect
+            res newModel Cmd.none
+              |> withEvent (Event.SetPlayer player)
 
         Err formErrors ->
-          res { model | loading = False, error = True } none
+          res { model | loading = False, error = True } Cmd.none
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
-submitTask : Model -> Task Never Action
-submitTask model =
+submitCmd : Model -> Cmd Msg
+submitCmd model =
   ServerApi.postLogin model.email model.password
     |> Task.map SubmitResult
+    |> CoreExtra.performSucceed identity

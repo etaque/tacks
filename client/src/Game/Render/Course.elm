@@ -1,4 +1,4 @@
-module Game.Render.Course (..) where
+module Game.Render.Course exposing (..)
 
 import Constants
 import Game.Models exposing (..)
@@ -11,7 +11,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 
-renderCourse : GameState -> Svg
+renderCourse : GameState -> Svg msg
 renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
   g
     [ class "course" ]
@@ -22,12 +22,12 @@ renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
     ]
 
 
-renderTiledGusts : TiledGusts -> Svg
+renderTiledGusts : TiledGusts -> Svg msg
 renderTiledGusts { gusts } =
   g [ class "tiled-gusts" ] (List.map renderTiledGust gusts)
 
 
-renderTiledGust : TiledGust -> Svg
+renderTiledGust : TiledGust -> Svg msg
 renderTiledGust { tiles } =
   tiles
     |> Dict.toList
@@ -35,7 +35,7 @@ renderTiledGust { tiles } =
     |> g [ class "tiled-gust" ]
 
 
-renderGustTile : ( Coords, GustTile ) -> Svg
+renderGustTile : ( Coords, GustTile ) -> Svg msg
 renderGustTile ( coords, { angle, speed } ) =
   let
     ( x, y ) =
@@ -59,7 +59,7 @@ renderGustTile ( coords, { angle, speed } ) =
       []
 
 
-renderGates : PlayerState -> Course -> Float -> Bool -> Svg
+renderGates : PlayerState -> Course -> Float -> Bool -> Svg msg
 renderGates { crossedGates } { start, gates } now started =
   start :: gates
     |> List.indexedMap (\i g -> Gates.render now started (i - List.length crossedGates) g)

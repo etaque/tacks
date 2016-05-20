@@ -1,4 +1,4 @@
-module Game.Steps.Vmg where
+module Game.Steps.Vmg exposing (..)
 
 import Game.Models exposing (..)
 import Game.Geo exposing (..)

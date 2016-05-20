@@ -1,4 +1,4 @@
-module Game.Core where
+module Game.Core exposing (..)
 
 import Maybe as M
 import Time exposing (..)

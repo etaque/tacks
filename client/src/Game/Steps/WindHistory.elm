@@ -1,4 +1,4 @@
-module Game.Steps.WindHistory where
+module Game.Steps.WindHistory exposing (..)
 
 import Time exposing (Time)
 

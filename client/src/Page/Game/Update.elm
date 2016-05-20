@@ -1,15 +1,10 @@
-module Page.Game.Update (..) where
+module Page.Game.Update exposing (..)
 
-import List exposing (take, (::))
-import Task exposing (Task, succeed, map, andThen)
-import Task.Extra exposing (delay)
 import Time exposing (millisecond, second)
 import String
 import Time exposing (Time)
-import Signal
 import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
-import Effects exposing (Effects, Never, none, tick)
 import Response exposing (..)
 import Model
 import Model.Shared exposing (..)
@@ -19,28 +14,24 @@ import Game.Models exposing (defaultGame, GameState)
 import Game.Steps exposing (gameStep)
 import Game.Outputs as Output
 import Update.Utils as Utils
+import Task
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.GameAction
-
-
-mount : String -> ( Model, Effects Action )
+mount : String -> Response Model Msg
 mount id =
-  taskRes initial (load id)
+  res initial (load id)
 
 
-update : Player -> Action -> Model -> ( Model, Effects Action )
-update player action model =
-  case action of
+update : Player -> Msg -> Model -> Response Model Msg
+update player msg model =
+  case msg of
     Load liveTrackResult courseResult ->
       case ( liveTrackResult, courseResult ) of
         ( Ok liveTrack, Ok course ) ->
           res model (tick <| InitGameState liveTrack course)
 
         _ ->
-          res { model | notFound = True } none
+          res { model | notFound = True } Cmd.none
 
     InitGameState liveTrack course time ->
       let
@@ -55,12 +46,12 @@ update player action model =
 
     PingServer time ->
       if model.live then
-        res model none
+        res model Cmd.none
       else
         res { model | gameState = updateTime time model.gameState } pingServer
 
     SetTab tab ->
-      res { model | tab = tab } none
+      res { model | tab = tab } Cmd.none
 
     StartRace ->
       let
@@ -86,33 +77,33 @@ update player action model =
         newGameState =
           Maybe.map (gameStep gameInput) model.gameState
       in
-        res { model | gameState = newGameState, live = True } none
+        res { model | gameState = newGameState, live = True } Cmd.none
 
     EnterChat ->
       let
         newGameState =
           Maybe.map (\gs -> { gs | chatting = True }) model.gameState
       in
-        res { model | gameState = newGameState } none
+        res { model | gameState = newGameState } Cmd.none
 
     LeaveChat ->
       let
         newGameState =
           Maybe.map (\gs -> { gs | chatting = False }) model.gameState
       in
-        res { model | gameState = newGameState } none
+        res { model | gameState = newGameState } Cmd.none
 
     UpdateMessageField s ->
-      res { model | messageField = s } none
+      res { model | messageField = s } Cmd.none
 
     SubmitMessage ->
       if model.live then
         taskRes { model | messageField = "" } (sendMessage model.messageField)
       else
-        res model none
+        res model Cmd.none
 
     NewMessage msg ->
-      res { model | messages = take 30 (msg :: model.messages) } none
+      res { model | messages = take 30 (msg :: model.messages) } Cmd.none
 
     AddGhost runId player ->
       let
@@ -129,10 +120,10 @@ update player action model =
         taskRes { model | ghostRuns = newGhostRuns } (removeGhost runId)
 
     UpdateLiveTrack liveTrack ->
-      res (applyLiveTrack liveTrack model) none
+      res (applyLiveTrack liveTrack model) Cmd.none
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
 applyLiveTrack : LiveTrack -> Model -> Model
@@ -150,20 +141,21 @@ applyLiveTrack ({ track, players, races } as liveTrack) model =
     { model | liveTrack = Just liveTrack, races = races, freePlayers = freePlayers }
 
 
-load : String -> Task Never Action
+load : String -> Cmd Msg
 load id =
   Task.map2
     Load
     (ServerApi.getLiveTrack id)
     (ServerApi.getCourse id)
+    |> Task.performSucceed
 
 
-pingServer : Effects Action
+pingServer : Cmd Msg
 pingServer =
   tick PingServer
 
 
-sendMessage : String -> Task error Action
+sendMessage : String -> Task error Msg
 sendMessage content =
   if String.isEmpty content then
     Task.succeed NoOp
@@ -172,13 +164,13 @@ sendMessage content =
       |> Task.map (\_ -> NoOp)
 
 
-addGhost : String -> Player -> Task error Action
+addGhost : String -> Player -> Task error Msg
 addGhost runId player =
   Signal.send Output.serverAddress (Output.AddGhost runId player)
     |> Task.map (\_ -> NoOp)
 
 
-removeGhost : String -> Task error Action
+removeGhost : String -> Task error Msg
 removeGhost runId =
   Signal.send Output.serverAddress (Output.RemoveGhost runId)
     |> Task.map (\_ -> NoOp)

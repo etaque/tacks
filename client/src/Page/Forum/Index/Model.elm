@@ -1,4 +1,4 @@
-module Page.Forum.Index.Model where
+module Page.Forum.Index.Model exposing (..)
 
 import Page.Forum.Model.Shared exposing (..)
 
@@ -12,7 +12,7 @@ initial =
   { topics = [] }
 
 
-type Action
+type Msg
   = ListResult (Result () (List TopicWithUser))
   | RefreshList
   | NoOp

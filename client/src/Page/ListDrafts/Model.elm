@@ -1,4 +1,4 @@
-module Page.ListDrafts.Model (..) where
+module Page.ListDrafts.Model exposing (..)
 
 import CoreExtra
 import Model.Shared exposing (..)
@@ -25,7 +25,7 @@ initial =
   }
 
 
-type Action
+type Msg
   = ListResult (Result () (List Track))
   | SetName String
   | Select (Maybe String)

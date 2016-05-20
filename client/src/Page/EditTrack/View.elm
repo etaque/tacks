@@ -1,4 +1,4 @@
-module Page.EditTrack.View (..) where
+module Page.EditTrack.View exposing (..)
 
 import Html exposing (Html)
 import Html.Lazy
@@ -16,31 +16,33 @@ import Game.Render.Gates as Gates
 import Game.Render.Players as Players
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Game Msg
 view ({ player, dims } as ctx) model =
   case ( model.track, model.editor ) of
     ( Just track, Just editor ) ->
       if canUpdateDraft player track then
-        Layout.gameLayout
+        Layout.Game
           "editor"
-          ctx
           (Context.toolbar track editor)
           (Context.view track editor)
           [ renderCourse dims editor
           ]
       else
-        Html.text "Access forbidden."
+        Layout.Game
+          "editor forbidden"
+          [ text "Access forbidden." ]
+          []
+          [  ]
 
     _ ->
-      Layout.gameLayout
+      Layout.Game
         "editor loading"
-        ctx
         [ text "" ]
         []
         [ Html.Lazy.lazy HexBg.render ctx.dims ]
 
 
-renderCourse : Dims -> Editor -> Html
+renderCourse : Dims -> Editor -> Html Msg
 renderCourse dims ({ center, course, mode } as editor) =
   let
     ( w, h ) =

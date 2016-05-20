@@ -1,4 +1,4 @@
-module Page.Forum.Model.Shared where
+module Page.Forum.Model.Shared exposing (..)
 
 import Time exposing (Time)
 

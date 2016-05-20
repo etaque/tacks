@@ -1,4 +1,4 @@
-module Page.Game.View.Players (..) where
+module Page.Game.View.Players exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -10,7 +10,7 @@ import Page.Game.Model exposing (..)
 import View.Utils as Utils
 
 
-block : Model -> Html
+block : Model -> Html Msg
 block { races, freePlayers } =
   div
     [ class "aside-module module-players" ]
@@ -22,7 +22,7 @@ block { races, freePlayers } =
     ]
 
 
-racesBlock : List Race -> Html
+racesBlock : List Race -> Html Msg
 racesBlock races =
   let
     isActive r =
@@ -34,7 +34,7 @@ racesBlock races =
     div [ class "list-races" ] (List.map raceItem activeRaces)
 
 
-raceItem : Race -> Html
+raceItem : Race -> Html Msg
 raceItem { startTime, tallies } =
   let
     formatted =
@@ -48,7 +48,7 @@ raceItem { startTime, tallies } =
       ]
 
 
-tallyItem : Int -> PlayerTally -> Html
+tallyItem : Int -> PlayerTally -> Html Msg
 tallyItem i { player, gates, finished } =
   let
     rank =
@@ -72,7 +72,7 @@ tallyItem i { player, gates, finished } =
       ]
 
 
-freePlayersBlock : List Player -> Html
+freePlayersBlock : List Player -> Html Msg
 freePlayersBlock players =
   div
     [ class "free-players" ]
@@ -80,7 +80,7 @@ freePlayersBlock players =
     ]
 
 
-freePlayerItem : Player -> Html
+freePlayerItem : Player -> Html Msg
 freePlayerItem player =
   li
     [ class "player" ]

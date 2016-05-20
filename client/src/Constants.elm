@@ -1,4 +1,4 @@
-module Constants (..) where
+module Constants exposing (..)
 
 import Color exposing (Color)
 

@@ -1,16 +1,9 @@
-module Game.Render.Dashboard.VmgBar (..) where
+module Game.Render.Dashboard.VmgBar exposing (..)
 
 import Game.Models exposing (..)
-import Game.Core exposing (..)
-import Model.Shared exposing (..)
 import Game.Render.SvgUtils exposing (..)
-import Game.Render.Gates exposing (..)
-import String
-import List exposing (..)
-import Maybe as M
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
 
 
 barWidth =
@@ -21,7 +14,7 @@ barHeight =
   5
 
 
-render : PlayerState -> Svg
+render : PlayerState -> Svg msg
 render playerState =
   let
     coef =

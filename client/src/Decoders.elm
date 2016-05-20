@@ -1,4 +1,4 @@
-module Decoders (..) where
+module Decoders exposing (..)
 
 import Json.Decode as Json exposing (..)
 import Dict

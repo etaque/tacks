@@ -1,6 +1,7 @@
-module View.Layout (..) where
+module View.Layout exposing (..)
 
 import Html exposing (..)
+import Html.App exposing (map)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy
@@ -8,41 +9,13 @@ import Markdown
 import View.HexBg as HexBg
 import View.Logo as Logo
 import View.Utils as Utils
-import Model exposing (appActionsAddress, Action(Logout))
+import Model exposing (..)
 import Model.Shared exposing (Context, Player, isAdmin)
 import Route
 import Page.Forum.Route as Forum
 import Page.Admin.Route as Admin
 import TransitStyle
 import Constants
-
-
-logo : Html
-logo =
-  Utils.linkTo
-    Route.Home
-    [ class "logo" ]
-    [ Logo.render
-    , span [] [ text "Tacks" ]
-    ]
-
-
-section : List Attribute -> List Html -> Html
-section attrs content =
-  Html.section
-    attrs
-    [ div [ class "container" ] content
-    ]
-
-
-header : Context -> List Attribute -> List Html -> Html
-header ctx attrs content =
-  Html.header
-    attrs
-    [ div
-        [ class "container" ]
-        content
-    ]
 
 
 type Nav
@@ -55,11 +28,55 @@ type Nav
   | Admin
 
 
-siteLayout : String -> Context -> Maybe Nav -> List Html -> Html
-siteLayout name ctx maybeCurrentNav mainContent =
+type alias Site msg =
+  { id : String
+  , maybeNav : Maybe Nav
+  , content : List (Html msg)
+  }
+
+
+type alias Game msg =
+  { id : String
+  , nav : List (Html msg)
+  , side : List (Html msg)
+  , main : List (Html msg)
+  }
+
+
+logo : Html Msg
+logo =
+  Utils.linkTo
+   
+    Route.Home
+    [ class "logo" ]
+    [ Logo.render
+    , span [] [ text "Tacks" ]
+    ]
+
+
+section : List (Attribute msg) -> List (Html msg) -> Html msg
+section attrs content =
+  Html.section
+    attrs
+    [ div [ class "container" ] content
+    ]
+
+
+header : Context -> List (Attribute msg) -> List (Html msg) -> Html msg
+header ctx attrs content =
+  Html.header
+    attrs
+    [ div
+        [ class "container" ]
+        content
+    ]
+
+
+renderSite : Context -> (msg -> PageMsg) -> Site msg -> Html Msg
+renderSite ctx pageTagger layout =
   let
     transitStyle =
-      case ctx.routeTransition of
+      case ctx.routeJump of
         Route.ForMain ->
           (TransitStyle.fade ctx.transition)
 
@@ -71,11 +88,11 @@ siteLayout name ctx maybeCurrentNav mainContent =
   in
     div
       [ class "layout-game layout-site"
-      , id name
+      , id layout.id
       ]
       [ aside
           [ class "dark" ]
-          (logo :: (sideMenu ctx.player maybeCurrentNav))
+          (logo :: (sideMenu ctx.player layout.maybeNav))
       , main'
           []
           [ div
@@ -85,36 +102,41 @@ siteLayout name ctx maybeCurrentNav mainContent =
                   [ class "content"
                   , style transitStyle
                   ]
-                  mainContent
+                  (List.map (map (pageTagger >> PageMsg)) layout.content)
               ]
           ]
       ]
 
 
-gameLayout : String -> Context -> List Html -> List Html -> List Html -> Html
-gameLayout name ctx navContent sideContent mainContent =
-  div
-    [ class "layout-game"
-    , id name
-    ]
-    [ aside
-        []
-        (logo :: sideContent)
-    , subHeader
-        ctx.player
-        navContent
-    , main' [] mainContent
-    ]
+renderGame : Context -> (msg -> PageMsg) -> Game msg -> Html Msg
+renderGame ctx pageTagger layout =
+  let
+    tag = List.map (map (pageTagger >> PageMsg))
+  in
+    div
+      [ class "layout-game"
+      , id layout.id
+      ]
+      [ aside
+          []
+          (logo :: (tag layout.side))
+      , subHeader
+          ctx.player
+          (tag layout.nav)
+      , main'
+          []
+          (tag layout.main)
+      ]
 
 
-subHeader : Player -> List Html -> Html
+subHeader : Player -> List (Html msg) -> Html msg
 subHeader player content =
   nav
     [ class "toolbar" ]
     content
 
 
-sideMenu : Player -> Maybe Nav -> List Html
+sideMenu : Player -> Maybe Nav -> List (Html Msg)
 sideMenu player maybeCurrent =
   [ if player.guest then
       div
@@ -137,7 +159,7 @@ sideMenu player maybeCurrent =
         , a
             [ class "logout"
             , title "Logout"
-            , onClick appActionsAddress Logout
+            , onClick Logout
             ]
             [ Utils.mIcon "exit_to_app" [] ]
         ]
@@ -161,7 +183,7 @@ sideMenu player maybeCurrent =
   , hr [] []
   , div
       [ class "made-by" ]
-      [ Markdown.toHtml """
+      [ Markdown.toHtml [] """
 An [open source](http://github.com/etaque/tacks) game crafted with love
 by [@etaque](http://twitter.com/etaque).
 
@@ -171,7 +193,7 @@ Written in [Elm](http://elm-lang.org).
   ]
 
 
-sideMenuItem : Route.Route -> String -> String -> Bool -> Html
+sideMenuItem : Route.Route -> String -> String -> Bool -> Html Msg
 sideMenuItem route icon label current =
   div
     [ classList
@@ -180,6 +202,7 @@ sideMenuItem route icon label current =
         ]
     ]
     [ Utils.linkTo
+       
         route
         []
         [ Utils.mIcon icon []

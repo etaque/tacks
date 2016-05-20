@@ -1,4 +1,4 @@
-module Game.Steps.GateCrossing (..) where
+module Game.Steps.GateCrossing exposing (..)
 
 import CoreExtra
 import Model.Shared exposing (..)

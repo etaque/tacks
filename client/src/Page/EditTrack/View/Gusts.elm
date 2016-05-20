@@ -1,4 +1,4 @@
-module Page.EditTrack.View.Gusts (..) where
+module Page.EditTrack.View.Gusts exposing (..)
 
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
@@ -8,7 +8,7 @@ import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Utils exposing (..)
 
 
-view : Track -> Editor -> List Html
+view : Track -> Editor -> List (Html FormMsg)
 view track ({ tab, course, name, saving, mode } as editor) =
   [ div
       [ class "gusts-fields" ]

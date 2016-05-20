@@ -1,4 +1,4 @@
-module Page.Login.View (..) where
+module Page.Login.View exposing (..)
 
 import String
 import Html exposing (..)
@@ -6,16 +6,14 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Page.Login.Model exposing (..)
-import Page.Login.Update exposing (addr)
 import View.Utils exposing (..)
 import View.Layout as Layout
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Site Msg
 view ctx model =
-  Layout.siteLayout
+  Layout.Site
     "login"
-    ctx
     (Just Layout.Login)
     [ Layout.header
         ctx
@@ -26,7 +24,7 @@ view ctx model =
     ]
 
 
-loginForm : Model -> Html
+loginForm : Model -> Html Msg
 loginForm { email, password, loading, error } =
   div
     [ class "form-login form-vertical" ]
@@ -36,8 +34,8 @@ loginForm { email, password, loading, error } =
             [ type' "text"
             , value email
             , classList [ ( "form-control", True ), ( "filled", not (String.isEmpty email) ) ]
-            , onInput addr SetEmail
-            , onEnter addr Submit
+            , onInput SetEmail
+            , onEnter Submit
             , id "login_email"
             ]
             []
@@ -49,8 +47,8 @@ loginForm { email, password, loading, error } =
             [ type' "password"
             , value password
             , classList [ ( "form-control", True ), ( "filled", not (String.isEmpty password) ) ]
-            , onInput addr SetPassword
-            , onEnter addr Submit
+            , onInput SetPassword
+            , onEnter Submit
             , id "login_password"
             ]
             []
@@ -62,14 +60,14 @@ loginForm { email, password, loading, error } =
         [ button
             [ class "btn-raised btn-block btn-primary"
             , disabled loading
-            , onClick addr Submit
+            , onClick Submit
             ]
             [ text "Submit" ]
         ]
     ]
 
 
-errorLine : Bool -> Html
+errorLine : Bool -> Html Msg
 errorLine error =
   if error then
     p [ class "form-error-global" ] [ text "Login failure. Wrong credentials?" ]

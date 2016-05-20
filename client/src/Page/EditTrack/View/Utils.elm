@@ -1,25 +1,16 @@
-module Page.EditTrack.View.Utils (..) where
+module Page.EditTrack.View.Utils exposing (..)
 
-import Signal
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
-import Html.Events exposing (..)
-import Model.Shared exposing (..)
 import View.Utils as Utils exposing (..)
-import Page.EditTrack.Update exposing (..)
 import Page.EditTrack.Model exposing (..)
 
 
-formAddr : Signal.Address FormAction
-formAddr =
-  Signal.forwardTo addr FormAction
-
-
-intInput : number -> (Int -> FormAction) -> List Attribute -> Html
+intInput : number -> (Int -> FormMsg) -> List (Attribute FormMsg) -> Html FormMsg
 intInput val formUpdate attrs =
   input
     ([ value (toString val)
-     , onIntInput formAddr formUpdate
+     , onIntInput formUpdate
      , type' "number"
      , class "form-control filled"
      ]

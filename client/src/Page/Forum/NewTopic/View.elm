@@ -1,6 +1,6 @@
-module Page.Forum.NewTopic.View (..) where
+module Page.Forum.NewTopic.View exposing (..)
 
-import Signal exposing (Address)
+import Html.App exposing (map)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -15,73 +15,73 @@ import View.Utils as Utils
 import View.Layout as Layout
 
 
-view : Address Action -> Context -> Model -> List Html
-view addr ctx { form, loading } =
-  let
-    formAddr =
-      Signal.forwardTo addr FormAction
+view : Context -> Model -> List (Html Msg)
+view ctx ({ form, loading } as model) =
+  [ Layout.header
+      ctx
+      []
+      [ Utils.linkTo
+         
+          (Route.Forum Index)
+          [ class "action-title"
+          , Html.Attributes.title "Back to forum index"
+          ]
+          [ Utils.mIcon "close" []
+          , h1 [] [ text "New topic" ]
+          ]
+      ]
+  , Layout.section
+      [ class "white" ]
+      [ map FormMsg (formView model) ]
+  ]
 
+
+formView : Model -> Html Form.Msg
+formView { form, loading } =
+  let
     title =
       Form.getFieldAsString "title" form
 
     content =
       Form.getFieldAsString "content" form
 
-    ( submitClick, submitDisabled ) =
+    submitDisabled =
       case Form.getOutput form of
         Just newTopic ->
-          ( onClick addr (Submit newTopic), loading )
+          loading
 
         Nothing ->
-          ( onClick formAddr Form.Submit, Form.isSubmitted form )
+           Form.isSubmitted form
   in
-    [ Layout.header
-        ctx
-        []
-        [ Utils.linkTo
-            (Route.Forum Index)
-            [ class "action-title"
-            , Html.Attributes.title "Back to forum index"
-            ]
-            [ Utils.mIcon "close" []
-            , h1 [] [ text "New topic" ]
-            ]
-        ]
-    , Layout.section
-        [ class "white" ]
+    div
+        [ class "form-sheet form-new-topic" ]
         [ div
-            [ class "form-sheet form-new-topic" ]
-            [ div
-                [ class "form-group" ]
-                [ Form.textInput
-                    title
-                    formAddr
-                    [ class "form-control"
-                    , placeholder "Title"
-                    ]
-                ]
-            , div
-                [ class "form-group" ]
-                [ Form.baseInput
-                    "hidden"
-                    Form.Text
-                    content
-                    formAddr
-                    [ id "new-topic-body" ]
-                , node
-                    "trix-editor"
-                    [ attribute "input" "new-topic-body" ]
-                    []
-                ]
-            , div
-                [ class "form-actions" ]
-                [ button
-                    [ class "btn-flat"
-                    , disabled submitDisabled
-                    , submitClick
-                    ]
-                    [ text "Submit" ]
+            [ class "form-group" ]
+            [ Form.textInput
+                title
+                [ class "form-control"
+                , placeholder "Title"
                 ]
             ]
+        , div
+            [ class "form-group" ]
+            [ Form.baseInput
+                "hidden"
+                Form.Text
+                content
+                [ id "new-topic-body" ]
+            , node
+                "trix-editor"
+                [ attribute "input" "new-topic-body" ]
+                []
+            ]
+        , div
+            [ class "form-actions" ]
+            [ button
+                [ class "btn-flat"
+                , disabled submitDisabled
+                , onClick Form.Submit
+                ]
+                [ text "Submit" ]
+            ]
         ]
-    ]

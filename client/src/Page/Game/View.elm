@@ -1,4 +1,4 @@
-module Page.Game.View (..) where
+module Page.Game.View exposing (..)
 
 import Html exposing (..)
 import Html.Lazy
@@ -25,7 +25,7 @@ pageTitle liveStatus model =
     "(" ++ toString playersCount ++ ") " ++ trackName
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Game Msg
 view ctx model =
   case ( model.liveTrack, model.gameState ) of
     ( Just liveTrack, Just gameState ) ->
@@ -33,9 +33,8 @@ view ctx model =
         ( w, h ) =
           ctx.dims
       in
-        Layout.gameLayout
+        Layout.Game
           "play-track"
-          ctx
           (Context.toolbar model liveTrack gameState)
           (Context.sidebar model liveTrack gameState)
           [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
@@ -43,9 +42,8 @@ view ctx model =
           ]
 
     _ ->
-      Layout.gameLayout
+      Layout.Game
         "play-track loading"
-        ctx
         []
         []
         [ Html.Lazy.lazy HexBg.render ctx.dims ]

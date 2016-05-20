@@ -1,18 +1,14 @@
-module Page.Game.View.Chat where
+module Page.Game.View.Chat exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-
 import Model.Shared exposing (..)
-
 import Page.Game.Model exposing (..)
-import Page.Game.Update exposing (addr)
-
 import View.Utils exposing (..)
 
 
-view : Int -> Model -> Html
+view : Int -> Model -> Html Msg
 view h {messages, messageField} =
   let
     messagesDiv =
@@ -28,12 +24,12 @@ view h {messages, messageField} =
       ]
 
 
-messagesList : List Message -> Html
+messagesList : List Message -> Html Msg
 messagesList messages =
   ul [ class "list-unstyled" ] (List.map messageItem (List.reverse messages))
 
 
-messageItem : Message -> Html
+messageItem : Message -> Html Msg
 messageItem {player, content, time} =
   li [ ]
     [ span [ class "message-handle" ] [ text <| playerHandle player ]
@@ -41,13 +37,13 @@ messageItem {player, content, time} =
     ]
 
 
-chatField : String -> Html
+chatField : String -> Html Msg
 chatField field =
   textInput
     [ value field
     , placeholder "type in there..."
-    , onInput addr UpdateMessageField
-    , onEnter addr SubmitMessage
-    , onFocus addr EnterChat
-    , onBlur addr LeaveChat
+    , onInput UpdateMessageField
+    , onEnter SubmitMessage
+    , onFocus EnterChat
+    , onBlur LeaveChat
     ]

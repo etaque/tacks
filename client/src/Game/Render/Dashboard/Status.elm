@@ -1,18 +1,15 @@
-module Game.Render.Dashboard.Status (..) where
+module Game.Render.Dashboard.Status exposing (..)
 
 import Game.Models exposing (..)
 import Game.Core exposing (..)
-import Model.Shared exposing (..)
-import Game.Render.SvgUtils exposing (..)
 import String
 import List exposing (..)
 import Time exposing (Time)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Svg.Lazy exposing (..)
 
 
-render : GameState -> Svg
+render : GameState -> Svg msg
 render gameState =
   g
     []
@@ -21,7 +18,7 @@ render gameState =
     ]
 
 
-renderTimer : GameState -> Svg
+renderTimer : GameState -> Svg msg
 renderTimer gameState =
   text'
     [ textAnchor "middle"
@@ -103,7 +100,7 @@ formatTimer t showMs =
     sMinutes ++ ":" ++ sSeconds ++ sMillis
 
 
-renderSubStatus : GameState -> Svg
+renderSubStatus : GameState -> Svg msg
 renderSubStatus gameState =
   text'
     [ textAnchor "middle"

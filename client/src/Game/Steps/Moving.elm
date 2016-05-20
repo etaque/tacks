@@ -1,4 +1,4 @@
-module Game.Steps.Moving (..) where
+module Game.Steps.Moving exposing (..)
 
 import List
 import Dict

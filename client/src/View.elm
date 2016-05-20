@@ -1,7 +1,7 @@
-module View (..) where
+module View exposing (..)
 
+import Html.App exposing (map)
 import Html exposing (..)
-import TransitRouter exposing (getTransition)
 import Model exposing (..)
 import Model.Shared exposing (Context)
 import Page.Home.View as HomePage
@@ -14,52 +14,59 @@ import Page.ListDrafts.View as ListDraftsPage
 import Page.Forum.View as ForumPage
 import Page.Admin.View as AdminPage
 import Route exposing (..)
+import View.Layout exposing (renderSite, renderGame)
 
 
-view : Signal.Address Action -> Model -> Html
-view _ ({ pages, player, liveStatus, dims, routeTransition } as model) =
+view : Model -> Html Msg
+view ({ pages, player, liveStatus, dims, location } as model) =
   let
     ctx =
-      Context player liveStatus dims (getTransition model) routeTransition
+      Context player liveStatus dims location.transition location.routeJump
   in
-    case (TransitRouter.getRoute model) of
-      Home ->
-        HomePage.view ctx pages.home
+    pageView ctx model
 
-      Register ->
-        RegisterPage.view ctx pages.register
 
-      Login ->
-        LoginPage.view ctx pages.login
 
-      Explore ->
-        ExplorePage.view ctx pages.explore
+pageView : Context -> Model -> Html Msg
+pageView ctx ({ pages, player, liveStatus, dims } as model) =
+  case model.location.route of
+    Home ->
+      renderSite ctx HomeMsg (HomePage.view ctx pages.home)
 
-      EditTrack _ ->
-        EditTrackPage.view ctx pages.editTrack
+    Register ->
+      renderSite ctx RegisterMsg (RegisterPage.view ctx pages.register)
 
-      PlayTrack _ ->
-        GamePage.view ctx pages.game
+    Login ->
+      renderSite ctx LoginMsg (LoginPage.view ctx pages.login)
 
-      ListDrafts ->
-        ListDraftsPage.view ctx pages.listDrafts
+    Explore ->
+      renderSite ctx ExploreMsg (ExplorePage.view ctx pages.explore)
 
-      Forum forumRoute ->
-        ForumPage.view ctx forumRoute pages.forum
+    EditTrack _ ->
+      renderGame ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
 
-      Admin adminRoute ->
-        AdminPage.view ctx adminRoute pages.admin
+    PlayTrack _ ->
+      renderGame ctx GameMsg (GamePage.view ctx pages.game)
 
-      NotFound ->
-        text "Not found!"
+    ListDrafts ->
+      renderSite ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
 
-      EmptyRoute ->
-        text ""
+    Forum forumRoute ->
+      renderSite ctx ForumMsg (ForumPage.view ctx forumRoute pages.forum)
+
+    Admin adminRoute ->
+      renderSite ctx AdminMsg (AdminPage.view ctx adminRoute pages.admin)
+
+    NotFound ->
+      text "Not found!"
+
+    EmptyRoute ->
+      text ""
 
 
 pageTitle : Model -> String
 pageTitle model =
-  case TransitRouter.getRoute model of
+  case model.location.route of
     PlayTrack _ ->
       GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
 

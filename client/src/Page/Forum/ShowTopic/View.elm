@@ -1,6 +1,5 @@
-module Page.Forum.ShowTopic.View (..) where
+module Page.Forum.ShowTopic.View exposing (..)
 
-import Signal exposing (Address)
 import String
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -17,8 +16,8 @@ import View.Utils as Utils
 import View.Layout as Layout
 
 
-view : Address Action -> Context -> Model -> List Html
-view addr ctx model =
+view : Context -> Model -> List (Html Msg)
+view ctx model =
   case model.currentTopic of
     Nothing ->
       [ header ctx "Loading..." ]
@@ -32,26 +31,27 @@ view addr ctx model =
               (List.map renderPost postsWithUsers)
           , case model.newPostContent of
               Just content ->
-                newPost addr content model.loading
+                newPost content model.loading
 
               Nothing ->
                 button
                   [ class "btn-floating btn-primary toggle-new-post"
-                  , onClick addr ToggleNewPost
+                  , onClick ToggleNewPost
                   ]
                   [ Utils.mIcon "add" [] ]
           ]
       ]
 
 
-header : Context -> String -> Html
+header : Context -> String -> Html Msg
 header ctx title =
   Layout.header
     ctx
     []
     [ Utils.linkTo
+       
         (Route.Forum Index)
-        [ class "action-title"
+        [ class "msg-title"
         , Html.Attributes.title "Back to forum index"
         ]
         [ Utils.mIcon "arrow_back" []
@@ -60,7 +60,7 @@ header ctx title =
     ]
 
 
-renderPost : PostWithUser -> Html
+renderPost : PostWithUser -> Html Msg
 renderPost { post, user } =
   div
     [ class "forum-post" ]
@@ -71,19 +71,19 @@ renderPost { post, user } =
         ]
     , div
         [ class "post-content" ]
-        [ Markdown.toHtml post.content ]
+        [ Markdown.toHtml [] post.content ]
     ]
 
 
-newPost : Address Action -> String -> Bool -> Html
-newPost addr content loading =
+newPost : String -> Bool -> Html Msg
+newPost content loading =
   div
     [ class "form-sheet" ]
     [ div
         [ class "form-header" ]
         [ div
             [ class "cancel-new-post"
-            , onClick addr ToggleNewPost
+            , onClick ToggleNewPost
             ]
             [ Utils.mIcon "close" [] ]
         , h3 [] [ text "New message" ]
@@ -94,7 +94,7 @@ newPost addr content loading =
             [ type' "hidden"
             , id "new-post-body"
             , value content
-            , Utils.onInput addr SetContent
+            , onInput SetContent
             ]
             []
         , node
@@ -103,11 +103,11 @@ newPost addr content loading =
             []
         ]
     , div
-        [ class "form-actions" ]
+        [ class "form-msgs" ]
         [ button
             [ class "btn-flat"
             , disabled (loading || String.isEmpty content)
-            , onClick addr Submit
+            , onClick Submit
             ]
             [ text "Submit" ]
         ]

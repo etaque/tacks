@@ -1,4 +1,4 @@
-module Page.Game.View.Context (..) where
+module Page.Game.View.Context exposing (..)
 
 import Dict exposing (Dict)
 import Html exposing (..)
@@ -8,13 +8,12 @@ import Model.Shared exposing (..)
 import Game.Models exposing (GameState, Timers, isStarted, raceTime)
 import CoreExtra
 import Page.Game.Model exposing (..)
-import Page.Game.Update exposing (addr)
 import Page.Game.View.Players as PlayersView
 import View.Utils as Utils
 import Route exposing (..)
 
 
-toolbar : Model -> LiveTrack -> GameState -> List Html
+toolbar : Model -> LiveTrack -> GameState -> List (Html Msg)
 toolbar model { track } gameState =
   [ div
       [ class "toolbar-left" ]
@@ -41,7 +40,7 @@ toolbar model { track } gameState =
   ]
 
 
-raceStatus : GameState -> List Html
+raceStatus : GameState -> List (Html Msg)
 raceStatus ({ timers, playerState } as gameState) =
   case timers.startTime of
     Just startTime ->
@@ -68,7 +67,7 @@ raceStatus ({ timers, playerState } as gameState) =
                 text ""
               else
                 a
-                  [ onClick addr ExitRace
+                  [ onClick ExitRace
                   , class "exit-race"
                   , title "Exit race"
                   ]
@@ -79,7 +78,7 @@ raceStatus ({ timers, playerState } as gameState) =
 
     Nothing ->
       [ a
-          [ onClick addr StartRace
+          [ onClick StartRace
           , class "btn-floating btn-warn start-race"
           , title "Start race"
           ]
@@ -103,7 +102,7 @@ timerOpacity gameState =
         (1000 - toFloat ms) / 500
 
 
-sidebar : Model -> LiveTrack -> GameState -> List Html
+sidebar : Model -> LiveTrack -> GameState -> List (Html Msg)
 sidebar model liveTrack gameState =
   let
     blocks =
@@ -115,14 +114,14 @@ sidebar model liveTrack gameState =
     blocks
 
 
-trackNav : LiveTrack -> Html
+trackNav : LiveTrack -> Html Msg
 trackNav liveTrack =
   div
     [ class "track-menu" ]
     [ h2 [] [ text liveTrack.track.name ] ]
 
 
-draftBlocks : LiveTrack -> List Html
+draftBlocks : LiveTrack -> List (Html Msg)
 draftBlocks { track } =
   [ div
       [ class "draft" ]
@@ -140,7 +139,7 @@ draftBlocks { track } =
   ]
 
 
-liveBlocks : GameState -> Model -> LiveTrack -> List Html
+liveBlocks : GameState -> Model -> LiveTrack -> List (Html Msg)
 liveBlocks gameState model liveTrack =
   (tabs model)
     :: case model.tab of
@@ -154,7 +153,7 @@ liveBlocks gameState model liveTrack =
           [ helpBlock ]
 
 
-tabs : Model -> Html
+tabs : Model -> Html Msg
 tabs { tab } =
   let
     items =
@@ -165,11 +164,11 @@ tabs { tab } =
   in
     Utils.tabsRow
       items
-      (\t -> onClick addr (SetTab t))
+      (\t -> onClick (SetTab t))
       ((==) tab)
 
 
-rankingsBlock : Dict String Player -> LiveTrack -> Html
+rankingsBlock : Dict String Player -> LiveTrack -> Html Msg
 rankingsBlock ghostRuns { meta } =
   div
     [ class "aside-module module-rankings" ]
@@ -185,18 +184,18 @@ rankingsBlock ghostRuns { meta } =
     ]
 
 
-rankingItem : (String -> Bool) -> Ranking -> Html
+rankingItem : (String -> Bool) -> Ranking -> Html Msg
 rankingItem isGhost ranking =
   let
     attrs =
       if isGhost ranking.runId then
         [ class "ranking remove-ghost"
-        , onClick addr (RemoveGhost ranking.runId)
+        , onClick (RemoveGhost ranking.runId)
         , title "Remove from ghosts"
         ]
       else
         [ class "ranking add-ghost"
-        , onClick addr (AddGhost ranking.runId ranking.player)
+        , onClick (AddGhost ranking.runId ranking.player)
         , title "Add to ghosts"
         ]
   in
@@ -208,14 +207,14 @@ rankingItem isGhost ranking =
       ]
 
 
-helpBlock : Html
+helpBlock : Html Msg
 helpBlock =
   div
     [ class "aside-module module-help" ]
     [ dl [] helpItems ]
 
 
-helpItems : List Html
+helpItems : List (Html Msg)
 helpItems =
   let
     items =
@@ -228,6 +227,6 @@ helpItems =
     List.concatMap helpItem items
 
 
-helpItem : ( String, String ) -> List Html
+helpItem : ( String, String ) -> List (Html Msg)
 helpItem ( keys, role ) =
   [ dt [] [ text role ], dd [] [ text keys ] ]

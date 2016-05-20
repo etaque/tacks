@@ -1,4 +1,4 @@
-module Page.EditTrack.FormUpdate (..) where
+module Page.EditTrack.FormUpdate exposing (..)
 
 import CoreExtra
 import Game.Models exposing (defaultGate)
@@ -6,8 +6,8 @@ import Game.Geo as Geo
 import Page.EditTrack.Model exposing (..)
 
 
-update : FormAction -> Editor -> Editor
-update formAction ({ course } as editor) =
+update : FormMsg -> Editor -> Editor
+update formMsg ({ course } as editor) =
   let
     { start, gates, windGenerator } =
       course
@@ -31,7 +31,7 @@ update formAction ({ course } as editor) =
     updateWindGen g =
       { editor | course = { course | windGenerator = g } }
   in
-    case formAction of
+    case formMsg of
       SelectGate i ->
         updateEditorGates i course
 

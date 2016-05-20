@@ -1,4 +1,4 @@
-module Game.Models (..) where
+module Game.Models exposing (..)
 
 import Model.Shared exposing (..)
 import Game.Core as Core

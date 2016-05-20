@@ -1,87 +1,71 @@
-module Page.EditTrack.Update (..) where
+module Page.EditTrack.Update exposing (..)
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
-import Effects exposing (Effects, Never, none)
-import Task.Extra exposing (delay)
-import Keyboard
 import Array
 import Response exposing (..)
-import Drag exposing (MouseEvent)
-import Model
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.FormUpdate as FormUpdate
-import Page.EditTrack.GridUpdate as GridUpdate
+-- import Page.EditTrack.GridUpdate as GridUpdate
 import Constants exposing (..)
 import ServerApi
-import Update.Utils as Utils
-import Route
 import Hexagons
+import CoreExtra
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.EditTrackAction
+-- mouseMsg : MouseEvent -> Msg
+-- mouseMsg =
+--   MouseMsg
 
 
-inputs : Signal Action
-inputs =
-  Signal.mergeMany
-    [ Signal.map AltMoveMode Keyboard.shift
-    ]
-
-
-mouseAction : MouseEvent -> Action
-mouseAction =
-  MouseAction
-
-
-mount : String -> ( Model, Effects Action )
+mount : String -> Res Model Msg
 mount id =
-  taskRes initial (loadTrack id)
+  res initial (loadTrack id)
 
 
-update : Dims -> Action -> Model -> ( Model, Effects Action )
-update dims action model =
-  case action of
+update : Dims -> Msg -> Model -> Res Model Msg
+update dims msg model =
+  case msg of
     LoadTrack trackResult courseResult ->
       case ( trackResult, courseResult ) of
         ( Ok track, Ok course ) ->
-          staticRes
+          res
             { model
               | track = Just track
               , editor = Just (initialEditor track course)
             }
+            Cmd.none
 
         _ ->
-          staticRes { model | notFound = True }
+          res { model | notFound = True } Cmd.none
 
     SetTab tab ->
-      staticRes (updateEditor (\e -> { e | tab = tab }) model)
+      res (updateEditor (\e -> { e | tab = tab }) model) Cmd.none
 
     SetName n ->
-      staticRes (updateEditor (\e -> { e | name = n }) model)
+      res (updateEditor (\e -> { e | name = n }) model) Cmd.none
 
-    MouseAction event ->
-      staticRes (updateEditor (GridUpdate.mouseAction event dims) model)
+    -- TODO
+    -- MouseMsg event ->
+    --   res (updateEditor (GridUpdate.mouseMsg event dims) model) Cmd.none
 
     SetMode mode ->
-      staticRes (updateEditor (\e -> { e | mode = mode }) model)
+      res (updateEditor (\e -> { e | mode = mode }) model) Cmd.none
 
     AltMoveMode b ->
-      staticRes (updateEditor (\e -> { e | altMove = b }) model)
+      res (updateEditor (\e -> { e | altMove = b }) model) Cmd.none
 
-    FormAction a ->
-      staticRes ((FormUpdate.update >> updateEditor) a model)
+    FormMsg a ->
+      res ((FormUpdate.update >> updateEditor) a model) Cmd.none
 
     Save try ->
       case ( model.track, model.editor ) of
         ( Just track, Just editor ) ->
-          taskRes (updateEditor (\e -> { e | saving = True }) model) (save try track.id editor)
+          res (updateEditor (\e -> { e | saving = True }) model) (save try track.id editor)
 
         _ ->
-          res model none
+          res model Cmd.none
 
     SaveResult try result ->
       case result of
@@ -92,30 +76,32 @@ update dims action model =
 
             effect =
               if try then
-                Effects.map (\_ -> NoOp) (Utils.redirect (Route.PlayTrack track.id))
+                -- TODO
+                -- Cmd.map (\_ -> NoOp) (Utils.redirect (Route.PlayTrack track.id))
+                Cmd.none
               else
-                none
+                Cmd.none
           in
             res newModel effect
 
         Err _ ->
-          res model none
+          res model Cmd.none
 
     ConfirmPublish ->
-      res (updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) model) none
+      res (updateEditor (\e -> { e | confirmPublish = not e.confirmPublish }) model) Cmd.none
 
     Publish ->
       case ( model.track, model.editor ) of
         ( Just track, Just editor ) ->
-          taskRes
+          res
             (updateEditor (\e -> { e | saving = True }) model)
             (publish track.id editor)
 
         _ ->
-          res model none
+          res model Cmd.none
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
 updateEditor : (Editor -> Editor) -> Model -> Model
@@ -127,12 +113,10 @@ updateEditor update model =
     { model | editor = newEditor }
 
 
-loadTrack : String -> Task Never Action
+loadTrack : String -> Cmd Msg
 loadTrack id =
-  Task.map2
-    LoadTrack
-    (ServerApi.getTrack id)
-    (ServerApi.getCourse id)
+  Task.map2 LoadTrack (ServerApi.getTrack id) (ServerApi.getCourse id)
+    |> CoreExtra.performSucceed identity
 
 
 saveEditor : String -> Editor -> Task Never (FormResult Track)
@@ -140,17 +124,17 @@ saveEditor id ({ course, name } as editor) =
   ServerApi.saveTrack id name { course | area = getRaceArea course.grid }
 
 
-save : Bool -> String -> Editor -> Task Never Action
+save : Bool -> String -> Editor -> Cmd Msg
 save try id editor =
-  delay 500 (saveEditor id editor)
-    |> Task.map (SaveResult try)
+  CoreExtra.delay 500 (saveEditor id editor)
+    |> CoreExtra.performSucceed (SaveResult try)
 
 
-publish : String -> Editor -> Task Never Action
+publish : String -> Editor -> Cmd Msg
 publish id ({ course, name } as editor) =
-  delay 500 (saveEditor id editor)
+  CoreExtra.delay 500 (saveEditor id editor)
     `andThen` (\_ -> ServerApi.publishTrack id)
-    |> Task.map (SaveResult True)
+    |> CoreExtra.performSucceed (SaveResult True)
 
 
 getRaceArea : Grid -> RaceArea
@@ -192,7 +176,3 @@ getRaceArea grid =
       getFirst yVals - hexRadius
   in
     RaceArea ( right, top ) ( left, bottom )
-
-
-staticRes m =
-  res m none
