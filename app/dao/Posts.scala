@@ -34,8 +34,8 @@ object Posts extends TableQuery(new PostTable(_)) {
 
   def listByTopicIdWithUser(topicId: UUID): Future[Seq[(Post, User)]] = DB.run {
     filter(_.topicId === topicId)
-      .sortBy(_.creationTime.desc)
       .join(Users).on(_.userId === _.id)
+      .sortBy(_._1.creationTime.asc)
       .result
   }
 
