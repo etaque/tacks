@@ -4,6 +4,11 @@ import Transit
 import Route exposing (Route)
 import Response exposing (..)
 import Model.Event as Event
+import Json.Decode as Json
+import Json.Decode.Extra exposing (lazy)
+import Html exposing (..)
+import Html.Attributes exposing (..)
+import Html.Events exposing (onWithOptions)
 
 
 port setPath : String -> Cmd msg
@@ -66,3 +71,34 @@ update msg model =
 navigate : Route -> Cmd msg
 navigate route =
   setPath (Route.toPath route)
+
+
+onNavigateClick : (String -> msg) -> Attribute msg
+onNavigateClick tagger =
+  onWithOptions
+    "click"
+    { stopPropagation = True
+    , preventDefault = True
+    }
+    (Json.map tagger (Json.at [ "target" ] pathDecoder))
+
+
+pathDecoder : Json.Decoder String
+pathDecoder =
+  Json.oneOf
+    [ Json.at [ "dataset", "navigate" ] Json.string
+    , Json.at [ "data-navigate" ] Json.string
+    , Json.at [ "parentElement" ] (lazy (\_ -> pathDecoder))
+    , Json.fail "no path found for click"
+    ]
+
+
+linkAttrs : Route -> List (Attribute msg)
+linkAttrs route =
+  let
+    path =
+      Route.toPath route
+  in
+    [ href path
+    , attribute "data-navigate" path
+    ]

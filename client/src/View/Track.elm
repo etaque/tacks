@@ -17,14 +17,13 @@ liveTrackBlock rankingClickHandler ({ track, meta, players } as lt) =
   in
     div
       [ class "col-md-6" ]
-      [ div
-          ([ classList
+      [ Utils.linkTo
+          (Route.PlayTrack track.id)
+          [ classList
               [ ( "live-track", True )
               , ( "is-empty", empty )
               ]
            ]
-            ++ (Utils.linkAttrs (Route.PlayTrack track.id))
-          )
           [ div
               [ class "live-track-header" ]
               [ h3

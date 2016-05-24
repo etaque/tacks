@@ -12,6 +12,7 @@ import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Index.Model exposing (..)
 import View.Utils as Utils
 import View.Layout as Layout
+import Location
 
 
 view : Context -> Model -> List (Html Msg)
@@ -21,7 +22,6 @@ view ctx ({ topics } as model) =
       []
       [ h1 [] [ text "Forum" ]
       , Utils.linkTo
-         
           (Route.Forum NewTopic)
           [ class "btn-raised btn-positive btn-new-topic cta"
           ]
@@ -56,7 +56,7 @@ topicsTable topics =
 topicRow : TopicWithUser -> Html Msg
 topicRow { topic, user } =
   tr
-    (Utils.linkAttrs (Route.Forum (ShowTopic topic.id)))
+    (Location.linkAttrs (Route.Forum (ShowTopic topic.id)))
     [ td
         [ class "icon" ]
         [ img [ src (Utils.avatarUrl 32 (asPlayer user)), class "avatar" ] [] ]

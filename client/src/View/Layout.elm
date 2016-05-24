@@ -16,6 +16,8 @@ import Page.Forum.Route as Forum
 import Page.Admin.Route as Admin
 import TransitStyle
 import Constants
+import Json.Decode as Json
+import Location
 
 
 type Nav
@@ -46,7 +48,6 @@ type alias Game msg =
 logo : Html Msg
 logo =
   Utils.linkTo
-   
     Route.Home
     [ class "logo" ]
     [ Logo.render
@@ -89,6 +90,7 @@ renderSite ctx pageTagger layout =
     div
       [ class "layout-game layout-site"
       , id layout.id
+      , Location.onNavigateClick Navigate
       ]
       [ aside
           [ class "dark" ]
@@ -116,6 +118,7 @@ renderGame ctx pageTagger layout =
     div
       [ class "layout-game"
       , id layout.id
+      , Location.onNavigateClick Navigate
       ]
       [ aside
           []

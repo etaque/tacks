@@ -94,12 +94,16 @@ msgUpdate msg ({ pages } as model) =
       res { model | dims = (size.width, size.height) } Cmd.none
 
     Logout ->
-      res model Cmd.none
-      -- TODO res model (Task.perform NoOp SetPlayer ServerApi.postLogout)
-      -- Task.perform (\_ -> NoOp) SetPlayer 
+      ServerApi.postLogout
+        |> Task.map (Result.toMaybe >> Maybe.map SetPlayer >> Maybe.withDefault NoOp)
+        |> CoreExtra.performSucceed identity
+        |> res model
 
     PageMsg pageMsg ->
       pageUpdate pageMsg model
+
+    Navigate path ->
+      res model (Location.setPath path)
 
     NoOp ->
       res model Cmd.none

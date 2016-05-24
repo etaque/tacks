@@ -15,12 +15,6 @@ import Location
 import Window
 
 
--- (?) : Maybe a -> a -> a
--- (?) maybe default =
---   Maybe.withDefault default maybe
--- infixr 9 ?
-
-
 type alias Setup =
   { player : Player
   , path : String
@@ -37,6 +31,7 @@ type Msg
   | PageMsg PageMsg
   | LocationMsg Location.Msg
   | Logout
+  | Navigate String
   | NoOp
 
 

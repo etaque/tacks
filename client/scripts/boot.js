@@ -21,16 +21,6 @@ appSetup.dims = dims();
 
 const app = Elm.Main.fullscreen(appSetup);
 
-document.addEventListener('click', (e) => {
-  if (e.target.dataset.navigate) {
-    const path = e.target.dataset.navigate;
-    history.pushState({}, '', path);
-    app.ports.pathUpdates.send(path);
-    e.preventDefault();
-  }
-});
-
-
 app.ports.setPath.subscribe(path => {
   history.pushState({}, '', path);
   app.ports.pathUpdates.send(path);
@@ -39,6 +29,7 @@ app.ports.setPath.subscribe(path => {
 window.onpopstate = () => {
   app.ports.pathUpdates.send(document.location.pathname);
 };
+
 // const sendMessage = (msg) => {
 //   if (msg && ws && ws.readyState === WebSocket.OPEN) {
 //     ws.send(JSON.stringify(msg));
