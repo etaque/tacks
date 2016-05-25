@@ -1,16 +1,15 @@
 module Game.Outputs exposing (..)
 
 import Json.Encode as Js
-import Model
 import Model.Shared exposing (..)
-import Page.Game.Model as GamePage
 import Game.Models exposing (..)
-import Game.Inputs exposing (..)
-import Route
+import WebSocket
+import ServerApi
 
 
 type ServerMsg
   = ServerNoOp
+  | UpdatePlayer PlayerOutput
   | SendMessage String
   | AddGhost String Player
   | RemoveGhost String
@@ -25,66 +24,25 @@ type LocalMsg
 
 type alias PlayerOutput =
   { state : OpponentState
-  , input : KeyboardInput
   , localTime : Float
   }
 
 
-extractPlayerOutput : Model.Model -> Model.Msg -> Maybe PlayerOutput
-extractPlayerOutput model msg =
-  let
-    keyboardInput =
-      case msg of
-        Model.PageMsg (Model.GameMsg (GamePage.GameUpdate gameInput)) ->
-          Just gameInput.keyboardInput
-
-        _ ->
-          Nothing
-
-    gameState =
-      case model.location.route of
-        Route.PlayTrack _ ->
-          model.pages.game.gameState
-
-        _ ->
-          Nothing
-  in
-    Maybe.map (makePlayerOutput keyboardInput) gameState
+playerOutput : GameState -> PlayerOutput
+playerOutput gameState =
+  { state = asOpponentState gameState.playerState
+  , localTime = gameState.timers.localTime
+  }
 
 
-makePlayerOutput : Maybe KeyboardInput -> GameState -> PlayerOutput
-makePlayerOutput keyboardInput gameState =
-  let
-    realKeyboardInput =
-      if gameState.chatting then
-        emptyKeyboardInput
-      else
-        Maybe.withDefault emptyKeyboardInput keyboardInput
-  in
-    { state = asOpponentState gameState.playerState
-    , input = realKeyboardInput
-    , localTime = gameState.timers.localTime
-    }
+sendToServer : Maybe LiveTrack -> ServerMsg -> Cmd msg
+sendToServer maybeLiveTrack serverMsg =
+  case maybeLiveTrack of
+    Just {track} ->
+      WebSocket.send (ServerApi.gameSocket track.id) (Js.encode 0 (encodeServerMsg serverMsg))
 
-
-getActiveTrack : Model.Model -> Maybe String
-getActiveTrack model =
-  case model.location.route of
-    Route.PlayTrack _ ->
-      Maybe.map (.track >> .id) model.pages.game.liveTrack
-
-    _ ->
-      Nothing
-
-
-needChatScrollDown : Model.Msg -> Maybe ()
-needChatScrollDown msg =
-  case msg of
-    Model.PageMsg (Model.GameMsg (GamePage.NewMessage _)) ->
-      Just ()
-
-    _ ->
-      Nothing
+    Nothing ->
+      Cmd.none
 
 
 encodeServerMsg : ServerMsg -> Js.Value
@@ -92,6 +50,9 @@ encodeServerMsg msg =
   case msg of
     ServerNoOp ->
       tag "ServerNoOp" []
+
+    UpdatePlayer output ->
+      tag "PlayerInput" [ ( "playerInput", encodePlayerOutput output ) ]
 
     SendMessage s ->
       tag "SendMessage" [ ( "content", Js.string s ) ]
@@ -114,25 +75,23 @@ tag name fields =
   Js.object <| ( "tag", Js.string name ) :: fields
 
 
+encodePlayerOutput : PlayerOutput -> Js.Value
+encodePlayerOutput output =
+  Js.object
+    [ ( "state", encodeOpponentState output.state )
+    , ( "localTime" , Js.float output.localTime )
+    ]
 
--- ghosts : Msg -> Maybe Js.Value
--- ghosts msg =
---   case msg of
---     PageMsg (GameMsg ga) ->
---       case ga of
---         GamePage.AddGhost runId _ ->
---           Just
---             <| Js.object
---                 [ ( "tag", Js.string "AddGhost" )
---                 , ( "runId", Js.string runId )
---                 ]
---         GamePage.RemoveGhost runId ->
---           Just
---             <| Js.object
---                 [ ( "tag", Js.string "RemoveGhost" )
---                 , ( "runId", Js.string runId )
---                 ]
---         _ ->
---           Nothing
---     _ ->
---       Nothing
+
+encodeOpponentState : OpponentState -> Js.Value
+encodeOpponentState o =
+  Js.object
+    [ ( "time", Js.float o.time )
+    , ( "position", Js.list [ Js.float (fst o.position), Js.float (snd o.position) ])
+    , ( "heading", Js.float o.heading )
+    , ( "velocity", Js.float o.velocity )
+    , ( "windAngle", Js.float o.windAngle )
+    , ( "windOrigin", Js.float o.windOrigin )
+    , ( "shadowDirection", Js.float o.shadowDirection )
+    , ( "crossedGates", Js.list (List.map Js.float o.crossedGates))
+    ]

@@ -126,25 +126,6 @@ messageDecoder =
     ("time" := float)
 
 
-
--- opponentDecoder : Decoder Opponent
--- opponentDecoder =
---   object2 Opponent
---     ("player" := playerDecoder)
---     ("state" := opponentStateDecoder)
--- opponentStateDecoder : Decoder OpponentState
--- opponentStateDecoder =
---   object8 OpponentState
---     ("time" := float)
---     ("position" := pointDecoder)
---     ("heading" := float)
---     ("velocity" := float)
---     ("windAngle" := float)
---     ("windOrigin" := float)
---     ("shadowDirection" := float)
---     ("crossedGates" := list float)
-
-
 pointDecoder : Decoder Point
 pointDecoder =
   tuple2 (,) float float

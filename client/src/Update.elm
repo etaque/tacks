@@ -9,7 +9,7 @@ import Page.Register.Update as Register
 import Page.Login.Update as Login
 import Page.Explore.Update as Explore
 import Page.EditTrack.Update as EditTrack
--- import Page.Game.Update as Game
+import Page.Game.Update as Game
 import Page.ListDrafts.Update as ListDrafts
 import Page.Forum.Update as Forum
 import Page.Admin.Update as Admin
@@ -24,11 +24,21 @@ import Window
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.batch
-    [ Location.subscriptions LocationMsg model.location
-    , Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
-    , Window.resizes WindowResized
-    ]
+  let
+    pageSub =
+      case model.location.route of
+        PlayTrack id ->
+          Sub.map GameMsg (Game.subscriptions model.pages.game)
+
+        _ ->
+          Sub.none
+  in
+    Sub.batch
+      [ Location.subscriptions LocationMsg model.location
+      , Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
+      , Window.resizes WindowResized
+      , Sub.map PageMsg pageSub
+      ]
 
 
 init : Setup -> ( Model, Cmd Msg )
@@ -110,14 +120,14 @@ msgUpdate msg ({ pages } as model) =
 
 
 mountRoute : Route -> Route -> Model -> Response Model Msg
-mountRoute prevRoute newRoute ({ pages, player } as model) =
-  -- let
-  --   routeTransition =
-  --     Route.detectTransition prevRoute newRoute
+mountRoute prevRoute newRoute ({ pages, player, location } as prevModel) =
+  let
+    routeJump =
+      Route.detectJump prevRoute newRoute
 
-  --   model =
-  --     { prevModel | routeTransition = routeTransition }
-  -- in
+    model =
+      { prevModel | location = { location | routeJump = routeJump } }
+  in
     case newRoute of
       Home ->
         applyHome (Home.mount pages.home) model
@@ -134,8 +144,8 @@ mountRoute prevRoute newRoute ({ pages, player } as model) =
       EditTrack id ->
         applyEditTrack (EditTrack.mount id) model
 
-      -- TODO PlayTrack id ->
-        -- applyGame (Game.mount id) model
+      PlayTrack id ->
+        applyGame (Game.mount id) model
 
       ListDrafts ->
         applyListDrafts (ListDrafts.mount pages.listDrafts) model
@@ -169,8 +179,7 @@ pageUpdate pageMsg ({ pages, player, dims } as model) =
       applyEditTrack (EditTrack.update dims a pages.editTrack) model
 
     GameMsg a ->
-      -- TODO applyGame (Game.update player a pages.game) model
-      res model Cmd.none
+      applyGame (Game.update player a pages.game) model
 
     ListDraftsMsg a ->
       applyListDrafts (ListDrafts.update a pages.listDrafts) model
@@ -180,10 +189,6 @@ pageUpdate pageMsg ({ pages, player, dims } as model) =
 
     AdminMsg a ->
       applyAdmin (Admin.update a pages.admin) model
-
-
--- logoutCmd : Task Cmd.Never Msg
--- logoutCmd =
 
 
 applyHome =

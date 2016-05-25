@@ -1,27 +1,16 @@
 module Game.Inputs exposing (..)
 
 import Time exposing (Time)
-import Set exposing (Set)
-import Keyboard
-import Char
 import Game.Models exposing (..)
 import Model.Shared exposing (..)
-
-
-buildGameInput : ( KeyboardInput, ( Int, Int ), Maybe RaceInput ) -> Clock -> Maybe GameInput
-buildGameInput ( keyboardInput, dims, maybeRaceInput ) clock =
-  Maybe.map (GameInput keyboardInput dims clock) maybeRaceInput
-
-
-
--- Game
+import Keyboard.Extra as Keyboard
 
 
 type alias GameInput =
-  { keyboardInput : KeyboardInput
-  , windowInput : ( Int, Int )
-  , clock : Clock
-  , raceInput : RaceInput
+  { raceInput : RaceInput
+  , keyboard : KeyboardInput
+  , dims : ( Int, Int )
+  , time : Time
   }
 
 
@@ -39,8 +28,8 @@ type alias KeyboardInput =
   }
 
 
-emptyKeyboardInput : KeyboardInput
-emptyKeyboardInput =
+initialKeyboard : KeyboardInput
+initialKeyboard =
   { arrows = { x = 0, y = 0 }
   , lock = False
   , tack = False
@@ -93,19 +82,11 @@ isLocking ki =
   ki.arrows.y > 0 || ki.lock
 
 
-toKeyboardInput : UserArrows -> Set Int -> KeyboardInput
-toKeyboardInput arrows keys =
-  { arrows = arrows
-  , lock = Set.member 13 keys
-  , tack = Set.member 32 keys
-  , subtleTurn = Set.member 16 keys
+keyboardInput : Keyboard.Model -> KeyboardInput
+keyboardInput kb =
+  { arrows = Keyboard.arrows kb
+  , lock = Keyboard.isPressed Keyboard.Enter kb
+  , tack = Keyboard.isPressed Keyboard.Space kb
+  , subtleTurn = Keyboard.isPressed Keyboard.Shift kb
   }
 
-
--- TODO
--- keyboardInput : Signal KeyboardInput
--- keyboardInput =
---   Signal.map2
---     toKeyboardInput
---     Keyboard.arrows
---     Keyboard.keysDown

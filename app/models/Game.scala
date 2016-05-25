@@ -95,7 +95,7 @@ case class Opponent(
   player: Player
 )
 
-case class PlayerInput(state: OpponentState, input: KeyboardInput, localTime: Long)
+case class PlayerInput(state: OpponentState, localTime: Long)
 case class PlayerUpdate(player: Player, playerInput: PlayerInput)
 
 

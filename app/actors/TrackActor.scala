@@ -69,7 +69,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
           state = state.addPlayer(player, sender)
           broadcastLiveTrackUpdate()
 
-        case Input(PlayerInput(opState, _, clientTime)) =>
+        case Input(PlayerInput(opState, clientTime)) =>
           state.players.get(player.id).foreach { context =>
             val newContext = context.copy(state = opState)
 

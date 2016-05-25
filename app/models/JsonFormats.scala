@@ -126,7 +126,6 @@ object JsonFormats {
 
   implicit val playerInputFormat: Format[PlayerInput] = (
     (__ \ 'state).format[OpponentState] and
-      (__ \ 'input).format[KeyboardInput] and
       (__ \ 'localTime).format(timestampFormat)
   )(PlayerInput.apply _, unlift(PlayerInput.unapply _))
 

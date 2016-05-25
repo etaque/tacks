@@ -1,13 +1,11 @@
 module Game.Steps exposing (..)
 
-import Model exposing (..)
 import Model.Shared exposing (..)
-import Game.Inputs exposing (..)
+import Game.Inputs as Input
 import Game.Models exposing (..)
-import Game.Geo exposing (..)
-import Game.Core exposing (..)
-import Constants exposing (..)
-import Hexagons.Grid as Grid
+import Game.Geo as Geo
+import CoreExtra
+import Constants
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving exposing (movingStep)
 import Game.Steps.Turning exposing (turningStep)
@@ -17,19 +15,24 @@ import Game.Steps.WindHistory exposing (windHistoryStep)
 import Game.Steps.Gusts exposing (gustsStep)
 
 
-gameStep : GameInput -> GameState -> GameState
-gameStep { raceInput, windowInput, keyboardInput, clock } gameState =
+gameStep : Input.GameInput -> GameState -> GameState
+gameStep { raceInput, keyboard, dims, time } gameState =
   let
     keyboardInputWithFocus =
       if gameState.chatting then
-        emptyKeyboardInput
+        Input.initialKeyboard
       else
-        keyboardInput
+        keyboard
 
     gameDims =
-      ( fst windowInput - sidebarWidth
-      , snd windowInput
+      ( fst dims - Constants.sidebarWidth
+      , snd dims
       )
+
+    clock =
+      { delta = time - gameState.timers.localTime
+      , time = time
+      }
   in
     raceInputStep raceInput clock gameState
       |> gustsStep
@@ -38,7 +41,7 @@ gameStep { raceInput, windowInput, keyboardInput, clock } gameState =
       |> centerStep gameState.playerState.position gameDims
 
 
-raceInputStep : RaceInput -> Clock -> GameState -> GameState
+raceInputStep : Input.RaceInput -> Input.Clock -> GameState -> GameState
 raceInputStep raceInput { delta, time } ({ playerState, timers } as gameState) =
   let
     { serverNow, startTime, opponents, ghosts, tallies, initial, clientTime } =
@@ -81,7 +84,7 @@ raceInputStep raceInput { delta, time } ({ playerState, timers } as gameState) =
     }
 
 
-playerStep : KeyboardInput -> Float -> GameState -> GameState
+playerStep : Input.KeyboardInput -> Float -> GameState -> GameState
 playerStep keyboardInput elapsed gameState =
   let
     playerState =
@@ -105,7 +108,7 @@ centerStep ( px, py ) dims ({ center, playerState, course } as gameState) =
       playerState.position
 
     ( w, h ) =
-      floatify dims
+      Geo.floatify dims
 
     ( ( xMax, yMax ), ( xMin, yMin ) ) =
       areaBox course.area
@@ -154,7 +157,7 @@ moveOpponentState : OpponentState -> Float -> OpponentState
 moveOpponentState state delta =
   let
     position =
-      movePoint state.position delta state.velocity state.heading
+      Geo.movePoint state.position delta state.velocity state.heading
   in
     { state | position = position }
 
@@ -176,7 +179,7 @@ updateOpponents : List Opponent -> Float -> List Opponent -> List Opponent
 updateOpponents previousOpponents delta newOpponents =
   let
     findPrevious o =
-      find (\po -> po.player.id == o.player.id) previousOpponents
+      CoreExtra.find (\po -> po.player.id == o.player.id) previousOpponents
   in
     List.map (\o -> updateOpponent (findPrevious o) delta o) newOpponents
 

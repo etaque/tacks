@@ -6,20 +6,49 @@ import Time exposing (Time)
 import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
 import Response exposing (..)
-import Model
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
+import Page.Game.Decoders as Decoders
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps exposing (gameStep)
 import Game.Outputs as Output
-import Update.Utils as Utils
+import Game.Inputs as Input
 import Task
+import CoreExtra
+import WebSocket
+import AnimationFrame
+import Keyboard.Extra as Keyboard
+import Window
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  case model.liveTrack of
+    Just liveTrack ->
+      Sub.batch
+        [ WebSocket.listen
+            (ServerApi.gameSocket liveTrack.track.id)
+            Decoders.decodeStringMsg
+        , AnimationFrame.times Frame
+        , Sub.map KeyboardMsg Keyboard.subscriptions
+        , Window.resizes WindowSize
+        ]
+
+    _ ->
+      Sub.none
 
 
 mount : String -> Response Model Msg
 mount id =
-  res initial (load id)
+  let
+    cmd =
+      Cmd.batch
+        [ load id
+        , CoreExtra.performSucceed WindowSize Window.size
+        ]
+  in
+    res initial cmd
 
 
 update : Player -> Msg -> Model -> Response Model Msg
@@ -28,7 +57,8 @@ update player msg model =
     Load liveTrackResult courseResult ->
       case ( liveTrackResult, courseResult ) of
         ( Ok liveTrack, Ok course ) ->
-          res model (tick <| InitGameState liveTrack course)
+          CoreExtra.performSucceed (InitGameState liveTrack course) Time.now
+            |> res model
 
         _ ->
           res { model | notFound = True } Cmd.none
@@ -42,42 +72,64 @@ update player msg model =
           { model | gameState = Just gameState }
             |> applyLiveTrack liveTrack
       in
-        res newModel pingServer
+        res newModel Cmd.none
 
-    PingServer time ->
-      if model.live then
-        res model Cmd.none
-      else
-        res { model | gameState = updateTime time model.gameState } pingServer
+    KeyboardMsg keyboardMsg ->
+      let
+        ( keyboard, keyboardCmd ) =
+          Keyboard.update keyboardMsg model.keyboard
+      in
+        res { model | keyboard = keyboard } (Cmd.map KeyboardMsg keyboardCmd)
+
+    WindowSize size ->
+      res { model | dims = ( size.width, size.height) } Cmd.none
+
+    RaceUpdate raceInput ->
+      res { model | raceInput = raceInput } Cmd.none
+
+    Frame time ->
+      case model.gameState of
+        Just gameState ->
+          let
+            gameInput =
+              Input.GameInput
+                model.raceInput
+                (Input.keyboardInput model.keyboard)
+                model.dims
+                time
+
+            newGameState =
+              gameStep gameInput gameState
+
+            serverCmd =
+              Output.sendToServer
+                model.liveTrack
+                (Output.UpdatePlayer (Output.playerOutput gameState))
+          in
+            res { model | gameState = Just newGameState } serverCmd
+
+        Nothing ->
+          res model Cmd.none
 
     SetTab tab ->
       res { model | tab = tab } Cmd.none
 
     StartRace ->
       let
-        startTask =
-          Signal.send Output.serverAddress Output.StartRace
-            |> Task.map (\_ -> NoOp)
+        start =
+          Output.sendToServer model.liveTrack Output.StartRace
       in
-        taskRes model startTask
+        res model start
 
     ExitRace ->
       let
         newModel =
           { model | gameState = Maybe.map clearCrossedGates model.gameState }
 
-        exitTask =
-          Signal.send Output.serverAddress Output.EscapeRace
-            |> Task.map (\_ -> NoOp)
+        escape =
+          Output.sendToServer model.liveTrack Output.EscapeRace
       in
-        taskRes newModel exitTask
-
-    GameUpdate gameInput ->
-      let
-        newGameState =
-          Maybe.map (gameStep gameInput) model.gameState
-      in
-        res { model | gameState = newGameState, live = True } Cmd.none
+        res newModel escape
 
     EnterChat ->
       let
@@ -97,27 +149,35 @@ update player msg model =
       res { model | messageField = s } Cmd.none
 
     SubmitMessage ->
-      if model.live then
-        taskRes { model | messageField = "" } (sendMessage model.messageField)
+      if model.live && not (String.isEmpty model.messageField) then
+        res
+          { model | messageField = "" }
+          (Output.sendToServer model.liveTrack (Output.SendMessage model.messageField))
       else
         res model Cmd.none
 
     NewMessage msg ->
-      res { model | messages = take 30 (msg :: model.messages) } Cmd.none
+      res { model | messages = List.take 30 (msg :: model.messages) } Cmd.none
 
     AddGhost runId player ->
       let
         newGhostRuns =
           Dict.insert runId player model.ghostRuns
+
+        cmd =
+          Output.sendToServer model.liveTrack (Output.AddGhost runId player)
       in
-        taskRes { model | ghostRuns = newGhostRuns } (addGhost runId player)
+        res { model | ghostRuns = newGhostRuns } cmd
 
     RemoveGhost runId ->
       let
         newGhostRuns =
           Dict.remove runId model.ghostRuns
+
+        cmd =
+          Output.sendToServer model.liveTrack (Output.RemoveGhost runId)
       in
-        taskRes { model | ghostRuns = newGhostRuns } (removeGhost runId)
+        res { model | ghostRuns = newGhostRuns } cmd
 
     UpdateLiveTrack liveTrack ->
       res (applyLiveTrack liveTrack model) Cmd.none
@@ -143,48 +203,10 @@ applyLiveTrack ({ track, players, races } as liveTrack) model =
 
 load : String -> Cmd Msg
 load id =
-  Task.map2
-    Load
-    (ServerApi.getLiveTrack id)
-    (ServerApi.getCourse id)
-    |> Task.performSucceed
-
-
-pingServer : Cmd Msg
-pingServer =
-  tick PingServer
-
-
-sendMessage : String -> Task error Msg
-sendMessage content =
-  if String.isEmpty content then
-    Task.succeed NoOp
-  else
-    Signal.send Output.serverAddress (Output.SendMessage content)
-      |> Task.map (\_ -> NoOp)
-
-
-addGhost : String -> Player -> Task error Msg
-addGhost runId player =
-  Signal.send Output.serverAddress (Output.AddGhost runId player)
-    |> Task.map (\_ -> NoOp)
-
-
-removeGhost : String -> Task error Msg
-removeGhost runId =
-  Signal.send Output.serverAddress (Output.RemoveGhost runId)
-    |> Task.map (\_ -> NoOp)
+  Task.map2 Load (ServerApi.getLiveTrack id) (ServerApi.getCourse id)
+    |> CoreExtra.performSucceed identity
 
 
 clearCrossedGates : GameState -> GameState
 clearCrossedGates ({ playerState } as gameState) =
   { gameState | playerState = { playerState | crossedGates = [] } }
-
-
-updateTime : Time -> Maybe GameState -> Maybe GameState
-updateTime time =
-  let
-    updateTime timers t =
-      { timers | localTime = time }
-  in
-    Maybe.map (\gs -> { gs | timers = updateTime gs.timers time })
