@@ -90,7 +90,7 @@ renderSite ctx pageTagger layout =
     div
       [ class "layout-game layout-site"
       , id layout.id
-      , Location.onNavigateClick Navigate
+      , Location.catchNavigationClicks Navigate
       ]
       [ aside
           [ class "dark" ]
@@ -118,7 +118,7 @@ renderGame ctx pageTagger layout =
     div
       [ class "layout-game"
       , id layout.id
-      , Location.onNavigateClick Navigate
+      , Location.catchNavigationClicks Navigate
       ]
       [ aside
           []

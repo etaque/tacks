@@ -73,8 +73,8 @@ navigate route =
   setPath (Route.toPath route)
 
 
-onNavigateClick : (String -> msg) -> Attribute msg
-onNavigateClick tagger =
+catchNavigationClicks : (String -> msg) -> Attribute msg
+catchNavigationClicks tagger =
   onWithOptions
     "click"
     { stopPropagation = True
