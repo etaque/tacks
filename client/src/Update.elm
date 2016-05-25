@@ -27,8 +27,11 @@ subscriptions model =
   let
     pageSub =
       case model.location.route of
-        PlayTrack id ->
+        PlayTrack _ ->
           Sub.map GameMsg (Game.subscriptions model.pages.game)
+
+        EditTrack _ ->
+          Sub.map EditTrackMsg (EditTrack.subscriptions model.pages.editTrack)
 
         _ ->
           Sub.none

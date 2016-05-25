@@ -1,9 +1,11 @@
 module Page.EditTrack.View exposing (..)
 
 import Html exposing (Html)
+import Html.Events exposing (on)
 import Html.Lazy
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Json.Decode as Json
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Context as Context
@@ -14,6 +16,7 @@ import Game.Render.SvgUtils exposing (..)
 import Game.Render.Tiles as Tiles
 import Game.Render.Gates as Gates
 import Game.Render.Players as Players
+import Mouse
 
 
 view : Context -> Model -> Layout.Game Msg
@@ -63,6 +66,7 @@ renderCourse dims ({ center, course, mode } as editor) =
     Svg.svg
       [ width (toString w)
       , height (toString h)
+      , on "mousedown" (Json.map (DragStart >> MouseMsg) Mouse.position)
       , class <| "mode-" ++ (modeName (realMode editor) |> fst)
       ]
       [ g

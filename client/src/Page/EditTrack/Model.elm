@@ -2,7 +2,7 @@ module Page.EditTrack.Model exposing (..)
 
 import Model.Shared exposing (..)
 import Constants
-import Route exposing (Route)
+import Mouse exposing (Position)
 
 
 type alias Model =
@@ -25,6 +25,7 @@ type alias Editor =
   , currentGate : Maybe Int
   , course : Course
   , center : Point
+  , drag : Maybe Position
   , mode : Mode
   , windSimDuration : WindSimDuration
   , altMove : Bool
@@ -46,6 +47,7 @@ initialEditor track course =
   , currentGate = Nothing
   , course = course
   , center = ( 0, 0 )
+  , drag = Nothing
   , mode = CreateTile Water
   , windSimDuration = TenMin
   , altMove = False
@@ -79,6 +81,7 @@ type Msg
   | SetMode Mode
   | AltMoveMode Bool
   | FormMsg FormMsg
+  | MouseMsg MouseMsg
   | SetTab Tab
   | SetName String
   | Save Bool
@@ -86,6 +89,12 @@ type Msg
   | ConfirmPublish
   | Publish
   | NoOp
+
+
+type MouseMsg
+  = DragStart Position
+  | DragAt Position
+  | DragEnd Position
 
 
 type FormMsg

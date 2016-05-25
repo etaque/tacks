@@ -7,16 +7,19 @@ import Response exposing (..)
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.FormUpdate as FormUpdate
--- import Page.EditTrack.GridUpdate as GridUpdate
+import Page.EditTrack.GridUpdate as GridUpdate
 import Constants exposing (..)
 import ServerApi
 import Hexagons
 import CoreExtra
+import Location
+import Route
+import Mouse
 
 
--- mouseMsg : MouseEvent -> Msg
--- mouseMsg =
---   MouseMsg
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.map MouseMsg (Sub.batch [ Mouse.moves DragAt, Mouse.ups DragEnd ])
 
 
 mount : String -> Res Model Msg
@@ -46,9 +49,8 @@ update dims msg model =
     SetName n ->
       res (updateEditor (\e -> { e | name = n }) model) Cmd.none
 
-    -- TODO
-    -- MouseMsg event ->
-    --   res (updateEditor (GridUpdate.mouseMsg event dims) model) Cmd.none
+    MouseMsg mouseMsg ->
+      res (updateEditor (GridUpdate.updateMouse mouseMsg dims) model) Cmd.none
 
     SetMode mode ->
       res (updateEditor (\e -> { e | mode = mode }) model) Cmd.none
@@ -76,9 +78,7 @@ update dims msg model =
 
             effect =
               if try then
-                -- TODO
-                -- Cmd.map (\_ -> NoOp) (Utils.redirect (Route.PlayTrack track.id))
-                Cmd.none
+                Location.navigate (Route.PlayTrack track.id)
               else
                 Cmd.none
           in
