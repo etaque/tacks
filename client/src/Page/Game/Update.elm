@@ -22,13 +22,13 @@ import Keyboard.Extra as Keyboard
 import Window
 
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions : String -> Model -> Sub Msg
+subscriptions host model =
   case model.liveTrack of
     Just liveTrack ->
       Sub.batch
         [ WebSocket.listen
-            (ServerApi.gameSocket liveTrack.track.id)
+            (ServerApi.gameSocket host liveTrack.track.id)
             Decoders.decodeStringMsg
         , AnimationFrame.times Frame
         , Sub.map KeyboardMsg Keyboard.subscriptions

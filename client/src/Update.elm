@@ -28,7 +28,7 @@ subscriptions model =
     pageSub =
       case model.location.route of
         PlayTrack _ ->
-          Sub.map GameMsg (Game.subscriptions model.pages.game)
+          Sub.map GameMsg (Game.subscriptions model.host model.pages.game)
 
         EditTrack _ ->
           Sub.map EditTrackMsg (EditTrack.subscriptions model.pages.editTrack)

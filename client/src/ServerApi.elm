@@ -14,10 +14,9 @@ import Encoders exposing (..)
 -- WebSocket
 
 
--- TODO host
-gameSocket : String -> String
-gameSocket id =
-  "ws://localhost:9020/ws/trackPlayer/" ++ id
+gameSocket : String -> String -> String
+gameSocket host id =
+  "ws://" ++ host ++ "/ws/trackPlayer/" ++ id
 
 
 -- GET

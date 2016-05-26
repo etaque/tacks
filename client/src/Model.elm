@@ -19,6 +19,7 @@ type alias Setup =
   { player : Player
   , path : String
   , dims : ( Int, Int )
+  , host : String
   }
 
 
@@ -53,6 +54,7 @@ type alias Model =
   , liveStatus : LiveStatus
   , dims : Dims
   , pages : Pages
+  , host : String
   }
 
 
@@ -70,7 +72,7 @@ type alias Pages =
 
 
 initialModel : Setup -> Model
-initialModel { dims, player } =
+initialModel { dims, player, host } =
   { player = player
   , liveStatus = { liveTracks = [], onlinePlayers = [] }
   , dims = dims
@@ -86,4 +88,5 @@ initialModel { dims, player } =
       , forum = Forum.initial
       , admin = Admin.initial
       }
+  , host = host
   }
