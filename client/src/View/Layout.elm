@@ -16,8 +16,8 @@ import Page.Forum.Route as Forum
 import Page.Admin.Route as Admin
 import TransitStyle
 import Constants
-import Json.Decode as Json
 import Location
+import Dialog
 
 
 type Nav
@@ -34,6 +34,16 @@ type alias Site msg =
   { id : String
   , maybeNav : Maybe Nav
   , content : List (Html msg)
+  , dialog : Maybe (Dialog.View msg)
+  }
+
+
+site : String -> Maybe Nav -> List (Html msg) -> Site msg
+site id maybeNav content =
+  { id = id
+  , maybeNav = maybeNav
+  , content = content
+  , dialog = Nothing
   }
 
 
@@ -43,34 +53,6 @@ type alias Game msg =
   , side : List (Html msg)
   , main : List (Html msg)
   }
-
-
-logo : Html Msg
-logo =
-  Utils.linkTo
-    Route.Home
-    [ class "logo" ]
-    [ Logo.render
-    , span [] [ text "Tacks" ]
-    ]
-
-
-section : List (Attribute msg) -> List (Html msg) -> Html msg
-section attrs content =
-  Html.section
-    attrs
-    [ div [ class "container" ] content
-    ]
-
-
-header : Context -> List (Attribute msg) -> List (Html msg) -> Html msg
-header ctx attrs content =
-  Html.header
-    attrs
-    [ div
-        [ class "container" ]
-        content
-    ]
 
 
 renderSite : Context -> (msg -> PageMsg) -> Site msg -> Html Msg
@@ -107,6 +89,12 @@ renderSite ctx pageTagger layout =
                   (List.map (map (pageTagger >> PageMsg)) layout.content)
               ]
           ]
+      , case layout.dialog of
+          Just dialog ->
+            map (pageTagger >> PageMsg) dialog.content
+
+          Nothing ->
+            text ""
       ]
 
 
@@ -130,6 +118,34 @@ renderGame ctx pageTagger layout =
           []
           (tag layout.main)
       ]
+
+
+logo : Html Msg
+logo =
+  Utils.linkTo
+    Route.Home
+    [ class "logo" ]
+    [ Logo.render
+    , span [] [ text "Tacks" ]
+    ]
+
+
+section : List (Attribute msg) -> List (Html msg) -> Html msg
+section attrs content =
+  Html.section
+    attrs
+    [ div [ class "container" ] content
+    ]
+
+
+header : Context -> List (Attribute msg) -> List (Html msg) -> Html msg
+header ctx attrs content =
+  Html.header
+    attrs
+    [ div
+        [ class "container" ]
+        content
+    ]
 
 
 subHeader : Player -> List (Html msg) -> Html msg
@@ -205,7 +221,6 @@ sideMenuItem route icon label current =
         ]
     ]
     [ Utils.linkTo
-       
         route
         []
         [ Utils.mIcon icon []

@@ -40,6 +40,7 @@ view ctx route model =
           [ content route ctx menuItem model
           ]
       ]
+      Nothing
 
 
 menu : Tab -> Html Msg

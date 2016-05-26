@@ -24,4 +24,4 @@ view ctx route model =
         NewTopic ->
           List.map (map NewTopicMsg) (NewTopic.view ctx model.newTopic)
   in
-    Layout.Site "forum" (Just Layout.Discuss) subView
+    Layout.Site "forum" (Just Layout.Discuss) subView Nothing

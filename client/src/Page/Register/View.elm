@@ -26,6 +26,7 @@ view ctx model =
         , div [ class "panel" ] [ map FormMsg (registerForm model) ]
         ]
     ]
+    Nothing
 
 
 registerForm : Model -> Html Form.Msg

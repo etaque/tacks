@@ -1,6 +1,7 @@
 module Dialog exposing (..)
 
 import Html exposing (..)
+import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Transit exposing (Step(..), getValue, getStep)
@@ -104,35 +105,44 @@ emptyLayout =
   Layout [] [] []
 
 
-view : Model -> Layout -> Html Msg
-view model layout =
-  div
-    [ class "dialog-wrapper"
-    , style
-        [ ( "display", display model )
-        , ( "opacity", toString (opacity model) )
+type alias View msg =
+  { content : Html msg
+  , backdrop : Html msg
+  }
+
+view : (Msg -> msg) -> Model -> Layout -> View msg
+view tagger model layout =
+  { content = Html.map tagger <|
+      div
+        [ class "dialog-wrapper"
+        , style
+            [ ( "display", display model )
+            , ( "opacity", toString (opacity model) )
+            ]
+        , onClick Close
         ]
-    , onClick Close
-    ]
-    [ div
-        [ class "dialog-sheet" ]
-        [ if List.isEmpty layout.header then
-            text ""
-          else
-            div
-              [ class "dialog-header" ]
-              (closeButton :: layout.header)
-        , div
-            [ class "dialog-body" ]
-            layout.body
-        , if List.isEmpty layout.footer then
-            text ""
-          else
-            div
-              [ class "dialog-footer" ]
-              layout.footer
+        [ div
+            [ class "dialog-sheet" ]
+            [ if List.isEmpty layout.header then
+                text ""
+              else
+                div
+                  [ class "dialog-header" ]
+                  (closeButton :: layout.header)
+            , div
+                [ class "dialog-body" ]
+                layout.body
+            , if List.isEmpty layout.footer then
+                text ""
+              else
+                div
+                  [ class "dialog-footer" ]
+                  layout.footer
+            ]
         ]
-    ]
+  , backdrop = Html.map tagger <|
+      div [ class "dialog-backdrop" ] []
+  }
 
 
 closeButton : Html Msg

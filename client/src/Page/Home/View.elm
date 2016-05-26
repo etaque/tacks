@@ -51,8 +51,8 @@ view ctx model =
         [ h2 [] [ text "Recent races" ]
         , Race.reports True reportClickHandler model.raceReports
         ]
-    , map DialogMsg (Dialog.view model.dialog (dialogContent model))
     ]
+    (Just (Dialog.view DialogMsg model.dialog (dialogContent model)))
 
 
 dialogContent : Model -> Dialog.Layout

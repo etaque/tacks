@@ -43,6 +43,7 @@ view ctx ({ tracks } as model) =
               (List.concatMap (draftItem model) tracks)
         ]
     ]
+    Nothing
 
 
 draftItem : Model -> Track -> List (Html Msg)

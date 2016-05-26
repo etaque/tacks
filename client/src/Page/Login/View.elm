@@ -22,6 +22,7 @@ view ctx model =
         , div [ class "panel" ] [ loginForm model ]
         ]
     ]
+    Nothing
 
 
 loginForm : Model -> Html Msg

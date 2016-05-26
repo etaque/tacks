@@ -24,10 +24,8 @@ view ctx model =
     , Layout.section
         [ class "white inside manage-tracks" ]
         [ liveTracks ctx.liveStatus.liveTracks ]
-    , map
-        DialogMsg
-        (Dialog.view model.dialog (dialogContent model))
     ]
+    (Just (Dialog.view DialogMsg model.dialog (dialogContent model)))
 
 
 dialogContent : Model -> Dialog.Layout
