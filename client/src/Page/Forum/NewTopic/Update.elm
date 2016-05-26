@@ -9,36 +9,28 @@ import Page.Forum.Route exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
 import CoreExtra
+import Location
 
 
 update : Msg -> Model -> Response Model Msg
 update msg ({ form, loading } as model) =
   case msg of
-    FormMsg fa ->
-      let
-        newForm =
-          Form.update fa model.form
-      in
-        res { model | form = newForm } Cmd.none
+    FormMsg formMsg ->
+      case (formMsg, Form.getOutput form) of
+        (Form.Submit, Just topic) ->
+          res { model | loading = True } (createTopic topic)
 
-    Submit newTopic ->
-      res { model | loading = True } (createTopic newTopic)
+        _ ->
+          res { model | form = Form.update formMsg model.form } Cmd.none
 
     SubmitResult result ->
       case result of
         Ok _ ->
-          -- TODO
-          -- Utils.redirect (Route.Forum Index)
-          --   |> Cmd.map (\_ -> NoOp)
-          --   |> res model
-          res model Cmd.none
+          res model (Location.navigate (Route.Forum Index))
 
         Err e ->
           -- TODO err
           res { model | loading = False } Cmd.none
-
-    NoOp ->
-      res model Cmd.none
 
 
 createTopic : NewTopic -> Cmd Msg

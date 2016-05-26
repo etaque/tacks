@@ -16,17 +16,15 @@ mount =
 
 
 update : Msg -> Model -> Res Model Msg
-update msg model =
+update msg ({form} as model) =
   case msg of
+    FormMsg formMsg ->
+      case ( formMsg, Form.getOutput form ) of
+        ( Form.Submit, Just player ) ->
+          res { model | loading = True } (submitCmd player)
 
-    FormMsg fa ->
-      let
-        newForm = Form.update fa model.form
-      in
-        res { model | form = newForm } Cmd.none
-
-    Submit newPlayer ->
-      res { model | loading = True } (submitCmd newPlayer)
+        _ ->
+          res { model | form = Form.update formMsg model.form } Cmd.none
 
     SubmitResult result ->
       case result of
@@ -35,9 +33,6 @@ update msg model =
             |> withEvent (Event.SetPlayer player)
         Err errors ->
           res { model | loading = False, serverErrors = errors } Cmd.none
-
-    NoOp ->
-      res model Cmd.none
 
 
 submitCmd : NewPlayer -> Cmd Msg

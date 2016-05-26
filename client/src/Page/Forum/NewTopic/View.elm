@@ -21,7 +21,6 @@ view ctx ({ form, loading } as model) =
       ctx
       []
       [ Utils.linkTo
-         
           (Route.Forum Index)
           [ class "action-title"
           , Html.Attributes.title "Back to forum index"
@@ -46,12 +45,9 @@ formView { form, loading } =
       Form.getFieldAsString "content" form
 
     submitDisabled =
-      case Form.getOutput form of
-        Just newTopic ->
-          loading
-
-        Nothing ->
-           Form.isSubmitted form
+      Form.getOutput form
+        |> Maybe.map (\_ -> loading)
+        |> Maybe.withDefault (Form.isSubmitted form)
   in
     div
         [ class "form-sheet form-new-topic" ]

@@ -42,6 +42,4 @@ initial =
 
 type Msg
   = FormMsg Form.Msg
-  | Submit NewPlayer
   | SubmitResult (FormResult Player)
-  | NoOp

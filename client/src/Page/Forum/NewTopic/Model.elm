@@ -33,7 +33,5 @@ initial =
 
 type Msg
   = FormMsg Form.Msg
-  | Submit NewTopic
   | SubmitResult (FormResult Topic)
-  | NoOp
 

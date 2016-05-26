@@ -32,8 +32,8 @@ view ctx model =
 registerForm : Model -> Html Form.Msg
 registerForm { form, loading, serverErrors } =
   let
-    ( submitClick, submitDisabled ) =
-      ( onClick Form.Submit, Form.isSubmitted form )
+    submitDisabled =
+      Form.isSubmitted form
 
     getServerErrors field =
       Dict.get field serverErrors |> Maybe.withDefault []
@@ -81,7 +81,7 @@ registerForm { form, loading, serverErrors } =
       , button
           [ class "btn-raised btn-primary btn-block"
           , onClick Form.Submit
-            -- , disabled submitDisabled
+          , disabled submitDisabled
           ]
           [ text "Submit" ]
       ]
