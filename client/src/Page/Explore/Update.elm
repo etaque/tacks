@@ -20,9 +20,11 @@ update msg model =
   case msg of
     ShowTrackRanking liveTrack ->
       Dialog.taggedOpen DialogMsg { model | showTrackRanking = Just liveTrack }
+        |> toResponse
 
     DialogMsg a ->
       Dialog.taggedUpdate DialogMsg a model
+        |> toResponse
 
     NoOp ->
       res model Cmd.none

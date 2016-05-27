@@ -4,16 +4,16 @@ import Html exposing (..)
 import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Svg
+import Svg.Attributes as SvgAttr
 import Transit exposing (Step(..), getValue, getStep)
-import Response exposing (..)
-import View.Utils as Utils
-import Update.Utils exposing (..)
+import Keyboard
 
 
 type Msg
   = NoOp
-  | Open
   | Close
+  | KeyDown Int
   | TransitMsg (Transit.Msg Msg)
 
 
@@ -38,6 +38,7 @@ initial =
 
 type alias Options =
   { duration : Float
+  , closeOnEscape : Bool
   , onClose : Maybe Msg
   }
 
@@ -45,57 +46,64 @@ type alias Options =
 defaultOptions : Options
 defaultOptions =
   { duration = 50
+  , closeOnEscape = True
   , onClose = Nothing
   }
 
 
-taggedOpen : (Msg -> msg) -> WithDialog model -> Response (WithDialog model) msg
+taggedOpen : (Msg -> msg) -> WithDialog model -> ( WithDialog model, Cmd msg )
 taggedOpen tagger model =
-  open model.dialog
-    |> Response.mapBoth (\newDialog -> { model | dialog = newDialog }) tagger
+  let
+    ( newDialog, cmd ) =
+      open model.dialog
+  in
+    ( { model | dialog = newDialog }, Cmd.map tagger cmd )
 
 
-open : Model -> Response Model Msg
+open : Model -> ( Model, Cmd Msg )
 open model =
-  res model (toCmd Open)
+  Transit.start TransitMsg NoOp (0, model.options.duration) { model | open = True }
 
 
-taggedUpdate : (Msg -> msg) -> Msg -> WithDialog model -> Response (WithDialog model) msg
+taggedUpdate : (Msg -> msg) -> Msg -> WithDialog model -> ( WithDialog model, Cmd msg )
 taggedUpdate tagger msg model =
-  update msg model.dialog
-    |> Response.mapBoth (\newDialog -> { model | dialog = newDialog }) tagger
+  let
+    ( newDialog, cmd ) =
+      update msg model.dialog
+  in
+    ( { model | dialog = newDialog }, Cmd.map tagger cmd )
 
 
-update : Msg -> Model -> Response Model Msg
+update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
   case msg of
     NoOp ->
-      res model Cmd.none
+      ( model, Cmd.none )
 
-    Open ->
-      let
-        newModel =
-          { model | open = True }
-      in
-        Transit.start TransitMsg NoOp (0, model.options.duration) newModel
-          |> pure
+    KeyDown code ->
+      if model.options.closeOnEscape && code == 27 then
+        closeUpdate model
+      else
+        ( model, Cmd.none )
 
     Close ->
-      let
-        newModel =
-          { model | open = False }
-      in
-        Transit.start TransitMsg NoOp (model.options.duration, 0) newModel
-          |> pure
+      closeUpdate model
 
     TransitMsg transitMsg ->
       Transit.tick TransitMsg transitMsg model
-        |> pure
+
+
+closeUpdate : Model -> ( Model, Cmd Msg )
+closeUpdate model =
+  Transit.start TransitMsg NoOp (model.options.duration, 0) { model | open = False }
 
 
 subscriptions : Transit.WithTransition model -> Sub Msg
 subscriptions model =
-  Transit.subscriptions TransitMsg model
+  Sub.batch
+    [ Keyboard.downs KeyDown
+    , Transit.subscriptions TransitMsg model
+    ]
 
 
 type alias Layout =
@@ -156,7 +164,19 @@ closeButton =
     [ class "dialog-close"
     , onClick Close
     ]
-    [ Utils.mIcon "close" [] ]
+    [ closeIcon ]
+
+
+closeIcon : Svg.Svg msg
+closeIcon =
+  Svg.svg
+    [ SvgAttr.width "24"
+    , SvgAttr.height "24"
+    ]
+    [ Svg.path
+        [ SvgAttr.d "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" ]
+        []
+    ]
 
 
 title : String -> Html Msg
@@ -189,7 +209,7 @@ opacity { open, transition } =
   else
     case Transit.getStep transition of
       Exit ->
-        1 - Transit.getValue transition
+        Transit.getValue transition
 
       _ ->
         0
