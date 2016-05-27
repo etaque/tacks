@@ -14,6 +14,23 @@ type alias Res model msg =
   Response model msg
 
 
+updateWithEvent : (Event -> msg) -> (msg -> model -> Response model msg) -> msg -> model -> ( model, Cmd msg )
+updateWithEvent eventMsg responseUpdate msg model =
+  let
+    msgResponse =
+      responseUpdate msg model
+
+    eventResponse =
+      case msgResponse.event of
+        Just event ->
+          responseUpdate (eventMsg event) msgResponse.model
+
+        Nothing ->
+          res msgResponse.model Cmd.none
+  in
+    ( eventResponse.model, Cmd.batch [ msgResponse.cmd, eventResponse.cmd ] )
+
+
 res : model -> Cmd msg -> Response model msg
 res model cmd =
   Response model cmd Nothing
@@ -51,17 +68,6 @@ withEvent event r =
   { r | event = Just event }
 
 
-noEvent : Response m a -> Response m a
-noEvent r =
-  { r | event = Nothing }
-
-
-joinEvent : Event -> ( m, Cmd a ) -> Response m a
-joinEvent event ( m, cmd ) =
-  res m cmd
-    |> withEvent event
-
-
-pure : ( model, Cmd msg ) -> Response model msg
-pure ( model, cmd ) =
+toResponse : ( model, Cmd msg ) -> Response model msg
+toResponse ( model, cmd ) =
   res model cmd

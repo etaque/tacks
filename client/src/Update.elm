@@ -68,20 +68,8 @@ eventMsg event =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg model =
-  let
-    msgResponse =
-      msgUpdate msg model
-
-    eventResponse =
-      case msgResponse.event of
-        Just event ->
-          msgUpdate (eventMsg event) msgResponse.model
-
-        Nothing ->
-          res msgResponse.model Cmd.none
-  in
-    ( eventResponse.model, Cmd.batch [ msgResponse.cmd, eventResponse.cmd ] )
+update =
+  Response.updateWithEvent eventMsg msgUpdate
 
 
 msgUpdate : Msg -> Model -> Response Model Msg
@@ -102,7 +90,7 @@ msgUpdate msg ({ pages } as model) =
 
     RouteTransition subMsg ->
       Transit.tick RouteTransition subMsg model
-        |> pure
+        |> toResponse
 
     MountRoute new ->
       mountRoute new model
