@@ -18,10 +18,10 @@ import View.Layout exposing (renderSite, renderGame)
 
 
 view : Model -> Html Msg
-view ({ pages, player, liveStatus, dims, location } as model) =
+view model =
   let
     ctx =
-      Context player liveStatus dims location.transition location.routeJump
+      Context model.player model.liveStatus model.dims model.transition model.routeJump
   in
     pageView ctx model
 
@@ -29,7 +29,7 @@ view ({ pages, player, liveStatus, dims, location } as model) =
 
 pageView : Context -> Model -> Html Msg
 pageView ctx ({ pages, player, liveStatus, dims } as model) =
-  case model.location.route of
+  case model.route of
     Home ->
       renderSite ctx HomeMsg (HomePage.view ctx pages.home)
 
@@ -61,12 +61,12 @@ pageView ctx ({ pages, player, liveStatus, dims } as model) =
       text "Not found!"
 
     EmptyRoute ->
-      text ""
+      text "Rien"
 
 
 pageTitle : Model -> String
 pageTitle model =
-  case model.location.route of
+  case model.route of
     PlayTrack _ ->
       GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
 

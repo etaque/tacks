@@ -11,8 +11,8 @@ import Page.ListDrafts.Model as ListDrafts
 import Page.Forum.Model as Forum
 import Page.Admin.Model as Admin
 import Route exposing (Route)
-import Location
 import Window
+import Transit
 
 
 type alias Setup =
@@ -28,9 +28,9 @@ type Msg
   | RefreshLiveStatus
   | SetLiveStatus (Result () LiveStatus)
   | WindowResized Window.Size
-  | MountRoute Route Route
+  | RouteTransition (Transit.Msg Msg)
+  | MountRoute Route
   | PageMsg PageMsg
-  | LocationMsg Location.Msg
   | Logout
   | Navigate String
   | NoOp
@@ -48,8 +48,9 @@ type PageMsg
   | AdminMsg Admin.Msg
 
 
-type alias Model =
-  { location : Location.Model
+type alias Model = Transit.WithTransition
+  { route : Route
+  , routeJump : Route.RouteJump
   , player : Player
   , liveStatus : LiveStatus
   , dims : Dims
@@ -73,10 +74,12 @@ type alias Pages =
 
 initialModel : Setup -> Model
 initialModel { dims, player, host } =
-  { player = player
+  { route = Route.EmptyRoute
+  , routeJump = Route.None
+  , transition = Transit.empty
+  , player = player
   , liveStatus = { liveTracks = [], onlinePlayers = [] }
   , dims = dims
-  , location = Location.initial
   , pages =
       { home = Home.initial
       , login = Login.initial

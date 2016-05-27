@@ -6,7 +6,7 @@ import Response exposing (..)
 import Form
 import Page.Register.Model exposing (..)
 import ServerApi
-import CoreExtra
+import Update.Utils exposing (..)
 import Model.Event as Event
 
 
@@ -39,5 +39,5 @@ submitCmd : NewPlayer -> Cmd Msg
 submitCmd np =
   ServerApi.postRegister np.email np.handle np.password
     |> Task.map SubmitResult
-    |> CoreExtra.performSucceed identity
+    |> performSucceed identity
 

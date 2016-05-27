@@ -5,7 +5,7 @@ import Result exposing (Result(Ok, Err))
 import Response exposing (..)
 import Page.Login.Model exposing (..)
 import ServerApi
-import CoreExtra
+import Update.Utils exposing (..)
 import Model.Event as Event
 
 
@@ -47,4 +47,4 @@ submitCmd : Model -> Cmd Msg
 submitCmd model =
   ServerApi.postLogin model.email model.password
     |> Task.map SubmitResult
-    |> CoreExtra.performSucceed identity
+    |> performSucceed identity

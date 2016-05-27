@@ -5,6 +5,11 @@ import Response exposing (..)
 import Dialog
 
 
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.map DialogMsg (Dialog.subscriptions model.dialog)
+
+
 mount : Res Model Msg
 mount =
   res initial Cmd.none

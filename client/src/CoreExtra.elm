@@ -2,9 +2,6 @@ module CoreExtra exposing (..)
 
 import Maybe
 import Array
-import Task exposing (Task)
-import Time exposing (Time)
-import Process
 
 
 find : (a -> Bool) -> List a -> Maybe a
@@ -72,23 +69,3 @@ updateAt i update items =
 within : ( comparable, comparable ) -> comparable -> Bool
 within ( a, b ) c =
   c >= a && c <= b
-
-
-performSucceed : (a -> msg) -> Task Never a -> Cmd msg
-performSucceed =
-  Task.perform never
-
-
-toCmd : msg -> Cmd msg
-toCmd msg =
-  performSucceed identity (Task.succeed msg)
-
-
-never : Never -> a
-never n =
-  never n
-
-
-delay : Time -> Task x a -> Task x a
-delay t task =
-  Process.sleep t `Task.andThen` (\_ -> task)

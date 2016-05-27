@@ -5,6 +5,8 @@ import Html.App exposing (map)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy
+import Json.Decode as Json
+import Json.Decode.Extra exposing (lazy)
 import Markdown
 import View.HexBg as HexBg
 import View.Logo as Logo
@@ -16,7 +18,6 @@ import Page.Forum.Route as Forum
 import Page.Admin.Route as Admin
 import TransitStyle
 import Constants
-import Location
 import Dialog
 
 
@@ -72,7 +73,7 @@ renderSite ctx pageTagger layout =
     div
       [ class "layout-game layout-site"
       , id layout.id
-      , Location.catchNavigationClicks Navigate
+      , catchNavigationClicks Navigate
       ]
       [ aside
           [ class "dark" ]
@@ -106,7 +107,7 @@ renderGame ctx pageTagger layout =
     div
       [ class "layout-game"
       , id layout.id
-      , Location.catchNavigationClicks Navigate
+      , catchNavigationClicks Navigate
       ]
       [ aside
           []
@@ -227,3 +228,24 @@ sideMenuItem route icon label current =
         , text label
         ]
     ]
+
+
+catchNavigationClicks : (String -> msg) -> Attribute msg
+catchNavigationClicks tagger =
+  onWithOptions
+    "click"
+    { stopPropagation = True
+    , preventDefault = True
+    }
+    (Json.map tagger (Json.at [ "target" ] pathDecoder))
+
+
+pathDecoder : Json.Decoder String
+pathDecoder =
+  Json.oneOf
+    [ Json.at [ "dataset", "navigate" ] Json.string
+    , Json.at [ "data-navigate" ] Json.string
+    , Json.at [ "parentElement" ] (lazy (\_ -> pathDecoder))
+    , Json.fail "no path found for click"
+    ]
+

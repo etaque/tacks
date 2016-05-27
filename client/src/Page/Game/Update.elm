@@ -9,6 +9,7 @@ import Response exposing (..)
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
 import Page.Game.Decoders as Decoders
+import Update.Utils exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps exposing (gameStep)
@@ -45,19 +46,19 @@ mount id =
     cmd =
       Cmd.batch
         [ load id
-        , CoreExtra.performSucceed WindowSize Window.size
+        , performSucceed WindowSize Window.size
         ]
   in
     res initial cmd
 
 
-update : Player -> Msg -> Model -> Response Model Msg
-update player msg model =
+update : Player -> String -> Msg -> Model -> Response Model Msg
+update player host msg model =
   case msg of
     Load liveTrackResult courseResult ->
       case ( liveTrackResult, courseResult ) of
         ( Ok liveTrack, Ok course ) ->
-          CoreExtra.performSucceed (InitGameState liveTrack course) Time.now
+          performSucceed (InitGameState liveTrack course) Time.now
             |> res model
 
         _ ->
@@ -103,6 +104,7 @@ update player msg model =
 
             serverCmd =
               Output.sendToServer
+                host
                 model.liveTrack
                 (Output.UpdatePlayer (Output.playerOutput gameState))
           in
@@ -117,7 +119,7 @@ update player msg model =
     StartRace ->
       let
         start =
-          Output.sendToServer model.liveTrack Output.StartRace
+          Output.sendToServer host model.liveTrack Output.StartRace
       in
         res model start
 
@@ -127,7 +129,7 @@ update player msg model =
           { model | gameState = Maybe.map clearCrossedGates model.gameState }
 
         escape =
-          Output.sendToServer model.liveTrack Output.EscapeRace
+          Output.sendToServer host model.liveTrack Output.EscapeRace
       in
         res newModel escape
 
@@ -149,10 +151,10 @@ update player msg model =
       res { model | messageField = s } Cmd.none
 
     SubmitMessage ->
-      if model.live && not (String.isEmpty model.messageField) then
+      if not (String.isEmpty model.messageField) then
         res
           { model | messageField = "" }
-          (Output.sendToServer model.liveTrack (Output.SendMessage model.messageField))
+          (Output.sendToServer host model.liveTrack (Output.SendMessage model.messageField))
       else
         res model Cmd.none
 
@@ -165,7 +167,7 @@ update player msg model =
           Dict.insert runId player model.ghostRuns
 
         cmd =
-          Output.sendToServer model.liveTrack (Output.AddGhost runId player)
+          Output.sendToServer host model.liveTrack (Output.AddGhost runId player)
       in
         res { model | ghostRuns = newGhostRuns } cmd
 
@@ -175,7 +177,7 @@ update player msg model =
           Dict.remove runId model.ghostRuns
 
         cmd =
-          Output.sendToServer model.liveTrack (Output.RemoveGhost runId)
+          Output.sendToServer host model.liveTrack (Output.RemoveGhost runId)
       in
         res { model | ghostRuns = newGhostRuns } cmd
 
@@ -204,7 +206,7 @@ applyLiveTrack ({ track, players, races } as liveTrack) model =
 load : String -> Cmd Msg
 load id =
   Task.map2 Load (ServerApi.getLiveTrack id) (ServerApi.getCourse id)
-    |> CoreExtra.performSucceed identity
+    |> performSucceed identity
 
 
 clearCrossedGates : GameState -> GameState

@@ -18,15 +18,6 @@ appSetup.dims = dims();
 
 const app = Elm.Main.fullscreen(appSetup);
 
-app.ports.setPath.subscribe(path => {
-  history.pushState({}, '', path);
-  app.ports.pathUpdates.send(path);
-});
-
-window.onpopstate = () => {
-  app.ports.pathUpdates.send(document.location.pathname);
-};
-
 // // game.ports.chatOutput.subscribe((output) => {
 // //   sendMessage({ tag: 'NewMessage', content: output });
 // // });

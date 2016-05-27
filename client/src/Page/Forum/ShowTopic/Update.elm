@@ -7,6 +7,7 @@ import Page.Forum.Decoders exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.ShowTopic.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
+import Update.Utils exposing (..)
 
 
 mount : String -> Response Model Msg
@@ -70,10 +71,10 @@ createPost topic content =
       [ ("content", JsEncode.string content) ]
   in
     postJson postWithUserDecoder ("/api/forum/topics/" ++ topic.id) body
-      |> CoreExtra.performSucceed SubmitResult
+      |> performSucceed SubmitResult
 
 
 showTopic : String -> Cmd Msg
 showTopic id =
   getJson topicWithPostsDecoder ("/api/forum/topics/" ++ id)
-    |> CoreExtra.performSucceed LoadResult
+    |> performSucceed LoadResult

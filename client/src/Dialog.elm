@@ -7,7 +7,7 @@ import Html.Events exposing (..)
 import Transit exposing (Step(..), getValue, getStep)
 import Response exposing (..)
 import View.Utils as Utils
-import CoreExtra
+import Update.Utils exposing (..)
 
 
 type Msg
@@ -57,7 +57,7 @@ taggedOpen tagger model =
 
 open : Model -> Response Model Msg
 open model =
-  res model (CoreExtra.toCmd Open)
+  res model (toCmd Open)
 
 
 taggedUpdate : (Msg -> msg) -> Msg -> WithDialog model -> Response (WithDialog model) msg
@@ -91,6 +91,11 @@ update msg model =
     TransitMsg transitMsg ->
       Transit.tick TransitMsg transitMsg model
         |> pure
+
+
+subscriptions : Transit.WithTransition model -> Sub Msg
+subscriptions model =
+  Transit.subscriptions TransitMsg model
 
 
 type alias Layout =

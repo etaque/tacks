@@ -2,7 +2,7 @@ module Page.Forum.Index.Update exposing (..)
 
 import Response exposing (..)
 import Json.Decode as Json
-import CoreExtra
+import Update.Utils exposing (..)
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Index.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
@@ -33,4 +33,4 @@ update msg ({topics} as model) =
 listTopics : Cmd Msg
 listTopics =
   getJson (Json.list topicWithUserDecoder) "/api/forum/topics"
-    |> CoreExtra.performSucceed ListResult
+    |> performSucceed ListResult

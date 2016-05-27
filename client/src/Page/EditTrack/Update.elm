@@ -11,8 +11,7 @@ import Page.EditTrack.GridUpdate as GridUpdate
 import Constants exposing (..)
 import ServerApi
 import Hexagons
-import CoreExtra
-import Location
+import Update.Utils exposing (..)
 import Route
 import Mouse
 
@@ -78,7 +77,7 @@ update dims msg model =
 
             effect =
               if try then
-                Location.navigate (Route.PlayTrack track.id)
+                navigate (Route.PlayTrack track.id)
               else
                 Cmd.none
           in
@@ -116,7 +115,7 @@ updateEditor update model =
 loadTrack : String -> Cmd Msg
 loadTrack id =
   Task.map2 LoadTrack (ServerApi.getTrack id) (ServerApi.getCourse id)
-    |> CoreExtra.performSucceed identity
+    |> performSucceed identity
 
 
 saveEditor : String -> Editor -> Task Never (FormResult Track)
@@ -126,15 +125,15 @@ saveEditor id ({ course, name } as editor) =
 
 save : Bool -> String -> Editor -> Cmd Msg
 save try id editor =
-  CoreExtra.delay 500 (saveEditor id editor)
-    |> CoreExtra.performSucceed (SaveResult try)
+  delay 500 (saveEditor id editor)
+    |> performSucceed (SaveResult try)
 
 
 publish : String -> Editor -> Cmd Msg
 publish id ({ course, name } as editor) =
-  CoreExtra.delay 500 (saveEditor id editor)
+  delay 500 (saveEditor id editor)
     `andThen` (\_ -> ServerApi.publishTrack id)
-    |> CoreExtra.performSucceed (SaveResult True)
+    |> performSucceed (SaveResult True)
 
 
 getRaceArea : Grid -> RaceArea

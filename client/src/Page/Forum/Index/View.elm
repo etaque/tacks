@@ -12,7 +12,6 @@ import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Index.Model exposing (..)
 import View.Utils as Utils
 import View.Layout as Layout
-import Location
 
 
 view : Context -> Model -> List (Html Msg)
@@ -56,7 +55,7 @@ topicsTable topics =
 topicRow : TopicWithUser -> Html Msg
 topicRow { topic, user } =
   tr
-    (Location.linkAttrs (Route.Forum (ShowTopic topic.id)))
+    (Utils.linkAttrs (Route.Forum (ShowTopic topic.id)))
     [ td
         [ class "icon" ]
         [ img [ src (Utils.avatarUrl 32 (asPlayer user)), class "avatar" ] [] ]

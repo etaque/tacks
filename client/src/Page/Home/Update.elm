@@ -4,7 +4,12 @@ import Response exposing (..)
 import Dialog
 import Page.Home.Model exposing (..)
 import ServerApi
-import CoreExtra
+import Update.Utils exposing (..)
+
+
+subscriptions : Model -> Sub Msg
+subscriptions model =
+  Sub.map DialogMsg (Dialog.subscriptions model.dialog)
 
 
 mount : Model -> Response Model Msg
@@ -35,4 +40,4 @@ update msg model =
 loadRaceReports : Cmd Msg
 loadRaceReports =
   ServerApi.getRaceReports Nothing
-    |> CoreExtra.performSucceed SetRaceReports
+    |> performSucceed SetRaceReports

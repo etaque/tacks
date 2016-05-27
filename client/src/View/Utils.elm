@@ -12,7 +12,6 @@ import Route exposing (Route)
 import Time exposing (Time)
 import Date
 import Date.Format as DateFormat
-import Location
 
 
 -- Events
@@ -20,7 +19,18 @@ import Location
 
 linkTo : Route -> List (Attribute msg) -> List (Html msg) -> Html msg
 linkTo route attrs content =
-  a ((Location.linkAttrs route) ++ attrs) content
+  a ((linkAttrs route) ++ attrs) content
+
+
+linkAttrs : Route -> List (Attribute msg)
+linkAttrs route =
+  let
+    path =
+      Route.toPath route
+  in
+    [ href path
+    , attribute "data-navigate" path
+    ]
 
 
 onButtonClick : msg -> Attribute msg

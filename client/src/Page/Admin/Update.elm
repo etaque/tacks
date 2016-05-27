@@ -3,8 +3,7 @@ module Page.Admin.Update exposing (..)
 import Response exposing (..)
 import Page.Admin.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
-import CoreExtra
-import Location
+import Update.Utils exposing (..)
 
 
 mount : Response Model Msg
@@ -26,7 +25,7 @@ update msg model =
         res { model | tracks = tracks, users = users, reports = reports } Cmd.none
 
     DeleteTrack id ->
-      res model (CoreExtra.performSucceed DeleteTrackResult (ServerApi.deleteDraft id))
+      res model (performSucceed DeleteTrackResult (ServerApi.deleteDraft id))
 
     DeleteTrackResult result ->
       case result of
@@ -43,4 +42,4 @@ update msg model =
 refreshData : Cmd Msg
 refreshData =
   getJson adminDataDecoder "/api/admin"
-    |> CoreExtra.performSucceed RefreshDataResult
+    |> performSucceed RefreshDataResult

@@ -8,8 +8,7 @@ import Page.Forum.Decoders exposing (..)
 import Page.Forum.Route exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
-import CoreExtra
-import Location
+import Update.Utils exposing (..)
 
 
 update : Msg -> Model -> Response Model Msg
@@ -26,7 +25,7 @@ update msg ({ form, loading } as model) =
     SubmitResult result ->
       case result of
         Ok _ ->
-          res model (Location.navigate (Route.Forum Index))
+          res model (navigate (Route.Forum Index))
 
         Err e ->
           -- TODO err
@@ -43,4 +42,4 @@ createTopic { title, content } =
         ]
   in
     postJson topicDecoder "/api/forum/topics" body
-      |> CoreExtra.performSucceed SubmitResult
+      |> performSucceed SubmitResult

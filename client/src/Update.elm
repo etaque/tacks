@@ -3,6 +3,7 @@ module Update exposing (..)
 import Task exposing (Task)
 import Result
 import Response exposing (..)
+import Update.Utils exposing (..)
 import Model exposing (..)
 import Page.Home.Update as Home
 import Page.Register.Update as Register
@@ -15,40 +16,46 @@ import Page.Forum.Update as Forum
 import Page.Admin.Update as Admin
 import ServerApi
 import Route exposing (..)
-import Location
 import Model.Event as Event exposing (Event)
-import CoreExtra exposing (..)
 import Time
 import Window
+import Transit
+import Navigation
 
 
 subscriptions : Model -> Sub Msg
-subscriptions model =
+subscriptions ({pages} as model) =
   let
     pageSub =
-      case model.location.route of
+      case model.route of
+        Home ->
+          Sub.map HomeMsg (Home.subscriptions pages.home)
+
+        Explore ->
+          Sub.map ExploreMsg (Explore.subscriptions pages.explore)
+
         PlayTrack _ ->
-          Sub.map GameMsg (Game.subscriptions model.host model.pages.game)
+          Sub.map GameMsg (Game.subscriptions model.host pages.game)
 
         EditTrack _ ->
-          Sub.map EditTrackMsg (EditTrack.subscriptions model.pages.editTrack)
+          Sub.map EditTrackMsg (EditTrack.subscriptions pages.editTrack)
 
         _ ->
           Sub.none
   in
     Sub.batch
-      [ Location.subscriptions LocationMsg model.location
-      , Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
+      [ Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
       , Window.resizes WindowResized
       , Sub.map PageMsg pageSub
+      , Transit.subscriptions RouteTransition model
       ]
 
 
-init : Setup -> ( Model, Cmd Msg )
-init setup =
+init : Setup -> Route -> ( Model, Cmd Msg )
+init setup route =
   let
     ( model, cmd ) =
-      update (LocationMsg (Location.PathUpdated setup.path)) (initialModel setup)
+      urlUpdate route (initialModel setup)
   in
     ( model, Cmd.batch [ cmd, refreshLiveStatus ] )
 
@@ -58,9 +65,6 @@ eventMsg event =
   case event of
     Event.SetPlayer p ->
       SetPlayer p
-
-    Event.MountRoute prev new ->
-      MountRoute prev new
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -83,10 +87,6 @@ update msg model =
 msgUpdate : Msg -> Model -> Response Model Msg
 msgUpdate msg ({ pages } as model) =
   case msg of
-    LocationMsg m ->
-      Location.update m model.location
-        |> mapBoth (\l -> { model | location = l }) LocationMsg
-
     RefreshLiveStatus ->
       res model refreshLiveStatus
 
@@ -98,10 +98,14 @@ msgUpdate msg ({ pages } as model) =
         res { model | liveStatus = liveStatus } Cmd.none
 
     SetPlayer p ->
-      res { model | player = p } (Location.navigate Route.Home)
+      res { model | player = p } (navigate Route.Home)
 
-    MountRoute prev new ->
-      mountRoute prev new model
+    RouteTransition subMsg ->
+      Transit.tick RouteTransition subMsg model
+        |> pure
+
+    MountRoute new ->
+      mountRoute new model
 
     WindowResized size ->
       res { model | dims = (size.width, size.height) } Cmd.none
@@ -109,27 +113,32 @@ msgUpdate msg ({ pages } as model) =
     Logout ->
       ServerApi.postLogout
         |> Task.map (Result.toMaybe >> Maybe.map SetPlayer >> Maybe.withDefault NoOp)
-        |> CoreExtra.performSucceed identity
+        |> performSucceed identity
         |> res model
 
     PageMsg pageMsg ->
       pageUpdate pageMsg model
 
     Navigate path ->
-      res model (Location.setPath path)
+      res model (Navigation.newUrl path)
 
     NoOp ->
       res model Cmd.none
 
 
-mountRoute : Route -> Route -> Model -> Response Model Msg
-mountRoute prevRoute newRoute ({ pages, player, location } as prevModel) =
+urlUpdate : Route -> Model -> ( Model, Cmd Msg )
+urlUpdate route model =
+  Transit.start RouteTransition (MountRoute route) (50, 200) model
+
+
+mountRoute : Route -> Model -> Response Model Msg
+mountRoute newRoute ({ pages, player, route } as prevModel) =
   let
     routeJump =
-      Route.detectJump prevRoute newRoute
+      Route.detectJump route newRoute
 
     model =
-      { prevModel | location = { location | routeJump = routeJump } }
+      { prevModel | routeJump = routeJump, route = newRoute }
   in
     case newRoute of
       Home ->
@@ -182,7 +191,7 @@ pageUpdate pageMsg ({ pages, player, dims } as model) =
       applyEditTrack (EditTrack.update dims a pages.editTrack) model
 
     GameMsg a ->
-      applyGame (Game.update player a pages.game) model
+      applyGame (Game.update player model.host a pages.game) model
 
     ListDraftsMsg a ->
       applyListDrafts (ListDrafts.update a pages.listDrafts) model

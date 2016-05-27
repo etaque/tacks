@@ -3,6 +3,12 @@ module Route exposing (..)
 import RouteParser exposing (..)
 import Page.Admin.Route as AdminRoute
 import Page.Forum.Route as ForumRoute
+import Navigation
+
+
+parser : Navigation.Location -> Route
+parser location =
+  fromPath location.pathname
 
 
 type Route

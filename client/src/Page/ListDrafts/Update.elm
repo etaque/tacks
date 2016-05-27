@@ -5,8 +5,7 @@ import Response exposing (..)
 import ServerApi
 import Route
 import Page.ListDrafts.Model exposing (..)
-import CoreExtra exposing (..)
-import Location
+import Update.Utils exposing (..)
 
 
 mount : Model -> Res Model Msg
@@ -39,12 +38,12 @@ update msg model =
       res { model | selectedTrack = maybeTrack } Cmd.none
 
     Create ->
-      res model (Task.perform never CreateResult (ServerApi.createTrack model.name))
+      res model (performSucceed CreateResult (ServerApi.createTrack model.name))
 
     CreateResult result ->
       case result of
         Ok track ->
-          res model (Location.navigate (Route.EditTrack track.id))
+          res model (navigate (Route.EditTrack track.id))
 
         Err formErrors ->
           -- TODO
@@ -59,7 +58,7 @@ update msg model =
     PublishResult result ->
       case result of
         Ok track ->
-          res model (Location.navigate (Route.PlayTrack track.id))
+          res model (navigate (Route.PlayTrack track.id))
 
         Err errors ->
           -- TODO
@@ -86,16 +85,16 @@ update msg model =
 loadDrafts : Cmd Msg
 loadDrafts =
   ServerApi.getUserTracks
-    |> Task.perform never ListResult
+    |> performSucceed ListResult
 
 
 publish : String -> Cmd Msg
 publish id =
   ServerApi.publishTrack id
-    |> Task.perform never PublishResult
+    |> performSucceed PublishResult
 
 
 deleteDraft : String -> Cmd Msg
 deleteDraft id =
   ServerApi.deleteDraft id
-    |> Task.perform never DeleteResult
+    |> performSucceed DeleteResult
