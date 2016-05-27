@@ -1,15 +1,15 @@
-module Page.Game.View.Chat exposing (..)
+module Page.Game.Chat.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
-import Page.Game.Model exposing (..)
+import Page.Game.Chat.Model exposing (..)
 import View.Utils exposing (..)
 
 
 view : Int -> Model -> Html Msg
-view h {messages, messageField} =
+view h {messages, field} =
   let
     messagesDiv =
       if List.isEmpty messages then
@@ -20,7 +20,7 @@ view h {messages, messageField} =
     div [ class "module-chat" ]
       [ h3 [ ] [ text "Chat" ]
       , messagesDiv
-      , chatField messageField
+      , fieldView field
       ]
 
 
@@ -37,13 +37,15 @@ messageItem {player, content, time} =
     ]
 
 
-chatField : String -> Html Msg
-chatField field =
+fieldView : String -> Html Msg
+fieldView field =
   textInput
-    [ value field
+    [ id fieldId
+    , value field
     , placeholder "type in there..."
-    , onInput UpdateMessageField
-    , onEnter SubmitMessage
-    , onFocus EnterChat
-    , onBlur LeaveChat
+    , onInput UpdateField
+    -- , onEnter Submit
+    -- , onEscape (Exit True)
+    , onFocus (Enter False)
+    , onBlur (Exit False)
     ]

@@ -1,7 +1,6 @@
 module Page.Game.Update exposing (..)
 
 import Time exposing (millisecond, second)
-import String
 import Time exposing (Time)
 import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
@@ -9,6 +8,7 @@ import Response exposing (..)
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
 import Page.Game.Decoders as Decoders
+import Page.Game.Chat.Update as Chat
 import Update.Utils exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
@@ -16,7 +16,6 @@ import Game.Steps exposing (gameStep)
 import Game.Outputs as Output
 import Game.Inputs as Input
 import Task
-import CoreExtra
 import WebSocket
 import AnimationFrame
 import Keyboard.Extra as Keyboard
@@ -34,6 +33,7 @@ subscriptions host model =
         , AnimationFrame.times Frame
         , Sub.map KeyboardMsg Keyboard.subscriptions
         , Window.resizes WindowSize
+        , Sub.map ChatMsg (Chat.subscriptions host model.chat)
         ]
 
     _ ->
@@ -75,12 +75,20 @@ update player host msg model =
       in
         res newModel Cmd.none
 
+    ChatMsg chatMsg ->
+      Chat.update (Output.sendToServer host model.liveTrack) chatMsg model.chat
+        |> mapBoth (\newChat -> { model | chat = newChat}) ChatMsg
+
+
     KeyboardMsg keyboardMsg ->
-      let
-        ( keyboard, keyboardCmd ) =
-          Keyboard.update keyboardMsg model.keyboard
-      in
-        res { model | keyboard = keyboard } (Cmd.map KeyboardMsg keyboardCmd)
+      if model.chat.focus then
+        res model Cmd.none
+      else
+        let
+          ( newKeyboard, keyboardCmd ) =
+            Keyboard.update keyboardMsg model.keyboard
+        in
+          res { model | keyboard = newKeyboard } (Cmd.map KeyboardMsg keyboardCmd)
 
     WindowSize size ->
       res { model | dims = ( size.width, size.height) } Cmd.none
@@ -133,33 +141,6 @@ update player host msg model =
       in
         res newModel escape
 
-    EnterChat ->
-      let
-        newGameState =
-          Maybe.map (\gs -> { gs | chatting = True }) model.gameState
-      in
-        res { model | gameState = newGameState } Cmd.none
-
-    LeaveChat ->
-      let
-        newGameState =
-          Maybe.map (\gs -> { gs | chatting = False }) model.gameState
-      in
-        res { model | gameState = newGameState } Cmd.none
-
-    UpdateMessageField s ->
-      res { model | messageField = s } Cmd.none
-
-    SubmitMessage ->
-      if not (String.isEmpty model.messageField) then
-        res
-          { model | messageField = "" }
-          (Output.sendToServer host model.liveTrack (Output.SendMessage model.messageField))
-      else
-        res model Cmd.none
-
-    NewMessage msg ->
-      res { model | messages = List.take 30 (msg :: model.messages) } Cmd.none
 
     AddGhost runId player ->
       let

@@ -49,10 +49,28 @@ intTargetValue =
 
 
 onEnter : msg -> Attribute msg
-onEnter msg =
+onEnter =
+  onKeyDown 13
+
+
+onEscape : msg -> Attribute msg
+onEscape =
+  onKeyDown 27
+
+
+onKeyDown : Int -> msg -> Attribute msg
+onKeyDown code msg =
   on
     "keydown"
-    (Json.map (\_ -> msg) (Json.customDecoder keyCode isEnter))
+    (Json.map (\_ -> msg) (Json.customDecoder keyCode (isKey code)))
+
+
+isKey : Int -> Int -> Result String ()
+isKey expected given =
+  if given == expected then
+    Ok ()
+  else
+    Err "not the right key code"
 
 
 eventOptions : Options
@@ -60,14 +78,6 @@ eventOptions =
   { stopPropagation = True
   , preventDefault = True
   }
-
-
-isEnter : Int -> Result String ()
-isEnter code =
-  if code == 13 then
-    Ok ()
-  else
-    Err "not the right key code"
 
 
 

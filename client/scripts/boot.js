@@ -18,6 +18,14 @@ appSetup.dims = dims();
 
 const app = Elm.Main.fullscreen(appSetup);
 
+app.ports.setFocus.subscribe(id => {
+  document.getElementById(id).focus();
+});
+
+app.ports.setBlur.subscribe(id => {
+  setTimeout(() => document.getElementById(id).blur());;
+});
+
 // // game.ports.chatOutput.subscribe((output) => {
 // //   sendMessage({ tag: 'NewMessage', content: output });
 // // });

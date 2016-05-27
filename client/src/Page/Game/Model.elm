@@ -6,6 +6,7 @@ import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs as Input
 import Keyboard.Extra as Keyboard
+import Page.Game.Chat.Model as Chat
 import Window
 import Set
 
@@ -20,9 +21,8 @@ type alias Model =
   , races : List Race
   , freePlayers : List Player
   , live : Bool
-  , messages : List Message
-  , messageField : String
   , ghostRuns : Dict String Player
+  , chat : Chat.Model
   , notFound : Bool
   }
 
@@ -44,9 +44,8 @@ initial =
   , races = []
   , freePlayers = []
   , live = False
-  , messages = []
-  , messageField = ""
   , ghostRuns = Dict.empty
+  , chat = Chat.initial
   , notFound = False
   }
 
@@ -56,17 +55,15 @@ type Msg
   | InitGameState LiveTrack Course Time
   | UpdateLiveTrack LiveTrack
   | KeyboardMsg Keyboard.Msg
+  | ChatMsg Chat.Msg
   | WindowSize Window.Size
   | RaceUpdate Input.RaceInput
   | Frame Time
   | SetTab Tab
   | StartRace
   | ExitRace
-  | EnterChat
-  | LeaveChat
-  | UpdateMessageField String
-  | SubmitMessage
-  | NewMessage Message
   | AddGhost String Player
   | RemoveGhost String
   | NoOp
+
+

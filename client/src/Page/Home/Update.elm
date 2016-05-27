@@ -29,9 +29,11 @@ update msg model =
 
     ShowDialog content ->
       Dialog.taggedOpen DialogMsg { model | showDialog = content }
+        |> toResponse
 
     DialogMsg a ->
       Dialog.taggedUpdate DialogMsg a model
+        |> toResponse
 
     NoOp ->
       res model Cmd.none
