@@ -37,7 +37,7 @@ update serverSocket msg model =
       if not (String.isEmpty model.field) then
         res
           { model | field = "" }
-          (serverSocket (Output.SendMessage model.field))
+          (Cmd.batch [ serverSocket (Output.SendMessage model.field), Ports.setBlur fieldId ])
       else
         res model Cmd.none
 
