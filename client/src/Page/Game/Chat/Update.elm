@@ -42,7 +42,9 @@ update serverSocket msg model =
         res model (Ports.setBlur fieldId)
 
     AddMessage msg ->
-      res { model | messages = List.take 30 (msg :: model.messages) } Cmd.none
+      res
+        { model | messages = List.take 30 (msg :: model.messages) }
+        (Ports.scrollToBottom messagesId)
 
     NoOp ->
       res model Cmd.none
@@ -50,13 +52,18 @@ update serverSocket msg model =
 
 keyCodeToMsg : Model -> Int -> Msg
 keyCodeToMsg model code =
-  if code == enter then
-    if model.focus then
-      Submit
+  if model.focus then
+    if code == enter then
+        Submit
+    else if code == esc then
+      Exit True
     else
-      Enter True
+      NoOp
   else
-    NoOp
+    if code == enter then
+      Enter True
+    else
+      NoOp
 
 
 esc : Int

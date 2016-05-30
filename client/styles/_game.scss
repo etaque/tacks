@@ -41,6 +41,12 @@
   }
 
   aside {
+    display: flex;
+    flex-direction: column;
+
+    .logo {
+      flex-shrink: 0;
+    }
 
     .draft {
       .actions {
@@ -55,6 +61,8 @@
     }
 
     .module-players {
+      flex: 1;
+
       .race-legend {
         margin: 0;
         padding: 16px 16px 8px 16px;
@@ -187,12 +195,37 @@
       }
     }
 
+    .chat-messages {
+      position: relative;
+      overflow-y: auto;
+
+      ul {
+        @include players-list;
+        padding: 16px;
+        margin: 0;
+        color: $darkGrey;
+
+        li {
+          line-height: 24px;
+          padding: 4px 0;
+
+          .handle {
+            margin-right: 8px;
+            color: $darkGrey;
+          }
+
+          .content {
+            color: $grey;
+          }
+        }
+      }
+    }
   }
 }
 
 .chat-input {
   position: absolute;
-  bottom: 24px;
+  bottom: 32px;
   left: 0;
   right: 0;
   margin: 0 auto;
@@ -214,7 +247,7 @@
 
     &:focus {
       width: 360px;
-      opacity: 0.8;
+      opacity: 1;
       cursor: auto;
       outline: none;
       background-color: $white;
@@ -224,51 +257,5 @@
     }
       
   }
-}
-
-.module-chat {
-  position: absolute;
-
-  right: 10px;
-  bottom: 10px;
-  opacity: 0.4;
-  width: 220px;
-
-  h3 {
-    background-color: #333;
-    color: $sand;
-    margin: 0 0 5px 0;
-    padding: 5px;
-    text-align: center;
-    text-transform: uppercase;
-    font-size: 13px;
-  }
-
-  $msgBg: black;
-
-  .messages {
-    background-color: $msgBg;
-    overflow-y: hidden;
-    font-size: 13px;
-    border-top: 5px solid $msgBg;
-    border-bottom: 5px solid $msgBg;
-    padding: 0 10px;
-    color: white;
-
-    ul {
-      padding: 0;
-      margin: 0;
-    }
-
-    .message-handle {
-      font-weight: bold;
-      color: $lightGrey;
-
-      &:after {
-        content: ": ";
-      }
-    }
-  }
-
 }
 

@@ -29,4 +29,9 @@ type Msg
 
 fieldId : String
 fieldId =
-  "game-chat"
+  "chat-input-field"
+
+
+messagesId : String
+messagesId =
+  "chat-messages-list"

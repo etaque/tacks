@@ -26,6 +26,15 @@ app.ports.setBlur.subscribe(id => {
   setTimeout(() => document.getElementById(id).blur());;
 });
 
+app.ports.scrollToBottom.subscribe(id => {
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  });
+});
+
 // // game.ports.chatOutput.subscribe((output) => {
 // //   sendMessage({ tag: 'NewMessage', content: output });
 // // });

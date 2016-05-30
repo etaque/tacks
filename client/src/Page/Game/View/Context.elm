@@ -1,6 +1,7 @@
 module Page.Game.View.Context exposing (..)
 
 import Dict exposing (Dict)
+import Html.App as Html
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -9,6 +10,7 @@ import Game.Models exposing (GameState, Timers, isStarted, raceTime)
 import CoreExtra
 import Page.Game.Model exposing (..)
 import Page.Game.View.Players as PlayersView
+import Page.Game.Chat.View as Chat
 import View.Utils as Utils
 import Route exposing (..)
 
@@ -144,7 +146,9 @@ liveBlocks gameState model liveTrack =
   (tabs model)
     :: case model.tab of
         LiveTab ->
-          [ PlayersView.block model ]
+          [ PlayersView.block model
+          , Html.map ChatMsg (Chat.messages model.chat)
+          ]
 
         RankingsTab ->
           [ rankingsBlock model.ghostRuns liveTrack ]
