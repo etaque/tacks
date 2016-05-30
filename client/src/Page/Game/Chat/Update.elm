@@ -39,10 +39,32 @@ update serverSocket msg model =
           { model | field = "" }
           (Cmd.batch [ serverSocket (Output.SendMessage model.field), Ports.setBlur fieldId ])
       else
-        res model Cmd.none
+        res model (Ports.setBlur fieldId)
 
     AddMessage msg ->
       res { model | messages = List.take 30 (msg :: model.messages) } Cmd.none
 
     NoOp ->
       res model Cmd.none
+
+
+keyCodeToMsg : Model -> Int -> Msg
+keyCodeToMsg model code =
+  if code == enter then
+    if model.focus then
+      Submit
+    else
+      Enter True
+  else
+    NoOp
+
+
+esc : Int
+esc =
+  27
+
+
+enter : Int
+enter =
+  13
+

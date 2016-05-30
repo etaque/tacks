@@ -20,7 +20,6 @@ view h {messages, field} =
     div [ class "module-chat" ]
       [ h3 [ ] [ text "Chat" ]
       , messagesDiv
-      , fieldView field
       ]
 
 
@@ -37,15 +36,18 @@ messageItem {player, content, time} =
     ]
 
 
-fieldView : String -> Html Msg
-fieldView field =
-  textInput
-    [ id fieldId
-    , value field
-    , placeholder "type in there..."
-    , onInput UpdateField
-    -- , onEnter Submit
-    -- , onEscape (Exit True)
-    , onFocus (Enter False)
-    , onBlur (Exit False)
+inputView : Model -> Html Msg
+inputView {field} =
+  div
+    [ class "chat-input" ]
+    [ input
+        [ type' "text"
+        , id fieldId
+        , value field
+        , placeholder "press Enter to chat"
+        , onInput UpdateField
+        , onFocus (Enter False)
+        , onBlur (Exit False)
+        ]
+        []
     ]

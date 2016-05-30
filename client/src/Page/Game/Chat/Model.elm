@@ -27,32 +27,6 @@ type Msg
   | NoOp
 
 
-keyCodeToMsg : Model -> Int -> Msg
-keyCodeToMsg model code =
-  if model.focus then
-    if code == esc then
-      Exit True
-    else if code == enter then
-      Submit
-    else
-      NoOp
-  else
-    if code == esc then
-      Enter True
-    else
-      NoOp
-
-
-esc : Int
-esc =
-  27
-
-
-enter : Int
-enter =
-  13
-
-
 fieldId : String
 fieldId =
   "game-chat"

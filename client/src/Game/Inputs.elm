@@ -85,7 +85,7 @@ isLocking ki =
 keyboardInput : Keyboard.Model -> KeyboardInput
 keyboardInput kb =
   { arrows = Keyboard.arrows kb
-  , lock = Keyboard.isPressed Keyboard.Enter kb
+  , lock = Keyboard.isPressed Keyboard.ArrowUp kb
   , tack = Keyboard.isPressed Keyboard.Space kb
   , subtleTurn = Keyboard.isPressed Keyboard.Shift kb
   }

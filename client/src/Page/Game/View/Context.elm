@@ -220,7 +220,7 @@ helpItems =
     items =
       [ ( "left/right", "turn" )
       , ( "left/right + shift", "adjust" )
-      , ( "enter", "lock angle to wind" )
+      , ( "up", "lock angle to wind" )
       , ( "space", "tack or jibe" )
       ]
   in

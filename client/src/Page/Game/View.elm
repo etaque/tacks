@@ -40,6 +40,7 @@ view ctx model =
           (Context.sidebar model liveTrack gameState)
           [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
           , Html.map ChatMsg (Chat.view h model.chat)
+          , Html.map ChatMsg (Chat.inputView model.chat)
           ]
 
     _ ->
