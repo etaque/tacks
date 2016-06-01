@@ -13,9 +13,10 @@
   },
   "private": true,
   "scripts": {
-    "build": "npm run build-elm && npm run build-sass && npm run build-js",
+    "build": "npm run build-elm && npm run compress-elm && npm run build-sass && npm run build-js",
     "build-js": "babel client/scripts/boot.js --out-file public/dist/boot.js",
-    "build-elm": "elm make client/src/Main.elm --output public/dist/main.js",
+    "build-elm": "elm make client/src/Main.elm --output public/dist/main-raw.js",
+    "compress-elm": "closure --js public/dist/main-raw.js --js_output_file public/dist/main.js",
     "build-sass": "node-sass client/styles -o public/dist",
     "watch": "npm run watch-elm & npm run watch-sass & npm run watch-js",
     "watch-js": "babel client/scripts/boot.js -w --out-file public/dev/boot.js",
