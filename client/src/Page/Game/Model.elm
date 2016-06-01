@@ -14,7 +14,7 @@ import Set
 type alias Model =
   { liveTrack : Maybe LiveTrack
   , gameState : Maybe GameState
-  , raceInput : Input.RaceInput
+  , lastPush : Time
   , keyboard : Keyboard.Model
   , dims : ( Int, Int )
   , tab : Tab
@@ -37,7 +37,7 @@ initial : Model
 initial =
   { liveTrack = Nothing
   , gameState = Nothing
-  , raceInput = Input.initialRaceInput
+  , lastPush = 0
   , keyboard = Keyboard.Model Set.empty
   , dims = ( 1 , 1 )
   , tab = LiveTab

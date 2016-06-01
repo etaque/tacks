@@ -54,7 +54,7 @@ raceInputDecoder : Decoder RaceInput
 raceInputDecoder =
   object8
     RaceInput
-    ("serverNow" := float)
+    ("serverTime" := float)
     ("startTime" := maybe float)
     ("wind" := windDecoder)
     ("opponents" := list opponentDecoder)

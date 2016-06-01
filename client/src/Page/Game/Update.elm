@@ -12,7 +12,7 @@ import Page.Game.Chat.Update as Chat
 import Update.Utils exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
-import Game.Steps exposing (gameStep)
+import Game.Steps as Steps
 import Game.Outputs as Output
 import Game.Inputs as Input
 import Task
@@ -94,7 +94,14 @@ update player host msg model =
       res { model | dims = ( size.width, size.height) } Cmd.none
 
     RaceUpdate raceInput ->
-      res { model | raceInput = raceInput } Cmd.none
+      case model.gameState of
+        Just gameState ->
+          res
+            { model | gameState = Just (Steps.raceInputStep raceInput gameState) }
+            Cmd.none
+
+        Nothing ->
+          res model Cmd.none
 
     Frame time ->
       case model.gameState of
@@ -102,13 +109,11 @@ update player host msg model =
           let
             gameInput =
               Input.GameInput
-                model.raceInput
                 (Input.keyboardInput model.keyboard)
                 model.dims
-                time
 
             newGameState =
-              gameStep gameInput gameState
+              Steps.frameStep gameInput time gameState
 
             serverCmd =
               Output.sendToServer
@@ -116,7 +121,10 @@ update player host msg model =
                 model.liveTrack
                 (Output.UpdatePlayer (Output.playerOutput gameState))
           in
-            res { model | gameState = Just newGameState } serverCmd
+            if time - model.lastPush > 33 then
+              res { model | gameState = Just newGameState, lastPush = time } serverCmd
+            else
+              res { model | gameState = Just newGameState } Cmd.none
 
         Nothing ->
           res model Cmd.none

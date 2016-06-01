@@ -52,7 +52,7 @@ getTimer { timers, playerState } =
           case playerState.nextGate of
             Just _ ->
               -- countdown, in sec
-              ( t - timers.now, False )
+              ( t - timers.localTime, False )
 
             Nothing ->
               -- last crossed gate time, in msec

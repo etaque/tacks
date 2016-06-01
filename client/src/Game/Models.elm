@@ -44,18 +44,16 @@ type alias GameState =
   , course : Course
   , tallies : List PlayerTally
   , timers : Timers
-  , live : Bool
+  -- , live : Bool
   , chatting : Bool
   }
 
 
 type alias Timers =
-  { now : Time
-  , serverNow : Maybe Time
-  , rtd : Maybe Time
-  , countdown : Float
+  { serverTime : Time
   , startTime : Maybe Time
   , localTime : Time
+  , lastServerUpdate : Time
   }
 
 
@@ -296,9 +294,9 @@ defaultVmg =
 
 
 defaultPlayerState : Player -> Float -> PlayerState
-defaultPlayerState player now =
+defaultPlayerState player time =
   { player = player
-  , time = now
+  , time = time
   , position = ( 0, 0 )
   , isGrounded = False
   , isTurning = False
@@ -338,19 +336,19 @@ defaultWind =
 
 
 emptyWindHistory : Time -> WindHistory
-emptyWindHistory now =
+emptyWindHistory time =
   { samples = []
   , lastSample = 0
-  , init = now
+  , init = time
   }
 
 
 defaultGame : Time -> Course -> Player -> GameState
-defaultGame now course player =
+defaultGame time course player =
   { wind = defaultWind
-  , windHistory = emptyWindHistory now
-  , gusts = TiledGusts now []
-  , playerState = defaultPlayerState player now
+  , windHistory = emptyWindHistory time
+  , gusts = TiledGusts time []
+  , playerState = defaultPlayerState player time
   , center = ( 0, 0 )
   , wake = []
   , opponents = []
@@ -358,14 +356,12 @@ defaultGame now course player =
   , course = course
   , tallies = []
   , timers =
-      { now = now
-      , serverNow = Nothing
-      , rtd = Nothing
-      , countdown = 0
+      { serverTime = time
+      -- , countdown = 0
       , startTime = Nothing
-      , localTime = now
+      , localTime = time
+      , lastServerUpdate = time
       }
-  , live = False
   , chatting = False
   }
 
@@ -397,7 +393,7 @@ raceTime : GameState -> Float
 raceTime { timers } =
   case timers.startTime of
     Just t ->
-      timers.now - t
+      timers.serverTime - t
 
     Nothing ->
       0
@@ -407,7 +403,7 @@ isStarted : GameState -> Bool
 isStarted { timers } =
   case timers.startTime of
     Just t ->
-      timers.now >= t
+      timers.serverTime >= t
 
     Nothing ->
       False

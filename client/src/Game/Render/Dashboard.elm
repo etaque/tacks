@@ -24,7 +24,7 @@ renderDashboard ( w, h ) ({ playerState } as gameState) =
         [ class "wind-speed"
         , transform (translate 30 30)
         ]
-        [ WindSpeedGraph.render gameState.timers.now playerState.windSpeed gameState.windHistory ]
+        [ WindSpeedGraph.render gameState.timers.serverTime playerState.windSpeed gameState.windHistory ]
     , g
         [ class "vmg"
         , transform (translate (toFloat w - VmgBar.barWidth - 40) 40)

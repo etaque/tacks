@@ -1,13 +1,13 @@
 module Game.Steps exposing (..)
 
+import Time exposing (Time)
 import Model.Shared exposing (..)
 import Game.Inputs as Input
 import Game.Models exposing (..)
 import Game.Geo as Geo
-import CoreExtra
 import Constants
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
-import Game.Steps.Moving exposing (movingStep)
+import Game.Steps.Moving as Moving
 import Game.Steps.Turning exposing (turningStep)
 import Game.Steps.Vmg exposing (vmgStep)
 import Game.Steps.PlayerWind exposing (playerWindStep)
@@ -15,8 +15,8 @@ import Game.Steps.WindHistory exposing (windHistoryStep)
 import Game.Steps.Gusts exposing (gustsStep)
 
 
-gameStep : Input.GameInput -> GameState -> GameState
-gameStep { raceInput, keyboard, dims, time } gameState =
+frameStep : Input.GameInput -> Time -> GameState -> GameState
+frameStep { keyboard, dims } time ({timers} as gameState) =
   let
     keyboardInputWithFocus =
       if gameState.chatting then
@@ -29,59 +29,52 @@ gameStep { raceInput, keyboard, dims, time } gameState =
       , snd dims
       )
 
-    clock =
-      { delta = time - gameState.timers.localTime
-      , time = time
+    clientDelta =
+      time - gameState.timers.localTime
+
+    serverDelta =
+      time - (max gameState.timers.lastServerUpdate gameState.timers.localTime)
+
+    newTimers =
+      { timers
+        | localTime = time
+        , serverTime = timers.serverTime + serverDelta
       }
   in
-    raceInputStep raceInput clock gameState
+    { gameState | timers = newTimers }
       |> gustsStep
-      |> playerStep keyboardInputWithFocus clock.delta
+      |> playerStep keyboardInputWithFocus clientDelta
+      |> opponentsStep serverDelta
       |> windHistoryStep
       |> centerStep gameState.playerState.position gameDims
 
 
-raceInputStep : Input.RaceInput -> Input.Clock -> GameState -> GameState
-raceInputStep raceInput { delta, time } ({ playerState, timers } as gameState) =
+raceInputStep : Input.RaceInput -> GameState -> GameState
+raceInputStep input ({ playerState, timers } as gameState) =
   let
-    { serverNow, startTime, opponents, ghosts, tallies, initial, clientTime } =
-      raceInput
-
-    rtd =
-      case timers.rtd of
-        Just previousRtd ->
-          min previousRtd (time - clientTime)
-
-        Nothing ->
-          time - clientTime
-
-    now =
-      serverNow
-
-    updatedOpponents =
-      updateOpponents gameState.opponents delta opponents
-
-    newPlayerState =
-      { playerState | time = now }
-
     newTimers =
       { timers
-        | serverNow = Just serverNow
-        , now = now
-        , startTime = startTime
-        , localTime = time
-        , rtd = Just rtd
+        | serverTime = input.serverTime
+        , startTime = input.startTime
+        , lastServerUpdate = timers.localTime
       }
   in
     { gameState
-      | opponents = updatedOpponents
-      , ghosts = ghosts
-      , wind = raceInput.wind
-      , tallies = tallies
-      , playerState = newPlayerState
-      , live = not initial
+      | opponents = input.opponents
+      , ghosts = input.ghosts
+      , wind = input.wind
+      , tallies = input.tallies
       , timers = newTimers
     }
+
+
+opponentsStep : Time -> GameState -> GameState
+opponentsStep elapsed gameState =
+  let
+    newOpponents =
+      moveOpponents elapsed (isStarted gameState) gameState.course gameState.opponents
+  in
+    { gameState | opponents = newOpponents }
 
 
 playerStep : Input.KeyboardInput -> Float -> GameState -> GameState
@@ -91,7 +84,7 @@ playerStep keyboardInput elapsed gameState =
       turningStep elapsed keyboardInput gameState.playerState
         |> playerWindStep gameState
         |> vmgStep
-        |> movingStep elapsed (isStarted gameState) gameState.course
+        |> Moving.playerStep elapsed (isStarted gameState) gameState.course
         |> gateCrossingStep gameState.playerState gameState
         |> playerTimeStep elapsed
   in
@@ -153,35 +146,11 @@ axisCenter p p' c window areaMin areaMax =
       c
 
 
-moveOpponentState : OpponentState -> Float -> OpponentState
-moveOpponentState state delta =
-  let
-    position =
-      Geo.movePoint state.position delta state.velocity state.heading
-  in
-    { state | position = position }
-
-
-updateOpponent : Maybe Opponent -> Float -> Opponent -> Opponent
-updateOpponent previousMaybe delta opponent =
-  case previousMaybe of
-    Just previous ->
-      if previous.state.time == opponent.state.time then
-        { opponent | state = moveOpponentState opponent.state delta }
-      else
-        opponent
-
-    Nothing ->
-      opponent
-
-
-updateOpponents : List Opponent -> Float -> List Opponent -> List Opponent
-updateOpponents previousOpponents delta newOpponents =
-  let
-    findPrevious o =
-      CoreExtra.find (\po -> po.player.id == o.player.id) previousOpponents
-  in
-    List.map (\o -> updateOpponent (findPrevious o) delta o) newOpponents
+moveOpponents : Time -> Bool -> Course -> List Opponent -> List Opponent
+moveOpponents delta started course opponents =
+  List.map
+    (\o -> { o | state = Moving.opponentStep delta started course o.state })
+    opponents
 
 
 playerTimeStep : Float -> PlayerState -> PlayerState

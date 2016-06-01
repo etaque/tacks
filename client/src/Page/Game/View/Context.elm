@@ -49,7 +49,7 @@ raceStatus ({ timers, playerState } as gameState) =
       let
         timer =
           playerState.nextGate
-            |> Maybe.map (\_ -> startTime - timers.now)
+            |> Maybe.map (\_ -> startTime - timers.serverTime)
             |> Maybe.withDefault (List.head playerState.crossedGates |> Maybe.withDefault 0)
 
         hasFinished =

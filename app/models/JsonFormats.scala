@@ -167,7 +167,7 @@ object JsonFormats {
   implicit val optionDateTimeFormat = Format.optionWithNull[DateTime]
 
   implicit val raceUpdateFormat: Format[RaceUpdate] = (
-      (__ \ 'serverNow).format[DateTime] and
+      (__ \ 'serverTime).format[DateTime] and
       (__ \ 'startTime).format[Option[DateTime]] and
       (__ \ 'wind).format[Wind] and
       (__ \ 'opponents).format[Seq[Opponent]] and

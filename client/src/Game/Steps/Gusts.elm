@@ -15,8 +15,8 @@ interval =
 
 gustsStep : GameState -> GameState
 gustsStep ({ timers, wind, gusts, course } as gameState) =
-  if gusts.genTime + interval < timers.now then
-    { gameState | gusts = genTiledGusts course.grid timers.now wind }
+  if gusts.genTime + interval < timers.serverTime then
+    { gameState | gusts = genTiledGusts course.grid timers.serverTime wind }
   else
     gameState
 

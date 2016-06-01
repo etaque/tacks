@@ -100,7 +100,7 @@ case class PlayerUpdate(player: Player, playerInput: PlayerInput)
 
 
 case class RaceUpdate(
-  serverNow: DateTime,
+  serverTime: DateTime,
   startTime: Option[DateTime],
   wind: Wind,
   opponents: Seq[Opponent],

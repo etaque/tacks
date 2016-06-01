@@ -177,7 +177,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
     val raceTimeOpt = startTimeOpt.map(now.getMillis - _.getMillis)
     val ghosts = raceTimeOpt.map(state.playerGhosts(player.id)).getOrElse(Nil)
     RaceUpdate(
-      serverNow = now,
+      serverTime = now,
       startTime = startTimeOpt,
       wind = wind,
       opponents = state.playerOpponents(player.id),

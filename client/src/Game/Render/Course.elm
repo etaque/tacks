@@ -18,7 +18,7 @@ renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
     [ Tiles.lazyRenderTiles course.grid
     , renderTiledGusts gusts
       -- , renderGusts wind
-    , renderGates playerState course timers.now (isStarted gameState)
+    , renderGates playerState course timers.localTime (isStarted gameState)
     ]
 
 
@@ -60,9 +60,9 @@ renderGustTile ( coords, { angle, speed } ) =
 
 
 renderGates : PlayerState -> Course -> Float -> Bool -> Svg msg
-renderGates { crossedGates } { start, gates } now started =
+renderGates { crossedGates } { start, gates } time started =
   start :: gates
-    |> List.indexedMap (\i g -> Gates.render now started (i - List.length crossedGates) g)
+    |> List.indexedMap (\i g -> Gates.render time started (i - List.length crossedGates) g)
     |> List.filterMap identity
     |> g [ class "gates" ]
 

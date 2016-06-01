@@ -7,16 +7,8 @@ import Keyboard.Extra as Keyboard
 
 
 type alias GameInput =
-  { raceInput : RaceInput
-  , keyboard : KeyboardInput
+  { keyboard : KeyboardInput
   , dims : ( Int, Int )
-  , time : Time
-  }
-
-
-type alias Clock =
-  { delta : Float
-  , time : Float
   }
 
 
@@ -42,7 +34,7 @@ type alias UserArrows =
 
 
 type alias RaceInput =
-  { serverNow : Time
+  { serverTime : Time
   , startTime : Maybe Time
   , wind : Wind
   , opponents : List Opponent
@@ -50,19 +42,6 @@ type alias RaceInput =
   , tallies : List PlayerTally
   , initial : Bool
   , clientTime : Time
-  }
-
-
-initialRaceInput : RaceInput
-initialRaceInput =
-  { serverNow = 0
-  , startTime = Nothing
-  , wind = defaultWind
-  , opponents = []
-  , ghosts = []
-  , tallies = []
-  , initial = True
-  , clientTime = 0
   }
 
 
