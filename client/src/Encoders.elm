@@ -1,4 +1,4 @@
-module Encoders (..) where
+module Encoders exposing (..)
 
 import Model.Shared exposing (..)
 import Dict exposing (Dict)

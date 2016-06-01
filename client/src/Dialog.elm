@@ -1,22 +1,20 @@
-module Dialog (..) where
+module Dialog exposing (..)
 
-import Signal exposing (Address, Message)
 import Html exposing (..)
+import Html.App as Html
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Transit exposing (Status(..), getValue, getStatus)
-import Task exposing (Task)
-import Effects exposing (Effects, Never, none)
-import CoreExtra
-import Response
-import View.Utils as Utils
+import Svg
+import Svg.Attributes as SvgAttr
+import Transit exposing (Step(..), getValue, getStep)
+import Keyboard
 
 
-type Action
+type Msg
   = NoOp
-  | Open
   | Close
-  | TransitAction (Transit.Action Action)
+  | KeyDown Int
+  | TransitMsg (Transit.Msg Msg)
 
 
 type alias Model =
@@ -32,7 +30,7 @@ type alias WithDialog a =
 
 initial : Model
 initial =
-  { transition = Transit.initial
+  { transition = Transit.empty
   , open = False
   , options = defaultOptions
   }
@@ -40,68 +38,78 @@ initial =
 
 type alias Options =
   { duration : Float
-  , onClose : Maybe Message
+  , closeOnEscape : Bool
+  , onClose : Maybe Msg
   }
 
 
 defaultOptions : Options
 defaultOptions =
   { duration = 50
+  , closeOnEscape = True
   , onClose = Nothing
   }
 
 
-taggedOpen : (Action -> a) -> WithDialog m -> ( WithDialog m, Effects a )
+taggedOpen : (Msg -> msg) -> WithDialog model -> ( WithDialog model, Cmd msg )
 taggedOpen tagger model =
-  open model.dialog
-    |> Response.mapBoth (\newDialog -> { model | dialog = newDialog }) tagger
+  let
+    ( newDialog, cmd ) =
+      open model.dialog
+  in
+    ( { model | dialog = newDialog }, Cmd.map tagger cmd )
 
 
-open : Model -> ( Model, Effects Action )
+open : Model -> ( Model, Cmd Msg )
 open model =
-  Response.taskRes model (Task.succeed Open)
+  Transit.start TransitMsg NoOp (0, model.options.duration) { model | open = True }
 
 
-taggedUpdate : (Action -> a) -> Action -> WithDialog m -> ( WithDialog m, Effects a )
-taggedUpdate tagger action model =
-  update action model.dialog
-    |> Response.mapBoth (\newDialog -> { model | dialog = newDialog }) tagger
+taggedUpdate : (Msg -> msg) -> Msg -> WithDialog model -> ( WithDialog model, Cmd msg )
+taggedUpdate tagger msg model =
+  let
+    ( newDialog, cmd ) =
+      update msg model.dialog
+  in
+    ( { model | dialog = newDialog }, Cmd.map tagger cmd )
 
 
-update : Action -> Model -> ( Model, Effects Action )
-update action model =
-  case action of
+update : Msg -> Model -> ( Model, Cmd Msg )
+update msg model =
+  case msg of
     NoOp ->
-      ( model, none )
+      ( model, Cmd.none )
 
-    Open ->
-      let
-        timeline =
-          Transit.timeline 0 NoOp model.options.duration
-
-        newModel =
-          { model | open = True }
-      in
-        Transit.init TransitAction timeline newModel
+    KeyDown code ->
+      if model.options.closeOnEscape && code == 27 then
+        closeUpdate model
+      else
+        ( model, Cmd.none )
 
     Close ->
-      let
-        timeline =
-          Transit.timeline model.options.duration NoOp 0
+      closeUpdate model
 
-        newModel =
-          { model | open = False }
-      in
-        Transit.init TransitAction timeline newModel
+    TransitMsg transitMsg ->
+      Transit.tick TransitMsg transitMsg model
 
-    TransitAction transitAction ->
-      Transit.update TransitAction transitAction model
+
+closeUpdate : Model -> ( Model, Cmd Msg )
+closeUpdate model =
+  Transit.start TransitMsg NoOp (model.options.duration, 0) { model | open = False }
+
+
+subscriptions : Transit.WithTransition model -> Sub Msg
+subscriptions model =
+  Sub.batch
+    [ Keyboard.downs KeyDown
+    , Transit.subscriptions TransitMsg model
+    ]
 
 
 type alias Layout =
-  { header : List Html
-  , body : List Html
-  , footer : List Html
+  { header : List (Html Msg)
+  , body : List (Html Msg)
+  , footer : List (Html Msg)
   }
 
 
@@ -110,66 +118,86 @@ emptyLayout =
   Layout [] [] []
 
 
-view : Address Action -> Model -> Layout -> Html
-view addr model layout =
-  div
-    [ class "dialog-wrapper"
-    , style
-        [ ( "display", display model )
-        , ( "opacity", toString (opacity model) )
+type alias View msg =
+  { content : Html msg
+  , backdrop : Html msg
+  }
+
+view : (Msg -> msg) -> Model -> Layout -> View msg
+view tagger model layout =
+  { content = Html.map tagger <|
+      div
+        [ class "dialog-wrapper"
+        , style
+            [ ( "display", display model )
+            , ( "opacity", toString (opacity model) )
+            ]
+        , onClick Close
         ]
-    , onClick addr Close
-    ]
-    [ div
-        [ class "dialog-sheet" ]
-        [ if List.isEmpty layout.header then
-            text ""
-          else
-            div
-              [ class "dialog-header" ]
-              (closeButton addr :: layout.header)
-        , div
-            [ class "dialog-body" ]
-            layout.body
-        , if List.isEmpty layout.footer then
-            text ""
-          else
-            div
-              [ class "dialog-footer" ]
-              layout.footer
+        [ div
+            [ class "dialog-sheet" ]
+            [ if List.isEmpty layout.header then
+                text ""
+              else
+                div
+                  [ class "dialog-header" ]
+                  (closeButton :: layout.header)
+            , div
+                [ class "dialog-body" ]
+                layout.body
+            , if List.isEmpty layout.footer then
+                text ""
+              else
+                div
+                  [ class "dialog-footer" ]
+                  layout.footer
+            ]
         ]
-    ]
+  , backdrop = Html.map tagger <|
+      div [ class "dialog-backdrop" ] []
+  }
 
 
-closeButton : Address Action -> Html
-closeButton addr =
+closeButton : Html Msg
+closeButton =
   span
-    [ class
-        "dialog-close"
-    , onClick addr Close
+    [ class "dialog-close"
+    , onClick Close
     ]
-    [ Utils.mIcon "close" [] ]
+    [ closeIcon ]
 
 
-title : String -> Html
+closeIcon : Svg.Svg msg
+closeIcon =
+  Svg.svg
+    [ SvgAttr.width "24"
+    , SvgAttr.height "24"
+    ]
+    [ Svg.path
+        [ SvgAttr.d "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" ]
+        []
+    ]
+
+
+title : String -> Html Msg
 title s =
   div [ class "dialog-title" ] [ text s ]
 
 
-subtitle : String -> Html
+subtitle : String -> Html Msg
 subtitle s =
   div [ class "dialog-subtitle" ] [ text s ]
 
 
 isVisible : Model -> Bool
 isVisible { open, transition } =
-  open || Transit.getStatus transition == Exit
+  open || Transit.getStep transition == Exit
 
 
 opacity : Model -> Float
 opacity { open, transition } =
   if open then
-    case Transit.getStatus transition of
+    case Transit.getStep transition of
       Exit ->
         0
 
@@ -179,9 +207,9 @@ opacity { open, transition } =
       Done ->
         1
   else
-    case Transit.getStatus transition of
+    case Transit.getStep transition of
       Exit ->
-        1 - Transit.getValue transition
+        Transit.getValue transition
 
       _ ->
         0

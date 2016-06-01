@@ -1,8 +1,5 @@
-module Model (..) where
+module Model exposing (..)
 
-import Task exposing (Task)
-import Effects exposing (Effects)
-import Drag exposing (MouseEvent)
 import Model.Shared exposing (..)
 import Page.Home.Model as Home
 import Page.Login.Model as Login
@@ -13,70 +10,53 @@ import Page.Game.Model as Game
 import Page.ListDrafts.Model as ListDrafts
 import Page.Forum.Model as Forum
 import Page.Admin.Model as Admin
-import Route
-import TransitRouter exposing (WithRoute)
+import Route exposing (Route)
+import Window
+import Transit
 
 
-appActionsMailbox : Signal.Mailbox Action
-appActionsMailbox =
-  Signal.mailbox NoOp
-
-
-appActionsAddress : Signal.Address Action
-appActionsAddress =
-  appActionsMailbox.address
-
-
-(?) : Maybe a -> a -> a
-(?) maybe default =
-  Maybe.withDefault default maybe
-infixr 9 ?
-
-
-type alias AppSetup =
+type alias Setup =
   { player : Player
   , path : String
   , dims : ( Int, Int )
+  , host : String
   }
 
 
-effect : a -> Effects a
-effect =
-  Task.succeed >> Effects.task
-
-
-type Action
+type Msg
   = SetPlayer Player
+  | RefreshLiveStatus
   | SetLiveStatus (Result () LiveStatus)
-  | RouterAction (TransitRouter.Action Route.Route)
-  | UpdateDims ( Int, Int )
-  | MouseEvent MouseEvent
-  | PageAction PageAction
+  | WindowResized Window.Size
+  | RouteTransition (Transit.Msg Msg)
+  | MountRoute Route
+  | PageMsg PageMsg
   | Logout
+  | Navigate String
   | NoOp
 
 
-type PageAction
-  = HomeAction Home.Action
-  | LoginAction Login.Action
-  | RegisterAction Register.Action
-  | ExploreAction Explore.Action
-  | EditTrackAction EditTrack.Action
-  | GameAction Game.Action
-  | ListDraftsAction ListDrafts.Action
-  | ForumAction Forum.Action
-  | AdminAction Admin.Action
+type PageMsg
+  = HomeMsg Home.Msg
+  | LoginMsg Login.Msg
+  | RegisterMsg Register.Msg
+  | ExploreMsg Explore.Msg
+  | EditTrackMsg EditTrack.Msg
+  | GameMsg Game.Msg
+  | ListDraftsMsg ListDrafts.Msg
+  | ForumMsg Forum.Msg
+  | AdminMsg Admin.Msg
 
 
-type alias Model =
-  WithRoute
-    Route.Route
-    { player : Player
-    , liveStatus : LiveStatus
-    , dims : Dims
-    , routeTransition : Route.RouteTransition
-    , pages : Pages
-    }
+type alias Model = Transit.WithTransition
+  { route : Route
+  , routeJump : Route.RouteJump
+  , player : Player
+  , liveStatus : LiveStatus
+  , dims : Dims
+  , pages : Pages
+  , host : String
+  }
 
 
 type alias Pages =
@@ -92,13 +72,14 @@ type alias Pages =
   }
 
 
-initialModel : AppSetup -> Model
-initialModel { path, dims, player } =
-  { player = player
+initialModel : Setup -> Model
+initialModel { dims, player, host } =
+  { route = Route.EmptyRoute
+  , routeJump = Route.None
+  , transition = Transit.empty
+  , player = player
   , liveStatus = { liveTracks = [], onlinePlayers = [] }
   , dims = dims
-  , transitRouter = TransitRouter.empty Route.EmptyRoute
-  , routeTransition = Route.None
   , pages =
       { home = Home.initial
       , login = Login.initial
@@ -110,4 +91,5 @@ initialModel { path, dims, player } =
       , forum = Forum.initial
       , admin = Admin.initial
       }
+  , host = host
   }

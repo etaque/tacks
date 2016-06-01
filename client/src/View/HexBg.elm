@@ -1,4 +1,4 @@
-module View.HexBg (..) where
+module View.HexBg exposing (..)
 
 import Dict exposing (Dict)
 import Svg exposing (..)
@@ -17,7 +17,7 @@ type alias Axial =
   Int
 
 
-render : Dims -> Svg
+render : Dims -> Svg msg
 render ( w, h ) =
   svg
     [ width (toString w)

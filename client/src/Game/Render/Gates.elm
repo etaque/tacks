@@ -1,4 +1,4 @@
-module Game.Render.Gates (..) where
+module Game.Render.Gates exposing (..)
 
 import Game.Models exposing (..)
 import Model.Shared exposing (..)
@@ -8,7 +8,7 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 
-render : Float -> Bool -> Int -> Gate -> Maybe Svg
+render : Float -> Bool -> Int -> Gate -> Maybe (Svg msg)
 render timer started index gate =
   if index == 0 then
     if started then
@@ -21,7 +21,7 @@ render timer started index gate =
     Nothing
 
 
-renderOpenGate : Float -> Gate -> Svg
+renderOpenGate : Float -> Gate -> Svg msg
 renderOpenGate timer gate =
   let
     lineStyle =
@@ -34,7 +34,7 @@ renderOpenGate timer gate =
     renderGate gate lineStyle 1 colors.green
 
 
-renderStartGate : Float -> Gate -> Svg
+renderStartGate : Float -> Gate -> Svg msg
 renderStartGate timer gate =
   let
     lineStyle =
@@ -45,7 +45,7 @@ renderStartGate timer gate =
     renderGate gate lineStyle 1 colors.green
 
 
-renderClosedGate : Float -> Gate -> Svg
+renderClosedGate : Float -> Gate -> Svg msg
 renderClosedGate timer gate =
   let
     lineStyle =
@@ -56,7 +56,7 @@ renderClosedGate timer gate =
     renderGate gate lineStyle 0.4 "black"
 
 
-renderGate : Gate -> List Attribute -> Float -> String -> Svg
+renderGate : Gate -> List (Attribute msg) -> Float -> String -> Svg msg
 renderGate gate lineStyle op color =
   let
     l =
@@ -68,7 +68,7 @@ renderGate gate lineStyle op color =
     g [ opacity (toString op) ] [ l, marks ]
 
 
-renderGateMarks : String -> Gate -> Svg
+renderGateMarks : String -> Gate -> Svg msg
 renderGateMarks color gate =
   let
     ( a, b ) =
@@ -77,7 +77,7 @@ renderGateMarks color gate =
     g [] (List.map (renderGateMark color) [ a, b ])
 
 
-renderGateMark : String -> Point -> Svg
+renderGateMark : String -> Point -> Svg msg
 renderGateMark color p =
   circle
     [ r (toString markRadius)

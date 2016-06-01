@@ -1,54 +1,45 @@
-module Page.Admin.Update (..) where
+module Page.Admin.Update exposing (..)
 
-import Task exposing (Task, succeed, andThen)
-import Signal
-import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
-import Model
 import Page.Admin.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
-import Update.Utils as Utils
+import Update.Utils exposing (..)
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.AdminAction
-
-
-mount : ( Model, Effects Action )
+mount : Response Model Msg
 mount =
-  taskRes initial refreshData
+  res initial refreshData
 
 
-update : Action -> Model -> ( Model, Effects Action )
-update action model =
-  case action of
+update : Msg -> Model -> Response Model Msg
+update msg model =
+  case msg of
     RefreshData ->
-      taskRes model refreshData
+      res model refreshData
 
     RefreshDataResult result ->
       let
         { tracks, users, reports } =
           Result.withDefault (AdminData [] [] []) result
       in
-        res { model | tracks = tracks, users = users, reports = reports } none
+        res { model | tracks = tracks, users = users, reports = reports } Cmd.none
 
     DeleteTrack id ->
-      taskRes model (Task.map DeleteTrackResult (ServerApi.deleteDraft id))
+      res model (performSucceed DeleteTrackResult (ServerApi.deleteDraft id))
 
     DeleteTrackResult result ->
       case result of
         Ok id ->
-          res { model | tracks = List.filter (\t -> t.id /= id) model.tracks } none
+          res { model | tracks = List.filter (\t -> t.id /= id) model.tracks } Cmd.none
 
         Err _ ->
-          res model none
+          res model Cmd.none
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
-refreshData : Task Never Action
+refreshData : Cmd Msg
 refreshData =
   getJson adminDataDecoder "/api/admin"
-    |> Task.map RefreshDataResult
+    |> performSucceed RefreshDataResult

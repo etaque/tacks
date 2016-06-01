@@ -69,7 +69,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
           state = state.addPlayer(player, sender)
           broadcastLiveTrackUpdate()
 
-        case Input(PlayerInput(opState, _, clientTime)) =>
+        case Input(PlayerInput(opState, clientTime)) =>
           state.players.get(player.id).foreach { context =>
             val newContext = context.copy(state = opState)
 
@@ -177,7 +177,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
     val raceTimeOpt = startTimeOpt.map(now.getMillis - _.getMillis)
     val ghosts = raceTimeOpt.map(state.playerGhosts(player.id)).getOrElse(Nil)
     RaceUpdate(
-      serverNow = now,
+      serverTime = now,
       startTime = startTimeOpt,
       wind = wind,
       opponents = state.playerOpponents(player.id),

@@ -1,4 +1,4 @@
-module Page.Admin.Route (Route(..), matchers, toPath) where
+module Page.Admin.Route exposing (Route(..), matchers, toPath)
 
 import RouteParser exposing (..)
 

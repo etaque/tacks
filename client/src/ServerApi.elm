@@ -1,4 +1,4 @@
-module ServerApi (..) where
+module ServerApi exposing (..)
 
 import Http exposing (..)
 import Task exposing (Task, andThen)
@@ -6,10 +6,17 @@ import Json.Decode as Json
 import Json.Encode as JsEncode
 import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
-import Effects exposing (Never)
 import Model.Shared exposing (..)
 import Decoders exposing (..)
 import Encoders exposing (..)
+
+
+-- WebSocket
+
+
+gameSocket : String -> String -> String
+gameSocket host id =
+  "ws://" ++ host ++ "/ws/trackPlayer/" ++ id
 
 
 -- GET

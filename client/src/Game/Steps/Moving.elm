@@ -1,4 +1,4 @@
-module Game.Steps.Moving (..) where
+module Game.Steps.Moving exposing (..)
 
 import List
 import Dict
@@ -17,8 +17,8 @@ maxAccel =
   0.03
 
 
-movingStep : Float -> Bool -> Course -> PlayerState -> PlayerState
-movingStep elapsed started course state =
+playerStep : Float -> Bool -> Course -> PlayerState -> PlayerState
+playerStep elapsed started course state =
   if elapsed == 0 then
     state
   else
@@ -61,6 +61,39 @@ movingStep elapsed started course state =
         , position = position
         , trail = trail
       }
+
+
+opponentStep : Float -> Bool -> Course -> OpponentState -> OpponentState
+opponentStep elapsed started course state =
+  if elapsed == 0 then
+    state
+  else
+    let
+      nextPosition =
+        movePoint state.position elapsed state.velocity state.heading
+
+      grounded =
+        isGrounded
+          started
+          state.position
+          nextPosition
+          course
+          (List.length state.crossedGates)
+
+      velocity =
+        if grounded then
+          0
+        else
+          velocity
+
+      position =
+        if grounded then
+          state.position
+        else
+          nextPosition
+    in
+      { state | position = position }
+
 
 
 withInertia : Float -> Float -> Float -> Float

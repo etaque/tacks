@@ -1,4 +1,4 @@
-module Page.Forum.Model where
+module Page.Forum.Model exposing (..)
 
 import Page.Forum.Route exposing (..)
 import Page.Forum.Index.Model as Index
@@ -26,9 +26,9 @@ initial =
   }
 
 
-type Action
-  = IndexAction Index.Action
-  | NewTopicAction NewTopic.Action
-  | ShowTopicAction ShowTopic.Action
+type Msg
+  = IndexMsg Index.Msg
+  | NewTopicMsg NewTopic.Msg
+  | ShowTopicMsg ShowTopic.Msg
   | NoOp
 

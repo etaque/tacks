@@ -1,4 +1,4 @@
-module Game.Layout where
+module Game.Layout exposing (..)
 
 import Graphics.Collage exposing (..)
 import Graphics.Element exposing (..)

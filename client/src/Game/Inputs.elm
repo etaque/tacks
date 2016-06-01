@@ -1,34 +1,14 @@
-module Game.Inputs (..) where
+module Game.Inputs exposing (..)
 
-import Signal exposing (..)
-import Time exposing (..)
-import Set as S exposing (..)
-import Keyboard
-import Char
+import Time exposing (Time)
 import Game.Models exposing (..)
 import Model.Shared exposing (..)
-
-
-buildGameInput : ( KeyboardInput, ( Int, Int ), Maybe RaceInput ) -> Clock -> Maybe GameInput
-buildGameInput ( keyboardInput, dims, maybeRaceInput ) clock =
-  Maybe.map (GameInput keyboardInput dims clock) maybeRaceInput
-
-
-
--- Game
+import Keyboard.Extra as Keyboard
 
 
 type alias GameInput =
-  { keyboardInput : KeyboardInput
-  , windowInput : ( Int, Int )
-  , clock : Clock
-  , raceInput : RaceInput
-  }
-
-
-type alias Clock =
-  { delta : Float
-  , time : Float
+  { keyboard : KeyboardInput
+  , dims : ( Int, Int )
   }
 
 
@@ -40,8 +20,8 @@ type alias KeyboardInput =
   }
 
 
-emptyKeyboardInput : KeyboardInput
-emptyKeyboardInput =
+initialKeyboard : KeyboardInput
+initialKeyboard =
   { arrows = { x = 0, y = 0 }
   , lock = False
   , tack = False
@@ -54,7 +34,7 @@ type alias UserArrows =
 
 
 type alias RaceInput =
-  { serverNow : Time
+  { serverTime : Time
   , startTime : Maybe Time
   , wind : Wind
   , opponents : List Opponent
@@ -62,19 +42,6 @@ type alias RaceInput =
   , tallies : List PlayerTally
   , initial : Bool
   , clientTime : Time
-  }
-
-
-initialRaceInput : RaceInput
-initialRaceInput =
-  { serverNow = 0
-  , startTime = Nothing
-  , wind = defaultWind
-  , opponents = []
-  , ghosts = []
-  , tallies = []
-  , initial = True
-  , clientTime = 0
   }
 
 
@@ -94,18 +61,11 @@ isLocking ki =
   ki.arrows.y > 0 || ki.lock
 
 
-toKeyboardInput : UserArrows -> Set Int -> KeyboardInput
-toKeyboardInput arrows keys =
-  { arrows = arrows
-  , lock = S.member 13 keys
-  , tack = S.member 32 keys
-  , subtleTurn = S.member 16 keys
+keyboardInput : Keyboard.Model -> KeyboardInput
+keyboardInput kb =
+  { arrows = Keyboard.arrows kb
+  , lock = Keyboard.isPressed Keyboard.ArrowUp kb
+  , tack = Keyboard.isPressed Keyboard.Space kb
+  , subtleTurn = Keyboard.isPressed Keyboard.Shift kb
   }
 
-
-keyboardInput : Signal KeyboardInput
-keyboardInput =
-  Signal.map2
-    toKeyboardInput
-    Keyboard.arrows
-    Keyboard.keysDown

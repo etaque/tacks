@@ -1,4 +1,4 @@
-module View.Sidebar where
+module View.Sidebar exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

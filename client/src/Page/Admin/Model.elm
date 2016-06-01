@@ -1,4 +1,4 @@
-module Page.Admin.Model (..) where
+module Page.Admin.Model exposing (..)
 
 import Json.Decode as Json exposing (..)
 import Model.Shared exposing (..)
@@ -66,7 +66,7 @@ initial =
   }
 
 
-type Action
+type Msg
   = RefreshData
   | RefreshDataResult (Result () AdminData)
   | DeleteTrack String

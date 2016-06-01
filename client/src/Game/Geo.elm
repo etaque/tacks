@@ -1,4 +1,4 @@
-module Game.Geo where
+module Game.Geo exposing (..)
 
 import Game.Core as Core
 import Model.Shared exposing (Point, Segment)

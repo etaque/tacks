@@ -1,11 +1,12 @@
-module Page.Game.View (..) where
+module Page.Game.View exposing (..)
 
 import Html exposing (..)
+import Html.App as Html
 import Html.Lazy
 import Html.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.Game.Model exposing (..)
-import Page.Game.View.Chat as Chat
+import Page.Game.Chat.View as Chat
 import Page.Game.View.Context as Context
 import View.Layout as Layout
 import View.HexBg as HexBg
@@ -25,7 +26,7 @@ pageTitle liveStatus model =
     "(" ++ toString playersCount ++ ") " ++ trackName
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Game Msg
 view ctx model =
   case ( model.liveTrack, model.gameState ) of
     ( Just liveTrack, Just gameState ) ->
@@ -33,19 +34,17 @@ view ctx model =
         ( w, h ) =
           ctx.dims
       in
-        Layout.gameLayout
+        Layout.Game
           "play-track"
-          ctx
           (Context.toolbar model liveTrack gameState)
           (Context.sidebar model liveTrack gameState)
           [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
-          , Chat.view h model
+          , Html.map ChatMsg (Chat.inputField model.chat)
           ]
 
     _ ->
-      Layout.gameLayout
+      Layout.Game
         "play-track loading"
-        ctx
         []
         []
         [ Html.Lazy.lazy HexBg.render ctx.dims ]

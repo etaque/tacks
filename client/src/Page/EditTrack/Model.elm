@@ -1,8 +1,8 @@
-module Page.EditTrack.Model (..) where
+module Page.EditTrack.Model exposing (..)
 
 import Model.Shared exposing (..)
 import Constants
-import Drag exposing (MouseEvent(..))
+import Mouse exposing (Position)
 
 
 type alias Model =
@@ -25,6 +25,7 @@ type alias Editor =
   , currentGate : Maybe Int
   , course : Course
   , center : Point
+  , drag : Maybe Position
   , mode : Mode
   , windSimDuration : WindSimDuration
   , altMove : Bool
@@ -46,6 +47,7 @@ initialEditor track course =
   , currentGate = Nothing
   , course = course
   , center = ( 0, 0 )
+  , drag = Nothing
   , mode = CreateTile Water
   , windSimDuration = TenMin
   , altMove = False
@@ -74,12 +76,12 @@ realMode { mode, altMove } =
     mode
 
 
-type Action
+type Msg
   = LoadTrack (Result () Track) (Result () Course)
-  | MouseAction MouseEvent
   | SetMode Mode
   | AltMoveMode Bool
-  | FormAction FormAction
+  | FormMsg FormMsg
+  | MouseMsg MouseMsg
   | SetTab Tab
   | SetName String
   | Save Bool
@@ -89,7 +91,13 @@ type Action
   | NoOp
 
 
-type FormAction
+type MouseMsg
+  = DragStart Position
+  | DragAt Position
+  | DragEnd Position
+
+
+type FormMsg
   = AddGate
   | SetGateCenterX Int Int
   | SetGateCenterY Int Int

@@ -1,6 +1,5 @@
-module Page.Forum.Index.View (..) where
+module Page.Forum.Index.View exposing (..)
 
-import Signal exposing (Address)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -15,8 +14,8 @@ import View.Utils as Utils
 import View.Layout as Layout
 
 
-view : Address Action -> Context -> Model -> List Html
-view addr ctx ({ topics } as model) =
+view : Context -> Model -> List (Html Msg)
+view ctx ({ topics } as model) =
   [ Layout.header
       ctx
       []
@@ -33,7 +32,7 @@ view addr ctx ({ topics } as model) =
   ]
 
 
-topicsTable : List TopicWithUser -> Html
+topicsTable : List TopicWithUser -> (Html Msg)
 topicsTable topics =
   table
     [ class "table forum-topics-table" ]
@@ -53,7 +52,7 @@ topicsTable topics =
     ]
 
 
-topicRow : TopicWithUser -> Html
+topicRow : TopicWithUser -> Html Msg
 topicRow { topic, user } =
   tr
     (Utils.linkAttrs (Route.Forum (ShowTopic topic.id)))

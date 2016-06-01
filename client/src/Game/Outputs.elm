@@ -1,17 +1,15 @@
-module Game.Outputs (..) where
+module Game.Outputs exposing (..)
 
 import Json.Encode as Js
-import TransitRouter exposing (getRoute)
-import Model
 import Model.Shared exposing (..)
-import Page.Game.Model as GamePage
 import Game.Models exposing (..)
-import Game.Inputs exposing (..)
-import Route
+import WebSocket
+import ServerApi
 
 
-type ServerAction
+type ServerMsg
   = ServerNoOp
+  | UpdatePlayer PlayerOutput
   | SendMessage String
   | AddGhost String Player
   | RemoveGhost String
@@ -19,90 +17,42 @@ type ServerAction
   | EscapeRace
 
 
-type LocalAction
+type LocalMsg
   = LocalNoOp
   | ChatScrollDown
 
 
-serverMailbox : Signal.Mailbox ServerAction
-serverMailbox =
-  Signal.mailbox ServerNoOp
-
-
-serverAddress : Signal.Address ServerAction
-serverAddress =
-  serverMailbox.address
-
-
 type alias PlayerOutput =
   { state : OpponentState
-  , input : KeyboardInput
   , localTime : Float
   }
 
 
-extractPlayerOutput : Model.Model -> Model.Action -> Maybe PlayerOutput
-extractPlayerOutput model action =
-  let
-    keyboardInput =
-      case action of
-        Model.PageAction (Model.GameAction (GamePage.GameUpdate gameInput)) ->
-          Just gameInput.keyboardInput
-
-        _ ->
-          Nothing
-
-    gameState =
-      case getRoute model of
-        Route.PlayTrack _ ->
-          model.pages.game.gameState
-
-        _ ->
-          Nothing
-  in
-    Maybe.map (makePlayerOutput keyboardInput) gameState
+playerOutput : GameState -> PlayerOutput
+playerOutput gameState =
+  { state = asOpponentState gameState.playerState
+  , localTime = gameState.timers.localTime
+  }
 
 
-makePlayerOutput : Maybe KeyboardInput -> GameState -> PlayerOutput
-makePlayerOutput keyboardInput gameState =
-  let
-    realKeyboardInput =
-      if gameState.chatting then
-        emptyKeyboardInput
-      else
-        Maybe.withDefault emptyKeyboardInput keyboardInput
-  in
-    { state = asOpponentState gameState.playerState
-    , input = realKeyboardInput
-    , localTime = gameState.timers.localTime
-    }
+sendToServer : String -> Maybe LiveTrack -> ServerMsg -> Cmd msg
+sendToServer host maybeLiveTrack serverMsg =
+  case maybeLiveTrack of
+    Just {track} ->
+      WebSocket.send (ServerApi.gameSocket host track.id) (Js.encode 0 (encodeServerMsg serverMsg))
+
+    Nothing ->
+      Cmd.none
 
 
-getActiveTrack : Model.Model -> Maybe String
-getActiveTrack model =
-  case getRoute model of
-    Route.PlayTrack _ ->
-      Maybe.map (.track >> .id) model.pages.game.liveTrack
-
-    _ ->
-      Nothing
-
-
-needChatScrollDown : Model.Action -> Maybe ()
-needChatScrollDown action =
-  case action of
-    Model.PageAction (Model.GameAction (GamePage.NewMessage _)) ->
-      Just ()
-
-    _ ->
-      Nothing
-
-
-encodeServerAction : ServerAction -> Js.Value
-encodeServerAction action =
-  case action of
+encodeServerMsg : ServerMsg -> Js.Value
+encodeServerMsg msg =
+  case msg of
     ServerNoOp ->
       tag "ServerNoOp" []
+
+    UpdatePlayer output ->
+      tag "PlayerInput" [ ( "playerInput", encodePlayerOutput output ) ]
 
     SendMessage s ->
       tag "SendMessage" [ ( "content", Js.string s ) ]
@@ -125,25 +75,23 @@ tag name fields =
   Js.object <| ( "tag", Js.string name ) :: fields
 
 
+encodePlayerOutput : PlayerOutput -> Js.Value
+encodePlayerOutput output =
+  Js.object
+    [ ( "state", encodeOpponentState output.state )
+    , ( "localTime" , Js.float output.localTime )
+    ]
 
--- ghosts : Action -> Maybe Js.Value
--- ghosts action =
---   case action of
---     PageAction (GameAction ga) ->
---       case ga of
---         GamePage.AddGhost runId _ ->
---           Just
---             <| Js.object
---                 [ ( "tag", Js.string "AddGhost" )
---                 , ( "runId", Js.string runId )
---                 ]
---         GamePage.RemoveGhost runId ->
---           Just
---             <| Js.object
---                 [ ( "tag", Js.string "RemoveGhost" )
---                 , ( "runId", Js.string runId )
---                 ]
---         _ ->
---           Nothing
---     _ ->
---       Nothing
+
+encodeOpponentState : OpponentState -> Js.Value
+encodeOpponentState o =
+  Js.object
+    [ ( "time", Js.float o.time )
+    , ( "position", Js.list [ Js.float (fst o.position), Js.float (snd o.position) ])
+    , ( "heading", Js.float o.heading )
+    , ( "velocity", Js.float o.velocity )
+    , ( "windAngle", Js.float o.windAngle )
+    , ( "windOrigin", Js.float o.windOrigin )
+    , ( "shadowDirection", Js.float o.shadowDirection )
+    , ( "crossedGates", Js.list (List.map Js.float o.crossedGates))
+    ]

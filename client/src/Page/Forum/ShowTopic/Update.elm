@@ -1,50 +1,48 @@
-module Page.Forum.ShowTopic.Update where
+module Page.Forum.ShowTopic.Update exposing (..)
 
-import Signal exposing (Address)
-import Task exposing (Task, succeed, andThen)
-import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 import Json.Encode as JsEncode
-
+import CoreExtra
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.ShowTopic.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
+import Update.Utils exposing (..)
 
 
-mount : String -> (Model, Effects Action)
+mount : String -> Response Model Msg
 mount id =
-  taskRes initial (showTopic id)
+  res initial (showTopic id)
 
 
-update : Action -> Model -> Response Model Action
-update action ({currentTopic, newPostContent} as model) =
-  case action of
+update : Msg -> Model -> Response Model Msg
+update msg ({currentTopic, newPostContent} as model) =
+  case msg of
 
     LoadResult result ->
       case result of
         Ok topic ->
-          res { model | currentTopic = Just topic } none
+          res { model | currentTopic = Just topic } Cmd.none
         Err _ ->
           -- TODO
-          res model none
+          res model Cmd.none
 
     ToggleNewPost ->
       case newPostContent of
         Just _ ->
-          res { model | newPostContent = Nothing } none
+          res { model | newPostContent = Nothing } Cmd.none
         Nothing ->
-          res { model | newPostContent = Just "" } none
+          res { model | newPostContent = Just "" } Cmd.none
 
     SetContent c ->
-      res { model | newPostContent = Just c } none
+      res { model | newPostContent = Just c } Cmd.none
 
     Submit ->
       case (currentTopic, newPostContent) of
         (Just {topic}, Just c) ->
-          taskRes { model | loading = True } (createPost topic c)
+          res { model | loading = True } (createPost topic c)
         _ ->
-          res model none
+          res model Cmd.none
 
     SubmitResult result ->
       case (result, currentTopic) of
@@ -53,30 +51,30 @@ update action ({currentTopic, newPostContent} as model) =
             newTopicWithPosts = { topicWithPosts | postsWithUsers = postsWithUsers ++ [ postWithUser ] }
             newModel = { model | loading = False, currentTopic = Just newTopicWithPosts, newPostContent = Nothing }
           in
-            res newModel none
+            res newModel Cmd.none
 
         (Err _, Just _) ->
           -- TODO tell error
-          res { model | loading = False } none
+          res { model | loading = False } Cmd.none
 
         _ ->
-          res model none
+          res model Cmd.none
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
-createPost : Topic -> String -> Task Never Action
+createPost : Topic -> String -> Cmd Msg
 createPost topic content =
   let
     body = JsEncode.object
       [ ("content", JsEncode.string content) ]
   in
     postJson postWithUserDecoder ("/api/forum/topics/" ++ topic.id) body
-      |> Task.map SubmitResult
+      |> performSucceed SubmitResult
 
 
-showTopic : String -> Task Never Action
+showTopic : String -> Cmd Msg
 showTopic id =
   getJson topicWithPostsDecoder ("/api/forum/topics/" ++ id)
-    |> Task.map LoadResult
+    |> performSucceed LoadResult

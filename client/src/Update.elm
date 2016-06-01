@@ -1,12 +1,9 @@
-module Update (..) where
+module Update exposing (..)
 
 import Task exposing (Task)
-import Task.Extra exposing (delay)
-import Time exposing (second)
-import Effects exposing (Effects, Never, none, map, task)
 import Result
 import Response exposing (..)
-import TransitRouter exposing (getRoute)
+import Update.Utils exposing (..)
 import Model exposing (..)
 import Page.Home.Update as Home
 import Page.Register.Update as Register
@@ -19,90 +16,117 @@ import Page.Forum.Update as Forum
 import Page.Admin.Update as Admin
 import ServerApi
 import Route exposing (..)
-import Update.Utils as Utils
+import Model.Event as Event exposing (Event)
+import Time
+import Window
+import Transit
+import Navigation
 
 
-routerConfig : TransitRouter.Config Route Action Model
-routerConfig =
-  { mountRoute = mountRoute
-  , getDurations = (\_ _ _ -> ( 50, 150 ))
-  , actionWrapper = RouterAction
-  , routeDecoder = Route.fromPath
-  }
-
-
-init : AppSetup -> Response Model Action
-init setup =
+subscriptions : Model -> Sub Msg
+subscriptions ({pages} as model) =
   let
-    ( model, routerEffects ) =
-      TransitRouter.init routerConfig setup.path (initialModel setup)
+    pageSub =
+      case model.route of
+        Home ->
+          Sub.map HomeMsg (Home.subscriptions pages.home)
 
-    effects =
-      Effects.batch
-        [ routerEffects
-        , task refreshLiveStatus
-        ]
+        Explore ->
+          Sub.map ExploreMsg (Explore.subscriptions pages.explore)
+
+        PlayTrack _ ->
+          Sub.map GameMsg (Game.subscriptions model.host pages.game)
+
+        EditTrack _ ->
+          Sub.map EditTrackMsg (EditTrack.subscriptions pages.editTrack)
+
+        _ ->
+          Sub.none
   in
-    ( model, effects )
+    Sub.batch
+      [ Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
+      , Window.resizes WindowResized
+      , Sub.map PageMsg pageSub
+      , Transit.subscriptions RouteTransition model
+      ]
 
 
-update : Action -> Model -> Response Model Action
-update action ({ pages } as model) =
-  case action of
-    RouterAction routerAction ->
-      TransitRouter.update routerConfig routerAction model
+init : Setup -> Route -> ( Model, Cmd Msg )
+init setup route =
+  let
+    ( model, cmd ) =
+      urlUpdate route (initialModel setup)
+  in
+    ( model, Cmd.batch [ cmd, refreshLiveStatus ] )
 
-    SetPlayer p ->
-      res { model | player = p } (Utils.redirect Home)
-        |> mapEffects (\_ -> NoOp)
+
+eventMsg : Event -> Msg
+eventMsg event =
+  case event of
+    Event.SetPlayer p ->
+      SetPlayer p
+
+
+update : Msg -> Model -> ( Model, Cmd Msg )
+update =
+  Response.updateWithEvent eventMsg msgUpdate
+
+
+msgUpdate : Msg -> Model -> Response Model Msg
+msgUpdate msg ({ pages } as model) =
+  case msg of
+    RefreshLiveStatus ->
+      res model refreshLiveStatus
 
     SetLiveStatus result ->
       let
         liveStatus =
           Result.withDefault model.liveStatus result
       in
-        taskRes
-          { model | liveStatus = liveStatus }
-          (delay (5 * second) refreshLiveStatus)
+        res { model | liveStatus = liveStatus } Cmd.none
 
-    UpdateDims dims ->
-      res { model | dims = dims } none
+    SetPlayer p ->
+      res { model | player = p } (navigate Route.Home)
 
-    MouseEvent mouseEvent ->
-      let
-        handlerMaybe =
-          case (getRoute model) of
-            EditTrack _ ->
-              Just (EditTrackAction << EditTrack.mouseAction)
+    RouteTransition subMsg ->
+      Transit.tick RouteTransition subMsg model
+        |> toResponse
 
-            _ ->
-              Nothing
-      in
-        case handlerMaybe of
-          Just handler ->
-            pageUpdate (handler mouseEvent) model
+    MountRoute new ->
+      mountRoute new model
 
-          _ ->
-            res model none
+    WindowResized size ->
+      res { model | dims = (size.width, size.height) } Cmd.none
 
     Logout ->
-      taskRes model logoutTask
+      ServerApi.postLogout
+        |> Task.map (Result.toMaybe >> Maybe.map SetPlayer >> Maybe.withDefault NoOp)
+        |> performSucceed identity
+        |> res model
 
-    PageAction pageAction ->
-      pageUpdate pageAction model
+    PageMsg pageMsg ->
+      pageUpdate pageMsg model
+
+    Navigate path ->
+      res model (Navigation.newUrl path)
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
-mountRoute : Route -> Route -> Model -> Response Model Action
-mountRoute prevRoute newRoute ({ pages, player } as prevModel) =
+urlUpdate : Route -> Model -> ( Model, Cmd Msg )
+urlUpdate route model =
+  Transit.start RouteTransition (MountRoute route) (50, 200) model
+
+
+mountRoute : Route -> Model -> Response Model Msg
+mountRoute newRoute ({ pages, player, route } as prevModel) =
   let
-    routeTransition =
-      Route.detectTransition prevRoute newRoute
+    routeJump =
+      Route.detectJump route newRoute
 
     model =
-      { prevModel | routeTransition = routeTransition }
+      { prevModel | routeJump = routeJump, route = newRoute }
   in
     case newRoute of
       Home ->
@@ -133,90 +157,84 @@ mountRoute prevRoute newRoute ({ pages, player } as prevModel) =
         applyAdmin Admin.mount model
 
       _ ->
-        res model none
+        res model Cmd.none
 
 
-pageUpdate : PageAction -> Model -> Response Model Action
-pageUpdate pageAction ({ pages, player, dims } as model) =
-  case pageAction of
-    HomeAction a ->
+pageUpdate : PageMsg -> Model -> Response Model Msg
+pageUpdate pageMsg ({ pages, player, dims } as model) =
+  case pageMsg of
+    HomeMsg a ->
       applyHome (Home.update a pages.home) model
 
-    LoginAction a ->
+    LoginMsg a ->
       applyLogin (Login.update a pages.login) model
 
-    RegisterAction a ->
+    RegisterMsg a ->
       applyRegister (Register.update a pages.register) model
 
-    ExploreAction a ->
+    ExploreMsg a ->
       applyExplore (Explore.update a pages.explore) model
 
-    EditTrackAction a ->
+    EditTrackMsg a ->
       applyEditTrack (EditTrack.update dims a pages.editTrack) model
 
-    GameAction a ->
-      applyGame (Game.update player a pages.game) model
+    GameMsg a ->
+      applyGame (Game.update player model.host a pages.game) model
 
-    ListDraftsAction a ->
+    ListDraftsMsg a ->
       applyListDrafts (ListDrafts.update a pages.listDrafts) model
 
-    ForumAction a ->
+    ForumMsg a ->
       applyForum (Forum.update a pages.forum) model
 
-    AdminAction a ->
+    AdminMsg a ->
       applyAdmin (Admin.update a pages.admin) model
 
 
-logoutTask : Task Effects.Never Action
-logoutTask =
-  ServerApi.postLogout
-    |> Task.map (\r -> Result.map SetPlayer r |> Result.withDefault NoOp)
-
-
 applyHome =
-  applyPage (\s pages -> { pages | home = s }) HomeAction
+  applyPage (\s pages -> { pages | home = s }) HomeMsg
 
 
 applyLogin =
-  applyPage (\s pages -> { pages | login = s }) LoginAction
+  applyPage (\s pages -> { pages | login = s }) LoginMsg
 
 
 applyRegister =
-  applyPage (\s pages -> { pages | register = s }) RegisterAction
+  applyPage (\s pages -> { pages | register = s }) RegisterMsg
 
 
 applyExplore =
-  applyPage (\s pages -> { pages | explore = s }) ExploreAction
+  applyPage (\s pages -> { pages | explore = s }) ExploreMsg
 
 
 applyEditTrack =
-  applyPage (\s pages -> { pages | editTrack = s }) EditTrackAction
+  applyPage (\s pages -> { pages | editTrack = s }) EditTrackMsg
 
 
 applyGame =
-  applyPage (\s pages -> { pages | game = s }) GameAction
+  applyPage (\s pages -> { pages | game = s }) GameMsg
 
 
 applyListDrafts =
-  applyPage (\s pages -> { pages | listDrafts = s }) ListDraftsAction
+  applyPage (\s pages -> { pages | listDrafts = s }) ListDraftsMsg
 
 
 applyForum =
-  applyPage (\s pages -> { pages | forum = s }) ForumAction
+  applyPage (\s pages -> { pages | forum = s }) ForumMsg
 
 
 applyAdmin =
-  applyPage (\s pages -> { pages | admin = s }) AdminAction
+  applyPage (\s pages -> { pages | admin = s }) AdminMsg
 
 
-applyPage : (model -> Pages -> Pages) -> (action -> PageAction) -> Response model action -> Model -> Response Model Action
-applyPage pagesUpdater actionWrapper response model =
+applyPage : (model -> Pages -> Pages) -> (msg -> PageMsg) -> Response model msg -> Model -> Response Model Msg
+applyPage pagesUpdater msgWrapper response model =
   response
     |> mapModel (\p -> { model | pages = pagesUpdater p model.pages })
-    |> mapEffects (actionWrapper >> PageAction)
+    |> mapCmd (msgWrapper >> PageMsg)
 
 
-refreshLiveStatus : Task Never Action
+refreshLiveStatus : Cmd Msg
 refreshLiveStatus =
   ServerApi.getLiveStatus
-    |> Task.map SetLiveStatus
+    |> Task.perform never SetLiveStatus

@@ -24,7 +24,7 @@
   </head>
   <body class="elm-game">
     <script id="appSetup" type="custom-data">
-     @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path)).toString())
+     @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path, "host" -> request.host)).toString())
     </script>
 
     @ga()

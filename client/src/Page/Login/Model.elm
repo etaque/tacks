@@ -1,4 +1,4 @@
-module Page.Login.Model where
+module Page.Login.Model exposing (..)
 
 import Model.Shared exposing (..)
 
@@ -18,7 +18,7 @@ initial =
   , error = False
   }
 
-type Action
+type Msg
   = SetEmail String
   | SetPassword String
   | Submit

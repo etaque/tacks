@@ -1,13 +1,11 @@
-module Page.Home.View (..) where
+module Page.Home.View exposing (..)
 
-import Signal
+import Html.App exposing (map)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
-import Page.Home.Update exposing (addr)
 import View.Utils as Utils exposing (..)
 import View.Layout as Layout
 import View.Race as Race
@@ -27,11 +25,10 @@ pageTitle liveStatus model =
       "Home"
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Site Msg
 view ctx model =
-  Layout.siteLayout
+  Layout.Site
     "home"
-    ctx
     (Just Layout.Home)
     [ Layout.header
         ctx
@@ -54,11 +51,8 @@ view ctx model =
         [ h2 [] [ text "Recent races" ]
         , Race.reports True reportClickHandler model.raceReports
         ]
-    , Dialog.view
-        (Signal.forwardTo addr DialogAction)
-        model.dialog
-        (dialogContent model)
     ]
+    (Just (Dialog.view DialogMsg model.dialog (dialogContent model)))
 
 
 dialogContent : Model -> Dialog.Layout
@@ -74,7 +68,7 @@ dialogContent model =
       Race.reportDialog raceReport
 
 
-liveTracks : Player -> LiveStatus -> Html
+liveTracks : Player -> LiveStatus -> Html Msg
 liveTracks player { liveTracks } =
   let
     featuredTracks =
@@ -87,17 +81,17 @@ liveTracks player { liveTracks } =
       ]
 
 
-rankingClickHandler : LiveTrack -> Attribute
+rankingClickHandler : LiveTrack -> Attribute Msg
 rankingClickHandler liveTrack =
-  onButtonClick addr (ShowDialog (RankingDialog liveTrack))
+  onButtonClick (ShowDialog (RankingDialog liveTrack))
 
 
-reportClickHandler : RaceReport -> Attribute
+reportClickHandler : RaceReport -> Attribute Msg
 reportClickHandler report =
-  onButtonClick addr (ShowDialog (ReportDialog report))
+  onButtonClick (ShowDialog (ReportDialog report))
 
 
-activePlayers : List LiveTrack -> Html
+activePlayers : List LiveTrack -> Html Msg
 activePlayers liveTracks =
   let
     activeLiveTracks =
@@ -117,7 +111,7 @@ activePlayers liveTracks =
       :: content
 
 
-activeTrackPlayers : LiveTrack -> Html
+activeTrackPlayers : LiveTrack -> Html Msg
 activeTrackPlayers { track, players } =
   linkTo
     (PlayTrack track.id)
@@ -127,14 +121,14 @@ activeTrackPlayers { track, players } =
     ]
 
 
-playersList : List Player -> Html
+playersList : List Player -> Html Msg
 playersList players =
   ul
     [ class "list-unstyled live-players" ]
     (List.map playerItem players)
 
 
-playerItem : Player -> Html
+playerItem : Player -> Html Msg
 playerItem player =
   li
     [ class "player" ]

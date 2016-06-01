@@ -1,4 +1,4 @@
-module Game.Render.SvgUtils (..) where
+module Game.Render.SvgUtils exposing (..)
 
 import Model.Shared exposing (..)
 import Game.Geo as Geo exposing (rotateDeg)
@@ -22,19 +22,19 @@ rotate_ a cx cy =
   "rotate(" ++ toString a ++ ", " ++ toString cx ++ ", " ++ toString cy ++ ")"
 
 
-segment : List Attribute -> ( Point, Point ) -> Svg
+segment : List (Attribute msg) -> ( Point, Point ) -> Svg msg
 segment attrs ( p1, p2 ) =
   line (attrs ++ (lineCoords p1 p2)) []
 
 
-polygonPoints : List Point -> Attribute
+polygonPoints : List Point -> Attribute msg
 polygonPoints pointsList =
   List.map (\( x, y ) -> toString x ++ "," ++ toString y) pointsList
     |> String.join " "
     |> points
 
 
-pathPoints : List Point -> Attribute
+pathPoints : List Point -> Attribute msg
 pathPoints pointsList =
   let
     coords =
@@ -44,7 +44,7 @@ pathPoints pointsList =
     d ("M " ++ coords)
 
 
-lineCoords : Point -> Point -> List Attribute
+lineCoords : Point -> Point -> List (Attribute msg)
 lineCoords p1 p2 =
   let
     x =
@@ -68,7 +68,7 @@ type alias ArcDef =
   }
 
 
-arc : List Attribute -> ArcDef -> Svg
+arc : List (Attribute msg) -> ArcDef -> Svg msg
 arc attrs { center, radius, fromAngle, toAngle } =
   let
     ( x1, y1 ) =
@@ -98,6 +98,6 @@ buildCmd cmd numbers =
     |> String.join " "
 
 
-empty : Svg
+empty : Svg msg
 empty =
   g [] []

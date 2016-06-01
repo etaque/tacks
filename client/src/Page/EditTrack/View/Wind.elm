@@ -1,15 +1,14 @@
-module Page.EditTrack.View.Wind (..) where
+module Page.EditTrack.View.Wind exposing (..)
 
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
-import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Utils exposing (..)
 import Page.EditTrack.View.WindGraph as WindGraph
 
 
-view : Editor -> List Html
+view : Editor -> List (Html FormMsg)
 view ({ course, windSimDuration } as editor) =
   [ div
       [ class "wind-fields" ]
@@ -51,12 +50,12 @@ view ({ course, windSimDuration } as editor) =
           [ class "wind-sim-duration pull-right" ]
           [ span
               [ classList [ ( "selected", windSimDuration == TenMin ) ]
-              , onClick formAddr (SetWindSimDuration TenMin)
+              , onClick (SetWindSimDuration TenMin)
               ]
               [ text "10min" ]
           , span
               [ classList [ ( "selected", windSimDuration == OneHour ) ]
-              , onClick formAddr (SetWindSimDuration OneHour)
+              , onClick (SetWindSimDuration OneHour)
               ]
               [ text "1h" ]
           ]

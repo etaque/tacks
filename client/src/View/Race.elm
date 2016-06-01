@@ -1,4 +1,4 @@
-module View.Race (..) where
+module View.Race exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -10,7 +10,7 @@ import View.Utils as Utils
 import Dialog
 
 
-reports : Bool -> (RaceReport -> Attribute) -> List RaceReport -> Html
+reports : Bool -> (RaceReport -> Attribute msg) -> List RaceReport -> Html msg
 reports showName clickHandler reports =
   div
     [ class "row race-reports" ]
@@ -20,7 +20,7 @@ reports showName clickHandler reports =
         List.map (raceReportItem showName clickHandler) reports
 
 
-raceReportItem : Bool -> (RaceReport -> Attribute) -> RaceReport -> Html
+raceReportItem : Bool -> (RaceReport -> Attribute msg) -> RaceReport -> Html msg
 raceReportItem showName clickHandler report =
   let
     count =
@@ -73,7 +73,7 @@ raceReportItem showName clickHandler report =
       ]
 
 
-raceReportRun : Int -> Run -> Html
+raceReportRun : Int -> Run -> Html msg
 raceReportRun i run =
   li
     [ class "ranking" ]
@@ -91,7 +91,7 @@ raceReportRun i run =
     ]
 
 
-emptyRun : Html
+emptyRun : Html msg
 emptyRun =
   li
     [ class "empty" ]

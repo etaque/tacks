@@ -1,4 +1,4 @@
-module Page.Register.Model where
+module Page.Register.Model exposing (..)
 
 import Regex exposing (Regex)
 import Form exposing (Form)
@@ -40,8 +40,6 @@ initial =
   , serverErrors = Dict.empty
   }
 
-type Action
-  = FormAction Form.Action
-  | Submit NewPlayer
+type Msg
+  = FormMsg Form.Msg
   | SubmitResult (FormResult Player)
-  | NoOp

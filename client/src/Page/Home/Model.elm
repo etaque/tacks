@@ -1,4 +1,4 @@
-module Page.Home.Model (..) where
+module Page.Home.Model exposing (..)
 
 import Model.Shared exposing (..)
 import Dialog exposing (WithDialog)
@@ -25,8 +25,8 @@ initial =
   }
 
 
-type Action
+type Msg
   = SetRaceReports (Result () (List RaceReport))
   | ShowDialog Dialog
-  | DialogAction Dialog.Action
+  | DialogMsg Dialog.Msg
   | NoOp

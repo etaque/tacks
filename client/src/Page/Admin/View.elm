@@ -1,4 +1,4 @@
-module Page.Admin.View (..) where
+module Page.Admin.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -8,7 +8,6 @@ import Model.Shared exposing (Track, Context, RaceReport)
 import Route
 import Page.Admin.Route exposing (..)
 import Page.Admin.Model exposing (..)
-import Page.Admin.Update exposing (addr)
 import View.Utils as Utils exposing (container, linkTo)
 import View.Layout as Layout
 import View.Race as Race
@@ -21,15 +20,14 @@ type Tab
   | ReportsTab
 
 
-view : Context -> Route -> Model -> Html
+view : Context -> Route -> Model -> Layout.Site Msg
 view ctx route model =
   let
     menuItem =
       routeMenuItem route
   in
-    Layout.siteLayout
+    Layout.Site
       "admin"
-      ctx
       (Just Layout.Admin)
       [ Layout.header
           ctx
@@ -42,9 +40,10 @@ view ctx route model =
           [ content route ctx menuItem model
           ]
       ]
+      Nothing
 
 
-menu : Tab -> Html
+menu : Tab -> Html Msg
 menu item =
   div
     [ class "tabs-container admin-tabs" ]
@@ -86,11 +85,11 @@ routeMenuItem r =
       TracksTab
 
 
-content : Route -> Context -> Tab -> Model -> Html
+content : Route -> Context -> Tab -> Model -> Html Msg
 content route ctx item ({ tracks, users } as model) =
   let
     transitStyle =
-      case ctx.routeTransition of
+      case ctx.routeJump of
         Route.ForAdmin _ _ ->
           (TransitStyle.fade ctx.transition)
 
@@ -114,14 +113,14 @@ content route ctx item ({ tracks, users } as model) =
     div [ class "admin-content", style transitStyle ] tabContent
 
 
-dashboardContent : Route -> Model -> List Html
+dashboardContent : Route -> Model -> List (Html Msg)
 dashboardContent route ({ tracks, users } as model) =
   [ div [ class "" ] [ text <| toString (List.length users) ++ " users" ]
   , div [ class "" ] [ text <| toString (List.length tracks) ++ " tracks" ]
   ]
 
 
-tracksContent : Route -> Model -> List Html
+tracksContent : Route -> Model -> List (Html Msg)
 tracksContent route ({ tracks, users } as model) =
   [ table
       [ class "admin-table admin-tracks" ]
@@ -129,7 +128,7 @@ tracksContent route ({ tracks, users } as model) =
   ]
 
 
-trackItem : Track -> Html
+trackItem : Track -> Html Msg
 trackItem track =
   tr
     []
@@ -142,7 +141,7 @@ trackItem track =
     ]
 
 
-usersContent : Route -> Model -> List Html
+usersContent : Route -> Model -> List (Html Msg)
 usersContent route ({ tracks, users } as model) =
   [ table
       [ class "admin-table admin-users" ]
@@ -150,7 +149,7 @@ usersContent route ({ tracks, users } as model) =
   ]
 
 
-userItem : User -> Html
+userItem : User -> Html Msg
 userItem user =
   tr
     []
@@ -163,7 +162,7 @@ userItem user =
     ]
 
 
-reportsContent : Model -> List Html
+reportsContent : Model -> List (Html Msg)
 reportsContent model =
-  [ Race.reports True (\_ -> onClick addr NoOp) model.reports
+  [ Race.reports True (\_ -> onClick NoOp) model.reports
   ]

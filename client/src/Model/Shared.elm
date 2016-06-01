@@ -1,4 +1,4 @@
-module Model.Shared (..) where
+module Model.Shared exposing (..)
 
 import Time exposing (Time)
 import Dict exposing (Dict)
@@ -13,7 +13,7 @@ type alias Context =
   , liveStatus : LiveStatus
   , dims : ( Int, Int )
   , transition : Transit.Transition
-  , routeTransition : Route.RouteTransition
+  , routeJump : Route.RouteJump
   }
 
 

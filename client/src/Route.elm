@@ -1,8 +1,14 @@
-module Route (..) where
+module Route exposing (..)
 
 import RouteParser exposing (..)
 import Page.Admin.Route as AdminRoute
 import Page.Forum.Route as ForumRoute
+import Navigation
+
+
+parser : Navigation.Location -> Route
+parser location =
+  fromPath location.pathname
 
 
 type Route
@@ -19,7 +25,7 @@ type Route
   | EmptyRoute
 
 
-type RouteTransition
+type RouteJump
   = ForMain
   | ForAdmin AdminRoute.Route AdminRoute.Route
   | None
@@ -82,8 +88,8 @@ toPath route =
       "/404"
 
 
-detectTransition : Route -> Route -> RouteTransition
-detectTransition prevRoute route =
+detectJump : Route -> Route -> RouteJump
+detectJump prevRoute route =
   case ( prevRoute, route ) of
     ( Admin from, Admin to ) ->
       ForAdmin from to

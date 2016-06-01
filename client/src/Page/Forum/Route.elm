@@ -1,4 +1,4 @@
-module Page.Forum.Route (Route(..), matchers, toPath) where
+module Page.Forum.Route exposing (Route(..), matchers, toPath)
 
 import RouteParser exposing (..)
 

@@ -1,4 +1,4 @@
-module Page.Explore.Model (..) where
+module Page.Explore.Model exposing (..)
 
 import Model.Shared exposing (..)
 import Dialog
@@ -17,7 +17,7 @@ initial =
   }
 
 
-type Action
+type Msg
   = NoOp
   | ShowTrackRanking LiveTrack
-  | DialogAction Dialog.Action
+  | DialogMsg Dialog.Msg

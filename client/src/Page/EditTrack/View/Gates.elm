@@ -1,6 +1,5 @@
-module Page.EditTrack.View.Gates (..) where
+module Page.EditTrack.View.Gates exposing (..)
 
-import Signal
 import Html exposing (..)
 import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
@@ -13,20 +12,20 @@ import Page.EditTrack.View.Utils exposing (..)
 import Route
 
 
-view : Maybe Int -> Course -> List Html
+view : Maybe Int -> Course -> List (Html FormMsg)
 view currentGate { start, gates } =
   [ div
       [ class "list-gates" ]
       (List.indexedMap (gateItem (List.length gates) currentGate) (start :: gates))
   , div
-      [ onClick formAddr AddGate
+      [ onClick AddGate
       , class "btn-floating btn-condensed btn-primary add-gate"
       ]
       [ Utils.mIcon "add" [] ]
   ]
 
 
-gateItem : Int -> Maybe Int -> Int -> Gate -> Html
+gateItem : Int -> Maybe Int -> Int -> Gate -> Html FormMsg
 gateItem count currentGate i gate =
   let
     name =
@@ -37,7 +36,7 @@ gateItem count currentGate i gate =
   in
     div
       [ classList [ ( "gate", True ), ( "selected", currentGate == Just i ) ]
-      , onClick formAddr (SelectGate i)
+      , onClick (SelectGate i)
       ]
       [ div
           [ class "gate-header" ]
@@ -64,7 +63,7 @@ gateItem count currentGate i gate =
           ]
       , if i == count && i /= 0 then
           div
-            [ onClick formAddr (RemoveGate i)
+            [ onClick (RemoveGate i)
             , class "btn-floating btn-condensed btn-white remove-gate"
             , title "Remove gate"
             ]
@@ -74,12 +73,12 @@ gateItem count currentGate i gate =
       ]
 
 
-orientationOptions : (Orientation -> FormAction) -> Orientation -> Html
+orientationOptions : (Orientation -> FormMsg) -> Orientation -> Html FormMsg
 orientationOptions toMsg current =
   let
     item o =
       span
-        [ onClick formAddr (toMsg o)
+        [ onClick (toMsg o)
         , classList [ ( "orientation", True ), ( "current", o == current ) ]
         , title (orientationTitle o)
         ]

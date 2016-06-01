@@ -1,9 +1,11 @@
-module Page.EditTrack.View (..) where
+module Page.EditTrack.View exposing (..)
 
 import Html exposing (Html)
+import Html.Events exposing (on)
 import Html.Lazy
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Json.Decode as Json
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Context as Context
@@ -14,33 +16,36 @@ import Game.Render.SvgUtils exposing (..)
 import Game.Render.Tiles as Tiles
 import Game.Render.Gates as Gates
 import Game.Render.Players as Players
+import Mouse
 
 
-view : Context -> Model -> Html
+view : Context -> Model -> Layout.Game Msg
 view ({ player, dims } as ctx) model =
   case ( model.track, model.editor ) of
     ( Just track, Just editor ) ->
       if canUpdateDraft player track then
-        Layout.gameLayout
+        Layout.Game
           "editor"
-          ctx
           (Context.toolbar track editor)
           (Context.view track editor)
           [ renderCourse dims editor
           ]
       else
-        Html.text "Access forbidden."
+        Layout.Game
+          "editor forbidden"
+          [ text "Access forbidden." ]
+          []
+          [  ]
 
     _ ->
-      Layout.gameLayout
+      Layout.Game
         "editor loading"
-        ctx
         [ text "" ]
         []
         [ Html.Lazy.lazy HexBg.render ctx.dims ]
 
 
-renderCourse : Dims -> Editor -> Html
+renderCourse : Dims -> Editor -> Html Msg
 renderCourse dims ({ center, course, mode } as editor) =
   let
     ( w, h ) =
@@ -61,6 +66,7 @@ renderCourse dims ({ center, course, mode } as editor) =
     Svg.svg
       [ width (toString w)
       , height (toString h)
+      , on "mousedown" (Json.map (DragStart >> MouseMsg) Mouse.position)
       , class <| "mode-" ++ (modeName (realMode editor) |> fst)
       ]
       [ g

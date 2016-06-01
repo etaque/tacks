@@ -1,4 +1,4 @@
-module Game.Render.Tiles (..) where
+module Game.Render.Tiles exposing (..)
 
 import String
 import Color
@@ -11,12 +11,12 @@ import Constants exposing (..)
 import Model.Shared exposing (..)
 
 
-lazyRenderTiles : Grid -> Svg
+lazyRenderTiles : Grid -> Svg msg
 lazyRenderTiles grid =
   lazy renderTiles grid
 
 
-renderTiles : Grid -> Svg
+renderTiles : Grid -> Svg msg
 renderTiles grid =
   let
     tiles =
@@ -25,7 +25,7 @@ renderTiles grid =
     g [ class "tiles" ] tiles
 
 
-renderTile : Tile -> Svg
+renderTile : Tile -> Svg msg
 renderTile { kind, coords } =
   let
     ( x, y ) =

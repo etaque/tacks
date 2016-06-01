@@ -1,4 +1,4 @@
-module CoreExtra (..) where
+module CoreExtra exposing (..)
 
 import Maybe
 import Array

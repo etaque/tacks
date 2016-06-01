@@ -1,4 +1,4 @@
-module Page.EditTrack.View.WindGraph (..) where
+module Page.EditTrack.View.WindGraph exposing (..)
 
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -20,7 +20,7 @@ originSpan =
   40
 
 
-render : Editor -> Svg
+render : Editor -> Svg msg
 render { course, windSimDuration } =
   let
     duration =

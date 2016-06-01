@@ -1,36 +1,42 @@
-module Page.EditTrack.GridUpdate (..) where
+module Page.EditTrack.GridUpdate exposing (..)
 
-import Drag exposing (mouseEvents, MouseEvent(..))
 import Dict
 import Constants exposing (sidebarWidth, toolbarHeight, hexRadius)
 import Model.Shared exposing (..)
 import CoreExtra exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Hexagons
+import Mouse exposing (Position)
 
 
-mouseAction : MouseEvent -> Dims -> Editor -> Editor
-mouseAction event dims editor =
+updateMouse : MouseMsg -> Dims -> Editor -> Editor
+updateMouse msg dims ({ course } as editor) =
   let
     courseDims =
       getCourseDims dims
+
+    newDrag =
+      getDrag msg editor.drag
+
+    newEditor =
+      case realMode editor of
+        CreateTile kind ->
+          updateTile kind msg courseDims editor
+
+        Erase ->
+          deleteTile msg courseDims editor
+
+        Watch ->
+          updateCenter msg courseDims editor
   in
-    case realMode editor of
-      CreateTile kind ->
-        updateTileAction kind event courseDims editor
-
-      Erase ->
-        deleteTileAction event courseDims editor
-
-      Watch ->
-        updateCenter event courseDims editor
+    { newEditor | drag = newDrag }
 
 
-deleteTileAction : MouseEvent -> Dims -> Editor -> Editor
-deleteTileAction event courseDims editor =
+deleteTile : MouseMsg -> Dims -> Editor -> Editor
+deleteTile msg courseDims editor =
   let
     coordsList =
-      getMouseEventTiles editor courseDims event
+      getMouseEventTiles editor courseDims msg
 
     newGrid =
       List.foldl Dict.remove editor.course.grid coordsList
@@ -38,11 +44,11 @@ deleteTileAction event courseDims editor =
     withGrid newGrid editor
 
 
-updateTileAction : TileKind -> MouseEvent -> Dims -> Editor -> Editor
-updateTileAction kind event courseDims editor =
+updateTile : TileKind -> MouseMsg -> Dims -> Editor -> Editor
+updateTile kind msg courseDims editor =
   let
     coordsList =
-      getMouseEventTiles editor courseDims event
+      getMouseEventTiles editor courseDims msg
 
     newGrid =
       List.foldl (\c -> Dict.insert c kind) editor.course.grid coordsList
@@ -59,33 +65,38 @@ withGrid grid ({ course } as editor) =
     { editor | course = newCourse }
 
 
-getMouseEventTiles : Editor -> Dims -> MouseEvent -> List Coords
+getMouseEventTiles : Editor -> Dims -> MouseMsg -> List Coords
 getMouseEventTiles editor courseDims event =
   let
     tileCoords =
       (clickPoint editor courseDims) >> (Maybe.map (Hexagons.pointToAxial hexRadius))
   in
     case event of
-      StartAt p ->
-        case tileCoords p of
+      DragStart p ->
+        case tileCoords ( p.x, p.y ) of
           Just c ->
             [ c ]
 
           Nothing ->
             []
 
-      MoveFromTo p1 p2 ->
-        case ( tileCoords p1, tileCoords p2 ) of
-          ( Just c1, Just c2 ) ->
-            if c1 == c2 then
-              [ c1 ]
-            else
-              Hexagons.axialLine c1 c2
+      DragAt p' ->
+        case editor.drag of
+          Just p ->
+            case ( tileCoords ( p.x, p.y ), tileCoords ( p'.x, p'.y ) ) of
+              ( Just c1, Just c2 ) ->
+                if c1 == c2 then
+                  [ c1 ]
+                else
+                  Hexagons.axialLine c1 c2
 
-          _ ->
+              _ ->
+                []
+
+          Nothing ->
             []
 
-      EndAt _ ->
+      DragEnd _ ->
         []
 
 
@@ -110,21 +121,39 @@ clickPoint { center } courseDims ( x, y ) =
     Nothing
 
 
-updateCenter : MouseEvent -> Dims -> Editor -> Editor
-updateCenter event courseDims ({ center } as editor) =
+getDrag : MouseMsg -> Maybe Position -> Maybe Position
+getDrag msg previous =
+  case ( msg, previous ) of
+    ( DragStart p, _ ) ->
+      Just p
+
+    ( DragAt p, Just _ ) ->
+      Just p
+
+    _ ->
+      Nothing
+
+
+updateCenter : MouseMsg -> Dims -> Editor -> Editor
+updateCenter msg courseDims ({ center } as editor) =
   let
     ( dx, dy ) =
-      case event of
-        StartAt _ ->
+      case msg of
+        DragStart p ->
           ( 0, 0 )
 
-        MoveFromTo ( xa, ya ) ( xb, yb ) ->
-          if withinWindow courseDims ( xa, ya ) && withinWindow courseDims ( xb, yb ) then
-            ( xb - xa, ya - yb )
-          else
-            ( 0, 0 )
+        DragAt p' ->
+          case editor.drag of
+            Just p ->
+              if withinWindow courseDims ( p'.x, p'.y ) then
+                ( p'.x - p.x, p.y - p'.y )
+              else
+                ( 0, 0 )
 
-        EndAt _ ->
+            Nothing ->
+              ( 0, 0 )
+
+        DragEnd _ ->
           ( 0, 0 )
 
     newCenter =

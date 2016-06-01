@@ -1,8 +1,7 @@
-module Page.Forum.NewTopic.Model where
+module Page.Forum.NewTopic.Model exposing (..)
 
 import Form exposing (Form)
 import Form.Validate exposing (..)
-
 import Model.Shared exposing (Id, User, FormResult)
 import Page.Forum.Model.Shared exposing (..)
 
@@ -32,9 +31,7 @@ initial =
   }
 
 
-type Action
-  = FormAction Form.Action
-  | Submit NewTopic
+type Msg
+  = FormMsg Form.Msg
   | SubmitResult (FormResult Topic)
-  | NoOp
 

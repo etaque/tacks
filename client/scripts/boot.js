@@ -13,73 +13,44 @@ function dims() {
   ];
 }
 
-let ws = null;
-let wsUrl = null;
-
 const appSetup = readData('appSetup', document);
 appSetup.dims = dims();
 
-const game = Elm.fullscreen(Elm.Main, {
-  raceInput: null,
-  gameActionsInput: { tag: 'NoOp' },
-  appSetup
+const app = Elm.Main.fullscreen(appSetup);
+
+app.ports.setFocus.subscribe(id => {
+  document.getElementById(id).focus();
 });
 
-const sendMessage = (msg) => {
-  if (msg && ws && ws.readyState === WebSocket.OPEN) {
-    ws.send(JSON.stringify(msg));
-  }
-};
-
-
-game.ports.playerOutput.subscribe((output) => {
-  if (output) sendMessage({ tag: 'PlayerInput', playerInput: output });
+app.ports.setBlur.subscribe(id => {
+  setTimeout(() => document.getElementById(id).blur());;
 });
 
-game.ports.serverActions.subscribe((msg) => {
-  sendMessage(msg);
+app.ports.scrollToBottom.subscribe(id => {
+  requestAnimationFrame(() => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollTop = el.scrollHeight;
+    }
+  });
 });
 
-// game.ports.chatOutput.subscribe((output) => {
-//   sendMessage({ tag: 'NewMessage', content: output });
+// // game.ports.chatOutput.subscribe((output) => {
+// //   sendMessage({ tag: 'NewMessage', content: output });
+// // });
+
+// game.ports.chatScrollDown.subscribe(() => {
+//   const el = document.getElementsByClassName('messages')[0];
+//   if (el) {
+//     requestAnimationFrame(() => {
+//       el.scrollTop = el.scrollHeight;
+//     });
+//   }
 // });
 
-game.ports.chatScrollDown.subscribe(() => {
-  const el = document.getElementsByClassName('messages')[0];
-  if (el) {
-    requestAnimationFrame(() => {
-      el.scrollTop = el.scrollHeight;
-    });
-  }
-});
-
-game.ports.title.subscribe(title => {
-  document.title = title;
-});
-
-game.ports.activeTrack.subscribe((id) => {
-  if (ws) {
-    ws.close();
-  }
-
-  if (id) {
-    wsUrl = window.jsRoutes.controllers.WebSockets.trackPlayer(id).webSocketURL();
-    ws = new WebSocket(wsUrl);
-
-    ws.onmessage = (event) => {
-      const frame = JSON.parse(event.data);
-      if (frame.tag === 'RaceUpdate') {
-        game.ports.raceInput.send(frame.raceUpdate);
-      } else {
-        game.ports.gameActionsInput.send(frame);
-      }
-    };
-
-    ws.onclose = () => game.ports.raceInput.send(null);
-  } else {
-    game.ports.raceInput.send(null);
-  }
-});
+// game.ports.title.subscribe(title => {
+//   document.title = title;
+// });
 
 document.addEventListener('trix-change', (event) => {
   event.target.inputElement.dispatchEvent(new Event('input', { bubbles: true }));

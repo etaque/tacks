@@ -1,29 +1,37 @@
-module Update.Utils where
+module Update.Utils exposing (..)
 
-import Effects exposing (Effects)
-import TransitRouter
+import Task exposing (Task)
+import Time exposing (Time)
+import Process
+import Navigation
+import Route exposing (Route)
 
-import Route
-import Model exposing (appActionsAddress)
-import Model.Shared exposing (..)
+
+navigate : Route -> Cmd msg
+navigate route =
+  Navigation.newUrl (Route.toPath route)
 
 
-redirect : Route.Route -> Effects ()
-redirect route =
-  Route.toPath route
-    |> Signal.send TransitRouter.pushPathAddress
-    |> Effects.task
+always : msg -> Cmd a -> Cmd msg
+always msg effect =
+  Cmd.map (\_ -> msg) effect
 
-setPlayer : Player -> Effects ()
-setPlayer player =
-  Model.SetPlayer player
-    |> Signal.send appActionsAddress
-    |> Effects.task
 
-always : action -> Effects a -> Effects action
-always action effect =
-  Effects.map (\_ -> action) effect
+performSucceed : (a -> msg) -> Task Never a -> Cmd msg
+performSucceed =
+  Task.perform never
 
-pageAddr : (action -> Model.PageAction) -> Signal.Address action
-pageAddr toPageAction =
-  Signal.forwardTo appActionsAddress (toPageAction >> Model.PageAction)
+
+toCmd : msg -> Cmd msg
+toCmd msg =
+  performSucceed identity (Task.succeed msg)
+
+
+never : Never -> a
+never n =
+  never n
+
+
+delay : Time -> Task x a -> Task x a
+delay t task =
+  Process.sleep t `Task.andThen` (\_ -> task)

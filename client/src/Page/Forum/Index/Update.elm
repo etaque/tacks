@@ -1,39 +1,36 @@
-module Page.Forum.Index.Update where
+module Page.Forum.Index.Update exposing (..)
 
-import Task exposing (Task, succeed, andThen)
-import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 import Json.Decode as Json
-
+import Update.Utils exposing (..)
 import Page.Forum.Decoders exposing (..)
-import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.Index.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
 
 
-mount : (Model, Effects Action)
+mount : Response Model Msg
 mount =
-  taskRes initial listTopics
+  res initial listTopics
 
 
-update : Action -> Model -> Response Model Action
-update action ({topics} as model) =
-  case action of
+update : Msg -> Model -> Response Model Msg
+update msg ({topics} as model) =
+  case msg of
 
     RefreshList ->
-      taskRes model listTopics
+      res model listTopics
 
     ListResult result ->
       let
         topics = Result.withDefault [] result
       in
-        res { model | topics = topics } none
+        res { model | topics = topics } Cmd.none
 
     NoOp ->
-      res model none
+      res model Cmd.none
 
 
-listTopics : Task Never Action
+listTopics : Cmd Msg
 listTopics =
   getJson (Json.list topicWithUserDecoder) "/api/forum/topics"
-    |> Task.map ListResult
+    |> performSucceed ListResult

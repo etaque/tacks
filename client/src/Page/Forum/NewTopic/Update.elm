@@ -1,7 +1,5 @@
-module Page.Forum.NewTopic.Update (..) where
+module Page.Forum.NewTopic.Update exposing (..)
 
-import Task exposing (Task, succeed, andThen)
-import Effects exposing (Effects, Never, none, map)
 import Response exposing (..)
 import Json.Encode as Json
 import Form
@@ -10,38 +8,31 @@ import Page.Forum.Decoders exposing (..)
 import Page.Forum.Route exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
-import Update.Utils as Utils
+import Update.Utils exposing (..)
 
 
-update : Action -> Model -> Response Model Action
-update action ({ form, loading } as model) =
-  case Debug.log "action" action of
-    FormAction fa ->
-      let
-        newForm =
-          Form.update fa model.form
-      in
-        res { model | form = newForm } none
+update : Msg -> Model -> Response Model Msg
+update msg ({ form, loading } as model) =
+  case msg of
+    FormMsg formMsg ->
+      case (formMsg, Form.getOutput form) of
+        (Form.Submit, Just topic) ->
+          res { model | loading = True } (createTopic topic)
 
-    Submit newTopic ->
-      taskRes { model | loading = True } (createTopic newTopic)
+        _ ->
+          res { model | form = Form.update formMsg model.form } Cmd.none
 
     SubmitResult result ->
       case result of
         Ok _ ->
-          Utils.redirect (Route.Forum Index)
-            |> Effects.map (\_ -> NoOp)
-            |> res model
+          res model (navigate (Route.Forum Index))
 
         Err e ->
           -- TODO err
-          res { model | loading = False } none
-
-    NoOp ->
-      res model none
+          res { model | loading = False } Cmd.none
 
 
-createTopic : NewTopic -> Task Never Action
+createTopic : NewTopic -> Cmd Msg
 createTopic { title, content } =
   let
     body =
@@ -51,4 +42,4 @@ createTopic { title, content } =
         ]
   in
     postJson topicDecoder "/api/forum/topics" body
-      |> Task.map SubmitResult
+      |> performSucceed SubmitResult

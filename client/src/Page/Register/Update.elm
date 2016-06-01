@@ -1,59 +1,43 @@
-module Page.Register.Update where
+module Page.Register.Update exposing (..)
 
 import Task exposing (Task, succeed, map, andThen)
-import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
-import Effects exposing (Effects, Never, none)
 import Response exposing (..)
-
 import Form
-
-import Model
 import Page.Register.Model exposing (..)
 import ServerApi
-import Update.Utils as Utils
+import Update.Utils exposing (..)
+import Model.Event as Event
 
 
-addr : Signal.Address Action
-addr =
-  Utils.pageAddr Model.RegisterAction
-
-
-mount : (Model, Effects Action)
+mount : Res Model Msg
 mount =
-  res initial none
+  res initial Cmd.none
 
 
-update : Action -> Model -> (Model, Effects Action)
-update action model =
-  case action of
+update : Msg -> Model -> Res Model Msg
+update msg ({form} as model) =
+  case msg of
+    FormMsg formMsg ->
+      case ( formMsg, Form.getOutput form ) of
+        ( Form.Submit, Just player ) ->
+          res { model | loading = True } (submitCmd player)
 
-    FormAction fa ->
-      let
-        newForm = Form.update fa model.form
-      in
-        res { model | form = newForm } none
-
-    Submit newPlayer ->
-      taskRes { model | loading = True } (submitTask newPlayer)
+        _ ->
+          res { model | form = Form.update formMsg model.form } Cmd.none
 
     SubmitResult result ->
       case result of
         Ok player ->
-          let
-            newModel = { model | loading = False }
-            effect = Utils.setPlayer player |> Utils.always NoOp
-          in
-            res newModel effect
+          res { model | loading = False } Cmd.none
+            |> withEvent (Event.SetPlayer player)
         Err errors ->
-          res { model | loading = False, serverErrors = errors } none
-
-    NoOp ->
-      res model none
+          res { model | loading = False, serverErrors = errors } Cmd.none
 
 
-submitTask : NewPlayer -> Task Never Action
-submitTask np =
+submitCmd : NewPlayer -> Cmd Msg
+submitCmd np =
   ServerApi.postRegister np.email np.handle np.password
     |> Task.map SubmitResult
+    |> performSucceed identity
 
