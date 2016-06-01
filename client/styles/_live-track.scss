@@ -14,6 +14,11 @@
     @include shadow-medium;
   }
 
+  &:focus {
+    text-decoration: none;
+    outline: none;
+  }
+
   .live-track-header {
     position: relative;
     margin: 0;
