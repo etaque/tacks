@@ -115,7 +115,7 @@ object JsonFormats {
       (__ \ 'windAngle).format[Double] and
       (__ \ 'windOrigin).format[Double] and
       (__ \ 'shadowDirection).format[Double] and
-      (__ \ 'crossedGates).format[Seq[Long]]
+      (__ \ 'crossedGates).format(timestampSeqFormat)
   )(OpponentState.apply _, unlift(OpponentState.unapply _))
 
   implicit val opponentFormat: Format[Opponent] = Json.format[Opponent]

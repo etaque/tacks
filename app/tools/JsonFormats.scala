@@ -104,4 +104,7 @@ object JsonFormats {
   val timestampFormat: Format[Long] =
     Format(Reads.FloatReads.map(_.round.toLong), Writes.LongWrites)
 
+  val timestampSeqFormat: Format[Seq[Long]] =
+    Format(Reads.seq(timestampFormat), Writes.seq(timestampFormat))
+
 }
