@@ -21,6 +21,8 @@ import Time
 import Window
 import Transit
 import Navigation
+import Json.Encode as Js
+import WebSocket
 
 
 subscriptions : Model -> Sub Msg
@@ -29,7 +31,7 @@ subscriptions ({pages} as model) =
     pageSub =
       case model.route of
         Home ->
-          Sub.map HomeMsg (Home.subscriptions pages.home)
+          Sub.map HomeMsg (Home.subscriptions model.host pages.home)
 
         Explore ->
           Sub.map ExploreMsg (Explore.subscriptions pages.explore)
@@ -45,6 +47,10 @@ subscriptions ({pages} as model) =
   in
     Sub.batch
       [ Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
+      , Time.every Time.second (\_ -> ActivityPing)
+      , WebSocket.listen
+          (ServerApi.activitySocket model.host)
+          (\_ -> NoOp)
       , Window.resizes WindowResized
       , Sub.map PageMsg pageSub
       , Transit.subscriptions RouteTransition model
@@ -84,6 +90,14 @@ msgUpdate msg ({ pages } as model) =
           Result.withDefault model.liveStatus result
       in
         res { model | liveStatus = liveStatus } Cmd.none
+
+    ActivityPing ->
+      let
+        socketMsg =
+          Js.object [ ( "tag", Js.string "Ping" ) ]
+            |> Js.encode 0
+      in
+        res model (WebSocket.send (ServerApi.activitySocket model.host) socketMsg)
 
     SetPlayer p ->
       res { model | player = p } (navigate Route.Home)
@@ -164,7 +178,7 @@ pageUpdate : PageMsg -> Model -> Response Model Msg
 pageUpdate pageMsg ({ pages, player, dims } as model) =
   case pageMsg of
     HomeMsg a ->
-      applyHome (Home.update a pages.home) model
+      applyHome (Home.update model.host a pages.home) model
 
     LoginMsg a ->
       applyLogin (Login.update a pages.login) model

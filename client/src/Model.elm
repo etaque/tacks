@@ -27,6 +27,7 @@ type Msg
   = SetPlayer Player
   | RefreshLiveStatus
   | SetLiveStatus (Result () LiveStatus)
+  | ActivityPing
   | WindowResized Window.Size
   | RouteTransition (Transit.Msg Msg)
   | MountRoute Route

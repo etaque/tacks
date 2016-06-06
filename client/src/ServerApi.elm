@@ -19,6 +19,11 @@ gameSocket host id =
   "ws://" ++ host ++ "/ws/trackPlayer/" ++ id
 
 
+activitySocket : String -> String
+activitySocket host =
+  "ws://" ++ host ++ "/ws/activity"
+
+
 -- GET
 
 

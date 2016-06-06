@@ -15,46 +15,50 @@ import models._
 import dao._
 
 
-case class Subscribe(player: Player, ref: ActorRef)
-case class Unsubscribe(player: Player, ref: ActorRef)
-case object GetOnlinePlayers
-case class NotificationEvent(key: String, params: Seq[String])
-
 case class LiveCenterState(
-  subscribers: Seq[(Player, ActorRef)] = Nil,
+  onlinePlayers: Map[PlayerId, (Player, ActorRef, DateTime)] = Map.empty,
   chatRoom: Seq[(Player, ActorRef)] = Nil
-)
+) {
+  def ping(player: Player, ref: ActorRef, time: DateTime): LiveCenterState = {
+    copy(
+      onlinePlayers = onlinePlayers + (player.id -> (player, ref, time))
+    )
+  }
+
+  def removeStale(time: DateTime): LiveCenterState = {
+    copy(
+      onlinePlayers = onlinePlayers.filter(_._2._3.isAfter(time))
+    )
+  }
+
+  def listOnlinePlayers = {
+    onlinePlayers.values.toSeq.map(_._1)
+  }
+}
+
+case object GetOnlinePlayers
+case object RemoveStalePlayers
 
 class LiveCenter extends Actor {
 
   var state = LiveCenterState()
-  implicit val timeout = Timeout(1.seconds)
+  // implicit val timeout = Timeout(1.seconds)
+
+  Akka.system.scheduler.schedule(1.second, 1.second, self, RemoveStalePlayers)
 
   def receive = {
 
-    // case Subscribe(player, ref) => {
-    //   state = state.copy(subscribers = state.subscribers :+ (player, ref))
-    //   Logger.debug("Player ref subscribed to notifications: " + player.toString)
-    //   LiveCenter.sendPlayersUpdate(state)
-    // }
+    case ActivityMsg(player, ref, msg) =>
+      import ActivityMsg._
 
-    // case Unsubscribe(player, ref) => {
-    //   state = state.copy(subscribers = state.subscribers.filterNot(_._2 == ref))
-    //   Logger.debug("Player ref unsubscribed from notifications: " + player.toString)
-    //   LiveCenter.sendPlayersUpdate(state)
-    // }
+      msg match {
+        case Ping =>
+          state = state.ping(player, ref, DateTime.now)
+      }
 
-    // case PlayerJoin(player) => {
-    //   state = state.copy(chatRoom = state.chatRoom :+ (player, sender))
-    //   Logger.debug("Player ref joined chat room: " + player.toString)
-    //   LiveCenter.sendPlayersUpdate(state)
-    // }
+    case RemoveStalePlayers =>
+      state = state.removeStale(DateTime.now.minusSeconds(5))
 
-    // case PlayerQuit(player) => {
-    //   state = state.copy(chatRoom = state.chatRoom.filterNot(_._2 == sender))
-    //   Logger.debug("Player ref left chat room: " + player.toString)
-    //   LiveCenter.sendPlayersUpdate(state)
-    // }
 
     // case m: Chat.NewMessage => {
     //   state.chatRoom.foreach(_._2 ! m)
@@ -68,10 +72,8 @@ class LiveCenter extends Actor {
     //   UserDAO.updateStatus(user.id, Some(content))
     // }
 
-    case GetOnlinePlayers => sender ! state.subscribers.map(_._1).distinct
-
+    case GetOnlinePlayers => sender ! state.listOnlinePlayers
   }
-
 }
 
 object LiveCenter {
@@ -80,9 +82,7 @@ object LiveCenter {
   implicit val timeout = Timeout(1.seconds)
 
   def sendPlayersUpdate(state: LiveCenterState) = {
-    val distinctPlayers = (state.subscribers.map(_._1) ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
-    // Logger.debug(s"Sending players update to ${state.chatRoom.size} refs: " + distinctPlayers.toString)
-    // state.chatRoom.foreach(_._2 ! Chat.UpdatePlayers(distinctPlayers))
+    val distinctPlayers = (state.listOnlinePlayers ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
   }
 
   // def updateStatus(state: LiveCenterState, playerId: BSONObjectID, status: String): LiveCenterState = {

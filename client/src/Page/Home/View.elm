@@ -11,6 +11,7 @@ import View.Layout as Layout
 import View.Race as Race
 import View.Track as Track
 import Dialog
+import Set
 
 
 pageTitle : LiveStatus -> Model -> String
@@ -43,7 +44,7 @@ view ctx model =
         [ div
             [ class "row live-center" ]
             [ div [ class "col-md-9" ] [ liveTracks ctx.player ctx.liveStatus ]
-            , div [ class "col-md-3" ] [ activePlayers ctx.liveStatus.liveTracks ]
+            , div [ class "col-md-3" ] [ activePlayersPane ctx.liveStatus ]
             ]
         ]
     , Layout.section
@@ -91,8 +92,8 @@ reportClickHandler report =
   onButtonClick (ShowDialog (ReportDialog report))
 
 
-activePlayers : List LiveTrack -> Html Msg
-activePlayers liveTracks =
+activePlayersPane : LiveStatus -> Html Msg
+activePlayersPane {liveTracks, onlinePlayers} =
   let
     activeLiveTracks =
       liveTracks
@@ -100,15 +101,35 @@ activePlayers liveTracks =
         |> List.sortBy (\lt -> List.length lt.players)
         |> List.reverse
 
-    content =
+    activePlayers =
+      activeLiveTracks
+        |> List.concatMap .players
+        |> List.map .id
+        |> Set.fromList
+
+    freePlayers =
+      List.filter (\p -> not (Set.member p.id activePlayers)) onlinePlayers
+
+    freePlayersBlock =
+      if List.isEmpty onlinePlayers then
+        text ""
+      else
+        div
+          [ class "free-players" ]
+          [ h4 [] [ text "Stand-by" ]
+          , playersList freePlayers
+          ]
+
+    trackPlayersBlock =
       if List.isEmpty activeLiveTracks then
-        [ div [ class "empty" ] [ text "Nobody's playing right now." ] ]
+        [ text "" ]
       else
         List.map activeTrackPlayers activeLiveTracks
   in
     div [ class "active-players" ]
       <| h2 [] [ text "Online players" ]
-      :: content
+      :: trackPlayersBlock
+      ++ [ freePlayersBlock ]
 
 
 activeTrackPlayers : LiveTrack -> Html Msg

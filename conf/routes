@@ -32,7 +32,7 @@ GET         /api/admin                                         controllers.Admin
 GET         /api/admin/s3                                      controllers.Admin.s3
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId: java.util.UUID)
-#GET         /ws/notifications                                  controllers.WebSockets.notifications
+GET         /ws/activity                                       controllers.WebSockets.activity
 
 #GET         /blog                                             controllers.Prismic.blog
 #GET         /blog/:id/:slug                                   controllers.Prismic.post(id, slug)

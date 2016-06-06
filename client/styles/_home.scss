@@ -16,12 +16,19 @@
 }
 
 .active-players {
-  .empty {
-    font-size: 14px;
-  }
-
   h3 {
     margin: 0;
+  }
+
+  .free-players {
+    @include sheet;
+    @include shadow-light;
+    padding: 8px 16px;
+    margin-bottom: 24px;
+
+    h4 {
+      color: $mediumGrey;
+    }
   }
 
   .active-track-players {

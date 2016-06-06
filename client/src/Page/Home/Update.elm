@@ -7,9 +7,11 @@ import ServerApi
 import Update.Utils exposing (..)
 
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
-  Sub.map DialogMsg (Dialog.subscriptions model.dialog)
+subscriptions : String -> Model -> Sub Msg
+subscriptions host model =
+  Sub.batch
+    [ Sub.map DialogMsg (Dialog.subscriptions model.dialog)
+    ]
 
 
 mount : Model -> Response Model Msg
@@ -17,8 +19,8 @@ mount model =
   res model loadRaceReports
 
 
-update : Msg -> Model -> Response Model Msg
-update msg model =
+update : String -> Msg -> Model -> Response Model Msg
+update host msg model =
   case msg of
     SetRaceReports result ->
       let
