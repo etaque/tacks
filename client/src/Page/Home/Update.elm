@@ -5,6 +5,7 @@ import Dialog
 import Page.Home.Model exposing (..)
 import ServerApi
 import Update.Utils exposing (..)
+import Model.Event as Event
 
 
 subscriptions : String -> Model -> Sub Msg
@@ -28,6 +29,10 @@ update host msg model =
           Result.withDefault [] result
       in
         res { model | raceReports = raceReports } Cmd.none
+
+    Poke player ->
+      res model Cmd.none
+        |> withEvent (Event.Poke player)
 
     ShowDialog content ->
       Dialog.taggedOpen DialogMsg { model | showDialog = content }

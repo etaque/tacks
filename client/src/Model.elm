@@ -13,6 +13,7 @@ import Page.Admin.Model as Admin
 import Route exposing (Route)
 import Window
 import Transit
+import Activity
 
 
 type alias Setup =
@@ -27,7 +28,8 @@ type Msg
   = SetPlayer Player
   | RefreshLiveStatus
   | SetLiveStatus (Result () LiveStatus)
-  | ActivityPing
+  | ActivityRawReceive String
+  | ActivityEmitMsg Activity.EmitMsg
   | WindowResized Window.Size
   | RouteTransition (Transit.Msg Msg)
   | MountRoute Route
@@ -35,6 +37,7 @@ type Msg
   | Logout
   | Navigate String
   | NoOp
+
 
 
 type PageMsg
@@ -94,3 +97,4 @@ initialModel { dims, player, host } =
       }
   , host = host
   }
+

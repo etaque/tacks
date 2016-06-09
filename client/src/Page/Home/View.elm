@@ -3,6 +3,7 @@ module Page.Home.View exposing (..)
 import Html.App exposing (map)
 import Html exposing (..)
 import Html.Attributes exposing (..)
+import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
@@ -117,7 +118,9 @@ activePlayersPane {liveTracks, onlinePlayers} =
         div
           [ class "free-players" ]
           [ h4 [] [ text "Stand-by" ]
-          , playersList freePlayers
+          , ul
+              [ class "list-unstyled live-players" ]
+              (List.map freePlayerItem freePlayers)
           ]
 
     trackPlayersBlock =
@@ -153,4 +156,14 @@ playerItem : Player -> Html Msg
 playerItem player =
   li
     [ class "player" ]
+    [ Utils.playerWithAvatar player ]
+
+
+freePlayerItem : Player -> Html Msg
+freePlayerItem player =
+  li
+    [ class "player"
+    , onClick (Poke player)
+    , title "Poke player"
+    ]
     [ Utils.playerWithAvatar player ]

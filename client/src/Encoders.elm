@@ -10,6 +10,11 @@ import Json.Encode as Js
   (,)
 
 
+tag : String -> List ( String, Value ) -> Value
+tag name fields =
+  Js.object <| ( "tag", Js.string name ) :: fields
+
+
 courseEncoder : Course -> Value
 courseEncoder course =
   Js.object

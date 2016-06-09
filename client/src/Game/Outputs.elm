@@ -1,6 +1,7 @@
 module Game.Outputs exposing (..)
 
 import Json.Encode as Js
+import Encoders exposing (tag)
 import Model.Shared exposing (..)
 import Game.Models exposing (..)
 import WebSocket
@@ -68,11 +69,6 @@ encodeServerMsg msg =
 
     EscapeRace ->
       tag "EscapeRace" []
-
-
-tag : String -> List ( String, Js.Value ) -> Js.Value
-tag name fields =
-  Js.object <| ( "tag", Js.string name ) :: fields
 
 
 encodePlayerOutput : PlayerOutput -> Js.Value

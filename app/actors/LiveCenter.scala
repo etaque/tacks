@@ -49,11 +49,17 @@ class LiveCenter extends Actor {
   def receive = {
 
     case ActivityMsg(player, ref, msg) =>
-      import ActivityMsg._
+      import Emit._
 
       msg match {
         case Ping =>
           state = state.ping(player, ref, DateTime.now)
+
+        case Poke(playerId) =>
+          state.onlinePlayers.get(playerId).foreach {
+            case (_, ref, _) =>
+              ref ! Receive.PokedBy(player)
+          }
       }
 
     case RemoveStalePlayers =>

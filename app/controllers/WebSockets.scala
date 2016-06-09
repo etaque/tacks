@@ -37,10 +37,12 @@ object WebSockets extends Controller with Security {
   }
 
 
-  import actors.ActivityMsg.msgFormat
-  implicit val activityFrameFormatter = FrameFormatter.jsonFrame[ActivityMsg.Msg]
+  import actors.Emit.msgFormat
+  import actors.Receive.msgFormat
+  implicit val activityEmitFrameFormatter = FrameFormatter.jsonFrame[Emit.Msg]
+  implicit val activityReceiveFrameFormatter = FrameFormatter.jsonFrame[Receive.Msg]
 
-  def activity = WebSocket.tryAcceptWithActor[ActivityMsg.Msg, ActivityMsg.Msg] { implicit request =>
+  def activity = WebSocket.tryAcceptWithActor[Emit.Msg, Receive.Msg] { implicit request =>
     for {
       player <- PlayerAction.getPlayer(request)
     }

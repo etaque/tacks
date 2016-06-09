@@ -22,7 +22,10 @@ import Window
 import Transit
 import Navigation
 import Json.Encode as Js
+import Json.Decode as Json
 import WebSocket
+import Activity
+import Ports
 
 
 subscriptions : Model -> Sub Msg
@@ -47,10 +50,10 @@ subscriptions ({pages} as model) =
   in
     Sub.batch
       [ Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
-      , Time.every Time.second (\_ -> ActivityPing)
+      , Time.every Time.second (\_ -> ActivityEmitMsg Activity.Ping)
       , WebSocket.listen
           (ServerApi.activitySocket model.host)
-          (\_ -> NoOp)
+          ActivityRawReceive
       , Window.resizes WindowResized
       , Sub.map PageMsg pageSub
       , Transit.subscriptions RouteTransition model
@@ -72,6 +75,9 @@ eventMsg event =
     Event.SetPlayer p ->
       SetPlayer p
 
+    Event.Poke p ->
+      ActivityEmitMsg (Activity.Poke p)
+
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update =
@@ -91,13 +97,22 @@ msgUpdate msg ({ pages } as model) =
       in
         res { model | liveStatus = liveStatus } Cmd.none
 
-    ActivityPing ->
+    ActivityEmitMsg emitMsg ->
       let
-        socketMsg =
-          Js.object [ ( "tag", Js.string "Ping" ) ]
-            |> Js.encode 0
+        raw =
+          Js.encode 0 (Activity.encodeEmitMsg emitMsg)
       in
-        res model (WebSocket.send (ServerApi.activitySocket model.host) socketMsg)
+        res model (WebSocket.send (ServerApi.activitySocket model.host) raw)
+
+    ActivityRawReceive rawMsg ->
+      case Json.decodeString Activity.receiveMsgDecoder rawMsg of
+        Ok receiveMsg ->
+          case receiveMsg of
+            Activity.PokedBy player ->
+              res model (Activity.notifyPokedBy player)
+
+        Err _ ->
+          res model Cmd.none
 
     SetPlayer p ->
       res { model | player = p } (navigate Route.Home)

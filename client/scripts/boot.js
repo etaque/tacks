@@ -13,6 +13,24 @@ function dims() {
   ];
 }
 
+function notify(msg) {
+  const options = {};
+
+  if (!('Notification' in window)) {
+    console.log('This browser does not support desktop notification');
+  }
+  else if (Notification.permission === 'granted') {
+    new Notification(msg, options);
+  }
+  else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      if (permission === 'granted') {
+        new Notification(msg, options);
+      }
+    });
+  }
+}
+
 const appSetup = readData('appSetup', document);
 appSetup.dims = dims();
 
@@ -33,6 +51,10 @@ app.ports.scrollToBottom.subscribe(id => {
       el.scrollTop = el.scrollHeight;
     }
   });
+});
+
+app.ports.notify.subscribe(msg => {
+  notify(msg);
 });
 
 // // game.ports.chatOutput.subscribe((output) => {

@@ -28,5 +28,6 @@ initial =
 type Msg
   = SetRaceReports (Result () (List RaceReport))
   | ShowDialog Dialog
+  | Poke Player
   | DialogMsg Dialog.Msg
   | NoOp

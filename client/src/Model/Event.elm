@@ -5,3 +5,4 @@ import Model.Shared exposing (..)
 
 type Event
   = SetPlayer Player
+  | Poke Player
