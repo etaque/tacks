@@ -81,7 +81,7 @@ update msg model =
       ( model, Cmd.none )
 
     KeyDown code ->
-      if model.options.closeOnEscape && code == 27 then
+      if model.options.closeOnEscape && code == 27 && model.open then
         closeUpdate model
       else
         ( model, Cmd.none )
