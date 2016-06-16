@@ -6,8 +6,9 @@ import Dialog exposing (WithDialog)
 
 type alias Model =
   WithDialog
-    { raceReports : List RaceReport
+    { raceReports : HttpData (List RaceReport)
     , showDialog : Dialog
+    , pokes : List Id
     }
 
 
@@ -19,15 +20,22 @@ type Dialog
 
 initial : Model
 initial =
-  { raceReports = []
+  { raceReports = Loading
   , showDialog = Empty
   , dialog = Dialog.initial
+  , pokes = []
   }
 
 
 type Msg
-  = SetRaceReports (Result () (List RaceReport))
+  = RaceReportsResult (HttpResult (List RaceReport))
   | ShowDialog Dialog
   | Poke Player
+  | PokeEnd Id
   | DialogMsg Dialog.Msg
   | NoOp
+
+
+canPoke : Player -> Player -> Bool
+canPoke from target =
+  from.user && target.user && from.id /= target.id

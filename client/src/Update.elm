@@ -25,7 +25,6 @@ import Json.Encode as Js
 import Json.Decode as Json
 import WebSocket
 import Activity
-import Ports
 
 
 subscriptions : Model -> Sub Msg
@@ -49,8 +48,7 @@ subscriptions ({pages} as model) =
           Sub.none
   in
     Sub.batch
-      [ Time.every (Time.second * 5) (\_ -> RefreshLiveStatus)
-      , Time.every Time.second (\_ -> ActivityEmitMsg Activity.Ping)
+      [ Time.every Time.second (\_ -> ActivityEmitMsg Activity.Ping)
       , WebSocket.listen
           (ServerApi.activitySocket model.host)
           ActivityRawReceive
@@ -62,11 +60,7 @@ subscriptions ({pages} as model) =
 
 init : Setup -> Route -> ( Model, Cmd Msg )
 init setup route =
-  let
-    ( model, cmd ) =
-      urlUpdate route (initialModel setup)
-  in
-    ( model, Cmd.batch [ cmd, refreshLiveStatus ] )
+  urlUpdate route (initialModel setup)
 
 
 eventMsg : Event -> Msg
@@ -87,16 +81,6 @@ update =
 msgUpdate : Msg -> Model -> Response Model Msg
 msgUpdate msg ({ pages } as model) =
   case msg of
-    RefreshLiveStatus ->
-      res model refreshLiveStatus
-
-    SetLiveStatus result ->
-      let
-        liveStatus =
-          Result.withDefault model.liveStatus result
-      in
-        res { model | liveStatus = liveStatus } Cmd.none
-
     ActivityEmitMsg emitMsg ->
       let
         raw =
@@ -110,6 +94,9 @@ msgUpdate msg ({ pages } as model) =
           case receiveMsg of
             Activity.PokedBy player ->
               res model (Activity.notifyPokedBy player)
+
+            Activity.RefreshLiveStatus liveStatus ->
+              res { model | liveStatus = liveStatus } Cmd.none
 
         Err _ ->
           res model Cmd.none
@@ -193,7 +180,7 @@ pageUpdate : PageMsg -> Model -> Response Model Msg
 pageUpdate pageMsg ({ pages, player, dims } as model) =
   case pageMsg of
     HomeMsg a ->
-      applyHome (Home.update model.host a pages.home) model
+      applyHome (Home.update model.host player a pages.home) model
 
     LoginMsg a ->
       applyLogin (Login.update a pages.login) model
@@ -262,8 +249,3 @@ applyPage pagesUpdater msgWrapper response model =
     |> mapModel (\p -> { model | pages = pagesUpdater p model.pages })
     |> mapCmd (msgWrapper >> PageMsg)
 
-
-refreshLiveStatus : Cmd Msg
-refreshLiveStatus =
-  ServerApi.getLiveStatus
-    |> Task.perform never SetLiveStatus

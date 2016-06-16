@@ -2,6 +2,7 @@ package controllers
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import akka.util.Timeout
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.mvc._
 import play.api.Play.current
@@ -12,21 +13,16 @@ import dao._
 
 object Application extends Controller with Security {
 
+  implicit val timeout = Timeout(5.seconds)
+
   def index(path: String = "") = PlayerAction.async() { implicit request =>
-    Future.successful(Ok(views.html.index()))
+    LiveStatus.get().map { liveStatus =>
+      Ok(views.html.index(liveStatus))
+    }
   }
 
   def notFound(path: String) = PlayerAction.async() { implicit request =>
     Future.successful(NotFound)
   }
-
-  // def showAvatar(id: String) = Action.async {
-  //   val cursor = AvatarDAO.read(BSONObjectID(id))
-  //   serve(AvatarDAO.store, cursor).map(_.withHeaders(
-  //     CONTENT_DISPOSITION -> CONTENT_DISPOSITION_INLINE,
-  //     ETAG -> id,
-  //     CACHE_CONTROL -> "max-age=290304000"
-  //   ))
-  // }
 }
 

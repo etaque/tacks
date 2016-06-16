@@ -1,11 +1,13 @@
 module Model.Shared exposing (..)
 
+import Task exposing (Task)
 import Time exposing (Time)
 import Dict exposing (Dict)
 import Transit
 import Hexagons
 import Constants
 import Route
+import Http
 
 
 type alias Context =
@@ -23,6 +25,24 @@ type alias FormResult a =
 
 type alias FormErrors =
   Dict String (List String)
+
+
+type RemoteData e a
+  = Loading
+  | DataErr e
+  | DataOk a
+
+
+type alias HttpData a =
+  RemoteData Http.Error a
+
+
+type alias HttpResult a =
+  Result Http.Error a
+
+
+type alias HttpTask a =
+  Task Never (HttpResult a)
 
 
 type alias Id =
@@ -73,6 +93,11 @@ type alias LiveStatus =
   { liveTracks : List LiveTrack
   , onlinePlayers : List Player
   }
+
+
+emptyLiveStatus : LiveStatus
+emptyLiveStatus =
+  LiveStatus [] []
 
 
 type alias LiveTrack =

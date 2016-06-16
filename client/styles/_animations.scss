@@ -1,36 +1,43 @@
+@import 'mixins';
+
 @mixin fade-slide-in {
   $name: fade-slide-in-anim;
   $duration: 200ms;
   $offset: 40px;
 
-  -webkit-animation: $name $duration ease-out;
-  animation: $name $duration ease-out;
+  @include prefixed(animatin, $name $duration ease-out);
 
-  @-webkit-keyframes #{$name} {
+  @include keyframes($name) {
     0% {
-      -webkit-transform: translateX($offset);
+      @include prefixed(transform, translateX($offset));
       opacity: 0;
     }
 
     100% {
-      -webkit-transform: translateX(0);
+      @include prefixed(transform, translateX(0));
       opacity: 1;
     }
-  }
-
-  @keyframes #{$name} {
-    0% {
-      transform: translateX($offset);
-      opacity: 0;
-    }
-
-    100% {
-      transform: translateX(0);
-      opacity: 1;
-    }
+    
   }
 }
 
 .fade-slide-in {
   @include fade-slide-in;
+}
+
+@keyframes buzz {
+	50% {
+		@include prefixed(transform, translateX(3px) rotate(2deg));
+	}
+
+	100% {
+		@include prefixed(transform, translateX(-3px) rotate(-2deg));
+	}
+}
+
+@mixin buzz {
+  @include prefixed(animation-name, buzz);
+  @include prefixed(animation-duration, .15s);
+  @include prefixed(animation-timing-function, linear);
+  @include prefixed(animation-iteration-count, infinite);
 }

@@ -3,7 +3,7 @@ package actors
 import akka.actor.{Props, ActorRef, Actor}
 import play.api.libs.json._
 import models._
-import JsonFormats.playerFormat
+import JsonFormats._
 
 
 case class ActivityMsg(
@@ -46,12 +46,16 @@ object Receive {
   sealed trait Msg
 
   case class PokedBy(player: Player) extends Msg
+  case class RefreshLiveStatus(liveStatus: LiveStatus) extends Msg
 
   implicit val msgFormat: Format[Msg] = new Format[Msg] {
     override def writes(msg: Msg): JsValue =
       msg match {
         case PokedBy(player) =>
           Json.obj("tag" -> "PokedBy", "player" -> Json.toJson(player))
+
+        case RefreshLiveStatus(liveStatus) =>
+          Json.obj("tag" -> "RefreshLiveStatus", "liveStatus" -> Json.toJson(liveStatus))
       }
     override def reads(json: JsValue): JsResult[Msg] =
       JsError("Not implemented")

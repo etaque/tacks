@@ -2,6 +2,7 @@ module Page.Home.Update exposing (..)
 
 import Response exposing (..)
 import Dialog
+import Model.Shared exposing (..)
 import Page.Home.Model exposing (..)
 import ServerApi
 import Update.Utils exposing (..)
@@ -20,19 +21,29 @@ mount model =
   res model loadRaceReports
 
 
-update : String -> Msg -> Model -> Response Model Msg
-update host msg model =
+update : String -> Player -> Msg -> Model -> Response Model Msg
+update host player msg model =
   case msg of
-    SetRaceReports result ->
-      let
-        raceReports =
-          Result.withDefault [] result
-      in
-        res { model | raceReports = raceReports } Cmd.none
+    RaceReportsResult result ->
+      res
+        { model | raceReports = httpData result }
+        Cmd.none
 
-    Poke player ->
-      res model Cmd.none
-        |> withEvent (Event.Poke player)
+    Poke target ->
+      if canPoke target player then
+        res
+          { model | pokes = target.id :: model.pokes }
+          (delayMsg 1000 (PokeEnd target.id))
+          |> withEvent (Event.Poke player)
+      else
+        res model Cmd.none
+
+    PokeEnd id ->
+      let
+        pokes =
+          List.filter ((/=) id) model.pokes
+      in
+        res { model | pokes = pokes } Cmd.none
 
     ShowDialog content ->
       Dialog.taggedOpen DialogMsg { model | showDialog = content }
@@ -49,4 +60,4 @@ update host msg model =
 loadRaceReports : Cmd Msg
 loadRaceReports =
   ServerApi.getRaceReports Nothing
-    |> performSucceed SetRaceReports
+    |> performSucceed RaceReportsResult

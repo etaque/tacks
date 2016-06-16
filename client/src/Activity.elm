@@ -4,7 +4,7 @@ import Model.Shared exposing (..)
 import Encoders exposing (tag)
 import Json.Encode as Js
 import Json.Decode exposing (..)
-import Decoders exposing (playerDecoder)
+import Decoders exposing (playerDecoder, liveStatusDecoder)
 import Ports
 
 
@@ -15,6 +15,7 @@ type EmitMsg
 
 type ReceiveMsg
   = PokedBy Player
+  | RefreshLiveStatus LiveStatus
 
 
 encodeEmitMsg : EmitMsg -> Js.Value
@@ -37,6 +38,9 @@ receiveTagDecoder tag =
   case tag of
     "PokedBy" ->
       map PokedBy ("player" := playerDecoder)
+
+    "RefreshLiveStatus" ->
+      map RefreshLiveStatus ("liveStatus" := liveStatusDecoder)
 
     _ ->
       fail (tag ++ " is unknown for Activity.ReceiveMsg")

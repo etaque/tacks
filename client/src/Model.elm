@@ -14,6 +14,8 @@ import Route exposing (Route)
 import Window
 import Transit
 import Activity
+import Json.Decode as Json
+import Decoders
 
 
 type alias Setup =
@@ -21,13 +23,12 @@ type alias Setup =
   , path : String
   , dims : ( Int, Int )
   , host : String
+  , rawLiveStatus : Json.Value
   }
 
 
 type Msg
   = SetPlayer Player
-  | RefreshLiveStatus
-  | SetLiveStatus (Result () LiveStatus)
   | ActivityRawReceive String
   | ActivityEmitMsg Activity.EmitMsg
   | WindowResized Window.Size
@@ -77,13 +78,15 @@ type alias Pages =
 
 
 initialModel : Setup -> Model
-initialModel { dims, player, host } =
+initialModel setup =
   { route = Route.EmptyRoute
   , routeJump = Route.None
   , transition = Transit.empty
-  , player = player
-  , liveStatus = { liveTracks = [], onlinePlayers = [] }
-  , dims = dims
+  , player = setup.player
+  , liveStatus =
+      Json.decodeValue Decoders.liveStatusDecoder setup.rawLiveStatus
+        |> Result.withDefault emptyLiveStatus
+  , dims = setup.dims
   , pages =
       { home = Home.initial
       , login = Login.initial
@@ -95,6 +98,6 @@ initialModel { dims, player, host } =
       , forum = Forum.initial
       , admin = Admin.initial
       }
-  , host = host
+  , host = setup.host
   }
 

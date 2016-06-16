@@ -30,17 +30,9 @@ object Live extends Controller with Security {
   implicit val timeout = Timeout(5.seconds)
 
   def status = PlayerAction.async() { implicit request =>
-    val tracksFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
-    val onlinePlayersFu = (LiveCenter.actorRef ? GetOnlinePlayers).mapTo[Seq[Player]]
-    for {
-      tracks <- tracksFu
-      homeLiveTracks = tracks.filter(_.track.isOpen).sortBy(_.meta.rankings.length).reverse
-      onlinePlayers <- onlinePlayersFu
+    LiveStatus.get().map { liveStatus =>
+      Ok(Json.toJson(liveStatus))
     }
-    yield Ok(Json.obj(
-      "liveTracks" -> Json.toJson(homeLiveTracks),
-      "onlinePlayers" -> Json.toJson(onlinePlayers)
-    ))
   }
 
   def allTracks = PlayerAction.async() { implicit request =>

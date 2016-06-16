@@ -5,6 +5,7 @@ import Time exposing (Time)
 import Process
 import Navigation
 import Route exposing (Route)
+import Model.Shared exposing (..)
 
 
 navigate : Route -> Cmd msg
@@ -35,3 +36,18 @@ never n =
 delay : Time -> Task x a -> Task x a
 delay t task =
   Process.sleep t `Task.andThen` (\_ -> task)
+
+
+delayMsg : Time -> msg -> Cmd msg
+delayMsg t msg =
+  performSucceed identity (delay t (Task.succeed msg))
+
+
+httpData : HttpResult a -> HttpData a
+httpData res =
+  case res of
+    Ok data ->
+      DataOk data
+
+    Err e ->
+      DataErr e

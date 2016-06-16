@@ -45,13 +45,21 @@ view ctx model =
         [ div
             [ class "row live-center" ]
             [ div [ class "col-md-9" ] [ liveTracks ctx.player ctx.liveStatus ]
-            , div [ class "col-md-3" ] [ activePlayersPane ctx.liveStatus ]
+            , div [ class "col-md-3" ] [ activePlayersPane ctx.player ctx.liveStatus model.pokes ]
             ]
         ]
     , Layout.section
         [ class "grey" ]
         [ h2 [] [ text "Recent races" ]
-        , Race.reports True reportClickHandler model.raceReports
+        , case model.raceReports of
+            Loading ->
+              Utils.loading
+
+            DataOk reports ->
+              Race.reports True reportClickHandler reports
+
+            _ ->
+              text ""
         ]
     ]
     (Just (Dialog.view DialogMsg model.dialog (dialogContent model)))
@@ -93,8 +101,8 @@ reportClickHandler report =
   onButtonClick (ShowDialog (ReportDialog report))
 
 
-activePlayersPane : LiveStatus -> Html Msg
-activePlayersPane {liveTracks, onlinePlayers} =
+activePlayersPane : Player -> LiveStatus -> List Id -> Html Msg
+activePlayersPane player {liveTracks, onlinePlayers} pokes =
   let
     activeLiveTracks =
       liveTracks
@@ -120,7 +128,7 @@ activePlayersPane {liveTracks, onlinePlayers} =
           [ h4 [] [ text "Stand-by" ]
           , ul
               [ class "list-unstyled live-players" ]
-              (List.map freePlayerItem freePlayers)
+              (List.map (freePlayerItem player pokes) freePlayers)
           ]
 
     trackPlayersBlock =
@@ -159,11 +167,31 @@ playerItem player =
     [ Utils.playerWithAvatar player ]
 
 
-freePlayerItem : Player -> Html Msg
-freePlayerItem player =
-  li
-    [ class "player"
-    , onClick (Poke player)
-    , title "Poke player"
-    ]
-    [ Utils.playerWithAvatar player ]
+freePlayerItem : Player -> List Id -> Player -> Html Msg
+freePlayerItem logged pokes player =
+  let
+    poking =
+      List.member player.id pokes
+
+    pokable =
+      canPoke logged player
+  in
+    li
+      [ classList
+          [ ( "player", True )
+          , ( "pokable", pokable )
+          , ( "poking", poking )
+          ]
+      ]
+      [ Utils.playerWithAvatar player
+      , if pokable then
+          span
+            [ class "poke"
+            , onClick (if poking then NoOp else Poke player)
+            , title "Poke player"
+            ]
+            [ Utils.mIcon "notifications_active" [] ]
+        else
+          text ""
+      ]
+

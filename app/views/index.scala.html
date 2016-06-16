@@ -1,7 +1,8 @@
-@()(implicit request: PlayerRequest[_], lang: Lang)
+@(liveStatus: LiveStatus)(implicit request: PlayerRequest[_], lang: Lang)
 
 @import play.api.Play.current
 @import JsonFormats.playerFormat
+@import JsonFormats.liveStatusFormat
 @import play.api.libs.json.Json
 
 @asset(path: String) = {
@@ -24,7 +25,7 @@
   </head>
   <body class="elm-game">
     <script id="appSetup" type="custom-data">
-     @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path, "host" -> request.host)).toString())
+     @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path, "host" -> request.host, "rawLiveStatus" -> liveStatus)).toString())
     </script>
 
     @ga()

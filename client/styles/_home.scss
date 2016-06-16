@@ -1,6 +1,7 @@
 @import 'colors';
 @import 'fonts';
 @import 'mixins';
+@import 'animations';
 
 #home {
   header {
@@ -24,6 +25,7 @@
     @include sheet;
     @include shadow-light;
     margin-bottom: 24px;
+    overflow: visible;
 
     h4 {
       padding: 16px;
@@ -32,10 +34,42 @@
 
     li {
       padding: 4px 16px;
-      cursor: pointer;
+      display: flex;
+
+      .player-avatar {
+        flex: 1;
+      }
+
+      .poke {
+        opacity: 0;
+        width: 24px;
+        cursor: pointer;
+        line-height: 48px;
+        transition: bezier(opacity), bezier(color);
+
+        i {
+          vertical-align: top;
+          padding-top: 12px;
+        }
+      }
 
       &:hover {
-        background-color: $whiteSmoke;
+        .poke {
+          opacity: 1;
+          color: $lightGrey;
+
+          &:hover {
+            color: $seaBlue;
+          }
+
+          &:active {
+            color: $orange;
+          }
+        }
+      }
+
+      &.poking {
+        @include buzz;
       }
     }
   }

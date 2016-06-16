@@ -41,14 +41,15 @@ getLiveStatus =
   getJson liveStatusDecoder "/api/live"
 
 
-getRaceReports : Maybe String -> GetJsonTask (List RaceReport)
+getRaceReports : Maybe String -> HttpTask (List RaceReport)
 getRaceReports maybeTrackId =
   let
     path =
       Maybe.map (\id -> "/api/live/" ++ id ++ "/reports") maybeTrackId
         |> Maybe.withDefault "/api/live/reports"
   in
-    getJson (Json.list raceReportDecoder) path
+    Http.get (Json.list raceReportDecoder) path
+      |> Task.toResult
 
 
 getTrack : String -> GetJsonTask Track

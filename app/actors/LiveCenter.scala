@@ -1,6 +1,7 @@
 package actors
 
 import play.api.Logger
+import scala.concurrent.Future
 
 import scala.concurrent.duration._
 import akka.actor.{ActorRef, Props, Actor}
@@ -37,14 +38,15 @@ case class LiveCenterState(
 }
 
 case object GetOnlinePlayers
-case object RemoveStalePlayers
+case object Refresh
+case class BroadcastLiveStatus(liveStatus: LiveStatus)
 
 class LiveCenter extends Actor {
 
   var state = LiveCenterState()
   // implicit val timeout = Timeout(1.seconds)
 
-  Akka.system.scheduler.schedule(1.second, 1.second, self, RemoveStalePlayers)
+  Akka.system.scheduler.schedule(1.second, 1.second, self, Refresh)
 
   def receive = {
 
@@ -62,9 +64,17 @@ class LiveCenter extends Actor {
           }
       }
 
-    case RemoveStalePlayers =>
+    case Refresh =>
       state = state.removeStale(DateTime.now.minusSeconds(5))
+      LiveCenter.getLiveTracks()
+        .map(LiveStatus(_, state.listOnlinePlayers))
+        .map(BroadcastLiveStatus(_))
+        .pipeTo(self)
 
+    case BroadcastLiveStatus(liveStatus) =>
+      state.onlinePlayers.values.foreach { case (_, ref, _) =>
+        ref ! Receive.RefreshLiveStatus(liveStatus)
+      }
 
     // case m: Chat.NewMessage => {
     //   state.chatRoom.foreach(_._2 ! m)
@@ -89,6 +99,15 @@ object LiveCenter {
 
   def sendPlayersUpdate(state: LiveCenterState) = {
     val distinctPlayers = (state.listOnlinePlayers ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
+  }
+
+  def getLiveTracks(): Future[Seq[LiveTrack]] = {
+    val tracksFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
+    for {
+      tracks <- tracksFu
+      liveTracks = tracks.filter(_.track.isOpen).sortBy(_.meta.rankings.length).reverse
+    }
+    yield liveTracks
   }
 
   // def updateStatus(state: LiveCenterState, playerId: BSONObjectID, status: String): LiveCenterState = {

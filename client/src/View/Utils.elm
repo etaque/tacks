@@ -206,6 +206,16 @@ passwordInput attributes =
 -- Components
 
 
+loading: Html msg
+loading =
+  div
+    [ class "loading-block" ]
+    [ div
+        [ class "loading-pulse" ]
+        []
+    ]
+
+
 playerWithAvatar : Player -> Html msg
 playerWithAvatar player =
   span
