@@ -36,6 +36,18 @@ object WebSockets extends Controller with Security {
     yield Right(PlayerActor.props(ref, player)(_))
   }
 
+  def timeTrialPlayer(timeTrialId: UUID) = WebSocket.tryAcceptWithActor[actors.PlayerAction.Action, actors.ServerAction.Action] { implicit request =>
+    for {
+      player <- PlayerAction.getPlayer(request)
+      timeTrialMaybe <- dao.TimeTrials.findById(timeTrialId)
+      timeTrial = timeTrialMaybe.getOrElse(sys.error("Time trial not found"))
+      trackMaybe <- dao.Tracks.findById(timeTrial.trackId)
+      track = trackMaybe.getOrElse(sys.error("Track not found"))
+      ref <- (RacesSupervisor.actorRef ? SupervisorAction.GetTimeTrialActorRef(timeTrial, track)).mapTo[ActorRef]
+    }
+    yield Right(PlayerActor.props(ref, player)(_))
+  }
+
 
   import actors.Emit.msgFormat
   import actors.Receive.msgFormat

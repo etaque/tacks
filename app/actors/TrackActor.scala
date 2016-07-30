@@ -32,9 +32,9 @@ object TrackAction {
   case object NoOp extends Action
 }
 
-class TrackActor(trackInit: Track) extends Actor with ManageWind {
+class TrackActor(trackInit: Track, timeTrial: Option[TimeTrial] = None) extends Actor with ManageWind {
 
-  val creationTime = trackInit.creationTime
+  val creationTime = timeTrial.map(_.creationTime).getOrElse(trackInit.creationTime)
 
   var state = TrackState(
     track = trackInit,
@@ -48,7 +48,8 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
   def track = state.track
   def course = track.course
 
-  def clock: Long = DateTime.now.getMillis
+  def clock: Long =
+    DateTime.now.getMillis - timeTrial.map(_.creationTime.getMillis).getOrElse(0L)
 
   val ticks = Seq(
     Akka.system.scheduler.schedule(1.second, 1.second, self, TrackAction.RotateNextRace),
@@ -136,7 +137,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
         case SaveRun(race, ctx, maybePath) =>
           val lastKnownPath = state.paths.lift(ctx.player.id).orElse(maybePath)
-          TrackActor.saveRun(track, race, ctx, lastKnownPath)
+          TrackActor.saveRun(track, timeTrial, race, ctx, lastKnownPath)
 
         case InitGhost(player, run, path) =>
           state = state.addGhost(player, run, path)
@@ -193,18 +194,19 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 }
 
 object TrackActor {
-  def props(track: Track) = Props(new TrackActor(track))
+  def props(track: Track, timeTrial: Option[TimeTrial] = None) = Props(new TrackActor(track, timeTrial))
 
   def getPath(run: Run): Future[Option[RunPath.Slices]] = {
     implicit val timeout = Timeout(1.second)
     (PathStore.actorRef ? PathStoreAction.Get(run)).mapTo[Option[RunPath.Slices]]
   }
 
-  def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath.Slices]): Future[Unit] = {
+  def saveRun(track: Track, timeTrial: Option[TimeTrial], race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath.Slices]): Future[Unit] = {
     val run = Run(
       id = UUID.randomUUID(),
       trackId = track.id,
-      raceId = race.id,
+      raceId = timeTrial.map(_.id).getOrElse(race.id),
+      isTimeTrial = timeTrial.isDefined,
       playerId = ctx.player.id,
       playerHandle = ctx.player.handleOpt,
       startTime = race.startTime,

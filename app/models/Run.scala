@@ -8,6 +8,7 @@ case class Run(
   id: UUID = UUID.randomUUID(),
   trackId: UUID,
   raceId: UUID,
+  isTimeTrial: Boolean,
   playerId: UUID,
   playerHandle: Option[String] = None,
   startTime: DateTime,

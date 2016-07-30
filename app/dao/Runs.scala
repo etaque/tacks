@@ -27,13 +27,14 @@ class RunTable(tag: Tag) extends Table[Run](tag, "runs") {
   def id = column[UUID]("id", O.PrimaryKey)
   def trackId = column[UUID]("track_id")
   def raceId = column[UUID]("race_id")
+  def isTimeTrial = column[Boolean]("is_time_trial")
   def playerId = column[UUID]("player_id")
   def playerHandle = column[Option[String]]("player_handle")
   def startTime = column[DateTime]("start_time")
   def tally = column[Seq[Long]]("tally")
   def duration = column[Long]("duration")
 
-  def * = (id, trackId, raceId, playerId, playerHandle, startTime, tally, duration) <> (Run.tupled, Run.unapply)
+  def * = (id, trackId, raceId, isTimeTrial, playerId, playerHandle, startTime, tally, duration) <> (Run.tupled, Run.unapply)
 }
 
 object Runs extends TableQuery(new RunTable(_)) {

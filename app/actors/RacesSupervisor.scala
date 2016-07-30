@@ -19,6 +19,7 @@ object SupervisorAction {
   sealed trait Action
 
   case class GetTrackActorRef(track: Track) extends Action
+  case class GetTimeTrialActorRef(timeTrial: TimeTrial, track: Track) extends Action
   case object GetTracks extends Action
   case class ReloadTrack(track: Track) extends Action
 }
@@ -48,6 +49,10 @@ class RacesSupervisor extends Actor {
         state = state.mountTrack(track, ref)
         ref
       }
+      sender ! ref
+
+    case GetTimeTrialActorRef(timeTrial, track) =>
+      val ref = context.actorOf(TrackActor.props(track, Some(timeTrial)))
       sender ! ref
 
     case GetTracks =>
