@@ -29,9 +29,9 @@ mount id =
 update : Dims -> Msg -> Model -> Res Model Msg
 update dims msg model =
   case msg of
-    LoadTrack trackResult courseResult ->
-      case ( trackResult, courseResult ) of
-        ( Ok track, Ok course ) ->
+    LoadTrack result ->
+      case result of
+        Ok ( track, course ) ->
           res
             { model
               | track = Just track
@@ -114,8 +114,9 @@ updateEditor update model =
 
 loadTrack : String -> Cmd Msg
 loadTrack id =
-  Task.map2 LoadTrack (ServerApi.getTrack id) (ServerApi.getCourse id)
-    |> performSucceed identity
+  Task.map2 (,) (ServerApi.getTrack id) (ServerApi.getCourse id)
+    |> Task.toResult
+    |> performSucceed LoadTrack
 
 
 saveEditor : String -> Editor -> Task Never (FormResult Track)

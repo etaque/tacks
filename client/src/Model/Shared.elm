@@ -32,6 +32,14 @@ type RemoteData e a
   | DataErr e
   | DataOk a
 
+dataToMaybe : RemoteData e a -> Maybe a
+dataToMaybe data =
+  case data of
+    DataOk ok ->
+      Just ok
+
+    _ ->
+      Nothing
 
 type alias HttpData a =
   RemoteData Http.Error a
@@ -91,13 +99,28 @@ canUpdateDraft player track =
 
 type alias LiveStatus =
   { liveTracks : List LiveTrack
+  , liveTimeTrial : Maybe LiveTimeTrial
   , onlinePlayers : List Player
   }
 
 
+type alias LiveTimeTrial =
+  { timeTrial : TimeTrial
+  , track : Track
+  , meta : TrackMeta
+  }
+
+
+type alias TimeTrial =
+  { id : String
+  , trackId : String
+  , period : String
+  , creationTime : Time
+  }
+
 emptyLiveStatus : LiveStatus
 emptyLiveStatus =
-  LiveStatus [] []
+  LiveStatus [] Nothing []
 
 
 type alias LiveTrack =

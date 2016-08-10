@@ -36,13 +36,18 @@ playerOutput gameState =
   }
 
 
-sendToServer : String -> Maybe LiveTrack -> ServerMsg -> Cmd msg
-sendToServer host maybeLiveTrack serverMsg =
+sendToTimeTrialServer : String -> ServerMsg -> Cmd msg
+sendToTimeTrialServer host serverMsg =
+  WebSocket.send (ServerApi.timeTrialSocket host) (Js.encode 0 (encodeServerMsg serverMsg))
+
+
+sendToTrackServer : String -> HttpData LiveTrack -> ServerMsg -> Cmd msg
+sendToTrackServer host maybeLiveTrack serverMsg =
   case maybeLiveTrack of
-    Just {track} ->
+    DataOk {track} ->
       WebSocket.send (ServerApi.gameSocket host track.id) (Js.encode 0 (encodeServerMsg serverMsg))
 
-    Nothing ->
+    _ ->
       Cmd.none
 
 

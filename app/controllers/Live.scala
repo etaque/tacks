@@ -57,6 +57,16 @@ object Live extends Controller with Security {
     }
   }
 
+  def timeTrial(period: Option[String]) = PlayerAction.async() { implicit request =>
+    LiveStatus.getLiveTimeTrial(period).map {
+      case Some(liveTimeTrial) =>
+        Ok(Json.toJson(liveTimeTrial))
+
+      case None =>
+        NotFound
+    }
+  }
+
   def allRaceReports(minPlayers: Option[Int]) =PlayerAction.async() { implicit request =>
     RaceReport.list(12, minPlayers, None).map(Json.toJson(_)).map(Ok(_))
   }

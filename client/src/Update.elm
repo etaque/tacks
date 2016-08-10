@@ -11,6 +11,7 @@ import Page.Login.Update as Login
 import Page.Explore.Update as Explore
 import Page.EditTrack.Update as EditTrack
 import Page.Game.Update as Game
+import Page.PlayTimeTrial.Update as PlayTimeTrial
 import Page.ListDrafts.Update as ListDrafts
 import Page.Forum.Update as Forum
 import Page.Admin.Update as Admin
@@ -40,6 +41,9 @@ subscriptions ({pages} as model) =
 
         PlayTrack _ ->
           Sub.map GameMsg (Game.subscriptions model.host pages.game)
+
+        PlayTimeTrial ->
+          Sub.map PlayTimeTrialMsg (PlayTimeTrial.subscriptions model.host pages.playTimeTrial)
 
         EditTrack _ ->
           Sub.map EditTrackMsg (EditTrack.subscriptions pages.editTrack)
@@ -163,6 +167,9 @@ mountRoute newRoute ({ pages, player, route } as prevModel) =
       PlayTrack id ->
         applyGame (Game.mount id) model
 
+      PlayTimeTrial ->
+        applyPlayTimeTrial PlayTimeTrial.mount model
+
       ListDrafts ->
         applyListDrafts (ListDrafts.mount pages.listDrafts) model
 
@@ -197,6 +204,9 @@ pageUpdate pageMsg ({ pages, player, dims } as model) =
     GameMsg a ->
       applyGame (Game.update player model.host a pages.game) model
 
+    PlayTimeTrialMsg a ->
+      applyPlayTimeTrial (PlayTimeTrial.update player model.host a pages.playTimeTrial) model
+
     ListDraftsMsg a ->
       applyListDrafts (ListDrafts.update a pages.listDrafts) model
 
@@ -229,6 +239,10 @@ applyEditTrack =
 
 applyGame =
   applyPage (\s pages -> { pages | game = s }) GameMsg
+
+
+applyPlayTimeTrial =
+  applyPage (\s pages -> { pages | playTimeTrial = s }) PlayTimeTrialMsg
 
 
 applyListDrafts =

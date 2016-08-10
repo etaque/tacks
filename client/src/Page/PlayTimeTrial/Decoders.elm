@@ -1,10 +1,9 @@
-module Page.Game.Decoders exposing (..)
+module Page.PlayTimeTrial.Decoders exposing (..)
 
 import Json.Decode as Json exposing (..)
 import Decoders exposing (..)
 import Game.Decoders exposing (..)
-import Page.Game.Model exposing (..)
-import Page.Game.Chat.Model as Chat
+import Page.PlayTimeTrial.Model exposing (..)
 import Game.Models exposing (..)
 import Game.Inputs exposing (RaceInput)
 
@@ -39,12 +38,6 @@ specificMsgDecoder tag =
 
     "RaceUpdate" ->
       map RaceUpdate ("raceUpdate" := raceInputDecoder)
-
-    "LiveTrack" ->
-      map UpdateLiveTrack ("liveTrack" := liveTrackDecoder)
-
-    "Message" ->
-      map (ChatMsg << Chat.AddMessage) ("message" := messageDecoder)
 
     _ ->
       fail <| tag ++ " is not a recognized tag for msgs"

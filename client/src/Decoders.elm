@@ -7,10 +7,28 @@ import Model.Shared exposing (..)
 
 liveStatusDecoder : Decoder LiveStatus
 liveStatusDecoder =
-  object2
+  object3
     LiveStatus
     ("liveTracks" := list liveTrackDecoder)
+    ("liveTimeTrial" := maybe liveTimeTrialDecoder)
     ("onlinePlayers" := list playerDecoder)
+
+liveTimeTrialDecoder : Decoder LiveTimeTrial
+liveTimeTrialDecoder =
+  object3
+    LiveTimeTrial
+    ("timeTrial" := timeTrialDecoder)
+    ("track" := trackDecoder)
+    ("meta" := trackMetaDecoder)
+
+timeTrialDecoder : Decoder TimeTrial
+timeTrialDecoder =
+  object4
+    TimeTrial
+    ("id" := string)
+    ("trackId" := string)
+    ("period" := string)
+    ("creationTime" := float)
 
 
 liveTrackDecoder : Decoder LiveTrack

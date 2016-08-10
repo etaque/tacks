@@ -17,7 +17,7 @@ object TimeTrial {
 
   val periodFormat = "YYYY-MM"
 
-  def currentPeriod =
+  def currentPeriod() =
     LocalDate.now.toString(periodFormat)
 
   def parsePeriod(p: String): LocalDate =

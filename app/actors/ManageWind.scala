@@ -13,15 +13,17 @@ trait ManageWind {
 
   var wind = Wind.default
   var previousWindUpdate: Option[Long] = None
+  lazy val rng = new scala.util.Random(creationTime.getMillis)
 
   def generateGust() = {
     val gen = course.gustGenerator
-    val maxRadius = gen.generateRadius()
     val xSeed = Math.abs(clock * creationTime.getMillis * Math.PI)
+    val maxRadius = gen.generateRadius(rng)
+
     val gust = Gust(
-      position = (course.area.genX(xSeed), course.area.top),
-      angle = gen.generateOrigin(),
-      speed = gen.generateSpeed(),
+      position = (course.area.genX(xSeed), course.area.top - maxRadius),
+      angle = gen.generateOrigin(rng),
+      speed = gen.generateSpeed(rng),
       radius = maxRadius,
       maxRadius = maxRadius,
       spawnedAt = clock

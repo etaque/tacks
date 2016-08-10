@@ -77,7 +77,7 @@ realMode { mode, altMove } =
 
 
 type Msg
-  = LoadTrack (Result () Track) (Result () Course)
+  = LoadTrack (HttpResult ( Track, Course ))
   | SetMode Mode
   | AltMoveMode Bool
   | FormMsg FormMsg

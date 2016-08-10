@@ -92,9 +92,9 @@ case class GustGenerator(
   speedVariation: Range,
   originVariation: Range
 ) {
-  def generateSpeed() = Random.shuffle(speedVariation.toList).headOption.getOrElse(0)
-  def generateOrigin() = Random.shuffle(originVariation.toList).headOption.getOrElse(0)
-  def generateRadius() = max(radiusBase + Random.nextInt(radiusVariation) - radiusVariation / 2, GustGenerator.minRadius)
+  def generateSpeed(rand: Random) = rand.shuffle(speedVariation.toList).headOption.getOrElse(0)
+  def generateOrigin(rand: Random) = rand.shuffle(originVariation.toList).headOption.getOrElse(0)
+  def generateRadius(rand: Random) = max(radiusBase + rand.nextInt(radiusVariation) - radiusVariation / 2, GustGenerator.minRadius)
 }
 
 object GustGenerator {

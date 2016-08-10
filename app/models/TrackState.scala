@@ -25,12 +25,12 @@ case class TrackState(
     copy(players = players + (player.id -> ctx))
   }
 
-  def updatePlayer(playerId: PlayerId, ctx: PlayerContext, clock: Long): TrackState = {
+  def updatePlayer(playerId: PlayerId, ctx: PlayerContext, t: DateTime): TrackState = {
     val withCtx = copy(players = players + (playerId -> ctx))
     playerRace(playerId).map { race =>
-      if (track.status == TrackStatus.open && race.startTime.plusMinutes(10).isAfterNow) { // max 10min de trace
+      if (track.status == TrackStatus.open && race.startTime.plusMinutes(10).isAfter(t)) { // max 10min de trace
 
-        val elapsedMillis = clock - race.startTime.getMillis
+        val elapsedMillis = t.getMillis - race.startTime.getMillis
         val currentSecond = elapsedMillis / 1000
 
         val point = PathPoint((elapsedMillis % 1000).toInt, ctx.state.position, ctx.state.heading)

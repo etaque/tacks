@@ -1,4 +1,4 @@
-module Page.Game.Update exposing (..)
+module Page.PlayTimeTrial.Update exposing (..)
 
 import Time exposing (millisecond, second)
 import Time exposing (Time)
@@ -6,46 +6,45 @@ import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
 import Response exposing (..)
 import Model.Shared exposing (..)
-import Page.Game.Model exposing (..)
-import Page.Game.Decoders as Decoders
-import Page.Game.Chat.Update as Chat
+import Page.PlayTimeTrial.Model exposing (..)
+import Page.PlayTimeTrial.Decoders as Decoders
 import Update.Utils exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps as Steps
 import Game.Outputs as Output
 import Game.Inputs as Input
-import Task
+import Task exposing (Task)
 import WebSocket
 import AnimationFrame
 import Keyboard.Extra as Keyboard
 import Window
+import Http
 
 
 subscriptions : String -> Model -> Sub Msg
 subscriptions host model =
-  case model.liveTrack of
-    DataOk liveTrack ->
+  case model.liveTimeTrial of
+    DataOk liveTimeTrial ->
       Sub.batch
         [ WebSocket.listen
-            (ServerApi.gameSocket host liveTrack.track.id)
+            (ServerApi.timeTrialSocket host)
             Decoders.decodeStringMsg
         , AnimationFrame.times Frame
         , Sub.map KeyboardMsg Keyboard.subscriptions
         , Window.resizes WindowSize
-        , Sub.map ChatMsg (Chat.subscriptions host model.chat)
         ]
 
     _ ->
       Sub.none
 
 
-mount : String -> Response Model Msg
-mount id =
+mount : Response Model Msg
+mount =
   let
     cmd =
       Cmd.batch
-        [ load id
+        [ load
         , performSucceed WindowSize Window.size
         ]
   in
@@ -54,41 +53,35 @@ mount id =
 
 update : Player -> String -> Msg -> Model -> Response Model Msg
 update player host msg model =
-  case msg of
+  case Debug.log "msg" msg of
     Load result ->
       case result of
-        Ok ( liveTrack, course ) ->
-          performSucceed (InitGameState liveTrack course) Time.now
-            |> res model
+        Ok ( liveTimeTrial, course ) ->
+          performSucceed (InitGameState course) Time.now
+            |> res { model | liveTimeTrial = DataOk liveTimeTrial }
 
         Err e ->
-          res { model | liveTrack = DataErr e } Cmd.none
+          res { model | liveTimeTrial = DataErr e } Cmd.none
 
-    InitGameState liveTrack course time ->
+    InitGameState course time ->
       let
         gameState =
           defaultGame time course player
 
         newModel =
           { model | gameState = Just gameState }
-            |> applyLiveTrack liveTrack
+
+        start =
+          Output.sendToTimeTrialServer host Output.StartRace
       in
-        res newModel Cmd.none
-
-    ChatMsg chatMsg ->
-      Chat.update (Output.sendToTrackServer host model.liveTrack) chatMsg model.chat
-        |> mapBoth (\newChat -> { model | chat = newChat}) ChatMsg
-
+        res newModel start
 
     KeyboardMsg keyboardMsg ->
-      if model.chat.focus then
-        res model Cmd.none
-      else
-        let
-          ( newKeyboard, keyboardCmd ) =
-            Keyboard.update keyboardMsg model.keyboard
-        in
-          res { model | keyboard = newKeyboard } (Cmd.map KeyboardMsg keyboardCmd)
+      let
+        ( newKeyboard, keyboardCmd ) =
+          Keyboard.update keyboardMsg model.keyboard
+      in
+        res { model | keyboard = newKeyboard } (Cmd.map KeyboardMsg keyboardCmd)
 
     WindowSize size ->
       res { model | dims = ( size.width, size.height) } Cmd.none
@@ -116,9 +109,8 @@ update player host msg model =
               Steps.frameStep gameInput time gameState
 
             serverCmd =
-              Output.sendToTrackServer
+              Output.sendToTimeTrialServer
                 host
-                model.liveTrack
                 (Output.UpdatePlayer (Output.playerOutput gameState))
           in
             if time - model.lastPush > 33 then
@@ -135,19 +127,19 @@ update player host msg model =
     StartRace ->
       let
         start =
-          Output.sendToTrackServer host model.liveTrack Output.StartRace
+          Output.sendToTimeTrialServer host Output.StartRace
       in
         res model start
 
     ExitRace ->
       let
-        newModel =
-          { model | gameState = Maybe.map clearCrossedGates model.gameState }
+        -- newModel =
+        --   { model | gameState = Maybe.map clearCrossedGates model.gameState }
 
         escape =
-          Output.sendToTrackServer host model.liveTrack Output.EscapeRace
+          Output.sendToTimeTrialServer host Output.EscapeRace
       in
-        res newModel escape
+        res model escape
 
 
     AddGhost runId player ->
@@ -156,7 +148,7 @@ update player host msg model =
           Dict.insert runId player model.ghostRuns
 
         cmd =
-          Output.sendToTrackServer host model.liveTrack (Output.AddGhost runId player)
+          Output.sendToTimeTrialServer host (Output.AddGhost runId player)
       in
         res { model | ghostRuns = newGhostRuns } cmd
 
@@ -166,39 +158,24 @@ update player host msg model =
           Dict.remove runId model.ghostRuns
 
         cmd =
-          Output.sendToTrackServer host model.liveTrack (Output.RemoveGhost runId)
+          Output.sendToTimeTrialServer host (Output.RemoveGhost runId)
       in
         res { model | ghostRuns = newGhostRuns } cmd
-
-    UpdateLiveTrack liveTrack ->
-      res (applyLiveTrack liveTrack model) Cmd.none
 
     NoOp ->
       res model Cmd.none
 
 
-applyLiveTrack : LiveTrack -> Model -> Model
-applyLiveTrack ({ track, players, races } as liveTrack) model =
-  let
-    racePlayers =
-      List.concatMap .players races
-
-    inRace p =
-      List.member p racePlayers
-
-    freePlayers =
-      List.filter (not << inRace) players
-  in
-    { model | liveTrack = DataOk liveTrack, races = races, freePlayers = freePlayers }
-
-
-load : String -> Cmd Msg
-load id =
-  Task.map2 (,) (ServerApi.getLiveTrack id) (ServerApi.getCourse id)
+load : Cmd Msg
+load =
+  (ServerApi.getLiveTimeTrial Nothing)
+    |> (flip Task.andThen) loadCourse
     |> Task.toResult
     |> performSucceed Load
 
 
-clearCrossedGates : GameState -> GameState
-clearCrossedGates ({ playerState } as gameState) =
-  { gameState | playerState = { playerState | crossedGates = [] } }
+loadCourse : LiveTimeTrial -> Task.Task Http.Error ( LiveTimeTrial, Course )
+loadCourse liveTimeTrial =
+  ServerApi.getCourse liveTimeTrial.track.id
+    |> Task.map (\course -> ( liveTimeTrial, course ))
+

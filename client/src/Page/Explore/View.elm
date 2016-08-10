@@ -39,7 +39,9 @@ liveTracks : List LiveTrack -> Html Msg
 liveTracks liveTracks =
   div
     [ class "live-tracks" ]
-    [ div [ class "row" ] (List.map (Track.liveTrackBlock rankingClickHandler) liveTracks)
+    [ div
+        [ class "row" ]
+        (List.map (\lt -> div [ class "col-md-4" ] [ Track.liveTrackBlock rankingClickHandler lt ]) liveTracks)
     ]
 
 

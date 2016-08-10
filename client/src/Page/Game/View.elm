@@ -21,7 +21,10 @@ pageTitle liveStatus model =
       List.length model.freePlayers + (List.concatMap .players model.races |> List.length)
 
     trackName =
-      model.liveTrack |> Maybe.map (.track >> .name) |> Maybe.withDefault ""
+      model.liveTrack
+        |> dataToMaybe
+        |> Maybe.map (.track >> .name)
+        |> Maybe.withDefault ""
   in
     "(" ++ toString playersCount ++ ") " ++ trackName
 
@@ -29,7 +32,7 @@ pageTitle liveStatus model =
 view : Context -> Model -> Layout.Game Msg
 view ctx model =
   case ( model.liveTrack, model.gameState ) of
-    ( Just liveTrack, Just gameState ) ->
+    ( DataOk liveTrack, Just gameState ) ->
       let
         ( w, h ) =
           ctx.dims

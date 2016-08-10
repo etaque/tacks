@@ -80,4 +80,16 @@
     }
   }
 
+  &.time-trial {
+    .live-track-header {
+      background-color: $lightPurple;
+      @include gradient-directional($lightPurple, $intensePurple, -30deg);
+    }
+    .btn-flat {
+      color: $intensePurple;
+      &:hover {
+        background-color: $whitePurple;
+      }
+    }
+  }
 }

@@ -19,6 +19,11 @@ gameSocket host id =
   "ws://" ++ host ++ "/ws/trackPlayer/" ++ id
 
 
+timeTrialSocket : String -> String
+timeTrialSocket host =
+  "ws://" ++ host ++ "/ws/timeTrialPlayer"
+
+
 activitySocket : String -> String
 activitySocket host =
   "ws://" ++ host ++ "/ws/activity"
@@ -52,19 +57,33 @@ getRaceReports maybeTrackId =
       |> Task.toResult
 
 
-getTrack : String -> GetJsonTask Track
+getTrack : String -> Task Http.Error Track
 getTrack id =
-  getJson trackDecoder ("/api/tracks/" ++ id)
+  Http.get trackDecoder ("/api/tracks/" ++ id)
 
 
-getCourse : String -> GetJsonTask Course
+getCourse : String -> Task Http.Error Course
 getCourse id =
-  getJson courseDecoder ("/api/tracks/" ++ id ++ "/course")
+  Http.get courseDecoder ("/api/tracks/" ++ id ++ "/course")
 
 
-getLiveTrack : String -> GetJsonTask LiveTrack
+getLiveTrack : String -> Task Http.Error LiveTrack
 getLiveTrack id =
-  getJson liveTrackDecoder ("/api/live/" ++ id)
+  Http.get liveTrackDecoder ("/api/live/" ++ id)
+
+
+getLiveTimeTrial : Maybe String -> Task Http.Error LiveTimeTrial
+getLiveTimeTrial maybeId =
+  let
+    params =
+      maybeId
+        |> Maybe.map (\id -> [ ("id", id) ])
+        |> Maybe.withDefault []
+
+    url =
+      Http.url "/api/live/time-trial" params
+  in
+    Http.get liveTimeTrialDecoder url
 
 
 getUserTracks : GetJsonTask (List Track)

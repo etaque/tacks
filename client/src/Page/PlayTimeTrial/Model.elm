@@ -1,4 +1,4 @@
-module Page.Game.Model exposing (..)
+module Page.PlayTimeTrial.Model exposing (..)
 
 import Time exposing (Time)
 import Dict exposing (Dict)
@@ -6,54 +6,45 @@ import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs as Input
 import Keyboard.Extra as Keyboard
-import Page.Game.Chat.Model as Chat
 import Window
 import Set
 
 
 type alias Model =
-  { liveTrack : HttpData LiveTrack
+  { liveTimeTrial : HttpData LiveTimeTrial
   , gameState : Maybe GameState
   , lastPush : Time
   , keyboard : Keyboard.Model
   , dims : ( Int, Int )
   , tab : Tab
-  , races : List Race
-  , freePlayers : List Player
   , live : Bool
   , ghostRuns : Dict String Player
-  , chat : Chat.Model
   }
 
 
 type Tab
-  = LiveTab
-  | RankingsTab
+  = RankingsTab
   | HelpTab
 
 
 initial : Model
 initial =
-  { liveTrack = Loading
+  { liveTimeTrial = Loading
   , gameState = Nothing
   , lastPush = 0
   , keyboard = Keyboard.Model Set.empty
   , dims = ( 1 , 1 )
-  , tab = LiveTab
-  , races = []
-  , freePlayers = []
+  , tab = RankingsTab
   , live = False
   , ghostRuns = Dict.empty
-  , chat = Chat.initial
   }
 
 
 type Msg
-  = Load (HttpResult ( LiveTrack, Course ))
-  | InitGameState LiveTrack Course Time
-  | UpdateLiveTrack LiveTrack
+  = Load (HttpResult ( LiveTimeTrial, Course ))
+  | InitGameState Course Time
+  -- | UpdateLiveTrack LiveTimeTrial
   | KeyboardMsg Keyboard.Msg
-  | ChatMsg Chat.Msg
   | WindowSize Window.Size
   | RaceUpdate Input.RaceInput
   | Frame Time
@@ -63,5 +54,4 @@ type Msg
   | AddGhost String Player
   | RemoveGhost String
   | NoOp
-
 

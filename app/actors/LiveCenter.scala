@@ -66,29 +66,19 @@ class LiveCenter extends Actor {
 
     case Refresh =>
       state = state.removeStale(DateTime.now.minusSeconds(5))
-      LiveCenter.getLiveTracks()
-        .map(LiveStatus(_, state.listOnlinePlayers))
-        .map(BroadcastLiveStatus(_))
-        .pipeTo(self)
+      val broadcastFu = for {
+        liveTracks <- LiveStatus.getLiveTracks()
+        liveTimeTrial <- LiveStatus.getLiveTimeTrial()
+      } yield BroadcastLiveStatus(LiveStatus(liveTracks, liveTimeTrial, state.listOnlinePlayers))
+      broadcastFu.pipeTo(self)
 
     case BroadcastLiveStatus(liveStatus) =>
       state.onlinePlayers.values.foreach { case (_, ref, _) =>
         ref ! Receive.RefreshLiveStatus(liveStatus)
       }
 
-    // case m: Chat.NewMessage => {
-    //   state.chatRoom.foreach(_._2 ! m)
-    //   Logger.debug("Player sent new message: " + m.toString)
-    // }
-
-    // case Chat.NewStatus(user, content) => {
-    //   state = LiveCenter.updateStatus(state, user.id, content)
-    //   Logger.debug("Player submitted new status: " + user.toString)
-    //   LiveCenter.sendPlayersUpdate(state)
-    //   UserDAO.updateStatus(user.id, Some(content))
-    // }
-
-    case GetOnlinePlayers => sender ! state.listOnlinePlayers
+    case GetOnlinePlayers =>
+      sender ! state.listOnlinePlayers
   }
 }
 
@@ -100,28 +90,4 @@ object LiveCenter {
   def sendPlayersUpdate(state: LiveCenterState) = {
     val distinctPlayers = (state.listOnlinePlayers ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
   }
-
-  def getLiveTracks(): Future[Seq[LiveTrack]] = {
-    val tracksFu = (RacesSupervisor.actorRef ? SupervisorAction.GetTracks).mapTo[Seq[LiveTrack]]
-    for {
-      tracks <- tracksFu
-      liveTracks = tracks.filter(_.track.isOpen).sortBy(_.meta.rankings.length).reverse
-    }
-    yield liveTracks
-  }
-
-  // def updateStatus(state: LiveCenterState, playerId: BSONObjectID, status: String): LiveCenterState = {
-  //   state.copy(
-  //     subscribers = state.subscribers.map(updatePlayerStatus(playerId, status)),
-  //     chatRoom = state.chatRoom.map(updatePlayerStatus(playerId, status))
-  //   )
-  // }
-
-  // def updatePlayerStatus(id: BSONObjectID, status: String)(pair: (Player, ActorRef)): (Player, ActorRef) = {
-  //   val (p, ref) = pair
-  //   p match {
-  //     case u: User if u.id == id => (u.copy(status = Some(status)), ref)
-  //     case _ => (p, ref)
-  //   }
-  // }
 }

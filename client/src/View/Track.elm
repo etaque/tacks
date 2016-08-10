@@ -15,41 +15,38 @@ liveTrackBlock rankingClickHandler ({ track, meta, players } as lt) =
     empty =
       List.length players == 0
   in
-    div
-      [ class "col-md-6" ]
-      [ Utils.linkTo
-          (Route.PlayTrack track.id)
-          [ classList
-              [ ( "live-track", True )
-              , ( "is-empty", empty )
-              ]
-           ]
-          [ div
-              [ class "live-track-header" ]
-              [ h3
-                  [ class "name", title track.name ]
-                  [ text track.name ]
-              , div
-                  [ class "creator" ]
-                  [ text ("by " ++ (Maybe.withDefault "" meta.creator.handle)) ]
-              , if empty then
-                  text ""
-                else
-                  span [ class "live-players" ] [ text (toString (List.length players)) ]
-              ]
+    Utils.linkTo
+      (Route.PlayTrack track.id)
+      [ classList
+          [ ( "live-track", True )
+          , ( "is-empty", empty )
+          ]
+        ]
+      [ div
+          [ class "live-track-header" ]
+          [ h3
+              [ class "name", title track.name ]
+              [ text track.name ]
           , div
-              [ class "live-track-body"
+              [ class "creator" ]
+              [ text ("by " ++ (Maybe.withDefault "" meta.creator.handle)) ]
+          , if empty then
+              text ""
+            else
+              span [ class "live-players" ] [ text (toString (List.length players)) ]
+          ]
+      , div
+          [ class "live-track-body"
+          ]
+          [ rankingsExtract meta.rankings
+          ]
+      , div
+          [ class "live-track-actions" ]
+          [ a
+              [ class "btn-flat"
+              , rankingClickHandler lt
               ]
-              [ rankingsExtract meta.rankings
-              ]
-          , div
-              [ class "live-track-actions" ]
-              [ a
-                  [ class "btn-flat"
-                  , rankingClickHandler lt
-                  ]
-                  [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")"
-                  ]
+              [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")"
               ]
           ]
       ]

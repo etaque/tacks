@@ -27,6 +27,18 @@ object TimeTrials extends TableQuery(new TimeTrialTable(_)) {
     onId(id).result.headOption
   }
 
+  def findByPeriod(period: String): Future[Option[TimeTrial]] = DB.run {
+    filter(_.period === period).result.headOption
+  }
+
+  def findByPeriodWithTrack(period: String): Future[Option[(TimeTrial, Track)]] = DB.run {
+    filter(_.period === period).join(Tracks).on(_.trackId === _.id).result.headOption
+  }
+
+  def save(timeTrial: TimeTrial): Future[Int] = DB.run {
+    all += timeTrial
+  }
+
   private def onId(id: UUID) =
     filter(_.id === id)
 

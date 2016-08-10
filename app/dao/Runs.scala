@@ -56,15 +56,23 @@ object Runs extends TableQuery(new RunTable(_)) {
     onTrack(trackId).countDistinct.result
   }
 
+  def listBestOnTimeTrialForPlayer(timeTrialId: UUID, playerId: UUID): Future[Seq[Run]] = DB.run {
+    onTimeTrial(timeTrialId).filter(_.playerId === playerId).sortBy(_.duration.asc).result
+  }
+
   def listBestOnTrackForPlayer(trackId: UUID, playerId: UUID): Future[Seq[Run]] = DB.run {
     onTrack(trackId).filter(_.playerId === playerId).sortBy(_.duration.asc).result
   }
 
-  def extractRankings(trackId: UUID) = DB.run {
+  def extractRankings(trackId: UUID, timeTrialId: Option[UUID] = None) = DB.run {
+    val whereTimeTrial = timeTrialId
+      .map(id => s"AND race_id = '$id' AND is_time_trial = true")
+      .getOrElse("AND is_time_trial = false")
+
     sql"""
       SELECT row_number() OVER (order by duration), r.id, player_id, duration FROM (
         SELECT DISTINCT ON (player_id) * FROM runs
-        WHERE track_id = $trackId
+        WHERE track_id = $trackId #$whereTimeTrial
         ORDER BY player_id, duration
       ) AS r
       JOIN users ON users.id = player_id
@@ -74,9 +82,9 @@ object Runs extends TableQuery(new RunTable(_)) {
 
 
   def lastRaceIds(limit: Int, minPlayers: Option[Int], trackId: Option[UUID]): Future[Seq[UUID]] = DB.run {
-    val whereTrack = trackId.map(id => s"WHERE track_id = '$id'").getOrElse("")
+    val whereTrack = trackId.map(id => s"AND track_id = '$id'").getOrElse("")
     sql"""
-      SELECT race_id, min(start_time) as t FROM runs #$whereTrack
+      SELECT race_id, min(start_time) as t FROM runs WHERE is_time_trial = false #$whereTrack
       GROUP BY race_id
       HAVING COUNT(player_id) >= ${minPlayers.getOrElse(2)}
       ORDER BY t DESC LIMIT $limit
@@ -107,7 +115,10 @@ object Runs extends TableQuery(new RunTable(_)) {
     filter(_.id === id)
 
   private def onTrack(trackId: UUID) =
-    filter(_.trackId === trackId)
+    filter(r => r.trackId === trackId && r.isTimeTrial === false)
+
+  private def onTimeTrial(timeTrialId: UUID) =
+    filter(r => r.raceId === timeTrialId && r.isTimeTrial === true)
 
   private def all =
     map(identity)

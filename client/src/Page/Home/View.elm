@@ -44,13 +44,28 @@ view ctx model =
         [ class "white inside" ]
         [ div
             [ class "row live-center" ]
-            [ div [ class "col-md-9" ] [ liveTracks ctx.player ctx.liveStatus ]
-            , div [ class "col-md-3" ] [ activePlayersPane ctx.player ctx.liveStatus model.pokes ]
+            [ div [ class "col-md-6" ] [ showTimeTrial ctx.player ctx.liveStatus ]
+            , div [ class "col-md-offset-2 col-md-4" ] [ activePlayersPane ctx.player ctx.liveStatus model.pokes ]
+            ]
+        , div
+            [ class "row" ]
+            [ div [ class "col-md-12" ] [ liveTracks ctx.player ctx.liveStatus ]
             ]
         ]
     , Layout.section
         [ class "grey" ]
         [ h2 [] [ text "Recent races" ]
+
+        , case ctx.liveStatus.liveTimeTrial of
+            Just liveTimeTrial ->
+              Utils.linkTo
+                Route.PlayTimeTrial
+                []
+                [ text liveTimeTrial.track.name ]
+
+            Nothing ->
+              text "ARFFFFFFFFFFFF"
+
         , case model.raceReports of
             Loading ->
               Utils.loading
@@ -78,16 +93,52 @@ dialogContent model =
       Race.reportDialog raceReport
 
 
+showTimeTrial : Player -> LiveStatus -> Html Msg
+showTimeTrial player liveStatus =
+  div
+    [ class "home-time-trial" ]
+    [ h2 [] [ text "Time trial of the month" ]
+    , case liveStatus.liveTimeTrial of
+        Just {track, timeTrial, meta} ->
+          Utils.linkTo
+            Route.PlayTimeTrial
+            [ class "live-track time-trial" ]
+            [ div
+                [ class "live-track-header" ]
+                [ h3
+                    [ class "name"
+                    , title track.name
+                    ]
+                    [ text track.name ]
+                ]
+            , div
+                [ class "live-track-body" ]
+                [ Track.rankingsExtract meta.rankings ]
+            , div
+                [ class "live-track-actions" ]
+                [ a
+                    [ class "btn-flat"
+                    ]
+                    [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")"
+                    ]
+                ]
+            ]
+        Nothing ->
+          text ""
+    ]
+
 liveTracks : Player -> LiveStatus -> Html Msg
 liveTracks player { liveTracks } =
   let
     featuredTracks =
-      List.filter (.track >> .featured) liveTracks
+      liveTracks
+        |> List.filter (.track >> .featured)
+        |> List.map (\lt -> div [ class "col-md-4"] [ Track.liveTrackBlock rankingClickHandler lt ])
   in
     div
       [ class "live-tracks" ]
       [ h2 [] [ text "Featured tracks" ]
-      , div [ class "row" ] (List.map (Track.liveTrackBlock rankingClickHandler) featuredTracks)
+      , div [ class "row" ] featuredTracks
       ]
 
 

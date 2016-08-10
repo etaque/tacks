@@ -10,6 +10,7 @@ import Page.Register.View as RegisterPage
 import Page.Explore.View as ExplorePage
 import Page.EditTrack.View as EditTrackPage
 import Page.Game.View as GamePage
+import Page.PlayTimeTrial.View as PlayTimeTrialPage
 import Page.ListDrafts.View as ListDraftsPage
 import Page.Forum.View as ForumPage
 import Page.Admin.View as AdminPage
@@ -24,7 +25,6 @@ view model =
       Context model.player model.liveStatus model.dims model.transition model.routeJump
   in
     pageView ctx model
-
 
 
 pageView : Context -> Model -> Html Msg
@@ -48,6 +48,9 @@ pageView ctx ({ pages, player, liveStatus, dims } as model) =
     PlayTrack _ ->
       renderGame ctx GameMsg (GamePage.view ctx pages.game)
 
+    PlayTimeTrial ->
+      renderGame ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)
+
     ListDrafts ->
       renderSite ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
 
@@ -69,6 +72,9 @@ pageTitle model =
   case model.route of
     PlayTrack _ ->
       GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
+
+    PlayTimeTrial ->
+      PlayTimeTrialPage.pageTitle model.pages.playTimeTrial ++ " - Tacks"
 
     Home ->
       HomePage.pageTitle model.liveStatus model.pages.home ++ " - Tacks"
