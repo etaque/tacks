@@ -18,81 +18,81 @@ import Constants exposing (..)
 
 pageTitle : Model -> String
 pageTitle model =
-  case model.liveTimeTrial of
-    DataOk {track} ->
-      "Time trial - " ++ track.name
+    case model.liveTimeTrial of
+        DataOk { track } ->
+            "Time trial - " ++ track.name
 
-    _ ->
-      ""
+        _ ->
+            ""
 
 
 view : Context -> Model -> Layout.Game Msg
 view ctx model =
-  case ( model.liveTimeTrial, model.gameState ) of
-    ( DataOk liveTimeTrial, Just gameState ) ->
-      let
-        ( w, h ) =
-          ctx.dims
-      in
-        Layout.Game
-          "play-time-trial"
-          (toolbar model liveTimeTrial gameState)
-          (sidebar model liveTimeTrial gameState)
-          [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
-          ]
+    case ( model.liveTimeTrial, model.gameState ) of
+        ( DataOk liveTimeTrial, Just gameState ) ->
+            let
+                ( w, h ) =
+                    ctx.dims
+            in
+                Layout.Game
+                    "play-time-trial"
+                    (toolbar model liveTimeTrial gameState)
+                    (sidebar model liveTimeTrial gameState)
+                    [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
+                    ]
 
-    _ ->
-      Layout.Game
-        "play-time-trial loading"
-        []
-        []
-        [ Html.Lazy.lazy HexBg.render ctx.dims ]
+        _ ->
+            Layout.Game
+                "play-time-trial loading"
+                []
+                []
+                [ Html.Lazy.lazy HexBg.render ctx.dims ]
 
 
 toolbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
 toolbar model { track } gameState =
-  [ div
-      [ class "toolbar-left" ]
-      [ Utils.linkTo
-          Route.Home
-          [ class "exit"
-          , title "Back to home"
-          ]
-          [ Utils.mIcon "arrow_back" [] ]
-      , h2 [] [ text track.name ]
-      ]
-  , div
-      [ class "toolbar-center" ]
-      (GameContext.raceStatus gameState StartRace ExitRace)
-  , div [ class "toolbar-right" ] []
-  ]
+    [ div
+        [ class "toolbar-left" ]
+        [ Utils.linkTo
+            Route.Home
+            [ class "exit"
+            , title "Back to home"
+            ]
+            [ Utils.mIcon "arrow_back" [] ]
+        , h2 [] [ text track.name ]
+        ]
+    , div
+        [ class "toolbar-center" ]
+        (GameContext.raceStatus gameState StartRace ExitRace)
+    , div [ class "toolbar-right" ] []
+    ]
 
 
 sidebar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
 sidebar model liveTimeTrial gameState =
-  (tabs model.tab)
-    :: case model.tab of
-        RankingsTab ->
-          [ GameContext.rankingsBlock
-              model.ghostRuns
-              (\r -> AddGhost r.runId r.player)
-              (\r -> RemoveGhost r.runId)
-              liveTimeTrial.meta
-          ]
+    (tabs model.tab)
+        :: case model.tab of
+            RankingsTab ->
+                [ GameContext.rankingsBlock
+                    model.ghostRuns
+                    (\r -> AddGhost r.runId r.player)
+                    (\r -> RemoveGhost r.runId)
+                    liveTimeTrial.meta
+                ]
 
-        HelpTab ->
-          [ GameContext.helpBlock ]
+            HelpTab ->
+                [ GameContext.helpBlock ]
 
 
 tabs : Tab -> Html Msg
 tabs tab =
-  let
-    items =
-      [ ( "Runs", RankingsTab )
-      , ( "Help", HelpTab )
-      ]
-  in
-    Utils.tabsRow
-      items
-      (\t -> onClick (SetTab t))
-      ((==) tab)
+    let
+        items =
+            [ ( "Runs", RankingsTab )
+            , ( "Help", HelpTab )
+            ]
+    in
+        Utils.tabsRow
+            items
+            (\t -> onClick (SetTab t))
+            ((==) tab)

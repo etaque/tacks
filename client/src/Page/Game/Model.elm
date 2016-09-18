@@ -12,56 +12,54 @@ import Set
 
 
 type alias Model =
-  { liveTrack : HttpData LiveTrack
-  , gameState : Maybe GameState
-  , lastPush : Time
-  , keyboard : Keyboard.Model
-  , dims : ( Int, Int )
-  , tab : Tab
-  , races : List Race
-  , freePlayers : List Player
-  , live : Bool
-  , ghostRuns : Dict String Player
-  , chat : Chat.Model
-  }
+    { liveTrack : HttpData LiveTrack
+    , gameState : Maybe GameState
+    , lastPush : Time
+    , keyboard : Keyboard.Model
+    , dims : ( Int, Int )
+    , tab : Tab
+    , races : List Race
+    , freePlayers : List Player
+    , live : Bool
+    , ghostRuns : Dict String Player
+    , chat : Chat.Model
+    }
 
 
 type Tab
-  = LiveTab
-  | RankingsTab
-  | HelpTab
+    = LiveTab
+    | RankingsTab
+    | HelpTab
 
 
 initial : Model
 initial =
-  { liveTrack = Loading
-  , gameState = Nothing
-  , lastPush = 0
-  , keyboard = Keyboard.Model Set.empty
-  , dims = ( 1 , 1 )
-  , tab = LiveTab
-  , races = []
-  , freePlayers = []
-  , live = False
-  , ghostRuns = Dict.empty
-  , chat = Chat.initial
-  }
+    { liveTrack = Loading
+    , gameState = Nothing
+    , lastPush = 0
+    , keyboard = Keyboard.Model Set.empty
+    , dims = ( 1, 1 )
+    , tab = LiveTab
+    , races = []
+    , freePlayers = []
+    , live = False
+    , ghostRuns = Dict.empty
+    , chat = Chat.initial
+    }
 
 
 type Msg
-  = Load (HttpResult ( LiveTrack, Course ))
-  | InitGameState LiveTrack Course Time
-  | UpdateLiveTrack LiveTrack
-  | KeyboardMsg Keyboard.Msg
-  | ChatMsg Chat.Msg
-  | WindowSize Window.Size
-  | RaceUpdate Input.RaceInput
-  | Frame Time
-  | SetTab Tab
-  | StartRace
-  | ExitRace
-  | AddGhost String Player
-  | RemoveGhost String
-  | NoOp
-
-
+    = Load (HttpResult ( LiveTrack, Course ))
+    | InitGameState LiveTrack Course Time
+    | UpdateLiveTrack LiveTrack
+    | KeyboardMsg Keyboard.Msg
+    | ChatMsg Chat.Msg
+    | WindowSize Window.Size
+    | RaceUpdate Input.RaceInput
+    | Frame Time
+    | SetTab Tab
+    | StartRace
+    | ExitRace
+    | AddGhost String Player
+    | RemoveGhost String
+    | NoOp

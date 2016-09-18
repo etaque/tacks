@@ -11,47 +11,46 @@ import Set
 
 
 type alias Model =
-  { liveTimeTrial : HttpData LiveTimeTrial
-  , gameState : Maybe GameState
-  , lastPush : Time
-  , keyboard : Keyboard.Model
-  , dims : ( Int, Int )
-  , tab : Tab
-  , live : Bool
-  , ghostRuns : Dict String Player
-  }
+    { liveTimeTrial : HttpData LiveTimeTrial
+    , gameState : Maybe GameState
+    , lastPush : Time
+    , keyboard : Keyboard.Model
+    , dims : ( Int, Int )
+    , tab : Tab
+    , live : Bool
+    , ghostRuns : Dict String Player
+    }
 
 
 type Tab
-  = RankingsTab
-  | HelpTab
+    = RankingsTab
+    | HelpTab
 
 
 initial : Model
 initial =
-  { liveTimeTrial = Loading
-  , gameState = Nothing
-  , lastPush = 0
-  , keyboard = Keyboard.Model Set.empty
-  , dims = ( 1 , 1 )
-  , tab = RankingsTab
-  , live = False
-  , ghostRuns = Dict.empty
-  }
+    { liveTimeTrial = Loading
+    , gameState = Nothing
+    , lastPush = 0
+    , keyboard = Keyboard.Model Set.empty
+    , dims = ( 1, 1 )
+    , tab = RankingsTab
+    , live = False
+    , ghostRuns = Dict.empty
+    }
 
 
 type Msg
-  = Load (HttpResult ( LiveTimeTrial, Course ))
-  | InitGameState Course Time
-  -- | UpdateLiveTrack LiveTimeTrial
-  | KeyboardMsg Keyboard.Msg
-  | WindowSize Window.Size
-  | RaceUpdate Input.RaceInput
-  | Frame Time
-  | SetTab Tab
-  | StartRace
-  | ExitRace
-  | AddGhost String Player
-  | RemoveGhost String
-  | NoOp
-
+    = Load (HttpResult ( LiveTimeTrial, Course ))
+    | InitGameState Course Time
+      -- | UpdateLiveTrack LiveTimeTrial
+    | KeyboardMsg Keyboard.Msg
+    | WindowSize Window.Size
+    | RaceUpdate Input.RaceInput
+    | Frame Time
+    | SetTab Tab
+    | StartRace
+    | ExitRace
+    | AddGhost String Player
+    | RemoveGhost String
+    | NoOp

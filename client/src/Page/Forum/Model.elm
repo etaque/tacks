@@ -7,28 +7,27 @@ import Page.Forum.ShowTopic.Model as ShowTopic
 
 
 type alias Model =
-  { index : Index.Model
-  , showTopic : ShowTopic.Model
-  , newTopic : NewTopic.Model
-  }
+    { index : Index.Model
+    , showTopic : ShowTopic.Model
+    , newTopic : NewTopic.Model
+    }
 
 
 initialRoute : Route
 initialRoute =
-  Index
+    Index
 
 
 initial : Model
 initial =
-  { index = Index.initial
-  , newTopic = NewTopic.initial
-  , showTopic = ShowTopic.initial
-  }
+    { index = Index.initial
+    , newTopic = NewTopic.initial
+    , showTopic = ShowTopic.initial
+    }
 
 
 type Msg
-  = IndexMsg Index.Msg
-  | NewTopicMsg NewTopic.Msg
-  | ShowTopicMsg ShowTopic.Msg
-  | NoOp
-
+    = IndexMsg Index.Msg
+    | NewTopicMsg NewTopic.Msg
+    | ShowTopicMsg ShowTopic.Msg
+    | NoOp

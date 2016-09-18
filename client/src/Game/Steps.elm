@@ -16,144 +16,143 @@ import Game.Steps.Gusts exposing (gustsStep)
 
 
 frameStep : Input.GameInput -> Time -> GameState -> GameState
-frameStep { keyboard, dims } time ({timers} as gameState) =
-  let
-    keyboardInputWithFocus =
-      if gameState.chatting then
-        Input.initialKeyboard
-      else
-        keyboard
+frameStep { keyboard, dims } time ({ timers } as gameState) =
+    let
+        keyboardInputWithFocus =
+            if gameState.chatting then
+                Input.initialKeyboard
+            else
+                keyboard
 
-    gameDims =
-      ( fst dims - Constants.sidebarWidth
-      , snd dims
-      )
+        gameDims =
+            ( fst dims - Constants.sidebarWidth
+            , snd dims
+            )
 
-    clientDelta =
-      time - gameState.timers.localTime
+        clientDelta =
+            time - gameState.timers.localTime
 
-    serverDelta =
-      time - (max gameState.timers.lastServerUpdate gameState.timers.localTime)
+        serverDelta =
+            time - (max gameState.timers.lastServerUpdate gameState.timers.localTime)
 
-    newTimers =
-      { timers
-        | localTime = time
-        , serverTime = timers.serverTime + serverDelta
-      }
-  in
-    { gameState | timers = newTimers }
-      |> gustsStep
-      |> playerStep keyboardInputWithFocus clientDelta
-      |> opponentsStep serverDelta
-      |> windHistoryStep
-      |> centerStep gameState.playerState.position gameDims
+        newTimers =
+            { timers
+                | localTime = time
+                , serverTime = timers.serverTime + serverDelta
+            }
+    in
+        { gameState | timers = newTimers }
+            |> gustsStep
+            |> playerStep keyboardInputWithFocus clientDelta
+            |> opponentsStep serverDelta
+            |> windHistoryStep
+            |> centerStep gameState.playerState.position gameDims
 
 
 raceInputStep : Input.RaceInput -> GameState -> GameState
 raceInputStep input ({ playerState, timers } as gameState) =
-  let
-    newTimers =
-      { timers
-        | serverTime = input.serverTime
-        , startTime = input.startTime
-        , lastServerUpdate = timers.localTime
-      }
-  in
-    { gameState
-      | opponents = input.opponents
-      , ghosts = input.ghosts
-      , wind = input.wind
-      , tallies = input.tallies
-      , timers = newTimers
-    }
+    let
+        newTimers =
+            { timers
+                | serverTime = input.serverTime
+                , startTime = input.startTime
+                , lastServerUpdate = timers.localTime
+            }
+    in
+        { gameState
+            | opponents = input.opponents
+            , ghosts = input.ghosts
+            , wind = input.wind
+            , tallies = input.tallies
+            , timers = newTimers
+        }
 
 
 opponentsStep : Time -> GameState -> GameState
 opponentsStep elapsed gameState =
-  let
-    newOpponents =
-      moveOpponents elapsed (isStarted gameState) gameState.course gameState.opponents
-  in
-    { gameState | opponents = newOpponents }
+    let
+        newOpponents =
+            moveOpponents elapsed (isStarted gameState) gameState.course gameState.opponents
+    in
+        { gameState | opponents = newOpponents }
 
 
 playerStep : Input.KeyboardInput -> Float -> GameState -> GameState
 playerStep keyboardInput elapsed gameState =
-  let
-    playerState =
-      turningStep elapsed keyboardInput gameState.playerState
-        |> playerWindStep gameState
-        |> vmgStep
-        |> Moving.playerStep elapsed (isStarted gameState) gameState.course
-        |> gateCrossingStep gameState.playerState gameState
-        |> playerTimeStep elapsed
-  in
-    { gameState | playerState = playerState }
+    let
+        playerState =
+            turningStep elapsed keyboardInput gameState.playerState
+                |> playerWindStep gameState
+                |> vmgStep
+                |> Moving.playerStep elapsed (isStarted gameState) gameState.course
+                |> gateCrossingStep gameState.playerState gameState
+                |> playerTimeStep elapsed
+    in
+        { gameState | playerState = playerState }
 
 
 centerStep : Point -> ( Int, Int ) -> GameState -> GameState
 centerStep ( px, py ) dims ({ center, playerState, course } as gameState) =
-  let
-    ( cx, cy ) =
-      center
+    let
+        ( cx, cy ) =
+            center
 
-    ( px', py' ) =
-      playerState.position
+        ( px', py' ) =
+            playerState.position
 
-    ( w, h ) =
-      Geo.floatify dims
+        ( w, h ) =
+            Geo.floatify dims
 
-    ( ( xMax, yMax ), ( xMin, yMin ) ) =
-      areaBox course.area
+        ( ( xMax, yMax ), ( xMin, yMin ) ) =
+            areaBox course.area
 
-    newCenter =
-      ( axisCenter px px' cx w xMin xMax
-      , axisCenter py py' cy h yMin yMax
-      )
-  in
-    { gameState | center = newCenter }
+        newCenter =
+            ( axisCenter px px' cx w xMin xMax
+            , axisCenter py py' cy h yMin yMax
+            )
+    in
+        { gameState | center = newCenter }
 
 
 axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
 axisCenter p p' c window areaMin areaMax =
-  let
-    offset =
-      (window / 2) - (window * 0.48)
+    let
+        offset =
+            (window / 2) - (window * 0.48)
 
-    outOffset =
-      (window / 2) - Constants.hexRadius
+        outOffset =
+            (window / 2) - Constants.hexRadius
 
-    delta =
-      p' - p
+        delta =
+            p' - p
 
-    minExit =
-      delta < 0 && p' < c - offset
+        minExit =
+            delta < 0 && p' < c - offset
 
-    maxExit =
-      delta > 0 && p' > c + offset
-  in
-    if minExit then
-      if areaMin > c - outOffset then
-        c
-      else
-        c + delta
-    else if maxExit then
-      if areaMax < c + outOffset then
-        c
-      else
-        c + delta
-    else
-      c
+        maxExit =
+            delta > 0 && p' > c + offset
+    in
+        if minExit then
+            if areaMin > c - outOffset then
+                c
+            else
+                c + delta
+        else if maxExit then
+            if areaMax < c + outOffset then
+                c
+            else
+                c + delta
+        else
+            c
 
 
 moveOpponents : Time -> Bool -> Course -> List Opponent -> List Opponent
 moveOpponents delta started course opponents =
-  List.map
-    (\o -> { o | state = Moving.opponentStep delta started course o.state })
-    opponents
+    List.map
+        (\o -> { o | state = Moving.opponentStep delta started course o.state })
+        opponents
 
 
 playerTimeStep : Float -> PlayerState -> PlayerState
 playerTimeStep elapsed state =
-  { state | time = state.time + elapsed }
-
+    { state | time = state.time + elapsed }

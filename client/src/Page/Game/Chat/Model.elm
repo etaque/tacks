@@ -4,34 +4,34 @@ import Model.Shared exposing (..)
 
 
 type alias Model =
-  { messages : List Message
-  , field : String
-  , focus : Bool
-  }
+    { messages : List Message
+    , field : String
+    , focus : Bool
+    }
 
 
 initial : Model
 initial =
-  { messages = []
-  , field = ""
-  , focus = False
-  }
+    { messages = []
+    , field = ""
+    , focus = False
+    }
 
 
 type Msg
-  = AddMessage Message
-  | Enter Bool
-  | Exit Bool
-  | UpdateField String
-  | Submit
-  | NoOp
+    = AddMessage Message
+    | Enter Bool
+    | Exit Bool
+    | UpdateField String
+    | Submit
+    | NoOp
 
 
 fieldId : String
 fieldId =
-  "chat-input-field"
+    "chat-input-field"
 
 
 messagesId : String
 messagesId =
-  "chat-messages-list"
+    "chat-messages-list"

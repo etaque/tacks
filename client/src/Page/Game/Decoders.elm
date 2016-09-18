@@ -11,40 +11,40 @@ import Game.Inputs exposing (RaceInput)
 
 decodeStringMsg : String -> Msg
 decodeStringMsg raw =
-  Json.decodeString Json.value raw
-    |> Result.map decodeMsg
-    |> Result.withDefault NoOp
+    Json.decodeString Json.value raw
+        |> Result.map decodeMsg
+        |> Result.withDefault NoOp
 
 
 decodeMsg : Json.Value -> Msg
 decodeMsg value =
-  case Json.decodeValue msgDecoder value of
-    Err e ->
-      NoOp
+    case Json.decodeValue msgDecoder value of
+        Err e ->
+            NoOp
 
-    Ok msg ->
-      msg
+        Ok msg ->
+            msg
 
 
 msgDecoder : Decoder Msg
 msgDecoder =
-  ("tag" := string) `andThen` specificMsgDecoder
+    ("tag" := string) `andThen` specificMsgDecoder
 
 
 specificMsgDecoder : String -> Decoder Msg
 specificMsgDecoder tag =
-  case tag of
-    "NoOp" ->
-      succeed NoOp
+    case tag of
+        "NoOp" ->
+            succeed NoOp
 
-    "RaceUpdate" ->
-      map RaceUpdate ("raceUpdate" := raceInputDecoder)
+        "RaceUpdate" ->
+            map RaceUpdate ("raceUpdate" := raceInputDecoder)
 
-    "LiveTrack" ->
-      map UpdateLiveTrack ("liveTrack" := liveTrackDecoder)
+        "LiveTrack" ->
+            map UpdateLiveTrack ("liveTrack" := liveTrackDecoder)
 
-    "Message" ->
-      map (ChatMsg << Chat.AddMessage) ("message" := messageDecoder)
+        "Message" ->
+            map (ChatMsg << Chat.AddMessage) ("message" := messageDecoder)
 
-    _ ->
-      fail <| tag ++ " is not a recognized tag for msgs"
+        _ ->
+            fail <| tag ++ " is not a recognized tag for msgs"

@@ -20,64 +20,64 @@ import View.Layout exposing (renderSite, renderGame)
 
 view : Model -> Html Msg
 view model =
-  let
-    ctx =
-      Context model.player model.liveStatus model.dims model.transition model.routeJump
-  in
-    pageView ctx model
+    let
+        ctx =
+            Context model.player model.liveStatus model.dims model.transition model.routeJump
+    in
+        pageView ctx model
 
 
 pageView : Context -> Model -> Html Msg
 pageView ctx ({ pages, player, liveStatus, dims } as model) =
-  case model.route of
-    Home ->
-      renderSite ctx HomeMsg (HomePage.view ctx pages.home)
+    case model.route of
+        Home ->
+            renderSite ctx HomeMsg (HomePage.view ctx pages.home)
 
-    Register ->
-      renderSite ctx RegisterMsg (RegisterPage.view ctx pages.register)
+        Register ->
+            renderSite ctx RegisterMsg (RegisterPage.view ctx pages.register)
 
-    Login ->
-      renderSite ctx LoginMsg (LoginPage.view ctx pages.login)
+        Login ->
+            renderSite ctx LoginMsg (LoginPage.view ctx pages.login)
 
-    Explore ->
-      renderSite ctx ExploreMsg (ExplorePage.view ctx pages.explore)
+        Explore ->
+            renderSite ctx ExploreMsg (ExplorePage.view ctx pages.explore)
 
-    EditTrack _ ->
-      renderGame ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
+        EditTrack _ ->
+            renderGame ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
 
-    PlayTrack _ ->
-      renderGame ctx GameMsg (GamePage.view ctx pages.game)
+        PlayTrack _ ->
+            renderGame ctx GameMsg (GamePage.view ctx pages.game)
 
-    PlayTimeTrial ->
-      renderGame ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)
+        PlayTimeTrial ->
+            renderGame ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)
 
-    ListDrafts ->
-      renderSite ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
+        ListDrafts ->
+            renderSite ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
 
-    Forum forumRoute ->
-      renderSite ctx ForumMsg (ForumPage.view ctx forumRoute pages.forum)
+        Forum forumRoute ->
+            renderSite ctx ForumMsg (ForumPage.view ctx forumRoute pages.forum)
 
-    Admin adminRoute ->
-      renderSite ctx AdminMsg (AdminPage.view ctx adminRoute pages.admin)
+        Admin adminRoute ->
+            renderSite ctx AdminMsg (AdminPage.view ctx adminRoute pages.admin)
 
-    NotFound ->
-      text "Not found!"
+        NotFound ->
+            text "Not found!"
 
-    EmptyRoute ->
-      text "Rien"
+        EmptyRoute ->
+            text "Rien"
 
 
 pageTitle : Model -> String
 pageTitle model =
-  case model.route of
-    PlayTrack _ ->
-      GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
+    case model.route of
+        PlayTrack _ ->
+            GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
 
-    PlayTimeTrial ->
-      PlayTimeTrialPage.pageTitle model.pages.playTimeTrial ++ " - Tacks"
+        PlayTimeTrial ->
+            PlayTimeTrialPage.pageTitle model.pages.playTimeTrial ++ " - Tacks"
 
-    Home ->
-      HomePage.pageTitle model.liveStatus model.pages.home ++ " - Tacks"
+        Home ->
+            HomePage.pageTitle model.liveStatus model.pages.home ++ " - Tacks"
 
-    _ ->
-      "Tacks"
+        _ ->
+            "Tacks"

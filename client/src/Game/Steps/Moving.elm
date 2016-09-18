@@ -14,142 +14,141 @@ import Hexagons
 
 maxAccel : Float
 maxAccel =
-  0.03
+    0.03
 
 
 playerStep : Float -> Bool -> Course -> PlayerState -> PlayerState
 playerStep elapsed started course state =
-  if elapsed == 0 then
-    state
-  else
-    let
-      baseSpeed =
-        polarSpeed state.windSpeed state.windAngle
+    if elapsed == 0 then
+        state
+    else
+        let
+            baseSpeed =
+                polarSpeed state.windSpeed state.windAngle
 
-      nextVelocity =
-        withInertia elapsed state.velocity baseSpeed
+            nextVelocity =
+                withInertia elapsed state.velocity baseSpeed
 
-      nextPosition =
-        movePoint state.position elapsed nextVelocity state.heading
+            nextPosition =
+                movePoint state.position elapsed nextVelocity state.heading
 
-      grounded =
-        isGrounded
-          started
-          state.position
-          nextPosition
-          course
-          (List.length state.crossedGates)
+            grounded =
+                isGrounded
+                    started
+                    state.position
+                    nextPosition
+                    course
+                    (List.length state.crossedGates)
 
-      velocity =
-        if grounded then
-          0
-        else
-          nextVelocity
+            velocity =
+                if grounded then
+                    0
+                else
+                    nextVelocity
 
-      position =
-        if grounded then
-          state.position
-        else
-          nextPosition
+            position =
+                if grounded then
+                    state.position
+                else
+                    nextPosition
 
-      trail =
-        List.take 20 (position :: state.trail)
-    in
-      { state
-        | isGrounded = grounded
-        , velocity = velocity
-        , position = position
-        , trail = trail
-      }
+            trail =
+                List.take 20 (position :: state.trail)
+        in
+            { state
+                | isGrounded = grounded
+                , velocity = velocity
+                , position = position
+                , trail = trail
+            }
 
 
 opponentStep : Float -> Bool -> Course -> OpponentState -> OpponentState
 opponentStep elapsed started course state =
-  if elapsed == 0 then
-    state
-  else
-    let
-      nextPosition =
-        movePoint state.position elapsed state.velocity state.heading
+    if elapsed == 0 then
+        state
+    else
+        let
+            nextPosition =
+                movePoint state.position elapsed state.velocity state.heading
 
-      grounded =
-        isGrounded
-          started
-          state.position
-          nextPosition
-          course
-          (List.length state.crossedGates)
+            grounded =
+                isGrounded
+                    started
+                    state.position
+                    nextPosition
+                    course
+                    (List.length state.crossedGates)
 
-      velocity =
-        if grounded then
-          0
-        else
-          velocity
+            velocity =
+                if grounded then
+                    0
+                else
+                    velocity
 
-      position =
-        if grounded then
-          state.position
-        else
-          nextPosition
-    in
-      { state | position = position }
-
+            position =
+                if grounded then
+                    state.position
+                else
+                    nextPosition
+        in
+            { state | position = position }
 
 
 withInertia : Float -> Float -> Float -> Float
 withInertia elapsed previousVelocity targetVelocity =
-  let
-    velocityDelta =
-      targetVelocity - previousVelocity
+    let
+        velocityDelta =
+            targetVelocity - previousVelocity
 
-    accel =
-      velocityDelta / elapsed
+        accel =
+            velocityDelta / elapsed
 
-    realAccel =
-      if accel > 0 then
-        min accel maxAccel
-      else
-        max accel -maxAccel
-  in
-    previousVelocity + realAccel * elapsed
+        realAccel =
+            if accel > 0 then
+                min accel maxAccel
+            else
+                max accel -maxAccel
+    in
+        previousVelocity + realAccel * elapsed
 
 
 isGrounded : Bool -> Point -> Point -> Course -> Int -> Bool
 isGrounded started oldPosition newPosition course crossedGatesCount =
-  let
-    gateIsVisible ( i, g ) =
-      abs (i - crossedGatesCount) <= 1
+    let
+        gateIsVisible ( i, g ) =
+            abs (i - crossedGatesCount) <= 1
 
-    visibleGates =
-      (course.start :: course.gates)
-        |> List.indexedMap (,)
-        |> List.filter gateIsVisible
-        |> List.map snd
+        visibleGates =
+            (course.start :: course.gates)
+                |> List.indexedMap (,)
+                |> List.filter gateIsVisible
+                |> List.map snd
 
-    marks =
-      visibleGates
-        |> List.map getGateMarks
-        |> List.concatMap (\m -> [ fst m, snd m ])
+        marks =
+            visibleGates
+                |> List.map getGateMarks
+                |> List.concatMap (\m -> [ fst m, snd m ])
 
-    halfBoatWidth =
-      boatWidth / 2
+        halfBoatWidth =
+            boatWidth / 2
 
-    stuckOnMark =
-      exists (\m -> (distance newPosition m) <= markRadius + halfBoatWidth) marks
+        stuckOnMark =
+            exists (\m -> (distance newPosition m) <= markRadius + halfBoatWidth) marks
 
-    stuckOnStartLine =
-      not started && startLineCrossed oldPosition newPosition course.start
+        stuckOnStartLine =
+            not started && startLineCrossed oldPosition newPosition course.start
 
-    currentTile =
-      Dict.get (Hexagons.pointToAxial hexRadius newPosition) course.grid
+        currentTile =
+            Dict.get (Hexagons.pointToAxial hexRadius newPosition) course.grid
 
-    onGround =
-      currentTile /= Just Water
-  in
-    stuckOnMark || stuckOnStartLine || onGround
+        onGround =
+            currentTile /= Just Water
+    in
+        stuckOnMark || stuckOnStartLine || onGround
 
 
 startLineCrossed : Point -> Point -> Gate -> Bool
 startLineCrossed oldPosition newPosition gate =
-  GateCrossing.gateCrossed gate oldPosition newPosition
-    || GateCrossing.gateCrossed (GateCrossing.revertGate gate) oldPosition newPosition
+    GateCrossing.gateCrossed gate oldPosition newPosition
+        || GateCrossing.gateCrossed (GateCrossing.revertGate gate) oldPosition newPosition

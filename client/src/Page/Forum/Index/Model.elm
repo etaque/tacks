@@ -4,15 +4,15 @@ import Page.Forum.Model.Shared exposing (..)
 
 
 type alias Model =
-  { topics : List TopicWithUser }
+    { topics : List TopicWithUser }
 
 
 initial : Model
 initial =
-  { topics = [] }
+    { topics = [] }
 
 
 type Msg
-  = ListResult (Result () (List TopicWithUser))
-  | RefreshList
-  | NoOp
+    = ListResult (Result () (List TopicWithUser))
+    | RefreshList
+    | NoOp

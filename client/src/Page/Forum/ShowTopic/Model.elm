@@ -5,26 +5,24 @@ import Page.Forum.Model.Shared exposing (..)
 
 
 type alias Model =
-  { currentTopic : Maybe TopicWithPosts
-  , newPostContent : Maybe String
-  , loading : Bool
-  }
+    { currentTopic : Maybe TopicWithPosts
+    , newPostContent : Maybe String
+    , loading : Bool
+    }
 
 
 initial : Model
 initial =
-  { currentTopic = Nothing
-  , newPostContent = Nothing
-  , loading = False
-  }
-
+    { currentTopic = Nothing
+    , newPostContent = Nothing
+    , loading = False
+    }
 
 
 type Msg
-  = LoadResult (Result () (TopicWithPosts))
-  | SetContent String
-  | ToggleNewPost
-  | Submit
-  | SubmitResult (FormResult PostWithUser)
-  | NoOp
-
+    = LoadResult (Result () (TopicWithPosts))
+    | SetContent String
+    | ToggleNewPost
+    | Submit
+    | SubmitResult (FormResult PostWithUser)
+    | NoOp

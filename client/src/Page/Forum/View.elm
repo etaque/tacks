@@ -12,16 +12,16 @@ import View.Layout as Layout
 
 view : Context -> Route -> Model -> Layout.Site Msg
 view ctx route model =
-  let
-    subView =
-      case route of
-        Index ->
-          List.map (map IndexMsg) (Index.view ctx model.index)
+    let
+        subView =
+            case route of
+                Index ->
+                    List.map (map IndexMsg) (Index.view ctx model.index)
 
-        ShowTopic _ ->
-          List.map (map ShowTopicMsg) (ShowTopic.view ctx model.showTopic)
+                ShowTopic _ ->
+                    List.map (map ShowTopicMsg) (ShowTopic.view ctx model.showTopic)
 
-        NewTopic ->
-          List.map (map NewTopicMsg) (NewTopic.view ctx model.newTopic)
-  in
-    Layout.Site "forum" (Just Layout.Discuss) subView Nothing
+                NewTopic ->
+                    List.map (map NewTopicMsg) (NewTopic.view ctx model.newTopic)
+    in
+        Layout.Site "forum" (Just Layout.Discuss) subView Nothing

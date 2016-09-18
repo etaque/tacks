@@ -11,219 +11,222 @@ import Http
 
 
 type alias Context =
-  { player : Player
-  , liveStatus : LiveStatus
-  , dims : ( Int, Int )
-  , transition : Transit.Transition
-  , routeJump : Route.RouteJump
-  }
+    { player : Player
+    , liveStatus : LiveStatus
+    , dims : ( Int, Int )
+    , transition : Transit.Transition
+    , routeJump : Route.RouteJump
+    }
 
 
 type alias FormResult a =
-  Result FormErrors a
+    Result FormErrors a
 
 
 type alias FormErrors =
-  Dict String (List String)
+    Dict String (List String)
 
 
 type RemoteData e a
-  = Loading
-  | DataErr e
-  | DataOk a
+    = Loading
+    | DataErr e
+    | DataOk a
+
 
 dataToMaybe : RemoteData e a -> Maybe a
 dataToMaybe data =
-  case data of
-    DataOk ok ->
-      Just ok
+    case data of
+        DataOk ok ->
+            Just ok
 
-    _ ->
-      Nothing
+        _ ->
+            Nothing
+
 
 type alias HttpData a =
-  RemoteData Http.Error a
+    RemoteData Http.Error a
 
 
 type alias HttpResult a =
-  Result Http.Error a
+    Result Http.Error a
 
 
 type alias HttpTask a =
-  Task Never (HttpResult a)
+    Task Never (HttpResult a)
 
 
 type alias Id =
-  String
+    String
 
 
 type alias Player =
-  { id : Id
-  , handle : Maybe String
-  , status : Maybe String
-  , avatarId : Maybe String
-  , vmgMagnet : Int
-  , guest : Bool
-  , user : Bool
-  }
+    { id : Id
+    , handle : Maybe String
+    , status : Maybe String
+    , avatarId : Maybe String
+    , vmgMagnet : Int
+    , guest : Bool
+    , user : Bool
+    }
 
 
 type alias User =
-  { id : Id
-  , handle : String
-  , status : Maybe String
-  , avatarId : Maybe String
-  , vmgMagnet : Int
-  }
+    { id : Id
+    , handle : String
+    , status : Maybe String
+    , avatarId : Maybe String
+    , vmgMagnet : Int
+    }
 
 
 asPlayer : User -> Player
 asPlayer user =
-  Player user.id (Just user.handle) user.status user.avatarId user.vmgMagnet False True
+    Player user.id (Just user.handle) user.status user.avatarId user.vmgMagnet False True
 
 
 isAdmin : Player -> Bool
 isAdmin player =
-  case player.handle of
-    Just h ->
-      List.member h Constants.admins
+    case player.handle of
+        Just h ->
+            List.member h Constants.admins
 
-    Nothing ->
-      False
+        Nothing ->
+            False
 
 
 canUpdateDraft : Player -> Track -> Bool
 canUpdateDraft player track =
-  (track.status == Draft && player.id == track.creatorId) || isAdmin player
+    (track.status == Draft && player.id == track.creatorId) || isAdmin player
 
 
 type alias LiveStatus =
-  { liveTracks : List LiveTrack
-  , liveTimeTrial : Maybe LiveTimeTrial
-  , onlinePlayers : List Player
-  }
+    { liveTracks : List LiveTrack
+    , liveTimeTrial : Maybe LiveTimeTrial
+    , onlinePlayers : List Player
+    }
 
 
 type alias LiveTimeTrial =
-  { timeTrial : TimeTrial
-  , track : Track
-  , meta : TrackMeta
-  }
+    { timeTrial : TimeTrial
+    , track : Track
+    , meta : TrackMeta
+    }
 
 
 type alias TimeTrial =
-  { id : String
-  , trackId : String
-  , period : String
-  , creationTime : Time
-  }
+    { id : String
+    , trackId : String
+    , period : String
+    , creationTime : Time
+    }
+
 
 emptyLiveStatus : LiveStatus
 emptyLiveStatus =
-  LiveStatus [] Nothing []
+    LiveStatus [] Nothing []
 
 
 type alias LiveTrack =
-  { track : Track
-  , meta : TrackMeta
-  , players : List Player
-  , races : List Race
-  }
+    { track : Track
+    , meta : TrackMeta
+    , players : List Player
+    , races : List Race
+    }
 
 
 liveTrackPlayers : LiveTrack -> List Player
 liveTrackPlayers liveTrack =
-  liveTrack.players ++ (List.concatMap .players liveTrack.races)
+    liveTrack.players ++ (List.concatMap .players liveTrack.races)
 
 
 type alias Track =
-  { id : TrackId
-  , name : String
-  , creatorId : String
-  , status : TrackStatus
-  , featured : Bool
-  , creationTime : Time
-  , updateTime : Time
-  }
+    { id : TrackId
+    , name : String
+    , creatorId : String
+    , status : TrackStatus
+    , featured : Bool
+    , creationTime : Time
+    , updateTime : Time
+    }
 
 
 type alias TrackId =
-  Id
+    Id
 
 
 type alias TrackMeta =
-  { creator : Player
-  , rankings : List Ranking
-  , runsCount : Int
-  }
+    { creator : Player
+    , rankings : List Ranking
+    , runsCount : Int
+    }
 
 
 type TrackStatus
-  = Draft
-  | Open
-  | Archived
-  | Deleted
+    = Draft
+    | Open
+    | Archived
+    | Deleted
 
 
 trackStatusLabel : TrackStatus -> String
 trackStatusLabel status =
-  case status of
-    Open ->
-      "Published"
+    case status of
+        Open ->
+            "Published"
 
-    _ ->
-      toString status
+        _ ->
+            toString status
 
 
 type alias Race =
-  { id : String
-  , startTime : Time
-  , players : List Player
-  , tallies : List PlayerTally
-  }
+    { id : String
+    , startTime : Time
+    , players : List Player
+    , tallies : List PlayerTally
+    }
 
 
 type alias Run =
-  { id : String
-  , trackId : String
-  , raceId : String
-  , playerId : String
-  , playerHandle : Maybe String
-  , startTime : Time
-  , tally : List Time
-  , duration : Time
-  }
+    { id : String
+    , trackId : String
+    , raceId : String
+    , playerId : String
+    , playerHandle : Maybe String
+    , startTime : Time
+    , tally : List Time
+    , duration : Time
+    }
 
 
 type alias RaceReport =
-  { id : String
-  , startTime : Time
-  , trackId : String
-  , trackName : String
-  , runs : List Run
-  }
+    { id : String
+    , startTime : Time
+    , trackId : String
+    , trackName : String
+    , runs : List Run
+    }
 
 
 type alias PlayerTally =
-  { player : Player
-  , gates : List Time
-  , finished : Bool
-  }
+    { player : Player
+    , gates : List Time
+    , finished : Bool
+    }
 
 
 type alias Ranking =
-  { rank : Int
-  , runId : String
-  , player : Player
-  , finishTime : Time
-  }
+    { rank : Int
+    , runId : String
+    , player : Player
+    , finishTime : Time
+    }
 
 
 type alias Message =
-  { content : String
-  , player : Player
-  , time : Float
-  }
+    { content : String
+    , player : Player
+    , time : Float
+    }
 
 
 
@@ -231,90 +234,90 @@ type alias Message =
 
 
 type alias Course =
-  { start : Gate
-  , gates : List Gate
-  , grid : Grid
-  , area : RaceArea
-  , windSpeed : Int
-  , windGenerator : WindGenerator
-  , gustGenerator : GustGenerator
-  }
+    { start : Gate
+    , gates : List Gate
+    , grid : Grid
+    , area : RaceArea
+    , windSpeed : Int
+    , windGenerator : WindGenerator
+    , gustGenerator : GustGenerator
+    }
 
 
 type alias Gate =
-  { label : Maybe String
-  , center : Point
-  , width : Float
-  , orientation : Orientation
-  }
+    { label : Maybe String
+    , center : Point
+    , width : Float
+    , orientation : Orientation
+    }
 
 
 type Orientation
-  = North
-  | South
-  | East
-  | West
+    = North
+    | South
+    | East
+    | West
 
 
 orientationAbbr : Orientation -> String
 orientationAbbr o =
-  case o of
-    North ->
-      "N"
+    case o of
+        North ->
+            "N"
 
-    South ->
-      "S"
+        South ->
+            "S"
 
-    East ->
-      "E"
+        East ->
+            "E"
 
-    West ->
-      "W"
+        West ->
+            "W"
 
 
 type alias RaceArea =
-  { rightTop : Point
-  , leftBottom : Point
-  }
+    { rightTop : Point
+    , leftBottom : Point
+    }
 
 
 type alias WindGenerator =
-  { wavelength1 : Int
-  , amplitude1 : Int
-  , wavelength2 : Int
-  , amplitude2 : Int
-  }
+    { wavelength1 : Int
+    , amplitude1 : Int
+    , wavelength2 : Int
+    , amplitude2 : Int
+    }
 
 
 type alias GustGenerator =
-  { interval : Int
-  , radiusBase : Int
-  , radiusVariation : Int
-  , speedVariation : Range
-  , originVariation : Range
-  }
+    { interval : Int
+    , radiusBase : Int
+    , radiusVariation : Int
+    , speedVariation : Range
+    , originVariation : Range
+    }
 
 
 type alias Range =
-  { start : Int
-  , end : Int
-  }
+    { start : Int
+    , end : Int
+    }
 
 
 type alias Point =
-  ( Float, Float )
+    ( Float, Float )
 
 
 type alias Dims =
-  ( Int, Int )
+    ( Int, Int )
 
 
 type alias Segment =
-  ( Point, Point )
+    ( Point, Point )
 
 
 type alias Coords =
-  Hexagons.Axial
+    Hexagons.Axial
 
 
 
@@ -322,20 +325,20 @@ type alias Coords =
 
 
 type alias Grid =
-  Dict Coords TileKind
+    Dict Coords TileKind
 
 
 type alias Tile =
-  { coords : Coords, kind : TileKind }
+    { coords : Coords, kind : TileKind }
 
 
 listGridTiles : Grid -> List Tile
 listGridTiles grid =
-  Dict.toList grid
-    |> List.map (\( c, k ) -> Tile c k)
+    Dict.toList grid
+        |> List.map (\( c, k ) -> Tile c k)
 
 
 type TileKind
-  = Water
-  | Grass
-  | Rock
+    = Water
+    | Grass
+    | Rock
