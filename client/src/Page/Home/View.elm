@@ -4,6 +4,8 @@ import Html.App exposing (map)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Date
+import Date.Format as DateFormat
 import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
@@ -44,8 +46,8 @@ view ctx model =
         [ class "white inside" ]
         [ div
             [ class "row live-center" ]
-            [ div [ class "col-md-6" ] [ showTimeTrial ctx.player ctx.liveStatus ]
-            , div [ class "col-md-offset-2 col-md-4" ] [ activePlayersPane ctx.player ctx.liveStatus model.pokes ]
+            [ div [ class "col-md-8" ] [ renderTimeTrial ctx.player ctx.liveStatus ]
+            , div [ class "col-md-4" ] [ activePlayersPane ctx.player ctx.liveStatus model.pokes ]
             ]
         , div
             [ class "row" ]
@@ -55,17 +57,6 @@ view ctx model =
     , Layout.section
         [ class "grey" ]
         [ h2 [] [ text "Recent races" ]
-
-        , case ctx.liveStatus.liveTimeTrial of
-            Just liveTimeTrial ->
-              Utils.linkTo
-                Route.PlayTimeTrial
-                []
-                [ text liveTimeTrial.track.name ]
-
-            Nothing ->
-              text "ARFFFFFFFFFFFF"
-
         , case model.raceReports of
             Loading ->
               Utils.loading
@@ -93,35 +84,49 @@ dialogContent model =
       Race.reportDialog raceReport
 
 
-showTimeTrial : Player -> LiveStatus -> Html Msg
-showTimeTrial player liveStatus =
+renderTimeTrial : Player -> LiveStatus -> Html Msg
+renderTimeTrial player liveStatus =
   div
     [ class "home-time-trial" ]
-    [ h2 [] [ text "Time trial of the month" ]
+    [ h2 [] [ text "Current time trial" ]
     , case liveStatus.liveTimeTrial of
         Just {track, timeTrial, meta} ->
           Utils.linkTo
             Route.PlayTimeTrial
-            [ class "live-track time-trial" ]
+            [ class "time-trial" ]
             [ div
-                [ class "live-track-header" ]
-                [ h3
-                    [ class "name"
-                    , title track.name
+                [ class "row"]
+                [ div
+                    [ class "col-sm-6 time-trial-left" ]
+                    [ div
+                        [ class "time-trial-header" ]
+                        [ div
+                            [ class "date" ]
+                            [ text ((DateFormat.format "%B %Y" (Date.fromTime timeTrial.creationTime))) ]
+                        , h3
+                            [ class "name"
+                            , title track.name
+                            ]
+                            [ text track.name ]
+                        ]
                     ]
-                    [ text track.name ]
+                , div
+                    [ class "col-sm-6 time-trial-right" ]
+                    [ div
+                        [ class "time-trial-body" ]
+                        [ Track.rankingsExtract meta.rankings ]
+                    , if List.length meta.rankings > 0 then
+                        div
+                          [ class "time-trial-actions" ]
+                          [ a
+                            [ class "btn-flat" ]
+                            [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")" ]
+                          ]
+                      else
+                        text ""
+                    ]
                 ]
-            , div
-                [ class "live-track-body" ]
-                [ Track.rankingsExtract meta.rankings ]
-            , div
-                [ class "live-track-actions" ]
-                [ a
-                    [ class "btn-flat"
-                    ]
-                    [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")"
-                    ]
-                ]
+
             ]
         Nothing ->
           text ""
@@ -137,7 +142,7 @@ liveTracks player { liveTracks } =
   in
     div
       [ class "live-tracks" ]
-      [ h2 [] [ text "Featured tracks" ]
+      [ h2 [] [ text "Live tracks" ]
       , div [ class "row" ] featuredTracks
       ]
 
@@ -196,7 +201,7 @@ activePlayersPane player {liveTracks, onlinePlayers} pokes =
 
 activeTrackPlayers : LiveTrack -> Html Msg
 activeTrackPlayers { track, players } =
-  linkTo
+  Utils.linkTo
     (PlayTrack track.id)
     [ class "active-track-players" ]
     [ h4 [] [ text track.name ]

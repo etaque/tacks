@@ -1,0 +1,81 @@
+@import 'colors';
+@import 'fonts';
+@import 'mixins';
+
+
+.time-trial {
+  @include sheet;
+  @include shadow-light;
+  /* background-color: $darkSeaBlue; */
+  /* @include gradient-directional($seaBlue, $mainBlue, -30deg); */
+  /* background-color: $lightPurple; */
+  /* @include gradient-directional($lightPurple, $intensePurple, -30deg); */
+  background-color: $charcoal;
+  @include gradient-directional($charcoal, $grey, -30deg);
+  padding-left: 15px;
+  padding-right: 15px;
+
+  margin-bottom: 24px;
+  cursor: pointer;
+  overflow: hidden;
+  display: block;
+
+  &:hover {
+    @include shadow-medium;
+  }
+
+  .time-trial-header {
+    color: $white;
+    position: relative;
+    margin: 0;
+    padding-top: 64px;
+    padding-left: 15px;
+    text-align: center;
+
+    h3 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: $thin;
+      font-size: 27px;
+      font-weight: bold;
+      margin: 0;
+    }
+
+    .date {
+      color: $darkGrey;
+      color: $lightGrey;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      font-size: 16px;
+    }
+  }
+
+  .time-trial-right {
+    padding-right: 0;
+  }
+
+  .time-trial-body {
+    position: relative;
+    overflow-y: hidden;
+    height: 147px;
+    background: $white;
+    border-left: $border;
+
+    .list-rankings {
+      margin-bottom: 0;
+    }
+  }
+
+  .time-trial-actions {
+    border-top: $border;
+    background-color: $white;
+    border-left: $border;
+
+    .btn-flat {
+      display: block;
+      line-height: 42px;
+    }
+  }
+
+}
