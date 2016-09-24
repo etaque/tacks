@@ -13,6 +13,7 @@ import View.Utils as Utils exposing (..)
 import View.Layout as Layout
 import View.Race as Race
 import View.Track as Track
+import View.TimeTrial as TimeTrial
 import Dialog
 import Set
 
@@ -89,47 +90,9 @@ renderTimeTrial player liveStatus =
     div
         [ class "home-time-trial" ]
         [ h2 [] [ text "Current time trial" ]
-        , case liveStatus.liveTimeTrial of
-            Just { track, timeTrial, meta } ->
-                Utils.linkTo
-                    Route.PlayTimeTrial
-                    [ class "time-trial" ]
-                    [ div
-                        [ class "row" ]
-                        [ div
-                            [ class "col-sm-6 time-trial-left" ]
-                            [ div
-                                [ class "time-trial-header" ]
-                                [ div
-                                    [ class "date" ]
-                                    [ text ((DateFormat.format "%B %Y" (Date.fromTime timeTrial.creationTime))) ]
-                                , h3
-                                    [ class "name"
-                                    , title track.name
-                                    ]
-                                    [ text track.name ]
-                                ]
-                            ]
-                        , div
-                            [ class "col-sm-6 time-trial-right" ]
-                            [ div
-                                [ class "time-trial-body" ]
-                                [ Track.rankingsExtract meta.rankings ]
-                            , if List.length meta.rankings > 0 then
-                                div
-                                    [ class "time-trial-actions" ]
-                                    [ a
-                                        [ class "btn-flat" ]
-                                        [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")" ]
-                                    ]
-                              else
-                                text ""
-                            ]
-                        ]
-                    ]
-
-            Nothing ->
-                text ""
+        , liveStatus.liveTimeTrial
+            |> Maybe.map (TimeTrial.cardView player)
+            |> Maybe.withDefault (text "")
         ]
 
 
