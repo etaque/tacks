@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import TransitStyle
-import Model.Shared exposing (Track, Context, RaceReport)
+import Model.Shared exposing (TimeTrial, Track, Context, RaceReport)
 import Route
 import Page.Admin.Route exposing (..)
 import Page.Admin.Model exposing (..)
@@ -15,8 +15,9 @@ import View.Race as Race
 
 type Tab
     = DashboardTab
-    | TracksTab
     | UsersTab
+    | TimeTrialsTab
+    | TracksTab
     | ReportsTab
 
 
@@ -54,13 +55,17 @@ menu item =
                 [ classList [ ( "tab", True ), ( "active", item == DashboardTab ) ] ]
                 [ text "Dashboard" ]
             , linkTo
-                (Route.Admin ListReports)
-                [ classList [ ( "tab", True ), ( "active", item == ReportsTab ) ] ]
-                [ text "Reports" ]
+                (Route.Admin ListTimeTrials)
+                [ classList [ ( "tab", True ), ( "active", item == TimeTrialsTab ) ] ]
+                [ text "Time trials" ]
             , linkTo
                 (Route.Admin (ListUsers Nothing))
                 [ classList [ ( "tab", True ), ( "active", item == UsersTab ) ] ]
                 [ text "Users" ]
+            , linkTo
+                (Route.Admin ListReports)
+                [ classList [ ( "tab", True ), ( "active", item == ReportsTab ) ] ]
+                [ text "Reports" ]
             , linkTo
                 (Route.Admin (ListTracks Nothing))
                 [ classList [ ( "tab", True ), ( "active", item == TracksTab ) ] ]
@@ -74,6 +79,9 @@ routeMenuItem r =
     case r of
         Dashboard ->
             DashboardTab
+
+        ListTimeTrials ->
+            TimeTrialsTab
 
         ListUsers _ ->
             UsersTab
@@ -101,6 +109,9 @@ content route ctx item ({ tracks, users } as model) =
                 DashboardTab ->
                     dashboardContent route model
 
+                TimeTrialsTab ->
+                    timeTrialsContent route model
+
                 TracksTab ->
                     tracksContent route model
 
@@ -118,6 +129,38 @@ dashboardContent route ({ tracks, users } as model) =
     [ div [ class "" ] [ text <| toString (List.length users) ++ " users" ]
     , div [ class "" ] [ text <| toString (List.length tracks) ++ " tracks" ]
     ]
+
+
+timeTrialsContent : Route -> Model -> List (Html Msg)
+timeTrialsContent route ({ timeTrials, tracks, users } as model) =
+    [ table
+        [ class "admin-table admin-time-trials" ]
+        (List.map (timeTrialItem tracks) timeTrials)
+    ]
+
+
+timeTrialItem : List Track -> TimeTrial -> Html Msg
+timeTrialItem tracks timeTrial =
+    let
+        trackMaybe =
+            List.filter (\t -> t.id == timeTrial.trackId) tracks |> List.head
+    in
+        tr
+            []
+            [ th
+                []
+                [ text timeTrial.period ]
+            , td
+                []
+                [ case trackMaybe of
+                    Just track ->
+                        linkTo (Route.EditTrack track.id) [ class "name" ] [ text track.name ]
+
+                    Nothing ->
+                        text "Track not found"
+                ]
+            , td [] [ text (Utils.formatDate timeTrial.creationTime) ]
+            ]
 
 
 tracksContent : Route -> Model -> List (Html Msg)

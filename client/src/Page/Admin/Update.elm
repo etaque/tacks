@@ -4,6 +4,7 @@ import Response exposing (..)
 import Page.Admin.Model exposing (..)
 import ServerApi exposing (getJson, postJson)
 import Update.Utils exposing (..)
+import Task
 
 
 mount : Response Model Msg
@@ -19,13 +20,39 @@ update msg model =
 
         RefreshDataResult result ->
             let
-                { tracks, users, reports } =
-                    Result.withDefault (AdminData [] [] []) result
+                { tracks, users, reports, timeTrials } =
+                    Result.withDefault (AdminData [] [] [] []) result
+
+                newModel =
+                    { model
+                        | tracks = tracks
+                        , users = users
+                        , reports = reports
+                        , timeTrials = timeTrials
+                    }
             in
-                res { model | tracks = tracks, users = users, reports = reports } Cmd.none
+                res newModel Cmd.none
+
+        DeleteTimeTrial id ->
+            ServerApi.deleteTimeTrial id
+                |> Task.toResult
+                |> performSucceed DeleteTimeTrialResult
+                |> res model
+
+        DeleteTimeTrialResult result ->
+            case result of
+                Ok id ->
+                    -- TODO
+                    res model Cmd.none
+
+                Err _ ->
+                    res model Cmd.none
 
         DeleteTrack id ->
-            res model (performSucceed DeleteTrackResult (ServerApi.deleteDraft id))
+            ServerApi.deleteDraft id
+                |> Task.toResult
+                |> performSucceed DeleteTrackResult
+                |> res model
 
         DeleteTrackResult result ->
             case result of

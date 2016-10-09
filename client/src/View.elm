@@ -10,6 +10,7 @@ import Page.Register.View as RegisterPage
 import Page.Explore.View as ExplorePage
 import Page.EditTrack.View as EditTrackPage
 import Page.Game.View as GamePage
+import Page.ShowTimeTrial.View as ShowTimeTrialPage
 import Page.PlayTimeTrial.View as PlayTimeTrialPage
 import Page.ListDrafts.View as ListDraftsPage
 import Page.Forum.View as ForumPage
@@ -47,6 +48,9 @@ pageView ctx ({ pages, player, liveStatus, dims } as model) =
 
         PlayTrack _ ->
             renderGame ctx GameMsg (GamePage.view ctx pages.game)
+
+        ShowTimeTrial _ ->
+            renderSite ctx ShowTimeTrialMsg (ShowTimeTrialPage.view ctx pages.showTimeTrial)
 
         PlayTimeTrial ->
             renderGame ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)

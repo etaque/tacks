@@ -8,6 +8,7 @@ import Page.Explore.Model as Explore
 import Page.EditTrack.Model as EditTrack
 import Page.Game.Model as Game
 import Page.PlayTimeTrial.Model as PlayTimeTrial
+import Page.ShowTimeTrial.Model as ShowTimeTrial
 import Page.ListDrafts.Model as ListDrafts
 import Page.Forum.Model as Forum
 import Page.Admin.Model as Admin
@@ -48,6 +49,7 @@ type PageMsg
     | ExploreMsg Explore.Msg
     | EditTrackMsg EditTrack.Msg
     | GameMsg Game.Msg
+    | ShowTimeTrialMsg ShowTimeTrial.Msg
     | PlayTimeTrialMsg PlayTimeTrial.Msg
     | ListDraftsMsg ListDrafts.Msg
     | ForumMsg Forum.Msg
@@ -73,6 +75,7 @@ type alias Pages =
     , explore : Explore.Model
     , editTrack : EditTrack.Model
     , game : Game.Model
+    , showTimeTrial : ShowTimeTrial.Model
     , playTimeTrial : PlayTimeTrial.Model
     , listDrafts : ListDrafts.Model
     , forum : Forum.Model
@@ -97,6 +100,7 @@ initialModel setup =
         , explore = Explore.initial
         , editTrack = EditTrack.initial
         , game = Game.initial
+        , showTimeTrial = ShowTimeTrial.initial
         , playTimeTrial = PlayTimeTrial.initial
         , listDrafts = ListDrafts.initial
         , forum = Forum.initial

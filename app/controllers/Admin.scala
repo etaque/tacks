@@ -35,12 +35,27 @@ object Admin extends Controller with Security {
         tracks <- dao.Tracks.list
         users <- dao.Users.list
         reports <- models.RaceReport.list(32, Some(1), None)
+        timeTrials <- dao.TimeTrials.list
       }
       yield Ok(Json.obj(
         "tracks" -> Json.toJson(tracks),
         "users" -> Json.toJson(users)(fullUserSeqFormat),
-        "reports" -> Json.toJson(reports)
+        "reports" -> Json.toJson(reports),
+        "timeTrials" -> Json.toJson(timeTrials)
       ))
+    }
+  }
+
+  def deleteTimeTrial(id: UUID) = PlayerAction.async(parse.json) { implicit request =>
+    dao.TimeTrials.findById(id).flatMap {
+      case Some(_) => {
+        dao.TimeTrials.remove(id).map { _ =>
+          Ok(Json.obj())
+        }
+
+      }
+      case None =>
+        Future.successful(NotFound)
     }
   }
 

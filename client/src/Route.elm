@@ -20,6 +20,7 @@ type Route
     | EditTrack String
     | PlayTrack String
     | PlayTimeTrial
+    | ShowTimeTrial String
     | Forum ForumRoute.Route
     | Admin AdminRoute.Route
     | NotFound
@@ -47,6 +48,7 @@ matchers =
     , static ListDrafts "/drafts"
     , dyn1 EditTrack "/edit/" string ""
     , dyn1 PlayTrack "/play/" string ""
+    , dyn1 ShowTimeTrial "/time-trial/" string ""
     , static PlayTimeTrial "/time-trial"
     ]
         ++ (mapMatchers Admin AdminRoute.matchers)
@@ -76,6 +78,9 @@ toPath route =
 
         PlayTrack id ->
             "/play/" ++ id
+
+        ShowTimeTrial id ->
+            "/time-trial/" ++ id
 
         PlayTimeTrial ->
             "/time-trial"

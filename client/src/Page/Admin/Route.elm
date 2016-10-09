@@ -5,8 +5,9 @@ import RouteParser exposing (..)
 
 type Route
     = Dashboard
-    | ListTracks (Maybe String)
     | ListUsers (Maybe String)
+    | ListTimeTrials
+    | ListTracks (Maybe String)
     | ListReports
 
 
@@ -18,10 +19,11 @@ router =
 matchers : List (Matcher Route)
 matchers =
     [ static Dashboard "/admin"
-    , static (ListTracks Nothing) "/admin/tracks"
-    , dyn1 (ListTracks << Just) "/admin/tracks/" string ""
     , static (ListUsers Nothing) "/admin/users"
     , dyn1 (ListUsers << Just) "/admin/users/" string ""
+    , static ListTimeTrials "/admin/time-trials"
+    , static (ListTracks Nothing) "/admin/tracks"
+    , dyn1 (ListTracks << Just) "/admin/tracks/" string ""
     , static ListReports "/admin/reports"
     ]
 
@@ -33,11 +35,14 @@ toPath route =
             Dashboard ->
                 ""
 
-            ListTracks id ->
-                "/tracks" ++ (maybe id)
-
             ListUsers id ->
                 "/users" ++ (maybe id)
+
+            ListTimeTrials ->
+                "/time-trials"
+
+            ListTracks id ->
+                "/tracks" ++ (maybe id)
 
             ListReports ->
                 "/reports"

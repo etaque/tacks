@@ -11,6 +11,7 @@ import Page.Login.Update as Login
 import Page.Explore.Update as Explore
 import Page.EditTrack.Update as EditTrack
 import Page.Game.Update as Game
+import Page.ShowTimeTrial.Update as ShowTimeTrial
 import Page.PlayTimeTrial.Update as PlayTimeTrial
 import Page.ListDrafts.Update as ListDrafts
 import Page.Forum.Update as Forum
@@ -167,6 +168,9 @@ mountRoute newRoute ({ pages, player, route } as prevModel) =
             PlayTrack id ->
                 applyGame (Game.mount id) model
 
+            ShowTimeTrial id ->
+                applyShowTimeTrial (ShowTimeTrial.mount id) model
+
             PlayTimeTrial ->
                 applyPlayTimeTrial PlayTimeTrial.mount model
 
@@ -204,6 +208,9 @@ pageUpdate pageMsg ({ pages, player, dims } as model) =
         GameMsg a ->
             applyGame (Game.update player model.host a pages.game) model
 
+        ShowTimeTrialMsg a ->
+            applyShowTimeTrial (ShowTimeTrial.update player a pages.showTimeTrial) model
+
         PlayTimeTrialMsg a ->
             applyPlayTimeTrial (PlayTimeTrial.update player model.host a pages.playTimeTrial) model
 
@@ -239,6 +246,10 @@ applyEditTrack =
 
 applyGame =
     applyPage (\s pages -> { pages | game = s }) GameMsg
+
+
+applyShowTimeTrial =
+    applyPage (\s pages -> { pages | showTimeTrial = s }) ShowTimeTrialMsg
 
 
 applyPlayTimeTrial =

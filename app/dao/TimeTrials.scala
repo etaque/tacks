@@ -39,6 +39,10 @@ object TimeTrials extends TableQuery(new TimeTrialTable(_)) {
     all += timeTrial
   }
 
+  def remove(id: UUID): Future[Int] = DB.run {
+    onId(id).delete
+  }
+
   private def onId(id: UUID) =
     filter(_.id === id)
 

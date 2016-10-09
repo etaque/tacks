@@ -87,13 +87,22 @@ dialogContent model =
 
 renderTimeTrial : Player -> LiveStatus -> Html Msg
 renderTimeTrial player liveStatus =
-    div
-        [ class "home-time-trial" ]
-        [ h2 [] [ text "Current time trial" ]
-        , liveStatus.liveTimeTrial
-            |> Maybe.map (TimeTrial.cardView player)
-            |> Maybe.withDefault (text "")
-        ]
+    case liveStatus.liveTimeTrial of
+        Just liveTimeTrial ->
+            div
+                [ class "home-time-trial" ]
+                [ Utils.linkTo
+                    (Route.ShowTimeTrial liveTimeTrial.timeTrial.id)
+                    []
+                    [ text "See all" ]
+                , h2
+                    []
+                    [ text "Current time trial" ]
+                , TimeTrial.cardView player liveTimeTrial
+                ]
+
+        Nothing ->
+            text ""
 
 
 liveTracks : Player -> LiveStatus -> Html Msg

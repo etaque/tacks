@@ -156,9 +156,14 @@ publishTrack id =
     postJson trackDecoder ("/api/tracks/" ++ id ++ "/publish") JsEncode.null
 
 
-deleteDraft : String -> Task Never (FormResult String)
+deleteDraft : String -> Task Http.Error String
 deleteDraft id =
-    postJson (Json.succeed id) ("/api/tracks/" ++ id ++ "/delete") JsEncode.null
+    Http.post (Json.succeed id) ("/api/tracks/" ++ id ++ "/delete") Http.empty
+
+
+deleteTimeTrial : String -> Task Http.Error String
+deleteTimeTrial id =
+    Http.post (Json.succeed id) ("/api/time-trials/" ++ id ++ "/delete") Http.empty
 
 
 

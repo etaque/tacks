@@ -10,6 +10,7 @@ type alias Model =
     { tracks : List Track
     , users : List User
     , reports : List RaceReport
+    , timeTrials : List TimeTrial
     }
 
 
@@ -28,16 +29,18 @@ type alias AdminData =
     { tracks : List Track
     , users : List User
     , reports : List RaceReport
+    , timeTrials : List TimeTrial
     }
 
 
 adminDataDecoder : Decoder AdminData
 adminDataDecoder =
-    object3
+    object4
         AdminData
         ("tracks" := list trackDecoder)
         ("users" := list userDecoder)
         ("reports" := list raceReportDecoder)
+        ("timeTrials" := list timeTrialDecoder)
 
 
 userDecoder : Decoder User
@@ -63,6 +66,7 @@ initial =
     { tracks = []
     , users = []
     , reports = []
+    , timeTrials = []
     }
 
 
@@ -70,5 +74,7 @@ type Msg
     = RefreshData
     | RefreshDataResult (Result () AdminData)
     | DeleteTrack String
-    | DeleteTrackResult (FormResult String)
+    | DeleteTrackResult (HttpResult String)
+    | DeleteTimeTrial String
+    | DeleteTimeTrialResult (HttpResult String)
     | NoOp
