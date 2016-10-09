@@ -97,4 +97,5 @@ publish id =
 deleteDraft : String -> Cmd Msg
 deleteDraft id =
     ServerApi.deleteDraft id
+        |> Task.toResult
         |> performSucceed DeleteResult

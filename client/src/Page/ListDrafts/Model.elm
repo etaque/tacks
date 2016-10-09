@@ -37,7 +37,7 @@ type Msg
     | PublishResult (FormResult Track)
     | ConfirmDelete Bool
     | Delete String
-    | DeleteResult (FormResult String)
+    | DeleteResult (HttpResult String)
     | NoOp
 
 
