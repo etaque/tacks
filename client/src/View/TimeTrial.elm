@@ -35,7 +35,11 @@ cardView player { track, timeTrial, meta } =
             , div
                 [ class "col-sm-6 time-trial-right" ]
                 [ div
-                    [ class "time-trial-body" ]
+                    [ classList
+                        [ ( "time-trial-body", True )
+                        , ( "empty", List.isEmpty meta.rankings )
+                        ]
+                    ]
                     [ Track.rankingsExtract meta.rankings ]
                 , if List.length meta.rankings > 0 then
                     div
