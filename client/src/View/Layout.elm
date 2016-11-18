@@ -1,12 +1,10 @@
 module View.Layout exposing (..)
 
 import Html exposing (..)
-import Html.App exposing (map)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Html.Lazy
 import Json.Decode as Json
-import Json.Decode.Extra exposing (lazy)
 import Markdown
 import View.HexBg as HexBg
 import View.Logo as Logo
@@ -68,7 +66,7 @@ renderSite ctx pageTagger layout =
                     []
 
         tiledBackground =
-            Html.Lazy.lazy HexBg.render ( fst ctx.dims - Constants.sidebarWidth, snd ctx.dims )
+            Html.Lazy.lazy HexBg.render ( Tuple.first ctx.dims - Constants.sidebarWidth, Tuple.second ctx.dims )
     in
         div
             [ class "layout-game layout-site"
@@ -78,7 +76,7 @@ renderSite ctx pageTagger layout =
             [ aside
                 [ class "dark" ]
                 (logo :: (sideMenu ctx.player layout.maybeNav))
-            , main'
+            , main_
                 []
                 [ div
                     [ class "scrollable" ]
@@ -87,12 +85,12 @@ renderSite ctx pageTagger layout =
                         [ class "content"
                         , style transitStyle
                         ]
-                        (List.map (map (pageTagger >> PageMsg)) layout.content)
+                        (List.map (Html.map (pageTagger >> PageMsg)) layout.content)
                     ]
                 ]
             , case layout.dialog of
                 Just dialog ->
-                    map (pageTagger >> PageMsg) dialog.content
+                    Html.map (pageTagger >> PageMsg) dialog.content
 
                 Nothing ->
                     text ""
@@ -103,7 +101,7 @@ renderGame : Context -> (msg -> PageMsg) -> Game msg -> Html Msg
 renderGame ctx pageTagger layout =
     let
         tag =
-            List.map (map (pageTagger >> PageMsg))
+            List.map (Html.map (pageTagger >> PageMsg))
     in
         div
             [ class "layout-game"
@@ -116,7 +114,7 @@ renderGame ctx pageTagger layout =
             , subHeader
                 ctx.player
                 (tag layout.nav)
-            , main'
+            , main_
                 []
                 (tag layout.main)
             ]
@@ -246,6 +244,6 @@ pathDecoder =
     Json.oneOf
         [ Json.at [ "dataset", "navigate" ] Json.string
         , Json.at [ "data-navigate" ] Json.string
-        , Json.at [ "parentElement" ] (lazy (\_ -> pathDecoder))
+        , Json.at [ "parentElement" ] (Json.lazy (\_ -> pathDecoder))
         , Json.fail "no path found for click"
         ]

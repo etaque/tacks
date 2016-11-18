@@ -80,10 +80,10 @@ getMouseEventTiles editor courseDims event =
                     Nothing ->
                         []
 
-            DragAt p' ->
+            DragAt p_ ->
                 case editor.drag of
                     Just p ->
-                        case ( tileCoords ( p.x, p.y ), tileCoords ( p'.x, p'.y ) ) of
+                        case ( tileCoords ( p.x, p.y ), tileCoords ( p_.x, p_.y ) ) of
                             ( Just c1, Just c2 ) ->
                                 if c1 == c2 then
                                     [ c1 ]
@@ -110,13 +110,13 @@ clickPoint { center } courseDims ( x, y ) =
             ( cx, cy ) =
                 center
 
-            x' =
+            x_ =
                 toFloat (x - sidebarWidth) - cx - toFloat w / 2
 
-            y' =
+            y_ =
                 toFloat -(y - toolbarHeight) - cy + toFloat h / 2
         in
-            Just ( x', y' )
+            Just ( x_, y_ )
     else
         Nothing
 
@@ -142,11 +142,11 @@ updateCenter msg courseDims ({ center } as editor) =
                 DragStart p ->
                     ( 0, 0 )
 
-                DragAt p' ->
+                DragAt p_ ->
                     case editor.drag of
                         Just p ->
-                            if withinWindow courseDims ( p'.x, p'.y ) then
-                                ( p'.x - p.x, p.y - p'.y )
+                            if withinWindow courseDims ( p_.x, p_.y ) then
+                                ( p_.x - p.x, p.y - p_.y )
                             else
                                 ( 0, 0 )
 
@@ -157,7 +157,7 @@ updateCenter msg courseDims ({ center } as editor) =
                     ( 0, 0 )
 
         newCenter =
-            ( fst center + toFloat dx, snd center + toFloat dy )
+            ( Tuple.first center + toFloat dx, Tuple.second center + toFloat dy )
     in
         { editor | center = newCenter }
 

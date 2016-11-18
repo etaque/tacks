@@ -106,7 +106,8 @@ autoVmgTarget state input =
 getTurn : Maybe Float -> PlayerState -> KeyboardInput -> Float -> Float
 getTurn tackTarget state input elapsed =
     if manualTurn input then
-        (toFloat input.arrows.x) * elapsed
+        (toFloat input.arrows.x)
+            * elapsed
             * (if input.subtleTurn then
                 slow
                else

@@ -40,7 +40,7 @@ render playerState =
                 []
 
         label =
-            text'
+            text_
                 [ textAnchor "middle"
                 , x (toString (barWidth * coef))
                 , y (toString (barHeight + 15))

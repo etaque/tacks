@@ -15,10 +15,10 @@ render : ( Int, Int ) -> GameState -> Html msg
 render ( w, h ) ({ playerState, course, wind } as gameState) =
     let
         cx =
-            (toFloat w) / 2 - (fst gameState.center)
+            (toFloat w) / 2 - (Tuple.first gameState.center)
 
         cy =
-            (toFloat h) / 2 - (toFloat h) - (snd gameState.center)
+            (toFloat h) / 2 - (toFloat h) - (Tuple.second gameState.center)
     in
         svg
             [ width (toString w)

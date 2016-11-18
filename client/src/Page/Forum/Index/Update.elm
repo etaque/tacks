@@ -5,7 +5,8 @@ import Json.Decode as Json
 import Update.Utils exposing (..)
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Index.Model exposing (..)
-import ServerApi exposing (getJson, postJson)
+import ServerApi
+import Http
 
 
 mount : Response Model Msg
@@ -32,5 +33,5 @@ update msg ({ topics } as model) =
 
 listTopics : Cmd Msg
 listTopics =
-    getJson (Json.list topicWithUserDecoder) "/api/forum/topics"
-        |> performSucceed ListResult
+    Http.get "/api/forum/topics" (Json.list topicWithUserDecoder)
+        |> Http.send ListResult

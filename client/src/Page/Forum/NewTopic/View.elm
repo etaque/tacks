@@ -1,6 +1,5 @@
 module Page.Forum.NewTopic.View exposing (..)
 
-import Html.App exposing (map)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
@@ -31,7 +30,7 @@ view ctx ({ form, loading } as model) =
         ]
     , Layout.section
         [ class "white" ]
-        [ map FormMsg (formView model) ]
+        [ Html.map FormMsg (formView model) ]
     ]
 
 
@@ -63,6 +62,7 @@ formView { form, loading } =
                 [ class "form-group" ]
                 [ Form.baseInput
                     "hidden"
+                    Form.String
                     Form.Text
                     content
                     [ id "new-topic-body" ]

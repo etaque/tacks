@@ -28,7 +28,7 @@ render : Float -> Float -> WindHistory -> Svg msg
 render now windSpeed { lastSample, samples, init } =
     let
         steps =
-            map (\{ time, speed } -> ( timeX init now time, speedY speed )) samples
+            List.map (\{ time, speed } -> ( timeX init now time, speedY speed )) samples
 
         currentX =
             timeX init now now
@@ -57,7 +57,7 @@ render now windSpeed { lastSample, samples, init } =
                 []
 
         currentText =
-            text'
+            text_
                 [ textAnchor "left"
                 , x (toString (currentX + 8))
                 , y (toString (currentY + 3))

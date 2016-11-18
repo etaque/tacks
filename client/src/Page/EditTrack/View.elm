@@ -52,10 +52,10 @@ renderCourse dims ({ center, course, mode } as editor) =
             floatify (getCourseDims dims)
 
         cx =
-            w / 2 + fst center
+            w / 2 + Tuple.first center
 
         cy =
-            -h / 2 + snd center
+            -h / 2 + Tuple.second center
 
         renderGate i gate =
             if editor.currentGate == Just i then
@@ -67,7 +67,7 @@ renderCourse dims ({ center, course, mode } as editor) =
             [ width (toString w)
             , height (toString h)
             , on "mousedown" (Json.map (DragStart >> MouseMsg) Mouse.position)
-            , class <| "mode-" ++ (modeName (realMode editor) |> fst)
+            , class <| "mode-" ++ (modeName (realMode editor) |> Tuple.first)
             ]
             [ g
                 [ transform ("scale(1,-1)" ++ (translate cx cy)) ]

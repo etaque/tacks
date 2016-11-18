@@ -23,10 +23,10 @@ type alias NewPlayer =
 
 validation : Validation () NewPlayer
 validation =
-    form3 NewPlayer
-        (get "handle" (string `andThen` (format handleFormat)))
-        (get "email" email)
-        (get "password" (string `andThen` minLength 4))
+    map3 NewPlayer
+        (field "handle" (string |> andThen (format handleFormat)))
+        (field "email" email)
+        (field "password" (string |> andThen (minLength 4)))
 
 
 handleFormat : Regex

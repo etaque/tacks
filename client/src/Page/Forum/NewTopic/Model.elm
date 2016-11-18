@@ -20,9 +20,9 @@ type alias NewTopic =
 
 validation : Validation () NewTopic
 validation =
-    form2 NewTopic
-        (get "title" (string `andThen` minLength 2))
-        (get "content" (string `andThen` minLength 2))
+    map2 NewTopic
+        (field "title" (string |> andThen (minLength 2)))
+        (field "content" (string |> andThen (minLength 2)))
 
 
 initial : Model

@@ -1,6 +1,5 @@
 module View exposing (..)
 
-import Html.App exposing (map)
 import Html exposing (..)
 import Model exposing (..)
 import Model.Shared exposing (Context)

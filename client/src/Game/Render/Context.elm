@@ -1,7 +1,6 @@
 module Game.Render.Context exposing (..)
 
 import Dict exposing (Dict)
-import Html.App as Html
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

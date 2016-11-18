@@ -36,17 +36,17 @@ res model cmd =
     Response model cmd Nothing
 
 
-mapModel : (m -> m') -> Response m a -> Response m' a
+mapModel : (m -> m_) -> Response m a -> Response m_ a
 mapModel onModel =
     mapBoth onModel identity
 
 
-mapCmd : (a -> a') -> Response m a -> Response m a'
+mapCmd : (a -> a_) -> Response m a -> Response m a_
 mapCmd onCmd =
     mapBoth identity onCmd
 
 
-mapBoth : (m -> m') -> (a -> a') -> Response m a -> Response m' a'
+mapBoth : (m -> m_) -> (a -> a_) -> Response m a -> Response m_ a_
 mapBoth onModel onCmd ({ model, cmd } as r) =
     { r
         | model = onModel model

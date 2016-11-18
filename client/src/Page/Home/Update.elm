@@ -7,6 +7,7 @@ import Page.Home.Model exposing (..)
 import ServerApi
 import Update.Utils exposing (..)
 import Model.Event as Event
+import Http
 
 
 subscriptions : String -> Model -> Sub Msg
@@ -60,4 +61,4 @@ update host player msg model =
 loadRaceReports : Cmd Msg
 loadRaceReports =
     ServerApi.getRaceReports Nothing
-        |> performSucceed RaceReportsResult
+        |> Http.send RaceReportsResult

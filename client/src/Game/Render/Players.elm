@@ -22,7 +22,7 @@ renderPlayers ({ playerState, opponents, ghosts, course, center } as gameState) 
 
 renderOpponents : List Opponent -> Svg msg
 renderOpponents opponents =
-    g [ class "opponents" ] (map renderOpponent opponents)
+    g [ class "opponents" ] (List.map renderOpponent opponents)
 
 
 renderOpponent : Opponent -> Svg msg
@@ -39,7 +39,7 @@ renderOpponent { state, player } =
             renderWindShadow state
 
         name =
-            text'
+            text_
                 [ textAnchor "middle"
                 , transform <| (translatePoint (Geo.add state.position ( 0, -25 ))) ++ "scale(1,-1)"
                 , opacity "0.3"
@@ -51,7 +51,7 @@ renderOpponent { state, player } =
 
 renderGhosts : List Ghost -> Svg msg
 renderGhosts ghosts =
-    g [ class "ghosts" ] (map renderGhost ghosts)
+    g [ class "ghosts" ] (List.map renderGhost ghosts)
 
 
 renderGhost : Ghost -> Svg msg
@@ -65,7 +65,7 @@ renderGhost ghost =
                 [ renderPlayerHull ghost.heading 0 ]
 
         name =
-            text'
+            text_
                 [ textAnchor "middle"
                 , transform <| (translatePoint (Geo.add ghost.position ( 0, -25 ))) ++ "scale(1,-1)"
                 , opacity "0.2"
@@ -194,7 +194,7 @@ renderWake wake =
         renderSegment ( i, ab ) =
             segment (style ++ [ opacity (opacityForIndex i) ]) ab
     in
-        g [ id "playerWake" ] (map renderSegment pairs)
+        g [ id "playerWake" ] (List.map renderSegment pairs)
 
 
 renderWindShadow : OpponentState -> Svg msg
@@ -204,7 +204,7 @@ renderWindShadow { windAngle, windOrigin, position, shadowDirection } =
             [ -15, -10, -5, 0, 5, 10, 15 ]
 
         endPoints =
-            map (\a -> Geo.add position (fromPolar ( windShadowLength, toRadians (shadowDirection + a) ))) arcAngles
+            List.map (\a -> Geo.add position (fromPolar ( windShadowLength, toRadians (shadowDirection + a) ))) arcAngles
     in
         polygon
             [ polygonPoints (position :: endPoints)
@@ -248,7 +248,7 @@ renderNextGateLine course state =
                     ]
                     ( p1, p2 )
     in
-        Maybe.map renderLine (maybeGatePos `Maybe.andThen` ifFarEnough)
+        Maybe.map renderLine (maybeGatePos |> Maybe.andThen ifFarEnough)
             |> Maybe.withDefault empty
 
 
@@ -297,7 +297,7 @@ renderPlayerAngles player =
             abs (round player.windAngle)
 
         windAngleText =
-            text'
+            text_
                 [ transform <| (translatePoint (Geo.rotateDeg (windOrigin + 180) 30)) ++ "scale(1,-1)"
                 , opacity "0.5"
                 , fill "black"

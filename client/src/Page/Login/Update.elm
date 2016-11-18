@@ -46,5 +46,4 @@ update msg model =
 submitCmd : Model -> Cmd Msg
 submitCmd model =
     ServerApi.postLogin model.email model.password
-        |> Task.map SubmitResult
-        |> performSucceed identity
+        |> ServerApi.sendForm SubmitResult

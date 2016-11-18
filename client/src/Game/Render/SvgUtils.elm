@@ -48,10 +48,10 @@ lineCoords : Point -> Point -> List (Attribute msg)
 lineCoords p1 p2 =
     let
         x =
-            fst >> toString
+            Tuple.first >> toString
 
         y =
-            snd >> toString
+            Tuple.second >> toString
     in
         [ x1 (x p1)
         , y1 (y p1)

@@ -5,14 +5,20 @@ import Decoders exposing (userDecoder)
 import Page.Forum.Model.Shared exposing (..)
 
 
+(:=) =
+    field
+
+
+topicWithUserDecoder : Decoder TopicWithUser
 topicWithUserDecoder =
-    object2 TopicWithUser
+    map2 TopicWithUser
         ("topic" := topicDecoder)
         ("user" := userDecoder)
 
 
+topicDecoder : Decoder Topic
 topicDecoder =
-    object5 Topic
+    map5 Topic
         ("id" := string)
         ("title" := string)
         ("postsCount" := int)
@@ -20,21 +26,24 @@ topicDecoder =
         ("activityTime" := float)
 
 
+postWithUserDecoder : Decoder PostWithUser
 postWithUserDecoder =
-    object2 PostWithUser
+    map2 PostWithUser
         ("post" := postDecoder)
         ("user" := userDecoder)
 
 
+postDecoder : Decoder Post
 postDecoder =
-    object4 Post
+    map4 Post
         ("id" := string)
         ("content" := string)
         ("creationTime" := float)
         ("updateTime" := float)
 
 
+topicWithPostsDecoder : Decoder TopicWithPosts
 topicWithPostsDecoder =
-    object2 TopicWithPosts
+    map2 TopicWithPosts
         ("topic" := topicDecoder)
         ("postsWithUsers" := list postWithUserDecoder)

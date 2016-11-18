@@ -70,7 +70,7 @@ exists f list =
 
 floatRange : Int -> Int -> List Float
 floatRange from to =
-    map toFloat [from..to]
+    map toFloat (List.range from to)
 
 
 

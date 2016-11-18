@@ -1,11 +1,11 @@
 module Page.ListDrafts.Update exposing (..)
 
-import Task exposing (Task)
 import Response exposing (..)
 import ServerApi
 import Route
 import Page.ListDrafts.Model exposing (..)
 import Update.Utils exposing (..)
+import Http
 
 
 mount : Model -> Res Model Msg
@@ -38,7 +38,7 @@ update msg model =
             res { model | selectedTrack = maybeTrack } Cmd.none
 
         Create ->
-            res model (performSucceed CreateResult (ServerApi.createTrack model.name))
+            res model (ServerApi.sendForm CreateResult (ServerApi.createTrack model.name))
 
         CreateResult result ->
             case result of
@@ -85,17 +85,16 @@ update msg model =
 loadDrafts : Cmd Msg
 loadDrafts =
     ServerApi.getUserTracks
-        |> performSucceed ListResult
+        |> Http.send ListResult
 
 
 publish : String -> Cmd Msg
 publish id =
     ServerApi.publishTrack id
-        |> performSucceed PublishResult
+        |> ServerApi.sendForm PublishResult
 
 
 deleteDraft : String -> Cmd Msg
 deleteDraft id =
     ServerApi.deleteDraft id
-        |> Task.toResult
-        |> performSucceed DeleteResult
+        |> ServerApi.sendForm DeleteResult

@@ -202,22 +202,22 @@ areaDims { rightTop, leftBottom } =
 
 areaTop : RaceArea -> Float
 areaTop { rightTop } =
-    snd rightTop
+    Tuple.second rightTop
 
 
 areaBottom : RaceArea -> Float
 areaBottom { leftBottom } =
-    snd leftBottom
+    Tuple.second leftBottom
 
 
 areaWidth : RaceArea -> Float
 areaWidth =
-    areaDims >> fst
+    areaDims >> Tuple.first
 
 
 areaHeight : RaceArea -> Float
 areaHeight =
-    areaDims >> snd
+    areaDims >> Tuple.second
 
 
 areaCenters : RaceArea -> ( Float, Float )
@@ -372,16 +372,16 @@ getGateMarks : Gate -> ( Point, Point )
 getGateMarks { center, width, orientation } =
     case orientation of
         North ->
-            ( ( fst center - width / 2, snd center ), ( fst center + width / 2, snd center ) )
+            ( ( Tuple.first center - width / 2, Tuple.second center ), ( Tuple.first center + width / 2, Tuple.second center ) )
 
         South ->
-            ( ( fst center + width / 2, snd center ), ( fst center - width / 2, snd center ) )
+            ( ( Tuple.first center + width / 2, Tuple.second center ), ( Tuple.first center - width / 2, Tuple.second center ) )
 
         East ->
-            ( ( fst center, snd center - width / 2 ), ( fst center, snd center + width / 2 ) )
+            ( ( Tuple.first center, Tuple.second center - width / 2 ), ( Tuple.first center, Tuple.second center + width / 2 ) )
 
         West ->
-            ( ( fst center, snd center + width / 2 ), ( fst center, snd center - width / 2 ) )
+            ( ( Tuple.first center, Tuple.second center + width / 2 ), ( Tuple.first center, Tuple.second center - width / 2 ) )
 
 
 findPlayerGhost : String -> List Ghost -> Maybe Ghost

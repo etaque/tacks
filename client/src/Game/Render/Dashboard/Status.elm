@@ -20,7 +20,7 @@ render gameState =
 
 renderTimer : GameState -> Svg msg
 renderTimer gameState =
-    text'
+    text_
         [ textAnchor "middle"
         , fontSize "42px"
         , opacity (toString <| timerOpacity gameState)
@@ -67,23 +67,23 @@ getTimer { timers, playerState } =
 formatTimer : Time -> Bool -> String
 formatTimer t showMs =
     let
-        t' =
+        t_ =
             t |> ceiling |> abs
 
         totalSeconds =
-            t' // 1000
+            t_ // 1000
 
         minutes =
             totalSeconds // 60
 
         seconds =
             if showMs || t <= 0 then
-                totalSeconds `rem` 60
+                rem totalSeconds 60
             else
-                (totalSeconds `rem` 60) + 1
+                (rem totalSeconds 60) + 1
 
         millis =
-            t' `rem` 1000
+            rem t_ 1000
 
         sMinutes =
             toString minutes
@@ -102,7 +102,7 @@ formatTimer t showMs =
 
 renderSubStatus : GameState -> Svg msg
 renderSubStatus gameState =
-    text'
+    text_
         [ textAnchor "middle"
         , fontSize "18px"
         , opacity "0.5"

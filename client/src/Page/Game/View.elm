@@ -1,7 +1,6 @@
 module Page.Game.View exposing (..)
 
 import Html exposing (..)
-import Html.App as Html
 import Html.Lazy
 import Html.Attributes exposing (..)
 import Model.Shared exposing (..)

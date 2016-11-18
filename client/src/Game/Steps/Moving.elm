@@ -80,12 +80,6 @@ opponentStep elapsed started course state =
                     course
                     (List.length state.crossedGates)
 
-            velocity =
-                if grounded then
-                    0
-                else
-                    velocity
-
             position =
                 if grounded then
                     state.position
@@ -123,12 +117,12 @@ isGrounded started oldPosition newPosition course crossedGatesCount =
             (course.start :: course.gates)
                 |> List.indexedMap (,)
                 |> List.filter gateIsVisible
-                |> List.map snd
+                |> List.map Tuple.second
 
         marks =
             visibleGates
                 |> List.map getGateMarks
-                |> List.concatMap (\m -> [ fst m, snd m ])
+                |> List.concatMap (\m -> [ Tuple.first m, Tuple.second m ])
 
         halfBoatWidth =
             boatWidth / 2

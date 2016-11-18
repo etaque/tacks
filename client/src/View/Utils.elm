@@ -3,6 +3,7 @@ module View.Utils exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
+import Html.Events.Extra exposing (targetValueInt)
 import Json.Decode as Json
 import String
 import Form.Error exposing (..)
@@ -40,12 +41,7 @@ onButtonClick msg =
 
 onIntInput : (Int -> msg) -> Attribute msg
 onIntInput tagger =
-    onWithOptions "input" eventOptions (Json.map tagger intTargetValue)
-
-
-intTargetValue : Json.Decoder Int
-intTargetValue =
-    Json.at [ "target", "value" ] (Json.customDecoder Json.string String.toInt)
+    onWithOptions "input" eventOptions (Json.map tagger targetValueInt)
 
 
 onEnter : msg -> Attribute msg
@@ -62,15 +58,15 @@ onKeyDown : Int -> msg -> Attribute msg
 onKeyDown code msg =
     on
         "keydown"
-        (Json.map (\_ -> msg) (Json.customDecoder keyCode (isKey code)))
+        (Json.map (\_ -> msg) (keyCode |> Json.andThen (isKey code)))
 
 
-isKey : Int -> Int -> Result String ()
+isKey : Int -> Int -> Json.Decoder ()
 isKey expected given =
     if given == expected then
-        Ok ()
+        Json.succeed ()
     else
-        Err "not the right key code"
+        Json.fail "not the right key code"
 
 
 eventOptions : Options
@@ -93,43 +89,14 @@ container className content =
     div [ class ("container " ++ className) ] content
 
 
-
--- containerFluid : String -> Wrapper msg
--- containerFluid className content =
---   div [ class ("container-fluid " ++ className) ] content
--- row : Wrapper
--- row content =
---   div [ class "row" ] content
--- col' : Int -> List Html -> Html
--- col' i content =
---   div [ class ("col-xs-" ++ toString i) ] content
--- fullWidth : Wrapper
--- fullWidth content =
---   row [ div [ class "col-lg-12" ] content ]
-
-
-hr' : Html msg
-hr' =
+hr_ : Html msg
+hr_ =
     hr [] []
 
 
-
--- dl' : List ( String, List (Html msg) ) -> Html msg
--- dl' items =
---   dl
---     [ class "dl-horizontal" ]
---     (List.concatMap (\( term, desc ) -> [ dt [] [ text term ], dd [] desc ]) items)
-
-
-abbr' : String -> String -> Html msg
-abbr' short long =
+abbr_ : String -> String -> Html msg
+abbr_ short long =
     abbr [ title long ] [ text short ]
-
-
-
--- icon : String -> Html msg
--- icon name =
---   span [ class ("glyphicon glyphicon-" ++ name) ] []
 
 
 mIcon : String -> List String -> Html msg
@@ -150,7 +117,7 @@ formatDate time =
 
 
 fieldGroup : String -> String -> String -> List String -> List (Html msg) -> Html msg
-fieldGroup id label' hint errors inputs =
+fieldGroup id label_ hint errors inputs =
     let
         feedbacksEl =
             div
@@ -163,21 +130,7 @@ fieldGroup id label' hint errors inputs =
                 , ( "with-error", not (List.isEmpty errors) )
                 ]
             ]
-            (inputs ++ [ label [ class "control-label", for id ] [ text label' ], feedbacksEl ])
-
-
-
--- fieldError : Maybe (Error e) -> Html
--- fieldError maybeError =
---   case maybeError of
---     Just e ->
---       div [ class "error-message" ] [ text (errorMessage e) ]
---     Nothing ->
---       div [ class "error-message empty" ] [ text "nope" ]
--- actionGroup : List (Html msg) -> Html msg
--- actionGroup content =
---   row
---     [ div [ class "col-xs-offset-3 col-xs-9" ] content ]
+            (inputs ++ [ label [ class "control-label", for id ] [ text label_ ], feedbacksEl ])
 
 
 formGroup : Bool -> List (Html msg) -> Html msg
@@ -189,12 +142,12 @@ formGroup hasErr content =
 
 textInput : List (Attribute msg) -> Html msg
 textInput attributes =
-    input (List.append [ type' "text", class "form-control" ] attributes) []
+    input (List.append [ type_ "text", class "form-control" ] attributes) []
 
 
 passwordInput : List (Attribute msg) -> Html msg
 passwordInput attributes =
-    input (List.append [ type' "password", class "form-control" ] attributes) []
+    input (List.append [ type_ "password", class "form-control" ] attributes) []
 
 
 
@@ -288,23 +241,23 @@ tabItem toAttr isSelected ( title, tab ) =
 formatTimer : Bool -> Float -> String
 formatTimer showMs t =
     let
-        t' =
+        t_ =
             t |> ceiling |> abs
 
         totalSeconds =
-            t' // 1000
+            t_ // 1000
 
         minutes =
             totalSeconds // 60
 
         seconds =
             if showMs || t <= 0 then
-                totalSeconds `rem` 60
+                rem totalSeconds 60
             else
-                (totalSeconds `rem` 60) + 1
+                (rem totalSeconds 60) + 1
 
         millis =
-            t' `rem` 1000
+            rem t_ 1000
 
         sMinutes =
             toString minutes
@@ -326,7 +279,7 @@ colWidth col =
     (containerWidth + gutterWidth) / 12 * (toFloat col) - gutterWidth
 
 
-errList : Maybe (Error e) -> List String
+errList : Maybe (ErrorValue e) -> List String
 errList me =
     case me of
         Just e ->
@@ -336,7 +289,7 @@ errList me =
             []
 
 
-errMsg : Error e -> String
+errMsg : ErrorValue e -> String
 errMsg e =
     case e of
         InvalidString ->

@@ -4,8 +4,7 @@ import Model.Shared exposing (..)
 import Page.ShowTimeTrial.Model exposing (..)
 import Response exposing (..)
 import ServerApi
-import Task
-import Update.Utils exposing (performSucceed)
+import Http
 
 
 mount : String -> Response Model Msg
@@ -28,5 +27,4 @@ update player msg model =
 load : String -> Cmd Msg
 load id =
     (ServerApi.getLiveTimeTrial (Just id))
-        |> Task.toResult
-        |> performSucceed Load
+        |> Http.send Load

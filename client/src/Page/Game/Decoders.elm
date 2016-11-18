@@ -5,8 +5,6 @@ import Decoders exposing (..)
 import Game.Decoders exposing (..)
 import Page.Game.Model exposing (..)
 import Page.Game.Chat.Model as Chat
-import Game.Models exposing (..)
-import Game.Inputs exposing (RaceInput)
 
 
 decodeStringMsg : String -> Msg
@@ -28,7 +26,7 @@ decodeMsg value =
 
 msgDecoder : Decoder Msg
 msgDecoder =
-    ("tag" := string) `andThen` specificMsgDecoder
+    (field "tag" string) |> andThen specificMsgDecoder
 
 
 specificMsgDecoder : String -> Decoder Msg
@@ -38,13 +36,13 @@ specificMsgDecoder tag =
             succeed NoOp
 
         "RaceUpdate" ->
-            map RaceUpdate ("raceUpdate" := raceInputDecoder)
+            map RaceUpdate (field "raceUpdate" raceInputDecoder)
 
         "LiveTrack" ->
-            map UpdateLiveTrack ("liveTrack" := liveTrackDecoder)
+            map UpdateLiveTrack (field "liveTrack" liveTrackDecoder)
 
         "Message" ->
-            map (ChatMsg << Chat.AddMessage) ("message" := messageDecoder)
+            map (ChatMsg << Chat.AddMessage) (field "message" messageDecoder)
 
         _ ->
             fail <| tag ++ " is not a recognized tag for msgs"

@@ -27,6 +27,7 @@ import Json.Encode as Js
 import Json.Decode as Json
 import WebSocket
 import Activity
+import Navigation
 
 
 subscriptions : Model -> Sub Msg
@@ -63,9 +64,9 @@ subscriptions ({ pages } as model) =
             ]
 
 
-init : Setup -> Route -> ( Model, Cmd Msg )
-init setup route =
-    urlUpdate route (initialModel setup)
+init : Setup -> Navigation.Location -> ( Model, Cmd Msg )
+init setup location =
+    urlUpdate (Route.parser location) (initialModel setup)
 
 
 eventMsg : Event -> Msg
@@ -121,8 +122,7 @@ msgUpdate msg ({ pages } as model) =
 
         Logout ->
             ServerApi.postLogout
-                |> Task.map (Result.toMaybe >> Maybe.map SetPlayer >> Maybe.withDefault NoOp)
-                |> performSucceed identity
+                |> ServerApi.sendForm (Result.toMaybe >> Maybe.map SetPlayer >> Maybe.withDefault NoOp)
                 |> res model
 
         PageMsg pageMsg ->

@@ -2,75 +2,73 @@ module Game.Decoders exposing (..)
 
 import Json.Decode as Json exposing (..)
 import Decoders exposing (..)
-import Page.Game.Model exposing (..)
-import Page.Game.Chat.Model as Chat
 import Game.Models exposing (..)
 import Game.Inputs exposing (RaceInput)
 
 
 raceInputDecoder : Decoder RaceInput
 raceInputDecoder =
-    object8
+    map8
         RaceInput
-        ("serverTime" := float)
-        ("startTime" := maybe float)
-        ("wind" := windDecoder)
-        ("opponents" := list opponentDecoder)
-        ("ghosts" := list ghostDecoder)
-        ("tallies" := list playerTallyDecoder)
-        ("initial" := bool)
-        ("clientTime" := float)
+        (field "serverTime" float)
+        (field "startTime" (maybe float))
+        (field "wind" windDecoder)
+        (field "opponents" (list opponentDecoder))
+        (field "ghosts" (list ghostDecoder))
+        (field "tallies" (list playerTallyDecoder))
+        (field "initial" bool)
+        (field "clientTime" float)
 
 
 windDecoder : Decoder Wind
 windDecoder =
-    object4
+    map4
         Wind
-        ("origin" := float)
-        ("speed" := float)
-        ("gusts" := list gustDecoder)
-        ("gustCounter" := int)
+        (field "origin" float)
+        (field "speed" float)
+        (field "gusts" (list gustDecoder))
+        (field "gustCounter" int)
 
 
 gustDecoder : Decoder Gust
 gustDecoder =
-    object6
+    map6
         Gust
-        ("position" := pointDecoder)
-        ("angle" := float)
-        ("speed" := float)
-        ("radius" := float)
-        ("maxRadius" := float)
-        ("spawnedAt" := float)
+        (field "position" pointDecoder)
+        (field "angle" float)
+        (field "speed" float)
+        (field "radius" float)
+        (field "maxRadius" float)
+        (field "spawnedAt" float)
 
 
 ghostDecoder : Decoder Ghost
 ghostDecoder =
-    object5
+    map5
         Ghost
-        ("position" := pointDecoder)
-        ("heading" := float)
-        ("id" := string)
-        ("handle" := maybe string)
-        ("gates" := list float)
+        (field "position" pointDecoder)
+        (field "heading" float)
+        (field "id" string)
+        (field "handle" (maybe string))
+        (field "gates" (list float))
 
 
 opponentDecoder : Decoder Opponent
 opponentDecoder =
-    object2
+    map2
         Opponent
-        ("player" := playerDecoder)
-        ("state" := opponentStateDecoder)
+        (field "player" playerDecoder)
+        (field "state" opponentStateDecoder)
 
 
 opponentStateDecoder : Decoder OpponentState
 opponentStateDecoder =
-    object8 OpponentState
-        ("time" := float)
-        ("position" := pointDecoder)
-        ("heading" := float)
-        ("velocity" := float)
-        ("windAngle" := float)
-        ("windOrigin" := float)
-        ("shadowDirection" := float)
-        ("crossedGates" := list float)
+    map8 OpponentState
+        (field "time" float)
+        (field "position" pointDecoder)
+        (field "heading" float)
+        (field "velocity" float)
+        (field "windAngle" float)
+        (field "windOrigin" float)
+        (field "shadowDirection" float)
+        (field "crossedGates" (list float))

@@ -20,7 +20,7 @@ always msg effect =
 
 performSucceed : (a -> msg) -> Task Never a -> Cmd msg
 performSucceed =
-    Task.perform never
+    Task.perform
 
 
 toCmd : msg -> Cmd msg
@@ -35,7 +35,7 @@ never n =
 
 delay : Time -> Task x a -> Task x a
 delay t task =
-    Process.sleep t `Task.andThen` (\_ -> task)
+    Process.sleep t |> Task.andThen (\_ -> task)
 
 
 delayMsg : Time -> msg -> Cmd msg

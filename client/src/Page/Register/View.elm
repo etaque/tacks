@@ -3,7 +3,6 @@ module Page.Register.View exposing (..)
 import Dict exposing (Dict)
 import String
 import Html exposing (..)
-import Html.App exposing (map)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Form.Input as Input
@@ -23,7 +22,7 @@ view ctx model =
             ctx
             []
             [ h1 [] [ text "Register" ]
-            , div [ class "panel" ] [ map FormMsg (registerForm model) ]
+            , div [ class "panel" ] [ Html.map FormMsg (registerForm model) ]
             ]
         ]
         Nothing
@@ -41,14 +40,14 @@ registerForm { form, loading, serverErrors } =
         isFilled field =
             Maybe.map (String.isEmpty >> not) field.value |> Maybe.withDefault False
 
-        group name label' hint renderer =
+        group name label_ hint renderer =
             let
                 field =
                     Form.getFieldAsString name form
             in
                 fieldGroup
                     ("register_" ++ name)
-                    label'
+                    label_
                     hint
                     (errList field.liveError ++ (getServerErrors name))
                     [ renderer

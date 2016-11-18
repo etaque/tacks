@@ -1,6 +1,7 @@
 module Page.Forum.Index.Model exposing (..)
 
 import Page.Forum.Model.Shared exposing (..)
+import Http
 
 
 type alias Model =
@@ -13,6 +14,6 @@ initial =
 
 
 type Msg
-    = ListResult (Result () (List TopicWithUser))
+    = ListResult (Result Http.Error (List TopicWithUser))
     | RefreshList
     | NoOp

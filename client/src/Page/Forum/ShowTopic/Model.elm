@@ -2,6 +2,7 @@ module Page.Forum.ShowTopic.Model exposing (..)
 
 import Model.Shared exposing (Id, User, FormResult)
 import Page.Forum.Model.Shared exposing (..)
+import Http
 
 
 type alias Model =
@@ -20,7 +21,7 @@ initial =
 
 
 type Msg
-    = LoadResult (Result () (TopicWithPosts))
+    = LoadResult (Result Http.Error TopicWithPosts)
     | SetContent String
     | ToggleNewPost
     | Submit

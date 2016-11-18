@@ -39,5 +39,4 @@ update msg ({ form } as model) =
 submitCmd : NewPlayer -> Cmd Msg
 submitCmd np =
     ServerApi.postRegister np.email np.handle np.password
-        |> Task.map SubmitResult
-        |> performSucceed identity
+        |> ServerApi.sendForm SubmitResult

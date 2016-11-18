@@ -32,7 +32,7 @@ loginForm { email, password, loading, error } =
         [ div
             [ class "form-group" ]
             [ input
-                [ type' "text"
+                [ type_ "text"
                 , value email
                 , classList [ ( "form-control", True ), ( "filled", not (String.isEmpty email) ) ]
                 , onInput SetEmail
@@ -45,7 +45,7 @@ loginForm { email, password, loading, error } =
         , div
             [ class "form-group" ]
             [ input
-                [ type' "password"
+                [ type_ "password"
                 , value password
                 , classList [ ( "form-control", True ), ( "filled", not (String.isEmpty password) ) ]
                 , onInput SetPassword

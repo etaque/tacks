@@ -54,10 +54,10 @@ buildRow j w =
         ( to, _ ) =
             Hexagons.pointToAxial Constants.hexRadius ( toFloat w, y )
     in
-        List.map (\i -> ( i, j )) [from..to]
+        List.map (\i -> ( i, j )) (List.range from to)
 
 
 getPixelY : Int -> Float
 getPixelY j =
     Hexagons.axialToPoint Constants.hexRadius ( 0, j )
-        |> snd
+        |> Tuple.second

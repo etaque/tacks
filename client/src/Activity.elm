@@ -18,6 +18,10 @@ type ReceiveMsg
     | RefreshLiveStatus LiveStatus
 
 
+(:=) =
+    field
+
+
 encodeEmitMsg : EmitMsg -> Js.Value
 encodeEmitMsg msg =
     case msg of
@@ -30,7 +34,7 @@ encodeEmitMsg msg =
 
 receiveMsgDecoder : Decoder ReceiveMsg
 receiveMsgDecoder =
-    ("tag" := string) `andThen` receiveTagDecoder
+    ("tag" := string) |> andThen receiveTagDecoder
 
 
 receiveTagDecoder : String -> Decoder ReceiveMsg

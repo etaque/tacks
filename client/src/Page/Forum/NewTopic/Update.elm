@@ -7,7 +7,9 @@ import Route
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Route exposing (..)
 import Page.Forum.NewTopic.Model exposing (..)
-import ServerApi exposing (getJson, postJson)
+import ServerApi
+import Http
+import Task
 import Update.Utils exposing (..)
 
 
@@ -41,5 +43,5 @@ createTopic { title, content } =
                 , ( "content", Json.string content )
                 ]
     in
-        postJson topicDecoder "/api/forum/topics" body
-            |> performSucceed SubmitResult
+        Http.post "/api/forum/topics" (Http.jsonBody body) topicDecoder
+            |> ServerApi.sendForm SubmitResult

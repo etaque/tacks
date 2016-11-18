@@ -26,7 +26,7 @@ initial =
 
 
 type Msg
-    = ListResult (Result () (List Track))
+    = ListResult (HttpResult (List Track))
     | SetName String
     | Select (Maybe String)
     | ToggleCreationForm
@@ -37,11 +37,11 @@ type Msg
     | PublishResult (FormResult Track)
     | ConfirmDelete Bool
     | Delete String
-    | DeleteResult (HttpResult String)
+    | DeleteResult (FormResult String)
     | NoOp
 
 
 getSelectedTrack : Model -> Maybe Track
 getSelectedTrack { tracks, selectedTrack } =
     selectedTrack
-        `Maybe.andThen` (\id -> CoreExtra.find (\t -> t.id == id) tracks)
+        |> Maybe.andThen (\id -> CoreExtra.find (\t -> t.id == id) tracks)

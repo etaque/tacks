@@ -88,7 +88,7 @@ encodeOpponentState : OpponentState -> Js.Value
 encodeOpponentState o =
     Js.object
         [ ( "time", Js.float o.time )
-        , ( "position", Js.list [ Js.float (fst o.position), Js.float (snd o.position) ] )
+        , ( "position", Js.list [ Js.float (Tuple.first o.position), Js.float (Tuple.second o.position) ] )
         , ( "heading", Js.float o.heading )
         , ( "velocity", Js.float o.velocity )
         , ( "windAngle", Js.float o.windAngle )

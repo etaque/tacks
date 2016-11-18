@@ -47,12 +47,12 @@ gateItem count currentGate i gate =
                 [ class "form-row" ]
                 [ div
                     [ class "form-group x" ]
-                    [ intInput ((round << fst) gate.center) (SetGateCenterX i) [ step "10" ]
+                    [ intInput ((round << Tuple.first) gate.center) (SetGateCenterX i) [ step "10" ]
                     , label [] [ text "lat" ]
                     ]
                 , div
                     [ class "form-group y" ]
-                    [ intInput ((round << snd) gate.center) (SetGateCenterY i) [ step "10" ]
+                    [ intInput ((round << Tuple.second) gate.center) (SetGateCenterY i) [ step "10" ]
                     , label [] [ text "lon" ]
                     ]
                 , div

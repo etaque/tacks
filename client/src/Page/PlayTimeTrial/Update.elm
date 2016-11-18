@@ -166,13 +166,13 @@ update player host msg model =
 
 load : Cmd Msg
 load =
-    (ServerApi.getLiveTimeTrial Nothing)
-        |> (flip Task.andThen) loadCourse
-        |> Task.toResult
-        |> performSucceed Load
+    (Http.toTask (ServerApi.getLiveTimeTrial Nothing))
+        |> Task.andThen loadCourse
+        |> Task.attempt Load
 
 
 loadCourse : LiveTimeTrial -> Task.Task Http.Error ( LiveTimeTrial, Course )
 loadCourse liveTimeTrial =
     ServerApi.getCourse liveTimeTrial.track.id
+        |> Http.toTask
         |> Task.map (\course -> ( liveTimeTrial, course ))

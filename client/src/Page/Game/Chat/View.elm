@@ -38,7 +38,7 @@ inputField { field } =
     div
         [ class "chat-input" ]
         [ input
-            [ type' "text"
+            [ type_ "text"
             , id fieldId
             , value field
             , placeholder "press Enter to chat"

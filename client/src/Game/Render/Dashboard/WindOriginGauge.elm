@@ -38,7 +38,7 @@ renderWindArrow =
 
 renderWindOriginText : Float -> Svg msg
 renderWindOriginText origin =
-    text'
+    text_
         [ textAnchor "middle"
         , x "0"
         , y "15"

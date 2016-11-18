@@ -11,7 +11,7 @@ intInput val formUpdate attrs =
     input
         ([ value (toString val)
          , onIntInput formUpdate
-         , type' "number"
+         , type_ "number"
          , class "form-control filled"
          ]
             ++ attrs

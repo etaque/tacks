@@ -25,8 +25,8 @@ frameStep { keyboard, dims } time ({ timers } as gameState) =
                 keyboard
 
         gameDims =
-            ( fst dims - Constants.sidebarWidth
-            , snd dims
+            ( Tuple.first dims - Constants.sidebarWidth
+            , Tuple.second dims
             )
 
         clientDelta =
@@ -97,7 +97,7 @@ centerStep ( px, py ) dims ({ center, playerState, course } as gameState) =
         ( cx, cy ) =
             center
 
-        ( px', py' ) =
+        ( px_, py_ ) =
             playerState.position
 
         ( w, h ) =
@@ -107,15 +107,15 @@ centerStep ( px, py ) dims ({ center, playerState, course } as gameState) =
             areaBox course.area
 
         newCenter =
-            ( axisCenter px px' cx w xMin xMax
-            , axisCenter py py' cy h yMin yMax
+            ( axisCenter px px_ cx w xMin xMax
+            , axisCenter py py_ cy h yMin yMax
             )
     in
         { gameState | center = newCenter }
 
 
 axisCenter : Float -> Float -> Float -> Float -> Float -> Float -> Float
-axisCenter p p' c window areaMin areaMax =
+axisCenter p p_ c window areaMin areaMax =
     let
         offset =
             (window / 2) - (window * 0.48)
@@ -124,13 +124,13 @@ axisCenter p p' c window areaMin areaMax =
             (window / 2) - Constants.hexRadius
 
         delta =
-            p' - p
+            p_ - p
 
         minExit =
-            delta < 0 && p' < c - offset
+            delta < 0 && p_ < c - offset
 
         maxExit =
-            delta > 0 && p' > c + offset
+            delta > 0 && p_ > c + offset
     in
         if minExit then
             if areaMin > c - outOffset then

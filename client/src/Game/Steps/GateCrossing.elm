@@ -93,22 +93,22 @@ gateCrossed gate p1 p2 =
 
 toSouth : Gate -> Segment -> Bool
 toSouth gate ( p1, p2 ) =
-    snd p1 > snd gate.center && snd p2 <= snd gate.center && horizontalIntersect gate ( p1, p2 )
+    Tuple.second p1 > Tuple.second gate.center && Tuple.second p2 <= Tuple.second gate.center && horizontalIntersect gate ( p1, p2 )
 
 
 toNorth : Gate -> Segment -> Bool
 toNorth gate ( p1, p2 ) =
-    snd p1 < snd gate.center && snd p2 >= snd gate.center && horizontalIntersect gate ( p1, p2 )
+    Tuple.second p1 < Tuple.second gate.center && Tuple.second p2 >= Tuple.second gate.center && horizontalIntersect gate ( p1, p2 )
 
 
 toEast : Gate -> Segment -> Bool
 toEast gate ( p1, p2 ) =
-    fst p1 < fst gate.center && fst p2 >= fst gate.center && verticalIntersect gate ( p1, p2 )
+    Tuple.first p1 < Tuple.first gate.center && Tuple.first p2 >= Tuple.first gate.center && verticalIntersect gate ( p1, p2 )
 
 
 toWest : Gate -> Segment -> Bool
 toWest gate ( p1, p2 ) =
-    fst p1 > fst gate.center && fst p2 <= fst gate.center && verticalIntersect gate ( p1, p2 )
+    Tuple.first p1 > Tuple.first gate.center && Tuple.first p2 <= Tuple.first gate.center && verticalIntersect gate ( p1, p2 )
 
 
 {-| North, South
@@ -120,10 +120,10 @@ horizontalIntersect gate seg =
             lineAB seg
 
         x =
-            (snd gate.center - b) / a
+            (Tuple.second gate.center - b) / a
 
         xRel =
-            x - fst gate.center
+            x - Tuple.first gate.center
     in
         (abs xRel) <= gate.width / 2
 
@@ -137,19 +137,19 @@ verticalIntersect gate seg =
             lineAB seg
 
         y =
-            a * (fst gate.center) + b
+            a * (Tuple.first gate.center) + b
 
         yRel =
-            y - snd gate.center
+            y - Tuple.second gate.center
     in
         (abs yRel) <= gate.width / 2
 
 
 lineAB : Segment -> ( Float, Float )
-lineAB ( ( x, y ), ( x', y' ) ) =
+lineAB ( ( x, y ), ( x_, y_ ) ) =
     let
         a =
-            (y - y') / (x - x')
+            (y - y_) / (x - x_)
 
         b =
             y - a * x

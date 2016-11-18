@@ -1,6 +1,5 @@
 module Page.Home.View exposing (..)
 
-import Html.App exposing (map)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)

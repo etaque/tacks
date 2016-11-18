@@ -2,9 +2,10 @@ module Page.Admin.Update exposing (..)
 
 import Response exposing (..)
 import Page.Admin.Model exposing (..)
-import ServerApi exposing (getJson, postJson)
+import ServerApi
 import Update.Utils exposing (..)
 import Task
+import Http
 
 
 mount : Response Model Msg
@@ -35,7 +36,7 @@ update msg model =
 
         DeleteTimeTrial id ->
             ServerApi.deleteTimeTrial id
-                |> Task.toResult
+                |> ServerApi.toFormTask
                 |> performSucceed DeleteTimeTrialResult
                 |> res model
 
@@ -50,7 +51,7 @@ update msg model =
 
         DeleteTrack id ->
             ServerApi.deleteDraft id
-                |> Task.toResult
+                |> ServerApi.toFormTask
                 |> performSucceed DeleteTrackResult
                 |> res model
 
@@ -68,5 +69,5 @@ update msg model =
 
 refreshData : Cmd Msg
 refreshData =
-    getJson adminDataDecoder "/api/admin"
-        |> performSucceed RefreshDataResult
+    Http.get "/api/admin" adminDataDecoder
+        |> Http.send RefreshDataResult

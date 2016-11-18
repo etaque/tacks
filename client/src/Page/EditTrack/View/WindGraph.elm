@@ -32,7 +32,8 @@ render { course, windSimDuration } =
                     60 * 60
 
         points =
-            [0..duration]
+            List.range 0 duration
+                |> List.map toFloat
                 |> List.map (\t -> ( t, generate course.windGenerator (t * 1000) ))
                 |> List.map (getPoint duration)
 
@@ -62,7 +63,8 @@ render { course, windSimDuration } =
                 ( ( 0, h ), ( graphWidth, h ) )
 
         timeMarks =
-            [0..timeIntervals]
+            List.range 0 timeIntervals
+                |> List.map toFloat
                 |> List.map timeMarkCoords
                 |> List.map (SvgUtils.segment [])
     in
@@ -72,12 +74,12 @@ render { course, windSimDuration } =
             ]
             [ originAxis
               -- , g [ class "time-marks" ] timeMarks
-            , text'
+            , text_
                 [ x "4"
                 , y "16"
                 ]
                 [ text <| "-" ++ toString (originSpan / 2) ++ "°" ]
-            , text'
+            , text_
                 [ x (toString (graphWidth - 4))
                 , y "16"
                 , textAnchor "end"

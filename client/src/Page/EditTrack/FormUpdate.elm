@@ -39,10 +39,10 @@ update formMsg ({ course } as editor) =
                 updateEditorGates (List.length gates + 1) { course | gates = gates ++ [ defaultGate ] }
 
             SetGateCenterX i x ->
-                updateEditorGates i (updateGate i (\g -> { g | center = ( toFloat x, snd g.center ) }))
+                updateEditorGates i (updateGate i (\g -> { g | center = ( toFloat x, Tuple.second g.center ) }))
 
             SetGateCenterY i y ->
-                updateEditorGates i (updateGate i (\g -> { g | center = ( fst g.center, toFloat y ) }))
+                updateEditorGates i (updateGate i (\g -> { g | center = ( Tuple.first g.center, toFloat y ) }))
 
             SetGateWidth i w ->
                 updateEditorGates i (updateGate i (\g -> { g | width = toFloat w }))

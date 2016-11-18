@@ -1,7 +1,6 @@
 module Page.EditTrack.View.Context exposing (..)
 
 import Html exposing (..)
-import Html.App exposing (map)
 import Html.Attributes as HtmlAttr exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
@@ -26,7 +25,7 @@ toolbar track editor =
             ]
             [ Utils.mIcon "arrow_back" [] ]
         , input
-            [ type' "text"
+            [ type_ "text"
             , class "edit-name"
             , value editor.name
             , onInput SetName
@@ -44,13 +43,13 @@ view track ({ course } as editor) =
         :: (tabs editor.tab)
         :: case editor.tab of
             GatesTab ->
-                List.map (map FormMsg) (Gates.view editor.currentGate course)
+                List.map (Html.map FormMsg) (Gates.view editor.currentGate course)
 
             WindTab ->
-                List.map (map FormMsg) (Wind.view editor)
+                List.map (Html.map FormMsg) (Wind.view editor)
 
             GustsTab ->
-                List.map (map FormMsg) (Gusts.view track editor)
+                List.map (Html.map FormMsg) (Gusts.view track editor)
 
 
 actions : Track -> Editor -> Html Msg

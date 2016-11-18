@@ -10,13 +10,13 @@ floatify ( x, y ) =
 
 
 add : Point -> Point -> Point
-add ( x, y ) ( x', y' ) =
-    ( x' + x, y' + y )
+add ( x, y ) ( x_, y_ ) =
+    ( x_ + x, y_ + y )
 
 
 sub : Point -> Point -> Point
-sub ( x, y ) ( x', y' ) =
-    ( x' - x, y' - y )
+sub ( x, y ) ( x_, y_ ) =
+    ( x_ - x, y_ - y )
 
 
 neg : Point -> Point
@@ -30,8 +30,8 @@ scale s ( x, y ) =
 
 
 distance : Point -> Point -> Float
-distance ( x, y ) ( x', y' ) =
-    sqrt <| (x - x') ^ 2 + (y - y') ^ 2
+distance ( x, y ) ( x_, y_ ) =
+    sqrt <| (x - x_) ^ 2 + (y - y_) ^ 2
 
 
 inBox : Point -> ( Point, Point ) -> Bool
@@ -50,13 +50,13 @@ movePoint ( x, y ) delta velocity direction =
         angle =
             Core.toRadians direction
 
-        x' =
+        x_ =
             x + delta * 0.001 * velocity * cos angle
 
-        y' =
+        y_ =
             y + delta * 0.001 * velocity * sin angle
     in
-        ( x', y' )
+        ( x_, y_ )
 
 
 rotateDeg : Float -> Float -> Point

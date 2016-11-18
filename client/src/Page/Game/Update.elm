@@ -20,6 +20,7 @@ import WebSocket
 import AnimationFrame
 import Keyboard.Extra as Keyboard
 import Window
+import Http
 
 
 subscriptions : String -> Model -> Sub Msg
@@ -192,9 +193,8 @@ applyLiveTrack ({ track, players, races } as liveTrack) model =
 
 load : String -> Cmd Msg
 load id =
-    Task.map2 (,) (ServerApi.getLiveTrack id) (ServerApi.getCourse id)
-        |> Task.toResult
-        |> performSucceed Load
+    Task.map2 (,) (Http.toTask (ServerApi.getLiveTrack id)) (Http.toTask (ServerApi.getCourse id))
+        |> Task.attempt Load
 
 
 clearCrossedGates : GameState -> GameState

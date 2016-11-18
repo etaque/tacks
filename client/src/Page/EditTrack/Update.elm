@@ -14,6 +14,7 @@ import Hexagons
 import Update.Utils exposing (..)
 import Route
 import Mouse
+import Http
 
 
 subscriptions : Model -> Sub Msg
@@ -114,27 +115,27 @@ updateEditor update model =
 
 loadTrack : String -> Cmd Msg
 loadTrack id =
-    Task.map2 (,) (ServerApi.getTrack id) (ServerApi.getCourse id)
-        |> Task.toResult
-        |> performSucceed LoadTrack
+    Task.map2 (,) (Http.toTask (ServerApi.getTrack id)) (Http.toTask (ServerApi.getCourse id))
+        |> Task.attempt LoadTrack
 
 
 saveEditor : String -> Editor -> Task Never (FormResult Track)
 saveEditor id ({ course, name } as editor) =
     ServerApi.saveTrack id name { course | area = getRaceArea course.grid }
+        |> ServerApi.toFormTask
 
 
 save : Bool -> String -> Editor -> Cmd Msg
 save try id editor =
     delay 500 (saveEditor id editor)
-        |> performSucceed (SaveResult try)
+        |> Task.perform (SaveResult try)
 
 
 publish : String -> Editor -> Cmd Msg
 publish id ({ course, name } as editor) =
     delay 500 (saveEditor id editor)
-        `andThen` (\_ -> ServerApi.publishTrack id)
-        |> performSucceed (SaveResult True)
+        |> Task.andThen (\_ -> (ServerApi.toFormTask (ServerApi.publishTrack id)))
+        |> Task.perform (SaveResult True)
 
 
 getRaceArea : Grid -> RaceArea
@@ -147,13 +148,13 @@ getRaceArea grid =
 
         xVals =
             waterPoints
-                |> List.map fst
+                |> List.map Tuple.first
                 |> List.sort
                 |> Array.fromList
 
         yVals =
             waterPoints
-                |> List.map snd
+                |> List.map Tuple.second
                 |> List.sort
                 |> Array.fromList
 

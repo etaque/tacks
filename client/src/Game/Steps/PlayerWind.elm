@@ -68,14 +68,15 @@ playerWindStep ({ wind, gusts, course, opponents } as gameState) state =
 
         easedOrigin =
             if abs originDelta > maxWindShift then
-                ensure360 <| state.windOrigin
-                    + (maxWindShift
-                        * (if originDelta > 0 then
-                            -1
-                           else
-                            1
+                ensure360 <|
+                    state.windOrigin
+                        + (maxWindShift
+                            * (if originDelta > 0 then
+                                -1
+                               else
+                                1
+                              )
                           )
-                      )
             else
                 newOrigin
     in

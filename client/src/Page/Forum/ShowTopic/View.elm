@@ -90,7 +90,7 @@ newPost content loading =
         , div
             [ class "form-group" ]
             [ input
-                [ type' "hidden"
+                [ type_ "hidden"
                 , id "new-post-body"
                 , value content
                 , onInput SetContent
