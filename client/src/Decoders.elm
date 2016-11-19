@@ -5,6 +5,11 @@ import Dict
 import Model.Shared exposing (..)
 
 
+tuple2 : Decoder a -> Decoder b -> Decoder ( a, b )
+tuple2 da db =
+    map2 (,) (index 0 da) (index 1 db)
+
+
 liveStatusDecoder : Decoder LiveStatus
 liveStatusDecoder =
     map3
@@ -148,7 +153,7 @@ messageDecoder =
 
 pointDecoder : Decoder Point
 pointDecoder =
-    map2 (,) float float
+    tuple2 float float
 
 
 courseDecoder : Decoder Course
@@ -195,7 +200,7 @@ orientationDecoder s =
 
 gridDecoder : Decoder Grid
 gridDecoder =
-    list (map2 (,) (map2 (,) int int) (string |> andThen tileKindDecoder))
+    list (tuple2 (tuple2 int int) (string |> andThen tileKindDecoder))
         |> map Dict.fromList
 
 
