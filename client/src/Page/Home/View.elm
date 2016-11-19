@@ -90,14 +90,14 @@ renderTimeTrial player liveStatus =
         Just liveTimeTrial ->
             div
                 [ class "home-time-trial" ]
-                [ Utils.linkTo
-                    (Route.ShowTimeTrial liveTimeTrial.timeTrial.id)
-                    []
-                    [ text "See all" ]
-                , h2
+                [ h2
                     []
                     [ text "Current time trial" ]
                 , TimeTrial.cardView player liveTimeTrial
+                  -- , Utils.linkTo
+                  --     (Route.ShowTimeTrial liveTimeTrial.timeTrial.id)
+                  --     []
+                  --     [ text "See all" ]
                 ]
 
         Nothing ->

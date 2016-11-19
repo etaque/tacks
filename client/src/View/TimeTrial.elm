@@ -22,14 +22,14 @@ cardView player { track, timeTrial, meta } =
                 [ class "col-sm-6 time-trial-left" ]
                 [ div
                     [ class "time-trial-header" ]
-                    [ div
-                        [ class "date" ]
-                        [ text ((DateFormat.format "%B %Y" (Date.fromTime timeTrial.creationTime))) ]
-                    , h3
+                    [ h3
                         [ class "name"
                         , title track.name
                         ]
                         [ text track.name ]
+                    , div
+                        [ class "date" ]
+                        [ text ((DateFormat.format "%B %Y" (Date.fromTime timeTrial.creationTime))) ]
                     ]
                 ]
             , div
