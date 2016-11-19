@@ -6,6 +6,7 @@ import Color.Mixing as Mix
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Svg.Lazy exposing (..)
+import Svg.Keyed as Keyed
 import Hexagons
 import Constants exposing (..)
 import Model.Shared exposing (..)
@@ -20,9 +21,14 @@ renderTiles : Grid -> Svg msg
 renderTiles grid =
     let
         tiles =
-            List.map renderTile (listGridTiles grid)
+            List.map (\tile -> ( tileKey tile, renderTile tile )) (listGridTiles grid)
     in
-        g [ class "tiles" ] tiles
+        Keyed.node "g" [ class "tiles" ] tiles
+
+
+tileKey : Tile -> String
+tileKey tile =
+    toString (Tuple.first tile.coords) ++ ":" ++ toString (Tuple.second tile.coords)
 
 
 renderTile : Tile -> Svg msg
