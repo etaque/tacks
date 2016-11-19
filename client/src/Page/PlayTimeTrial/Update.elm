@@ -53,7 +53,7 @@ mount =
 
 update : Player -> String -> Msg -> Model -> Response Model Msg
 update player host msg model =
-    case Debug.log "msg" msg of
+    case msg of
         Load result ->
             case result of
                 Ok ( liveTimeTrial, course ) ->
