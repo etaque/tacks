@@ -31,3 +31,5 @@ play.PlayScala.projectSettings
 scalacOptions += "-feature"
 
 offline := true
+
+skip in update := true
