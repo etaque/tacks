@@ -70,14 +70,14 @@ pageView ctx ({ pages, player, liveStatus, dims } as model) =
             text "Rien"
 
 
-pageTitle : Model -> String
-pageTitle model =
+pageTitle : Context -> Model -> String
+pageTitle ctx model =
     case model.route of
         PlayTrack _ ->
             GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
 
         PlayTimeTrial ->
-            PlayTimeTrialPage.pageTitle model.pages.playTimeTrial ++ " - Tacks"
+            PlayTimeTrialPage.pageTitle ctx ++ " - Tacks"
 
         Home ->
             HomePage.pageTitle model.liveStatus model.pages.home ++ " - Tacks"

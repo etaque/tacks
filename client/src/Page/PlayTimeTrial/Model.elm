@@ -11,8 +11,7 @@ import Set
 
 
 type alias Model =
-    { liveTimeTrial : HttpData LiveTimeTrial
-    , gameState : Maybe GameState
+    { gameState : Maybe GameState
     , lastPush : Time
     , keyboard : Keyboard.Model
     , dims : ( Int, Int )
@@ -29,8 +28,7 @@ type Tab
 
 initial : Model
 initial =
-    { liveTimeTrial = Loading
-    , gameState = Nothing
+    { gameState = Nothing
     , lastPush = 0
     , keyboard = Keyboard.Model Set.empty
     , dims = ( 1, 1 )
@@ -41,9 +39,8 @@ initial =
 
 
 type Msg
-    = Load (HttpResult ( LiveTimeTrial, Course ))
+    = LoadCourse (HttpResult Course)
     | InitGameState Course Time
-      -- | UpdateLiveTrack LiveTimeTrial
     | KeyboardMsg Keyboard.Msg
     | WindowSize Window.Size
     | RaceUpdate Input.RaceInput

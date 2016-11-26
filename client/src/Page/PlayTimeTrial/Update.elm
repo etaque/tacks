@@ -22,10 +22,10 @@ import Window
 import Http
 
 
-subscriptions : String -> Model -> Sub Msg
-subscriptions host model =
-    case model.liveTimeTrial of
-        DataOk liveTimeTrial ->
+subscriptions : String -> LiveStatus -> Model -> Sub Msg
+subscriptions host liveStatus model =
+    case liveStatus.liveTimeTrial of
+        Just liveTimeTrial ->
             Sub.batch
                 [ WebSocket.listen
                     (ServerApi.timeTrialSocket host)
@@ -39,29 +39,35 @@ subscriptions host model =
             Sub.none
 
 
-mount : Response Model Msg
-mount =
-    let
-        cmd =
-            Cmd.batch
-                [ load
-                , performSucceed WindowSize Window.size
-                ]
-    in
-        res initial cmd
+mount : LiveStatus -> Response Model Msg
+mount liveStatus =
+    case liveStatus.liveTimeTrial of
+        Just ltt ->
+            let
+                cmd =
+                    Cmd.batch
+                        [ loadCourse ltt
+                        , performSucceed WindowSize Window.size
+                        ]
+            in
+                res initial cmd
+
+        Nothing ->
+            res initial Cmd.none
 
 
 update : Player -> String -> Msg -> Model -> Response Model Msg
 update player host msg model =
     case msg of
-        Load result ->
+        LoadCourse result ->
             case result of
-                Ok ( liveTimeTrial, course ) ->
+                Ok course ->
                     performSucceed (InitGameState course) Time.now
-                        |> res { model | liveTimeTrial = DataOk liveTimeTrial }
+                        |> res model
 
                 Err e ->
-                    res { model | liveTimeTrial = DataErr e } Cmd.none
+                    -- TODO handle err
+                    res model Cmd.none
 
         InitGameState course time ->
             let
@@ -164,15 +170,7 @@ update player host msg model =
             res model Cmd.none
 
 
-load : Cmd Msg
-load =
-    (Http.toTask (ServerApi.getLiveTimeTrial Nothing))
-        |> Task.andThen loadCourse
-        |> Task.attempt Load
-
-
-loadCourse : LiveTimeTrial -> Task.Task Http.Error ( LiveTimeTrial, Course )
+loadCourse : LiveTimeTrial -> Cmd Msg
 loadCourse liveTimeTrial =
     ServerApi.getCourse liveTimeTrial.track.id
-        |> Http.toTask
-        |> Task.map (\course -> ( liveTimeTrial, course ))
+        |> Http.send LoadCourse

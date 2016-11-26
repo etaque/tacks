@@ -45,7 +45,7 @@ subscriptions ({ pages } as model) =
                     Sub.map GameMsg (Game.subscriptions model.host pages.game)
 
                 PlayTimeTrial ->
-                    Sub.map PlayTimeTrialMsg (PlayTimeTrial.subscriptions model.host pages.playTimeTrial)
+                    Sub.map PlayTimeTrialMsg (PlayTimeTrial.subscriptions model.host model.liveStatus pages.playTimeTrial)
 
                 EditTrack _ ->
                     Sub.map EditTrackMsg (EditTrack.subscriptions pages.editTrack)
@@ -172,7 +172,7 @@ mountRoute newRoute ({ pages, player, route } as prevModel) =
                 applyShowTimeTrial (ShowTimeTrial.mount id) model
 
             PlayTimeTrial ->
-                applyPlayTimeTrial PlayTimeTrial.mount model
+                applyPlayTimeTrial (PlayTimeTrial.mount model.liveStatus) model
 
             ListDrafts ->
                 applyListDrafts (ListDrafts.mount pages.listDrafts) model

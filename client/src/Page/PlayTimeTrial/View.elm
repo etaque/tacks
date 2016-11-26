@@ -16,10 +16,10 @@ import Route exposing (..)
 import Constants exposing (..)
 
 
-pageTitle : Model -> String
-pageTitle model =
-    case model.liveTimeTrial of
-        DataOk { track } ->
+pageTitle : Context -> String
+pageTitle ctx =
+    case ctx.liveStatus.liveTimeTrial of
+        Just { track } ->
             "Time trial - " ++ track.name
 
         _ ->
@@ -28,8 +28,8 @@ pageTitle model =
 
 view : Context -> Model -> Layout.Game Msg
 view ctx model =
-    case ( model.liveTimeTrial, model.gameState ) of
-        ( DataOk liveTimeTrial, Just gameState ) ->
+    case ( ctx.liveStatus.liveTimeTrial, model.gameState ) of
+        ( Just liveTimeTrial, Just gameState ) ->
             let
                 ( w, h ) =
                     ctx.dims
