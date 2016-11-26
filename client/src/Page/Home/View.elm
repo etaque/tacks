@@ -83,6 +83,9 @@ dialogContent model =
         ReportDialog raceReport ->
             Race.reportDialog raceReport
 
+        TimeTrialDialog ltt ->
+            TimeTrial.rankingDialog ltt
+
 
 renderTimeTrial : Player -> LiveStatus -> Html Msg
 renderTimeTrial player liveStatus =
@@ -93,7 +96,10 @@ renderTimeTrial player liveStatus =
                 [ h2
                     []
                     [ text "Current time trial" ]
-                , TimeTrial.cardView player liveTimeTrial
+                , TimeTrial.cardView
+                    (ShowDialog (TimeTrialDialog liveTimeTrial))
+                    player
+                    liveTimeTrial
                   -- , Utils.linkTo
                   --     (Route.ShowTimeTrial liveTimeTrial.timeTrial.id)
                   --     []

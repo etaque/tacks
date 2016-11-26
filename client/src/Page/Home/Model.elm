@@ -16,6 +16,7 @@ type Dialog
     = Empty
     | RankingDialog LiveTrack
     | ReportDialog RaceReport
+    | TimeTrialDialog LiveTimeTrial
 
 
 initial : Model

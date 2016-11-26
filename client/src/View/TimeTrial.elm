@@ -9,10 +9,11 @@ import Model.Shared exposing (..)
 import Route exposing (..)
 import View.Utils as Utils exposing (..)
 import View.Track as Track
+import Dialog
 
 
-cardView : Player -> LiveTimeTrial -> Html msg
-cardView player { track, timeTrial, meta } =
+cardView : msg -> Player -> LiveTimeTrial -> Html msg
+cardView rankingMsg player ({ track, timeTrial, meta } as ltt) =
     Utils.linkTo
         Route.PlayTimeTrial
         [ class "time-trial" ]
@@ -45,7 +46,9 @@ cardView player { track, timeTrial, meta } =
                     div
                         [ class "time-trial-actions" ]
                         [ a
-                            [ class "btn-flat" ]
+                            [ class "btn-flat"
+                            , onButtonClick rankingMsg
+                            ]
                             [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")" ]
                         ]
                   else
@@ -53,3 +56,15 @@ cardView player { track, timeTrial, meta } =
                 ]
             ]
         ]
+
+
+rankingDialog : LiveTimeTrial -> Dialog.Layout
+rankingDialog { track, meta } =
+    { header = [ Dialog.title track.name ]
+    , body =
+        [ ul
+            [ class "list-unstyled list-rankings" ]
+            (List.map Utils.rankingItem meta.rankings)
+        ]
+    , footer = []
+    }
