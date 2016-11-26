@@ -21,7 +21,7 @@
     "build-sass": "node-sass client/styles -o public/dist",
     "watch": "parallelshell 'yarn run watch-elm' 'yarn run watch-sass' 'yarn run watch-js'",
     "watch-js": "babel client/scripts/boot.js -w --out-file public/dev/boot.js",
-    "watch-elm": "chokidar 'client/src/**/*.elm' --initial -d 750 -i '/#/' -c 'yarn run compile-elm --silent'",
+    "watch-elm": "chokidar 'client/src/**/*.elm' --initial -d 750 -t 500 -i '/#/' -c 'yarn run compile-elm --silent'",
     "compile-elm": "elm make client/src/Main.elm --output public/dev/main.js",
     "watch-sass": "node-sass -w client/styles -o public/dev",
     "clean": "rm -rf elm-stuff/build-artifacts/0.17.0/etaque/tacks/"
