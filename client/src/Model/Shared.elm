@@ -139,6 +139,11 @@ liveTrackPlayers liveTrack =
     liveTrack.players ++ (List.concatMap .players liveTrack.races)
 
 
+lastLiveTracksFirst : List LiveTrack -> List LiveTrack
+lastLiveTracksFirst =
+    List.sortBy (.track >> .creationTime >> ((-) 0))
+
+
 type alias Track =
     { id : TrackId
     , name : String

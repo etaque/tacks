@@ -3,8 +3,6 @@ module Page.Home.View exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Date
-import Date.Format as DateFormat
 import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
@@ -40,7 +38,11 @@ view ctx model =
             [ h1 [] [ text "Sailing tactics from the sofa" ]
             , p
                 [ class "subtitle" ]
-                [ text "Tacks is a free regatta simulation game. Engage yourself in a realtime multiplayer race or attempt to break your best time to climb the rankings." ]
+                [ text """
+                    Tacks is a free regatta simulation game.
+                    Engage yourself in a realtime multiplayer race
+                    or attempt to break your best time to climb the rankings."""
+                ]
             ]
         , Layout.section
             [ class "white inside" ]
@@ -116,6 +118,7 @@ liveTracks player { liveTracks } =
         featuredTracks =
             liveTracks
                 |> List.filter (.track >> .featured)
+                |> lastLiveTracksFirst
                 |> List.map (\lt -> div [ class "col-md-4" ] [ Track.liveTrackBlock rankingClickHandler lt ])
     in
         div

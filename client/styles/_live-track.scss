@@ -22,7 +22,7 @@
   .live-track-header {
     position: relative;
     margin: 0;
-    padding: 24px 16px 16px 16px;
+    padding: 24px 16px 8px 16px;
     background-color: $lightSeaBlue;
     @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
     color: $white;

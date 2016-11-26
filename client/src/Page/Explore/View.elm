@@ -40,7 +40,10 @@ liveTracks liveTracks =
         [ class "live-tracks" ]
         [ div
             [ class "row" ]
-            (List.map (\lt -> div [ class "col-md-4" ] [ Track.liveTrackBlock rankingClickHandler lt ]) liveTracks)
+            (List.map
+                (\lt -> div [ class "col-md-4" ] [ Track.liveTrackBlock rankingClickHandler lt ])
+                (lastLiveTracksFirst liveTracks)
+            )
         ]
 
 
