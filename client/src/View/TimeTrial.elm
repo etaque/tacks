@@ -14,16 +14,17 @@ import Dialog
 
 cardView : msg -> Player -> LiveTimeTrial -> Html msg
 cardView rankingMsg player ({ track, timeTrial, meta } as ltt) =
-    Utils.linkTo
-        Route.PlayTimeTrial
+    div
         [ class "time-trial" ]
         [ div
             [ class "row" ]
             [ div
                 [ class "col-sm-6 time-trial-left" ]
-                [ div
+                [ Utils.linkTo
+                    Route.PlayTimeTrial
                     [ class "time-trial-header" ]
-                    [ div
+                    [ Utils.mIcon "play_circle_filled" []
+                    , div
                         [ class "date" ]
                         [ text ((DateFormat.format "%B %Y" (Date.fromTime timeTrial.creationTime))) ]
                     , h3
@@ -40,19 +41,18 @@ cardView rankingMsg player ({ track, timeTrial, meta } as ltt) =
                         [ ( "time-trial-body", True )
                         , ( "empty", List.isEmpty meta.rankings )
                         ]
+                    , onClick rankingMsg
                     ]
-                    [ Track.rankingsExtract meta.rankings ]
-                , if List.length meta.rankings > 0 then
-                    div
-                        [ class "time-trial-actions" ]
-                        [ a
-                            [ class "btn-flat"
-                            , onButtonClick rankingMsg
+                    [ Track.rankingsExtract meta.rankings
+                    , if List.length meta.rankings > 0 then
+                        div
+                            [ class "live-track-meta" ]
+                            [ Utils.mIcon "fullscreen" []
+                            , text <| Utils.pluralize (List.length meta.rankings) "entry" "entries"
                             ]
-                            [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")" ]
-                        ]
-                  else
-                    text ""
+                      else
+                        text ""
+                    ]
                 ]
             ]
         ]
@@ -66,5 +66,7 @@ rankingDialog { track, meta } =
             [ class "list-unstyled list-rankings" ]
             (List.map Utils.rankingItem meta.rankings)
         ]
-    , footer = []
+    , footer =
+        [ text <| Utils.pluralize (List.length meta.rankings) "entry" "entries"
+        ]
     }

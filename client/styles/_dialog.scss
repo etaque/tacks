@@ -77,12 +77,14 @@
   .dialog-body {
     flex: 1;
     overflow-y: auto;
-    margin-bottom: 16px;
     border-bottom: $border;
 
     .list-rankings {
       margin-bottom: 0;
     }
   }
-  
+
+  .dialog-footer {
+    padding: 12px 24px;
+  }
 }

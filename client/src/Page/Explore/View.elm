@@ -41,12 +41,7 @@ liveTracks liveTracks =
         [ div
             [ class "row" ]
             (List.map
-                (\lt -> div [ class "col-md-4" ] [ Track.liveTrackBlock rankingClickHandler lt ])
+                (\lt -> div [ class "col-md-4" ] [ Track.liveTrackBlock (ShowTrackRanking lt) lt ])
                 (lastLiveTracksFirst liveTracks)
             )
         ]
-
-
-rankingClickHandler : LiveTrack -> Attribute Msg
-rankingClickHandler liveTrack =
-    Utils.onButtonClick (ShowTrackRanking liveTrack)

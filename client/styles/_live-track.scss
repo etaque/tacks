@@ -21,12 +21,26 @@
 
   .live-track-header {
     position: relative;
+    display: block;
     margin: 0;
-    padding: 24px 16px 8px 16px;
+    padding: 24px 16px 16px 16px;
     background-color: $lightSeaBlue;
     @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
     color: $white;
     overflow: hidden;
+
+    i {
+      float: right;
+      transition: bezier(color);
+      color: $mainBlue;
+      font-size: 42px;
+    }
+
+    &:hover {
+      i {
+        color: $whiteSeaBlue;
+      }
+    }
 
     h3 {
       white-space: nowrap;
@@ -63,11 +77,35 @@
   .live-track-body {
     padding: 0;
     position: relative;
-    overflow-y: hidden;
-    height: 147px;
+
+    i {
+      opacity: 0;
+      line-height: 36px;
+      margin-right: 8px;
+      transition: bezier(opacity);
+      position: absolute;
+      right: 0;
+    }
+
+    &:hover {
+      i {
+        opacity: 0.5;
+      }
+    }
 
     .list-rankings {
       margin-bottom: 0;
+      overflow-y: hidden;
+      height: 147px;
+    }
+
+    .live-track-meta {
+      border-top: $border;
+      background-color: $whiteSmoke;
+      text-align: center;
+      font-family: $mono;
+      line-height: 36px;
+      color: $grey;
     }
   }
 

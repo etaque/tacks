@@ -115,22 +115,26 @@ renderTimeTrial player liveStatus =
 liveTracks : Player -> LiveStatus -> Html Msg
 liveTracks player { liveTracks } =
     let
+        renderBlock lt =
+            Track.liveTrackBlock (ShowDialog (RankingDialog lt)) lt
+
         featuredTracks =
             liveTracks
                 |> List.filter (.track >> .featured)
                 |> lastLiveTracksFirst
-                |> List.map (\lt -> div [ class "col-md-4" ] [ Track.liveTrackBlock rankingClickHandler lt ])
+                |> List.take 3
+                |> List.map (\lt -> div [ class "col-md-4" ] [ renderBlock lt ])
     in
         div
             [ class "live-tracks" ]
-            [ h2 [] [ text "Featured courses" ]
+            [ h2 []
+                [ text "Featured courses – "
+                , Utils.linkTo Route.Explore
+                    []
+                    [ text "see all" ]
+                ]
             , div [ class "row" ] featuredTracks
             ]
-
-
-rankingClickHandler : LiveTrack -> Attribute Msg
-rankingClickHandler liveTrack =
-    onButtonClick (ShowDialog (RankingDialog liveTrack))
 
 
 reportClickHandler : RaceReport -> Attribute Msg

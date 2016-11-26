@@ -9,22 +9,23 @@ import View.Utils as Utils
 import Dialog
 
 
-liveTrackBlock : (LiveTrack -> Attribute msg) -> LiveTrack -> Html msg
-liveTrackBlock rankingClickHandler ({ track, meta, players } as lt) =
+liveTrackBlock : msg -> LiveTrack -> Html msg
+liveTrackBlock rankingMsg ({ track, meta, players } as lt) =
     let
         empty =
             List.length players == 0
     in
-        Utils.linkTo
-            (Route.PlayTrack track.id)
+        div
             [ classList
                 [ ( "live-track", True )
                 , ( "is-empty", empty )
                 ]
             ]
-            [ div
+            [ Utils.linkTo
+                (Route.PlayTrack track.id)
                 [ class "live-track-header" ]
-                [ h3
+                [ Utils.mIcon "navigate_next" []
+                , h3
                     [ class "name", title track.name ]
                     [ text track.name ]
                 , div
@@ -37,16 +38,13 @@ liveTrackBlock rankingClickHandler ({ track, meta, players } as lt) =
                 ]
             , div
                 [ class "live-track-body"
+                , onClick rankingMsg
                 ]
                 [ rankingsExtract meta.rankings
-                ]
-            , div
-                [ class "live-track-actions" ]
-                [ a
-                    [ class "btn-flat"
-                    , rankingClickHandler lt
-                    ]
-                    [ text <| "See all (" ++ toString (List.length meta.rankings) ++ ")"
+                , div
+                    [ class "live-track-meta" ]
+                    [ Utils.mIcon "fullscreen" []
+                    , text <| Utils.pluralize (List.length meta.rankings) "entry" "entries"
                     ]
                 ]
             ]
@@ -61,12 +59,14 @@ rankingsExtract rankings =
 
 
 rankingDialog : LiveTrack -> Dialog.Layout
-rankingDialog liveTrack =
-    { header = [ Dialog.title liveTrack.track.name ]
+rankingDialog { track, meta } =
+    { header = [ Dialog.title track.name ]
     , body =
         [ ul
             [ class "list-unstyled list-rankings" ]
-            (List.map Utils.rankingItem liveTrack.meta.rankings)
+            (List.map Utils.rankingItem meta.rankings)
         ]
-    , footer = []
+    , footer =
+        [ text <| Utils.pluralize (List.length meta.rankings) "entry" "entries"
+        ]
     }

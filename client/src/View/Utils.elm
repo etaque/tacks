@@ -318,3 +318,13 @@ errMsg e =
 
         _ ->
             toString e
+
+
+pluralize : Int -> String -> String -> String
+pluralize i singular plural =
+    if i == 0 then
+        "no " ++ plural
+    else if i == 1 then
+        "one " ++ singular
+    else
+        toString i ++ " " ++ plural

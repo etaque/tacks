@@ -6,17 +6,10 @@
 .time-trial {
   @include sheet;
   @include shadow-light;
-  /* background-color: $darkSeaBlue; */
-  /* @include gradient-directional($seaBlue, $mainBlue, -30deg); */
-  /* background-color: $lightPurple; */
-  /* @include gradient-directional($lightPurple, $intensePurple, -30deg); */
-  background-color: $charcoal;
-  @include gradient-directional($charcoal, $grey, -30deg);
   padding-left: 15px;
   padding-right: 15px;
 
   margin-bottom: 24px;
-  cursor: pointer;
   overflow: hidden;
   display: block;
 
@@ -24,57 +17,107 @@
     @include shadow-medium;
   }
 
+  .time-trial-left {
+    padding: 0;
+    /* background-color: $orange; */
+    @include gradient-directional($whiteSmoke, $white, -30deg);
+  }
+
   .time-trial-header {
-    color: $white;
+    display: block;
     position: relative;
     margin: 0;
-    padding-top: 64px;
-    padding-left: 15px;
     text-align: center;
+    height: 184px;
+
+    i {
+      position: absolute;
+      bottom: 24px;
+      left: 0;
+      right: 0;
+      float: right;
+      transition: bezier(color);
+      font-size: 42px;
+      color: #eee;
+    }
+
+    &:hover {
+      i {
+        color:
+        $orange;
+      }
+    }
+
+    .date {
+      position: absolute;
+      top: 0;
+      right: 48px;
+      left: 48px;
+      color: $grey;
+      line-height: 48px;
+      text-transform: uppercase;
+      /* font-size: 16px; */
+      font-family: $thin;
+      border-bottom: 1px solid #eee;
+    }
 
     h3 {
+      position: absolute;
+      top: 72px;
+      left: 0;
+      right: 0;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
       font-family: $thin;
-      font-size: 27px;
+      font-size: 34px;
       font-weight: bold;
       margin: 0;
-    }
-
-    .date {
-      color: $darkGrey;
-      color: $lightGrey;
-      margin-bottom: 4px;
-      text-transform: uppercase;
-      font-size: 16px;
     }
   }
 
   .time-trial-right {
     padding-right: 0;
+    padding-left: 0;
   }
 
   .time-trial-body {
+    background-color: white;
     position: relative;
-    overflow-y: hidden;
-    height: 147px;
     background: $white;
     border-left: $border;
+    cursor: pointer;
 
     .list-rankings {
       margin-bottom: 0;
+      overflow-y: hidden;
+      height: 147px;
     }
-  }
 
-  .time-trial-actions {
-    border-top: $border;
-    background-color: $white;
-    border-left: $border;
+    .live-track-meta {
+      border-top: $border;
+      background-color: $whiteSmoke;
+      text-align: center;
+      font-family: $mono;
+      line-height: 36px;
+      color: $grey;
+    }
 
-    .btn-flat {
-      display: block;
-      line-height: 42px;
+    i {
+      opacity: 0;
+      line-height: 36px;
+      margin-right: 8px;
+      transition: bezier(opacity);
+      position: absolute;
+      right: 0;
+    }
+
+    &:hover {
+      border-color: #ddd;
+
+      i {
+        opacity: 0.5;
+      }
     }
   }
 
