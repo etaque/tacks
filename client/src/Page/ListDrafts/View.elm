@@ -21,12 +21,12 @@ view ctx ({ tracks } as model) =
         [ Layout.header
             ctx
             []
-            [ h1 [] [ text "Your tracks" ]
+            [ h1 [] [ text "Your courses" ]
             , div
                 [ class "btn-raised btn-positive btn-new-track cta"
                 , onClick ToggleCreationForm
                 ]
-                [ text "New track" ]
+                [ text "New course" ]
             ]
         , Layout.section
             [ classList [ ( "grey new-track inside", True ), ( "show", model.showCreationForm ) ] ]
@@ -36,7 +36,7 @@ view ctx ({ tracks } as model) =
             [ if List.isEmpty tracks then
                 div
                     [ class "empty-notice" ]
-                    [ text "No track built yet!" ]
+                    [ text "No course built yet!" ]
               else
                 div
                     [ class "tracks-list" ]
@@ -163,7 +163,7 @@ confirmPublish track =
             , Utils.onButtonClick (ConfirmPublish False)
             ]
             [ text "Cancel" ]
-        , span [] [ text "Track will be frozen, no changes allowed anymore!" ]
+        , span [] [ text "Course will be frozen, no changes allowed anymore!" ]
         ]
 
 
@@ -192,7 +192,7 @@ createTrackForm { name } =
             False
             [ Utils.textInput
                 [ value name
-                , placeholder "New track name"
+                , placeholder "Course name"
                 , onInput SetName
                 , Utils.onEnter Create
                 ]
@@ -202,5 +202,5 @@ createTrackForm { name } =
             , onClick Create
             , disabled (String.isEmpty name)
             ]
-            [ text "Create track" ]
+            [ text "Create" ]
         ]

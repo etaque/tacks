@@ -19,7 +19,7 @@ view ctx model =
         [ Layout.header
             ctx
             []
-            [ h1 [] [ text "All tracks" ] ]
+            [ h1 [] [ text "Explore courses" ] ]
         , Layout.section
             [ class "white inside manage-tracks" ]
             [ liveTracks ctx.liveStatus.liveTracks ]

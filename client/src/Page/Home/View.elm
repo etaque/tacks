@@ -123,7 +123,7 @@ liveTracks player { liveTracks } =
     in
         div
             [ class "live-tracks" ]
-            [ h2 [] [ text "Live tracks" ]
+            [ h2 [] [ text "Featured courses" ]
             , div [ class "row" ] featuredTracks
             ]
 
