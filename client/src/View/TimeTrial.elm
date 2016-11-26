@@ -23,14 +23,14 @@ cardView rankingMsg player ({ track, timeTrial, meta } as ltt) =
                 [ class "col-sm-6 time-trial-left" ]
                 [ div
                     [ class "time-trial-header" ]
-                    [ h3
+                    [ div
+                        [ class "date" ]
+                        [ text ((DateFormat.format "%B %Y" (Date.fromTime timeTrial.creationTime))) ]
+                    , h3
                         [ class "name"
                         , title track.name
                         ]
                         [ text track.name ]
-                    , div
-                        [ class "date" ]
-                        [ text ((DateFormat.format "%B %Y" (Date.fromTime timeTrial.creationTime))) ]
                     ]
                 ]
             , div
