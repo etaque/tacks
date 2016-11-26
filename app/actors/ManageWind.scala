@@ -17,7 +17,7 @@ trait ManageWind {
 
   def generateGust() = {
     val gen = course.gustGenerator
-    val xSeed = Math.abs(clock * creationTime.getMillis * Math.PI)
+    val xSeed = Math.abs(wind.gustCounter * creationTime.getMillis * Math.PI)
     val maxRadius = gen.generateRadius(rng)
 
     val gust = Gust(
