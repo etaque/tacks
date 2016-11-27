@@ -53,7 +53,7 @@ object Users extends Controller with Security {
     )
   }
 
-  def logout = Action.async(parse.json) { request =>
+  def logout = Action.async { request =>
     val newPlayer = Guest(UUID.randomUUID())
     Future.successful(Ok(
       playerFormat.writes(newPlayer)).withSession("playerId" -> newPlayer.id.toString))
