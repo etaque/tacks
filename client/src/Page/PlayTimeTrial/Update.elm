@@ -19,6 +19,7 @@ import AnimationFrame
 import Keyboard.Extra as Keyboard
 import Window
 import Http
+import List.Extra as ListExtra
 
 
 subscriptions : String -> LiveStatus -> Model -> Sub Msg
@@ -42,21 +43,15 @@ mount : LiveStatus -> Response Model Msg
 mount liveStatus =
     case liveStatus.liveTimeTrial of
         Just ltt ->
-            let
-                cmd =
-                    Cmd.batch
-                        [ loadCourse ltt
-                        , Task.perform WindowSize Window.size
-                        ]
-            in
-                res initial cmd
+            Cmd.batch [ loadCourse ltt, Task.perform WindowSize Window.size ]
+                |> res initial
 
         Nothing ->
             res initial Cmd.none
 
 
-update : Player -> String -> Msg -> Model -> Response Model Msg
-update player host msg model =
+update : LiveStatus -> Player -> String -> Msg -> Model -> Response Model Msg
+update liveStatus player host msg model =
     case msg of
         LoadCourse result ->
             case result of
@@ -76,10 +71,14 @@ update player host msg model =
                 newModel =
                     { model | gameState = Just gameState }
 
-                start =
+                startCmd =
                     Output.sendToTimeTrialServer host Output.StartRace
+
+                ghostsCmd =
+                    Maybe.map (electGhosts player) liveStatus.liveTimeTrial
+                        |> Maybe.withDefault Cmd.none
             in
-                res newModel start
+                res newModel (Cmd.batch [ startCmd, ghostsCmd ])
 
         KeyboardMsg keyboardMsg ->
             let
@@ -173,3 +172,41 @@ loadCourse : LiveTimeTrial -> Cmd Msg
 loadCourse liveTimeTrial =
     ServerApi.getCourse liveTimeTrial.track.id
         |> Http.send LoadCourse
+
+
+maxGhosts : Int
+maxGhosts =
+    5
+
+
+electGhosts : Player -> LiveTimeTrial -> Cmd Msg
+electGhosts player { meta } =
+    let
+        playerIndex =
+            ListExtra.findIndex (\r -> r.player.id == player.id) meta.rankings
+
+        runs =
+            case playerIndex of
+                Just i ->
+                    let
+                        faster =
+                            meta.rankings
+                                |> List.take (i + 1)
+                                |> List.reverse
+                                |> List.take maxGhosts
+
+                        slower =
+                            meta.rankings
+                                |> List.drop i
+                    in
+                        List.take maxGhosts (faster ++ slower)
+
+                Nothing ->
+                    meta.rankings
+                        |> List.reverse
+                        |> List.take maxGhosts
+    in
+        runs
+            |> List.map (\r -> AddGhost r.runId r.player)
+            |> List.map (Task.succeed >> (Task.perform identity))
+            |> Cmd.batch

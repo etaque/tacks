@@ -212,7 +212,7 @@ pageUpdate pageMsg ({ pages, player, dims } as model) =
             applyShowTimeTrial (ShowTimeTrial.update player a pages.showTimeTrial) model
 
         PlayTimeTrialMsg a ->
-            applyPlayTimeTrial (PlayTimeTrial.update player model.host a pages.playTimeTrial) model
+            applyPlayTimeTrial (PlayTimeTrial.update model.liveStatus player model.host a pages.playTimeTrial) model
 
         ListDraftsMsg a ->
             applyListDrafts (ListDrafts.update a pages.listDrafts) model

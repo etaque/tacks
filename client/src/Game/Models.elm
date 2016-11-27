@@ -43,9 +43,7 @@ type alias GameState =
     , ghosts : List Ghost
     , course : Course
     , tallies : List PlayerTally
-    , timers :
-        Timers
-        -- , live : Bool
+    , timers : Timers
     , chatting : Bool
     }
 
