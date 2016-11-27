@@ -12,7 +12,7 @@ type Route
 matchers : List (Matcher Route)
 matchers =
     [ static Index "/forum"
-    , dyn1 ShowTopic "/forum/t/" string ""
+    , dyn1 ShowTopic "/forum/topic/" string ""
     , static NewTopic "/forum/new"
     ]
 
@@ -25,7 +25,7 @@ toPath route =
                 ""
 
             ShowTopic id ->
-                "/t/" ++ id
+                "/topic/" ++ id
 
             NewTopic ->
                 "/new"

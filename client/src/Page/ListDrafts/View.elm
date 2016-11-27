@@ -32,14 +32,14 @@ view ctx ({ tracks } as model) =
             [ classList [ ( "grey new-track inside", True ), ( "show", model.showCreationForm ) ] ]
             [ createTrackForm model ]
         , Layout.section
-            [ class "white manage-tracks overlap" ]
+            [ class "white manage-tracks with-overlap" ]
             [ if List.isEmpty tracks then
                 div
                     [ class "empty-notice" ]
                     [ text "No course built yet!" ]
               else
                 div
-                    [ class "tracks-list" ]
+                    [ class "tracks-list is-overlap" ]
                     (List.concatMap (draftItem model) tracks)
             ]
         ]

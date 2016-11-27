@@ -3,6 +3,7 @@ module Page.Forum.ShowTopic.Update exposing (..)
 import Response exposing (..)
 import Json.Encode as JsEncode
 import CoreExtra
+import Model.Shared exposing (httpResultToData, RemoteData(..))
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.ShowTopic.Model exposing (..)
@@ -17,51 +18,45 @@ mount id =
 
 
 update : Msg -> Model -> Response Model Msg
-update msg ({ currentTopic, newPostContent } as model) =
+update msg ({ topicWithPosts, response } as model) =
     case msg of
         LoadResult result ->
-            case result of
-                Ok topic ->
-                    res { model | currentTopic = Just topic } Cmd.none
+            res { model | topicWithPosts = httpResultToData result } Cmd.none
 
-                Err _ ->
-                    -- TODO
-                    res model Cmd.none
-
-        ToggleNewPost ->
-            case newPostContent of
+        ToggleResponse ->
+            case response of
                 Just _ ->
-                    res { model | newPostContent = Nothing } Cmd.none
+                    res { model | response = Nothing } Cmd.none
 
                 Nothing ->
-                    res { model | newPostContent = Just "" } Cmd.none
+                    res { model | response = Just "" } Cmd.none
 
         SetContent c ->
-            res { model | newPostContent = Just c } Cmd.none
+            res { model | response = Just c } Cmd.none
 
-        Submit ->
-            case ( currentTopic, newPostContent ) of
-                ( Just { topic }, Just c ) ->
-                    res { model | loading = True } (createPost topic c)
+        SubmitResponse ->
+            case ( topicWithPosts, response ) of
+                ( DataOk { topic }, Just c ) ->
+                    res { model | submitting = True } (createPost topic c)
 
                 _ ->
                     res model Cmd.none
 
-        SubmitResult result ->
-            case ( result, currentTopic ) of
-                ( Ok postWithUser, Just ({ topic, postsWithUsers } as topicWithPosts) ) ->
+        SubmitResponseResult result ->
+            case ( result, topicWithPosts ) of
+                ( Ok postWithUser, DataOk ({ topic, postsWithUsers } as topicWithPosts) ) ->
                     let
                         newTopicWithPosts =
                             { topicWithPosts | postsWithUsers = postsWithUsers ++ [ postWithUser ] }
 
                         newModel =
-                            { model | loading = False, currentTopic = Just newTopicWithPosts, newPostContent = Nothing }
+                            { model | submitting = False, topicWithPosts = DataOk newTopicWithPosts, response = Nothing }
                     in
                         res newModel Cmd.none
 
-                ( Err _, Just _ ) ->
+                ( Err _, DataOk _ ) ->
                     -- TODO tell error
-                    res { model | loading = False } Cmd.none
+                    res { model | submitting = False } Cmd.none
 
                 _ ->
                     res model Cmd.none
@@ -78,7 +73,7 @@ createPost topic content =
                 [ ( "content", JsEncode.string content ) ]
     in
         Http.post ("/api/forum/topics/" ++ topic.id) (Http.jsonBody body) postWithUserDecoder
-            |> ServerApi.sendForm SubmitResult
+            |> ServerApi.sendForm SubmitResponseResult
 
 
 showTopic : String -> Cmd Msg

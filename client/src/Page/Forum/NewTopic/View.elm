@@ -29,7 +29,7 @@ view ctx ({ form, loading } as model) =
             ]
         ]
     , Layout.section
-        [ class "white" ]
+        [ class "white has-overlap" ]
         [ Html.map FormMsg (formView model) ]
     ]
 
@@ -49,7 +49,7 @@ formView { form, loading } =
                 |> Maybe.withDefault (Form.isSubmitted form)
     in
         div
-            [ class "form-sheet form-new-topic" ]
+            [ class "form-sheet form-new-topic is-overlap" ]
             [ div
                 [ class "form-group" ]
                 [ Form.textInput

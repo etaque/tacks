@@ -27,7 +27,7 @@ view ctx ({ topics } as model) =
             [ text "New topic" ]
         ]
     , Layout.section
-        [ class "white" ]
+        [ class "white with-overlap" ]
         [ topicsTable topics ]
     ]
 
@@ -35,7 +35,7 @@ view ctx ({ topics } as model) =
 topicsTable : List TopicWithUser -> Html Msg
 topicsTable topics =
     table
-        [ class "table forum-topics-table" ]
+        [ class "table forum-topics-table is-overlap" ]
         [ thead
             []
             [ tr

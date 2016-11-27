@@ -114,6 +114,7 @@
   background-color: $white;
   border-radius: 2px;
   @include bezier(box-shadow);
+  color: $grey;
 }
 
 @mixin shadow-light {

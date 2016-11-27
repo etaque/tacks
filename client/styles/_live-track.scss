@@ -23,20 +23,18 @@
     display: block;
     margin: 0;
     padding: 24px 12px 16px 16px;
-    background-color: $lightSeaBlue;
-    @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
-    color: $white;
+    @include gradient-directional($whiteSmoke, $white, -30deg);
+    border-bottom: $border;
 
     i {
       float: right;
-      transition: bezier(color);
-      color: $mainBlue;
+      color: $lightGrey;
       font-size: 42px;
     }
 
     &:hover {
       i {
-        color: $whiteSeaBlue;
+        @include pulse(launch-track, $lightGrey, $orange);
       }
     }
 
@@ -51,7 +49,7 @@
     }
 
     .creator {
-      color: $light-hard;
+      color: $grey;
     }
 
     .live-players {

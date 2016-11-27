@@ -33,6 +33,16 @@ type RemoteData e a
     | DataOk a
 
 
+httpResultToData : HttpResult a -> RemoteData Http.Error a
+httpResultToData result =
+    case result of
+        Ok ok ->
+            DataOk ok
+
+        Err e ->
+            DataErr e
+
+
 dataToMaybe : RemoteData e a -> Maybe a
 dataToMaybe data =
     case data of

@@ -1,29 +1,29 @@
 module Page.Forum.ShowTopic.Model exposing (..)
 
-import Model.Shared exposing (Id, User, FormResult)
+import Model.Shared as Shared exposing (Id, User, FormResult, RemoteData(..))
 import Page.Forum.Model.Shared exposing (..)
 import Http
 
 
 type alias Model =
-    { currentTopic : Maybe TopicWithPosts
-    , newPostContent : Maybe String
-    , loading : Bool
+    { topicWithPosts : RemoteData Http.Error TopicWithPosts
+    , response : Maybe String
+    , submitting : Bool
     }
 
 
 initial : Model
 initial =
-    { currentTopic = Nothing
-    , newPostContent = Nothing
-    , loading = False
+    { topicWithPosts = Loading
+    , response = Nothing
+    , submitting = False
     }
 
 
 type Msg
     = LoadResult (Result Http.Error TopicWithPosts)
     | SetContent String
-    | ToggleNewPost
-    | Submit
-    | SubmitResult (FormResult PostWithUser)
+    | ToggleResponse
+    | SubmitResponse
+    | SubmitResponseResult (FormResult PostWithUser)
     | NoOp

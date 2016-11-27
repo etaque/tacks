@@ -78,10 +78,10 @@ renderSite ctx pageTagger layout =
                 (logo :: (sideMenu ctx.player layout.maybeNav))
             , main_
                 []
-                [ div
+                [ tiledBackground
+                , div
                     [ class "scrollable" ]
-                    [ tiledBackground
-                    , div
+                    [ div
                         [ class "content"
                         , style transitStyle
                         ]

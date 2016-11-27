@@ -5,7 +5,7 @@
 
 h1 {
   font-family: $thin;
-  color: $darkGrey;
+  color: $white;
   margin-top: 0;
   margin-bottom: 24px;
 }
@@ -13,9 +13,23 @@ h1 {
 h2 {
   font-size: 24px;
   font-family: $thin;
-  color: $darkGrey;
+  color: $whiteSeaBlue;
   margin-top: 0;
   margin-bottom: 16px;
+
+
+  a {
+    color: $light-medium;
+    font-weight: bold;
+    cursor: pointer;
+    transition: bezier(color);
+
+    &:hover, &:active {
+      // color: $seaBlue;
+      text-decoration: none;
+      color: $light-hard;
+    }
+  }
 }
 
 h3 {
@@ -48,15 +62,17 @@ $header: 154px;
   top: 0;
   left: 0;
   right: 0;
-  height: $header;
+  bottom: 0;
+  // height: $header;
   /* bottom: 0; */
   overflow: hidden;
 }
 
 header {
   height: $header;
-  /* background-color: $seaBlue; */
   color: white;
+  background-color: $light;
+  // @include gradient-directional($light, $transparent, 0);
 
   .container {
     position: relative;
@@ -113,7 +129,7 @@ header {
     h1 {
       bottom: 64px;
     }
-    
+
     .tabs-container {
       position: absolute;
       bottom: 0;
@@ -127,7 +143,7 @@ header {
         &:hover {
           background-color: transparent;
           color: $white;
-          border-bottom-color: $mainBlue;
+          border-bottom-color: $orange;
         }
 
         &.active {
@@ -140,29 +156,36 @@ header {
 }
 
 section {
+  @include shadow-inset-light;
+
   .container {
     padding-top: 36px;
     padding-bottom: 36px;
   }
 
   &.white {
-    /* background-color: #eee; */
   }
 
   &.grey {
-    background-color: $lightGrey;
-    @include shadow-inset-light;
+    background-color: $shadow;
   }
 }
 
-header + section.white:not(.inside), section.overlap {
-  margin-top: -16px;
+header + section.white:not(.inside), section.with-overlap {
+  // margin-top: -16px;
 
   .container {
     padding-top: 0;
     position: relative;
   }
 
+}
+
+.is-overlap {
+  position: absolute;
+  left: 15px;
+  right: 15px;
+  top: -15px;
 }
 
 .sheet {
@@ -379,9 +402,7 @@ hr {
 }
 
 aside {
-  
   h3 {
-    /* margin: 16px 16px 8px 16px; */
     margin: 0;
     margin-bottom: 16px;
     font-weight: bold;
@@ -392,83 +413,6 @@ aside {
 
 }
 
-
-/* .btn { */
-/*   padding: 7px 12px 5px 12px; */
-/*   transition: all .1s ease-in; */
-/*   box-shadow: 1px 1px 1px $shadow; */
-/*   border: none; */
-/*   border-bottom: 3px solid transparent; */
-/*   border-radius: 3px; */
-/*   font-family: $serif; */
-/*   font-size: 14px; */
-/*   text-transform: lowercase; */
-
-/*   &:hover { */
-/*   } */
-/* } */
-
-/* .btn-sm { */
-/*   padding: 3px 8px 3px 8px; */
-/*   border-bottom-width: 2px; */
-/*   border-radius: 2px; */
-/*   font-size: 13px; */
-/* } */
-
-/* .btn-xs { */
-/*   padding: 2px 5px 0px 5px; */
-/*   border-bottom-width: 1px; */
-/*   border-radius: 1px; */
-/*   font-size: 12px; */
-/* } */
-
-/* .btn-default { */
-/*   background-color: $lightGrey; */
-/*   border-color: darken($lightGrey, 5%); */
-/*   color: $grey; */
-
-/*   &:hover { */
-/*     background-color: darken($lightGrey, 5%); */
-/*     border-color: darken($lightGrey, 10%); */
-/*     color: $darkGrey; */
-/*   } */
-/* } */
-
-/* .btn-primary { */
-/*   background-color: $mainBlue; */
-/*   border-color: little-desat-dark($mainBlue); */
-
-/*   &:hover { */
-/*     background-color: darken($mainBlue, 5%); */
-/*     border-color: darken(little-desat-dark($mainBlue), 5%); */
-/*   } */
-/* } */
-
-/* .btn-warning { */
-/*   background-color: $orange; */
-/*   border-color: desat-dark($orange); */
-
-/*   &:hover { */
-/*     background-color: darken($orange, 5%); */
-/*     border-color: darken(desat-dark($orange), 5%); */
-/*   } */
-/* } */
-
-/* .btn-danger { */
-/*   background-color: $white; */
-/*   border-color: darken($lightGrey, 5%); */
-/*   color: $red; */
-
-/*   &:hover { */
-/*     background-color: $red; */
-/*     border-color: desat-dark($red); */
-/*   } */
-/* } */
-
-/* .btn-link { */
-/*   border-color: transparent; */
-/*   box-shadow: none; */
-/* } */
 
 .alert {
   border-radius: 0;

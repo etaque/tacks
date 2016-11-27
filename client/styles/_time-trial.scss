@@ -36,15 +36,13 @@
       left: 0;
       right: 0;
       float: right;
-      transition: bezier(color);
       font-size: 42px;
-      color: #eee;
+      color: $lightGrey;
     }
 
     &:hover {
       i {
-        color:
-        $orange;
+        @include pulse(launch-time-trial, $lightGrey, $orange);
       }
     }
 
@@ -56,7 +54,6 @@
       color: $grey;
       line-height: 48px;
       text-transform: uppercase;
-      /* font-size: 16px; */
       font-family: $thin;
       border-bottom: 1px solid #eee;
     }

@@ -7,7 +7,7 @@ import Html.Events exposing (..)
 import Markdown
 import Date
 import Date.Format as DateFormat
-import Model.Shared exposing (Context, asPlayer)
+import Model.Shared exposing (Context, asPlayer, RemoteData(..))
 import Route
 import Page.Forum.Route exposing (..)
 import Page.Forum.Model.Shared exposing (..)
@@ -18,25 +18,28 @@ import View.Layout as Layout
 
 view : Context -> Model -> List (Html Msg)
 view ctx model =
-    case model.currentTopic of
-        Nothing ->
+    case model.topicWithPosts of
+        Loading ->
             [ header ctx "Loading..." ]
 
-        Just { topic, postsWithUsers } ->
+        DataErr e ->
+            [ header ctx "Unable to load topic!" ]
+
+        DataOk { topic, postsWithUsers } ->
             [ header ctx topic.title
             , Layout.section
-                [ class "white" ]
+                [ class "white has-overlap" ]
                 [ div
-                    [ class "forum-topic-posts" ]
+                    [ class "forum-topic-posts is-overlap" ]
                     (List.map renderPost postsWithUsers)
-                , case model.newPostContent of
+                , case model.response of
                     Just content ->
-                        newPost content model.loading
+                        newPost content model.submitting
 
                     Nothing ->
                         button
                             [ class "btn-floating btn-primary toggle-new-post"
-                            , onClick ToggleNewPost
+                            , onClick ToggleResponse
                             ]
                             [ Utils.mIcon "add" [] ]
                 ]
@@ -50,7 +53,7 @@ header ctx title =
         []
         [ Utils.linkTo
             (Route.Forum Index)
-            [ class "msg-title"
+            [ class "action-title"
             , Html.Attributes.title "Back to forum index"
             ]
             [ Utils.mIcon "arrow_back" []
@@ -82,7 +85,7 @@ newPost content loading =
             [ class "form-header" ]
             [ div
                 [ class "cancel-new-post"
-                , onClick ToggleNewPost
+                , onClick ToggleResponse
                 ]
                 [ Utils.mIcon "close" [] ]
             , h3 [] [ text "New message" ]
@@ -106,7 +109,7 @@ newPost content loading =
             [ button
                 [ class "btn-flat"
                 , disabled (loading || String.isEmpty content)
-                , onClick Submit
+                , onClick SubmitResponse
                 ]
                 [ text "Submit" ]
             ]
