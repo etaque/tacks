@@ -21,7 +21,7 @@ pageTitle liveStatus model =
 
         trackName =
             model.liveTrack
-                |> dataToMaybe
+                |> dataMaybe
                 |> Maybe.map (.track >> .name)
                 |> Maybe.withDefault ""
     in

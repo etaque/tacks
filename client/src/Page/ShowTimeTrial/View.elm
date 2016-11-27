@@ -12,7 +12,7 @@ view ctx model =
     Layout.Site
         "show-time-trial"
         Nothing
-        (Maybe.map (contentView ctx) (dataToMaybe model.liveTimeTrial) |> Maybe.withDefault [ text "Not found" ])
+        (Maybe.map (contentView ctx) (dataMaybe model.liveTimeTrial) |> Maybe.withDefault [ text "Not found" ])
         Nothing
 
 

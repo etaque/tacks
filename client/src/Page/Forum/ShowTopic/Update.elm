@@ -2,14 +2,13 @@ module Page.Forum.ShowTopic.Update exposing (..)
 
 import Response exposing (..)
 import Json.Encode as JsEncode
-import CoreExtra
-import Model.Shared exposing (httpResultToData, RemoteData(..))
+import Model.Shared exposing (RemoteData(..))
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.ShowTopic.Model exposing (..)
 import ServerApi
 import Http
-import Update.Utils exposing (..)
+import Update.Utils as Utils
 
 
 mount : String -> Response Model Msg
@@ -21,7 +20,7 @@ update : Msg -> Model -> Response Model Msg
 update msg ({ topicWithPosts, response } as model) =
     case msg of
         LoadResult result ->
-            res { model | topicWithPosts = httpResultToData result } Cmd.none
+            res { model | topicWithPosts = Utils.httpData result } Cmd.none
 
         ToggleResponse ->
             case response of

@@ -8,7 +8,6 @@ import Response exposing (..)
 import Model.Shared exposing (..)
 import Page.PlayTimeTrial.Model exposing (..)
 import Page.PlayTimeTrial.Decoders as Decoders
-import Update.Utils exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)
 import Game.Steps as Steps
@@ -47,7 +46,7 @@ mount liveStatus =
                 cmd =
                     Cmd.batch
                         [ loadCourse ltt
-                        , performSucceed WindowSize Window.size
+                        , Task.perform WindowSize Window.size
                         ]
             in
                 res initial cmd
@@ -62,7 +61,7 @@ update player host msg model =
         LoadCourse result ->
             case result of
                 Ok course ->
-                    performSucceed (InitGameState course) Time.now
+                    Task.perform (InitGameState course) Time.now
                         |> res model
 
                 Err e ->

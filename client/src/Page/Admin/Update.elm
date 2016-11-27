@@ -37,7 +37,7 @@ update msg model =
         DeleteTimeTrial id ->
             ServerApi.deleteTimeTrial id
                 |> ServerApi.toFormTask
-                |> performSucceed DeleteTimeTrialResult
+                |> Task.perform DeleteTimeTrialResult
                 |> res model
 
         DeleteTimeTrialResult result ->
@@ -52,7 +52,7 @@ update msg model =
         DeleteTrack id ->
             ServerApi.deleteDraft id
                 |> ServerApi.toFormTask
-                |> performSucceed DeleteTrackResult
+                |> Task.perform DeleteTrackResult
                 |> res model
 
         DeleteTrackResult result ->

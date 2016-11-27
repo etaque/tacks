@@ -47,7 +47,7 @@ mount id =
         cmd =
             Cmd.batch
                 [ load id
-                , performSucceed WindowSize Window.size
+                , Task.perform WindowSize Window.size
                 ]
     in
         res initial cmd
@@ -59,7 +59,7 @@ update player host msg model =
         Load result ->
             case result of
                 Ok ( liveTrack, course ) ->
-                    performSucceed (InitGameState liveTrack course) Time.now
+                    Task.perform (InitGameState liveTrack course) Time.now
                         |> res model
 
                 Err e ->
