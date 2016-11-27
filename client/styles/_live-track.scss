@@ -7,7 +7,6 @@
   @include shadow-light;
   margin-bottom: 24px;
   cursor: pointer;
-  overflow: hidden;
   display: block;
 
   &:hover {
@@ -23,11 +22,10 @@
     position: relative;
     display: block;
     margin: 0;
-    padding: 24px 16px 16px 16px;
+    padding: 24px 12px 16px 16px;
     background-color: $lightSeaBlue;
     @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
     color: $white;
-    overflow: hidden;
 
     i {
       float: right;
@@ -58,8 +56,8 @@
 
     .live-players {
       position: absolute;
-      right: 14px;
-      top: 24px;
+      right: 16px;
+      top: -16px;
       width: 32px;
       line-height: 32px;
       border-radius: 16px;

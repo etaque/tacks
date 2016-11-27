@@ -113,7 +113,6 @@
 @mixin sheet {
   background-color: $white;
   border-radius: 2px;
-  overflow: hidden;
   @include bezier(box-shadow);
 }
 

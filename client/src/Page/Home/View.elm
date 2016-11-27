@@ -102,10 +102,6 @@ renderTimeTrial player liveStatus =
                     (ShowDialog (TimeTrialDialog liveTimeTrial))
                     player
                     liveTimeTrial
-                  -- , Utils.linkTo
-                  --     (Route.ShowTimeTrial liveTimeTrial.timeTrial.id)
-                  --     []
-                  --     [ text "See all" ]
                 ]
 
         Nothing ->
@@ -161,7 +157,7 @@ activePlayersPane player { liveTracks, onlinePlayers } pokes =
             List.filter (\p -> not (Set.member p.id activePlayers)) onlinePlayers
 
         freePlayersBlock =
-            if List.isEmpty onlinePlayers then
+            if List.isEmpty freePlayers then
                 text ""
             else
                 div
