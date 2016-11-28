@@ -16,199 +16,200 @@ import Encoders exposing (..)
 
 gameSocket : String -> String -> String
 gameSocket host id =
-  "ws://" ++ host ++ "/ws/trackPlayer/" ++ id
+    "ws://" ++ host ++ "/ws/trackPlayer/" ++ id
+
+
+timeTrialSocket : String -> String
+timeTrialSocket host =
+    "ws://" ++ host ++ "/ws/timeTrialPlayer"
 
 
 activitySocket : String -> String
 activitySocket host =
-  "ws://" ++ host ++ "/ws/activity"
+    "ws://" ++ host ++ "/ws/activity"
+
 
 
 -- GET
 
 
 type alias GetJsonTask a =
-  Task Never (Result () a)
+    Task Never (Result () a)
 
 
-getPlayer : String -> GetJsonTask Player
+getPlayer : String -> Request Player
 getPlayer handle =
-  getJson playerDecoder ("/api/players/" ++ handle)
+    get ("/api/players/" ++ handle) playerDecoder
 
 
-getLiveStatus : GetJsonTask LiveStatus
+getLiveStatus : Request LiveStatus
 getLiveStatus =
-  getJson liveStatusDecoder "/api/live"
+    get "/api/live" liveStatusDecoder
 
 
-getRaceReports : Maybe String -> HttpTask (List RaceReport)
+getRaceReports : Maybe String -> Request (List RaceReport)
 getRaceReports maybeTrackId =
-  let
-    path =
-      Maybe.map (\id -> "/api/live/" ++ id ++ "/reports") maybeTrackId
-        |> Maybe.withDefault "/api/live/reports"
-  in
-    Http.get (Json.list raceReportDecoder) path
-      |> Task.toResult
+    let
+        path =
+            Maybe.map (\id -> "/api/live/" ++ id ++ "/reports") maybeTrackId
+                |> Maybe.withDefault "/api/live/reports"
+    in
+        Http.get path (Json.list raceReportDecoder)
 
 
-getTrack : String -> GetJsonTask Track
+getTrack : String -> Request Track
 getTrack id =
-  getJson trackDecoder ("/api/tracks/" ++ id)
+    get ("/api/tracks/" ++ id) trackDecoder
 
 
-getCourse : String -> GetJsonTask Course
+getCourse : String -> Request Course
 getCourse id =
-  getJson courseDecoder ("/api/tracks/" ++ id ++ "/course")
+    Http.get ("/api/tracks/" ++ id ++ "/course") courseDecoder
 
 
-getLiveTrack : String -> GetJsonTask LiveTrack
+getLiveTrack : String -> Request LiveTrack
 getLiveTrack id =
-  getJson liveTrackDecoder ("/api/live/" ++ id)
+    Http.get ("/api/live/" ++ id) liveTrackDecoder
 
 
-getUserTracks : GetJsonTask (List Track)
+getLiveTimeTrial : Maybe String -> Request LiveTimeTrial
+getLiveTimeTrial maybeId =
+    let
+        params =
+            maybeId
+                |> Maybe.map (\id -> [ ( "id", id ) ])
+                |> Maybe.withDefault []
+    in
+        get ("/api/live/time-trial" ++ (queryString params)) liveTimeTrialDecoder
+
+
+getUserTracks : Request (List Track)
 getUserTracks =
-  getJson (Json.list trackDecoder) "/api/tracks/user"
+    get "/api/tracks/user" (Json.list trackDecoder)
 
 
 
 -- POST
 
 
-postHandle : String -> Task Never (FormResult Player)
+postHandle : String -> Request Player
 postHandle handle =
-  JsEncode.object
-    [ ( "handle", JsEncode.string handle ) ]
-    |> postJson playerDecoder "/api/setHandle"
+    post "/api/setHandle"
+        (jsonBody (JsEncode.object [ ( "handle", JsEncode.string handle ) ]))
+        playerDecoder
 
 
-postRegister : String -> String -> String -> Task Never (FormResult Player)
+postRegister : String -> String -> String -> Request Player
 postRegister email handle password =
-  JsEncode.object
-    [ ( "email", JsEncode.string email )
-    , ( "handle", JsEncode.string handle )
-    , ( "password", JsEncode.string password )
-    ]
-    |> postJson playerDecoder "/api/register"
+    let
+        body =
+            JsEncode.object
+                [ ( "email", JsEncode.string email )
+                , ( "handle", JsEncode.string handle )
+                , ( "password", JsEncode.string password )
+                ]
+    in
+        post "/api/register" (jsonBody body) playerDecoder
 
 
-postLogin : String -> String -> Task Never (FormResult Player)
+postLogin : String -> String -> Request Player
 postLogin email password =
-  let
-    body =
-      JsEncode.object
-        [ ( "email", JsEncode.string email )
-        , ( "password", JsEncode.string password )
-        ]
-  in
-    postJson playerDecoder "/api/login" body
+    let
+        body =
+            JsEncode.object
+                [ ( "email", JsEncode.string email )
+                , ( "password", JsEncode.string password )
+                ]
+    in
+        post "/api/login" (jsonBody body) playerDecoder
 
 
-postLogout : Task Never (FormResult Player)
+postLogout : Request Player
 postLogout =
-  postJson playerDecoder "/api/logout" JsEncode.null
+    post "/api/logout" Http.emptyBody playerDecoder
 
 
-createTrack : String -> Task Never (FormResult Track)
+createTrack : String -> Request Track
 createTrack name =
-  let
-    body =
-      JsEncode.object [ ( "name", JsEncode.string name ) ]
-  in
-    postJson trackDecoder "/api/tracks" body
+    let
+        body =
+            JsEncode.object [ ( "name", JsEncode.string name ) ]
+    in
+        post "/api/tracks" (jsonBody body) trackDecoder
 
 
-saveTrack : String -> String -> Course -> Task Never (FormResult Track)
+saveTrack : String -> String -> Course -> Request Track
 saveTrack id name course =
-  let
-    body =
-      JsEncode.object
-        [ ( "course", courseEncoder course )
-        , ( "name", JsEncode.string name )
-        ]
-  in
-    postJson trackDecoder ("/api/tracks/" ++ id) body
+    let
+        body =
+            JsEncode.object
+                [ ( "course", courseEncoder course )
+                , ( "name", JsEncode.string name )
+                ]
+    in
+        post ("/api/tracks/" ++ id) (jsonBody body) trackDecoder
 
 
-publishTrack : String -> Task Never (FormResult Track)
+publishTrack : String -> Request Track
 publishTrack id =
-  postJson trackDecoder ("/api/tracks/" ++ id ++ "/publish") JsEncode.null
+    post ("/api/tracks/" ++ id ++ "/publish") Http.emptyBody trackDecoder
 
 
-deleteDraft : String -> Task Never (FormResult String)
+deleteDraft : String -> Request String
 deleteDraft id =
-  postJson (Json.succeed id) ("/api/tracks/" ++ id ++ "/delete") JsEncode.null
+    post ("/api/tracks/" ++ id ++ "/delete") Http.emptyBody (Json.succeed id)
+
+
+deleteTimeTrial : String -> Request String
+deleteTimeTrial id =
+    post ("/api/time-trials/" ++ id ++ "/delete") Http.emptyBody (Json.succeed id)
 
 
 
 -- Tooling
 
 
-getJson : Json.Decoder a -> String -> GetJsonTask a
-getJson decoder path =
-  Http.get decoder path
-    |> Task.toResult
-    |> Task.map (Result.formatError (\e -> Debug.log (toString e) ()))
+sendForm : (FormResult a -> msg) -> Request a -> Cmd msg
+sendForm toMsg request =
+    toFormTask request
+        |> Task.perform toMsg
 
 
-postJson : Json.Decoder a -> String -> JsEncode.Value -> Task Never (FormResult a)
-postJson decoder url jsonBody =
-  Http.send Http.defaultSettings (jsonRequest url jsonBody)
-    |> Task.toResult
-    |> Task.map (handleResult decoder)
+toFormTask : Request a -> Task Never (FormResult a)
+toFormTask request =
+    toTask request
+        |> Task.map Ok
+        |> Task.onError recoverFormError
 
 
-jsonRequest : String -> JsEncode.Value -> Request
-jsonRequest url jsonBody =
-  { verb = "POST"
-  , headers = [ ( "Content-Type", "application/json" ) ]
-  , url = url
-  , body = Http.string (JsEncode.encode 0 jsonBody)
-  }
+recoverFormError : Error -> Task Never (FormResult a)
+recoverFormError error =
+    case error of
+        BadStatus response ->
+            case Json.decodeString errorsDecoder response.body of
+                Ok errors ->
+                    Task.succeed (Err errors)
 
-
-handleResult : Json.Decoder a -> Result RawError Response -> FormResult a
-handleResult decoder result =
-  case result of
-    Ok response ->
-      handleResponse decoder response
-
-    Err _ ->
-      Err serverError
-
-
-handleResponse : Json.Decoder a -> Response -> FormResult a
-handleResponse decoder response =
-  case 200 <= response.status && response.status < 300 of
-    False ->
-      case ( response.status, response.value ) of
-        ( 400, Text body ) ->
-          case Json.decodeString errorsDecoder body of
-            Ok errors ->
-              Err errors
-
-            Err _ ->
-              Err serverError
+                Err _ ->
+                    Task.succeed (Err serverError)
 
         _ ->
-          Err serverError
-
-    True ->
-      case response.value of
-        Text body ->
-          Json.decodeString decoder body
-            |> Result.formatError (\e -> Debug.log e serverError)
-
-        _ ->
-          Err serverError
+            Task.succeed (Err serverError)
 
 
 errorsDecoder : Json.Decoder FormErrors
 errorsDecoder =
-  Json.dict (Json.list Json.string)
+    Json.dict (Json.list Json.string)
 
 
 serverError : FormErrors
 serverError =
-  Dict.singleton "global" [ "Unexpected server response." ]
+    Dict.singleton "global" [ "Unexpected server response." ]
+
+
+queryString : List ( String, String ) -> String
+queryString params =
+    if List.isEmpty params then
+        ""
+    else
+        "?" ++ (List.map (\( k, v ) -> k ++ "=" ++ v) params |> String.join "&")

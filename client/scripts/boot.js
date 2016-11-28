@@ -41,7 +41,7 @@ app.ports.setFocus.subscribe(id => {
 });
 
 app.ports.setBlur.subscribe(id => {
-  setTimeout(() => document.getElementById(id).blur());;
+  setTimeout(() => document.getElementById(id).blur());
 });
 
 app.ports.scrollToBottom.subscribe(id => {

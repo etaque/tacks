@@ -10,35 +10,33 @@ import Page.Forum.NewTopic.Update as NewTopic
 
 mount : Route -> Response Model Msg
 mount route =
-  case route of
-    Index ->
-      Index.mount
-        |> mapBoth (\t -> { initial | index = t }) IndexMsg
+    case route of
+        Index ->
+            Index.mount
+                |> mapBoth (\t -> { initial | index = t }) IndexMsg
 
-    ShowTopic id ->
-      ShowTopic.mount id
-        |> mapBoth (\t -> { initial | showTopic = t }) ShowTopicMsg
+        ShowTopic id ->
+            ShowTopic.mount id
+                |> mapBoth (\t -> { initial | showTopic = t }) ShowTopicMsg
 
-    NewTopic ->
-      res initial Cmd.none
+        NewTopic ->
+            res initial Cmd.none
 
 
 update : Msg -> Model -> Response Model Msg
 update msg model =
-  case msg of
+    case msg of
+        IndexMsg a ->
+            Index.update a model.index
+                |> mapBoth (\i -> { model | index = i }) IndexMsg
 
-    IndexMsg a ->
-      Index.update a model.index
-        |> mapBoth (\i -> { model | index = i }) IndexMsg
+        NewTopicMsg a ->
+            NewTopic.update a model.newTopic
+                |> mapBoth (\t -> { model | newTopic = t }) NewTopicMsg
 
-    NewTopicMsg a ->
-      NewTopic.update a model.newTopic
-        |> mapBoth (\t -> { model | newTopic = t }) NewTopicMsg
+        ShowTopicMsg a ->
+            ShowTopic.update a model.showTopic
+                |> mapBoth (\t -> { model | showTopic = t }) ShowTopicMsg
 
-    ShowTopicMsg a ->
-      ShowTopic.update a model.showTopic
-        |> mapBoth (\t -> { model | showTopic = t }) ShowTopicMsg
-
-    NoOp ->
-      res model Cmd.none
-
+        NoOp ->
+            res model Cmd.none

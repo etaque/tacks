@@ -21,58 +21,58 @@ import Mouse
 
 view : Context -> Model -> Layout.Game Msg
 view ({ player, dims } as ctx) model =
-  case ( model.track, model.editor ) of
-    ( Just track, Just editor ) ->
-      if canUpdateDraft player track then
-        Layout.Game
-          "editor"
-          (Context.toolbar track editor)
-          (Context.view track editor)
-          [ renderCourse dims editor
-          ]
-      else
-        Layout.Game
-          "editor forbidden"
-          [ text "Access forbidden." ]
-          []
-          [  ]
+    case ( model.track, model.editor ) of
+        ( Just track, Just editor ) ->
+            if canUpdateDraft player track then
+                Layout.Game
+                    "editor"
+                    (Context.toolbar track editor)
+                    (Context.view track editor)
+                    [ renderCourse dims editor
+                    ]
+            else
+                Layout.Game
+                    "editor forbidden"
+                    [ text "Access forbidden." ]
+                    []
+                    []
 
-    _ ->
-      Layout.Game
-        "editor loading"
-        [ text "" ]
-        []
-        [ Html.Lazy.lazy HexBg.render ctx.dims ]
+        _ ->
+            Layout.Game
+                "editor loading"
+                [ text "" ]
+                []
+                [ Html.Lazy.lazy HexBg.render ctx.dims ]
 
 
 renderCourse : Dims -> Editor -> Html Msg
 renderCourse dims ({ center, course, mode } as editor) =
-  let
-    ( w, h ) =
-      floatify (getCourseDims dims)
+    let
+        ( w, h ) =
+            floatify (getCourseDims dims)
 
-    cx =
-      w / 2 + fst center
+        cx =
+            w / 2 + Tuple.first center
 
-    cy =
-      -h / 2 + snd center
+        cy =
+            -h / 2 + Tuple.second center
 
-    renderGate i gate =
-      if editor.currentGate == Just i then
-        Gates.renderOpenGate 0 gate
-      else
-        Gates.renderClosedGate 0 gate
-  in
-    Svg.svg
-      [ width (toString w)
-      , height (toString h)
-      , on "mousedown" (Json.map (DragStart >> MouseMsg) Mouse.position)
-      , class <| "mode-" ++ (modeName (realMode editor) |> fst)
-      ]
-      [ g
-          [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
-          [ Tiles.lazyRenderTiles course.grid
-          , g [] (List.indexedMap renderGate (course.start :: course.gates))
-          , Players.renderPlayerHull 0 0
-          ]
-      ]
+        renderGate i gate =
+            if editor.currentGate == Just i then
+                Gates.renderOpenGate 0 gate
+            else
+                Gates.renderClosedGate 0 gate
+    in
+        Svg.svg
+            [ width (toString w)
+            , height (toString h)
+            , on "mousedown" (Json.map (DragStart >> MouseMsg) Mouse.position)
+            , class <| "mode-" ++ (modeName (realMode editor) |> Tuple.first)
+            ]
+            [ g
+                [ transform ("scale(1,-1)" ++ (translate cx cy)) ]
+                [ Tiles.lazyRenderTiles course.grid
+                , g [] (List.indexedMap renderGate (course.start :: course.gates))
+                , Players.renderPlayerHull 0 0
+                ]
+            ]

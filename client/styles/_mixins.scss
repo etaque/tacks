@@ -113,8 +113,8 @@
 @mixin sheet {
   background-color: $white;
   border-radius: 2px;
-  overflow: hidden;
   @include bezier(box-shadow);
+  color: $grey;
 }
 
 @mixin shadow-light {
@@ -159,8 +159,6 @@
 
 @mixin rankings {
   li {
-    background-color: $white;
-
     &.empty {
       height: 49px;
     }

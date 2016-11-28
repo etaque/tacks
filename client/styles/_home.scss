@@ -11,8 +11,12 @@
     .subtitle {
       position: absolute;
       bottom: 32px;
-      left: 16px;
+      left: 24px;
     }
+  }
+
+  .live-tracks {
+    margin-top: 16px;
   }
 }
 
@@ -24,16 +28,16 @@
   .free-players {
     @include sheet;
     @include shadow-light;
+    padding: 8px 16px 4px 16px;
     margin-bottom: 24px;
     overflow: visible;
 
     h4 {
-      padding: 16px;
+      padding: 4px 0;
       color: $mediumGrey;
     }
 
     li {
-      padding: 4px 16px;
       display: flex;
 
       .player-avatar {
@@ -80,7 +84,7 @@
 
     display: block;
     margin-bottom: 24px;
-    padding: 8px 16px;
+    padding: 8px 16px 4px 16px;
     cursor: pointer;
     color: $darkGrey;
 
@@ -91,8 +95,8 @@
 
   h4 {
     margin: 0;
-    padding-top: 8px;
-    padding-bottom: 8px;
+    padding-top: 4px;
+    padding-bottom: 4px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -109,4 +113,5 @@
       margin-bottom: 0;
     }
   }
+
 }

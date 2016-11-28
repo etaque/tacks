@@ -20,184 +20,183 @@ import WebSocket
 import AnimationFrame
 import Keyboard.Extra as Keyboard
 import Window
+import Http
 
 
 subscriptions : String -> Model -> Sub Msg
 subscriptions host model =
-  case model.liveTrack of
-    Just liveTrack ->
-      Sub.batch
-        [ WebSocket.listen
-            (ServerApi.gameSocket host liveTrack.track.id)
-            Decoders.decodeStringMsg
-        , AnimationFrame.times Frame
-        , Sub.map KeyboardMsg Keyboard.subscriptions
-        , Window.resizes WindowSize
-        , Sub.map ChatMsg (Chat.subscriptions host model.chat)
-        ]
+    case model.liveTrack of
+        DataOk liveTrack ->
+            Sub.batch
+                [ WebSocket.listen
+                    (ServerApi.gameSocket host liveTrack.track.id)
+                    Decoders.decodeStringMsg
+                , AnimationFrame.times Frame
+                , Sub.map KeyboardMsg Keyboard.subscriptions
+                , Window.resizes WindowSize
+                , Sub.map ChatMsg (Chat.subscriptions host model.chat)
+                ]
 
-    _ ->
-      Sub.none
+        _ ->
+            Sub.none
 
 
 mount : String -> Response Model Msg
 mount id =
-  let
-    cmd =
-      Cmd.batch
-        [ load id
-        , performSucceed WindowSize Window.size
-        ]
-  in
-    res initial cmd
+    let
+        cmd =
+            Cmd.batch
+                [ load id
+                , Task.perform WindowSize Window.size
+                ]
+    in
+        res initial cmd
 
 
 update : Player -> String -> Msg -> Model -> Response Model Msg
 update player host msg model =
-  case msg of
-    Load liveTrackResult courseResult ->
-      case ( liveTrackResult, courseResult ) of
-        ( Ok liveTrack, Ok course ) ->
-          performSucceed (InitGameState liveTrack course) Time.now
-            |> res model
+    case msg of
+        Load result ->
+            case result of
+                Ok ( liveTrack, course ) ->
+                    Task.perform (InitGameState liveTrack course) Time.now
+                        |> res model
 
-        _ ->
-          res { model | notFound = True } Cmd.none
+                Err e ->
+                    res { model | liveTrack = DataErr e } Cmd.none
 
-    InitGameState liveTrack course time ->
-      let
-        gameState =
-          defaultGame time course player
+        InitGameState liveTrack course time ->
+            let
+                gameState =
+                    defaultGame time course player
 
-        newModel =
-          { model | gameState = Just gameState }
-            |> applyLiveTrack liveTrack
-      in
-        res newModel Cmd.none
+                newModel =
+                    { model | gameState = Just gameState }
+                        |> applyLiveTrack liveTrack
+            in
+                res newModel Cmd.none
 
-    ChatMsg chatMsg ->
-      Chat.update (Output.sendToServer host model.liveTrack) chatMsg model.chat
-        |> mapBoth (\newChat -> { model | chat = newChat}) ChatMsg
+        ChatMsg chatMsg ->
+            Chat.update (Output.sendToTrackServer host model.liveTrack) chatMsg model.chat
+                |> mapBoth (\newChat -> { model | chat = newChat }) ChatMsg
 
-
-    KeyboardMsg keyboardMsg ->
-      if model.chat.focus then
-        res model Cmd.none
-      else
-        let
-          ( newKeyboard, keyboardCmd ) =
-            Keyboard.update keyboardMsg model.keyboard
-        in
-          res { model | keyboard = newKeyboard } (Cmd.map KeyboardMsg keyboardCmd)
-
-    WindowSize size ->
-      res { model | dims = ( size.width, size.height) } Cmd.none
-
-    RaceUpdate raceInput ->
-      case model.gameState of
-        Just gameState ->
-          res
-            { model | gameState = Just (Steps.raceInputStep raceInput gameState) }
-            Cmd.none
-
-        Nothing ->
-          res model Cmd.none
-
-    Frame time ->
-      case model.gameState of
-        Just gameState ->
-          let
-            gameInput =
-              Input.GameInput
-                (Input.keyboardInput model.keyboard)
-                model.dims
-
-            newGameState =
-              Steps.frameStep gameInput time gameState
-
-            serverCmd =
-              Output.sendToServer
-                host
-                model.liveTrack
-                (Output.UpdatePlayer (Output.playerOutput gameState))
-          in
-            if time - model.lastPush > 33 then
-              res { model | gameState = Just newGameState, lastPush = time } serverCmd
+        KeyboardMsg keyboardMsg ->
+            if model.chat.focus then
+                res model Cmd.none
             else
-              res { model | gameState = Just newGameState } Cmd.none
+                let
+                    ( newKeyboard, keyboardCmd ) =
+                        Keyboard.update keyboardMsg model.keyboard
+                in
+                    res { model | keyboard = newKeyboard } (Cmd.map KeyboardMsg keyboardCmd)
 
-        Nothing ->
-          res model Cmd.none
+        WindowSize size ->
+            res { model | dims = ( size.width, size.height ) } Cmd.none
 
-    SetTab tab ->
-      res { model | tab = tab } Cmd.none
+        RaceUpdate raceInput ->
+            case model.gameState of
+                Just gameState ->
+                    res
+                        { model | gameState = Just (Steps.raceInputStep raceInput gameState) }
+                        Cmd.none
 
-    StartRace ->
-      let
-        start =
-          Output.sendToServer host model.liveTrack Output.StartRace
-      in
-        res model start
+                Nothing ->
+                    res model Cmd.none
 
-    ExitRace ->
-      let
-        newModel =
-          { model | gameState = Maybe.map clearCrossedGates model.gameState }
+        Frame time ->
+            case model.gameState of
+                Just gameState ->
+                    let
+                        gameInput =
+                            Input.GameInput
+                                (Input.keyboardInput model.keyboard)
+                                model.dims
 
-        escape =
-          Output.sendToServer host model.liveTrack Output.EscapeRace
-      in
-        res newModel escape
+                        newGameState =
+                            Steps.frameStep gameInput time gameState
 
+                        serverCmd =
+                            Output.sendToTrackServer
+                                host
+                                model.liveTrack
+                                (Output.UpdatePlayer (Output.playerOutput gameState))
+                    in
+                        if time - model.lastPush > 33 then
+                            res { model | gameState = Just newGameState, lastPush = time } serverCmd
+                        else
+                            res { model | gameState = Just newGameState } Cmd.none
 
-    AddGhost runId player ->
-      let
-        newGhostRuns =
-          Dict.insert runId player model.ghostRuns
+                Nothing ->
+                    res model Cmd.none
 
-        cmd =
-          Output.sendToServer host model.liveTrack (Output.AddGhost runId player)
-      in
-        res { model | ghostRuns = newGhostRuns } cmd
+        SetTab tab ->
+            res { model | tab = tab } Cmd.none
 
-    RemoveGhost runId ->
-      let
-        newGhostRuns =
-          Dict.remove runId model.ghostRuns
+        StartRace ->
+            let
+                start =
+                    Output.sendToTrackServer host model.liveTrack Output.StartRace
+            in
+                res model start
 
-        cmd =
-          Output.sendToServer host model.liveTrack (Output.RemoveGhost runId)
-      in
-        res { model | ghostRuns = newGhostRuns } cmd
+        ExitRace ->
+            let
+                newModel =
+                    { model | gameState = Maybe.map clearCrossedGates model.gameState }
 
-    UpdateLiveTrack liveTrack ->
-      res (applyLiveTrack liveTrack model) Cmd.none
+                escape =
+                    Output.sendToTrackServer host model.liveTrack Output.EscapeRace
+            in
+                res newModel escape
 
-    NoOp ->
-      res model Cmd.none
+        AddGhost runId player ->
+            let
+                newGhostRuns =
+                    Dict.insert runId player model.ghostRuns
+
+                cmd =
+                    Output.sendToTrackServer host model.liveTrack (Output.AddGhost runId player)
+            in
+                res { model | ghostRuns = newGhostRuns } cmd
+
+        RemoveGhost runId ->
+            let
+                newGhostRuns =
+                    Dict.remove runId model.ghostRuns
+
+                cmd =
+                    Output.sendToTrackServer host model.liveTrack (Output.RemoveGhost runId)
+            in
+                res { model | ghostRuns = newGhostRuns } cmd
+
+        UpdateLiveTrack liveTrack ->
+            res (applyLiveTrack liveTrack model) Cmd.none
+
+        NoOp ->
+            res model Cmd.none
 
 
 applyLiveTrack : LiveTrack -> Model -> Model
 applyLiveTrack ({ track, players, races } as liveTrack) model =
-  let
-    racePlayers =
-      List.concatMap .players races
+    let
+        racePlayers =
+            List.concatMap .players races
 
-    inRace p =
-      List.member p racePlayers
+        inRace p =
+            List.member p racePlayers
 
-    freePlayers =
-      List.filter (not << inRace) players
-  in
-    { model | liveTrack = Just liveTrack, races = races, freePlayers = freePlayers }
+        freePlayers =
+            List.filter (not << inRace) players
+    in
+        { model | liveTrack = DataOk liveTrack, races = races, freePlayers = freePlayers }
 
 
 load : String -> Cmd Msg
 load id =
-  Task.map2 Load (ServerApi.getLiveTrack id) (ServerApi.getCourse id)
-    |> performSucceed identity
+    Task.map2 (,) (Http.toTask (ServerApi.getLiveTrack id)) (Http.toTask (ServerApi.getCourse id))
+        |> Task.attempt Load
 
 
 clearCrossedGates : GameState -> GameState
 clearCrossedGates ({ playerState } as gameState) =
-  { gameState | playerState = { playerState | crossedGates = [] } }
+    { gameState | playerState = { playerState | crossedGates = [] } }

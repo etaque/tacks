@@ -4,79 +4,113 @@ import Constants exposing (..)
 import Model.Shared exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
-
 import Hexagons
 import Hexagons.Grid as Grid
-
 import List exposing (..)
 import Dict exposing (Dict)
 
 
 shadowSpeedImpact : Float
-shadowSpeedImpact = -5 -- knots
+shadowSpeedImpact =
+    -5
+
+
+
+-- knots
+
 
 shadowArc : Float
-shadowArc = 30 -- degrees
+shadowArc =
+    30
+
+
+
+-- degrees
+
 
 maxWindShift : Float
-maxWindShift = 0.5
+maxWindShift =
+    0.5
+
 
 playerWindStep : GameState -> PlayerState -> PlayerState
-playerWindStep ({wind, gusts, course, opponents} as gameState) state =
-  let
-    shadowDirection = ensure360 (state.windOrigin + 180 + (state.windAngle / 3))
+playerWindStep ({ wind, gusts, course, opponents } as gameState) state =
+    let
+        shadowDirection =
+            ensure360 (state.windOrigin + 180 + (state.windAngle / 3))
 
-    gustTiles = gusts.gusts
-      |> filter (isGustOnPlayer state)
-      |> map .tiles
-      |> filterMap (findGustTile state.position)
+        gustTiles =
+            gusts.gusts
+                |> filter (isGustOnPlayer state)
+                |> map .tiles
+                |> filterMap (findGustTile state.position)
 
-    windShadow = opponents
-      |> filter (inShadow state)
-      |> map (\_ -> shadowSpeedImpact)
-      |> sum
+        windShadow =
+            opponents
+                |> filter (inShadow state)
+                |> map (\_ -> shadowSpeedImpact)
+                |> sum
 
-    gustOrigin = sum (map .angle gustTiles)
-    newOrigin = ensure360 (wind.origin + gustOrigin)
+        gustOrigin =
+            sum (map .angle gustTiles)
 
-    gustSpeed = sum (map .speed gustTiles)
-    speed = wind.speed + gustSpeed + windShadow
+        newOrigin =
+            ensure360 (wind.origin + gustOrigin)
 
-    originDelta = angleDelta state.windOrigin newOrigin
-    easedOrigin =
-      if abs originDelta > maxWindShift then
-        ensure360 <| state.windOrigin + (maxWindShift * (if originDelta > 0 then -1 else 1))
-      else
-        newOrigin
+        gustSpeed =
+            sum (map .speed gustTiles)
 
-  in
-    { state
-      | windOrigin = easedOrigin
-      , windSpeed = speed
-      , shadowDirection = shadowDirection
-    }
+        speed =
+            wind.speed + gustSpeed + windShadow
+
+        originDelta =
+            angleDelta state.windOrigin newOrigin
+
+        easedOrigin =
+            if abs originDelta > maxWindShift then
+                ensure360 <|
+                    state.windOrigin
+                        + (maxWindShift
+                            * (if originDelta > 0 then
+                                -1
+                               else
+                                1
+                              )
+                          )
+            else
+                newOrigin
+    in
+        { state
+            | windOrigin = easedOrigin
+            , windSpeed = speed
+            , shadowDirection = shadowDirection
+        }
+
 
 isGustOnPlayer : PlayerState -> TiledGust -> Bool
 isGustOnPlayer s g =
-  (distance s.position g.position) < g.radius + hexRadius
+    (distance s.position g.position) < g.radius + hexRadius
 
 
 findGustTile : Point -> Dict Coords GustTile -> Maybe GustTile
 findGustTile p gustGrid =
-  Dict.get (Hexagons.pointToAxial hexRadius p) gustGrid
+    Dict.get (Hexagons.pointToAxial hexRadius p) gustGrid
 
 
 inShadow : PlayerState -> Opponent -> Bool
 inShadow state opponent =
-  (distance opponent.state.position state.position) <= windShadowLength &&
-    let
-      angle = angleBetween opponent.state.position state.position
-      (min, max) = windShadowSector opponent.state
-    in
-      inSector min max angle
+    (distance opponent.state.position state.position)
+        <= windShadowLength
+        && let
+            angle =
+                angleBetween opponent.state.position state.position
+
+            ( min, max ) =
+                windShadowSector opponent.state
+           in
+            inSector min max angle
 
 
-windShadowSector : OpponentState -> (Float,Float)
-windShadowSector {shadowDirection} =
-  (ensure360 (shadowDirection - shadowArc/2), ensure360 (shadowDirection + shadowArc/2))
-
+windShadowSector : OpponentState -> ( Float, Float )
+windShadowSector { shadowDirection } =
+    ( ensure360 (shadowDirection - shadowArc / 2), ensure360 (shadowDirection + shadowArc / 2) )

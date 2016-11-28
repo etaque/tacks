@@ -8,12 +8,12 @@ import Page.EditTrack.Model exposing (..)
 
 intInput : number -> (Int -> FormMsg) -> List (Attribute FormMsg) -> Html FormMsg
 intInput val formUpdate attrs =
-  input
-    ([ value (toString val)
-     , onIntInput formUpdate
-     , type' "number"
-     , class "form-control filled"
-     ]
-      ++ attrs
-    )
-    []
+    input
+        ([ value (toString val)
+         , onIntInput formUpdate
+         , type_ "number"
+         , class "form-control filled"
+         ]
+            ++ attrs
+        )
+        []

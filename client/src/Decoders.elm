@@ -5,253 +5,278 @@ import Dict
 import Model.Shared exposing (..)
 
 
+tuple2 : Decoder a -> Decoder b -> Decoder ( a, b )
+tuple2 da db =
+    map2 (,) (index 0 da) (index 1 db)
+
+
 liveStatusDecoder : Decoder LiveStatus
 liveStatusDecoder =
-  object2
-    LiveStatus
-    ("liveTracks" := list liveTrackDecoder)
-    ("onlinePlayers" := list playerDecoder)
+    map3
+        LiveStatus
+        (field "liveTracks" (list liveTrackDecoder))
+        (field "liveTimeTrial" (maybe liveTimeTrialDecoder))
+        (field "onlinePlayers" (list playerDecoder))
+
+
+liveTimeTrialDecoder : Decoder LiveTimeTrial
+liveTimeTrialDecoder =
+    map3
+        LiveTimeTrial
+        (field "timeTrial" timeTrialDecoder)
+        (field "track" trackDecoder)
+        (field "meta" trackMetaDecoder)
+
+
+timeTrialDecoder : Decoder TimeTrial
+timeTrialDecoder =
+    map4
+        TimeTrial
+        (field "id" string)
+        (field "trackId" string)
+        (field "period" string)
+        (field "creationTime" float)
 
 
 liveTrackDecoder : Decoder LiveTrack
 liveTrackDecoder =
-  object4
-    LiveTrack
-    ("track" := trackDecoder)
-    ("meta" := trackMetaDecoder)
-    ("players" := list playerDecoder)
-    ("races" := list raceDecoder)
+    map4
+        LiveTrack
+        (field "track" trackDecoder)
+        (field "meta" trackMetaDecoder)
+        (field "players" (list playerDecoder))
+        (field "races" (list raceDecoder))
 
 
 trackMetaDecoder : Decoder TrackMeta
 trackMetaDecoder =
-  object3
-    TrackMeta
-    ("creator" := playerDecoder)
-    ("rankings" := list rankingDecoder)
-    ("runsCount" := int)
+    map3
+        TrackMeta
+        (field "creator" playerDecoder)
+        (field "rankings" (list rankingDecoder))
+        (field "runsCount" int)
 
 
 raceDecoder : Decoder Race
 raceDecoder =
-  object4
-    Race
-    ("id" := string)
-    ("startTime" := float)
-    ("players" := list playerDecoder)
-    ("tallies" := list playerTallyDecoder)
+    map4
+        Race
+        (field "id" string)
+        (field "startTime" float)
+        (field "players" (list playerDecoder))
+        (field "tallies" (list playerTallyDecoder))
 
 
 rankingDecoder : Decoder Ranking
 rankingDecoder =
-  object4
-    Ranking
-    ("rank" := int)
-    ("runId" := string)
-    ("player" := playerDecoder)
-    ("finishTime" := float)
+    map4
+        Ranking
+        (field "rank" int)
+        (field "runId" string)
+        (field "player" playerDecoder)
+        (field "finishTime" float)
 
 
 playerTallyDecoder : Decoder PlayerTally
 playerTallyDecoder =
-  object3
-    PlayerTally
-    ("player" := playerDecoder)
-    ("gates" := list float)
-    ("finished" := bool)
+    map3
+        PlayerTally
+        (field "player" playerDecoder)
+        (field "gates" (list float))
+        (field "finished" bool)
 
 
 trackDecoder : Decoder Track
 trackDecoder =
-  object7
-    Track
-    ("id" := string)
-    ("name" := string)
-    ("creatorId" := string)
-    ("status" := string `andThen` trackStatusDecoder)
-    ("featured" := bool)
-    ("creationTime" := float)
-    ("updateTime" := float)
+    map7
+        Track
+        (field "id" string)
+        (field "name" string)
+        (field "creatorId" string)
+        (field "status" (string) |> andThen trackStatusDecoder)
+        (field "featured" bool)
+        (field "creationTime" float)
+        (field "updateTime" float)
 
 
 trackStatusDecoder : String -> Decoder TrackStatus
 trackStatusDecoder s =
-  case s of
-    "draft" ->
-      succeed Draft
+    case s of
+        "draft" ->
+            succeed Draft
 
-    "open" ->
-      succeed Open
+        "open" ->
+            succeed Open
 
-    "archived" ->
-      succeed Archived
+        "archived" ->
+            succeed Archived
 
-    "deleted" ->
-      succeed Deleted
+        "deleted" ->
+            succeed Deleted
 
-    _ ->
-      fail (s ++ " is not a TrackStatus")
+        _ ->
+            fail (s ++ " is not a TrackStatus")
 
 
 playerDecoder : Decoder Player
 playerDecoder =
-  object7
-    Player
-    ("id" := string)
-    (maybe ("handle" := string))
-    (maybe ("status" := string))
-    (maybe ("avatarId" := string))
-    ("vmgMagnet" := int)
-    ("guest" := bool)
-    ("user" := bool)
+    map7
+        Player
+        (field "id" string)
+        (maybe (field "handle" string))
+        (maybe (field "status" string))
+        (maybe (field "avatarId" string))
+        (field "vmgMagnet" int)
+        (field "guest" bool)
+        (field "user" bool)
 
 
 userDecoder : Decoder User
 userDecoder =
-  object5
-    User
-    ("id" := string)
-    ("handle" := string)
-    (maybe ("status" := string))
-    (maybe ("avatarId" := string))
-    ("vmgMagnet" := int)
+    map5
+        User
+        (field "id" string)
+        (field "handle" string)
+        (maybe (field "status" string))
+        (maybe (field "avatarId" string))
+        (field "vmgMagnet" int)
 
 
 messageDecoder : Decoder Message
 messageDecoder =
-  object3
-    Message
-    ("content" := string)
-    ("player" := playerDecoder)
-    ("time" := float)
+    map3
+        Message
+        (field "content" string)
+        (field "player" playerDecoder)
+        (field "time" float)
 
 
 pointDecoder : Decoder Point
 pointDecoder =
-  tuple2 (,) float float
+    tuple2 float float
 
 
 courseDecoder : Decoder Course
 courseDecoder =
-  object7
-    Course
-    ("start" := gateDecoder)
-    ("gates" := list gateDecoder)
-    ("grid" := gridDecoder)
-    ("area" := raceAreaDecoder)
-    ("windSpeed" := int)
-    ("windGenerator" := windGeneratorDecoder)
-    ("gustGenerator" := gustGeneratorDecoder)
+    map7
+        Course
+        (field "start" gateDecoder)
+        (field "gates" (list gateDecoder))
+        (field "grid" gridDecoder)
+        (field "area" raceAreaDecoder)
+        (field "windSpeed" int)
+        (field "windGenerator" windGeneratorDecoder)
+        (field "gustGenerator" gustGeneratorDecoder)
 
 
 gateDecoder : Decoder Gate
 gateDecoder =
-  object4
-    Gate
-    (maybe ("label" := string))
-    ("center" := pointDecoder)
-    ("width" := float)
-    ("orientation" := (string `andThen` orientationDecoder))
+    map4
+        Gate
+        (maybe (field "label" string))
+        (field "center" pointDecoder)
+        (field "width" float)
+        (field "orientation" (string |> andThen orientationDecoder))
 
 
 orientationDecoder : String -> Decoder Orientation
 orientationDecoder s =
-  case s of
-    "N" ->
-      succeed North
+    case s of
+        "N" ->
+            succeed North
 
-    "S" ->
-      succeed South
+        "S" ->
+            succeed South
 
-    "E" ->
-      succeed East
+        "E" ->
+            succeed East
 
-    "W" ->
-      succeed West
+        "W" ->
+            succeed West
 
-    _ ->
-      fail (s ++ " is not an Orientation")
+        _ ->
+            fail (s ++ " is not an Orientation")
 
 
 gridDecoder : Decoder Grid
 gridDecoder =
-  list (tuple2 (,) (tuple2 (,) int int) (string `andThen` tileKindDecoder))
-    |> map Dict.fromList
+    list (tuple2 (tuple2 int int) (string |> andThen tileKindDecoder))
+        |> map Dict.fromList
 
 
 tileKindDecoder : String -> Decoder TileKind
 tileKindDecoder s =
-  case s of
-    "W" ->
-      succeed Water
+    case s of
+        "W" ->
+            succeed Water
 
-    "G" ->
-      succeed Grass
+        "G" ->
+            succeed Grass
 
-    "R" ->
-      succeed Rock
+        "R" ->
+            succeed Rock
 
-    _ ->
-      fail (s ++ " is not a TileKind")
+        _ ->
+            fail (s ++ " is not a TileKind")
 
 
 raceAreaDecoder : Decoder RaceArea
 raceAreaDecoder =
-  object2
-    RaceArea
-    ("rightTop" := pointDecoder)
-    ("leftBottom" := pointDecoder)
+    map2
+        RaceArea
+        (field "rightTop" pointDecoder)
+        (field "leftBottom" pointDecoder)
 
 
 windGeneratorDecoder : Decoder WindGenerator
 windGeneratorDecoder =
-  object4
-    WindGenerator
-    ("wavelength1" := int)
-    ("amplitude1" := int)
-    ("wavelength2" := int)
-    ("amplitude2" := int)
+    map4
+        WindGenerator
+        (field "wavelength1" int)
+        (field "amplitude1" int)
+        (field "wavelength2" int)
+        (field "amplitude2" int)
 
 
 gustGeneratorDecoder : Decoder GustGenerator
 gustGeneratorDecoder =
-  object5
-    GustGenerator
-    ("interval" := int)
-    ("radiusBase" := int)
-    ("radiusVariation" := int)
-    ("speedVariation" := rangeDecoder)
-    ("originVariation" := rangeDecoder)
+    map5
+        GustGenerator
+        (field "interval" int)
+        (field "radiusBase" int)
+        (field "radiusVariation" int)
+        (field "speedVariation" rangeDecoder)
+        (field "originVariation" rangeDecoder)
 
 
 rangeDecoder : Decoder Range
 rangeDecoder =
-  object2
-    Range
-    ("start" := int)
-    ("end" := int)
+    map2
+        Range
+        (field "start" int)
+        (field "end" int)
 
 
 runDecoder : Decoder Run
 runDecoder =
-  object8
-    Run
-    ("id" := string)
-    ("trackId" := string)
-    ("raceId" := string)
-    ("playerId" := string)
-    (maybe ("playerHandle" := string))
-    ("startTime" := float)
-    ("tally" := list float)
-    ("duration" := float)
+    map8
+        Run
+        (field "id" string)
+        (field "trackId" string)
+        (field "raceId" string)
+        (field "playerId" string)
+        (maybe (field "playerHandle" string))
+        (field "startTime" float)
+        (field "tally" (list float))
+        (field "duration" float)
 
 
 raceReportDecoder : Decoder RaceReport
 raceReportDecoder =
-  object5
-    RaceReport
-    ("id" := string)
-    ("startTime" := float)
-    ("trackId" := string)
-    ("trackName" := string)
-    ("runs" := list runDecoder)
+    map5
+        RaceReport
+        (field "id" string)
+        (field "startTime" float)
+        (field "trackId" string)
+        (field "trackName" string)
+        (field "runs" (list runDecoder))

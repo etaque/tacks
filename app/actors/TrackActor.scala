@@ -32,9 +32,9 @@ object TrackAction {
   case object NoOp extends Action
 }
 
-class TrackActor(trackInit: Track) extends Actor with ManageWind {
+class TrackActor(trackInit: Track, timeTrial: Option[TimeTrial] = None) extends Actor with ManageWind {
 
-  val creationTime = trackInit.creationTime
+  val creationTime = timeTrial.map(_.creationTime).getOrElse(trackInit.creationTime)
 
   var state = TrackState(
     track = trackInit,
@@ -48,7 +48,14 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
   def track = state.track
   def course = track.course
 
-  def clock: Long = DateTime.now.getMillis
+  def clock: Long =
+    if (timeTrial.isDefined) {
+      state.races.headOption.map { race =>
+        DateTime.now.getMillis - race.startTime.getMillis
+      }.getOrElse(0L)
+    } else {
+      DateTime.now.getMillis - timeTrial.map(_.creationTime.getMillis).getOrElse(0L)
+    }
 
   val ticks = Seq(
     Akka.system.scheduler.schedule(1.second, 1.second, self, TrackAction.RotateNextRace),
@@ -73,7 +80,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
           state.players.get(player.id).foreach { context =>
             val newContext = context.copy(state = opState)
 
-            state = state.updatePlayer(player.id, newContext, clock)
+            state = state.updatePlayer(player.id, newContext, DateTime.now)
 
             if (context.state.crossedGates != newContext.state.crossedGates) {
               state = state.gateCrossedUpdate(newContext)
@@ -92,8 +99,13 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
           }
 
         case Quit =>
-          state = state.removePlayer(player)
-          broadcastLiveTrackUpdate()
+          if (timeTrial.isDefined) {
+            self ! PoisonPill
+          } else {
+            state = state.removePlayer(player)
+            broadcastLiveTrackUpdate()
+
+          }
 
         case StartRace =>
           state = state.startCountdown(player.id)
@@ -136,7 +148,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 
         case SaveRun(race, ctx, maybePath) =>
           val lastKnownPath = state.paths.lift(ctx.player.id).orElse(maybePath)
-          TrackActor.saveRun(track, race, ctx, lastKnownPath)
+          TrackActor.saveRun(track, timeTrial, race, ctx, lastKnownPath)
 
         case InitGhost(player, run, path) =>
           state = state.addGhost(player, run, path)
@@ -165,7 +177,7 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
   }
 
   private def broadcastLiveTrackUpdate(): Future[TrackAction.LiveTrackUpdate] = {
-    trackMeta(track).map { meta =>
+    LiveStatus.trackMeta(track).map { meta =>
       val liveTrack = LiveTrack(track, meta, state.races, state.listPlayers)
       TrackAction.LiveTrackUpdate(liveTrack)
     }.pipeTo(self)
@@ -193,18 +205,19 @@ class TrackActor(trackInit: Track) extends Actor with ManageWind {
 }
 
 object TrackActor {
-  def props(track: Track) = Props(new TrackActor(track))
+  def props(track: Track, timeTrial: Option[TimeTrial] = None) = Props(new TrackActor(track, timeTrial))
 
   def getPath(run: Run): Future[Option[RunPath.Slices]] = {
-    implicit val timeout = Timeout(1.second)
+    implicit val timeout = Timeout(10.second)
     (PathStore.actorRef ? PathStoreAction.Get(run)).mapTo[Option[RunPath.Slices]]
   }
 
-  def saveRun(track: Track, race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath.Slices]): Future[Unit] = {
+  def saveRun(track: Track, timeTrialMaybe: Option[TimeTrial], race: Race, ctx: PlayerContext, pathMaybe: Option[RunPath.Slices]): Future[Unit] = {
     val run = Run(
       id = UUID.randomUUID(),
       trackId = track.id,
-      raceId = race.id,
+      raceId = timeTrialMaybe.map(_.id).getOrElse(race.id),
+      isTimeTrial = timeTrialMaybe.isDefined,
       playerId = ctx.player.id,
       playerHandle = ctx.player.handleOpt,
       startTime = race.startTime,
@@ -216,9 +229,11 @@ object TrackActor {
       userMaybe <- Users.findById(ctx.player.id)
       if userMaybe.isDefined
       _ = Logger.debug(s"User exists, proceeding")
-      previousBestRun <- Runs.listBestOnTrackForPlayer(track.id, ctx.player.id).map(_.headOption)
+      previousBestRun <- timeTrialMaybe.map { timeTrial =>
+        Runs.listBestOnTimeTrialForPlayer(timeTrial.id, ctx.player.id).map(_.headOption)
+      }.getOrElse(Runs.listBestOnTrackForPlayer(track.id, ctx.player.id).map(_.headOption))
       _ = Logger.debug(s"Previous best run: $previousBestRun")
-      _ = pathMaybe.map(path => savePathIfBetter(previousBestRun, run, path))
+      _ = pathMaybe.foreach(path => savePathIfBetter(previousBestRun, run, path))
       _ <- Runs.save(run)
     }
     yield ()

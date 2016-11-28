@@ -12,6 +12,7 @@ POST        /api/setHandle                                     controllers.Users
 GET         /api/live                                          controllers.Live.status
 GET         /api/live/all                                      controllers.Live.allTracks
 GET         /api/live/reports                                  controllers.Live.allRaceReports(minPlayers : Option[Int])
+GET         /api/live/time-trial                               controllers.Live.timeTrial(period: Option[String])
 GET         /api/live/:id                                      controllers.Live.track(id: java.util.UUID)
 GET         /api/live/:id/reports                              controllers.Live.trackRaceReports(id: java.util.UUID, minPlayers : Option[Int])
 
@@ -29,9 +30,11 @@ POST        /api/forum/topics                                  controllers.Forum
 POST        /api/forum/topics/:id                              controllers.Forum.createPost(id: java.util.UUID)
 
 GET         /api/admin                                         controllers.Admin.index
+POST        /api/admin/time-trials/:id/delete                  controllers.Admin.deleteTimeTrial(id: java.util.UUID)
 GET         /api/admin/s3                                      controllers.Admin.s3
 
 GET         /ws/trackPlayer/:trackId                           controllers.WebSockets.trackPlayer(trackId: java.util.UUID)
+GET         /ws/timeTrialPlayer                                controllers.WebSockets.timeTrialPlayer
 GET         /ws/activity                                       controllers.WebSockets.activity
 
 #GET         /blog                                             controllers.Prismic.blog

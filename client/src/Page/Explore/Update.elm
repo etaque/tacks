@@ -7,24 +7,24 @@ import Dialog
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.map DialogMsg (Dialog.subscriptions model.dialog)
+    Sub.map DialogMsg (Dialog.subscriptions model.dialog)
 
 
 mount : Res Model Msg
 mount =
-  res initial Cmd.none
+    res initial Cmd.none
 
 
 update : Msg -> Model -> Res Model Msg
 update msg model =
-  case msg of
-    ShowTrackRanking liveTrack ->
-      Dialog.taggedOpen DialogMsg { model | showTrackRanking = Just liveTrack }
-        |> toResponse
+    case msg of
+        ShowTrackRanking liveTrack ->
+            Dialog.taggedOpen DialogMsg { model | showTrackRanking = Just liveTrack }
+                |> toResponse
 
-    DialogMsg a ->
-      Dialog.taggedUpdate DialogMsg a model
-        |> toResponse
+        DialogMsg a ->
+            Dialog.taggedUpdate DialogMsg a model
+                |> toResponse
 
-    NoOp ->
-      res model Cmd.none
+        NoOp ->
+            res model Cmd.none

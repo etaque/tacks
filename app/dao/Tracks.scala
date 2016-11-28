@@ -40,6 +40,10 @@ object Tracks extends TableQuery(new TrackTable(_)) {
     all.sortBy(_.creationTime.desc).result
   }
 
+  def listOpen(): Future[Seq[Track]] = DB.run {
+    all.filter(_.status === TrackStatus.open).sortBy(_.creationTime.desc).result
+  }
+
   def findById(id: UUID): Future[Option[Track]] = DB.run {
     onId(id).result.headOption
   }

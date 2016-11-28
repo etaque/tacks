@@ -7,7 +7,6 @@
   @include shadow-light;
   margin-bottom: 24px;
   cursor: pointer;
-  overflow: hidden;
   display: block;
 
   &:hover {
@@ -21,12 +20,23 @@
 
   .live-track-header {
     position: relative;
+    display: block;
     margin: 0;
-    padding: 24px 16px 16px 16px;
-    background-color: $lightSeaBlue;
-    @include gradient-directional($lightSeaBlue, $mainBlue, -30deg);
-    color: $white;
-    overflow: hidden;
+    padding: 24px 12px 16px 16px;
+    @include gradient-directional($whiteSmoke, $white, -30deg);
+    border-bottom: $border;
+
+    i {
+      float: right;
+      color: $lightGrey;
+      font-size: 42px;
+    }
+
+    &:hover {
+      i {
+        @include pulse(launch-track, $lightGrey, $orange);
+      }
+    }
 
     h3 {
       white-space: nowrap;
@@ -39,13 +49,13 @@
     }
 
     .creator {
-      color: $light-hard;
+      color: $grey;
     }
 
     .live-players {
       position: absolute;
-      right: 14px;
-      top: 24px;
+      right: 16px;
+      top: -16px;
       width: 32px;
       line-height: 32px;
       border-radius: 16px;
@@ -63,11 +73,35 @@
   .live-track-body {
     padding: 0;
     position: relative;
-    overflow-y: hidden;
-    height: 147px;
+
+    i {
+      opacity: 0;
+      line-height: 36px;
+      margin-right: 8px;
+      transition: bezier(opacity);
+      position: absolute;
+      right: 0;
+    }
+
+    &:hover {
+      i {
+        opacity: 0.5;
+      }
+    }
 
     .list-rankings {
       margin-bottom: 0;
+      overflow-y: hidden;
+      height: 147px;
+    }
+
+    .live-track-meta {
+      border-top: $border;
+      background-color: $whiteSmoke;
+      text-align: center;
+      font-family: $mono;
+      line-height: 36px;
+      color: $grey;
     }
   }
 

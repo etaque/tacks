@@ -1,0 +1,126 @@
+@import 'colors';
+@import 'fonts';
+@import 'mixins';
+
+
+.time-trial {
+  @include sheet;
+  @include shadow-light;
+  padding-left: 15px;
+  padding-right: 15px;
+
+  margin-bottom: 24px;
+  overflow: hidden;
+  display: block;
+
+  &:hover {
+    @include shadow-medium;
+  }
+
+  .time-trial-left {
+    padding: 0;
+    /* background-color: $orange; */
+    @include gradient-directional($whiteSmoke, $white, -30deg);
+  }
+
+  .time-trial-header {
+    display: block;
+    position: relative;
+    margin: 0;
+    text-align: center;
+    height: 184px;
+
+    i {
+      position: absolute;
+      bottom: 24px;
+      left: 0;
+      right: 0;
+      float: right;
+      font-size: 42px;
+      color: $lightGrey;
+    }
+
+    &:hover {
+      i {
+        @include pulse(launch-time-trial, $lightGrey, $orange);
+      }
+    }
+
+    .date {
+      position: absolute;
+      top: 0;
+      right: 48px;
+      left: 48px;
+      color: $grey;
+      line-height: 48px;
+      text-transform: uppercase;
+      font-family: $thin;
+      border-bottom: 1px solid #eee;
+    }
+
+    h3 {
+      position: absolute;
+      top: 72px;
+      left: 0;
+      right: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-family: $thin;
+      font-size: 34px;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+
+  .time-trial-right {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .time-trial-body {
+    background-color: white;
+    position: relative;
+    background: $white;
+    border-left: $border;
+    cursor: pointer;
+
+    .list-rankings {
+      margin-bottom: 0;
+      overflow-y: hidden;
+      height: 147px;
+    }
+
+    .live-track-meta {
+      border-top: $border;
+      background-color: $whiteSmoke;
+      text-align: center;
+      font-family: $mono;
+      line-height: 36px;
+      color: $grey;
+    }
+
+    i {
+      opacity: 0;
+      line-height: 36px;
+      margin-right: 8px;
+      transition: bezier(opacity);
+      position: absolute;
+      right: 0;
+    }
+
+    &:hover {
+      border-color: #ddd;
+
+      i {
+        opacity: 0.5;
+      }
+    }
+  }
+
+  .empty {
+    background-color: $white;
+  }
+
+
+}

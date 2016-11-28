@@ -5,7 +5,7 @@
   $duration: 200ms;
   $offset: 40px;
 
-  @include prefixed(animatin, $name $duration ease-out);
+  @include prefixed(animation, $name $duration ease-out);
 
   @include keyframes($name) {
     0% {
@@ -17,12 +17,26 @@
       @include prefixed(transform, translateX(0));
       opacity: 1;
     }
-    
   }
 }
 
 .fade-slide-in {
   @include fade-slide-in;
+}
+
+@mixin pulse($name, $c1, $c2, $duration: 1000ms) {
+  @include prefixed(animation, $name $duration cubic-bezier(0.4, 0, 0.2, 1) infinite);
+  @include keyframes($name) {
+    0% {
+      color: $c1;
+    }
+    50% {
+      color: $c2;
+    }
+    100% {
+      color: $c1;
+    }
+  }
 }
 
 @keyframes buzz {

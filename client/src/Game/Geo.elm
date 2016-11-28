@@ -2,81 +2,122 @@ module Game.Geo exposing (..)
 
 import Game.Core as Core
 import Model.Shared exposing (Point, Segment)
-
 import Time exposing (..)
 
 
-floatify (x,y) = (toFloat x, toFloat y)
+floatify ( x, y ) =
+    ( toFloat x, toFloat y )
+
 
 add : Point -> Point -> Point
-add (x,y) (x',y') = (x' + x, y' + y)
+add ( x, y ) ( x_, y_ ) =
+    ( x_ + x, y_ + y )
+
 
 sub : Point -> Point -> Point
-sub (x,y) (x',y') = (x' - x, y' - y)
+sub ( x, y ) ( x_, y_ ) =
+    ( x_ - x, y_ - y )
+
 
 neg : Point -> Point
-neg (x,y) = (-x,-y)
+neg ( x, y ) =
+    ( -x, -y )
+
 
 scale : Float -> Point -> Point
-scale s (x,y) = (x*s, y*s)
+scale s ( x, y ) =
+    ( x * s, y * s )
+
 
 distance : Point -> Point -> Float
-distance (x,y) (x',y') =
-  sqrt <| (x - x')^2 + (y - y')^2
+distance ( x, y ) ( x_, y_ ) =
+    sqrt <| (x - x_) ^ 2 + (y - y_) ^ 2
 
-inBox : Point -> (Point,Point) -> Bool
-inBox (x, y) ((xMax, yMax), (xMin, yMin)) =
-  x > xMin && x < xMax && y > yMin && y < yMax
 
-toBox : Point -> Float -> Float -> (Point,Point)
-toBox (x,y) w h =
-  ((x + w/2, y + h/2), (x - w/2, y - h/2))
+inBox : Point -> ( Point, Point ) -> Bool
+inBox ( x, y ) ( ( xMax, yMax ), ( xMin, yMin ) ) =
+    x > xMin && x < xMax && y > yMin && y < yMax
+
+
+toBox : Point -> Float -> Float -> ( Point, Point )
+toBox ( x, y ) w h =
+    ( ( x + w / 2, y + h / 2 ), ( x - w / 2, y - h / 2 ) )
+
 
 movePoint : Point -> Time -> Float -> Float -> Point
-movePoint (x,y) delta velocity direction =
-  let angle = Core.toRadians direction
-      x' = x + delta * 0.001 * velocity * cos angle
-      y' = y + delta * 0.001 * velocity * sin angle
-  in (x',y')
+movePoint ( x, y ) delta velocity direction =
+    let
+        angle =
+            Core.toRadians direction
+
+        x_ =
+            x + delta * 0.001 * velocity * cos angle
+
+        y_ =
+            y + delta * 0.001 * velocity * sin angle
+    in
+        ( x_, y_ )
+
 
 rotateDeg : Float -> Float -> Point
 rotateDeg deg radius =
-  let
-    a = Core.toRadians deg
-  in
-    (radius * cos a, radius * sin a)
+    let
+        a =
+            Core.toRadians deg
+    in
+        ( radius * cos a, radius * sin a )
+
 
 ensure360 : Float -> Float
 ensure360 val =
-  let rounded = round val
-      excess = val - (toFloat rounded)
-  in  ((rounded + 360) % 360 |> toFloat) + excess
+    let
+        rounded =
+            round val
+
+        excess =
+            val - (toFloat rounded)
+    in
+        ((rounded + 360) % 360 |> toFloat) + excess
+
 
 angleDelta : Float -> Float -> Float
 angleDelta a1 a2 =
-  let
-    delta = a1 - a2
-  in
-    if delta > 180 then delta - 360
-    else
-      if delta <= -180 then delta + 360
-      else delta
+    let
+        delta =
+            a1 - a2
+    in
+        if delta > 180 then
+            delta - 360
+        else if delta <= -180 then
+            delta + 360
+        else
+            delta
+
 
 angleBetween : Point -> Point -> Float
-angleBetween (x1, y1) (x2, y2) =
-  let
-    xDelta = x2 - x1
-    yDelta = y2 - y1
-    rad = atan2 yDelta xDelta
-  in
-    ensure360 (Core.toDegrees rad)
+angleBetween ( x1, y1 ) ( x2, y2 ) =
+    let
+        xDelta =
+            x2 - x1
+
+        yDelta =
+            y2 - y1
+
+        rad =
+            atan2 yDelta xDelta
+    in
+        ensure360 (Core.toDegrees rad)
+
 
 {-| is angle included in sector?
 -}
 inSector : Float -> Float -> Float -> Bool
 inSector b1 b2 angle =
-  let
-    a1 = -(angleDelta b1 angle)
-    a2 = -(angleDelta angle b2)
-  in
-    a1 >= 0 && a2 >= 0
+    let
+        a1 =
+            -(angleDelta b1 angle)
+
+        a2 =
+            -(angleDelta angle b2)
+    in
+        a1 >= 0 && a2 >= 0

@@ -5,19 +5,19 @@ import Dialog
 
 
 type alias Model =
-  Dialog.WithDialog
-    { showTrackRanking : Maybe LiveTrack
-    }
+    Dialog.WithDialog
+        { showTrackRanking : Maybe LiveTrack
+        }
 
 
 initial : Model
 initial =
-  { showTrackRanking = Nothing
-  , dialog = Dialog.initial
-  }
+    { showTrackRanking = Nothing
+    , dialog = Dialog.initial
+    }
 
 
 type Msg
-  = NoOp
-  | ShowTrackRanking LiveTrack
-  | DialogMsg Dialog.Msg
+    = NoOp
+    | ShowTrackRanking LiveTrack
+    | DialogMsg Dialog.Msg

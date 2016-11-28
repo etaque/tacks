@@ -2,79 +2,80 @@ module Page.Forum.ShowTopic.Update exposing (..)
 
 import Response exposing (..)
 import Json.Encode as JsEncode
-import CoreExtra
+import Model.Shared exposing (RemoteData(..))
 import Page.Forum.Decoders exposing (..)
 import Page.Forum.Model.Shared exposing (..)
 import Page.Forum.ShowTopic.Model exposing (..)
-import ServerApi exposing (getJson, postJson)
-import Update.Utils exposing (..)
+import ServerApi
+import Http
+import Update.Utils as Utils
 
 
 mount : String -> Response Model Msg
 mount id =
-  res initial (showTopic id)
+    res initial (showTopic id)
 
 
 update : Msg -> Model -> Response Model Msg
-update msg ({currentTopic, newPostContent} as model) =
-  case msg of
+update msg ({ topicWithPosts, response } as model) =
+    case msg of
+        LoadResult result ->
+            res { model | topicWithPosts = Utils.httpData result } Cmd.none
 
-    LoadResult result ->
-      case result of
-        Ok topic ->
-          res { model | currentTopic = Just topic } Cmd.none
-        Err _ ->
-          -- TODO
-          res model Cmd.none
+        ToggleResponse ->
+            case response of
+                Just _ ->
+                    res { model | response = Nothing } Cmd.none
 
-    ToggleNewPost ->
-      case newPostContent of
-        Just _ ->
-          res { model | newPostContent = Nothing } Cmd.none
-        Nothing ->
-          res { model | newPostContent = Just "" } Cmd.none
+                Nothing ->
+                    res { model | response = Just "" } Cmd.none
 
-    SetContent c ->
-      res { model | newPostContent = Just c } Cmd.none
+        SetContent c ->
+            res { model | response = Just c } Cmd.none
 
-    Submit ->
-      case (currentTopic, newPostContent) of
-        (Just {topic}, Just c) ->
-          res { model | loading = True } (createPost topic c)
-        _ ->
-          res model Cmd.none
+        SubmitResponse ->
+            case ( topicWithPosts, response ) of
+                ( DataOk { topic }, Just c ) ->
+                    res { model | submitting = True } (createPost topic c)
 
-    SubmitResult result ->
-      case (result, currentTopic) of
-        (Ok postWithUser, Just ({topic, postsWithUsers} as topicWithPosts)) ->
-          let
-            newTopicWithPosts = { topicWithPosts | postsWithUsers = postsWithUsers ++ [ postWithUser ] }
-            newModel = { model | loading = False, currentTopic = Just newTopicWithPosts, newPostContent = Nothing }
-          in
-            res newModel Cmd.none
+                _ ->
+                    res model Cmd.none
 
-        (Err _, Just _) ->
-          -- TODO tell error
-          res { model | loading = False } Cmd.none
+        SubmitResponseResult result ->
+            case ( result, topicWithPosts ) of
+                ( Ok postWithUser, DataOk ({ topic, postsWithUsers } as topicWithPosts) ) ->
+                    let
+                        newTopicWithPosts =
+                            { topicWithPosts | postsWithUsers = postsWithUsers ++ [ postWithUser ] }
 
-        _ ->
-          res model Cmd.none
+                        newModel =
+                            { model | submitting = False, topicWithPosts = DataOk newTopicWithPosts, response = Nothing }
+                    in
+                        res newModel Cmd.none
 
-    NoOp ->
-      res model Cmd.none
+                ( Err _, DataOk _ ) ->
+                    -- TODO tell error
+                    res { model | submitting = False } Cmd.none
+
+                _ ->
+                    res model Cmd.none
+
+        NoOp ->
+            res model Cmd.none
 
 
 createPost : Topic -> String -> Cmd Msg
 createPost topic content =
-  let
-    body = JsEncode.object
-      [ ("content", JsEncode.string content) ]
-  in
-    postJson postWithUserDecoder ("/api/forum/topics/" ++ topic.id) body
-      |> performSucceed SubmitResult
+    let
+        body =
+            JsEncode.object
+                [ ( "content", JsEncode.string content ) ]
+    in
+        Http.post ("/api/forum/topics/" ++ topic.id) (Http.jsonBody body) postWithUserDecoder
+            |> ServerApi.sendForm SubmitResponseResult
 
 
 showTopic : String -> Cmd Msg
 showTopic id =
-  getJson topicWithPostsDecoder ("/api/forum/topics/" ++ id)
-    |> performSucceed LoadResult
+    Http.get ("/api/forum/topics/" ++ id) topicWithPostsDecoder
+        |> Http.send LoadResult

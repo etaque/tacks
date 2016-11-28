@@ -4,6 +4,7 @@ import java.util.UUID
 import tools.Conf
 import scala.concurrent.Future
 import scala.concurrent.duration._
+import scala.util.Random
 import play.api.libs.concurrent.Akka
 import play.api.libs.concurrent.Execution.Implicits._
 import play.api.Play.current
@@ -19,6 +20,7 @@ object SupervisorAction {
   sealed trait Action
 
   case class GetTrackActorRef(track: Track) extends Action
+  case class GetTimeTrialActorRef(timeTrial: TimeTrial, track: Track) extends Action
   case object GetTracks extends Action
   case class ReloadTrack(track: Track) extends Action
 }
@@ -50,6 +52,10 @@ class RacesSupervisor extends Actor {
       }
       sender ! ref
 
+    case GetTimeTrialActorRef(timeTrial, track) =>
+      val ref = context.actorOf(TrackActor.props(track, Some(timeTrial)))
+      sender ! ref
+
     case GetTracks =>
       Tracks.list().flatMap { tracks =>
         Future.sequence(tracks.map(getLiveTrack))
@@ -68,12 +74,12 @@ class RacesSupervisor extends Actor {
       case Some((track, ref)) => {
         for {
           (races, opponents) <- (ref ? TrackAction.GetStatus).mapTo[(Seq[Race], Seq[Opponent])]
-          meta <- trackMeta(track)
+          meta <- LiveStatus.trackMeta(track)
         }
         yield LiveTrack(track, meta, races, opponents.map(_.player))
       }
       case None => {
-        trackMeta(track).map { meta => LiveTrack(track, meta, Nil, Nil) }
+        LiveStatus.trackMeta(track).map { meta => LiveTrack(track, meta, Nil, Nil) }
       }
     }
   }
@@ -84,5 +90,25 @@ object RacesSupervisor {
 
   implicit val timeout = Timeout(5.seconds)
 
-  def start() = {}
+  def start() = {
+    Akka.system.scheduler.schedule(10.second, 1.minute) {
+      dao.TimeTrials.findByPeriod(TimeTrial.currentPeriod()).foreach {
+        case Some(_) =>
+          // ok
+        case None =>
+          for {
+            trials <- dao.TimeTrials.list()
+            tracks <- dao.Tracks.listOpen()
+            untrialedTracks = tracks.filterNot(t => trials.exists(_.trackId == t.id))
+            track = if (untrialedTracks.isEmpty) {
+              Random.shuffle(tracks).headOption.getOrElse(sys.error("Empty track list!"))
+            } else {
+              Random.shuffle(untrialedTracks).headOption.getOrElse(sys.error("Empty untrialedTracks list ?!?"))
+            }
+            newTimeTrial = TimeTrial(UUID.randomUUID(), track.id, TimeTrial.currentPeriod, DateTime.now)
+            _ <- dao.TimeTrials.save(newTimeTrial)
+          } yield ()
+      }
+    }
+  }
 }
