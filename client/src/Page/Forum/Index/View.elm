@@ -58,7 +58,7 @@ topicRow { topic, user } =
         (Utils.linkAttrs (Route.Forum (ShowTopic topic.id)))
         [ td
             [ class "icon" ]
-            [ img [ src (Utils.avatarUrl 32 (asPlayer user)), class "avatar" ] [] ]
+            [ Utils.avatarImg 32 (asPlayer user) ]
         , td
             [ class "title-with-author" ]
             [ div [ class "title" ] [ text topic.title ]

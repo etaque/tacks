@@ -168,10 +168,15 @@ playerWithAvatar : Player -> Html msg
 playerWithAvatar player =
     span
         [ class "player-avatar" ]
-        [ img [ src (avatarUrl 32 player), class "avatar" ] []
+        [ avatarImg 32 player
         , text " "
         , span [ class "handle" ] [ text (playerHandle player) ]
         ]
+
+
+avatarImg : Int -> Player -> Html msg
+avatarImg size player =
+    img [ src (avatarUrl (size * 2) player), height size, width size, class "avatar" ] []
 
 
 avatarUrl : Int -> Player -> String
