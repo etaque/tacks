@@ -38,11 +38,13 @@
       float: right;
       font-size: 42px;
       color: $lightGrey;
+      transition: bezier(color);
     }
 
     &:hover {
       i {
-        @include pulse(launch-time-trial, $lightGrey, $orange);
+        color: $mediumGrey;
+        /* @include pulse(launch-time-trial, $lightGrey, $orange); */
       }
     }
 
@@ -88,7 +90,7 @@
     .list-rankings {
       margin-bottom: 0;
       overflow-y: hidden;
-      height: 147px;
+      height: 184px;
     }
 
     .live-track-meta {

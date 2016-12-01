@@ -30,11 +30,13 @@
       float: right;
       color: $lightGrey;
       font-size: 42px;
+      transition: bezier(color);
     }
 
     &:hover {
       i {
-        @include pulse(launch-track, $lightGrey, $orange);
+        color: $mediumGrey;
+        // @include pulse(launch-track, $lightGrey, $orange);
       }
     }
 
