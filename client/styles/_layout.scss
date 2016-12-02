@@ -86,6 +86,7 @@ $aside: 270px;
     background-color: $white;
     @include shadow-medium;
     transition: bezier(background-color);
+    color: $grey;
 
     .logo {
       display: block;
