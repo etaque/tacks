@@ -153,12 +153,15 @@
     .handle {
       color: $darkGrey;
       font-weight: bold;
+      @include ellipsis;
     }
   }
 }
 
 @mixin rankings {
   li {
+    display: flex;
+
     &.empty {
       height: 49px;
     }
@@ -170,7 +173,6 @@
     }
 
     .rank {
-      display: inline-block;
       margin-right: 16px;
       font-weight: bold;
       font-family: $mono;
@@ -180,13 +182,17 @@
       background-color: $whiteSmoke;
     }
 
+    .player-avatar {
+      flex: 1;
+    }
+
     .time {
       font-family: $mono;
       float: right;
       color: $grey;
       padding-right: 16px;
     }
-  } 
+  }
 }
 
 $border: 1px solid #eee;

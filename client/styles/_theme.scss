@@ -550,10 +550,10 @@ aside {
 }
 
 .player-avatar {
-  display: inline-block;
+  display: flex;
+  align-items: center;
 
   .avatar {
-    display: inline-block;
     vertical-align: none;
     height: 32px;
     width: 32px;
@@ -562,6 +562,7 @@ aside {
   }
 
   .handle {
+    flex: 1;
     font-weight: bold;
   }
 }

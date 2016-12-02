@@ -215,7 +215,7 @@ $aside: 270px;
       background-color: lighten($charcoal, 4%);
 
       i {
-        line-height: 52px; 
+        line-height: 52px;
       }
 
       &:hover {
@@ -254,7 +254,7 @@ $aside: 270px;
       bottom: 0;
     }
   }
-  
+
   aside {
     background-color: $charcoal;
 
@@ -268,33 +268,30 @@ $aside: 270px;
 
     .player {
       background-color: darken($charcoal, 4%);
-      padding: 16px 12px 16px 16px;
+      padding: 16px 8px 16px 14px;
+      display: flex;
 
       .avatar {
-        width: 42px;
         border-radius: 24px;
-        vertical-align: top;
       }
 
       .handle {
+        flex: 1;
         color: $white;
         font-weight: bold;
-        font-size: 18px;
         margin-left: 12px;
+        margin-right: 12px;
         vertical-align: top;
-        line-height: 42px;
-        display: inline-block;
+        line-height: 32px;
+        @include ellipsis;
       }
 
       .logout {
-        float: right;
-        width: 42px;
-        text-align: center;
         color: $grey;
         transition: bezier(color);
 
         i {
-          line-height: 42px;
+          line-height: 32px;
         }
 
         &:hover {

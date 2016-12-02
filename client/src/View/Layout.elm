@@ -173,7 +173,7 @@ sideMenu player maybeCurrent =
       else
         div
             [ class "player" ]
-            [ img [ src (Utils.avatarUrl 42 player), class "avatar" ] []
+            [ Utils.avatarImg 32 player
             , span [ class "handle" ] [ text (Utils.playerHandle player) ]
             , a
                 [ class "logout"
