@@ -86,11 +86,11 @@
     background: $white;
     border-left: $border;
     cursor: pointer;
-    height: 184px;
 
     .list-rankings {
       margin-bottom: 0;
       overflow-y: hidden;
+      height: 184px - 37px;
     }
 
     .live-track-meta {

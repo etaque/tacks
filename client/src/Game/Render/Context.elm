@@ -106,8 +106,8 @@ rankingItem isGhost doAdd doRemove ranking =
         li
             attrs
             [ span [ class "rank" ] [ text (toString ranking.rank) ]
-            , span [ class "time" ] [ text (Utils.formatTimer True ranking.finishTime) ]
             , Utils.playerWithAvatar ranking.player
+            , span [ class "time" ] [ text (Utils.formatTimer True ranking.finishTime) ]
             ]
 
 

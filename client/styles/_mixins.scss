@@ -173,24 +173,29 @@
     }
 
     .rank {
-      margin-right: 16px;
+      margin-right: 12px;
       font-weight: bold;
       font-family: $mono;
       color: $mediumGrey;
       text-align: center;
       width: 48px;
       background-color: $whiteSmoke;
+      flex-shrink: 0;
     }
 
     .player-avatar {
       flex: 1;
+      max-width: 162px;
     }
 
     .time {
       font-family: $mono;
-      float: right;
       color: $grey;
-      padding-right: 16px;
+      margin-left: 12px;
+      padding-right: 12px;
+      text-align: right;
+      flex: 0.5;
+      flex-shrink: 0;
     }
   }
 }

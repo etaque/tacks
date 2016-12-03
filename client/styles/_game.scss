@@ -13,7 +13,7 @@
       display: block;
     }
   }
-  
+
   .toolbar {
     .start-race {
       margin-top: 24px;
@@ -134,6 +134,10 @@
             color: $white;
           }
         }
+
+        .player-avatar {
+          max-width: 138px;
+        }
       }
     }
 
@@ -148,6 +152,7 @@
         padding: 2px 8px;
         position: relative;
         cursor: pointer;
+        display: flex;
 
         &:hover {
           /* background-color: $whiteRed; */
@@ -156,6 +161,10 @@
           .remove {
             /* color: $red; */
           }
+        }
+
+        .player-avatar {
+          flex: 1;
         }
       }
 
