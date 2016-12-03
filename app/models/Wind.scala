@@ -17,11 +17,10 @@ case class Gust(
   // val pixelPerSecond = 1
   val maxRadiusAfterSeconds = 5
 
-  def update(course: Course, wind: Wind, elapsed: Long, clock: Long): Gust = {
+  def step(course: Course, wind: Wind, elapsed: Long): Gust = {
     val groundSpeed = (wind.speed + speed)
     val groundDirection = ensure360(angle + 180)
     val newPosition = movePoint(position, elapsed, groundSpeed, groundDirection)
-    // val radius = min((clock - spawnedAt) * 0.001 * maxRadius / maxRadiusAfterSeconds, maxRadius)
     copy(position = newPosition, radius = maxRadius)
   }
 }

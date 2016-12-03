@@ -32,19 +32,19 @@ trait ManageWind {
   }
 
   def updateWind(): Unit = {
-    val c = clock
-    val elapsed = previousWindUpdate.map(c - _)
+    val now = clock
+    val elapsed = previousWindUpdate.map(now - _)
     wind = wind.copy(
-      origin = course.windGenerator.windOrigin(c),
+      origin = course.windGenerator.windOrigin(now),
       speed = course.windSpeed,
-      gusts = elapsed.fold(wind.gusts)(e => moveGusts(c, wind.gusts, e))
+      gusts = elapsed.fold(wind.gusts)(moveGusts(wind.gusts, _))
     )
-    previousWindUpdate = Some(c)
+    previousWindUpdate = Some(now)
   }
 
-  def moveGusts(clock: Long, gusts: Seq[Gust], elapsed: Long): Seq[Gust] = {
+  def moveGusts(gusts: Seq[Gust], elapsed: Long): Seq[Gust] = {
     gusts
-      .map(_.update(course, wind, elapsed, clock))
+      .map(_.step(course, wind, elapsed))
       .filter(g => g.position._2 + g.radius > course.area.bottom)
   }
 
