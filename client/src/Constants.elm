@@ -27,15 +27,26 @@ transitionDuration =
     100
 
 
+rgbColors =
+    { water = ( 33, 148, 206 )
+    , sand = ( 226, 219, 190 )
+    , grass = ( 200, 230, 180 )
+    , rock = ( 171, 196, 198 )
+    }
+
+
 colors =
-    { water =
-        "rgb(33, 148, 206)"
-        -- "rgb(147, 202, 223)"
-    , sand = "rgb(226, 219, 190)"
-    , grass = "rgb(200, 230, 180)"
-    , rock = "rgb(171, 196, 198)"
+    { water = toStringColor rgbColors.water
+    , sand = toStringColor rgbColors.sand
+    , grass = toStringColor rgbColors.grass
+    , rock = toStringColor rgbColors.rock
     , green = "rgb(100, 180, 106)"
     }
+
+
+toStringColor : ( Int, Int, Int ) -> String
+toStringColor ( r, g, b ) =
+    "rgb(" ++ toString r ++ ", " ++ toString g ++ "," ++ toString b ++ ")"
 
 
 seaBlue : Color

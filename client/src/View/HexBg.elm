@@ -2,11 +2,10 @@ module View.HexBg exposing (..)
 
 import Dict exposing (Dict)
 import Svg exposing (..)
-import Svg.Attributes exposing (..)
 import Hexagons
 import Constants
 import Model.Shared exposing (..)
-import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles)
+import Game.Render.WebGL as GameWebGL
 
 
 type alias Pixel =
@@ -19,12 +18,14 @@ type alias Axial =
 
 render : Dims -> Svg msg
 render ( w, h ) =
-    svg
-        [ width (toString w)
-        , height (toString h)
-        , class "hex-bg"
-        ]
-        [ lazyRenderTiles (buildGrid ( w, h )) ]
+    let
+        size =
+            { width = w, height = h }
+
+        viewport =
+            GameWebGL.Viewport size 2 ( toFloat -w / 2, (toFloat -h / 2) )
+    in
+        GameWebGL.renderGrid viewport (buildGrid ( w, h ))
 
 
 buildGrid : Dims -> Grid

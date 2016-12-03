@@ -234,6 +234,15 @@ $aside: 270px;
     background-color: $seaBlue;
     overflow-y: auto;
 
+    svg {
+      position: absolute;
+      z-index: 10;
+    }
+
+    canvas {
+      position: absolute;
+      z-index: 0;
+    }
   }
 }
 

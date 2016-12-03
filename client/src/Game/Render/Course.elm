@@ -15,9 +15,7 @@ renderCourse : GameState -> Svg msg
 renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
     g
         [ class "course" ]
-        [ Tiles.lazyRenderTiles course.grid
-        , renderTiledGusts gusts
-          -- , renderGusts wind
+        [ renderTiledGusts gusts
         , renderGates playerState course timers.localTime (isStarted gameState)
         ]
 

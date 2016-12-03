@@ -11,9 +11,9 @@ import Game.Render.Context as GameContext
 import View.Layout as Layout
 import View.HexBg as HexBg
 import View.Utils as Utils
-import Game.Render.All exposing (render)
+import Game.Render.All as Game
 import Route exposing (..)
-import Constants exposing (..)
+import Constants
 
 
 pageTitle : Context -> String
@@ -38,8 +38,7 @@ view ctx model =
                     "play-time-trial"
                     (toolbar model liveTimeTrial gameState)
                     (sidebar model liveTimeTrial gameState)
-                    [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
-                    ]
+                    (Game.render ( w - Constants.sidebarWidth, h - Constants.toolbarHeight ) gameState)
 
         _ ->
             Layout.Game
