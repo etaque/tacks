@@ -35,7 +35,7 @@ update host player msg model =
                 res
                     { model | pokes = target.id :: model.pokes }
                     (delayMsg 1000 (PokeEnd target.id))
-                    |> withEvent (Event.Poke player)
+                    |> withEvent (Event.Poke target)
             else
                 res model Cmd.none
 
