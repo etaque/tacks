@@ -13,10 +13,20 @@ import Http
 type alias Context =
     { player : Player
     , liveStatus : LiveStatus
-    , dims : ( Int, Int )
+    , layout : Layout
     , transition : Transit.Transition
     , routeJump : Route.RouteJump
     }
+
+
+type alias Layout =
+    { showSidebar : Bool
+    , size : Size
+    }
+
+
+type alias Size =
+    { width : Int, height : Int }
 
 
 type alias FormResult a =

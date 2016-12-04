@@ -3,61 +3,29 @@ module View.HexBg exposing (..)
 import Dict exposing (Dict)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Hexagons
+import Extra.Hexagons as Hexagons
 import Constants
 import Model.Shared exposing (..)
-import Game.Render.Tiles as RenderTiles exposing (lazyRenderTiles)
+import Game.Render.Tiles as Tiles
+import Html.Lazy as Lazy
 
 
-type alias Pixel =
-    Int
+render : Size -> Svg msg
+render size =
+    Lazy.lazy renderRaw size
 
 
-type alias Axial =
-    Int
-
-
-render : Dims -> Svg msg
-render ( w, h ) =
-    svg
-        [ width (toString w)
-        , height (toString h)
-        , class "hex-bg"
-        ]
-        [ lazyRenderTiles (buildGrid ( w, h )) ]
-
-
-buildGrid : Dims -> Grid
-buildGrid dims =
-    buildGridRec dims 0 []
-        |> List.map (\c -> ( c, Water ))
-        |> Dict.fromList
-
-
-buildGridRec : Dims -> Axial -> List Coords -> List Coords
-buildGridRec ( w, h ) j grid =
-    if getPixelY (j - 1) > toFloat h then
-        grid
-    else
-        buildGridRec ( w, h ) (j + 1) (grid ++ (buildRow j w))
-
-
-buildRow : Axial -> Pixel -> List Coords
-buildRow j w =
+renderRaw : Size -> Svg msg
+renderRaw size =
     let
-        y =
-            getPixelY j
-
-        ( from, _ ) =
-            Hexagons.pointToAxial Constants.hexRadius ( 0, y )
-
-        ( to, _ ) =
-            Hexagons.pointToAxial Constants.hexRadius ( toFloat w, y )
+        grid =
+            Hexagons.makeRect Constants.hexRadius size.width size.height
+                |> List.map (\c -> ( c, Water ))
+                |> Dict.fromList
     in
-        List.map (\i -> ( i, j )) (List.range from to)
-
-
-getPixelY : Int -> Float
-getPixelY j =
-    Hexagons.axialToPoint Constants.hexRadius ( 0, j )
-        |> Tuple.second
+        svg
+            [ width (toString size.width)
+            , height (toString size.height)
+            , class "hex-bg"
+            ]
+            [ Tiles.renderTiles grid ]

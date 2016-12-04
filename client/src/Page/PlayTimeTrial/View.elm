@@ -27,26 +27,22 @@ pageTitle ctx =
 
 
 view : Context -> Model -> Layout.Game Msg
-view ctx model =
-    case ( ctx.liveStatus.liveTimeTrial, model.gameState ) of
+view { layout, liveStatus } model =
+    case ( liveStatus.liveTimeTrial, model.gameState ) of
         ( Just liveTimeTrial, Just gameState ) ->
-            let
-                ( w, h ) =
-                    ctx.dims
-            in
-                Layout.Game
-                    "play-time-trial"
-                    (toolbar model liveTimeTrial gameState)
-                    (sidebar model liveTimeTrial gameState)
-                    [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
-                    ]
+            Layout.Game
+                "play-time-trial"
+                (toolbar model liveTimeTrial gameState)
+                (sidebar model liveTimeTrial gameState)
+                [ render ( layout.size.width, layout.size.height - toolbarHeight ) gameState
+                ]
 
         _ ->
             Layout.Game
                 "play-time-trial loading"
                 []
                 []
-                [ Html.Lazy.lazy HexBg.render ctx.dims ]
+                [ Html.Lazy.lazy HexBg.render layout.size ]
 
 
 toolbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)

@@ -15,6 +15,7 @@ import Update.Utils exposing (..)
 import Route
 import Mouse
 import Http
+import Window
 
 
 subscriptions : Model -> Sub Msg
@@ -27,8 +28,8 @@ mount id =
     res initial (loadTrack id)
 
 
-update : Dims -> Msg -> Model -> Res Model Msg
-update dims msg model =
+update : Window.Size -> Msg -> Model -> Res Model Msg
+update size msg model =
     case msg of
         LoadTrack result ->
             case result of
@@ -50,7 +51,7 @@ update dims msg model =
             res (updateEditor (\e -> { e | name = n }) model) Cmd.none
 
         MouseMsg mouseMsg ->
-            res (updateEditor (GridUpdate.updateMouse mouseMsg dims) model) Cmd.none
+            res (updateEditor (GridUpdate.updateMouse mouseMsg size) model) Cmd.none
 
         SetMode mode ->
             res (updateEditor (\e -> { e | mode = mode }) model) Cmd.none

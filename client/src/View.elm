@@ -19,55 +19,50 @@ import View.Layout exposing (renderSite, renderGame)
 
 
 view : Model -> Html Msg
-view model =
+view ({ pages, player, liveStatus, layout, transition, routeJump } as model) =
     let
         ctx =
-            Context model.player model.liveStatus model.dims model.transition model.routeJump
+            Context player liveStatus layout transition routeJump
     in
-        pageView ctx model
+        case model.route of
+            Home ->
+                renderSite ctx HomeMsg (HomePage.view ctx pages.home)
 
+            Register ->
+                renderSite ctx RegisterMsg (RegisterPage.view ctx pages.register)
 
-pageView : Context -> Model -> Html Msg
-pageView ctx ({ pages, player, liveStatus, dims } as model) =
-    case model.route of
-        Home ->
-            renderSite ctx HomeMsg (HomePage.view ctx pages.home)
+            Login ->
+                renderSite ctx LoginMsg (LoginPage.view ctx pages.login)
 
-        Register ->
-            renderSite ctx RegisterMsg (RegisterPage.view ctx pages.register)
+            Explore ->
+                renderSite ctx ExploreMsg (ExplorePage.view ctx pages.explore)
 
-        Login ->
-            renderSite ctx LoginMsg (LoginPage.view ctx pages.login)
+            EditTrack _ ->
+                renderGame ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
 
-        Explore ->
-            renderSite ctx ExploreMsg (ExplorePage.view ctx pages.explore)
+            PlayTrack _ ->
+                renderGame ctx GameMsg (GamePage.view ctx pages.game)
 
-        EditTrack _ ->
-            renderGame ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
+            ShowTimeTrial _ ->
+                renderSite ctx ShowTimeTrialMsg (ShowTimeTrialPage.view ctx pages.showTimeTrial)
 
-        PlayTrack _ ->
-            renderGame ctx GameMsg (GamePage.view ctx pages.game)
+            PlayTimeTrial ->
+                renderGame ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)
 
-        ShowTimeTrial _ ->
-            renderSite ctx ShowTimeTrialMsg (ShowTimeTrialPage.view ctx pages.showTimeTrial)
+            ListDrafts ->
+                renderSite ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
 
-        PlayTimeTrial ->
-            renderGame ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)
+            Forum forumRoute ->
+                renderSite ctx ForumMsg (ForumPage.view ctx forumRoute pages.forum)
 
-        ListDrafts ->
-            renderSite ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
+            Admin adminRoute ->
+                renderSite ctx AdminMsg (AdminPage.view ctx adminRoute pages.admin)
 
-        Forum forumRoute ->
-            renderSite ctx ForumMsg (ForumPage.view ctx forumRoute pages.forum)
+            NotFound ->
+                text "Not found!"
 
-        Admin adminRoute ->
-            renderSite ctx AdminMsg (AdminPage.view ctx adminRoute pages.admin)
-
-        NotFound ->
-            text "Not found!"
-
-        EmptyRoute ->
-            text "Rien"
+            EmptyRoute ->
+                text ""
 
 
 pageTitle : Context -> Model -> String

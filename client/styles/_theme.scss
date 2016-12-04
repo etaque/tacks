@@ -69,35 +69,16 @@ $header: 154px;
 }
 
 header {
-  height: $header;
   color: white;
   background-color: $light;
-  // @include gradient-directional($light, $transparent, 0);
 
   .container {
-    position: relative;
-    height: $header;
-
-    h1 {
-      color: white;
-      margin: 0;
-      padding: 0;
-      position: absolute;
-      bottom: 32px;
-      left: 24px;
-    }
+    padding: 36px 0;
+    min-height: $header;
   }
 
-  .cta {
-    position: absolute;
-    bottom: 32px;
-    right: 24px;
-  }
 
   .action-title {
-    position: absolute;
-    bottom: 32px;
-    /* left: -36px; */
 
     &:hover {
       color: $mainBlue;

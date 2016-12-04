@@ -6,11 +6,11 @@ function readData(id, el) {
   return value && JSON.parse(value);
 }
 
-function dims() {
-  return [
-    window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-    window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
-  ];
+function windowSize() {
+  return {
+    width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
+    height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+  };
 }
 
 function notify(msg) {
@@ -32,7 +32,7 @@ function notify(msg) {
 }
 
 const appSetup = readData('appSetup', document);
-appSetup.dims = dims();
+appSetup.size = windowSize();
 
 const app = Elm.Main.fullscreen(appSetup);
 

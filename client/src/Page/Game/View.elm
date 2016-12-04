@@ -10,7 +10,7 @@ import Page.Game.View.Context as Context
 import View.Layout as Layout
 import View.HexBg as HexBg
 import Game.Render.All exposing (render)
-import Constants exposing (..)
+import Constants
 
 
 pageTitle : LiveStatus -> Model -> String
@@ -29,24 +29,20 @@ pageTitle liveStatus model =
 
 
 view : Context -> Model -> Layout.Game Msg
-view ctx model =
+view { layout } model =
     case ( model.liveTrack, model.gameState ) of
         ( DataOk liveTrack, Just gameState ) ->
-            let
-                ( w, h ) =
-                    ctx.dims
-            in
-                Layout.Game
-                    "play-track"
-                    (Context.toolbar model liveTrack gameState)
-                    (Context.sidebar model liveTrack gameState)
-                    [ render ( w - sidebarWidth, h - toolbarHeight ) gameState
-                    , Html.map ChatMsg (Chat.inputField model.chat)
-                    ]
+            Layout.Game
+                "play-track"
+                (Context.toolbar model liveTrack gameState)
+                (Context.sidebar model liveTrack gameState)
+                [ render ( layout.size.width - Constants.sidebarWidth, layout.size.height - Constants.toolbarHeight ) gameState
+                , Html.map ChatMsg (Chat.inputField model.chat)
+                ]
 
         _ ->
             Layout.Game
                 "play-track loading"
                 []
                 []
-                [ Html.Lazy.lazy HexBg.render ctx.dims ]
+                [ Html.Lazy.lazy HexBg.render layout.size ]

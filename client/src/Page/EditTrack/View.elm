@@ -20,7 +20,7 @@ import Mouse
 
 
 view : Context -> Model -> Layout.Game Msg
-view ({ player, dims } as ctx) model =
+view ({ player, layout } as ctx) model =
     case ( model.track, model.editor ) of
         ( Just track, Just editor ) ->
             if canUpdateDraft player track then
@@ -28,7 +28,7 @@ view ({ player, dims } as ctx) model =
                     "editor"
                     (Context.toolbar track editor)
                     (Context.view track editor)
-                    [ renderCourse dims editor
+                    [ renderCourse layout.size editor
                     ]
             else
                 Layout.Game
@@ -42,14 +42,14 @@ view ({ player, dims } as ctx) model =
                 "editor loading"
                 [ text "" ]
                 []
-                [ Html.Lazy.lazy HexBg.render ctx.dims ]
+                [ Html.Lazy.lazy HexBg.render layout.size ]
 
 
-renderCourse : Dims -> Editor -> Html Msg
-renderCourse dims ({ center, course, mode } as editor) =
+renderCourse : Size -> Editor -> Html Msg
+renderCourse size ({ center, course, mode } as editor) =
     let
         ( w, h ) =
-            floatify (getCourseDims dims)
+            floatify (getCourseDims ( size.width, size.height ))
 
         cx =
             w / 2 + Tuple.first center

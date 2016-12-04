@@ -7,13 +7,14 @@ import CoreExtra exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Hexagons
 import Mouse exposing (Position)
+import Window
 
 
-updateMouse : MouseMsg -> Dims -> Editor -> Editor
-updateMouse msg dims ({ course } as editor) =
+updateMouse : MouseMsg -> Window.Size -> Editor -> Editor
+updateMouse msg size ({ course } as editor) =
     let
         courseDims =
-            getCourseDims dims
+            getCourseDims ( size.width, size.height )
 
         newDrag =
             getDrag msg editor.drag

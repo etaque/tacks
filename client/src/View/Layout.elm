@@ -17,6 +17,7 @@ import Page.Admin.Route as Admin
 import TransitStyle
 import Constants
 import Dialog
+import Html.Lazy as Lazy
 
 
 type Nav
@@ -66,27 +67,29 @@ renderSite ctx pageTagger layout =
                     []
 
         tiledBackground =
-            Html.Lazy.lazy HexBg.render ( Tuple.first ctx.dims - Constants.sidebarWidth, Tuple.second ctx.dims )
+            Lazy.lazy HexBg.render ctx.layout.size
     in
         div
-            [ class "layout-game layout-site"
+            [ classList
+                [ ( "layout layout-site", True )
+                , ( "show-sidebar", ctx.layout.showSidebar )
+                ]
             , id layout.id
             , catchNavigationClicks Navigate
             ]
-            [ aside
-                [ class "dark" ]
-                (logo :: (sideMenu ctx.player layout.maybeNav))
+            [ tiledBackground
+            , aside
+                [ class "menu" ]
+                (logo (ToggleSidebar False) :: (sideMenu ctx.player layout.maybeNav))
+            , siteHeader
+                ctx.player
             , main_
                 []
-                [ tiledBackground
-                , div
-                    [ class "scrollable" ]
-                    [ div
-                        [ class "content"
-                        , style transitStyle
-                        ]
-                        (List.map (Html.map (pageTagger >> PageMsg)) layout.content)
+                [ div
+                    [ class "content"
+                    , style transitStyle
                     ]
+                    (List.map (Html.map (pageTagger >> PageMsg)) layout.content)
                 ]
             , case layout.dialog of
                 Just dialog ->
@@ -104,27 +107,34 @@ renderGame ctx pageTagger layout =
             List.map (Html.map (pageTagger >> PageMsg))
     in
         div
-            [ class "layout-game"
+            [ classList
+                [ ( "layout layout-game", True )
+                , ( "show-sidebar", ctx.layout.showSidebar )
+                ]
             , id layout.id
             , catchNavigationClicks Navigate
             ]
             [ aside
-                []
-                (logo :: (tag layout.side))
+                [ class "menu" ]
+                (logo (ToggleSidebar False) :: (sideMenu ctx.player Nothing))
             , subHeader
                 ctx.player
                 (tag layout.nav)
+            , aside
+                [ class "context" ]
+                (tag layout.side)
             , main_
                 []
                 (tag layout.main)
             ]
 
 
-logo : Html Msg
-logo =
-    Utils.linkTo
-        Route.Home
-        [ class "logo" ]
+logo : Msg -> Html Msg
+logo clickMsg =
+    a
+        [ class "logo"
+        , onClick clickMsg
+        ]
         [ Logo.render
         , span [] [ text "Tacks" ]
         ]
@@ -148,11 +158,18 @@ header ctx attrs content =
         ]
 
 
-subHeader : Player -> List (Html msg) -> Html msg
+siteHeader : Player -> Html Msg
+siteHeader player =
+    nav
+        [ class "toolbar" ]
+        [ logo (ToggleSidebar True) ]
+
+
+subHeader : Player -> List (Html Msg) -> Html Msg
 subHeader player content =
     nav
         [ class "toolbar" ]
-        content
+        (logo (ToggleSidebar True) :: content)
 
 
 sideMenu : Player -> Maybe Nav -> List (Html Msg)

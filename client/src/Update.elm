@@ -1,6 +1,5 @@
 module Update exposing (..)
 
-import Task exposing (Task)
 import Result
 import Response exposing (..)
 import Update.Utils exposing (..)
@@ -85,7 +84,7 @@ update =
 
 
 msgUpdate : Msg -> Model -> Response Model Msg
-msgUpdate msg ({ pages } as model) =
+msgUpdate msg ({ layout, pages } as model) =
     case msg of
         ActivityEmitMsg emitMsg ->
             let
@@ -118,7 +117,7 @@ msgUpdate msg ({ pages } as model) =
             mountRoute new model
 
         WindowResized size ->
-            res { model | dims = ( size.width, size.height ) } Cmd.none
+            res { model | layout = { layout | size = size } } Cmd.none
 
         Logout ->
             ServerApi.postLogout
@@ -131,6 +130,9 @@ msgUpdate msg ({ pages } as model) =
         Navigate path ->
             res model (Navigation.newUrl path)
 
+        ToggleSidebar visible ->
+            res { model | layout = { layout | showSidebar = visible } } Cmd.none
+
         NoOp ->
             res model Cmd.none
 
@@ -141,13 +143,17 @@ urlUpdate route model =
 
 
 mountRoute : Route -> Model -> Response Model Msg
-mountRoute newRoute ({ pages, player, route } as prevModel) =
+mountRoute newRoute ({ pages, player, route, layout } as prevModel) =
     let
         routeJump =
             Route.detectJump route newRoute
 
         model =
-            { prevModel | routeJump = routeJump, route = newRoute }
+            { prevModel
+                | routeJump = routeJump
+                , route = newRoute
+                , layout = { layout | showSidebar = False }
+            }
     in
         case newRoute of
             Home ->
@@ -188,7 +194,7 @@ mountRoute newRoute ({ pages, player, route } as prevModel) =
 
 
 pageUpdate : PageMsg -> Model -> Response Model Msg
-pageUpdate pageMsg ({ pages, player, dims } as model) =
+pageUpdate pageMsg ({ pages, player, layout } as model) =
     case pageMsg of
         HomeMsg a ->
             applyHome (Home.update model.host player a pages.home) model
@@ -203,7 +209,7 @@ pageUpdate pageMsg ({ pages, player, dims } as model) =
             applyExplore (Explore.update a pages.explore) model
 
         EditTrackMsg a ->
-            applyEditTrack (EditTrack.update dims a pages.editTrack) model
+            applyEditTrack (EditTrack.update layout.size a pages.editTrack) model
 
         GameMsg a ->
             applyGame (Game.update player model.host a pages.game) model
