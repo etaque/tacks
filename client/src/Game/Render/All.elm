@@ -40,5 +40,5 @@ render ( w, h ) gameState =
                 ]
             , renderDashboard ( w, h ) gameState
             ]
-        , GameWebGL.renderGrid viewport gameState.course.grid
+        , GameWebGL.renderGrid viewport gameState.tiles
         ]

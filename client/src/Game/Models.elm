@@ -42,6 +42,7 @@ type alias GameState =
     , opponents : List Opponent
     , ghosts : List Ghost
     , course : Course
+    , tiles : List Tile
     , tallies : List PlayerTally
     , timers : Timers
     , chatting : Bool
@@ -353,6 +354,7 @@ defaultGame time course player =
     , opponents = []
     , ghosts = []
     , course = course
+    , tiles = listGridTiles course.grid
     , tallies = []
     , timers =
         { serverTime =

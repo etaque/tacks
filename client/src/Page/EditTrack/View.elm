@@ -77,5 +77,5 @@ renderCourse dims ({ center, course, mode } as editor) =
                 , Players.renderPlayerHull 0 0
                 ]
             ]
-        , GameWebGL.renderGrid viewport course.grid
+        , GameWebGL.renderGrid viewport (listGridTiles course.grid)
         ]

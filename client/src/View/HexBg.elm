@@ -25,14 +25,13 @@ render ( w, h ) =
         viewport =
             GameWebGL.Viewport size 2 ( toFloat -w / 2, (toFloat -h / 2) )
     in
-        GameWebGL.renderGrid viewport (buildGrid ( w, h ))
+        GameWebGL.renderGrid viewport (makeTiles ( w, h ))
 
 
-buildGrid : Dims -> Grid
-buildGrid dims =
+makeTiles : Dims -> List Tile
+makeTiles dims =
     buildGridRec dims 0 []
-        |> List.map (\c -> ( c, Water ))
-        |> Dict.fromList
+        |> List.map (\c -> Tile c Water)
 
 
 buildGridRec : Dims -> Axial -> List Coords -> List Coords

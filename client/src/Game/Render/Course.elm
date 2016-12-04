@@ -16,6 +16,7 @@ renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
     g
         [ class "course" ]
         [ renderTiledGusts gusts
+          -- , Tiles.lazyRenderTiles gameState.course.grid
         , renderGates playerState course timers.localTime (isStarted gameState)
         ]
 

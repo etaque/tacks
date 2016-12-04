@@ -8,7 +8,8 @@ import WebGL
 import Hexagons
 import Window
 import Constants exposing (rgbColors)
-import Model.Shared as Shared exposing (Grid, Tile, TileKind(..))
+import Model.Shared as Shared exposing (Point, Grid, Tile, TileKind(..))
+import Game.Geo as Geo
 
 
 type alias Viewport =
@@ -35,33 +36,50 @@ type alias Varying =
     { vColor : Vec3 }
 
 
-renderGrid : Viewport -> Grid -> Html msg
-renderGrid { size, devicePixelRatio, offset } grid =
-    WebGL.toHtml
-        [ width <| round (toFloat size.width * devicePixelRatio)
-        , height <| round (toFloat size.height * devicePixelRatio)
-        , style
-            [ ( "transform-origin", "0 0" )
-            , ( "transform", "scale(" ++ toString (1 / devicePixelRatio) ++ ")" )
+renderGrid : Viewport -> List Tile -> Html msg
+renderGrid { size, devicePixelRatio, offset } tiles =
+    let
+        ( dx, dy ) =
+            offset
+
+        w =
+            toFloat size.width + Constants.hexRadius * 2
+
+        h =
+            toFloat size.height + Constants.hexRadius * 2
+
+        viewBox =
+            ( ( w / 2 - dx, h / 2 + dy ), ( w / 2 + dy, h / 2 - dy ) )
+    in
+        WebGL.toHtml
+            [ width <| round (toFloat size.width * devicePixelRatio)
+            , height <| round (toFloat size.height * devicePixelRatio)
+            , style
+                [ ( "transform-origin", "0 0" )
+                , ( "transform", "scale(" ++ toString (1 / devicePixelRatio) ++ ")" )
+                ]
             ]
-        ]
-        (List.map (renderCell size offset) (Shared.listGridTiles grid))
+            (List.filterMap (renderCell viewBox size offset) tiles)
 
 
-renderCell : Window.Size -> ( Float, Float ) -> Tile -> WebGL.Renderable
-renderCell { width, height } ( dx, dy ) tile =
+renderCell : ( Point, Point ) -> Window.Size -> ( Float, Float ) -> Tile -> Maybe WebGL.Renderable
+renderCell viewBox { width, height } ( dx, dy ) tile =
     let
         ( tx, ty ) =
             Hexagons.axialToPoint Constants.hexRadius tile.coords
-
-        uniform =
-            { color = rgbToVec3 (cellColor tile.kind)
-            , offset = vec2 (tx + dx) (-ty - dy)
-            , windowSize = vec2 (toFloat width) (toFloat height)
-            , hexSize = Vec2.fromTuple (Hexagons.dims Constants.hexRadius)
-            }
     in
-        WebGL.render vertexShader fragmentShader mesh uniform
+        if Geo.inBox ( tx, ty ) viewBox then
+            let
+                uniform =
+                    { color = rgbToVec3 (cellColor tile.kind)
+                    , offset = vec2 (tx + dx) (-ty - dy)
+                    , windowSize = vec2 (toFloat width) (toFloat height)
+                    , hexSize = Vec2.fromTuple (Hexagons.dims Constants.hexRadius)
+                    }
+            in
+                Just (WebGL.render vertexShader fragmentShader mesh uniform)
+        else
+            Nothing
 
 
 cellColor : TileKind -> ( Int, Int, Int )
