@@ -32,9 +32,9 @@ view { layout, liveStatus } model =
         ( Just liveTimeTrial, Just gameState ) ->
             Layout.Game
                 "play-time-trial"
-                (toolbar model liveTimeTrial gameState)
+                (appbar model liveTimeTrial gameState)
                 (sidebar model liveTimeTrial gameState)
-                [ render ( layout.size.width, layout.size.height - toolbarHeight ) gameState
+                [ render ( layout.size.width, layout.size.height - appbarHeight ) gameState
                 ]
 
         _ ->
@@ -45,10 +45,10 @@ view { layout, liveStatus } model =
                 [ Html.Lazy.lazy HexBg.render layout.size ]
 
 
-toolbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
-toolbar model { track } gameState =
+appbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
+appbar model { track } gameState =
     [ div
-        [ class "toolbar-left" ]
+        [ class "appbar-left" ]
         [ Utils.linkTo
             Route.Home
             [ class "exit"
@@ -58,9 +58,9 @@ toolbar model { track } gameState =
         , h2 [] [ text track.name ]
         ]
     , div
-        [ class "toolbar-center" ]
+        [ class "appbar-center" ]
         (GameContext.raceStatus gameState StartRace ExitRace)
-    , div [ class "toolbar-right" ] []
+    , div [ class "appbar-right" ] []
     ]
 
 

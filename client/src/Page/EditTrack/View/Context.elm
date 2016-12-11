@@ -14,10 +14,10 @@ import Game.Render.Tiles as RenderTiles exposing (tileKindColor)
 import Route
 
 
-toolbar : Track -> Editor -> List (Html Msg)
-toolbar track editor =
+appbar : Track -> Editor -> List (Html Msg)
+appbar track editor =
     [ div
-        [ class "toolbar-left" ]
+        [ class "appbar-left" ]
         [ linkTo
             Route.ListDrafts
             [ class "exit"
@@ -33,7 +33,7 @@ toolbar track editor =
             []
         ]
     , surfaceBlock editor
-    , div [ class "toolbar-right" ] []
+    , div [ class "appbar-right" ] []
     ]
 
 
@@ -104,7 +104,7 @@ surfaceBlock editor =
             realMode editor
     in
         div
-            [ class "toolbar-center surface-modes" ]
+            [ class "appbar-center surface-modes" ]
             (List.map (renderSurfaceMode currentMode) modes)
 
 

@@ -20,7 +20,7 @@ type alias Context =
 
 
 type alias Layout =
-    { showSidebar : Bool
+    { showMenu : Bool
     , size : Size
     }
 

@@ -21,53 +21,6 @@ body > div {
   height: 100%;
 }
 
-$toolbar: 52px;
-$aside: 270px;
-
-
-.logo {
-  position: relative;
-  height: 50px;
-  width: 150px;
-
-  > * {
-    display: block;
-    position: absolute;
-  }
-
-  svg {
-    left: 0px;
-  }
-
-  span {
-    left: 50px;
-    margin-top: 20px;
-    color: $darkGrey;
-    font-family: "Luckiest Guy";
-    font-size: 32px;
-
-    &:focus {
-      text-decoration: none;
-    }
-  }
-
-  .hexagon {
-    fill: $seaBlue;
-    stroke: $seaBlue;
-    stroke-width: 10px;
-    stroke-linejoin: round;
-  }
-
-  .hull {
-    fill: $white;
-    fill-opacity: 1;
-    stroke: $white;
-    stroke-opacity: 1;
-  }
-
-  &:hover {}
-}
-
 .layout {
   height: 100%;
   width: 100%;
@@ -87,53 +40,79 @@ $aside: 270px;
     transition: bezier(left);
   }
 
-  &.show-sidebar {
+  &.show-menu {
     aside.menu {
       left: 0;
     }
   }
 
-  .toolbar {
+  .appbar {
     position: absolute;
-    height: 52px;
+    height: $appbar;
     left: 0;
     right: 0;
-    display: flex;
     z-index: 2;
     background-color: $charcoal;
     @include shadow-light;
 
-    .logo {
-      display: block;
-      height: 52px;
-      width: $aside;
-
-      svg {
-        left: 50px;
-      }
-
-      span {
-        color: $whiteSmoke;
-        left: 100px;
-      }
+    .brand {
+      float: left;
     }
 
-    .toolbar-left, .toolbar-right {
-      flex: 1;
-    }
-
-    .toolbar-left {
+    .appbar-left {
+      float: left;
       display: flex;
       flex-direction: row;
     }
 
-    .toolbar-center {
-      text-align: center;
+    .appbar-center {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
       white-space: nowrap;
     }
 
-    .toolbar-right {
-      text-align: right;
+    .appbar-player {
+      float: right;
+      height: $appbar;
+      padding: 0;
+
+      .player-avatar {
+        line-height: $appbar;
+        display: block;
+        float: left;
+        margin: 0 8px;
+      }
+
+      .logout {
+        display: block;
+        float: left;
+        color: $mediumGrey;
+        padding: 0 16px;
+
+        i {
+          line-height: $appbar;
+        }
+
+        &:hover {
+          color: $whiteSmoke;
+        }
+      }
+
+      .login {
+        display: block;
+        line-height: $appbar;
+        padding: 0 24px;
+        color: $mediumGrey;
+
+        &:focus {
+          text-decoration: none;
+        }
+
+        &:hover {
+          color: $whiteSmoke;
+        }
+      }
     }
   }
 
@@ -145,16 +124,63 @@ $aside: 270px;
     right: 0;
     overflow-x: hidden;
     overflow-y: auto;
-    margin-top: $toolbar;
+    margin-top: $appbar;
   }
 
-  aside.context + main {
-    left: $aside;
+  aside.context {
+    @include shadow-medium;
+    z-index: 2;
+
+    .brand {
+      background-color: #ddd;
+
+      .hexagon {
+        fill: $mediumGrey;
+        stroke: $mediumGrey;
+      }
+
+      .icon-menu {
+        stroke: $lightGrey;
+      }
+
+      &:hover {
+        .icon-menu {
+          stroke: $whiteSmoke;
+        }
+      }
+
+      span {
+        color: $darkGrey;
+      }
+    }
+
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: $aside;
+    background-color: $white;
+  }
+
+  &.with-context {
+    .appbar {
+      left: $aside;
+
+      .brand {
+        display: none;
+      }
+    }
+
+    main {
+      left: $aside;
+    }
+
   }
 }
 
 .layout-game {
-  .toolbar {
+  .appbar {
+
     h2 {
       display: inline-block;
       margin: 0;
@@ -184,15 +210,6 @@ $aside: 270px;
         color: $lightGrey;
       }
     }
-  }
-
-  aside.context {
-    position: absolute;
-    top: $toolbar;
-    bottom: 0;
-    left: 0;
-    width: $aside;
-    background-color: $white;
   }
 
 }

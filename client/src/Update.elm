@@ -131,7 +131,7 @@ msgUpdate msg ({ layout, pages } as model) =
             res model (Navigation.newUrl path)
 
         ToggleSidebar visible ->
-            res { model | layout = { layout | showSidebar = visible } } Cmd.none
+            res { model | layout = { layout | showMenu = visible } } Cmd.none
 
         NoOp ->
             res model Cmd.none
@@ -152,7 +152,7 @@ mountRoute newRoute ({ pages, player, route, layout } as prevModel) =
             { prevModel
                 | routeJump = routeJump
                 , route = newRoute
-                , layout = { layout | showSidebar = False }
+                , layout = { layout | showMenu = False }
             }
     in
         case newRoute of

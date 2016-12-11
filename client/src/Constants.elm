@@ -7,7 +7,7 @@ sidebarWidth =
     270
 
 
-toolbarHeight =
+appbarHeight =
     52
 
 

@@ -72,7 +72,7 @@ renderSite ctx pageTagger layout =
         div
             [ classList
                 [ ( "layout layout-site", True )
-                , ( "show-sidebar", ctx.layout.showSidebar )
+                , ( "show-menu", ctx.layout.showMenu )
                 ]
             , id layout.id
             , catchNavigationClicks Navigate
@@ -80,9 +80,10 @@ renderSite ctx pageTagger layout =
             [ tiledBackground
             , aside
                 [ class "menu" ]
-                (logo (ToggleSidebar False) :: (sideMenu ctx.player layout.maybeNav))
-            , siteHeader
+                (sideMenu ctx.player layout.maybeNav)
+            , appbar
                 ctx.player
+                []
             , main_
                 []
                 [ div
@@ -108,35 +109,35 @@ renderGame ctx pageTagger layout =
     in
         div
             [ classList
-                [ ( "layout layout-game", True )
-                , ( "show-sidebar", ctx.layout.showSidebar )
+                [ ( "layout layout-game with-context", True )
+                , ( "show-menu", ctx.layout.showMenu )
                 ]
             , id layout.id
             , catchNavigationClicks Navigate
             ]
             [ aside
                 [ class "menu" ]
-                (logo (ToggleSidebar False) :: (sideMenu ctx.player Nothing))
-            , subHeader
+                (sideMenu ctx.player Nothing)
+            , appbar
                 ctx.player
                 (tag layout.nav)
             , aside
                 [ class "context" ]
-                (tag layout.side)
+                (brand (ToggleSidebar True) :: (tag layout.side))
             , main_
                 []
                 (tag layout.main)
             ]
 
 
-logo : Msg -> Html Msg
-logo clickMsg =
+brand : Msg -> Html Msg
+brand clickMsg =
     a
-        [ class "logo"
+        [ class "brand"
         , onClick clickMsg
         ]
-        [ Logo.render
-        , span [] [ text "Tacks" ]
+        [ Logo.renderMenu
+        , span [] [ text "tacks" ]
         ]
 
 
@@ -158,40 +159,35 @@ header ctx attrs content =
         ]
 
 
-siteHeader : Player -> Html Msg
-siteHeader player =
+appbar : Player -> List (Html Msg) -> Html Msg
+appbar player content =
     nav
-        [ class "toolbar" ]
-        [ logo (ToggleSidebar True) ]
+        [ class "appbar" ]
+    <|
+        brand (ToggleSidebar True)
+            :: content
+            ++ [ appbarPlayer player ]
 
 
-subHeader : Player -> List (Html Msg) -> Html Msg
-subHeader player content =
-    nav
-        [ class "toolbar" ]
-        (logo (ToggleSidebar True) :: content)
-
-
-sideMenu : Player -> Maybe Nav -> List (Html Msg)
-sideMenu player maybeCurrent =
-    [ if player.guest then
-        div
-            [ class "guest" ]
-            [ div
-                [ class "player" ]
-                [ text "Guest session" ]
-            , div
-                [ class "menu" ]
-                [ sideMenuItem Route.Login "face" "Login" (maybeCurrent == Just Login)
-                , sideMenuItem Route.Register "person_add" "Register" (maybeCurrent == Just Register)
-                ]
-            , hr [] []
+appbarPlayer : Player -> Html Msg
+appbarPlayer player =
+    div
+        [ classList
+            [ ( "appbar-player", True )
+            , ( "guest", player.guest )
             ]
-      else
-        div
-            [ class "player" ]
-            [ Utils.avatarImg 32 player
-            , span [ class "handle" ] [ text (Utils.playerHandle player) ]
+        ]
+    <|
+        if player.guest then
+            [ Utils.linkTo Route.Login
+                [ class "login" ]
+                [ text "Login" ]
+            ]
+        else
+            [ div [ class "player-avatar" ]
+                [ Utils.avatarImg 24 player
+                , span [ class "handle" ] [ text (Utils.playerHandle player) ]
+                ]
             , a
                 [ class "logout"
                 , title "Logout"
@@ -199,6 +195,11 @@ sideMenu player maybeCurrent =
                 ]
                 [ Utils.mIcon "exit_to_app" [] ]
             ]
+
+
+sideMenu : Player -> Maybe Nav -> List (Html Msg)
+sideMenu player maybeCurrent =
+    [ brand (ToggleSidebar False)
     , div
         [ class "menu" ]
         [ sideMenuItem Route.Home "home" "Home" (maybeCurrent == Just Home)

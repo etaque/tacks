@@ -95,7 +95,7 @@ initialModel setup =
             |> Result.withDefault emptyLiveStatus
     , layout =
         { size = setup.size
-        , showSidebar = False
+        , showMenu = False
         }
     , pages =
         { home = Home.initial

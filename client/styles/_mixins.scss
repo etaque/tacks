@@ -1,5 +1,8 @@
 @import 'colors';
 
+$appbar: 52px;
+$aside: 270px;
+
 @mixin placeholder {
   &::-webkit-input-placeholder {@content}
   &:-moz-placeholder           {@content}

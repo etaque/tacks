@@ -1,7 +1,7 @@
 module Page.EditTrack.GridUpdate exposing (..)
 
 import Dict
-import Constants exposing (sidebarWidth, toolbarHeight, hexRadius)
+import Constants exposing (sidebarWidth, appbarHeight, hexRadius)
 import Model.Shared exposing (..)
 import CoreExtra exposing (..)
 import Page.EditTrack.Model exposing (..)
@@ -115,7 +115,7 @@ clickPoint { center } courseDims ( x, y ) =
                 toFloat (x - sidebarWidth) - cx - toFloat w / 2
 
             y_ =
-                toFloat -(y - toolbarHeight) - cy + toFloat h / 2
+                toFloat -(y - appbarHeight) - cy + toFloat h / 2
         in
             Just ( x_, y_ )
     else
@@ -170,6 +170,6 @@ withinWindow ( w, h ) ( x, y ) =
             ( sidebarWidth, w + sidebarWidth )
 
         yWindow =
-            ( toolbarHeight, y + toolbarHeight )
+            ( appbarHeight, y + appbarHeight )
     in
         within xWindow x && within yWindow y

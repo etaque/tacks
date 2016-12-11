@@ -26,7 +26,7 @@ view ({ player, layout } as ctx) model =
             if canUpdateDraft player track then
                 Layout.Game
                     "editor"
-                    (Context.toolbar track editor)
+                    (Context.appbar track editor)
                     (Context.view track editor)
                     [ renderCourse layout.size editor
                     ]

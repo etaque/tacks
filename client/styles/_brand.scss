@@ -1,0 +1,72 @@
+@import 'colors';
+@import 'mixins';
+@import 'fonts';
+
+.brand {
+  $height: $appbar;
+
+  display: block;
+  position: relative;
+  width: $aside;
+  height: $height;
+  background-color: $darkCharcoal;
+
+  svg {
+    position: absolute;
+    left: 14px;
+    top: 2px;
+  }
+
+  .hexagon {
+    fill: $darkGrey;
+    stroke: $darkGrey;
+    fill: transparent;
+    stroke: transparent;
+    stroke-width: 10px;
+    stroke-linejoin: round;
+    transition: bezier(fill), bezier(stroke);
+  }
+
+  .hull {
+    fill: $whiteSmoke;
+    fill-opacity: 1;
+    stroke: $whiteSmoke;
+    stroke-opacity: 1;
+  }
+
+  .icon-menu {
+    stroke: $mediumGrey;
+    stroke-width: 2px;
+    stroke-linejoin: round;
+    transition: bezier(stroke);
+  }
+
+  span {
+    position: absolute;
+    left: 0;
+    right: 0;
+    text-align: center;
+    line-height: $height;
+    font-family: $logoFont;
+    font-weight: 700;
+    font-size: 27px;
+    color: $lightGrey;
+
+    &:focus {
+      text-decoration: none;
+    }
+  }
+
+  &:hover {
+    .hexagon {
+      fill: $darkGrey;
+      stroke: $darkGrey;
+    }
+
+    .icon-menu {
+      stroke: $whiteSmoke;
+    }
+  }
+
+}
+

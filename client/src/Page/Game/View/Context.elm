@@ -13,10 +13,10 @@ import View.Utils as Utils
 import Route exposing (..)
 
 
-toolbar : Model -> LiveTrack -> GameState -> List (Html Msg)
-toolbar model { track } gameState =
+appbar : Model -> LiveTrack -> GameState -> List (Html Msg)
+appbar model { track } gameState =
     [ div
-        [ class "toolbar-left" ]
+        [ class "appbar-left" ]
         [ if track.status == Draft then
             Utils.linkTo
                 (Route.EditTrack track.id)
@@ -34,9 +34,9 @@ toolbar model { track } gameState =
         , h2 [] [ text track.name ]
         ]
     , div
-        [ class "toolbar-center" ]
+        [ class "appbar-center" ]
         (GameContext.raceStatus gameState StartRace ExitRace)
-    , div [ class "toolbar-right" ] []
+    , div [ class "appbar-right" ] []
     ]
 
 

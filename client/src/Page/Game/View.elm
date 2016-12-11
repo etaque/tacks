@@ -34,9 +34,9 @@ view { layout } model =
         ( DataOk liveTrack, Just gameState ) ->
             Layout.Game
                 "play-track"
-                (Context.toolbar model liveTrack gameState)
+                (Context.appbar model liveTrack gameState)
                 (Context.sidebar model liveTrack gameState)
-                [ render ( layout.size.width - Constants.sidebarWidth, layout.size.height - Constants.toolbarHeight ) gameState
+                [ render ( layout.size.width - Constants.sidebarWidth, layout.size.height - Constants.appbarHeight ) gameState
                 , Html.map ChatMsg (Chat.inputField model.chat)
                 ]
 

@@ -1,4 +1,4 @@
-@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700|Luckiest+Guy);
+@import url(https://fonts.googleapis.com/css?family=Inconsolata:400,700|Luckiest+Guy|Bungee+Hairline);
 
 $grid-gutter-width: 30px;
 $container-large-desktop: (940px + $grid-gutter-width);
@@ -6,11 +6,10 @@ $icon-font-path: "/assets/fonts/bootstrap/";
 
 @import '../../node_modules/bootstrap-sass/assets/stylesheets/_bootstrap.scss';
 
-@import 'mixins';
 
 @import 'layout';
+@import 'brand';
 @import 'menu';
-@import 'sidebar';
 @import 'theme';
 @import 'animations';
 @import 'dialog';
