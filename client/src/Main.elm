@@ -10,7 +10,7 @@ import Route
 main : Program Model.Setup Model.Model Model.Msg
 main =
     Navigation.programWithFlags
-        (Route.parser >> Model.MountRoute)
+        (Route.parser >> Model.AskRoute)
         { init = Update.init
         , update = Update.update
         , view = View.view

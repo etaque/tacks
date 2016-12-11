@@ -65,7 +65,7 @@ subscriptions ({ pages } as model) =
 
 init : Setup -> Navigation.Location -> ( Model, Cmd Msg )
 init setup location =
-    urlUpdate (Route.parser location) (initialModel setup)
+    askRoute (Route.parser location) (initialModel setup)
 
 
 eventMsg : Event -> Msg
@@ -109,6 +109,10 @@ msgUpdate msg ({ layout, pages } as model) =
         SetPlayer p ->
             res { model | player = p } (navigate Route.Home)
 
+        AskRoute route ->
+            askRoute route model
+                |> toResponse
+
         RouteTransition subMsg ->
             Transit.tick RouteTransition subMsg model
                 |> toResponse
@@ -137,8 +141,8 @@ msgUpdate msg ({ layout, pages } as model) =
             res model Cmd.none
 
 
-urlUpdate : Route -> Model -> ( Model, Cmd Msg )
-urlUpdate route model =
+askRoute : Route -> Model -> ( Model, Cmd Msg )
+askRoute route model =
     Transit.start RouteTransition (MountRoute route) ( 50, 200 ) model
 
 

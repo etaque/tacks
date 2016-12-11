@@ -34,6 +34,7 @@ type Msg
     | ActivityRawReceive String
     | ActivityEmitMsg Activity.EmitMsg
     | WindowResized Window.Size
+    | AskRoute Route
     | RouteTransition (Transit.Msg Msg)
     | MountRoute Route
     | PageMsg PageMsg
