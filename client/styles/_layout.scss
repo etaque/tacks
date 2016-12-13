@@ -40,9 +40,26 @@ body > div {
     transition: bezier(left, 120ms);
   }
 
+  .menu-backdrop {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 0;
+    cursor: pointer;
+    opacity: 0;
+    transition: bezier(opacity, 120ms);
+  }
+
   &.show-menu {
     aside.menu {
       left: 0;
+    }
+    .menu-backdrop {
+      z-index: 2;
+      opacity: 1;
     }
   }
 

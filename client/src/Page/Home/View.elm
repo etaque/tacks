@@ -33,7 +33,10 @@ view ctx model =
         "home"
         (Just Layout.Home)
         [ if ctx.player.guest then
-            Layout.header ctx [] [ onboard ]
+            Layout.header ctx
+                []
+                [ onboard
+                ]
           else
             text ""
         , Layout.section
@@ -69,14 +72,16 @@ onboard : Html Msg
 onboard =
     div
         [ class "row" ]
-        [ div [ class "col-sm-6" ]
+        [ div
+            [ class "col-sm-6" ]
             [ img
                 [ src "/assets/images/screenshot1.png"
                 , class "screenshot"
                 ]
                 []
             ]
-        , div [ class "col-sm-6" ]
+        , div
+            [ class "col-sm-6" ]
             [ h1 [] [ text "Sailing tactics from the sofa" ]
             , p
                 [ class "subtitle" ]

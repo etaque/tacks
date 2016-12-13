@@ -41,11 +41,11 @@ aside.menu {
 
     &.current {
       a {
-        background-color: $orange;
-        color: $charcoal;
+        background-color: lighten($charcoal, 8%);
+        color: $smokeWhite;
 
         i {
-          color: $charcoal;
+          color: $smokeWhite;
         }
       }
     }

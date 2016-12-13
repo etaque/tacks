@@ -81,6 +81,11 @@ renderSite ctx pageTagger layout =
             , aside
                 [ class "menu" ]
                 (sideMenu ctx.player layout.maybeNav)
+            , div
+                [ class "menu-backdrop"
+                , onClick (ToggleSidebar False)
+                ]
+                []
             , appbar
                 ctx.player
                 []
