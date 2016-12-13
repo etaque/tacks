@@ -85,7 +85,7 @@ class LiveCenter extends Actor {
 object LiveCenter {
   val actorRef = Akka.system.actorOf(Props[LiveCenter])
 
-  implicit val timeout = Timeout(1.seconds)
+  implicit val timeout = Timeout(5.seconds)
 
   def sendPlayersUpdate(state: LiveCenterState) = {
     val distinctPlayers = (state.listOnlinePlayers ++ state.chatRoom.map(_._1)).distinct.sortBy(_.handleOpt)
