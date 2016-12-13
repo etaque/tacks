@@ -21,12 +21,12 @@ view ctx ({ tracks } as model) =
         [ Layout.header
             ctx
             []
-            [ h1 [] [ text "Your courses" ]
-            , div
-                [ class "btn-raised btn-positive btn-new-track cta"
+            [ div
+                [ class "btn-raised btn-positive btn-new-track cta pull-right"
                 , onClick ToggleCreationForm
                 ]
                 [ text "New course" ]
+            , h1 [] [ text "Your courses" ]
             ]
         , Layout.section
             [ classList [ ( "grey new-track inside", True ), ( "show", model.showCreationForm ) ] ]

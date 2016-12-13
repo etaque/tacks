@@ -19,12 +19,12 @@ view ctx ({ topics } as model) =
     [ Layout.header
         ctx
         []
-        [ h1 [] [ text "Forum" ]
-        , Utils.linkTo
+        [ Utils.linkTo
             (Route.Forum NewTopic)
-            [ class "btn-raised btn-positive btn-new-topic cta"
+            [ class "btn-raised btn-positive btn-new-topic cta pull-right"
             ]
             [ text "New topic" ]
+        , h1 [] [ text "Forum" ]
         ]
     , Layout.section
         [ class "white with-overlap" ]

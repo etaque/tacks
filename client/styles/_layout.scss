@@ -37,7 +37,7 @@ body > div {
     overflow-x: hidden;
     color: $grey;
     background-color: $charcoal;
-    transition: bezier(left, 100ms);
+    transition: bezier(left, 120ms);
   }
 
   &.show-menu {

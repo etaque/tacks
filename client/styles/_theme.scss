@@ -73,8 +73,7 @@ header {
   background-color: $light;
 
   .container {
-    padding: 36px 0;
-    min-height: $header;
+    padding: 36px 15px;
   }
 
 
@@ -107,13 +106,11 @@ header {
   }
 
   &.with-tabs {
-    h1 {
-      bottom: 64px;
+    .container {
+      padding-bottom: 0;
     }
 
     .tabs-container {
-      position: absolute;
-      bottom: 0;
       background-color: transparent;
 
       .tab {
@@ -153,20 +150,14 @@ section {
 }
 
 header + section.white:not(.inside), section.with-overlap {
-  // margin-top: -16px;
-
   .container {
     padding-top: 0;
     position: relative;
   }
-
 }
 
 .is-overlap {
-  position: absolute;
-  left: 15px;
-  right: 15px;
-  top: -15px;
+  margin-top: -24px;
 }
 
 .sheet {
