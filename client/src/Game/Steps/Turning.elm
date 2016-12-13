@@ -3,8 +3,6 @@ module Game.Steps.Turning exposing (..)
 import Game.Inputs exposing (..)
 import Game.Models exposing (..)
 import Game.Geo exposing (..)
-import Maybe as M
-import List as L
 
 
 slow : Float
@@ -50,11 +48,14 @@ turningStep elapsed input state =
                 FixedAngle
             else
                 state.controlMode
+
+        isTurning =
+            manualTurn input && not input.subtleTurn
     in
         { state
             | heading = heading
             , windAngle = windAngle
-            , isTurning = isTurning input
+            , isTurning = isTurning
             , tackTarget = tackTarget
             , controlMode = newControlMode
         }
@@ -62,8 +63,8 @@ turningStep elapsed input state =
 
 tackTargetReached : PlayerState -> Bool
 tackTargetReached state =
-    M.map (\target -> abs (angleDelta state.windAngle target) < 1) state.tackTarget
-        |> M.withDefault False
+    Maybe.map (\target -> abs (angleDelta state.windAngle target) < 1) state.tackTarget
+        |> Maybe.withDefault False
 
 
 getTackTarget : PlayerState -> KeyboardInput -> Bool -> Maybe Float
@@ -92,7 +93,7 @@ getTackTarget state input targetReached =
 autoVmgTarget : PlayerState -> KeyboardInput -> Maybe Float
 autoVmgTarget state input =
     if
-        not (L.isEmpty state.crossedGates)
+        not (List.isEmpty state.crossedGates)
             && state.isTurning
             && not (manualTurn input)
             && (abs (deltaToVmg state))

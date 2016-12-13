@@ -27,6 +27,7 @@
         "etaque/elm-transit": "7.0.3 <= v < 8.0.0",
         "etaque/elm-transit-style": "3.0.1 <= v < 4.0.0",
         "evancz/elm-markdown": "3.0.1 <= v < 4.0.0",
+        "knledg/touch-events": "2.1.1 <= v < 3.0.0",
         "mdgriffith/elm-color-mixing": "1.0.4 <= v < 2.0.0",
         "mgold/elm-date-format": "1.1.7 <= v < 2.0.0",
         "ohanhi/keyboard-extra": "1.2.0 <= v < 2.0.0"

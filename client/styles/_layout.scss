@@ -193,6 +193,36 @@ body > div {
     }
 
   }
+
+  .touchbar {
+    background-color: $lightGrey;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 2;
+    display: flex;
+
+    .touchbar-left, .touchbar-right {
+      flex: 1;
+
+      a {
+        user-select: none;
+        display: block;
+        text-align: center;
+
+        &:active {
+          background-color: $white;
+        }
+
+        i {
+          user-select: none;
+          font-size: 42px;
+          line-height: 64px;
+        }
+      }
+    }
+  }
 }
 
 .layout-game {

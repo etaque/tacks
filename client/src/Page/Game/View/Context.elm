@@ -11,6 +11,8 @@ import Page.Game.View.Players as PlayersView
 import Page.Game.Chat.View as Chat
 import View.Utils as Utils
 import Route exposing (..)
+import Game.Touch as Touch
+import TouchEvents
 
 
 appbar : Model -> LiveTrack -> GameState -> List (Html Msg)
@@ -111,3 +113,35 @@ tabs { tab } =
             items
             (\t -> onClick (SetTab t))
             ((==) tab)
+
+
+touchbar : Model -> LiveTrack -> GameState -> Html Msg
+touchbar model liveTrack gameState =
+    div
+        [ class "touchbar" ]
+        [ div
+            [ class "touchbar-left" ]
+            [ a
+                [ onMouseDown (TouchMsg (Touch.Left True))
+                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.Left True))
+                , onMouseUp (TouchMsg (Touch.Left False))
+                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.Left False))
+                ]
+                [ Utils.mIcon "chevron_left" []
+                ]
+            ]
+        , div
+            [ class "touchbar-center" ]
+            []
+        , div
+            [ class "touchbar-right" ]
+            [ a
+                [ onMouseDown (TouchMsg (Touch.Right True))
+                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.Right True))
+                , onMouseUp (TouchMsg (Touch.Right False))
+                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.Right False))
+                ]
+                [ Utils.mIcon "chevron_right" []
+                ]
+            ]
+        ]

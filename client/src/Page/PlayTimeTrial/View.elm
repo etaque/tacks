@@ -32,10 +32,11 @@ view { layout, liveStatus } model =
         ( Just liveTimeTrial, Just gameState ) ->
             Layout.Game
                 "play-time-trial"
-                (appbar model liveTimeTrial gameState)
+                (toolbar model liveTimeTrial gameState)
                 (sidebar model liveTimeTrial gameState)
                 [ render ( layout.size.width, layout.size.height - appbarHeight ) gameState
                 ]
+                []
 
         _ ->
             Layout.Game
@@ -43,10 +44,11 @@ view { layout, liveStatus } model =
                 []
                 []
                 [ Html.Lazy.lazy HexBg.render layout.size ]
+                []
 
 
-appbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
-appbar model { track } gameState =
+toolbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
+toolbar model { track } gameState =
     [ div
         [ class "appbar-left" ]
         [ Utils.linkTo

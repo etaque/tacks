@@ -15,7 +15,6 @@ import Route
 import Page.Forum.Route as Forum
 import Page.Admin.Route as Admin
 import TransitStyle
-import Constants
 import Dialog
 import Html.Lazy as Lazy
 
@@ -52,6 +51,7 @@ type alias Game msg =
     , nav : List (Html msg)
     , side : List (Html msg)
     , main : List (Html msg)
+    , touchbar : List (Html msg)
     }
 
 
@@ -132,6 +132,10 @@ renderGame ctx pageTagger layout =
             , main_
                 []
                 (tag layout.main)
+            , if List.isEmpty layout.touchbar then
+                text ""
+              else
+                footer [ class "touchbar" ] (tag layout.touchbar)
             ]
 
 

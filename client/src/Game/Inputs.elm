@@ -4,6 +4,7 @@ import Time exposing (Time)
 import Game.Models exposing (..)
 import Model.Shared exposing (..)
 import Keyboard.Extra as Keyboard
+import Game.Touch as Touch exposing (Touch)
 
 
 type alias GameInput =
@@ -49,10 +50,6 @@ manualTurn ki =
     ki.arrows.x /= 0
 
 
-isTurning ki =
-    manualTurn ki && not ki.subtleTurn
-
-
 isSubtleTurning ki =
     manualTurn ki && ki.subtleTurn
 
@@ -67,4 +64,22 @@ keyboardInput kb =
     , lock = Keyboard.isPressed Keyboard.ArrowUp kb
     , tack = Keyboard.isPressed Keyboard.Space kb
     , subtleTurn = Keyboard.isPressed Keyboard.Shift kb
+    }
+
+
+touchInput : Touch -> KeyboardInput
+touchInput touch =
+    { arrows = Touch.asArrows touch
+    , lock = False
+    , tack = False
+    , subtleTurn = False
+    }
+
+
+merge : KeyboardInput -> KeyboardInput -> KeyboardInput
+merge k1 k2 =
+    { arrows = { x = k1.arrows.x + k2.arrows.x, y = k1.arrows.y + k2.arrows.y }
+    , lock = k1.lock || k2.lock
+    , tack = k1.tack || k2.tack
+    , subtleTurn = k1.subtleTurn || k2.subtleTurn
     }

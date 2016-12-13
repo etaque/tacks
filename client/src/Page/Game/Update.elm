@@ -19,6 +19,7 @@ import Task
 import WebSocket
 import AnimationFrame
 import Keyboard.Extra as Keyboard
+import Game.Touch as Touch
 import Window
 import Http
 
@@ -90,6 +91,9 @@ update player host msg model =
                 in
                     res { model | keyboard = newKeyboard } (Cmd.map KeyboardMsg keyboardCmd)
 
+        TouchMsg touchMsg ->
+            res { model | touch = Debug.log "touch" (Touch.update touchMsg model.touch) } Cmd.none
+
         WindowSize size ->
             res { model | dims = ( size.width, size.height ) } Cmd.none
 
@@ -107,9 +111,12 @@ update player host msg model =
             case model.gameState of
                 Just gameState ->
                     let
+                        keyboardInput =
+                            Input.merge (Input.keyboardInput model.keyboard) (Input.touchInput model.touch)
+
                         gameInput =
                             Input.GameInput
-                                (Input.keyboardInput model.keyboard)
+                                keyboardInput
                                 model.dims
 
                         newGameState =

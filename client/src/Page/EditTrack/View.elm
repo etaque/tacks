@@ -30,10 +30,12 @@ view ({ player, layout } as ctx) model =
                     (Context.view track editor)
                     [ renderCourse layout.size editor
                     ]
+                    []
             else
                 Layout.Game
                     "editor forbidden"
                     [ text "Access forbidden." ]
+                    []
                     []
                     []
 
@@ -43,6 +45,7 @@ view ({ player, layout } as ctx) model =
                 [ text "" ]
                 []
                 [ Html.Lazy.lazy HexBg.render layout.size ]
+                []
 
 
 renderCourse : Size -> Editor -> Html Msg

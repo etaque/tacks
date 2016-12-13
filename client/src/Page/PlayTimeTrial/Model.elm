@@ -5,6 +5,7 @@ import Dict exposing (Dict)
 import Model.Shared exposing (..)
 import Game.Models exposing (GameState)
 import Game.Inputs as Input
+import Game.Touch as Touch exposing (Touch)
 import Keyboard.Extra as Keyboard
 import Window
 import Set
@@ -14,6 +15,7 @@ type alias Model =
     { gameState : Maybe GameState
     , lastPush : Time
     , keyboard : Keyboard.Model
+    , touch : Touch
     , dims : ( Int, Int )
     , tab : Tab
     , live : Bool
@@ -31,6 +33,7 @@ initial =
     { gameState = Nothing
     , lastPush = 0
     , keyboard = Keyboard.Model Set.empty
+    , touch = Touch.initial
     , dims = ( 1, 1 )
     , tab = RankingsTab
     , live = False
@@ -42,6 +45,7 @@ type Msg
     = LoadCourse (HttpResult Course)
     | InitGameState Course Time
     | KeyboardMsg Keyboard.Msg
+    | TouchMsg Touch.Msg
     | WindowSize Window.Size
     | RaceUpdate Input.RaceInput
     | Frame Time

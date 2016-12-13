@@ -39,6 +39,7 @@ view { layout } model =
                 [ render ( layout.size.width - Constants.sidebarWidth, layout.size.height - Constants.appbarHeight ) gameState
                 , Html.map ChatMsg (Chat.inputField model.chat)
                 ]
+                [ Context.touchbar model liveTrack gameState ]
 
         _ ->
             Layout.Game
@@ -46,3 +47,4 @@ view { layout } model =
                 []
                 []
                 [ Html.Lazy.lazy HexBg.render layout.size ]
+                []

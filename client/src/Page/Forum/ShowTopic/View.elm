@@ -107,7 +107,7 @@ newPost content loading =
         , div
             [ class "form-msgs" ]
             [ button
-                [ class "btn-flat"
+                [ class "btn-flat btn-block"
                 , disabled (loading || String.isEmpty content)
                 , onClick SubmitResponse
                 ]
