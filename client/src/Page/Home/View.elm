@@ -35,13 +35,33 @@ view ctx model =
         [ Layout.header
             ctx
             []
-            [ h1 [] [ text "Sailing tactics from the sofa" ]
-            , p
-                [ class "subtitle" ]
-                [ text """
+            [ div
+                [ class "row" ]
+                [ div [ class "col-sm-6" ]
+                    [ img
+                        [ src "/assets/images/screenshot1.png"
+                        , class "screenshot"
+                        ]
+                        []
+                    ]
+                , div [ class "col-sm-6" ]
+                    [ h1 [] [ text "Sailing tactics from the sofa" ]
+                    , p
+                        [ class "subtitle" ]
+                        [ text """
                     Tacks is a free regatta simulation game.
                     Engage yourself in a realtime multiplayer race
                     or attempt to break your best time to climb the rankings."""
+                        ]
+                    , case ctx.player.handle of
+                        Just handle ->
+                            text ""
+
+                        Nothing ->
+                            Utils.linkTo Register
+                                [ class "btn btn-raised btn-white cta" ]
+                                [ text "Signup and save your scores" ]
+                    ]
                 ]
             ]
         , Layout.section
