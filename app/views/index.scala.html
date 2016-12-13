@@ -23,9 +23,11 @@
     <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-16x16.png")" sizes="16x16">
     <link rel="icon" type="image/png" href="@routes.Assets.at("favicon-32x32.png")" sizes="32x32">
 
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
   </head>
-  <body class="elm-game">
+  <body>
     <script id="appSetup" type="custom-data">
      @Html(play.api.libs.json.Json.toJson(Json.obj("player" -> request.player, "path" -> request.path, "host" -> request.host, "rawLiveStatus" -> liveStatus)).toString())
     </script>
