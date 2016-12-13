@@ -295,6 +295,15 @@ hr {
       background-color: lighten($red, 52%);
     }
   }
+
+  &.btn-transparent {
+    background-color: transparent;
+    color: white;
+
+    &:hover {
+      background-color: $light;
+    }
+  }
 }
 
 

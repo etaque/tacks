@@ -32,38 +32,10 @@ view ctx model =
     Layout.Site
         "home"
         (Just Layout.Home)
-        [ Layout.header
-            ctx
-            []
-            [ div
-                [ class "row" ]
-                [ div [ class "col-sm-6" ]
-                    [ img
-                        [ src "/assets/images/screenshot1.png"
-                        , class "screenshot"
-                        ]
-                        []
-                    ]
-                , div [ class "col-sm-6" ]
-                    [ h1 [] [ text "Sailing tactics from the sofa" ]
-                    , p
-                        [ class "subtitle" ]
-                        [ text """
-                    Tacks is a free regatta simulation game.
-                    Engage yourself in a realtime multiplayer race
-                    or attempt to break your best time to climb the rankings."""
-                        ]
-                    , case ctx.player.handle of
-                        Just handle ->
-                            text ""
-
-                        Nothing ->
-                            Utils.linkTo Register
-                                [ class "btn btn-raised btn-white cta" ]
-                                [ text "Signup and save your scores" ]
-                    ]
-                ]
-            ]
+        [ if ctx.player.guest then
+            Layout.header ctx [] [ onboard ]
+          else
+            text ""
         , Layout.section
             [ class "white inside" ]
             [ div
@@ -91,6 +63,36 @@ view ctx model =
             ]
         ]
         (Just (Dialog.view DialogMsg model.dialog (dialogContent model)))
+
+
+onboard : Html Msg
+onboard =
+    div
+        [ class "row" ]
+        [ div [ class "col-sm-6" ]
+            [ img
+                [ src "/assets/images/screenshot1.png"
+                , class "screenshot"
+                ]
+                []
+            ]
+        , div [ class "col-sm-6" ]
+            [ h1 [] [ text "Sailing tactics from the sofa" ]
+            , p
+                [ class "subtitle" ]
+                [ text """
+                    Tacks is a free regatta simulation game.
+                    engage yourself in a realtime multiplayer race
+                    or attempt to break your best time to climb the rankings."""
+                ]
+            , Utils.linkTo Register
+                [ class "btn btn-raised btn-white cta" ]
+                [ text "Signup and save your scores" ]
+            , Utils.linkTo Login
+                [ class "btn btn-flat btn-transparent" ]
+                [ text "or log in" ]
+            ]
+        ]
 
 
 dialogContent : Model -> Dialog.Layout
