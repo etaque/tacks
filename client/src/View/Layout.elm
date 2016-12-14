@@ -186,24 +186,11 @@ appbarPlayer player =
             , ( "guest", player.guest )
             ]
         ]
-    <|
-        if player.guest then
-            [ Utils.linkTo Route.Login
-                [ class "login" ]
-                [ text "Login" ]
+        [ div [ class "player-avatar" ]
+            [ Utils.avatarImg 24 player
+            , span [ class "handle" ] [ text (Utils.playerHandle player) ]
             ]
-        else
-            [ div [ class "player-avatar" ]
-                [ Utils.avatarImg 24 player
-                , span [ class "handle" ] [ text (Utils.playerHandle player) ]
-                ]
-            , a
-                [ class "logout"
-                , title "Logout"
-                , onClick Logout
-                ]
-                [ Utils.mIcon "exit_to_app" [] ]
-            ]
+        ]
 
 
 sideMenu : Player -> Maybe Nav -> List (Html Msg)
@@ -226,6 +213,26 @@ sideMenu player maybeCurrent =
           else
             text ""
         ]
+    , hr [] []
+    , if player.guest then
+        div
+            [ class "menu" ]
+            [ sideMenuItem Route.Login "account_circle" "Login" (maybeCurrent == Just Login)
+            , sideMenuItem Route.Register "add_circle" "Register" (maybeCurrent == Just Register)
+            ]
+      else
+        div
+            [ class "menu" ]
+            [ div
+                [ class "menu-item"
+                ]
+                [ a
+                    [ onClick Logout ]
+                    [ Utils.mIcon "flight_takeoff" []
+                    , text "Logout"
+                    ]
+                ]
+            ]
     , hr [] []
     , div
         [ class "made-by" ]
