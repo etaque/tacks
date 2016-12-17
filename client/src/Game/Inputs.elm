@@ -69,10 +69,10 @@ keyboardInput kb =
 
 touchInput : Touch -> KeyboardInput
 touchInput touch =
-    { arrows = Touch.asArrows touch
+    { arrows = { x = touch.turn, y = 0 }
     , lock = False
     , tack = False
-    , subtleTurn = False
+    , subtleTurn = touch.subtle
     }
 
 

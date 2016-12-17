@@ -2,39 +2,33 @@ module Game.Touch exposing (..)
 
 
 type alias Touch =
-    { left : Bool
-    , right : Bool
+    { turn : Int
+    , subtle : Bool
     }
 
 
 initial : Touch
 initial =
-    Touch False False
+    Touch 0 False
 
 
 asArrows : Touch -> { x : Int, y : Int }
-asArrows { left, right } =
-    { x =
-        if left then
-            -1
-        else if right then
-            1
-        else
-            0
+asArrows touch =
+    { x = touch.turn
     , y = 0
     }
 
 
 type Msg
-    = Left Bool
-    | Right Bool
+    = Turn Int
+    | SubtleTurn Int
 
 
 update : Msg -> Touch -> Touch
 update msg touch =
     case msg of
-        Left b ->
-            Touch b False
+        Turn x ->
+            Touch x False
 
-        Right b ->
-            Touch False b
+        SubtleTurn x ->
+            Touch x True

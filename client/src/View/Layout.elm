@@ -51,7 +51,6 @@ type alias Game msg =
     , nav : List (Html msg)
     , side : List (Html msg)
     , main : List (Html msg)
-    , touchbar : List (Html msg)
     }
 
 
@@ -128,14 +127,10 @@ renderGame ctx pageTagger layout =
                 (tag layout.nav)
             , aside
                 [ class "context" ]
-                (brand (ToggleSidebar True) :: (tag layout.side))
+                (tag layout.side)
             , main_
                 []
                 (tag layout.main)
-            , if List.isEmpty layout.touchbar then
-                text ""
-              else
-                footer [ class "touchbar" ] (tag layout.touchbar)
             ]
 
 
@@ -197,7 +192,7 @@ sideMenu : Player -> Maybe Nav -> List (Html Msg)
 sideMenu player maybeCurrent =
     [ brand (ToggleSidebar False)
     , div
-        [ class "menu" ]
+        [ class "menu-block" ]
         [ sideMenuItem Route.Home "home" "Home" (maybeCurrent == Just Home)
         , sideMenuItem Route.Explore "explore" "Explore" (maybeCurrent == Just Explore)
         , if player.guest then
@@ -216,13 +211,13 @@ sideMenu player maybeCurrent =
     , hr [] []
     , if player.guest then
         div
-            [ class "menu" ]
+            [ class "menu-block" ]
             [ sideMenuItem Route.Login "account_circle" "Login" (maybeCurrent == Just Login)
             , sideMenuItem Route.Register "add_circle" "Register" (maybeCurrent == Just Register)
             ]
       else
         div
-            [ class "menu" ]
+            [ class "menu-block" ]
             [ div
                 [ class "menu-item"
                 ]

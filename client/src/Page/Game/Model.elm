@@ -29,7 +29,8 @@ type alias Model =
 
 
 type Tab
-    = LiveTab
+    = NoTab
+    | LiveTab
     | RankingsTab
     | HelpTab
 
@@ -42,7 +43,7 @@ initial =
     , keyboard = Keyboard.Model Set.empty
     , touch = Touch.initial
     , dims = ( 1, 1 )
-    , tab = LiveTab
+    , tab = NoTab
     , races = []
     , freePlayers = []
     , live = False

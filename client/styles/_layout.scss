@@ -25,203 +25,264 @@ body > div {
   height: 100%;
   width: 100%;
   position: relative;
+}
 
+aside.menu {
+  @include shadow-medium;
+  z-index: 3;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: -$aside - 5;
+  width: $aside;
+  overflow-x: hidden;
+  transition: bezier(left, 120ms);
+}
+
+.menu-backdrop {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 0;
+  cursor: pointer;
+  opacity: 0;
+  transition: bezier(opacity, 120ms);
+}
+
+&.show-menu {
   aside.menu {
-    @include shadow-medium;
-    z-index: 3;
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: -$aside;
-    width: $aside;
-    overflow-x: hidden;
-    color: $grey;
-    background-color: $charcoal;
-    transition: bezier(left, 120ms);
+    left: 0;
   }
 
   .menu-backdrop {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    background: rgba(0, 0, 0, 0.5);
-    z-index: 0;
-    cursor: pointer;
-    opacity: 0;
-    transition: bezier(opacity, 120ms);
-  }
+    z-index: 2;
+    opacity: 1;
 
-  &.show-menu {
-    aside.menu {
-      left: 0;
-    }
-    .menu-backdrop {
-      z-index: 2;
-      opacity: 1;
+    &:hover {
+      opacity: 0.8;
     }
   }
+}
 
-  .appbar {
+.appbar {
+  position: absolute;
+  height: $appbar;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  background-color: $charcoal;
+  @include shadow-light;
+
+  .brand {
+    float: left;
+  }
+
+  .appbar-left {
+    float: left;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .appbar-center {
     position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    white-space: nowrap;
+  }
+
+  .appbar-player {
+    float: right;
     height: $appbar;
-    left: 0;
-    right: 0;
-    z-index: 2;
-    background-color: $charcoal;
-    @include shadow-light;
+    padding: 0;
 
-    .brand {
+    .player-avatar {
+      line-height: $appbar;
+      display: block;
       float: left;
+      margin: 0 16px;
     }
 
-    .appbar-left {
+    .logout {
+      display: block;
       float: left;
-      display: flex;
-      flex-direction: row;
-    }
+      color: $mediumGrey;
+      padding: 0 16px;
 
-    .appbar-center {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      white-space: nowrap;
-    }
-
-    .appbar-player {
-      float: right;
-      height: $appbar;
-      padding: 0;
-
-      .player-avatar {
+      i {
         line-height: $appbar;
-        display: block;
-        float: left;
-        margin: 0 8px;
-      }
-
-      .logout {
-        display: block;
-        float: left;
-        color: $mediumGrey;
-        padding: 0 16px;
-
-        i {
-          line-height: $appbar;
-        }
-
-        &:hover {
-          color: $whiteSmoke;
-        }
-      }
-
-      .login {
-        display: block;
-        line-height: $appbar;
-        padding: 0 24px;
-        color: $mediumGrey;
-
-        &:focus {
-          text-decoration: none;
-        }
-
-        &:hover {
-          color: $whiteSmoke;
-        }
-      }
-    }
-  }
-
-  main {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    overflow-x: hidden;
-    overflow-y: auto;
-    margin-top: $appbar;
-  }
-
-  aside.context {
-    @include shadow-medium;
-    z-index: 2;
-
-    .brand {
-      background-color: #ddd;
-
-      .hexagon {
-        fill: $mediumGrey;
-        stroke: $mediumGrey;
-      }
-
-      .icon-menu {
-        stroke: $lightGrey;
       }
 
       &:hover {
-        .icon-menu {
-          stroke: $whiteSmoke;
-        }
-      }
-
-      span {
-        color: $darkGrey;
+        color: $whiteSmoke;
       }
     }
 
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: $aside;
-    background-color: $white;
+    .login {
+      display: block;
+      line-height: $appbar;
+      padding: 0 24px;
+      color: $mediumGrey;
+
+      &:focus {
+        text-decoration: none;
+      }
+
+      &:hover {
+        color: $whiteSmoke;
+      }
+    }
+  }
+}
+
+main {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin-top: $appbar;
+}
+
+aside.context {
+  @include shadow-medium;
+  position: absolute;
+  width: $aside + $appbar - 2*16px;
+  left: 16px;
+  top: $appbar + 16px;
+  /* bottom: 16px; */
+  width: $aside - 2*16px;
+  z-index: 2;
+  background-color: $white;
+  border-radius: 4px;
+  opacity: 0.8;
+  transition: bezier(opacity);
+
+  .aside-module {
+    overflow-y: scroll;
   }
 
-  &.with-context {
-    .appbar {
-      left: $aside;
-
-      .brand {
-        display: none;
-      }
-    }
-
-    main {
-      left: $aside;
-    }
-
+  &:hover {
+    opacity: 1;
   }
 
-  .touchbar {
-    background-color: $lightGrey;
+  .tabs-container {
+    background-color: transparent;
+  }
+
+  .tab {
+    background-color: #eee;
+  }
+
+  .tab:first-child {
+    border-top-left-radius: 4px;
+  }
+
+  .tab:last-child {
+    border-top-right-radius: 4px;
+  }
+}
+
+.with-context {
+  /* .appbar { */
+  /*   left: $aside; */
+
+  /*   .brand { */
+  /*     display: none; */
+  /*   } */
+  /* } */
+
+  /* main { */
+  /*   left: $aside; */
+  /* } */
+
+}
+
+.touch-commands {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+
+
+  .touch-panel-left, .touch-panel-right {
     position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 2;
+    bottom: 16px;
     display: flex;
+    flex-direction: column;
 
-    .touchbar-left, .touchbar-right {
+    a {
       flex: 1;
+      user-select: none;
+      display: block;
+      text-align: center;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      width: 52px;
+      background-color: $strongShadow;
+      color: $light;
 
-      a {
+      &.touch-left, &.touch-right {
+        opacity: 0.8;
+      }
+
+      &.touch-subtle-left, &.touch-subtle-right {
+        opacity: 0.5;
+      }
+
+      // &:active {
+      //   background-color: $charcoal;
+      //   color: white;
+      // }
+
+      i {
         user-select: none;
-        display: block;
-        text-align: center;
-
-        &:active {
-          background-color: $white;
-        }
-
-        i {
-          user-select: none;
-          font-size: 42px;
-          line-height: 64px;
-        }
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        font-size: 42px;
+        line-height: 104px;
       }
     }
+  }
+
+  .touch-panel-left .touch-subtle-left {
+    border-bottom-right-radius: 8px;
+  }
+
+  .touch-panel-left .touch-left {
+    border-top-right-radius: 8px;
+  }
+
+  .touch-panel-left {
+    left: 0;
+  }
+
+  .touch-panel-right {
+    right: 0;
+  }
+
+}
+
+@media screen and (max-width: $break-mobile-l) {
+  .appbar .appbar-player .player-avatar {
+    margin: 0 8px;
+
+    .avatar {
+      margin-right: 6px;
+    }
+
+    span {
+      display: none;
+    }
+  }
+
+  aside.context {
+    display: none;
   }
 }
 

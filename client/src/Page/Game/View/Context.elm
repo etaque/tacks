@@ -83,6 +83,9 @@ liveBlocks : GameState -> Model -> LiveTrack -> List (Html Msg)
 liveBlocks gameState model liveTrack =
     (tabs model)
         :: case model.tab of
+            NoTab ->
+                []
+
             LiveTab ->
                 [ PlayersView.block model
                 , Html.map ChatMsg (Chat.messages model.chat)
@@ -108,38 +111,56 @@ tabs { tab } =
             , ( "Runs", RankingsTab )
             , ( "Help", HelpTab )
             ]
+
+        setTab t =
+            if t == tab then
+                SetTab NoTab
+            else
+                SetTab t
     in
         Utils.tabsRow
             items
-            (\t -> onClick (SetTab t))
+            (\t -> onClick (setTab t))
             ((==) tab)
 
 
-touchbar : Model -> LiveTrack -> GameState -> Html Msg
-touchbar model liveTrack gameState =
+touch : Model -> LiveTrack -> GameState -> Html Msg
+touch model liveTrack gameState =
     div
-        [ class "touchbar" ]
+        [ class "touch-commands" ]
         [ div
-            [ class "touchbar-left" ]
+            [ class "touch-panel-left" ]
             [ a
-                [ onMouseDown (TouchMsg (Touch.Left True))
-                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.Left True))
-                , onMouseUp (TouchMsg (Touch.Left False))
-                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.Left False))
+                [ class "touch-left"
+                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.Turn -1))
+                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.Turn 0))
+                ]
+                [ Utils.mIcon "chevron_left" []
+                ]
+            , a
+                [ class "touch-subtle-left"
+                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.SubtleTurn -1))
+                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.SubtleTurn 0))
                 ]
                 [ Utils.mIcon "chevron_left" []
                 ]
             ]
         , div
-            [ class "touchbar-center" ]
+            [ class "touch-panel-center" ]
             []
         , div
-            [ class "touchbar-right" ]
+            [ class "touch-panel-right" ]
             [ a
-                [ onMouseDown (TouchMsg (Touch.Right True))
-                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.Right True))
-                , onMouseUp (TouchMsg (Touch.Right False))
-                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.Right False))
+                [ class "touch-right"
+                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.Turn 1))
+                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.Turn 0))
+                ]
+                [ Utils.mIcon "chevron_right" []
+                ]
+            , a
+                [ class "touch-subtle-right"
+                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.SubtleTurn 1))
+                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.SubtleTurn 0))
                 ]
                 [ Utils.mIcon "chevron_right" []
                 ]

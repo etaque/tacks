@@ -57,23 +57,9 @@ app.ports.notify.subscribe(msg => {
   notify(msg);
 });
 
-// // game.ports.chatOutput.subscribe((output) => {
-// //   sendMessage({ tag: 'NewMessage', content: output });
-// // });
-
-// game.ports.chatScrollDown.subscribe(() => {
-//   const el = document.getElementsByClassName('messages')[0];
-//   if (el) {
-//     requestAnimationFrame(() => {
-//       el.scrollTop = el.scrollHeight;
-//     });
-//   }
-// });
-
-// game.ports.title.subscribe(title => {
-//   document.title = title;
-// });
-
 document.addEventListener('trix-change', (event) => {
   event.target.inputElement.dispatchEvent(new Event('input', { bubbles: true }));
 });
+
+// hide ui on mobile
+window.scrollTo(0,1);

@@ -36,7 +36,6 @@ view { layout, liveStatus } model =
                 (sidebar model liveTimeTrial gameState)
                 [ render ( layout.size.width, layout.size.height - appbarHeight ) gameState
                 ]
-                []
 
         _ ->
             Layout.Game
@@ -44,7 +43,6 @@ view { layout, liveStatus } model =
                 []
                 []
                 [ Html.Lazy.lazy HexBg.render layout.size ]
-                []
 
 
 toolbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)

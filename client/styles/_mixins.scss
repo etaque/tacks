@@ -3,6 +3,10 @@
 $appbar: 52px;
 $aside: 270px;
 
+$break-mobile-s: 320px;
+$break-mobile-l: 425px;
+$break-tablet: 768px;
+
 @mixin placeholder {
   &::-webkit-input-placeholder {@content}
   &:-moz-placeholder           {@content}

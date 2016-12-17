@@ -3,13 +3,36 @@
 @import 'mixins';
 
 aside.menu {
+  color: $grey;
+  background-color: $darkCharcoal;
+
   .brand {
-    background-color: $darkCharcoal;
+    margin-bottom: 8px;
+    background-color: darken($darkCharcoal, 4%);
 
     .hexagon {
       fill: $darkGrey;
       stroke: $darkGrey;
     }
+
+    .icon-menu {
+      stroke: $lightGrey;
+    }
+
+    &:hover {
+      .icon-menu {
+        stroke: $whiteSmoke;
+      }
+    }
+
+    span {
+      color: $whiteSmoke;
+    }
+
+  }
+
+  .menu-block {
+    margin: 16px 0;
   }
 
   .menu-item {
@@ -18,7 +41,6 @@ aside.menu {
       padding: 10px 0 10px 18px;
       line-height: 24px;
       color: $mediumGrey;
-      font-weight: bold;
       transition: bezier(color), bezier(background-color);
 
       i {
@@ -30,7 +52,7 @@ aside.menu {
       }
 
       &:hover {
-        background-color: lighten($charcoal, 4%);
+        background-color: $charcoal;
       }
 
       &:active, &:visited, &:focus {
@@ -41,7 +63,7 @@ aside.menu {
 
     &.current {
       a {
-        background-color: lighten($charcoal, 8%);
+        background-color: lighten($charcoal, 4%);
         color: $smokeWhite;
 
         i {
@@ -53,7 +75,7 @@ aside.menu {
 
   hr {
     border-top: $border;
-    border-color: lighten($charcoal, 8%);
+    border-color: $charcoal;
     margin: 16px 0;
   }
 
