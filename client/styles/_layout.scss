@@ -268,19 +268,36 @@ aside.context {
 
 }
 
-@media screen and (max-width: $break-mobile-l) {
-  .appbar .appbar-player .player-avatar {
-    margin: 0 8px;
+@media screen and (max-width: $break-tablet) {
+  .appbar {
+    .brand {
+      width: 52px;
 
-    .avatar {
-      margin-right: 6px;
+      svg {
+        left: 10px;
+      }
+
+      span {
+        display: none;
+      }
     }
 
-    span {
+    .appbar-left {
       display: none;
     }
-  }
 
+    .appbar-player .player-avatar {
+      margin: 0 8px;
+
+      .avatar {
+        margin-right: 6px;
+      }
+
+      span {
+        display: none;
+      }
+    }
+  }
   aside.context {
     display: none;
   }
