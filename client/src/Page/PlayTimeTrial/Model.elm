@@ -3,7 +3,7 @@ module Page.PlayTimeTrial.Model exposing (..)
 import Time exposing (Time)
 import Dict exposing (Dict)
 import Model.Shared exposing (..)
-import Game.Models exposing (GameState)
+import Game.Shared exposing (GameState, WithGameControl)
 import Game.Inputs as Input
 import Game.Touch as Touch exposing (Touch)
 import Keyboard.Extra as Keyboard
@@ -12,15 +12,16 @@ import Set
 
 
 type alias Model =
-    { gameState : Maybe GameState
-    , lastPush : Time
-    , keyboard : Keyboard.Model
-    , touch : Touch
-    , dims : ( Int, Int )
-    , tab : Tab
-    , live : Bool
-    , ghostRuns : Dict String Player
-    }
+    WithGameControl
+        { gameState : Maybe GameState
+        , lastPush : Time
+        , keyboard : Keyboard.Model
+        , touch : Touch
+        , dims : ( Int, Int )
+        , tab : Tab
+        , live : Bool
+        , ghostRuns : Dict String Player
+        }
 
 
 type Tab

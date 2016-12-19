@@ -1,6 +1,6 @@
 module Game.Render.Gates exposing (..)
 
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import Model.Shared exposing (..)
 import Constants exposing (colors)
 import Game.Render.SvgUtils exposing (..)

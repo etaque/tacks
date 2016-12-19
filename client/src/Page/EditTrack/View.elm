@@ -11,7 +11,7 @@ import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Context as Context
 import View.Layout as Layout
 import View.HexBg as HexBg
-import Game.Geo exposing (floatify)
+import Game.Utils exposing (floatify)
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Tiles as Tiles
 import Game.Render.Gates as Gates

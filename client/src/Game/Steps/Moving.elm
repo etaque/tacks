@@ -1,11 +1,13 @@
 module Game.Steps.Moving exposing (..)
 
 import List
+import List.Extra as List
+import Maybe.Extra as Maybe
 import Dict
 import Model.Shared exposing (..)
-import Game.Models exposing (..)
-import Game.Geo exposing (..)
-import Game.Core exposing (..)
+import Game.Shared exposing (..)
+import Game.Utils exposing (..)
+import Game.Utils as Utils
 import Game.Steps.Util exposing (..)
 import Game.Steps.GateCrossing as GateCrossing
 import Constants exposing (hexRadius)
@@ -128,7 +130,8 @@ isGrounded started oldPosition newPosition course crossedGatesCount =
             boatWidth / 2
 
         stuckOnMark =
-            exists (\m -> (distance newPosition m) <= markRadius + halfBoatWidth) marks
+            List.find (\m -> (distance newPosition m) <= markRadius + halfBoatWidth) marks
+                |> Maybe.isJust
 
         stuckOnStartLine =
             not started && startLineCrossed oldPosition newPosition course.start

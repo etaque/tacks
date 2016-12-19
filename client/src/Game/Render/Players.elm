@@ -1,8 +1,8 @@
 module Game.Render.Players exposing (..)
 
-import Game.Core exposing (..)
-import Game.Geo as Geo
-import Game.Models exposing (..)
+import Game.Utils exposing (..)
+import Game.Utils as Utils
+import Game.Shared exposing (..)
 import Model.Shared exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import Svg exposing (..)
@@ -41,7 +41,7 @@ renderOpponent { state, player } =
         name =
             text_
                 [ textAnchor "middle"
-                , transform <| (translatePoint (Geo.add state.position ( 0, -25 ))) ++ "scale(1,-1)"
+                , transform <| (translatePoint (Utils.add state.position ( 0, -25 ))) ++ "scale(1,-1)"
                 , opacity "0.3"
                 ]
                 [ text (Maybe.withDefault "Anonymous" player.handle) ]
@@ -67,7 +67,7 @@ renderGhost ghost =
         name =
             text_
                 [ textAnchor "middle"
-                , transform <| (translatePoint (Geo.add ghost.position ( 0, -25 ))) ++ "scale(1,-1)"
+                , transform <| (translatePoint (Utils.add ghost.position ( 0, -25 ))) ++ "scale(1,-1)"
                 , opacity "0.2"
                 ]
                 [ text (Maybe.withDefault "Anonymous" ghost.handle) ]
@@ -204,7 +204,7 @@ renderWindShadow { windAngle, windOrigin, position, shadowDirection } =
             [ -15, -10, -5, 0, 5, 10, 15 ]
 
         endPoints =
-            List.map (\a -> Geo.add position (fromPolar ( windShadowLength, toRadians (shadowDirection + a) ))) arcAngles
+            List.map (\a -> Utils.add position (fromPolar ( windShadowLength, toRadians (shadowDirection + a) ))) arcAngles
     in
         polygon
             [ polygonPoints (position :: endPoints)
@@ -224,7 +224,7 @@ renderNextGateLine course state =
             Maybe.map .center state.nextGate
 
         ifFarEnough gatePos =
-            if (Geo.distance state.position gatePos) > length * 2.5 then
+            if (Utils.distance state.position gatePos) > length * 2.5 then
                 Just gatePos
             else
                 Nothing
@@ -232,13 +232,13 @@ renderNextGateLine course state =
         renderLine gatePos =
             let
                 a =
-                    Geo.angleBetween state.position gatePos
+                    Utils.angleBetween state.position gatePos
 
                 p1 =
-                    Geo.add state.position (Geo.rotateDeg a 50)
+                    Utils.add state.position (Utils.rotateDeg a 50)
 
                 p2 =
-                    Geo.add state.position (Geo.rotateDeg a 150)
+                    Utils.add state.position (Utils.rotateDeg a 150)
             in
                 segment
                     [ stroke "white"
@@ -291,14 +291,14 @@ renderPlayerAngles player =
         windLine =
             segment
                 [ stroke "white", opacity "0.5" ]
-                ( ( 0, 0 ), Geo.rotateDeg windOrigin 35 )
+                ( ( 0, 0 ), Utils.rotateDeg windOrigin 35 )
 
         absWindAngle =
             abs (round player.windAngle)
 
         windAngleText =
             text_
-                [ transform <| (translatePoint (Geo.rotateDeg (windOrigin + 180) 30)) ++ "scale(1,-1)"
+                [ transform <| (translatePoint (Utils.rotateDeg (windOrigin + 180) 30)) ++ "scale(1,-1)"
                 , opacity "0.5"
                 , fill "black"
                 , textAnchor "middle"
@@ -334,7 +334,7 @@ renderVmgLine : Float -> Svg msg
 renderVmgLine a =
     segment
         [ stroke "white", opacity "0.8" ]
-        ( ( 0, 0 ), (Geo.rotateDeg a 30) )
+        ( ( 0, 0 ), (Utils.rotateDeg a 30) )
 
 
 renderVmgSign : PlayerState -> Svg msg

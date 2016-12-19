@@ -1,8 +1,8 @@
 module Game.Steps.Vmg exposing (..)
 
-import Game.Models exposing (..)
-import Game.Geo exposing (..)
-import Game.Core exposing (..)
+import Game.Shared exposing (..)
+import Game.Utils exposing (..)
+import Game.Utils exposing (..)
 import Game.Steps.Util exposing (..)
 import Maybe as M
 import List as L

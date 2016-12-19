@@ -4,7 +4,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
-import Game.Models exposing (GameState, Timers, isStarted, raceTime)
+import Game.Shared exposing (GameState, Timers, isStarted, raceTime)
 import Game.Render.Context as GameContext
 import Page.PlayLive.Model exposing (..)
 import Page.PlayLive.View.Players as PlayersView

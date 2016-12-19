@@ -3,7 +3,7 @@ module Game.Outputs exposing (..)
 import Json.Encode as Js
 import Encoders exposing (tag)
 import Model.Shared exposing (..)
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import WebSocket
 import ServerApi
 

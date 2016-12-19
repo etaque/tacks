@@ -2,8 +2,8 @@ module Game.Steps.PlayerWind exposing (..)
 
 import Constants exposing (..)
 import Model.Shared exposing (..)
-import Game.Models exposing (..)
-import Game.Geo exposing (..)
+import Game.Shared exposing (..)
+import Game.Utils exposing (..)
 import Hexagons
 import Hexagons.Grid as Grid
 import List exposing (..)

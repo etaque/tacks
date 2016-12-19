@@ -2,8 +2,8 @@ module Game.Steps.Gusts exposing (..)
 
 import Constants exposing (..)
 import Model.Shared exposing (..)
-import Game.Models exposing (..)
-import Game.Geo as Geo
+import Game.Shared exposing (..)
+import Game.Utils as Utils
 import Hexagons
 import Dict
 
@@ -35,7 +35,7 @@ genTiledGust grid ({ position, angle, speed, radius } as gust) =
             Hexagons.pointToAxial hexRadius position
 
         southTile =
-            Hexagons.pointToAxial hexRadius (Geo.add position ( 0, -radius ))
+            Hexagons.pointToAxial hexRadius (Utils.add position ( 0, -radius ))
 
         distance =
             Hexagons.axialDistance centerTile southTile
@@ -55,7 +55,7 @@ genGustTile : Grid -> Gust -> Coords -> Maybe ( Coords, GustTile )
 genGustTile grid { position, angle, speed, radius } coords =
     let
         distance =
-            Geo.distance position (Hexagons.axialToPoint hexRadius coords)
+            Utils.distance position (Hexagons.axialToPoint hexRadius coords)
     in
         if distance <= radius then
             let

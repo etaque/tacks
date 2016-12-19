@@ -1,8 +1,8 @@
 module Game.Steps.GateCrossing exposing (..)
 
-import CoreExtra
+import List.Extra as List
 import Model.Shared exposing (..)
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 
 
 gateCrossingStep : PlayerState -> GameState -> PlayerState -> PlayerState
@@ -52,7 +52,7 @@ getNextGate course crossedGatesCount =
     else if crossedGatesCount == 0 then
         Just course.start
     else
-        CoreExtra.getAt (crossedGatesCount - 1) course.gates
+        List.getAt (crossedGatesCount - 1) course.gates
 
 
 revertGate : Gate -> Gate

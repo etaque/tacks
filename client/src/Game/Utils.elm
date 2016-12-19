@@ -1,10 +1,39 @@
-module Game.Geo exposing (..)
+module Game.Utils exposing (..)
 
-import Game.Core as Core
+import Maybe
+import List
+import Maybe.Extra as Maybe
+import List.Extra as List
+import Time exposing (Time)
 import Model.Shared exposing (Point, Segment)
-import Time exposing (..)
 
 
+toRadians : Float -> Float
+toRadians deg =
+    radians ((90 - deg) * pi / 180)
+
+
+toDegrees : Float -> Float
+toDegrees rad =
+    -rad * 180 / pi + 90
+
+
+within : ( comparable, comparable ) -> comparable -> Bool
+within ( a, b ) c =
+    c >= a && c <= b
+
+
+lift : Int -> List a -> Maybe a
+lift n items =
+    List.drop n items |> List.head
+
+
+floatRange : Int -> Int -> List Float
+floatRange from to =
+    List.map toFloat (List.range from to)
+
+
+floatify : ( Int, Int ) -> ( Float, Float )
 floatify ( x, y ) =
     ( toFloat x, toFloat y )
 
@@ -48,7 +77,7 @@ movePoint : Point -> Time -> Float -> Float -> Point
 movePoint ( x, y ) delta velocity direction =
     let
         angle =
-            Core.toRadians direction
+            toRadians direction
 
         x_ =
             x + delta * 0.001 * velocity * cos angle
@@ -63,7 +92,7 @@ rotateDeg : Float -> Float -> Point
 rotateDeg deg radius =
     let
         a =
-            Core.toRadians deg
+            toRadians deg
     in
         ( radius * cos a, radius * sin a )
 
@@ -106,7 +135,7 @@ angleBetween ( x1, y1 ) ( x2, y2 ) =
         rad =
             atan2 yDelta xDelta
     in
-        ensure360 (Core.toDegrees rad)
+        ensure360 (toDegrees rad)
 
 
 {-| is angle included in sector?

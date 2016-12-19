@@ -1,7 +1,7 @@
 module Game.Render.Dashboard.Status exposing (..)
 
-import Game.Models exposing (..)
-import Game.Core exposing (..)
+import Game.Shared exposing (..)
+import Maybe.Extra as Maybe
 import String
 import List exposing (..)
 import Time exposing (Time)
@@ -58,7 +58,7 @@ getTimer { timers, playerState } =
                             -- last crossed gate time, in msec
                             ( Maybe.withDefault 0 (head playerState.crossedGates), True )
             in
-                formatTimer timer (isNothing playerState.nextGate)
+                formatTimer timer (Maybe.isNothing playerState.nextGate)
 
         Nothing ->
             "START PENDING"

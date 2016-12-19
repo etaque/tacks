@@ -1,8 +1,8 @@
 module Page.EditTrack.FormUpdate exposing (..)
 
-import CoreExtra
-import Game.Models exposing (defaultGate)
-import Game.Geo as Geo
+import List.Extra as List
+import Game.Shared exposing (defaultGate)
+import Game.Utils as Utils
 import Page.EditTrack.Model exposing (..)
 
 
@@ -16,15 +16,15 @@ update formMsg ({ course } as editor) =
             if i == 0 then
                 { course | start = f start }
             else
-                { course | gates = CoreExtra.updateAt (i - 1) f gates }
+                { course | gates = List.updateAt (i - 1) f gates |> Maybe.withDefault gates }
 
         updateEditorGates i newCourse =
             { editor
                 | course = newCourse
                 , currentGate = Just i
                 , center =
-                    CoreExtra.getAt i (newCourse.start :: newCourse.gates)
-                        |> Maybe.map (.center >> Geo.neg)
+                    List.getAt i (newCourse.start :: newCourse.gates)
+                        |> Maybe.map (.center >> Utils.neg)
                         |> Maybe.withDefault editor.center
             }
 
@@ -51,7 +51,7 @@ update formMsg ({ course } as editor) =
                 updateEditorGates i (updateGate i (\g -> { g | orientation = o }))
 
             RemoveGate i ->
-                updateEditorGates (i - 1) { course | gates = CoreExtra.removeAt (i - 1) gates }
+                updateEditorGates (i - 1) { course | gates = List.removeAt (i - 1) gates }
 
             UpdateGustGen fn ->
                 { editor | course = { course | gustGenerator = fn course.gustGenerator } }

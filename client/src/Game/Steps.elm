@@ -3,8 +3,8 @@ module Game.Steps exposing (..)
 import Time exposing (Time)
 import Model.Shared exposing (..)
 import Game.Inputs as Input
-import Game.Models exposing (..)
-import Game.Geo as Geo
+import Game.Shared exposing (..)
+import Game.Utils as Utils
 import Constants
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving as Moving
@@ -101,7 +101,7 @@ centerStep ( px, py ) dims ({ center, playerState, course } as gameState) =
             playerState.position
 
         ( w, h ) =
-            Geo.floatify dims
+            Utils.floatify dims
 
         ( ( xMax, yMax ), ( xMin, yMin ) ) =
             areaBox course.area

@@ -1,7 +1,7 @@
 module Game.Render.Course exposing (..)
 
 import Constants
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import Model.Shared exposing (..)
 import Hexagons
 import Game.Render.Gates as Gates

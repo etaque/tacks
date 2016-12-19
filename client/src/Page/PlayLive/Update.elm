@@ -11,7 +11,7 @@ import Page.PlayLive.Decoders as Decoders
 import Page.PlayLive.Chat.Update as Chat
 import Update.Utils exposing (..)
 import ServerApi
-import Game.Models exposing (defaultGame, GameState)
+import Game.Shared exposing (defaultGame, GameState)
 import Game.Steps as Steps
 import Game.Outputs as Output
 import Game.Inputs as Input

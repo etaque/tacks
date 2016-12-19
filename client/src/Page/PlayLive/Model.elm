@@ -3,7 +3,7 @@ module Page.PlayLive.Model exposing (..)
 import Time exposing (Time)
 import Dict exposing (Dict)
 import Model.Shared exposing (..)
-import Game.Models exposing (GameState)
+import Game.Shared exposing (GameState, WithGameControl)
 import Game.Inputs as Input
 import Game.Touch as Touch exposing (Touch)
 import Keyboard.Extra as Keyboard
@@ -13,19 +13,20 @@ import Set
 
 
 type alias Model =
-    { liveTrack : HttpData LiveTrack
-    , gameState : Maybe GameState
-    , lastPush : Time
-    , keyboard : Keyboard.Model
-    , touch : Touch
-    , dims : ( Int, Int )
-    , tab : Tab
-    , races : List Race
-    , freePlayers : List Player
-    , live : Bool
-    , ghostRuns : Dict String Player
-    , chat : Chat.Model
-    }
+    WithGameControl
+        { liveTrack : HttpData LiveTrack
+        , gameState : Maybe GameState
+        , lastPush : Time
+        , keyboard : Keyboard.Model
+        , touch : Touch
+        , dims : ( Int, Int )
+        , tab : Tab
+        , races : List Race
+        , freePlayers : List Player
+        , live : Bool
+        , ghostRuns : Dict String Player
+        , chat : Chat.Model
+        }
 
 
 type Tab

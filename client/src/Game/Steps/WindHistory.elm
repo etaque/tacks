@@ -1,7 +1,7 @@
 module Game.Steps.WindHistory exposing (..)
 
 import Time exposing (Time)
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 
 
 windHistoryStep : GameState -> GameState

@@ -3,7 +3,7 @@ module Page.EditTrack.GridUpdate exposing (..)
 import Dict
 import Constants exposing (sidebarWidth, appbarHeight, hexRadius)
 import Model.Shared exposing (..)
-import CoreExtra exposing (..)
+import Game.Utils exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Hexagons
 import Mouse exposing (Position)

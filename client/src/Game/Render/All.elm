@@ -1,6 +1,6 @@
 module Game.Render.All exposing (..)
 
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Defs exposing (..)
 import Game.Render.Course exposing (..)

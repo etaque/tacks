@@ -1,6 +1,6 @@
 module Game.Render.Dashboard.VmgBar exposing (..)
 
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)

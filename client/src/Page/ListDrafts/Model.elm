@@ -1,6 +1,6 @@
 module Page.ListDrafts.Model exposing (..)
 
-import CoreExtra
+import List.Extra as List
 import Model.Shared exposing (..)
 
 
@@ -44,4 +44,4 @@ type Msg
 getSelectedTrack : Model -> Maybe Track
 getSelectedTrack { tracks, selectedTrack } =
     selectedTrack
-        |> Maybe.andThen (\id -> CoreExtra.find (\t -> t.id == id) tracks)
+        |> Maybe.andThen (\id -> List.find (\t -> t.id == id) tracks)

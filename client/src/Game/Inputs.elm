@@ -1,7 +1,7 @@
 module Game.Inputs exposing (..)
 
 import Time exposing (Time)
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import Model.Shared exposing (..)
 import Keyboard.Extra as Keyboard
 import Game.Touch as Touch exposing (Touch)

@@ -6,7 +6,7 @@ import Html.Lazy
 import Html.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.PlayTimeTrial.Model exposing (..)
-import Game.Models exposing (GameState, Timers, isStarted, raceTime)
+import Game.Shared exposing (GameState, Timers, isStarted, raceTime)
 import Game.Render.Context as GameContext
 import View.Layout as Layout
 import View.HexBg as HexBg

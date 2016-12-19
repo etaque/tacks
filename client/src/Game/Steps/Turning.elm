@@ -1,8 +1,8 @@
 module Game.Steps.Turning exposing (..)
 
 import Game.Inputs exposing (..)
-import Game.Models exposing (..)
-import Game.Geo exposing (..)
+import Game.Shared exposing (..)
+import Game.Utils exposing (..)
 
 
 slow : Float

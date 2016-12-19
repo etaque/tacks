@@ -1,6 +1,6 @@
 module Game.Render.Dashboard exposing (..)
 
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Dashboard.WindSpeedGraph as WindSpeedGraph
 import Game.Render.Dashboard.WindOriginGauge as WindOriginGauge

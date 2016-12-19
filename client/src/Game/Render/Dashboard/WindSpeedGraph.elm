@@ -1,6 +1,6 @@
 module Game.Render.Dashboard.WindSpeedGraph exposing (..)
 
-import Game.Models exposing (..)
+import Game.Shared exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import List exposing (..)
 import Svg exposing (..)

@@ -1,12 +1,12 @@
 module Game.Render.Context exposing (..)
 
 import Dict exposing (Dict)
+import Maybe.Extra as Maybe
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
-import Game.Models exposing (GameState, Timers, isStarted, raceTime)
-import CoreExtra
+import Game.Shared exposing (GameState, Timers, isStarted, raceTime)
 import View.Utils as Utils
 
 
@@ -21,7 +21,7 @@ raceStatus ({ timers, playerState } as gameState) startMsg exitMsg =
                         |> Maybe.withDefault (List.head playerState.crossedGates |> Maybe.withDefault 0)
 
                 hasFinished =
-                    CoreExtra.isNothing playerState.nextGate
+                    Maybe.isNothing playerState.nextGate
             in
                 [ div
                     [ classList

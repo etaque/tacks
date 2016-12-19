@@ -9,7 +9,7 @@ import Model.Shared exposing (..)
 import Page.PlayTimeTrial.Model exposing (..)
 import Page.PlayTimeTrial.Decoders as Decoders
 import ServerApi
-import Game.Models exposing (defaultGame, GameState)
+import Game.Shared exposing (defaultGame, GameState)
 import Game.Steps as Steps
 import Game.Outputs as Output
 import Game.Inputs as Input
