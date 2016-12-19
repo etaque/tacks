@@ -1,4 +1,4 @@
-module Page.Game.Update exposing (..)
+module Page.PlayLive.Update exposing (..)
 
 import Time exposing (millisecond, second)
 import Time exposing (Time)
@@ -6,9 +6,9 @@ import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
 import Response exposing (..)
 import Model.Shared exposing (..)
-import Page.Game.Model exposing (..)
-import Page.Game.Decoders as Decoders
-import Page.Game.Chat.Update as Chat
+import Page.PlayLive.Model exposing (..)
+import Page.PlayLive.Decoders as Decoders
+import Page.PlayLive.Chat.Update as Chat
 import Update.Utils exposing (..)
 import ServerApi
 import Game.Models exposing (defaultGame, GameState)

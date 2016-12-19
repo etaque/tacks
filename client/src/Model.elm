@@ -6,7 +6,7 @@ import Page.Login.Model as Login
 import Page.Register.Model as Register
 import Page.Explore.Model as Explore
 import Page.EditTrack.Model as EditTrack
-import Page.Game.Model as Game
+import Page.PlayLive.Model as PlayLive
 import Page.PlayTimeTrial.Model as PlayTimeTrial
 import Page.ShowTimeTrial.Model as ShowTimeTrial
 import Page.ListDrafts.Model as ListDrafts
@@ -50,7 +50,7 @@ type PageMsg
     | RegisterMsg Register.Msg
     | ExploreMsg Explore.Msg
     | EditTrackMsg EditTrack.Msg
-    | GameMsg Game.Msg
+    | PlayLiveMsg PlayLive.Msg
     | ShowTimeTrialMsg ShowTimeTrial.Msg
     | PlayTimeTrialMsg PlayTimeTrial.Msg
     | ListDraftsMsg ListDrafts.Msg
@@ -76,7 +76,7 @@ type alias Pages =
     , register : Register.Model
     , explore : Explore.Model
     , editTrack : EditTrack.Model
-    , game : Game.Model
+    , game : PlayLive.Model
     , showTimeTrial : ShowTimeTrial.Model
     , playTimeTrial : PlayTimeTrial.Model
     , listDrafts : ListDrafts.Model
@@ -104,7 +104,7 @@ initialModel setup =
         , register = Register.initial
         , explore = Explore.initial
         , editTrack = EditTrack.initial
-        , game = Game.initial
+        , game = PlayLive.initial
         , showTimeTrial = ShowTimeTrial.initial
         , playTimeTrial = PlayTimeTrial.initial
         , listDrafts = ListDrafts.initial

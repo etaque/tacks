@@ -9,7 +9,7 @@ import Page.Register.Update as Register
 import Page.Login.Update as Login
 import Page.Explore.Update as Explore
 import Page.EditTrack.Update as EditTrack
-import Page.Game.Update as Game
+import Page.PlayLive.Update as PlayLive
 import Page.ShowTimeTrial.Update as ShowTimeTrial
 import Page.PlayTimeTrial.Update as PlayTimeTrial
 import Page.ListDrafts.Update as ListDrafts
@@ -41,7 +41,7 @@ subscriptions ({ pages } as model) =
                     Sub.map ExploreMsg (Explore.subscriptions pages.explore)
 
                 PlayTrack _ ->
-                    Sub.map GameMsg (Game.subscriptions model.host pages.game)
+                    Sub.map PlayLiveMsg (PlayLive.subscriptions model.host pages.game)
 
                 PlayTimeTrial ->
                     Sub.map PlayTimeTrialMsg (PlayTimeTrial.subscriptions model.host model.liveStatus pages.playTimeTrial)
@@ -176,7 +176,7 @@ mountRoute newRoute ({ pages, player, route, layout } as prevModel) =
                 applyEditTrack (EditTrack.mount id) model
 
             PlayTrack id ->
-                applyGame (Game.mount id) model
+                applyPlayLive (PlayLive.mount id) model
 
             ShowTimeTrial id ->
                 applyShowTimeTrial (ShowTimeTrial.mount id) model
@@ -215,8 +215,8 @@ pageUpdate pageMsg ({ pages, player, layout } as model) =
         EditTrackMsg a ->
             applyEditTrack (EditTrack.update layout.size a pages.editTrack) model
 
-        GameMsg a ->
-            applyGame (Game.update player model.host a pages.game) model
+        PlayLiveMsg a ->
+            applyPlayLive (PlayLive.update player model.host a pages.game) model
 
         ShowTimeTrialMsg a ->
             applyShowTimeTrial (ShowTimeTrial.update player a pages.showTimeTrial) model
@@ -254,8 +254,8 @@ applyEditTrack =
     applyPage (\s pages -> { pages | editTrack = s }) EditTrackMsg
 
 
-applyGame =
-    applyPage (\s pages -> { pages | game = s }) GameMsg
+applyPlayLive =
+    applyPage (\s pages -> { pages | game = s }) PlayLiveMsg
 
 
 applyShowTimeTrial =

@@ -1,4 +1,4 @@
-module Page.Game.Chat.Model exposing (..)
+module Page.PlayLive.Chat.Model exposing (..)
 
 import Model.Shared exposing (..)
 

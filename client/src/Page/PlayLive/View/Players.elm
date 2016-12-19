@@ -1,4 +1,4 @@
-module Page.Game.View.Players exposing (..)
+module Page.PlayLive.View.Players exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,7 +6,7 @@ import Html.Events exposing (..)
 import Date exposing (..)
 import Date.Format exposing (format)
 import Model.Shared exposing (..)
-import Page.Game.Model exposing (..)
+import Page.PlayLive.Model exposing (..)
 import View.Utils as Utils
 
 

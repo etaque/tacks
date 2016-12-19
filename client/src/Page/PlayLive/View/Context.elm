@@ -1,4 +1,4 @@
-module Page.Game.View.Context exposing (..)
+module Page.PlayLive.View.Context exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,9 +6,9 @@ import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Game.Models exposing (GameState, Timers, isStarted, raceTime)
 import Game.Render.Context as GameContext
-import Page.Game.Model exposing (..)
-import Page.Game.View.Players as PlayersView
-import Page.Game.Chat.View as Chat
+import Page.PlayLive.Model exposing (..)
+import Page.PlayLive.View.Players as PlayersView
+import Page.PlayLive.Chat.View as Chat
 import View.Utils as Utils
 import Route exposing (..)
 import Game.Touch as Touch

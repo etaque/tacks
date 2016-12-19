@@ -1,10 +1,10 @@
-module Page.Game.Chat.View exposing (..)
+module Page.PlayLive.Chat.View exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
-import Page.Game.Chat.Model exposing (..)
+import Page.PlayLive.Chat.Model exposing (..)
 import View.Utils exposing (..)
 
 

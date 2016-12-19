@@ -1,4 +1,4 @@
-module Page.Game.Model exposing (..)
+module Page.PlayLive.Model exposing (..)
 
 import Time exposing (Time)
 import Dict exposing (Dict)
@@ -7,7 +7,7 @@ import Game.Models exposing (GameState)
 import Game.Inputs as Input
 import Game.Touch as Touch exposing (Touch)
 import Keyboard.Extra as Keyboard
-import Page.Game.Chat.Model as Chat
+import Page.PlayLive.Chat.Model as Chat
 import Window
 import Set
 

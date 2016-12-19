@@ -1,10 +1,10 @@
-module Page.Game.Decoders exposing (..)
+module Page.PlayLive.Decoders exposing (..)
 
 import Json.Decode as Json exposing (..)
 import Decoders exposing (..)
 import Game.Decoders exposing (..)
-import Page.Game.Model exposing (..)
-import Page.Game.Chat.Model as Chat
+import Page.PlayLive.Model exposing (..)
+import Page.PlayLive.Chat.Model as Chat
 
 
 decodeStringMsg : String -> Msg

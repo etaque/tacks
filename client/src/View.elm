@@ -8,7 +8,7 @@ import Page.Login.View as LoginPage
 import Page.Register.View as RegisterPage
 import Page.Explore.View as ExplorePage
 import Page.EditTrack.View as EditTrackPage
-import Page.Game.View as GamePage
+import Page.PlayLive.View as PlayLivePage
 import Page.ShowTimeTrial.View as ShowTimeTrialPage
 import Page.PlayTimeTrial.View as PlayTimeTrialPage
 import Page.ListDrafts.View as ListDraftsPage
@@ -41,7 +41,7 @@ view ({ pages, player, liveStatus, layout, transition, routeJump } as model) =
                 renderGame ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
 
             PlayTrack _ ->
-                renderGame ctx GameMsg (GamePage.view ctx pages.game)
+                renderGame ctx PlayLiveMsg (PlayLivePage.view ctx pages.game)
 
             ShowTimeTrial _ ->
                 renderSite ctx ShowTimeTrialMsg (ShowTimeTrialPage.view ctx pages.showTimeTrial)
@@ -69,7 +69,7 @@ pageTitle : Context -> Model -> String
 pageTitle ctx model =
     case model.route of
         PlayTrack _ ->
-            GamePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
+            PlayLivePage.pageTitle model.liveStatus model.pages.game ++ " - Tacks"
 
         PlayTimeTrial ->
             PlayTimeTrialPage.pageTitle ctx ++ " - Tacks"

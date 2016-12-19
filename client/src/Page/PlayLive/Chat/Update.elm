@@ -1,9 +1,9 @@
-module Page.Game.Chat.Update exposing (..)
+module Page.PlayLive.Chat.Update exposing (..)
 
 import String
 import Response exposing (..)
 import Update.Utils exposing (..)
-import Page.Game.Chat.Model exposing (..)
+import Page.PlayLive.Chat.Model exposing (..)
 import Game.Outputs as Output
 import Ports
 import Keyboard
