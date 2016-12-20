@@ -12,7 +12,6 @@ case class Arrows(x: Int, y: Int)
 case class KeyboardInput(
   tack: Boolean,
   arrows: Arrows,
-  subtleTurn: Boolean,
   lock: Boolean
 )
 
@@ -20,7 +19,6 @@ object KeyboardInput {
   val initial = KeyboardInput(
     tack = false,
     arrows = Arrows(0, 0),
-    subtleTurn = false,
     lock = false
   )
 }
@@ -40,7 +38,7 @@ case class PlayerState(
   time: Float,
   position: Point,
   isGrounded: Boolean,
-  isTurning: Boolean,
+  turning: Option[Double],
   heading: Double,
   velocity: Double,
   vmgValue: Double,
@@ -59,7 +57,7 @@ case class PlayerState(
 
 object PlayerState {
   def initial(player: Player) = PlayerState(
-    player, DateTime.now.getMillis.toFloat, (0,0), false, false, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
+    player, DateTime.now.getMillis.toFloat, (0,0), false, None, 0, 0, 0, 0, 0, 0, Vmg(0, 0, 0), Vmg(0, 0, 0), 0, Seq(),
     FixedHeading, None, Seq(), None)
 }
 

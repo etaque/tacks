@@ -1,9 +1,5 @@
 module Game.Utils exposing (..)
 
-import Maybe
-import List
-import Maybe.Extra as Maybe
-import List.Extra as List
 import Time exposing (Time)
 import Model.Shared exposing (Point, Segment)
 
@@ -16,6 +12,16 @@ toRadians deg =
 toDegrees : Float -> Float
 toDegrees rad =
     -rad * 180 / pi + 90
+
+
+sign : number -> number
+sign n =
+    if n == 0 then
+        n
+    else if n < 0 then
+        -1
+    else
+        1
 
 
 within : ( comparable, comparable ) -> comparable -> Bool

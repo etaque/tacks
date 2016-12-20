@@ -1,7 +1,7 @@
 module Page.EditTrack.FormUpdate exposing (..)
 
 import List.Extra as List
-import Game.Shared exposing (defaultGate)
+import Model.Shared exposing (..)
 import Game.Utils as Utils
 import Page.EditTrack.Model exposing (..)
 
@@ -73,3 +73,12 @@ update formMsg ({ course } as editor) =
 
             SetWindSimDuration d ->
                 { editor | windSimDuration = d }
+
+
+defaultGate : Gate
+defaultGate =
+    { label = Nothing
+    , center = ( 0, 0 )
+    , width = 100
+    , orientation = North
+    }

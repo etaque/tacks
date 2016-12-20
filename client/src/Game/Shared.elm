@@ -1,13 +1,10 @@
 module Game.Shared exposing (..)
 
 import Model.Shared exposing (..)
-import Game.Utils as Utils
 import Time exposing (..)
 import Dict exposing (Dict)
-import List.Extra as List
 import Keyboard.Extra as Keyboard
 import Game.Touch as Touch exposing (Touch)
-import Set
 
 
 markRadius : Float
@@ -161,7 +158,7 @@ type alias PlayerState =
     , time : Float
     , position : Point
     , isGrounded : Bool
-    , isTurning : Bool
+    , turning : Maybe Time
     , heading : Float
     , velocity : Float
     , vmgValue : Float
@@ -239,21 +236,6 @@ areaDims { rightTop, leftBottom } =
         ( r - l, t - b )
 
 
-
--- areaTop : RaceArea -> Float
--- areaTop { rightTop } =
---     Tuple.second rightTop
--- areaBottom : RaceArea -> Float
--- areaBottom { leftBottom } =
---     Tuple.second leftBottom
--- areaWidth : RaceArea -> Float
--- areaWidth =
---     areaDims >> Tuple.first
--- areaHeight : RaceArea -> Float
--- areaHeight =
---     areaDims >> Tuple.second
-
-
 upwind s =
     abs s.windAngle < 90
 
@@ -304,7 +286,7 @@ defaultPlayerState player time =
     , time = time
     , position = ( 0, 0 )
     , isGrounded = False
-    , isTurning = False
+    , turning = Nothing
     , heading = 0
     , velocity = 0
     , vmgValue = 0
@@ -319,15 +301,6 @@ defaultPlayerState player time =
     , tackTarget = Nothing
     , crossedGates = []
     , nextGate = Nothing
-    }
-
-
-defaultGate : Gate
-defaultGate =
-    { label = Nothing
-    , center = ( 0, 0 )
-    , width = 100
-    , orientation = North
     }
 
 
@@ -361,9 +334,7 @@ defaultGame time course player =
     , course = course
     , tallies = []
     , timers =
-        { serverTime =
-            time
-            -- , countdown = 0
+        { serverTime = time
         , startTime = Nothing
         , localTime = time
         , lastServerUpdate = time
@@ -386,16 +357,6 @@ getGateMarks { center, width, orientation } =
 
         West ->
             ( ( Tuple.first center, Tuple.second center + width / 2 ), ( Tuple.first center, Tuple.second center - width / 2 ) )
-
-
-findPlayerGhost : String -> List Ghost -> Maybe Ghost
-findPlayerGhost playerId ghosts =
-    List.find (\g -> g.id == playerId) ghosts
-
-
-findOpponent : List PlayerState -> String -> Maybe PlayerState
-findOpponent opponents id =
-    List.find (\ps -> ps.player.id == id) opponents
 
 
 raceTime : GameState -> Float

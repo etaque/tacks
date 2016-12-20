@@ -132,13 +132,6 @@ object JsonFormats {
   implicit val playerTallyFormat: Format[PlayerTally] = Json.format[PlayerTally]
 
   implicit val ghostStateFormat: Format[GhostState] = Json.format[GhostState]
-    // (
-    // (__ \ 'position).format[Point] and
-    //   (__ \ 'heading).format[Double] and
-    //   (__ \ 'id).format[BSONObjectID] and
-    //   (__ \ 'handle).format[Option[String]] and
-    //   (__ \ 'gates).format[Seq[Long]]
-    // )(Ghost.apply _, unlift(Ghost.unapply _))
 
   implicit val optionGateFormat = Format.optionWithNull[Gate]
 
@@ -147,7 +140,7 @@ object JsonFormats {
       (__ \ 'time).format[Float] and
       (__ \ 'position).format[Point] and
       (__ \ 'isGrounded).format[Boolean] and
-      (__ \ 'isTurning).format[Boolean] and
+      (__ \ 'isTurning).format[Option[Double]] and
       (__ \ 'heading).format[Double] and
       (__ \ 'velocity).format[Double] and
       (__ \ 'vmgValue).format[Double] and

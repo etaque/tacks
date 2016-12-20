@@ -17,7 +17,6 @@ type alias KeyboardInput =
     { arrows : UserArrows
     , lock : Bool
     , tack : Bool
-    , subtleTurn : Bool
     }
 
 
@@ -26,7 +25,6 @@ initialKeyboard =
     { arrows = { x = 0, y = 0 }
     , lock = False
     , tack = False
-    , subtleTurn = False
     }
 
 
@@ -50,10 +48,6 @@ manualTurn ki =
     ki.arrows.x /= 0
 
 
-isSubtleTurning ki =
-    manualTurn ki && ki.subtleTurn
-
-
 isLocking ki =
     ki.arrows.y > 0 || ki.lock
 
@@ -63,7 +57,6 @@ keyboardInput kb =
     { arrows = Keyboard.arrows kb
     , lock = Keyboard.isPressed Keyboard.ArrowUp kb
     , tack = Keyboard.isPressed Keyboard.Space kb
-    , subtleTurn = Keyboard.isPressed Keyboard.Shift kb
     }
 
 
@@ -72,7 +65,6 @@ touchInput touch =
     { arrows = { x = touch.turn, y = 0 }
     , lock = False
     , tack = False
-    , subtleTurn = touch.subtle
     }
 
 
@@ -81,5 +73,4 @@ merge k1 k2 =
     { arrows = { x = k1.arrows.x + k2.arrows.x, y = k1.arrows.y + k2.arrows.y }
     , lock = k1.lock || k2.lock
     , tack = k1.tack || k2.tack
-    , subtleTurn = k1.subtleTurn || k2.subtleTurn
     }

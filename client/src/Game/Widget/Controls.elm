@@ -22,13 +22,6 @@ view =
                 ]
                 [ Utils.mIcon "chevron_left" []
                 ]
-            , a
-                [ class "touch-subtle-left"
-                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.SubtleTurn -1))
-                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.SubtleTurn 0))
-                ]
-                [ Utils.mIcon "chevron_left" []
-                ]
             ]
         , div
             [ class "touch-panel-center" ]
@@ -39,13 +32,6 @@ view =
                 [ class "touch-right"
                 , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.Turn 1))
                 , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.Turn 0))
-                ]
-                [ Utils.mIcon "chevron_right" []
-                ]
-            , a
-                [ class "touch-subtle-right"
-                , TouchEvents.onTouchStart (\_ -> TouchMsg (Touch.SubtleTurn 1))
-                , TouchEvents.onTouchEnd (\_ -> TouchMsg (Touch.SubtleTurn 0))
                 ]
                 [ Utils.mIcon "chevron_right" []
                 ]
