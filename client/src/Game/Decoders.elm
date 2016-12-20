@@ -3,7 +3,7 @@ module Game.Decoders exposing (..)
 import Json.Decode as Json exposing (..)
 import Decoders exposing (..)
 import Game.Shared exposing (..)
-import Game.Inputs exposing (RaceInput)
+import Game.Input exposing (RaceInput)
 
 
 raceInputDecoder : Decoder RaceInput

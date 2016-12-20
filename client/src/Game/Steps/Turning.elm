@@ -1,6 +1,6 @@
 module Game.Steps.Turning exposing (..)
 
-import Game.Inputs exposing (..)
+import Game.Input exposing (..)
 import Game.Shared exposing (..)
 import Game.Utils exposing (..)
 

@@ -1,4 +1,4 @@
-module Game.Inputs exposing (..)
+module Game.Input exposing (..)
 
 import Time exposing (Time)
 import Game.Shared exposing (..)

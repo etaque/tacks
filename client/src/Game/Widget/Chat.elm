@@ -1,4 +1,4 @@
-module Game.Render.Chat exposing (..)
+module Game.Widget.Chat exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)

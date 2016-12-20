@@ -1,4 +1,4 @@
-module Page.PlayLive.View.Players exposing (..)
+module Game.Widget.LivePlayers exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
@@ -6,12 +6,11 @@ import Html.Events exposing (..)
 import Date exposing (..)
 import Date.Format exposing (format)
 import Model.Shared exposing (..)
-import Page.PlayLive.Model exposing (..)
 import View.Utils as Utils
 
 
-block : Model -> Html Msg
-block { races, freePlayers } =
+view : List Race -> List Player -> Html msg
+view races freePlayers =
     div
         [ class "aside-module module-players" ]
         [ if (List.isEmpty freePlayers) then
@@ -22,7 +21,7 @@ block { races, freePlayers } =
         ]
 
 
-racesBlock : List Race -> Html Msg
+racesBlock : List Race -> Html msg
 racesBlock races =
     let
         isActive r =
@@ -34,7 +33,7 @@ racesBlock races =
         div [ class "list-races" ] (List.map raceItem activeRaces)
 
 
-raceItem : Race -> Html Msg
+raceItem : Race -> Html msg
 raceItem { startTime, tallies } =
     let
         formatted =
@@ -48,7 +47,7 @@ raceItem { startTime, tallies } =
             ]
 
 
-tallyItem : Int -> PlayerTally -> Html Msg
+tallyItem : Int -> PlayerTally -> Html msg
 tallyItem i { player, gates, finished } =
     let
         rank =
@@ -72,7 +71,7 @@ tallyItem i { player, gates, finished } =
             ]
 
 
-freePlayersBlock : List Player -> Html Msg
+freePlayersBlock : List Player -> Html msg
 freePlayersBlock players =
     div
         [ class "free-players" ]
@@ -80,7 +79,7 @@ freePlayersBlock players =
         ]
 
 
-freePlayerItem : Player -> Html Msg
+freePlayerItem : Player -> Html msg
 freePlayerItem player =
     li
         [ class "player" ]

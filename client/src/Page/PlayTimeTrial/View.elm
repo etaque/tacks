@@ -8,7 +8,9 @@ import Model.Shared exposing (..)
 import Page.PlayTimeTrial.Model exposing (..)
 import Game.Shared exposing (GameState, Timers, isStarted, raceTime)
 import Game.Msg exposing (..)
-import Game.Render.Context as GameContext
+import Game.Widget.Timer as Timer
+import Game.Widget.Help as Help
+import Game.Widget.Rankings as Rankings
 import View.Layout as Layout
 import View.HexBg as HexBg
 import View.Utils as Utils
@@ -33,7 +35,7 @@ view { layout, liveStatus } model =
         ( Just liveTimeTrial, Just gameState ) ->
             Layout.Game
                 "play-time-trial"
-                (toolbar model liveTimeTrial gameState)
+                (appbar model liveTimeTrial gameState)
                 (sidebar model liveTimeTrial gameState)
                 [ render ( layout.size.width, layout.size.height - appbarHeight ) gameState
                 ]
@@ -46,8 +48,8 @@ view { layout, liveStatus } model =
                 [ Html.Lazy.lazy HexBg.render layout.size ]
 
 
-toolbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
-toolbar model { track } gameState =
+appbar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
+appbar model { track } gameState =
     [ div
         [ class "appbar-left" ]
         [ Utils.linkTo
@@ -60,25 +62,22 @@ toolbar model { track } gameState =
         ]
     , div
         [ class "appbar-center" ]
-        (GameContext.raceStatus gameState (GameMsg StartRace) (GameMsg ExitRace))
+        [ Html.map GameMsg (Timer.view gameState) ]
     , div [ class "appbar-right" ] []
     ]
 
 
 sidebar : Model -> LiveTimeTrial -> GameState -> List (Html Msg)
 sidebar model liveTimeTrial gameState =
-    (tabs model.tab)
+    tabs model.tab
         :: case model.tab of
             RankingsTab ->
-                [ GameContext.rankingsBlock
-                    model.ghostRuns
-                    (\r -> GameMsg (AddGhost r.runId r.player))
-                    (\r -> GameMsg (RemoveGhost r.runId))
-                    liveTimeTrial.meta
+                [ Html.map GameMsg
+                    (Rankings.view model.ghostRuns liveTimeTrial.meta)
                 ]
 
             HelpTab ->
-                [ GameContext.helpBlock ]
+                [ Help.view ]
 
 
 tabs : Tab -> Html Msg

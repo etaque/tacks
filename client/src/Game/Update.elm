@@ -3,8 +3,8 @@ module Game.Update exposing (..)
 import Game.Msg exposing (..)
 import Game.Shared exposing (..)
 import Game.Steps as Steps
-import Game.Outputs as Output
-import Game.Inputs as Input
+import Game.Output as Output
+import Game.Input as Input
 import Ports
 import Response exposing (..)
 import Model.Shared exposing (..)

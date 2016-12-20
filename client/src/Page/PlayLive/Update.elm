@@ -10,7 +10,7 @@ import Page.PlayLive.Decoders as Decoders
 import ServerApi
 import Game.Shared exposing (defaultGame, GameState)
 import Game.Update as Game
-import Game.Outputs as Output
+import Game.Output as Output
 import Task
 import WebSocket
 import Http

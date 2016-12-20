@@ -1,4 +1,4 @@
-module Game.Outputs exposing (..)
+module Game.Output exposing (..)
 
 import Json.Encode as Js
 import Encoders exposing (tag)

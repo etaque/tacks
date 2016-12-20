@@ -2,7 +2,7 @@ module Game.Steps exposing (..)
 
 import Time exposing (Time)
 import Model.Shared exposing (..)
-import Game.Inputs as Input
+import Game.Input as Input
 import Game.Shared exposing (..)
 import Game.Utils as Utils
 import Constants

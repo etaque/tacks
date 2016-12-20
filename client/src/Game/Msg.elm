@@ -3,7 +3,7 @@ module Game.Msg exposing (..)
 import Model.Shared exposing (..)
 import Time exposing (Time)
 import Window
-import Game.Inputs as Input
+import Game.Input as Input
 import Game.Touch as Touch exposing (Touch)
 import Keyboard.Extra as Keyboard
 
