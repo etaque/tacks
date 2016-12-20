@@ -2,7 +2,6 @@ module Game.Update exposing (..)
 
 import Game.Msg exposing (..)
 import Game.Shared exposing (..)
-import Game.Steps as Steps
 import Game.Output as Output
 import Game.Input as Input
 import Ports
@@ -13,6 +12,7 @@ import Window
 import AnimationFrame
 import Keyboard.Extra as Keyboard
 import Game.Touch as Touch
+import Game.Steps as Steps
 import Keyboard
 import Task
 
@@ -52,14 +52,9 @@ update player toServerCmd msg model =
             res { model | dims = ( size.width, size.height ) } Cmd.none
 
         RaceUpdate raceInput ->
-            case model.gameState of
-                Just gameState ->
-                    res
-                        { model | gameState = Just (Steps.raceInputStep raceInput gameState) }
-                        Cmd.none
-
-                Nothing ->
-                    res model Cmd.none
+            res
+                { model | gameState = Maybe.map (updateRaceInput raceInput) model.gameState }
+                Cmd.none
 
         Frame time ->
             model.gameState
@@ -105,7 +100,7 @@ updateFrame time toServerCmd model gameState =
                 model.dims
 
         newGameState =
-            Steps.frameStep gameInput time gameState
+            Steps.run gameInput time gameState
 
         serverCmd =
             toServerCmd (Output.UpdatePlayer (Output.playerOutput gameState))
@@ -114,6 +109,25 @@ updateFrame time toServerCmd model gameState =
             res { model | gameState = Just newGameState, lastPush = time } serverCmd
         else
             res { model | gameState = Just newGameState } Cmd.none
+
+
+updateRaceInput : Input.RaceInput -> GameState -> GameState
+updateRaceInput input ({ playerState, timers } as gameState) =
+    let
+        newTimers =
+            { timers
+                | serverTime = input.serverTime
+                , startTime = input.startTime
+                , lastServerUpdate = timers.localTime
+            }
+    in
+        { gameState
+            | opponents = input.opponents
+            , ghosts = input.ghosts
+            , wind = input.wind
+            , tallies = input.tallies
+            , timers = newTimers
+        }
 
 
 updateChat : (Output.ServerMsg -> Cmd GameMsg) -> ChatMsg -> Chat -> Response Chat GameMsg
