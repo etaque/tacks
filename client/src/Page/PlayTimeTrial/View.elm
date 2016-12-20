@@ -7,6 +7,7 @@ import Html.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.PlayTimeTrial.Model exposing (..)
 import Game.Shared exposing (GameState, Timers, isStarted, raceTime)
+import Game.Msg exposing (..)
 import Game.Render.Context as GameContext
 import View.Layout as Layout
 import View.HexBg as HexBg
@@ -59,7 +60,7 @@ toolbar model { track } gameState =
         ]
     , div
         [ class "appbar-center" ]
-        (GameContext.raceStatus gameState StartRace ExitRace)
+        (GameContext.raceStatus gameState (GameMsg StartRace) (GameMsg ExitRace))
     , div [ class "appbar-right" ] []
     ]
 
@@ -71,8 +72,8 @@ sidebar model liveTimeTrial gameState =
             RankingsTab ->
                 [ GameContext.rankingsBlock
                     model.ghostRuns
-                    (\r -> AddGhost r.runId r.player)
-                    (\r -> RemoveGhost r.runId)
+                    (\r -> GameMsg (AddGhost r.runId r.player))
+                    (\r -> GameMsg (RemoveGhost r.runId))
                     liveTimeTrial.meta
                 ]
 

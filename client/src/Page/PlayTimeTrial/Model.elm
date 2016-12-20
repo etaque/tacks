@@ -3,24 +3,16 @@ module Page.PlayTimeTrial.Model exposing (..)
 import Time exposing (Time)
 import Dict exposing (Dict)
 import Model.Shared exposing (..)
-import Game.Shared exposing (GameState, WithGameControl)
-import Game.Inputs as Input
+import Game.Shared exposing (GameState, WithGame)
+import Game.Msg exposing (GameMsg)
 import Game.Touch as Touch exposing (Touch)
 import Keyboard.Extra as Keyboard
-import Window
 import Set
 
 
 type alias Model =
-    WithGameControl
-        { gameState : Maybe GameState
-        , lastPush : Time
-        , keyboard : Keyboard.Model
-        , touch : Touch
-        , dims : ( Int, Int )
-        , tab : Tab
-        , live : Bool
-        , ghostRuns : Dict String Player
+    WithGame
+        { tab : Tab
         }
 
 
@@ -39,20 +31,13 @@ initial =
     , tab = RankingsTab
     , live = False
     , ghostRuns = Dict.empty
+    , chat = Game.Shared.initialChat
     }
 
 
 type Msg
     = LoadCourse (HttpResult Course)
     | InitGameState Course Time
-    | KeyboardMsg Keyboard.Msg
-    | TouchMsg Touch.Msg
-    | WindowSize Window.Size
-    | RaceUpdate Input.RaceInput
-    | Frame Time
     | SetTab Tab
-    | StartRace
-    | ExitRace
-    | AddGhost String Player
-    | RemoveGhost String
+    | GameMsg GameMsg
     | NoOp

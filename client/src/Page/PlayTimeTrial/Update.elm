@@ -2,23 +2,18 @@ module Page.PlayTimeTrial.Update exposing (..)
 
 import Time exposing (millisecond, second)
 import Time exposing (Time)
-import Dict exposing (Dict)
 import Result exposing (Result(Ok, Err))
 import Response exposing (..)
 import Model.Shared exposing (..)
-import Page.PlayTimeTrial.Model exposing (..)
+import Page.PlayTimeTrial.Model as Model exposing (..)
 import Page.PlayTimeTrial.Decoders as Decoders
 import ServerApi
 import Game.Shared exposing (defaultGame, GameState)
-import Game.Steps as Steps
+import Game.Update as Game
 import Game.Outputs as Output
-import Game.Inputs as Input
+import Game.Msg exposing (..)
 import Task exposing (Task)
 import WebSocket
-import AnimationFrame
-import Keyboard.Extra as Keyboard
-import Game.Touch as Touch
-import Window
 import Http
 import List.Extra as ListExtra
 
@@ -31,9 +26,7 @@ subscriptions host liveStatus model =
                 [ WebSocket.listen
                     (ServerApi.timeTrialSocket host)
                     Decoders.decodeStringMsg
-                , AnimationFrame.times Frame
-                , Sub.map KeyboardMsg Keyboard.subscriptions
-                , Window.resizes WindowSize
+                , Sub.map GameMsg (Game.subscriptions model)
                 ]
 
         _ ->
@@ -44,7 +37,7 @@ mount : LiveStatus -> Response Model Msg
 mount liveStatus =
     case liveStatus.liveTimeTrial of
         Just ltt ->
-            Cmd.batch [ loadCourse ltt, Task.perform WindowSize Window.size ]
+            Cmd.batch [ loadCourse ltt, Cmd.map GameMsg Game.mount ]
                 |> res initial
 
         Nothing ->
@@ -81,97 +74,14 @@ update liveStatus player host msg model =
             in
                 res newModel (Cmd.batch [ startCmd, ghostsCmd ])
 
-        KeyboardMsg keyboardMsg ->
-            let
-                ( newKeyboard, keyboardCmd ) =
-                    Keyboard.update keyboardMsg model.keyboard
-            in
-                res { model | keyboard = newKeyboard } (Cmd.map KeyboardMsg keyboardCmd)
-
-        TouchMsg touchMsg ->
-            res { model | touch = Touch.update touchMsg model.touch } Cmd.none
-
-        WindowSize size ->
-            res { model | dims = ( size.width, size.height ) } Cmd.none
-
-        RaceUpdate raceInput ->
-            case model.gameState of
-                Just gameState ->
-                    res
-                        { model | gameState = Just (Steps.raceInputStep raceInput gameState) }
-                        Cmd.none
-
-                Nothing ->
-                    res model Cmd.none
-
-        Frame time ->
-            case model.gameState of
-                Just gameState ->
-                    let
-                        keyboardInput =
-                            Input.merge (Input.keyboardInput model.keyboard) (Input.touchInput model.touch)
-
-                        gameInput =
-                            Input.GameInput
-                                keyboardInput
-                                model.dims
-
-                        newGameState =
-                            Steps.frameStep gameInput time gameState
-
-                        serverCmd =
-                            Output.sendToTimeTrialServer
-                                host
-                                (Output.UpdatePlayer (Output.playerOutput gameState))
-                    in
-                        if time - model.lastPush > 33 then
-                            res { model | gameState = Just newGameState, lastPush = time } serverCmd
-                        else
-                            res { model | gameState = Just newGameState } Cmd.none
-
-                Nothing ->
-                    res model Cmd.none
+        GameMsg gameMsg ->
+            Game.update player (Output.sendToTimeTrialServer host) gameMsg model
+                |> mapCmd GameMsg
 
         SetTab tab ->
             res { model | tab = tab } Cmd.none
 
-        StartRace ->
-            let
-                start =
-                    Output.sendToTimeTrialServer host Output.StartRace
-            in
-                res model start
-
-        ExitRace ->
-            let
-                -- newModel =
-                --   { model | gameState = Maybe.map clearCrossedGates model.gameState }
-                escape =
-                    Output.sendToTimeTrialServer host Output.EscapeRace
-            in
-                res model escape
-
-        AddGhost runId player ->
-            let
-                newGhostRuns =
-                    Dict.insert runId player model.ghostRuns
-
-                cmd =
-                    Output.sendToTimeTrialServer host (Output.AddGhost runId player)
-            in
-                res { model | ghostRuns = newGhostRuns } cmd
-
-        RemoveGhost runId ->
-            let
-                newGhostRuns =
-                    Dict.remove runId model.ghostRuns
-
-                cmd =
-                    Output.sendToTimeTrialServer host (Output.RemoveGhost runId)
-            in
-                res { model | ghostRuns = newGhostRuns } cmd
-
-        NoOp ->
+        Model.NoOp ->
             res model Cmd.none
 
 
@@ -217,3 +127,4 @@ electGhosts player { meta } =
             |> List.map (\r -> AddGhost r.runId r.player)
             |> List.map (Task.succeed >> (Task.perform identity))
             |> Cmd.batch
+            |> Cmd.map GameMsg

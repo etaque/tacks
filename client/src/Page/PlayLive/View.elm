@@ -5,11 +5,11 @@ import Html.Lazy
 import Html.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.PlayLive.Model exposing (..)
-import Page.PlayLive.Chat.View as Chat
 import Page.PlayLive.View.Context as Context
-import Page.PlayLive.View.Context as Context
+import Game.Msg exposing (GameMsg(ChatMsg))
 import View.Layout as Layout
 import View.HexBg as HexBg
+import Game.Render.Chat as Chat
 import Game.Render.All exposing (render)
 import Constants
 
@@ -38,7 +38,7 @@ view { layout } model =
                 (Context.appbar model liveTrack gameState)
                 (Context.sidebar model liveTrack gameState)
                 [ render ( layout.size.width, layout.size.height - Constants.appbarHeight ) gameState
-                , Html.map ChatMsg (Chat.inputField model.chat)
+                , Html.map (GameMsg << ChatMsg) (Chat.inputField model.chat)
                   -- , Context.touch model liveTrack gameState
                 ]
 

@@ -3,6 +3,7 @@ module Page.PlayTimeTrial.Decoders exposing (..)
 import Json.Decode as Json exposing (..)
 import Game.Decoders exposing (..)
 import Page.PlayTimeTrial.Model exposing (..)
+import Game.Msg exposing (GameMsg(..))
 
 
 decodeStringMsg : String -> Msg
@@ -34,7 +35,7 @@ specificMsgDecoder tag =
             succeed NoOp
 
         "RaceUpdate" ->
-            map RaceUpdate (field "raceUpdate" raceInputDecoder)
+            map (GameMsg << RaceUpdate) (field "raceUpdate" raceInputDecoder)
 
         _ ->
             fail <| tag ++ " is not a recognized tag for msgs"

@@ -6,9 +6,10 @@ import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Game.Shared exposing (GameState, Timers, isStarted, raceTime)
 import Game.Render.Context as GameContext
+import Game.Msg exposing (..)
+import Game.Render.Chat as Chat
 import Page.PlayLive.Model exposing (..)
 import Page.PlayLive.View.Players as PlayersView
-import Page.PlayLive.Chat.View as Chat
 import View.Utils as Utils
 import Route exposing (..)
 import Game.Touch as Touch
@@ -37,7 +38,7 @@ appbar model { track } gameState =
         ]
     , div
         [ class "appbar-center" ]
-        (GameContext.raceStatus gameState StartRace ExitRace)
+        (GameContext.raceStatus gameState (GameMsg StartRace) (GameMsg ExitRace))
     , div [ class "appbar-right" ] []
     ]
 
@@ -88,14 +89,14 @@ liveBlocks gameState model liveTrack =
 
             LiveTab ->
                 [ PlayersView.block model
-                , Html.map ChatMsg (Chat.messages model.chat)
+                , Html.map (GameMsg << ChatMsg) (Chat.messages model.chat)
                 ]
 
             RankingsTab ->
                 [ GameContext.rankingsBlock
                     model.ghostRuns
-                    (\r -> AddGhost r.runId r.player)
-                    (\r -> RemoveGhost r.runId)
+                    (\r -> GameMsg (AddGhost r.runId r.player))
+                    (\r -> GameMsg (RemoveGhost r.runId))
                     liveTrack.meta
                 ]
 
@@ -124,7 +125,7 @@ tabs { tab } =
             ((==) tab)
 
 
-touch : Model -> LiveTrack -> GameState -> Html Msg
+touch : Model -> LiveTrack -> GameState -> Html GameMsg
 touch model liveTrack gameState =
     div
         [ class "touch-commands" ]

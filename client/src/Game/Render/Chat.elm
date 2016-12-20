@@ -1,18 +1,19 @@
-module Page.PlayLive.Chat.View exposing (..)
+module Game.Render.Chat exposing (..)
 
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
-import Page.PlayLive.Chat.Model exposing (..)
 import View.Utils exposing (..)
+import Game.Shared exposing (..)
+import Game.Msg exposing (..)
 
 
-messages : Model -> Html Msg
+messages : Chat -> Html ChatMsg
 messages model =
     div
         [ class "chat-messages"
-        , id messagesId
+        , id chatMessagesId
         ]
         [ ul
             [ class "list-unstyled" ]
@@ -20,7 +21,7 @@ messages model =
         ]
 
 
-messageItem : Message -> Html Msg
+messageItem : Message -> Html ChatMsg
 messageItem { player, content, time } =
     li
         []
@@ -33,18 +34,18 @@ messageItem { player, content, time } =
         ]
 
 
-inputField : Model -> Html Msg
+inputField : Chat -> Html ChatMsg
 inputField { field } =
     div
         [ class "chat-input" ]
         [ input
             [ type_ "text"
-            , id fieldId
+            , id chatFieldId
             , value field
             , placeholder "press Enter to chat"
             , onInput UpdateField
-            , onFocus (Enter False)
-            , onBlur (Exit False)
+            , onFocus (EnterChat False)
+            , onBlur (ExitChat False)
             ]
             []
         ]

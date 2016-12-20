@@ -3,8 +3,8 @@ module Page.PlayLive.Decoders exposing (..)
 import Json.Decode as Json exposing (..)
 import Decoders exposing (..)
 import Game.Decoders exposing (..)
+import Game.Msg exposing (GameMsg(..), ChatMsg(AddMessage))
 import Page.PlayLive.Model exposing (..)
-import Page.PlayLive.Chat.Model as Chat
 
 
 decodeStringMsg : String -> Msg
@@ -32,17 +32,14 @@ msgDecoder =
 specificMsgDecoder : String -> Decoder Msg
 specificMsgDecoder tag =
     case tag of
-        "NoOp" ->
-            succeed NoOp
-
         "RaceUpdate" ->
-            map RaceUpdate (field "raceUpdate" raceInputDecoder)
+            map (GameMsg << RaceUpdate) (field "raceUpdate" raceInputDecoder)
 
         "LiveTrack" ->
             map UpdateLiveTrack (field "liveTrack" liveTrackDecoder)
 
         "Message" ->
-            map (ChatMsg << Chat.AddMessage) (field "message" messageDecoder)
+            map (GameMsg << ChatMsg << AddMessage) (field "message" messageDecoder)
 
         _ ->
             fail <| tag ++ " is not a recognized tag for msgs"
