@@ -23,11 +23,6 @@ within ( a, b ) c =
     c >= a && c <= b
 
 
-lift : Int -> List a -> Maybe a
-lift n items =
-    List.drop n items |> List.head
-
-
 floatRange : Int -> Int -> List Float
 floatRange from to =
     List.map toFloat (List.range from to)

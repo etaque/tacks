@@ -1,21 +1,6 @@
 module Game.Steps.Util exposing (..)
 
 
-knFactor : Float
-knFactor =
-    1.852
-
-
-mpsToKn : Float -> Float
-mpsToKn mps =
-    mps / knFactor / 1000 * 3600
-
-
-knToMps : Float -> Float
-knToMps knot =
-    knot * knFactor * 1000 / 3600
-
-
 polarSpeed : Float -> Float -> Float
 polarSpeed windSpeed windAngle =
     let
