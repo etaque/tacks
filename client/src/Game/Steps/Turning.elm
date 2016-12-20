@@ -142,10 +142,10 @@ getTurnCoeff x elapsed maybePrevTurnCoeff =
                         if x == 0 then
                             Utils.sign -prevTurnCoeff
                         else
-                            toFloat x
+                            x
 
                     newCoeff =
-                        prevTurnCoeff + (sense * elapsed * turnCoeffAccel)
+                        prevTurnCoeff + (toFloat sense * elapsed * turnCoeffAccel)
                 in
                     if Utils.sign newCoeff == Utils.sign prevTurnCoeff then
                         Just newCoeff

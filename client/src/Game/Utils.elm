@@ -14,7 +14,7 @@ toDegrees rad =
     -rad * 180 / pi + 90
 
 
-sign : number -> number
+sign : number -> Int
 sign n =
     if n == 0 then
         n

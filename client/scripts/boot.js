@@ -61,5 +61,16 @@ document.addEventListener('trix-change', (event) => {
   event.target.inputElement.dispatchEvent(new Event('input', { bubbles: true }));
 });
 
+// if(window.DeviceOrientationEvent) {
+//   window.addEventListener('deviceorientation', function(event) {
+//     // alpha : compas
+//     // beta : avant/arrière
+//     // gamma : gauche/droite
+//     if (event.alpha && event.beta && event.gamma) {
+//       app.ports.deviceOrientation.send(event);
+//     }
+//   }, true);
+// }
+
 // hide ui on mobile
 window.scrollTo(0,1);

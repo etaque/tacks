@@ -24,6 +24,7 @@ subscriptions model =
         , Sub.map KeyboardMsg Keyboard.subscriptions
         , Window.resizes WindowSize
         , Sub.map ChatMsg (Keyboard.downs (keyCodeToMsg model.chat))
+        , Ports.deviceOrientation (TouchMsg << Touch.Orientation)
         ]
 
 
