@@ -4,10 +4,7 @@ import Time exposing (Time)
 import Dict exposing (Dict)
 import Model.Shared exposing (..)
 import Game.Shared exposing (GameState, WithGame)
-import Game.Touch as Touch exposing (Touch)
 import Game.Msg exposing (GameMsg)
-import Keyboard.Extra as Keyboard
-import Set
 
 
 type alias Model =
@@ -34,8 +31,7 @@ initial =
     , freePlayers = []
     , gameState = Nothing
     , lastPush = 0
-    , keyboard = Keyboard.Model Set.empty
-    , touch = Touch.initial
+    , direction = ( False, False )
     , dims = ( 1, 1 )
     , live = False
     , ghostRuns = Dict.empty

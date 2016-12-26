@@ -15,6 +15,7 @@ import Game.Widget.Help as Help
 import Game.Widget.Rankings as Rankings
 import Game.Widget.LivePlayers as LivePlayers
 import Game.Widget.Chat as Chat
+import Game.Widget.Controls as Controls
 import Constants
 import Game.Shared exposing (GameState)
 import View.Utils as Utils
@@ -46,7 +47,7 @@ view { layout } model =
                 (sidebar model liveTrack gameState)
                 [ render ( layout.size.width, layout.size.height - Constants.appbarHeight ) gameState
                 , Html.map (GameMsg << ChatMsg) (Chat.inputField model.chat)
-                  -- , Context.touch model liveTrack gameState
+                , Html.map GameMsg Controls.view
                 ]
 
         _ ->

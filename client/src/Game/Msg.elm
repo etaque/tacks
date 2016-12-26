@@ -1,24 +1,26 @@
 module Game.Msg exposing (..)
 
 import Model.Shared exposing (..)
+import Game.Shared exposing (RaceInput)
 import Time exposing (Time)
 import Window
-import Game.Input as Input
-import Game.Touch as Touch exposing (Touch)
-import Keyboard.Extra as Keyboard
 
 
 type GameMsg
-    = KeyboardMsg Keyboard.Msg
-    | TouchMsg Touch.Msg
+    = Left Bool
+    | Right Bool
     | WindowSize Window.Size
-    | RaceUpdate Input.RaceInput
+    | RaceUpdate RaceInput
     | Frame Time
+    | Tack
+    | AutoVmg
+    | LockWindAngle
     | StartRace
     | ExitRace
     | AddGhost String Player
     | RemoveGhost String
     | ChatMsg ChatMsg
+    | GameNoOp
 
 
 type ChatMsg
@@ -27,4 +29,3 @@ type ChatMsg
     | ExitChat Bool
     | UpdateField String
     | SubmitMessage
-    | NoOp

@@ -1,25 +1,21 @@
 module Game.Steps.Turning exposing (..)
 
-import Game.Input exposing (..)
 import Game.Shared exposing (..)
 import Game.Utils as Utils
 import Maybe.Extra as Maybe
 
 
-turningStep : Float -> KeyboardInput -> PlayerState -> PlayerState
-turningStep elapsed input state =
+turningStep : Float -> Int -> PlayerState -> PlayerState
+turningStep elapsed direction state =
     let
-        lock =
-            input.lock || input.arrows.y > 0
-
         targetReached =
             tackTargetReached state
 
         tackTarget =
-            getTackTarget state input targetReached
+            Maybe.filter (\_ -> not targetReached) state.tackTarget
 
         turn =
-            getTurn tackTarget state input elapsed
+            getTurn tackTarget state elapsed
 
         heading =
             Utils.ensure360 (state.heading + turn)
@@ -28,15 +24,15 @@ turningStep elapsed input state =
             Utils.angleDelta heading state.windOrigin
 
         newControlMode =
-            if manualTurn input then
+            if direction /= 0 then
                 FixedHeading
-            else if lock || targetReached then
+            else if targetReached then
                 FixedAngle
             else
                 state.controlMode
 
         turning =
-            getTurnCoeff input.arrows.x elapsed state.turning
+            getTurnCoeff direction elapsed state.turning
     in
         { state
             | heading = heading
@@ -53,39 +49,8 @@ tackTargetReached state =
         |> Maybe.withDefault False
 
 
-getTackTarget : PlayerState -> KeyboardInput -> Bool -> Maybe Float
-getTackTarget state input targetReached =
-    if manualTurn input then
-        -- a manual turn means no tack
-        Nothing
-    else
-        -- no manual turn => any previous tack in progress?
-        case state.tackTarget of
-            Just _ ->
-                -- yes => check target
-                if targetReached then
-                    Nothing
-                else
-                    state.tackTarget
-
-            Nothing ->
-                -- no => maybe player triggered one
-                if input.tack then
-                    Just -state.windAngle
-                else
-                    autoVmgTarget state input
-
-
-autoVmgTarget : PlayerState -> KeyboardInput -> Maybe Float
-autoVmgTarget state input =
-    if input.arrows.y == -1 then
-        Just (windAngleOnVmg state)
-    else
-        Nothing
-
-
-getTurn : Maybe Float -> PlayerState -> KeyboardInput -> Float -> Float
-getTurn tackTarget state input elapsed =
+getTurn : Maybe Float -> PlayerState -> Float -> Float
+getTurn tackTarget state elapsed =
     case state.turning of
         Just turnCoeff ->
             elapsed * turnCoeff

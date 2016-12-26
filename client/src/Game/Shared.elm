@@ -3,8 +3,6 @@ module Game.Shared exposing (..)
 import Model.Shared exposing (..)
 import Time exposing (..)
 import Dict exposing (Dict)
-import Keyboard.Extra as Keyboard
-import Game.Touch as Touch exposing (Touch)
 
 
 markRadius : Float
@@ -36,8 +34,7 @@ type alias WithGame a =
     { a
         | gameState : Maybe GameState
         , lastPush : Time
-        , keyboard : Keyboard.Model
-        , touch : Touch
+        , direction : ( Bool, Bool )
         , dims : ( Int, Int )
         , live : Bool
         , ghostRuns : Dict String Player
@@ -91,6 +88,18 @@ type alias Timers =
     , startTime : Maybe Time
     , localTime : Time
     , lastServerUpdate : Time
+    }
+
+
+type alias RaceInput =
+    { serverTime : Time
+    , startTime : Maybe Time
+    , wind : Wind
+    , opponents : List Opponent
+    , ghosts : List Ghost
+    , tallies : List PlayerTally
+    , initial : Bool
+    , clientTime : Time
     }
 
 

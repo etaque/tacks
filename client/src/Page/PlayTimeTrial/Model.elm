@@ -5,9 +5,6 @@ import Dict exposing (Dict)
 import Model.Shared exposing (..)
 import Game.Shared exposing (GameState, WithGame)
 import Game.Msg exposing (GameMsg)
-import Game.Touch as Touch exposing (Touch)
-import Keyboard.Extra as Keyboard
-import Set
 
 
 type alias Model =
@@ -25,8 +22,7 @@ initial : Model
 initial =
     { gameState = Nothing
     , lastPush = 0
-    , keyboard = Keyboard.Model Set.empty
-    , touch = Touch.initial
+    , direction = ( False, False )
     , dims = ( 1, 1 )
     , tab = RankingsTab
     , live = False

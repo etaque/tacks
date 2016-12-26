@@ -2,9 +2,7 @@ module Game.Steps exposing (..)
 
 import Time exposing (Time)
 import Model.Shared exposing (..)
-import Game.Input as Input
 import Game.Shared exposing (..)
-import Constants
 import Game.Steps.GateCrossing exposing (gateCrossingStep)
 import Game.Steps.Moving as Moving
 import Game.Steps.Turning exposing (turningStep)
@@ -15,20 +13,36 @@ import Game.Steps.Gusts exposing (gustsStep)
 import Game.Steps.Viewport exposing (viewportStep)
 
 
-run : Input.GameInput -> Time -> GameState -> GameState
-run { keyboard, dims } time ({ timers } as gameState) =
+setTack : GameState -> GameState
+setTack ({ playerState } as gameState) =
     let
-        keyboardInputWithFocus =
-            if gameState.chatting then
-                Input.initialKeyboard
-            else
-                keyboard
+        newPlayerState =
+            { playerState | tackTarget = Just -playerState.windAngle }
+    in
+        { gameState | playerState = newPlayerState }
 
-        gameDims =
-            ( Tuple.first dims - Constants.sidebarWidth
-            , Tuple.second dims
-            )
 
+setAutoVmg : GameState -> GameState
+setAutoVmg ({ playerState } as gameState) =
+    let
+        newPlayerState =
+            { playerState | tackTarget = Just (windAngleOnVmg playerState) }
+    in
+        { gameState | playerState = newPlayerState }
+
+
+lockWindAngle : GameState -> GameState
+lockWindAngle ({ playerState } as gameState) =
+    let
+        newPlayerState =
+            { playerState | controlMode = FixedAngle }
+    in
+        { gameState | playerState = newPlayerState }
+
+
+run : Dims -> Int -> Time -> GameState -> GameState
+run dims direction time ({ timers } as gameState) =
+    let
         clientDelta =
             time - gameState.timers.localTime
 
@@ -43,10 +57,10 @@ run { keyboard, dims } time ({ timers } as gameState) =
     in
         { gameState | timers = newTimers }
             |> gustsStep
-            |> playerStep keyboardInputWithFocus clientDelta
+            |> playerStep direction clientDelta
             |> opponentsStep serverDelta
             |> windHistoryStep
-            |> viewportStep gameState.playerState.position gameDims
+            |> viewportStep gameState.playerState.position dims
 
 
 opponentsStep : Time -> GameState -> GameState
@@ -58,11 +72,11 @@ opponentsStep elapsed gameState =
         { gameState | opponents = newOpponents }
 
 
-playerStep : Input.KeyboardInput -> Float -> GameState -> GameState
-playerStep keyboardInput elapsed gameState =
+playerStep : Int -> Float -> GameState -> GameState
+playerStep direction elapsed gameState =
     let
         playerState =
-            turningStep elapsed keyboardInput gameState.playerState
+            turningStep elapsed direction gameState.playerState
                 |> playerWindStep gameState
                 |> vmgStep
                 |> Moving.playerStep elapsed (isStarted gameState) gameState.course

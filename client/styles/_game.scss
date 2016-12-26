@@ -176,7 +176,7 @@
 
       dl {
         padding: 16px;
-        @include clearfix; 
+        @include clearfix;
 
         & > * {
           padding: 8px 0;
@@ -261,7 +261,103 @@
       color: $darkGrey;
       text-align: left;
     }
-      
   }
 }
 
+
+.touch-commands {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 16px;
+  right: 16px;
+
+  .touch-panel-center {
+    position: absolute;
+    background-color: transparent;
+    left: 80px;
+    right: 80px;
+    top: 50%;
+    height: 64px * 2 + 16px * 3;
+
+    &:active {
+      background-color: $light;
+    }
+  }
+
+  .touch-panel-left, .touch-panel-right {
+    position: absolute;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+
+    a {
+      display: block;
+      text-align: center;
+      @include shadow-medium;
+      @include gradient-directional($lightGrey, $white, -30deg);
+      border: 2px solid $whiteSmoke;
+      width: 64px;
+      height: 64px;
+      position: relative;
+      border-radius: 32px;
+      background-color: $whiteSmoke;
+      color: $darkGrey;
+      user-select: none;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      margin-top: 16px;
+
+
+      &:active {
+        @include gradient-directional($lightGrey, $white, 150deg);
+      }
+
+      &.touch-left, &.touch-right {
+        // font-weight: bold;
+      }
+
+      &.touch-lock, &.touch-vmg {
+        span {
+          color: $grey;
+        }
+      }
+
+      // &:active {
+      //   background-color: $charcoal;
+      //   color: white;
+      // }
+
+      i {
+        display: block;
+        user-select: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        margin-top: 12px;
+        font-size: 24px;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 24px;
+      }
+
+      span {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 34px;
+        font-size: 12px;
+      }
+    }
+  }
+
+  .touch-panel-left {
+    left: 0;
+  }
+
+  .touch-panel-right {
+    right: 0;
+  }
+
+}
