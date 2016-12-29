@@ -7,13 +7,14 @@ import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Page.Login.Model exposing (..)
 import View.Utils exposing (..)
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 
 
-view : Context -> Model -> Layout.Site Msg
+view : Context -> Model -> Layout Msg
 view ctx model =
-    Layout.Site
+    Layout
         "login"
+        []
         (Just Layout.Login)
         [ Layout.header
             ctx

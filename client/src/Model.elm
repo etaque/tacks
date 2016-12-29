@@ -25,6 +25,7 @@ type alias Setup =
     , path : String
     , size : Window.Size
     , host : String
+    , control : Json.Value
     , rawLiveStatus : Json.Value
     }
 
@@ -64,7 +65,7 @@ type alias Model =
         , routeJump : Route.RouteJump
         , player : Player
         , liveStatus : LiveStatus
-        , layout : Layout
+        , device : Device
         , pages : Pages
         , host : String
         }
@@ -94,9 +95,12 @@ initialModel setup =
     , liveStatus =
         Json.decodeValue Decoders.liveStatusDecoder setup.rawLiveStatus
             |> Result.withDefault emptyLiveStatus
-    , layout =
+    , device =
         { size = setup.size
         , showMenu = False
+        , control =
+            Json.decodeValue Decoders.deviceControlDecoder setup.control
+                |> Result.withDefault UnknownControl
         }
     , pages =
         { home = Home.initial

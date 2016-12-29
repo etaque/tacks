@@ -2,15 +2,13 @@ module Page.EditTrack.View exposing (..)
 
 import Html exposing (Html)
 import Html.Events exposing (on)
-import Html.Lazy
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
 import Json.Decode as Json
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.View.Context as Context
-import View.Layout as Layout
-import View.HexBg as HexBg
+import View.Layout as Layout exposing (Layout)
 import Game.Utils exposing (floatify)
 import Game.Render.SvgUtils exposing (..)
 import Game.Render.Tiles as Tiles
@@ -19,30 +17,27 @@ import Game.Render.Players as Players
 import Mouse
 
 
-view : Context -> Model -> Layout.Game Msg
-view ({ player, layout } as ctx) model =
+view : Context -> Model -> Layout Msg
+view ({ player, device } as ctx) model =
     case ( model.track, model.editor ) of
         ( Just track, Just editor ) ->
             if canUpdateDraft player track then
-                Layout.Game
+                Layout
                     "editor"
                     (Context.appbar track editor)
-                    (Context.view track editor)
-                    [ renderCourse layout.size editor
+                    Nothing
+                    [ renderCourse device.size editor
+                    , Context.surfaceBlock editor
+                    , Context.panel track editor
                     ]
+                    Nothing
             else
-                Layout.Game
+                Layout.empty
                     "editor forbidden"
-                    [ text "Access forbidden." ]
-                    []
-                    []
 
         _ ->
-            Layout.Game
+            Layout.empty
                 "editor loading"
-                [ text "" ]
-                []
-                [ Html.Lazy.lazy HexBg.render layout.size ]
 
 
 renderCourse : Size -> Editor -> Html Msg

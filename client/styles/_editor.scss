@@ -19,9 +19,11 @@
     }
   }
 
-  .toolbar {
-    @include no-select;
+  aside.context {
+    top: 16px * 2 + 36px;
+  }
 
+  .appbar {
     .edit-name {
       flex: 1;
       height: 36px;
@@ -43,75 +45,79 @@
       }
     }
 
-    .surface-modes {
+    .actions {
       padding: 8px;
+    }
+  }
 
-      a {
+  .surface-modes {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 2;
+    display: flex;
+    @include shadow-light;
+
+    &:hover {
+      @include shadow-medium;
+    }
+
+    a {
+      display: block;
+      color: $mediumGrey;
+      padding: 0 16px 0 8px;
+      line-height: 36px;
+      vertical-align: middle;
+      background-color: lighten($charcoal, 8%);
+      transition: bezier(background-color), bezier(color);
+
+      &:first-child {
+        border-top-left-radius: 2px;
+        border-bottom-left-radius: 2px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 2px;
+        border-bottom-right-radius: 2px;
+      }
+
+      .surface-icon {
         display: inline-block;
-        color: $mediumGrey; 
-        padding: 4px 16px 4px 8px;
-        line-height: 26px;
-        min-width: 64px;
-        vertical-align: middle;
-        background-color: lighten($charcoal, 8%);
-        transition: bezier(background-color), bezier(color);
+        width: 18px;
+        height: 18px;
+        margin-right: 8px;
+        margin-top: 4px;
+        vertical-align: top;
+      }
 
-        &:first-child {
-          border-top-left-radius: 2px;
-          border-bottom-left-radius: 2px;
-        }
-
-        &:last-child {
-          border-top-right-radius: 2px;
-          border-bottom-right-radius: 2px;
-        }
-
-        span {
-          display: inline-block;
-          width: 18px;
-          height: 18px;
-          margin-right: 8px;
-          margin-top: 4px;
-          vertical-align: top;
-        }
-
-        i {
-          font-size: 18px;
-        }
+      i {
+        font-size: 18px;
+      }
 
 
-        &:hover {
-          color: $white;
-          background-color: lighten($charcoal, 12%);
-        }
+      &:hover {
+        color: $white;
+        background-color: lighten($charcoal, 12%);
+      }
 
-        &.current, &.current:hover {
-          color: $whiteSmoke;
-          background-color: darken($charcoal, 8%);
-          @include shadow-inset-light;
-        }
+      &.current, &.current:hover {
+        color: $whiteSmoke;
+        background-color: darken($charcoal, 8%);
+        @include shadow-inset-light;
       }
     }
   }
 
-  aside {
+  aside.context {
+    max-height: calc(100% - 16px * 2 - 52px);
 
-    .actions {
-      padding: 16px;
-      padding-bottom: 8px;
-      background-color: #eee;
-      display: flex;
-      flex-direction: row;
+    display: flex;
+    flex-direction: column;
 
-      .btn[disabled] {
-        cursor: progress;
-      }
-
-      > a {
-        flex: 1;
-      }
+    .tab-body {
+      flex: 1;
+      overflow: scroll;
     }
-
 
     .list-gates {
       margin-top: 16px;
@@ -155,7 +161,6 @@
           font-weight: bold;
           color: $darkGrey;
         }
-        
 
         .orientations {
           padding: 4px;
@@ -276,6 +281,22 @@
 
       .time-marks line {
         stroke: $lightGrey;
+      }
+    }
+  }
+
+  @media screen and (max-width: $break-tablet) {
+    .surface-modes {
+      a {
+        padding: 0 8px;
+
+        .surface-icon {
+          margin-right: 0;
+        }
+
+        .surface-label {
+          display: none;
+        }
       }
     }
   }

@@ -7,7 +7,7 @@ import Model.Shared exposing (..)
 import Route exposing (..)
 import Page.Home.Model exposing (..)
 import View.Utils as Utils exposing (..)
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 import View.Race as Race
 import View.Track as Track
 import View.TimeTrial as TimeTrial
@@ -27,10 +27,11 @@ pageTitle liveStatus model =
             "Home"
 
 
-view : Context -> Model -> Layout.Site Msg
+view : Context -> Model -> Layout Msg
 view ctx model =
-    Layout.Site
+    Layout
         "home"
+        []
         (Just Layout.Home)
         [ if ctx.player.guest then
             Layout.header ctx
@@ -100,7 +101,7 @@ onboard =
         ]
 
 
-dialogContent : Model -> Dialog.Layout
+dialogContent : Model -> Dialog.Layout msg
 dialogContent model =
     case model.showDialog of
         Empty ->

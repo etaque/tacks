@@ -31,51 +31,51 @@ appbar track editor =
             , onInput SetName
             ]
             []
+        , div
+            [ class "actions " ]
+            [ a
+                [ onClick (Save False)
+                , class "btn btn-raised btn-primary btn-save"
+                , disabled editor.saving
+                ]
+                [ Utils.mIcon
+                    (if editor.saving then
+                        "cached"
+                     else
+                        "save"
+                    )
+                    []
+                , span [] [ text "Save" ]
+                ]
+            , a
+                [ onClick (Save True)
+                , class "btn btn-raised btn-white btn-save-and-try"
+                , disabled editor.saving
+                ]
+                [ Utils.mIcon "gamepad" []
+                , span [] [ text "Test" ]
+                ]
+            ]
         ]
-    , surfaceBlock editor
     , div [ class "appbar-right" ] []
     ]
 
 
-view : Track -> Editor -> List (Html Msg)
-view track ({ course } as editor) =
-    (actions track editor)
-        :: (tabs editor.tab)
-        :: case editor.tab of
-            GatesTab ->
-                List.map (Html.map FormMsg) (Gates.view editor.currentGate course)
+panel : Track -> Editor -> Html Msg
+panel track ({ course } as editor) =
+    aside
+        [ class "context visible" ]
+        [ tabs editor.tab
+        , div [ class "tab-body" ] <|
+            case editor.tab of
+                GatesTab ->
+                    List.map (Html.map FormMsg) (Gates.view editor.currentGate course)
 
-            WindTab ->
-                List.map (Html.map FormMsg) (Wind.view editor)
+                WindTab ->
+                    List.map (Html.map FormMsg) (Wind.view editor)
 
-            GustsTab ->
-                List.map (Html.map FormMsg) (Gusts.view track editor)
-
-
-actions : Track -> Editor -> Html Msg
-actions track editor =
-    div
-        [ class "actions" ]
-        [ a
-            [ onClick (Save False)
-            , class "btn-raised btn-primary btn-save"
-            , disabled editor.saving
-            ]
-            [ Utils.mIcon
-                (if editor.saving then
-                    "cached"
-                 else
-                    "save"
-                )
-                []
-            , text "Save"
-            ]
-        , a
-            [ onClick (Save True)
-            , class "btn-raised btn-white btn-save-and-try"
-            , disabled editor.saving
-            ]
-            [ Utils.mIcon "gamepad" [], text "Test" ]
+                GustsTab ->
+                    List.map (Html.map FormMsg) (Gusts.view track editor)
         ]
 
 
@@ -104,7 +104,7 @@ surfaceBlock editor =
             realMode editor
     in
         div
-            [ class "appbar-center surface-modes" ]
+            [ class "surface-modes" ]
             (List.map (renderSurfaceMode currentMode) modes)
 
 
@@ -138,7 +138,10 @@ renderSurfaceMode currentMode mode =
             ]
             [ span
                 [ style [ ( "color", color ) ]
+                , class "surface-icon"
                 ]
                 [ Utils.mIcon icon [] ]
-            , text label
+            , span
+                [ class "surface-label" ]
+                [ text label ]
             ]

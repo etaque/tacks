@@ -9,19 +9,22 @@ import Game.Shared exposing (..)
 import Game.Msg exposing (..)
 
 
-messages : Chat -> Html ChatMsg
+messages : Chat -> Html msg
 messages model =
-    div
-        [ class "chat-messages"
-        , id chatMessagesId
-        ]
-        [ ul
-            [ class "list-unstyled" ]
-            (List.map messageItem (List.reverse model.messages))
-        ]
+    if List.isEmpty model.messages then
+        text ""
+    else
+        div
+            [ class "chat-messages"
+            , id chatMessagesId
+            ]
+            [ ul
+                [ class "list-unstyled" ]
+                (List.map messageItem (List.reverse model.messages))
+            ]
 
 
-messageItem : Message -> Html ChatMsg
+messageItem : Message -> Html msg
 messageItem { player, content, time } =
     li
         []

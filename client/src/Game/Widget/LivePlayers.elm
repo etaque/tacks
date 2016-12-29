@@ -66,8 +66,8 @@ tallyItem i { player, gates, finished } =
         li
             [ class "player" ]
             [ span [ class "rank" ] [ text rank ]
-            , span [ class "time" ] [ text status ]
             , Utils.playerWithAvatar player
+            , span [ class "time" ] [ text status ]
             ]
 
 

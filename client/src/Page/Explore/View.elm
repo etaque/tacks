@@ -6,15 +6,16 @@ import Html.Events exposing (..)
 import Dialog
 import Model.Shared exposing (..)
 import Page.Explore.Model exposing (..)
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 import View.Track as Track
 import View.Utils as Utils
 
 
-view : Context -> Model -> Layout.Site Msg
+view : Context -> Model -> Layout Msg
 view ctx model =
-    Layout.Site
+    Layout
         "explore"
+        []
         (Just Layout.Explore)
         [ Layout.header
             ctx
@@ -27,7 +28,7 @@ view ctx model =
         (Just (Dialog.view DialogMsg model.dialog (dialogContent model)))
 
 
-dialogContent : Model -> Dialog.Layout
+dialogContent : Model -> Dialog.Layout msg
 dialogContent model =
     model.showTrackRanking
         |> Maybe.map Track.rankingDialog

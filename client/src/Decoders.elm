@@ -280,3 +280,20 @@ raceReportDecoder =
         (field "trackId" string)
         (field "trackName" string)
         (field "runs" (list runDecoder))
+
+
+deviceControlDecoder : Decoder DeviceControl
+deviceControlDecoder =
+    string
+        |> andThen
+            (\s ->
+                case s of
+                    "KeyboardControl" ->
+                        succeed KeyboardControl
+
+                    "TouchControl" ->
+                        succeed TouchControl
+
+                    _ ->
+                        fail <| "Unkown DeviceControl: " ++ s
+            )

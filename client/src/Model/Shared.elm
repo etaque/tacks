@@ -13,16 +13,23 @@ import Http
 type alias Context =
     { player : Player
     , liveStatus : LiveStatus
-    , layout : Layout
+    , device : Device
     , transition : Transit.Transition
     , routeJump : Route.RouteJump
     }
 
 
-type alias Layout =
+type alias Device =
     { showMenu : Bool
     , size : Size
+    , control : DeviceControl
     }
+
+
+type DeviceControl
+    = KeyboardControl
+    | TouchControl
+    | UnknownControl
 
 
 type alias Size =

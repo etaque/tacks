@@ -84,7 +84,7 @@ update =
 
 
 msgUpdate : Msg -> Model -> Response Model Msg
-msgUpdate msg ({ layout, pages } as model) =
+msgUpdate msg ({ device, pages } as model) =
     case msg of
         ActivityEmitMsg emitMsg ->
             let
@@ -121,7 +121,7 @@ msgUpdate msg ({ layout, pages } as model) =
             mountRoute new model
 
         WindowResized size ->
-            res { model | layout = { layout | size = size } } Cmd.none
+            res { model | device = { device | size = size } } Cmd.none
 
         Logout ->
             ServerApi.postLogout
@@ -135,7 +135,7 @@ msgUpdate msg ({ layout, pages } as model) =
             res model (Navigation.newUrl path)
 
         ToggleSidebar visible ->
-            res { model | layout = { layout | showMenu = visible } } Cmd.none
+            res { model | device = { device | showMenu = visible } } Cmd.none
 
         NoOp ->
             res model Cmd.none
@@ -147,7 +147,7 @@ askRoute route model =
 
 
 mountRoute : Route -> Model -> Response Model Msg
-mountRoute newRoute ({ pages, player, route, layout } as prevModel) =
+mountRoute newRoute ({ pages, player, route, device } as prevModel) =
     let
         routeJump =
             Route.detectJump route newRoute
@@ -156,7 +156,7 @@ mountRoute newRoute ({ pages, player, route, layout } as prevModel) =
             { prevModel
                 | routeJump = routeJump
                 , route = newRoute
-                , layout = { layout | showMenu = False }
+                , device = { device | showMenu = False }
             }
     in
         case newRoute of
@@ -198,7 +198,7 @@ mountRoute newRoute ({ pages, player, route, layout } as prevModel) =
 
 
 pageUpdate : PageMsg -> Model -> Response Model Msg
-pageUpdate pageMsg ({ pages, player, layout } as model) =
+pageUpdate pageMsg ({ pages, player, device } as model) =
     case pageMsg of
         HomeMsg a ->
             applyHome (Home.update model.host player a pages.home) model
@@ -213,7 +213,7 @@ pageUpdate pageMsg ({ pages, player, layout } as model) =
             applyExplore (Explore.update a pages.explore) model
 
         EditTrackMsg a ->
-            applyEditTrack (EditTrack.update layout.size a pages.editTrack) model
+            applyEditTrack (EditTrack.update device.size a pages.editTrack) model
 
         PlayLiveMsg a ->
             applyPlayLive (PlayLive.update player model.host a pages.game) model

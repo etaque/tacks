@@ -4,13 +4,14 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Page.ShowTimeTrial.Model exposing (..)
 import Model.Shared exposing (..)
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 
 
-view : Context -> Model -> Layout.Site Msg
+view : Context -> Model -> Layout Msg
 view ctx model =
-    Layout.Site
+    Layout
         "show-time-trial"
+        []
         Nothing
         (Maybe.map (contentView ctx) (dataMaybe model.liveTimeTrial) |> Maybe.withDefault [ text "Not found" ])
         Nothing

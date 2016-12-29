@@ -3,7 +3,6 @@ module View.Layout exposing (..)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
-import Html.Lazy
 import Json.Decode as Json
 import Markdown
 import View.HexBg as HexBg
@@ -29,33 +28,22 @@ type Nav
     | Admin
 
 
-type alias Site msg =
+type alias Layout msg =
     { id : String
+    , appbar : List (Html msg)
     , maybeNav : Maybe Nav
     , content : List (Html msg)
     , dialog : Maybe (Dialog.View msg)
     }
 
 
-site : String -> Maybe Nav -> List (Html msg) -> Site msg
-site id maybeNav content =
-    { id = id
-    , maybeNav = maybeNav
-    , content = content
-    , dialog = Nothing
-    }
+empty : String -> Layout msg
+empty id =
+    Layout id [] Nothing [] Nothing
 
 
-type alias Game msg =
-    { id : String
-    , nav : List (Html msg)
-    , side : List (Html msg)
-    , main : List (Html msg)
-    }
-
-
-renderSite : Context -> (msg -> PageMsg) -> Site msg -> Html Msg
-renderSite ctx pageTagger layout =
+render : Context -> (msg -> PageMsg) -> Layout msg -> Html Msg
+render ctx pageTagger layout =
     let
         transitStyle =
             case ctx.routeJump of
@@ -65,17 +53,29 @@ renderSite ctx pageTagger layout =
                 _ ->
                     []
 
+        dialogItems =
+            case layout.dialog of
+                Just dialog ->
+                    tag [ dialog.content, dialog.backdrop ]
+
+                Nothing ->
+                    []
+
         tiledBackground =
-            Lazy.lazy HexBg.render ctx.layout.size
+            Lazy.lazy HexBg.render ctx.device.size
+
+        tag =
+            List.map (Html.map (pageTagger >> PageMsg))
     in
         div
             [ classList
-                [ ( "layout layout-site", True )
-                , ( "show-menu", ctx.layout.showMenu )
+                [ ( "layout", True )
+                , ( "show-menu", ctx.device.showMenu )
                 ]
             , id layout.id
             , catchNavigationClicks Navigate
             ]
+        <|
             [ tiledBackground
             , aside
                 [ class "menu" ]
@@ -87,51 +87,17 @@ renderSite ctx pageTagger layout =
                 []
             , appbar
                 ctx.player
-                []
+                (tag layout.appbar)
             , main_
                 []
                 [ div
                     [ class "content"
                     , style transitStyle
                     ]
-                    (List.map (Html.map (pageTagger >> PageMsg)) layout.content)
+                    (tag layout.content)
                 ]
-            , case layout.dialog of
-                Just dialog ->
-                    Html.map (pageTagger >> PageMsg) dialog.content
-
-                Nothing ->
-                    text ""
             ]
-
-
-renderGame : Context -> (msg -> PageMsg) -> Game msg -> Html Msg
-renderGame ctx pageTagger layout =
-    let
-        tag =
-            List.map (Html.map (pageTagger >> PageMsg))
-    in
-        div
-            [ classList
-                [ ( "layout layout-game with-context", True )
-                , ( "show-menu", ctx.layout.showMenu )
-                ]
-            , id layout.id
-            , catchNavigationClicks Navigate
-            ]
-            [ aside
-                [ class "menu" ]
-                (sideMenu ctx.player Nothing)
-            , appbar
-                ctx.player
-                (tag layout.nav)
-            , aside
-                [ class "context" ]
-                (tag layout.side)
-            , main_
-                []
-                (tag layout.main)
-            ]
+                ++ dialogItems
 
 
 brand : Msg -> Html Msg

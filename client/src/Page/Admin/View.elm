@@ -9,7 +9,7 @@ import Route
 import Page.Admin.Route exposing (..)
 import Page.Admin.Model exposing (..)
 import View.Utils as Utils exposing (container, linkTo)
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 import View.Race as Race
 
 
@@ -21,14 +21,15 @@ type Tab
     | ReportsTab
 
 
-view : Context -> Route -> Model -> Layout.Site Msg
+view : Context -> Route -> Model -> Layout Msg
 view ctx route model =
     let
         menuItem =
             routeMenuItem route
     in
-        Layout.Site
+        Layout
             "admin"
+            []
             (Just Layout.Admin)
             [ Layout.header
                 ctx

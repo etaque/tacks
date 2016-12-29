@@ -5,28 +5,32 @@ import Dict exposing (Dict)
 import Model.Shared exposing (..)
 import Game.Shared exposing (GameState, WithGame)
 import Game.Msg exposing (GameMsg)
+import Dialog
 
 
 type alias Model =
     WithGame
         { liveTrack : HttpData LiveTrack
-        , tab : Tab
+        , showContext : Bool
+        , dialog : Dialog.Model
+        , dialogKind : Maybe DialogKind
         , races : List Race
         , freePlayers : List Player
         }
 
 
-type Tab
-    = NoTab
-    | LiveTab
-    | RankingsTab
-    | HelpTab
+type DialogKind
+    = ChooseControl
+    | RankingsDialog
+    | NewBestTime
 
 
 initial : Model
 initial =
     { liveTrack = Loading
-    , tab = NoTab
+    , showContext = False
+    , dialog = Dialog.initial
+    , dialogKind = Nothing
     , races = []
     , freePlayers = []
     , gameState = Nothing
@@ -43,6 +47,8 @@ type Msg
     = Load (HttpResult ( LiveTrack, Course ))
     | InitGameState LiveTrack Course Time
     | UpdateLiveTrack LiveTrack
-    | SetTab Tab
     | GameMsg GameMsg
+    | ShowContext Bool
+    | ShowDialog DialogKind
+    | DialogMsg Dialog.Msg
     | NoOp

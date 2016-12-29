@@ -1,14 +1,12 @@
 module Page.PlayLive.View exposing (..)
 
 import Html exposing (..)
-import Html.Lazy
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Model.Shared exposing (..)
 import Page.PlayLive.Model exposing (..)
 import Game.Msg exposing (GameMsg(ChatMsg))
-import View.Layout as Layout
-import View.HexBg as HexBg
+import View.Layout as Layout exposing (Layout)
 import Game.Render.All exposing (render)
 import Game.Widget.Timer as Timer
 import Game.Widget.Help as Help
@@ -20,6 +18,7 @@ import Constants
 import Game.Shared exposing (GameState)
 import View.Utils as Utils
 import Route
+import Dialog
 
 
 pageTitle : LiveStatus -> Model -> String
@@ -37,25 +36,55 @@ pageTitle liveStatus model =
         "(" ++ toString playersCount ++ ") " ++ trackName
 
 
-view : Context -> Model -> Layout.Game Msg
-view { layout } model =
+view : Context -> Model -> Layout Msg
+view { device } model =
     case ( model.liveTrack, model.gameState ) of
         ( DataOk liveTrack, Just gameState ) ->
-            Layout.Game
-                "play-track"
-                (appbar model liveTrack gameState)
-                (sidebar model liveTrack gameState)
-                [ render ( layout.size.width, layout.size.height - Constants.appbarHeight ) gameState
-                , Html.map (GameMsg << ChatMsg) (Chat.inputField model.chat)
-                , Html.map GameMsg Controls.view
-                ]
+            { id = "play-track"
+            , appbar = appbar model liveTrack gameState
+            , maybeNav = Nothing
+            , content =
+                (baseLayers device model liveTrack gameState)
+                    ++ (chatLayers device model)
+                    ++ (controlLayers device)
+            , dialog =
+                Maybe.map
+                    (dialogContent model liveTrack >> Dialog.view DialogMsg model.dialog)
+                    model.dialogKind
+            }
 
         _ ->
-            Layout.Game
-                "play-track loading"
-                []
-                []
-                [ Html.Lazy.lazy HexBg.render layout.size ]
+            Layout.empty "play-track loading"
+
+
+baseLayers : Device -> Model -> LiveTrack -> GameState -> List (Html Msg)
+baseLayers device model liveTrack gameState =
+    [ render
+        ( device.size.width
+        , device.size.height - Constants.appbarHeight
+        )
+        gameState
+    , toolbar liveTrack model gameState
+    , contextAside model liveTrack gameState
+    ]
+
+
+chatLayers : Device -> Model -> List (Html Msg)
+chatLayers device { chat } =
+    if device.control /= TouchControl then
+        [ Chat.messages chat
+        , Html.map (GameMsg << ChatMsg) (Chat.inputField chat)
+        ]
+    else
+        []
+
+
+controlLayers : Device -> List (Html Msg)
+controlLayers device =
+    if device.control == TouchControl then
+        [ Html.map GameMsg Controls.view ]
+    else
+        []
 
 
 appbar : Model -> LiveTrack -> GameState -> List (Html Msg)
@@ -68,7 +97,7 @@ appbar model { track } gameState =
                 [ class "exit"
                 , title "Back to editor"
                 ]
-                [ Utils.mIcon "close" [] ]
+                [ Utils.mIcon "edit" [] ]
           else
             Utils.linkTo
                 Route.Home
@@ -81,84 +110,93 @@ appbar model { track } gameState =
     , div
         [ class "appbar-center" ]
         [ Html.map GameMsg (Timer.view gameState) ]
-    , div [ class "appbar-right" ] []
+    , div
+        [ class "appbar-right" ]
+        []
     ]
 
 
-sidebar : Model -> LiveTrack -> GameState -> List (Html Msg)
-sidebar model liveTrack gameState =
-    let
-        blocks =
-            if liveTrack.track.status == Draft then
-                draftBlocks liveTrack
-            else
-                liveBlocks gameState model liveTrack
-    in
-        blocks
-
-
-trackNav : LiveTrack -> Html Msg
-trackNav liveTrack =
-    div
-        [ class "track-menu" ]
-        [ h2 [] [ text liveTrack.track.name ] ]
-
-
-draftBlocks : LiveTrack -> List (Html Msg)
-draftBlocks { track } =
-    [ div
-        [ class "draft" ]
-        [ div
-            [ class "actions" ]
-            [ Utils.linkTo
-                (Route.EditTrack track.id)
-                [ class "btn-raised btn-primary" ]
-                [ Utils.mIcon "edit" [], text "Edit draft" ]
-            ]
-        , p
-            []
-            [ text "This is a draft, you're the only one seeing this race track." ]
-        ]
-    ]
-
-
-liveBlocks : GameState -> Model -> LiveTrack -> List (Html Msg)
-liveBlocks gameState model liveTrack =
-    (tabs model)
-        :: case model.tab of
-            NoTab ->
-                []
-
-            LiveTab ->
-                [ LivePlayers.view model.races model.freePlayers
-                , Html.map (GameMsg << ChatMsg) (Chat.messages model.chat)
+toolbar : LiveTrack -> Model -> GameState -> Html Msg
+toolbar liveTrack model gameState =
+    if liveTrack.track.status == Draft then
+        text ""
+    else
+        div
+            [ class "toolbar" ]
+            [ contextBadge model gameState
+            , div
+                [ class "toolbar-group" ]
+                [ div
+                    [ class "toolbar-item"
+                    , onClick (ShowDialog RankingsDialog)
+                    ]
+                    [ Utils.mIcon "timeline" [] ]
                 ]
+            ]
 
-            RankingsTab ->
+
+contextBadge : Model -> GameState -> Html Msg
+contextBadge model gameState =
+    let
+        playersCount =
+            List.length (List.concatMap .players model.races)
+                + List.length model.freePlayers
+    in
+        div
+            [ class "toolbar-group"
+            , onClick (ShowContext (not model.showContext))
+            ]
+            [ div
+                [ classList
+                    [ ( "toolbar-item mini-context", True )
+                    , ( "active", model.showContext )
+                    ]
+                ]
+                [ span
+                    [ class "players-count" ]
+                    [ text (toString playersCount) ]
+                , Utils.mIcon "people" []
+                , span [ class "separator" ] []
+                , span
+                    [ class "gates" ]
+                    [ if Game.Shared.isStarted gameState then
+                        text <|
+                            toString (List.length gameState.playerState.crossedGates)
+                                ++ "/"
+                                ++ toString (List.length gameState.course.gates + 1)
+                      else
+                        text "-/-"
+                    ]
+                ]
+            ]
+
+
+contextAside : Model -> LiveTrack -> GameState -> Html Msg
+contextAside model liveTrack gameState =
+    aside
+        [ classList
+            [ ( "context", True )
+            , ( "visible", model.showContext )
+            ]
+        ]
+        [ LivePlayers.view model.races model.freePlayers
+        ]
+
+
+dialogContent : Model -> LiveTrack -> DialogKind -> Dialog.Layout Msg
+dialogContent model liveTrack kind =
+    case kind of
+        ChooseControl ->
+            Dialog.emptyLayout
+
+        RankingsDialog ->
+            { header = [ Dialog.title "Rankings" ]
+            , body =
                 [ Html.map GameMsg
                     (Rankings.view model.ghostRuns liveTrack.meta)
                 ]
+            , footer = []
+            }
 
-            HelpTab ->
-                [ Help.view ]
-
-
-tabs : Model -> Html Msg
-tabs { tab } =
-    let
-        items =
-            [ ( "Live", LiveTab )
-            , ( "Runs", RankingsTab )
-            , ( "Help", HelpTab )
-            ]
-
-        setTab t =
-            if t == tab then
-                SetTab NoTab
-            else
-                SetTab t
-    in
-        Utils.tabsRow
-            items
-            (\t -> onClick (setTab t))
-            ((==) tab)
+        NewBestTime ->
+            Dialog.emptyLayout

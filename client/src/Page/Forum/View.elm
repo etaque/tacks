@@ -7,10 +7,10 @@ import Page.Forum.Model exposing (..)
 import Page.Forum.Index.View as Index
 import Page.Forum.ShowTopic.View as ShowTopic
 import Page.Forum.NewTopic.View as NewTopic
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 
 
-view : Context -> Route -> Model -> Layout.Site Msg
+view : Context -> Route -> Model -> Layout Msg
 view ctx route model =
     let
         subView =
@@ -24,4 +24,4 @@ view ctx route model =
                 NewTopic ->
                     List.map (Html.map NewTopicMsg) (NewTopic.view ctx model.newTopic)
     in
-        Layout.Site "forum" (Just Layout.Discuss) subView Nothing
+        Layout "forum" [] (Just Layout.Discuss) subView Nothing

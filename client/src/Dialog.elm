@@ -44,7 +44,7 @@ type alias Options =
 
 defaultOptions : Options
 defaultOptions =
-    { duration = 50
+    { duration = 150
     , closeOnEscape = True
     , onClose = Nothing
     }
@@ -105,14 +105,14 @@ subscriptions model =
         ]
 
 
-type alias Layout =
-    { header : List (Html Msg)
-    , body : List (Html Msg)
-    , footer : List (Html Msg)
+type alias Layout msg =
+    { header : List (Html msg)
+    , body : List (Html msg)
+    , footer : List (Html msg)
     }
 
 
-emptyLayout : Layout
+emptyLayout : Layout msg
 emptyLayout =
     Layout [] [] []
 
@@ -123,40 +123,48 @@ type alias View msg =
     }
 
 
-view : (Msg -> msg) -> Model -> Layout -> View msg
+view : (Msg -> msg) -> Model -> Layout msg -> View msg
 view tagger model layout =
     { content =
-        Html.map tagger <|
-            div
-                [ class "dialog-wrapper"
+        div
+            [ class "dialog-wrapper"
+            , style
+                [ ( "display", display model )
+                ]
+            ]
+            [ div
+                [ class "dialog-sheet"
                 , style
-                    [ ( "display", display model )
-                    , ( "opacity", toString (opacity model) )
-                    ]
-                , onClick Close
-                ]
-                [ div
-                    [ class "dialog-sheet" ]
-                    [ if List.isEmpty layout.header then
-                        text ""
-                      else
-                        div
-                            [ class "dialog-header" ]
-                            (closeButton :: layout.header)
-                    , div
-                        [ class "dialog-body" ]
-                        layout.body
-                    , if List.isEmpty layout.footer then
-                        text ""
-                      else
-                        div
-                            [ class "dialog-footer" ]
-                            layout.footer
+                    [ ( "margin-top", top model )
                     ]
                 ]
+                [ if List.isEmpty layout.header then
+                    text ""
+                  else
+                    div
+                        [ class "dialog-header" ]
+                        (Html.map tagger closeButton :: layout.header)
+                , div
+                    [ class "dialog-body" ]
+                    layout.body
+                , if List.isEmpty layout.footer then
+                    text ""
+                  else
+                    div
+                        [ class "dialog-footer" ]
+                        layout.footer
+                ]
+            ]
     , backdrop =
-        Html.map tagger <|
-            div [ class "dialog-backdrop" ] []
+        div
+            [ class "dialog-backdrop"
+            , style
+                [ ( "display", display model )
+                , ( "opacity", toString (opacity model) )
+                ]
+            , onClick (tagger Close)
+            ]
+            []
     }
 
 
@@ -181,12 +189,12 @@ closeIcon =
         ]
 
 
-title : String -> Html Msg
+title : String -> Html msg
 title s =
     div [ class "dialog-title" ] [ text s ]
 
 
-subtitle : String -> Html Msg
+subtitle : String -> Html msg
 subtitle s =
     div [ class "dialog-subtitle" ] [ text s ]
 
@@ -194,6 +202,29 @@ subtitle s =
 isVisible : Model -> Bool
 isVisible { open, transition } =
     open || Transit.getStep transition == Exit
+
+
+top : Model -> String
+top { open, transition } =
+    if open then
+        -- opening
+        case Transit.getStep transition of
+            Exit ->
+                "-100%"
+
+            Enter ->
+                "-" ++ toString ((1 - Transit.getValue transition) * 100) ++ "%"
+
+            Done ->
+                "0%"
+    else
+        -- closing
+        case Transit.getStep transition of
+            Exit ->
+                "-" ++ toString ((1 - Transit.getValue transition) * 100) ++ "%"
+
+            _ ->
+                "-100%"
 
 
 opacity : Model -> Float

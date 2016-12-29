@@ -10,13 +10,14 @@ import Model.Shared exposing (..)
 import Route
 import Page.ListDrafts.Model exposing (..)
 import View.Utils as Utils
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 
 
-view : Context -> Model -> Layout.Site Msg
+view : Context -> Model -> Layout Msg
 view ctx ({ tracks } as model) =
-    Layout.Site
+    Layout
         "list-drafts"
+        []
         (Just Layout.Build)
         [ Layout.header
             ctx

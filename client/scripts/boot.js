@@ -33,6 +33,7 @@ function notify(msg) {
 
 const appSetup = readData('appSetup', document);
 appSetup.size = windowSize();
+appSetup.control = null;
 
 const app = Elm.Main.fullscreen(appSetup);
 

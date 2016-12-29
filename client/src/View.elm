@@ -15,48 +15,48 @@ import Page.ListDrafts.View as ListDraftsPage
 import Page.Forum.View as ForumPage
 import Page.Admin.View as AdminPage
 import Route exposing (..)
-import View.Layout exposing (renderSite, renderGame)
+import View.Layout exposing (render)
 
 
 view : Model -> Html Msg
-view ({ pages, player, liveStatus, layout, transition, routeJump } as model) =
+view ({ pages, player, liveStatus, device, transition, routeJump } as model) =
     let
         ctx =
-            Context player liveStatus layout transition routeJump
+            Context player liveStatus device transition routeJump
     in
         case model.route of
             Home ->
-                renderSite ctx HomeMsg (HomePage.view ctx pages.home)
+                render ctx HomeMsg (HomePage.view ctx pages.home)
 
             Register ->
-                renderSite ctx RegisterMsg (RegisterPage.view ctx pages.register)
+                render ctx RegisterMsg (RegisterPage.view ctx pages.register)
 
             Login ->
-                renderSite ctx LoginMsg (LoginPage.view ctx pages.login)
+                render ctx LoginMsg (LoginPage.view ctx pages.login)
 
             Explore ->
-                renderSite ctx ExploreMsg (ExplorePage.view ctx pages.explore)
+                render ctx ExploreMsg (ExplorePage.view ctx pages.explore)
 
             EditTrack _ ->
-                renderGame ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
+                render ctx EditTrackMsg (EditTrackPage.view ctx pages.editTrack)
 
             PlayTrack _ ->
-                renderGame ctx PlayLiveMsg (PlayLivePage.view ctx pages.game)
+                render ctx PlayLiveMsg (PlayLivePage.view ctx pages.game)
 
             ShowTimeTrial _ ->
-                renderSite ctx ShowTimeTrialMsg (ShowTimeTrialPage.view ctx pages.showTimeTrial)
+                render ctx ShowTimeTrialMsg (ShowTimeTrialPage.view ctx pages.showTimeTrial)
 
             PlayTimeTrial ->
-                renderGame ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)
+                render ctx PlayTimeTrialMsg (PlayTimeTrialPage.view ctx pages.playTimeTrial)
 
             ListDrafts ->
-                renderSite ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
+                render ctx ListDraftsMsg (ListDraftsPage.view ctx pages.listDrafts)
 
             Forum forumRoute ->
-                renderSite ctx ForumMsg (ForumPage.view ctx forumRoute pages.forum)
+                render ctx ForumMsg (ForumPage.view ctx forumRoute pages.forum)
 
             Admin adminRoute ->
-                renderSite ctx AdminMsg (AdminPage.view ctx adminRoute pages.admin)
+                render ctx AdminMsg (AdminPage.view ctx adminRoute pages.admin)
 
             NotFound ->
                 text "Not found!"

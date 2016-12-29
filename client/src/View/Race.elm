@@ -109,7 +109,7 @@ emptyRun =
         ]
 
 
-reportDialog : RaceReport -> Dialog.Layout
+reportDialog : RaceReport -> Dialog.Layout msg
 reportDialog report =
     { header =
         [ Dialog.title "Race report"

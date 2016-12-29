@@ -16,6 +16,7 @@ import Task exposing (Task)
 import WebSocket
 import Http
 import List.Extra as ListExtra
+import Dialog
 
 
 subscriptions : String -> LiveStatus -> Model -> Sub Msg
@@ -27,6 +28,7 @@ subscriptions host liveStatus model =
                     (ServerApi.timeTrialSocket host)
                     Decoders.decodeStringMsg
                 , Sub.map GameMsg (Game.subscriptions model)
+                , Sub.map DialogMsg (Dialog.subscriptions model.dialog)
                 ]
 
         _ ->
@@ -78,8 +80,16 @@ update liveStatus player host msg model =
             Game.update player (Output.sendToTimeTrialServer host) gameMsg model
                 |> mapCmd GameMsg
 
-        SetTab tab ->
-            res { model | tab = tab } Cmd.none
+        ShowContext b ->
+            res { model | showContext = b } Cmd.none
+
+        ShowDialog kind ->
+            Dialog.taggedOpen DialogMsg { model | dialogKind = Just kind }
+                |> toResponse
+
+        DialogMsg dialogMsg ->
+            Dialog.taggedUpdate DialogMsg dialogMsg model
+                |> toResponse
 
         Model.NoOp ->
             res model Cmd.none

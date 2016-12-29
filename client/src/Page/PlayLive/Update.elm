@@ -14,6 +14,7 @@ import Game.Output as Output
 import Task
 import WebSocket
 import Http
+import Dialog
 
 
 subscriptions : String -> Model -> Sub Msg
@@ -25,6 +26,7 @@ subscriptions host model =
                     (ServerApi.gameSocket host liveTrack.track.id)
                     Decoders.decodeStringMsg
                 , Sub.map GameMsg (Game.subscriptions model)
+                , Sub.map DialogMsg (Dialog.subscriptions model.dialog)
                 ]
 
         _ ->
@@ -64,11 +66,19 @@ update player host msg model =
             Game.update player (Output.sendToTrackServer host model.liveTrack) gameMsg model
                 |> mapCmd GameMsg
 
-        SetTab tab ->
-            res { model | tab = tab } Cmd.none
-
         UpdateLiveTrack liveTrack ->
             res (applyLiveTrack liveTrack model) Cmd.none
+
+        ShowContext b ->
+            res { model | showContext = b } Cmd.none
+
+        ShowDialog kind ->
+            Dialog.taggedOpen DialogMsg { model | dialogKind = Just kind }
+                |> toResponse
+
+        DialogMsg dialogMsg ->
+            Dialog.taggedUpdate DialogMsg dialogMsg model
+                |> toResponse
 
         Model.NoOp ->
             res model Cmd.none

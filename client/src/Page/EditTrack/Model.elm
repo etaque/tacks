@@ -135,4 +135,4 @@ modeName mode =
 
 getCourseDims : Dims -> Dims
 getCourseDims ( w, h ) =
-    ( w - Constants.sidebarWidth, h - Constants.appbarHeight )
+    ( w, h - Constants.appbarHeight )

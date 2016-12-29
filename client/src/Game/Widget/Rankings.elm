@@ -31,12 +31,12 @@ rankingItem isGhost ranking =
         attrs =
             if isGhost ranking.runId then
                 [ class "ranking remove-ghost"
-                , onClick (RemoveGhost ranking.runId)
+                , Utils.onButtonClick (RemoveGhost ranking.runId)
                 , title "Remove from ghosts"
                 ]
             else
                 [ class "ranking add-ghost"
-                , onClick (AddGhost ranking.runId ranking.player)
+                , Utils.onButtonClick (AddGhost ranking.runId ranking.player)
                 , title "Add to ghosts"
                 ]
     in

@@ -93,6 +93,36 @@ aside.menu {
     white-space: nowrap;
   }
 
+  h2 {
+    display: inline-block;
+    margin: 0;
+    line-height: 52px;
+    padding: 0 16px;
+    color: $lightGrey;
+    font-family: $regular;
+    font-size: 21px;
+    @include ellipsis;
+  }
+
+  .exit {
+    display: inline-block;
+    vertical-align: top;
+    color: $grey;
+    width: 52px;
+    text-align: center;
+    transition: bezier(background-color), bezier(color);
+    background-color: lighten($charcoal, 4%);
+
+    i {
+      line-height: 52px;
+    }
+
+    &:hover {
+      background-color: lighten($charcoal, 8%);
+      color: $lightGrey;
+    }
+  }
+
   .appbar-player {
     float: right;
     height: $appbar;
@@ -149,59 +179,23 @@ main {
 }
 
 aside.context {
-  @include shadow-medium;
+  @include shadow-light;
   position: absolute;
-  width: $aside + $appbar - 2*16px;
-  left: 16px;
-  top: $appbar + 16px;
-  /* bottom: 16px; */
-  width: $aside - 2*16px;
+  top: 16px;
+  left: -16px - $aside;
+  width: $aside;
   z-index: 2;
-  background-color: $white;
-  border-radius: 4px;
-  opacity: 0.8;
-  transition: bezier(opacity);
+  border-radius: 2px;
+  transition: bezier(opacity, 250ms), bezier(left, 250ms);
+  opacity: 0;
+  background-color: $whiteSmoke;
+  color: $darkGrey;
 
-  .aside-module {
-    overflow-y: scroll;
-  }
-
-  &:hover {
-    opacity: 1;
-  }
-
-  .tabs-container {
-    background-color: transparent;
-  }
-
-  .tab {
-    background-color: #eee;
-  }
-
-  .tab:first-child {
-    border-top-left-radius: 4px;
-  }
-
-  .tab:last-child {
-    border-top-right-radius: 4px;
+  &.visible {
+    opacity: 0.9;
+    left: 16px;
   }
 }
-
-.with-context {
-  /* .appbar { */
-  /*   left: $aside; */
-
-  /*   .brand { */
-  /*     display: none; */
-  /*   } */
-  /* } */
-
-  /* main { */
-  /*   left: $aside; */
-  /* } */
-
-}
-
 
 @media screen and (max-width: $break-tablet) {
   .appbar {
@@ -233,43 +227,11 @@ aside.context {
       }
     }
   }
-  aside.context {
-    display: none;
-  }
 }
 
 .layout-game {
   .appbar {
 
-    h2 {
-      display: inline-block;
-      margin: 0;
-      line-height: 52px;
-      padding: 0 16px;
-      color: $lightGrey;
-      font-family: $regular;
-      font-size: 21px;
-      @include ellipsis;
-    }
-
-    .exit {
-      display: inline-block;
-      vertical-align: top;
-      color: $grey;
-      width: 52px;
-      text-align: center;
-      transition: bezier(background-color), bezier(color);
-      background-color: lighten($charcoal, 4%);
-
-      i {
-        line-height: 52px;
-      }
-
-      &:hover {
-        background-color: lighten($charcoal, 8%);
-        color: $lightGrey;
-      }
-    }
   }
 
 }

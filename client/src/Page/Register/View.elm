@@ -10,13 +10,14 @@ import Form
 import Model.Shared exposing (..)
 import Page.Register.Model exposing (..)
 import View.Utils exposing (..)
-import View.Layout as Layout
+import View.Layout as Layout exposing (Layout)
 
 
-view : Context -> Model -> Layout.Site Msg
+view : Context -> Model -> Layout Msg
 view ctx model =
-    Layout.Site
+    Layout
         "register"
+        []
         (Just Layout.Register)
         [ Layout.header
             ctx

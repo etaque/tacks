@@ -58,7 +58,7 @@ cardView rankingMsg player ({ track, timeTrial, meta } as ltt) =
         ]
 
 
-rankingDialog : LiveTimeTrial -> Dialog.Layout
+rankingDialog : LiveTimeTrial -> Dialog.Layout msg
 rankingDialog { track, meta } =
     { header = [ Dialog.title track.name ]
     , body =

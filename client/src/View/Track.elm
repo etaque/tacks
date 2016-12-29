@@ -58,7 +58,7 @@ rankingsExtract rankings =
         (List.take 3 rankings |> List.map Utils.rankingItem)
 
 
-rankingDialog : LiveTrack -> Dialog.Layout
+rankingDialog : LiveTrack -> Dialog.Layout msg
 rankingDialog { track, meta } =
     { header = [ Dialog.title track.name ]
     , body =
