@@ -69,11 +69,12 @@ raceDecoder =
 
 rankingDecoder : Decoder Ranking
 rankingDecoder =
-    map4
+    map5
         Ranking
         (field "rank" int)
         (field "runId" string)
         (field "player" playerDecoder)
+        (field "gates" (list float))
         (field "finishTime" float)
 
 

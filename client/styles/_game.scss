@@ -48,58 +48,11 @@
     z-index: 2;
     transition: bezier(box-shadow);
 
-    .toolbar-group {
+    .toolbar-group, .toggle-context {
       float: left;
-      margin-right: 8px;
-      display: flex;
-      border-radius: 18px;
-      cursor: pointer;
-      background-color: #eee;
+      margin-right: 12px;
       @include shadow-light;
       transition: bezier(box-shadow);
-
-      &:hover {
-        @include shadow-medium;
-      }
-
-    }
-
-    .toolbar-item {
-      padding: 0 8px;
-      font-size: 15px;
-      display: flex;
-      color: $grey;
-      transition: bezier(color);
-
-      &.active {
-        color: $mainBlue;
-
-        &:hover {
-          color: $seaBlue;
-        }
-      }
-
-      &:hover {
-        color: $darkGrey;
-      }
-
-      .separator {
-        border-right: 1px solid #ddd;
-        margin: 0 8px;
-        padding: 0;
-      }
-
-      .players-count, .gates {
-        font-family: $mono;
-      }
-
-      .players-count {
-        margin-left: 6px;
-      }
-
-      .gates {
-        margin-right: 6px;
-      }
 
       i, span {
         line-height: 36px;
@@ -113,10 +66,86 @@
         margin-left: 6px;
       }
     }
+
+    .toggle-context {
+      display: flex;
+      padding: 0 12px;
+      cursor: pointer;
+      background-color: $darkCharcoal;
+      color: $mediumGrey;
+      border-radius: 2px;
+      font-family: $mono;
+      transition: bezier(color), bezier(background-color);
+
+      &:hover {
+        background-color: $charcoal;
+        color: $whiteSmoke;
+
+        .separator {
+          border-color: $darkGrey;
+        }
+      }
+
+      .indicator {
+        margin-left: 0;
+        transform: rotate(180deg);
+        transition: bezier(transform);
+      }
+
+      &.active {
+        color: $orange;
+
+        &:hover {
+          color: $lightOrange;
+        }
+
+        .indicator {
+          transform: rotate(0);
+        }
+      }
+
+      .separator {
+        border-right: 1px solid $charcoal;
+        margin: 10px 12px;
+        padding: 0;
+        line-height: 16px;
+      }
+
+      .players-count {
+      }
+
+      .gates {
+      }
+    }
+
+    .toolbar-group {
+      display: flex;
+      border-radius: 18px;
+      background-color: #eee;
+      color: $grey;
+
+      &:hover {
+        @include shadow-medium;
+      }
+    }
+
+    .toolbar-item {
+      padding: 0 8px;
+      font-size: 15px;
+      display: flex;
+      transition: bezier(color);
+      border: none;
+      background-color: transparent;
+      outline: none;
+
+      &:hover {
+        color: $darkGrey;
+      }
+    }
   }
 
   aside.context {
-    top: 16px * 2 + 36px;
+    top: 16px + 36px + 12px;
 
     .aside-module {
       overflow-y: scroll;
@@ -166,38 +195,6 @@
     }
 
 
-    // .module-ghosts {
-    //   ul {
-    //     padding: 0;
-    //     font-family: $mono;
-    //     font-weight: bold;
-    //   }
-
-    //   li {
-    //     padding: 2px 8px;
-    //     position: relative;
-    //     cursor: pointer;
-    //     display: flex;
-
-    //     &:hover {
-    //       color: $whiteSeaBlue;
-
-    //       .remove {
-    //       }
-    //     }
-
-    //     .player-avatar {
-    //       flex: 1;
-    //     }
-    //   }
-
-    //   .remove {
-    //     position: absolute;
-    //     right: 8px;
-    //     top: 2px;
-    //   }
-    // }
-
     // .module-help {
 
     //   dl {
@@ -227,31 +224,6 @@
     //   }
     // }
 
-    // .chat-messages {
-    //   position: relative;
-    //   overflow-y: auto;
-
-    //   ul {
-    //     @include players-list;
-    //     padding: 16px;
-    //     margin: 0;
-    //     color: $darkGrey;
-
-    //     li {
-    //       line-height: 24px;
-    //       padding: 4px 0;
-
-    //       .handle {
-    //         margin-right: 8px;
-    //         color: $darkGrey;
-    //       }
-
-    //       .content {
-    //         color: $grey;
-    //       }
-    //     }
-    //   }
-    // }
   }
 
   .module-rankings {
@@ -260,24 +232,6 @@
     .empty {
       font-size: 13px;
       margin: 16px;
-    }
-
-    li {
-      line-height: 36px;
-
-      .avatar {
-        height: 24px;
-        width: 24px;
-      }
-
-      .rank {
-        width: 36px;
-        margin-right: 12px;
-      }
-
-      .time {
-        padding-right: 12px;
-      }
     }
 
     .add-ghost, .remove-ghost {
@@ -318,6 +272,35 @@
     }
   }
 
+  .module-gate-ranking {
+    .trial-status {
+      margin: 0;
+      padding: 16px 16px 8px 16px;
+      font-weight: bold;
+      border-top: $border;
+    }
+
+    li .rank {
+      background-color: #eee;
+    }
+
+    li.current {
+      background-color: $lightOrange;
+
+      .rank {
+        background-color: $orange;
+        color: $darkOrange;
+      }
+
+      .handle {
+        color: $darkerOrange;
+      }
+
+      .time {
+        color: $darkOrange;
+      }
+    }
+  }
 }
 
 .chat-input {

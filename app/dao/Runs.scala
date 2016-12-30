@@ -15,7 +15,7 @@ object RunMappings {
     MappedColumnType.base[Seq[Long], JsValue](Json.toJson(_), _.as[Seq[Long]])
 
   implicit val getRankings =
-    GetResult(r => RunRanking(r.nextLong, r.nextUUID, r.nextUUID, r.nextLong))
+    GetResult(r => RunRanking(r.nextLong, r.nextUUID, r.nextUUID, r.nextLongSeq, r.nextLong))
 
   implicit val getRaceIds =
     GetResult(_.nextUUID)
@@ -70,7 +70,7 @@ object Runs extends TableQuery(new RunTable(_)) {
       .getOrElse("AND is_time_trial = false")
 
     sql"""
-      SELECT row_number() OVER (order by duration), r.id, player_id, duration FROM (
+      SELECT row_number() OVER (order by duration), r.id, player_id, r.tally, duration FROM (
         SELECT DISTINCT ON (player_id) * FROM runs
         WHERE track_id = $trackId #$whereTimeTrial
         ORDER BY player_id, duration

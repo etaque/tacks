@@ -10,10 +10,18 @@ import Dialog
 
 type alias Model =
     WithGame
-        { showContext : Bool
+        { gateRankings : List GateRanking
+        , showContext : Bool
         , dialog : Dialog.Model
         , dialogKind : Maybe DialogKind
         }
+
+
+type alias GateRanking =
+    { player : Player
+    , time : Time
+    , isCurrent : Bool
+    }
 
 
 type DialogKind
@@ -24,7 +32,8 @@ type DialogKind
 
 initial : Model
 initial =
-    { showContext = False
+    { gateRankings = []
+    , showContext = True
     , dialog = Dialog.initial
     , dialogKind = Nothing
     , gameState = Nothing

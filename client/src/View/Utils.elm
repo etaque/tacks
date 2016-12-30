@@ -275,7 +275,10 @@ formatTimer showMs t =
             else
                 ""
     in
-        sMinutes ++ ":" ++ sSeconds ++ sMillis
+        if minutes > 0 then
+            sMinutes ++ ":" ++ sSeconds ++ sMillis
+        else
+            sSeconds ++ sMillis
 
 
 colWidth : Int -> Float

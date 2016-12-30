@@ -50,6 +50,7 @@ case class RunRanking(
   rank: Long,
   runId: UUID,
   playerId: UUID,
+  gates: Seq[Long],
   duration: Long
 )
 

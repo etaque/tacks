@@ -28,7 +28,7 @@ type DialogKind
 initial : Model
 initial =
     { liveTrack = Loading
-    , showContext = False
+    , showContext = True
     , dialog = Dialog.initial
     , dialogKind = Nothing
     , races = []

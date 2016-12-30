@@ -70,7 +70,7 @@ object LiveStatus {
       runRankings <- dao.Runs.extractRankings(trackId, timeTrialId)
       players <- dao.Users.listByIds(runRankings.map(_.playerId))
       playerRankings = runRankings.flatMap { r =>
-        players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, r.runId, p, r.duration))
+        players.find(_.id == r.playerId).map(p => PlayerRanking(r.rank, r.runId, p, r.gates, r.duration))
       }
     }
     yield playerRankings

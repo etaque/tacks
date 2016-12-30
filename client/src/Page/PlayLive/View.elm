@@ -126,7 +126,7 @@ toolbar liveTrack model gameState =
             [ contextBadge model gameState
             , div
                 [ class "toolbar-group" ]
-                [ div
+                [ button
                     [ class "toolbar-item"
                     , onClick (ShowDialog RankingsDialog)
                     ]
@@ -143,31 +143,29 @@ contextBadge model gameState =
                 + List.length model.freePlayers
     in
         div
-            [ class "toolbar-group"
+            [ classList
+                [ ( "toggle-context", True )
+                , ( "active", model.showContext )
+                ]
             , onClick (ShowContext (not model.showContext))
             ]
-            [ div
-                [ classList
-                    [ ( "toolbar-item mini-context", True )
-                    , ( "active", model.showContext )
-                    ]
+            [ span
+                [ class "players-count" ]
+                [ text (toString playersCount) ]
+            , Utils.mIcon "people" []
+            , span [ class "separator" ] []
+            , span
+                [ class "gates" ]
+                [ if Game.Shared.isStarted gameState then
+                    text <|
+                        toString (List.length gameState.playerState.crossedGates)
+                            ++ "/"
+                            ++ toString (List.length gameState.course.gates + 1)
+                  else
+                    text "-/-"
                 ]
-                [ span
-                    [ class "players-count" ]
-                    [ text (toString playersCount) ]
-                , Utils.mIcon "people" []
-                , span [ class "separator" ] []
-                , span
-                    [ class "gates" ]
-                    [ if Game.Shared.isStarted gameState then
-                        text <|
-                            toString (List.length gameState.playerState.crossedGates)
-                                ++ "/"
-                                ++ toString (List.length gameState.course.gates + 1)
-                      else
-                        text "-/-"
-                    ]
-                ]
+            , span [ class "separator" ] []
+            , Utils.mIcon "arrow_drop_down" [ "indicator" ]
             ]
 
 

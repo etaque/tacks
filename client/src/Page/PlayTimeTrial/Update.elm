@@ -15,7 +15,7 @@ import Game.Msg exposing (..)
 import Task exposing (Task)
 import WebSocket
 import Http
-import List.Extra as ListExtra
+import List.Extra as List
 import Dialog
 
 
@@ -79,6 +79,7 @@ update liveStatus player host msg model =
         GameMsg gameMsg ->
             Game.update player (Output.sendToTimeTrialServer host) gameMsg model
                 |> mapCmd GameMsg
+                |> updateGateRankings liveStatus.liveTimeTrial model
 
         ShowContext b ->
             res { model | showContext = b } Cmd.none
@@ -110,7 +111,7 @@ electGhosts : Player -> LiveTimeTrial -> Cmd Msg
 electGhosts player { meta } =
     let
         playerIndex =
-            ListExtra.findIndex (\r -> r.player.id == player.id) meta.rankings
+            List.findIndex (\r -> r.player.id == player.id) meta.rankings
 
         runs =
             case playerIndex of
@@ -138,3 +139,43 @@ electGhosts player { meta } =
             |> List.map (Task.succeed >> (Task.perform identity))
             |> Cmd.batch
             |> Cmd.map GameMsg
+
+
+updateGateRankings : Maybe LiveTimeTrial -> Model -> Response Model Msg -> Response Model Msg
+updateGateRankings maybeLiveTimeTrial oldModel ({ model } as response) =
+    case ( maybeLiveTimeTrial, oldModel.gameState, model.gameState ) of
+        ( Just liveTimeTrial, Just oldGameState, Just gameState ) ->
+            if oldGameState.playerState.crossedGates /= gameState.playerState.crossedGates then
+                let
+                    newModel =
+                        { model | gateRankings = gateRankings liveTimeTrial gameState }
+                in
+                    { response | model = newModel }
+            else
+                response
+
+        _ ->
+            response
+
+
+gateRankings : LiveTimeTrial -> GameState -> List GateRanking
+gateRankings { timeTrial, track, meta } { playerState, course } =
+    let
+        gateNumber =
+            List.length (course.start :: course.gates) - List.length playerState.crossedGates
+    in
+        List.head playerState.crossedGates
+            |> Maybe.map (sortRankings meta.rankings gateNumber playerState.player)
+            |> Maybe.withDefault []
+
+
+sortRankings : List Ranking -> Int -> Player -> Float -> List GateRanking
+sortRankings rankings gateNumber currentPlayer currentTime =
+    rankings
+        |> List.filterMap
+            (\ranking ->
+                List.getAt gateNumber ranking.gates
+                    |> Maybe.map (\time -> GateRanking ranking.player time False)
+            )
+        |> (::) (GateRanking currentPlayer currentTime True)
+        |> List.sortBy .time

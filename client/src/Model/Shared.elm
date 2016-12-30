@@ -240,6 +240,7 @@ type alias Ranking =
     { rank : Int
     , runId : String
     , player : Player
+    , gates : List Time
     , finishTime : Time
     }
 

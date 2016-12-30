@@ -139,6 +139,7 @@ case class PlayerRanking(
   rank: Long,
   runId: UUID,
   player: Player,
+  gates: Seq[Long],
   finishTime: Long
 )
 

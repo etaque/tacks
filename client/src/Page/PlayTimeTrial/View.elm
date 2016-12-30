@@ -5,6 +5,7 @@ import Html.Events exposing (..)
 import Html.Attributes exposing (..)
 import Model.Shared exposing (..)
 import Page.PlayTimeTrial.Model exposing (..)
+import Page.PlayTimeTrial.ContextView as ContextView
 import Game.Shared exposing (GameState, Timers, isStarted, raceTime)
 import Game.Widget.Timer as Timer
 import Game.Widget.Help as Help
@@ -14,7 +15,7 @@ import View.Layout as Layout exposing (Layout)
 import View.Utils as Utils
 import Game.Render.All exposing (render)
 import Route exposing (..)
-import Constants exposing (..)
+import Constants
 import Dialog
 
 
@@ -51,7 +52,11 @@ view { device, liveStatus } model =
 
 baseLayers : Device -> Model -> LiveTimeTrial -> GameState -> List (Html Msg)
 baseLayers device model liveTimeTrial gameState =
-    [ render ( device.size.width, device.size.height - appbarHeight ) gameState
+    [ render
+        ( device.size.width
+        , device.size.height - Constants.appbarHeight
+        )
+        gameState
     , toolbar model liveTimeTrial gameState
     , contextAside model liveTimeTrial gameState
     ]
@@ -90,8 +95,9 @@ toolbar model liveTimeTrial gameState =
         [ class "toolbar" ]
         [ contextBadge model gameState
         , div
-            [ class "toolbar-group" ]
-            [ div
+            [ class "toolbar-group"
+            ]
+            [ button
                 [ class "toolbar-item"
                 , onClick (ShowDialog RankingsDialog)
                 ]
@@ -103,26 +109,24 @@ toolbar model liveTimeTrial gameState =
 contextBadge : Model -> GameState -> Html Msg
 contextBadge model gameState =
     div
-        [ class "toolbar-group"
+        [ classList
+            [ ( "toggle-context", True )
+            , ( "active", model.showContext )
+            ]
         , onClick (ShowContext (not model.showContext))
         ]
-        [ div
-            [ classList
-                [ ( "toolbar-item mini-context", True )
-                , ( "active", model.showContext )
-                ]
+        [ span
+            [ class "gates" ]
+            [ if Game.Shared.isStarted gameState then
+                text <|
+                    toString (List.length gameState.playerState.crossedGates)
+                        ++ "/"
+                        ++ toString (List.length gameState.course.gates + 1)
+              else
+                text "-/-"
             ]
-            [ span
-                [ class "gates" ]
-                [ if Game.Shared.isStarted gameState then
-                    text <|
-                        toString (List.length gameState.playerState.crossedGates)
-                            ++ "/"
-                            ++ toString (List.length gameState.course.gates + 1)
-                  else
-                    text "-/-"
-                ]
-            ]
+        , span [ class "separator" ] []
+        , Utils.mIcon "arrow_drop_down" [ "indicator" ]
         ]
 
 
@@ -134,7 +138,7 @@ contextAside model liveTimeTrial gameState =
             , ( "visible", model.showContext )
             ]
         ]
-        [ text "coucou" ]
+        [ ContextView.view model liveTimeTrial gameState ]
 
 
 dialogContent : Model -> LiveTimeTrial -> DialogKind -> Dialog.Layout Msg

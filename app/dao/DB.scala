@@ -15,20 +15,25 @@ import org.joda.time.DateTime
 
 
 trait DB extends ExPostgresDriver
-  with PgDateSupportJoda
-  with PgPlayJsonSupport {
+    with PgDateSupportJoda
+    with PgArraySupport
+    with PgPlayJsonSupport {
 
   def pgjson = "jsonb"
 
   override val api = LocaleAPI
 
   object LocaleAPI extends API
-    with DateTimeImplicits
-    with PlayJsonImplicits {
+      with DateTimeImplicits
+      with PlayJsonImplicits
+      with PlayJsonPlainImplicits
+      with JsonImplicits
+      with SimpleArrayPlainImplicits {
 
     implicit class PgPositionedResult(val r: PositionedResult) {
       def nextUUID: UUID = UUID.fromString(r.nextString)
       def nextUUIDOption: Option[UUID] = r.nextStringOption().map(UUID.fromString)
+      def nextLongSeq: Seq[Long] = r.nextJson.asOpt[Seq[Long]].getOrElse(Nil)
     }
 
     implicit object SetUUID extends SetParameter[UUID] {
