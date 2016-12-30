@@ -29,7 +29,7 @@ body > div {
 
 aside.menu {
   @include shadow-medium;
-  z-index: 3;
+  z-index: 10;
   position: fixed;
   top: 0;
   bottom: 0;
@@ -58,8 +58,8 @@ aside.menu {
   }
 
   .menu-backdrop {
-    z-index: 2;
     opacity: 1;
+    z-index: 9;
 
     &:hover {
       opacity: 0.8;
@@ -72,7 +72,7 @@ aside.menu {
   height: $appbar;
   left: 0;
   right: 0;
-  z-index: 2;
+  z-index: 5;
   background-color: $charcoal;
   @include shadow-light;
 
