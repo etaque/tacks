@@ -31,8 +31,9 @@ windDecoder =
 
 gustDecoder : Decoder Gust
 gustDecoder =
-    map6
+    map7
         Gust
+        (field "id" string)
         (field "position" pointDecoder)
         (field "angle" float)
         (field "speed" float)

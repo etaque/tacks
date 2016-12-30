@@ -48,7 +48,7 @@ genTiledGust grid ({ position, angle, speed, radius } as gust) =
                 |> List.filterMap (genGustTile grid gust)
                 |> Dict.fromList
     in
-        TiledGust position radius tiles
+        TiledGust gust.id position radius tiles
 
 
 genGustTile : Grid -> Gust -> Coords -> Maybe ( Coords, GustTile )

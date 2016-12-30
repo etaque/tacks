@@ -1,12 +1,13 @@
 package models
 
 import java.lang.Math._
-
+import java.util.UUID
 import models.Geo._
 import play.api.libs.json.{Json, Format}
 
 
 case class Gust(
+  id: UUID,
   position: Point,
   angle: Double, // degrees
   speed: Double,

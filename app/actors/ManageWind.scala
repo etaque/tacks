@@ -2,8 +2,8 @@ package actors
 
 import java.util.UUID
 import org.joda.time.DateTime
-
 import models._
+
 
 trait ManageWind {
 
@@ -21,6 +21,7 @@ trait ManageWind {
     val maxRadius = gen.generateRadius(rng)
 
     val gust = Gust(
+      id = UUID.randomUUID(),
       position = (course.area.genX(xSeed), course.area.top - maxRadius),
       angle = gen.generateOrigin(rng),
       speed = gen.generateSpeed(rng),

@@ -8,6 +8,7 @@ import Game.Render.Gates as Gates
 import Game.Render.Tiles as Tiles
 import Dict
 import Svg exposing (..)
+import Svg.Keyed
 import Svg.Attributes exposing (..)
 
 
@@ -24,15 +25,19 @@ renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
 
 renderTiledGusts : TiledGusts -> Svg msg
 renderTiledGusts { gusts } =
-    g [ class "tiled-gusts" ] (List.map renderTiledGust gusts)
+    Svg.Keyed.node "g" [ class "tiled-gusts" ] (List.map renderTiledGust gusts)
 
 
-renderTiledGust : TiledGust -> Svg msg
-renderTiledGust { tiles } =
-    tiles
-        |> Dict.toList
-        |> List.map renderGustTile
-        |> g [ class "tiled-gust" ]
+renderTiledGust : TiledGust -> ( String, Svg msg )
+renderTiledGust { id, tiles } =
+    let
+        node =
+            tiles
+                |> Dict.toList
+                |> List.map renderGustTile
+                |> g [ class "tiled-gust" ]
+    in
+        ( id, node )
 
 
 renderGustTile : ( Coords, GustTile ) -> Svg msg

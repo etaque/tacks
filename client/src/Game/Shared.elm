@@ -130,7 +130,8 @@ type alias WindSample =
 
 
 type alias Gust =
-    { position : Point
+    { id : String
+    , position : Point
     , angle : Float
     , speed : Float
     , radius : Float
@@ -146,7 +147,8 @@ type alias TiledGusts =
 
 
 type alias TiledGust =
-    { position : Point
+    { id : String
+    , position : Point
     , radius : Float
     , tiles : Dict Coords GustTile
     }

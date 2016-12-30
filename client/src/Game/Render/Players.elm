@@ -7,6 +7,7 @@ import Model.Shared exposing (..)
 import Game.Render.SvgUtils exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
+import Svg.Keyed
 import List exposing (..)
 
 
@@ -22,10 +23,10 @@ renderPlayers ({ playerState, opponents, ghosts, course, center } as gameState) 
 
 renderOpponents : List Opponent -> Svg msg
 renderOpponents opponents =
-    g [ class "opponents" ] (List.map renderOpponent opponents)
+    Svg.Keyed.node "g" [ class "opponents" ] (List.map renderOpponent opponents)
 
 
-renderOpponent : Opponent -> Svg msg
+renderOpponent : Opponent -> ( String, Svg msg )
 renderOpponent { state, player } =
     let
         hull =
@@ -46,15 +47,15 @@ renderOpponent { state, player } =
                 ]
                 [ text (Maybe.withDefault "Anonymous" player.handle) ]
     in
-        g [ class "opponent" ] [ shadow, hull, name ]
+        ( player.id, g [ class "opponent" ] [ shadow, hull, name ] )
 
 
 renderGhosts : List Ghost -> Svg msg
 renderGhosts ghosts =
-    g [ class "ghosts" ] (List.map renderGhost ghosts)
+    Svg.Keyed.node "g" [ class "ghosts" ] (List.map renderGhost ghosts)
 
 
-renderGhost : Ghost -> Svg msg
+renderGhost : Ghost -> ( String, Svg msg )
 renderGhost ghost =
     let
         hull =
@@ -72,7 +73,7 @@ renderGhost ghost =
                 ]
                 [ text (Maybe.withDefault "Anonymous" ghost.handle) ]
     in
-        g [ class "ghost" ] [ hull, name ]
+        ( ghost.id, g [ class "ghost" ] [ hull, name ] )
 
 
 renderPlayer : Course -> PlayerState -> Svg msg
