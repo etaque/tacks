@@ -18,8 +18,6 @@ view =
                 [ class "touch-left"
                 , TouchEvents.onTouchStart (\_ -> Left True)
                 , TouchEvents.onTouchEnd (\_ -> Left False)
-                , onMouseDown (Left True)
-                , onMouseUp (Left False)
                 ]
                 [ Utils.mIcon "keyboard_arrow_left" []
                 , span [] [ text "left" ]
@@ -27,7 +25,6 @@ view =
             , a
                 [ class "touch-lock"
                 , TouchEvents.onTouchStart (\_ -> LockWindAngle)
-                , onMouseDown LockWindAngle
                 ]
                 [ Utils.mIcon "keyboard_arrow_down" []
                 , span [] [ text "lock" ]
@@ -36,7 +33,6 @@ view =
         , a
             [ class "touch-panel-center touch-tack"
             , TouchEvents.onTouchStart (\_ -> Tack)
-            , onMouseDown Tack
             ]
             []
         , div
@@ -45,8 +41,6 @@ view =
                 [ class "touch-right"
                 , TouchEvents.onTouchStart (\_ -> Right True)
                 , TouchEvents.onTouchEnd (\_ -> Right False)
-                , onMouseDown (Right True)
-                , onMouseUp (Right False)
                 ]
                 [ Utils.mIcon "keyboard_arrow_right" []
                 , span [] [ text "right" ]
@@ -54,7 +48,6 @@ view =
             , a
                 [ class "touch-vmg"
                 , TouchEvents.onTouchStart (\_ -> AutoVmg)
-                , onMouseDown AutoVmg
                 ]
                 [ Utils.mIcon "keyboard_arrow_up" []
                 , span [] [ text "vmg" ]
