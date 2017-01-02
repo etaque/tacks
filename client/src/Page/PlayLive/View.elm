@@ -71,12 +71,7 @@ baseLayers device model liveTrack gameState =
 
 chatLayers : Device -> Model -> List (Html Msg)
 chatLayers device { chat } =
-    if device.control /= TouchControl then
-        [ Chat.messages chat
-        , Html.map (GameMsg << ChatMsg) (Chat.inputField chat)
-        ]
-    else
-        []
+    [ Html.map (GameMsg << ChatMsg) (Chat.view chat) ]
 
 
 controlLayers : Device -> List (Html Msg)

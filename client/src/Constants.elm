@@ -27,6 +27,10 @@ transitionDuration =
     100
 
 
+breakTablet =
+    768
+
+
 colors =
     { water =
         "rgb(33, 148, 206)"

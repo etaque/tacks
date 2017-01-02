@@ -46,6 +46,8 @@ type alias Chat =
     { messages : List Message
     , field : String
     , focus : Bool
+    , showMessages : Bool
+    , unreadCount : Int
     }
 
 
@@ -54,6 +56,8 @@ initialChat =
     { messages = []
     , field = ""
     , focus = False
+    , showMessages = False
+    , unreadCount = 0
     }
 
 

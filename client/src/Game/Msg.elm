@@ -25,7 +25,8 @@ type GameMsg
 
 type ChatMsg
     = AddMessage Message
-    | EnterChat Bool
-    | ExitChat Bool
+    | EnterChat
+    | ExitChat
     | UpdateField String
+    | ShowMessages Bool
     | SubmitMessage

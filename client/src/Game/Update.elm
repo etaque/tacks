@@ -148,18 +148,20 @@ updateRaceInput input ({ playerState, timers } as gameState) =
 updateChat : (Output.ServerMsg -> Cmd GameMsg) -> ChatMsg -> Chat -> Response Chat GameMsg
 updateChat serverSocket msg model =
     case msg of
-        EnterChat withFocus ->
-            res { model | focus = True } (Ports.setFocus chatFieldId)
+        ShowMessages b ->
+            res
+                { model | showMessages = b }
+                (if b then
+                    Ports.scrollToBottom chatMessagesId
+                 else
+                    Cmd.none
+                )
 
-        ExitChat withBlur ->
-            let
-                cmd =
-                    if withBlur then
-                        Ports.setBlur chatFieldId
-                    else
-                        Cmd.none
-            in
-                res { model | focus = False } cmd
+        EnterChat ->
+            res { model | focus = True, showMessages = True, unreadCount = 0 } (Ports.setFocus chatFieldId)
+
+        ExitChat ->
+            res { model | focus = False } (Ports.setBlur chatFieldId)
 
         UpdateField s ->
             res { model | field = s } Cmd.none
@@ -168,12 +170,25 @@ updateChat serverSocket msg model =
             if String.isEmpty model.field then
                 res model (Ports.setBlur chatFieldId)
             else
-                res { model | field = "" } (serverSocket (Output.SendMessage model.field))
+                res
+                    { model | field = "", showMessages = True }
+                    (serverSocket (Output.SendMessage model.field))
 
         AddMessage msg ->
             res
-                { model | messages = List.take 30 (msg :: model.messages) }
-                (Ports.scrollToBottom chatMessagesId)
+                { model
+                    | messages = List.take 30 (msg :: model.messages)
+                    , unreadCount =
+                        if model.showMessages then
+                            0
+                        else
+                            model.unreadCount + 1
+                }
+                (if model.showMessages then
+                    Ports.scrollToBottom chatMessagesId
+                 else
+                    Cmd.none
+                )
 
 
 downKeyToMsg : WithGame a -> Int -> GameMsg
@@ -184,14 +199,14 @@ downKeyToMsg model code =
                 ChatMsg (SubmitMessage)
 
             Keyboard.Escape ->
-                ChatMsg (ExitChat True)
+                ChatMsg ExitChat
 
             _ ->
                 GameNoOp
     else
         case Keyboard.fromCode code of
             Keyboard.Enter ->
-                ChatMsg (EnterChat True)
+                ChatMsg EnterChat
 
             Keyboard.ArrowUp ->
                 AutoVmg

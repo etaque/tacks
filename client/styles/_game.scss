@@ -303,79 +303,158 @@
   }
 }
 
-.chat-input {
-  position: absolute;
-  bottom: 16px;
-  left: 0;
-  right: 0;
-  margin: 0 auto;
-  text-align: center;
 
 
-  input {
-    @include sheet;
-    background-color: $charcoal;
-    padding: 8px;
-    font-size: 14px;
-    width: 180px;
-    opacity: 0.3;
-    border: none;
-    cursor: pointer;
-    transition: bezier(all);
-    @include placeholder-color($white);
-    text-align: center;
-
-    &:focus {
-      width: $aside;
-      opacity: 1;
-      cursor: auto;
-      outline: none;
-      background-color: $white;
-      @include shadow-medium;
-      color: $darkGrey;
-      text-align: left;
-    }
-  }
-}
-
-.chat-messages {
+.chat-layer {
   position: absolute;
   right: 16px;
   bottom: 16px;
-  opacity: 0.8;
-  width: $aside;
-  background-color: $shadow;
-  font-size: 14px;
-  max-height: calc(100% - 32px);
-  overflow-y: auto;
+  left: 16px;
+  top: 52px + 16px;
+  z-index: 5;
 
-  ul {
-    @include players-list;
-    padding: 4px 8px;
-    margin: 0;
-    color: $white;
+  .chat-input {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    @include sheet;
+    display: flex;
+    opacity: 0.7;
+    border-radius: 18px;
+    transition: bezier(all);
 
-    li {
-      line-height: 16px;
-      padding: 4px 0;
+    &:hover {
+      opacity: 1;
+    }
 
-      .handle {
-        color: white;
-        margin-right: 8px;
-        // text-decoration: underline;
-        font-weight: bold;
 
-        &:after {
-          content: ":";
-        }
+    input {
+      padding: 8px 0;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      transition: bezier(all);
+      @include placeholder-color($white);
+      text-align: left;
+      background-color: transparent;
+      color: $darkGrey;
+      width: 1px;
+      opacity: 0;
+    }
+
+    .chat-btn {
+      position: relative;
+
+      i {
+        width: 36px;
+        line-height: 36px;
+        text-align: center;
+        font-size: 20px;
+        cursor: pointer;
       }
 
-      .content {
+      .unread-count {
+        background-color: $red;
+        color: white;
+        position: absolute;
+        top: -8px;
+        left: -8px;
+        font-size: 13px;
+        width: 18px;
+        text-align: center;
+        line-height: 18px;
+        border-radius: 2px;
+        transition: bezier(opacity);
+
+        &.no-unread {
+          opacity: 0;
+        }
+      }
+    }
+  }
+
+  &.focus {
+    .chat-input {
+      @include shadow-medium;
+      opacity: 1;
+      border-radius: 2px;
+
+      input {
+        cursor: auto;
+        outline: none;
+        width: $aside - 36px;
+        opacity: 1;
+      }
+    }
+  }
+
+  .chat-messages-toggle {
+    float: right;
+
+    i {
+      font-size: 20px;
+      color: $white;
+      width: 36px;
+      line-height: 36px;
+      text-align: center;
+      color: $lightGrey;
+      cursor: pointer;
+
+      &:hover {
         color: white;
       }
     }
   }
+
+  .chat-messages {
+    position: absolute;
+    right: 0;
+    bottom: 36px + 12px;
+    opacity: 0;
+    width: $aside;
+    background-color: $shadow;
+    font-size: 14px;
+    max-height: 100%;
+    overflow-y: auto;
+    border-radius: 2px;
+    transition: bezier(opacity);
+
+    &.visible {
+      opacity: 0.8;
+    }
+
+    &.empty {
+      opacity: 0;
+    }
+
+    ul {
+      @include players-list;
+      padding: 4px 8px;
+      margin: 0;
+      color: $white;
+
+      li {
+        line-height: 16px;
+        padding: 4px 0;
+
+        .handle {
+          color: white;
+          margin-right: 8px;
+          font-weight: bold;
+
+          &:after {
+            content: ":";
+          }
+        }
+
+        .content {
+          color: white;
+        }
+      }
+    }
+  }
 }
+
 
 .touch-commands {
   position: absolute;
