@@ -20,6 +20,7 @@ type GameMsg
     | AddGhost String Player
     | RemoveGhost String
     | ChatMsg ChatMsg
+    | ChooseControl DeviceControl
     | GameNoOp
 
 

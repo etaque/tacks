@@ -33,7 +33,7 @@ function notify(msg) {
 
 const appSetup = readData('appSetup', document);
 appSetup.size = windowSize();
-appSetup.control = null;
+appSetup.control = window.localStorage && window.localStorage.getItem("deviceControl");
 
 const app = Elm.Main.fullscreen(appSetup);
 
@@ -52,6 +52,12 @@ app.ports.scrollToBottom.subscribe(id => {
       el.scrollTop = el.scrollHeight;
     }
   });
+});
+
+app.ports.saveControl.subscribe(deviceControl => {
+  if (window.localStorage) {
+    window.localStorage.setItem("deviceControl", deviceControl);
+  }
 });
 
 app.ports.notify.subscribe(msg => {

@@ -17,6 +17,7 @@ import Game.Widget.Controls as Controls
 import Constants
 import Game.Shared exposing (GameState)
 import View.Utils as Utils
+import View.DeviceControl
 import Route
 import Dialog
 
@@ -49,7 +50,7 @@ view { device } model =
                     ++ (controlLayers device)
             , dialog =
                 Maybe.map
-                    (dialogContent model liveTrack >> Dialog.view DialogMsg model.dialog)
+                    (dialogContent device model liveTrack >> Dialog.view DialogMsg model.dialog)
                     model.dialogKind
             }
 
@@ -64,7 +65,7 @@ baseLayers device model liveTrack gameState =
         , device.size.height - Constants.appbarHeight
         )
         gameState
-    , toolbar liveTrack model gameState
+    , toolbar device liveTrack model gameState
     , contextAside model liveTrack gameState
     ]
 
@@ -111,8 +112,8 @@ appbar model { track } gameState =
     ]
 
 
-toolbar : LiveTrack -> Model -> GameState -> Html Msg
-toolbar liveTrack model gameState =
+toolbar : Device -> LiveTrack -> Model -> GameState -> Html Msg
+toolbar device liveTrack model gameState =
     if liveTrack.track.status == Draft then
         text ""
     else
@@ -124,8 +125,15 @@ toolbar liveTrack model gameState =
                 [ button
                     [ class "toolbar-item"
                     , onClick (ShowDialog RankingsDialog)
+                    , title "Rankings"
                     ]
                     [ Utils.mIcon "timeline" [] ]
+                , button
+                    [ class "toolbar-item"
+                    , onClick (ShowDialog ChooseControl)
+                    , title "Control mode"
+                    ]
+                    [ Utils.mIcon (View.DeviceControl.icon device.control) [] ]
                 ]
             ]
 
@@ -176,11 +184,14 @@ contextAside model liveTrack gameState =
         ]
 
 
-dialogContent : Model -> LiveTrack -> DialogKind -> Dialog.Layout Msg
-dialogContent model liveTrack kind =
+dialogContent : Device -> Model -> LiveTrack -> DialogKind -> Dialog.Layout Msg
+dialogContent device model liveTrack kind =
     case kind of
         ChooseControl ->
-            Dialog.emptyLayout
+            { header = [ Dialog.title "Choose control mode" ]
+            , body = [ Html.map GameMsg (View.DeviceControl.view device.control) ]
+            , footer = []
+            }
 
         RankingsDialog ->
             { header = [ Dialog.title "Rankings" ]

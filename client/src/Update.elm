@@ -27,6 +27,7 @@ import Json.Decode as Json
 import WebSocket
 import Activity
 import Navigation
+import Ports
 
 
 subscriptions : Model -> Sub Msg
@@ -76,6 +77,9 @@ eventMsg event =
 
         Event.Poke p ->
             ActivityEmitMsg (Activity.Poke p)
+
+        Event.SetDeviceControl deviceControl ->
+            SetDeviceControl deviceControl
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -136,6 +140,11 @@ msgUpdate msg ({ device, pages } as model) =
 
         ToggleSidebar visible ->
             res { model | device = { device | showMenu = visible } } Cmd.none
+
+        SetDeviceControl deviceControl ->
+            res
+                { model | device = { device | control = deviceControl } }
+                (Ports.saveControl (toString deviceControl))
 
         NoOp ->
             res model Cmd.none

@@ -138,6 +138,12 @@
       background-color: transparent;
       outline: none;
 
+      border-right: 1px solid #ddd;
+
+      &:last-child {
+        border-right: none;
+      }
+
       &:hover {
         color: $darkGrey;
       }
@@ -455,6 +461,67 @@
   }
 }
 
+.control-mode {
+  margin: 16px;
+
+  .modes {
+    display: flex;
+  }
+
+  .mode {
+    flex: 1;
+    text-align: center;
+    cursor: pointer;
+    border-radius: 2px;
+    padding: 16px 0;
+
+
+    &:hover {
+      background-color: $whiteSmoke;
+      color: $darkGrey;
+    }
+
+    &.chosen {
+      background-color: $whiteSeaBlue;
+      color: $darkSeaBlue;
+    }
+
+    i {
+      font-size: 48px;
+      display: block;
+      margin-bottom: 8px;
+    }
+  }
+
+  .help {
+    margin: 16px 8px;
+
+    dl {
+      @include clearfix;
+      margin: 0;
+    }
+
+    dt, dd {
+      line-height: 24px;
+    }
+
+    dt {
+      float: left;
+      clear: both;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      background-color: $lightGrey;
+      border-radius: 2px;
+      padding: 0 8px;
+
+    }
+
+    dd {
+      float: right;
+    }
+
+  }
+}
 
 .touch-commands {
   position: absolute;

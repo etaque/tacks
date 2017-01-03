@@ -6,6 +6,7 @@ import Game.Output as Output
 import Ports
 import Response exposing (..)
 import Model.Shared exposing (..)
+import Model.Event as Event
 import Dict exposing (Dict)
 import Window
 import AnimationFrame
@@ -92,6 +93,10 @@ update player toServerCmd msg model =
         ChatMsg chatMsg ->
             updateChat toServerCmd chatMsg model.chat
                 |> mapModel (\newChat -> { model | chat = newChat })
+
+        ChooseControl deviceControl ->
+            res model Cmd.none
+                |> withEvent (Event.SetDeviceControl deviceControl)
 
         GameNoOp ->
             res model Cmd.none

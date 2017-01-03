@@ -42,6 +42,7 @@ type Msg
     | Logout
     | Navigate String
     | ToggleSidebar Bool
+    | SetDeviceControl DeviceControl
     | NoOp
 
 
