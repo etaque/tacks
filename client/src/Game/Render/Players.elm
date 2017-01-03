@@ -282,7 +282,9 @@ renderPlayerAngles player =
 
         vmgLines =
             g
-                [ opacity "0.5" ]
+                [ opacity "0.5"
+                , transform (rotate_ -player.windOrigin 0 0)
+                ]
                 [ renderVmgLine -player.upwindVmg.angle
                 , renderVmgLine player.upwindVmg.angle
                 , renderVmgLine -player.downwindVmg.angle
@@ -362,7 +364,7 @@ vmgIcon player =
             (abs player.windAngle)
 
         margin =
-            3
+            1
     in
         if a < 90 then
             if a < player.upwindVmg.angle - margin then
