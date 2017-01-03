@@ -35,15 +35,24 @@ subscriptions host liveStatus model =
             Sub.none
 
 
-mount : LiveStatus -> Response Model Msg
-mount liveStatus =
+mount : Device -> LiveStatus -> Response Model Msg
+mount device liveStatus =
     case liveStatus.liveTimeTrial of
         Just ltt ->
-            Cmd.batch [ loadCourse ltt, Cmd.map GameMsg Game.mount ]
+            Cmd.batch [ loadCourse ltt, Cmd.map GameMsg Game.mount, chooseDeviceControl device ]
                 |> res initial
 
         Nothing ->
             res initial Cmd.none
+
+
+chooseDeviceControl : Device -> Cmd Msg
+chooseDeviceControl device =
+    if device.control == UnknownControl then
+        Task.succeed ChooseControlDialog
+            |> Task.perform ShowDialog
+    else
+        Cmd.none
 
 
 update : LiveStatus -> Player -> String -> Msg -> Model -> Response Model Msg

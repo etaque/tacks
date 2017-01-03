@@ -185,13 +185,13 @@ mountRoute newRoute ({ pages, player, route, device } as prevModel) =
                 applyEditTrack (EditTrack.mount id) model
 
             PlayTrack id ->
-                applyPlayLive (PlayLive.mount id) model
+                applyPlayLive (PlayLive.mount device id) model
 
             ShowTimeTrial id ->
                 applyShowTimeTrial (ShowTimeTrial.mount id) model
 
             PlayTimeTrial ->
-                applyPlayTimeTrial (PlayTimeTrial.mount model.liveStatus) model
+                applyPlayTimeTrial (PlayTimeTrial.mount device model.liveStatus) model
 
             ListDrafts ->
                 applyListDrafts (ListDrafts.mount pages.listDrafts) model

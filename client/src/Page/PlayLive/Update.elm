@@ -33,10 +33,19 @@ subscriptions host model =
             Sub.none
 
 
-mount : String -> Response Model Msg
-mount id =
-    Cmd.batch [ load id, Cmd.map GameMsg Game.mount ]
+mount : Device -> String -> Response Model Msg
+mount device id =
+    Cmd.batch [ load id, Cmd.map GameMsg Game.mount, chooseDeviceControl device ]
         |> res initial
+
+
+chooseDeviceControl : Device -> Cmd Msg
+chooseDeviceControl device =
+    if device.control == UnknownControl then
+        Task.succeed ChooseControl
+            |> Task.perform ShowDialog
+    else
+        Cmd.none
 
 
 update : Player -> String -> Msg -> Model -> Response Model Msg

@@ -12,6 +12,7 @@ import Game.Widget.Help as Help
 import Game.Widget.Rankings as Rankings
 import Game.Widget.Controls as Controls
 import View.Layout as Layout exposing (Layout)
+import View.DeviceControl
 import View.Utils as Utils
 import Game.Render.All exposing (render)
 import Route exposing (..)
@@ -41,7 +42,7 @@ view { device, liveStatus } model =
                     ++ (controlLayers device)
             , dialog =
                 Maybe.map
-                    (dialogContent model liveTimeTrial >> Dialog.view DialogMsg model.dialog)
+                    (dialogContent device model liveTimeTrial >> Dialog.view DialogMsg model.dialog)
                     model.dialogKind
             }
 
@@ -57,7 +58,7 @@ baseLayers device model liveTimeTrial gameState =
         , device.size.height - Constants.appbarHeight
         )
         gameState
-    , toolbar model liveTimeTrial gameState
+    , toolbar device model liveTimeTrial gameState
     , contextAside model liveTimeTrial gameState
     ]
 
@@ -89,8 +90,8 @@ appbar model { track } gameState =
     ]
 
 
-toolbar : Model -> LiveTimeTrial -> GameState -> Html Msg
-toolbar model liveTimeTrial gameState =
+toolbar : Device -> Model -> LiveTimeTrial -> GameState -> Html Msg
+toolbar device model liveTimeTrial gameState =
     div
         [ class "toolbar" ]
         [ contextBadge model gameState
@@ -102,6 +103,12 @@ toolbar model liveTimeTrial gameState =
                 , onClick (ShowDialog RankingsDialog)
                 ]
                 [ Utils.mIcon "timeline" [] ]
+            , button
+                [ class "toolbar-item"
+                , onClick (ShowDialog ChooseControlDialog)
+                , title "Control mode"
+                ]
+                [ Utils.mIcon (View.DeviceControl.icon device.control) [] ]
             ]
         ]
 
@@ -141,11 +148,14 @@ contextAside model liveTimeTrial gameState =
         [ ContextView.view model liveTimeTrial gameState ]
 
 
-dialogContent : Model -> LiveTimeTrial -> DialogKind -> Dialog.Layout Msg
-dialogContent model liveTimeTrial kind =
+dialogContent : Device -> Model -> LiveTimeTrial -> DialogKind -> Dialog.Layout Msg
+dialogContent device model liveTimeTrial kind =
     case kind of
-        ChooseControl ->
-            Dialog.emptyLayout
+        ChooseControlDialog ->
+            { header = [ Dialog.title "Choose control mode" ]
+            , body = [ Html.map GameMsg (View.DeviceControl.view device.control) ]
+            , footer = []
+            }
 
         RankingsDialog ->
             { header = [ Dialog.title "Rankings" ]

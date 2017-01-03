@@ -25,7 +25,7 @@ type alias GateRanking =
 
 
 type DialogKind
-    = ChooseControl
+    = ChooseControlDialog
     | RankingsDialog
     | NewBestTime
 

@@ -520,6 +520,13 @@
       float: right;
     }
 
+    dd:nth-child(4)::before {
+      content: "new!";
+      color: $orange;
+      text-transform: uppercase;
+      margin-right: 4px;
+    }
+
   }
 }
 

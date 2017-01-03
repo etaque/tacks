@@ -9,7 +9,6 @@ import Game.Msg exposing (GameMsg(ChatMsg))
 import View.Layout as Layout exposing (Layout)
 import Game.Render.All exposing (render)
 import Game.Widget.Timer as Timer
-import Game.Widget.Help as Help
 import Game.Widget.Rankings as Rankings
 import Game.Widget.LivePlayers as LivePlayers
 import Game.Widget.Chat as Chat
