@@ -2,20 +2,18 @@ module Page.EditTrack.Update exposing (..)
 
 import Task exposing (Task, succeed, map, andThen)
 import Result exposing (Result(Ok, Err))
-import Array
 import Response exposing (..)
 import Model.Shared exposing (..)
 import Page.EditTrack.Model exposing (..)
 import Page.EditTrack.FormUpdate as FormUpdate
 import Page.EditTrack.GridUpdate as GridUpdate
-import Constants exposing (..)
 import ServerApi
-import Hexagons
 import Update.Utils exposing (..)
 import Route
 import Mouse
 import Http
 import Window
+import Game.Utils
 
 
 subscriptions : Model -> Sub Msg
@@ -122,8 +120,13 @@ loadTrack id =
 
 saveEditor : String -> Editor -> Task Never (FormResult Track)
 saveEditor id ({ course, name } as editor) =
-    ServerApi.saveTrack id name { course | area = getRaceArea course.grid }
-        |> ServerApi.toFormTask
+    let
+        area =
+            listGridTiles course.grid
+                |> List.filter (\t -> t.kind == Water)
+                |> Game.Utils.getRaceArea
+    in
+        ServerApi.saveTrack id name { course | area = area } |> ServerApi.toFormTask
 
 
 save : Bool -> String -> Editor -> Cmd Msg
@@ -137,44 +140,3 @@ publish id ({ course, name } as editor) =
     delay 500 (saveEditor id editor)
         |> Task.andThen (\_ -> (ServerApi.toFormTask (ServerApi.publishTrack id)))
         |> Task.perform (SaveResult True)
-
-
-getRaceArea : Grid -> RaceArea
-getRaceArea grid =
-    let
-        waterPoints =
-            listGridTiles grid
-                |> List.filter (\t -> t.kind == Water)
-                |> List.map (\t -> Hexagons.axialToPoint hexRadius t.coords)
-
-        xVals =
-            waterPoints
-                |> List.map Tuple.first
-                |> List.sort
-                |> Array.fromList
-
-        yVals =
-            waterPoints
-                |> List.map Tuple.second
-                |> List.sort
-                |> Array.fromList
-
-        getFirst arr =
-            Maybe.withDefault 0 (Array.get 0 arr)
-
-        getLast arr =
-            Maybe.withDefault 0 (Array.get (Array.length arr - 1) arr)
-
-        right =
-            getLast xVals + hexRadius
-
-        left =
-            getFirst xVals - hexRadius
-
-        top =
-            getLast yVals + hexRadius
-
-        bottom =
-            getFirst yVals - hexRadius
-    in
-        RaceArea ( right, top ) ( left, bottom )

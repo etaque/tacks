@@ -6,21 +6,49 @@ import Model.Shared exposing (..)
 import Hexagons
 import Game.Render.Gates as Gates
 import Game.Render.Tiles as Tiles
+import Game.Render.Layer as Layer
 import Dict
+import Html exposing (Html)
 import Svg exposing (..)
 import Svg.Keyed
 import Svg.Attributes exposing (..)
 
 
-renderCourse : GameState -> Svg msg
-renderCourse ({ playerState, course, gusts, timers, wind } as gameState) =
+render : GameState -> Svg msg
+render ({ playerState, course, gusts, timers, wind } as gameState) =
     g
         [ class "course" ]
-        [ Tiles.lazyRenderTiles course.grid
-        , renderTiledGusts gusts
-          -- , renderGusts wind
+        [ renderTiledGusts gusts
         , renderGates playerState course timers.localTime (isStarted gameState)
         ]
+
+
+
+-- gatesLayer : GameState -> Html msg
+-- gatesLayer gameState =
+
+
+courseGridLayer : ( Int, Int ) -> GameState -> Html msg
+courseGridLayer dims gameState =
+    let
+        { rightTop, leftBottom } =
+            gameState.course.area
+
+        ( ( right, top ), ( left, bottom ) ) =
+            ( rightTop, leftBottom )
+    in
+        LayerDef.svgLayer
+            { size = dims
+            , center = gameState.center
+            }
+            { width = right - left + 2 * Constants.hexRadius
+            , height = top - bottom + 2 * Constants.hexRadius
+            , left = left - Constants.hexRadius
+            , bottom = bottom - Constants.hexRadius
+            , rotation = 0
+            }
+            "course-layer"
+            (Tiles.lazyRenderTiles gameState.course.grid)
 
 
 renderTiledGusts : TiledGusts -> Svg msg

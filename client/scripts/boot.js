@@ -1,6 +1,5 @@
 const Elm = window.Elm;
 
-
 function readData(id, el) {
   const value = el.getElementById(id).textContent.trim();
   return value && JSON.parse(value);
@@ -8,32 +7,35 @@ function readData(id, el) {
 
 function windowSize() {
   return {
-    width: window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth,
-    height: window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight
+    width: window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth,
+    height: window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight
   };
 }
 
 function notify(msg) {
   const options = {};
 
-  if (!('Notification' in window)) {
-    console.log('This browser does not support desktop notification');
-  }
-  else if (Notification.permission === 'granted') {
+  if (!("Notification" in window)) {
+    console.log("This browser does not support desktop notification");
+  } else if (Notification.permission === "granted") {
     new Notification(msg, options);
-  }
-  else if (Notification.permission !== 'denied') {
-    Notification.requestPermission(function (permission) {
-      if (permission === 'granted') {
+  } else if (Notification.permission !== "denied") {
+    Notification.requestPermission(function(permission) {
+      if (permission === "granted") {
         new Notification(msg, options);
       }
     });
   }
 }
 
-const appSetup = readData('appSetup', document);
+const appSetup = readData("appSetup", document);
 appSetup.size = windowSize();
-appSetup.control = window.localStorage && window.localStorage.getItem("deviceControl");
+appSetup.control =
+  window.localStorage && window.localStorage.getItem("deviceControl");
 
 const app = Elm.Main.fullscreen(appSetup);
 
@@ -64,8 +66,10 @@ app.ports.notify.subscribe(msg => {
   notify(msg);
 });
 
-document.addEventListener('trix-change', (event) => {
-  event.target.inputElement.dispatchEvent(new Event('input', { bubbles: true }));
+document.addEventListener("trix-change", event => {
+  event.target.inputElement.dispatchEvent(
+    new Event("input", { bubbles: true })
+  );
 });
 
 // if(window.DeviceOrientationEvent) {
@@ -80,4 +84,4 @@ document.addEventListener('trix-change', (event) => {
 // }
 
 // hide ui on mobile
-window.scrollTo(0,1);
+window.scrollTo(0, 1);

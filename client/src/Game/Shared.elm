@@ -3,6 +3,7 @@ module Game.Shared exposing (..)
 import Model.Shared exposing (..)
 import Time exposing (..)
 import Dict exposing (Dict)
+import Game.Utils
 
 
 markRadius : Float
@@ -346,7 +347,7 @@ defaultGame time course player =
     , wake = []
     , opponents = []
     , ghosts = []
-    , course = course
+    , course = { course | area = Game.Utils.getRaceArea (listGridTiles course.grid) }
     , tallies = []
     , timers =
         { serverTime = time

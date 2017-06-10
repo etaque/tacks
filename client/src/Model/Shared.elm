@@ -21,7 +21,7 @@ type alias Context =
 
 type alias Device =
     { showMenu : Bool
-    , size : Size
+    , size : Size Int
     , control : DeviceControl
     }
 
@@ -30,10 +30,6 @@ type DeviceControl
     = KeyboardControl
     | TouchControl
     | UnknownControl
-
-
-type alias Size =
-    { width : Int, height : Int }
 
 
 type alias FormResult a =
@@ -329,6 +325,24 @@ type alias Range =
 
 type alias Point =
     ( Float, Float )
+
+
+type alias Position =
+    { x : Float, y : Float }
+
+
+type alias Area =
+    { leftBottom : Position
+    , rightTop : Position
+    }
+
+
+type alias Translation =
+    { u : Float, v : Float }
+
+
+type alias Size number =
+    { width : number, height : number }
 
 
 type alias Dims =

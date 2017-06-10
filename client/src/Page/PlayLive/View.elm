@@ -7,7 +7,7 @@ import Model.Shared exposing (..)
 import Page.PlayLive.Model exposing (..)
 import Game.Msg exposing (GameMsg(ChatMsg))
 import View.Layout as Layout exposing (Layout)
-import Game.Render.All exposing (render)
+import Game.Render
 import Game.Widget.Timer as Timer
 import Game.Widget.Rankings as Rankings
 import Game.Widget.LivePlayers as LivePlayers
@@ -59,14 +59,16 @@ view { device } model =
 
 baseLayers : Device -> Model -> LiveTrack -> GameState -> List (Html Msg)
 baseLayers device model liveTrack gameState =
-    [ render
-        ( device.size.width
-        , device.size.height - Constants.appbarHeight
-        )
-        gameState
-    , toolbar device liveTrack model gameState
-    , contextAside model liveTrack gameState
-    ]
+    let
+        viewDims =
+            ( device.size.width
+            , device.size.height - Constants.appbarHeight
+            )
+    in
+        Game.Render.layers viewDims gameState
+            ++ [ toolbar device liveTrack model gameState
+               , contextAside model liveTrack gameState
+               ]
 
 
 chatLayers : Device -> Model -> List (Html Msg)

@@ -1,7 +1,9 @@
 module Game.Utils exposing (..)
 
 import Time exposing (Time)
-import Model.Shared exposing (Point, Segment)
+import Model.Shared exposing (..)
+import Hexagons
+import Constants
 
 
 toRadians : Float -> Float
@@ -151,3 +153,29 @@ inSector b1 b2 angle =
             -(angleDelta angle b2)
     in
         a1 >= 0 && a2 >= 0
+
+
+getRaceArea : List Tile -> RaceArea
+getRaceArea tiles =
+    let
+        centers =
+            List.map
+                (\t -> Hexagons.axialToPoint Constants.hexRadius t.coords)
+                tiles
+    in
+        List.foldl
+            expandArea
+            (RaceArea ( 0, 0 ) ( 0, 0 ))
+            centers
+
+
+expandArea : Point -> RaceArea -> RaceArea
+expandArea point { rightTop, leftBottom } =
+    { rightTop = expandWith max point rightTop
+    , leftBottom = expandWith min point leftBottom
+    }
+
+
+expandWith : (Float -> Float -> Float) -> Point -> Point -> Point
+expandWith comp ( x1, y1 ) ( x2, y2 ) =
+    ( comp x1 x2, comp y1 y2 )

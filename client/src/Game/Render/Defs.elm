@@ -7,19 +7,7 @@ import Svg.Attributes exposing (..)
 renderDefs : Svg msg
 renderDefs =
     defs []
-        [ pattern
-            [ id "seaPattern"
-            , x "0"
-            , y "0"
-            , width "50"
-            , height "120"
-            , patternUnits "userSpaceOnUse"
-            ]
-            [ rect [ x "0", y "0", width "50", height "30", fill "grey", opacity "0.05" ] []
-            , rect [ x "0", y "30", width "50", height "30", fill "grey", opacity "0.1" ] []
-            , rect [ x "0", y "60", width "50", height "30", fill "grey", opacity "0.05" ] []
-            ]
-        , marker
+        [ marker
             [ id "whiteFullArrow"
             , markerWidth "6"
             , markerHeight "6"
@@ -32,12 +20,6 @@ renderDefs =
             [ id "transparentToBlack"
             ]
             [ stop [ offset "0%", stopColor "black", stopOpacity "0" ] []
-            , stop [ offset "100%", stopColor "black", stopOpacity "1" ] []
-            ]
-        , linearGradient
-            [ id "midBlack"
-            ]
-            [ stop [ offset "0%", stopColor "black", stopOpacity "0.5" ] []
             , stop [ offset "100%", stopColor "black", stopOpacity "1" ] []
             ]
         ]

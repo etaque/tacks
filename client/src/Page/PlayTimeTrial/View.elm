@@ -14,7 +14,7 @@ import Game.Widget.Controls as Controls
 import View.Layout as Layout exposing (Layout)
 import View.DeviceControl
 import View.Utils as Utils
-import Game.Render.All exposing (render)
+import Game.Render
 import Route exposing (..)
 import Constants
 import Dialog
@@ -53,14 +53,14 @@ view { device, liveStatus } model =
 
 baseLayers : Device -> Model -> LiveTimeTrial -> GameState -> List (Html Msg)
 baseLayers device model liveTimeTrial gameState =
-    [ render
+    Game.Render.layers
         ( device.size.width
         , device.size.height - Constants.appbarHeight
         )
         gameState
-    , toolbar device model liveTimeTrial gameState
-    , contextAside model liveTimeTrial gameState
-    ]
+        ++ [ toolbar device model liveTimeTrial gameState
+           , contextAside model liveTimeTrial gameState
+           ]
 
 
 controlLayers : Device -> List (Html Msg)

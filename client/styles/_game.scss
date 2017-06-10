@@ -5,13 +5,17 @@
 #play-track,
 #play-time-trial {
 
+  .svg-container {
+    position: absolute;
+
+    svg {
+      display: block;
+    }
+  }
+
   main {
     background-color: $sand;
     overflow: hidden;
-
-    > svg {
-      display: block;
-    }
   }
 
   .appbar-center {
@@ -619,4 +623,3 @@
     right: 0;
   }
 }
-
